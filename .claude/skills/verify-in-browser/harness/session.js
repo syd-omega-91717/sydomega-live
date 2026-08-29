@@ -71,13 +71,24 @@ async function launch(opts = {}) {
     deviceScaleFactor: mobile ? 2 : 1
   });
 
-  /* The sandbox proxy denies CONNECT to esm.sh. Every gated page does
-     `import{createClient}from'https://esm.sh/@supabase/supabase-js@2'` at the
-     top of a module script -- and when a module's top-level import fails,
-     NONE of that module's code runs. Without this stub a scan reports every
-     window.-exposed function in every module as "missing", which is the single
-     most misleading failure mode in this repo's tooling history. */
+  /* Every gated page imports the Supabase client at the top of a module
+     script -- and when a module's top-level import fails, NONE of that
+     module's code runs. Without a stub a scan reports every window.-exposed
+     function in every module as "missing", which is the single most
+     misleading failure mode in this repo's tooling history.
+
+     The import target is now `/vendor/supabase-js.js`, self-hosted, because
+     a third-party CDN on the critical path of all 179 pages was producing
+     exactly that never-resolving state in production (see the file header).
+     So the stub is routed at the LOCAL path: serving the real vendored
+     bundle here would make every page try to reach supabase.co, which the
+     sandbox denies, and the approval guard would then never lift.
+
+     esm.sh stays stubbed for the other libraries still loaded from it
+     (tsparticles, tone, jspdf, ...). */
   if (signedIn) {
+    await ctx.route('**/vendor/supabase-js.js', r =>
+      r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));
     await ctx.route('https://esm.sh/**', r =>
       r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));
   }

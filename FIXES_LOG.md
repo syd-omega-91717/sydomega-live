@@ -3715,3 +3715,134 @@ documented CDN-blocked `graph`/`map`/`realm`); `./scripts/ci-local.sh` 17/17.
 No geometry property (padding, margin, width, height, position) was touched
 anywhere in this change, which is why the overlap and overflow baselines
 could not move.
+
+
+---
+
+## The buffering: a third-party CDN on the critical path of every page, plus the motion layer
+
+### 1. Why pages sat "buffering" and never loaded
+
+Every gated page began its module script with
+
+    import{createClient}from'https://esm.sh/@supabase/supabase-js@2'
+
+**146 such imports across 114 pages and 14 modules.** That is a third-party CDN
+on the critical path of every single page view. When a module's top-level
+import does not resolve, **none of that module's code runs** -- so the page
+paints its static placeholders ("--", empty tables, zeroed KPIs) and sits
+there. No spinner clears, because none was shown. No error appears, because
+nothing threw. Slow esm.sh, a blocked host, an ad blocker, a corporate proxy
+or a rate limit all produce exactly the reported symptom.
+
+It was also **unpinned** (`@2`), so the bundle actually served could change
+under the platform between two page loads with no commit anywhere.
+
+**Fix: `vendor/supabase-js.js`, self-hosted.** The official UMD bundle from the
+npm tarball (`@supabase/supabase-js@2.112.4`, `dist/umd/supabase.js`),
+byte-for-byte, with an ES-module export footer appended. The UMD build is
+fully self-contained -- auth-js, postgrest-js, realtime-js, storage-js and
+functions-js are inlined -- so it has no bare specifiers and needs no bundler,
+keeping the no-build-step property intact (CLAUDE.md 9). In an ES module
+`var supabase = ...` is module-scoped, so nothing leaks onto `window`.
+
+All 146 call sites repointed; `grep -rn "esm.sh/@supabase"` returns 0.
+
+Verified in a real browser, without the harness stub: importing
+`/vendor/supabase-js.js` and calling `createClient` yields a client with
+`from` function, `auth` object, `storage` object, `functions` object and
+`channel` function. Also verified under `node --input-type=module`.
+
+**The harness had to follow.** `session.js` stubbed `https://esm.sh/**`
+because the sandbox denies CONNECT to it. With imports now local, that stub no
+longer intercepts anything and every page would try to reach supabase.co --
+which the sandbox also denies -- so the approval guard would never lift and
+every scan would report an empty platform. The stub is now routed at
+`**/vendor/supabase-js.js`; the esm.sh route stays for the other libraries
+(tsparticles, tone, jspdf, d3, Leaflet, three). Confirmed still working:
+dashboard renders 69 cards with `body.omega-approved` set.
+
+**To upgrade the client:** `npm pack @supabase/supabase-js@2`, take
+`package/dist/umd/supabase.js`, re-apply the export footer. Do NOT reintroduce
+the CDN import.
+
+### 2. A waiting page must not look like a finished one
+
+Self-hosting removes the CDN failure, not every failure -- a slow network,
+an offline device or a 5xx still leaves placeholders forever, silently,
+because Supabase resolves to `{data:null,error}` and never throws
+(CLAUDE.md 8.1 class 1).
+
+Split deliberately in two:
+
+* **The recorder is inline at the top of `bg.js`** -- it wraps `window.fetch`
+  during head parse, before any `<script type="module">` issues its first
+  queries. A dynamically injected script is async by default and would install
+  its wrapper *after* exactly the requests that hang. It observes only: the
+  request passes through untouched and both settlement paths re-emit what the
+  caller would have seen.
+* **`omega-dataguard.js` is the UI half**: >=9s in flight -> "CONNECTION SLOW";
+  a rejection or >=500 -> "DATA DID NOT LOAD"; the next success clears it.
+  4xx deliberately raises nothing -- an unauthorised or absent row is a real
+  answer, not a connectivity failure. Neither is an empty result set.
+
+It renders through the `#omega-toasts` / `.omega-toast` contract that has been
+sitting in bg.js's stylesheet with **nothing in the repo ever building it**.
+
+**A bug found by hit-testing rather than by looking:** the container is
+`pointer-events:none` -- correct for passive notifications, fatal for a RETRY
+button. The button rendered perfectly and could not be clicked; a hit-test at
+its own centre returned `#galaxy-canvas` underneath. Fixed by re-enabling
+pointer events on this one note, leaving the shared stack pass-through.
+
+Verified end to end: healthy page shows no note; a rejected backend request
+produces the note within 1.4s, and its RETRY button hit-tests as itself
+(56x24, `reachable: true`).
+
+### 3. Motion layer (`omega-motion.js` + visual-evolution v3)
+
+Built on the Web Animations API with `fill:'none'` throughout, so no element
+ever carries a persistent hidden state: the resting state stays whatever the
+page's CSS says, and if the file never runs, throws, or is blocked, every page
+renders normally. Invisible content is not a possible outcome. `rotate` and
+`scale` are used rather than `transform`, because `.card:hover` already sets a
+`transform` and `#omega-depth-field` runs a keyframe animation that owns it --
+the independent properties compose instead of being discarded.
+
+Measured, all six:
+
+| behaviour | evidence |
+|---|---|
+| entrance choreography | opacity dips 0.87 / 0.77 / 0.58 / 0.26 down the first four cards (the stagger), every element rests at exactly 1.0 |
+| value roll-up | 5/5 formats restored byte-exact: `1,284`, `$42,500.75`, `98.6%`, `7`, `0.5` |
+| pointer tilt | `rotate` +1.68deg at card top, -1.68deg at bottom |
+| surface sheen | hover moves background-position to `-40% 0` |
+| press feedback | `getAnimations()` 0 -> 1 on pointerdown |
+| ambient field drift | `body::before` background-position moves 0.16% -> 0.37% over 2.5s |
+
+**Coverage checked rather than assumed:** across a 20-page sample, 468 of 489
+entrance candidates and 119 of 119 numeric readouts are claimed by this
+module. An earlier check reported "0 unclaimed" and was a **test** bug -- it
+filtered on `__omgSeen`, which is set when an element is *observed*, not when
+it animates, so it excluded everything the module had already taken.
+
+**One owner per element.** Two reveal systems already exist --
+`omega-content.js` (`.oc-hidden`) and `omega-animated.js`
+(`.oa-reveal`/`.oa-revealed`) -- and both own `opacity` on what they manage.
+A viewport-relative scan across 8 pages found **0 elements stuck invisible in
+view**, so they work and are left alone; the entrance skips anything carrying
+their classes, and the roll-up skips anything `omega-content.js` marked
+`__isNum`. Three owners for one property would have meant a visible
+double-fade.
+
+**A stripe pattern was designed for `.bar-fill` and rejected:** 18 bars set
+`style="background:var(--gold)"` inline, and the `background` SHORTHAND resets
+`background-image` to none -- the stripe would have shown on bars without an
+inline colour and silently vanished on the ones with it. Two different-looking
+progress bars on one page is worse than none. Animated `box-shadow` instead,
+which that shorthand cannot reach, so every bar reads identically.
+
+**Verification.** `scan.js errors` 3/179 (the documented CDN-blocked pages);
+`scan.js chrome` 0/179; `scan.js overflow` 0/179; `audit.py` 0 critical /
+7 warnings; `ci-local.sh` 17/17 after `omega-registry.py` picked up the two
+new modules (114 -> 116).

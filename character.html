@@ -221,7 +221,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
 function setW(id,pct){var el=document.getElementById(id);if(el)el.style.width=pct.toFixed(1)+'%';}
 </script>
 <script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 (async function(){
   var s=(await sb.auth.getSession()).data.session;

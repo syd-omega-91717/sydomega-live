@@ -85,7 +85,7 @@ function setTab(name){
 function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
 </script>
 <script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var ELEM_ORDER=['Fire','Water','Wind','Metal','Sand'];
 var APEX=27.8367;

@@ -1,3 +1,51 @@
+/* -- DATA-FETCH RECORDER (must be the first thing this file does) -----------
+   Records the timing and outcome of every request to this platform's own
+   backend, so omega-dataguard.js can tell a page that is WAITING on data from
+   a page that has finished loading nothing. Those look identical today: the
+   placeholders a page paints up front ("--", empty tables, zeroed KPIs) are
+   simply never replaced when a query does not resolve, and Supabase resolves
+   to {data:null,error} rather than throwing, so the bare try/catch blocks
+   these pages use catch nothing (CLAUDE.md 8.1 class 1).
+
+   It lives HERE, inline and synchronous, rather than in the module, because a
+   dynamically injected script is async by default and would install its
+   wrapper AFTER the page's own `<script type="module">` had already issued
+   its first queries -- which are exactly the ones that hang on a page that
+   never finishes loading. bg.js runs during parse, so this wraps fetch before
+   any module script executes.
+
+   It OBSERVES ONLY. The request is passed through untouched and both
+   settlement paths re-emit exactly what the caller would have seen, so no
+   existing call site can behave differently because this ran. */
+(function(){
+  if(window.__omegaFetchWatch) return; window.__omegaFetchWatch=1;
+  var real=window.fetch; if(typeof real!=='function') return;
+  var W=window.__omegaData={inflight:0,ok:0,failed:0,firstAt:0};
+  /* Only this platform's backend. A slow avatar or webfont is not a data failure. */
+  function watched(u){
+    try{ u=String(u);
+      return u.indexOf('.supabase.co/')>-1||u.indexOf('/rest/v1/')>-1||
+             u.indexOf('/auth/v1/')>-1||u.indexOf('/functions/v1/')>-1;
+    }catch(e){ return false; }
+  }
+  function emit(d){ try{ document.dispatchEvent(new CustomEvent('omega:fetch-settled',{detail:d})); }catch(e){} }
+  window.fetch=function(input,init){
+    var u=(input&&input.url)?input.url:input;
+    if(!watched(u)) return real.apply(this,arguments);
+    W.inflight++; if(!W.firstAt) W.firstAt=Date.now();
+    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; } }
+    var p; try{ p=real.apply(this,arguments); }catch(e){ done(); throw e; }
+    return p.then(function(res){
+      done();
+      /* 4xx is a real answer -- an unauthorised or absent row is not a
+         connectivity failure. 5xx is. */
+      if(res&&res.status>=500){ W.failed++; emit({ok:false,status:res.status}); }
+      else { if(res&&res.ok) W.ok++; emit({ok:!!(res&&res.ok),status:res&&res.status}); }
+      return res;
+    },function(err){ done(); W.failed++; emit({ok:false,err:1}); throw err; });
+  };
+})();
+
 /* -- BODY-APPEND QUEUE (defined before every injection below) --------------
    Each dynamic injection in this file guarded its append with
    `if(document.body)` and SILENTLY DID NOTHING when body was absent. That is
@@ -25,6 +73,8 @@ function __omegaAppend(el){
   });
 }
 /* Platform nervous system */
+  if(!document.querySelector('script[data-omega-motion]')){var mo=document.createElement('script');mo.src='/omega-motion.js';mo.setAttribute('data-omega-motion','1');mo.defer=true;__omegaAppend(mo);}
+  if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* AI copilot on every page */
   if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;__omegaAppend(os_data_omega_copilot);}
@@ -220,7 +270,7 @@ function __omegaAppend(el){
        one, this builds another, and two GoTrueClients share the storage key. */
     if (window.__omegaSb) return Promise.resolve(publish(window.__omegaSb));
     if (_p) return _p;
-    _p = import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
+    _p = import('/vendor/supabase-js.js').then(function (mod) {
       var cc = mod.createClient || (mod.default && mod.default.createClient);
       if (!cc) throw new Error('supabase createClient unavailable');
       /* publish it so any page module loading later reuses this one */
@@ -1128,7 +1178,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   if(EX[pg])return;
   /* shared singleton -- each extra createClient registers another GoTrueClient
      competing for the same auth-token storage key */
-  (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
+  (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){
     return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   })).then(function(sb){
     sb.auth.getSession().then(function(res){
@@ -1249,7 +1299,7 @@ setTimeout(function(){
   (async function(){
     try{
       var sb=await (window.OmegaSB?window.OmegaSB.get():(async function(){
-        var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+        var mod=await import('/vendor/supabase-js.js');
         var cc=mod.createClient||mod.default&&mod.default.createClient;
         return cc?cc("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"):null;
       })());
@@ -1288,7 +1338,7 @@ setTimeout(function(){
   async function checkTrialExpiry(){
     try{
       var sb=await (window.OmegaSB?window.OmegaSB.get():(async function(){
-        var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+        var mod=await import('/vendor/supabase-js.js');
         var cc=mod.createClient||(mod.default&&mod.default.createClient);
         return cc?cc("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"):null;
       })());

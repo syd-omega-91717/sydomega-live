@@ -617,7 +617,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <script type="module">
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const LEVELS=[
@@ -779,7 +779,7 @@ window.bootAscension = bootAscension;
 </script>
 <script type="module">
 
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  import { createClient } from '/vendor/supabase-js.js';
   var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   const APEX=27.8367;
   const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
@@ -852,7 +852,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 (async function loadRealHonors(){
   let trophyCount=0, medalCount=0, certCount=0;
   try{
-    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    const { createClient } = await import('/vendor/supabase-js.js');
     var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
     const sess = (await sb.auth.getSession()).data.session;
     if(!sess) return;

@@ -257,7 +257,7 @@
       return;
     }
     var sc=document.createElement('script');sc.type='module';
-    sc.textContent='import{createClient}from"https://esm.sh/@supabase/supabase-js@2";createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q").auth.signOut().then(()=>location.href="/account.html")';
+    sc.textContent='import{createClient}from"/vendor/supabase-js.js";createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q").auth.signOut().then(()=>location.href="/account.html")';
     document.body.appendChild(sc);
   });
 

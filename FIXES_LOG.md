@@ -3533,3 +3533,185 @@ by an end-to-end browser run. First real member session will settle it;
   `getBoundingClientRect`, so it cannot thrash layout however long the page is.
   No regressions: overlap 0/24, `chrome` 0/179, `overflow` 0/179, page errors 3/179 (the three
   documented CDN-blocked pages), `ci-local.sh` 17/17.
+
+
+---
+
+## Ω-GVP `.card` sweep — the full per-class exclusion list
+
+Moved verbatim out of `CLAUDE.md` §4.1, which is auto-loaded into every
+session and had only 18 tokens of budget headroom. This is a per-class audit
+record, not a standing fact, so it belongs here per §9's rule. §4.1 keeps the
+one-line pointer and the two failure modes; the enumeration is below.
+
+**Read this with the corrected mechanism.** §4.1 used to justify these
+exclusions with "`::before` can only render one rule's declarations, never
+merges". That is wrong: pseudo-elements cascade per *property* like any
+element. Proven live in a render of `dashboard.html` — `.card::before`
+resolves `content:""`, `position:absolute`, `height:2px` and
+`background-color:rgb(201,168,76)` from bg.js **merged with**
+`box-shadow:rgba(201,168,76,.18) 0 0 18px` from `omega-visual-evolution.css`.
+So an entry excluded merely for *having* a pseudo may not actually conflict;
+one whose pseudo sets the same property `.card::before` sets (`background`)
+still does. Each entry below is flagged on the old reasoning and should be
+re-checked against which properties collide before being treated as settled.
+
+  - **Confirmed real conflicts, left alone** (remaining ~34, same two
+    failure modes as before): `academy.html` `.exam-card` (`::before` +
+    a `--ec` custom-property top-accent, same `.kpi`-pattern exclusion
+    reason below); `achievements.html` `.ach-card` (inline
+    `style="border-color:..."` per instance); `advertising.html`
+    `.tier-card` (`::before`); `agents.html` `.agent-card` (JS
+    `card.style.borderLeftColor=...` on the card itself — `sovereign.html`
+    doesn't exist in this repo, `sovereigns.html` does and has no
+    `.agent-card` at all, so that part of the original list was stale);
+    `sovereign-ai.html` `.agent-card` (its base rule itself reads
+    `border-top:2px solid var(--ac,var(--gold))`, a per-instance custom
+    property on every card, not a modifier — structurally the same
+    pattern that got `.kpi` excluded from the glow-edge treatment
+    entirely, so excluded here too rather than hover-mask it);
+    `analytics.html` `.algo-card` (inline `border-top-color`, 10
+    instances); `chronicle.html` `.future-card` (`::before`) and
+    `.event-card` (`::before` + inline border, 17 instances);
+    `city.html` `.district-card` (JS `card.style.borderLeftColor`);
+    `cosmos.html` `.el-card` (the exact conflict already documented
+    above — JS `cssText+=` per-element border) and `elements.html`
+    `.el-card` (separately, JS `card.style.borderColor`); `dna.html`
+    `.dna-card` (`::before`); `exam.html` `.q-card` (inline
+    `border-left-color`) and `.exam-card` (`::before`); `family.html`
+    `.sg-card` (`::before` + inline border); `feed.html` `.post-card`
+    (`::before`); `gaming.html` `.g-card`/`.e-card` (both `::before`);
+    `honors.html` `.phase-card` (JS `c.style.borderTopColor`);
+    `intelligence.html` `.log-card` (inline `border-left-color` per
+    instance, on top of its own already-safe `.type-*` modifiers);
+    `investment.html` `.holding-card` (inline `border-left`); `lab.html`
+    `.tech-card` (inline `border-top`); `notes.html` `.note-card`
+    (inline `border-left-color`, on top of its own already-safe
+    `.pinned` modifier); `oracle.html` `.reading-card` (`::before` +
+    inline border); `prediction.html` `.pred-card` (JS
+    `c.style.borderTopColor` + `--pc`); `projects.html` `.proj-card`
+    (inline `border-left-color`, on top of its own already-safe
+    `.status-*` modifiers); `publications.html` `.rec-card` (inline
+    `border-top-color`, 6 instances); `queue.html` `.worker-card`
+    (`::before`); `revenue.html` `.stream-card` (inline
+    `border-left-color`); `series.html` `.ser-card` (`::before`);
+    `social.html` `.plat-card` (JS `card.style.borderTopColor`, on top
+    of its own already-safe `.connected` modifier); `sovereign-covenant.html`
+    `.article-card` (`::before` — checked against `vault.html`'s
+    already-merged `.article-card` specifically, since that one turned
+    out to be an exact duplicate; this one isn't — it adds
+    `opacity`/`transition`/a gradient background and is hover-revealed,
+    a materially different rule, so it stays a real conflict, not a
+    second free pass); `studio.html` `.axis-card`/`.create-card` (both
+    `::before`); `triads.html` `.triad-card` (`::after`); `tribe.html`
+    `.elem-card` (JS `card.style.borderColor`) and `.tribe-rank-card`
+    (JS `card.style.borderTop`); `wallet.html` `.account-card` (inline
+    `border-top`). (`vault.html`'s `.article-card` remains already
+    reviewed and added from the earlier pass — no change here.)
+
+
+---
+
+## Ω-HORIZON v3 / VISUAL EVOLUTION v2 — the resting-state design layer, and the five-layer cascade that made v2 invisible
+
+**Symptom.** The Ω-HORIZON v2 layer (commit `5f141cd3`) added easing tokens,
+elevation, focus bloom, a specular sweep, a conic progress ring and scroll
+parallax across all 179 pages, and every rule was verified as applied by
+computed style. It changed almost nothing that a member would see.
+
+**Measurement.** Screenshots at 1440×900 against a pinned BEFORE
+(`S.gitShow('a8d46e48', ['bg.js'])`), pixel-diffed by decoding both PNGs into
+a canvas inside the already-running headless Chromium and reading
+`getImageData` (PIL is not installed in this environment):
+
+| page | pixels differing perceptibly (Δ>8/765) | mean Δ |
+|---|---|---|
+| dashboard | 2.21% | 1.28 |
+| cosmos | 1.15% | 1.70 |
+| vault | 0.66% | 0.76 |
+| **same build, 1.2s apart (noise floor)** | **1.59%** | **1.74** |
+
+The change was *smaller than the noise* produced by the drift and particle
+animations alone. Cause: all of v2 was `:hover`, `:focus-visible` or scroll
+state, and `.omg-ring` was opt-in and unused. Nothing was broken; nothing was
+visible either.
+
+**Root cause of the second half — bg.js is sheet 1 of 53.** Enumerating
+`document.styleSheets` on a rendered `dashboard.html` found 53 stylesheets.
+bg.js (`omega-global-css`) is the *second*, so any later sheet wins an
+equal-specificity tie. Four later layers were redefining the same surfaces:
+
+* `omega-visual-evolution.css` (sheet 13, a `<link>` injected by
+  `omega-sovereign-os.js` on every page) — owned `.card`/`.kpi`/`.kpi-card`
+  `box-shadow` + `border-color`, `.side`, `.topbar`, `.sechead`.
+* `theme.js` (`omega-theme-css`, 14) — owned `body::before`'s background.
+* `nav.js` (`omega-nav-css`, 16) — owns `#omega-side{background:...!important}`.
+* `omega-backdrop.js` (`omega-backdrop-css`, 20) — owns
+  `body{background:...!important}`, deliberately: it tints the backdrop to
+  the member's element and to the page. A feature, not a conflict.
+
+So the parts of the v3 draft written into bg.js for `body`, `.side`,
+`.topbar` and `.sechead` were dead code that looked correct in the diff.
+Confirmed by reading the computed values back: `bodyLayers: 1` where 6 were
+declared, `.side` `backgroundImage: none`, `.sechead` resolving to
+evolution.css's `14px rgba(0,229,255,.14)` rather than the declared 18px.
+
+**Fix — one owner per selector, not a fifth competing layer.**
+
+1. `bg.js` Ω-HORIZON v3 keeps only what nothing later claims: the `.card`/
+   `.kpi` background-image wash (composes with evolution.css's
+   background-*color*), `.glass` rim, `.kpi-n`/`.kpi-val` halo, `.chip`,
+   `.bar-track`/`.bar-fill`, `.btn`, `.tbl-head`. The block header records
+   the ownership map so the next session does not repeat the mistake.
+2. `omega-visual-evolution.css` → **v2**, carrying the resting-state work for
+   the surfaces it owns: machined-glass cards (rim + cyan bounce + ambient),
+   a 9-layer ambient field on `body::before` (downward fade, edge vignette,
+   three light pools, two grid scales), instrument-column sidebar, topbar
+   seam, `.tbl-wrap` rim, stronger `.sechead` halo.
+3. `theme.js`'s `body::before` background removed — it supplied only a
+   background to a pseudo whose geometry came from evolution.css, i.e. a
+   strict subset of the same field, silently replacing it. Divergent-copy
+   class (CLAUDE.md §8.1(8)).
+4. `nav.js`'s `#omega-side` `!important` background upgraded in place to the
+   same instrument-column gradient, since nav.js is the real owner.
+
+**Result, measured the same way, with `prefers-reduced-motion` emulated to
+suppress what noise could be suppressed:**
+
+| page | pixels differing perceptibly | mean Δ |
+|---|---|---|
+| dashboard | 17.25% | 4.97 |
+| cosmos | 11.04% | 4.09 |
+| vault | 11.61% | 3.54 |
+| academy | 14.09% | 4.88 |
+| **same build (noise floor, reduced motion)** | **1.63%** | **1.42** |
+
+7–11× the noise floor, where v2 was below it.
+
+**Two constraints this produced, both now in CLAUDE.md §4/§4.1.**
+
+* *Never pair `background-clip:text` with a transparent fill on a shared
+  class.* Gradient-filled KPI numerals were designed and then rejected: 32
+  pages set `color` on `.kpi-n`/`.kpi-val`, and their colour would win while
+  the clip still applied — rendering the glyph invisible on those pages.
+  Halos use `text-shadow:0 0 22px color-mix(in srgb,currentColor 40%,
+  transparent)` instead, which inherits the page's own colour (so per-instance
+  `--kc` coding survives) and cannot erase anything.
+* *Pseudo-elements cascade per property.* §4.1 claimed "`::before` can only
+  render one rule's declarations, last-in-cascade wins, never merges" and used
+  it to exclude ~34 page-local card classes. Disproven live: `.card::before`
+  resolves `content:""`, `position:absolute`, `height:2px` and
+  `background-color:rgb(201,168,76)` from bg.js **merged with**
+  `box-shadow:rgba(201,168,76,.18) 0 0 18px` from evolution.css. The
+  `honors.html` exclusion still stands (both rules set `background`), but the
+  list needs re-checking against *which properties* collide.
+
+**Verification.** `node --check` on bg.js/theme.js/nav.js; computed-style
+read-back confirming all 9 field layers, the sidebar gradient, the card
+shadow stack and the merged `.card::before` all resolve as declared;
+`scan.js chrome` 0/179 clipped-or-covered fixed widgets; `scan.js overflow`
+0/179 pages scrolling horizontally at 375px; `scan.js errors` 3/179 (the
+documented CDN-blocked `graph`/`map`/`realm`); `./scripts/ci-local.sh` 17/17.
+No geometry property (padding, margin, width, height, position) was touched
+anywhere in this change, which is why the overlap and overflow baselines
+could not move.

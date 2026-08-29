@@ -139,7 +139,7 @@
          clipped, not scrollable, just unreachable. Sidebar items below the
          fold could never be scrolled to. Changed to overflow-y:auto so the
          dock scrolls independently of the page. */
-      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:#08080F!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
+      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:linear-gradient(180deg,rgba(201,168,76,0.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,0.06) 100%),linear-gradient(180deg,#08080F,#05050C)!important;box-shadow:inset -1px 0 0 rgba(201,168,76,0.16),22px 0 48px -34px rgba(0,229,255,0.5)!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
       '.side{width:80px!important}',
       /* Icon dock */
       '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',

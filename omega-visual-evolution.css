@@ -1,14 +1,62 @@
-/* Ω SYD OMEGA 91717 — VISUAL EVOLUTION v1
-   Purpose: visible platform-wide cinematic/high-tech layer.
-   Loaded by omega-sovereign-os.js after the canonical design system.
-   Accessibility: reduced-motion and forced-colors are explicit. */
+/* Ω SYD OMEGA 91717 — VISUAL EVOLUTION v2
+   Purpose: the platform-wide cinematic/high-tech layer, at RESTING state.
+   Loaded by omega-sovereign-os.js (and omega-interface-v2.js) on every page,
+   after bg.js. Accessibility: reduced-motion and forced-colors are explicit.
+
+   ── WHY THIS FILE, AND NOT bg.js ────────────────────────────────────────
+   bg.js is documented as "the design system", and for tokens and layout it
+   is. It is not the last word on paint. A live render of dashboard.html
+   enumerates 53 stylesheets and bg.js is sheet 1 of 53, so every later
+   sheet wins an equal-specificity tie. This file is one of those later
+   sheets, and it owns:
+
+       .card / .kpi / .kpi-card   box-shadow, background-color, border-color
+       .side / #omega-side        background, box-shadow
+       .topbar                    background, box-shadow, ::after seam
+       .sechead                   text-shadow
+
+   body{background} is owned by neither: omega-backdrop.js sets it with
+   !important because it tints the backdrop to the member's element and to
+   the page they are on. That is a feature. This file therefore builds its
+   ambient field entirely in body::before / body::after, which compose over
+   that personalised colour instead of fighting it.
+
+   ── WHY v2 EXISTS ───────────────────────────────────────────────────────
+   v1's surfaces were real but flat, and the layer added on top of it in
+   bg.js (Ω-HORIZON v2) turned out to be invisible: measured against a
+   pinned BEFORE at 1440×900, 0.66–2.21% of pixels differed perceptibly,
+   while two screenshots of the SAME build 1.2s apart differed by 1.59%
+   from the running drift animations alone. The change sat inside its own
+   noise floor, because all of it was :hover, :focus-visible or scroll
+   state. Everything added in v2 is visible with zero interaction.
+
+   ── CONSTRAINTS CARRIED FORWARD ─────────────────────────────────────────
+   (1) No border-image outside :hover — it always wins the border paint and
+       silently erases a page-local per-instance border.
+   (2) No background-clip:text with a transparent fill on a shared class:
+       32 pages set `color` on the KPI value, and their colour would win
+       while the clip still applied, rendering the glyph INVISIBLE. Halos
+       are text-shadow color-mixed from currentColor, which inherits
+       whatever colour the page chose and cannot erase anything.
+   (3) No geometry — no padding, margin, width, height or position changes —
+       so the fixed-widget overlap and horizontal-overflow baselines cannot
+       move. */
 
 :root{
   --omega-glow-gold:rgba(201,168,76,.18);
   --omega-glow-cyan:rgba(0,229,255,.14);
   --omega-grid:rgba(201,168,76,.035);
+  --omega-grid-fine:rgba(201,168,76,.016);
   --omega-glass:rgba(10,10,15,.68);
   --omega-edge:rgba(201,168,76,.22);
+  /* A lit surface needs a top rim, not just a drop shadow: the rim is the
+     key light catching the upper edge, and it is what separates a pane of
+     glass from a painted rectangle. */
+  --omega-rim:inset 0 1px 0 rgba(255,255,255,.07);
+  /* Ambient occlusion plus a cool bounce from below, so a panel reads as
+     sitting in a lit room rather than floating on grey. */
+  --omega-rest:0 14px 34px -20px rgba(0,0,0,.92),0 2px 8px -4px rgba(0,0,0,.6);
+  --omega-bounce:inset 0 -22px 40px -34px rgba(0,229,255,.4);
 }
 
 html{background:#020206}
@@ -20,6 +68,18 @@ body{
     radial-gradient(ellipse 55% 45% at 100% 50%,rgba(0,229,255,.035),transparent 70%),
     #0A0A0F;
 }
+
+/* ── AMBIENT FIELD ────────────────────────────────────────────────────────
+   All of it on ::before, so it layers over omega-backdrop.js's personalised
+   body background rather than competing with its !important — and so
+   body::after stays exactly as v1 left it (the scanlines below), which
+   matters because moving those onto .shell would have silently dropped them
+   from every page that has neither .shell nor .page-shell.
+
+   Layers paint first-on-top. Order here: a downward fade that retires the
+   grid low on the page, an edge vignette, three light pools, then two grid
+   scales. v1 achieved the grid fade with mask-image; a fade layer does the
+   same job without masking the light pools out of existence along with it. */
 body::before{
   content:"";
   position:fixed;
@@ -27,10 +87,17 @@ body::before{
   z-index:-2;
   pointer-events:none;
   background-image:
+    linear-gradient(to bottom,transparent 0%,transparent 52%,rgba(0,0,0,.34) 96%),
+    radial-gradient(140% 106% at 50% 46%,transparent 48%,rgba(0,0,0,.5) 100%),
+    radial-gradient(1200px 800px at 8% -12%,rgba(201,168,76,.1),transparent 62%),
+    radial-gradient(1000px 720px at 96% 104%,rgba(0,229,255,.075),transparent 60%),
+    radial-gradient(780px 540px at 54% 38%,rgba(155,107,240,.05),transparent 68%),
     linear-gradient(var(--omega-grid) 1px,transparent 1px),
-    linear-gradient(90deg,var(--omega-grid) 1px,transparent 1px);
-  background-size:42px 42px;
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,.75),transparent 88%);
+    linear-gradient(90deg,var(--omega-grid) 1px,transparent 1px),
+    linear-gradient(var(--omega-grid-fine) 1px,transparent 1px),
+    linear-gradient(90deg,var(--omega-grid-fine) 1px,transparent 1px);
+  background-size:auto,auto,auto,auto,auto,42px 42px,42px 42px,14px 14px,14px 14px;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,repeat,repeat,repeat,repeat;
 }
 body::after{
   content:"";
@@ -38,47 +105,66 @@ body::after{
   inset:0;
   z-index:9990;
   pointer-events:none;
-  opacity:.22;
-  background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,.025) 50%,transparent 100%);
+  opacity:.2;
+  background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,.03) 50%,transparent 100%);
   background-size:100% 5px;
   mix-blend-mode:screen;
 }
 
-/* Premium glass surfaces */
+/* ── MACHINED GLASS SURFACES ──────────────────────────────────────────────
+   background-color, not the `background` shorthand, so the top-lit gradient
+   wash bg.js sets as background-image survives and composes with this tint.
+   The rim + ambient + cyan bounce is the whole difference between a panel
+   that looks printed and one that looks lit. */
 .card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer,
 [class*="card"],[class*="panel"]{
   background-color:var(--omega-glass);
   border-color:var(--omega-edge);
-  box-shadow:0 10px 35px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025);
+  box-shadow:var(--omega-rim),var(--omega-bounce),var(--omega-rest);
 }
+/* Merges with bg.js's `.card::before` top-accent bar rather than replacing
+   it — two rules on one pseudo-element cascade per property, so bg.js keeps
+   `content`/`position`/`background` and this adds the bloom. */
 .card::before{box-shadow:0 0 18px var(--omega-glow-gold)}
 .card:hover,.kpi:hover,.kpi-card:hover,.panel:hover,.module:hover,.tile:hover,.widget:hover{
-  box-shadow:0 16px 48px rgba(0,0,0,.34),0 0 24px var(--omega-glow-gold),inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:var(--omega-rim),0 20px 52px -18px rgba(0,0,0,.5),0 0 26px var(--omega-glow-gold);
 }
 
-/* Navigation becomes an instrument panel rather than a plain sidebar. */
+/* ── NAVIGATION AS AN INSTRUMENT COLUMN ───────────────────────────────────
+   Gold at the top, cyan at the foot: the same two-accent grammar the rest
+   of the platform uses, applied to the one element on every single page. */
 .side,#omega-side{
-  background:linear-gradient(180deg,rgba(2,2,6,.98),rgba(8,8,14,.94));
-  box-shadow:8px 0 40px rgba(0,0,0,.25),inset -1px 0 0 rgba(0,229,255,.035);
+  background:
+    linear-gradient(180deg,rgba(201,168,76,.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,.06) 100%),
+    linear-gradient(180deg,rgba(2,2,6,.98),rgba(8,8,14,.94));
+  box-shadow:
+    inset -1px 0 0 rgba(201,168,76,.16),
+    8px 0 40px rgba(0,0,0,.25),
+    22px 0 48px -34px rgba(0,229,255,.5);
 }
 .side a,#omega-side a{transition:transform .18s ease,filter .18s ease,background .18s ease}
 .side a:hover,#omega-side a:hover{transform:translateX(2px);filter:drop-shadow(0 0 7px rgba(201,168,76,.3))}
 
 .topbar{
   background:linear-gradient(90deg,rgba(2,2,6,.97),rgba(10,10,15,.92),rgba(2,2,6,.97));
-  box-shadow:0 8px 35px rgba(0,0,0,.28);
+  box-shadow:0 1px 0 rgba(201,168,76,.12),0 8px 35px rgba(0,0,0,.28);
 }
 .topbar::after{
   content:"";
   position:absolute;
   left:0;right:0;bottom:-1px;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),var(--gold),transparent);
-  opacity:.45;
+  opacity:.55;
 }
 
-/* Typography hierarchy: preserve existing font system while making primary information clearer. */
+/* ── DATA SURFACES ────────────────────────────────────────────────────────
+   Tables are the densest thing on most pages and were the flattest. */
+.tbl-wrap{box-shadow:var(--omega-rim),0 10px 26px -20px rgba(0,0,0,.9)}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────────────────────
+   Preserve the existing font system; make primary information read as lit. */
 h1,h2,h3{ text-shadow:0 0 22px rgba(201,168,76,.09) }
-.sechead{ text-shadow:0 0 14px rgba(0,229,255,.14) }
+.sechead{ text-shadow:0 0 18px rgba(0,229,255,.4) }
 
 /* Focus states are visible and intentional. */
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{
@@ -105,8 +191,8 @@ h1,h2,h3{ text-shadow:0 0 22px rgba(201,168,76,.09) }
 main,.main,.page-shell,.content,.container{position:relative;z-index:1}
 
 @media (max-width:700px){
-  body::before{background-size:30px 30px;opacity:.7}
-  body::after{opacity:.12}
+  body::before{background-size:auto,auto,auto,auto,auto,30px 30px,30px 30px,10px 10px,10px 10px;opacity:.75}
+  body::after{opacity:.1}
   .card:hover,.kpi:hover,.kpi-card:hover,.panel:hover,.module:hover,.tile:hover,.widget:hover{transform:none}
 }
 

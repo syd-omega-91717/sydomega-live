@@ -29,12 +29,12 @@
       --glow-cyan:rgba(0,229,255,0.12);
     }
     body { background:var(--void); color:var(--ink); }
-    body::before {
-      background:
-        radial-gradient(ellipse 80% 40% at 50% -10%,rgba(201,168,76,0.06),transparent),
-        radial-gradient(ellipse 60% 50% at 90% 90%,rgba(139,0,0,0.04),transparent),
-        radial-gradient(ellipse 40% 30% at 10% 60%,rgba(0,229,255,0.03),transparent);
-    }
+    /* body::before is the ambient field, and omega-visual-evolution.css owns
+       it -- that file supplies the pseudo's content/position/z-index, this
+       one only ever supplied a background, i.e. a strict subset of the same
+       field. Two rules on one pseudo-element merge per property, so the
+       background declared here silently replaced the field's while keeping
+       its geometry. Removed so there is one owner, not two divergent copies. */
   `;
 
   /* --- MICRO-INTERACTION STYLES --- */

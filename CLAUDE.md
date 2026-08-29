@@ -110,8 +110,24 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 
 ## 4. Design system (as it exists, not as a target)
 
-Defined once, in `bg.js`'s injected `<style>` block — this *is* the
-design system; there is no separate token file to keep in sync.
+Tokens and layout primitives are defined once, in `bg.js`'s injected
+`<style>` block. **Paint is not.** This section used to say bg.js *is* the
+design system; a live render of `dashboard.html` enumerates **53
+stylesheets** and bg.js is sheet 1 of 53, so every later sheet wins an
+equal-specificity tie. Five global layers redefine the same surfaces, and
+the effective owner differs per selector — check the render, not this list,
+before styling a shared class:
+
+| surface | real owner |
+|---|---|
+| tokens, layout, `.glass`, `.kpi-n`, `.chip`, `.bar-*`, `.btn`, `.tbl-head` | `bg.js` (sheet 1) |
+| `.card`/`.kpi`/`.kpi-card` shadow + border, `.topbar`, `.sechead`, `body::before` field | `omega-visual-evolution.css` (13) |
+| `#omega-side` (with `!important`) | `nav.js` (16) |
+| `body{background}` (with `!important`) | `omega-backdrop.js` (20) — tints to the member's element and page; a feature, don't fight it |
+
+A rule written in bg.js for a surface it does not own is dead code that
+looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
+to be invisible (§8.4).
 
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),
@@ -170,9 +186,16 @@ through this one file with no per-page markup changes:
   touched. `honors.html`'s `.honor-card` was never given the `.card`
   class at all — its own `::before` rule does 5-way tier color-coding
   (omega/gold/silver/bronze/cyan) which `.card`'s pre-existing v3
-  `::before` top-accent bar would fully replace (`::before` can only
-  render one rule's declarations, last-in-cascade wins, never merges),
-  and that conflict isn't fixable by hover-gating since it's about the
+  `::before` top-accent bar would override. **The mechanism stated here was
+  wrong** ("`::before` can only render one rule's declarations, never
+  merges"): pseudo-elements cascade per *property* like any element, proven
+  live — `.card::before` renders `content`/`position`/`height` from bg.js
+  merged with `box-shadow` from `omega-visual-evolution.css`. The exclusion
+  still stands, because both rules set `background` and only one can win
+  that, but the reason is a property collision, not an all-or-nothing one —
+  so re-check the excluded classes below against *which properties*
+  actually collide rather than against the presence of a pseudo. That
+  conflict isn't fixable by hover-gating since it's about the
   achievement badges' permanent resting-state appearance, not a hover
   effect — left on its own local styling instead.
 - **Platform-wide `.card` sweep, done with a scanner, not by hand.** A
@@ -236,58 +259,15 @@ through this one file with no per-page markup changes:
     its own CSS rule) and is never applied to any element in the page's
     markup or JS. Adding `.card` to a selector nothing uses would be a
     no-op; left as-is rather than invented a usage.
-  - **Confirmed real conflicts, left alone** (remaining ~34, same two
-    failure modes as before): `academy.html` `.exam-card` (`::before` +
-    a `--ec` custom-property top-accent, same `.kpi`-pattern exclusion
-    reason below); `achievements.html` `.ach-card` (inline
-    `style="border-color:..."` per instance); `advertising.html`
-    `.tier-card` (`::before`); `agents.html` `.agent-card` (JS
-    `card.style.borderLeftColor=...` on the card itself — `sovereign.html`
-    doesn't exist in this repo, `sovereigns.html` does and has no
-    `.agent-card` at all, so that part of the original list was stale);
-    `sovereign-ai.html` `.agent-card` (its base rule itself reads
-    `border-top:2px solid var(--ac,var(--gold))`, a per-instance custom
-    property on every card, not a modifier — structurally the same
-    pattern that got `.kpi` excluded from the glow-edge treatment
-    entirely, so excluded here too rather than hover-mask it);
-    `analytics.html` `.algo-card` (inline `border-top-color`, 10
-    instances); `chronicle.html` `.future-card` (`::before`) and
-    `.event-card` (`::before` + inline border, 17 instances);
-    `city.html` `.district-card` (JS `card.style.borderLeftColor`);
-    `cosmos.html` `.el-card` (the exact conflict already documented
-    above — JS `cssText+=` per-element border) and `elements.html`
-    `.el-card` (separately, JS `card.style.borderColor`); `dna.html`
-    `.dna-card` (`::before`); `exam.html` `.q-card` (inline
-    `border-left-color`) and `.exam-card` (`::before`); `family.html`
-    `.sg-card` (`::before` + inline border); `feed.html` `.post-card`
-    (`::before`); `gaming.html` `.g-card`/`.e-card` (both `::before`);
-    `honors.html` `.phase-card` (JS `c.style.borderTopColor`);
-    `intelligence.html` `.log-card` (inline `border-left-color` per
-    instance, on top of its own already-safe `.type-*` modifiers);
-    `investment.html` `.holding-card` (inline `border-left`); `lab.html`
-    `.tech-card` (inline `border-top`); `notes.html` `.note-card`
-    (inline `border-left-color`, on top of its own already-safe
-    `.pinned` modifier); `oracle.html` `.reading-card` (`::before` +
-    inline border); `prediction.html` `.pred-card` (JS
-    `c.style.borderTopColor` + `--pc`); `projects.html` `.proj-card`
-    (inline `border-left-color`, on top of its own already-safe
-    `.status-*` modifiers); `publications.html` `.rec-card` (inline
-    `border-top-color`, 6 instances); `queue.html` `.worker-card`
-    (`::before`); `revenue.html` `.stream-card` (inline
-    `border-left-color`); `series.html` `.ser-card` (`::before`);
-    `social.html` `.plat-card` (JS `card.style.borderTopColor`, on top
-    of its own already-safe `.connected` modifier); `sovereign-covenant.html`
-    `.article-card` (`::before` — checked against `vault.html`'s
-    already-merged `.article-card` specifically, since that one turned
-    out to be an exact duplicate; this one isn't — it adds
-    `opacity`/`transition`/a gradient background and is hover-revealed,
-    a materially different rule, so it stays a real conflict, not a
-    second free pass); `studio.html` `.axis-card`/`.create-card` (both
-    `::before`); `triads.html` `.triad-card` (`::after`); `tribe.html`
-    `.elem-card` (JS `card.style.borderColor`) and `.tribe-rank-card`
-    (JS `card.style.borderTop`); `wallet.html` `.account-card` (inline
-    `border-top`). (`vault.html`'s `.article-card` remains already
-    reviewed and added from the earlier pass — no change here.)
+  - **Confirmed real conflicts, left alone** (~34 classes across as many
+    pages). The full per-class enumeration moved to `FIXES_LOG.md`
+    ("the full per-class exclusion list") — it is an audit record, not a
+    standing fact, and §4.1 is auto-loaded into every session. Two failure
+    modes account for all of them: a page-local `::before`/`::after` on the
+    class, or a per-instance border set on the card element itself (inline
+    `style=`, JS `.style.border*`, or a same-element modifier combo). Read
+    that list against the corrected pseudo-element mechanism above before
+    treating any single entry as settled.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
@@ -728,6 +708,17 @@ entries (which were accurate when written):
   language) is what actually measured them. Any per-page state the code under test
   persists — theme, language, a dismissed banner — needs a fresh context, not a
   fresh `goto`.
+- **A visual change needs a noise floor before it means anything.** A
+  before/after screenshot diff on this platform reads ~1.6% of pixels as
+  "changed" with *no change at all* — the particle canvas and drift
+  keyframes never settle, so two shots of the same build 1.2s apart differ
+  that much (`prefers-reduced-motion` narrows it, it does not reach zero).
+  A design layer measured at 0.66–2.21% was therefore inside its own noise
+  and invisible at rest, which no amount of computed-style checking would
+  have revealed: every rule *applied*, all of it just sat behind `:hover`,
+  `:focus-visible` or scroll. Diff same-build pairs first, then compare.
+  Decoding PNGs needs no PIL (absent here) — draw them to a canvas in the
+  already-running Chromium and read `getImageData`.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine

@@ -651,7 +651,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **88** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **91** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,220** approx tokens / 16,000 budget |

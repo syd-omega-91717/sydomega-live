@@ -3438,3 +3438,91 @@ not apply to it. Its SELECT, UPDATE and DELETE policies are all
   71 → **73 tests**; `ci-local.sh` 16/16 blocking; every blocking `ci.yml` step green. Neither
   fix changes what CI actually verifies — one restores a gate that was rejecting a correct
   workflow, the other stops a generated document from claiming verification it never had.
+
+## A `Ω` in a print statement was the whole CI failure on `main`
+
+`main`'s `verify` job was red at step 9 (`python -m unittest discover -s scripts/tests`)
+with `failures=6, errors=1` — every one of them in `test_evidence_audit.py`, and every one
+reading the same way:
+
+```
+AssertionError: 'LOCAL_ONLY     1' not found in ''
+AssertionError: 'BROKEN         1' not found in ''
+FileNotFoundError: ...\omega-evidence-4oe9mpj2\EVIDENCE_MATRIX.md
+```
+
+`not found in ''`. The scanner had produced **no stdout at all** and never written its
+report — which reads like a broken scanner, and is not.
+
+**What actually happened.** CI moved off GitHub-hosted runners while this branch was open:
+all four workflows now say `runs-on: self-hosted` with `defaults.run.shell: cmd`, and
+runner `HP` (id 21) executed run #584 for real on 2026-08-29 at 01:43 UTC. On that runner
+Python encodes stdout with the **cp1252** code page. `scripts/evidence-audit.py`'s first
+statement in `main()` is:
+
+```python
+print('Ω MASTER EVIDENCE AUDIT')
+```
+
+cp1252 has no `Ω` (U+03A9), so that line raised `UnicodeEncodeError` before a single page
+was classified. Exit 1, empty stdout, no `EVIDENCE_MATRIX.md`. Reproduced on Linux —
+the traceback is character-for-character the runner's:
+
+```
+$ PYTHONIOENCODING=cp1252 python3 scripts/evidence-audit.py
+UnicodeEncodeError: 'charmap' codec can't encode character 'Ω'
+in position 0: character maps to <undefined>
+exit=1
+```
+
+Only two scripts in the repo contain a character cp1252 cannot encode, and both were
+reachable: `evidence-audit.py` (`Ω`, printed on every run) and `schema-dictionary.py`
+(`→`, in the module docstring that `--help` prints — latent, and it fired the moment
+anything asked that script what it does). `audit.py` has none, which is why 69 of the
+73 tests passed on the same runner.
+
+**Fixed** in three places, each for a distinct reason:
+
+1. **stdout degrades instead of aborting.** `sys.stdout.reconfigure(errors='replace')`
+   in both scripts, guarded for streams that are not reconfigurable. The `Ω` prints as
+   `?` on a cp1252 console and unchanged everywhere else. In `evidence-audit.py` it sits
+   above the `--help` block, because that block prints the `Ω`-bearing docstring.
+2. **The report pins UTF-8.** `Path('EVIDENCE_MATRIX.md').write_text(..., encoding='utf-8')`
+   and `read_text(encoding='utf-8', errors='replace')` on all four reads. Without this the
+   matrix — which carries `Ω` in its own heading — would have crashed the write on Windows
+   even after the print was fixed. The locale default there is cp1252; this repo is UTF-8.
+3. **`--help` no longer runs the audit.** It had no argument guard at all, so asking the
+   script what it did made it do it *and rewrite `EVIDENCE_MATRIX.md`* — the unrequested-write
+   shape CLAUDE.md §8.4 records for the other writers in `scripts/`. This module was added
+   after that sweep and never got the guard.
+
+**Three regression tests, A/B'd against the pre-fix script** (pinned with
+`git show HEAD:scripts/evidence-audit.py`, not `git stash`): all three fail there with the
+exact `UnicodeEncodeError` above, all three pass after. They force the child's encoding
+with `PYTHONIOENCODING=cp1252` and assert exit 0, no `UnicodeEncodeError` on stderr, a
+report written and readable as UTF-8, and `--help` writing nothing.
+
+**One trap worth recording.** Forcing `PYTHONIOENCODING=cp1252` on the *whole* suite
+locally is not the runner and gives a worse answer: 38 errors, all
+`UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97`, raised in the *parent* — the
+harnesses run children with `text=True`, which decodes using the locale encoding, still
+UTF-8 on Linux. On Windows both sides are cp1252 and agree, which is why the runner
+reported 7 failures and not 38. The fixture's `run_audit()` now decodes with whatever
+codec it forced on the child, so the reproduction is faithful rather than merely alarming.
+
+This is a base-branch failure, not this PR's: neither `scripts/evidence-audit.py` nor its
+tests appear in this branch's diff against `main`. It is fixed here because it is the only
+thing standing between this PR and a green head, and because it is now genuinely fixable —
+the runner block that made CI unverifiable is gone.
+
+73 → **76 tests**, all passing; `./scripts/ci-local.sh` 16/16 blocking checks;
+`audit.py` 0 critical / 7 warnings; `EVIDENCE_MATRIX.md` byte-identical after the change
+(`git status` clean on that file), so the fix changes when the scanner runs, never what it
+concludes.
+
+**Still unverified on Windows:** steps 10–24 of `verify` were *skipped* after step 9
+failed, so `schema-dictionary.py`, the RLS/upsert/migration audits, `omega-registry.py`
+and `context-budget.py` have never executed on that runner. The cp1252 crash class is now
+swept from all of them (only the two scripts above contained such a character), but any
+other Windows-specific behaviour — path separators, line endings — remains unmeasured
+until a run gets that far.

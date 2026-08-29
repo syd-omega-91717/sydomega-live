@@ -601,18 +601,16 @@ open, recorded in `FIXES_LOG.md`:
   client code calling any of them**, so this is still locked-but-unused, not a
   broken live feature — do not "fix" it by granting without deciding the
   feature is wanted.
-- **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
-  every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
-  and a completely empty check-run output — reproduced on `pull_request`,
-  `push` to `main`, and `workflow_dispatch` alike, so it is not trigger- or
-  branch-specific. This repo is **private on a personal account**, so Actions
-  minutes draw on the account allowance; the last green run was #344 on Aug 22
-  at 11:56 UTC. Nothing in the code affects it — clear it under Settings →
-  Billing and licensing → Budgets and alerts. Meanwhile `./scripts/ci-local.sh`
-  runs every blocking step locally, so a commit can still be verified, and
-  `.githooks/pre-push` runs it automatically on every push — enable per clone
-  with `git config core.hooksPath .githooks`, bypass one push with
-  `git push --no-verify`.
+- **CI now runs on one self-hosted Windows runner, not GitHub-hosted.** The
+  hosted-runner block (`runner_id: 0`, no `steps`, 0 billable ms, from
+  2026-08-22) was worked around by pointing all four workflows at
+  `runs-on: self-hosted` with `shell: cmd`. Runner `HP` (id 21) executed run
+  #584 for real on 2026-08-29. Two consequences: **jobs queue when that one
+  machine is offline** (a `queued` check is not a failure), and **every step
+  now runs under cp1252, not UTF-8** — see §8.4. `./scripts/ci-local.sh` still
+  runs every blocking step locally, and `.githooks/pre-push` runs it on every
+  push — enable per clone with `git config core.hooksPath .githooks`, bypass
+  one push with `git push --no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
   The advisor reports 93; reading the bodies, the owner-sensitive ones guard
   themselves via `public.omega_is_owner()`, which a substring classifier looking
@@ -651,7 +649,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **73** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **76** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,365** approx tokens / 16,000 budget |
@@ -742,6 +740,19 @@ entries (which were accurate when written):
   cannot be cloned or its tree listed. Do not present those dimensions as
   assessed; `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` marks them NOT VERIFIED. Also:
   the file tree cannot be enumerated, so a path guess that 404s means nothing.
+- **CI's Python runs under cp1252 — a `Ω` in a `print()` is a crash there.** The
+  self-hosted Windows runner encodes stdout with the cp1252 code page, which
+  cannot represent `Ω` (U+03A9) or `→` (U+2192). `evidence-audit.py` printed its
+  `Ω` banner as the first line of `main()`, so it exited 1 before doing any work
+  and never wrote its report; all 7 `test_evidence_audit` failures on `main`
+  read `not found in ''` — an **empty stdout**, which looks exactly like a
+  broken scanner. Reproduce with `PYTHONIOENCODING=cp1252`, and pin
+  `encoding='utf-8'` on every `read_text`/`write_text`/`open` (the locale
+  default there is cp1252, and this repo is UTF-8). But forcing that variable on
+  the *whole* suite locally is not the runner: the parent still decodes children
+  as UTF-8 on Linux, giving 38 bogus `UnicodeDecodeError`s that do not occur on
+  Windows, where both sides agree. Force it per-child and decode with the same
+  codec.
 - **Per-session context cost is now gated.** `scripts/context-budget.py` runs
   blocking in CI. See `.claude/skills/context-budget/` for where new
   documentation belongs and how to read this repo's very large files cheaply

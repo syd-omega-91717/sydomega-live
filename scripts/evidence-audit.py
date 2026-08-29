@@ -40,9 +40,38 @@ call). --strict exits 1 if any BROKEN row is found.
   python3 scripts/evidence-audit.py --strict    # non-zero exit on BROKEN
 """
 
+import sys
+
+# CI runs this on a self-hosted Windows runner with `shell: cmd`, where Python
+# encodes stdout with the cp1252 code page. This module's own banner contains
+# `Ω` (U+03A9), which cp1252 cannot encode, so `print()` raised
+# UnicodeEncodeError on the first line of main(): the process exited 1 before
+# doing any work and never wrote EVIDENCE_MATRIX.md. That is why all 7
+# test_evidence_audit failures on main read `not found in ''` -- an empty
+# stdout, not a misclassification. Reproduced on Linux with
+# PYTHONIOENCODING=cp1252 before writing this.
+#
+# Degrade an unencodable character instead of aborting the run. This has to
+# come before the --help block below, which prints the Ω-bearing docstring.
+# Every read and write further down pins UTF-8 explicitly for the same
+# underlying reason: the locale default is cp1252 on that runner, and this
+# repository is UTF-8.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(errors='replace')
+    except (AttributeError, ValueError):  # not a reconfigurable text stream
+        pass
+
+# Asking this script what it does must not make it do it. Without this, --help
+# ran the full audit and rewrote EVIDENCE_MATRIX.md as a side effect -- the
+# unrequested-write shape CLAUDE.md §8.4 records for the other writers in
+# scripts/. This module was added after that sweep and never got the guard.
+if '--help' in sys.argv[1:] or '-h' in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import os
 import re
-import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -110,7 +139,7 @@ def sql_surface():
         r'create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?([a-z0-9_]+)', re.I)
 
     for path in sorted(Path('supabase').rglob('*.sql')):
-        text = _strip_sql_comments(path.read_text(errors='replace'))
+        text = _strip_sql_comments(path.read_text(encoding='utf-8', errors='replace'))
         for m in tbl_re.finditer(text):
             name = m.group(1).lower()
             rels.add(name)
@@ -151,7 +180,7 @@ BACKUP_RE = re.compile(r'OmegaLocalBackup')
 
 
 def scan_client(path):
-    text = path.read_text(errors='replace')
+    text = path.read_text(encoding='utf-8', errors='replace')
     tables = set(FROM_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
     edges = {a or b for a, b in EDGE_RE.findall(text)}
@@ -173,7 +202,7 @@ def nav_slugs():
     the PS map: nav.js builds some hrefs by concatenation, and a parser that
     only read PS's literal keys would report reachable pages as orphans.
     """
-    text = Path('nav.js').read_text(errors='replace')
+    text = Path('nav.js').read_text(encoding='utf-8', errors='replace')
     return set(re.findall(r"['\"]([a-z0-9][a-z0-9-]{1,40})['\"]", text))
 
 
@@ -273,7 +302,7 @@ def main():
     # Edge Functions ---------------------------------------------------------
     client_edges = set()
     for path in list(Path('.').glob('*.html')) + list(Path('.').glob('*.js')):
-        text = path.read_text(errors='replace')
+        text = path.read_text(encoding='utf-8', errors='replace')
         for a, b in EDGE_RE.findall(text):
             client_edges.add(a or b)
 
@@ -444,7 +473,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
     w('access settles it.')
     w('')
 
-    Path('EVIDENCE_MATRIX.md').write_text('\n'.join(out) + '\n')
+    Path('EVIDENCE_MATRIX.md').write_text('\n'.join(out) + '\n', encoding='utf-8')
 
 
 if __name__ == '__main__':

@@ -46,18 +46,27 @@ class EvidenceAuditFixture(unittest.TestCase):
     def write(self, rel, text):
         path = os.path.join(self.dir, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w') as fh:
+        with open(path, 'w', encoding='utf-8') as fh:
             fh.write(text)
 
-    def run_audit(self, *args):
+    def run_audit(self, *args, **kwargs):
+        env = dict(os.environ)
+        env.update(kwargs.pop('env', {}))
+        # When a test forces the child's stdout encoding to reproduce the
+        # Windows runner, decode with that same codec. Otherwise the parent
+        # decodes cp1252 bytes as UTF-8 and dies on the first `§` -- a harness
+        # artifact that looks exactly like the script bug under test.
+        forced = env.get('PYTHONIOENCODING')
         proc = subprocess.run(
             [sys.executable, os.path.join(self.dir, 'scripts', 'evidence-audit.py')]
             + list(args),
-            capture_output=True, text=True, cwd=self.dir)
+            capture_output=True, text=True, cwd=self.dir, env=env,
+            encoding=forced, errors='replace' if forced else None, **kwargs)
         return proc
 
     def report(self):
-        with open(os.path.join(self.dir, 'EVIDENCE_MATRIX.md')) as fh:
+        with open(os.path.join(self.dir, 'EVIDENCE_MATRIX.md'),
+                  encoding='utf-8') as fh:
             return fh.read()
 
 
@@ -143,6 +152,56 @@ class TestReachability(EvidenceAuditFixture):
         self.write('orphan.html', '<html></html>')
         out = self.run_audit().stdout
         self.assertIn('UNREACHABLE    1', out)
+
+
+class TestNonUTF8Console(EvidenceAuditFixture):
+    """The failure that made every other test in this file red on CI.
+
+    CI runs on a self-hosted Windows runner with `shell: cmd`, where Python
+    encodes stdout as cp1252. The script's banner is `Ω MASTER EVIDENCE AUDIT`
+    and cp1252 cannot encode U+03A9, so `print()` raised UnicodeEncodeError
+    before any classification happened: exit 1, empty stdout, no
+    EVIDENCE_MATRIX.md. Every assertion here then failed as `not found in ''`,
+    which reads like a broken scanner rather than a broken pipe encoding.
+
+    PYTHONIOENCODING reproduces that on any platform. Both assertions fail
+    against the pre-fix script -- checked by reverting it and re-running.
+    """
+
+    def _fixture(self):
+        self.write('nav.js', "var PS={'alpha':'X'};")
+        self.write('alpha.html', '<html></html>')
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+
+    def test_banner_does_not_crash_on_a_cp1252_stdout(self):
+        self._fixture()
+        proc = self.run_audit(env={'PYTHONIOENCODING': 'cp1252'})
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertNotIn('UnicodeEncodeError', proc.stderr)
+        self.assertIn('pages total', proc.stdout)
+
+    def test_report_is_written_as_utf8_regardless_of_locale(self):
+        """The matrix carries Ω too, so the write must pin UTF-8, not locale."""
+        self._fixture()
+        proc = self.run_audit(env={'PYTHONIOENCODING': 'cp1252'})
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        path = os.path.join(self.dir, 'EVIDENCE_MATRIX.md')
+        self.assertTrue(os.path.exists(path), 'report was never written')
+        with open(path, encoding='utf-8') as fh:
+            self.assertIn('\u03a9 MASTER EVIDENCE MATRIX', fh.read())
+
+
+class TestHelpDoesNotRun(EvidenceAuditFixture):
+    def test_help_prints_and_writes_nothing(self):
+        """Asking what a writer does must not make it do it (CLAUDE.md §8.4)."""
+        self.write('nav.js', "var PS={'alpha':'X'};")
+        self.write('alpha.html', '<html></html>')
+        proc = self.run_audit('--help', env={'PYTHONIOENCODING': 'cp1252'})
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn('MASTER EVIDENCE AUDIT', proc.stdout)
+        self.assertFalse(
+            os.path.exists(os.path.join(self.dir, 'EVIDENCE_MATRIX.md')),
+            '--help must not rewrite the report as a side effect')
 
 
 if __name__ == '__main__':

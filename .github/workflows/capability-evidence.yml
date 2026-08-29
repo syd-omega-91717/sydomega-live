@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: capability-evidence-${{ github.ref }}
-  cancel-in-progress: false
+  group: sydomega-quality-gate-${{ github.ref }}
+  cancel-in-progress: true
 
 defaults:
   run:

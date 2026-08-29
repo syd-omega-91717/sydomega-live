@@ -148,20 +148,31 @@ function initMap(L,members){
   nodesLayer=L.layerGroup();
   var counts={Fire:0,Water:0,Wind:0,Metal:0,Sand:0};
   var countrySet=new Set();
+  var placed=0;
   members.forEach(function(m){
-    if(!m.lat||!m.lon)return;
+    /* Element and country come from real columns, so they are counted for
+       every public member. They used to be computed inside the coordinate
+       guard below, which meant every KPI read 0 even though the data was
+       there -- the counts were gated on a column that does not exist. */
     var elem=m.element||'Sand';
-    var col=EC[elem]||'#D9B86A';
     counts[elem]=(counts[elem]||0)+1;
     if(m.country)countrySet.add(m.country);
+
+    /* A pin needs coordinates. `profiles` has no lat/lon column and this
+       platform collects no member location, so this never runs today. It is
+       kept, rather than deleted, so the map works the day location exists --
+       and `placed` makes the difference visible instead of silent. */
+    if(m.lat==null||m.lon==null)return;
+    var col=EC[elem]||'#D9B86A';
     var icon=L.icon({iconUrl:svgPin(col),iconSize:[18,24],iconAnchor:[9,24],popupAnchor:[0,-24]});
     var mk=L.marker([m.lat,m.lon],{icon:icon});
     var popup=document.createElement('div');
     var nameEl=document.createElement('b');nameEl.textContent=m.display_name||'Anonymous';
-    var elemEl=document.createElement('div');elemEl.textContent=elem+' · Gate '+m.gate;
+    var elemEl=document.createElement('div');elemEl.textContent=elem;
     popup.appendChild(nameEl);popup.appendChild(elemEl);
     mk.bindPopup(popup);
     membersLayer.addLayer(mk);
+    placed++;
   });
   var NODES=[
     {name:'LONDON NEXUS',lat:51.5074,lon:-0.1278},{name:'NEW YORK NODE',lat:40.7128,lon:-74.006},
@@ -177,7 +188,20 @@ function initMap(L,members){
   });
   if(layerState.members)mapObj.addLayer(membersLayer);
   if(layerState.nodes)mapObj.addLayer(nodesLayer);
-  loading.style.display='none';
+  /* Say why the map has no member pins, rather than leaving a blank world and
+     letting a member conclude the platform is empty. Only shown when there is
+     actually something to explain: members exist but none could be placed. */
+  if(members.length&&!placed){
+    loading.textContent='NO MEMBER LOCATIONS — this platform does not collect coordinates. '
+      +'Counts below are live; the pins shown are fixed network nodes.';
+    loading.style.background='transparent';
+    loading.style.alignItems='flex-start';
+    loading.style.padding='.75rem 1rem';
+    loading.style.pointerEvents='none';
+    loading.style.textAlign='center';
+  } else {
+    loading.style.display='none';
+  }
   document.getElementById('kpi-total').textContent=members.length;
   document.getElementById('kpi-countries').textContent=countrySet.size||'—';
   document.getElementById('kpi-fire').textContent=counts.Fire||0;
@@ -196,7 +220,20 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-  var membersRes=await sb.from('profiles').select('display_name,element,lat,lon,country,gate').eq('is_public',true).limit(500);
+  /* Select only columns that exist. This used to ask for lat, lon and gate,
+     none of which are columns on `profiles` -- and PostgREST rejects the WHOLE
+     query when any single column is unknown, so `data` came back null and the
+     map rendered zero members and zero countries with no error shown. That is
+     CLAUDE.md §8.1 class 2, and it made every KPI on this page read 0.
+     display_name, element, country and is_public are all real. */
+  var membersRes=await sb.from('profiles').select('display_name,element,country').eq('is_public',true).limit(500);
+  /* Supabase resolves to {data:null,error} rather than throwing (§8.1 class 1),
+     so a bare `.data||[]` turns a real failure into a convincing empty map. */
+  if(membersRes.error){
+    var ml=document.getElementById('map-loading');
+    if(ml)ml.textContent='COULD NOT LOAD MEMBERS — '+(membersRes.error.message||'query failed');
+    return;
+  }
   var members=membersRes.data||[];
   var L=await import('https://esm.sh/leaflet@1.9.4');
   var css=document.createElement('link');

@@ -41,8 +41,8 @@ This scanner reads the repository. It has no database connection, so:
 | `LOCAL_ONLY` | 48 |
 | `STATIC` | 8 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 1 |
-| **total** | **178** |
+| `UNREACHABLE` | 2 |
+| **total** | **179** |
 
 ## BUILT (95)
 
@@ -246,10 +246,11 @@ This scanner reads the repository. It has no database connection, so:
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
 
-## UNREACHABLE (1)
+## UNREACHABLE (2)
 
 | page | evidence |
 |---|---|
+| `architecture.html` | not referenced by nav.js and not a public page |
 | `demo-check.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
@@ -273,7 +274,7 @@ This scanner reads the repository. It has no database connection, so:
 | | count |
 |---|---:|
 | tables + views declared in `supabase/` | 118 |
-| functions declared in `supabase/` | 127 |
+| functions declared in `supabase/` | 128 |
 | tables defined in more than one root SQL file | 47 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a

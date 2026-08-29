@@ -120,7 +120,7 @@
     <div class="card"><div class="card-title">SUBSCRIPTION TIERS</div><div class="card-body">Six membership tiers from INITIATE (trial) to LIFETIME ($1,917 one-time). Each tier unlocks additional platform modules, axis progression paths, and sovereign privileges. Tier upgrades are processed by the Sovereign Architect pending legal review of payment systems.</div></div>
     <div class="card"><div class="card-title">AUTHORITY &amp; TIERS</div><div class="card-body">Subscription tier and authority score operate independently. Auth = sqrt(A³+B³+C³)×φ/e measures knowledge, mastery, and contribution — not payment level. A free-tier member with high axis values can outrank a paid subscriber on the leaderboard.</div></div>
     <div class="card"><div class="card-title">TRIAL SESSION</div><div class="card-body">Trial members receive a 9-minute 17-second sovereign session window (9.1717 minutes). During this period all platform modules are accessible. A countdown timer appears in the plan card and status band. Upon expiry, the session redirects to the pending approval page.</div></div>
-    <div class="card"><div class="card-title">PAYMENT PIPELINE</div><div class="card-body">Payment history queries the transactions table in real time. All amounts in USD. The 9.17% Arbiter commission applies to all marketplace transactions. Payment activation requires KYC/AML compliance — all financial flows are governed by the Arbiter agent (Taurus, Marketplace &amp; Commerce).</div></div>
+    <div class="card"><div class="card-title">PAYMENT PIPELINE</div><div class="card-body">Payment history will query the transactions ledger once payments are activated; that ledger does not exist yet. All amounts in USD. The 9.17% Arbiter commission applies to all marketplace transactions. Payment activation requires KYC/AML compliance — all financial flows are governed by the Arbiter agent (Taurus, Marketplace &amp; Commerce).</div></div>
   </div>
 </div>
 <div data-page-emblem="subscriptions" style="margin:20px auto 0"></div>
@@ -221,8 +221,18 @@ function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
     }
     /* Payments */
     var ph=document.getElementById('payments-list');
-    var txns=(await sb.from('transactions').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20)).data||[];
-    if(!txns.length){
+    var txRes=await sb.from('transactions').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
+    /* `transactions` does not exist on the live database -- payment
+       infrastructure is deliberately dormant (CLAUDE.md §8.2). Supabase
+       resolves that to {data:null,error} rather than throwing (§8.1 class 1),
+       so the old `.data||[]` turned a failed query into "you have no records".
+       Those are different claims and only one of them is true here. */
+    var txns=txRes.data||[];
+    if(txRes.error){
+      ph.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">'
+        +'PAYMENT LEDGER NOT AVAILABLE YET. Payment infrastructure is dormant pending legal review — '
+        +'no ledger exists to read, so this is not a record of zero payments.</div>';
+    } else if(!txns.length){
       ph.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">NO PAYMENT RECORDS YET. PAYMENT ACTIVATION PENDING LEGAL REVIEW.</div>';
     } else {
       ph.innerHTML='';

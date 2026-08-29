@@ -3478,3 +3478,19 @@ by an end-to-end browser run. First real member session will settle it;
   carry `id bigint` + `axis` + `increment` (plus `task_name`/`task_type`/`axis_type`/
   `points_earned`/`axis_*_before`/`axis_*_after`/`auth_after`), matching none of the bag's three
   competing definitions — that counterexample stands exactly as documented.
+
+- **All 36 client-called RPCs verified live: none missing, none unreachable.** Tables were only
+  half the client's contact surface with the database; `.rpc()` is the other half, and it has
+  its own version of the §8.1(6) class — a function that exists but that `authenticated` cannot
+  `EXECUTE` returns `42501`, which the Supabase client resolves to `{data:null,error}` rather
+  than throwing, exactly like the table case. Checked every name against `pg_proc` and
+  `has_function_privilege`: **36 names, 0 missing, 36/36 executable by `authenticated`**, and no
+  ambiguous overloads. Exactly **one** is executable by `anon` — `report_client_error`, already
+  reviewed and correct (write-only, returns only `{ok:…}`, rate-limited 20 per 10 minutes,
+  every input truncated, `search_path` pinned), which public pages need for signed-out visitors.
+  That single count corroborates the security advisor's lone
+  `anon_security_definer_function_executable` warning from an independent direction.
+  **The zero was verified rather than trusted**, per §8.4's *"a scan against a stopped static
+  server also reports 0"*: the first query returned an empty result set, so it was re-run as a
+  positive count with a control row (`definitely_not_a_real_rpc_xyz` → 0) to prove the join
+  actually discriminates between present and absent functions before reading the 0 as good news.

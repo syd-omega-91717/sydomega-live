@@ -9,7 +9,6 @@ executed steps.
 
 from pathlib import Path
 import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
@@ -26,7 +25,7 @@ REQUIRED = {
         "actions/checkout@v4",
         "actions/setup-python@v5",
         "python scripts/production-contract.py",
-        "node --check \"$file\"",
+        "node --check $file.FullName",
     ],
     "capability-evidence.yml": [
         "actions/checkout@v4",
@@ -47,8 +46,8 @@ for name, required in REQUIRED.items():
 
     text = path.read_text(encoding="utf-8")
 
-    if "runs-on: ubuntu-latest" not in text:
-        ERRORS.append(f"{name}: expected runs-on: ubuntu-latest")
+    if not re.search(r"runs-on:\s*self-hosted\b", text):
+        ERRORS.append(f"{name}: expected runs-on: self-hosted for the registered Windows runner")
     if not re.search(r"timeout-minutes:\s*\d+", text):
         ERRORS.append(f"{name}: missing timeout-minutes")
     if "permissions:" not in text or "contents: read" not in text:

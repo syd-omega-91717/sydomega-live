@@ -312,7 +312,7 @@ arithmetic:function(ex){
   function renderP(){
     var p=problems[idx];
     document.getElementById('activeEx').innerHTML=
-      '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">QUESTION '+(idx+1)+'/10 · '+correct+' CORRECT</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>'+
+      '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">QUESTION '+(idx+1)+'/10 · '+correct+' CORRECT</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
       '<div class="ex-content" style="font-size:28px;text-align:center;letter-spacing:4px">'+p.q+' = ?</div>'+
       '<input class="ex-input" id="ansInput" type="number" placeholder="YOUR ANSWER" autofocus>'+
       '<div class="btn-row"><button class="ex-btn" id="submitAns">SUBMIT ↵</button></div>'+
@@ -336,7 +336,7 @@ arithmetic:function(ex){
     }
     document.getElementById('submitAns').addEventListener('click',submit);
     document.getElementById('ansInput').addEventListener('keydown',function(e){if(e.key==='Enter') submit();});
-    document.getElementById('exitBtn').addEventListener('click',exitExercise);
+    document.querySelector('.exitBtn').addEventListener('click',exitExercise);
   }
   document.getElementById('activeEx').style.display='flex';
   renderP();
@@ -357,7 +357,7 @@ sequence:function(ex){
   var startTime=Date.now();
   document.getElementById('activeEx').style.display='flex';
   document.getElementById('activeEx').innerHTML=
-    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">FIND THE NEXT NUMBER</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>'+
+    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">FIND THE NEXT NUMBER</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
     '<div class="ex-content" style="font-size:20px;text-align:center;letter-spacing:6px">'+s.seq.join('   ')+'   <span style="color:rgba(201,168,76,.3)">?</span></div>'+
     '<input class="ex-input" id="seqAns" type="number" placeholder="NEXT NUMBER" autofocus>'+
     '<div class="btn-row"><button class="ex-btn" id="submitSeq">VERIFY →</button></div>'+
@@ -378,7 +378,7 @@ sequence:function(ex){
   }
   document.getElementById('submitSeq').addEventListener('click',check);
   document.getElementById('seqAns').addEventListener('keydown',function(e){if(e.key==='Enter') check();});
-  document.getElementById('exitBtn').addEventListener('click',exitExercise);
+  document.querySelector('.exitBtn').addEventListener('click',exitExercise);
 },
 
 creative:function(ex){
@@ -416,7 +416,7 @@ logic:function(ex){
   var startTime=Date.now();
   document.getElementById('activeEx').style.display='flex';
   document.getElementById('activeEx').innerHTML=
-    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">MULTI-STEP LOGICAL DEDUCTION</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>'+
+    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">MULTI-STEP LOGICAL DEDUCTION</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
     '<div class="ex-content" style="line-height:1.8">'+p.q+'</div>'+
     '<textarea class="ex-textarea" id="logicAns" placeholder="Show your reasoning, then give your final answer..." style="min-height:120px"></textarea>'+
     '<div class="btn-row"><button class="ex-btn" id="submitLogic">SUBMIT DEDUCTION →</button><button class="ex-btn secondary" id="hintBtn">REVEAL HINT</button></div>'+
@@ -433,7 +433,7 @@ logic:function(ex){
     rb.style.color='var(--cyan)';rb.classList.add('visible');
     setTimeout(function(){endExercise(score,ex.xp,ex.id);},3000);
   });
-  document.getElementById('exitBtn').addEventListener('click',exitExercise);
+  document.querySelector('.exitBtn').addEventListener('click',exitExercise);
 },
 
 reading:function(ex){EXERCISE_HANDLERS.creative(ex);},
@@ -495,7 +495,7 @@ vocabulary:function(ex){
   function renderWord(){
     var w=set[idx];
     document.getElementById('activeEx').innerHTML=
-      '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">WORD '+(idx+1)+'/5 · '+correct+' CORRECT</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>'+
+      '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">WORD '+(idx+1)+'/5 · '+correct+' CORRECT</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
       '<div class="ex-content" style="font-size:22px;text-align:center;letter-spacing:3px;color:var(--gold)">'+w.word+'</div>'+
       '<textarea class="ex-textarea" id="wordAns" placeholder="Write your definition of this word..." style="min-height:80px"></textarea>'+
       '<div class="btn-row"><button class="ex-btn" id="wordSubmit">REVEAL DEFINITION →</button></div>'+
@@ -507,7 +507,7 @@ vocabulary:function(ex){
       document.getElementById('markCorrect').addEventListener('click',function(){next(true);});
       document.getElementById('markWrong').addEventListener('click',function(){next(false);});
     });
-    document.getElementById('exitBtn').addEventListener('click',exitExercise);
+    document.querySelector('.exitBtn').addEventListener('click',exitExercise);
   }
   function next(got){
     if(got) correct++;idx++;
@@ -529,7 +529,7 @@ cipher:function(ex){
   var startTime=Date.now();
   document.getElementById('activeEx').style.display='flex';
   document.getElementById('activeEx').innerHTML=
-    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">CAESAR CIPHER — FIND THE SHIFT AND DECODE</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>'+
+    '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">CAESAR CIPHER — FIND THE SHIFT AND DECODE</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
     '<div class="ex-content" style="font-size:16px;letter-spacing:3px;color:#FF6600">'+encoded+'</div>'+
     '<div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:-8px">EACH LETTER HAS BEEN SHIFTED BY A FIXED AMOUNT. FIND THE SHIFT, DECODE THE MESSAGE.</div>'+
     '<input class="ex-input" id="cipherAns" placeholder="Type your decoded message..." autofocus>'+
@@ -545,7 +545,7 @@ cipher:function(ex){
     rb.style.color=similarity>0.8?'var(--green)':'rgba(200,50,50,.7)';rb.classList.add('visible');
     setTimeout(function(){endExercise(score,ex.xp,ex.id);},3000);
   });
-  document.getElementById('exitBtn').addEventListener('click',exitExercise);
+  document.querySelector('.exitBtn').addEventListener('click',exitExercise);
 },
 };
 </script>

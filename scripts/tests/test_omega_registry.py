@@ -16,6 +16,7 @@ with a negative one that perturbs the fixture and asserts a non-zero exit.
 Run: python3 -m unittest scripts/tests/test_omega_registry.py -v
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -121,6 +122,37 @@ class TestGeneration(unittest.TestCase):
         write(self.fx.path("CLAUDE.md"), "# CLAUDE\nalpha\n")  # beta now unreferenced
         self.fx.run()
         self.assertIn("named in no reference doc", self.fx.registry())
+
+    def _seed_i18n(self, en_keys, pack_keys):
+        body = ",\n".join('"k%d":"v%d"' % (i, i) for i in range(en_keys))
+        write(self.fx.path("i18n.js"), "var T_EN={\n%s\n};\n" % body)
+        write(self.fx.path("i18n", "fr.json"),
+              json.dumps({"k%d" % i: "f%d" % i for i in range(pack_keys)}))
+
+    def test_pack_key_count_is_committed_so_a_loss_fails_check(self):
+        """The exact bug that shipped: a pack silently loses keys, CI stays green.
+
+        Three packs sat 14 keys short of T_EN for weeks because nothing counted
+        them. Recording the counts in the generated census turns that loss into
+        drift, which --check already fails on.
+        """
+        self._seed_i18n(20, 20)
+        self.assertEqual(self.fx.run().returncode, 0)
+        self.assertIn("| `i18n/fr.json` | 20 |", self.fx.registry())
+        self.assertEqual(self.fx.run("--check").returncode, 0)
+
+        self._seed_i18n(20, 6)          # 14 translations disappear
+        r = self.fx.run("--check")
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("out of date", r.stdout)
+        self.fx.run()
+        self.assertIn("14 short of `T_EN`", self.fx.registry())
+
+    def test_unparseable_pack_is_recorded_not_skipped(self):
+        self._seed_i18n(5, 5)
+        write(self.fx.path("i18n", "fr.json"), '{"k0":"a" "k1":"b"}')
+        self.assertEqual(self.fx.run().returncode, 0)
+        self.assertIn("UNPARSEABLE", self.fx.registry())
 
     def _seed_migrations(self, numbered, timestamped=3):
         for i in range(1, numbered + 1):

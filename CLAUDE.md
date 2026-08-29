@@ -417,6 +417,13 @@ treat it as an information-architecture decision.
 6. `deno check` on every Edge Function (non-blocking).
 7. `sw.js` precache list vs. actual files (blocking).
 8. `manifest.json` icon paths vs. actual files (blocking).
+9. `python3 scripts/i18n-contract.py` (blocking) — every `i18n/*.json` parses,
+   every static `data-i18n` key resolves in `T_EN`, no pack key `T_EN` lacks,
+   no HTML entity in any value (they render literally; every write path is
+   textual). Translation *coverage* is reported, not blocked — a missing pack
+   key falls back to English by design — but it cannot silently regress either:
+   `omega-registry.py` commits each pack's key count to the census, so a loss
+   is drift and fails `--check`.
 
 Anything you add should keep this pipeline green. If you add a new
 `omega-*.js` module, make sure it's actually referenced somewhere (`bg.js`
@@ -644,14 +651,15 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **73** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **88** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,150** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,220** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
+| `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **16** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **17** blocking checks, all passing |
 | broken asset references | 0 |
 | service-role key scan | clean |
 
@@ -686,6 +694,15 @@ entries (which were accurate when written):
   that makes rows member-visible. The classifier's own false-positive pass is
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
+- **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
+  auto-applies `localStorage['omega_lang']` on load, and `localStorage` survives
+  `page.goto()` within an origin — so a loop that snapshots "English", switches
+  language, then moves to the next page is comparing against whatever the previous
+  iteration selected, not English. A first run of exactly that reported plausible
+  numbers that happened to be right; the re-run with a fresh context per (page,
+  language) is what actually measured them. Any per-page state the code under test
+  persists — theme, language, a dismissed banner — needs a fresh context, not a
+  fresh `goto`.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine

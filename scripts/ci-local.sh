@@ -114,6 +114,7 @@ step "2b.  Audit tooling self-tests"           python3 -m unittest discover -s s
 step "2g.  TypeScript types from schema"       python3 scripts/types-from-schema.py
 step "2h.  Context budget"                     python3 scripts/context-budget.py
 step "2j.  Skill/agent registry"               python3 scripts/omega-registry.py --check
+step "2k.  i18n contract"                      python3 scripts/i18n-contract.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan
 step "7.   Service worker precache"             sw_precache

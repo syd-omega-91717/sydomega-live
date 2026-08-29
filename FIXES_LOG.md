@@ -3296,3 +3296,53 @@ by an end-to-end browser run. First real member session will settle it;
   71 → **73 tests**; `ci-local.sh` 16/16 blocking; every blocking `ci.yml` step green. Neither
   fix changes what CI actually verifies — one restores a gate that was rejecting a correct
   workflow, the other stops a generated document from claiming verification it never had.
+
+- **138 `data-i18n` references resolved to nothing, in every language — and nothing in CI had
+  ever looked at i18n.** `apply()` does `var entry=T[key]; if(entry){...}` (`i18n.js:1200`), so a
+  key with no `T_EN` entry is skipped for **all seven** languages, not just one. 138 references
+  across four pages were in that state: `profile.html` **124 of its 158** `data-i18n` elements,
+  plus `analytics.html` 5, `account.html` 8, `matrix.html` 1. Invisible in English — the authored
+  markup still renders, and the base-language guard (`if(baseLang && ownText(el)) return;`) means
+  English never consults the dictionary anyway — so only a non-English reader saw it: a profile
+  page that stayed 78% English while its shell translated.
+  **`account.html`'s eight were a different defect.** They use a dotted convention
+  (`auth.member_access`, `auth.dob`) that matches nothing else in a flat `snake_case` dictionary
+  of 1029 keys, and `git log -S` puts them in the page's own creating commit (`90c310d7`) — they
+  were never resolvable, not a regression. Renamed to the repo's actual page-prefix convention
+  (`account_*`; `auth_` was already taken by `auth_apex`).
+  **A third defect surfaced while checking the first: HTML entities in dictionary values reach
+  the reader literally.** Every write path is textual — `setOwnText` assigns `nodeValue`
+  (`i18n.js:1147`), placeholders and alts are attributes — so `&mdash;` and `&#9670;` are never
+  parsed as markup. **Verified in a real render before believing it**: Arabic showed
+  `الأبراج السيادية الاثني عشر &mdash; ماندالا البدء` and `&#9670; ثوابت النظام &middot; محرك السلطة`
+  to the reader. 45 values across all 7 sources (11 distinct keys) were affected; decoded per
+  regex match rather than by whole-string unescape, so a bare `&` in prose is untouched.
+  **Fix.** All 138 keys added to `T_EN` and to all six packs, 1029 → **1167** each, with parity
+  held (`set(pack) == set(T_EN)` ×6). The English value for every key was **extracted from the
+  live DOM**, not retyped — `ownText` semantics, so the 12 keys whose element has children
+  (`<span data-canon-lattice>`, `<br>`, or a nested `data-i18n` subtitle) contribute only their
+  own text node and cannot swallow a child's content. That is the `dashboard.html` trap
+  `i18n.js`'s own comment records ("· 18 18 SOVEREIGN MODULES"), checked for rather than assumed
+  past. Only the six translations per key were authored.
+  **Verified by rendering all four pages in all six languages** (24 fresh browser contexts):
+  every element translates, **0 blank**, **0 page errors**, `dir=rtl` on Arabic. The handful that
+  come back identical to English were inspected individually and are genuine identity
+  translations — `CONTRIBUTION`, `Courage`, `Vision`, `Justice`, `7 CLASSES`, `PHASE / 12` in
+  French. **The first version of that check was wrong and its numbers should not have been
+  trusted**: `i18n.js` auto-applies `localStorage['omega_lang']` on load, and reusing one browser
+  context across pages meant the "English baseline" was whatever the previous iteration had
+  selected. Re-run with a fresh context per (page, language). The headline numbers survived, but
+  they had been right by luck, not by measurement.
+  **The structural fix is the point: `scripts/i18n-contract.py`, blocking in CI.** Four checks,
+  each tied to a defect that actually shipped — every pack parses (the corruption class), every
+  static `data-i18n` key resolves in `T_EN` (this one), no pack key `T_EN` lacks (drift the other
+  way), no HTML entity in any value (the third). Translation *coverage* is deliberately
+  **reported, not blocked**: a missing pack key falls back to English by design, and blocking it
+  would only pressure the next contributor into inventing translations to get CI green. Coverage
+  still cannot silently regress — `scripts/omega-registry.py` now records each pack's key count in
+  the generated census, so a pack losing keys changes a committed number and fails `--check`.
+  That is the guard the previous entry's bug needed and did not have. Runtime-built attributes
+  (`'data-i18n="'+k+'"'`) are skipped rather than guessed at. **13 new contract tests + 2 census
+  tests, every check asserted in both directions** — the census test reproduces the shipped bug
+  exactly (20 keys → 6, `--check` exits 1, registry then reads "14 short of `T_EN`").
+  73 → **88 tests**; `ci-local.sh` 16 → **17** blocking checks; `audit.py` 0 critical / 8 warnings.

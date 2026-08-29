@@ -164,8 +164,8 @@
 
       <!-- AUTH VIEW -->
       <section class="panel" id="view-auth" style="display:none">
-        <div class="eyebrow" data-i18n="auth.member_access">MEMBER ACCESS</div>
-        <h1 data-i18n="auth.join">Join the Order</h1>
+        <div class="eyebrow" data-i18n="account_member_access">MEMBER ACCESS</div>
+        <h1 data-i18n="account_join">Join the Order</h1>
         <p class="sub">Create your account to claim a permanent place. Your cosmology and your evolving matrix position are saved to your sovereign profile -- waiting for you each time you return.</p>
         <div class="form">
           <label for="au-email">EMAIL</label>
@@ -173,8 +173,8 @@
           <label for="au-pw">PASSWORD</label>
           <input type="password" id="au-pw" placeholder="at least 6 characters" autocomplete="current-password" />
           <div class="row2">
-            <button class="btn" id="btn-signup" data-i18n="auth.create">CREATE ACCOUNT</button>
-            <button class="btn" id="btn-login" data-i18n="auth.login">LOG IN</button>
+            <button class="btn" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
+            <button class="btn" id="btn-login" data-i18n="account_login">LOG IN</button>
           </div>
           <div class="msg" id="au-msg"></div>
           <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:11px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
@@ -183,13 +183,13 @@
 
       <!-- GATE VIEW -->
       <section class="panel" id="view-gate" style="display:none">
-        <div class="eyebrow" data-i18n="auth.threshold">THE THRESHOLD</div>
-        <h1 data-i18n="auth.set_cosmology">Set Your Cosmology</h1>
+        <div class="eyebrow" data-i18n="account_threshold">THE THRESHOLD</div>
+        <h1 data-i18n="account_set_cosmology">Set Your Cosmology</h1>
         <p class="sub">Your birth date resolves your sign, and your sign deterministically assigns your element, your Olympian, your planet, and the agent bound to your path. This is saved to your profile once.</p>
         <div class="form">
-          <label for="dob" data-i18n="auth.dob">YOUR DATE OF BIRTH</label>
+          <label for="dob" data-i18n="account_dob">YOUR DATE OF BIRTH</label>
           <input type="date" id="dob" min="1900-01-01" />
-          <button class="btn" id="gate-go" data-i18n="auth.reveal_save">REVEAL &amp; SAVE</button>
+          <button class="btn" id="gate-go" data-i18n="account_reveal_save">REVEAL &amp; SAVE</button>
           <div class="msg bad" id="gate-err"></div>
         </div>
       </section>

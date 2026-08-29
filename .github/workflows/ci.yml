@@ -85,6 +85,8 @@ jobs:
         continue-on-error: true
       - name: Skill and agent registry
         run: python scripts/omega-registry.py --check
+      - name: i18n contract
+        run: python scripts/i18n-contract.py
       - name: Context budget
         run: python scripts/context-budget.py
       - name: Client credential scan

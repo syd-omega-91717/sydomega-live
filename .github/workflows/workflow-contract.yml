@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
@@ -44,7 +44,7 @@ jobs:
       - name: Validate implementation readiness
         run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if (-not (Test-Path 'scripts/ci-local.sh' -PathType Leaf)) { throw 'scripts/ci-local.sh is missing' }
@@ -52,7 +52,7 @@ jobs:
           if ($text -notmatch '--help') { throw 'ci-local.sh help contract is missing' }
           Write-Host 'ci-local.sh help contract verified'
       - name: Execution marker
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }

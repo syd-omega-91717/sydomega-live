@@ -539,9 +539,13 @@ open, recorded in `FIXES_LOG.md`:
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means
   history rewrite + force-push — do not attempt without explicit permission.
-- **`map.html` queries `profiles.lat/lon/gate`** — no member-location data
-  exists anywhere on this platform. Building collection is a feature and
-  privacy decision, not a bug fix. (`country` *is* a real live column.)
+- **`map.html` no longer queries phantom columns** (fixed; see `FIXES_LOG.md`).
+  It asked for `lat`, `lon` and `gate`, none of which exist on `profiles`, so
+  PostgREST rejected the whole query and every KPI on the page read 0. Member
+  *location* remains genuinely absent — collecting coordinates is a feature and
+  privacy decision, not a bug fix — so pins still cannot render, but the page
+  now says so instead of showing a blank world. (`country` *is* a real live
+  column, and is now declared in `supabase/` too.)
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
   `#evt-metrics-body`, an id that exists nowhere. Building the container means
   designing UI that was never built.
@@ -568,12 +572,15 @@ open, recorded in `FIXES_LOG.md`:
   RLS is enabled with no policies, which is the *safe* state (total lockout),
   and they are empty. Inventing policies for schema of unknown purpose would
   be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
-- **`platform_events` and `platform_metrics` still have `WITH CHECK(true)` on
-  INSERT**, on tables that carry a `user_id`. That is the spoofing shape in
-  §8.1(b): any member could insert rows attributed to anyone. `authenticated`
-  is deliberately **not** granted INSERT on either, so it is currently
-  unreachable — but the policy itself is still wrong and should be scoped
-  before that grant is ever added.
+- **`platform_events`'s INSERT policy is now scoped** (`migrations/0098`). It was
+  named "member inserts own events" while checking `true`, on a table that
+  carries a `user_id` — §8.1 class 6(b). Unreachable (no INSERT grant to
+  `authenticated`), so never exploited, but fixed rather than left one grant
+  away from live. **Correction to what this section used to say:**
+  `platform_metrics` was listed alongside it as "carrying a user_id" — it does
+  not have that column, so the shape never applied there. Its SELECT/UPDATE/
+  DELETE policies are all `is_platform_owner()` (verified live), so the
+  DELETE/UPDATE grants `authenticated` holds on it are inert for non-owners.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
   `is_platform_owner() OR status='active'` respectively). Both look deliberate
@@ -636,10 +643,10 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **7** warnings |
+| `python3 scripts/audit.py` | 0 critical / **6** warnings |
 | `python3 -m unittest discover -s scripts/tests` | **71** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
-| `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
+| `python3 scripts/schema-dictionary.py` | **0** findings |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,090** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/omega-registry.py --check` | matches the repo |

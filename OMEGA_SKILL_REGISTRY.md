@@ -21,7 +21,7 @@ effectively invisible unless invoked by exact name.
 | `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-15 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
-| `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-22 |
+| `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-15 |
 | `verify-in-browser` | yes | 4 | 1,971 | CLAUDE.md, README.md | 2026-08-23 |
@@ -62,17 +62,17 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | pages loading `bg.js` | 178 of 178 |
 | `omega-*.js` modules | 91 (821 KB) |
 | root `.js` files | 99 |
-| `supabase/*.sql` (flat bag) | 121 |
-| `supabase/migrations/*.sql` | 120 (97 numbered `NNNN_`, 23 timestamped) |
+| `supabase/*.sql` (flat bag) | 123 |
+| `supabase/migrations/*.sql` | 122 (99 numbered `NNNN_`, 23 timestamped) |
 | Edge Functions | 11 |
 | skills | 8 |
 | agent definitions | 1 |
 
-`supabase/migrations/README.md` records that the **97-file
-numbered sequence** (`0001`–`0097`) applies cleanly against a fresh scratch
+`supabase/migrations/README.md` records that the **99-file
+numbered sequence** (`0001`–`0099`) applies cleanly against a fresh scratch
 PostgreSQL 16 instance. The 23 timestamped files added since were **not part of
 that validation**, and no run has covered all
-120. Treat the validated scope as the numbered sequence only.
+122. Treat the validated scope as the numbered sequence only.
 
 **`bg.js` is loaded by all 178 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

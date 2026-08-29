@@ -3212,3 +3212,146 @@ by an end-to-end browser run. First real member session will settle it;
   `rls-auditor.py` still reporting its one finding. Also removed that script's leftover
   `print(f"DEBUG: __file__={__file__}, ROOT={ROOT}, cwd={os.getcwd()}", file=sys.stderr)`, which
   had been firing on every CI run.
+
+---
+
+## map.html asked for three columns that do not exist, so it rendered nothing
+
+**Found** by chasing `scripts/schema-dictionary.py`'s 4 standing findings to their
+source, then checking the live database rather than the SQL bag.
+
+`map.html:199` read:
+
+```js
+sb.from('profiles').select('display_name,element,lat,lon,country,gate').eq('is_public',true)
+```
+
+Live `profiles` has **no `lat`, `lon` or `gate` column** (verified against
+`information_schema.columns`: of those six names only `display_name`, `element`
+and `country` exist). PostgREST rejects the *entire* query when any single
+column is unknown — CLAUDE.md §8.1 class 2 — so `membersRes.data` came back
+null on every load.
+
+The consequences compounded, and none of them surfaced an error:
+
+1. `var members=membersRes.data||[]` turned the failure into an empty list
+   (§8.1 class 1 — Supabase resolves to `{data:null,error}`, it does not throw).
+2. `members.forEach` therefore did nothing, so **every KPI on the page read 0 or
+   an em dash** — total members, countries, and all four element counts.
+3. The element and country tallies were additionally computed *inside* the
+   `if(!m.lat||!m.lon)return;` coordinate guard, so even with a working query
+   they would have stayed 0. Real data (`element`, `country`) was gated behind a
+   column that does not exist.
+4. The map still drew its five hard-coded network nodes, so the page looked
+   deliberate rather than broken: a world map, five gold pins, "0 members".
+
+**Fixed:** select only real columns; check `.error` explicitly and say so
+instead of rendering a convincing empty map; move the element/country tallies
+out of the coordinate guard so they count every public member; drop the phantom
+`m.gate` from the popup. The coordinate guard itself is kept — this platform
+collects no member location (§8.2), so pins genuinely cannot render, and a
+`placed` counter now drives an honest on-map message saying why rather than
+leaving a blank world.
+
+**Verified:** `scripts/schema-dictionary.py` **4 findings → 0**. Browser error
+scan unchanged at 3/178 — `map.html`'s `L.map is not a function` is the
+documented sandbox CDN block (§8.4), not this change. Note the limit: because
+Leaflet cannot load in the sandbox, `initMap` never executes there, so the
+counting fix is verified by reading, not by render; the query fix does run, as
+it precedes the import.
+
+---
+
+## vault.html displayed twelve wallets that do not exist
+
+`vault.html:483` read:
+
+```js
+sid('wallet-count', wallets.length||'12');
+```
+
+`wallet_balances` does not exist on the live database (Ω-token infrastructure is
+deliberately dormant, §8.2), so `wallets` is always `[]`. `0` is falsy, so the
+`||` fell through and the page rendered the literal string **`12`**. A member
+was shown twelve wallets they do not have, with a Ω-balance beside it.
+
+That is §8.1 class 9 — fabricated data rendered as fact — and it is the same
+shape as `hercules.html`'s `Math.random()*100` progress bar.
+
+**Fixed:** read `wb.error` explicitly, then show `—` when the ledger is
+unreachable and the true count (including `0`) when it is. `wallet-total` gets
+the same treatment.
+
+**Also fixed in `subscriptions.html`:** the transaction query used the same
+`.data||[]`, collapsing "the ledger does not exist" into "you have no payment
+records" — different claims, and only one is true. It now distinguishes them.
+Page copy claiming "Payment history queries the transactions table in real
+time" was corrected to future tense, per §9's rule that user-facing copy about
+dormant features stays future-tense until they are actually on.
+
+---
+
+## Four live objects that no repo SQL declared
+
+`profiles.country`, `check_gate(text,numeric)`, `digest_preferences` and
+`weekly_digest_queue` all exist in production but were declared in no
+`supabase/*.sql` file. Every source-only tool in this repo builds its model from
+that directory, so each produced a wrong answer about a correct system —
+schema-dictionary called `profiles.country` non-existent, and `audit.py` warned
+that `check_gate` and both digest tables were never created.
+
+**Fixed** in `supabase/omega_live_schema_reconciliation.sql` (+ `migrations/0099`).
+Column types were read from `information_schema.columns`, and `check_gate`'s body
+is the **verbatim** `pg_get_functiondef` output rather than a reconstruction —
+writing a plausible-looking body would mean anyone applying the file silently
+overwrote the real function with a guess.
+
+**Two mistakes caught while writing it, both worth recording:**
+
+1. The first draft omitted RLS entirely, reasoning that re-declaring policies
+   from an incomplete reading risks widening access. `scripts/audit.py` caught
+   that as **CRITICAL**: a `CREATE TABLE` with no `ENABLE ROW LEVEL SECURITY`
+   means anyone applying the file to a fresh database gets two unprotected
+   tables. Omitting protection is not the safe default; stating it accurately
+   is. RLS and both policies are now reproduced from `pg_policies`.
+2. Those policies were first written with `(SELECT auth.uid())`, the wrapped
+   form this repo standardised on in migration `20260818002535`. A
+   `BEGIN … ROLLBACK` trial against live reported
+   `policy_definitions_identical = false` — live carries the *unwrapped* form,
+   so the file would have been a policy rewrite, not the no-op it claims to be.
+   Changed to match live exactly; optimising those two policies is a separate,
+   deliberate change rather than something smuggled into a reconciliation file.
+
+Grants are deliberately **not** issued: live shows no SELECT/INSERT/UPDATE/DELETE
+grant to `anon`, `authenticated` or `service_role` on either digest table. They
+are reached only by the weekly-digest Edge Function under `service_role`, which
+bypasses RLS.
+
+**Verified as a true no-op** by running the whole file against production inside
+`BEGIN … ROLLBACK`: `profiles`/`digest_preferences`/`weekly_digest_queue` column
+counts unchanged, `check_gate` body md5 identical after `CREATE OR REPLACE`,
+`policy_definitions_identical = true`, `grants_unchanged = true`, and
+`anon` EXECUTE on `check_gate` still false before and after.
+
+`audit.py` warnings **7 → 6**; `schema-dictionary.py` **4 → 0**.
+
+---
+
+## platform_events accepted inserts attributed to anyone
+
+`platform_events` carries a `user_id`, and its INSERT policy was named
+"member inserts own events" while its check was literally `true`. The name
+described an intent the policy did not implement.
+
+Never exploitable — `authenticated` holds only SELECT on that table, and a grant
+is checked before row security, so the policy never ran — but wrong, and one
+future grant away from being live. **Fixed** to
+`WITH CHECK ((SELECT auth.uid()) = user_id)`, applied to production and verified
+(`with_check` now reads `(( SELECT auth.uid() AS uid) = user_id)`).
+
+**Correction to CLAUDE.md §8.2**, which recorded this as affecting
+`platform_events` *and* `platform_metrics` "on tables that carry a `user_id`":
+`platform_metrics` has no `user_id` column at all, so the spoofing shape does
+not apply to it. Its SELECT, UPDATE and DELETE policies are all
+`is_platform_owner()`, verified live — so the DELETE/UPDATE grants
+`authenticated` holds there are inert for non-owners. Left alone deliberately.

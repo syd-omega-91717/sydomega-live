@@ -344,6 +344,17 @@ export interface DataLineage {
   transformation: string | null;
 }
 
+export interface DigestPreferences {
+  createdAt: string | null;
+  digestFrequency: string | null;
+  id: string | null;
+  lastDigestSentAt: string | null;
+  preferredDayOfWeek: number | null;
+  preferredHour: number | null;
+  updatedAt: string | null;
+  weeklyDigestEnabled: boolean | null;
+}
+
 export interface Dispatches {
   body: string | null;
   category: string | null;
@@ -858,6 +869,7 @@ export interface Profiles {
   bio: string | null;
   birthDate: string | null;
   certificatesEarned: number | null;
+  country: string | null;
   deactivatedAt: string | null;
   demoWatchedAt: string | null;
   displayName: string | null;
@@ -1153,6 +1165,15 @@ export interface WealthSnapshots {
   snapshotAt: string;
 }
 
+export interface WeeklyDigestQueue {
+  digestData: Record<string, any> | null;
+  errorMessage: string | null;
+  id: string | null;
+  processedAt: string | null;
+  queuedAt: string | null;
+  status: string | null;
+}
+
 export interface WorkflowDefinitions {
   createdAt: string;
   description: string | null;
@@ -1235,6 +1256,11 @@ export interface award_tokenParams {
   amount: number;
   token: string;
   user: string;
+}
+
+export interface check_gateParams {
+  action: string;
+  risk_score: number;
 }
 
 export interface check_trial_statusParams {
@@ -1571,6 +1597,7 @@ export interface Database {
       data_entities: DataEntities;
       data_export_requests: DataExportRequests;
       data_lineage: DataLineage;
+      digest_preferences: DigestPreferences;
       dispatches: Dispatches;
       enterprise_accounts: EnterpriseAccounts;
       enterprise_audit: EnterpriseAudit;
@@ -1648,6 +1675,7 @@ export interface Database {
       user_dedication: UserDedication;
       user_journeys: UserJourneys;
       wealth_snapshots: WealthSnapshots;
+      weekly_digest_queue: WeeklyDigestQueue;
       workflow_definitions: WorkflowDefinitions;
       workflow_executions: WorkflowExecutions;
     };

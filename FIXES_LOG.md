@@ -3846,3 +3846,229 @@ which that shorthand cannot reach, so every bar reads identically.
 `scan.js chrome` 0/179; `scan.js overflow` 0/179; `audit.py` 0 critical /
 7 warnings; `ci-local.sh` 17/17 after `omega-registry.py` picked up the two
 new modules (114 -> 116).
+
+
+---
+
+## First full live sweep of RLS scoping and owner-guarded RPCs
+
+Run with live database access against project `ydqhzvvoyufiiqvzcjns`.
+
+### Client tables vs live schema — 57/60 healthy
+
+Every table named in a client `.from(...)` call (60 distinct) checked live for
+existence, RLS, policy count and a grant to `authenticated`. Three did not come
+back clean, and all three are already-known and deliberate:
+
+* `top_pages` — a view, so RLS does not apply; it runs `security_invoker` and
+  defers to `telemetry_events`' own policies (fixed earlier, `omega_live_fixes_2026_08_29.sql`).
+* `transactions`, `wallet_balances` — MISSING, deliberate: the token/payment
+  infrastructure is dormant pending legal review (CLAUDE.md 8.2).
+
+No new broken client feature. The `oaths` fix from the earlier pass is holding.
+
+### One real RLS gap: `dispatches`
+
+Every RLS-enabled public table carrying a `user_id` was counted twice — once
+privileged, once impersonating a real non-owner approved member. Empty tables
+were skipped (both counts are 0 there and prove nothing). One table returned the
+same count to a non-owner as to a superuser.
+
+`dispatches_select` read:
+
+    (is_published = true) OR is_platform_owner() OR ((SELECT auth.role()) = 'authenticated')
+
+The third branch is true for every signed-in member, which makes the first
+branch **dead**: `is_published` gated nothing and an unpublished draft was
+readable platform-wide. Exactly CLAUDE.md 8.4's "classifying a policy by
+substring is not reading it" — a scanner looking for `is_published` or for
+`is_platform_owner` calls this policy correctly scoped.
+
+Nothing was exposed at the time: the table held one row and it was published.
+That is why it was fixed then — zero blast radius, gap closed before the first
+draft exists. The blanket branch was standing in for an author branch, so that
+is what replaced it. Write policies were already correct and untouched.
+
+Verified live on a real seeded draft owned by member A (both cases return 0
+against a table with no drafts and would have proved nothing):
+
+| assertion | result |
+|---|---|
+| member B sees A's draft | 0 (was 1) |
+| member B total rows | 1 — the published one only |
+| author A sees own draft | 1 |
+| owner sees all rows | 2 |
+
+Probe draft rolled back; `dispatches` left at its original 1 row.
+
+### A false critical, caught before it was reported
+
+The first pass at the owner-guarded RPCs concluded that **five** privilege-
+granting functions were callable by any member — `approve_member`,
+`extend_trial`, `academy_promote`, `award_token`, `apply_subscription`. That
+would have meant any member could approve members, mint tokens and grant
+themselves a paid subscription.
+
+It was wrong, and the bug was in the probe. Those functions **return a refusal
+payload instead of raising**:
+
+    IF NOT public.is_platform_owner() THEN
+      RETURN jsonb_build_object('ok', false, 'error', 'forbidden');
+    END IF;
+
+so `PERFORM fn(...)` inside a `BEGIN ... EXCEPTION` block completes without
+error, and an exception-based test reads that as success. This is CLAUDE.md
+8.1 class 1 turned around: the same "resolves rather than throws" shape that
+makes a failed write look successful to application code also makes a
+successfully-blocked call look permitted to a test. **The return value is the
+only evidence.** Re-tested by capturing it:
+
+| function | returns to a non-owner |
+|---|---|
+| `approve_member` | `{"ok": false, "error": "forbidden"}` |
+| `extend_trial` | `{"ok": false, "error": "forbidden"}` |
+| `apply_subscription` | `{"ok": false, "error": "forbidden"}` |
+| `academy_promote` | `{"ok": false, "error": "owner_only"}` |
+| `award_token` | `{"ok": false, "note": "economy disabled until legal sign-off"}` |
+
+All correctly guarded. `award_token` additionally confirms the `tokens_enabled`
+dormancy gate is live, not just declared.
+
+The owner helpers were checked directly under the same impersonation and are
+sound: `omega_is_owner()` and `is_platform_owner()` both return `false` for a
+non-owner while `auth.uid()` resolves to that member — so the helper layer every
+owner-gated policy depends on is not the weak point.
+
+Every probe in this pass ended in a deliberate `RAISE` so the whole block rolled
+back. Confirmed afterwards: `notifications` still 0 rows, the probe target still
+approved, `dispatches` back to 1 row.
+
+### Advisors: 173 lints, 0 ERROR
+
+89 INFO `rls_enabled_no_policy` (the scaffold tables — RLS on with no policy is
+total lockout, the safe state), 83 WARN `security_definer_function_executable`
+(reviewed above; the sensitive ones are guarded), 1 WARN
+`auth_leaked_password_protection` (Pro-plan feature, unavailable on `free`).
+
+### Five `USING(true)` SELECT policies reviewed, none changed
+
+`leaderboard_snapshots`, `member_events`, `member_presence`, `oaths`,
+`platform_owners`. None is the `dispatches` shape — none has a visibility gate
+for a blanket branch to cancel. They are read-only social surfaces meant to be
+member-visible; narrowing them is a product decision, not a bug fix.
+
+### Open, needs an owner decision: there are TWO owner accounts
+
+`profiles.is_owner = true` for both `s.y.dagher@gmail.com` and
+`slmndghr@gmail.com`. CLAUDE.md 1 describes this as a single-owner platform
+keyed to the first address. The second account carries full elevated access
+across every owner-gated policy and RPC verified above. Not changed — removing
+an owner is an ownership decision, not a fix — but it should be confirmed as
+intended.
+
+
+---
+
+## `live-schema.json` — gating the column-name bug class against reality, not intent
+
+`scripts/schema-dictionary.py` gates CLAUDE.md §8.1 class 2: **a column name
+that does not exist**, which makes PostgREST reject the *entire* query or write
+and empty a page with no visible error and nothing thrown.
+
+It could only ever build its dictionary from `supabase/*.sql` — from what the
+repo *intends* — plus a hand-maintained `KNOWN_LIVE_COLUMNS` dict patching the
+places live had already drifted. That patch list drifts again the moment live
+does; it is the same failure mode as a count typed into prose.
+
+`supabase/live-schema.json` is now a dated capture of the real `public` schema:
+**208 relations** (tables, views, materialized views, partitioned tables) mapped
+to their columns in `attnum` order. `parse_sql_files()` folds it in
+**additively** — a column live has is accepted even if no `CREATE TABLE`
+declares it; a column the bag declares but live lacks is *still* accepted,
+because the bag may legitimately be ahead of an unapplied migration. The
+snapshot removes false positives; it does not become a second source of truth
+about what should exist. A missing or corrupt snapshot falls back to
+`KNOWN_LIVE_COLUMNS` rather than failing, so it cannot take CI down.
+
+The standing counterexample is now captured rather than hand-patched. Live
+`public.task_completions`:
+
+    id, user_id, kind, task, completed_at, axis, increment, created_at,
+    task_name, task_type, axis_type, description, points_earned,
+    axis_a_before, axis_b_before, axis_c_before,
+    axis_a_after,  axis_b_after,  axis_c_after, auth_after
+
+— matching none of its three competing `CREATE TABLE IF NOT EXISTS` definitions
+in the SQL bag.
+
+The snapshot also confirms a §8.2 entry from the other direction: `profiles` has
+no `lat`, `lon` or `gate` column, so the `map.html` reads removed in `3f8a17d7`
+were genuinely dead.
+
+**Verified the gate still bites, because a checker that reports nothing looks
+identical to one that is not running** (§8.4). Negative control: a nonsense
+column added to a real `.select()` produced
+
+    FOUND 1 COLUMN-NAME MISMATCH(ES):
+      dashboard.html:828 — read from profiles.definitely_not_a_real_column_zzz (column does not exist)
+
+and the file was restored, returning the checker to `OK — all client calls
+reference existing columns`. Dictionary size went from the bag's tables to
+**216 tables / 1,852 columns** once live was folded in.
+
+Regeneration query and the reasoning live in `supabase/live-schema.README.md`.
+Regenerate whenever schema is applied live — a stale snapshot silently re-opens
+the false positives it was written to close.
+
+
+---
+
+## The Windows runner, and a test that could not say why it failed
+
+**GitHub Actions runs again.** CLAUDE.md §8.2 recorded that no runner could be
+assigned on this account since 2026-08-22 (every run dying in 2-5s with
+`runner_id: 0`). That is no longer the whole picture: jobs now execute on a
+**self-hosted Windows runner** (`C:\actions-runner`, `C:\Users\HP` in the job
+log), which is what the owner's `ci: explicitly pin every run step to cmd on
+Windows runner` commit is for. Cloud-hosted minutes still appear unavailable --
+queued jobs drain slowly, one at a time -- but a red check is now real output
+from a real run, not an infrastructure no-op, so it has to be read rather than
+dismissed.
+
+**The failure that arrived was stale.** `verify` failed on `db24aa46` with 6
+failures + 1 error, all of this shape:
+
+    AssertionError: 'UNREACHABLE    1' not found in ''
+
+`db24aa46` is an ancestor of `main`, and the run reports `Ran 88 tests` while the
+suite is now 92 -- so it predates the current tree and is superseded, not a
+failure of the branch it was delivered against.
+
+**But it exposed a genuine defect in the tests.** Every one of those assertions
+is on `self.run_audit().stdout`, and none checked the child's exit code. An
+empty stdout means `evidence-audit.py` died; the assertion then reports only
+that a needle is missing from an empty string, and says nothing whatsoever about
+the traceback that caused it. Six assertions all reading `not found in ''` is
+maximally uninformative -- the real cause was only visible by opening the raw
+job log, which is precisely the situation CI exists to avoid.
+
+Added `EvidenceAuditFixture.audit_stdout()`: it runs the child, and if the exit
+code is non-zero it fails with the code, the stderr and the stdout inline,
+instead of letting six downstream assertions misreport. The six stdout-asserting
+call sites now use it. The deliberate non-zero cases (`--strict`, which must
+exit 1) keep using `run_audit()` and check `returncode` directly, so nothing
+about the intended semantics changed.
+
+Verified with a negative control rather than assumed -- a checker that never
+fires looks exactly like one that has nothing to report. `evidence-audit.py` was
+temporarily made to exit 3, and the test then reported:
+
+    AssertionError: evidence-audit.py exited 3 (expected 0), so its stdout is
+    empty and every assertion below would be misleading.
+    --- stderr ---
+    SIMULATED WINDOWS CRASH
+    --- stdout ---
+    (empty)
+
+The script was restored (`git status` clean) and the suite returns to 92
+passing.

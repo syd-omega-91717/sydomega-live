@@ -52,9 +52,9 @@ vendor/              Third-party code served from this origin rather than a
                      CDN — currently the Supabase client (see §4).
 omega-*.json         Static config/data: agent roster (omega-agents.json),
                      element/house tables, content catalog, canon lore.
-supabase/*.sql       Backend schema. Flat directory of ~105 files, applied
-                     manually/in sequence — see "Known debt" below. Not a
-                     Supabase-CLI-managed migrations/ directory yet.
+supabase/*.sql       Backend schema, a flat bag applied in sequence (see
+                     "Known debt"). live-schema.json snapshots what the
+                     database actually has.
 supabase/functions/  Edge Functions (Deno/TypeScript): checkout,
                      stripe-webhook, concierge (Anthropic API-backed
                      assistant), notify-access, intel-feed, rankings,
@@ -455,7 +455,9 @@ are listed in rough order of how often they have recurred.
    a whole page with no visible error. Recurring wrong names, all now swept:
    `zodiac_sign`→`sign`, `full_name`→`display_name`, `agent_name`→`agent`,
    `created_at`→`occurred_at` on event tables. `scripts/schema-dictionary.py`
-   gates this in CI now — but only against schema defined in `supabase/*.sql`.
+   gates this in CI against `supabase/live-schema.json` — a dated snapshot of
+   the real schema, folded in additively. Regenerate it whenever schema is
+   applied live; a stale snapshot re-opens the false positives (see its README).
 3. **Measuring an element before the approval guard reveals it.** §3's guard
    hides `#app`/`.shell`/`main.main` until the profile is approved, and that
    reveal fires **no resize event**. Anything reading `offsetWidth`/
@@ -542,10 +544,9 @@ open, recorded in `FIXES_LOG.md`:
   `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
   `bloodline_nodes` already hold comparable data server-side under the same,
   tested RLS.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
-  directly and chose to leave it; `.vercelignore` already keeps both out of
-  the deploy, so this is hygiene debt, not a functional bug. A real fix means
-  history rewrite + force-push — do not attempt without explicit permission.
+- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
+  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
+  fix means history rewrite + force-push — never without explicit permission.
 - **`map.html`'s `profiles.lat/lon/gate` reads are gone** (fixed in `3f8a17d7`,
   not by the live-verification pass). Confirmed against production on
   2026-08-29: `profiles.country` exists (`text`); `lat`, `lon` and `gate` do
@@ -561,8 +562,7 @@ open, recorded in `FIXES_LOG.md`:
   implies protection that is not happening. Wiring it is an architecture
   decision; removing the badge is a product one.
 - **`omega-threat.js` is not threat detection** — it is the digital-thread
-  traceability engine (`window.OmegaThread`). The filename mismatch is
-  deliberate and was left alone rather than guessed at.
+  traceability engine (`window.OmegaThread`). Filename mismatch left as-is.
 - **`supabase/migrations/` is validated only against a blank database.** Do not
   run the full sequence against production expecting it to catch up existing
   state — `task_completions` is a proven counterexample. The flat
@@ -605,18 +605,17 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
-- **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
-  every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
-  and a completely empty check-run output — reproduced on `pull_request`,
-  `push` to `main`, and `workflow_dispatch` alike, so it is not trigger- or
-  branch-specific. This repo is **private on a personal account**, so Actions
-  minutes draw on the account allowance; the last green run was #344 on Aug 22
-  at 11:56 UTC. Nothing in the code affects it — clear it under Settings →
-  Billing and licensing → Budgets and alerts. Meanwhile `./scripts/ci-local.sh`
-  runs every blocking step locally, so a commit can still be verified, and
-  `.githooks/pre-push` runs it automatically on every push — enable per clone
-  with `git config core.hooksPath .githooks`, bypass one push with
-  `git push --no-verify`.
+- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
+  in the job log). Cloud minutes still look unavailable — this repo is private
+  on a personal account — so queued jobs drain slowly, one at a time, and a
+  check can sit `queued` for a long while. But a red check is now real output
+  from a real run, to be read rather than dismissed as the old
+  `runner_id: 0` infra no-op. Two Windows-specific traps: paths and the console
+  codec differ, and a crashed child process yields empty stdout, which makes
+  any assertion on that stdout misreport (see `FIXES_LOG.md`).
+  `./scripts/ci-local.sh` still runs every blocking step locally, and
+  `.githooks/pre-push` runs it on every push — enable per clone with
+  `git config core.hooksPath .githooks`, bypass with `--no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
   The advisor reports 93; reading the bodies, the owner-sensitive ones guard
   themselves via `public.omega_is_owner()`, which a substring classifier looking

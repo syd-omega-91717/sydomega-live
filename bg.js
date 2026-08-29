@@ -602,11 +602,33 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
    ========================================================================= */
 (function(){
   if(document.getElementById('omega-desktop-ladder'))return;
+  /* The right edge above was laddered; the CENTRE and LEFT edges were not, and
+     both were still sitting in the ticker's band. Re-measured at 1280x800 on
+     dashboard.html after the right-edge fix landed:
+
+       #omega-ticker-strip   bottom 0    h 28   ->  occupies  0..28
+       #omega-controls-dock  bottom 16   h 34   ->  16..50    12px INTO the ticker
+       #ofb-btn              bottom 16   h 38   ->  16..54    12px INTO the ticker
+
+     Both paint above the strip (z 2000 and 9000 vs 200), so they are not
+     "covered" and a hit-test finds them -- which is exactly why the reachability
+     scan stayed silent about it. The damage is to the ticker: its top 12px runs
+     underneath a 415px-wide dock and a 99px-wide button, on every page that
+     loads them. Confirmed on 12 of 12 sampled pages at 1280.
+
+     Both move to the same bottom:36 baseline cp-btn already uses -- the 28px
+     strip plus an 8px gap. Re-checked for a NEW collision after the move rather
+     than assumed:
+       #ofb-btn      36..74  x 12..111   vs #omega-voice-btn 90..134 x 24..68  -> 16px clear
+       #omega-controls-dock 36..70 x 432..848 vs cp-btn x 1204..1256           -> no x overlap
+     !important for the same reason as above: these are set via inline cssText. */
   var css='@media(min-width:761px){'
     +'#cp-btn{right:24px!important;bottom:36px!important}'
     +'#osh-btn{right:24px!important;bottom:98px!important}'
     +'#omega-ded-widget{right:24px!important;bottom:146px!important}'
     +'#omega-cap-badge{right:24px!important;bottom:215px!important}'
+    +'#omega-controls-dock{bottom:36px!important}'
+    +'#ofb-btn{bottom:36px!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-desktop-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);

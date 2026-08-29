@@ -14,13 +14,16 @@ concurrency:
   group: production-contract-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: cmd
+
 jobs:
   contract:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -44,12 +47,10 @@ jobs:
       - name: Production contract
         run: python scripts/production-contract.py
       - name: JavaScript syntax
-        shell: cmd
         run: |
           @echo off
           for %%F in (*.js) do node --check "%%F" || exit /b 1
       - name: Execution marker
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

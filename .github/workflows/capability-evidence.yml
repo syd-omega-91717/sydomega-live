@@ -14,13 +14,16 @@ concurrency:
   group: capability-evidence-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: cmd
+
 jobs:
   evidence:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -46,7 +49,6 @@ jobs:
       - name: Validate architecture runtime
         run: python scripts/architecture-readiness.py
       - name: Execution marker
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

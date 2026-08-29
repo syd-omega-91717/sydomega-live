@@ -3965,3 +3965,57 @@ keyed to the first address. The second account carries full elevated access
 across every owner-gated policy and RPC verified above. Not changed — removing
 an owner is an ownership decision, not a fix — but it should be confirmed as
 intended.
+
+
+---
+
+## `live-schema.json` — gating the column-name bug class against reality, not intent
+
+`scripts/schema-dictionary.py` gates CLAUDE.md §8.1 class 2: **a column name
+that does not exist**, which makes PostgREST reject the *entire* query or write
+and empty a page with no visible error and nothing thrown.
+
+It could only ever build its dictionary from `supabase/*.sql` — from what the
+repo *intends* — plus a hand-maintained `KNOWN_LIVE_COLUMNS` dict patching the
+places live had already drifted. That patch list drifts again the moment live
+does; it is the same failure mode as a count typed into prose.
+
+`supabase/live-schema.json` is now a dated capture of the real `public` schema:
+**208 relations** (tables, views, materialized views, partitioned tables) mapped
+to their columns in `attnum` order. `parse_sql_files()` folds it in
+**additively** — a column live has is accepted even if no `CREATE TABLE`
+declares it; a column the bag declares but live lacks is *still* accepted,
+because the bag may legitimately be ahead of an unapplied migration. The
+snapshot removes false positives; it does not become a second source of truth
+about what should exist. A missing or corrupt snapshot falls back to
+`KNOWN_LIVE_COLUMNS` rather than failing, so it cannot take CI down.
+
+The standing counterexample is now captured rather than hand-patched. Live
+`public.task_completions`:
+
+    id, user_id, kind, task, completed_at, axis, increment, created_at,
+    task_name, task_type, axis_type, description, points_earned,
+    axis_a_before, axis_b_before, axis_c_before,
+    axis_a_after,  axis_b_after,  axis_c_after, auth_after
+
+— matching none of its three competing `CREATE TABLE IF NOT EXISTS` definitions
+in the SQL bag.
+
+The snapshot also confirms a §8.2 entry from the other direction: `profiles` has
+no `lat`, `lon` or `gate` column, so the `map.html` reads removed in `3f8a17d7`
+were genuinely dead.
+
+**Verified the gate still bites, because a checker that reports nothing looks
+identical to one that is not running** (§8.4). Negative control: a nonsense
+column added to a real `.select()` produced
+
+    FOUND 1 COLUMN-NAME MISMATCH(ES):
+      dashboard.html:828 — read from profiles.definitely_not_a_real_column_zzz (column does not exist)
+
+and the file was restored, returning the checker to `OK — all client calls
+reference existing columns`. Dictionary size went from the bag's tables to
+**216 tables / 1,852 columns** once live was folded in.
+
+Regeneration query and the reasoning live in `supabase/live-schema.README.md`.
+Regenerate whenever schema is applied live — a stale snapshot silently re-opens
+the false positives it was written to close.

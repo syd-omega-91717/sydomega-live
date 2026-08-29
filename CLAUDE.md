@@ -52,9 +52,9 @@ vendor/              Third-party code served from this origin rather than a
                      CDN — currently the Supabase client (see §4).
 omega-*.json         Static config/data: agent roster (omega-agents.json),
                      element/house tables, content catalog, canon lore.
-supabase/*.sql       Backend schema. Flat directory of ~105 files, applied
-                     manually/in sequence — see "Known debt" below. Not a
-                     Supabase-CLI-managed migrations/ directory yet.
+supabase/*.sql       Backend schema, a flat bag applied in sequence (see
+                     "Known debt"). live-schema.json snapshots what the
+                     database actually has.
 supabase/functions/  Edge Functions (Deno/TypeScript): checkout,
                      stripe-webhook, concierge (Anthropic API-backed
                      assistant), notify-access, intel-feed, rankings,
@@ -455,7 +455,9 @@ are listed in rough order of how often they have recurred.
    a whole page with no visible error. Recurring wrong names, all now swept:
    `zodiac_sign`→`sign`, `full_name`→`display_name`, `agent_name`→`agent`,
    `created_at`→`occurred_at` on event tables. `scripts/schema-dictionary.py`
-   gates this in CI now — but only against schema defined in `supabase/*.sql`.
+   gates this in CI against `supabase/live-schema.json` — a dated snapshot of
+   the real schema, folded in additively. Regenerate it whenever schema is
+   applied live; a stale snapshot re-opens the false positives (see its README).
 3. **Measuring an element before the approval guard reveals it.** §3's guard
    hides `#app`/`.shell`/`main.main` until the profile is approved, and that
    reveal fires **no resize event**. Anything reading `offsetWidth`/
@@ -542,10 +544,9 @@ open, recorded in `FIXES_LOG.md`:
   `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
   `bloodline_nodes` already hold comparable data server-side under the same,
   tested RLS.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
-  directly and chose to leave it; `.vercelignore` already keeps both out of
-  the deploy, so this is hygiene debt, not a functional bug. A real fix means
-  history rewrite + force-push — do not attempt without explicit permission.
+- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
+  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
+  fix means history rewrite + force-push — never without explicit permission.
 - **`map.html`'s `profiles.lat/lon/gate` reads are gone** (fixed in `3f8a17d7`,
   not by the live-verification pass). Confirmed against production on
   2026-08-29: `profiles.country` exists (`text`); `lat`, `lon` and `gate` do
@@ -561,8 +562,7 @@ open, recorded in `FIXES_LOG.md`:
   implies protection that is not happening. Wiring it is an architecture
   decision; removing the badge is a product one.
 - **`omega-threat.js` is not threat detection** — it is the digital-thread
-  traceability engine (`window.OmegaThread`). The filename mismatch is
-  deliberate and was left alone rather than guessed at.
+  traceability engine (`window.OmegaThread`). Filename mismatch left as-is.
 - **`supabase/migrations/` is validated only against a blank database.** Do not
   run the full sequence against production expecting it to catch up existing
   state — `task_completions` is a proven counterexample. The flat

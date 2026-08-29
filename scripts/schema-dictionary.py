@@ -29,6 +29,7 @@ if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
     raise SystemExit(0)
 
 import os
+import json
 import re
 import sys
 from pathlib import Path
@@ -129,6 +130,10 @@ def _split_top_level(body):
     return parts
 
 
+# FALLBACK ONLY -- used when supabase/live-schema.json is missing or corrupt.
+# The snapshot supersedes this hand-maintained list, which drifts again the
+# moment live does. Kept so the gate still behaves sanely without the snapshot.
+#
 # Columns that are live in production but appear in no CREATE TABLE in this
 # repo, because they were created out-of-band. Documented in CLAUDE.md §8:
 # the owner's live public.task_completions has an older shape (id bigint,
@@ -205,10 +210,35 @@ def parse_sql_files():
             for col_name in cols:
                 schema[table_name]["columns"].add(col_name)
 
-    # Fold in columns known to be live but absent from the SQL bag.
-    for table, cols in KNOWN_LIVE_COLUMNS.items():
-        if table in schema:
-            schema[table]["columns"].update(cols)
+    # Fold in what the LIVE database actually has. supabase/live-schema.json is a
+    # dated snapshot of the production public schema; the SQL bag is what this
+    # repo intends, and the two have provably diverged (task_completions matches
+    # none of its three competing CREATE TABLE definitions). Checking client code
+    # against intent rather than reality is how this checker ends up reporting
+    # columns that genuinely exist -- and an advisory checker that cries wolf is
+    # one nobody reads.
+    #
+    # Live is additive here, never subtractive: a column the bag declares but
+    # live lacks is still accepted, because the bag may legitimately be ahead of
+    # an unapplied migration. The snapshot's job is to stop FALSE positives, not
+    # to become a second source of truth about what should exist.
+    live_path = Path("supabase/live-schema.json")
+    if live_path.exists():
+        try:
+            live = json.loads(live_path.read_text(encoding="utf-8")).get("tables", {})
+            for table, cols in live.items():
+                if table in schema:
+                    schema[table]["columns"].update(cols)
+                else:
+                    schema[table] = {"columns": set(cols), "source": "live-schema.json"}
+        except (ValueError, OSError):
+            # A corrupt or unreadable snapshot must not take the gate down; fall
+            # through to the hand-maintained list below.
+            live_path = None
+    if not (live_path and live_path.exists()):
+        for table, cols in KNOWN_LIVE_COLUMNS.items():
+            if table in schema:
+                schema[table]["columns"].update(cols)
 
     return schema
 

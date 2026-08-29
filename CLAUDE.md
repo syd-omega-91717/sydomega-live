@@ -337,6 +337,13 @@ Every change here was verified before shipping by rendering an isolated
 test harness (all the shared classes, plus raw unclassed elements) through
 headless Chromium — not just `node --check` on the syntax.
 
+### 4.2 Ω-HORIZON extension layer
+
+A third layer in the same `bg.js` stylesheet (search `Ω-HORIZON`): motion
+and elevation tokens, hover elevation, focus bloom, `.omg-ring`, a
+`.btn-gold` sweep, scroll parallax. Its constraints, and the
+animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
+
 ## 5. Backend / data model
 
 - **Auth & authorization:** Supabase Auth for identity; RLS policies on

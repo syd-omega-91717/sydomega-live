@@ -3494,3 +3494,42 @@ by an end-to-end browser run. First real member session will settle it;
   server also reports 0"*: the first query returned an empty result set, so it was re-run as a
   positive count with a control row (`definitely_not_a_real_rpc_xyz` → 0) to prove the join
   actually discriminates between present and absent functions before reading the 0 as good news.
+
+- **Ω-HORIZON v2 — a futuristic design layer added without repeating any of the traps the last
+  one hit.** A third additive section in `bg.js`'s injected stylesheet, reaching all 179 pages
+  through the one file: motion tokens (`--ease-expo`/`--ease-spring`/`--ease-glide`,
+  `--dur-1..3`), a tinted elevation scale (`--elev-1..3`, `--elev-cyan` — each level pairs a dark
+  ambient shadow with a *coloured* key-light bloom, so a raised surface reads as lit by the gold
+  key rather than floating on grey), hover elevation, a focus bloom, an opt-in `.omg-ring` conic
+  progress ring using `@property` so the sweep interpolates instead of snapping, a specular
+  sweep across `.btn-gold`, `text-wrap: balance`/`pretty`, and scroll parallax on
+  `#omega-depth-field`.
+  **Three constraints, each taken from a regression already in this log rather than invented:**
+  (1) no `border-image` outside `:hover` — it always wins the border paint and silently erases a
+  page's per-instance border; (2) **no `::before`/`::after` on `.card`/`.kpi`/`.glass`** — v3 and
+  Ω-GVP already own both pseudos there and a pseudo renders one rule, never a merge, so the
+  specular sweep is a `background-image` layer and every new pseudo lives on a new opt-in class;
+  (3) bare element selectors wrapped in `:where()` so their specificity is zero and any
+  page-local rule still wins — the exact failure mode that let a page-local `nav{}` rule hijack
+  the injected mobile nav in the commit before this one.
+  **The render caught a real defect the diff could not.** The parallax was first written as
+  `transform:translate3d(0,calc(var(--sy) * -14px),0)`. It looked correct and did nothing:
+  `#omega-depth-field` already runs the `gvp-depth-drift` keyframe animation, which owns
+  `transform`, and **a running animation beats a plain declaration**. Measured rather than
+  assumed — scrolling moved `--sy` from `0` to `0.5046` while the matrix shifted by ~0.1px,
+  which is the drift animation progressing, not parallax. Rewritten to use the **independent
+  `translate` property**, which is a separate animatable property and therefore *composes* with
+  the animated `transform` instead of being overridden by it. Re-verified: `translate` goes
+  `0px` → `0px -5.348px`, exactly `--sy` 0.382 × −14px, while the animation's matrix continues
+  independently. This is the same class as §8.4's note about an edit reaching the file but not
+  the cascade, and it is why every token, the ring's computed `conic-gradient`, the `.card`
+  transition and the heading `text-wrap` were each read back out of `getComputedStyle` in a real
+  page before this was called done.
+  Reduced-motion coverage was extended in the same pass, and the scroll listener is **not
+  registered at all** under `prefers-reduced-motion` rather than merely neutralised in CSS — a
+  user who asked for less motion should not pay for a rAF loop whose result the stylesheet
+  discards. The listener otherwise matches the existing pointer handler exactly: one passive,
+  rAF-throttled listener reading only `scrollY` and `clientHeight`, never a per-element
+  `getBoundingClientRect`, so it cannot thrash layout however long the page is.
+  No regressions: overlap 0/24, `chrome` 0/179, `overflow` 0/179, page errors 3/179 (the three
+  documented CDN-blocked pages), `ci-local.sh` 17/17.

@@ -356,9 +356,12 @@ headless Chromium — not just `node --check` on the syntax.
   file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
   only scripts). The 94-file numbered sequence (`0001`–`0094`) applies
   cleanly end-to-end against a fresh scratch PostgreSQL 16 instance
-  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — but the
-  directory now holds **117** files: 23 later timestamped ones were never part
-  of that validation and no run has covered all 117 — but that only proves the sequence is
+  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — that is
+  the only such run on record, and the directory has grown well past it since,
+  so re-derive both numbers from `scripts/omega-registry.py` rather than
+  trusting a count quoted here. Everything added after `0094` — later numbered
+  files as well as timestamped ones — was never part of that validation, and no
+  run has covered the directory in full — and even the validated part only proves the sequence is
   internally consistent on a **blank** database, not that it matches the
   owner's actual live schema; `task_completions` is a proven
   counterexample (live `id bigint` + `axis`/`increment` columns match none
@@ -620,10 +623,14 @@ open, recorded in `FIXES_LOG.md`:
   free-tier substitute for the same credential-stuffing threat.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
-- **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now
+- **`scripts/audit.py` reports 8 warnings**, and the tool now
   reports which parts of each are real risk vs. known noise. They cannot be
   driven to 0 from source alone without live-schema verification, and forcing
-  them down would trade a known-unknown for an unverified "fixed".
+  them down would trade a known-unknown for an unverified "fixed". Seven were
+  reviewed and understood when this item was written; the count has since moved
+  from 7 to 8 without the list being re-read, so treat "all understood" as
+  covering the seven, not the current set — run the tool and check which one is
+  new before assuming a warning is old news.
 - **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
   nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
   and does real work on every page. Self-activation with no caller is the norm
@@ -636,15 +643,15 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **71** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings |
+| `python3 -m unittest discover -s scripts/tests` | **73** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,090** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,150** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **11** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **16** blocking checks, all passing |
 | broken asset references | 0 |
 | service-role key scan | clean |
 

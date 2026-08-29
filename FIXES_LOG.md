@@ -3212,3 +3212,87 @@ by an end-to-end browser run. First real member session will settle it;
   `rls-auditor.py` still reporting its one finding. Also removed that script's leftover
   `print(f"DEBUG: __file__={__file__}, ROOT={ROOT}, cwd={os.getcwd()}", file=sys.stderr)`, which
   had been firing on every CI run.
+
+- **Three language packs shipped 14 keys short, and `feed.html`'s topbar resolved to nothing —
+  both live on `main`.** `i18n/nl.json`, `zh.json` and `hi.json` each held **1013** keys against
+  `T_EN`'s **1027** (`set(T_EN) - set(pack)` → the 14 `cosmos_*` keys: `cosmos_agents_heading`,
+  `cosmos_tab_gates`, `cosmos_gates_thresholds`, …), so `cosmos.html` fell back to English for
+  Dutch, Chinese and Hindi readers while Arabic, French and Spanish were complete at 1027.
+  Separately, `feed.html:33` is the only page markup referencing `feed_topbar_title` and
+  `feed_topbar_subtitle`, and **neither key existed in any of the seven sources** — the entry
+  lookup in `apply()` (`i18n.js:1200`, `var entry=T[key]; if(entry){…}`) simply skipped both
+  elements in every language.
+  **Root cause, traced through two commits.** `80adabeb` ("Phase 4.5: Complete cosmos.html
+  internationalization") wrote the 14 translations into all three packs but left each file
+  unparseable — a delimiter error near the end, not a truncation
+  (`nl` 51081 bytes, *Expecting ',' delimiter: line 1 column 50082*; `zh` 46247 bytes, col 33137;
+  `hi` 84288 bytes, col 47351). `faac665b` ("Fix: Restore corrupted i18n JSON files") then
+  restored all three from their **pre-`80adabeb`** blobs, which cleared the parse error and
+  unblocked CI — and discarded the 14 translations along with the corruption. The packs have
+  been 14 keys short on `main` ever since; nothing in CI compares pack key sets against `T_EN`,
+  so it stayed invisible.
+  **Fix, additive only.** The 42 translations were recovered by regex from the corrupted
+  `80adabeb` blobs (14/14 for each of nl, zh, hi — the corruption is localised well past every
+  `cosmos_*` entry), so no text was re-translated or invented:
+  `cosmos_agents_heading` = *"Twaalf Soevereine Agenten"* / *"十二位主权代理"* /
+  *"बारह संप्रभु एजेंट"*. The two `feed_topbar_*` keys were added to `T_EN` and to all six packs.
+  Every pack is rewritten in `T_EN` key order, which all six already followed exactly
+  (`list(pack) == [k for k in T_EN if k in pack]` → True for all six before the change).
+  **Verified in a real render, not just by key count.** All seven sources now carry an identical
+  **1029**-key set (`set(pack) == set(T_EN)` → True ×6, 0 duplicates in `T_EN`), and a repo-wide
+  `data-i18n` scan reports `feed.html` fully resolved. A headless-Chromium harness reproducing
+  `feed.html:33`'s nested markup then switched through nl → zh → hi → ar with the packs served
+  over HTTP: the title translates, the nested `<span data-i18n="feed_topbar_subtitle">` is
+  **still a child of the title div** in every language (`setOwnText`'s text-node path, `i18n.js:1147`,
+  doing what its comment promises), `cosmos_agents_heading` renders the recovered translation,
+  `dir` flips to `rtl` for Arabic, and **zero page errors**. `node --check i18n.js` clean;
+  `ci-local.sh` 16/16 blocking checks; `audit.py` 0 critical / 7 warnings.
+  **Two things deliberately left alone.** (1) Switching *back* to English does not restore
+  English text — `apply()`'s base-language guard (`if(baseLang && ownText(el)) return;`,
+  `i18n.js:1209`) is a deliberate "the markup wins in the base language" rule, and once another
+  language has overwritten the text there is no longer an empty gap for it to fill. Present
+  identically on `main` before this change, and reverting it would resurrect the 106 drifted
+  English entries its own comment documents — a product decision, not a merge fix. (2) Four
+  pages still reference keys that exist in no source (`account.html` 8, `analytics.html` 5,
+  `matrix.html` 1, `profile.html` 124) — counted identically against `origin/main`'s `i18n.js`,
+  so pre-existing and out of scope here; they degrade to authored English rather than breaking.
+
+- **`main` itself was red on two blocking gates, both self-inflicted by contracts that tracked a
+  spelling instead of a requirement.** Found by running the full blocking set against a clean
+  `origin/main` worktree (`420e17a8`) rather than assuming a red check belonged to the branch in
+  hand — `workflow-contract.py` and `omega-registry.py --check` both exited 1 there, identically.
+  1. **`scripts/workflow-contract.py` demanded a PowerShell string the workflow no longer
+     contains.** Its `REQUIRED` list held the literal `node --check $file.FullName`, but
+     `4f33f020` ("ci: remove pwsh dependency from self-hosted verification") rewrote that step in
+     `cmd` as `for %%F in (*.js) do node --check "%%F"`. The requirement was still satisfied —
+     every root `.js` file is still syntax-checked — yet the gate reported
+     *"production-contract.yml: missing required contract"*. `420e17a8`
+     ("ci: make workflow contract Windows-shell compatible") did not fix this: its diff touches
+     only `.github/workflows/workflow-contract.yml`, the workflow that *runs* the checker, never
+     the checker. Fixed by splitting the shell-dependent requirement out of the literal
+     `REQUIRED` list into a `REQUIRED_PATTERNS` regex (`node\s+--check\b`), so the contract
+     asserts *what* runs and survives the next shell change. **Verified in both directions:**
+     PASS as committed, and replacing `node --check "%%F"` with `echo skip` in the workflow
+     brings back a FAIL and exit 1 — a gate that only ever passes proves nothing.
+  2. **`scripts/omega-registry.py` derived a verification claim from a file count.** Its
+     generated census read
+     `` the **{numbered}-file numbered sequence** (`0001`–`00{numbered}`) applies cleanly against
+     a fresh scratch PostgreSQL 16 instance ``. Only **one** such run exists —
+     `supabase/migrations/README.md`'s *"Full 94-file sequence validated end-to-end for the first
+     time"*, covering `0001`–`0094` — so every numbered migration added afterwards silently
+     enrolled itself in a validation it was never part of. By `main` the directory held **141**
+     files (99 numbered + 42 timestamped) and the generator was asserting `0001`–`0099` had been
+     validated; five files (`0095`–`0099`) had not. The same expression also mis-rendered past
+     99 (`00120` for 120 files, reproduced in the A/B below). Compounding it, the "not part of
+     that validation" count only ever counted *timestamped* files, so newly added numbered ones
+     were omitted from the unvalidated total as well. Fixed by pinning `VALIDATED_MIGRATIONS = 94`
+     as a fact about a run that happened, citing the README heading, with an explicit instruction
+     to raise it only after a run that actually reaches higher — and computing the unvalidated
+     remainder as `total - validated` so numbered and timestamped files both count.
+     `CLAUDE.md` §5's own copy of these numbers (94 / 117 / "23 later timestamped") had gone
+     stale the same way and now points at the generator instead of restating a count.
+     **A/B'd against `main`'s generator** in a throwaway worktree: both new tests fail there
+     (`'`0001`–`0094`' not found`, and `The 8 files added since` absent) and pass here.
+  71 → **73 tests**; `ci-local.sh` 16/16 blocking; every blocking `ci.yml` step green. Neither
+  fix changes what CI actually verifies — one restores a gate that was rejecting a correct
+  workflow, the other stops a generated document from claiming verification it never had.

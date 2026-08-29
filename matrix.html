@@ -527,7 +527,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </div>
 
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 function fmt(n){ return Number(n||0).toFixed(3); }
@@ -703,7 +703,7 @@ document.querySelectorAll('.axis-bar').forEach(el=>{const w=el.style.width;el.st
 </script>
 <script type="module">
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const SERVICES=[
@@ -835,7 +835,7 @@ window.bootGrid = bootGrid;
 </script>
 <script type="module">
 
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  import { createClient } from '/vendor/supabase-js.js';
   var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 

@@ -62,7 +62,7 @@
 
   function detect() {
     try {
-      (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');})).then(function (sb) {
+      (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');})).then(function (sb) {
         sb.auth.getSession().then(function (r) {
           var ss = r && r.data && r.data.session; if (!ss) return;
           sb.from('profiles').select('sign,element').eq('id', ss.user.id).maybeSingle().then(function (res) {

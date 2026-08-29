@@ -134,7 +134,7 @@
       if (C && C.ready) {
         clearInterval(iv);
         var sbp = window.OmegaSB ? window.OmegaSB.get()
-          : import('https://esm.sh/@supabase/supabase-js@2').then(function (m) {
+          : import('/vendor/supabase-js.js').then(function (m) {
               return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co",
                                     "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
             });

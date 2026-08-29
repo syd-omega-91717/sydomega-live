@@ -759,7 +759,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 </script>
 <script type="module">
 
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'/vendor/supabase-js.js';
 const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 /* Share this single client with every shared script (bg.js, emblems,
    gate, membership, progress ...) so the page has exactly one
@@ -874,7 +874,7 @@ bootUniverse();
 </script>
 <script type="module">
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from '/vendor/supabase-js.js';
 const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 var FILMS=[

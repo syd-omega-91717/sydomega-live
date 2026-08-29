@@ -152,7 +152,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
 function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--solar)':'var(--crim)';}
 </script>
 <script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
 function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--solar)':'var(--crim)';}

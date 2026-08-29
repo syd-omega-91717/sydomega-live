@@ -170,7 +170,7 @@
 
   function detect() {
     try {
-      (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');})).then(function (sb) {
+      (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');})).then(function (sb) {
         sb.auth.getSession().then(function (r) {
           var s = r && r.data && r.data.session;
           if (!s) return;

@@ -192,7 +192,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
 const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
 
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+const {createClient}=await import('/vendor/supabase-js.js');
 const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
 const {data:{session}}=await sb.auth.getSession();
 if(!session){location.href='/account.html';throw 0;}

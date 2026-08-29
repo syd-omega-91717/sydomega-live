@@ -100,7 +100,7 @@
     if (!sbPromise) {
       sbPromise = window.OmegaSB && typeof window.OmegaSB.get === "function"
         ? Promise.resolve(window.OmegaSB.get())
-        : import("https://esm.sh/@supabase/supabase-js@2").then(function (m) {
+        : import("/vendor/supabase-js.js").then(function (m) {
             return m.createClient(SUPABASE_URL, SUPABASE_KEY);
           });
     }

@@ -894,7 +894,7 @@ window.setTab=setTab;
 </script>
 <script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
 <script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 (async function(){

@@ -89,7 +89,7 @@
   }
 
   function boot() {
-    (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2')
+    (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js')
       .then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');}))
       .then(function (_client) {
       sb = _client;

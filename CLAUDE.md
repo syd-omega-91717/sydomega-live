@@ -31,26 +31,25 @@ bundler.
 ## 2. Repository layout
 
 ```
-/                    178 standalone .html pages, one per feature/page.
-                     Each is a full HTML document with inline <script>,
-                     not a component — there is no shared page template
-                     engine. Shared behavior comes from loader scripts
-                     injected at runtime (see below).
+/                    Standalone .html pages, one per feature. Each is a
+                     full HTML document with inline <script>, not a
+                     component — no page template engine. Shared behavior
+                     comes from loader scripts injected at runtime.
+                     (Counts drift; run `scripts/omega-registry.py`.)
 bg.js                The "nervous system": injected first, loaded by every
-                     page. Injects the global design-system <style> block,
-                     the approval-guard CSS, and defer-loads the other
-                     omega-*.js modules. If bg.js fails to parse, the
-                     entire platform is down (see ci.yml comment) — all
-                     178 pages load it, so it is a total, not partial,
+                     page. Injects the design-system <style>, the approval
+                     guard, a synchronous fetch recorder, and defer-loads
+                     every other omega-*.js module. If it fails to parse
+                     the whole platform is down — a total, not partial,
                      single point of failure.
 nav.js               Sidebar navigation: maps every page slug to a nav
                      section (COMMAND, IDENTITY, ASCEND, COSMOS, VAULT,
                      ORDER, INTEL, ...) and renders the icon dock.
-omega-*.js           90 single-purpose modules (auth gate, AI copilot,
-                     threat/telemetry, chart rendering, share cards,
-                     progress tracking, PWA/service-worker registration,
-                     etc.), each loaded on-demand by bg.js or by the pages
-                     that need them.
+omega-*.js           Single-purpose modules (auth gate, copilot, telemetry,
+                     charts, motion, data guard, PWA, ...), loaded by bg.js
+                     or by the pages that need them.
+vendor/              Third-party code served from this origin rather than a
+                     CDN — currently the Supabase client (see §4).
 omega-*.json         Static config/data: agent roster (omega-agents.json),
                      element/house tables, content catalog, canon lore.
 supabase/*.sql       Backend schema. Flat directory of ~105 files, applied
@@ -91,17 +90,12 @@ comes entirely from `bg.js`, which every page loads via `<script src="/bg.js">`
    `omega-copilot.js`, `omega-threat.js`, etc.) via injected `<script>`
    tags, guarded by `data-omega-*` attributes so nothing double-loads.
 
-`nav.js` separately renders the sidebar, keyed off `data-page` or the
-current pathname. `bg.js` auto-injects it (guarded by `data-omega-nav`, same
-pattern as the other modules) — a page only needs its own explicit
-`<script src="/nav.js">` tag if it deliberately wants the sidebar to render
-before `bg.js` finishes loading; the ~9 pages that still do this predate the
-auto-injection and are harmless (double-injection is guarded against, not
-just deduped). This auto-injection didn't exist until it was added as a bug
-fix — see `FIXES_LOG.md` — after being missing for an unknown but apparently long
-stretch of this repo's history; verify with a real browser render, not just
-a grep for the script tag, before trusting that a "no page-level nav.js
-needed" claim like this one is actually true.
+`nav.js` renders the sidebar, keyed off `data-page` or the pathname.
+`bg.js` auto-injects it (guarded by `data-omega-nav`); the ~9 pages with
+their own `<script src="/nav.js">` predate that and are harmless, since
+double-injection is guarded. That auto-injection was itself a bug fix
+(`FIXES_LOG.md`) after being absent for a long stretch — so verify claims
+like this one with a real render, not a grep for the script tag.
 
 **Consequence for anyone editing a page:** don't hand-roll the auth check,
 the design tokens, or the sidebar. Load `bg.js` the way every other page
@@ -128,6 +122,22 @@ before styling a shared class:
 A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
+
+**The Supabase client is self-hosted at `/vendor/supabase-js.js`** — the
+official UMD bundle plus an ESM export footer, no bundler. Do not reintroduce
+`import ... from 'https://esm.sh/@supabase/supabase-js@2'`: that was 146
+imports putting a third-party CDN on the critical path of every page view, and
+a top-level import that never resolves runs *none* of that module's code, so
+the page paints its placeholders and sits there forever. The browser harness
+stubs that local path, not esm.sh. Upgrade with `npm pack`, per `FIXES_LOG.md`.
+
+**Motion and load-state have single owners too.** `bg.js` wraps `fetch`
+synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
+data; `omega-motion.js` owns entrance, value roll-up, tilt and press via the
+Web Animations API with `fill:'none'`, so nothing ever holds a persistent
+hidden state. It defers to the two pre-existing reveal systems —
+`omega-content.js` (`.oc-hidden`) and `omega-animated.js` (`.oa-reveal`) —
+which already own `opacity` on what they manage.
 
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),

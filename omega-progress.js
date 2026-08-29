@@ -88,7 +88,7 @@
 
   function client() {
     if (window.OmegaSB) return window.OmegaSB.get();
-    return import('https://esm.sh/@supabase/supabase-js@2').then(function (m) {
+    return import('/vendor/supabase-js.js').then(function (m) {
       return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co",
                             "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
     });

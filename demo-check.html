@@ -181,7 +181,7 @@ async function runAll(){
    v.src='/SYDOMEGA91717_DEMOD-1-.mp4';
  });
  try{
-   var m=await import('https://esm.sh/@supabase/supabase-js@2');
+   var m=await import('/vendor/supabase-js.js');
    var sb=m.createClient(SB_URL,SB_KEY);
    var s=(await sb.auth.getSession()).data.session;
    add(s?'ok':'bad','Signed in',s?s.user.email:'Sign in first — the demo never shows to signed-out visitors');

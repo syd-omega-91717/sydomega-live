@@ -25,7 +25,6 @@ REQUIRED = {
         "actions/checkout@v4",
         "actions/setup-python@v5",
         "python scripts/production-contract.py",
-        "node --check $file.FullName",
     ],
     "capability-evidence.yml": [
         "actions/checkout@v4",
@@ -33,6 +32,20 @@ REQUIRED = {
         "python scripts/capability-audit.py --check",
         "python scripts/capability-audit.py",
         "python -m json.tool docs/capabilities/registry.json",
+    ],
+}
+
+# Requirements that are about WHAT a workflow runs, not how a particular shell
+# spells it. `production-contract.yml` must syntax-check every root .js file,
+# but the loop that does it is written in whichever shell the runner uses. When
+# that workflow moved from PowerShell to cmd, the literal
+# `node --check $file.FullName` this contract used to demand stopped appearing
+# and the gate failed on `main` while the workflow itself was perfectly correct
+# -- a contract that tracked the spelling instead of the requirement. Matching
+# the invocation rather than the loop syntax survives the next shell change.
+REQUIRED_PATTERNS = {
+    "production-contract.yml": [
+        (r"node\s+--check\b", "node --check over the root .js files"),
     ],
 }
 
@@ -60,6 +73,10 @@ for name, required in REQUIRED.items():
     for needle in required:
         if needle not in text:
             ERRORS.append(f"{name}: missing required contract: {needle}")
+
+    for pattern, description in REQUIRED_PATTERNS.get(name, []):
+        if not re.search(pattern, text):
+            ERRORS.append(f"{name}: missing required contract: {description}")
 
 # Production evidence gates are never advisory.
 for name in ("production-contract.yml", "capability-evidence.yml"):

@@ -1092,7 +1092,9 @@ var T_EN={
 "cosmos_gates_heading":"THE 12 GATES OF AUTHORITY",
 "cosmos_gods_heading":"THE 12 OLYMPIAN GODS",
 "cosmos_constants_heading":"&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE",
-"cosmos_gates_thresholds":"GATE THRESHOLDS"
+"cosmos_gates_thresholds":"GATE THRESHOLDS",
+"feed_topbar_title":"ACTIVITY FEED",
+"feed_topbar_subtitle":"M8 COMMUNICATION · MEMBER ACTIVITY STREAM · AUTH=sqrt(A³+B³+C³)×φ/e"
 };
 
 /* T is the merged dictionary in the original {key:{lang:string}} shape, so

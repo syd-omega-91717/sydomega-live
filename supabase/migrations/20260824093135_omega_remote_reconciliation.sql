@@ -1,0 +1,2 @@
+-- Remote migration 20260824093135 is already applied to the production database.
+-- This immutable reconciliation marker preserves migration-history parity for Supabase branching.

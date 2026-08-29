@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: JavaScript syntax
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           $files = @(Get-ChildItem -Path . -File -Filter '*.js')
@@ -88,7 +88,7 @@ jobs:
       - name: Context budget
         run: python scripts/context-budget.py
       - name: Client credential scan
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           $hits = @(Get-ChildItem -Path . -Recurse -File -Include '*.js','*.html','*.json' | Select-String -Pattern 'service_role|SUPABASE_SERVICE_ROLE_KEY')
@@ -97,7 +97,7 @@ jobs:
             throw 'Client credential marker detected'
           }
       - name: Execution marker
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }

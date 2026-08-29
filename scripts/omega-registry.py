@@ -39,6 +39,7 @@ if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
     print(__doc__.strip())
     raise SystemExit(0)
 
+import json
 import os
 import re
 import subprocess
@@ -197,7 +198,35 @@ def platform_census():
                           if Path("supabase/functions").is_dir() else 0,
         "skills": len(list(SKILLS_DIR.glob("*/SKILL.md"))),
         "agents": len(list(AGENTS_DIR.glob("*.md"))) if AGENTS_DIR.is_dir() else 0,
+        "i18n": i18n_census(),
     }
+
+
+def i18n_census():
+    """English dictionary size and each pack's key count.
+
+    Recorded here so a pack that LOSES keys changes a committed number and
+    fails `--check`. Three language packs once shipped 14 keys short for weeks
+    -- one commit wrote the translations but left the files unparseable, the
+    next restored the pre-translation blobs to clear the parse error and
+    dropped the translations with it. Both were green, because no check
+    anywhere counted these.
+    """
+    js = Path("i18n.js")
+    if not js.is_file():
+        return None
+    m = re.search(r"var T_EN=\{(.*?)\n\};", js.read_text(encoding="utf-8"), re.S)
+    if not m:
+        return None
+    out = {"en": len(re.findall(r'^"([^"]+)"\s*:', m.group(1), re.M)), "packs": {}}
+    for pack in sorted(Path("i18n").glob("*.json")) if Path("i18n").is_dir() else []:
+        try:
+            out["packs"][pack.stem] = len(json.loads(pack.read_text(encoding="utf-8")))
+        except Exception:
+            # An unparseable pack is exactly the failure this census exists to
+            # surface, so it is recorded rather than skipped.
+            out["packs"][pack.stem] = "UNPARSEABLE"
+    return out
 
 
 def render(skills, agents, census) -> str:
@@ -286,6 +315,24 @@ def render(skills, agents, census) -> str:
     add(f"| skills | {census['skills']} |")
     add(f"| agent definitions | {census['agents']} |")
     add("")
+
+    i18n = census.get("i18n")
+    if i18n:
+        add("### Translation coverage")
+        add("")
+        add("Committed on purpose: a pack that loses keys changes a number here and")
+        add("fails `--check`. `scripts/i18n-contract.py` enforces the rest (every")
+        add("`data-i18n` key resolves, no orphan pack keys, no HTML entities in values).")
+        add("")
+        add("| Source | Keys |")
+        add("|---|---|")
+        add(f"| `T_EN` (English, inlined in `i18n.js`) | {i18n['en']} |")
+        for lang, n in sorted(i18n["packs"].items()):
+            gap = "" if n == i18n["en"] else (
+                " — **%s**" % n if n == "UNPARSEABLE"
+                else " — %d short of `T_EN`" % (i18n["en"] - n))
+            add(f"| `i18n/{lang}.json` | {n}{gap} |")
+        add("")
     if census["migrations_timestamped"]:
         unvalidated = census["migrations"] - VALIDATED_MIGRATIONS
         add(f"`supabase/migrations/README.md` records exactly one end-to-end run against a")

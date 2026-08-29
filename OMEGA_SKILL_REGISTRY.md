@@ -68,6 +68,22 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | skills | 8 |
 | agent definitions | 1 |
 
+### Translation coverage
+
+Committed on purpose: a pack that loses keys changes a number here and
+fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
+`data-i18n` key resolves, no orphan pack keys, no HTML entities in values).
+
+| Source | Keys |
+|---|---|
+| `T_EN` (English, inlined in `i18n.js`) | 1167 |
+| `i18n/ar.json` | 1167 |
+| `i18n/es.json` | 1167 |
+| `i18n/fr.json` | 1167 |
+| `i18n/hi.json` | 1167 |
+| `i18n/nl.json` | 1167 |
+| `i18n/zh.json` | 1167 |
+
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated

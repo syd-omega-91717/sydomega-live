@@ -24,10 +24,11 @@ jobs:
         run: |
           set -euo pipefail
           test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
           echo "runner=${RUNNER_NAME}"
-          echo "runner_id=${RUNNER_TRACKING_ID:-unknown}"
-          echo "os=${RUNNER_OS}"
-          echo "arch=${RUNNER_ARCH}"
+          echo "runner_os=${RUNNER_OS}"
+          echo "runner_arch=${RUNNER_ARCH}"
           echo "run=${GITHUB_RUN_ID}"
           echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Checkout
@@ -94,7 +95,7 @@ jobs:
             echo 'Client credential marker detected'
             exit 1
           fi
-      - name: Final execution marker
+      - name: Execution marker
         run: |
           test -n "${RUNNER_NAME:-}"
           echo 'CI_EXECUTED=true'

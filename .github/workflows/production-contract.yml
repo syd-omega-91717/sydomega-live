@@ -24,10 +24,11 @@ jobs:
         run: |
           set -euo pipefail
           test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
           echo "runner=${RUNNER_NAME}"
-          echo "runner_id=${RUNNER_TRACKING_ID:-unknown}"
-          echo "os=${RUNNER_OS}"
-          echo "arch=${RUNNER_ARCH}"
+          echo "runner_os=${RUNNER_OS}"
+          echo "runner_arch=${RUNNER_ARCH}"
           echo "run=${GITHUB_RUN_ID}"
           echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Checkout
@@ -54,3 +55,4 @@ jobs:
           test -n "${RUNNER_NAME:-}"
           echo 'PRODUCTION_CONTRACT_EXECUTED=true'
           echo "PRODUCTION_CONTRACT_RUN_ID=${GITHUB_RUN_ID}"
+          echo "PRODUCTION_CONTRACT_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"

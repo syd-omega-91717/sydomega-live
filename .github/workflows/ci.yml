@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -37,11 +38,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Full history. `scripts/omega-registry.py` derives each skill's
-          # "Last touched" from `git log -1 -- <path>`, and in a shallow clone
-          # that returns the graft boundary rather than the real commit -- so
-          # at the default depth of 1 every file dates to the CI run itself and
-          # `--check` fails on drift that does not exist.
           fetch-depth: 0
       - name: Node
         uses: actions/setup-node@v4
@@ -52,51 +48,71 @@ jobs:
         with:
           python-version: '3.12'
       - name: JavaScript syntax
+        shell: cmd
         run: |
           @echo off
           for %%F in (*.js) do node --check "%%F" || exit /b 1
       - name: Inline JavaScript syntax
+        shell: cmd
         run: python scripts/check-inline-js.py
       - name: Repository audit
+        shell: cmd
         run: python scripts/audit.py
       - name: Audit tooling tests
+        shell: cmd
         run: python -m unittest discover -s scripts/tests -v
       - name: Production contract
+        shell: cmd
         run: python scripts/production-contract.py
       - name: Workflow contract
+        shell: cmd
         run: python scripts/workflow-contract.py
       - name: 16-block architecture contract
+        shell: cmd
         run: python scripts/architecture-contract.py
       - name: 16-block implementation readiness
+        shell: cmd
         run: python scripts/architecture-readiness.py
       - name: Capability registry
+        shell: cmd
         run: python scripts/capability-audit.py --check
       - name: Capability runtime audit
+        shell: cmd
         run: python scripts/capability-audit.py
       - name: Registry JSON
+        shell: cmd
         run: python -m json.tool docs/capabilities/registry.json
       - name: Schema dictionary
+        shell: cmd
         run: python scripts/schema-dictionary.py
         continue-on-error: true
       - name: RLS audit
+        shell: cmd
         run: python scripts/rls-auditor.py
         continue-on-error: true
       - name: Silent failure audit
+        shell: cmd
         run: python scripts/silent-failure-detector.py
         continue-on-error: true
       - name: Migration consistency
+        shell: cmd
         run: python scripts/migration-consistency.py
         continue-on-error: true
       - name: Upsert conflict audit
+        shell: cmd
         run: python scripts/upsert-conflict-check.py
         continue-on-error: true
       - name: Skill and agent registry
+        shell: cmd
         run: python scripts/omega-registry.py --check
       - name: i18n contract
+        shell: cmd
         run: python scripts/i18n-contract.py
       - name: Context budget
+        shell: cmd
         run: python scripts/context-budget.py
       - name: Client credential scan
+        shell: cmd
         run: |
           @echo off
           findstr /S /I /N /C:"service_role" /C:"SUPABASE_SERVICE_ROLE_KEY" *.js *.html *.json > "%TEMP%\sydomega-credential-scan.txt" 2>nul
@@ -107,6 +123,7 @@ jobs:
           )
           del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
       - name: Execution marker
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

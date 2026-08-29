@@ -1,0 +1,30 @@
+name: Hosted Runner Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hosted-runner-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - name: Runner proof
+        run: |
+          set -eu
+          test -n "$RUNNER_NAME"
+          test -n "$RUNNER_OS"
+          test -n "$RUNNER_ARCH"
+          echo "HOSTED_RUNNER_EXECUTED=true"
+          echo "runner=$RUNNER_NAME"
+          echo "runner_os=$RUNNER_OS"
+          echo "runner_arch=$RUNNER_ARCH"
+          echo "run=$GITHUB_RUN_ID"

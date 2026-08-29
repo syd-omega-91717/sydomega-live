@@ -36,6 +36,13 @@ jobs:
           echo attempt=%GITHUB_RUN_ATTEMPT%
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Full history. `scripts/omega-registry.py` derives each skill's
+          # "Last touched" from `git log -1 -- <path>`, and in a shallow clone
+          # that returns the graft boundary rather than the real commit -- so
+          # at the default depth of 1 every file dates to the CI run itself and
+          # `--check` fails on drift that does not exist.
+          fetch-depth: 0
       - name: Node
         uses: actions/setup-node@v4
         with:

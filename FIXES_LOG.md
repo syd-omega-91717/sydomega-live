@@ -3346,3 +3346,35 @@ by an end-to-end browser run. First real member session will settle it;
   tests, every check asserted in both directions** — the census test reproduces the shipped bug
   exactly (20 keys → 6, `--check` exits 1, registry then reads "14 short of `T_EN`").
   73 → **88 tests**; `ci-local.sh` 16 → **17** blocking checks; `audit.py` 0 critical / 8 warnings.
+
+- **`scripts/omega-registry.py --check` was a guaranteed CI failure, and had already
+  committed three wrong dates.** Found by running the full blocking set against a clean
+  `origin/main` — it exited 1 on drift in the skills table's "Last touched" column alone:
+  `autonomous-coder`, `subscriber-portal` and `web-trend-scout` committed as `2026-08-15`,
+  regenerated as `2026-08-11`.
+  **Root cause: a shallow clone answers `git log -1 -- <path>` with the graft boundary
+  rather than failing.** When the commit that really last touched a file lies beyond the
+  boundary, git silently substitutes the boundary commit, so the date is whatever that
+  commit happens to carry. Reproduced directly: a `--depth 1` clone of this repo reports
+  **2026-08-29** — the clone's own date — for a file whose real commit is `90c310d7` on
+  2026-08-11. `.github/workflows/ci.yml` used `actions/checkout@v4` with no `fetch-depth`,
+  which defaults to **1**, so every CI run would have regenerated all eight dates as the run
+  date and failed `--check` on drift that does not exist. Nobody had seen it because no
+  runner has been assignable on this account since 2026-08-22 (§8.2).
+  **The committed `2026-08-15` values were themselves a guess.** Reading
+  `$(git rev-parse --git-dir)/shallow` in this session's clone listed five boundary SHAs, and
+  `90c310d7` — the commit the date came from — **is one of them**. After
+  `git fetch --unshallow` (480 → **7,362** commits) the real commits appear
+  (`3010634a`, `8b647132`) and all three dates are **2026-08-11**. So the previous value was
+  one shallow clone's boundary and the new one is the truth, not two equally valid readings.
+  **Fixed in both places.** `ci.yml` now sets `fetch-depth: 0`. The generator reads the
+  graft set once and, if `git log` returns a SHA that is in it, records `unknown` and exits 1
+  naming the files and the remedy — refusing to write a date it cannot know, because a wrong
+  date in a generated artifact is indistinguishable from real drift and sends the next
+  session chasing it. **The detection is deliberately the boundary, not shallowness itself**:
+  a first attempt refused on any shallow clone and broke this very checkout, which is shallow
+  at 480 commits yet correct for every file whose commit is inside that window.
+  **Verified in both directions**: a depth-1 clone refuses, naming 9 files; this repo
+  (post-deepen) generates cleanly and `--check` passes. The new test grafts a fixture's own
+  history via `.git/shallow` and asserts exit 0 before and exit 1 after.
+  91 → **92 tests**; `ci-local.sh` 17/17; every blocking `ci.yml` step green.

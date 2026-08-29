@@ -3846,3 +3846,122 @@ which that shorthand cannot reach, so every bar reads identically.
 `scan.js chrome` 0/179; `scan.js overflow` 0/179; `audit.py` 0 critical /
 7 warnings; `ci-local.sh` 17/17 after `omega-registry.py` picked up the two
 new modules (114 -> 116).
+
+
+---
+
+## First full live sweep of RLS scoping and owner-guarded RPCs
+
+Run with live database access against project `ydqhzvvoyufiiqvzcjns`.
+
+### Client tables vs live schema — 57/60 healthy
+
+Every table named in a client `.from(...)` call (60 distinct) checked live for
+existence, RLS, policy count and a grant to `authenticated`. Three did not come
+back clean, and all three are already-known and deliberate:
+
+* `top_pages` — a view, so RLS does not apply; it runs `security_invoker` and
+  defers to `telemetry_events`' own policies (fixed earlier, `omega_live_fixes_2026_08_29.sql`).
+* `transactions`, `wallet_balances` — MISSING, deliberate: the token/payment
+  infrastructure is dormant pending legal review (CLAUDE.md 8.2).
+
+No new broken client feature. The `oaths` fix from the earlier pass is holding.
+
+### One real RLS gap: `dispatches`
+
+Every RLS-enabled public table carrying a `user_id` was counted twice — once
+privileged, once impersonating a real non-owner approved member. Empty tables
+were skipped (both counts are 0 there and prove nothing). One table returned the
+same count to a non-owner as to a superuser.
+
+`dispatches_select` read:
+
+    (is_published = true) OR is_platform_owner() OR ((SELECT auth.role()) = 'authenticated')
+
+The third branch is true for every signed-in member, which makes the first
+branch **dead**: `is_published` gated nothing and an unpublished draft was
+readable platform-wide. Exactly CLAUDE.md 8.4's "classifying a policy by
+substring is not reading it" — a scanner looking for `is_published` or for
+`is_platform_owner` calls this policy correctly scoped.
+
+Nothing was exposed at the time: the table held one row and it was published.
+That is why it was fixed then — zero blast radius, gap closed before the first
+draft exists. The blanket branch was standing in for an author branch, so that
+is what replaced it. Write policies were already correct and untouched.
+
+Verified live on a real seeded draft owned by member A (both cases return 0
+against a table with no drafts and would have proved nothing):
+
+| assertion | result |
+|---|---|
+| member B sees A's draft | 0 (was 1) |
+| member B total rows | 1 — the published one only |
+| author A sees own draft | 1 |
+| owner sees all rows | 2 |
+
+Probe draft rolled back; `dispatches` left at its original 1 row.
+
+### A false critical, caught before it was reported
+
+The first pass at the owner-guarded RPCs concluded that **five** privilege-
+granting functions were callable by any member — `approve_member`,
+`extend_trial`, `academy_promote`, `award_token`, `apply_subscription`. That
+would have meant any member could approve members, mint tokens and grant
+themselves a paid subscription.
+
+It was wrong, and the bug was in the probe. Those functions **return a refusal
+payload instead of raising**:
+
+    IF NOT public.is_platform_owner() THEN
+      RETURN jsonb_build_object('ok', false, 'error', 'forbidden');
+    END IF;
+
+so `PERFORM fn(...)` inside a `BEGIN ... EXCEPTION` block completes without
+error, and an exception-based test reads that as success. This is CLAUDE.md
+8.1 class 1 turned around: the same "resolves rather than throws" shape that
+makes a failed write look successful to application code also makes a
+successfully-blocked call look permitted to a test. **The return value is the
+only evidence.** Re-tested by capturing it:
+
+| function | returns to a non-owner |
+|---|---|
+| `approve_member` | `{"ok": false, "error": "forbidden"}` |
+| `extend_trial` | `{"ok": false, "error": "forbidden"}` |
+| `apply_subscription` | `{"ok": false, "error": "forbidden"}` |
+| `academy_promote` | `{"ok": false, "error": "owner_only"}` |
+| `award_token` | `{"ok": false, "note": "economy disabled until legal sign-off"}` |
+
+All correctly guarded. `award_token` additionally confirms the `tokens_enabled`
+dormancy gate is live, not just declared.
+
+The owner helpers were checked directly under the same impersonation and are
+sound: `omega_is_owner()` and `is_platform_owner()` both return `false` for a
+non-owner while `auth.uid()` resolves to that member — so the helper layer every
+owner-gated policy depends on is not the weak point.
+
+Every probe in this pass ended in a deliberate `RAISE` so the whole block rolled
+back. Confirmed afterwards: `notifications` still 0 rows, the probe target still
+approved, `dispatches` back to 1 row.
+
+### Advisors: 173 lints, 0 ERROR
+
+89 INFO `rls_enabled_no_policy` (the scaffold tables — RLS on with no policy is
+total lockout, the safe state), 83 WARN `security_definer_function_executable`
+(reviewed above; the sensitive ones are guarded), 1 WARN
+`auth_leaked_password_protection` (Pro-plan feature, unavailable on `free`).
+
+### Five `USING(true)` SELECT policies reviewed, none changed
+
+`leaderboard_snapshots`, `member_events`, `member_presence`, `oaths`,
+`platform_owners`. None is the `dispatches` shape — none has a visibility gate
+for a blanket branch to cancel. They are read-only social surfaces meant to be
+member-visible; narrowing them is a product decision, not a bug fix.
+
+### Open, needs an owner decision: there are TWO owner accounts
+
+`profiles.is_owner = true` for both `s.y.dagher@gmail.com` and
+`slmndghr@gmail.com`. CLAUDE.md 1 describes this as a single-owner platform
+keyed to the first address. The second account carries full elevated access
+across every owner-gated policy and RPC verified above. Not changed — removing
+an owner is an ownership decision, not a fix — but it should be confirmed as
+intended.

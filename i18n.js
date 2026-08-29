@@ -1078,7 +1078,23 @@ var T_EN={
 "settings_category_audio":"AUDIO",
 "settings_ambient":"Ambient Frequency",
 "settings_click_sounds":"Click Sounds",
-"settings_oracle_voice":"Oracle Voice"
+"settings_oracle_voice":"Oracle Voice",
+"cosmos_tab_agents":"&#9670; AGENTS",
+"cosmos_tab_horoscope":"&#9670; COSMOS",
+"cosmos_tab_gates":"&#9670; GATES",
+"cosmos_tab_science":"&#9670; SCIENCE",
+"cosmos_agents_heading":"AI COUNCIL CHAMBER -- 12 EXECUTOR AGENTS",
+"cosmos_oracle_heading":"DAILY ORACLE &mdash;",
+"cosmos_signs_heading":"THE 12 SOVEREIGN SIGNS &mdash; GENESIS MANDALA",
+"cosmos_positions_heading":"PLANETARY POSITIONS &mdash; SYMBOLIC PLACEMENT",
+"cosmos_compatibility_heading":"SIGN COMPATIBILITY",
+"cosmos_elements_heading":"THE 9 SOVEREIGN ELEMENTS",
+"cosmos_gates_heading":"THE 12 GATES OF AUTHORITY",
+"cosmos_gods_heading":"THE 12 OLYMPIAN GODS",
+"cosmos_constants_heading":"&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE",
+"cosmos_gates_thresholds":"GATE THRESHOLDS",
+"feed_topbar_title":"ACTIVITY FEED",
+"feed_topbar_subtitle":"M8 COMMUNICATION · MEMBER ACTIVITY STREAM · AUTH=sqrt(A³+B³+C³)×φ/e"
 };
 
 /* T is the merged dictionary in the original {key:{lang:string}} shape, so

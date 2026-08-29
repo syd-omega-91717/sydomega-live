@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "SYD OMEGA 91717 — 16-Block Production Architecture",
+  "version": "1.0.0",
+  "purpose": "Machine-readable architecture contract for scalable, secure, observable and AI-ready production operation.",
+  "evidence_policy": "A block is not VERIFIED merely because its specification exists. Verification requires executable evidence appropriate to the block.",
+  "blocks": [
+    {"id":"api-gateway","layer":"architecture","purpose":"Route, authenticate, authorize, rate-limit and version external API traffic.","evidence":["route contract","authentication test","rate-limit test","versioning test"]},
+    {"id":"load-balancer","layer":"architecture","purpose":"Distribute traffic across healthy runtime instances and remove unhealthy targets.","evidence":["health-check contract","distribution test","failure-removal test"]},
+    {"id":"microservices","layer":"architecture","purpose":"Separate independently deployable business capabilities where independent scaling or ownership is justified.","evidence":["service boundary registry","dependency map","contract tests"]},
+    {"id":"event-driven","layer":"architecture","purpose":"Decouple producers and consumers with durable asynchronous events.","evidence":["event schema","producer test","consumer test","retry/dead-letter policy"]},
+    {"id":"database","layer":"data","purpose":"Provide durable transactional system-of-record storage with explicit schema, constraints and migrations.","evidence":["schema registry","migration chain","constraint tests","backup evidence"]},
+    {"id":"caching","layer":"data","purpose":"Reduce latency and database load without becoming the source of truth.","evidence":["cache policy","TTL/invalidation test","fallback test"]},
+    {"id":"data-partitioning","layer":"data","purpose":"Partition high-volume datasets when measured scale requires it while preserving query correctness.","evidence":["partition strategy","routing test","retention policy"]},
+    {"id":"object-blob-storage","layer":"data","purpose":"Store user media, documents, backups, exports and other large immutable or versioned objects.","evidence":["bucket policy","upload/download test","access-control test","retention policy"]},
+    {"id":"message-queues","layer":"reliability","purpose":"Absorb traffic spikes and isolate asynchronous workloads from interactive request paths.","evidence":["queue contract","retry policy","dead-letter handling","idempotency test"]},
+    {"id":"fault-tolerance","layer":"reliability","purpose":"Prevent cascading failures through timeouts, retries, circuit breaking, isolation and graceful degradation.","evidence":["failure-injection test","timeout policy","retry budget","degradation test"]},
+    {"id":"cdn","layer":"reliability","purpose":"Deliver cacheable static and media content close to users and reduce origin load.","evidence":["cache headers","origin fallback","cache invalidation test"]},
+    {"id":"high-availability","layer":"reliability","purpose":"Maintain service continuity through redundancy, health checks, backup, restoration and defined recovery objectives.","evidence":["RTO/RPO","restore test","health checks","continuity runbook"]},
+    {"id":"observability","layer":"operations","purpose":"Make system behavior measurable through structured logs, metrics, traces, alerts and audit events.","evidence":["correlation IDs","health metrics","alert rules","audit-log verification"]},
+    {"id":"security-identity","layer":"operations","purpose":"Protect identities, secrets, data and service boundaries with least privilege, Zero Trust controls and auditable authorization.","evidence":["RBAC/ABAC tests","RLS tests","secret scan","threat model","incident runbook"]},
+    {"id":"ai-llm-gateway","layer":"intelligence","purpose":"Centralize model routing, prompt policy, safety controls, token/cost budgets, model versions and evaluation evidence.","evidence":["model registry","policy enforcement test","cost telemetry","evaluation suite","fallback test"]},
+    {"id":"vector-search-rag","layer":"intelligence","purpose":"Ground retrieval-augmented AI capabilities in permission-aware, provenance-aware indexed data.","evidence":["embedding/index contract","source provenance","permission filter test","retrieval evaluation","citation trace"]}
+  ],
+  "platform_cross_cuts": [
+    "governance",
+    "privacy-and-data-protection",
+    "accessibility",
+    "intellectual-property-and-licensing",
+    "records-management",
+    "supply-chain-security",
+    "business-continuity",
+    "financial-controls",
+    "ai-governance",
+    "human-oversight",
+    "change-management"
+  ],
+  "status_model": ["SPECIFIED","DESIGNED","BUILT","CONNECTED","TESTED","DEPLOYED","VERIFIED","BLOCKED"],
+  "verification_rule": "BLOCKED or SPECIFIED is never equivalent to VERIFIED; live credentials and production evidence are required for environment-dependent claims."
+}

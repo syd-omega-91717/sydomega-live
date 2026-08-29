@@ -1,0 +1,57 @@
+name: Capability Evidence
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sydomega-quality-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: cmd
+
+jobs:
+  evidence:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Runner diagnostics
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate capability registry
+        run: python scripts/capability-audit.py --check
+      - name: Source runtime audit
+        run: python scripts/capability-audit.py
+      - name: Validate registry JSON
+        run: python -m json.tool docs/capabilities/registry.json
+      - name: Validate architecture runtime
+        run: python scripts/architecture-readiness.py
+      - name: Execution marker
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo CAPABILITY_EVIDENCE_EXECUTED=true
+          echo CAPABILITY_EVIDENCE_RUN_ID=%GITHUB_RUN_ID%
+          echo CAPABILITY_EVIDENCE_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

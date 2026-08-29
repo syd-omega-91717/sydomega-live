@@ -1,0 +1,61 @@
+name: Workflow Contract
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-contract-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: cmd
+
+jobs:
+  workflow-contract:
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - name: Runner diagnostics
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate workflow contracts
+        run: python scripts/workflow-contract.py
+      - name: Validate architecture contract
+        run: python scripts/architecture-contract.py
+      - name: Validate implementation readiness
+        run: python scripts/architecture-readiness.py
+      - name: Validate local production gate help path
+        run: |
+          @echo off
+          if not exist scripts\ci-local.sh exit /b 1
+          findstr /C:"--help" scripts\ci-local.sh >nul || exit /b 1
+          echo ci-local.sh help contract verified
+      - name: Execution marker
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo WORKFLOW_CONTRACT_EXECUTED=true
+          echo WORKFLOW_CONTRACT_RUN_ID=%GITHUB_RUN_ID%
+          echo WORKFLOW_CONTRACT_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ω Architecture Control Plane</title>
+<meta name="description" content="SYD OMEGA 91717 production architecture control plane and runtime evidence dashboard">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--panel:#101017;--line:#2b2b36;--gold:#C9A84C;--cyan:#00E5FF;--ok:#3fb27f;--warn:#E2C86D;--ink:#e9e6dc;--muted:#8a8676}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#202018 0,#0A0A0F 42%);color:var(--ink);font:14px/1.55 system-ui,sans-serif}.wrap{max-width:1200px;margin:auto;padding:28px}.hero{border:1px solid var(--line);padding:28px;background:rgba(16,16,23,.8);box-shadow:0 20px 60px #0008}.eyebrow{color:var(--cyan);font:11px monospace;letter-spacing:3px}.title{font-size:clamp(28px,5vw,56px);margin:8px 0;color:var(--gold)}.sub{color:var(--muted);max-width:760px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:18px}.card{border:1px solid var(--line);background:var(--panel);padding:18px;min-height:130px}.card h2{font-size:15px;margin:0 0 8px;color:var(--gold)}.status{font-family:monospace;letter-spacing:1px}.ok{color:var(--ok)}.warn{color:var(--warn)}.evidence{font-size:12px;color:var(--muted);margin-top:8px}.bar{height:4px;background:#262630;margin-top:12px}.bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .3s}.meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;font-family:monospace;font-size:12px;color:var(--muted)}button{background:transparent;color:var(--cyan);border:1px solid #2d6c73;padding:9px 14px;cursor:pointer}button:hover{border-color:var(--cyan);background:#00e5ff12}pre{white-space:pre-wrap;max-height:280px;overflow:auto;color:var(--muted);font-size:11px}
+</style>
+  <script src="/bg.js"></script>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow">Ω SYD OMEGA 91717 / PRODUCTION CONTROL PLANE</div>
+<h1 class="title">16-Block Architecture</h1>
+<p class="sub">Runtime capability control and evidence surface for the existing platform. Infrastructure-dependent capabilities remain explicitly unverified until their real deployment evidence is available.</p>
+<div class="meta"><span id="runtime">RUNTIME: loading</span><span id="count">BLOCKS: 0/16</span><span id="origin"></span><button id="probe">RUN HEALTH PROBES</button></div>
+</section>
+<section id="grid" class="grid" aria-live="polite"></section>
+<section class="card" style="margin-top:12px"><h2>Runtime evidence</h2><pre id="log">Waiting for runtime…</pre></section>
+</main>
+<script src="/omega-architecture-runtime.js"></script>
+<script>
+(function(){
+'use strict';
+var labels={
+'api-gateway':'API Gateway','load-balancer':'Load Balancer','microservices':'Microservices','event-driven':'Event-Driven','database':'Database','caching':'Caching','data-partitioning':'Data Partitioning','object-blob-storage':'Object / Blob Storage','message-queues':'Message Queues','fault-tolerance':'Fault Tolerance','cdn':'CDN','high-availability':'High Availability','observability':'Observability','security-identity':'Security & Identity','ai-llm-gateway':'AI / LLM Gateway','vector-search-rag':'Vector Search / RAG'};
+var grid=document.getElementById('grid'), log=document.getElementById('log');
+function render(){var s=window.__omegaArchitecture.status(), ids=Object.keys(labels); grid.innerHTML=''; var connected=0;
+ids.forEach(function(id){var x=s[id]||{status:'UNAVAILABLE',evidence:[]}; if(x.status==='CONNECTED'||x.status==='VERIFIED'||x.status==='DEPLOYED')connected++; var c=document.createElement('article'); c.className='card'; c.innerHTML='<h2>'+labels[id]+'</h2><div class="status '+(x.status==='BUILT'||x.status==='CONNECTED'?'ok':'warn')+'">'+x.status+'</div><div class="evidence">'+(x.evidence||[]).join(' · ')+'</div><div class="bar"><i style="width:'+(x.status==='VERIFIED'?100:x.status==='CONNECTED'?80:x.status==='BUILT'?55:10)+'%"></i></div>'; grid.appendChild(c)});
+document.getElementById('count').textContent='CONNECTED/VERIFIED: '+connected+'/16'; document.getElementById('runtime').textContent='RUNTIME: '+window.__omegaArchitecture.version; document.getElementById('origin').textContent=location.origin; log.textContent=JSON.stringify(s,null,2);}
+window.__omegaArchitecture.subscribe(render); render();
+document.getElementById('probe').onclick=function(){var a=window.__omegaArchitecture; a.health({origin:function(){return fetch(location.origin+'/',{method:'HEAD',cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('origin '+r.status)})},cdn:function(){return a.cdnProbe().then(function(r){if(!r.ok)throw new Error('robots '+r.status)})}}).then(function(x){a.observe('architecture_health_checks',x.length,'checks'); log.textContent=JSON.stringify({checks:x,status:a.status()},null,2);});};
+})();
+</script>
+</body></html>

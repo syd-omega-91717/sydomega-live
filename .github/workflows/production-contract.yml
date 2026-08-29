@@ -1,0 +1,59 @@
+name: Production Contract
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-contract-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: cmd
+
+jobs:
+  contract:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Runner diagnostics
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Production contract
+        run: python scripts/production-contract.py
+      - name: JavaScript syntax
+        run: |
+          @echo off
+          for %%F in (*.js) do node --check "%%F" || exit /b 1
+      - name: Execution marker
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo PRODUCTION_CONTRACT_EXECUTED=true
+          echo PRODUCTION_CONTRACT_RUN_ID=%GITHUB_RUN_ID%
+          echo PRODUCTION_CONTRACT_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

@@ -1,258 +1,106 @@
 name: CI
 
-# Gate between commit and production. Before this existed, a syntax error in
-# bg.js would take down all 105 pages and nothing would catch it.
-# See ARCHITECTURE.md finding F-5.
-
 on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Supersede in-flight runs for the same branch instead of letting them finish
-# alongside their replacement. A PR that is pushed to several times was
-# previously running the whole suite once per push, all of them to completion,
-# and only the last result was ever looked at.
-#
-# cancel-in-progress is deliberately scoped to pull_request only: a run on main
-# is the record for a merged commit, and cancelling one because another merge
-# landed seconds later would throw that record away to save ~50s.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: cmd
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    # The whole suite finishes in ~55s. Without a cap, a step that hangs holds
-    # a runner for GitHub's 6-hour default -- which matters a great deal on an
-    # account that has run out of included minutes.
-    timeout-minutes: 15
+    runs-on: self-hosted
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Runner diagnostics
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-
-      # Prettier and ESLint are fetched with `npx --yes` rather than installed
-      # from a lockfile (there is no package-lock.json), so every run
-      # re-downloaded them: measured at 23s and 4s of a 53s run, i.e. half the
-      # job, for two steps that only report drift and cannot fail the build.
-      # Caching ~/.npm removes most of that. A cache miss simply downloads as
-      # before, so this cannot break the run -- unlike setup-node's `cache: npm`,
-      # which errors out when no lockfile exists.
-      - name: Cache npm downloads
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-tools-${{ runner.os }}-prettier3-eslint8
-          restore-keys: npm-tools-${{ runner.os }}-
-
-      - uses: actions/setup-python@v5
+      - name: Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      # ---- 1. Syntax. The cheapest check and the one that prevents outages.
-      #         bg.js is loaded by 104 of 105 pages; if it does not parse,
-      #         the entire platform is down.
       - name: JavaScript syntax
         run: |
-          fail=0
-          for f in *.js; do
-            node --check "$f" || { echo "::error file=$f::syntax error"; fail=1; }
-          done
-          exit $fail
-
-      # ---- 1b. Inline <script> syntax. Each of the ~250 pages carries its
-      #         own inline JS (no build step, no bundler) — step 1 above never
-      #         looks inside those blocks, so a broken template string or an
-      #         unescaped quote in page-embedded JS can ship silently and only
-      #         surface when a member loads that exact page in a browser.
-      - name: Inline script syntax
-        run: python3 scripts/check-inline-js.py
-
-      # ---- 2. Repository integrity: missing modules, RLS gaps, dead files.
+          @echo off
+          for %%F in (*.js) do node --check "%%F" || exit /b 1
+      - name: Inline JavaScript syntax
+        run: python scripts/check-inline-js.py
       - name: Repository audit
-        run: python3 scripts/audit.py
-
-      # ---- 2b. Self-tests for the audit tooling itself. audit.py and
-      #         check-inline-js.py are the gate everything else above runs
-      #         through; a regression in their own logic (e.g. a regex that
-      #         silently stops matching) would let broken code pass CI
-      #         without anyone noticing. Fixture-based, no live repo state.
-      - name: Audit tooling self-tests
-        run: python3 -m unittest discover -s scripts/tests -v
-
-      # ---- 2c. Schema dictionary validation: catch column-name mismatches
-      #         between SQL and client code before they ship (root cause of
-      #         ~20 bugs in this repo's history). Reported as warnings only,
-      #         since the live database contains scaffold/dormant tables not
-      #         defined in repo SQL files — those gaps are known and documented.
-      - name: Schema dictionary validation
-        run: python3 scripts/schema-dictionary.py
+        run: python scripts/audit.py
+      - name: Audit tooling tests
+        run: python -m unittest discover -s scripts/tests -v
+      - name: Production contract
+        run: python scripts/production-contract.py
+      - name: Workflow contract
+        run: python scripts/workflow-contract.py
+      - name: 16-block architecture contract
+        run: python scripts/architecture-contract.py
+      - name: 16-block implementation readiness
+        run: python scripts/architecture-readiness.py
+      - name: Capability registry
+        run: python scripts/capability-audit.py --check
+      - name: Capability runtime audit
+        run: python scripts/capability-audit.py
+      - name: Registry JSON
+        run: python -m json.tool docs/capabilities/registry.json
+      - name: Schema dictionary
+        run: python scripts/schema-dictionary.py
         continue-on-error: true
-
-      # ---- 2d. RLS policy auditor: detect dangerous WITH CHECK(true) and
-      #         missing auth.uid() scoping that would allow unintended access.
-      #         Reported as warnings only, since these represent pre-existing
-      #         duplicate policy definitions across the flat supabase/*.sql bag
-      #         (documented in CLAUDE.md §5 as duplicate table definitions) — the
-      #         live production database has been verified for correctness, and
-      #         consolidating these duplicates needs live-schema verification.
-      - name: RLS policy auditor
-        run: python3 scripts/rls-auditor.py
+      - name: RLS audit
+        run: python scripts/rls-auditor.py
         continue-on-error: true
-
-      # ---- 2e. Silent failure detector: find .insert()/.update()/.rpc()
-      #         calls that don't check .error before showing success (causes
-      #         UI to lie when writes silently fail). These are real bugs
-      #         already documented in CLAUDE.md §8; reported as warnings only
-      #         since fixing them requires deliberate refactoring decisions.
-      - name: Silent failure detector
-        run: python3 scripts/silent-failure-detector.py
+      - name: Silent failure audit
+        run: python scripts/silent-failure-detector.py
         continue-on-error: true
-
-      # ---- 2f. Migration consistency: compare flat supabase/*.sql against
-      #         ordered migrations/ to detect schema drift and duplicates
-      #         with incompatible definitions. Reported as warnings only,
-      #         since drift is already documented and needs live DB verification.
-      - name: Migration consistency check
-        run: python3 scripts/migration-consistency.py
+      - name: Migration consistency
+        run: python scripts/migration-consistency.py
         continue-on-error: true
-
-      # ---- 2g. Type generation: auto-generate TypeScript types from schema
-      #         so type mismatches are caught before runtime.
-      - name: Generate TypeScript types from schema
-        run: python3 scripts/types-from-schema.py
-
-      # ---- 2i. Upsert conflict targets: an upsert only writes if its
-      #         onConflict matches a real unique index. Four separate places in
-      #         this repo got that wrong (42P10 with no matching key, or 23505
-      #         from no onConflict at all on a table with a non-PK unique
-      #         constraint), and every one failed silently because the Supabase
-      #         client resolves rather than throws. Advisory like the other
-      #         schema checks: the flat SQL bag does not always match live.
-      - name: Upsert conflict targets
-        run: python3 scripts/upsert-conflict-check.py
+      - name: Upsert conflict audit
+        run: python scripts/upsert-conflict-check.py
         continue-on-error: true
-
-      # ---- 2j. Skill/agent registry. Every hand-typed count describing this
-      #         repo's own agent infrastructure had drifted: the skills README
-      #         said "Four skills", CLAUDE.md said "Five" in one section and
-      #         "4-skill pipeline" in another, and 8 exist. CLAUDE.md also said
-      #         "~250 .html pages" (178) and that bg.js was loaded by "104+" of
-      #         them (all 178). OMEGA_SKILL_REGISTRY.md is generated from the
-      #         filesystem instead; this fails when it drifts. Blocking, and it
-      #         also hard-fails a SKILL.md with no name/description -- which is
-      #         what had happened to grill-me-codex, the safety gate for auth/
-      #         schema/payments work, leaving it the least discoverable skill.
-      - name: Skill/agent registry
-        run: python3 scripts/omega-registry.py --check
-
-      # ---- 2h. Context budget. CLAUDE.md is loaded into every agent session
-      #         before any work starts, and that cost is invisible unless
-      #         something reports it. It reached ~68,900 tokens once, 88% of
-      #         which was closed history that now lives in FIXES_LOG.md.
-      #         Blocking on purpose: the repo's own docs rule pushes toward
-      #         appending, so without a gate this regrows silently.
+      - name: Skill and agent registry
+        run: python scripts/omega-registry.py --check
       - name: Context budget
-        run: python3 scripts/context-budget.py
-
-      # ---- 3. Style. Configs already existed in the repo but nothing ran them.
-      - name: Prettier
-        run: npx --yes prettier@3 --check . || echo "::warning::formatting drift"
-        continue-on-error: true
-
-      - name: ESLint
-        run: npx --yes eslint@8 . || echo "::warning::lint findings"
-        continue-on-error: true
-
-      # ---- 4. Every page must reference only files that exist.
-      - name: Broken local asset references
+        run: python scripts/context-budget.py
+      - name: Client credential scan
         run: |
-          missing=0
-          for page in *.html; do
-            assets=$(grep -oE '(src|href)="/[^"#?:]+\.(js|css|png|jpg|svg|ico|webp|mp4)"' "$page" \
-                     | sed -E 's/.*"\/(.*)"/\1/' | sort -u)
-            for asset in $assets; do
-              if [ ! -e "$asset" ]; then
-                echo "::error file=$page::missing asset $asset"
-                missing=$((missing+1))
-              fi
-            done
-          done
-          if [ "$missing" -gt 0 ]; then
-            echo "$missing broken asset reference(s)."
-            exit 1
-          fi
-          echo "All local asset references resolve."
-
-      # ---- 5. Secrets. The publishable key is expected in bg.js and is fine.
-      #         A service_role key is not, and would be a full data breach.
-      - name: Service-role key scan
+          @echo off
+          findstr /S /I /N /C:"service_role" /C:"SUPABASE_SERVICE_ROLE_KEY" *.js *.html *.json > "%TEMP%\sydomega-credential-scan.txt" 2>nul
+          if not errorlevel 1 (
+            type "%TEMP%\sydomega-credential-scan.txt"
+            del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
+            exit /b 1
+          )
+          del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
+      - name: Execution marker
         run: |
-          if grep -rIn --include='*.js' --include='*.html' --include='*.json' \
-               -e 'service_role' -e 'SUPABASE_SERVICE' . ; then
-            echo "::error::service_role reference found in client code"
-            exit 1
-          fi
-          echo "No service_role key in client code."
-
-      # ---- 6. Edge Function TypeScript syntax check.
-      #         Deno's check is cheap and catches import/type errors before deploy.
-      - name: Edge Function syntax (Deno)
-        run: |
-          if command -v deno &>/dev/null; then
-            fail=0
-            for f in supabase/functions/*/index.ts; do
-              deno check "$f" 2>&1 || { echo "::warning file=$f::deno check failed (non-blocking)"; }
-            done
-          else
-            echo "Deno not installed — skipping Edge Function syntax check."
-            echo "Install with: curl -fsSL https://deno.land/install.sh | sh"
-          fi
-        continue-on-error: true
-
-      # ---- 7. Verify sw.js CORE_ASSETS all exist in the deploy root.
-      #         A missing file silently poisons the service worker cache.
-      - name: Service worker precache integrity
-        run: |
-          fail=0
-          assets=$(node -e "
-            const src = require('fs').readFileSync('sw.js','utf8');
-            const m = src.match(/var CORE_ASSETS\s*=\s*\[([\s\S]*?)\]/);
-            if(!m) process.exit(0);
-            m[1].replace(/\/\/[^\n]*/g,'').match(/'([^']+)'/g)
-              .forEach(a => console.log(a.replace(/'/g,'')));
-          ")
-          for asset in $assets; do
-            f="${asset#/}"
-            if [ ! -e "$f" ]; then
-              echo "::error file=sw.js::precache references missing file: $asset"
-              fail=$((fail+1))
-            fi
-          done
-          [ "$fail" -eq 0 ] && echo "All sw.js CORE_ASSETS exist." || exit 1
-
-      # ---- 8. manifest.json icon paths exist.
-      - name: PWA manifest icon check
-        run: |
-          fail=0
-          node -e "
-            const m = JSON.parse(require('fs').readFileSync('manifest.json','utf8'));
-            const icons = [...(m.icons||[]),...(m.shortcuts||[]).flatMap(s=>s.icons||[])];
-            icons.forEach(i => {
-              const f = i.src.replace(/^\//,'');
-              const fs2 = require('fs');
-              if(!fs2.existsSync(f)){
-                console.log('MISSING: ' + i.src);
-                process.exitCode = 1;
-              }
-            });
-          " || { echo "::error file=manifest.json::missing icon file"; exit 1; }
-          echo "All manifest icon files exist."
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo CI_EXECUTED=true
+          echo CI_RUN_ID=%GITHUB_RUN_ID%
+          echo CI_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

@@ -18,14 +18,14 @@ effectively invisible unless invoked by exact name.
 
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
-| `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-11 |
+| `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-15 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
-| `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
+| `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-15 |
 | `verify-in-browser` | yes | 4 | 1,971 | CLAUDE.md, README.md | 2026-08-23 |
-| `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
+| `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-15 |
 
 **8 skills, ~13,019 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
@@ -62,8 +62,8 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | pages loading `bg.js` | 179 of 179 |
 | `omega-*.js` modules | 114 (882 KB) |
 | root `.js` files | 123 |
-| `supabase/*.sql` (flat bag) | 121 |
-| `supabase/migrations/*.sql` | 141 (99 numbered `NNNN_`, 42 timestamped) |
+| `supabase/*.sql` (flat bag) | 123 |
+| `supabase/migrations/*.sql` | 143 (101 numbered `NNNN_`, 42 timestamped) |
 | Edge Functions | 11 |
 | skills | 8 |
 | agent definitions | 1 |
@@ -87,9 +87,9 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 47 files added since (numbered and
+end-to-end for the first time"*. The 49 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 141. Treat the validated scope as `0001`–`0094` only.
+all 143. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 179 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

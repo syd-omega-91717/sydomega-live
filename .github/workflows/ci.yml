@@ -16,21 +16,21 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: ubuntu-slim
+    runs-on: self-hosted
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}"
-          test -n "${RUNNER_OS:-}"
-          test -n "${RUNNER_ARCH:-}"
-          echo "runner=${RUNNER_NAME}"
-          echo "runner_os=${RUNNER_OS}"
-          echo "runner_arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_OS)) { throw 'RUNNER_OS is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_ARCH)) { throw 'RUNNER_ARCH is empty' }
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "runner_os=$env:RUNNER_OS"
+          Write-Host "runner_arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Node
@@ -42,12 +42,12 @@ jobs:
         with:
           python-version: '3.12'
       - name: JavaScript syntax
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          mapfile -t files < <(find . -maxdepth 1 -type f -name '*.js' -print)
-          test "${#files[@]}" -gt 0
-          for file in "${files[@]}"; do node --check "$file"; done
+          $ErrorActionPreference = 'Stop'
+          $files = @(Get-ChildItem -Path . -File -Filter '*.js')
+          if ($files.Count -eq 0) { throw 'No root JavaScript files found' }
+          foreach ($file in $files) { node --check $file.FullName; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
       - name: Inline JavaScript syntax
         run: python scripts/check-inline-js.py
       - name: Repository audit
@@ -88,16 +88,19 @@ jobs:
       - name: Context budget
         run: python scripts/context-budget.py
       - name: Client credential scan
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          if grep -RInE --include='*.js' --include='*.html' --include='*.json' 'service_role|SUPABASE_SERVICE_ROLE_KEY' .; then
-            echo 'Client credential marker detected'
-            exit 1
-          fi
+          $ErrorActionPreference = 'Stop'
+          $hits = @(Get-ChildItem -Path . -Recurse -File -Include '*.js','*.html','*.json' | Select-String -Pattern 'service_role|SUPABASE_SERVICE_ROLE_KEY')
+          if ($hits.Count -gt 0) {
+            $hits | ForEach-Object { Write-Host $_.ToString() }
+            throw 'Client credential marker detected'
+          }
       - name: Execution marker
+        shell: pwsh
         run: |
-          test -n "${RUNNER_NAME:-}"
-          echo 'CI_EXECUTED=true'
-          echo "CI_RUN_ID=${GITHUB_RUN_ID}"
-          echo "CI_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }
+          Write-Host 'CI_EXECUTED=true'
+          Write-Host "CI_RUN_ID=$env:GITHUB_RUN_ID"
+          Write-Host "CI_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

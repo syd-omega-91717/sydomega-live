@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
@@ -46,7 +46,7 @@ jobs:
       - name: Validate architecture runtime
         run: python scripts/architecture-readiness.py
       - name: Execution marker
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }

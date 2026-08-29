@@ -3378,3 +3378,69 @@ by an end-to-end browser run. First real member session will settle it;
   (post-deepen) generates cleanly and `--check` passes. The new test grafts a fixture's own
   history via `.git/shallow` and asserts exit 0 before and exit 1 after.
   91 → **92 tests**; `ci-local.sh` 17/17; every blocking `ci.yml` step green.
+
+- **First live-database verification this repo has ever had — and it found a whole feature that
+  never reached the server.** Everything before this was source- and browser-level only, which
+  `CLAUDE.md` §8.4 already warned was the unimportant half: *"a `BUILT` row means the client is
+  wired and nothing more. The live table, its columns, its `GRANT` and its policy are all still
+  unverified, and each has been a real shipped bug."* With Supabase access finally authorized,
+  all 57 tables named in a client `.from(...)` call were checked against production for
+  existence, grants to `authenticated`, and policy count. **53 came back fully healthy.** Four
+  did not: `transactions` and `wallet_balances` (both MISSING — known and deliberate, tokens
+  dormant per §8.2), plus two nobody had recorded.
+  **`oaths` did not exist in production.** `oath.html` inserts to and selects from it, and the
+  table *is* declared — in `supabase/chunk_09_new_features.sql`, a file that was **never
+  applied**: 3 of its 4 tables are absent live (`oaths`, `codex_bookmarks`, `signal_saves`; only
+  `user_dedication` exists). Nothing ever crashed, because `oath.html` is written correctly — it
+  checks `res.error` and falls back to `localStorage` with a different toast (*"OATH HASHED"*
+  rather than *"OATH SEALED"*). So this is **not** the silent-success class of §8.1(1); it is
+  quieter and arguably worse. Every oath any member has ever sworn lives only in that member's
+  browser, has never been persisted, and dies with their cache.
+  Fixed by applying the bag's own declaration, reviewed first rather than pasted:
+  `oaths_insert` is `WITH CHECK (auth.uid() = user_id)` — the correctly scoped form, not the
+  `WITH CHECK(true)` spoofing shape of §8.1(6b); `oaths_read` is `USING(true)`, which the file
+  comments as a deliberate *"transparent ledger"* and which matches `loadOaths()` reading all
+  members' oaths; there are no UPDATE/DELETE policies, so oaths are immutable; and the `GRANT`
+  is present and matches the policies, so it does not repeat the policy-without-grant class of
+  §8.1(6c) that broke 22 features. The client's six `data-cat` values were checked against the
+  `CHECK` constraint **before** applying, since a mismatch would have made every insert fail on
+  a check violation. `codex_bookmarks` and `signal_saves` were deliberately **not** created —
+  `codex.html` uses `localStorage` only and never calls `.from('codex_bookmarks')`, and
+  `signal_saves` has zero references repo-wide; creating them would be building unwired
+  features.
+  **Verified by impersonating a real non-owner member**, all eight checks: SELECT OK; INSERT as
+  self allowed **and the row confirmed present afterwards** (not merely "did not error");
+  INSERT attributed to another member refused `42501`; UPDATE refused; DELETE refused; anon
+  refused; probe rows removed, table left at 0.
+  **`top_pages` — and the obvious fix would have been a privacy regression.** The view existed
+  live with **no grant to `authenticated`**, so `dashboard.html:953` failed `42501` for
+  everyone including the owner; that widget has never rendered, silently, inside a bare
+  `try/catch`. Granting it would have leaked: `reloptions` was NULL, so the view had no
+  `security_invoker` and ran with its `postgres` owner's privileges, **bypassing RLS on
+  `telemetry_events` entirely** — every approved member would have gained platform-wide traffic
+  analytics. `dashboard.html` does gate the widget with `if(pr.is_owner)` and renders
+  *"N VIEWS · N MEMBERS"*, confirming owner-only intent, but a client-side `if` is not an
+  authorization boundary (§5): anyone with the anon key could have read the view directly once
+  granted.
+  **The first fix was wrong and was replaced.** Adding `AND public.omega_is_owner()` to the view
+  body worked (owner 1 row, non-owner 0, anon refused) but kept SECURITY DEFINER — Supabase's
+  advisor flagged it `ERROR security_definer_view`, the only ERROR on the project — and it
+  duplicated an authorization rule using a *different* owner helper from the one the table's own
+  policy uses (`omega_is_owner` vs `is_platform_owner`). They agree today, but a duplicated rule
+  that can drift from the one that actually binds is a latent bug, not defence in depth.
+  Replaced with `security_invoker = true` and the filter removed, so the base table's existing
+  RLS (`owner reads all telemetry USING (is_platform_owner())`) is the single boundary.
+  **Verified on a real seeded row** — both cases return 0 on an empty table and would have
+  proved nothing: `security_invoker=true` confirmed in `pg_class.reloptions`, owner 1 row,
+  non-owner 0, anon `42501`, probe row removed. Security advisor **174 lints / 1 ERROR → 173 /
+  0 ERROR**.
+  **Two corrections to my own reporting during this pass.** A probe reported `INSERT as self ->
+  FAILED 22P02` and I nearly recorded a broken write path; the fault was in the probe —
+  `r := r || 'literal'` makes Postgres parse a bare string as an array literal, and the
+  exception handler then misattributed its own failure to the INSERT. And a first read of the
+  advisor reported **0 lints** where there were 173, because the payload nests under `result`;
+  §8.4's *"verify a 0-findings result is real"* is what caught it. Separately, `schema-dictionary.py`
+  going **4 → 0** in this same window is **not** attributable here — `map.html` was fixed by
+  `3f8a17d7`. What this change moved is `.from()`-never-declared, **4 → 2**, the remainder being
+  the two deliberately dormant token tables.
+  `audit.py` 0 critical / **7** warnings (was 8); `ci-local.sh` 17/17; 92 tests.

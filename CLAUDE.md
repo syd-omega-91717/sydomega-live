@@ -549,9 +549,11 @@ open, recorded in `FIXES_LOG.md`:
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means
   history rewrite + force-push — do not attempt without explicit permission.
-- **`map.html` queries `profiles.lat/lon/gate`** — no member-location data
-  exists anywhere on this platform. Building collection is a feature and
-  privacy decision, not a bug fix. (`country` *is* a real live column.)
+- **`map.html`'s `profiles.lat/lon/gate` reads are gone** (fixed in `3f8a17d7`,
+  not by the live-verification pass). Confirmed against production on
+  2026-08-29: `profiles.country` exists (`text`); `lat`, `lon` and `gate` do
+  not. Collecting member location remains a feature and privacy decision, not a
+  bug fix, so nothing here proposes adding it.
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
   `#evt-metrics-body`, an id that exists nowhere. Building the container means
   designing UI that was never built.
@@ -591,16 +593,17 @@ open, recorded in `FIXES_LOG.md`:
   but they became *reachable* only when the missing grants were added, so they
   are recorded here rather than assumed fine. 10 governance rows are visible to
   a non-owner and all 10 are `status='active'`; no drafts leak.
-- **38 tables still have RLS policies and no grant.** Not referenced by any
-  client code here; most are the ~83-table scaffold below. Left locked out (the
-  safe state) rather than granted on the assumption that a policy's existence
-  implies it should be reachable. **Five were confirmed live** by role
-  impersonation on 2026-08-24 — `conversations`, `messages`, `knowledge_nodes`,
-  `knowledge_edges`, `subscriptions` all raise `42501` for `authenticated`
-  despite carrying 1–4 policies each. A repo-wide `.from()` grep finds **no
-  client code calling any of them**, so this is still locked-but-unused, not a
-  broken live feature — do not "fix" it by granting without deciding the
-  feature is wanted.
+- **39 tables have RLS policies and no grant** (was 38; re-counted live
+  2026-08-29). Left locked out — the safe state — rather than granted on the
+  assumption that a policy's existence implies it should be reachable. **Now
+  measured against live rather than inferred:** of 202 public tables, RLS is
+  enabled on **all 202** (the `audit.py` check-4 invariant holds in production,
+  not just in source), 74 have both policies and a grant, 39 have policies and
+  no grant, and 1 has a grant but no policy — which is still locked, since RLS
+  with no policy denies by default. Every one of the 39 was cross-referenced
+  against client `.from(...)` calls: **none is reachable from any page**, so
+  this remains locked-but-unused, not a broken feature. Do not "fix" it by
+  granting without deciding the feature is wanted.
 - **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
   every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
   and a completely empty check-run output — reproduced on `pull_request`,
@@ -650,10 +653,10 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings |
+| `python3 scripts/audit.py` | 0 critical / **7** warnings |
 | `python3 -m unittest discover -s scripts/tests` | **92** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
-| `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
+| `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,220** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |

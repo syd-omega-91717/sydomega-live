@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
@@ -44,14 +44,14 @@ jobs:
       - name: Production contract
         run: python scripts/production-contract.py
       - name: JavaScript syntax
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           $files = @(Get-ChildItem -Path . -File -Filter '*.js')
           if ($files.Count -eq 0) { throw 'No root JavaScript files found' }
           foreach ($file in $files) { node --check $file.FullName; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
       - name: Execution marker
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }

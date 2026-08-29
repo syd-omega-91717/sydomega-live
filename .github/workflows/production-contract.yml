@@ -16,21 +16,21 @@ concurrency:
 
 jobs:
   contract:
-    runs-on: ubuntu-slim
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}"
-          test -n "${RUNNER_OS:-}"
-          test -n "${RUNNER_ARCH:-}"
-          echo "runner=${RUNNER_NAME}"
-          echo "runner_os=${RUNNER_OS}"
-          echo "runner_arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_OS)) { throw 'RUNNER_OS is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_ARCH)) { throw 'RUNNER_ARCH is empty' }
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "runner_os=$env:RUNNER_OS"
+          Write-Host "runner_arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Node
@@ -44,15 +44,17 @@ jobs:
       - name: Production contract
         run: python scripts/production-contract.py
       - name: JavaScript syntax
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          mapfile -t files < <(find . -maxdepth 1 -type f -name '*.js' -print)
-          test "${#files[@]}" -gt 0
-          for file in "${files[@]}"; do node --check "$file"; done
+          $ErrorActionPreference = 'Stop'
+          $files = @(Get-ChildItem -Path . -File -Filter '*.js')
+          if ($files.Count -eq 0) { throw 'No root JavaScript files found' }
+          foreach ($file in $files) { node --check $file.FullName; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
       - name: Execution marker
+        shell: pwsh
         run: |
-          test -n "${RUNNER_NAME:-}"
-          echo 'PRODUCTION_CONTRACT_EXECUTED=true'
-          echo "PRODUCTION_CONTRACT_RUN_ID=${GITHUB_RUN_ID}"
-          echo "PRODUCTION_CONTRACT_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }
+          Write-Host 'PRODUCTION_CONTRACT_EXECUTED=true'
+          Write-Host "PRODUCTION_CONTRACT_RUN_ID=$env:GITHUB_RUN_ID"
+          Write-Host "PRODUCTION_CONTRACT_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

@@ -3444,3 +3444,37 @@ by an end-to-end browser run. First real member session will settle it;
   `3f8a17d7`. What this change moved is `.from()`-never-declared, **4 → 2**, the remainder being
   the two deliberately dormant token tables.
   `audit.py` 0 critical / **7** warnings (was 8); `ci-local.sh` 17/17; 92 tests.
+
+- **All 11 client `.upsert()` calls verified against the LIVE unique indexes — the check
+  `upsert-conflict-check.py` says it structurally cannot do.** That script's own docstring is
+  explicit: *"WHAT THIS CANNOT CATCH, stated plainly: a constraint the SQL bag declares but the
+  live database does not actually have. `ai_memory` was exactly that."* With database access,
+  every conflict target was matched against `pg_index` rather than against `supabase/*.sql`:
+  `profiles`→`id` (PK), `user_dedication`→`user_dedication_user_id_date_key`,
+  `platform_metrics`→`platform_metrics_metric_date_metric_name_key` (both callers),
+  `graph_entities`→`graph_entities_user_id_entity_type_canonical_name_key` (both callers),
+  `graph_relationships`→`graph_relationships_natural_key`, and
+  **`ai_memory`→`ai_memory_user_key (user_id, memory_key)` — the previously-broken one,
+  confirmed genuinely fixed in production**, not just in the bag. The §8.1(7) family is closed.
+  Three upserts send **no** `onConflict` and so default to the primary key, which is the
+  dangerous 23505 shape when the payload does not carry it — and two of them look exactly like
+  that on paper: `profile.html:1936` sends `character_records` without `user_id` (PK `user_id`),
+  and `social.html:175` sends `social_connections` `{platform, handle}` against PK
+  `(user_id, platform)`. **Both are fine, and only live could show why**: `user_id` on both
+  tables is `NOT NULL DEFAULT auth.uid()`, so PostgREST's insert fills the key server-side from
+  the JWT and the conflict target resolves. Proven rather than reasoned — each upsert was
+  executed twice under member impersonation and the repeat did not raise 23505; neither member
+  had a pre-existing row, and both probe rows were removed. (`member_presence` passes the
+  ordinary way: it sends `user_id` explicitly.)
+- **`platform_events` is no longer the spoofing shape §8.2 described, and `platform_metrics`
+  never was.** The standing entry claimed both *"still have `WITH CHECK(true)` on INSERT, on
+  tables that carry a `user_id` … any member could insert rows attributed to anyone."* Live says
+  otherwise: `platform_events`'s INSERT policy is `member inserts own events`,
+  `WITH CHECK ((SELECT auth.uid()) = user_id)` — correctly scoped. `platform_metrics` does carry
+  `WITH CHECK(true)`, but the table has **no `user_id` column**, so nothing can be attributed to
+  anyone; the residual risk is arbitrary metric rows, a data-integrity concern rather than
+  impersonation. Both confirmed still ungranted INSERT to `authenticated`, so both are
+  unreachable either way. §8.2 corrected. Also re-confirmed live: `task_completions` really does
+  carry `id bigint` + `axis` + `increment` (plus `task_name`/`task_type`/`axis_type`/
+  `points_earned`/`axis_*_before`/`axis_*_after`/`auth_after`), matching none of the bag's three
+  competing definitions — that counterexample stands exactly as documented.

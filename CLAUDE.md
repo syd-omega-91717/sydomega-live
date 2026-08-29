@@ -580,12 +580,16 @@ open, recorded in `FIXES_LOG.md`:
   RLS is enabled with no policies, which is the *safe* state (total lockout),
   and they are empty. Inventing policies for schema of unknown purpose would
   be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
-- **`platform_events` and `platform_metrics` still have `WITH CHECK(true)` on
-  INSERT**, on tables that carry a `user_id`. That is the spoofing shape in
-  §8.1(b): any member could insert rows attributed to anyone. `authenticated`
-  is deliberately **not** granted INSERT on either, so it is currently
-  unreachable — but the policy itself is still wrong and should be scoped
-  before that grant is ever added.
+- **The `WITH CHECK(true)` item was overstated — corrected against live
+  2026-08-29.** Neither table is the §8.1(6b) spoofing shape.
+  `platform_events`'s INSERT policy is `member inserts own events`,
+  `WITH CHECK ((SELECT auth.uid()) = user_id)` — **correctly scoped**, not
+  `true`. `platform_metrics` *does* have `WITH CHECK(true)`, but the table has
+  **no `user_id` column at all**, so there is no attribution to spoof; the
+  residual risk is arbitrary metric rows (data integrity), not impersonation.
+  `authenticated` is confirmed **not** granted INSERT on either, so both are
+  unreachable regardless. Scope `platform_metrics` before that grant is ever
+  added, but it is not the security hole this entry used to describe.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
   `is_platform_owner() OR status='active'` respectively). Both look deliberate

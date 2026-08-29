@@ -16,21 +16,21 @@ concurrency:
 
 jobs:
   evidence:
-    runs-on: ubuntu-slim
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}"
-          test -n "${RUNNER_OS:-}"
-          test -n "${RUNNER_ARCH:-}"
-          echo "runner=${RUNNER_NAME}"
-          echo "runner_os=${RUNNER_OS}"
-          echo "runner_arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_OS)) { throw 'RUNNER_OS is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_ARCH)) { throw 'RUNNER_ARCH is empty' }
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "runner_os=$env:RUNNER_OS"
+          Write-Host "runner_arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -46,8 +46,10 @@ jobs:
       - name: Validate architecture runtime
         run: python scripts/architecture-readiness.py
       - name: Execution marker
+        shell: pwsh
         run: |
-          test -n "${RUNNER_NAME:-}"
-          echo 'CAPABILITY_EVIDENCE_EXECUTED=true'
-          echo "CAPABILITY_EVIDENCE_RUN_ID=${GITHUB_RUN_ID}"
-          echo "CAPABILITY_EVIDENCE_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }
+          Write-Host 'CAPABILITY_EVIDENCE_EXECUTED=true'
+          Write-Host "CAPABILITY_EVIDENCE_RUN_ID=$env:GITHUB_RUN_ID"
+          Write-Host "CAPABILITY_EVIDENCE_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

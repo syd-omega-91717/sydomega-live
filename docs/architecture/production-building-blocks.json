@@ -1,0 +1,23 @@
+{
+  "name": "SYD OMEGA 91717 — Production Building Block Map",
+  "version": "1.0.0",
+  "principle": "Reuse the existing platform primitives first; introduce a new managed service only when an explicit scaling, isolation, compliance, or reliability requirement justifies it.",
+  "blocks": {
+    "api-gateway": {"implementation":"Supabase Edge Functions + explicit API boundary modules","source_of_truth":"repository","required_evidence":["route contract","authz test","rate-limit policy","version policy"]},
+    "load-balancer": {"implementation":"Vercel edge routing for web traffic; provider-managed balancing for serverless/edge execution","source_of_truth":"deployment provider","required_evidence":["health endpoint","origin fallback","deployment smoke test"]},
+    "microservices": {"implementation":"Capability-oriented modules and Edge Functions; split only where independent scaling or ownership is justified","source_of_truth":"repository","required_evidence":["service registry","dependency map","contract tests"]},
+    "event-driven": {"implementation":"Supabase database events/triggers plus asynchronous function boundaries; queue primitive added when workload requires durable buffering","source_of_truth":"database + repository","required_evidence":["event schema","producer/consumer tests","retry/dead-letter policy"]},
+    "database": {"implementation":"Supabase PostgreSQL with migrations, RLS and schema contracts","source_of_truth":"supabase/migrations","required_evidence":["migration chain","constraint tests","backup/restore evidence"]},
+    "caching": {"implementation":"HTTP/CDN caching first; application cache only for measured hot paths","source_of_truth":"repository + deployment","required_evidence":["cache policy","TTL/invalidation test","origin fallback"]},
+    "data-partitioning": {"implementation":"PostgreSQL partitioning only for measured high-volume tables","source_of_truth":"database","required_evidence":["partition strategy","routing test","retention policy"]},
+    "object-blob-storage": {"implementation":"Supabase Storage with private buckets, signed access and lifecycle policy","source_of_truth":"Supabase Storage configuration","required_evidence":["bucket policy","upload/download test","access-control test","retention policy"]},
+    "message-queues": {"implementation":"Asynchronous Edge Function/event boundary; adopt Supabase Queues or equivalent managed queue when workload thresholds are met","source_of_truth":"database/runtime","required_evidence":["queue contract","retry policy","dead-letter handling","idempotency test"]},
+    "fault-tolerance": {"implementation":"Timeouts, bounded retries, idempotency, graceful degradation and provider isolation at every external boundary","source_of_truth":"repository","required_evidence":["failure injection","timeout policy","retry budget","degradation test"]},
+    "cdn": {"implementation":"Vercel edge/CDN delivery for static assets and cacheable public content","source_of_truth":"deployment provider","required_evidence":["cache headers","origin fallback","invalidation test"]},
+    "high-availability": {"implementation":"Managed Vercel/Supabase availability primitives plus backup/restore and continuity procedures","source_of_truth":"providers + operations","required_evidence":["RTO/RPO","restore test","health checks","continuity runbook"]},
+    "observability": {"implementation":"Structured browser/server logs, request correlation IDs, deployment checks and provider telemetry","source_of_truth":"repository + providers","required_evidence":["correlation IDs","health metrics","alerts","audit-log verification"]},
+    "security-identity": {"implementation":"Supabase Auth/RLS, least privilege, secret isolation, security scanning and auditable authorization","source_of_truth":"repository + Supabase","required_evidence":["RBAC/RLS tests","secret scan","threat model","incident runbook"]},
+    "ai-llm-gateway": {"implementation":"Central AI policy boundary with model registry, routing, budget controls, safety/evaluation metadata and provider adapters","source_of_truth":"repository","required_evidence":["model registry","policy test","cost telemetry","evaluation suite","fallback test"]},
+    "vector-search-rag": {"implementation":"PostgreSQL/pgvector-compatible retrieval layer with provenance and permission-aware filtering","source_of_truth":"database + repository","required_evidence":["embedding/index contract","provenance","permission test","retrieval evaluation","citation trace"]}
+  }
+}

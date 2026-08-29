@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
 """SYD OMEGA 91717 production contract gate.
 
-This gate is intentionally dependency-free and deterministic. It validates the
-static deployment contract that must hold for every production build:
-
-- every HTML page loads the platform runtime (bg.js)
-- every local script/stylesheet/image reference resolves
-- root JSON manifests are valid JSON
-- client code contains no service-role credential marker
-- duplicate HTML ids are rejected
-
-The gate is source-only; it never assumes live Supabase state.
+Deterministic source contract for the static production deployment. Runtime
+claims remain separate: architecture.html exposes executable browser probes,
+while this gate verifies that the control-plane assets are shipped.
 """
 from __future__ import annotations
 
@@ -47,8 +40,6 @@ def check_pages() -> None:
                 error(page, f"duplicate id={ident!r}")
             seen.add(ident)
 
-        # Validate local absolute asset references. External URLs, data URLs,
-        # fragments and protocol-relative URLs are intentionally ignored.
         refs = re.findall(r'\b(?:src|href)=["\'](/[^"\'#?]+)["\']', src, re.I)
         for ref in sorted(set(refs)):
             rel = ref.lstrip("/")
@@ -79,10 +70,35 @@ def check_client_credentials() -> None:
                 error(path, f"client credential marker detected: {pattern.pattern}")
 
 
+def check_architecture_control_plane() -> None:
+    runtime = ROOT / "omega-architecture-runtime.js"
+    dashboard = ROOT / "architecture.html"
+    contract = ROOT / "docs" / "architecture" / "16-block-system.json"
+    for path in (runtime, dashboard, contract):
+        if not path.exists():
+            error(path, "required 16-block control-plane asset is missing")
+    if dashboard.exists():
+        text = dashboard.read_text(encoding="utf-8", errors="ignore")
+        if '/omega-architecture-runtime.js' not in text:
+            error(dashboard, "does not load the architecture runtime")
+    if runtime.exists():
+        text = runtime.read_text(encoding="utf-8", errors="ignore")
+        required = (
+            'api-gateway', 'load-balancer', 'microservices', 'event-driven',
+            'database', 'caching', 'data-partitioning', 'object-blob-storage',
+            'message-queues', 'fault-tolerance', 'cdn', 'high-availability',
+            'observability', 'security-identity', 'ai-llm-gateway', 'vector-search-rag',
+        )
+        for ident in required:
+            if "set('" + ident + "'" not in text:
+                error(runtime, f"missing runtime registration: {ident}")
+
+
 def main() -> int:
     check_pages()
     check_json()
     check_client_credentials()
+    check_architecture_control_plane()
     if FAIL:
         print(f"\nPRODUCTION CONTRACT FAILED: {FAIL} finding(s)")
         return 1

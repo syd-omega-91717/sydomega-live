@@ -478,10 +478,20 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
 
     try{
       var wb=await sb.from('wallet_balances').select('*').eq('user_id',sess.user.id);
+      /* `wallet_balances` does not exist on the live database -- Ω-token
+         infrastructure is deliberately dormant pending legal review
+         (CLAUDE.md §8.2). Supabase resolves that to {data:null,error} rather
+         than throwing (§8.1 class 1), so this must be read explicitly. */
+      var walletsUnavailable=!!wb.error;
       var wallets=wb.data||[];
       var total=wallets.reduce(function(s,w){return s+Number(w.balance||0);},0);
-      sid('wallet-total','Ω '+(total>0?total.toFixed(3):'0.000'));
-      sid('wallet-count',wallets.length||'12');
+      sid('wallet-total',walletsUnavailable?'Ω —':'Ω '+(total>0?total.toFixed(3):'0.000'));
+      /* This read `wallets.length||'12'`, which rendered the literal number 12
+         whenever the list was empty -- and it is always empty, because the
+         table is absent. A member was shown twelve wallets they do not have.
+         That is §8.1 class 9, fabricated data presented as fact. 0 is a real
+         answer; an em dash is the honest answer when the query failed. */
+      sid('wallet-count',walletsUnavailable?'—':String(wallets.length));
       if(wallets.length){
         var tg=document.getElementById('wallet-token-grid');
         if(tg){

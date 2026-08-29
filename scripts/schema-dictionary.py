@@ -11,6 +11,19 @@ Exit code 0 if clean, 1 if critical findings.
 """
 
 import sys as _sys
+
+# The docstring above contains `→` (U+2192), which the cp1252 code page cannot
+# encode -- and CI runs on a self-hosted Windows runner with `shell: cmd`,
+# where cp1252 is Python's stdout encoding. Without this, `--help` died with
+# UnicodeEncodeError there instead of printing. Same root cause as the
+# evidence-audit.py failure this commit fixes; that one was reached because its
+# banner prints on every run, this one only on --help.
+for _stream in (_sys.stdout, _sys.stderr):
+    try:
+        _stream.reconfigure(errors='replace')
+    except (AttributeError, ValueError):  # not a reconfigurable text stream
+        pass
+
 if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
     print(__doc__.strip())
     raise SystemExit(0)

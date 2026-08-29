@@ -20,17 +20,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_OS)) { throw 'RUNNER_OS is empty' }
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_ARCH)) { throw 'RUNNER_ARCH is empty' }
-          Write-Host "runner=$env:RUNNER_NAME"
-          Write-Host "runner_os=$env:RUNNER_OS"
-          Write-Host "runner_arch=$env:RUNNER_ARCH"
-          Write-Host "run=$env:GITHUB_RUN_ID"
-          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
       - name: Checkout
         uses: actions/checkout@v4
       - name: Node
@@ -44,17 +44,15 @@ jobs:
       - name: Production contract
         run: python scripts/production-contract.py
       - name: JavaScript syntax
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = 'Stop'
-          $files = @(Get-ChildItem -Path . -File -Filter '*.js')
-          if ($files.Count -eq 0) { throw 'No root JavaScript files found' }
-          foreach ($file in $files) { node --check $file.FullName; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          @echo off
+          for %%F in (*.js) do node --check "%%F" || exit /b 1
       - name: Execution marker
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }
-          Write-Host 'PRODUCTION_CONTRACT_EXECUTED=true'
-          Write-Host "PRODUCTION_CONTRACT_RUN_ID=$env:GITHUB_RUN_ID"
-          Write-Host "PRODUCTION_CONTRACT_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo PRODUCTION_CONTRACT_EXECUTED=true
+          echo PRODUCTION_CONTRACT_RUN_ID=%GITHUB_RUN_ID%
+          echo PRODUCTION_CONTRACT_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

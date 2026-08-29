@@ -16,21 +16,21 @@ concurrency:
 
 jobs:
   workflow-contract:
-    runs-on: ubuntu-slim
+    runs-on: self-hosted
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}"
-          test -n "${RUNNER_OS:-}"
-          test -n "${RUNNER_ARCH:-}"
-          echo "runner=${RUNNER_NAME}"
-          echo "runner_os=${RUNNER_OS}"
-          echo "runner_arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'RUNNER_NAME is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_OS)) { throw 'RUNNER_OS is empty' }
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_ARCH)) { throw 'RUNNER_ARCH is empty' }
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "runner_os=$env:RUNNER_OS"
+          Write-Host "runner_arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -44,11 +44,18 @@ jobs:
       - name: Validate implementation readiness
         run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
-        shell: bash
-        run: bash scripts/ci-local.sh --help
-      - name: Execution marker
+        shell: pwsh
         run: |
-          test -n "${RUNNER_NAME:-}"
-          echo 'WORKFLOW_CONTRACT_EXECUTED=true'
-          echo "WORKFLOW_CONTRACT_RUN_ID=${GITHUB_RUN_ID}"
-          echo "WORKFLOW_CONTRACT_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if (-not (Test-Path 'scripts/ci-local.sh' -PathType Leaf)) { throw 'scripts/ci-local.sh is missing' }
+          $text = Get-Content 'scripts/ci-local.sh' -Raw
+          if ($text -notmatch '--help') { throw 'ci-local.sh help contract is missing' }
+          Write-Host 'ci-local.sh help contract verified'
+      - name: Execution marker
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner identity missing' }
+          Write-Host 'WORKFLOW_CONTRACT_EXECUTED=true'
+          Write-Host "WORKFLOW_CONTRACT_RUN_ID=$env:GITHUB_RUN_ID"
+          Write-Host "WORKFLOW_CONTRACT_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

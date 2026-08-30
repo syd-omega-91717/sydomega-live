@@ -62,7 +62,7 @@
         "authorization": "RLS on public.profiles (own-row plus is_platform_owner()); the bg.js approval guard gates every non-public page on body.omega-approved",
         "failure_path": "account.html route() now destructures { error } on every profiles read and on reactivate_account, and console.warns a reason on failure (matching omega-demo-video.js's diagnosability convention); profiles.upsert already checked { error }. profile.html checks partially. No silent swallow left on the sign-in path.",
         "static_evidence": "scripts/schema-dictionary.py (profiles column names vs supabase/live-schema.json, blocking); scripts/rls-auditor.py; scripts/silent-failure-detector.py flags the unchecked calls above",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session. account.html and profile.html both render; the reactivate branch is covered by the stub's deactivated-profile shape."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does: public.profiles exists, RLS enabled, 3 policies, and authenticated holds SELECT (no INSERT/UPDATE grant - profile writes go through RPCs, not direct table writes). Plus the headless render evidence from scripts/verify-runtime.js on account.html and profile.html"
       }
     },
     {
@@ -80,7 +80,7 @@
         "authorization": "member_posts: GRANT SELECT/INSERT/UPDATE/DELETE TO authenticated + RLS (supabase/platform_expansion.sql, migrations/0069); publications: own-row policy on user_id; a cross-member 'published' feed needs an RLS policy that does not yet exist (FEATURE_IDEAS.md 'Flagged, not proposed')",
         "failure_path": "PARTIAL - 2 of ~4 read paths destructure { error }; the member-writable text fields (title, body) are escaped with esc() before render (stored-XSS history, CLAUDE.md 8.1)",
         "static_evidence": "scripts/schema-dictionary.py; scripts/rls-auditor.py; scripts/silent-failure-detector.py; the feed column-name fix is recorded in FIXES_LOG.md",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does: member_posts (RLS, 4 policies, full CRUD grant), publications and task_completions (RLS, 1 policy each, INSERT+SELECT granted) all exist. Plus the verify-runtime.js render of feed.html"
       }
     },
     {
@@ -98,7 +98,7 @@
         "authorization": "is_platform_owner() inside every RPC; approvals.html itself is not in the public-page allowlist so the approval guard blocks non-owners; RPC EXECUTE is REVOKEd from PUBLIC then granted narrowly (CLAUDE.md 8.2, migrations/0097)",
         "failure_path": "GOOD - 8 .error checks; destructive actions confirm; OmegaGuardian.gate('admin', ...) wraps grant/extend/revoke with a graceful fallback and an error toast",
         "static_evidence": "scripts/rls-auditor.py; scripts/silent-failure-detector.py; scripts/audit.py; DEPLOYMENT_READY.md records the gate wiring",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js: renders without error and correctly keeps #app hidden for a non-owner stub (the owner gate working). Owner-path render + the six approval RPCs' live privilege state still BLOCKED - no provider access."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does: notifications exists with RLS, 4 policies, and SELECT+UPDATE granted to authenticated but deliberately NO INSERT - that is the client-forged-notification hardening (commit 744b968) working as intended. Plus the verify-runtime.js render of approvals.html"
       }
     },
     {
@@ -116,7 +116,7 @@
         "authorization": "own-row RLS FOR ALL TO authenticated: bloodline_own on bloodline_nodes, heritage_own on heritage_records (supabase/chunk_03_migrations.sql / chunk_06); matching per-table GRANTs present; family_nodes policy keyed on user_id",
         "failure_path": "WEAK - only 1 .error check across 4 table paths; member-entered names/notes are escaped with esc() (family.html was fixed for exactly this, CLAUDE.md 8.1)",
         "static_evidence": "scripts/rls-auditor.py (own-row policies present); scripts/schema-dictionary.py; scripts/silent-failure-detector.py flags the unchecked writes",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does: family_nodes, bloodline_nodes and heritage_records all exist with RLS enabled, 1 policy each, and SELECT/INSERT/DELETE granted to authenticated (family_nodes also UPDATE). Plus the verify-runtime.js render of family.html"
       }
     },
     {
@@ -134,7 +134,7 @@
         "authorization": "own-row RLS FOR ALL TO authenticated: broadcast_own, social_conn_own (supabase/chunk_03_migrations.sql / chunk_06); GRANTs present (broadcasts: SELECT+INSERT; connections: SELECT+INSERT+UPDATE+DELETE)",
         "failure_path": "OK - 3 .error checks; social.html was fixed to check .error before its success toast (CLAUDE.md 9); broadcast text escaped with esc()",
         "static_evidence": "scripts/rls-auditor.py; scripts/schema-dictionary.py; scripts/silent-failure-detector.py",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does: social_broadcasts and social_connections exist, RLS enabled, 1 policy each, INSERT+SELECT granted to authenticated. Plus the verify-runtime.js render of social.html"
       }
     },
     {
@@ -150,7 +150,7 @@
         "authorization": "n/a - dormant by design pending a legal/business decision; the Ω-token economy is deliberately not shipped",
         "failure_path": "the querying pages carry copy stating the feature is dormant; the missing-table query returns null and the UI shows the dormant state",
         "static_evidence": "scripts/audit.py '.from() table never CREATE TABLE'd' warning names both; FEATURE_IDEAS.md 'Explicitly not proposed here'",
-        "live_verification": "BLOCKED and by design - not to be verified or promoted until an explicit owner decision to ship the token economy (CLAUDE.md 9)"
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does. CONFIRMED ABSENT: public.transactions and public.wallet_balances do not exist in the live database (pg_class lookup returned no row). BROKEN is accurate, and deliberate - payment/token infrastructure is dormant pending legal review, CLAUDE.md 8.2"
       }
     },
     {
@@ -166,7 +166,7 @@
         "authorization": "n/a - same dormant-by-design status as transactions",
         "failure_path": "missing-table query returns null; UI shows the dormant/zero state",
         "static_evidence": "scripts/audit.py '.from() table never CREATE TABLE'd' warning; FIXES_LOG.md",
-        "live_verification": "BLOCKED and by design - tied to the same token-economy decision as transactions"
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does. CONFIRMED ABSENT: public.wallet_balances does not exist in the live database. BROKEN is accurate and deliberate (CLAUDE.md 8.2)"
       }
     },
     {
@@ -253,11 +253,11 @@
       "verified": false,
       "contract": {
         "entrypoint": "omega-telemetry.js, omega-metrics.js, omega-finops.js, omega-dataguard.js (all loaded via bg.js); surfaced on ops.html and analytics.html",
-        "data_contract": "public.telemetry_events (omega-telemetry.js), public.user_journeys, public.platform_metrics (omega-metrics.js / omega-finops.js) - defined in supabase/omega_telemetry.sql; omega-dataguard.js has no table, it decorates slow/failed fetches in the DOM",
+        "data_contract": "public.telemetry_events (omega-telemetry.js, and now omega-metrics.js + omega-finops.js via OmegaTelemetry.track) - columns id, user_id, event_type, page, session_id, properties, created_at, confirmed live. public.platform_metrics exists but is OWNER-ONLY in practice: authenticated has no INSERT grant, so it is not a member write target. public.user_journeys exists but NO client code writes or reads it - the only reference is a string in graphify.html's ingest source list - and authenticated has neither SELECT nor INSERT on it. omega-dataguard.js has no table; it decorates slow/failed fetches in the DOM",
         "authorization": "RLS enabled on all three: telemetry_events INSERT WITH CHECK(true) + owner-only SELECT; user_journeys scoped to auth.uid() both ways; platform_metrics INSERT WITH CHECK(true) (no user_id column, so no attribution to spoof - data-integrity only, CLAUDE.md 8.2) + owner-only read",
-        "failure_path": "WEAK - telemetry/metrics writes are fire-and-forget by design (a dropped metric must not break a page), but that means a broken pipeline is invisible; ops.html's event-bus metrics table looks up an id that exists nowhere (CLAUDE.md 8.2) so that panel never renders",
+        "failure_path": "telemetry writes go through OmegaTelemetry.track, which buffers until the profile is known and checks res.error (the client resolves to {data,error}, it does not throw). Still WEAK by design: telemetry is fire-and-forget so a broken pipeline is not user-visible, and ops.html's event-bus metrics table looks up an id that exists nowhere (CLAUDE.md 8.2), so that panel never renders",
         "static_evidence": "scripts/rls-auditor.py (policies present); scripts/schema-dictionary.py; scripts/audit.py flags the ops.html dead lookup; supabase/omega_telemetry.sql is idempotent DDL",
-        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session. ops.html and analytics.html render (the dead ops.html metrics panel is a known gap, tracked). platform_metrics grant state still unverified."
+        "live_verification": "live-verified 2026-08-30 against project ydqhzvvoyufiiqvzcjns by member impersonation (set_config role=authenticated + request.jwt.claims), which is what PostgREST does. FOUND AND FIXED: INSERT into platform_metrics returned 42501 permission denied - INSERT policy present (WITH CHECK true) but no grant to authenticated, so every omega-metrics.js and omega-finops.js write since they shipped was rejected. Both now route through OmegaTelemetry.track into telemetry_events, whose member INSERT was verified to SUCCEED with the real payload shape. SELECT on user_journeys also returns 42501; nothing reads it. platform_metrics deliberately NOT granted: it has no user_id (members would overwrite each other on metric_date+metric_name) and its UPDATE policy is is_platform_owner()"
       }
     },
     {

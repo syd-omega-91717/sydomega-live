@@ -66,21 +66,30 @@
       console.groupEnd();
     }
 
-    /* Send to Supabase platform_metrics */
-    if(window.__omegaSb){
-      window.__omegaSb.from('platform_metrics').upsert({
-        metric_date:new Date().toISOString().slice(0,10),
-        metric_name:PAGE+'_cwv',
-        metric_value:metric.lcp_ms,
-        dimensions:metric
-      },{onConflict:'metric_date,metric_name'}).then(function(res){
-        /* platform_metrics has UNIQUE(metric_date, metric_name); an upsert
-           with no conflict target defaults to the PRIMARY KEY (id), which this
-           payload does not carry -- so PostgREST sent a plain insert and every
-           write after the day's first for a given metric_name raised 23505.
-           .catch() never fired: the client resolves to {data, error}. */
-        if(res&&res.error){console.warn('[omega-metrics] platform_metrics upsert failed:',res.error.message);}
-      });
+    /* Route through OmegaTelemetry, NOT a direct platform_metrics write.
+       Verified live 2026-08-30 by member impersonation: INSERT into
+       platform_metrics as `authenticated` fails 42501 permission denied. The
+       table has an INSERT policy (WITH CHECK true) but no INSERT grant, and a
+       GRANT is checked before row security -- CLAUDE.md 8.1 class 6(c). The
+       old code did check res.error, so this was not silent in the strict
+       sense: it console.warn'd on every page load and every metric was lost.
+       Nothing surfaced that to a user or a gate, so it read as working.
+       Granting platform_metrics is the wrong fix twice over: it has no user_id,
+       so members would overwrite each other on (metric_date, metric_name), and
+       its UPDATE policy is is_platform_owner(), so the upsert's DO UPDATE
+       branch fails even with the grant. CLAUDE.md 8.2 warns against exactly
+       that grant. telemetry_events is the correct home -- per-member,
+       WITH CHECK (auth.uid() = user_id), already granted, and verified live to
+       accept this payload.
+       Going through OmegaTelemetry.track rather than inserting here directly
+       is deliberate: it owns _uid/_session resolution and buffers until the
+       profile is known. Writing the insert inline would need window.__omegaUid,
+       a global nothing assigns -- CLAUDE.md 8.1 class 4(b) -- and a null
+       user_id fails that WITH CHECK. bg.js loads telemetry (line 1710) after
+       metrics (526), so guard rather than assume; track() buffers pre-ready
+       events itself once it exists. */
+    if(window.OmegaTelemetry&&window.OmegaTelemetry.track){
+      window.OmegaTelemetry.track('web_vitals',metric);
     }
 
     window.__omegaMetrics=metric;

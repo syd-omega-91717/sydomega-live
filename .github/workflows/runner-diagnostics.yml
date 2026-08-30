@@ -40,13 +40,14 @@ jobs:
           python --version
           node --version
 
-      # See runner-probe.yml: bare `bash` here is the WSL shim with no distro
-      # installed. `shell: bash` uses the Git for Windows bash instead.
+      # Git for Windows bash by absolute path -- see runner-probe.yml: both
+      # `shell: cmd` + `bash ...` and `shell: bash` resolve to the WSL shim on
+      # this runner, which has no distro installed.
       - name: Local CI Validation
-        shell: bash
+        shell: 'C:\Program Files\Git\bin\bash.exe -eo pipefail {0}'
         run: |
           bash --version
-          bash scripts/ci-local.sh
+          scripts/ci-local.sh
 
       - name: Success Summary
         shell: cmd

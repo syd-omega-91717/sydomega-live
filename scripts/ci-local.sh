@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 # Run the repository's deterministic production verification suite locally.
 #
-# GitHub Actions on this private personal-account repository has been unable to
-# assign a runner since 2026-08-22: runner_id 0, no executed steps, 0 billable
-# ms, and empty check-run output. That is an account-level Actions entitlement
-# problem, not a repository-code failure.
-#
-# This gate mirrors every BLOCKING repository verification contract:
-#   - .github/workflows/ci.yml
-#   - .github/workflows/production-contract.yml
-#   - .github/workflows/capability-evidence.yml
-#
 # A local pass is execution evidence, never a fabricated GitHub Actions pass.
 # GitHub remains the authoritative merge gate when its runners are available.
 
@@ -107,6 +97,7 @@ manifest_icons() {
 printf '\033[1mLocal CI — complete production verification\033[0m\n'
 
 step "0.   Workflow contract"                  python3 scripts/workflow-contract.py
+step "0b.  Release completeness gate"          python3 scripts/release-gate.py
 step "1.   JavaScript syntax"                  js_syntax
 step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
 step "2.   Repository audit"                   python3 scripts/audit.py

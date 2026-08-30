@@ -32,5 +32,6 @@ node_modules/
 .github/
 .vscode/
 .idea/
+.mailmap
 package.json
 package-lock.json

@@ -1,0 +1,12 @@
+# Canonical author identity for SYD OMEGA 91717.
+#
+# The owner account is s.y.dagher@gmail.com (CLAUDE.md §1, profiles.is_owner).
+# A stretch of commits was authored as <sydomega@91717.com>, which is not a
+# real address — GitHub could not attribute the commit and Vercel refused the
+# deployment. The global git identity has been corrected to s.y.dagher@gmail.com;
+# this file remaps the historical commits so `git shortlog`, `git blame`, and
+# any tool that honours .mailmap show one consistent author.
+#
+# Format: <canonical name> <canonical email> <commit name> <commit email>
+S.Y.D OMEGA 91717 <s.y.dagher@gmail.com> SYD OMEGA 91717 <sydomega@91717.com>
+S.Y.D OMEGA 91717 <s.y.dagher@gmail.com> <sydomega@91717.com>

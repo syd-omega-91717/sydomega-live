@@ -70,6 +70,27 @@ jobs:
           python --version
           node --version
           python scripts/workflow-contract.py
+      # TEMPORARY capability probe (#157). Which shells actually exist on this
+      # runner is currently unknown, and guessing is what cost three rounds on
+      # the bash bug. Every step here is continue-on-error, so a failure is
+      # DATA, not a broken build. Removed once the answer is recorded.
+      - name: shell probe - pwsh
+        continue-on-error: true
+        shell: pwsh
+        run: Write-Output "PWSH_OK=true"
+      - name: shell probe - powershell
+        continue-on-error: true
+        shell: powershell
+        run: Write-Output "POWERSHELL_OK=true"
+      - name: shell probe - python
+        continue-on-error: true
+        shell: python
+        run: |
+          import platform, sys
+          print("PYTHON_SHELL_OK=true", platform.system(), sys.version.split()[0])
+      - name: shell probe - default (no shell key)
+        continue-on-error: true
+        run: echo DEFAULT_SHELL_OK=true
       - name: Execution marker
         shell: cmd
         run: |

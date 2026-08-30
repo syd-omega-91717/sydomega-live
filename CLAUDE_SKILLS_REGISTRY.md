@@ -1,11 +1,17 @@
 # Claude Code Skills Registry — sydomega-live
 
-**Last Updated:** 2026-08-30 (added supabase, supabase-postgres-best-practices, supabase-server, find-skills)  
+**Last Updated:** 2026-08-30 (added supabase*, find-skills, runtime-verify, i18n, edge-functions)  
 **Project Type:** Static site + Supabase backend (no build step)
 
 ---
 
 ## Available Skills
+
+This file rates **Claude Code's built-in and ecosystem skills** for this repo.
+The repo's **own** skills (`.claude/skills/*`, 18 of them) are inventoried by
+`scripts/omega-registry.py` in `OMEGA_SKILL_REGISTRY.md` and described in
+`.claude/skills/README.md`. Entries below marked *installed* / *project skill*
+are the overlap — repo skills that also answer a Claude Code skill's purpose.
 
 ### 🟢 Highly Applicable to This Project
 
@@ -64,41 +70,53 @@
 - **Purpose:** Discover and install agent skills (`npx skills find/add`).
 - **Use:** When evaluating whether a new external skill fits — apply `CLAUDE.md` §10.1's bar (names a mechanism that exists here) before adopting.
 
+#### 12. runtime-verify — *project skill, `.claude/skills/runtime-verify/`*
+- **Purpose:** Use `scripts/verify-runtime.js` (headless render of the capability entrypoints) and keep `docs/capabilities/registry.json`'s six-part contracts honest.
+- **Use:** After any `bg.js`/`nav.js`/`omega-*.js`/markup/data-layer change, and before raising a capability's `status`/`confidence` or setting `verified`.
+
+#### 13. i18n — *project skill, `.claude/skills/i18n/`*
+- **Purpose:** T_EN + the 6 language packs; the four i18n-contract.py blocking checks and the add-key/value/language workflows.
+- **Use:** Before touching any `data-i18n` key or dictionary value.
+
+#### 14. edge-functions — *project skill, `.claude/skills/edge-functions/`*
+- **Purpose:** The 11 `supabase/functions/*` (Deno/TS): secrets + `check-secrets.sh`, the secret-gated-dormant convention, `stripe-webhook` signature validation, `concierge` fallback, the hand-deploy path.
+- **Use:** Before adding, changing, deploying, or debugging any Edge Function or code that calls one.
+
 ---
 
 ### 🟡 Conditionally Applicable
 
-#### 12. claude-api
+#### 15. claude-api
 - **Purpose:** Claude/Anthropic API reference
 - **Use:** When building Edge Functions that call Anthropic API
 - **Example:** `supabase/functions/concierge` (existing, uses Anthropic)
 
-#### 13. deploy-gate
+#### 16. deploy-gate
 - **Purpose:** Deployment readiness checks
 - **Use:** Before Vercel deployments
 - **Checks:** CI passing, no service-role keys, schema consistent
 
-#### 14. feature-architect
+#### 17. feature-architect
 - **Purpose:** Design implementation plans for new features
 - **Use:** Part of platform's autonomous pipeline (§10 in CLAUDE.md)
 - **Output:** File-by-file blueprint
 
-#### 15. grill-me-codex
+#### 18. grill-me-codex
 - **Purpose:** Threat model & decision documentation for high-risk features
 - **Use:** Before implementing auth changes, RLS policies, payments, new public RPCs
 - **Output:** PLAN.md + CODEX_REVIEW.md
 
-#### 16. autonomous-coder
+#### 19. autonomous-coder
 - **Purpose:** Implement blueprints from feature-architect
 - **Use:** Part of platform's autonomous pipeline
 - **Scope:** Never flips platform_settings flags, never merges to main
 
-#### 17. web-trend-scout
+#### 20. web-trend-scout
 - **Purpose:** Research features from web trends
 - **Use:** Generate FEATURE_IDEAS.md proposals
 - **Part of:** Autonomous feature pipeline (§10)
 
-#### 18. subscriber-portal
+#### 21. subscriber-portal
 - **Purpose:** Wire features into subscriber-facing pages
 - **Use:** After feature is complete and flag is flipped on
 - **Uses:** membership_tier + OmegaCanon.tierUnlocks() system
@@ -117,7 +135,6 @@
 | doc-coauthoring / docx / pptx / pdf / xlsx | Not document editing; CLAUDE.md is markdown. |
 | brand-guidelines | Omega brand already defined in omega-agents.json + design system. |
 | slack-gif-creator / theme-factory | Not relevant to backend/membership platform. |
-| image-pipeline / cinematic-media | No media generation; images are static assets. |
 | algorithmic-art | Not an art project. |
 | mcp-builder | No custom MCP servers needed. |
 | skill-creator | Skills documented in this file; not building new ones. |

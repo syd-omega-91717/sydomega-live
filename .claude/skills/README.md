@@ -1,15 +1,37 @@
 # Skills
 
-**15 skills live here.** The full generated inventory — including which reference
+**18 skills live here.** The full generated inventory — including which reference
 doc names each one, and whether its frontmatter makes it discoverable at all —
 is `OMEGA_SKILL_REGISTRY.md` at the repo root, produced by
 `scripts/omega-registry.py` and gated in CI. Prefer it over any count written
 into prose here: this file said "Four skills" for long enough that three of the
 eight went undocumented, and `CLAUDE.md` disagreed with it in two places.
 
-Eight of the fifteen are the feature-proposal pipeline and its support skills,
-described below. Four are **domain skills** (below). Three are the **vendored
-Supabase skills** — this repo is a Supabase project, and its single most
+Eight are the feature-proposal pipeline and its support skills, described
+below. Seven are **domain skills** — reference for a specific surface of the
+platform:
+
+- **deploy-gate** — release gating (Vercel static site + Supabase backend are
+  separate planes), `.vercelignore`, rollback.
+- **runtime-verify** — `scripts/verify-runtime.js` (headless render of the
+  capability entrypoints) and keeping `docs/capabilities/registry.json`'s
+  six-part contracts honest. Invoke after any `bg.js`/`nav.js`/`omega-*.js`/
+  markup change, and before promoting a capability's status.
+- **edge-functions** — the 11 `supabase/functions/*` (Deno/TS): the secrets,
+  `check-secrets.sh`, the secret-gated-dormant convention, `stripe-webhook`
+  signature validation, `concierge`'s graceful fallback, the hand-deploy path.
+- **visual-assets** — canonical palette/type tokens from `bg.js` `:root`,
+  SVG-only asset rules, the sigil/emblem/share-card modules.
+- **cinematic-media** — the demo video, faststart remux, the transition/2.5D/
+  motion engines and their traps.
+- **image-pipeline** — procedural SVG first, the canvas→PNG generators,
+  `OmegaStorage` uploads, raster-add rules.
+- **i18n** — `T_EN` in `i18n.js` + the 6 `i18n/*.json` packs; the four things
+  `scripts/i18n-contract.py` blocks on (parse, unresolved key, orphan pack
+  key, HTML entity in a value) and the workflows for adding a key / value /
+  language. Invoke before touching any `data-i18n` key or dictionary value.
+
+Three are the **vendored Supabase skills** — this repo is a Supabase project, and its single most
 recurring bug class is Supabase-shaped (`CLAUDE.md` §8.1: wrong column names,
 missing `GRANT`s, RLS gaps, upsert-conflict targets, migration drift), so the
 official guidance is kept in-tree:
@@ -26,30 +48,6 @@ official guidance is kept in-tree:
   functions still use the legacy `Deno.serve` + `createClient(Deno.env.get(...))`
   pattern this skill treats as a migration target; load it before touching
   `supabase/functions/`. Vendored from `supabase/server`.
-
-The four **domain skills** — reference for a specific surface of the platform,
-invoked when a change touches that surface:
-
-- **deploy-gate** — what actually gates a release (the Vercel static site and
-  the Supabase backend are separate planes), why a green GitHub check may mean
-  "never ran", what `.vercelignore` keeps out of the public bundle, and how a
-  bad deploy is rolled back. Invoke for any release / CI-gate / "safe to push"
-  question.
-- **visual-assets** — the canonical palette and type tokens (from `bg.js`
-  `:root`, which `design-system.html` has drifted from), the SVG-only /
-  no-CDN-image asset rules, and the existing sigil / emblem / share-card /
-  page-mark modules to reuse. Invoke before adding or editing anything under
-  `assets/` or any `omega-*emblem/sigil/share-card*.js`.
-- **cinematic-media** — the welcome demo video and the three faults that kept
-  v1 from playing, the mandatory `-movflags +faststart` remux, the
-  `.mp4`-in-git constraint, and the transition / 2.5D / motion engines and
-  their traps. Invoke for any video, page transition, scroll reveal, or
-  "make it more cinematic" request.
-- **image-pipeline** — why there is no AI image generation here, procedural
-  SVG first, the canvas→PNG generators (`OmegaShareCard`, `OmegaQR`),
-  member uploads via `OmegaStorage`, and the rules for adding a raster file
-  (no LFS; PWA-icon / `sw.js` precache constraints). Invoke when generating a
-  graphic, adding an image file, or wiring an `<img>`.
 
 ## Autonomous feature-proposal pipeline
 

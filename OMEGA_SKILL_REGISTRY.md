@@ -7,7 +7,7 @@ Regenerate with `python3 scripts/omega-registry.py`;
 Every number here is read off the filesystem at generation time. It exists
 because the hand-written equivalents all drifted: `.claude/skills/README.md`
 said "Four skills", `CLAUDE.md` §10 said "Five", §11 said "4-skill pipeline",
-and 15 exist.
+and 18 exist.
 
 ## 1 · Skills
 
@@ -22,19 +22,22 @@ effectively invisible unless invoked by exact name.
 | `cinematic-media` | yes | — | 1,651 | README.md | 2026-08-30 |
 | `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-30 |
 | `deploy-gate` | yes | — | 1,703 | README.md | 2026-08-30 |
+| `edge-functions` | yes | — | 1,389 | README.md | uncommitted |
 | `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-30 |
 | `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-30 |
+| `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | uncommitted |
 | `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
+| `runtime-verify` | yes | — | 1,288 | README.md | uncommitted |
 | `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
-| `supabase` | yes | 3 | 3,244 | CLAUDE.md, README.md | uncommitted |
-| `supabase-postgres-best-practices` | yes | 35 | 823 | README.md | uncommitted |
-| `supabase-server` | yes | — | 5,201 | README.md | uncommitted |
+| `supabase` | yes | 3 | 3,244 | CLAUDE.md, README.md | 2026-08-30 |
+| `supabase-postgres-best-practices` | yes | 35 | 823 | README.md | 2026-08-30 |
+| `supabase-server` | yes | — | 5,201 | README.md | 2026-08-30 |
 | `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
 | `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
 
-**15 skills, ~29,220 tokens** if every SKILL.md were read in one
+**18 skills, ~32,945 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 ### Purpose of each
@@ -43,11 +46,14 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`cinematic-media`** — Work on sydomega-live's video and "cinematic" motion surface — the welcome demo video and its wiring, the transition/2.5D/motion engines, and the…
 - **`context-budget`** — Keep this repo's per-session context cost down — measure what every agent session loads before it starts, decide where new documentation belongs so…
 - **`deploy-gate`** — Ship a change to sydomega-live's real deployment surface — the static Vercel site and, separately, the Supabase backend — without letting a green local…
+- **`edge-functions`** — Work on sydomega-live's Supabase Edge Functions — the 11 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge,…
 - **`feature-architect`** — Turns a FEATURE_IDEAS.md proposal into an exact, file-by-file implementation blueprint for this repo's real static-HTML/Supabase architecture (no…
 - **`grill-me-codex`** — Safety gate for HIGH-RISK changes in this repo — auth, database schema, payments/Stripe, RLS policies, or any new public-callable function/RPC.
   - carries: `THREAT_MODEL.md`
+- **`i18n`** — Work on sydomega-live's translation layer — i18n.js (the inlined English key set T_EN) and i18n/{ar,es,fr,hi,nl,zh}.json.
 - **`image-pipeline`** — Produce, add, or change imagery for sydomega-live — procedural SVG, canvas-rendered PNG (share cards, QR, exports), PWA/favicon raster, and…
 - **`interface-guidelines`** — Audit sydomega-live against the Web Interface Guidelines, using only the rules that apply to a no-build vanilla-HTML stack.
+- **`runtime-verify`** — Verify a change to sydomega-live at runtime — render the real capability entrypoints in a headless browser with scripts/verify-runtime.js — and keep…
 - **`subscriber-portal`** — Surfaces an already-built, human-approved feature inside the real subscriber-facing UI (dashboard/hub pages, existing tier and notification systems) —…
 - **`supabase`** — "Use when doing ANY task involving Supabase.
   - carries: `assets/feedback-issue-template.md`, `CHANGELOG.md`, `references/skill-feedback.md`
@@ -81,7 +87,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `supabase/*.sql` (flat bag) | 125 |
 | `supabase/migrations/*.sql` | 145 (103 numbered `NNNN_`, 42 timestamped) |
 | Edge Functions | 11 |
-| skills | 15 |
+| skills | 18 |
 | agent definitions | 1 |
 
 ### Translation coverage

@@ -1,20 +1,31 @@
-# Runner canaries for issue #157.
+# Runner canary for issue #157.
 #
-# Two lanes, deliberately:
+# Proves the registered self-hosted runner actually executes work: a non-zero
+# runner id, real steps, and a retrievable log -- #157's acceptance criterion.
 #
-#   self-hosted  - the runner the quality gates actually use. Proves runner
-#                  provisioning and real step execution. This lane may fail.
-#   github-hosted - answers the open question in #157 ("are GitHub-hosted
-#                  runners restored?") with a fact on every push instead of a
-#                  blind check of billing/policy settings. It is
-#                  continue-on-error, so it can NEVER gate anything: it is an
-#                  instrument, not a requirement. Read its result, don't rely
-#                  on it. When it starts passing, hosted runners are available
-#                  again and #157's routing decision can be made on evidence.
+# DELIBERATELY DOES NOT INVOKE BASH. Every one of this workflow's first 29 runs
+# failed, and not one was a code failure. On this Windows runner `bash`
+# resolves to the WSL shim at C:\Windows\System32\bash.exe with no distro
+# installed, so it dies before reading any script:
 #
-# #157's acceptance criterion is a non-zero runner ID, at least one executed
-# step, and a real job log. Both lanes print exactly that, so whichever one
-# works, the criterion is demonstrable rather than asserted.
+#   WSL (10 - Relay) ERROR: CreateProcessCommon:800:
+#   execvpe(/bin/bash) failed: No such file or directory
+#
+# Two fixes were tried and both failed on the same line: `shell: cmd` then
+# `bash ...`, and `shell: bash` -- which Actions ALSO resolved to the shim
+# ("shell: C:\Windows\system32\bash.EXE --noprofile --norc -e -o pipefail {0}"
+# is in run 27's log), so its documented Git-for-Windows behaviour does not
+# hold here.
+#
+# The third fix is to stop needing bash. This probe never had to run
+# ci-local.sh: ci.yml already runs all 18 blocking checks on this exact runner
+# and passes, so duplicating them here proved nothing and cost a second slot on
+# a single-runner queue. `shell: cmd` invoking python/node directly is the form
+# ci.yml uses and is proven to work here.
+#
+# runner-diagnostics.yml was deleted alongside this: it ran the same
+# ci-local.sh on the same runner on an HOURLY cron, so it produced a guaranteed
+# red run every hour and competed for the one runner. It duplicated this file.
 name: Runner Probe
 
 on:
@@ -29,9 +40,6 @@ jobs:
   self-hosted:
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 5
-    defaults:
-      run:
-        shell: cmd
     steps:
       - name: Prove the runner is real
         shell: cmd
@@ -46,26 +54,22 @@ jobs:
           echo SELF_HOSTED_RUNNER_OK=true
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Runtime tools
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # A real repo check, run the way ci.yml runs its checks -- python
+      # directly under cmd, no shell indirection. Cheap and deterministic.
+      - name: Toolchain and a real repo check execute on this runner
         shell: cmd
         run: |
           python --version
           node --version
-      # The Git for Windows bash by ABSOLUTE PATH. Two weaker attempts failed
-      # here first, both proven by the runner log:
-      #   `shell: cmd` + `bash ...`  -> bare bash is C:\Windows\System32\bash.exe,
-      #      the WSL shim, and no WSL distro is installed:
-      #      "WSL (10 - Relay) ERROR: execvpe(/bin/bash) failed"
-      #   `shell: bash`              -> Actions ALSO resolved that to the shim.
-      #      The log line was literally
-      #      "shell: C:\Windows\system32\bash.EXE --noprofile --norc -e -o pipefail {0}"
-      #      so the documented "uses Git for Windows bash" behaviour does not
-      #      hold on this runner -- System32 wins the PATH lookup.
-      # Naming the interpreter outright is the only form that cannot be
-      # re-resolved. -e -o pipefail matches what `shell: bash` would have set.
-      - name: Deterministic contract on the registered runner
-        shell: 'C:\Program Files\Git\bin\bash.exe -eo pipefail {0}'
-        run: scripts/ci-local.sh
+          python scripts/workflow-contract.py
       - name: Execution marker
         shell: cmd
         run: |

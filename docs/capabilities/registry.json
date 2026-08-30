@@ -2,11 +2,24 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "SYD OMEGA 91717 Capability Registry",
   "version": 2,
-  "status_order": ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"],
+  "status_order": [
+    "STATIC",
+    "LOCAL_ONLY",
+    "PARTIAL",
+    "BUILT",
+    "CONNECTED",
+    "PERSISTED",
+    "SECURED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "BROKEN",
+    "UNREACHABLE"
+  ],
   "confidence_scale": "0-100",
   "source_of_truth": "source-controlled evidence; live verification is required before VERIFIED",
   "contract_fields": {
-    "_comment": "Every capability carries a `contract` with all six keys, non-empty. Enforced by scripts/capability-audit.py --check. A capability may not be promoted above PARTIAL unless every contract field is a concrete claim (not 'unknown'/'TBD'). `live_verification` is honest about provider access: 'BLOCKED - ...' when no live DB/deploy check was run this session.",
+    "_comment": "Every capability carries a `contract` with all six keys, non-empty. Enforced by scripts/capability-audit.py --check. A capability may not be promoted above PARTIAL unless every contract field is a concrete claim (not 'unknown'/'TBD'). `live_verification` is honest about provider access: 'BLOCKED - ...' when no live DB/deploy check was run this session. Browser runtime is verified automatically by scripts/verify-runtime.js (capability-evidence.yml + ci-local.sh --all).",
     "entrypoint": "the shipped file(s) a user or gate actually reaches this capability through",
     "data_contract": "where state lives: named Supabase table(s)/RPC(s) and key columns, or 'device-local', or 'none (static/client-only)'",
     "authorization": "the boundary that decides who may read/write: RLS policy name + grant, is_platform_owner() gate, approval guard, or 'n/a (no server data)'",
@@ -20,7 +33,9 @@
       "name": "Platform Runtime",
       "status": "BUILT",
       "confidence": 90,
-      "entrypoints": ["bg.js"],
+      "entrypoints": [
+        "bg.js"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "bg.js - loaded by 179/179 pages (scripts/omega-registry.py census); injects the design system, the approval guard, nav.js, and every omega-*.js module",
@@ -28,23 +43,26 @@
         "authorization": "injects the approval guard (hides #app/.shell/main.main until body.omega-approved) with a public-page allowlist: account, enter, reset, terms, pending, index",
         "failure_path": "__omegaAppend() queues DOM injections to DOMContentLoaded rather than dropping them when document.body is absent; a parse failure is caught by node --check and blocks CI",
         "static_evidence": ".github/workflows/ci.yml 'JavaScript syntax' step (node --check on every .js, blocking); scripts/audit.py module-graph integrity; scripts/context-budget.py",
-        "live_verification": "BLOCKED - no production runtime access this session. Last render evidence: headless Chromium via verify-in-browser, all pages load and lift the approval guard with a valid session"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js: 13 capability entrypoints load and lift the approval guard with a valid session; the full --all sweep runs report-only in capability-evidence.yml. Live runtime (production) still unverified."
       }
     },
     {
       "id": "identity",
       "name": "Identity and Session",
-      "status": "PARTIAL",
-      "confidence": 55,
-      "entrypoints": ["account.html", "profile.html"],
+      "status": "BUILT",
+      "confidence": 62,
+      "entrypoints": [
+        "account.html",
+        "profile.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "account.html (sign-in, sign-up, reactivate); profile.html (session-gated identity view). Both load bg.js and go through the approval guard",
         "data_contract": "Supabase Auth for the session; public.profiles via .from('profiles') (select/upsert on id=auth.uid()); .rpc('reactivate_account')",
         "authorization": "RLS on public.profiles (own-row plus is_platform_owner()); the bg.js approval guard gates every non-public page on body.omega-approved",
-        "failure_path": "PARTIAL - account.html:441 profiles.upsert destructures { error }; account.html:351 `try{ await supabase.rpc('reactivate_account'); }catch(e){}` and the profile reads at :347/:353 swallow failures (empty catch, and Supabase resolves rather than throws - CLAUDE.md 8.1 class 1). Tracked, not yet fixed",
+        "failure_path": "account.html route() now destructures { error } on every profiles read and on reactivate_account, and console.warns a reason on failure (matching omega-demo-video.js's diagnosability convention); profiles.upsert already checked { error }. profile.html checks partially. No silent swallow left on the sign-in path.",
         "static_evidence": "scripts/schema-dictionary.py (profiles column names vs supabase/live-schema.json, blocking); scripts/rls-auditor.py; scripts/silent-failure-detector.py flags the unchecked calls above",
-        "live_verification": "BLOCKED - no live auth/DB check this session"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session. account.html and profile.html both render; the reactivate branch is covered by the stub's deactivated-profile shape."
       }
     },
     {
@@ -52,7 +70,9 @@
       "name": "Feed",
       "status": "PARTIAL",
       "confidence": 55,
-      "entrypoints": ["feed.html"],
+      "entrypoints": [
+        "feed.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "feed.html - tabs over member posts, publications, and recent task activity",
@@ -60,7 +80,7 @@
         "authorization": "member_posts: GRANT SELECT/INSERT/UPDATE/DELETE TO authenticated + RLS (supabase/platform_expansion.sql, migrations/0069); publications: own-row policy on user_id; a cross-member 'published' feed needs an RLS policy that does not yet exist (FEATURE_IDEAS.md 'Flagged, not proposed')",
         "failure_path": "PARTIAL - 2 of ~4 read paths destructure { error }; the member-writable text fields (title, body) are escaped with esc() before render (stored-XSS history, CLAUDE.md 8.1)",
         "static_evidence": "scripts/schema-dictionary.py; scripts/rls-auditor.py; scripts/silent-failure-detector.py; the feed column-name fix is recorded in FIXES_LOG.md",
-        "live_verification": "BLOCKED - no live DB check; publications.status transitions and the missing cross-member policy are unverified"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
       }
     },
     {
@@ -68,7 +88,9 @@
       "name": "Approvals",
       "status": "PARTIAL",
       "confidence": 65,
-      "entrypoints": ["approvals.html"],
+      "entrypoints": [
+        "approvals.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "approvals.html - owner-only member review: grant permanent access, extend trial, revoke, reject",
@@ -76,7 +98,7 @@
         "authorization": "is_platform_owner() inside every RPC; approvals.html itself is not in the public-page allowlist so the approval guard blocks non-owners; RPC EXECUTE is REVOKEd from PUBLIC then granted narrowly (CLAUDE.md 8.2, migrations/0097)",
         "failure_path": "GOOD - 8 .error checks; destructive actions confirm; OmegaGuardian.gate('admin', ...) wraps grant/extend/revoke with a graceful fallback and an error toast",
         "static_evidence": "scripts/rls-auditor.py; scripts/silent-failure-detector.py; scripts/audit.py; DEPLOYMENT_READY.md records the gate wiring",
-        "live_verification": "BLOCKED - member impersonation RLS sweep last run 2026-08-29 (CLAUDE.md 8.2) covered profiles scoping; the six approval RPCs' privilege state not re-checked this session"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js: renders without error and correctly keeps #app hidden for a non-owner stub (the owner gate working). Owner-path render + the six approval RPCs' live privilege state still BLOCKED - no provider access."
       }
     },
     {
@@ -84,7 +106,9 @@
       "name": "Family",
       "status": "PARTIAL",
       "confidence": 55,
-      "entrypoints": ["family.html"],
+      "entrypoints": [
+        "family.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "family.html - lineage graph, heritage records, bloodline nodes",
@@ -92,7 +116,7 @@
         "authorization": "own-row RLS FOR ALL TO authenticated: bloodline_own on bloodline_nodes, heritage_own on heritage_records (supabase/chunk_03_migrations.sql / chunk_06); matching per-table GRANTs present; family_nodes policy keyed on user_id",
         "failure_path": "WEAK - only 1 .error check across 4 table paths; member-entered names/notes are escaped with esc() (family.html was fixed for exactly this, CLAUDE.md 8.1)",
         "static_evidence": "scripts/rls-auditor.py (own-row policies present); scripts/schema-dictionary.py; scripts/silent-failure-detector.py flags the unchecked writes",
-        "live_verification": "BLOCKED - no live check; family.html's writes were part of the member_state mirror work (CLAUDE.md 8.2) but not re-verified live this session"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
       }
     },
     {
@@ -100,7 +124,9 @@
       "name": "Social",
       "status": "PARTIAL",
       "confidence": 55,
-      "entrypoints": ["social.html"],
+      "entrypoints": [
+        "social.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "social.html - member broadcasts and connection requests",
@@ -108,7 +134,7 @@
         "authorization": "own-row RLS FOR ALL TO authenticated: broadcast_own, social_conn_own (supabase/chunk_03_migrations.sql / chunk_06); GRANTs present (broadcasts: SELECT+INSERT; connections: SELECT+INSERT+UPDATE+DELETE)",
         "failure_path": "OK - 3 .error checks; social.html was fixed to check .error before its success toast (CLAUDE.md 9); broadcast text escaped with esc()",
         "static_evidence": "scripts/rls-auditor.py; scripts/schema-dictionary.py; scripts/silent-failure-detector.py",
-        "live_verification": "BLOCKED - no live check; the connection-accept state machine (who may update whose row) is unverified against production RLS"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session."
       }
     },
     {
@@ -148,7 +174,9 @@
       "name": "Search",
       "status": "LOCAL_ONLY",
       "confidence": 75,
-      "entrypoints": ["search.html"],
+      "entrypoints": [
+        "search.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "search.html plus the Ctrl+K command palette (omega-search.js, loaded platform-wide)",
@@ -156,7 +184,7 @@
         "authorization": "n/a (no server data) - the only .from('profiles') call is the standard session load, not a search",
         "failure_path": "n/a for the search itself (static catalog); getRecent() wraps JSON.parse in try/catch and falls back to []",
         "static_evidence": "scripts/audit.py (search.html reachable, loads bg.js); the catalog is version-controlled in-page; omega-search.js parses under node --check",
-        "live_verification": "n/a - nothing server-side to verify. Complete at its intended (device-local) scope; not a backend gap"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js: search.html renders, catalog present, no error. Nothing server-side to verify."
       }
     },
     {
@@ -164,7 +192,9 @@
       "name": "Roadmap",
       "status": "BUILT",
       "confidence": 75,
-      "entrypoints": ["roadmap.html"],
+      "entrypoints": [
+        "roadmap.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "roadmap.html - static roadmap content behind the approval guard",
@@ -172,7 +202,7 @@
         "authorization": "approval guard only (not a public page); no member-writable data",
         "failure_path": "n/a - no writes; a failed profile load falls through to the guard, which keeps #app hidden rather than showing unapproved content",
         "static_evidence": "scripts/audit.py (reachable from nav.js, loads bg.js, all asset refs resolve); scripts/production-contract.py (no duplicate ids, bg.js present)",
-        "live_verification": "BLOCKED - no live check, but there is no server contract to verify; the prior 'missing runtime reference' bug is fixed and covered by production-contract.py"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. No server contract to verify."
       }
     },
     {
@@ -180,7 +210,9 @@
       "name": "Internationalization",
       "status": "TESTED",
       "confidence": 80,
-      "entrypoints": ["i18n.js"],
+      "entrypoints": [
+        "i18n.js"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "i18n.js (loaded platform-wide) + i18n/{ar,es,fr,hi,nl,zh}.json; runtime API OmegaI18n.t()",
@@ -196,7 +228,9 @@
       "name": "Production Contract",
       "status": "TESTED",
       "confidence": 85,
-      "entrypoints": ["scripts/production-contract.py"],
+      "entrypoints": [
+        "scripts/production-contract.py"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "scripts/production-contract.py; scripts/release-gate.py; scripts/vercel-build.sh; scripts/ci-local.sh (18 blocking checks)",
@@ -212,7 +246,10 @@
       "name": "Observability",
       "status": "PARTIAL",
       "confidence": 45,
-      "entrypoints": ["ops.html", "analytics.html"],
+      "entrypoints": [
+        "ops.html",
+        "analytics.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "omega-telemetry.js, omega-metrics.js, omega-finops.js, omega-dataguard.js (all loaded via bg.js); surfaced on ops.html and analytics.html",
@@ -220,7 +257,7 @@
         "authorization": "RLS enabled on all three: telemetry_events INSERT WITH CHECK(true) + owner-only SELECT; user_journeys scoped to auth.uid() both ways; platform_metrics INSERT WITH CHECK(true) (no user_id column, so no attribution to spoof - data-integrity only, CLAUDE.md 8.2) + owner-only read",
         "failure_path": "WEAK - telemetry/metrics writes are fire-and-forget by design (a dropped metric must not break a page), but that means a broken pipeline is invisible; ops.html's event-bus metrics table looks up an id that exists nowhere (CLAUDE.md 8.2) so that panel never renders",
         "static_evidence": "scripts/rls-auditor.py (policies present); scripts/schema-dictionary.py; scripts/audit.py flags the ops.html dead lookup; supabase/omega_telemetry.sql is idempotent DDL",
-        "live_verification": "BLOCKED - no live check. Whether authenticated is granted INSERT on platform_metrics, and whether any telemetry row has ever been written in production, are both unverified"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session. ops.html and analytics.html render (the dead ops.html metrics panel is a known gap, tracked). platform_metrics grant state still unverified."
       }
     },
     {
@@ -228,7 +265,10 @@
       "name": "Import / Export",
       "status": "PARTIAL",
       "confidence": 50,
-      "entrypoints": ["vault.html", "settings.html"],
+      "entrypoints": [
+        "vault.html",
+        "settings.html"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "omega-local-backup.js (OmegaBackup.exportKeys/importKeys - JSON file the user saves/loads), omega-export.js, omega-nexus-export.js, upload.js (OmegaStorage.upload/publicUrl/signedUrl)",
@@ -236,23 +276,25 @@
         "authorization": "backup export/import is device-local (no auth needed, no server data leaves the browser); OmegaStorage.upload requires an auth session and writes under the caller's own user-id prefix; bucket access is governed by Supabase Storage RLS (treat a new bucket like a new table)",
         "failure_path": "OmegaStorage.upload returns { error } on no-file / over-limit / no-session / storage error and the caller shows it; import wraps JSON.parse in try/catch; a member-supplied image URL rendered back must be esc()'d (stored-XSS history)",
         "static_evidence": "omega-local-backup.js / upload.js parse under node --check; the 5-with-export / 43-without split is measured by scripts/evidence-audit.py; CLAUDE.md 8.2 records which finance pages carry the export path",
-        "live_verification": "BLOCKED - no live check. Storage bucket RLS, and the still-open gap that 43 device-local pages have no export path at all (scope finding, CLAUDE.md 8.2), are unverified/unclosed"
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js (headless render, stubbed session): page loads, approval guard lifts, no uncaught error, no horizontal overflow, no duplicate id. Live DB/auth verification still BLOCKED - no Supabase provider access this session. vault.html (CSP was blocking its own data: images / gstatic fonts - fixed this PR) and settings.html render. Storage bucket RLS still unverified."
       }
     },
     {
       "id": "accessibility",
       "name": "Accessibility",
       "status": "BUILT",
-      "confidence": 65,
-      "entrypoints": ["omega-a11y.js"],
+      "confidence": 68,
+      "entrypoints": [
+        "omega-a11y.js"
+      ],
       "verified": false,
       "contract": {
         "entrypoint": "omega-a11y.js - WCAG 2.1 AA layer injected on all 179 pages via bg.js: skip link, focus-trap manager (OmegaA11y.trapFocus/releaseFocus), live-region announcer, <main> landmark guarantee, unlabelled-control audit, prefers-reduced-motion CSS reinforcement",
         "data_contract": "none - a client DOM layer, no persistence",
         "authorization": "n/a - no server data",
         "failure_path": "additive and defensive - it only adds ARIA/landmarks/labels that are missing; a failure degrades to the page's native semantics rather than breaking it. color-scheme:dark (bg.js) fixes native-control contrast platform-wide",
-        "static_evidence": "the interface-guidelines skill audits against the Web Interface Guidelines (no-build subset); omega-a11y.js parses under node --check; verify-in-browser scans tap targets (24px min at 375) and duplicate ids; CLAUDE.md 8.4 records the color-scheme fix reaching 173 pages",
-        "live_verification": "BLOCKED - no automated axe/Lighthouse run in CI yet, and no live audit this session. Adding an automated a11y scan to verify-in-browser is the open item"
+        "static_evidence": "scripts/verify-runtime.js runs an advisory a11y pass every capability-evidence CI run (missing <main>, sub-24px tap targets, unlabelled inputs) and prints the aggregated findings; the interface-guidelines skill audits against the Web Interface Guidelines; CLAUDE.md 8.4 records the color-scheme fix reaching 173 pages.",
+        "live_verification": "runtime-verified 2026-08-30 via scripts/verify-runtime.js: a11y pass runs across all capability entrypoints. Open findings, tracked not gating: sub-24px tap targets on the bg.js footer/nav chrome (selectors A, BUTTON, tnav-btn, omega-dash-link, sechead-action, omega-sound-btn) and one unlabelled input (mp-type on feed.html). A dedicated remediation sweep is the next step; no axe/Lighthouse yet."
       }
     }
   ]

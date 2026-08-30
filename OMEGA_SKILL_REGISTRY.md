@@ -18,18 +18,18 @@ effectively invisible unless invoked by exact name.
 
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
-| `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-11 |
+| `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-30 |
 | `cinematic-media` | yes | — | 1,651 | README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-23 |
+| `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-30 |
 | `deploy-gate` | yes | — | 1,703 | README.md | 2026-08-30 |
-| `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-22 |
-| `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-24 |
+| `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-30 |
+| `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-30 |
 | `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
-| `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-23 |
-| `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-11 |
+| `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
+| `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
 | `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
 | `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
-| `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-11 |
+| `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
 
 **12 skills, ~19,952 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
@@ -58,7 +58,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
-| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,556 | 2026-08-18 |
+| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,556 | 2026-08-30 |
 
 ## 3 · Platform census
 

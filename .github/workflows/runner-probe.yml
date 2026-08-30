@@ -1,0 +1,38 @@
+# Issue #157 canary. GitHub-hosted runners stopped provisioning for this repo
+# on 2026-08-27. This workflow is the acceptance check: run it (Actions tab ->
+# "Runner Probe" -> Run workflow) after fixing the account/org Actions settings
+# and billing. If it produces a run with a NON-ZERO runner id, at least one
+# executed step, and a real job log, the #157 acceptance criteria are met and
+# the issue can be closed — then the four real workflows can move back off
+# `self-hosted` (or keep both as a matrix).
+#
+# It is manual-only (workflow_dispatch) so it adds no red noise on normal pushes
+# while GitHub-hosted execution is still broken.
+name: Runner Probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  github-hosted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prove the runner is real
+        run: |
+          set -e
+          test -n "$RUNNER_NAME" || { echo "RUNNER_NAME empty — runner never provisioned"; exit 1; }
+          echo "runner_name=$RUNNER_NAME"
+          echo "runner_os=$RUNNER_OS  arch=$RUNNER_ARCH"
+          echo "run_id=$GITHUB_RUN_ID  attempt=$GITHUB_RUN_ATTEMPT"
+          echo "GITHUB_HOSTED_RUNNER_OK=true"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deterministic contract on a GitHub-hosted runner
+        run: |
+          python3 --version
+          node --version
+          bash scripts/ci-local.sh

@@ -437,7 +437,9 @@
 
     async function initCouncil() {
       try {
-        const sess = await sb.auth.getSession();
+        const _c = (window.OmegaSupabase && window.OmegaSupabase.sb) || (window.OmegaSB && await window.OmegaSB.get()) || null;
+        if (!_c) return;
+        const sess = await _c.auth.getSession();
         currentUser = sess?.data?.session?.user?.id;
         if (!currentUser) return;
 

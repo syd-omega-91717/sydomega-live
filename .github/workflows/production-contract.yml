@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -45,12 +46,15 @@ jobs:
         with:
           python-version: '3.12'
       - name: Production contract
+        shell: cmd
         run: python scripts/production-contract.py
       - name: JavaScript syntax
+        shell: cmd
         run: |
           @echo off
           for %%F in (*.js) do node --check "%%F" || exit /b 1
       - name: Execution marker
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

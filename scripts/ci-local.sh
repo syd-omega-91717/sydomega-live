@@ -122,6 +122,8 @@ if [ "$RUN_ALL" -eq 1 ]; then
     printf '\n\033[1m── %s (advisory)\033[0m\n' "$s"
     python3 "scripts/$s.py" || true
   done
+  printf '\n\033[1m── runtime verification (advisory; needs playwright-core + Chrome)\033[0m\n'
+  node scripts/verify-runtime.js || true
 fi
 
 printf '\n══════════════════════════════════════════════════════════\n'

@@ -1,0 +1,48 @@
+# Self-hosted runner canary for issue #157.
+# The repository quality gates use the registered Windows self-hosted runner.
+# This probe proves that runner provisioning and actual step execution work.
+name: Runner Probe
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-hosted:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: cmd
+    steps:
+      - name: Prove the runner is real
+        shell: cmd
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner_name=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS% arch=%RUNNER_ARCH%
+          echo run_id=%GITHUB_RUN_ID% attempt=%GITHUB_RUN_ATTEMPT%
+          echo SELF_HOSTED_RUNNER_OK=true
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deterministic contract on the registered runner
+        shell: cmd
+        run: |
+          python --version
+          node --version
+          bash scripts/ci-local.sh
+      - name: Execution marker
+        shell: cmd
+        run: |
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo RUNNER_PROBE_EXECUTED=true
+          echo RUNNER_PROBE_RUN_ID=%GITHUB_RUN_ID%
+          echo RUNNER_PROBE_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

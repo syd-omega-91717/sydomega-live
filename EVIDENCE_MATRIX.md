@@ -41,8 +41,8 @@ This scanner reads the repository. It has no database connection, so:
 | `LOCAL_ONLY` | 48 |
 | `STATIC` | 8 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 2 |
-| **total** | **179** |
+| `UNREACHABLE` | 0 |
+| **total** | **177** |
 
 ## BUILT (95)
 
@@ -246,13 +246,6 @@ This scanner reads the repository. It has no database connection, so:
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
 
-## UNREACHABLE (2)
-
-| page | evidence |
-|---|---|
-| `architecture.html` | not referenced by nav.js and not a public page |
-| `demo-check.html` | not referenced by nav.js and not a public page |
-
 ## Edge Functions
 
 | function | state | evidence |
@@ -275,7 +268,7 @@ This scanner reads the repository. It has no database connection, so:
 |---|---:|
 | tables + views declared in `supabase/` | 118 |
 | functions declared in `supabase/` | 128 |
-| tables defined in more than one root SQL file | 47 |
+| tables defined in more than one root SQL file | 48 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
 live defect: `scripts/audit.py` separates the byte-identical copies from
@@ -315,6 +308,7 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 | `member_events` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `member_perks` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_sovereign_points.sql` |
 | `messages` | `chunk_06_migrations.sql`, `conversations.sql`, `migration_runner.sql` |
+| `oaths` | `chunk_09_new_features.sql`, `omega_live_fixes_2026_08_29.sql` |
 | `platform_owners` | `access_gate.sql`, `chunk_02b_migrations.sql`, `chunk_08_migrations.sql`, `migration_runner.sql`, … (8 total) |
 | `platform_settings` | `chunk_02b_migrations.sql`, `chunk_03_migrations.sql`, `chunk_08_migrations.sql`, `migration_runner.sql`, … (8 total) |
 | `point_perks` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_sovereign_points.sql` |

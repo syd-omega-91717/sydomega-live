@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -41,18 +42,23 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate workflow contracts
+        shell: cmd
         run: python scripts/workflow-contract.py
       - name: Validate architecture contract
+        shell: cmd
         run: python scripts/architecture-contract.py
       - name: Validate implementation readiness
+        shell: cmd
         run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
+        shell: cmd
         run: |
           @echo off
           if not exist scripts\ci-local.sh exit /b 1
           findstr /C:"--help" scripts\ci-local.sh >nul || exit /b 1
           echo ci-local.sh help contract verified
       - name: Execution marker
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

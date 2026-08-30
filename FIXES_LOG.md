@@ -4126,3 +4126,58 @@ border color, and `scripts/audit.py` (0 critical / 6 pre-existing warnings).
   `::before`/`::after` on the class, or a per-instance border on the card
   element itself. This is the "full per-class exclusion list" referenced from
   §4.1 — an audit trail, not a standing fact.
+
+---
+
+## Runtime sweep (2026-08-30): bg.js double-load on 29 pages, eager OmegaSupabase read on 6
+
+Found by `scripts/verify-runtime.js --all` (headless render of all 179 pages,
+added the same session — issue #175), which asserts the live DOM has no
+duplicate id and no uncaught error. Two real classes surfaced.
+
+### bg.js loaded twice → duplicate ids on 29 pages
+
+29 of the oldest self-improvement pages (`affirmations`, `atlas`, `body`,
+`breath`, `budget`, `command`, `decisions`, `flashcard`, `focus`, `gratitude`,
+`habits`, `journal`, `library`, `meditate`, `mood`, `network`, `nutrition`,
+`quotes`, `reading`, `rituals`, `sleep`, `stoic`, `targets`, `time`, `vision`,
+`water`, `wealth`, `weekly`, `workout`) each carried **`<script src="/bg.js">`
+in `<head>` and a second `<script src="bg.js">` just before `</body>`**. The
+different `src` spelling (`/bg.js` vs `bg.js`) meant nothing deduped them, so
+`bg.js`'s whole IIFE ran twice: `window.OmegaSB` is not set until near the end
+of the first run, so the second run re-injected the four style/overlay elements
+it creates before that point — `#omega-approval-guard`, `#ocl-css`,
+`#omega-noise-overlay`, `#omega-depth-field` — each appearing twice in the live
+DOM on all 29 pages (verified: `verify-runtime.js` reported exactly these four
+ids, 29× each). Every deferred `omega-*.js` module load also fired twice.
+
+**Fix:** removed the second `<script src="bg.js"></script>` line from all 29
+pages; the `<head>` `/bg.js` still loads. Re-verified: 0 `omega-*` duplicate
+ids. (`habits.html` still shows its own page-generated `hc-hN` duplicate ids —
+a separate, pre-existing bug in that page's calendar render, tracked not fixed.)
+
+### `const sb = window.OmegaSupabase?.sb` read before it exists — 6 pages
+
+`council.html` and `graph-explorer/timeline/centrality/evidence/anomalies.html`
+each did `const sb = window.OmegaSupabase?.sb;` at the top of a synchronous
+`<script>`, then `sb.auth.getSession()` / `sb.from(...)`. This is CLAUDE.md
+§8.1 class 4 again: `bg.js` publishes `window.OmegaSupabase.sb` **lazily**,
+only inside `OmegaSB.get()`'s resolution, so at parse time it is `undefined`
+and every call throws `Cannot read properties of undefined`. The pages'
+existing `if (!sb) { … "SUPABASE NOT READY" … }` guard set innerHTML but did
+not stop the init function.
+
+**Fix:** `let sb = window.OmegaSupabase?.sb || null;` and, as the first line of
+each async `init*()`, `sb = sb || (window.OmegaSB ? await window.OmegaSB.get()
+: null); if (!sb) return;` — matching the `await window.OmegaSB.get()` pattern
+`bg.js` itself uses at lines ~1181/1301/1340. Re-verified clean.
+
+### Not fixed, recorded
+
+- `codex.html` fetches `export.arxiv.org/api` client-side; arxiv sends no CORS
+  header, so it fails in production too. Needs an Edge Function proxy, not a
+  source fix.
+- Platform-wide a11y (advisory): sub-24px tap targets on the `bg.js` footer/nav
+  chrome (`.tnav-btn`, `.omega-dash-link`, footer `<a>`), and ~5 unlabelled
+  inputs (`mp-type`, `depthSelect`, `dateFilter`, `*-import-file`, `j-date`).
+  Tracked as the `accessibility` capability; a dedicated sweep is the next step.

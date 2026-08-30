@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -40,15 +41,27 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Validate capability registry
+        shell: cmd
         run: python scripts/capability-audit.py --check
       - name: Source runtime audit
+        shell: cmd
         run: python scripts/capability-audit.py
       - name: Validate registry JSON
+        shell: cmd
         run: python -m json.tool docs/capabilities/registry.json
       - name: Validate architecture runtime
+        shell: cmd
         run: python scripts/architecture-readiness.py
+      - name: Runtime verification (headless render of capability entrypoints)
+        shell: cmd
+        run: node scripts/verify-runtime.js
       - name: Execution marker
+        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

@@ -1,0 +1,1079 @@
+{
+  "metadata": {
+    "generated": "2026-08-30T13:21:50.938135",
+    "total_unique_tables": 120,
+    "total_duplicates": 110,
+    "tier_1_parser_artifacts": 6,
+    "tier_2_legitimate_duplicates": 104
+  },
+  "tier_1": {
+    "above": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0059_omega_ai_memory.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_ai_memory.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 8,
+      "requires_manual_verification": true
+    },
+    "alone": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/academy_progress.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0015_academy_progress.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": true
+    },
+    "bodies": {
+      "canonical_definition": "supabase/chunk_06_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0034_omega_schema_repair.sql",
+        "supabase/omega_schema_repair.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": true
+    },
+    "for": {
+      "canonical_definition": "supabase/migrations/0091_omega_notifications_fix.sql",
+      "duplicate_files": [
+        "supabase/migrations/0089_omega_user_assets_fix.sql",
+        "supabase/omega_notifications_fix.sql",
+        "supabase/omega_user_assets_fix.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": true
+    },
+    "if": {
+      "canonical_definition": "supabase/migrations/0099_omega_live_schema_reconciliation.sql",
+      "duplicate_files": [
+        "supabase/omega_live_schema_reconciliation.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": true
+    },
+    "is": {
+      "canonical_definition": "supabase/chunk_08_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_06_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0034_omega_schema_repair.sql",
+        "supabase/migrations/0053_omega_stats_repair.sql",
+        "supabase/omega_schema_repair.sql",
+        "supabase/omega_stats_repair.sql",
+        "supabase/runner_chunk_05.sql"
+      ],
+      "duplicate_count": 8,
+      "requires_manual_verification": true
+    }
+  },
+  "tier_2": {
+    "academy_access": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0007_omega_academy_access.sql",
+        "supabase/omega_academy_access.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "academy_progress": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/academy_progress.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0015_academy_progress.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "access_audit": {
+      "canonical_definition": "supabase/chunk_05_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0028_omega_access_audit.sql",
+        "supabase/omega_access_audit.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "access_grant_audit": {
+      "canonical_definition": "supabase/migrations/0079_privilege_lockdown.sql",
+      "duplicate_files": [
+        "supabase/0003_privilege_lockdown.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "activity_feed": {
+      "canonical_definition": "supabase/migrations/0069_platform_expansion.sql",
+      "duplicate_files": [
+        "supabase/platform_expansion.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "agent_threads": {
+      "canonical_definition": "supabase/migrations/0059_omega_ai_memory.sql",
+      "duplicate_files": [
+        "supabase/omega_ai_memory.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "ai_memory": {
+      "canonical_definition": "supabase/migrations/0059_omega_ai_memory.sql",
+      "duplicate_files": [
+        "supabase/omega_ai_memory.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "api_keys": {
+      "canonical_definition": "supabase/migrations/0062_omega_entreprise.sql",
+      "duplicate_files": [
+        "supabase/omega_entreprise.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "automation_rules": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "bloodline_nodes": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "capability_kpi_log": {
+      "canonical_definition": "supabase/migrations/0061_omega_capability_registry.sql",
+      "duplicate_files": [
+        "supabase/omega_capability_registry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "capability_registry": {
+      "canonical_definition": "supabase/migrations/0061_omega_capability_registry.sql",
+      "duplicate_files": [
+        "supabase/omega_capability_registry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "certificates": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 6,
+      "requires_manual_verification": false
+    },
+    "character_records": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "circuit_breakers": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "client_errors": {
+      "canonical_definition": "supabase/chunk_05_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0030_omega_error_monitor.sql",
+        "supabase/omega_error_monitor.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "commission_contracts": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_04_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0009_omega_contracts.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_contracts.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 9,
+      "requires_manual_verification": false
+    },
+    "consent_records": {
+      "canonical_definition": "supabase/migrations/0070_privacy_gdpr.sql",
+      "duplicate_files": [
+        "supabase/privacy_gdpr.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "consult_requests": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_04_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0013_omega_consult.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_consult.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 9,
+      "requires_manual_verification": false
+    },
+    "content_recommendations": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "content_versions": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "contribution_log": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 6,
+      "requires_manual_verification": false
+    },
+    "conversations": {
+      "canonical_definition": "supabase/chunk_06_migrations.sql",
+      "duplicate_files": [
+        "supabase/conversations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0036_conversations.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "daily_engagement": {
+      "canonical_definition": "supabase/migrations/0084_chronometers.sql",
+      "duplicate_files": [
+        "supabase/0006_chronometers.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "data_domains": {
+      "canonical_definition": "supabase/migrations/0064_omega_master_data.sql",
+      "duplicate_files": [
+        "supabase/omega_master_data.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "data_entities": {
+      "canonical_definition": "supabase/migrations/0064_omega_master_data.sql",
+      "duplicate_files": [
+        "supabase/omega_master_data.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "data_export_requests": {
+      "canonical_definition": "supabase/migrations/0070_privacy_gdpr.sql",
+      "duplicate_files": [
+        "supabase/privacy_gdpr.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "data_lineage": {
+      "canonical_definition": "supabase/migrations/0064_omega_master_data.sql",
+      "duplicate_files": [
+        "supabase/omega_master_data.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "definitions": {
+      "canonical_definition": "supabase/migrations/0094_omega_complete_task_dedup_fix.sql",
+      "duplicate_files": [
+        "supabase/omega_complete_task_dedup_fix.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "digest_preferences": {
+      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "duplicate_files": [
+        "supabase/migrations/0099_omega_live_schema_reconciliation.sql",
+        "supabase/omega_live_schema_reconciliation.sql"
+      ],
+      "duplicate_count": 3,
+      "requires_manual_verification": false
+    },
+    "dispatches": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_04_migrations.sql",
+        "supabase/chunk_06_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0010_omega_dispatch.sql",
+        "supabase/migrations/0037_dispatches.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_dispatch.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 11,
+      "requires_manual_verification": false
+    },
+    "enterprise_accounts": {
+      "canonical_definition": "supabase/migrations/0062_omega_entreprise.sql",
+      "duplicate_files": [
+        "supabase/omega_entreprise.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "enterprise_audit": {
+      "canonical_definition": "supabase/migrations/0062_omega_entreprise.sql",
+      "duplicate_files": [
+        "supabase/omega_entreprise.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "error_budget_policy": {
+      "canonical_definition": "supabase/migrations/0071_slo_monitoring.sql",
+      "duplicate_files": [
+        "supabase/slo_monitoring.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "ethics_declarations": {
+      "canonical_definition": "supabase/migrations/0063_omega_governance.sql",
+      "duplicate_files": [
+        "supabase/omega_governance.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "event_rsvps": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "evolution_events": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 6,
+      "requires_manual_verification": false
+    },
+    "exam_results": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0003_omega_exams.sql",
+        "supabase/omega_exams.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "expert_bookings": {
+      "canonical_definition": "supabase/migrations/0069_platform_expansion.sql",
+      "duplicate_files": [
+        "supabase/platform_expansion.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "family_nodes": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_06_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0038_family_nodes.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 8,
+      "requires_manual_verification": false
+    },
+    "feature_flags": {
+      "canonical_definition": "supabase/migrations/0061_omega_capability_registry.sql",
+      "duplicate_files": [
+        "supabase/omega_capability_registry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "feedback": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0008_omega_feedback.sql",
+        "supabase/omega_feedback.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "governance_policies": {
+      "canonical_definition": "supabase/migrations/0063_omega_governance.sql",
+      "duplicate_files": [
+        "supabase/omega_governance.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "graph_entities": {
+      "canonical_definition": "supabase/migrations/20260818141500_omega_graphify_schema.sql",
+      "duplicate_files": [
+        "supabase/omega_graphify_schema.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "graph_events": {
+      "canonical_definition": "supabase/migrations/20260818141500_omega_graphify_schema.sql",
+      "duplicate_files": [
+        "supabase/omega_graphify_schema.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "graph_evidence": {
+      "canonical_definition": "supabase/migrations/20260818141500_omega_graphify_schema.sql",
+      "duplicate_files": [
+        "supabase/omega_graphify_schema.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "graph_relationships": {
+      "canonical_definition": "supabase/migrations/20260818141500_omega_graphify_schema.sql",
+      "duplicate_files": [
+        "supabase/omega_graphify_schema.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "health_logs": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "heritage_records": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "incidents": {
+      "canonical_definition": "supabase/migrations/0071_slo_monitoring.sql",
+      "duplicate_files": [
+        "supabase/slo_monitoring.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "interest_signals": {
+      "canonical_definition": "supabase/migrations/0077_omega_interest_graph.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql",
+        "supabase/migrations/0056_entreprise_schema_v2.sql",
+        "supabase/omega_interest_graph.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "knowledge_edges": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "knowledge_nodes": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "leaderboard_snapshots": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "marketplace_listings": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_06_migrations.sql",
+        "supabase/chunk_08_migrations.sql",
+        "supabase/marketplace_listings.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0040_marketplace_listings.sql",
+        "supabase/migrations/0048_omega_marketplace_fix.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_marketplace_fix.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 12,
+      "requires_manual_verification": false
+    },
+    "matrix_progress": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0004_omega_nested_matrix.sql",
+        "supabase/omega_nested_matrix.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "matrix_tracks": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0004_omega_nested_matrix.sql",
+        "supabase/omega_nested_matrix.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "medals": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/achievements.sql",
+        "supabase/chunk_06_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0035_achievements.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 7,
+      "requires_manual_verification": false
+    },
+    "media_items": {
+      "canonical_definition": "supabase/migrations/0069_platform_expansion.sql",
+      "duplicate_files": [
+        "supabase/platform_expansion.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "media_reservations": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_04_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0012_omega_marketing.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_marketing.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 9,
+      "requires_manual_verification": false
+    },
+    "member_events": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "member_perks": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0005_omega_sovereign_points.sql",
+        "supabase/omega_sovereign_points.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "member_posts": {
+      "canonical_definition": "supabase/migrations/0069_platform_expansion.sql",
+      "duplicate_files": [
+        "supabase/platform_expansion.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "member_presence": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "member_state": {
+      "canonical_definition": "supabase/migrations/0095_omega_member_state.sql",
+      "duplicate_files": [
+        "supabase/omega_member_state.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "messages": {
+      "canonical_definition": "supabase/chunk_06_migrations.sql",
+      "duplicate_files": [
+        "supabase/conversations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0036_conversations.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "notifications": {
+      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "duplicate_files": [
+        "supabase/migrations/0091_omega_notifications_fix.sql",
+        "supabase/omega_notifications_fix.sql"
+      ],
+      "duplicate_count": 3,
+      "requires_manual_verification": false
+    },
+    "oaths": {
+      "canonical_definition": "supabase/omega_live_fixes_2026_08_29.sql",
+      "duplicate_files": [
+        "supabase/chunk_09_new_features.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "platform_events": {
+      "canonical_definition": "supabase/migrations/0067_omega_threat.sql",
+      "duplicate_files": [
+        "supabase/omega_threat.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "platform_metrics": {
+      "canonical_definition": "supabase/migrations/0066_omega_telemetry.sql",
+      "duplicate_files": [
+        "supabase/omega_telemetry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "platform_owners": {
+      "canonical_definition": "supabase/chunk_08_migrations.sql",
+      "duplicate_files": [
+        "supabase/access_gate.sql",
+        "supabase/chunk_02b_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0017_access_gate.sql",
+        "supabase/migrations/0044_omega_evolution_rpc.sql",
+        "supabase/migrations/0051_omega_rls_fix.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_evolution_rpc.sql",
+        "supabase/omega_master_deploy.sql",
+        "supabase/omega_rls_fix.sql"
+      ],
+      "duplicate_count": 13,
+      "requires_manual_verification": false
+    },
+    "platform_settings": {
+      "canonical_definition": "supabase/chunk_08_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_02b_migrations.sql",
+        "supabase/chunk_03_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0006_omega_tokens.sql",
+        "supabase/migrations/0007_omega_academy_access.sql",
+        "supabase/migrations/0050_omega_payments.sql",
+        "supabase/omega_academy_access.sql",
+        "supabase/omega_master_deploy.sql",
+        "supabase/omega_payments.sql",
+        "supabase/omega_tokens.sql"
+      ],
+      "duplicate_count": 12,
+      "requires_manual_verification": false
+    },
+    "point_perks": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0005_omega_sovereign_points.sql",
+        "supabase/omega_sovereign_points.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "policy_eval_log": {
+      "canonical_definition": "supabase/migrations/0065_omega_policy_engine.sql",
+      "duplicate_files": [
+        "supabase/omega_policy_engine.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "policy_rules": {
+      "canonical_definition": "supabase/migrations/0065_omega_policy_engine.sql",
+      "duplicate_files": [
+        "supabase/omega_policy_engine.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "profiles": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 6,
+      "requires_manual_verification": false
+    },
+    "publications": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/chunk_08_migrations.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0052_publications.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 8,
+      "requires_manual_verification": false
+    },
+    "rate_limits": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "research_hypotheses": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "risk_register": {
+      "canonical_definition": "supabase/migrations/0063_omega_governance.sql",
+      "duplicate_files": [
+        "supabase/omega_governance.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "search_index": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0016_search_index.sql",
+        "supabase/search_index.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "security_policies": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "session_heartbeats": {
+      "canonical_definition": "supabase/chunk_04_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0011_omega_time_sovereign.sql",
+        "supabase/omega_time_sovereign.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "sim_trades": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0005_omega_sovereign_points.sql",
+        "supabase/omega_sovereign_points.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "sla_metrics": {
+      "canonical_definition": "supabase/migrations/0062_omega_entreprise.sql",
+      "duplicate_files": [
+        "supabase/omega_entreprise.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "slo_metrics": {
+      "canonical_definition": "supabase/migrations/0071_slo_monitoring.sql",
+      "duplicate_files": [
+        "supabase/slo_monitoring.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "soc_alerts": {
+      "canonical_definition": "supabase/migrations/0067_omega_threat.sql",
+      "duplicate_files": [
+        "supabase/omega_threat.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "social_broadcasts": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "social_connections": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "sovereign_events": {
+      "canonical_definition": "supabase/migrations/0056_entreprise_schema_v2.sql",
+      "duplicate_files": [
+        "supabase/entreprise_schema_v2.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "sovereign_points_ledger": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0005_omega_sovereign_points.sql",
+        "supabase/omega_sovereign_points.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "task_completions": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/matrix_engine.sql",
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0058_matrix_engine.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 8,
+      "requires_manual_verification": false
+    },
+    "telemetry_events": {
+      "canonical_definition": "supabase/migrations/0066_omega_telemetry.sql",
+      "duplicate_files": [
+        "supabase/omega_telemetry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "threat_events": {
+      "canonical_definition": "supabase/migrations/0067_omega_threat.sql",
+      "duplicate_files": [
+        "supabase/omega_threat.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "token_balances": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0006_omega_tokens.sql",
+        "supabase/omega_tokens.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "token_catalog": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0006_omega_tokens.sql",
+        "supabase/omega_tokens.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "travel_journeys": {
+      "canonical_definition": "supabase/chunk_03_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0002_omega_personal_logs.sql",
+        "supabase/omega_personal_logs.sql"
+      ],
+      "duplicate_count": 4,
+      "requires_manual_verification": false
+    },
+    "trophies": {
+      "canonical_definition": "supabase/chunk_02a_migrations.sql",
+      "duplicate_files": [
+        "supabase/migration_runner.sql",
+        "supabase/migrations/0001_omega_master_deploy.sql",
+        "supabase/migrations/0060_omega_backend_sync.sql",
+        "supabase/omega_backend_sync.sql",
+        "supabase/omega_master_deploy.sql"
+      ],
+      "duplicate_count": 6,
+      "requires_manual_verification": false
+    },
+    "user_assets": {
+      "canonical_definition": "supabase/migrations/0089_omega_user_assets_fix.sql",
+      "duplicate_files": [
+        "supabase/omega_user_assets_fix.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "user_dedication": {
+      "canonical_definition": "supabase/migrations/0055_dedication_table.sql",
+      "duplicate_files": [
+        "supabase/chunk_09_new_features.sql",
+        "supabase/dedication_table.sql"
+      ],
+      "duplicate_count": 3,
+      "requires_manual_verification": false
+    },
+    "user_journeys": {
+      "canonical_definition": "supabase/migrations/0066_omega_telemetry.sql",
+      "duplicate_files": [
+        "supabase/omega_telemetry.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "weekly_digest_queue": {
+      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "duplicate_files": [
+        "supabase/migrations/0099_omega_live_schema_reconciliation.sql",
+        "supabase/omega_live_schema_reconciliation.sql"
+      ],
+      "duplicate_count": 3,
+      "requires_manual_verification": false
+    },
+    "workflow_definitions": {
+      "canonical_definition": "supabase/migrations/0068_omega_workflows.sql",
+      "duplicate_files": [
+        "supabase/omega_workflows.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    },
+    "workflow_executions": {
+      "canonical_definition": "supabase/migrations/0068_omega_workflows.sql",
+      "duplicate_files": [
+        "supabase/omega_workflows.sql"
+      ],
+      "duplicate_count": 2,
+      "requires_manual_verification": false
+    }
+  }
+}

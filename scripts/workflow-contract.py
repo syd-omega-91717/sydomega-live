@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Validate GitHub Actions workflow contracts before execution.
 
-This check is intentionally source-level. It may prove that the workflow is
-well formed and blocking, but it must never claim that GitHub executed it.
-Execution is proven only by GitHub run/job evidence with a real runner and
-executed steps.
+This is a source-level gate. It proves workflow structure, not that GitHub
+actually scheduled a runner. Runtime execution is proven only by job evidence.
 """
 
 from pathlib import Path
@@ -35,14 +33,6 @@ REQUIRED = {
     ],
 }
 
-# Requirements that are about WHAT a workflow runs, not how a particular shell
-# spells it. `production-contract.yml` must syntax-check every root .js file,
-# but the loop that does it is written in whichever shell the runner uses. When
-# that workflow moved from PowerShell to cmd, the literal
-# `node --check $file.FullName` this contract used to demand stopped appearing
-# and the gate failed on `main` while the workflow itself was perfectly correct
-# -- a contract that tracked the spelling instead of the requirement. Matching
-# the invocation rather than the loop syntax survives the next shell change.
 REQUIRED_PATTERNS = {
     "production-contract.yml": [
         (r"node\s+--check\b", "node --check over the root .js files"),
@@ -59,8 +49,13 @@ for name, required in REQUIRED.items():
 
     text = path.read_text(encoding="utf-8")
 
-    if not re.search(r"runs-on:\s*self-hosted\b", text):
-        ERRORS.append(f"{name}: expected runs-on: self-hosted for the registered Windows runner")
+    # Production CI intentionally uses GitHub-hosted runners. Self-hosted
+    # infrastructure is optional and must never be a prerequisite for the
+    # repository's mandatory quality gates.
+    if not re.search(r"runs-on:\s*ubuntu-latest\b", text):
+        ERRORS.append(f"{name}: mandatory quality gate must use GitHub-hosted ubuntu-latest")
+    if re.search(r"runs-on:\s*self-hosted\b", text):
+        ERRORS.append(f"{name}: self-hosted runner must not block the mandatory quality gate")
     if not re.search(r"timeout-minutes:\s*\d+", text):
         ERRORS.append(f"{name}: missing timeout-minutes")
     if "permissions:" not in text or "contents: read" not in text:
@@ -78,7 +73,6 @@ for name, required in REQUIRED.items():
         if not re.search(pattern, text):
             ERRORS.append(f"{name}: missing required contract: {description}")
 
-# Production evidence gates are never advisory.
 for name in ("production-contract.yml", "capability-evidence.yml"):
     path = WORKFLOWS / name
     if path.is_file():
@@ -86,8 +80,6 @@ for name in ("production-contract.yml", "capability-evidence.yml"):
         if "continue-on-error: true" in text:
             ERRORS.append(f"{name}: production gate cannot use continue-on-error")
 
-# Every blocking workflow must expose an execution marker. This makes a
-# successful source check distinguishable from a job that never executed.
 for name in REQUIRED:
     path = WORKFLOWS / name
     if path.is_file():
@@ -105,5 +97,5 @@ if ERRORS:
 
 print("WORKFLOW CONTRACT: PASS")
 for name in REQUIRED:
-    print(f"- {name}: structure, blocking behavior and execution evidence hooks verified")
+    print(f"- {name}: hosted-runner structure, blocking behavior and execution evidence hooks verified")
 print("- Runtime execution is evaluated separately from this source-level contract.")

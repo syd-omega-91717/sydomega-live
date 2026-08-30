@@ -1,6 +1,20 @@
-# Self-hosted runner canary for issue #157.
-# The repository quality gates use the registered Windows self-hosted runner.
-# This probe proves that runner provisioning and actual step execution work.
+# Runner canaries for issue #157.
+#
+# Two lanes, deliberately:
+#
+#   self-hosted  - the runner the quality gates actually use. Proves runner
+#                  provisioning and real step execution. This lane may fail.
+#   github-hosted - answers the open question in #157 ("are GitHub-hosted
+#                  runners restored?") with a fact on every push instead of a
+#                  blind check of billing/policy settings. It is
+#                  continue-on-error, so it can NEVER gate anything: it is an
+#                  instrument, not a requirement. Read its result, don't rely
+#                  on it. When it starts passing, hosted runners are available
+#                  again and #157's routing decision can be made on evidence.
+#
+# #157's acceptance criterion is a non-zero runner ID, at least one executed
+# step, and a real job log. Both lanes print exactly that, so whichever one
+# works, the criterion is demonstrable rather than asserted.
 name: Runner Probe
 
 on:
@@ -12,6 +26,47 @@ permissions:
   contents: read
 
 jobs:
+  # Instrument only. continue-on-error means a failure here is DATA about
+  # GitHub-hosted availability, never a broken build. If hosted provisioning is
+  # still unprovisioned the job dies in ~2s (issue #157: runner_id 0, steps [],
+  # BlobNotFound), which is the signal; timeout-minutes caps the other failure
+  # mode, a job that is queued but never assigned a runner.
+  github-hosted:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 10
+    steps:
+      - name: Prove a GitHub-hosted runner is real
+        run: |
+          set -eu
+          test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
+          echo "runner_name=$RUNNER_NAME"
+          echo "runner_os=$RUNNER_OS arch=$RUNNER_ARCH"
+          echo "run_id=$GITHUB_RUN_ID attempt=$GITHUB_RUN_ATTEMPT"
+          echo "GITHUB_HOSTED_RUNNER_OK=true"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # omega-registry.py refuses to date files past a graft boundary
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Same deterministic contract the self-hosted lane runs
+        run: bash scripts/ci-local.sh
+      - name: Execution marker
+        run: |
+          set -eu
+          test -n "${RUNNER_NAME:-}"
+          echo "GITHUB_HOSTED_PROBE_EXECUTED=true"
+          echo "GITHUB_HOSTED_PROBE_RUN_ID=$GITHUB_RUN_ID"
+
   self-hosted:
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 5

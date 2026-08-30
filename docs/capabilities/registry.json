@@ -236,9 +236,9 @@
         "entrypoint": "scripts/production-contract.py; scripts/release-gate.py; scripts/vercel-build.sh; scripts/ci-local.sh (18 blocking checks)",
         "data_contract": "none - a deterministic source contract. Verifies bg.js present on every page, no duplicate ids, every local asset ref resolves, no client-side elevated database credential, the 16-block control-plane assets ship, registry integrity",
         "authorization": "n/a - a build gate, not a user surface",
-        "failure_path": "non-zero exit blocks the Vercel build (vercel-build.sh) and the merge (ci.yml); ci-local.sh mirrors it for local execution evidence while GitHub-hosted runners are unavailable (issue #157)",
+        "failure_path": "non-zero exit blocks the Vercel build (vercel-build.sh) and the merge (ci.yml); ci-local.sh mirrors it for local execution evidence, and the self-hosted runner executes it in CI for real (evidence in live_verification)",
         "static_evidence": "it IS the static evidence; self-tested by scripts/tests/ (python -m unittest, 92 tests, blocking in CI)",
-        "live_verification": "PARTIAL - runs green locally (ci-local.sh: all 18) and self-hosted CI executes it; GitHub-hosted runner execution is still blocked per issue #157, so a cloud run with a non-zero runner id is not yet on record"
+        "live_verification": "VERIFIED on CI 2026-08-30 - #157's acceptance criterion (non-zero runner id, at least one executed step, a real job log) is met on the registered self-hosted runner, not asserted: job 99327845313 (workflow-contract, run 33337824893) reports runner_id=21, runner_name=HP, 12 executed steps, all success; job 99326018309 returned a full log. This supersedes the earlier 'no cloud run with a non-zero runner id is yet on record'. GitHub-hosted execution remains unconfirmed and is now measured continuously by the github-hosted lane of .github/workflows/runner-probe.yml (continue-on-error, non-gating) rather than assumed."
       }
     },
     {

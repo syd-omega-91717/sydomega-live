@@ -34,13 +34,52 @@ const pagesFlag = ARGV.indexOf('--pages');
 const PAGES_ARG = pagesFlag >= 0 && ARGV[pagesFlag + 1] ? ARGV[pagesFlag + 1]
   : (ARGV.find(a => a.startsWith('--pages=')) || '').split('=')[1] || '';
 
-// Capability entrypoints (docs/capabilities/registry.json) + pages whose
-// contract.failure_path was tightened for #175.
-const DEFAULT_PAGES = [
-  'account.html', 'profile.html', 'dashboard.html', 'feed.html', 'family.html',
-  'social.html', 'approvals.html', 'search.html', 'roadmap.html', 'ops.html',
-  'analytics.html', 'vault.html', 'settings.html'
-];
+// The capability set is DERIVED from docs/capabilities/registry.json, not
+// listed here. It used to be a hand-maintained array that merely *claimed* to
+// be "capability entrypoints" -- the drift pattern CLAUDE.md 8.4 warns about.
+// It happened to be in sync when this was written, but nothing kept it there:
+// a capability added tomorrow with a new .html entrypoint would go unrendered
+// while its contract.live_verification still cited this script as evidence.
+// Deriving it means adding a capability automatically extends verification,
+// and scripts/capability-audit.py --check enforces the other direction (a
+// contract may not cite this script for an entrypoint this script skips).
+const REGISTRY = path.join(ROOT, 'docs', 'capabilities', 'registry.json');
+
+// Not a capability entrypoint of its own, but the page every approved member
+// lands on, so a regression here is the most visible one there is.
+const EXTRA_PAGES = ['dashboard.html'];
+
+function capabilityPages() {
+  let reg;
+  try {
+    reg = JSON.parse(fs.readFileSync(REGISTRY, 'utf8'));
+  } catch (e) {
+    console.error(`verify-runtime: cannot read ${path.relative(ROOT, REGISTRY)}: ${e.message}`);
+    console.error('  The capability set is derived from it; refusing to silently verify a partial set.');
+    process.exit(2);
+  }
+  const pages = [];
+  for (const cap of reg.capabilities || []) {
+    for (const ep of cap.entrypoints || []) {
+      // Non-.html entrypoints (bg.js, omega-a11y.js) are platform-wide modules
+      // exercised by every page rendered here, so they need no page of their own.
+      if (ep.endsWith('.html') && !pages.includes(ep)) pages.push(ep);
+    }
+  }
+  for (const ep of EXTRA_PAGES) if (!pages.includes(ep)) pages.push(ep);
+  return pages.filter(p => fs.existsSync(path.join(ROOT, p)));
+}
+
+const DEFAULT_PAGES = capabilityPages();
+
+// --list prints the derived set and exits. Needed because the set is no longer
+// readable from the source, and because it lets the derivation be asserted
+// (scripts/tests/test_verify_runtime.py) on a machine with no browser, where
+// a normal run reports SKIPPED and would prove nothing.
+if (ARGV.includes('--list')) {
+  for (const page of DEFAULT_PAGES) console.log(page);
+  process.exit(0);
+}
 
 // Thrown/logged by CDN libs a sandbox blocks, not by our code. Kept in sync
 // with .claude/skills/verify-in-browser/SKILL.md "the gotchas".

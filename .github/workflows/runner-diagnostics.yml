@@ -10,57 +10,47 @@ permissions:
 
 jobs:
   diagnose:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: cmd
     steps:
       - name: Environment Check
+        shell: cmd
         run: |
-          set -euo pipefail
-          echo "=== GitHub Actions Environment ==="
-          echo "Runner Name: ${RUNNER_NAME:-UNSET}"
-          echo "Runner OS: ${RUNNER_OS:-UNSET}"
-          echo "Runner Arch: ${RUNNER_ARCH:-UNSET}"
-          echo "Run ID: ${GITHUB_RUN_ID:-UNSET}"
-          echo "Run Attempt: ${GITHUB_RUN_ATTEMPT:-UNSET}"
-          echo ""
-          echo "=== System ==="
-          uname -a
-          echo ""
-          echo "=== Tools ==="
-          python3 --version
-          node --version
-          bash --version | head -1
-          echo ""
-          echo "✓ GitHub-hosted runner is provisioning correctly"
+          @echo off
+          echo === SYD OMEGA GitHub Actions Runner ===
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo Runner Name: %RUNNER_NAME%
+          echo Runner OS: %RUNNER_OS%
+          echo Runner Arch: %RUNNER_ARCH%
+          echo Run ID: %GITHUB_RUN_ID%
+          echo Run Attempt: %GITHUB_RUN_ATTEMPT%
+          echo SELF_HOSTED_RUNNER_PROVISIONED=true
 
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Local CI Validation
+      - name: Runtime tools
+        shell: cmd
         run: |
-          set -euo pipefail
-          echo "Running local CI validation..."
-          bash scripts/ci-local.sh 2>&1 | tail -20
-          echo "✓ Local CI passed"
+          python --version
+          node --version
+          bash --version
+
+      - name: Local CI Validation
+        shell: cmd
+        run: |
+          bash scripts/ci-local.sh
 
       - name: Success Summary
+        shell: cmd
         run: |
-          cat > /tmp/runner-status.txt << 'SUMMARY'
-          ✓ GitHub-hosted runner: WORKING
-          ✓ Python 3: available
-          ✓ Node: available
-          ✓ Bash: available
-          ✓ Local CI validation: passing
-
-          If this job completes successfully with all checks passing, then:
-          - GitHub Actions account has billing/spending enabled
-          - GitHub-hosted runners are available for this repository
-          - Repository policies allow runner execution
-
-          Next steps if self-hosted runners are desired:
-          1. Register self-hosted runner at:
-             https://github.com/syd-omega-91717/sydomega-live/settings/actions/runners
-          2. Update .github/workflows/*.yml to use 'runs-on: self-hosted'
-          3. Ensure runner machine is online when CI runs
-          SUMMARY
-          cat /tmp/runner-status.txt
+          @echo off
+          echo SELF_HOSTED_RUNNER_HEALTHY=true
+          echo SELF_HOSTED_RUNNER_NAME=%RUNNER_NAME%
+          echo SELF_HOSTED_RUNNER_RUN_ID=%GITHUB_RUN_ID%
+          echo SELF_HOSTED_RUNNER_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

@@ -16,7 +16,7 @@ concurrency:
 
 defaults:
   run:
-    shell: cmd
+    shell: pwsh
 
 jobs:
   verify:
@@ -24,17 +24,16 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          if "%RUNNER_OS%"=="" exit /b 1
-          if "%RUNNER_ARCH%"=="" exit /b 1
-          echo runner=%RUNNER_NAME%
-          echo runner_os=%RUNNER_OS%
-          echo runner_arch=%RUNNER_ARCH%
-          echo run=%GITHUB_RUN_ID%
-          echo attempt=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          if (-not $env:RUNNER_OS)   { exit 1 }
+          if (-not $env:RUNNER_ARCH) { exit 1 }
+          "runner=$env:RUNNER_NAME"
+          "runner_os=$env:RUNNER_OS"
+          "runner_arch=$env:RUNNER_ARCH"
+          "run=$env:GITHUB_RUN_ID"
+          "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -48,85 +47,105 @@ jobs:
         with:
           python-version: '3.12'
       - name: JavaScript syntax
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          for %%F in (*.js) do node --check "%%F" || exit /b 1
+          $ErrorActionPreference = 'Continue'
+          Get-ChildItem -File -Filter *.js | ForEach-Object {
+            node --check $_.Name
+            if ($LASTEXITCODE -ne 0) { exit 1 }
+          }
       - name: Inline JavaScript syntax
-        shell: cmd
+        shell: pwsh
         run: python scripts/check-inline-js.py
       - name: Repository audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/audit.py
       - name: Audit tooling tests
-        shell: cmd
+        shell: pwsh
         run: python -m unittest discover -s scripts/tests -v
       - name: Production contract
-        shell: cmd
+        shell: pwsh
         run: python scripts/production-contract.py
       - name: Workflow contract
-        shell: cmd
+        shell: pwsh
         run: python scripts/workflow-contract.py
       - name: 16-block architecture contract
-        shell: cmd
+        shell: pwsh
         run: python scripts/architecture-contract.py
       - name: 16-block implementation readiness
-        shell: cmd
+        shell: pwsh
         run: python scripts/architecture-readiness.py
       - name: Capability registry
-        shell: cmd
+        shell: pwsh
         run: python scripts/capability-audit.py --check
       - name: Capability runtime audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/capability-audit.py
       - name: Registry JSON
-        shell: cmd
+        shell: pwsh
         run: python -m json.tool docs/capabilities/registry.json
       - name: Schema dictionary
-        shell: cmd
+        shell: pwsh
         run: python scripts/schema-dictionary.py
         continue-on-error: true
       - name: RLS audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/rls-auditor.py
         continue-on-error: true
       - name: Silent failure audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/silent-failure-detector.py
         continue-on-error: true
       - name: Migration consistency
-        shell: cmd
+        shell: pwsh
         run: python scripts/migration-consistency.py
         continue-on-error: true
       - name: Upsert conflict audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/upsert-conflict-check.py
         continue-on-error: true
       - name: Skill and agent registry
-        shell: cmd
+        shell: pwsh
         run: python scripts/omega-registry.py --check
       - name: i18n contract
-        shell: cmd
+        shell: pwsh
         run: python scripts/i18n-contract.py
       - name: Context budget
-        shell: cmd
+        shell: pwsh
         run: python scripts/context-budget.py
       - name: Client credential scan
-        shell: cmd
+        # shell: python, so this is identical on Windows and Linux. It replaces
+        # a findstr pipeline that only existed on Windows. Semantics preserved:
+        # recursive over *.js/*.html/*.json, case-insensitive, .git excluded,
+        # non-zero exit on any hit -- matching scripts/ci-local.sh step 5.
+        shell: python
         run: |
-          @echo off
-          findstr /S /I /N /C:"service_role" /C:"SUPABASE_SERVICE_ROLE_KEY" *.js *.html *.json > "%TEMP%\sydomega-credential-scan.txt" 2>nul
-          if not errorlevel 1 (
-            type "%TEMP%\sydomega-credential-scan.txt"
-            del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
-            exit /b 1
-          )
-          del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
+          import pathlib, sys
+          NEEDLES = ("service_role", "supabase_service_role_key")
+          hits = []
+          for path in pathlib.Path(".").rglob("*"):
+              if ".git" in path.parts or not path.is_file():
+                  continue
+              if path.suffix not in (".js", ".html", ".json"):
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8", errors="ignore")
+              except OSError:
+                  continue
+              for n, line in enumerate(text.splitlines(), 1):
+                  low = line.lower()
+                  if any(x in low for x in NEEDLES):
+                      hits.append(f"{path}:{n}: {line.strip()[:160]}")
+          if hits:
+              print("::error::service-role credential marker found in client code")
+              for h in hits:
+                  print(h)
+              sys.exit(1)
+          print("no service-role credential marker in client code")
       - name: Execution marker
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          echo CI_EXECUTED=true
-          echo CI_RUN_ID=%GITHUB_RUN_ID%
-          echo CI_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          "CI_EXECUTED=true"
+          "CI_RUN_ID=$env:GITHUB_RUN_ID"
+          "CI_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

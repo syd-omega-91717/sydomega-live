@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /owner/
+Disallow: /private/
+Disallow: /api/
+
+# Keep authenticated/private application routes out of crawler indexes.

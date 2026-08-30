@@ -1,22 +1,211 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "SYD OMEGA 91717 Capability Registry",
-  "version": 1,
+  "version": 2,
   "status_order": ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"],
   "confidence_scale": "0-100",
   "source_of_truth": "source-controlled evidence; live verification is required before VERIFIED",
+  "contract_fields": {
+    "_comment": "Every capability carries a `contract` with all six keys, non-empty. Enforced by scripts/capability-audit.py --check. A capability may not be promoted above PARTIAL unless every contract field is a concrete claim (not 'unknown'/'TBD'). `live_verification` is honest about provider access: 'BLOCKED - ...' when no live DB/deploy check was run this session.",
+    "entrypoint": "the shipped file(s) a user or gate actually reaches this capability through",
+    "data_contract": "where state lives: named Supabase table(s)/RPC(s) and key columns, or 'device-local', or 'none (static/client-only)'",
+    "authorization": "the boundary that decides who may read/write: RLS policy name + grant, is_platform_owner() gate, approval guard, or 'n/a (no server data)'",
+    "failure_path": "how a failed operation surfaces to the user or gate; names the check (.error handling) or records the gap",
+    "static_evidence": "the automated/static check that proves the above without a live system: a script, CI step, or test",
+    "live_verification": "result of a real production DB/deploy check, with date - or 'BLOCKED - <reason>' when none was possible"
+  },
   "capabilities": [
-    {"id":"platform-runtime","name":"Platform Runtime","status":"BUILT","confidence":90,"entrypoints":["bg.js"],"evidence":["shared runtime dependency"],"verified":false},
-    {"id":"identity","name":"Identity and Session","status":"PARTIAL","confidence":60,"entrypoints":["profile.html","account.html"],"evidence":["authentication/session paths exist"],"verified":false},
-    {"id":"feed","name":"Feed","status":"PARTIAL","confidence":60,"entrypoints":["feed.html"],"evidence":["feed UI and i18n implementation require re-verification"],"verified":false},
-    {"id":"approvals","name":"Approvals","status":"PARTIAL","confidence":55,"entrypoints":["approvals.html"],"evidence":["approval UI and persistence paths exist"],"verified":false},
-    {"id":"family","name":"Family","status":"PARTIAL","confidence":55,"entrypoints":["family.html"],"evidence":["member-state persistence work exists"],"verified":false},
-    {"id":"social","name":"Social","status":"PARTIAL","confidence":55,"entrypoints":["social.html"],"evidence":["member-state persistence work exists"],"verified":false},
-    {"id":"transactions","name":"Transactions","status":"BROKEN","confidence":20,"entrypoints":[],"evidence":["dormant by design pending legal/business decision (CLAUDE.md section 8.2); no transactions.html ships","previous evidence audit identified broken capability"],"verified":false},
-    {"id":"wallet-balances","name":"Wallet Balances","status":"BROKEN","confidence":20,"entrypoints":[],"evidence":["previous evidence audit identified broken capability; exact production entrypoint requires live verification"],"verified":false},
-    {"id":"search","name":"Search","status":"PARTIAL","confidence":50,"entrypoints":["search.html"],"evidence":["search capability requires connected-backend verification"],"verified":false},
-    {"id":"roadmap","name":"Roadmap","status":"BUILT","confidence":70,"entrypoints":["roadmap.html"],"evidence":["page and runtime reference fixed in prior hardening"],"verified":false},
-    {"id":"internationalization","name":"Internationalization","status":"PARTIAL","confidence":60,"entrypoints":["i18n.js"],"evidence":["multi-language runtime exists; feed PR was closed for rework"],"verified":false},
-    {"id":"production-contract","name":"Production Contract","status":"TESTED","confidence":85,"entrypoints":["scripts/production-contract.py"],"evidence":["CI production contract gate exists"],"verified":false}
+    {
+      "id": "platform-runtime",
+      "name": "Platform Runtime",
+      "status": "BUILT",
+      "confidence": 90,
+      "entrypoints": ["bg.js"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "bg.js - loaded by 179/179 pages (scripts/omega-registry.py census); injects the design system, the approval guard, nav.js, and every omega-*.js module",
+        "data_contract": "none (client runtime). Publishes window.OmegaSB from the self-hosted /vendor/supabase-js.js; no CDN on the critical path",
+        "authorization": "injects the approval guard (hides #app/.shell/main.main until body.omega-approved) with a public-page allowlist: account, enter, reset, terms, pending, index",
+        "failure_path": "__omegaAppend() queues DOM injections to DOMContentLoaded rather than dropping them when document.body is absent; a parse failure is caught by node --check and blocks CI",
+        "static_evidence": ".github/workflows/ci.yml 'JavaScript syntax' step (node --check on every .js, blocking); scripts/audit.py module-graph integrity; scripts/context-budget.py",
+        "live_verification": "BLOCKED - no production runtime access this session. Last render evidence: headless Chromium via verify-in-browser, all pages load and lift the approval guard with a valid session"
+      }
+    },
+    {
+      "id": "identity",
+      "name": "Identity and Session",
+      "status": "PARTIAL",
+      "confidence": 55,
+      "entrypoints": ["account.html", "profile.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "account.html (sign-in, sign-up, reactivate); profile.html (session-gated identity view). Both load bg.js and go through the approval guard",
+        "data_contract": "Supabase Auth for the session; public.profiles via .from('profiles') (select/upsert on id=auth.uid()); .rpc('reactivate_account')",
+        "authorization": "RLS on public.profiles (own-row plus is_platform_owner()); the bg.js approval guard gates every non-public page on body.omega-approved",
+        "failure_path": "PARTIAL - account.html:441 profiles.upsert destructures { error }; account.html:351 `try{ await supabase.rpc('reactivate_account'); }catch(e){}` and the profile reads at :347/:353 swallow failures (empty catch, and Supabase resolves rather than throws - CLAUDE.md 8.1 class 1). Tracked, not yet fixed",
+        "static_evidence": "scripts/schema-dictionary.py (profiles column names vs supabase/live-schema.json, blocking); scripts/rls-auditor.py; scripts/silent-failure-detector.py flags the unchecked calls above",
+        "live_verification": "BLOCKED - no live auth/DB check this session"
+      }
+    },
+    {
+      "id": "feed",
+      "name": "Feed",
+      "status": "PARTIAL",
+      "confidence": 55,
+      "entrypoints": ["feed.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "feed.html - tabs over member posts, publications, and recent task activity",
+        "data_contract": "public.member_posts (status, created_at, user_id), public.publications (user_id, status), public.task_completions, public.profiles - all via .from(...).select(...)",
+        "authorization": "member_posts: GRANT SELECT/INSERT/UPDATE/DELETE TO authenticated + RLS (supabase/platform_expansion.sql, migrations/0069); publications: own-row policy on user_id; a cross-member 'published' feed needs an RLS policy that does not yet exist (FEATURE_IDEAS.md 'Flagged, not proposed')",
+        "failure_path": "PARTIAL - 2 of ~4 read paths destructure { error }; the member-writable text fields (title, body) are escaped with esc() before render (stored-XSS history, CLAUDE.md 8.1)",
+        "static_evidence": "scripts/schema-dictionary.py; scripts/rls-auditor.py; scripts/silent-failure-detector.py; the feed column-name fix is recorded in FIXES_LOG.md",
+        "live_verification": "BLOCKED - no live DB check; publications.status transitions and the missing cross-member policy are unverified"
+      }
+    },
+    {
+      "id": "approvals",
+      "name": "Approvals",
+      "status": "PARTIAL",
+      "confidence": 65,
+      "entrypoints": ["approvals.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "approvals.html - owner-only member review: grant permanent access, extend trial, revoke, reject",
+        "data_contract": "public.profiles + owner RPCs: get_all_members, check_trial_status, access_audit_log, review_contracts, review_reservations, error_summary; the access-lifecycle RPCs insert public.notifications rows",
+        "authorization": "is_platform_owner() inside every RPC; approvals.html itself is not in the public-page allowlist so the approval guard blocks non-owners; RPC EXECUTE is REVOKEd from PUBLIC then granted narrowly (CLAUDE.md 8.2, migrations/0097)",
+        "failure_path": "GOOD - 8 .error checks; destructive actions confirm; OmegaGuardian.gate('admin', ...) wraps grant/extend/revoke with a graceful fallback and an error toast",
+        "static_evidence": "scripts/rls-auditor.py; scripts/silent-failure-detector.py; scripts/audit.py; DEPLOYMENT_READY.md records the gate wiring",
+        "live_verification": "BLOCKED - member impersonation RLS sweep last run 2026-08-29 (CLAUDE.md 8.2) covered profiles scoping; the six approval RPCs' privilege state not re-checked this session"
+      }
+    },
+    {
+      "id": "family",
+      "name": "Family",
+      "status": "PARTIAL",
+      "confidence": 55,
+      "entrypoints": ["family.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "family.html - lineage graph, heritage records, bloodline nodes",
+        "data_contract": "public.family_nodes (user_id), public.bloodline_nodes (user_id), public.heritage_records (user_id), public.profiles - all .from(...) select/insert/delete",
+        "authorization": "own-row RLS FOR ALL TO authenticated: bloodline_own on bloodline_nodes, heritage_own on heritage_records (supabase/chunk_03_migrations.sql / chunk_06); matching per-table GRANTs present; family_nodes policy keyed on user_id",
+        "failure_path": "WEAK - only 1 .error check across 4 table paths; member-entered names/notes are escaped with esc() (family.html was fixed for exactly this, CLAUDE.md 8.1)",
+        "static_evidence": "scripts/rls-auditor.py (own-row policies present); scripts/schema-dictionary.py; scripts/silent-failure-detector.py flags the unchecked writes",
+        "live_verification": "BLOCKED - no live check; family.html's writes were part of the member_state mirror work (CLAUDE.md 8.2) but not re-verified live this session"
+      }
+    },
+    {
+      "id": "social",
+      "name": "Social",
+      "status": "PARTIAL",
+      "confidence": 55,
+      "entrypoints": ["social.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "social.html - member broadcasts and connection requests",
+        "data_contract": "public.social_broadcasts (user_id), public.social_connections (user_id), public.profiles - .from(...) select/insert/update/delete",
+        "authorization": "own-row RLS FOR ALL TO authenticated: broadcast_own, social_conn_own (supabase/chunk_03_migrations.sql / chunk_06); GRANTs present (broadcasts: SELECT+INSERT; connections: SELECT+INSERT+UPDATE+DELETE)",
+        "failure_path": "OK - 3 .error checks; social.html was fixed to check .error before its success toast (CLAUDE.md 9); broadcast text escaped with esc()",
+        "static_evidence": "scripts/rls-auditor.py; scripts/schema-dictionary.py; scripts/silent-failure-detector.py",
+        "live_verification": "BLOCKED - no live check; the connection-accept state machine (who may update whose row) is unverified against production RLS"
+      }
+    },
+    {
+      "id": "transactions",
+      "name": "Transactions",
+      "status": "BROKEN",
+      "confidence": 15,
+      "entrypoints": [],
+      "verified": false,
+      "contract": {
+        "entrypoint": "none - no transactions.html ships; subscriptions.html/vault.html reference a public.transactions table that does not exist",
+        "data_contract": "public.transactions and public.wallet_balances are not created by any supabase/*.sql; queried but never defined (CLAUDE.md 8.2)",
+        "authorization": "n/a - dormant by design pending a legal/business decision; the Ω-token economy is deliberately not shipped",
+        "failure_path": "the querying pages carry copy stating the feature is dormant; the missing-table query returns null and the UI shows the dormant state",
+        "static_evidence": "scripts/audit.py '.from() table never CREATE TABLE'd' warning names both; FEATURE_IDEAS.md 'Explicitly not proposed here'",
+        "live_verification": "BLOCKED and by design - not to be verified or promoted until an explicit owner decision to ship the token economy (CLAUDE.md 9)"
+      }
+    },
+    {
+      "id": "wallet-balances",
+      "name": "Wallet Balances",
+      "status": "BROKEN",
+      "confidence": 15,
+      "entrypoints": [],
+      "verified": false,
+      "contract": {
+        "entrypoint": "none - no dedicated page; wallet.html/vault.html read a public.wallet_balances table that does not exist",
+        "data_contract": "public.wallet_balances is not created by any supabase/*.sql (CLAUDE.md 8.2)",
+        "authorization": "n/a - same dormant-by-design status as transactions",
+        "failure_path": "missing-table query returns null; UI shows the dormant/zero state",
+        "static_evidence": "scripts/audit.py '.from() table never CREATE TABLE'd' warning; FIXES_LOG.md",
+        "live_verification": "BLOCKED and by design - tied to the same token-economy decision as transactions"
+      }
+    },
+    {
+      "id": "search",
+      "name": "Search",
+      "status": "LOCAL_ONLY",
+      "confidence": 75,
+      "entrypoints": ["search.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "search.html plus the Ctrl+K command palette (omega-search.js, loaded platform-wide)",
+        "data_contract": "device-local by design - an in-page static catalog array (label/path/description/keywords) searched in the browser; omega_recent_searches in localStorage, capped at 5, never sent to the server (stated on the page)",
+        "authorization": "n/a (no server data) - the only .from('profiles') call is the standard session load, not a search",
+        "failure_path": "n/a for the search itself (static catalog); getRecent() wraps JSON.parse in try/catch and falls back to []",
+        "static_evidence": "scripts/audit.py (search.html reachable, loads bg.js); the catalog is version-controlled in-page; omega-search.js parses under node --check",
+        "live_verification": "n/a - nothing server-side to verify. Complete at its intended (device-local) scope; not a backend gap"
+      }
+    },
+    {
+      "id": "roadmap",
+      "name": "Roadmap",
+      "status": "BUILT",
+      "confidence": 75,
+      "entrypoints": ["roadmap.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "roadmap.html - static roadmap content behind the approval guard",
+        "data_contract": "none (static content) - the only .from('profiles') is the standard session load",
+        "authorization": "approval guard only (not a public page); no member-writable data",
+        "failure_path": "n/a - no writes; a failed profile load falls through to the guard, which keeps #app hidden rather than showing unapproved content",
+        "static_evidence": "scripts/audit.py (reachable from nav.js, loads bg.js, all asset refs resolve); scripts/production-contract.py (no duplicate ids, bg.js present)",
+        "live_verification": "BLOCKED - no live check, but there is no server contract to verify; the prior 'missing runtime reference' bug is fixed and covered by production-contract.py"
+      }
+    },
+    {
+      "id": "internationalization",
+      "name": "Internationalization",
+      "status": "TESTED",
+      "confidence": 80,
+      "entrypoints": ["i18n.js"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "i18n.js (loaded platform-wide) + i18n/{ar,es,fr,hi,nl,zh}.json; runtime API OmegaI18n.t()",
+        "data_contract": "T_EN (English, inlined in i18n.js) is the key set; each of the 6 packs mirrors it. omega_lang in localStorage selects the active pack (device-local)",
+        "authorization": "n/a - static translation assets, no server data",
+        "failure_path": "a missing pack key falls back to English by design; HTML entities in values are rejected (they would render literally)",
+        "static_evidence": "scripts/i18n-contract.py (BLOCKING in CI): every data-i18n key resolves in T_EN, no orphan pack keys, no HTML entities; scripts/omega-registry.py commits each pack's key count so a silent key loss fails --check",
+        "live_verification": "n/a - fully static; nothing server-side. Coverage beyond the sidebar is a scope item, not a correctness gap"
+      }
+    },
+    {
+      "id": "production-contract",
+      "name": "Production Contract",
+      "status": "TESTED",
+      "confidence": 85,
+      "entrypoints": ["scripts/production-contract.py"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "scripts/production-contract.py; scripts/release-gate.py; scripts/vercel-build.sh; scripts/ci-local.sh (18 blocking checks)",
+        "data_contract": "none - a deterministic source contract. Verifies bg.js present on every page, no duplicate ids, every local asset ref resolves, no client-side elevated database credential, the 16-block control-plane assets ship, registry integrity",
+        "authorization": "n/a - a build gate, not a user surface",
+        "failure_path": "non-zero exit blocks the Vercel build (vercel-build.sh) and the merge (ci.yml); ci-local.sh mirrors it for local execution evidence while GitHub-hosted runners are unavailable (issue #157)",
+        "static_evidence": "it IS the static evidence; self-tested by scripts/tests/ (python -m unittest, 92 tests, blocking in CI)",
+        "live_verification": "PARTIAL - runs green locally (ci-local.sh: all 18) and self-hosted CI executes it; GitHub-hosted runner execution is still blocked per issue #157, so a cloud run with a non-zero runner id is not yet on record"
+      }
+    }
   ]
 }

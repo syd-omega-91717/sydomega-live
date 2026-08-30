@@ -18,20 +18,20 @@ effectively invisible unless invoked by exact name.
 
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
-| `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-30 |
-| `cinematic-media` | yes | — | 1,651 | README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-30 |
-| `deploy-gate` | yes | — | 1,703 | README.md | 2026-08-30 |
-| `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-30 |
-| `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-30 |
-| `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
-| `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
-| `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
-| `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
-| `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
-| `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
+| `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-11 |
+| `cinematic-media` | yes | — | 1,621 | README.md | 2026-08-30 |
+| `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
+| `deploy-gate` | yes | — | 1,672 | README.md | 2026-08-30 |
+| `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
+| `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
+| `image-pipeline` | yes | — | 1,400 | README.md | 2026-08-30 |
+| `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
+| `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
+| `verify-in-browser` | yes | 4 | 2,257 | CLAUDE.md, README.md | 2026-08-30 |
+| `visual-assets` | yes | — | 1,582 | README.md | 2026-08-30 |
+| `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**12 skills, ~19,952 tokens** if every SKILL.md were read in one
+**12 skills, ~19,580 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 ### Purpose of each
@@ -58,7 +58,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
-| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,556 | 2026-08-30 |
+| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,524 | 2026-08-18 |
 
 ## 3 · Platform census
 
@@ -66,9 +66,9 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 179 |
-| pages loading `bg.js` | 179 of 179 |
-| `omega-*.js` modules | 118 (925 KB) |
+| `.html` pages | 177 |
+| pages loading `bg.js` | 177 of 177 |
+| `omega-*.js` modules | 118 (907 KB) |
 | root `.js` files | 127 |
 | `supabase/*.sql` (flat bag) | 125 |
 | `supabase/migrations/*.sql` | 145 (103 numbered `NNNN_`, 42 timestamped) |
@@ -99,7 +99,7 @@ end-to-end for the first time"*. The 51 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 145. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 179 pages.** It is a hard single point of
+**`bg.js` is loaded by all 177 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

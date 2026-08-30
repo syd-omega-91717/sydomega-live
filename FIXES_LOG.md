@@ -4072,3 +4072,57 @@ temporarily made to exit 3, and the test then reported:
 
 The script was restored (`git status` clean) and the suite returns to 92
 passing.
+
+---
+
+## Platform-wide `.card` sweep — scanner logic and per-class exclusion detail
+
+Moved out of `CLAUDE.md` §4.1 (2026-08-30) as an audit record rather than a
+standing fact; §4.1 keeps the one-paragraph standing version. The Ω-GVP layer
+gives `.card`/`.kpi-card` a gradient `border-image` + box-shadow glow, gated to
+`:hover` so a page's own resting-state border is never overridden.
+
+**The sweep.** A repo-wide grep found ~230 page-local `*-card` classes across
+~150 pages — too many for one-by-one manual verification. A scanner (used, not
+committed) detected the two failure modes found by hand:
+
+1. a page-local `::before`/`::after` rule on the class — pseudo-elements cascade
+   per *property*, and both that rule and `.card::before` set `background`, so
+   one silently wins;
+2. a per-instance border set directly on the card element — inline
+   `style="border…"`, JS `el.style.border`/`el.style.cssText+=` right after the
+   class is assigned, or a same-element modifier combo like `.mc.heir{border-left:…}`.
+
+Classes matching either were left untouched. Modifier classes
+(`.sel`/`.active`/`.mine`/`.unlocked`/`.vip`) that set `border-color` as a
+persistent *state* indicator were swept in: `.card`'s `border-image` is
+hover-only, so a state border stays fully visible at rest and is masked only
+while simultaneously hovering that element.
+
+187 class additions across 117 files were applied, each verified by regex
+round-trip (the inserted `card` landed as a whole word, trailing spaces in JS
+concatenation like `'rule-card '+(on?'active':'paused')` preserved byte-for-byte)
+and a full-repo `querySelector`/`getElementsByClassName` scan (7 exact-class
+selector hits, all `querySelectorAll(...).forEach(...classList...)` patterns
+unaffected). Spot-verified visually on `account.html` `.sign-card`.
+
+**Manual-review pass (later session).** Worked the full flagged list class by
+class against the same two failure modes. Verified with `node --check` on every
+touched page's inline scripts, a headless-Chromium resting-state computed-style
+check confirming the hover-only `border-image` masks no page's own resting
+border color, and `scripts/audit.py` (0 critical / 6 pre-existing warnings).
+
+- **Safe, `.card` added** (3): `evolution.html` `.gate-card`
+  (`.reached`/`.current`/`.locked` are state indicators); `trophies.html`
+  `.medal-card` (`.earned`'s `border-left` off a JS-set `--mc` is a state
+  indicator). Both confirmed by injecting the page's exact class string and
+  reading `getComputedStyle` at rest — `border-image: none`, page borders
+  unmasked.
+- **Already done** (1): `wealth.html` `.asset-class-card` — all 4 usages already
+  carry `class="asset-class-card card"`.
+- **Dead CSS** (1): `map.html` `.stat-card` — one CSS rule, applied to nothing;
+  adding `.card` to an unused selector is a no-op.
+- **Confirmed real conflicts, left alone** (~34 classes). Each has a page-local
+  `::before`/`::after` on the class, or a per-instance border on the card
+  element itself. This is the "full per-class exclusion list" referenced from
+  §4.1 — an audit trail, not a standing fact.

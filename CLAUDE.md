@@ -208,76 +208,23 @@ through this one file with no per-page markup changes:
   conflict isn't fixable by hover-gating since it's about the
   achievement badges' permanent resting-state appearance, not a hover
   effect — left on its own local styling instead.
-- **Platform-wide `.card` sweep, done with a scanner, not by hand.** A
-  repo-wide grep found ~230 page-local `*-card` classes across ~150
-  pages (far beyond the dozen or so pages checked individually above),
-  making one-by-one manual verification impractical. Wrote a scanner
-  (used, not committed to the repo — logic summarized here) that
-  detects the two real failure modes found by hand above:
-  1. a page-local `::before`/`::after` rule on the class (would be
-     silently replaced by `.card`'s own `::before`, not merged), and
-  2. a per-instance border set directly on the card element itself —
-     either inline (`style="border..."` on the same tag, or JS
-     `el.style.border`/`el.style.cssText+=` right after the class is
-     assigned) or via a same-element modifier class combo like
-     `.mc.heir{border-left:...}`.
-  Classes matching either were left untouched (45 classes across 44
-  pages — see below). A third category — modifier classes like
-  `.sel`/`.active`/`.mine`/`.unlocked`/`.vip` that set border-color as a
-  persistent *state* indicator — were included rather than excluded:
-  since `.card`'s border-image is hover-only (see above), a state
-  modifier's border stays fully visible at rest and is only ever
-  masked while *simultaneously* hovering that same element, a narrow,
-  low-consequence interaction rather than a permanent loss. 187 class
-  additions across 117 files were applied this way, each verified by
-  regex round-trip (confirming the inserted `card` landed as a whole
-  word with the rest of the string, including significant trailing
-  spaces in JS concatenation like `'rule-card '+(on?'active':'paused')`,
-  preserved byte-for-byte) and a full-repo `querySelector`/
-  `getElementsByClassName` scan (7 exact-class-selector hits found, all
-  `querySelectorAll(...).forEach(...classList...)` patterns unaffected
-  by an added class). Spot-verified visually (`account.html`'s
-  `.sign-card`, in addition to the pages already covered above) before
-  shipping.
-  **Manual-review pass completed** (a later session worked through the
-  full flagged list below, class by class, checking each against the
-  same two failure modes — a page-local `::before`/`::after` rule, or a
-  per-instance border via inline `style=` / JS `.style.border*`/
-  `.style.setProperty('--x',...)`/`.style.cssText+=` on the card element
-  itself). Verified with `node --check` on every touched page's inline
-  scripts, a headless-Chromium resting-state computed-style check
-  confirming `.card`'s hover-only `border-image` doesn't mask any
-  page's own resting border color, and `scripts/audit.py` reconfirming
-  0 critical / 6 pre-existing warnings.
-  - **Safe, `.card` added** (3): `evolution.html` `.gate-card` (only
-    modifier-class border-color rules — `.reached`/`.current`/`.locked`
-    — the same "persistent state indicator" category already established
-    as safe to include, since `.card`'s border-image only ever masks it
-    during a simultaneous hover); `trophies.html` `.medal-card` (same
-    shape — `.earned`'s `border-left` keyed off a JS-set `--mc` custom
-    property is a state indicator, not a bare per-instance override).
-    Both confirmed by injecting a real element with the exact class
-    string used by that page's own render code and reading
-    `getComputedStyle` at rest: border-image is `none`, and the page's
-    own border colors render unmasked.
-  - **Already done, no action needed** (1): `wealth.html`
-    `.asset-class-card` — all 4 usages already carry `class="asset-class-card
-    card"` in the markup; this session's list was stale on this one
-    entry specifically.
-  - **Dead CSS, nothing to sweep** (1): `map.html` `.stat-card` — the
-    class has exactly one occurrence repo-wide (its own `CREATE`... no,
-    its own CSS rule) and is never applied to any element in the page's
-    markup or JS. Adding `.card` to a selector nothing uses would be a
-    no-op; left as-is rather than invented a usage.
-  - **Confirmed real conflicts, left alone** (~34 classes across as many
-    pages). The full per-class enumeration moved to `FIXES_LOG.md`
-    ("the full per-class exclusion list") — it is an audit record, not a
-    standing fact, and §4.1 is auto-loaded into every session. Two failure
-    modes account for all of them: a page-local `::before`/`::after` on the
-    class, or a per-instance border set on the card element itself (inline
-    `style=`, JS `.style.border*`, or a same-element modifier combo). Read
-    that list against the corrected pseudo-element mechanism above before
-    treating any single entry as settled.
+- **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
+  `*-card` classes across 117 files with a scanner, not by hand. **The
+  standing fact:** ~34 classes across as many pages were deliberately
+  **not** swept because `.card`'s hover-only `border-image`/glow would
+  collide with something they already own — either a page-local
+  `::before`/`::after` rule (pseudo-elements cascade per *property*, and
+  both rules set `background`, so one wins), or a per-instance border set
+  on the card element itself (inline `style=`, JS `.style.border*`/
+  `.style.cssText+=`, or a same-element modifier combo like
+  `.mc.heir{border-left:…}`). State-modifier classes
+  (`.sel`/`.active`/`.unlocked`…) that set `border-color` were swept in —
+  hover-only masking only ever hides them during a simultaneous hover.
+  The full per-class exclusion list, the scanner logic, and the
+  verification (regex round-trip, `querySelector` scan, headless-Chromium
+  resting-state computed-style check) are in `FIXES_LOG.md` — "the full
+  per-class exclusion list" and "Platform-wide `.card` sweep". Check a
+  class against those two failure modes before adding `.card` to it.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row

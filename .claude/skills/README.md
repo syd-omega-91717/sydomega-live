@@ -1,11 +1,36 @@
 # Skills
 
-**8 skills live here.** The full generated inventory — including which reference
+**12 skills live here.** The full generated inventory — including which reference
 doc names each one, and whether its frontmatter makes it discoverable at all —
 is `OMEGA_SKILL_REGISTRY.md` at the repo root, produced by
 `scripts/omega-registry.py` and gated in CI. Prefer it over any count written
 into prose here: this file said "Four skills" for long enough that three of the
 eight went undocumented, and `CLAUDE.md` disagreed with it in two places.
+
+Eight of the twelve are the feature-proposal pipeline and its support skills,
+described below. The other four are **domain skills** — reference for a
+specific surface of the platform, invoked when a change touches that surface:
+
+- **deploy-gate** — what actually gates a release (the Vercel static site and
+  the Supabase backend are separate planes), why a green GitHub check may mean
+  "never ran", what `.vercelignore` keeps out of the public bundle, and how a
+  bad deploy is rolled back. Invoke for any release / CI-gate / "safe to push"
+  question.
+- **visual-assets** — the canonical palette and type tokens (from `bg.js`
+  `:root`, which `design-system.html` has drifted from), the SVG-only /
+  no-CDN-image asset rules, and the existing sigil / emblem / share-card /
+  page-mark modules to reuse. Invoke before adding or editing anything under
+  `assets/` or any `omega-*emblem/sigil/share-card*.js`.
+- **cinematic-media** — the welcome demo video and the three faults that kept
+  v1 from playing, the mandatory `-movflags +faststart` remux, the
+  `.mp4`-in-git constraint, and the transition / 2.5D / motion engines and
+  their traps. Invoke for any video, page transition, scroll reveal, or
+  "make it more cinematic" request.
+- **image-pipeline** — why there is no AI image generation here, procedural
+  SVG first, the canvas→PNG generators (`OmegaShareCard`, `OmegaQR`),
+  member uploads via `OmegaStorage`, and the rules for adding a raster file
+  (no LFS; PWA-icon / `sw.js` precache constraints). Invoke when generating a
+  graphic, adding an image file, or wiring an `<img>`.
 
 ## Autonomous feature-proposal pipeline
 

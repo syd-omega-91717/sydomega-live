@@ -14,26 +14,20 @@ concurrency:
   group: sydomega-quality-gate-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: cmd
-
 jobs:
   evidence:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          if "%RUNNER_OS%"=="" exit /b 1
-          if "%RUNNER_ARCH%"=="" exit /b 1
-          echo runner=%RUNNER_NAME%
-          echo runner_os=%RUNNER_OS%
-          echo runner_arch=%RUNNER_ARCH%
-          echo run=%GITHUB_RUN_ID%
-          echo attempt=%GITHUB_RUN_ATTEMPT%
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}" && test -n "${RUNNER_OS:-}" && test -n "${RUNNER_ARCH:-}"
+          echo "runner=$RUNNER_NAME"
+          echo "runner_os=$RUNNER_OS"
+          echo "runner_arch=$RUNNER_ARCH"
+          echo "run=$GITHUB_RUN_ID"
+          echo "attempt=$GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -52,17 +46,19 @@ jobs:
         run: python -m json.tool docs/capabilities/registry.json
       - name: Validate architecture runtime
         run: python scripts/architecture-readiness.py
-      - name: Runtime verification (headless render of capability entrypoints)
+      - name: Install Playwright runtime
         run: |
-          @echo off
-          if not exist "%RUNNER_TEMP%\pw" mkdir "%RUNNER_TEMP%\pw"
-          call npm --prefix "%RUNNER_TEMP%\pw" install playwright-core --no-save --no-audit --no-fund --loglevel error || echo playwright-core install skipped
-          set OMEGA_SCRATCHPAD=%RUNNER_TEMP%\pw
-          node scripts/verify-runtime.js
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pw"
+          npm --prefix "$RUNNER_TEMP/pw" install playwright --no-save --no-audit --no-fund --loglevel error
+          npx --prefix "$RUNNER_TEMP/pw" playwright install --with-deps chromium
+          echo "OMEGA_SCRATCHPAD=$RUNNER_TEMP/pw" >> "$GITHUB_ENV"
+      - name: Runtime verification (headless render of capability entrypoints)
+        run: node scripts/verify-runtime.js
       - name: Execution marker
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          echo CAPABILITY_EVIDENCE_EXECUTED=true
-          echo CAPABILITY_EVIDENCE_RUN_ID=%GITHUB_RUN_ID%
-          echo CAPABILITY_EVIDENCE_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "CAPABILITY_EVIDENCE_EXECUTED=true"
+          echo "CAPABILITY_EVIDENCE_RUN_ID=$GITHUB_RUN_ID"
+          echo "CAPABILITY_EVIDENCE_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"

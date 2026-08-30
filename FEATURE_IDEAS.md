@@ -784,7 +784,7 @@ new subsystem, not a new command surface, and not a change to what any skill act
 table makes the 4-skill feature pipeline immediately scannable while keeping authoritative details
 in the SKILL.md files.
 
-## 19. Signature cinematic / emblem visual tier — one motif, three high-traffic surfaces (design system)
+## 19. Signature cinematic / emblem visual tier — one motif, three high-traffic surfaces (design system) — PHASE 1 SHIPPED
 
 **Grounded in:** infrastructure that already exists and already loads on all 179 pages via
 `bg.js`, plus `UX_REDESIGN_BRIEF.md` §3 ("emblematic, cinematic, animated — without the
@@ -826,19 +826,28 @@ animation across every card is explicitly what the brief warns against.
 
 **Nav placement:** none — this is shared design-system CSS + two explicit mounts.
 
-**Blocked on, before any code:**
-- **Browser verification.** `CLAUDE.md` §9 and the `verify-in-browser` skill make a real
-  render mandatory for any change touching `bg.js` or page markup, and several bug classes
-  (§8.1 class 3: zero-buffer canvas; §4 / §4.1: a rule written for a surface `bg.js` no longer
-  owns is dead code that looks right in the diff) are only catchable that way. The
-  `verify-in-browser` harness assumes Linux paths (`/opt/pw-browsers`) and has not been run on
-  the current Windows checkout — a session with the harness available (or a Linux checkout)
-  should own the implementation.
-- **`bg.js` blast radius.** Adding a shared class + registering one module in the loader both
-  touch the platform's documented single point of failure; per this repo's convention that is
-  an explicit go-ahead, not a quiet change.
-- **Which three surfaces.** `profile.html` / `dashboard.html` / `cosmos.html` are the brief's
-  pick; confirm before building.
+**Phase 1 — SHIPPED.** The `.omega-spin-slow` shared class was added to `bg.js`'s injected
+stylesheet, immediately after the (previously dead) `@keyframes spin-slow` it reuses:
+`.omega-spin-slow{animation:spin-slow 60s linear infinite;transform-origin:50% 50%;will-change:transform}`
+plus `@media (prefers-reduced-motion: reduce){.omega-spin-slow{animation:none}}`. Applied to
+`#ph-sigil` on `profile.html` (the already-mounted `OmegaSigil` SVG, FEATURE_IDEAS #10).
+
+Verified with headless system Chrome (`playwright-core`, `channel:'chrome'`, reusing the repo's
+own `sbstub.js` — the Windows recipe is now in `verify-in-browser/SKILL.md`) across 10 pages,
+normal and reduced motion:
+- `profile.html`: sigil present, renders as `<svg>`, computed `animation-name: spin-slow`,
+  `animation-duration: 60s`; under `prefers-reduced-motion: reduce` → `animation-name: none`.
+- All 10 pages: HTTP 200, no horizontal overflow, **no new console errors** vs. the pre-existing
+  platform-wide `applyStyles` throw (blocked CDN, documented in `verify-in-browser`).
+- `node --check bg.js`, `check-inline-js.py`, `audit.py` (0 critical), `production-contract.py`
+  all pass.
+
+**Phase 2 — not yet done (own PR):** the same class on `dashboard.html` and the `cosmos.html`
+hero emblem; both need their own explicit mount point since neither carries a `[data-sigil]`
+element today.
+
+**Phase 3 — flagged, not this feature:** registering `omega-page-emblem.js` in the `bg.js`
+loader for the ~40 flat pages. Additive but touches the loader; do it as its own reviewed step.
 
 **Source inspiration:** `UX_REDESIGN_BRIEF.md` §3 and §5 (this repo's own friend-feedback →
 action plan); `omega-sigil-gen.js` / `omega-cinematic-engine.js` / `omega-page-emblem.js`

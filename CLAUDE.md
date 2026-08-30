@@ -268,6 +268,10 @@ through this one file with no per-page markup changes:
   `offline.html`, `reset.html`, `terms.html`) already define their own
   `body::before` and a bare-selector CSS rule would have collided with
   those.
+- **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
+  linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
+  `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
+  currently only `#ph-sigil` on `profile.html` (`FEATURE_IDEAS.md` #19 phase 1).
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated

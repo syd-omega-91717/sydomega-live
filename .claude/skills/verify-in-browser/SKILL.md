@@ -31,6 +31,30 @@ node .claude/skills/verify-in-browser/harness/serve.js &   # static server on :8
 Chromium is already at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
 Never run `playwright install`.
 
+### On a Windows checkout (self-hosted runner, local dev)
+
+The Linux Chromium path and `serve.js`'s hardcoded `ROOT` do not apply.
+`session.js`/`scan.js` need porting; the pieces that transfer directly:
+
+```
+cd "$SCRATCH" && npm i playwright-core        # -core: no bundled browser
+```
+```js
+const { chromium } = require('playwright-core');
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+// channel:'chrome' (or 'msedge') uses the system browser already on Win11 —
+// no download, no `playwright install`.
+```
+
+Everything else is identical: still `serviceWorkers: 'block'`, still route
+`**/vendor/supabase-js.js` and `https://esm.sh/**` to `sbstub.js`'s `STUB`,
+still pre-seed `omega_demo_watched_at` / `omega_consent_v1` / `omega_last_gate`,
+still remove `#omega-genesis` after load. Serve the repo with a 20-line static
+server whose `ROOT` is the checkout path and that sends `cache-control: no-store`
+(copy `serve.js`'s body, fix the two constants). Verified working:
+`getComputedStyle` reads `animation-name` correctly, `reducedMotion: 'reduce'`
+in `newContext` exercises the `prefers-reduced-motion` path.
+
 ## Repo-wide scans
 
 ```

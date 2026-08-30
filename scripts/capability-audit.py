@@ -11,6 +11,16 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/capabilities/registry.json"
 STATUS_ORDER = ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"]
 
+# The six-part contract every capability must carry, in full, before it can be
+# promoted. Matches docs/capabilities/registry.json -> contract_fields and the
+# acceptance criteria: implemented entrypoint, persistence/data contract,
+# authorization boundary, failure path, automated/static evidence, and live
+# verification where provider access permits.
+CONTRACT_KEYS = ("entrypoint", "data_contract", "authorization",
+                 "failure_path", "static_evidence", "live_verification")
+# Placeholder words that mean the field was not actually filled in.
+_PLACEHOLDERS = ("tbd", "todo", "unknown", "?", "n/a?", "fixme", "xxx")
+
 
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
@@ -42,10 +52,28 @@ def validate_registry() -> int:
         confidence = item.get("confidence")
         if not isinstance(confidence, int) or not 0 <= confidence <= 100:
             failures.append(f"{ident}: confidence must be 0..100")
-        if not isinstance(item.get("evidence"), list) or not item["evidence"]:
-            failures.append(f"{ident}: evidence is required")
+        contract = item.get("contract")
+        if not isinstance(contract, dict):
+            failures.append(f"{ident}: contract object is required (six keys: {', '.join(CONTRACT_KEYS)})")
+        else:
+            for key in CONTRACT_KEYS:
+                val = contract.get(key)
+                if not isinstance(val, str) or len(val.strip()) < 12:
+                    failures.append(f"{ident}: contract.{key} must be a concrete sentence")
+                elif val.strip().lower().rstrip(".") in _PLACEHOLDERS:
+                    failures.append(f"{ident}: contract.{key} is a placeholder, not evidence")
+            # A capability promoted above PARTIAL must not hide an unaddressed
+            # failure path or an empty data contract behind a high status.
+            promoted = STATUS_ORDER.index(item.get("status", "STATIC")) >= STATUS_ORDER.index("BUILT") \
+                and item.get("status") not in ("BROKEN", "UNREACHABLE")
+            if promoted and isinstance(contract.get("failure_path"), str) \
+                    and contract["failure_path"].strip().upper().startswith(("GAP", "WEAK", "MISSING")):
+                failures.append(f"{ident}: status {item.get('status')} but contract.failure_path starts with a gap marker - keep it PARTIAL until the failure path is real")
         if item.get("status") == "VERIFIED" and item.get("verified") is not True:
             failures.append(f"{ident}: VERIFIED requires verified=true")
+        lv = (contract or {}).get("live_verification", "") if isinstance(contract, dict) else ""
+        if item.get("verified") is True and "BLOCKED" in str(lv).upper():
+            failures.append(f"{ident}: verified=true but live_verification is BLOCKED - no capability may be marked verified without evidence")
     if failures:
         print("CAPABILITY REGISTRY FAILED")
         for failure in failures:

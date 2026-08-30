@@ -7,7 +7,7 @@ Regenerate with `python3 scripts/omega-registry.py`;
 Every number here is read off the filesystem at generation time. It exists
 because the hand-written equivalents all drifted: `.claude/skills/README.md`
 said "Four skills", `CLAUDE.md` §10 said "Five", §11 said "4-skill pipeline",
-and 12 exist.
+and 15 exist.
 
 ## 1 · Skills
 
@@ -18,20 +18,23 @@ effectively invisible unless invoked by exact name.
 
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
-| `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-11 |
+| `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-30 |
 | `cinematic-media` | yes | — | 1,651 | README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-23 |
+| `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-30 |
 | `deploy-gate` | yes | — | 1,703 | README.md | 2026-08-30 |
-| `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-22 |
-| `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-24 |
+| `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-30 |
+| `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-30 |
 | `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
-| `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-23 |
-| `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-11 |
+| `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
+| `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
+| `supabase` | yes | 3 | 3,244 | CLAUDE.md, README.md | uncommitted |
+| `supabase-postgres-best-practices` | yes | 35 | 823 | README.md | uncommitted |
+| `supabase-server` | yes | — | 5,201 | README.md | uncommitted |
 | `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
 | `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
-| `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-11 |
+| `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
 
-**12 skills, ~19,952 tokens** if every SKILL.md were read in one
+**15 skills, ~29,220 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 ### Purpose of each
@@ -46,6 +49,11 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`image-pipeline`** — Produce, add, or change imagery for sydomega-live — procedural SVG, canvas-rendered PNG (share cards, QR, exports), PWA/favicon raster, and…
 - **`interface-guidelines`** — Audit sydomega-live against the Web Interface Guidelines, using only the rules that apply to a no-build vanilla-HTML stack.
 - **`subscriber-portal`** — Surfaces an already-built, human-approved feature inside the real subscriber-facing UI (dashboard/hub pages, existing tier and notification systems) —…
+- **`supabase`** — "Use when doing ANY task involving Supabase.
+  - carries: `assets/feedback-issue-template.md`, `CHANGELOG.md`, `references/skill-feedback.md`
+- **`supabase-postgres-best-practices`** — "Postgres best practices maintained by Supabase, for Postgres running anywhere.
+  - carries: `CHANGELOG.md`, `references/_contributing.md`, `references/_sections.md`, `references/_template.md`, `references/advanced-full-text-search.md`, `references/advanced-jsonb-indexing.md`, `references/conn-idle-timeout.md`, `references/conn-limits.md`, `references/conn-pooling.md`, `references/conn-prepared-statements.md`, `references/data-batch-inserts.md`, `references/data-n-plus-one.md`, `references/data-pagination.md`, `references/data-upsert.md`, `references/lock-advisory.md`, `references/lock-deadlock-prevention.md`, `references/lock-short-transactions.md`, `references/lock-skip-locked.md`, `references/monitor-explain-analyze.md`, `references/monitor-pg-stat-statements.md`, `references/monitor-vacuum-analyze.md`, `references/query-composite-indexes.md`, `references/query-covering-indexes.md`, `references/query-index-types.md`, `references/query-missing-indexes.md`, `references/query-partial-indexes.md`, `references/schema-constraints.md`, `references/schema-data-types.md`, `references/schema-foreign-key-indexes.md`, `references/schema-lowercase-identifiers.md`, `references/schema-partitioning.md`, `references/schema-primary-keys.md`, `references/security-privileges.md`, `references/security-rls-basics.md`, `references/security-rls-performance.md`
+- **`supabase-server`** — Use when planning or writing server-side code that uses `@supabase/server` — Edge Functions, Hono apps, webhook handlers, or any backend that creates…
 - **`verify-in-browser`** — Verify a change to sydomega-live by rendering the real pages in headless Chromium, and run repo-wide scans (page errors, mobile tap targets, horizontal…
   - carries: `harness/sbstub.js`, `harness/scan.js`, `harness/serve.js`, `harness/session.js`
 - **`visual-assets`** — Design or change any visual element of sydomega-live — SVG assets, sigils, emblems, share cards, page marks, palette, typography — so it matches the…
@@ -58,7 +66,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
-| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,556 | 2026-08-18 |
+| `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,556 | 2026-08-30 |
 
 ## 3 · Platform census
 
@@ -73,7 +81,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `supabase/*.sql` (flat bag) | 125 |
 | `supabase/migrations/*.sql` | 145 (103 numbered `NNNN_`, 42 timestamped) |
 | Edge Functions | 11 |
-| skills | 12 |
+| skills | 15 |
 | agent definitions | 1 |
 
 ### Translation coverage

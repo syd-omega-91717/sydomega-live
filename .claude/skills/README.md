@@ -1,15 +1,34 @@
 # Skills
 
-**12 skills live here.** The full generated inventory — including which reference
+**15 skills live here.** The full generated inventory — including which reference
 doc names each one, and whether its frontmatter makes it discoverable at all —
 is `OMEGA_SKILL_REGISTRY.md` at the repo root, produced by
 `scripts/omega-registry.py` and gated in CI. Prefer it over any count written
 into prose here: this file said "Four skills" for long enough that three of the
 eight went undocumented, and `CLAUDE.md` disagreed with it in two places.
 
-Eight of the twelve are the feature-proposal pipeline and its support skills,
-described below. The other four are **domain skills** — reference for a
-specific surface of the platform, invoked when a change touches that surface:
+Eight of the fifteen are the feature-proposal pipeline and its support skills,
+described below. Four are **domain skills** (below). Three are the **vendored
+Supabase skills** — this repo is a Supabase project, and its single most
+recurring bug class is Supabase-shaped (`CLAUDE.md` §8.1: wrong column names,
+missing `GRANT`s, RLS gaps, upsert-conflict targets, migration drift), so the
+official guidance is kept in-tree:
+
+- **supabase** — the general Supabase skill (Database, Auth, Edge Functions,
+  Realtime, Storage, RLS, CLI/MCP, migrations, debugging PostgREST/Postgres
+  errors and reading logs). Vendored from `supabase/agent-skills`.
+- **supabase-postgres-best-practices** — load **before** creating or altering a
+  table/column, writing an RLS policy or its test, an index, a trigger, a DB
+  function, a `pg_cron`/`pgmq` job, or a migration — and when diagnosing a slow
+  query, a timeout, a lock, or a row visible to the wrong tenant. 33 reference
+  files under `references/`. Vendored from `supabase/agent-skills` (MIT).
+- **supabase-server** — for Edge Function / inbound-auth code. This repo's 11
+  functions still use the legacy `Deno.serve` + `createClient(Deno.env.get(...))`
+  pattern this skill treats as a migration target; load it before touching
+  `supabase/functions/`. Vendored from `supabase/server`.
+
+The four **domain skills** — reference for a specific surface of the platform,
+invoked when a change touches that surface:
 
 - **deploy-gate** — what actually gates a release (the Vercel static site and
   the Supabase backend are separate planes), why a green GitHub check may mean

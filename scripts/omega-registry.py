@@ -72,7 +72,20 @@ VALIDATED_MIGRATIONS = 94
 
 
 def approx_tokens(path: Path) -> int:
-    return path.stat().st_size // BYTES_PER_TOKEN
+    """LF-normalised byte length, deliberately not st_size.
+
+    .gitattributes pins these files to LF, but an attribute only controls what
+    a *checkout writes*. The self-hosted Windows runner reuses its working
+    directory, and once `eol=lf` is in effect git reads an already-CRLF file
+    back as LF, finds it clean against the index, and never rewrites it -- so
+    stale CRLF bytes survive there indefinitely and inflate this count by one
+    byte per line. Measured: .claude/skills/omega-platform/SKILL.md is 6,918
+    bytes over 161 lines, so 1,729 tokens on LF and 1,769 on CRLF, and 1,769 is
+    exactly what CI regenerated while the LF-correct 1,729 sat in the committed
+    registry. Normalising here makes the figure a property of the file's
+    content rather than of whichever checkout happens to be measuring it.
+    """
+    return len(path.read_bytes().replace(b"\r\n", b"\n")) // BYTES_PER_TOKEN
 
 
 def parse_frontmatter(path: Path):

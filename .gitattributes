@@ -12,12 +12,14 @@
 # rewrites line endings in every .js/.html file at once.
 CLAUDE.md text eol=lf
 
-# scripts/omega-registry.py measures every SKILL.md / agent .md the same way
-# (bytes // 4) and commits the result to OMEGA_SKILL_REGISTRY.md, which
-# `--check` then gates on. Unpinned, a CRLF checkout inflates each count by
-# ~1 byte per line (autonomous-coder/SKILL.md: 6,950 B / 120 lines -> 1,737
-# tokens on LF, 1,767 on CRLF — the values previously committed), so the gate
-# flip-flops between the self-hosted Windows runner and a Linux checkout.
-# Same remedy as CLAUDE.md above.
+# scripts/omega-registry.py measures every SKILL.md / agent .md and commits the
+# result to OMEGA_SKILL_REGISTRY.md, which `--check` gates on. Pinning these to
+# LF keeps a fresh checkout byte-identical across platforms. It is NOT what
+# makes that gate deterministic: an attribute only controls what a checkout
+# *writes*, and the self-hosted Windows runner reuses its working directory --
+# with `eol=lf` in effect git reads an already-CRLF file back as LF, finds it
+# clean against the index, and never rewrites it, so stale CRLF bytes persist
+# and inflated the measurement by one byte per line. That is fixed in
+# approx_tokens(), which normalises before counting; this pin is hygiene on top.
 .claude/skills/**/*.md text eol=lf
 .claude/agents/*.md text eol=lf

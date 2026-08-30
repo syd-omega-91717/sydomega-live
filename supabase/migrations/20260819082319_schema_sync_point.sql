@@ -31,8 +31,29 @@ BEGIN
     RAISE WARNING 'Expected at least 50 tables in public schema, found %', table_count;
   END IF;
   
-  -- Log migration application
-  INSERT INTO public.migrations_log (migration_name, status, applied_at)
-  VALUES ('schema_sync_point', 'applied', NOW())
-  ON CONFLICT DO NOTHING;
+  -- Log migration application, IF that table exists.
+  --
+  -- public.migrations_log is created by nothing in this repository and does
+  -- not exist on production either (to_regclass('public.migrations_log')
+  -- returns NULL on ydqhzvvoyufiiqvzcjns, checked 2026-08-30). An unguarded
+  -- INSERT therefore aborts the whole push on any database:
+  --
+  --   ERROR: relation "public.migrations_log" does not exist (SQLSTATE 42P01)
+  --
+  -- which is exactly what Supabase Preview reported. This migration has never
+  -- been applied to production -- its version is absent from
+  -- supabase_migrations.schema_migrations -- so the log row was never written
+  -- anywhere and nothing depends on it.
+  --
+  -- Guarded rather than deleted: the file's purpose is to be a sync-point
+  -- marker plus the sanity check above, and if a migrations_log table is ever
+  -- introduced this records into it correctly. to_regclass returns NULL
+  -- instead of raising, so it is the right test here.
+  IF to_regclass('public.migrations_log') IS NOT NULL THEN
+    EXECUTE $log$
+      INSERT INTO public.migrations_log (migration_name, status, applied_at)
+      VALUES ('schema_sync_point', 'applied', NOW())
+      ON CONFLICT DO NOTHING
+    $log$;
+  END IF;
 END $$;

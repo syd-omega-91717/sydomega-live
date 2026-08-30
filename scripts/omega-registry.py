@@ -71,8 +71,25 @@ REFERENCE_DOCS = [Path("CLAUDE.md"), SKILLS_DIR / "README.md"]
 VALIDATED_MIGRATIONS = 94
 
 
+def lf_bytes(path: Path) -> int:
+    """Byte length with CRLF normalised to LF, deliberately not st_size.
+
+    .gitattributes pins these files to LF, but an attribute only controls what
+    a *checkout writes*. The self-hosted Windows runner reuses its working
+    directory, and once `eol=lf` is in effect git reads an already-CRLF file
+    back as LF, finds it clean against the index, and never rewrites it -- so
+    stale CRLF bytes survive there indefinitely and inflate this count by one
+    byte per line. Measured: .claude/skills/omega-platform/SKILL.md is 6,918
+    bytes over 161 lines, so 1,729 tokens on LF and 1,769 on CRLF, and 1,769 is
+    exactly what CI regenerated while the LF-correct 1,729 sat in the committed
+    registry. Normalising here makes the figure a property of the file's
+    content rather than of whichever checkout happens to be measuring it.
+    """
+    return len(path.read_bytes().replace(b"\r\n", b"\n"))
+
+
 def approx_tokens(path: Path) -> int:
-    return path.stat().st_size // BYTES_PER_TOKEN
+    return lf_bytes(path) // BYTES_PER_TOKEN
 
 
 def parse_frontmatter(path: Path):
@@ -193,13 +210,20 @@ def report_unreliable_dates() -> None:
 
 def collect_skills():
     skills, errors = [], []
-    for skill_md in sorted(SKILLS_DIR.glob("*/SKILL.md")):
+    for skill_md in sorted(SKILLS_DIR.glob("*/SKILL.md"), key=lambda p: p.parent.name):
         name = skill_md.parent.name
         fields, err = parse_frontmatter(skill_md)
         if err:
             errors.append(f"{skill_md}: {err}")
+        # Sort and render on the POSIX-relative string, which is exactly what
+        # gets written out. Sorting Path objects instead is platform-dependent
+        # (Windows case-folds the comparison, POSIX does not), and str(Path)
+        # emits os.sep -- together those made the Windows runner write
+        # `assets\feedback-issue-template.md` first where Linux wrote
+        # `CHANGELOG.md`, failing --check on nothing but the platform.
         support = sorted(
-            p for p in skill_md.parent.rglob("*") if p.is_file() and p.name != "SKILL.md"
+            (p for p in skill_md.parent.rglob("*") if p.is_file() and p.name != "SKILL.md"),
+            key=lambda p: p.relative_to(skill_md.parent).as_posix(),
         )
         mentioned_in = [
             str(doc) for doc in REFERENCE_DOCS
@@ -224,7 +248,7 @@ def collect_agents():
     agents = []
     if not AGENTS_DIR.is_dir():
         return agents
-    for md in sorted(AGENTS_DIR.glob("*.md")):
+    for md in sorted(AGENTS_DIR.glob("*.md"), key=lambda p: p.name):
         text = md.read_text(encoding="utf-8")
         role = ""
         m = re.search(r"^\*\*Role:\*\*\s*(.+)$", text, re.M)
@@ -250,7 +274,7 @@ def platform_census():
     modules = sorted(Path(".").glob("omega-*.js"))
     root_js = sorted(Path(".").glob("*.js"))
     bg_pages = [p for p in pages if "bg.js" in p.read_text(encoding="utf-8", errors="ignore")]
-    module_kb = sum(p.stat().st_size for p in modules) // 1024
+    module_kb = sum(lf_bytes(p) for p in modules) // 1024
     return {
         "pages": len(pages),
         "pages_loading_bg": len(bg_pages),
@@ -347,7 +371,7 @@ def render(skills, agents, census) -> str:
     for s in skills:
         add(f"- **`{s['name']}`** — {first_sentence(s['description']) or '_no description in frontmatter_'}")
         if s["support"]:
-            add(f"  - carries: {', '.join('`' + str(p.relative_to(s['path'].parent)) + '`' for p in s['support'])}")
+            add(f"  - carries: {', '.join('`' + p.relative_to(s['path'].parent).as_posix() + '`' for p in s['support'])}")
     add("")
 
     # ---------------- agents ----------------

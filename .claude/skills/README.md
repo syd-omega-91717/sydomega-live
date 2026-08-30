@@ -1,6 +1,6 @@
 # Skills
 
-**18 skills live here.** The full generated inventory — including which reference
+**19 skills live here.** The full generated inventory — including which reference
 doc names each one, and whether its frontmatter makes it discoverable at all —
 is `OMEGA_SKILL_REGISTRY.md` at the repo root, produced by
 `scripts/omega-registry.py` and gated in CI. Prefer it over any count written
@@ -8,9 +8,15 @@ into prose here: this file said "Four skills" for long enough that three of the
 eight went undocumented, and `CLAUDE.md` disagreed with it in two places.
 
 Eight are the feature-proposal pipeline and its support skills, described
-below. Seven are **domain skills** — reference for a specific surface of the
-platform:
+below. Eight are **domain skills** — reference for a specific surface of the
+platform, or (in `omega-platform`'s case) across all of them:
 
+- **omega-platform** — the cross-discipline production-engineering skill:
+  one place covering GitHub, Vercel/static delivery, Supabase (Postgres, Auth,
+  Storage, Edge Functions), AI/agents, security, accessibility, performance,
+  testing, observability, data lifecycle and release ops. Invoke for a
+  substantial change that spans more than one of the single-surface skills
+  below.
 - **deploy-gate** — release gating (Vercel static site + Supabase backend are
   separate planes), `.vercelignore`, rollback.
 - **runtime-verify** — `scripts/verify-runtime.js` (headless render of the

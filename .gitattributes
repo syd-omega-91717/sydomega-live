@@ -11,3 +11,13 @@
 # normalization (matching .editorconfig) is the fuller fix — deferred because it
 # rewrites line endings in every .js/.html file at once.
 CLAUDE.md text eol=lf
+
+# scripts/omega-registry.py measures every SKILL.md / agent .md the same way
+# (bytes // 4) and commits the result to OMEGA_SKILL_REGISTRY.md, which
+# `--check` then gates on. Unpinned, a CRLF checkout inflates each count by
+# ~1 byte per line (autonomous-coder/SKILL.md: 6,950 B / 120 lines -> 1,737
+# tokens on LF, 1,767 on CRLF — the values previously committed), so the gate
+# flip-flops between the self-hosted Windows runner and a Linux checkout.
+# Same remedy as CLAUDE.md above.
+.claude/skills/**/*.md text eol=lf
+.claude/agents/*.md text eol=lf

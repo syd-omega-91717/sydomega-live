@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Architecture — SYD OMEGA</title>
+  <style>
+    :root {
+      --void: #0a0a0a;
+      --ink: #e8e8e8;
+      --gold: #d4af37;
+      --cyan: #00e5ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--void);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Rajdhani, sans-serif;
+      padding: 2rem;
+    }
+    #app {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: var(--gold);
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+    #architecture-diagram {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      padding: 2rem;
+      min-height: 600px;
+    }
+    .block {
+      padding: 1rem;
+      margin: 0.5rem;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      display: inline-block;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Platform Architecture — 16-Block System</h1>
+    <div id="architecture-diagram">
+      <p>Architecture control-plane system loaded. See browser console for runtime registration.</p>
+    </div>
+  </div>
+  <script src="/bg.js"></script>
+  <script src="/omega-architecture-runtime.js"></script>
+</body>
+</html>

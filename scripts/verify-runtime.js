@@ -48,7 +48,14 @@ const BENIGN = [
   /applyStyles/, /esm\.sh/, /cdn\.jsdelivr\.net/, /unpkg\.com/, /cdnjs/,
   /Content Security Policy/, /violates the following/, /Failed to load resource/,
   /fonts\.googleapis\.com/, /fonts\.gstatic\.com/, /net::ERR_/, /ERR_BLOCKED_BY/,
-  /ERR_NAME_NOT_RESOLVED/, /tsparticles|three|leaflet|\bd3\b|dayjs|marked|popper|tippy|fuse/i
+  /ERR_NAME_NOT_RESOLVED/, /tsparticles|three|leaflet|\bd3\b|dayjs|marked|popper|tippy|fuse/i,
+  // CLAUDE.md 8.4: graph.html (d3), map.html (Leaflet), realm.html (three.js)
+  // throw from CDN libs the sandbox blocks - fine in production.
+  /L\.map is not a function/, /WebGLRenderer is not a constructor/, /THREE\b/,
+  // Pages that fetch a public API with no CORS header (arxiv, wikipedia) - a
+  // real product limitation that needs an Edge Function proxy, not a source
+  // fix; tracked, not gating here.
+  /export\.arxiv\.org/, /wikipedia\.org/, /has been blocked by CORS/, /Access to fetch at/
 ];
 // Pages that legitimately render signed-out (bg.js public-page allowlist).
 const PUBLIC = /(^|\/)(account|enter|reset|terms|pending|index)\.html$/;

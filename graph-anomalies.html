@@ -300,7 +300,7 @@
   </div>
 
   <script>
-    const sb = window.OmegaSupabase?.sb;
+    let sb = window.OmegaSupabase?.sb || null;
     if (!sb) {
       document.getElementById('anomalyTable').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1">SUPABASE NOT READY</div>';
     }
@@ -310,6 +310,8 @@
 
     async function initAnomalies() {
       try {
+        sb = sb || (window.OmegaSB ? await window.OmegaSB.get() : null);
+        if (!sb) return;
         const sess = await sb.auth.getSession();
         currentUser = sess?.data?.session?.user?.id;
         if (!currentUser) return;

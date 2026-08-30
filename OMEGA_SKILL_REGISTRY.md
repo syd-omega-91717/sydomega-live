@@ -27,11 +27,11 @@ effectively invisible unless invoked by exact name.
 | `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
 | `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
-| `verify-in-browser` | yes | 4 | 2,009 | CLAUDE.md, README.md | 2026-08-30 |
+| `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
 | `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
 
-**12 skills, ~19,660 tokens** if every SKILL.md were read in one
+**12 skills, ~19,952 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 ### Purpose of each

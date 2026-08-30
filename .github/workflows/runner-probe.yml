@@ -87,12 +87,22 @@ jobs:
           echo SELF_HOSTED_RUNNER_OK=true
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Deterministic contract on the registered runner
+      - name: Runtime tools
         shell: cmd
         run: |
           python --version
           node --version
-          bash scripts/ci-local.sh
+      # shell: bash, NOT `shell: cmd` + `bash ...`. Bare `bash` on this Windows
+      # runner resolves to the WSL shim (C:\Windows\System32\bash.exe), and no
+      # WSL distro is installed, so every run of this probe since it was created
+      # died on:
+      #   WSL (10 - Relay) ERROR: CreateProcessCommon:800:
+      #   execvpe(/bin/bash) failed: No such file or directory
+      # Git for Windows is installed and ships a real bash; `shell: bash` is
+      # documented to use it on Windows rather than the WSL shim.
+      - name: Deterministic contract on the registered runner
+        shell: bash
+        run: bash scripts/ci-local.sh
       - name: Execution marker
         shell: cmd
         run: |

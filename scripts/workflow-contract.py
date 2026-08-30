@@ -23,8 +23,36 @@ for name, required in REQUIRED.items():
         ERRORS.append(f"missing workflow: {path.relative_to(ROOT)}")
         continue
     text = path.read_text(encoding="utf-8")
-    if not re.search(r"runs-on:\s*self-hosted\b", text):
-        ERRORS.append(f"{name}: expected provisioned self-hosted runner")
+    # Assert the workflow names a runner it can actually get, NOT that the
+    # runner is self-hosted specifically.
+    #
+    # This used to require `runs-on: self-hosted` outright. That made the repo
+    # enforce the opposite of what issue #157 asks for: the moment GitHub-hosted
+    # provisioning is restored, flipping a gate back to `ubuntu-latest` would
+    # fail this very check, so the contract would block its own fix. #157's
+    # acceptance criterion is a non-zero runner id, an executed step and a real
+    # log -- which is about execution, not about which fleet provided it, and
+    # the RUNNER_NAME / "Execution marker" assertions below are what actually
+    # prove it.
+    #
+    # So: either a self-hosted label or a recognised GitHub-hosted image is
+    # accepted, and an unrecognised label still fails (a typo'd or retired image
+    # is how a job sits unassigned forever). `ubuntu-slim` is deliberately NOT
+    # in this list: three days of runs on it produced the runner_id 0 / steps []
+    # signature, and the hosted lane reproduced that on plain `ubuntu-latest`
+    # too, so the label was never the cause -- but there is no reason to bless a
+    # label this repo has no evidence ever worked here.
+    runner = re.search(r"runs-on:\s*(\[[^\]]*\]|[^\n#]+)", text)
+    if not runner:
+        ERRORS.append(f"{name}: no runs-on declared")
+    else:
+        label = runner.group(1).strip()
+        hosted = re.match(r"(ubuntu|windows|macos)-(latest|\d[\w.]*)$", label)
+        if "self-hosted" not in label and not hosted:
+            ERRORS.append(
+                f"{name}: runs-on {label!r} is neither self-hosted nor a recognised "
+                f"GitHub-hosted image (ubuntu-/windows-/macos-latest or a version)"
+            )
     if not re.search(r"timeout-minutes:\s*\d+", text):
         ERRORS.append(f"{name}: missing timeout-minutes")
     if "permissions:" not in text or "contents: read" not in text:

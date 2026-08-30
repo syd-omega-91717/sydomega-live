@@ -19,22 +19,22 @@ effectively invisible unless invoked by exact name.
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
 | `autonomous-coder` | yes | — | 1,767 | CLAUDE.md, README.md | 2026-08-30 |
-| `cinematic-media` | yes | — | 1,651 | README.md | 2026-08-30 |
+| `cinematic-media` | yes | — | 1,651 | CLAUDE.md, README.md | 2026-08-30 |
 | `context-budget` | yes | — | 1,451 | CLAUDE.md, README.md | 2026-08-30 |
-| `deploy-gate` | yes | — | 1,703 | README.md | 2026-08-30 |
-| `edge-functions` | yes | — | 1,389 | README.md | uncommitted |
+| `deploy-gate` | yes | — | 1,703 | CLAUDE.md, README.md | 2026-08-30 |
+| `edge-functions` | yes | — | 1,389 | CLAUDE.md, README.md | 2026-08-30 |
 | `feature-architect` | yes | — | 1,819 | CLAUDE.md, README.md | 2026-08-30 |
 | `grill-me-codex` | yes | 1 | 2,793 | CLAUDE.md, README.md | 2026-08-30 |
-| `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | uncommitted |
-| `image-pipeline` | yes | — | 1,427 | README.md | 2026-08-30 |
+| `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
+| `image-pipeline` | yes | — | 1,427 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,142 | CLAUDE.md, README.md | 2026-08-30 |
-| `runtime-verify` | yes | — | 1,288 | README.md | uncommitted |
+| `runtime-verify` | yes | — | 1,288 | CLAUDE.md, README.md | 2026-08-30 |
 | `subscriber-portal` | yes | — | 1,178 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase` | yes | 3 | 3,244 | CLAUDE.md, README.md | 2026-08-30 |
-| `supabase-postgres-best-practices` | yes | 35 | 823 | README.md | 2026-08-30 |
-| `supabase-server` | yes | — | 5,201 | README.md | 2026-08-30 |
+| `supabase-postgres-best-practices` | yes | 35 | 823 | CLAUDE.md, README.md | 2026-08-30 |
+| `supabase-server` | yes | — | 5,201 | CLAUDE.md, README.md | 2026-08-30 |
 | `verify-in-browser` | yes | 4 | 2,301 | CLAUDE.md, README.md | 2026-08-30 |
-| `visual-assets` | yes | — | 1,611 | README.md | 2026-08-30 |
+| `visual-assets` | yes | — | 1,611 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,109 | CLAUDE.md, README.md | 2026-08-30 |
 
 **18 skills, ~32,945 tokens** if every SKILL.md were read in one

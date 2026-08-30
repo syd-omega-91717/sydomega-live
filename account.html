@@ -344,15 +344,18 @@
     currentUser=session.user;
     let prof=null;
     try{
-      const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+      const { data, error } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+      if(error) console.warn('[account route] profiles read failed:', error.message||error);
       prof=data;
-    }catch(e){ prof=null; }
+    }catch(e){ console.warn('[account route] profiles read threw:', e); prof=null; }
     if(prof && prof.deactivated_at){
-      try{ await supabase.rpc('reactivate_account'); }catch(e){}
+      const { error:reErr } = await supabase.rpc('reactivate_account');
+      if(reErr) console.warn('[account route] reactivate_account failed:', reErr.message||reErr);
       try{
-        const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
-        prof=data;
-      }catch(e){}
+        const { data, error } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+        if(error) console.warn('[account route] profiles re-read failed:', error.message||error);
+        if(data) prof=data;
+      }catch(e){ console.warn('[account route] profiles re-read threw:', e); }
     }
     if(prof && (prof.sign || prof.is_owner || prof.access_approved)){ window.location.href='/dashboard.html'; return; }
     else { document.getElementById('gate-err').textContent=''; show(vGate); }

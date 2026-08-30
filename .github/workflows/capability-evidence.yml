@@ -40,6 +40,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Validate capability registry
         run: python scripts/capability-audit.py --check
       - name: Source runtime audit
@@ -48,6 +52,13 @@ jobs:
         run: python -m json.tool docs/capabilities/registry.json
       - name: Validate architecture runtime
         run: python scripts/architecture-readiness.py
+      - name: Runtime verification (headless render of capability entrypoints)
+        run: |
+          @echo off
+          if not exist "%RUNNER_TEMP%\pw" mkdir "%RUNNER_TEMP%\pw"
+          call npm --prefix "%RUNNER_TEMP%\pw" install playwright-core --no-save --no-audit --no-fund --loglevel error || echo playwright-core install skipped
+          set OMEGA_SCRATCHPAD=%RUNNER_TEMP%\pw
+          node scripts/verify-runtime.js
       - name: Execution marker
         run: |
           @echo off

@@ -94,11 +94,51 @@ def check_architecture_control_plane() -> None:
                 error(runtime, f"missing runtime registration: {ident}")
 
 
+def check_migration_versions() -> None:
+    """No two migrations may share a version prefix.
+
+    supabase_migrations.schema_migrations has `version` as its primary key, so
+    the CLI inserting a second file with the same prefix aborts the whole push:
+
+        ERROR: duplicate key value violates unique constraint
+        "schema_migrations_pkey" (SQLSTATE 23505)
+        Key (version)=(0093) already exists.
+
+    That is what the Supabase Preview check reported on ab57cf87, with four
+    colliding pairs in the directory (0093, 0094, 0098, 0099). It is a deploy
+    stopper rather than a style issue -- `supabase db push` cannot complete --
+    and nothing caught it, because migration-consistency.py compares the flat
+    bag against migrations/ and never looks for collisions within migrations/
+    itself. Blocking here so a rename or a hand-numbered file cannot
+    reintroduce it silently.
+    """
+    migrations = ROOT / "supabase" / "migrations"
+    if not migrations.is_dir():
+        return
+    seen: dict[str, list[str]] = {}
+    for path in sorted(migrations.glob("*.sql")):
+        match = re.match(r"^(\d+)_", path.name)
+        if match:
+            seen.setdefault(match.group(1), []).append(path.name)
+    for version, files in sorted(seen.items()):
+        if len(files) > 1:
+            error(
+                migrations,
+                "duplicate migration version "
+                + version
+                + ": "
+                + ", ".join(files)
+                + " -- schema_migrations.version is a primary key, so "
+                "`supabase db push` aborts with SQLSTATE 23505",
+            )
+
+
 def main() -> int:
     check_pages()
     check_json()
     check_client_credentials()
     check_architecture_control_plane()
+    check_migration_versions()
     if FAIL:
         print(f"\nPRODUCTION CONTRACT FAILED: {FAIL} finding(s)")
         return 1

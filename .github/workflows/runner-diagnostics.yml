@@ -1,0 +1,66 @@
+name: Runner Diagnostics
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Environment Check
+        run: |
+          set -euo pipefail
+          echo "=== GitHub Actions Environment ==="
+          echo "Runner Name: ${RUNNER_NAME:-UNSET}"
+          echo "Runner OS: ${RUNNER_OS:-UNSET}"
+          echo "Runner Arch: ${RUNNER_ARCH:-UNSET}"
+          echo "Run ID: ${GITHUB_RUN_ID:-UNSET}"
+          echo "Run Attempt: ${GITHUB_RUN_ATTEMPT:-UNSET}"
+          echo ""
+          echo "=== System ==="
+          uname -a
+          echo ""
+          echo "=== Tools ==="
+          python3 --version
+          node --version
+          bash --version | head -1
+          echo ""
+          echo "✓ GitHub-hosted runner is provisioning correctly"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Local CI Validation
+        run: |
+          set -euo pipefail
+          echo "Running local CI validation..."
+          bash scripts/ci-local.sh 2>&1 | tail -20
+          echo "✓ Local CI passed"
+
+      - name: Success Summary
+        run: |
+          cat > /tmp/runner-status.txt << 'SUMMARY'
+          ✓ GitHub-hosted runner: WORKING
+          ✓ Python 3: available
+          ✓ Node: available
+          ✓ Bash: available
+          ✓ Local CI validation: passing
+
+          If this job completes successfully with all checks passing, then:
+          - GitHub Actions account has billing/spending enabled
+          - GitHub-hosted runners are available for this repository
+          - Repository policies allow runner execution
+
+          Next steps if self-hosted runners are desired:
+          1. Register self-hosted runner at:
+             https://github.com/syd-omega-91717/sydomega-live/settings/actions/runners
+          2. Update .github/workflows/*.yml to use 'runs-on: self-hosted'
+          3. Ensure runner machine is online when CI runs
+          SUMMARY
+          cat /tmp/runner-status.txt

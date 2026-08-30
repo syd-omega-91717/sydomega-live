@@ -14,20 +14,27 @@ concurrency:
   group: workflow-contract-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: cmd
+
 jobs:
   workflow-contract:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
+        shell: cmd
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}" && test -n "${RUNNER_OS:-}" && test -n "${RUNNER_ARCH:-}"
-          echo "runner=$RUNNER_NAME"
-          echo "runner_os=$RUNNER_OS"
-          echo "runner_arch=$RUNNER_ARCH"
-          echo "run=$GITHUB_RUN_ID"
-          echo "attempt=$GITHUB_RUN_ATTEMPT"
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          if "%RUNNER_OS%"=="" exit /b 1
+          if "%RUNNER_ARCH%"=="" exit /b 1
+          echo runner=%RUNNER_NAME%
+          echo runner_os=%RUNNER_OS%
+          echo runner_arch=%RUNNER_ARCH%
+          echo run=%GITHUB_RUN_ID%
+          echo attempt=%GITHUB_RUN_ATTEMPT%
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -35,21 +42,26 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate workflow contracts
+        shell: cmd
         run: python scripts/workflow-contract.py
       - name: Validate architecture contract
+        shell: cmd
         run: python scripts/architecture-contract.py
       - name: Validate implementation readiness
+        shell: cmd
         run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
+        shell: cmd
         run: |
-          set -euo pipefail
-          test -f scripts/ci-local.sh
-          grep -F -- '--help' scripts/ci-local.sh >/dev/null
-          echo 'ci-local.sh help contract verified'
+          @echo off
+          if not exist scripts\ci-local.sh exit /b 1
+          findstr /C:"--help" scripts\ci-local.sh >nul || exit /b 1
+          echo ci-local.sh help contract verified
       - name: Execution marker
+        shell: cmd
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME:-}"
-          echo "WORKFLOW_CONTRACT_EXECUTED=true"
-          echo "WORKFLOW_CONTRACT_RUN_ID=$GITHUB_RUN_ID"
-          echo "WORKFLOW_CONTRACT_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+          @echo off
+          if "%RUNNER_NAME%"=="" exit /b 1
+          echo WORKFLOW_CONTRACT_EXECUTED=true
+          echo WORKFLOW_CONTRACT_RUN_ID=%GITHUB_RUN_ID%
+          echo WORKFLOW_CONTRACT_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%

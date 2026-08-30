@@ -784,6 +784,66 @@ new subsystem, not a new command surface, and not a change to what any skill act
 table makes the 4-skill feature pipeline immediately scannable while keeping authoritative details
 in the SKILL.md files.
 
+## 19. Signature cinematic / emblem visual tier — one motif, three high-traffic surfaces (design system)
+
+**Grounded in:** infrastructure that already exists and already loads on all 179 pages via
+`bg.js`, plus `UX_REDESIGN_BRIEF.md` §3 ("emblematic, cinematic, animated — without the
+generic-AI look"), which asked for exactly this and scoped it to restraint:
+
+- `omega-cinematic.js` (page-transition curtain, `[data-reveal]`, `[data-countup]`,
+  `[data-stagger]`, `[data-scan]`), `omega-motion.js` (WAAPI entrance / roll-up / tilt /
+  press), `omega-emblems.js` and `omega-emblem-panel.js` are all in the `bg.js` loader today.
+- `omega-cinematic-engine.js` (fixed 2.5D HUD: vignette, scanlines, corner ticks, parallax
+  particle canvas) and `omega-page-emblem.js` (per-page mark derived from the page's
+  lattice/axis/glyph) exist but are **not** in the `bg.js` loader — they only run where a page
+  carries an explicit `<script>` tag or a `data-page-emblem` element.
+- `omega-sigil-gen.js` generates a deterministic per-member SVG sigil and auto-mounts on
+  `[data-sigil]` on `omega:user-loaded`, but that event is not dispatched platform-wide (see
+  the "Flagged, not proposed" note on `omega:user-loaded` — this proposal does **not** depend
+  on that; it mounts the sigil explicitly on the two pages named below).
+- The brief's "only 7 `@keyframes` / 3 `rotate()` across the platform" figure is now **stale** —
+  a current grep finds `@keyframes` in 52 files / 117 distinct names. The motion *system* is no
+  longer untapped; what's still missing is a single deliberate, repeated **signature** motif
+  rather than 117 unrelated one-offs.
+
+**Idea (design-system scope, no new page, no schema, no money/data):** define one signature
+motion motif — a slow orbital rotation (`--omega-spin-slow`, ~60s, `prefers-reduced-motion`
+→ static) as a shared class in `bg.js`'s injected stylesheet — and apply it deliberately in
+**three** places only:
+
+1. `profile.html` header — the member's own rotating, glowing `omega-sigil-gen.js` sigil.
+2. `dashboard.html` — the same sigil, smaller, beside the standing readout.
+3. `cosmos.html` hero — the existing emblem ring, given the signature spin.
+
+Optionally, as a separate reviewable step: register `omega-page-emblem.js` in the `bg.js`
+loader (guarded `data-omega-page-emblem`, no-op where no `data-page-emblem` element exists) so
+the ~40 flat service pages the module was built for actually get their derived mark.
+
+**User benefit:** the platform reads as one designed world rather than a set of pages, and the
+"alive" feeling stops being hover-only (Ω-GVP shimmer is `:hover` by design, `CLAUDE.md` §4.1).
+Restraint — one motif, three surfaces — is what reads as cinematic instead of busy; scattering
+animation across every card is explicitly what the brief warns against.
+
+**Nav placement:** none — this is shared design-system CSS + two explicit mounts.
+
+**Blocked on, before any code:**
+- **Browser verification.** `CLAUDE.md` §9 and the `verify-in-browser` skill make a real
+  render mandatory for any change touching `bg.js` or page markup, and several bug classes
+  (§8.1 class 3: zero-buffer canvas; §4 / §4.1: a rule written for a surface `bg.js` no longer
+  owns is dead code that looks right in the diff) are only catchable that way. The
+  `verify-in-browser` harness assumes Linux paths (`/opt/pw-browsers`) and has not been run on
+  the current Windows checkout — a session with the harness available (or a Linux checkout)
+  should own the implementation.
+- **`bg.js` blast radius.** Adding a shared class + registering one module in the loader both
+  touch the platform's documented single point of failure; per this repo's convention that is
+  an explicit go-ahead, not a quiet change.
+- **Which three surfaces.** `profile.html` / `dashboard.html` / `cosmos.html` are the brief's
+  pick; confirm before building.
+
+**Source inspiration:** `UX_REDESIGN_BRIEF.md` §3 and §5 (this repo's own friend-feedback →
+action plan); `omega-sigil-gen.js` / `omega-cinematic-engine.js` / `omega-page-emblem.js`
+(this repo's own already-built modules).
+
 ## Flagged, not proposed — need explicit scoping/sign-off before any code
 
 - **`omega-recommend.js`'s "surfacing" half doesn't exist in code at all.** The signal-*recording*

@@ -2,3 +2,12 @@
 # REPOSITORY_AUDIT.md §4). Mark them binary so they're never diffed/merged as text.
 *.mp4 -diff -text
 *.docx -diff -text
+
+# scripts/context-budget.py measures CLAUDE.md by raw byte size (bytes // 4).
+# On a checkout with core.autocrlf=true, CRLF adds ~1 byte per line (~970 for
+# CLAUDE.md), which inflated the measurement over the 16,000-token budget and
+# failed the gate on Windows checkouts while passing on Linux. Pin it to LF so
+# the measurement is the same everywhere. A repo-wide `* text=auto eol=lf`
+# normalization (matching .editorconfig) is the fuller fix — deferred because it
+# rewrites line endings in every .js/.html file at once.
+CLAUDE.md text eol=lf

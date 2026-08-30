@@ -51,7 +51,7 @@ sitting idle, not a new project.
 | "Upload/download/publish smoother" | Two distinct surfaces, both worth addressing: (a) *member-facing* — file/document uploads (KYC, avatar), the finance-pages backup export/import already built (`omega-local-backup.js`), unstyled raw `<input>`/`<button>` elements now get a shared glass skin but haven't been audited for actual drag-and-drop or progress-state UX; (b) *owner-facing* — shipping a new feature already has a 4-stage pipeline (`web-trend-scout → feature-architect → autonomous-coder → subscriber-portal`, `.claude/skills/README.md`) that's under-used relative to how much of this feedback assumes ad hoc, from-scratch building. |
 | "Feels inactive, needs real content/data" | See §0 — the mechanisms that make a platform feel alive (presence, ticker, notifications, leaderboard) are already built and mostly already fixed; they're just not deployed or populated. This is a deployment/seeding gap, not a missing-feature gap. |
 | "Source standard features from trusted sources instead of building from scratch" | Use the existing `web-trend-scout` skill for this exactly — it researches real external platforms/APIs and writes a grounded, evidence-cited proposal before any code is written. See §4 for the categories worth scouting first. |
-| "Elevate visual design — emblematic, cinematic, animated" | The brand system (`bg.js`'s design tokens + the Ω-GVP glass layer) is more capable than what's currently visible: only 7 `@keyframes` and 3 `rotate()` uses exist across all ~250 pages. See §5. |
+| "Elevate visual design — emblematic, cinematic, animated" | The brand system (`bg.js`'s design tokens + the Ω-GVP glass layer + `omega-cinematic*.js` / `omega-motion.js` / `omega-emblems.js`, all loaded platform-wide) is more capable than what's currently visible. Motion is now plentiful (`@keyframes` in 52 files) but has no *signature* motif; `omega-cinematic-engine.js` and `omega-page-emblem.js` exist but aren't in the `bg.js` loader. See §3, §5, and `FEATURE_IDEAS.md` #19. |
 | "Feel like a civilization/planet/galaxy, not a small project" | See §5 — the six things that actually separate "small project" from "living world" already have real infrastructure in this schema; most of the gap is activation and content depth, not architecture. |
 
 ## 2. Checkable criteria
@@ -91,10 +91,11 @@ The palette is already distinctive and worth keeping exactly as-is (`--void:#0A0
 `--void2:#020206`, `--gold:#C9A84C`, `--solar:#E2C86D`, `--cyan:#00E5FF`, `--crim:#8B0000`,
 `--purple:#9B6BF0`) — the brief here is *use what exists more*, not replace it:
 
-- **Motion budget is nearly untapped.** 7 keyframes and 3 `rotate()` calls across ~250 pages
-  means the "dynamic, rotating elements" ask is mostly unmet not because the system can't do
-  it, but because almost nothing uses it yet. Add one **signature motion motif** — a slow
-  orbital rotation (a `spin-slow`-class ring/glyph) — and use it deliberately in 2–3 high-visit
+- **Motion is now plentiful but unsignatured.** This bullet originally read "7 keyframes and
+  3 `rotate()` calls across ~250 pages"; a current grep finds `@keyframes` in 52 files / 117
+  distinct names, so the system is no longer untapped — it is *uncoordinated*. The ask is now
+  one **signature motion motif** — a slow orbital rotation (a `spin-slow`-class ring/glyph) —
+  used deliberately in 2–3 high-visit
   places (a member's zodiac/element emblem on `profile.html` and `dashboard.html`, the
   `cosmos.html` hero) rather than scattering animation across every card. Restraint here is
   what reads as cinematic instead of busy.
@@ -180,7 +181,8 @@ incrementally, phase by phase (§6), not as one large rebuild.
 
 **Phase 2 — 2–4 weeks**
 - Ship the signature motion/sigil treatment from §3 on `profile.html`, `dashboard.html`,
-  `cosmos.html`.
+  `cosmos.html` — scoped and grounded as `FEATURE_IDEAS.md` #19 (needs a Linux/harness-capable
+  session for the mandatory browser verification, and explicit go-ahead for the `bg.js` touch).
 - Audit and polish upload/download flows: styled file inputs with real progress/success states,
   extend the backup export/import pattern already proven on the 7 finance pages to other
   data-heavy pages if useful.

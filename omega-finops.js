@@ -137,21 +137,12 @@
         duration_s:summary.session_duration_s
       });
     }
-    /* Write to Supabase if significant cost */
-    if(summary.total_usd>0.001&&window.__omegaSb){
-      window.__omegaSb.from('platform_metrics').upsert({
-        metric_date:new Date().toISOString().slice(0,10),
-        metric_name:'session_cost_usd',
-        metric_value:summary.total_usd,
-        dimensions:summary
-      },{onConflict:'metric_date,metric_name'}).then(function(res){
-        /* platform_metrics has UNIQUE(metric_date, metric_name); an upsert
-           with no conflict target defaults to the PRIMARY KEY (id), which this
-           payload does not carry -- so PostgREST sent a plain insert and every
-           write after the day's first for a given metric_name raised 23505.
-           .catch() never fired: the client resolves to {data, error}. */
-        if(res&&res.error){console.warn('[omega-finops] platform_metrics upsert failed:',res.error.message);}
-      });
+    /* Route through OmegaTelemetry, not platform_metrics -- see the note in
+       omega-metrics.js: an authenticated INSERT into platform_metrics fails
+       42501 (policy present, grant absent, CLAUDE.md 8.1 class 6(c)), so this
+       write never landed. track() owns uid/session resolution and buffering. */
+    if(summary.total_usd>0.001&&window.OmegaTelemetry&&window.OmegaTelemetry.track){
+      window.OmegaTelemetry.track('session_cost',summary);
     }
   });
 

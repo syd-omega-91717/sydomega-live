@@ -55,16 +55,19 @@ omega-*.json         Static config/data: agent roster (omega-agents.json),
 supabase/*.sql       Backend schema, a flat bag applied in sequence (see
                      "Known debt"). live-schema.json snapshots what the
                      database actually has.
-supabase/functions/  Edge Functions (Deno/TypeScript): checkout,
-                     stripe-webhook, concierge (Anthropic API-backed
-                     assistant), notify-access, intel-feed, rankings,
-                     snapshot-leaderboard.
+supabase/functions/  Edge Functions (Deno/TypeScript) — 11: checkout,
+                     stripe-webhook, concierge (Anthropic-backed), notify-
+                     access, weekly-digest, and the pg_cron jobs (rankings,
+                     snapshot-leaderboard, …). Full map: the `edge-functions`
+                     skill. Deployed by hand via the Supabase CLI, not CI.
 scripts/             Repo tooling: audit.py (CI-gating integrity check),
-                     check-secrets.sh (verifies Edge Function secrets are
-                     set before deploy), one-off migration/patch scripts.
+                     verify-runtime.js (headless render check),
+                     capability-audit.py / release-gate.py (the §10 registry
+                     gates), check-secrets.sh, one-off migration/patch scripts.
 .github/workflows/   CI: syntax check, repo audit, prettier/eslint
                      (non-blocking), broken-asset check, service-role key
-                     scan, Edge Function syntax check, PWA asset checks.
+                     scan, Edge Function syntax check, PWA asset checks,
+                     capability-evidence (incl. the runtime render).
 ```
 
 There is no `src/`, no `components/`, no `dist/`. What you see in the repo
@@ -608,12 +611,15 @@ entries (which were accurate when written):
 | `python3 -m unittest discover -s scripts/tests` | **92** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,220** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
+| `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry) |
+| `python3 scripts/release-gate.py` | PASSED |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **17** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **18** blocking checks, all passing |
 | broken asset references | 0 |
 | service-role key scan | clean |
 
@@ -733,6 +739,15 @@ entries (which were accurate when written):
   documentation belongs and how to read this repo's very large files cheaply
   (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
   the entire auto-loaded context).
+- **Runtime verification is automated now — use it before claiming a UI or
+  data-layer change works.** `node scripts/verify-runtime.js` renders the
+  capability entrypoints in headless Chrome/Edge (zero repo deps; `SKIPPED`
+  when no browser) and asserts load / approval-guard-lifts / no-throw /
+  no-overflow / no-dup-id plus an advisory a11y pass; `--all` sweeps every
+  page. It found the `bg.js`-loaded-twice class on 29 pages and the
+  eager-`window.OmegaSupabase.sb` read on 6 (both fixed, `FIXES_LOG.md`). It
+  stubs Supabase, so it proves the client is wired, never production RLS.
+  Details in the `runtime-verify` skill.
 
 
 ## 9. Working in this repo — practical rules
@@ -795,12 +810,25 @@ entries (which were accurate when written):
 
 ## 10. Autonomous feature-proposal pipeline (`.claude/skills/`) — with safety gating
 
-Eight skills exist (`OMEGA_SKILL_REGISTRY.md`, generated); five of them
-orchestrate turning outside research into shipped-but-dormant
-features on this actual static-HTML/Supabase stack — no framework, no
-build step, adapted to the real architecture in §§1–6. The pipeline
-intentionally stops at "reviewable, dormant-by-default code on a branch"
-rather than auto-deploying to subscribers, matching §9's rule against
+The skills under `.claude/skills/` (exact count and per-skill token cost in
+`OMEGA_SKILL_REGISTRY.md`, generated — do not hard-code it here) fall in four
+groups; `.claude/skills/README.md` is the full index:
+
+1. **The feature-proposal pipeline** (this section) — five skills that turn
+   outside research into shipped-but-dormant features on this actual
+   static-HTML/Supabase stack, no framework, no build step (§§1–6).
+2. **Standalone verification** — `verify-in-browser`, `runtime-verify`
+   (`scripts/verify-runtime.js` + the §10-registry contracts),
+   `context-budget`, `interface-guidelines`.
+3. **Domain skills** — `deploy-gate`, `edge-functions`, `i18n`,
+   `visual-assets`, `cinematic-media`, `image-pipeline`: reference for one
+   surface, invoked when a change touches it.
+4. **Vendored Supabase skills** — `supabase`, `supabase-postgres-best-practices`,
+   `supabase-server`, kept in-tree because §8.1's most recurring bug class is
+   Supabase-shaped.
+
+The pipeline intentionally stops at "reviewable, dormant-by-default code on a
+branch" rather than auto-deploying to subscribers, matching §9's rule against
 shipping monetizable/legally-sensitive features live without an explicit
 gating decision — and this repo's own history of serious bugs that shipped
 silently (§8.1, and `FIXES_LOG.md` in full) is why that gating exists.
@@ -821,20 +849,12 @@ web-trend-scout → grill-me-codex [lock intent] → feature-architect → auton
 
 - `web-trend-scout` — research only, writes a grounded proposal into
   `FEATURE_IDEAS.md`. No code.
-- **`grill-me-codex` (HIGH-RISK decisions only)** — structured interrogation
-  framework. Locks down intent by forcing explicit threat-model review and
-  decision documentation before any architecture or code. Three invocation
-  modes: Standard (3 rounds, structured interrogation + Codex review),
-  Extended (5 rounds for complex decisions), Quick (single-shot wizard for
-  low-risk features). Outputs: `PLAN.md` (decision record with threat
-  analysis) + `CODEX_REVIEW.md` (audit trail of verdicts and revisions).
-  See `.claude/skills/grill-me-codex/SKILL.md` for quick start, and
-  `.claude/grill-me-codex.md` for full framework reference. Grounded in
-  eight threat classes from this repo's own failure history (CLAUDE.md §8.1,
-  with the full evidence in `FIXES_LOG.md`):
-  stored XSS, silent-failure writes, RLS policy gaps, column-name
-  mismatches, module-boundary bugs, unguarded RPCs, race conditions, missing
-  edge cases.
+- **`grill-me-codex` (HIGH-RISK decisions only)** — forces a threat-model
+  review + decision record (`PLAN.md` + `CODEX_REVIEW.md`) before any
+  architecture or code, grounded in §8.1's eight failure classes (stored XSS,
+  silent-failure writes, RLS gaps, column-name mismatches, module-boundary
+  bugs, unguarded RPCs, races, missing edge cases). Modes and framework:
+  `.claude/skills/grill-me-codex/SKILL.md`, `.claude/grill-me-codex.md`.
 - `feature-architect` — planning only, turns one proposal (+ Codex approval
   if HIGH-RISK) into an exact file-by-file blueprint (page, `nav.js`
   wiring, `supabase/*.sql`, `platform_settings` flag). No code.
@@ -851,8 +871,6 @@ web-trend-scout → grill-me-codex [lock intent] → feature-architect → auton
   subscriber-facing pages (using the real `membership_tier`/
   `OmegaCanon.tierUnlocks()` system, not an invented one) once a human has
   already turned its flag on.
-
-See `.claude/skills/README.md` for the full pipeline.
 
 ### 10.1 External repos and skills — what has been evaluated, and the bar
 

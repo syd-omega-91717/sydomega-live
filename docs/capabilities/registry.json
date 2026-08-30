@@ -206,6 +206,54 @@
         "static_evidence": "it IS the static evidence; self-tested by scripts/tests/ (python -m unittest, 92 tests, blocking in CI)",
         "live_verification": "PARTIAL - runs green locally (ci-local.sh: all 18) and self-hosted CI executes it; GitHub-hosted runner execution is still blocked per issue #157, so a cloud run with a non-zero runner id is not yet on record"
       }
+    },
+    {
+      "id": "observability",
+      "name": "Observability",
+      "status": "PARTIAL",
+      "confidence": 45,
+      "entrypoints": ["ops.html", "analytics.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "omega-telemetry.js, omega-metrics.js, omega-finops.js, omega-dataguard.js (all loaded via bg.js); surfaced on ops.html and analytics.html",
+        "data_contract": "public.telemetry_events (omega-telemetry.js), public.user_journeys, public.platform_metrics (omega-metrics.js / omega-finops.js) - defined in supabase/omega_telemetry.sql; omega-dataguard.js has no table, it decorates slow/failed fetches in the DOM",
+        "authorization": "RLS enabled on all three: telemetry_events INSERT WITH CHECK(true) + owner-only SELECT; user_journeys scoped to auth.uid() both ways; platform_metrics INSERT WITH CHECK(true) (no user_id column, so no attribution to spoof - data-integrity only, CLAUDE.md 8.2) + owner-only read",
+        "failure_path": "WEAK - telemetry/metrics writes are fire-and-forget by design (a dropped metric must not break a page), but that means a broken pipeline is invisible; ops.html's event-bus metrics table looks up an id that exists nowhere (CLAUDE.md 8.2) so that panel never renders",
+        "static_evidence": "scripts/rls-auditor.py (policies present); scripts/schema-dictionary.py; scripts/audit.py flags the ops.html dead lookup; supabase/omega_telemetry.sql is idempotent DDL",
+        "live_verification": "BLOCKED - no live check. Whether authenticated is granted INSERT on platform_metrics, and whether any telemetry row has ever been written in production, are both unverified"
+      }
+    },
+    {
+      "id": "import-export",
+      "name": "Import / Export",
+      "status": "PARTIAL",
+      "confidence": 50,
+      "entrypoints": ["vault.html", "settings.html"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "omega-local-backup.js (OmegaBackup.exportKeys/importKeys - JSON file the user saves/loads), omega-export.js, omega-nexus-export.js, upload.js (OmegaStorage.upload/publicUrl/signedUrl)",
+        "data_contract": "export: reads localStorage keys and writes a Blob download; no server round-trip. upload: Supabase Storage bucket, path <user-id>/<timestamp>_<safe-name>, 5 GB client cap",
+        "authorization": "backup export/import is device-local (no auth needed, no server data leaves the browser); OmegaStorage.upload requires an auth session and writes under the caller's own user-id prefix; bucket access is governed by Supabase Storage RLS (treat a new bucket like a new table)",
+        "failure_path": "OmegaStorage.upload returns { error } on no-file / over-limit / no-session / storage error and the caller shows it; import wraps JSON.parse in try/catch; a member-supplied image URL rendered back must be esc()'d (stored-XSS history)",
+        "static_evidence": "omega-local-backup.js / upload.js parse under node --check; the 5-with-export / 43-without split is measured by scripts/evidence-audit.py; CLAUDE.md 8.2 records which finance pages carry the export path",
+        "live_verification": "BLOCKED - no live check. Storage bucket RLS, and the still-open gap that 43 device-local pages have no export path at all (scope finding, CLAUDE.md 8.2), are unverified/unclosed"
+      }
+    },
+    {
+      "id": "accessibility",
+      "name": "Accessibility",
+      "status": "BUILT",
+      "confidence": 65,
+      "entrypoints": ["omega-a11y.js"],
+      "verified": false,
+      "contract": {
+        "entrypoint": "omega-a11y.js - WCAG 2.1 AA layer injected on all 179 pages via bg.js: skip link, focus-trap manager (OmegaA11y.trapFocus/releaseFocus), live-region announcer, <main> landmark guarantee, unlabelled-control audit, prefers-reduced-motion CSS reinforcement",
+        "data_contract": "none - a client DOM layer, no persistence",
+        "authorization": "n/a - no server data",
+        "failure_path": "additive and defensive - it only adds ARIA/landmarks/labels that are missing; a failure degrades to the page's native semantics rather than breaking it. color-scheme:dark (bg.js) fixes native-control contrast platform-wide",
+        "static_evidence": "the interface-guidelines skill audits against the Web Interface Guidelines (no-build subset); omega-a11y.js parses under node --check; verify-in-browser scans tap targets (24px min at 375) and duplicate ids; CLAUDE.md 8.4 records the color-scheme fix reaching 173 pages",
+        "live_verification": "BLOCKED - no automated axe/Lighthouse run in CI yet, and no live audit this session. Adding an automated a11y scan to verify-in-browser is the open item"
+      }
     }
   ]
 }

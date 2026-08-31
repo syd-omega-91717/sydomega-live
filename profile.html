@@ -2144,7 +2144,10 @@ async function submitKyc(){
   if(!window.OmegaStorage){ msg.style.color='var(--crim)'; msg.textContent='Secure storage isn\u2019t available right now.'; return; }
   msg.style.color='var(--muted)'; msg.textContent='Uploading securely\u2026';
   var path=null;
-  try{ var up=await window.OmegaStorage.upload(fileEl.files[0],'uploads'); path=up&&(up.path||up.fullPath||up.key)||null; }
+  try{ var up=await window.OmegaStorage.upload('uploads',fileEl.files[0]); 
+       if(!up||up.error){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: '+((up&&up.error)||'no response from storage.'); return; }
+       path=up.path||up.fullPath||up.key||null;
+       if(!path){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: storage returned no path.'; return; } }
   catch(e){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: '+(e.message||e); return; }
   var u=await ppSb.from('profiles').update({kyc_status:'submitted',kyc_doc_path:path,kyc_submitted_at:new Date().toISOString()}).eq('id',ppUid);
   if(u.error){ msg.style.color='var(--crim)'; msg.textContent='Saved the file, but couldn\u2019t record status: '+u.error.message+' (run kyc.sql).'; return; }

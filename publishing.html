@@ -150,7 +150,11 @@ document.getElementById('p-go').addEventListener('click',async function(){
   var fEl=document.getElementById('p-file');
   if(fEl&&fEl.files&&fEl.files[0]){
     showMsg(true,'Uploading file… (large files take time)');
-    try{var up=await window.OmegaStorage.upload('uploads',fEl.files[0]);if(up&&!up.error)filePath=up.path||null;}catch(e){}
+    var up=null;
+    try{up=await window.OmegaStorage.upload('uploads',fEl.files[0]);}catch(e){up={error:e.message||String(e)};}
+    if(!up||up.error){btn.disabled=false;showMsg(false,'Upload failed: '+((up&&up.error)||'no response from storage.')+' Nothing was committed.');return;}
+    filePath=up.path||null;
+    if(!filePath){btn.disabled=false;showMsg(false,'Upload failed: storage returned no path. Nothing was committed.');return;}
   }
   var ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
   if(ins.error){btn.disabled=false;showMsg(false,'Could not commit ('+(ins.error.code||ins.error.message||'')+').');return;}

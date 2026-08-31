@@ -137,7 +137,11 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
   var file_path=null;
   var fileEl=document.getElementById('f-file');
   if(fileEl&&fileEl.files&&fileEl.files[0]){
-    try{var up=await window.OmegaStorage.upload(fileEl.files[0],'uploads');file_path=up&&(up.path||up.fullPath||up.key)||null;}catch(e){}
+    var up=null;
+    try{up=await window.OmegaStorage.upload('uploads',fileEl.files[0]);}catch(e){up={error:e.message||String(e)};}
+    if(!up||up.error){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: '+((up&&up.error)||'no response from storage.')+' -- nothing was listed.';return;}
+    file_path=up.path||up.fullPath||up.key||null;
+    if(!file_path){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: storage returned no path -- nothing was listed.';return;}
   }
   var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
   if(ins.error){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='ERROR: '+ins.error.message;return;}

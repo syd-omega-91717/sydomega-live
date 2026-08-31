@@ -20,7 +20,7 @@ defaults:
 
 jobs:
   evidence:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -30,12 +30,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Runner diagnostics
-        # Deliberately AFTER setup-python, not first. `shell: python`
-        # needs an interpreter on PATH, and a capability probe measured
-        # pwsh working at step 6 but NOT at step 1 on this runner
-        # ("pwsh: command not found"), which is exactly the mistake of
-        # measuring in one position and assuming another. setup-python
-        # guarantees it from here on, on both Windows and Linux.
         run: |
           import os, sys
           for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):

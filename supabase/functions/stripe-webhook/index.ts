@@ -33,7 +33,7 @@
 //     customer.subscription.deleted
 //     invoice.payment_failed
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), {

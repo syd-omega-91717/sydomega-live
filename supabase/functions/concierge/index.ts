@@ -16,7 +16,7 @@
 //   recall_ai_context, omega_ai_memory.sql; the endpoint works fine for
 //   anonymous visitors too, just without personalization or memory)
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",

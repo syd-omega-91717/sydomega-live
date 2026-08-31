@@ -559,6 +559,19 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
+- **Three time-bombs are open on purpose, each needing an owner decision**
+  (`scripts/resilience-audit.py`, blocking in CI; detail in `FIXES_LOG.md`).
+  (a) **Stripe's API version is unpinned** — `checkout:57` and
+  `stripe-webhook:238` send no `Stripe-Version`, so Stripe applies the
+  *account* default, which moves outside this repo and changes payload shapes
+  under unchanged payment code. Highest severity here, and deliberately not
+  auto-fixed: the right value is only readable from the Stripe dashboard, and
+  a guessed pin breaks checkout immediately rather than eventually. HIGH-RISK
+  per §10 — run `grill-me-codex` first. (b) **All 5 workflows target one
+  machine** (`[self-hosted, Windows, X64]`), so CI failure is total, not
+  partial; every `scripts/*.py` gate is platform-independent, so a hosted
+  fallback lane is possible. (c) **`vercel.json`'s CSP is Report-Only with no
+  reporting endpoint**, so it neither enforces nor collects anything.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
   in the job log). Cloud minutes still look unavailable — this repo is private
   on a personal account — so queued jobs drain slowly, one at a time, and a
@@ -608,7 +621,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **92** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **116** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -619,7 +632,8 @@ entries (which were accurate when written):
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **18** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **19** blocking checks, all passing |
+| `python3 scripts/resilience-audit.py` | 0 findings; 3 warnings (Stripe version, CI runner, CSP) |
 | broken asset references | 0 |
 | service-role key scan | clean |
 

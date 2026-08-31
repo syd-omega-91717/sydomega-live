@@ -10,7 +10,7 @@
 // The service role key is required so the function can read all profiles
 // without being bound by the calling user's RLS policies.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const PHI = 1.6180339887;
 const EU  = 2.7182818285;

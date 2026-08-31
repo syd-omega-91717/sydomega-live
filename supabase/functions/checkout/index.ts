@@ -2,7 +2,7 @@
 // Double-gated: refuses unless payments_enabled=true AND STRIPE_SECRET_KEY is set.
 // Env (Supabase secrets): STRIPE_SECRET_KEY, STRIPE_PRICE_MAP (JSON tier->price_id),
 //   SITE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",

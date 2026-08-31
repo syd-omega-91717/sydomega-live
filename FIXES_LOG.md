@@ -4181,3 +4181,102 @@ each async `init*()`, `sb = sb || (window.OmegaSB ? await window.OmegaSB.get()
   chrome (`.tnav-btn`, `.omega-dash-link`, footer `<a>`), and ~5 unlabelled
   inputs (`mp-type`, `depthSelect`, `dateFilter`, `*-import-file`, `j-date`).
   Tracked as the `accessibility` capability; a dedicated sweep is the next step.
+
+## Time-bombs: the failures that arrive on someone else's schedule (2026-08-31)
+
+Every gate in `scripts/` answered "is this code correct as written today".
+None answered "will this same, unchanged code still work in six months". That
+second class leaves no diff to blame, is invisible to `node --check`,
+`audit.py`, the capability registry and the runtime render, and lands in
+production on a third party's timetable. Five instances were already present.
+
+`scripts/resilience-audit.py` now gates the class; `scripts/tests/test_resilience_audit.py`
+(13 tests) proves each detector actually fires, since a gate that cannot fail
+is not a gate. Wired blocking into `ci-local.sh` (step `2l`) and `ci.yml`.
+
+### Fixed — floating dependency pins in 6 of 11 Edge Functions
+
+`checkout`, `stripe-webhook`, `concierge`, `rankings`, `snapshot-leaderboard`
+and `weekly-digest` each imported
+`https://esm.sh/@supabase/supabase-js@2` — no minor, no patch. esm.sh resolves
+that at *deploy* time, so two deploys of byte-identical source can ship
+different libraries, with nothing in the repo to explain the difference.
+
+Pinned all six to **2.112.4** — the version `vendor/supabase-js.js` already
+ships to every browser on this platform, so it is the one version here with
+production evidence behind it. The two `graphify-*` functions were left on
+their existing explicit `2.39.8`: they are *pinned*, so they are not this bug,
+and moving them is an upgrade decision, not a resilience fix.
+
+This repo already paid for this lesson once — `vendor/supabase-js.js` exists
+because a third-party CDN on the critical path took the whole platform down
+(that file's header; CLAUDE.md §4). The Edge Functions were still doing it.
+
+### Fixed — `weekly-digest` imported the frozen `deno.land/std`
+
+`supabase/functions/weekly-digest/index.ts:6` pulled `serve` from
+`https://deno.land/std@0.168.0/http/server.ts`. That line is frozen and being
+retired in favour of JSR, and Supabase's Edge Runtime has provided `Deno.serve`
+natively for years — so the dependency bought nothing and could only ever
+break. Removed the import; `serve(async (req) => {` → `Deno.serve(async (req) => {`.
+Every other Edge Function in the repo already used `Deno.serve`, so this was
+the lone holdout, not a new pattern. Verified: 0 `deno.land` references remain,
+braces and parens balanced. `deno check` is not installed in this environment —
+CI step 6 covers it (non-blocking there).
+
+### NOT fixed, deliberately — Stripe API version is unpinned
+
+`checkout/index.ts:57` and `stripe-webhook/index.ts:238` call `api.stripe.com`
+with no `Stripe-Version` header. Stripe then applies **the account's default
+API version**, which moves when Stripe migrates the account or someone clicks
+upgrade in a dashboard this repo cannot see. Request and response shapes change
+under code that never changed — in real payment code (CLAUDE.md §5).
+
+This is the highest-severity item found, and it is reported as a *warning*
+rather than auto-fixed on purpose: the correct value is the account's current
+default version, readable only from Stripe Dashboard → Developers → API
+versions. Pinning a guessed string breaks checkout **immediately** instead of
+eventually. Per CLAUDE.md §10 this is HIGH-RISK (payments) and wants the
+`grill-me-codex` gate before the change. Remediation, for whoever has the
+dashboard open: read the account's current default, send it as `Stripe-Version`
+on every `api.stripe.com` request, then redeploy and verify a real checkout.
+
+### Also reported as warnings — owner decisions, not code bugs
+
+- **All 5 workflows target one label set**, `[self-hosted, Windows, X64]` —
+  one physical machine. While it is offline every gate is unrunnable, jobs
+  queue indefinitely, and nothing can be validated or merged: CI failure is
+  total, not partial. Every `scripts/*.py` gate is platform-independent, so a
+  hosted-runner fallback lane is possible without touching the Windows-specific
+  steps. Costs money, so it stays the owner's call.
+- **`vercel.json` sets `Content-Security-Policy-Report-Only` with no
+  `report-uri`/`report-to`.** Report-Only does not enforce, and with no
+  endpoint the violations go nowhere — the header costs bytes and buys nothing,
+  while reading to a future session as protection that is not happening (the
+  same shape as `OmegaGuardian`'s badge, CLAUDE.md §8.2).
+
+### A gate against rot, not just against today
+
+`live-schema.json` is what `schema-dictionary.py` checks every client column
+name against — the only defence against §8.1's most expensive recurring bug
+class — and it is a hand-captured dated file that nothing ever forced anyone to
+refresh. The audit now fails when `_captured` is missing, unparseable, or more
+than 90 days old (currently 2026-08-29, 2 days). 90 is deliberately generous:
+a gate that cries every fortnight gets ignored, which is worse than no gate.
+
+### Corrected while investigating
+
+A first pass concluded that `workflow-contract.yml` and `runner-probe.yml`
+would fail the registry check because they run `ci-local.sh` without
+`fetch-depth: 0`. **Wrong** — neither executes it. `workflow-contract.yml` only
+asserts the file contains a `--help` string, and `runner-probe.yml` names it in
+a comment explaining why it deliberately does *not* run it (no bash on that
+runner). The shallow-clone dependency is confined to `ci.yml`, which correctly
+sets `fetch-depth: 0`. Recorded because the grep looked conclusive and was not
+— CLAUDE.md §8.4's "a repo-wide grep is a candidate generator, not a verdict".
+
+**Scope this audit does NOT cover, stated plainly:** it reads the repository.
+It never reached Stripe, esm.sh, npm or the live database, so it proves a pin
+is *present*, never that it is *right*. A pinned version that is later
+unpublished, or a `Stripe-Version` string that is wrong for the account, both
+pass this gate.

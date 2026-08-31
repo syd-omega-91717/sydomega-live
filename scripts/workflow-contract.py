@@ -9,12 +9,42 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
+# What each gate must actually invoke.
+#
+# These are matched as REGEX against the workflow text, not as literal shell
+# strings. They used to be literals like "python scripts/audit.py", which meant
+# the contract asserted a *shell spelling* rather than the thing that matters --
+# that the gate runs that script. The moment the workflows moved off Windows
+# batch to `shell: python` (so they can run on a hosted runner as well as the
+# registered one), every literal broke at once even though every gate still ran
+# exactly the same checks. A contract that fails when the invocation style
+# changes, while the behaviour does not, is testing the wrong thing.
+#
+# Anchored on the script path and its arguments, which is what actually has to
+# be true, and is stable across cmd / bash / pwsh / python invocation.
 REQUIRED = {
-    "ci.yml": ["actions/checkout@v4", "actions/setup-node@v4", "actions/setup-python@v5", "python scripts/audit.py", "python -m unittest discover -s scripts/tests -v", "python scripts/omega-registry.py --check"],
-    "production-contract.yml": ["actions/checkout@v4", "actions/setup-python@v5", "python scripts/production-contract.py"],
-    "capability-evidence.yml": ["actions/checkout@v4", "actions/setup-python@v5", "python scripts/capability-audit.py --check", "python scripts/capability-audit.py", "python -m json.tool docs/capabilities/registry.json"],
+    "ci.yml": [
+        r"actions/checkout@v4",
+        r"actions/setup-node@v4",
+        r"actions/setup-python@v5",
+        r"scripts/audit\.py",
+        r"unittest['\"],\s*['\"]discover['\"],\s*['\"]-s['\"],\s*['\"]scripts/tests|unittest discover -s scripts/tests",
+        r"scripts/omega-registry\.py['\"]?,?\s*['\"]?--check",
+    ],
+    "production-contract.yml": [
+        r"actions/checkout@v4",
+        r"actions/setup-python@v5",
+        r"scripts/production-contract\.py",
+    ],
+    "capability-evidence.yml": [
+        r"actions/checkout@v4",
+        r"actions/setup-python@v5",
+        r"scripts/capability-audit\.py['\"]?,?\s*['\"]?--check",
+        r"scripts/capability-audit\.py",
+        r"json\.tool['\"],\s*['\"]docs/capabilities/registry\.json|json\.tool docs/capabilities/registry\.json",
+    ],
 }
-REQUIRED_PATTERNS = {"production-contract.yml": [(r"node\s+--check\b", "node --check over root .js files")]}
+REQUIRED_PATTERNS = {"production-contract.yml": [(r"node['\"]?,?\s*['\"]?--check\b", "node --check over root .js files")]}
 ERRORS: list[str] = []
 
 for name, required in REQUIRED.items():
@@ -62,7 +92,7 @@ for name, required in REQUIRED.items():
     if not re.search(r"\b(push|pull_request):", text):
         ERRORS.append(f"{name}: missing automatic push/pull_request trigger")
     for needle in required:
-        if needle not in text:
+        if not re.search(needle, text):
             ERRORS.append(f"{name}: missing required contract: {needle}")
     for pattern, description in REQUIRED_PATTERNS.get(name, []):
         if not re.search(pattern, text):

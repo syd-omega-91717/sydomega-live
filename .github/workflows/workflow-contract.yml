@@ -16,7 +16,7 @@ concurrency:
 
 defaults:
   run:
-    shell: cmd
+    shell: pwsh
 
 jobs:
   workflow-contract:
@@ -24,17 +24,16 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          if "%RUNNER_OS%"=="" exit /b 1
-          if "%RUNNER_ARCH%"=="" exit /b 1
-          echo runner=%RUNNER_NAME%
-          echo runner_os=%RUNNER_OS%
-          echo runner_arch=%RUNNER_ARCH%
-          echo run=%GITHUB_RUN_ID%
-          echo attempt=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          if (-not $env:RUNNER_OS)   { exit 1 }
+          if (-not $env:RUNNER_ARCH) { exit 1 }
+          "runner=$env:RUNNER_NAME"
+          "runner_os=$env:RUNNER_OS"
+          "runner_arch=$env:RUNNER_ARCH"
+          "run=$env:GITHUB_RUN_ID"
+          "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -42,26 +41,24 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate workflow contracts
-        shell: cmd
+        shell: pwsh
         run: python scripts/workflow-contract.py
       - name: Validate architecture contract
-        shell: cmd
+        shell: pwsh
         run: python scripts/architecture-contract.py
       - name: Validate implementation readiness
-        shell: cmd
+        shell: pwsh
         run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if not exist scripts\ci-local.sh exit /b 1
-          findstr /C:"--help" scripts\ci-local.sh >nul || exit /b 1
-          echo ci-local.sh help contract verified
+          if (-not (Test-Path 'scripts/ci-local.sh')) { exit 1 }
+          if (-not (Select-String -Path 'scripts/ci-local.sh' -SimpleMatch '--help' -Quiet)) { exit 1 }
+          'ci-local.sh help contract verified'
       - name: Execution marker
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          echo WORKFLOW_CONTRACT_EXECUTED=true
-          echo WORKFLOW_CONTRACT_RUN_ID=%GITHUB_RUN_ID%
-          echo WORKFLOW_CONTRACT_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          "WORKFLOW_CONTRACT_EXECUTED=true"
+          "WORKFLOW_CONTRACT_RUN_ID=$env:GITHUB_RUN_ID"
+          "WORKFLOW_CONTRACT_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

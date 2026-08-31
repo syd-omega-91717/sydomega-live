@@ -716,3 +716,64 @@ the next `NNNN` in sequence — add the matching local file immediately in the s
 followup), named with the exact version `list_migrations` reports, or the same CI check will fail
 again. This is now the established pattern for anything applied live rather than pre-numbered into
 this directory ahead of time.
+
+## Full 151-file sequence replayed on a blank PostgreSQL 16 — 2026-08-30
+
+The entry above records a 94-file run and warns that everything after `0094` was never part of
+it. The whole directory has now been replayed end to end, so that gap is closed with a number
+rather than left as a known-unknown.
+
+Method: `initdb` a scratch PostgreSQL 16.13, create the minimum Supabase substrate a bare
+Postgres lacks (roles `anon`/`authenticated`/`service_role`, schemas `auth`/`storage`/
+`extensions`, `auth.users`, `auth.uid()`/`auth.role()`/`auth.email()`, `pgcrypto`,
+`uuid-ossp`), then apply every file in `ls | sort` order with `-v ON_ERROR_STOP=1`.
+
+**Result: 136 of 151 applied, 15 failed.** The 15 are listed below with the object each one
+could not find.
+
+**None of the 15 is a defect in this directory.** Every missing object exists on the live
+project — verified in one query with `to_regclass` and `pg_proc`/`pg_type` lookups:
+`storage.buckets`, `storage.objects`, `supabase_migrations.schema_migrations`,
+`public.omega_knowledge_sources`, `public.advertisements`, `public.pending_access_requests`,
+`public.ai_memory`, `public.council_deliberations`, the `vector` type, `public.notify_member()`,
+`public.erase_ai_memory()`, and `auth.users.email_confirmed_at` are all present there. They are
+absent only from a bare Postgres, because Supabase manages some of them and the flat
+`supabase/*.sql` bag creates the rest.
+
+Independently: 13 of the 15 are already recorded in the live
+`supabase_migrations.schema_migrations`, which means they applied successfully against the real
+schema. Only `0096_omega_anon_execute_hardening.sql` and `0103_trusted_source_registry.sql` were
+never applied live, and both of their dependencies (`notify_member()`,
+`omega_knowledge_sources`) exist there.
+
+| migration | missing on blank PG | on production |
+|---|---|---|
+| `0022_storage.sql` | `storage.buckets` | present |
+| `0059_omega_ai_memory.sql` | type `vector` | present |
+| `0081_signup_pipeline.sql` | `auth.users.email_confirmed_at` | present |
+| `0096_omega_anon_execute_hardening.sql` | `notify_member()` | present |
+| `0103_trusted_source_registry.sql` | `omega_knowledge_sources` | present |
+| `20260816231218_omega_rls_scoping_fix.sql` | `storage.objects` | present |
+| `20260817233805_omega_advertisements_insert_fix.sql` | `advertisements` | present |
+| `20260817234540_revoke_pending_access_requests_...sql` | `pending_access_requests` | present |
+| `20260818000551_revoke_anon_execute_...sql` | `erase_ai_memory()` | present |
+| `20260818063011_merge_second_pass_...sql` | `ai_memory` | present |
+| `20260818072124_remove_throwaway_test_migration_records.sql` | `supabase_migrations.schema_migrations` | present |
+| `20260818080246_rls_pass6_...sql` | `ai_memory` | present |
+| `20260818082309_add_missing_fk_indexes_real_schema.sql` | column `lesson_id` | applied live |
+| `20260818141500_omega_graphify_schema.sql` | column `degree` | applied live |
+| `20260819071913_optimize_auth_rls_initplan_seven_policies.sql` | `council_deliberations` | present |
+
+**What this replay was actually for.** The Supabase Preview check had been failing in a chain,
+each fix revealing the next: *remote versions not found locally* → *duplicate primary keys
+(SQLSTATE 23505, four colliding prefixes)* → *`relation "public.migrations_log" does not exist`*.
+Rather than keep discovering one per merge, this replay enumerates everything at once.
+
+It found exactly one object absent from **both** this repo and production: `public.migrations_log`,
+which `20260819082319_schema_sync_point.sql` inserted into unguarded. That is the one real
+defect, and it is fixed. Every other failure above is a bare-Postgres artifact.
+
+**So the standing caveat is now narrower, not gone.** This sequence still must not be run against
+a blank database expecting a working schema — 15 files need substrate the flat bag provides. What
+is newly established is that it contains no unfixed ordering or dependency defect of its own, and
+that the Preview database (which carries the production schema) has everything the 15 need.

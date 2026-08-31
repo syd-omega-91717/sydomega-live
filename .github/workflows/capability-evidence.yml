@@ -16,7 +16,7 @@ concurrency:
 
 defaults:
   run:
-    shell: cmd
+    shell: pwsh
 
 jobs:
   evidence:
@@ -24,17 +24,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          if "%RUNNER_OS%"=="" exit /b 1
-          if "%RUNNER_ARCH%"=="" exit /b 1
-          echo runner=%RUNNER_NAME%
-          echo runner_os=%RUNNER_OS%
-          echo runner_arch=%RUNNER_ARCH%
-          echo run=%GITHUB_RUN_ID%
-          echo attempt=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          if (-not $env:RUNNER_OS)   { exit 1 }
+          if (-not $env:RUNNER_ARCH) { exit 1 }
+          "runner=$env:RUNNER_NAME"
+          "runner_os=$env:RUNNER_OS"
+          "runner_arch=$env:RUNNER_ARCH"
+          "run=$env:GITHUB_RUN_ID"
+          "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -46,25 +45,24 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Validate capability registry
-        shell: cmd
+        shell: pwsh
         run: python scripts/capability-audit.py --check
       - name: Source runtime audit
-        shell: cmd
+        shell: pwsh
         run: python scripts/capability-audit.py
       - name: Validate registry JSON
-        shell: cmd
+        shell: pwsh
         run: python -m json.tool docs/capabilities/registry.json
       - name: Validate architecture runtime
-        shell: cmd
+        shell: pwsh
         run: python scripts/architecture-readiness.py
       - name: Runtime verification (headless render of capability entrypoints)
-        shell: cmd
+        shell: pwsh
         run: node scripts/verify-runtime.js
       - name: Execution marker
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          echo CAPABILITY_EVIDENCE_EXECUTED=true
-          echo CAPABILITY_EVIDENCE_RUN_ID=%GITHUB_RUN_ID%
-          echo CAPABILITY_EVIDENCE_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          "CAPABILITY_EVIDENCE_EXECUTED=true"
+          "CAPABILITY_EVIDENCE_RUN_ID=$env:GITHUB_RUN_ID"
+          "CAPABILITY_EVIDENCE_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

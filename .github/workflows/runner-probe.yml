@@ -1,31 +1,27 @@
 # Runner canary for issue #157.
 #
-# Proves the registered self-hosted runner actually executes work: a non-zero
-# runner id, real steps, and a retrievable log -- #157's acceptance criterion.
+# Proves the registered runner actually executes work: a non-zero runner id,
+# real steps, and a retrievable log -- #157's acceptance criterion.
 #
-# DELIBERATELY DOES NOT INVOKE BASH. Every one of this workflow's first 29 runs
-# failed, and not one was a code failure. On this Windows runner `bash`
-# resolves to the WSL shim at C:\Windows\System32\bash.exe with no distro
-# installed, so it dies before reading any script:
+# SHELL HISTORY, so nobody re-litigates it. Runs 1-29 of this workflow all
+# failed, and not one was a code failure. On the registered Windows runner
+# `bash` resolves to the WSL shim at C:\Windows\System32\bash.exe with no
+# distro installed, so it died before reading any script:
 #
 #   WSL (10 - Relay) ERROR: CreateProcessCommon:800:
 #   execvpe(/bin/bash) failed: No such file or directory
 #
-# Two fixes were tried and both failed on the same line: `shell: cmd` then
-# `bash ...`, and `shell: bash` -- which Actions ALSO resolved to the shim
-# ("shell: C:\Windows\system32\bash.EXE --noprofile --norc -e -o pipefail {0}"
-# is in run 27's log), so its documented Git-for-Windows behaviour does not
-# hold here.
+# Three spellings failed: `shell: cmd` + `bash ...`; `shell: bash`, which
+# Actions also resolved to the shim (run 27's log reads
+# "shell: C:\Windows\system32\bash.EXE --noprofile --norc -e -o pipefail {0}");
+# and an absolute Git-bash path, which the runner refused to parse
+# ("Second path fragment must not be a drive or UNC name").
 #
-# The third fix is to stop needing bash. This probe never had to run
-# ci-local.sh: ci.yml already runs all 18 blocking checks on this exact runner
-# and passes, so duplicating them here proved nothing and cost a second slot on
-# a single-runner queue. `shell: cmd` invoking python/node directly is the form
-# ci.yml uses and is proven to work here.
-#
-# runner-diagnostics.yml was deleted alongside this: it ran the same
-# ci-local.sh on the same runner on an HOURLY cron, so it produced a guaranteed
-# red run every hour and competed for the one runner. It duplicated this file.
+# A capability probe (run 33342384308) then MEASURED what this runner has,
+# rather than guessing again. All four worked: pwsh, powershell, python, and
+# the default shell. So `pwsh` is used here and across the gate workflows --
+# it exists on this Windows runner AND is preinstalled on GitHub's Linux
+# runners, which is what makes those workflows runner-agnostic.
 name: Runner Probe
 
 on:
@@ -36,22 +32,23 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   self-hosted:
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 5
     steps:
       - name: Prove the runner is real
-        shell: cmd
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          if /I not "%RUNNER_OS%"=="Windows" exit /b 1
-          if "%RUNNER_ARCH%"=="" exit /b 1
-          echo runner_name=%RUNNER_NAME%
-          echo runner_os=%RUNNER_OS% arch=%RUNNER_ARCH%
-          echo run_id=%GITHUB_RUN_ID% attempt=%GITHUB_RUN_ATTEMPT%
-          echo SELF_HOSTED_RUNNER_OK=true
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          if (-not $env:RUNNER_ARCH) { exit 1 }
+          "runner_name=$env:RUNNER_NAME"
+          "runner_os=$env:RUNNER_OS arch=$env:RUNNER_ARCH"
+          "run_id=$env:GITHUB_RUN_ID attempt=$env:GITHUB_RUN_ATTEMPT"
+          "SELF_HOSTED_RUNNER_OK=true"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -62,19 +59,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      # A real repo check, run the way ci.yml runs its checks -- python
-      # directly under cmd, no shell indirection. Cheap and deterministic.
+      # A real repo check, run the way the gates run theirs. Deliberately not
+      # ci-local.sh: that needs bash, which does not work here, and ci.yml
+      # already runs all 18 blocking checks on this same runner.
       - name: Toolchain and a real repo check execute on this runner
-        shell: cmd
         run: |
           python --version
           node --version
           python scripts/workflow-contract.py
       - name: Execution marker
-        shell: cmd
         run: |
-          @echo off
-          if "%RUNNER_NAME%"=="" exit /b 1
-          echo RUNNER_PROBE_EXECUTED=true
-          echo RUNNER_PROBE_RUN_ID=%GITHUB_RUN_ID%
-          echo RUNNER_PROBE_RUN_ATTEMPT=%GITHUB_RUN_ATTEMPT%
+          if (-not $env:RUNNER_NAME) { exit 1 }
+          "RUNNER_PROBE_EXECUTED=true"
+          "RUNNER_PROBE_RUN_ID=$env:GITHUB_RUN_ID"
+          "RUNNER_PROBE_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

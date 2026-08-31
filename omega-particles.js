@@ -72,7 +72,7 @@ function injectCanvas(elem){
 function launch(elemName){
   var cv=injectCanvas(elemName);
   if(!cv) return;
-  import('https://esm.sh/tsparticles-slim@2').then(function(mod){
+  import('https://esm.sh/tsparticles-slim@2.12.0').then(function(mod){
     var tsP=mod.tsParticles||mod.default;
     if(!tsP||typeof tsP.load!=='function') return;
     tsP.load({id:'omega-particles-canvas',element:cv,options:buildConfig(elemName)}).catch(function(){});

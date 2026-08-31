@@ -559,19 +559,21 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
-- **Three time-bombs are open on purpose, each needing an owner decision**
-  (`scripts/resilience-audit.py`, blocking in CI; detail in `FIXES_LOG.md`).
-  (a) **Stripe's API version is unpinned** — `checkout:57` and
-  `stripe-webhook:238` send no `Stripe-Version`, so Stripe applies the
-  *account* default, which moves outside this repo and changes payload shapes
-  under unchanged payment code. Highest severity here, and deliberately not
-  auto-fixed: the right value is only readable from the Stripe dashboard, and
-  a guessed pin breaks checkout immediately rather than eventually. HIGH-RISK
-  per §10 — run `grill-me-codex` first. (b) **All 5 workflows target one
-  machine** (`[self-hosted, Windows, X64]`), so CI failure is total, not
-  partial; every `scripts/*.py` gate is platform-independent, so a hosted
-  fallback lane is possible. (c) **`vercel.json`'s CSP is Report-Only with no
-  reporting endpoint**, so it neither enforces nor collects anything.
+- **Third-party pins are now gated** (`scripts/resilience-audit.py`, blocking;
+  detail in `FIXES_LOG.md`). It caught 9 CDN libraries floating on every page
+  view — `omega-oss.js` is injected by `bg.js` and every entry floated, one at
+  `@latest`. **A grep cannot find these: they are injected at runtime, not
+  written as markup** — they surfaced only from CSP violation events in a real
+  browser. Versions come from `registry.npmjs.org` (reachable here; the CDNs
+  themselves are 403), never from memory. `vercel.json`'s CSP is now **enforced**
+  and was verified to produce 0 violations across every page; as written before
+  it would have broken the webfonts and four features. Stripe is handled in code
+  rather than by pinning: `periodEndSeconds()` reads both the pre-basil and
+  basil subscription shapes, because two of the three read sites take the
+  *inbound webhook* payload, whose version is a dashboard property no repo
+  change can pin. **The one item still open is the single physical CI runner** —
+  and do not "fix" it with a hosted lane: `docs/CI_RUNNER_RECOVERY.md` records
+  that returning `runner_id: 0` / `steps: []`, green without executing.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
   in the job log). Cloud minutes still look unavailable — this repo is private
   on a personal account — so queued jobs drain slowly, one at a time, and a
@@ -621,7 +623,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **116** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **119** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -633,7 +635,7 @@ entries (which were accurate when written):
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
 | `./scripts/ci-local.sh` | **19** blocking checks, all passing |
-| `python3 scripts/resilience-audit.py` | 0 findings; 3 warnings (Stripe version, CI runner, CSP) |
+| `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
 

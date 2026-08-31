@@ -4280,3 +4280,109 @@ It never reached Stripe, esm.sh, npm or the live database, so it proves a pin
 is *present*, never that it is *right*. A pinned version that is later
 unpublished, or a `Stripe-Version` string that is wrong for the account, both
 pass this gate.
+
+## Nine floating CDN dependencies on every page view, and a CSP that would have broken four features (2026-08-31)
+
+Follow-up to the time-bomb entry above, after being told to stop handing
+decisions back and make them. Three were outstanding: the Stripe API version,
+the single CI runner, and the inert CSP. Working them turned up a larger
+problem than any of the three.
+
+### The CSP was never validated against the app it protects
+
+`vercel.json` shipped a `Content-Security-Policy-Report-Only` header. Enforcing
+it as written would have broken the platform, which is why it had to be tested
+rather than promoted:
+
+- `style-src 'self' 'unsafe-inline'` did **not** include `fonts.googleapis.com`,
+  and `bg.js:123` injects the Google Fonts stylesheet. Enforcing would have
+  killed the brand webfonts on all 178 pages — the same fonts §4.1 records as
+  only recently working at all.
+- `script-src 'self' 'unsafe-inline'` did **not** include `esm.sh`,
+  `cdn.jsdelivr.net` or `unpkg.com`, all of which the app loads at runtime.
+
+Verified by serving the repo with the policy applied and reading real
+`securitypolicyviolation` events in headless Chromium — 5 distinct violations
+across 7 of 8 sample pages. The corrected policy produces **0**, then
+re-verified across every `.html` page in the repo.
+
+### The finding the grep could not have made: 9 floating CDN dependencies
+
+The violation events named scripts no source scan had reported.
+`grep -rhoE '(src|href)="https://...'` over every page and module returns five
+social links and nothing else, because **every one of these is injected at
+runtime by JavaScript**, never written as markup. CLAUDE.md §8.4 says a
+repo-wide grep is a candidate generator, not a verdict; here it was not even a
+candidate generator.
+
+`omega-oss.js` — injected by `bg.js` on every page (`bg.js:1712`) — is a
+registry of third-party CDN libraries, and every entry floated:
+
+| file | was | now |
+|---|---|---|
+| `omega-oss.js` | `unpkg.com/lucide@latest` | `lucide@1.37.0` |
+| `omega-oss.js` | `chart.js@4` | `4.5.1` |
+| `omega-oss.js` | `fuse.js@7` | `7.5.0` |
+| `omega-oss.js` | `dayjs@1` (×2, incl. plugin) | `1.11.23` |
+| `omega-oss.js` | `marked@12` | `12.0.2` |
+| `omega-oss.js` | `highlightjs/cdn-release@11` | `11.12.0` |
+| `omega-oss.js` | `@popperjs/core@2` | `2.11.8` |
+| `omega-oss.js` | `tippy.js@6` | `6.3.7` |
+| `omega-tooltip.js` | `tippy.js@6` (second copy) | `6.3.7` |
+| `omega-tour.js` | `shepherd.js@13` (js + css) | `13.0.3` |
+| `omega-particles.js` | `tsparticles-slim@2` | `2.12.0` |
+| `omega-qr.js` | `qrcode-generator@1` | `1.5.2` |
+| `omega-passport.js` | `esm.sh/jspdf@2` | `2.5.2` |
+| `omega-music.js` | `esm.sh/tone@14` | `14.9.17` |
+| `graph.html` | `esm.sh/d3@7` | `7.9.0` |
+
+`lucide@latest` is the worst of them: whatever the maintainer published minutes
+ago, executed on every page view that renders an icon.
+
+**Every version was resolved from `registry.npmjs.org`, not from memory.** The
+CDNs themselves are 403 at this environment's egress proxy, but the npm
+registry answers 200 — so each pin is the highest release *within the range the
+code already requested*, which makes pinning behaviour-preserving today and
+frozen from here. A guessed version that does not exist would break the feature
+immediately, which is worse than the floating pin it replaced.
+
+This is the same lesson `vendor/supabase-js.js` was created for. That fix
+removed one CDN from the critical path and left fifteen.
+
+### Stripe: solved from the code, not the dashboard
+
+The previous entry deferred this for want of the account's default API version.
+That was the wrong framing. Reading what the code actually parses settles it:
+`stripe-webhook` reads `current_period_end` at the **top level** of the
+Subscription object in three places (`:145`, `:179`, `:251`) — a field Stripe
+**removed** in `2025-03-31.basil` and moved onto subscription items. So the
+account default silently migrating is not a hypothetical: it makes `periodEnd`
+null and subscription expiry stops being recorded, silently, in payment code
+(§8.1 class 1).
+
+Two of those three sites read the **inbound webhook payload**, whose version is
+a property of the endpoint in the Stripe dashboard and cannot be pinned from
+code at all. So pinning alone could never have fixed it. Fixed properly with
+`periodEndSeconds()`, which reads the pre-basil top-level field **or** the
+basil per-item field — correct under either version, needing no dashboard
+access. `Stripe-Version: 2025-02-24.acacia` (last pre-basil) is additionally
+pinned on both outbound calls for determinism, and `plan.nickname` now falls
+back to `price.nickname`, `plan` being the legacy of that pair.
+
+### CI runner: the recommendation was wrong, and is now corrected
+
+The previous entry advised adding a GitHub-hosted fallback lane. That advice
+was wrong and has been reversed in the audit's own output.
+`docs/CI_RUNNER_RECOVERY.md` records why the repo moved *off* hosted runners:
+the hosted lane returned `runner_id: 0` with `steps: []` — reporting success
+without executing anything. A fallback lane that lies is worse than no lane.
+The real mitigations, now named by the gate: a second self-hosted runner on the
+same labels, and `./scripts/ci-local.sh` via `.githooks/pre-push`, which does
+not depend on GitHub at all.
+
+### Gate extended
+
+`scripts/resilience-audit.py` now also scans root `*.js`/`*.html` for CDN URLs
+without a full `major.minor.patch`, flagging `@latest` separately as
+UNVERSIONED. 16 regression tests (up from 13). Warnings are down from 3 to 1;
+the survivor is the single physical runner, which no code change can fix.

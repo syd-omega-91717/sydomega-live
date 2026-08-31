@@ -110,6 +110,42 @@ IMPORT_RE = re.compile(r'from\s+["\'](https://[^"\']+)["\']')
 FULL_PIN_RE = re.compile(r"@(\d+\.\d+\.\d+)")
 
 
+# Client-side CDN dependencies. These matter MORE than the Edge Function ones,
+# not less: omega-oss.js is injected by bg.js on every page, so its registry is
+# on the critical path of every page view. A repo-wide grep for `src="https://`
+# finds none of them, because every one is injected at runtime by JS -- they
+# were found by rendering the pages in a real browser and reading the CSP
+# violation events. CLAUDE.md §8.4: a grep is a candidate generator, not a
+# verdict.
+CDN_HOSTS = ("cdn.jsdelivr.net", "unpkg.com", "esm.sh")
+CDN_URL_RE = re.compile(r"https://(?:cdn\.jsdelivr\.net|unpkg\.com|esm\.sh)/[^\s'\"`)]+")
+# Skip the tooling that deliberately names these hosts (stub routes, harnesses).
+CLIENT_SKIP_DIRS = ("scripts", "vendor", ".claude", "node_modules", "supabase")
+
+
+def check_client_cdn_pins():
+    for f in sorted(list(ROOT.glob("*.js")) + list(ROOT.glob("*.html"))):
+        text = f.read_text(encoding="utf-8", errors="ignore")
+        for n, line in enumerate(text.splitlines(), 1):
+            for url in CDN_URL_RE.findall(line):
+                # A full major.minor.patch anywhere in the URL is a real pin.
+                if FULL_PIN_RE.search(url):
+                    continue
+                floating = "@latest" in url
+                add(findings, "%s:%d" % (rel(f), n),
+                    "%s CDN dependency: %s"
+                    % ("UNVERSIONED" if floating else "floating", url),
+                    "Resolved by the CDN at request time, on the critical path "
+                    "of a page view. '@latest' takes whatever was published "
+                    "minutes ago; a floating major takes any release in that "
+                    "line. Either can change the platform with no commit here.",
+                    "Pin major.minor.patch. Resolve the real current version "
+                    "from registry.npmjs.org (reachable from this environment "
+                    "even when the CDNs themselves are not) rather than "
+                    "guessing -- a version that does not exist breaks the "
+                    "feature immediately.")
+
+
 def check_edge_function_pins():
     fns = ROOT / "supabase" / "functions"
     if not fns.is_dir():
@@ -250,10 +286,16 @@ def check_ci_runner_spof():
                 "That is one physical machine. While it is offline every gate "
                 "is unrunnable, jobs queue indefinitely, and nothing can be "
                 "validated or merged -- CI failure becomes total, not partial.",
-                "Add a fallback lane so the gates can still run without that "
-                "box: either a hosted-runner job for the checks that need no "
-                "Windows (all of scripts/*.py are platform-independent), or a "
-                "second self-hosted runner sharing the label set.")
+                "Do NOT 'fix' this by adding a GitHub-hosted lane. That was "
+                "tried and deliberately reverted: docs/CI_RUNNER_RECOVERY.md "
+                "records the hosted lane returning `runner_id: 0` with "
+                "`steps: []` -- reporting success without executing anything, "
+                "which is worse than no lane at all. The real mitigations are "
+                "a SECOND self-hosted runner sharing the label set, and the "
+                "local gate that does not depend on GitHub: ./scripts/ci-local.sh, "
+                "run automatically by .githooks/pre-push (enable per clone with "
+                "`git config core.hooksPath .githooks`). Recovery for the "
+                "existing box: scripts/bootstrap-github-runner.ps1.")
 
 
 # ---------------------------------------------------------------------------
@@ -290,6 +332,7 @@ def main():
     print("=" * 70)
 
     check_edge_function_pins()
+    check_client_cdn_pins()
     check_stripe_version_pin()
     check_schema_snapshot_age()
     check_ci_runner_spof()

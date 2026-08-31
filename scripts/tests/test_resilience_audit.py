@@ -98,6 +98,31 @@ class ResilienceAuditTest(unittest.TestCase):
         self.assertEqual(r.returncode, 1, r.stdout)
         self.assertIn("floating dependency pin", r.stdout)
 
+    def test_client_cdn_floating_major_blocks(self):
+        """omega-oss.js is injected by bg.js on every page, so its CDN registry
+        is on the critical path of every page view. A repo-wide grep finds none
+        of these — they are injected at runtime — so this detector exists
+        because a browser render found them, not a source scan."""
+        write(self.fx.path("omega-oss.js"),
+              "var LIBS={fuse:{url:'https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js'}};\n")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("floating CDN dependency", r.stdout)
+
+    def test_client_cdn_latest_tag_blocks(self):
+        write(self.fx.path("omega-oss.js"),
+              "var u='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';\n")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("UNVERSIONED CDN dependency", r.stdout)
+
+    def test_client_cdn_fully_pinned_passes(self):
+        write(self.fx.path("omega-oss.js"),
+              "var u='https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js';\n"
+              "var v='https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js';\n")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout)
+
     def test_deno_land_std_import_blocks(self):
         write(self.fx.path("supabase", "functions", "bad", "index.ts"),
               'import { serve } from "https://deno.land/std@0.168.0/http/server.ts";\n')

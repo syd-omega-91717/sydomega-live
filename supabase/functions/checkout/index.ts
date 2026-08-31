@@ -56,7 +56,15 @@ Deno.serve(async (req) => {
 
     const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${sk}`, "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        Authorization: `Bearer ${sk}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        // Pinned deliberately: without it Stripe applies the ACCOUNT default
+        // version, which moves outside this repo and can change the response
+        // shape under code that never changed. This is the last version
+        // before basil's subscription reshape, matching what this file reads.
+        "Stripe-Version": "2025-02-24.acacia",
+      },
       body: form,
     });
     const session = await r.json();

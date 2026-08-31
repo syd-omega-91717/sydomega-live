@@ -7,22 +7,22 @@
    Libraries integrated (all MIT/Apache licensed, CDN-loaded on demand):
    
    A. LUCIDE ICONS      — MIT. 1,400+ clean SVG icons. Replaces emoji/unicode.
-      CDN: https://unpkg.com/lucide@latest/dist/umd/lucide.min.js
+      CDN: https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js
       
    B. CHART.JS 4.x      — MIT. Lightweight chart library. Auth/lattice graphs.
-      CDN: https://cdn.jsdelivr.net/npm/chart.js@4
+      CDN: https://cdn.jsdelivr.net/npm/chart.js@4.5.1
       
    C. FUSE.JS 7.x       — Apache 2.0. Fuzzy search. Enhances omega-search.js.
-      CDN: https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js
+      CDN: https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js
       
    D. DAYJS             — MIT. Tiny date/time library. Formats timestamps.
-      CDN: https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js
+      CDN: https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
       
    E. MARKED.JS         — MIT. Markdown renderer for chatbot/agent responses.
-      CDN: https://cdn.jsdelivr.net/npm/marked@12/marked.min.js
+      CDN: https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js
       
    F. HIGHLIGHT.JS      — BSD. Code syntax highlighting. For lab/research pages.
-      CDN: https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js
+      CDN: https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js
    
    Design: lazy-load each library only when first needed.
    Never block page load. Always provide fallbacks.
@@ -55,17 +55,17 @@
 
   /* ── LIBRARY REGISTRY ─────────────────────────────────────────── */
   var LIBS = {
-    lucide:    {url:'https://unpkg.com/lucide@latest/dist/umd/lucide.min.js',global:'lucide'},
-    chartjs:   {url:'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js',global:'Chart'},
-    fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js',global:'Fuse'},
-    dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js',global:'dayjs'},
-    dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js',global:'dayjs'},
-    marked:    {url:'https://cdn.jsdelivr.net/npm/marked@12/marked.min.js',global:'marked'},
-    hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js',global:'hljs'},
+    lucide:    {url:'https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js',global:'lucide'},
+    chartjs:   {url:'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js',global:'Chart'},
+    fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js',global:'Fuse'},
+    dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js',global:'dayjs'},
+    dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js',global:'dayjs'},
+    marked:    {url:'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js',global:'marked'},
+    hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js',global:'hljs'},
     /* Tippy.js — MIT. Lightweight tooltip/popover library (8KB gzip).
        Requires @popperjs/core. Lazy-loaded pair: popper first, then tippy. */
-    popper:    {url:'https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js',global:'Popper'},
-    tippy:     {url:'https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js',global:'tippy'},
+    popper:    {url:'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js',global:'Popper'},
+    tippy:     {url:'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js',global:'tippy'},
   };
 
   /* ── PUBLIC API ───────────────────────────────────────────────── */
@@ -227,7 +227,7 @@
   OSS.require('dayjs', function(){
     /* CDN plugin file sets window.dayjs_plugin_relativeTime */
     var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js';
+    s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js';
     s.async = true;
     s.onload = function(){
       try{

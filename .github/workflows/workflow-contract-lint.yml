@@ -1,0 +1,30 @@
+name: Workflow Contract Lint
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-contract-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Workflow safety lint
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify Python
+        shell: pwsh
+        run: python --version
+      - name: Lint workflows
+        shell: pwsh
+        run: python scripts/workflow-contract-lint.py

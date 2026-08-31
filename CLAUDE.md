@@ -365,7 +365,11 @@ treat it as an information-architecture decision.
 4. Broken local asset reference check (every `src=`/`href=` in every page
    must resolve to a file that exists).
 5. `service_role`/`SUPABASE_SERVICE` scan across client code (blocking).
-6. `deno check` on every Edge Function (non-blocking).
+6. **Nothing type- or syntax-checks the Edge Functions.** This line used to
+   claim `deno check` ran here; a grep of `.github/workflows/` and
+   `ci-local.sh` for `deno` returns **zero** hits. Their only automated
+   coverage is `resilience-audit.py`'s import-pin rules. Parse them with
+   `npx typescript@5` in a scratchpad before deploying (see `FIXES_LOG.md`).
 7. `sw.js` precache list vs. actual files (blocking).
 8. `manifest.json` icon paths vs. actual files (blocking).
 9. `python3 scripts/i18n-contract.py` (blocking) — every `i18n/*.json` parses,
@@ -559,21 +563,19 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
-- **Third-party pins are now gated** (`scripts/resilience-audit.py`, blocking;
-  detail in `FIXES_LOG.md`). It caught 9 CDN libraries floating on every page
-  view — `omega-oss.js` is injected by `bg.js` and every entry floated, one at
-  `@latest`. **A grep cannot find these: they are injected at runtime, not
-  written as markup** — they surfaced only from CSP violation events in a real
-  browser. Versions come from `registry.npmjs.org` (reachable here; the CDNs
-  themselves are 403), never from memory. `vercel.json`'s CSP is now **enforced**
-  and was verified to produce 0 violations across every page; as written before
-  it would have broken the webfonts and four features. Stripe is handled in code
-  rather than by pinning: `periodEndSeconds()` reads both the pre-basil and
-  basil subscription shapes, because two of the three read sites take the
-  *inbound webhook* payload, whose version is a dashboard property no repo
-  change can pin. **The one item still open is the single physical CI runner** —
-  and do not "fix" it with a hosted lane: `docs/CI_RUNNER_RECOVERY.md` records
-  that returning `runner_id: 0` / `steps: []`, green without executing.
+- **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
+  detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
+  **A grep cannot find these — they are injected at runtime, not written as
+  markup**; they surfaced only from CSP violation events in a real browser.
+  Resolve versions from `registry.npmjs.org` (reachable; the CDNs are 403),
+  never memory. `vercel.json`'s CSP is now **enforced**, verified at 0
+  violations across all 178 pages; as written before it would have killed the
+  webfonts and four features. Stripe is fixed in code, not by pinning:
+  `periodEndSeconds()` reads both pre-basil and basil shapes, because two of
+  three read sites take the *inbound webhook* payload, whose version is a
+  dashboard property no repo change can pin. **Still open: the single physical
+  CI runner** — do not "fix" it with a hosted lane, `docs/CI_RUNNER_RECOVERY.md`
+  records that returning `runner_id: 0` / `steps: []`, green without executing.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
   in the job log). Cloud minutes still look unavailable — this repo is private
   on a personal account — so queued jobs drain slowly, one at a time, and a

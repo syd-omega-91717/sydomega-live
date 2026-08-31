@@ -4386,3 +4386,38 @@ not depend on GitHub at all.
 without a full `major.minor.patch`, flagging `@latest` separately as
 UNVERSIONED. 16 regression tests (up from 13). Warnings are down from 3 to 1;
 the survivor is the single physical runner, which no code change can fix.
+
+### CLAUDE.md §7 claimed a CI gate that does not exist (2026-08-31)
+
+§7 item 6 read "`deno check` on every Edge Function (non-blocking)".
+`grep -rn deno .github/workflows/ scripts/ci-local.sh` returns **zero hits**.
+There is no Deno step anywhere: not in `ci.yml`, not in the four other
+workflows, not in the local gate. The Edge Functions — including the Stripe
+payment path — have had **no automated syntax or type coverage at all**.
+
+Found while closing a risk this session's own change created: 3 Edge Functions
+were edited (`checkout`, `stripe-webhook`, `weekly-digest`) and a syntax error
+would have surfaced only at deploy time. A documented-but-absent gate is worse
+than a known gap, because the next session trusts it — the exact drift §9's
+"keep the docs current" rule exists to prevent, and it had reached the file
+that is loaded into every session.
+
+**Corrected in CLAUDE.md** to state the real coverage (the import-pin rules in
+`resilience-audit.py`, and nothing else).
+
+**Deliberately not "fixed" by adding a `deno check` CI step.** Deno is not
+installed in this environment, so such a step could not be tested before
+pushing, and the runner is a single self-hosted Windows box whose behaviour is
+documented as fragile (`docs/CI_RUNNER_RECOVERY.md`). Adding an unverifiable
+step to the one lane that gates every merge risks turning CI red for everyone
+with no way to reproduce it locally. That is a change to make with the runner
+in front of you.
+
+**Method that worked here, for the next session.** `deno` is unavailable but
+the TypeScript compiler API is: `npm i typescript@5` into the scratchpad, then
+`ts.createSourceFile(...).parseDiagnostics` over `supabase/functions/**/*.ts`.
+That is a *parse* check, not a type check — it proves the file is well-formed
+TypeScript, not that its types are sound — but it catches exactly the class a
+scripted edit introduces. All 11 functions parse clean at this commit.
+Note `typescript@7` is the native port and does **not** expose
+`createSourceFile` from its main entry; `@5` is the one with the classic API.

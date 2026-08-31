@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
-"""Validate the local Supabase migration history and, when requested, the linked remote history.
+"""Validate the canonical Supabase migration history.
 
-This contract prevents the recurring `Remote migration versions not found in local
-migrations directory` failure by making migration versions deterministic and by
-refusing to continue when local/remote histories diverge.
-
-Usage:
-  python scripts/migration-history-contract.py --local
-  python scripts/migration-history-contract.py --remote-output <file>
-
-The remote mode expects the plain-text output of `supabase migration list`.
+Prevents two recurring classes of failure:
+1. remote versions missing from version control;
+2. the Supabase CLI ordering bug caused by mixing an 8-digit YYYYMMDD
+   migration with a 14-digit migration sharing that YYYYMMDD prefix.
 """
 
 from __future__ import annotations
 
 import argparse
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -26,21 +20,24 @@ VERSION_RE = re.compile(r"^(\d+)_")
 ROW_RE = re.compile(r"^\s*(\d+)\s*[│|]\s*(\d+)?\s*[│|]")
 
 
-def local_versions() -> tuple[dict[str, list[str]], list[str]]:
+def local_versions() -> tuple[dict[str, list[str]], list[str], list[str]]:
     versions: dict[str, list[str]] = {}
     duplicates: list[str] = []
+    invalid_timestamp_versions: list[str] = []
     for path in sorted(MIGRATIONS.glob("*.sql")):
         match = VERSION_RE.match(path.name)
         if not match:
-            # README and non-migration SQL files must not silently become part
-            # of the migration history.
             continue
         version = match.group(1)
         versions.setdefault(version, []).append(path.name)
+        # Legacy numeric baseline migrations are 4 digits. New timestamp
+        # migrations must use the full 14-digit Supabase timestamp format.
+        if len(version) not in (4, 14):
+            invalid_timestamp_versions.append(f"{version}: {path.name}")
     for version, files in versions.items():
         if len(files) > 1:
             duplicates.append(f"{version}: {', '.join(files)}")
-    return versions, duplicates
+    return versions, duplicates, invalid_timestamp_versions
 
 
 def parse_remote(text: str) -> set[str]:
@@ -51,7 +48,6 @@ def parse_remote(text: str) -> set[str]:
         if match:
             remote.add(match.group(2) or match.group(1))
             continue
-        # Also accept the CLI's compact table format if spacing changes.
         versions = re.findall(r"(?<!\d)(\d{4,14})(?!\d)", line)
         if "│" in line or "|" in line:
             remote.update(versions[:2])
@@ -62,11 +58,17 @@ def check_local() -> tuple[set[str], int]:
     if not MIGRATIONS.is_dir():
         print("::error::supabase/migrations directory is missing")
         return set(), 1
-    versions, duplicates = local_versions()
+    versions, duplicates, invalid = local_versions()
     if duplicates:
         print("::error::duplicate local migration versions detected")
         for item in duplicates:
             print(f"  {item}")
+        return set(versions), 1
+    if invalid:
+        print("::error::invalid migration version width")
+        for item in invalid:
+            print(f"  {item}")
+        print("Use 4-digit historical versions or new 14-digit YYYYMMDDhhmmss versions; never create 8-digit YYYYMMDD versions.")
         return set(versions), 1
     print(f"local migration versions: {len(versions)}")
     if versions:
@@ -79,6 +81,12 @@ def check_remote_text(text: str, local: set[str]) -> int:
     if not remote:
         print("::error::could not parse any remote migration versions")
         return 1
+    invalid_remote = sorted(v for v in remote if len(v) not in (4, 14))
+    if invalid_remote:
+        print("::error::remote migration history contains unsupported version widths")
+        for version in invalid_remote:
+            print(f"  {version}")
+        return 1
     missing = sorted(remote - local, key=lambda x: (len(x), x))
     local_only = sorted(local - remote, key=lambda x: (len(x), x))
     print(f"remote migration versions: {len(remote)}")
@@ -87,13 +95,11 @@ def check_remote_text(text: str, local: set[str]) -> int:
         print("::error::remote migration versions missing locally")
         for version in missing:
             print(f"  {version}")
-        print("Repair rule: recover/preserve the exact remote version in supabase/migrations; do not mark it reverted merely to make CI green.")
         return 1
     if local_only:
         print("::error::local migration versions missing remotely")
         for version in local_only:
             print(f"  {version}")
-        print("Apply the pending local migration through the normal deployment pipeline before declaring production synchronized.")
         return 1
     print("OK — local and remote migration histories are exactly synchronized.")
     return 0
@@ -108,8 +114,7 @@ def main() -> int:
     if code:
         return code
     if args.remote_output:
-        text = args.remote_output.read_text(encoding="utf-8", errors="replace")
-        return check_remote_text(text, local)
+        return check_remote_text(args.remote_output.read_text(encoding="utf-8", errors="replace"), local)
     if args.local:
         print("OK — local migration history is structurally valid.")
         return 0

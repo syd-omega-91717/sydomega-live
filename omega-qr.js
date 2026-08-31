@@ -2,7 +2,7 @@
    Ω SYD OMEGA 91717 — QR CODE ENGINE (omega-qr.js)
 
    Open-source integration: qrcode-generator (MIT, Kazuhiko Arase)
-   CDN: https://cdn.jsdelivr.net/npm/qrcode-generator@1/qrcode.min.js
+   CDN: https://cdn.jsdelivr.net/npm/qrcode-generator@1.5.2/qrcode.min.js
 
    Use cases:
    A. MEMBER CREDENTIAL QR — on profile.html, vault.html, membership cards.
@@ -26,7 +26,7 @@
   if(window.__omegaQRActive) return;
   window.__omegaQRActive = true;
 
-  var QR_CDN = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1/qrcode.min.js';
+  var QR_CDN = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.5.2/qrcode.min.js';
   var _qrLoaded = false;
   var _qrCbs = [];
 

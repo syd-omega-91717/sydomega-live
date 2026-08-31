@@ -2,7 +2,7 @@
    Ω SYD OMEGA 91717 — SOVEREIGN TOUR ENGINE (omega-tour.js)
 
    Open-source: Shepherd.js v13 (MIT) — the world's most popular site tour library.
-   CDN: https://cdn.jsdelivr.net/npm/shepherd.js@13/dist/js/shepherd.min.js
+   CDN: https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/js/shepherd.min.js
 
    Architecture:
    - First-time members get a guided tour of the dashboard automatically.
@@ -26,8 +26,8 @@
   if(window.__omegaTourActive) return;
   window.__omegaTourActive = true;
 
-  var SHEPHERD_JS  = 'https://cdn.jsdelivr.net/npm/shepherd.js@13/dist/js/shepherd.min.js';
-  var SHEPHERD_CSS = 'https://cdn.jsdelivr.net/npm/shepherd.js@13/dist/css/shepherd.css';
+  var SHEPHERD_JS  = 'https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/js/shepherd.min.js';
+  var SHEPHERD_CSS = 'https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/css/shepherd.css';
 
   var _tours = {};        /* registered page tours */
   var _loaded = false;

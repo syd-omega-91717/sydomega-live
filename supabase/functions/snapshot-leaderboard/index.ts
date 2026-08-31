@@ -11,7 +11,7 @@
 //
 // Env (Supabase secrets): SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const PHI = 1.6180339887;
 const EU  = 2.7182818285;

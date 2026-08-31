@@ -33,7 +33,7 @@
 //     customer.subscription.deleted
 //     invoice.payment_failed
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), {
@@ -97,6 +97,30 @@ function extractMetadata(obj: Record<string, unknown>): { uid: string | null; ti
   };
 }
 
+// Stripe moved `current_period_end` off the Subscription object and onto its
+// items in API version 2025-03-31.basil. Three call sites here read it, and
+// two of them read it from the INBOUND webhook payload, whose version is a
+// dashboard setting on the endpoint -- not something this repo can pin. So
+// rather than depend on a version we cannot control, read both shapes: the
+// pre-basil top-level field, then the basil per-item field. Returns the unix
+// seconds value, or null when neither shape carries one, so each call site
+// keeps its own fallback behaviour.
+function periodEndSeconds(subLike: unknown): number | null {
+  const s = (subLike || {}) as Record<string, unknown>;
+  const top = s["current_period_end"];
+  if (typeof top === "number") return top;
+  const item = (s["items"] as any)?.data?.[0]?.current_period_end;
+  return typeof item === "number" ? item : null;
+}
+
+// Pinned deliberately. Without this header Stripe applies the ACCOUNT default
+// version, which moves when Stripe migrates the account or someone clicks
+// upgrade in the dashboard -- changing payload shapes under code that never
+// changed. 2025-02-24.acacia is the last version before basil's subscription
+// reshape, matching what this file was written against; periodEndSeconds()
+// above keeps it correct even if that ever changes again.
+const STRIPE_API_VERSION = "2025-02-24.acacia";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok");
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
@@ -142,8 +166,9 @@ Deno.serve(async (req) => {
       // period_end comes from the subscription object embedded in the session
       // when mode=subscription. Fall back to now+30 days if absent.
       const sub = obj.subscription as Record<string, unknown> | null;
-      const periodEnd = sub?.current_period_end
-        ? new Date((sub.current_period_end as number) * 1000).toISOString()
+      const subPeriodEnd = periodEndSeconds(sub);
+      const periodEnd = subPeriodEnd !== null
+        ? new Date(subPeriodEnd * 1000).toISOString()
         : new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
 
       const customer = (obj.customer as string) || null;
@@ -174,10 +199,12 @@ Deno.serve(async (req) => {
         return json({ received: true, skipped: "missing_uid" });
       }
 
-      const resolvedTier = tier || (obj.items as any)?.data?.[0]?.plan?.nickname || "unknown";
+      const resolvedTier = tier || (obj.items as any)?.data?.[0]?.plan?.nickname
+        || (obj.items as any)?.data?.[0]?.price?.nickname || "unknown";
       const status = (obj.status as string) || "active";
-      const periodEnd = obj.current_period_end
-        ? new Date((obj.current_period_end as number) * 1000).toISOString()
+      const updPeriodEnd = periodEndSeconds(obj);
+      const periodEnd = updPeriodEnd !== null
+        ? new Date(updPeriodEnd * 1000).toISOString()
         : null;
       const customer = (obj.customer as string) || null;
 
@@ -236,7 +263,10 @@ Deno.serve(async (req) => {
       if (!stripeKey) return json({ received: true, skipped: "no_stripe_key" });
 
       const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${subId}`, {
-        headers: { Authorization: `Bearer ${stripeKey}` },
+        headers: {
+          Authorization: `Bearer ${stripeKey}`,
+          "Stripe-Version": STRIPE_API_VERSION,
+        },
       });
       if (!subRes.ok) return json({ received: true, skipped: "stripe_fetch_failed" });
 
@@ -244,12 +274,13 @@ Deno.serve(async (req) => {
       const { uid } = extractMetadata(subData);
       if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
 
+      const failedPeriodEnd = periodEndSeconds(subData);
       const { data: result, error } = await admin.rpc("apply_subscription", {
         p_uid: uid,
         p_tier: subData.metadata?.tier || null,
         p_status: "past_due",
-        p_period_end: subData.current_period_end
-          ? new Date(subData.current_period_end * 1000).toISOString()
+        p_period_end: failedPeriodEnd !== null
+          ? new Date(failedPeriodEnd * 1000).toISOString()
           : null,
         p_customer: subData.customer || null,
       });

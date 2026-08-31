@@ -85,7 +85,7 @@ function semitoneToNote(root,semis){
 
 function loadTone(){
   if(_Tone) return Promise.resolve(_Tone);
-  return import('https://esm.sh/tone@14').then(function(mod){
+  return import('https://esm.sh/tone@14.9.17').then(function(mod){
     _Tone=mod;
     _loaded=true;
     return _Tone;

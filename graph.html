@@ -284,7 +284,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   var membersRes=await sb.from('profiles').select('id,display_name,sign,axis_a,axis_b,axis_c,is_owner').eq('access_approved',true);
   var members=membersRes.data||[];
   buildMembersTab(members);
-  var d3=await import('https://esm.sh/d3@7');
+  var d3=await import('https://esm.sh/d3@7.9.0');
   await initGraph(d3,members);
 })();
 </script>

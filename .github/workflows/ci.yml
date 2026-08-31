@@ -131,6 +131,11 @@ jobs:
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
         continue-on-error: true
+      - name: Canonical migration history
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/migration-history-contract.py', '--local']).returncode)
       - name: Upsert conflict audit
         shell: python
         run: |

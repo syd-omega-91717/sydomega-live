@@ -20,7 +20,7 @@ defaults:
 
 jobs:
   verify:
-    runs-on: self-hosted
+    runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -36,12 +36,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Runner diagnostics
-        # Deliberately AFTER setup-python, not first. `shell: python`
-        # needs an interpreter on PATH, and a capability probe measured
-        # pwsh working at step 6 but NOT at step 1 on this runner
-        # ("pwsh: command not found"), which is exactly the mistake of
-        # measuring in one position and assuming another. setup-python
-        # guarantees it from here on, on both Windows and Linux.
         run: |
           import os, sys
           for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
@@ -62,7 +56,7 @@ jobs:
           if bad:
               print("::error::syntax error in: " + ", ".join(bad))
               sys.exit(1)
-          print(f"node --check clean")
+          print("node --check clean")
       - name: Inline JavaScript syntax
         shell: python
         run: |
@@ -118,31 +112,31 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
-        continue-on-error: true
       - name: RLS audit
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
-        continue-on-error: true
       - name: Silent failure audit
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/silent-failure-detector.py']).returncode)
-        continue-on-error: true
       - name: Migration consistency
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
-        continue-on-error: true
+      - name: Canonical migration history
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/migration-history-contract.py', '--local']).returncode)
       - name: Upsert conflict audit
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/upsert-conflict-check.py']).returncode)
-        continue-on-error: true
       - name: Skill and agent registry
         shell: python
         run: |
@@ -159,10 +153,6 @@ jobs:
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/context-budget.py']).returncode)
       - name: Client credential scan
-        # shell: python, so this is identical on Windows and Linux. It replaces
-        # a findstr pipeline that only existed on Windows. Semantics preserved:
-        # recursive over *.js/*.html/*.json, case-insensitive, .git excluded,
-        # non-zero exit on any hit -- matching scripts/ci-local.sh step 5.
         shell: python
         run: |
           import pathlib, sys

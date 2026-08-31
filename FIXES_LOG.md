@@ -4181,3 +4181,243 @@ each async `init*()`, `sb = sb || (window.OmegaSB ? await window.OmegaSB.get()
   chrome (`.tnav-btn`, `.omega-dash-link`, footer `<a>`), and ~5 unlabelled
   inputs (`mp-type`, `depthSelect`, `dateFilter`, `*-import-file`, `j-date`).
   Tracked as the `accessibility` capability; a dedicated sweep is the next step.
+
+## Time-bombs: the failures that arrive on someone else's schedule (2026-08-31)
+
+Every gate in `scripts/` answered "is this code correct as written today".
+None answered "will this same, unchanged code still work in six months". That
+second class leaves no diff to blame, is invisible to `node --check`,
+`audit.py`, the capability registry and the runtime render, and lands in
+production on a third party's timetable. Five instances were already present.
+
+`scripts/resilience-audit.py` now gates the class; `scripts/tests/test_resilience_audit.py`
+(13 tests) proves each detector actually fires, since a gate that cannot fail
+is not a gate. Wired blocking into `ci-local.sh` (step `2l`) and `ci.yml`.
+
+### Fixed — floating dependency pins in 6 of 11 Edge Functions
+
+`checkout`, `stripe-webhook`, `concierge`, `rankings`, `snapshot-leaderboard`
+and `weekly-digest` each imported
+`https://esm.sh/@supabase/supabase-js@2` — no minor, no patch. esm.sh resolves
+that at *deploy* time, so two deploys of byte-identical source can ship
+different libraries, with nothing in the repo to explain the difference.
+
+Pinned all six to **2.112.4** — the version `vendor/supabase-js.js` already
+ships to every browser on this platform, so it is the one version here with
+production evidence behind it. The two `graphify-*` functions were left on
+their existing explicit `2.39.8`: they are *pinned*, so they are not this bug,
+and moving them is an upgrade decision, not a resilience fix.
+
+This repo already paid for this lesson once — `vendor/supabase-js.js` exists
+because a third-party CDN on the critical path took the whole platform down
+(that file's header; CLAUDE.md §4). The Edge Functions were still doing it.
+
+### Fixed — `weekly-digest` imported the frozen `deno.land/std`
+
+`supabase/functions/weekly-digest/index.ts:6` pulled `serve` from
+`https://deno.land/std@0.168.0/http/server.ts`. That line is frozen and being
+retired in favour of JSR, and Supabase's Edge Runtime has provided `Deno.serve`
+natively for years — so the dependency bought nothing and could only ever
+break. Removed the import; `serve(async (req) => {` → `Deno.serve(async (req) => {`.
+Every other Edge Function in the repo already used `Deno.serve`, so this was
+the lone holdout, not a new pattern. Verified: 0 `deno.land` references remain,
+braces and parens balanced. `deno check` is not installed in this environment —
+CI step 6 covers it (non-blocking there).
+
+### NOT fixed, deliberately — Stripe API version is unpinned
+
+`checkout/index.ts:57` and `stripe-webhook/index.ts:238` call `api.stripe.com`
+with no `Stripe-Version` header. Stripe then applies **the account's default
+API version**, which moves when Stripe migrates the account or someone clicks
+upgrade in a dashboard this repo cannot see. Request and response shapes change
+under code that never changed — in real payment code (CLAUDE.md §5).
+
+This is the highest-severity item found, and it is reported as a *warning*
+rather than auto-fixed on purpose: the correct value is the account's current
+default version, readable only from Stripe Dashboard → Developers → API
+versions. Pinning a guessed string breaks checkout **immediately** instead of
+eventually. Per CLAUDE.md §10 this is HIGH-RISK (payments) and wants the
+`grill-me-codex` gate before the change. Remediation, for whoever has the
+dashboard open: read the account's current default, send it as `Stripe-Version`
+on every `api.stripe.com` request, then redeploy and verify a real checkout.
+
+### Also reported as warnings — owner decisions, not code bugs
+
+- **All 5 workflows target one label set**, `[self-hosted, Windows, X64]` —
+  one physical machine. While it is offline every gate is unrunnable, jobs
+  queue indefinitely, and nothing can be validated or merged: CI failure is
+  total, not partial. Every `scripts/*.py` gate is platform-independent, so a
+  hosted-runner fallback lane is possible without touching the Windows-specific
+  steps. Costs money, so it stays the owner's call.
+- **`vercel.json` sets `Content-Security-Policy-Report-Only` with no
+  `report-uri`/`report-to`.** Report-Only does not enforce, and with no
+  endpoint the violations go nowhere — the header costs bytes and buys nothing,
+  while reading to a future session as protection that is not happening (the
+  same shape as `OmegaGuardian`'s badge, CLAUDE.md §8.2).
+
+### A gate against rot, not just against today
+
+`live-schema.json` is what `schema-dictionary.py` checks every client column
+name against — the only defence against §8.1's most expensive recurring bug
+class — and it is a hand-captured dated file that nothing ever forced anyone to
+refresh. The audit now fails when `_captured` is missing, unparseable, or more
+than 90 days old (currently 2026-08-29, 2 days). 90 is deliberately generous:
+a gate that cries every fortnight gets ignored, which is worse than no gate.
+
+### Corrected while investigating
+
+A first pass concluded that `workflow-contract.yml` and `runner-probe.yml`
+would fail the registry check because they run `ci-local.sh` without
+`fetch-depth: 0`. **Wrong** — neither executes it. `workflow-contract.yml` only
+asserts the file contains a `--help` string, and `runner-probe.yml` names it in
+a comment explaining why it deliberately does *not* run it (no bash on that
+runner). The shallow-clone dependency is confined to `ci.yml`, which correctly
+sets `fetch-depth: 0`. Recorded because the grep looked conclusive and was not
+— CLAUDE.md §8.4's "a repo-wide grep is a candidate generator, not a verdict".
+
+**Scope this audit does NOT cover, stated plainly:** it reads the repository.
+It never reached Stripe, esm.sh, npm or the live database, so it proves a pin
+is *present*, never that it is *right*. A pinned version that is later
+unpublished, or a `Stripe-Version` string that is wrong for the account, both
+pass this gate.
+
+## Nine floating CDN dependencies on every page view, and a CSP that would have broken four features (2026-08-31)
+
+Follow-up to the time-bomb entry above, after being told to stop handing
+decisions back and make them. Three were outstanding: the Stripe API version,
+the single CI runner, and the inert CSP. Working them turned up a larger
+problem than any of the three.
+
+### The CSP was never validated against the app it protects
+
+`vercel.json` shipped a `Content-Security-Policy-Report-Only` header. Enforcing
+it as written would have broken the platform, which is why it had to be tested
+rather than promoted:
+
+- `style-src 'self' 'unsafe-inline'` did **not** include `fonts.googleapis.com`,
+  and `bg.js:123` injects the Google Fonts stylesheet. Enforcing would have
+  killed the brand webfonts on all 178 pages — the same fonts §4.1 records as
+  only recently working at all.
+- `script-src 'self' 'unsafe-inline'` did **not** include `esm.sh`,
+  `cdn.jsdelivr.net` or `unpkg.com`, all of which the app loads at runtime.
+
+Verified by serving the repo with the policy applied and reading real
+`securitypolicyviolation` events in headless Chromium — 5 distinct violations
+across 7 of 8 sample pages. The corrected policy produces **0**, then
+re-verified across every `.html` page in the repo.
+
+### The finding the grep could not have made: 9 floating CDN dependencies
+
+The violation events named scripts no source scan had reported.
+`grep -rhoE '(src|href)="https://...'` over every page and module returns five
+social links and nothing else, because **every one of these is injected at
+runtime by JavaScript**, never written as markup. CLAUDE.md §8.4 says a
+repo-wide grep is a candidate generator, not a verdict; here it was not even a
+candidate generator.
+
+`omega-oss.js` — injected by `bg.js` on every page (`bg.js:1712`) — is a
+registry of third-party CDN libraries, and every entry floated:
+
+| file | was | now |
+|---|---|---|
+| `omega-oss.js` | `unpkg.com/lucide@latest` | `lucide@1.37.0` |
+| `omega-oss.js` | `chart.js@4` | `4.5.1` |
+| `omega-oss.js` | `fuse.js@7` | `7.5.0` |
+| `omega-oss.js` | `dayjs@1` (×2, incl. plugin) | `1.11.23` |
+| `omega-oss.js` | `marked@12` | `12.0.2` |
+| `omega-oss.js` | `highlightjs/cdn-release@11` | `11.12.0` |
+| `omega-oss.js` | `@popperjs/core@2` | `2.11.8` |
+| `omega-oss.js` | `tippy.js@6` | `6.3.7` |
+| `omega-tooltip.js` | `tippy.js@6` (second copy) | `6.3.7` |
+| `omega-tour.js` | `shepherd.js@13` (js + css) | `13.0.3` |
+| `omega-particles.js` | `tsparticles-slim@2` | `2.12.0` |
+| `omega-qr.js` | `qrcode-generator@1` | `1.5.2` |
+| `omega-passport.js` | `esm.sh/jspdf@2` | `2.5.2` |
+| `omega-music.js` | `esm.sh/tone@14` | `14.9.17` |
+| `graph.html` | `esm.sh/d3@7` | `7.9.0` |
+
+`lucide@latest` is the worst of them: whatever the maintainer published minutes
+ago, executed on every page view that renders an icon.
+
+**Every version was resolved from `registry.npmjs.org`, not from memory.** The
+CDNs themselves are 403 at this environment's egress proxy, but the npm
+registry answers 200 — so each pin is the highest release *within the range the
+code already requested*, which makes pinning behaviour-preserving today and
+frozen from here. A guessed version that does not exist would break the feature
+immediately, which is worse than the floating pin it replaced.
+
+This is the same lesson `vendor/supabase-js.js` was created for. That fix
+removed one CDN from the critical path and left fifteen.
+
+### Stripe: solved from the code, not the dashboard
+
+The previous entry deferred this for want of the account's default API version.
+That was the wrong framing. Reading what the code actually parses settles it:
+`stripe-webhook` reads `current_period_end` at the **top level** of the
+Subscription object in three places (`:145`, `:179`, `:251`) — a field Stripe
+**removed** in `2025-03-31.basil` and moved onto subscription items. So the
+account default silently migrating is not a hypothetical: it makes `periodEnd`
+null and subscription expiry stops being recorded, silently, in payment code
+(§8.1 class 1).
+
+Two of those three sites read the **inbound webhook payload**, whose version is
+a property of the endpoint in the Stripe dashboard and cannot be pinned from
+code at all. So pinning alone could never have fixed it. Fixed properly with
+`periodEndSeconds()`, which reads the pre-basil top-level field **or** the
+basil per-item field — correct under either version, needing no dashboard
+access. `Stripe-Version: 2025-02-24.acacia` (last pre-basil) is additionally
+pinned on both outbound calls for determinism, and `plan.nickname` now falls
+back to `price.nickname`, `plan` being the legacy of that pair.
+
+### CI runner: the recommendation was wrong, and is now corrected
+
+The previous entry advised adding a GitHub-hosted fallback lane. That advice
+was wrong and has been reversed in the audit's own output.
+`docs/CI_RUNNER_RECOVERY.md` records why the repo moved *off* hosted runners:
+the hosted lane returned `runner_id: 0` with `steps: []` — reporting success
+without executing anything. A fallback lane that lies is worse than no lane.
+The real mitigations, now named by the gate: a second self-hosted runner on the
+same labels, and `./scripts/ci-local.sh` via `.githooks/pre-push`, which does
+not depend on GitHub at all.
+
+### Gate extended
+
+`scripts/resilience-audit.py` now also scans root `*.js`/`*.html` for CDN URLs
+without a full `major.minor.patch`, flagging `@latest` separately as
+UNVERSIONED. 16 regression tests (up from 13). Warnings are down from 3 to 1;
+the survivor is the single physical runner, which no code change can fix.
+
+### CLAUDE.md §7 claimed a CI gate that does not exist (2026-08-31)
+
+§7 item 6 read "`deno check` on every Edge Function (non-blocking)".
+`grep -rn deno .github/workflows/ scripts/ci-local.sh` returns **zero hits**.
+There is no Deno step anywhere: not in `ci.yml`, not in the four other
+workflows, not in the local gate. The Edge Functions — including the Stripe
+payment path — have had **no automated syntax or type coverage at all**.
+
+Found while closing a risk this session's own change created: 3 Edge Functions
+were edited (`checkout`, `stripe-webhook`, `weekly-digest`) and a syntax error
+would have surfaced only at deploy time. A documented-but-absent gate is worse
+than a known gap, because the next session trusts it — the exact drift §9's
+"keep the docs current" rule exists to prevent, and it had reached the file
+that is loaded into every session.
+
+**Corrected in CLAUDE.md** to state the real coverage (the import-pin rules in
+`resilience-audit.py`, and nothing else).
+
+**Deliberately not "fixed" by adding a `deno check` CI step.** Deno is not
+installed in this environment, so such a step could not be tested before
+pushing, and the runner is a single self-hosted Windows box whose behaviour is
+documented as fragile (`docs/CI_RUNNER_RECOVERY.md`). Adding an unverifiable
+step to the one lane that gates every merge risks turning CI red for everyone
+with no way to reproduce it locally. That is a change to make with the runner
+in front of you.
+
+**Method that worked here, for the next session.** `deno` is unavailable but
+the TypeScript compiler API is: `npm i typescript@5` into the scratchpad, then
+`ts.createSourceFile(...).parseDiagnostics` over `supabase/functions/**/*.ts`.
+That is a *parse* check, not a type check — it proves the file is well-formed
+TypeScript, not that its types are sound — but it catches exactly the class a
+scripted edit introduces. All 11 functions parse clean at this commit.
+Note `typescript@7` is the native port and does **not** expose
+`createSourceFile` from its main entry; `@5` is the one with the classic API.

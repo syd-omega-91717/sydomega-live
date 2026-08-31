@@ -3,15 +3,14 @@
 // Processes weekly digest queue and sends email notifications
 // ============================================================================
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL") || "",
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""
 );
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // CORS headers
   if (req.method === "OPTIONS") {
     return new Response("ok", {

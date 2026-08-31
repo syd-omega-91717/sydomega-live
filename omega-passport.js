@@ -137,7 +137,7 @@ function drawPassport(pdf, pr, user){
 function generate(){
   var pr=window.__omegaProfile||{};
   var user=window.__omegaUser||{};
-  import('https://esm.sh/jspdf@2').then(function(mod){
+  import('https://esm.sh/jspdf@2.5.2').then(function(mod){
     var jsPDF=mod.jsPDF||mod.default;
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a6'});
     drawPassport(pdf,pr,user);

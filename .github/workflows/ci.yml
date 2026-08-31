@@ -147,6 +147,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/i18n-contract.py']).returncode)
+      - name: Resilience audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/resilience-audit.py']).returncode)
       - name: Context budget
         shell: python
         run: |

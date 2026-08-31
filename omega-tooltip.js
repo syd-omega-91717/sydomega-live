@@ -49,7 +49,7 @@
   })();
 
   /* ─── TIPPY LOADER ──────────────────────────────────────────────── */
-  var TIPPY_CDN = 'https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.min.js';
+  var TIPPY_CDN = 'https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js';
   var _loaded = false, _queue = [];
 
   function loadTippy(cb) {

@@ -365,7 +365,11 @@ treat it as an information-architecture decision.
 4. Broken local asset reference check (every `src=`/`href=` in every page
    must resolve to a file that exists).
 5. `service_role`/`SUPABASE_SERVICE` scan across client code (blocking).
-6. `deno check` on every Edge Function (non-blocking).
+6. **Nothing type- or syntax-checks the Edge Functions.** This line used to
+   claim `deno check` ran here; a grep of `.github/workflows/` and
+   `ci-local.sh` for `deno` returns **zero** hits. Their only automated
+   coverage is `resilience-audit.py`'s import-pin rules. Parse them with
+   `npx typescript@5` in a scratchpad before deploying (see `FIXES_LOG.md`).
 7. `sw.js` precache list vs. actual files (blocking).
 8. `manifest.json` icon paths vs. actual files (blocking).
 9. `python3 scripts/i18n-contract.py` (blocking) — every `i18n/*.json` parses,
@@ -559,6 +563,19 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
+- **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
+  detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
+  **A grep cannot find these — they are injected at runtime, not written as
+  markup**; they surfaced only from CSP violation events in a real browser.
+  Resolve versions from `registry.npmjs.org` (reachable; the CDNs are 403),
+  never memory. `vercel.json`'s CSP is now **enforced**, verified at 0
+  violations across all 178 pages; as written before it would have killed the
+  webfonts and four features. Stripe is fixed in code, not by pinning:
+  `periodEndSeconds()` reads both pre-basil and basil shapes, because two of
+  three read sites take the *inbound webhook* payload, whose version is a
+  dashboard property no repo change can pin. **Still open: the single physical
+  CI runner** — do not "fix" it with a hosted lane, `docs/CI_RUNNER_RECOVERY.md`
+  records that returning `runner_id: 0` / `steps: []`, green without executing.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
   in the job log). Cloud minutes still look unavailable — this repo is private
   on a personal account — so queued jobs drain slowly, one at a time, and a
@@ -608,7 +625,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **92** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **119** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -619,7 +636,8 @@ entries (which were accurate when written):
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **18** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **19** blocking checks, all passing |
+| `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
 

@@ -2,7 +2,7 @@
 // Double-gated: refuses unless payments_enabled=true AND STRIPE_SECRET_KEY is set.
 // Env (Supabase secrets): STRIPE_SECRET_KEY, STRIPE_PRICE_MAP (JSON tier->price_id),
 //   SITE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -56,7 +56,15 @@ Deno.serve(async (req) => {
 
     const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${sk}`, "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        Authorization: `Bearer ${sk}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        // Pinned deliberately: without it Stripe applies the ACCOUNT default
+        // version, which moves outside this repo and can change the response
+        // shape under code that never changed. This is the last version
+        // before basil's subscription reshape, matching what this file reads.
+        "Stripe-Version": "2025-02-24.acacia",
+      },
       body: form,
     });
     const session = await r.json();

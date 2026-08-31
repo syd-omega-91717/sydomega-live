@@ -31,13 +31,15 @@ workflows = ROOT / ".github" / "workflows"
 if not workflows.exists():
     errors.append(".github/workflows is missing")
 else:
+    workflow_files = list(workflows.glob("*.yml")) + list(workflows.glob("*.yaml"))
     workflow_text = "\n".join(
-        p.read_text(encoding="utf-8", errors="replace")
-        for p in workflows.glob("*.y*ml")
+        p.read_text(encoding="utf-8", errors="replace") for p in workflow_files
     )
-    if not re.search(r"runs-on:\s*[^\n]*self-hosted", workflow_text):
+    # Accept both scalar and GitHub's array form of runs-on.
+    self_hosted = re.compile(r"runs-on:\s*(?:[^\n]*\bself-hosted\b)", re.IGNORECASE)
+    if not self_hosted.search(workflow_text):
         errors.append("no workflow declares the self-hosted runner path")
-    if "continue-on-error: true" in workflow_text:
+    if re.search(r"continue-on-error:\s*true\b", workflow_text, re.IGNORECASE):
         errors.append("critical workflow contains continue-on-error: true")
 
 supabase = ROOT / "supabase"

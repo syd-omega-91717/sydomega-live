@@ -16,24 +16,13 @@ concurrency:
 
 defaults:
   run:
-    shell: pwsh
+    shell: python
 
 jobs:
   verify:
     runs-on: self-hosted
     timeout-minutes: 30
     steps:
-      - name: Runner diagnostics
-        shell: pwsh
-        run: |
-          if (-not $env:RUNNER_NAME) { exit 1 }
-          if (-not $env:RUNNER_OS)   { exit 1 }
-          if (-not $env:RUNNER_ARCH) { exit 1 }
-          "runner=$env:RUNNER_NAME"
-          "runner_os=$env:RUNNER_OS"
-          "runner_arch=$env:RUNNER_ARCH"
-          "run=$env:GITHUB_RUN_ID"
-          "attempt=$env:GITHUB_RUN_ATTEMPT"
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -46,73 +35,129 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: JavaScript syntax
-        shell: pwsh
+      - name: Runner diagnostics
+        # Deliberately AFTER setup-python, not first. `shell: python`
+        # needs an interpreter on PATH, and a capability probe measured
+        # pwsh working at step 6 but NOT at step 1 on this runner
+        # ("pwsh: command not found"), which is exactly the mistake of
+        # measuring in one position and assuming another. setup-python
+        # guarantees it from here on, on both Windows and Linux.
         run: |
-          $ErrorActionPreference = 'Continue'
-          Get-ChildItem -File -Filter *.js | ForEach-Object {
-            node --check $_.Name
-            if ($LASTEXITCODE -ne 0) { exit 1 }
-          }
+          import os, sys
+          for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
+              if not os.environ.get(var):
+                  print(f"::error::{var} is empty - no real runner")
+                  sys.exit(1)
+          print("runner=" + os.environ["RUNNER_NAME"])
+          print("runner_os=" + os.environ["RUNNER_OS"])
+          print("runner_arch=" + os.environ["RUNNER_ARCH"])
+          print("run=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("attempt=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
+      - name: JavaScript syntax
+        shell: python
+        run: |
+          import pathlib, subprocess, sys
+          bad = [p.name for p in sorted(pathlib.Path(".").glob("*.js"))
+                 if subprocess.run(["node", "--check", p.name]).returncode != 0]
+          if bad:
+              print("::error::syntax error in: " + ", ".join(bad))
+              sys.exit(1)
+          print(f"node --check clean")
       - name: Inline JavaScript syntax
-        shell: pwsh
-        run: python scripts/check-inline-js.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/check-inline-js.py']).returncode)
       - name: Repository audit
-        shell: pwsh
-        run: python scripts/audit.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/audit.py']).returncode)
       - name: Audit tooling tests
-        shell: pwsh
-        run: python -m unittest discover -s scripts/tests -v
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
       - name: Production contract
-        shell: pwsh
-        run: python scripts/production-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/production-contract.py']).returncode)
       - name: Workflow contract
-        shell: pwsh
-        run: python scripts/workflow-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/workflow-contract.py']).returncode)
       - name: 16-block architecture contract
-        shell: pwsh
-        run: python scripts/architecture-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/architecture-contract.py']).returncode)
       - name: 16-block implementation readiness
-        shell: pwsh
-        run: python scripts/architecture-readiness.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/architecture-readiness.py']).returncode)
       - name: Capability registry
-        shell: pwsh
-        run: python scripts/capability-audit.py --check
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py', '--check']).returncode)
       - name: Capability runtime audit
-        shell: pwsh
-        run: python scripts/capability-audit.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py']).returncode)
       - name: Registry JSON
-        shell: pwsh
-        run: python -m json.tool docs/capabilities/registry.json
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'json.tool', 'docs/capabilities/registry.json']).returncode)
       - name: Schema dictionary
-        shell: pwsh
-        run: python scripts/schema-dictionary.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
         continue-on-error: true
       - name: RLS audit
-        shell: pwsh
-        run: python scripts/rls-auditor.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
         continue-on-error: true
       - name: Silent failure audit
-        shell: pwsh
-        run: python scripts/silent-failure-detector.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/silent-failure-detector.py']).returncode)
         continue-on-error: true
       - name: Migration consistency
-        shell: pwsh
-        run: python scripts/migration-consistency.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
         continue-on-error: true
       - name: Upsert conflict audit
-        shell: pwsh
-        run: python scripts/upsert-conflict-check.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/upsert-conflict-check.py']).returncode)
         continue-on-error: true
       - name: Skill and agent registry
-        shell: pwsh
-        run: python scripts/omega-registry.py --check
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-registry.py', '--check']).returncode)
       - name: i18n contract
-        shell: pwsh
-        run: python scripts/i18n-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/i18n-contract.py']).returncode)
       - name: Context budget
-        shell: pwsh
-        run: python scripts/context-budget.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/context-budget.py']).returncode)
       - name: Client credential scan
         # shell: python, so this is identical on Windows and Linux. It replaces
         # a findstr pipeline that only existed on Windows. Semantics preserved:
@@ -143,9 +188,11 @@ jobs:
               sys.exit(1)
           print("no service-role credential marker in client code")
       - name: Execution marker
-        shell: pwsh
+        shell: python
         run: |
-          if (-not $env:RUNNER_NAME) { exit 1 }
-          "CI_EXECUTED=true"
-          "CI_RUN_ID=$env:GITHUB_RUN_ID"
-          "CI_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"
+          import os, sys
+          if not os.environ.get("RUNNER_NAME"):
+              sys.exit(1)
+          print("CI_EXECUTED=true")
+          print("CI_RUN_ID=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("CI_RUN_ATTEMPT=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))

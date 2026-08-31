@@ -34,27 +34,37 @@ permissions:
 
 defaults:
   run:
-    shell: pwsh
+    shell: python
 
 jobs:
   self-hosted:
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 5
     steps:
-      - name: Prove the runner is real
-        run: |
-          if (-not $env:RUNNER_NAME) { exit 1 }
-          if (-not $env:RUNNER_ARCH) { exit 1 }
-          "runner_name=$env:RUNNER_NAME"
-          "runner_os=$env:RUNNER_OS arch=$env:RUNNER_ARCH"
-          "run_id=$env:GITHUB_RUN_ID attempt=$env:GITHUB_RUN_ATTEMPT"
-          "SELF_HOSTED_RUNNER_OK=true"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Prove the runner is real
+        # Deliberately AFTER setup-python, not first. `shell: python`
+        # needs an interpreter on PATH, and a capability probe measured
+        # pwsh working at step 6 but NOT at step 1 on this runner
+        # ("pwsh: command not found"), which is exactly the mistake of
+        # measuring in one position and assuming another. setup-python
+        # guarantees it from here on, on both Windows and Linux.
+        run: |
+          import os, sys
+          for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
+              if not os.environ.get(var):
+                  print(f"::error::{var} is empty - no real runner")
+                  sys.exit(1)
+          print("runner=" + os.environ["RUNNER_NAME"])
+          print("runner_os=" + os.environ["RUNNER_OS"])
+          print("runner_arch=" + os.environ["RUNNER_ARCH"])
+          print("run=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("attempt=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
       - name: Node
         uses: actions/setup-node@v4
         with:
@@ -64,12 +74,17 @@ jobs:
       # already runs all 18 blocking checks on this same runner.
       - name: Toolchain and a real repo check execute on this runner
         run: |
-          python --version
-          node --version
-          python scripts/workflow-contract.py
+          import subprocess, sys
+          for cmd in (["python", "--version"], ["node", "--version"],
+                      ["python", "scripts/workflow-contract.py"]):
+              r = subprocess.run(cmd)
+              if r.returncode != 0:
+                  sys.exit(r.returncode)
       - name: Execution marker
         run: |
-          if (-not $env:RUNNER_NAME) { exit 1 }
-          "RUNNER_PROBE_EXECUTED=true"
-          "RUNNER_PROBE_RUN_ID=$env:GITHUB_RUN_ID"
-          "RUNNER_PROBE_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"
+          import os, sys
+          if not os.environ.get("RUNNER_NAME"):
+              sys.exit(1)
+          print("RUNNER_PROBE_EXECUTED=true")
+          print("RUNNER_PROBE_RUN_ID=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("RUNNER_PROBE_RUN_ATTEMPT=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))

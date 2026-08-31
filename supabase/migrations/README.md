@@ -53,7 +53,9 @@ Credentials must be supplied through the CI secret store and must never be commi
 
 ## Migration ordering
 
-The numbered baseline (`0001` onward) remains the historical foundation. Timestamped migrations record later production changes and reconciliation work. Version numbers are the identity used by Supabase; descriptive filenames document intent but must not be used as a substitute for version identity.
+The numbered baseline (`0001` onward) remains the historical foundation. Timestamped migrations record later production changes and reconciliation work. Version numbers are the identity used by Supabase; descriptive filenames must not be used as a substitute for version identity.
+
+**Timestamp invariant:** historical numeric versions may remain 4 digits; every new timestamp migration must use the full 14-digit `YYYYMMDDhhmmss` form. Never create an 8-digit `YYYYMMDD` migration. This prevents the known Supabase CLI ordering failure when an 8-digit version shares its date prefix with a 14-digit migration.
 
 New schema changes must be created as new migrations. Existing applied migrations must not be rewritten or renumbered.
 

@@ -112,25 +112,21 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
-        continue-on-error: true
       - name: RLS audit
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
-        continue-on-error: true
       - name: Silent failure audit
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/silent-failure-detector.py']).returncode)
-        continue-on-error: true
       - name: Migration consistency
         shell: python
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
-        continue-on-error: true
       - name: Canonical migration history
         shell: python
         run: |
@@ -141,7 +137,6 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/upsert-conflict-check.py']).returncode)
-        continue-on-error: true
       - name: Skill and agent registry
         shell: python
         run: |

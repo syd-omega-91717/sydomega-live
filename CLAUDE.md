@@ -502,6 +502,9 @@ open, recorded in `FIXES_LOG.md`:
   `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
   `bloodline_nodes` already hold comparable data server-side under the same,
   tested RLS.
+- **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
+  to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
+  offers a delete — a gap, and a product decision.
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
   `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
   fix means history rewrite + force-push — never without explicit permission.
@@ -625,14 +628,14 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **119** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **126** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
-| `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry) |
+| `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |

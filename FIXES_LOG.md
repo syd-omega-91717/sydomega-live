@@ -4182,6 +4182,109 @@ each async `init*()`, `sb = sb || (window.OmegaSB ? await window.OmegaSB.get()
   inputs (`mp-type`, `depthSelect`, `dateFilter`, `*-import-file`, `j-date`).
   Tracked as the `accessibility` capability; a dedicated sweep is the next step.
 
+## Storage upload never ran on 2 of 4 pages, and reported success on 3 (#175)
+
+Found while closing the last `BLOCKED` live-verification line in
+`docs/capabilities/registry.json` — the `import-export` capability, whose
+contract said "Storage bucket RLS still unverified". Verifying it live turned
+up a client bug the RLS check itself could not have shown.
+
+### The swapped argument
+
+`upload.js:11` declares `upload:async function(bucket,file)`. Two of the four
+call sites passed them the other way round:
+
+```
+profile.html:2147      OmegaStorage.upload(fileEl.files[0],'uploads')   // KYC document
+marketplace.html:140   OmegaStorage.upload(fileEl.files[0],'uploads')   // listing file
+publishing.html:153    OmegaStorage.upload('uploads',fEl.files[0])      // correct order
+marketing.html:198     OmegaStorage.upload('uploads',fEl.files[0])      // correct order
+```
+
+With the string in the `file` slot the guards all pass — `'uploads'` is truthy,
+and `'uploads'.size` is `undefined`, so `undefined > MAX` is `false` — and the
+function reaches `file.name.replace(...)` at line 17, where `'uploads'.name` is
+`undefined` and `.replace` raises a **TypeError inside upload()**.
+
+Both callers wrapped the call in a try/catch. `marketplace.html`'s was a bare
+`catch(e){}`. So the exception was swallowed, `file_path` stayed `null`, the
+`marketplace_listings` insert ran anyway, and the page printed
+
+> ✓ LISTED — Your work is now visible in the marketplace.
+
+for a listing whose file had never left the browser. `profile.html`'s KYC
+submit surfaced the raw TypeError text instead — no member could ever submit a
+KYC document. That is §8.1 bug class 1 (a write that silently does nothing
+while the UI reports success), reached through class 4's shape: a shared
+accessor used on trust, its signature never checked against its callers.
+
+### The third page, with the arguments right
+
+`publishing.html:153` was `try{var up=await OmegaStorage.upload('uploads',
+fEl.files[0]);if(up&&!up.error)filePath=up.path||null;}catch(e){}` — correct
+order, and still bug class 1: `upload()` **returns** `{error}` rather than
+throwing (Supabase's storage client resolves to `{data,error}`), so a failed
+upload left `filePath` null, the `publications` insert ran, and the page said
+"Committed to your archive." Only `marketing.html` checked and aborted.
+
+### Fixed
+
+- `upload.js` normalises a swapped pair, and now **returns** `{error:'No
+  storage bucket named.'}` / `{error:'No file chosen.'}` instead of throwing a
+  TypeError for a bad argument — its contract is to return, so a caller that
+  checks `.error` is now sufficient on its own.
+- All three call sites corrected: bucket first, `.error` checked, and the
+  member told the upload failed *and* that nothing was listed/committed,
+  instead of a success toast over a null path.
+
+### Gated
+
+`scripts/tests/test_storage_upload_contract.py`, 7 tests. The static half scans
+every real `OmegaStorage.upload(` call and asserts (1) the first argument is a
+quoted bucket name and (2) the call's **own** result variable is inspected for
+`.error` within six lines. The node half loads `upload.js` with a
+never-settling client stub and asserts the four bad-argument shapes return
+`{error}` rather than throwing.
+
+Mutation-checked, all four fail it: restoring the swapped args in
+`profile.html`; deleting the `.error` check in `marketplace.html`; restoring
+`publishing.html`'s swallowing form; restoring `upload.js`'s throw. The first
+draft of assertion 2 matched any `.error` in the window and **passed** the
+marketplace mutation — it was matching the unrelated `ins.error` two lines
+below. Anchoring on the call's own variable is what made it decisive; a
+mutation that a test survives is the test's finding, not the code's.
+
+### Live storage RLS — measured, not assumed
+
+Method per §8.4: `set_config('role','authenticated',true)` plus
+`request.jwt.claims` with a real member uuid, every attempt inside a rolled-back
+transaction, against project `ydqhzvvoyufiiqvzcjns`.
+
+| attempt | result |
+|---|---|
+| insert into own `<uid>/` prefix (`uploads`) | ALLOWED |
+| insert into another member's prefix (`uploads`) | DENIED 42501 |
+| insert into another member's prefix (`avatars`) | DENIED 42501 |
+| insert into the bucket root, no uid prefix | DENIED 42501 |
+| insert into an undeclared bucket | DENIED 42501 |
+| delete one's own upload | **DENIED 42501** |
+
+No spoofing gap: both INSERT policies are
+`WITH CHECK (bucket_id = <bucket> AND (storage.foldername(name))[1] =
+auth.uid()::text)`, and `uploads read` is own-prefix `OR is_platform_owner()`.
+`avatars read` is unscoped, which matches that bucket being `public:true`.
+
+**Recorded, not fixed:** there is no DELETE policy on `storage.objects`, so a
+member can never remove a file they uploaded. No client code offers a delete,
+so this is a gap rather than a shipped bug — adding the policy is a product
+decision about whether members may retract a KYC document or a listing file,
+not a bug fix, and §9's rule is that an unverified item stays unverified rather
+than being upgraded on assumption. Both buckets hold 0 objects today.
+
+With this, `docs/capabilities/registry.json` has **0 of 15** capabilities
+carrying a `BLOCKED` live-verification line — issue #175's "no capability may
+be marked verified without evidence", measured rather than asserted.
+
 ## Time-bombs: the failures that arrive on someone else's schedule (2026-08-31)
 
 Every gate in `scripts/` answered "is this code correct as written today".

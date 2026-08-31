@@ -9,7 +9,16 @@
     MAX:MAX,
     ready:ready,
     upload:async function(bucket,file){
-      if(!file) return {error:'No file chosen.'};
+      /* Two of the four call sites shipped with these arguments the other way
+         round (profile.html KYC, marketplace.html listing). That made
+         file.name undefined, threw a TypeError inside this function, and both
+         callers swallowed it in a try/catch -- so the upload never ran while
+         the page went on to report success. Normalise the order here rather
+         than trusting every future caller, and never throw for a bad
+         argument: this function's contract is to RETURN {error}. */
+      if(typeof bucket!=='string' && typeof file==='string'){ var _b=file; file=bucket; bucket=_b; }
+      if(!bucket || typeof bucket!=='string') return {error:'No storage bucket named.'};
+      if(!file || typeof file.name!=='string' || typeof file.size!=='number') return {error:'No file chosen.'};
       if(file.size>MAX) return {error:'File exceeds the 5 GB limit.'};
       var sb=await ready;
       var s=(await sb.auth.getSession()).data.session;

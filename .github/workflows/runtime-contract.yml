@@ -1,0 +1,50 @@
+name: Runtime Contract
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime:
+    name: Runtime syntax and configuration contract
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify runtimes
+        shell: pwsh
+        run: |
+          python --version
+          node --version
+      - name: Check JavaScript syntax
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $files = Get-ChildItem -Path . -Filter '*.js' -File -Recurse | Where-Object { $_.FullName -notmatch '\\node_modules\\|\\dist\\|\\build\\|\\.git\\' }
+          foreach ($f in $files) { node --check $f.FullName }
+          Write-Host "Checked $($files.Count) JavaScript files."
+      - name: Validate JSON configuration
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $files = Get-ChildItem -Path config -Filter '*.json' -File -Recurse
+          foreach ($f in $files) { Get-Content $f.FullName -Raw | ConvertFrom-Json | Out-Null }
+          Write-Host "Checked $($files.Count) JSON configuration files."
+      - name: Validate Python contracts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python scripts/content-registry-contract.py
+          python scripts/page-estate-quality.py
+          python scripts/page-experience-contract.py

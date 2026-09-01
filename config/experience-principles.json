@@ -1,0 +1,16 @@
+{
+  "version":"1.0.0",
+  "principles":[
+    {"id":"one-purpose","rule":"Every canonical page has one primary user purpose and one primary action."},
+    {"id":"visual-first","rule":"Use emblematic visual hierarchy before explanatory copy where comprehension is not reduced."},
+    {"id":"non-repetitive","rule":"Shared information has one canonical home; other pages link to it instead of duplicating it."},
+    {"id":"living-content","rule":"Dynamic experiences must expose provenance, freshness and failure state when applicable."},
+    {"id":"safe-creation","rule":"User-created content is draft-first and requires policy, moderation and publication state before public release."},
+    {"id":"monetization-trust","rule":"Payments, advertising and participation must disclose price, purpose, eligibility and material terms before commitment."},
+    {"id":"investment-boundary","rule":"Investment-like participation is separated from ordinary purchases and remains subject to jurisdiction-specific legal review and required compliance."},
+    {"id":"accessible-motion","rule":"Animation and 3D enhance navigation but never become the sole means of understanding or completing an action."},
+    {"id":"failure-visible","rule":"A failed data or action request must never present a false success state."},
+    {"id":"reversible","rule":"Content, configuration and deployment changes must have a documented rollback path."
+    }
+  ]
+}

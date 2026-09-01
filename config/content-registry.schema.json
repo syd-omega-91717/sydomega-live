@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SYD OMEGA Content Registry",
+  "type": "object",
+  "required": ["version", "entries"],
+  "properties": {
+    "version": {"type": "string"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "route", "purpose", "audience", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "route": {"type": "string", "pattern": "^/"},
+          "purpose": {"type": "string", "minLength": 1},
+          "audience": {"type": "string", "minLength": 1},
+          "status": {"enum": ["planned", "draft", "review", "published", "archived"]},
+          "canonical": {"type": "boolean"},
+          "parent": {"type": ["string", "null"]},
+          "domain": {"type": "string"},
+          "languages": {"type": "array", "items": {"type": "string"}},
+          "primaryAction": {"type": "string"},
+          "emblem": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

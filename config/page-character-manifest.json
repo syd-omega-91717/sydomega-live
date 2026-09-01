@@ -1,0 +1,40 @@
+{
+  "$schema": "./page-character-manifest.schema.json",
+  "version": 1,
+  "default": {
+    "visual": "sovereign",
+    "motion": "subtle",
+    "depth": "glass",
+    "density": "clear",
+    "interaction": "direct",
+    "emblem": "omega"
+  },
+  "archetypes": {
+    "command": {"visual":"command","motion":"cinematic","depth":"orbital","density":"clear","interaction":"direct","emblem":"command"},
+    "identity": {"visual":"identity","motion":"ceremonial","depth":"glass","density":"clear","interaction":"direct","emblem":"identity"},
+    "intelligence": {"visual":"intelligence","motion":"reactive","depth":"holographic","density":"data","interaction":"explore","emblem":"intelligence"},
+    "knowledge": {"visual":"knowledge","motion":"calm","depth":"glass","density":"readable","interaction":"learn","emblem":"knowledge"},
+    "gaming": {"visual":"arena","motion":"dynamic","depth":"3d","density":"visual","interaction":"play","emblem":"gaming"},
+    "media": {"visual":"cinema","motion":"cinematic","depth":"3d","density":"visual","interaction":"watch","emblem":"media"},
+    "commerce": {"visual":"exchange","motion":"dynamic","depth":"glass","density":"transactional","interaction":"buy","emblem":"marketplace"},
+    "creation": {"visual":"forge","motion":"reactive","depth":"3d","density":"workspace","interaction":"create","emblem":"forge"},
+    "community": {"visual":"constellation","motion":"organic","depth":"glass","density":"social","interaction":"connect","emblem":"social"},
+    "governance": {"visual":"council","motion":"ceremonial","depth":"holographic","density":"structured","interaction":"decide","emblem":"governance"},
+    "finance": {"visual":"treasury","motion":"precise","depth":"glass","density":"data","interaction":"manage","emblem":"treasury"},
+    "system": {"visual":"control","motion":"precise","depth":"holographic","density":"technical","interaction":"operate","emblem":"system"}
+  },
+  "rules": [
+    {"match":"command|dashboard|home","archetype":"command"},
+    {"match":"identity|profile|passport|character|account|membership","archetype":"identity"},
+    {"match":"intelligence|research|prediction|analytics|graph|search|oracle|agents|ai","archetype":"intelligence"},
+    {"match":"academy|knowledge|library|codex|exam|flashcard|grades|heritage|tutor","archetype":"knowledge"},
+    {"match":"gaming|game|arena|trophy|leaderboard","archetype":"gaming"},
+    {"match":"media|cinema|film|series|trailers|music|video","archetype":"media"},
+    {"match":"marketplace|commerce|merchant|store|shop|services","archetype":"commerce"},
+    {"match":"forge|creator|creation|publishing|contribution|lab|project","archetype":"creation"},
+    {"match":"social|family|contacts|feed|community|factions","archetype":"community"},
+    {"match":"governance|govern|compliance|approvals|charter|covenant|terms","archetype":"governance"},
+    {"match":"vault|treasury|wallet|income|payments|payment|investment|portfolio|ledger|budget|expenses","archetype":"finance"},
+    {"match":"settings|maintenance|system|admin|operator|enterprise|security|kyc","archetype":"system"}
+  ]
+}

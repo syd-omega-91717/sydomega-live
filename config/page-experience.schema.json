@@ -1,0 +1,33 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"SYD OMEGA Page Experience Contract",
+  "type":"object",
+  "required":["version","defaults","archetypes"],
+  "properties":{
+    "version":{"type":"string"},
+    "defaults":{
+      "type":"object",
+      "required":["motion","depth","contentDensity","reducedMotion"],
+      "properties":{
+        "motion":{"enum":["none","micro","ambient","cinematic","immersive"]},
+        "depth":{"enum":["flat","layered","3d"]},
+        "contentDensity":{"enum":["minimal","balanced","rich"]},
+        "reducedMotion":{"type":"string"}
+      },"additionalProperties":false
+    },
+    "archetypes":{
+      "type":"object",
+      "additionalProperties":{
+        "type":"object",
+        "required":["motion","depth","contentDensity","primaryAction"],
+        "properties":{
+          "motion":{"enum":["none","micro","ambient","cinematic","immersive"]},
+          "depth":{"enum":["flat","layered","3d"]},
+          "contentDensity":{"enum":["minimal","balanced","rich"]},
+          "primaryAction":{"type":"string","minLength":1},
+          "visualIntent":{"type":"string"}
+        },"additionalProperties":false
+      }
+    }
+  },"additionalProperties":false
+}

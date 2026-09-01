@@ -568,17 +568,16 @@ open, recorded in `FIXES_LOG.md`:
   granting without deciding the feature is wanted.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
-  **A grep cannot find these — they are injected at runtime, not written as
-  markup**; they surfaced only from CSP violation events in a real browser.
-  Resolve versions from `registry.npmjs.org` (reachable; the CDNs are 403),
-  never memory. `vercel.json`'s CSP is now **enforced**, verified at 0
-  violations across all 178 pages; as written before it would have killed the
-  webfonts and four features. Stripe is fixed in code, not by pinning:
-  `periodEndSeconds()` reads both pre-basil and basil shapes, because two of
-  three read sites take the *inbound webhook* payload, whose version is a
-  dashboard property no repo change can pin. **Still open: the single physical
-  CI runner** — do not "fix" it with a hosted lane, `docs/CI_RUNNER_RECOVERY.md`
-  records that returning `runner_id: 0` / `steps: []`, green without executing.
+  **A grep cannot find these — they are injected at runtime, not markup**; only
+  CSP violations in a real browser surfaced them. Resolve versions from
+  `registry.npmjs.org` (the CDNs are 403), never memory. `vercel.json`'s CSP is
+  now **enforced**, verified at 0 violations across all pages; as written before
+  it would have killed the webfonts and four features. Stripe is fixed in code,
+  not by pinning: `periodEndSeconds()` reads both pre-basil and basil shapes,
+  since two of three read sites take the *inbound webhook* payload, whose
+  version is a dashboard property no repo change can pin. **Still open: the
+  single physical CI runner** — never "fix" it with a hosted lane;
+  `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
   in the job log). Cloud minutes still look unavailable — this repo is private
   on a personal account — so queued jobs drain slowly, one at a time, and a

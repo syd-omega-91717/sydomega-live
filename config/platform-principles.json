@@ -1,0 +1,12 @@
+{
+  "version":"1.0.0",
+  "principles":[
+    {"id":"preserve","rule":"Never delete existing content automatically; preserve, review, migrate, or redirect."},
+    {"id":"canonical","rule":"Every published experience has one canonical route and one declared purpose."},
+    {"id":"action","rule":"Every primary page exposes one clear primary user action."},
+    {"id":"accessibility","rule":"Motion and visual effects must degrade gracefully and respect reduced-motion preferences."},
+    {"id":"trust","rule":"Payments, identity, investment, advertising, and user-generated publishing require explicit state, consent, auditability, and appropriate controls."},
+    {"id":"evidence","rule":"Production readiness is evidenced by automated tests and live verification, not configuration alone."},
+    {"id":"rollback","rule":"Every production change must be reversible through version control and deployment rollback."}
+  ]
+}

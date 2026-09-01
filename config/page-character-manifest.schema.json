@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["version", "default", "archetypes", "rules"],
+  "properties": {
+    "version": {"type":"integer","minimum":1},
+    "default": {"$ref":"#/$defs/character"},
+    "archetypes": {"type":"object","additionalProperties":{"$ref":"#/$defs/character"}},
+    "rules": {"type":"array","items":{"type":"object","required":["match","archetype"],"properties":{"match":{"type":"string"},"archetype":{"type":"string"}},"additionalProperties":false}}
+  },
+  "$defs": {
+    "character": {
+      "type":"object",
+      "required":["visual","motion","depth","density","interaction","emblem"],
+      "properties": {
+        "visual":{"type":"string"},"motion":{"type":"string"},"depth":{"type":"string"},
+        "density":{"type":"string"},"interaction":{"type":"string"},"emblem":{"type":"string"}
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}

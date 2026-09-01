@@ -1,0 +1,27 @@
+name: Page Overlap Audit
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: page-overlap-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  overlap:
+    name: Detect overlapping pages
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run overlap audit
+        shell: pwsh
+        run: python scripts/page-overlap-audit.py

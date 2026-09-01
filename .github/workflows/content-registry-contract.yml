@@ -1,0 +1,27 @@
+name: Content Registry Contract
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: content-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  registry:
+    name: Canonical content registry
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate registry
+        shell: pwsh
+        run: python scripts/content-registry-contract.py

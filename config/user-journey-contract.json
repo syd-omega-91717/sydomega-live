@@ -1,0 +1,18 @@
+{
+  "version":"1.0.0",
+  "rules":[
+    {"id":"discover","from":"/","to":"/discover","goal":"Find the right destination quickly"},
+    {"id":"learn","from":"/discover","to":"/academy","goal":"Move from discovery to useful knowledge"},
+    {"id":"create","from":"/discover","to":"/forge","goal":"Turn an idea into a structured creation"},
+    {"id":"participate","from":"/discover","to":"/community","goal":"Connect with the ecosystem"},
+    {"id":"commerce","from":"/discover","to":"/marketplace","goal":"Discover products and services with transparent terms"},
+    {"id":"identity","from":"/","to":"/profile","goal":"Access identity and personalization"}
+  ],
+  "requirements":[
+    "Every journey has a visible recovery path.",
+    "Primary navigation must not depend on animation.",
+    "A destination must expose its purpose before commitment.",
+    "Authentication-required actions must explain the requirement.",
+    "Failed network actions must expose retry and preserve user input when safe."
+  ]
+}

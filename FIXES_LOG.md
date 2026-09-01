@@ -4524,3 +4524,91 @@ TypeScript, not that its types are sound — but it catches exactly the class a
 scripted edit introduces. All 11 functions parse clean at this commit.
 Note `typescript@7` is the native port and does **not** expose
 `createSourceFile` from its main entry; `@5` is the one with the classic API.
+
+## Gateway: making the mark the door, and a filter that hid nothing (2026-09-01)
+
+The owner's direction was that the platform should be graphic before textual,
+that each page's emblem and name should be the clickable way in, and that no
+subject should repeat across pages. Measuring first changed what the work was.
+
+### What the measurement actually showed
+
+A scan of all 178 pages for duplicated content found **2 duplicate `<title>`s
+(`membership`/`subscriptions`, `rune`/`sigil`), 0 duplicate headings, and 0
+duplicate copy blocks**. There is almost no copy-paste text here, so
+"repetitive subject" could not mean repeated wording.
+
+Re-measured against shared data instead — two pages reading the same tables are
+showing the member the same thing whatever their headings say — the real
+overlap appeared. The first pass was wrong and its own false-positive class is
+worth recording: ranking pairs by shared tables put `academy`/`payments`/
+`gaming`/`beacon`/`analytics` at "100% overlap" purely because every page reads
+`profiles` and `task_completions`. Excluding the universal tables left the
+genuine clusters: the **8-page `graph-*` family** on
+`graph_entities`/`graph_relationships`/`graph_events`, plus
+`honors`↔`trophies` (`certificates`, `medals`, `trophies`),
+`publishing`↔`studio`, `news`↔`queue`, `evolution`↔`matrix`,
+`portfolio`↔`vault`.
+
+**Only 39 of 178 pages carry a subject-bearing table at all**; 36 have no
+table, no RPC and no `localStorage`. That is the root cause of the repetition:
+there are not 178 distinct subjects.
+
+### What was already built, and what was missing
+
+`omega-page-emblem.js` already does exactly what the direction described — a
+per-page mark derived from what the page IS (lattice, axis, glyph) — and it was
+already live on **165 of 178 pages**. Nothing needed inventing. What was
+missing was that the mark was decoration *inside* a page you had already
+reached; navigation was a sidebar of 15 sections and **223 written labels**,
+and there was no hub page anywhere (`index.html` does not exist; `command`,
+`atlas`, `grid`, `universe`, `gates` each contain **0** internal page links).
+
+Added `gateway.html` + `omega-gateway.js`: every destination as its own emblem
+plus its name, the whole tile a link, grouped by axis, with a filter. 171 tiles
+(175 registry entries less the 4 excluded system pages). Ten pages that had no
+identity were given one — `architecture`, `council`, `hercules`, `graphify` and
+the six `graph-*` pages; `404`, `enter`, `offline` and `reset` deliberately get
+none, being states rather than destinations.
+
+**One source of truth.** The tile list and every mark come from
+`OmegaPageEmblem.pages`. This module keeps no page list of its own — a second
+hand-kept list would be the duplication the page exists to remove.
+
+### The performance constraint that shaped it
+
+`draw()` opens a `requestAnimationFrame` loop per mark that never stops.
+Correct for one emblem; on a grid of 171 it would run 171 permanent loops each
+repainting a 264x264 canvas every frame. So `draw()` gained an optional `opts`
+(`size`, `animate`) — defaults `132`/`true`, so every existing caller is
+unchanged — and the gateway draws once, statically, with the rotation moved to
+a CSS transform on hover/focus. Regression-tested: `dashboard`, `profile`,
+`academy`, `vault`, `cosmos`, `matrix` all still paint at 132px/264px **and
+still animate**.
+
+### The bug only the render caught
+
+The filter set `tile.hidden = true` and **every tile stayed on screen**. An
+author `.gw-tile{display:flex}` beats the UA stylesheet's `[hidden]{display:none}`.
+The harness reported "8 visible" and passed, because it counted the `hidden`
+DOM property — which was set perfectly correctly. Only the screenshot showed
+171 tiles under a status line reading "8 of 171 match".
+
+Fixed with `.gw-tile[hidden]{display:none!important}`, and the check was
+changed to assert **computed `display`** rather than the property, so it can no
+longer pass while the UI is broken. This is §8.4's "verify it applies in a
+render" in a new shape: the earlier case was a rule that reached the file but
+not the cascade; this is a property that was set but overridden.
+
+Also fixed while verifying: the destination count blanked itself on load (the
+filter's first pass overwrote `boot()`'s value), and the per-axis count stayed
+at its unfiltered total above a filtered grid.
+
+### Verification
+
+19/19 blocking checks, 126 tests, 0 dead links out of 171, no horizontal
+overflow, all 171 marks confirmed painted by reading canvas pixel alpha rather
+than assuming. `scripts/verify-runtime.js` could not run: the scratchpad's
+`playwright-core` expects `chromium_headless_shell-1234` and this environment
+ships `chromium-1194`, so it reports SKIPPED — the checks above were run
+against `/opt/pw-browsers/chromium-1194` with an explicit `executablePath`.

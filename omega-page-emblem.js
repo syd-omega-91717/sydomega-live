@@ -161,14 +161,26 @@
   wealth:[12,'b','▤'],
   weekly:[9,'b','≡'],
   workout:[9,'b','⚕'],
+  architecture:[12,'a','▦'],
+  council:[12,'c','☰'],
+  hercules:[12,'b','⚔'],
+  'graph-admin':[9,'a','◈'],
+  'graph-anomalies':[9,'a','⚠'],
+  'graph-centrality':[9,'a','◉'],
+  'graph-evidence':[9,'a','✎'],
+  'graph-explorer':[9,'a','⌕'],
+  'graph-timeline':[9,'a','◔'],
+  graphify:[9,'a','⬡'],
 };
   var AXIS_COL = { a:'#00E5FF', b:'#C9A84C', c:'#3fb27f' };
 
   var reduce = false;
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
-  function draw(host, points, col, glyph) {
-    var S = 132;
+  function draw(host, points, col, glyph, opts) {
+    opts = opts || {};
+    var S = opts.size || 132;
+    var animate = opts.animate !== false;
     var cv = document.createElement('canvas');
     cv.width = S * 2; cv.height = S * 2;
     cv.style.cssText = 'width:' + S + 'px;height:' + S + 'px;display:block;margin:0 auto';
@@ -236,7 +248,7 @@
       ctx.fillStyle = col; ctx.fillText(glyph, CX, CY + 2);
       ctx.shadowBlur = 0;
 
-      if (!reduce) { t += 0.016; requestAnimationFrame(frame); }
+      if (!reduce && animate) { t += 0.016; requestAnimationFrame(frame); }
     }
     frame();
   }
@@ -258,7 +270,8 @@
     }
   }
 
-  window.OmegaPageEmblem = { boot: boot, pages: PAGES };
+  window.OmegaPageEmblem = { boot: boot, pages: PAGES,
+                            draw: draw, axisColour: AXIS_COL };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
   setTimeout(boot, 900);

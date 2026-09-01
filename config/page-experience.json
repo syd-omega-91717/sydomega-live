@@ -1,0 +1,23 @@
+{
+  "version":"1.0.0",
+  "defaults":{
+    "motion":"ambient",
+    "depth":"layered",
+    "contentDensity":"balanced",
+    "reducedMotion":"Respect prefers-reduced-motion and provide equivalent static interaction."
+  },
+  "archetypes":{
+    "command":{"motion":"cinematic","depth":"3d","contentDensity":"balanced","primaryAction":"Command","visualIntent":"Operational command center"},
+    "identity":{"motion":"ambient","depth":"3d","contentDensity":"minimal","primaryAction":"Enter identity","visualIntent":"Personal identity chamber"},
+    "intelligence":{"motion":"cinematic","depth":"3d","contentDensity":"rich","primaryAction":"Explore intelligence","visualIntent":"Observatory and analytical environment"},
+    "knowledge":{"motion":"ambient","depth":"layered","contentDensity":"rich","primaryAction":"Learn","visualIntent":"Interactive academy and library"},
+    "gaming":{"motion":"immersive","depth":"3d","contentDensity":"balanced","primaryAction":"Play","visualIntent":"Arena and progression world"},
+    "media":{"motion":"cinematic","depth":"3d","contentDensity":"minimal","primaryAction":"Watch","visualIntent":"Immersive media studio"},
+    "commerce":{"motion":"ambient","depth":"layered","contentDensity":"balanced","primaryAction":"Explore marketplace","visualIntent":"Trustworthy visual commerce"},
+    "creation":{"motion":"cinematic","depth":"3d","contentDensity":"balanced","primaryAction":"Create","visualIntent":"Creative workshop"},
+    "community":{"motion":"ambient","depth":"layered","contentDensity":"rich","primaryAction":"Connect","visualIntent":"Living community space"},
+    "governance":{"motion":"micro","depth":"layered","contentDensity":"rich","primaryAction":"Review","visualIntent":"Transparent governance workspace"},
+    "finance":{"motion":"micro","depth":"layered","contentDensity":"rich","primaryAction":"Review finances","visualIntent":"Clear financial workspace"},
+    "system":{"motion":"micro","depth":"layered","contentDensity":"balanced","primaryAction":"Manage","visualIntent":"System operations"}
+  }
+}

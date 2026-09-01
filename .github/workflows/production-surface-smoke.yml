@@ -1,0 +1,38 @@
+name: Production Surface Smoke
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-surface-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Live production smoke test
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Verify public site
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $u = 'https://www.sydomega.com/'
+          $r = Invoke-WebRequest -Uri $u -UseBasicParsing -MaximumRedirection 5 -TimeoutSec 30
+          if ($r.StatusCode -lt 200 -or $r.StatusCode -ge 400) { throw "Production site returned HTTP $($r.StatusCode)" }
+          if ([string]::IsNullOrWhiteSpace($r.Content)) { throw 'Production site returned an empty document' }
+          Write-Host "Production site HTTP $($r.StatusCode), $($r.Content.Length) bytes"
+
+      - name: Verify public Supabase API surface
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $u = 'https://ydqhzvvoyufiiqvzcjns.supabase.co/auth/v1/health'
+          $r = Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 30
+          if ($r.StatusCode -lt 200 -or $r.StatusCode -ge 400) { throw "Supabase Auth health returned HTTP $($r.StatusCode)" }
+          Write-Host "Supabase Auth health HTTP $($r.StatusCode)"

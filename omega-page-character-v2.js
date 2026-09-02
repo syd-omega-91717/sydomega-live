@@ -42,7 +42,7 @@ for (var k in map) if (map[k].test(key)) return k;
 return 'sovereign';
 }
 function mount() {
-var key = (location.pathname.split('/').pop() || 'index').replace(//.html?$/i, '').toLowerCase();
+var key = (location.pathname.split('/').pop() || 'index').replace(/\.html?$/i, '').toLowerCase();
 var type = classify(key);
 var c = FRAMEWORK[type];
 if (!c) return;
@@ -58,12 +58,12 @@ body.dataset.omegaCharacter = type;
 if (!document.getElementById('omega-page-character-v2-css')) {
 var st = document.createElement('style');
 st.id = 'omega-page-character-v2-css';
-st.textContent = '[data-omega-character]{transition:background .6s}
-' + 'body[data-omega-character= gaming] .card:hover,body[data-omega-character= media] .card:hover{transform:translateY(-4px) scale(1.015)}
-' + 'body[data-omega-character= knowledge]{--omega-motion-speed:2s}
-' + 'body[data-omega-character= command] .topbar{border-bottom-color:rgba(201,168,76,.25)}
-' + 'body[data-omega-character= intelligence] .topbar{border-bottom-color:rgba(0,229,255,.2)}
-' + '@media(prefers-reduced-motion:reduce){[data-omega-character]{--omega-motion-speed:0s}}';
+st.textContent = '[data-omega-character]{transition:background .6s}\n'
++ 'body[data-omega-character= gaming] .card:hover,body[data-omega-character= media] .card:hover{transform:translateY(-4px) scale(1.015)}\n'
++ 'body[data-omega-character= knowledge]{--omega-motion-speed:2s}\n'
++ 'body[data-omega-character= command] .topbar{border-bottom-color:rgba(201,168,76,.25)}\n'
++ 'body[data-omega-character= intelligence] .topbar{border-bottom-color:rgba(0,229,255,.2)}\n'
++ '@media(prefers-reduced-motion:reduce){[data-omega-character]{--omega-motion-speed:0s}}';
 (document.head || document.documentElement).appendChild(st);
 }
 document.dispatchEvent(new CustomEvent('omega:page-character-v2', {

@@ -77,7 +77,7 @@ log = JSON.parse(sessionStorage.getItem('omega:uniqueness:log') || '[]');
 }
 catch (e) {
 }
-var key = (location.pathname.split('/').pop() || 'index').replace(//.html?$/i, '');
+var key = (location.pathname.split('/').pop() || 'index').replace(/\.html?$/i, '');
 var v = VIOLATIONS.find(function (x) {
 return x.page === key;
 });

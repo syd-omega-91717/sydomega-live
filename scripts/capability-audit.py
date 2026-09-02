@@ -89,7 +89,8 @@ def source_audit() -> int:
     missing_runtime = []
     for page in pages:
         src = read(page)
-        if not re.search(r'<script[^>]+src=["\']/+bg\.js(?:[?#"\'])', src, re.I):
+        # Unquoted attribute values are valid HTML5 and used by several pages.
+        if not re.search(r'<script[^>]+src=["\']?/+bg\.js(?:[?#"\'\s>]|$)', src, re.I):
             missing_runtime.append(page.name)
             continue
         score = 10

@@ -97,7 +97,12 @@ injected = {
 
 static_included = set()
 for page in (f for f in os.listdir(".") if f.endswith(".html")):
-    for m in re.findall(r"""<script[^>]+src=["']([^"']+)""", read(page)):
+    # Also match unquoted src (valid HTML5): a quoted-only pattern made every
+    # script on a compactly-written page invisible to the module graph, so
+    # the modules those pages load were reported as orphans.
+    for a, b in re.findall(
+            r"""<script[^>]+src=(?:["']([^"']+)["']|([^\s>"'=]+))""", read(page)):
+        m = a or b
         static_included.add(m.split("/")[-1].split("?")[0])
 
 reachable = injected | static_included

@@ -107,6 +107,17 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     </div>
   </div>
   <div class="settings-section">
+    <div class="settings-section-title">YOUR DATA</div>
+    <p class="settings-hint">48 pages keep what you enter in this browser only. Clearing your browser
+      data, or moving to a new device, loses it. Export writes a single file you keep; import reads it
+      back. Nothing here is uploaded &mdash; the file goes straight to your device.</p>
+    <div class="acct-row" style="gap:8px;flex-wrap:wrap">
+      <button class="btn-gold" id="btn-data-export" style="font-size:9px;letter-spacing:2px;padding:10px 16px">EXPORT MY DATA</button>
+      <button class="btn-gold" id="btn-data-import" style="font-size:9px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">IMPORT FROM FILE</button>
+    </div>
+    <div class="settings-msg" id="data-msg" role="status" aria-live="polite"></div>
+  </div>
+  <div class="settings-section">
     <div class="settings-section-title">DEACTIVATE ACCOUNT</div>
     <p class="settings-hint">Deactivate is reversible &mdash; sign back in to restore. Your profile and data are preserved.</p>
     <div class="acct-row">
@@ -149,6 +160,34 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
 </div>
 
 <script>
+/* Data export / import. OmegaLocalBackup is loaded platform-wide by bg.js and
+   defer-loaded, so it may not have published when this runs -- hence the guard
+   rather than an assumption. */
+(function(){
+  function msg(s){ var el=document.getElementById('data-msg'); if(el) el.textContent=s; }
+  function lb(){ return window.OmegaLocalBackup; }
+  document.addEventListener('DOMContentLoaded', function(){
+    var ex=document.getElementById('btn-data-export');
+    var im=document.getElementById('btn-data-import');
+    if(ex) ex.addEventListener('click', function(){
+      var b=lb();
+      if(!b||!b.exportAll){ msg('Backup module not loaded — reload the page and try again.'); return; }
+      var n=b.exportAll();
+      msg(n ? ('Exported ' + n + ' item' + (n===1?'':'s') + ' to your downloads.')
+            : 'Nothing stored in this browser yet — nothing to export.');
+    });
+    if(im) im.addEventListener('click', function(){
+      var b=lb();
+      if(!b||!b.importAll){ msg('Backup module not loaded — reload the page and try again.'); return; }
+      b.importAll(function(ok, restored, rejected){
+        if(!ok){ msg('That file could not be read. Choose a file exported from this platform.'); return; }
+        msg('Restored ' + restored + ' item' + (restored===1?'':'s')
+            + (rejected ? ' — ' + rejected + ' entry(s) ignored as not platform data.' : '')
+            + ' Reload a page to see them.');
+      });
+    });
+  });
+})();
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['preferences','account','privacy','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

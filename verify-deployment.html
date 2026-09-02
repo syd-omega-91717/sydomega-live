@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase C/D - Deployment Status</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #000; color: #0f0; line-height: 1.6; }
+    h1 { color: #0f0; margin-bottom: 10px; }
+    .section { border: 1px solid #0f0; padding: 15px; margin: 10px 0; }
+    .pass { color: #0f0; }
+    .fail { color: #f00; }
+    .warn { color: #ff0; }
+    pre { background: #111; padding: 10px; overflow-x: auto; border: 1px solid #0f0; margin: 10px 0; }
+    button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; font-family: monospace; }
+    button:hover { background: #00f; }
+    #status { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>PHASE C/D - DEPLOYMENT VERIFICATION</h1>
+  
+  <div class="section">
+    <h2>Module Status</h2>
+    <div id="modules"></div>
+  </div>
+  
+  <div class="section">
+    <h2>Visual System Check</h2>
+    <div id="visual"></div>
+  </div>
+  
+  <div class="section">
+    <h2>Page Archetype Detection</h2>
+    <div id="archetype"></div>
+  </div>
+  
+  <div class="section">
+    <h2>Debug Output</h2>
+    <button onclick="document.getElementById('debug').innerHTML = JSON.stringify({
+      modules: window.OmegaArchetype ? 'loaded' : 'missing',
+      emblems: window.OmegaEmblems ? Object.keys(window.OmegaEmblems).length + ' emblems' : 'missing',
+      windowKeys: Object.keys(window).filter(k => k.startsWith('Omega')).join(', ')
+    }, null, 2)">Run Diagnostic</button>
+    <pre id="debug"></pre>
+  </div>
+
+  <script src="/bg.js"></script>
+  <script>
+    var results = { modules: {}, visual: {}, archetype: {} };
+    
+    function check(name) {
+      return {
+        pass: function(msg) { 
+          results.modules[name] = '✓ ' + msg;
+          return true;
+        },
+        fail: function(msg) { 
+          results.modules[name] = '✗ ' + msg;
+          return false;
+        }
+      };
+    }
+    
+    function render() {
+      setTimeout(function(){
+        var html = '';
+        
+        // Module checks
+        var t = check('OmegaArchetype');
+        window.OmegaArchetype ? t.pass('Loaded - ' + Object.keys(window.OmegaArchetype).length + ' methods') : t.fail('NOT LOADED');
+        
+        t = check('OmegaEmblemIntegration');
+        window.OmegaEmblemIntegration ? t.pass('Loaded') : t.fail('NOT LOADED');
+        
+        t = check('OmegaEmblems');
+        window.OmegaEmblems ? t.pass('Loaded - ' + Object.keys(window.OmegaEmblems).length + ' emblems') : t.fail('NOT LOADED');
+        
+        t = check('OmegaDataBinding');
+        window.OmegaDataBinding ? t.pass('Loaded') : t.fail('NOT LOADED');
+        
+        t = check('OmegaPageFeatures');
+        window.OmegaPageFeatures ? t.pass('Loaded') : t.fail('NOT LOADED');
+        
+        // Render module results
+        var modDiv = document.getElementById('modules');
+        for (var key in results.modules) {
+          var cls = results.modules[key].startsWith('✓') ? 'pass' : 'fail';
+          modDiv.innerHTML += '<div class="' + cls + '">' + results.modules[key] + '</div>';
+        }
+        
+        // Check visual integration
+        var visDiv = document.getElementById('visual');
+        if (window.OmegaEmblemIntegration) {
+          visDiv.innerHTML += '<div class="pass">✓ Emblem integration module loaded - emblems can be rendered</div>';
+        } else {
+          visDiv.innerHTML += '<div class="fail">✗ Emblem integration not loaded - no visual updates possible</div>';
+        }
+        
+        // Check archetype system
+        var archDiv = document.getElementById('archetype');
+        if (window.OmegaArchetype && typeof window.OmegaArchetype.getArchetype === 'function') {
+          try {
+            var arch = window.OmegaArchetype.getArchetype(document.body);
+            archDiv.innerHTML += '<div class="pass">✓ Archetype detection works - detected: ' + arch + '</div>';
+          } catch (e) {
+            archDiv.innerHTML += '<div class="fail">✗ Archetype detection failed: ' + e.message + '</div>';
+          }
+        } else {
+          archDiv.innerHTML += '<div class="fail">✗ Archetype system not available</div>';
+        }
+        
+      }, 2000);
+    }
+    
+    render();
+  </script>
+</body>
+</html>

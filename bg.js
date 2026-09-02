@@ -1828,3 +1828,5 @@ setTimeout(function(){
   /* Sovereign worker fleet — 6 async consumers with circuit breaker + retry + DLQ */
   if(!document.querySelector('script[data-omega-workers]')){var _owrk=document.createElement('script');_owrk.src='/omega-workers.js';_owrk.setAttribute('data-omega-workers','1');_owrk.defer=true;__omegaAppend(_owrk);}
   if(!document.querySelector('script[data-omega-member-state]')){var _omst=document.createElement('script');_omst.src='/omega-member-state.js';_omst.setAttribute('data-omega-member-state','1');_omst.defer=true;__omegaAppend(_omst);}
+  /* Loaded platform-wide so every page can hand the member their data back. It reached only 7 finance pages before; 43 pages held localStorage-only data with no export path at all. */
+  if(!document.querySelector('script[data-omega-local-backup]')){var _olb=document.createElement('script');_olb.src='/omega-local-backup.js';_olb.setAttribute('data-omega-local-backup','1');_olb.defer=true;__omegaAppend(_olb);}

@@ -82,6 +82,8 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-threat]')){var os_data_omega_threat=document.createElement('script');os_data_omega_threat.src='/omega-threat.js';os_data_omega_threat.setAttribute('data-omega-threat','1');os_data_omega_threat.defer=true;__omegaAppend(os_data_omega_threat);}
   /* Real-time knowledge graph integration engine */
   if(!document.querySelector('script[data-omega-graphify-integration]')){var os_data_omega_graphify_integration=document.createElement('script');os_data_omega_graphify_integration.src='/omega-graphify-integration.js';os_data_omega_graphify_integration.setAttribute('data-omega-graphify-integration','1');os_data_omega_graphify_integration.defer=true;__omegaAppend(os_data_omega_graphify_integration);}
+  /* Phase D.1: Page feature registry and capability discovery */
+  if(!document.querySelector('script[data-omega-page-features]')){var os_data_omega_page_features=document.createElement('script');os_data_omega_page_features.src='/omega-page-features.js';os_data_omega_page_features.setAttribute('data-omega-page-features','1');os_data_omega_page_features.defer=true;__omegaAppend(os_data_omega_page_features);}
   /* Phase C.2: SVG emblem system for all 184 pages */
   if(!document.querySelector('script[data-omega-emblems]')){var os_data_omega_emblems=document.createElement('script');os_data_omega_emblems.src='/omega-emblems-catalog.js';os_data_omega_emblems.setAttribute('data-omega-emblems','1');os_data_omega_emblems.defer=true;__omegaAppend(os_data_omega_emblems);}
   /* Phase C.3: Emblem integration with sidebar navigation and glass effects */

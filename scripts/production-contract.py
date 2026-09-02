@@ -30,10 +30,16 @@ def check_pages() -> None:
 
     for page in pages:
         src = page.read_text(encoding="utf-8", errors="ignore")
-        if not re.search(r'<script[^>]+src=["\']/+bg\.js(?:[?#\"\'])', src, re.I):
+        # Attribute values may be unquoted -- valid HTML5, and several pages are
+        # written that way (`src=/bg.js`). Requiring a quote made this report
+        # "missing /bg.js runtime" for 5 pages that load it correctly.
+        if not re.search(r'<script[^>]+src=["\']?/+bg\.js(?:[?#"\'\s>]|$)', src, re.I):
             error(page, "missing /bg.js runtime")
 
-        ids = re.findall(r'\bid=["\']([^"\']+)["\']', src, re.I)
+        # Same unquoted-attribute blind spot: this silently skipped every id on
+        # those pages, so the duplicate-id check was not running there at all.
+        ids = [a or b for a, b in
+               re.findall(r'\bid=(?:["\']([^"\']+)["\']|([^\s>"\'=]+))', src, re.I)]
         seen: set[str] = set()
         for ident in ids:
             if ident in seen:

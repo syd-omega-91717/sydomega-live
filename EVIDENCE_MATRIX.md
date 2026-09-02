@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 95 |
 | `PARTIAL` | 24 |
 | `LOCAL_ONLY` | 48 |
-| `STATIC` | 8 |
+| `STATIC` | 9 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 0 |
-| **total** | **177** |
+| `UNREACHABLE` | 6 |
+| **total** | **184** |
 
 ## BUILT (95)
 
@@ -226,7 +226,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
 
-## STATIC (8)
+## STATIC (9)
 
 | page | evidence |
 |---|---|
@@ -234,6 +234,7 @@ This scanner reads the repository. It has no database connection, so:
 | `architect.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
 | `enter.html` | no backend call, no stored state |
+| `gateway.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
 | `ops.html` | no backend call, no stored state |
@@ -245,6 +246,17 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
+
+## UNREACHABLE (6)
+
+| page | evidence |
+|---|---|
+| `ad-network.html` | not referenced by nav.js and not a public page |
+| `architecture.html` | not referenced by nav.js and not a public page |
+| `control-plane.html` | not referenced by nav.js and not a public page |
+| `creator.html` | not referenced by nav.js and not a public page |
+| `project-studio.html` | not referenced by nav.js and not a public page |
+| `world-shell.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
 
@@ -266,8 +278,8 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 118 |
-| functions declared in `supabase/` | 128 |
+| tables + views declared in `supabase/` | 119 |
+| functions declared in `supabase/` | 129 |
 | tables defined in more than one root SQL file | 48 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a

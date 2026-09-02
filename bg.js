@@ -87,7 +87,9 @@ function __omegaAppend(el){
   /* Phase C.3: Emblem integration with sidebar navigation and glass effects */
   if(!document.querySelector('script[data-omega-emblem-integration]')){var os_data_omega_emblem_integration=document.createElement('script');os_data_omega_emblem_integration.src='/omega-emblem-integration.js';os_data_omega_emblem_integration.setAttribute('data-omega-emblem-integration','1');os_data_omega_emblem_integration.defer=true;__omegaAppend(os_data_omega_emblem_integration);}
   /* Phase C.4: Page archetype system for consistent visual treatment */
-  if(!document.querySelector('script[data-omega-archetype]')){var os_data_omega_archetype=document.createElement('script');os_data_omega_archetype.src='/omega-archetype-system.js';os_data_omega_archetype.setAttribute('data-omega-archetype','1');os_data_omega_archetype.defer=true;__omegaAppend(os_data_omega_archetype);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-archetype]')){var os_data_omega_archetype=document.createElement('script');os_data_omega_archetype.src='/omega-archetype-system.js';os_data_omega_archetype.setAttribute('data-omega-archetype','1');os_data_omega_archetype.defer=true;__omegaAppend(os_data_omega_archetype);}
+  /* Phase C.5: Archetype-specific motion and visual styling rules */
+  if(!document.querySelector('script[data-omega-archetype-motion]')){var os_data_omega_archetype_motion=document.createElement('script');os_data_omega_archetype_motion.src='/omega-archetype-motion.js';os_data_omega_archetype_motion.setAttribute('data-omega-archetype-motion','1');os_data_omega_archetype_motion.defer=true;__omegaAppend(os_data_omega_archetype_motion);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

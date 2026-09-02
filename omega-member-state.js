@@ -278,6 +278,15 @@
   }
 
   window.OmegaMemberState = {
+    /* The definition of "this is member data" lives here and is exported so
+       omega-local-backup.js exports exactly what this mirrors -- a second
+       hand-kept copy of PREFIX/SKIP would drift the moment a page adds a key. */
+    prefix: PREFIX,
+    skip: SKIP,
+    isMemberKey: function (k) {
+      return typeof k === 'string' && k.indexOf(PREFIX) === 0 && !SKIP[k];
+    },
+
     status: function () {
       return {
         enabled: state.enabled, reason: state.reason, pending: state.pending,

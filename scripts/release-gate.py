@@ -54,7 +54,10 @@ def check_public_pages() -> int:
     pages = sorted(ROOT.glob("*.html"))
     for page in pages:
         text = page.read_text(encoding="utf-8", errors="ignore")
-        if not re.search(r'<script[^>]+src=["\']/+bg\.js(?:[?#\"\'])', text, re.I):
+        # Unquoted attribute values are valid HTML5 (`src=/bg.js`) and several
+        # pages use them. The quoted-only pattern reported 5 such pages as not
+        # loading bg.js when a real render shows the guard and nav both active.
+        if not re.search(r'<script[^>]+src=["\']?/+bg\.js(?:[?#"\'\s>]|$)', text, re.I):
             fail(f"public page does not load /bg.js: {page.name}")
             failures += 1
     for rel in PUBLIC_CONTRACTS:

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Module Verification Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #0f0; }
+    .status { margin: 10px 0; padding: 10px; border: 1px solid #0f0; }
+    .pass { color: #0f0; }
+    .fail { color: #f00; }
+    pre { background: #000; padding: 10px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Module Verification Test</h1>
+  <div id="results"></div>
+
+  <script src="/bg.js"></script>
+  <script>
+    var results = document.getElementById('results');
+
+    function test(name) {
+      return {
+        pass: function(msg) {
+          var el = document.createElement('div');
+          el.className = 'status pass';
+          el.innerHTML = '✓ ' + name + ': ' + msg;
+          results.appendChild(el);
+        },
+        fail: function(msg) {
+          var el = document.createElement('div');
+          el.className = 'status fail';
+          el.innerHTML = '✗ ' + name + ': ' + msg;
+          results.appendChild(el);
+        }
+      };
+    }
+
+    // Test module initialization
+    setTimeout(function(){
+      var t;
+
+      t = test('OmegaArchetype');
+      window.OmegaArchetype ? t.pass('loaded, ' + Object.keys(window.OmegaArchetype).length + ' methods') : t.fail('not defined');
+
+      t = test('OmegaArchetypeMotion');
+      window.OmegaArchetypeMotion ? t.pass('loaded, ' + Object.keys(window.OmegaArchetypeMotion).length + ' methods') : t.fail('not defined');
+
+      t = test('OmegaArchetypeSurfaces');
+      window.OmegaArchetypeSurfaces ? t.pass('loaded, ' + Object.keys(window.OmegaArchetypeSurfaces).length + ' methods') : t.fail('not defined');
+
+      t = test('OmegaEmblemIntegration');
+      window.OmegaEmblemIntegration ? t.pass('loaded, ' + Object.keys(window.OmegaEmblemIntegration).length + ' methods') : t.fail('not defined');
+
+      t = test('OmegaEmblems');
+      window.OmegaEmblems ? t.pass('loaded, ' + Object.keys(window.OmegaEmblems).length + ' items') : t.fail('not defined');
+
+      t = test('OmegaPageFeatures');
+      window.OmegaPageFeatures ? t.pass('loaded, ' + Object.keys(window.OmegaPageFeatures).length + ' capabilities') : t.fail('not defined');
+
+      t = test('OmegaDataBinding');
+      window.OmegaDataBinding ? t.pass('loaded, ' + Object.keys(window.OmegaDataBinding).length + ' methods') : t.fail('not defined');
+
+      // Check for any errors in console
+      if(window.OmegaArchetype && typeof window.OmegaArchetype.getArchetype === 'function'){
+        t = test('OmegaArchetype.getArchetype');
+        try {
+          var arch = window.OmegaArchetype.getArchetype(document.body);
+          t.pass('returns: ' + arch);
+        } catch(e) {
+          t.fail(e.message);
+        }
+      }
+
+    }, 2000);
+  </script>
+</body>
+</html>

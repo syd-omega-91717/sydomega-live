@@ -85,7 +85,9 @@ function __omegaAppend(el){
   /* Phase C.2: SVG emblem system for all 184 pages */
   if(!document.querySelector('script[data-omega-emblems]')){var os_data_omega_emblems=document.createElement('script');os_data_omega_emblems.src='/omega-emblems-catalog.js';os_data_omega_emblems.setAttribute('data-omega-emblems','1');os_data_omega_emblems.defer=true;__omegaAppend(os_data_omega_emblems);}
   /* Phase C.3: Emblem integration with sidebar navigation and glass effects */
-  if(!document.querySelector('script[data-omega-emblem-integration]')){var os_data_omega_emblem_integration=document.createElement('script');os_data_omega_emblem_integration.src='/omega-emblem-integration.js';os_data_omega_emblem_integration.setAttribute('data-omega-emblem-integration','1');os_data_omega_emblem_integration.defer=true;__omegaAppend(os_data_omega_emblem_integration);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-emblem-integration]')){var os_data_omega_emblem_integration=document.createElement('script');os_data_omega_emblem_integration.src='/omega-emblem-integration.js';os_data_omega_emblem_integration.setAttribute('data-omega-emblem-integration','1');os_data_omega_emblem_integration.defer=true;__omegaAppend(os_data_omega_emblem_integration);}
+  /* Phase C.4: Page archetype system for consistent visual treatment */
+  if(!document.querySelector('script[data-omega-archetype]')){var os_data_omega_archetype=document.createElement('script');os_data_omega_archetype.src='/omega-archetype-system.js';os_data_omega_archetype.setAttribute('data-omega-archetype','1');os_data_omega_archetype.defer=true;__omegaAppend(os_data_omega_archetype);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

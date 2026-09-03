@@ -41,8 +41,8 @@ This scanner reads the repository. It has no database connection, so:
 | `LOCAL_ONLY` | 48 |
 | `STATIC` | 15 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 0 |
-| **total** | **184** |
+| `UNREACHABLE` | 2 |
+| **total** | **186** |
 
 ## BUILT (95)
 
@@ -252,6 +252,13 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
+
+## UNREACHABLE (2)
+
+| page | evidence |
+|---|---|
+| `verify-deployment.html` | not referenced by nav.js and not a public page |
+| `verify-modules.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
 

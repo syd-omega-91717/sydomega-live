@@ -4858,3 +4858,68 @@ The deterministic reproduction goes **1 throw → 0**. 20/20 blocking checks and
 144 tests still pass. This is a pre-existing defect, present at `0ec01227` and
 every commit before it — not introduced by the commerce-flag work in the same
 branch, which the dual-commit reproduction is the proof of.
+
+## An unenforced rule drifts within hours: the reachability gate (2026-09-03)
+
+CLAUDE.md section 9 has always said it: *"Don't write a new page without ...
+adding it to `nav.js`'s `PS` map and the relevant `SECTIONS` entry — otherwise
+it's unreachable from navigation."* Like section 9's dormancy rule before
+`commerce-contract.py`, it had no enforcement, so it held only as long as
+someone remembered.
+
+It did not hold. Seven pages linked from nowhere and fifteen with no
+active-state entry were driven to zero earlier the same day; a merge brought
+**two more unreachable pages** (`verify-deployment.html`, `verify-modules.html`)
+within hours. Two unenforced rules, two identical outcomes — which is the
+argument for the gate rather than another sweep.
+
+`scripts/reachability-contract.py` (blocking, `ci-local.sh` step 2n, `ci.yml`).
+
+### The distinction that had to be built in
+
+`nav.js` holds two independent maps, and reporting them as one produced a wrong
+number the first time:
+
+| map | decides | a page missing from it |
+|---|---|---|
+| `SECTIONS` `sub[]` | which links render | **unreachable** — nothing points to it |
+| `PS` | which section shows active | renders nav, highlights nothing |
+
+A first pass checked only `PS` and reported "15 pages unreachable". The real
+numbers were **7** and **15**. So unreachability blocks and active-state is
+advisory, reported separately.
+
+### Keying on the href, not the slug
+
+Several `SECTIONS` entries deep-link into another page:
+`['gates','12 GATES','/elements.html#gates']`. That makes `elements.html`
+reachable and leaves `gates.html` exactly as unreachable as before. Keying on
+the entry's *slug* would have called `gates.html` linked because an entry named
+`gates` exists. The gate resolves the href, strips the fragment, and both
+behaviours are pinned by tests.
+
+### Exemptions carry their reason
+
+`SYSTEM_PAGES` lists the ten pages that are not member destinations — error
+states, the signed-out pages, the two owner diagnostics from the merge — each
+with why. "Exempt" with no reason recorded is how an unreachable page gets
+quietly normalised. The gate also reports a *stale* exemption (a listed page
+that no longer exists); it caught one in its own first run (`sovereign`, a
+`vercel.json` redirect target with no file), which was removed.
+
+### What it cannot check
+
+That the sidebar actually appears. `nav.js` returns immediately without an
+element with id `omega-side`, so a perfectly-registered page can still render no
+navigation — `architecture.html` was exactly that. The `no_nav_container` check
+is a best-effort grep; `scripts/verify-runtime.js` is what proves it.
+
+### Verification
+
+Cross-checked against `0ec01227` rather than trusted: run there it reports
+precisely the seven pages that were unreachable at that commit. 10 new tests
+(154 total), 21/21 blocking checks.
+
+**Note for the next session: CLAUDE.md is now at exactly 16,000 of its 16,000
+token budget.** Adding any standing fact to section 8 now requires removing one
+first. Two items were compressed to fit this entry's baseline updates.

@@ -114,7 +114,7 @@
     </div>
 
     <!-- TAB 1: GATEWAY -->
-    <div class="tab-pane active" id="tab-gateway">
+    <div class="tab-panel active" id="tab-gateway">
       <div class="gw-canvas-wrap">
         <canvas id="omega-canvas" width="400" height="280" style="width:200px;height:140px"></canvas>
       </div>
@@ -147,7 +147,7 @@
     </div>
 
     <!-- TAB 2: STATUS -->
-    <div class="tab-pane" id="tab-status">
+    <div class="tab-panel" id="tab-status">
       <!-- Every row below used to be hard-coded: eight green/gold dots
            asserting SUPABASE: CONNECTED and AUTH LAYER: ONLINE, under a
            LAST CHECK clock that ticked every second while nothing was ever
@@ -174,7 +174,7 @@
     </div>
 
     <!-- TAB 3: PROTOCOL -->
-    <div class="tab-pane" id="tab-protocol">
+    <div class="tab-panel" id="tab-protocol">
       <div class="proto-grid">
         <div class="proto-card card">
           <div class="proto-title">RESONANCE FREQUENCY</div>
@@ -208,7 +208,7 @@
     </div>
 
     <!-- TAB 4: SCIENCE -->
-    <div class="tab-pane" id="tab-science">
+    <div class="tab-panel" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
         <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
         <div class="stat-card card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
@@ -245,7 +245,7 @@
 document.querySelectorAll('.lt').forEach(function(b){
   b.addEventListener('click',function(){
     document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('active');});
-    document.querySelectorAll('.tab-pane').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('active');});
     b.classList.add('active');
     var p=document.getElementById('tab-'+b.dataset.tab);
     if(p)p.classList.add('active');

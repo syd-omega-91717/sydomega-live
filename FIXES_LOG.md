@@ -5380,3 +5380,65 @@ Verified in a render: `{"tls":"NOT HTTPS","rt":"LOADED","sb":"READY"}` with zero
 page errors. The TLS row reporting **NOT HTTPS** over the `http://localhost`
 harness is the proof the check is real — a hard-coded panel would have said
 ENCRYPTED.
+
+## The front door rendered all four tabs at once (2026-09-03)
+
+Found by screenshotting `enter.html` to confirm the rebuilt STATUS panel looked
+right — the panel was fine, and the screenshot showed the GATEWAY, STATUS and
+PROTOCOL panes all painted on top of each other.
+
+`bg.js` defines the shared tab primitive as **`.tab-panel`**:
+
+```
+.tab-panel,.tab-panels>.tab-panel{display:none}
+.tab-panel.active,.tab-panel.on,.tab-panel.act{display:block}
+```
+
+`enter.html` wrote **`.tab-pane`** — one letter short. Nothing in the repo
+defines that class (`grep -rn --include=*.css --include=*.js '\.tab-pane\b[^l]'`
+returns nothing), so `display:none` never applied and all four panes rendered
+stacked. The tab bar was decorative: clicking toggled an `active` class that
+changed nothing. `/` rewrites to `/enter`, so this was the first thing every
+visitor saw. Measured in a render:
+
+```
+before   {"total":4,"visible":4}
+after    on load {"visible":["tab-gateway"]}   after status {"visible":["tab-status"]}
+         after protocol {"visible":["tab-protocol"]}   after science {"visible":["tab-science"]}
+```
+
+### Two measurement errors on the way to a one-page answer
+
+**The grep overcounted six-fold.** `grep -l 'class="tab-pane' *.html` reported
+**159 pages** and it looked like a platform-wide failure. `tab-pane` is a prefix
+of `tab-panel`, so the pattern matched every *correct* page too. A render across
+all 159 gave the real split: 131 use `.tab-panel` correctly, 22 use `.tab-pane`
+and define it in their own `<style>`, and **1** — `enter.html` — used it with no
+definition anywhere. §8.4's "a repo-wide grep is a candidate generator, not a
+verdict", in its most expensive form yet.
+
+A first scan also reported "1 broken, 22 OK" while silently skipping 136 pages
+that returned no panes. That number happened to be right, but it was right by
+luck until the skips were classified (131 no-`.tab-pane`-in-DOM, 5 redirected to
+`/dashboard.html`, 0 errored). Getting the right number by luck is not
+measuring.
+
+**The gate written for this bug could not catch it.** `shared-class-check.py`'s
+first version collected "locally defined" classes from the whole page source, so
+`enter.html`'s own `document.querySelectorAll('.tab-pane')` counted as a
+definition and the script reported **0 findings against the broken file**. A
+selector in JavaScript is a *use*, not a definition. Only `<style>` blocks
+define. Corrected, then verified in both directions before shipping: it reports
+`.tab-pane / 1 page(s): enter.html` against `git show HEAD:enter.html`, and 0
+findings across the current 186-page estate. This is exactly §8.4's "verify a 0
+findings result is real" — a gate that cannot catch its own founding bug is
+worse than no gate, because its green is read as evidence.
+
+Scope is deliberately narrow: only class tokens starting with a shared-primitive
+prefix (`tab- kpi card glass bar- chip tbl- btn`) are checked, and class
+attributes containing a quote or `+` are skipped as JavaScript template
+fragments. 0 false positives across the estate; widen only with the same
+before/after evidence.
+
+`node scripts/verify-runtime.js --all`: **PASS (186 pages)** after all of this
+session's page changes.

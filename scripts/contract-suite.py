@@ -92,6 +92,9 @@ GATES = [
     ('absolute-asset',
      'every absolute URL on our own domain resolves to a committed file',
      ['scripts/absolute-asset-check.py']),
+    ('shared-class',
+     'markup never asks for a shared primitive no stylesheet defines',
+     ['scripts/shared-class-check.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

@@ -6062,3 +6062,77 @@ ok  world-shell      1360x166  ink 6269   "12-FOLD ..."
 
 Estate total moves 158 -> 174 of 187. The remaining 13 are the 7 tab-hosted
 marks and the 6 public/utility pages, both correct as they are.
+
+### Every section heading now carries its page's emblem — and why the glyph would not paint
+
+614 `.sechead` elements across 109 pages were text-only. Each now shows the
+glyph from that page's own canon config, inside a slowly-rotating dashed ring,
+in that page's axis colour: gold `⌘` on dashboard, green `◆` on vault, gold
+`⚖` on compliance, cyan `⍛` on cosmos. One rule in `bg.js`, no per-page markup.
+
+`--pg-glyph` and `--pg-col` are published on `<html>` by `omega-page-emblem.js`
+— the module that owns the 183-entry `PAGES` table — so the stylesheet reads
+the canonical values rather than carrying a second copy (§8.1 class 8).
+`publishVars()` runs regardless of whether the page mounts
+`[data-page-emblem]`, because 13 pages legitimately have no mount and their
+headings still want the mark.
+
+**The mark rendered as an empty ring for four attempts.** The box drew — right
+size, right place, dashed border — and the glyph inside it never did.
+
+What each attempt ruled out, in order:
+
+* A background on the pseudo proved the box existed, 17x17, exactly inside the
+  ring. So placement was right and only text was missing.
+* The same declarations on a plain `div` rendered the glyph fine. So the rule
+  was not wrong in isolation.
+* Collapsing two pseudos into one changed nothing, which killed the theory that
+  generating two absolutely-positioned pseudos on a `display:flex` parent was
+  at fault.
+* `getComputedStyle(h,'::before')` reported everything correct: `content:"⚖"`,
+  `display:block`, `18x18`, `borderTopStyle:dashed`, gold, 11px, and exactly
+  **one** rule in the whole cascade targeting the selector.
+
+**The test that found it: forcing `content:"X" !important`. Still nothing.** A
+pseudo that cannot paint a plain ASCII letter is not a glyph problem, a font
+problem, or a `var()` problem.
+
+Root cause, `bg.js:1290`:
+
+```js
+[].slice.call(document.querySelectorAll('.sechead')).forEach(function(el){
+  if(el.children.length===0&&(el.textContent||'').trim().length<48)
+    el.classList.add('ofx-sheen');
+});
+```
+
+`.ofx-sheen` fills heading text with a gradient via
+`background-clip:text` + **`-webkit-text-fill-color:transparent`**. That
+property **inherits into pseudo-elements**. Borders are not text fill, so the
+ring painted; the glyph was filled with transparent. Fixed with an explicit
+`-webkit-text-fill-color:var(--pg-col)` on the pseudo.
+
+**Standing hazard worth carrying forward: any `::before`/`::after` text on an
+element that receives `.ofx-sheen` is invisible unless it sets its own
+`-webkit-text-fill-color`.** The symptom — box paints, text does not — looks
+nothing like a text-fill problem.
+
+Two further constraints, both measured rather than assumed:
+
+* **Absolute positioning is required, not stylistic.** `.sechead` is
+  `display:flex` with `justify-content:space-between`; a static pseudo becomes
+  a flex item and springs each heading's own right-hand content to the far
+  edge. Out of flow it cannot disturb anything — A/B on `vault.html`, pinning
+  `bg.js` without the rule, measured first-content offset delta **0 across all
+  10 headings**. `position:relative` was already set by `omega-content.js`.
+* **90s rotation, not the 34s/42s of `omega-emblems.js`'s rings.** 614 of these
+  can share one page; anything quicker reads as a swarm. The keyframes repeat
+  the transform rather than relying on the declared one, per §4.2's
+  animation-beats-declaration trap.
+
+Two process notes from the same work, both already in §8.4 and both hit anyway:
+`bg.js`'s CSS section headers use real box-drawing characters, so a `replace()`
+written against `─` matched nothing; and inserting CSS into that
+single-quoted JS string requires escaping backslashes, then apostrophes, then
+newlines — getting the order wrong broke the file, `node --check` caught it,
+and it was restored from git rather than patched over.

@@ -264,7 +264,28 @@
     frame();
   }
 
+  /* Publish this page's canon mark as CSS custom properties on <html>, so any
+     stylesheet can draw the page's own glyph without a second copy of PAGES
+     (CLAUDE.md section 8.1 class 8 -- two divergent copies of one canonical
+     table is this repo's most expensive recurring bug).
+
+     Deliberately independent of whether the page mounts [data-page-emblem]:
+     13 pages legitimately have no mount (7 host theirs on a non-default tab,
+     6 are public/utility), and every one of them still has section headings
+     that want the mark. Keyed off the pathname, which is what boot() falls
+     back to anyway. */
+  function publishVars() {
+    var key = (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
+    var cfg = PAGES[key] || [12, 'b', '\u03A9'];
+    var root = document.documentElement;
+    /* content: needs a QUOTED string, so the quotes are part of the value. */
+    root.style.setProperty('--pg-glyph', '"' + cfg[2] + '"');
+    root.style.setProperty('--pg-col', AXIS_COL[cfg[1]] || '#C9A84C');
+    root.setAttribute('data-pg-fold', String(cfg[0]));
+  }
+
   function boot() {
+    publishVars();
     var hosts = document.querySelectorAll('[data-page-emblem]');
     for (var i = 0; i < hosts.length; i++) {
       var host = hosts[i];
@@ -281,7 +302,7 @@
     }
   }
 
-  window.OmegaPageEmblem = { boot: boot, pages: PAGES,
+  window.OmegaPageEmblem = { boot: boot, pages: PAGES, publishVars: publishVars,
                             draw: draw, axisColour: AXIS_COL };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

@@ -6429,19 +6429,51 @@ page. `flex-grow > 0` identifies the content column on every layout here, since
 the sidebar is `flex-shrink:0` at a fixed width and never grows. With the
 fallback, `matrix.html` joins the rest at 334x161.
 
-A third correction, and the one that mattered most. The first working version
-fired on **any** flex parent, which is wrong in a way the "0 stretched" result
-cannot show: a page that deliberately mounts the emblem inside a flex header or
-card row would have had a correct mount relocated. The guard now also requires
-the parent to contain a sidebar (`aside, .side, #omega-side`), so only the shell
-row qualifies. A "correctly sized" count proves nothing about that case -- it
-needs a parent-identity diff across all 181 pages, before vs. after, which is
-running as this is written.
+**The third correction is the one worth reading, and it was a regression I had
+already pushed.** The first working version fired on any flex parent, and the
+"0 stretched" sweep cannot show what is wrong with that: it counts heights, and
+a mount that was already correct reads 161 -> 161 whether or not it was moved.
+The parent-identity diff across all 181 pages found it --
+**`graph.html`'s correct mount was being relocated into `#tab-graph.tab-panel`**,
+a container that is `display:none` whenever another tab is selected, so the
+emblem would have vanished from that page depending on the open tab.
 
-Re-measured after the fix (before the sidebar guard was added):
-**181 of 181 correctly sized, 0 stretched.** The full-estate
-`verify-runtime.js --all` re-run and the parent-identity false-positive pass
-are both still in flight; neither result is claimed here yet.
+Adding a sidebar-sibling requirement did not fix it; `#app.page-shell` has a
+sidebar. The missing condition is the flex **axis**:
+
+```
+page                    container          direction  sidebar  stretched
+clarity/matrix (+21)    .shell             row        yes      yes
+graph.html              #app.page-shell    column     yes      NO
+analytics.html          #app.page-shell    column     no       NO
+```
+
+A vertical stretch is only possible in a row-direction container. In a column
+container the cross axis is horizontal and a full-width block is exactly what
+the page wanted -- which is why `graph.html` measured 161px in place. The guard
+requires `row`/`row-reverse`, which excludes it and cannot affect the 23, all of
+which are `.shell` at `flex-direction:row`. `analytics.html` shows the sidebar
+check was doing real work too: same container, no sidebar, never touched.
+
+**The false-positive pass itself returned a wrong answer first, and it was the
+documented kind.** Its first run printed a clean `0 / 0 / 0` while all 181 of
+its lines said `SKIP`: the static server was down, every page load errored, and
+a total failure rendered as a perfect score -- §8.4's "verify a 0 findings
+result is real", walked into directly. The probe now asserts its own coverage
+and exits non-zero if more than five pages fail to load. The server had been
+killed by `pkill -f 'harness/serve.js'`, which matches the invoking shell's own
+command line because that string appears in it, so the command took down its own
+process group including the runtime sweep beside it.
+
+Final measurements, all on the shipped code:
+
+```
+emblem box sweep, 181 mounting pages:  181 correctly sized, 0 stretched
+parent-identity diff, 181 pages:       skipped 0
+                                       parent unchanged 158
+                                       moved (were stretched) 23
+                                       MOVED THOUGH ALREADY CORRECT 0
+```
 
 One incidental gate failure worth recording as a success: `omega-registry.py`
 failed on this change because the module census tracks total `omega-*.js` bytes

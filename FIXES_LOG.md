@@ -5796,3 +5796,132 @@ Verified: `--check` clean and idempotent (a second `--apply` rescales 0);
 `scripts/check-inline-js.py` still parses every inline block; the diff on
 `ad-network.html` shows the attributes still unquoted with only the numeral
 changed.
+
+---
+
+## Session 2026-09-03 (continued) — the signature diagram, and the module it needed that had never loaded
+
+Driven by five reference boards the owner supplied. Their strongest shared
+motif is a ring of emblems orbiting a central Ω — the platform's own twelve
+agents drawn as a constellation rather than a list. Translating it meant
+finding out what this repo already had, and one answer was a surprise.
+
+### `omega-emblems.js` had never loaded on any page — two modules shared one guard
+
+`bg.js` injects each module behind a `data-omega-*` attribute guard so nothing
+double-loads. Two different modules were using the same attribute:
+
+```
+bg.js:90   omega-emblems-catalog.js   guard: data-omega-emblems
+bg.js:611  omega-emblems.js           guard: data-omega-emblems   <-- same
+```
+
+Line 90 runs first, so by the time line 611 asks
+`document.querySelector('script[data-omega-emblems]')` the answer is always
+yes, and `omega-emblems.js` — the 12 living zodiac marks, twin counter-rotating
+rings, element-coloured glyph — was never injected. Confirmed in a render
+before touching anything, on three pages:
+
+```
+   emblem/sigil/ring scripts in DOM: omega-emblems-catalog.js,
+     omega-emblem-integration.js, emblem.js, omega-emblem-panel.js,
+     omega-page-emblem.js, omega-ring.js, omega-sigil-gen.js
+   holding data-omega-emblems  : omega-emblems-catalog.js
+   OmegaEmblems=object   <- the CATALOG's export (plural)
+   OmegaEmblem =undefined <- this module's export (singular)
+```
+
+The near-identical export names are why the collision read as working:
+`window.OmegaEmblems` existed, so a spot check found "the emblem module" and
+moved on.
+
+**The honest scope, which is smaller than it first looked.** A repo-wide grep
+for real mounts — `data-omega-emblem="<Sign>"` and `data-omega-sigil` — returns
+**zero** across all 187 pages. So nothing visible was broken; this was a latent
+guard collision plus 7 KB of finished brand artwork that nothing had ever
+asked for. `audit.py` cannot see it either: the injection *exists* in bg.js
+source, so the module is not orphaned — only the runtime knows it never ran.
+
+Fixed by giving it its own guard, `data-omega-emblem-living`. **The rule the
+collision teaches: a guard attribute is the module's identity, not the feature
+area's.** Two modules in the same area must never share one.
+
+Two follow-ups this forced, because the module is now live on 187 pages for the
+first time:
+
+* **Its MutationObserver was unthrottled** — a whole-document
+  `querySelectorAll('[data-omega-emblem]')` on *every* mutation. Free while the
+  module was unreachable; real work now, since the activity ticker, the
+  dedication chronometer and the chat panes all mutate the DOM on a timer.
+  Coalesced to one scan per animation frame.
+* **`color(sign)` added to its export.** Anything composing these marks needs
+  the same colour that painted the mark it wraps. Reading
+  `omega-sigil-gen.js`'s `ELEM_PALETTES` instead would put two different Fires
+  (`#E86A3A` here, `#FF6B35` there — the drift the `visual-assets` skill
+  records) on one node. This keeps a composed mark internally consistent; it
+  does **not** resolve the underlying drift, which is still open.
+
+### `omega-constellation.js` — the ring-of-emblems diagram
+
+`<div data-omega-constellation="agents">` renders the twelve agents from the
+real `/omega-agents.json` — the same file `agents.html` already consumes, with
+the same fallback posture — as marks on an orbit around a central Ω, joined by
+hairline spokes. Every node is a real `<a>`: the emblem is the door.
+
+Mounted on `agents.html`'s Council tab, above the existing dossier grid.
+**Not** mounted on `cosmos.html`, which already has a working radial agent
+wheel — measured before deciding, 50,616 painted pixels in `#agent-wheel`'s
+1040x1040 buffer. Two agent wheels on one page would have been the duplication
+this repo keeps having to undo.
+
+Three construction decisions, each avoiding a bug class already shipped here:
+
+1. **Nodes are HTML; only spokes and orbit are SVG.** An SVG `<text>` label
+   scales with its viewBox, so markup reading 15px on a desktop renders about
+   7px on a phone — under the 12px floor, and *invisible* to
+   `scripts/type-scale.py`, which matches `font-size:Npx` declarations while an
+   SVG font-size attribute is a bare number. HTML labels are real text at a
+   real 12px (verified in the render), selectable, translatable, and each node
+   is a genuine link with its own focus ring.
+2. **It draws no emblem of its own** — it emits `data-omega-emblem="Aries"` and
+   lets the owning module fill it. That module scans on boot *and* observes, so
+   load order does not matter: no polling, no ordering contract, no second copy
+   of a canonical table (§8.1 class 8).
+3. **No canvas, so no zero-sized buffer.** Geometry is percentage-positioned in
+   an `aspect-ratio:1` box; nothing reads a rendered dimension, so §8.1 class
+   3 — a canvas measured at `DOMContentLoaded` while the approval guard still
+   hides the page — cannot apply.
+
+### The geometry was wrong twice, and only a render said so
+
+**First version: every one of the 12 nodes overlapped its neighbour.** A node
+was `width:23%` on an orbit of radius `.345W`; twelve nodes on that circle get
+`2*pi*R/12 = .181W` of arc each, so a `.26W` node overlaps at *every* width. On
+an `<a>` that means the wrong link catches a click. Measured 12/12 overlapping
+pairs at 390px.
+
+Widening the diagram and narrowing the node to 17% cut it to 4 — and **arc was
+the wrong measure**. Overlap is tested on axis-aligned boxes, so what matters
+is the centre-to-centre delta between adjacent nodes, `dx = dy = R*W*(cos30 -
+cos60)` = 108px at W=860. A 146x125 node overlapped by exactly `146-108` by
+`125-108` — the measured `38x16px`, at the four shoulder positions.
+
+Both dimensions had to come under that delta, which fixed three things at once:
+the box hugs its content (`width:max-content`, capped at 17%) instead of taking
+a fixed share, the mark became a fixed 64px rather than a percentage of a box
+that no longer has a fixed width, and W rose to 900 so the delta is 113.6px
+against a node measured at 90x105. **Result: 0 overlapping pairs, every node
+hit-testable, no sub line clipped** (widest 137px box against 133px of ink).
+
+**A scanner false positive on the way.** The same probe reported 3 of 12 nodes
+"not hit-testable at their own centre" — `AUDITOR`, `PROXY`, `ORACLE`, all with
+`elementFromPoint` returning `null`. Nothing covered them: their centres were
+at y 962–1002 in a 1000px viewport. `elementFromPoint` returns null *outside*
+the viewport, so a node below the fold reads as covered. The probe now skips
+off-viewport centres. §8.4's rule again — a scanner needs its own
+false-positive pass before its number means anything.
+
+Verified at 390px mobile, 390px with `prefers-reduced-motion: reduce`
+(`animation-name: none`, every mark still drawn) and 1024px: 12 nodes, 12 marks
+filled, labels 12px, 0 page-level horizontal scroll — the wrap scrolls inside
+itself, which is what `verify-runtime.js` asserts.

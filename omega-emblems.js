@@ -125,8 +125,15 @@
     scanNamed();
     if (document.querySelector('[data-omega-sigil]')) detectAndSigil();
     try {
+      // Coalesced to one scan per frame. Unthrottled, this ran a
+      // whole-document querySelectorAll on EVERY mutation -- which cost
+      // nothing while the module was unreachable, and costs real work now
+      // that it loads on all 187 pages: the activity ticker, the chrono
+      // widget and the chat panes all mutate the DOM on a timer.
+      var queued = 0;
       new MutationObserver(function () {
-        scanNamed();
+        if (queued) return;
+        queued = requestAnimationFrame(function () { queued = 0; scanNamed(); });
       }).observe(document.documentElement, { childList: true, subtree: true });
     } catch (e) {}
   }
@@ -134,5 +141,14 @@
   else document.addEventListener('DOMContentLoaded', boot);
 
   // expose for pages that want to build a full 12-emblem gallery
-  window.OmegaEmblem = { svg: svg, ring: ring, signs: Object.keys(SIGN) };
+  // `color(sign)` exists so anything composing these marks -- the
+  // constellation, a medallion row -- tints its own labels from the SAME
+  // table that painted the mark it wraps. The alternative was to read
+  // `omega-sigil-gen.js`'s ELEM_PALETTES, and those two tables DISAGREE
+  // (Fire is #E86A3A here, #FF6B35 there; the visual-assets skill records the
+  // drift). Mixing them would put two different Fires on one node. This does
+  // not resolve the drift -- it keeps each composed mark internally
+  // consistent, which is a different and smaller claim.
+  function color(sign) { return (SIGN[sign] || SIGN.Aries).c; }
+  window.OmegaEmblem = { svg: svg, ring: ring, color: color, signs: Object.keys(SIGN) };
 })();

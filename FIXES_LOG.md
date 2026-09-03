@@ -5037,3 +5037,85 @@ Full estate before this session's runtime work: **22 pages failing**. After:
 `node scripts/verify-runtime.js --all` reports **PASS (186 pages)** — zero
 failures across the whole estate, confirmed by a full sweep rather than by the
 subset runs that guided each individual fix.
+
+## CLAUDE.md described OmegaGuardian wrongly on two of three counts (2026-09-03)
+
+§8.2 carried this, loaded into every session:
+
+> **`OmegaGuardian.gate()` is defined but never called**, and the
+> `threat_signal` event it listens for is never emitted. The topbar badge
+> therefore always effectively reads 100.
+
+Two of those three claims are false, and the corrected version is a **more**
+interesting finding than the wrong one.
+
+### `gate()` is called
+
+`approvals.html` calls it at **three** sites — 541, 568, 613 — each wrapping a
+real privileged write:
+
+```js
+await window.OmegaGuardian.gate('admin', async function(){
+  var ok = await rpcOk('grant_permanent_access', {p_uid: uid});
+```
+
+`'admin'` requires a score of 100 in `ACTION_LEVELS`, so the gate is not
+decorative: it stands in front of granting permanent access.
+
+### The badge is not frozen at 100
+
+`injectGuardianBadge()` hard-codes `textContent='100'` at injection, which is
+probably where the claim came from. But `updateBadge()` runs on
+`setInterval(updateBadge, 2000)` and assigns `badge.textContent=_sessionScore`,
+recolouring at the 70/40 thresholds. The badge tracks the real score every two
+seconds.
+
+And the score does move. `adjustScore` has three callers:
+
+| site | effect | live? |
+|---|---|---|
+| `omega-guardian.js:104` | `-5` when a gated action throws | yes — inside `gate()`'s own `catch` |
+| `omega-guardian.js:122` | `-10` after 30 min idle | yes — `setInterval(…, 300000)` with real activity listeners |
+| `omega-guardian.js:129` | `RISK_EVENTS[event](d)` | **no** |
+
+### What is actually true
+
+The third row is the real finding. All six risk events —
+`threat_signal`, `rate_limit`, `ua_change`, `console_clear`, `iframe_embed`,
+`long_idle` — are **listened for and never emitted**. Checked one by one:
+
+```
+threat_signal   emitted in 0 place(s)
+rate_limit      emitted in 0 place(s)
+ua_change       emitted in 0 place(s)
+console_clear   emitted in 0 place(s)
+iframe_embed    emitted in 0 place(s)
+long_idle       emitted in 0 place(s)
+```
+
+So the whole `RISK_EVENTS` table is dead wiring, and the score only ever falls
+for idle or a thrown action — never because anything detected a threat. That is
+a narrower and more accurate statement of the gap than "never called".
+
+### Two near-misses while establishing this
+
+**A guessed identifier.** `grep -n "_adjust("` returned nothing and briefly
+looked like proof that the score can never change. The function is called
+`adjustScore`; the name was mine, not the file's. The correct conclusion was the
+opposite of the one that grep implied. §8.4's "a repo-wide grep is a candidate
+generator, not a verdict", in the shape where the *pattern* is wrong rather than
+the results.
+
+**An unterminated comment that was terminated.** `omega-guardian.js:46` renders
+as `/* ── SESSION HEALTH SCORE ────…` with no visible `*/`, which would put
+`adjustScore` inside a comment and make three call sites throw. It is fine: the
+box-drawing run is long and the terminal truncated the line. Counting delimiters
+before line 47 gives 12 `/*` and 12 `*/`, and `node --check` passes. Verified
+rather than reported.
+
+### Left alone, deliberately
+
+Emitting the six risk signals means building threat detection, which is the
+architecture decision §8.2 says it is. `ops.html`'s `#evt-metrics-body` was
+re-checked in the same pass and that entry is **correct** — `ops.html:485` looks
+the id up and no HTML anywhere defines it.

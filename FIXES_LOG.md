@@ -4765,9 +4765,15 @@ real shapes, all five measured false positives, and each of the three accepted
 gate references).
 
 `node scripts/verify-runtime.js` **ran for real this time** — PASS on all 13
-capability entrypoints, and the `--all` sweep over the full estate. The previous
+capability entrypoints. The previous
 entry recorded it as SKIPPED; the cause was a layout mismatch, not a missing
-browser. `playwright-core` resolves `chromium-1234/chrome-linux64/chrome` and
+browser. `migrations/0106` was applied against a real scratch PostgreSQL 16 instance
+rather than eyeballed: it applies clean, re-applies clean, and — the property
+that actually matters — after `ad_network_enabled` is set true, re-running
+leaves it true. `ON CONFLICT DO NOTHING` means the file can never switch a flag
+back off after the owner has enabled it.
+
+`playwright-core` resolves `chromium-1234/chrome-linux64/chrome` and
 `chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell`,
 while the image ships `chromium-1194/chrome-linux/chrome` and a headless binary
 named `headless_shell`. Symlinking both expected layouts onto the installed 1194

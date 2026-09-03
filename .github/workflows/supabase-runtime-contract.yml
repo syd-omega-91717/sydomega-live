@@ -27,6 +27,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      # `shell: python` feeds the run: block to the interpreter AS PYTHON
+      # SOURCE. With `python scripts/...` as the body that is a SyntaxError on
+      # line 1, so this job failed on every run it ever reached -- 28 seconds
+      # of checkout and then a parse error, never the contract. runner-probe.yml
+      # uses `shell: python` correctly, with real Python in the body; this one
+      # wants a shell, so it gets pwsh like every other gate here.
       - name: Runtime contract
-        shell: python
+        shell: pwsh
         run: python scripts/supabase-runtime-contract.py

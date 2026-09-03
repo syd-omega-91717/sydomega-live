@@ -297,10 +297,19 @@
      measured in its final container. If the flex parent has no content column
      to move into, the host is left exactly where it is. */
   function reseat(host) {
-    var p = host.parentElement, d;
+    var p = host.parentElement, cs;
     if (!p) return;
-    try { d = getComputedStyle(p).display; } catch (e) { return; }
-    if (d !== 'flex' && d !== 'inline-flex') return;
+    try { cs = getComputedStyle(p); } catch (e) { return; }
+    if (cs.display !== 'flex' && cs.display !== 'inline-flex') return;
+    /* The damage is a VERTICAL stretch, which only a row-direction container
+       produces -- in a column container the cross axis is horizontal and a
+       full-width block is exactly what the page wanted. Measured: the 23
+       stretched pages are all `.shell` at flex-direction:row, while
+       graph.html's `#app.page-shell` is flex-direction:column and its mount
+       was already correct at 161px. Without this check graph.html's emblem was
+       relocated into `#tab-graph.tab-panel`, where it would vanish whenever
+       another tab is selected. */
+    if (cs.flexDirection !== 'row' && cs.flexDirection !== 'row-reverse') return;
     /* Narrow to the app shell specifically. Being a flex parent is not enough:
        a page may deliberately mount the emblem inside a flex header or card
        row, and relocating that would move a correct mount. The shell row is the

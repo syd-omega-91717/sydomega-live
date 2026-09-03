@@ -251,7 +251,7 @@ function __omegaAppend(el){
        governance text sitting beside terms in that same EX list, so the two are
        reconciled in this direction. Changing either list means changing both.
        CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter'];
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/omega-visual-home'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
@@ -1285,7 +1285,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
   if(EX[pg])return;
   /* shared singleton -- each extra createClient registers another GoTrueClient
      competing for the same auth-token storage key */
@@ -1359,7 +1359,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* TOPBAR HOME+BACK + MOBILE BOTTOM NAV */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
   if(EX[pg])return;
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){

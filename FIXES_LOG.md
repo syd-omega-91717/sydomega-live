@@ -5562,3 +5562,62 @@ of these numbers.
 
 `scripts/type-scale.py --check` is now a blocking gate in `contract-suite.py`,
 so the floor cannot erode back.
+
+## main arrived red: a visual page merged with no bg.js, while CI was down (2026-09-03)
+
+Rebasing the type-scale work onto a freshly-merged `main` turned 22/22 blocking
+checks into **4 failures**. None were mine — verified by running the gates in a
+clean worktree of `origin/main` with no local changes:
+
+```
+RELEASE GATE: FAILED    ERROR: public page does not load /bg.js: omega-visual-home.html
+REACHABILITY:  FAILED    omega-visual-home.html -- 1 unreachable page(s)
+PRODUCTION:    FAILED    missing /bg.js runtime
+REGISTRY:      FAILED    OMEGA_SKILL_REGISTRY.md out of date
+```
+
+`omega-visual-home.html` (627de839, "Omega visual universe foundation") is a
+genuine new visual gateway — six realm cards into dashboard/cosmos/intelligence/
+media/marketplace/creator. It was merged **without `bg.js`** and **unregistered
+in nav.js**, and it landed in the window when the self-hosted runner was offline,
+so no check ran on it. Exactly the gap the CI-consolidation work exists to close,
+arriving in the one interval where CI could not fire.
+
+Fixed:
+
+* `bg.js` added to the page. Section 9 makes this non-negotiable and two
+  separate gates encode it.
+* Added to **all three** of bg.js's exempt lists — `PUBLIC` (line 254) and BOTH
+  `EX` maps (1288, 1362). This is the charter.html trap: that page rendered
+  blank for every visitor because it sat in one list and not the other. Verified
+  with a **signed-out** context, which is the only way to see it: no redirect,
+  `.omega-main` visible, 6 cards, 0 page errors.
+* Exempted in `reachability-contract.py` with its reason — it is a landing page
+  like `enter`, linking out to the realms and back to `/enter.html` with nothing
+  linking in. Whether it should replace or sit beside `/enter` as the site root
+  is a product decision, not a gate finding, and is left to the owner.
+* Registry census regenerated.
+
+### The same merge shipped two modules nothing loads
+
+`omega-platform-visual-integration.js` and `omega-platform-visual.css` (PR #213,
+"integrate platform visual runtime") are referenced by **nothing** — no HTML, no
+`bg.js` injection. `audit.py` lists the .js among its orphaned modules. The
+"integration" does not run, which is the only reason the platform is unaffected.
+
+Deliberately **not** wired in, because doing so unreviewed would ship three
+conflicts with this repo's own rules:
+
+1. **Divergent duplicate tokens.** It defines its own palette, and two values
+   disagree with canonical: `--omega-ink #f5f1e6` vs `--ink #e9e6dc`, and
+   `--omega-muted #aaa6a0` vs `--muted #8a8676`. Section 8.1 class 8, and the
+   `visual-assets` skill's explicit "use the token, never the hex".
+2. **A vignette at `z-index:2147483000`**, against a highest-in-bg.js of
+   `100001` — roughly 21,000x above every existing layer, painting a permanent
+   dark radial over the entire interface including the genesis overlay.
+3. **It sets `body{background-image}`**, a surface CLAUDE.md section 4 records as
+   owned by `omega-backdrop.js` with `!important` ("tints to the member's
+   element and page; a feature, don't fight it").
+
+Enabling it changes the look of all 186 pages, so it is reported for the owner
+rather than switched on by a session that did not author it.

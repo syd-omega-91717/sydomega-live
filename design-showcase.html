@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ω SYDOMEGA — Design System</title>
+<style>
+:root {
+  /* Canonical tokens are deliberately NOT redefined here. bg.js owns --void,
+     --gold, --cyan and the rest for every page; this file carried its own
+     divergent set (--gold:#ffd700 against the brand's #C9A84C, and nine more),
+     and a page <style> beats bg.js, so it would have rendered in a palette no
+     other page uses -- CLAUDE.md 8.1 class 8, two divergent copies of one
+     canonical table. Variables genuinely local to this page are kept below. */
+  --D: 'Cinzel Decorative', serif;
+  --R: 'Rajdhani', sans-serif;
+  --M: 'Courier Prime', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, var(--void) 0%, var(--void2) 100%);
+  color: var(--ink);
+  font-family: var(--R);
+  overflow-x: hidden;
+}
+
+#omega-noise-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.035;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100" height="100" filter="url(%23n)" opacity="0.03"/></svg>');
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.page-title {
+  font-family: var(--D);
+  font-size: 3.5rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.page-subtitle {
+  font-family: var(--M);
+  font-size: 1rem;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section {
+  margin-bottom: 4rem;
+  padding: 2.5rem;
+  background: rgba(26,31,46,0.5);
+  border: 1px solid rgba(0,229,255,0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.section-title {
+  font-family: var(--D);
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 30px;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--cyan) 100%);
+}
+
+/* COLOR PALETTE */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.color-swatch {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0,229,255,0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+  cursor: pointer;
+}
+
+.color-swatch:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0,229,255,0.2);
+}
+
+.color-sample {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--D);
+  font-size: 28px;
+}
+
+.color-info {
+  padding: 1rem;
+  background: rgba(10,14,21,0.8);
+}
+
+.color-name {
+  font-family: var(--M);
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.color-code {
+  font-family: var(--M);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* EMBLEM GALLERY */
+.emblem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.emblem-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(10,14,21,0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(0,229,255,0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.emblem-item:hover {
+  background: rgba(255,215,0,0.08);
+  border-color: rgba(255,215,0,0.3);
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+}
+
+.emblem-symbol {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.emblem-name {
+  font-family: var(--M);
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* BUTTON STYLES */
+.btn-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-family: var(--M);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--solar) 100%);
+  color: var(--void);
+  font-weight: 600;
+  box-shadow: 0 0 20px rgba(255,215,0,0.3);
+}
+
+.btn-gold:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(255,215,0,0.5);
+}
+
+.btn-cyan {
+  background: transparent;
+  color: var(--cyan);
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 15px rgba(0,229,255,0.2);
+}
+
+.btn-cyan:hover {
+  background: rgba(0,229,255,0.1);
+  box-shadow: 0 0 30px rgba(0,229,255,0.4);
+}
+
+/* MOTION DEMO */
+.motion-demo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.motion-card {
+  padding: 2rem;
+  background: rgba(255,215,0,0.05);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 4px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.motion-card:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) translateZ(20px);
+  box-shadow: 0 20px 40px rgba(255,215,0,0.2);
+  background: rgba(255,215,0,0.1);
+}
+
+.motion-label {
+  font-family: var(--M);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+}
+
+/* ANIMATION SHOWCASE */
+@keyframes cinematic-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255,215,0,0.4), 
+                0 0 40px rgba(255,215,0,0.2);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(255,215,0,0.6), 
+                0 0 60px rgba(255,215,0,0.3);
+  }
+}
+
+.glow-demo {
+  padding: 2rem;
+  background: rgba(255,215,0,0.05);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 4px;
+  text-align: center;
+  animation: cinematic-glow 2s ease-in-out infinite;
+  margin-bottom: 2rem;
+}
+
+.glow-demo-text {
+  font-family: var(--D);
+  font-size: 1.5rem;
+  color: var(--gold);
+}
+
+/* TYPOGRAPHY SHOWCASE */
+.typo-section {
+  margin-bottom: 2rem;
+}
+
+.typo-display {
+  font-family: var(--D);
+  font-size: 3rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.typo-body {
+  font-family: var(--R);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.typo-mono {
+  font-family: var(--M);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+}
+
+/* DENSITY LEVELS */
+.density-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.density-box {
+  padding: 1.5rem;
+  background: rgba(10,14,21,0.6);
+  border: 1px solid rgba(0,229,255,0.1);
+  border-radius: 4px;
+}
+
+.density-label {
+  font-family: var(--M);
+  font-size: 0.8rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.density-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.density-item {
+  padding: 0.5rem;
+  background: rgba(255,215,0,0.05);
+  border-left: 2px solid var(--gold);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .page-title { font-size: 2rem; }
+  .section-title { font-size: 1.5rem; }
+  .color-grid { grid-template-columns: repeat(2, 1fr); }
+  .emblem-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 2rem 1rem; }
+  .page-title { font-size: 1.5rem; }
+  .color-grid { grid-template-columns: 1fr; }
+  .emblem-grid { grid-template-columns: repeat(3, 1fr); }
+  .btn-row { flex-direction: column; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div id="omega-noise-overlay"></div>
+
+<div class="container" id="app" style="display:none">
+  <div class="page-header">
+    <h1 class="page-title">Ω DESIGN SYSTEM</h1>
+    <p class="page-subtitle">━━━ Visual Language & Component Library ━━━</p>
+  </div>
+
+  <!-- COLOR PALETTE -->
+  <div class="section">
+    <h2 class="section-title">COLOR PALETTE</h2>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #ffd700;">Ω</div>
+        <div class="color-info">
+          <div class="color-name">Gold</div>
+          <div class="color-code">#FFD700</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #ffb700;">◆</div>
+        <div class="color-info">
+          <div class="color-name">Solar</div>
+          <div class="color-code">#FFB700</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #00e5ff;">◈</div>
+        <div class="color-info">
+          <div class="color-name">Cyan</div>
+          <div class="color-code">#00E5FF</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #2ecc71;">✓</div>
+        <div class="color-info">
+          <div class="color-name">Green</div>
+          <div class="color-code">#2ECC71</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #9b59b6;">✦</div>
+        <div class="color-info">
+          <div class="color-name">Purple</div>
+          <div class="color-code">#9B59B6</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #ff3b5c;">✕</div>
+        <div class="color-info">
+          <div class="color-name">Crimson</div>
+          <div class="color-code">#FF3B5C</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #0a0e15; color: #ecf0f1;">◯</div>
+        <div class="color-info">
+          <div class="color-name">Void</div>
+          <div class="color-code">#0A0E15</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-sample" style="background: #1a1f2e; color: #ecf0f1;">◮</div>
+        <div class="color-info">
+          <div class="color-name">Void 2</div>
+          <div class="color-code">#1A1F2E</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBLEM CONSTELLATION -->
+  <div class="section">
+    <h2 class="section-title">EMBLEM CONSTELLATION</h2>
+    <div class="emblem-grid">
+      <div class="emblem-item"><div class="emblem-symbol">♐︎</div><div class="emblem-name">Sentinel</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♑︎</div><div class="emblem-name">Merchant</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♒︎</div><div class="emblem-name">Scout</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♓︎</div><div class="emblem-name">Warden</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♈︎</div><div class="emblem-name">Sovereign</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♉︎</div><div class="emblem-name">Auditor</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♊︎</div><div class="emblem-name">Proxy</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♋︎</div><div class="emblem-name">Oracle</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♌︎</div><div class="emblem-name">Beacon</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♍︎</div><div class="emblem-name">Analyst</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♎︎</div><div class="emblem-name">Tutor</div></div>
+      <div class="emblem-item"><div class="emblem-symbol">♏︎</div><div class="emblem-name">Historian</div></div>
+    </div>
+  </div>
+
+  <!-- BUTTONS & INTERACTION -->
+  <div class="section">
+    <h2 class="section-title">INTERACTIVE COMPONENTS</h2>
+    <div class="btn-row">
+      <button class="btn btn-gold">PRIMARY ACTION</button>
+      <button class="btn btn-cyan">SECONDARY ACTION</button>
+      <button class="btn btn-gold" style="opacity: 0.6;">DISABLED STATE</button>
+    </div>
+  </div>
+
+  <!-- MOTION & DEPTH -->
+  <div class="section">
+    <h2 class="section-title">MOTION & DEPTH</h2>
+    <div class="motion-demo">
+      <div class="motion-card"><div style="font-size: 2rem;">↗</div><div class="motion-label">Hover Lift</div></div>
+      <div class="motion-card"><div style="font-size: 2rem;">◈</div><div class="motion-label">3D Transform</div></div>
+      <div class="motion-card"><div style="font-size: 2rem;">⟳</div><div class="motion-label">Spring Physics</div></div>
+      <div class="motion-card"><div style="font-size: 2rem;">✧</div><div class="motion-label">Glow Pulse</div></div>
+    </div>
+    <div class="glow-demo">
+      <div class="glow-demo-text">CINEMATIC GLOW ✧</div>
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="section">
+    <h2 class="section-title">TYPOGRAPHY SYSTEM</h2>
+    <div class="typo-section">
+      <div class="typo-display">Display · Cinzel Decorative</div>
+      <div class="typo-body">Body · Rajdhani · The typeface for all body copy, UI labels, and general content. Designed for clarity and readability across all screen sizes.</div>
+      <div class="typo-mono">Mono · Courier Prime · Used for technical labels, code, and letter-spacing chrome throughout the interface.</div>
+    </div>
+  </div>
+
+  <!-- DENSITY LEVELS -->
+  <div class="section">
+    <h2 class="section-title">VISUAL DENSITY LEVELS</h2>
+    <div class="density-section">
+      <div class="density-box">
+        <div class="density-label">SPARSE</div>
+        <div class="density-items">
+          <div class="density-item">Item 1</div>
+          <div style="height: 20px;"></div>
+          <div class="density-item">Item 2</div>
+        </div>
+      </div>
+      <div class="density-box">
+        <div class="density-label">COMFORTABLE</div>
+        <div class="density-items">
+          <div class="density-item">Item 1</div>
+          <div class="density-item">Item 2</div>
+          <div class="density-item">Item 3</div>
+        </div>
+      </div>
+      <div class="density-box">
+        <div class="density-label">DENSE</div>
+        <div class="density-items">
+          <div class="density-item">Item 1</div>
+          <div class="density-item">Item 2</div>
+          <div class="density-item">Item 3</div>
+          <div class="density-item">Item 4</div>
+        </div>
+      </div>
+      <div class="density-box">
+        <div class="density-label">ULTRA</div>
+        <div class="density-items">
+          <div class="density-item">Item 1</div>
+          <div class="density-item">Item 2</div>
+          <div class="density-item">Item 3</div>
+          <div class="density-item">Item 4</div>
+          <div class="density-item">Item 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION STATEMENT -->
+  <div class="section">
+    <h2 class="section-title">DESIGN PRINCIPLES</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--muted); margin-bottom: 1rem;">
+      ◈ <strong>Cinematic depth</strong> through 3D transforms and parallax creates tactile, immersive interaction.
+    </p>
+    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--muted); margin-bottom: 1rem;">
+      ◈ <strong>Spring physics</strong> and cubic-bezier easing bring fluid, natural motion to every transition.
+    </p>
+    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--muted);">
+      ◈ <strong>Emblem constellation</strong> organizes 12 archetypal domains into a visual hierarchy that guides navigation and meaning.
+    </p>
+  </div>
+  <div data-page-emblem="design-showcase" style="margin:20px auto 28px"></div>
+</div>
+
+<script src="/bg.js"></script>
+</body>
+</html>

@@ -6624,3 +6624,71 @@ Four tests added (12 in the file, 179 in the suite): entity form caught, both
 JS escape forms caught, an already-pinned entity accepted, and the monochrome
 blocks accepted while real emoji are still rejected.
 
+
+## PR #224: three conflicts, and 62,245 event listeners on one page (2026-09-03)
+
+The Phase C/D audit branch had been unmergeable since main moved under it. The
+conflicts were the small part.
+
+### The conflicts
+
+`nav.js` -- **union**. Both sides only added destinations to the same INTEL
+section: the branch added `design-showcase`, main added `architecture`,
+`control-plane`, `world-shell`. Dropping either leaves a shipped page
+unreachable from navigation, which `audit.py` flags. Kept all four.
+
+`bg.js` -- **both**. Unrelated code that collided only on insertion point:
+main's synchronous flag gate and the branch's Phase C/D activation. Main's goes
+first, because its hide rule has to be written before anything else runs.
+
+`gateway.html` -- **main's version**, and the only genuine conflict of intent.
+The branch rewrites it as a 371-line hand-authored page with **twelve hardcoded
+emblem orbs**; main's is 93 lines that mount `omega-gateway.js`, which builds
+every tile from `OmegaPageEmblem.pages`. That module's own header calls a second
+hand-kept list "exactly the duplication this page exists to remove". Main's also
+carries the `[hidden]` filter fix and the page-emblem mount.
+
+### Three defects the branch would have shipped
+
+**1. A divergent copy of the canonical palette, in three files.** `gateway.html`,
+`agent-network.html` and `design-showcase.html` each redefined ten brand tokens
+page-locally -- `--gold:#ffd700` against the brand's `#C9A84C`, and nine more.
+A page `<style>` beats `bg.js`, so those pages would have rendered in a palette
+no other page uses. CLAUDE.md 8.1 class 8. Removed from the two new pages, which
+now inherit the canonical set; `gateway.html` was resolved to main's version.
+
+**2. 25 unpinned colour glyphs**, the same twelve zodiac signs the emoji sweep
+had just cleared from main, re-entering through pages written before it. Pinned
+with U+FE0E.
+
+**3. Unbounded listener accumulation -- the serious one.** The activation runs
+`querySelectorAll` over the whole document and calls `addEventListener` on every
+match with a fresh closure, and a `MutationObserver` on `body`
+(`childList`+`subtree`) re-ran it on **every DOM insertion**, unthrottled.
+Section 7 bound a `window` scroll listener inside the same function, so those
+stacked too, each walking every parallax element per scroll event. Measured on
+`dashboard.html` by instrumenting `addEventListener` before page scripts:
+
+```
+                                    before      after
+interactive elements                   580        580
+hover listeners after load          62,245      1,207
+added by 10 ordinary insertions      4,640         20
+```
+
+1,207 is right: 580 elements x 2, plus a few from other modules. 20 is right:
+ten inserted buttons x 2. A 51x reduction with the feature intact.
+
+Three minimal changes: an `__omgCdWired` flag so each element is wired once, a
+`__omgCdScrollBound` flag so the scroll listener binds once, and a
+`requestAnimationFrame` coalesce so a list render runs the activation once per
+frame instead of once per node. Two related fixes while there:
+`transition:all` inline became an explicit `transform, box-shadow` list -- `all`
+animates layout properties and beat the design system's own transitions on
+`.card`/`.kpi`/`.btn` -- and `will-change:transform` was dropped, since it was
+promoting all 580 matched elements to their own compositing layer at once.
+
+Both new pages also gained a registry entry and an emblem mount, so the
+"every page a member sees carries its own mark" invariant is not lost on the
+next merge.
+

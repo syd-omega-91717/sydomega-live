@@ -272,7 +272,7 @@
       host.setAttribute('data-emblem-done', '1');
       draw(host, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
       var cap = document.createElement('div');
-      cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
+      cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
       cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span>';
       host.appendChild(cap);
     }

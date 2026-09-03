@@ -164,7 +164,7 @@
       el.dataset.origHtml = el.innerHTML;
       el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;opacity:.7">'
         +'<div class="oa-spin" style="width:16px;height:16px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold,#C9A84C);border-radius:50%"></div>'
-        +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:2px;color:var(--muted,#8a8676)">'+(msg||'LOADING')+'&hellip;</span>'
+        +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">'+(msg||'LOADING')+'&hellip;</span>'
         +'</div>';
     },
     hide: function(el){
@@ -175,15 +175,15 @@
     error: function(el, msg){
       if(!el) return;
       el.innerHTML = '<div style="padding:16px;text-align:center;border:1px solid rgba(139,0,0,.3);border-radius:2px;background:rgba(139,0,0,.05)">'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">ERROR</div>'
-        +'<div style="font-size:11px;color:rgba(233,230,220,.7)">'+(msg||'Failed to load data')+'</div>'
+        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">ERROR</div>'
+        +'<div style="font-size:12px;color:rgba(233,230,220,.7)">'+(msg||'Failed to load data')+'</div>'
         +'</div>';
     },
     empty: function(el, msg, icon){
       if(!el) return;
       el.innerHTML = '<div style="padding:24px;text-align:center">'
         +'<div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:32px;color:rgba(201,168,76,.15);margin-bottom:10px">'+(icon||'&#9670;')+'</div>'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.4)">'+(msg||'NO DATA')+'</div>'
+        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">'+(msg||'NO DATA')+'</div>'
         +'</div>';
     }
   };

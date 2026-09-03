@@ -37,7 +37,7 @@
       +'<div style="text-align:center;margin-bottom:24px">'
         +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(10px,2vw,13px);letter-spacing:4px;color:rgba(201,168,76,.5);margin-bottom:8px">SYD OMEGA 91717</div>'
         +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(20px,5vw,36px);color:#C9A84C;line-height:1;margin-bottom:8px">\u03A9 SOVEREIGN IDENTITY</div>'
-        +'<div style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:3px;color:rgba(138,134,118,.6)">SELECT YOUR ZODIAC SIGN TO BEGIN YOUR SOVEREIGN JOURNEY</div>'
+        +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.6)">SELECT YOUR ZODIAC SIGN TO BEGIN YOUR SOVEREIGN JOURNEY</div>'
       +'</div>'
       +'<div id="ob-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px">'
       +ZODIAC_MAP.map(function(z){
@@ -47,15 +47,15 @@
           +' style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;text-align:center;transition:all .18s;position:relative"'
           +' onmouseenter="this.style.borderColor=\''+col+'\';this.style.background=\''+col+'11\'" onmouseleave="this.style.borderColor=this.dataset.selected?\''+col+'\':\'rgba(201,168,76,.15)\';this.style.background=this.dataset.selected?\''+col+'11\':\'rgba(10,10,15,.55)\'">'
           +'<div style="font-size:28px;margin-bottom:6px">'+z.glyph+'</div>'
-          +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:10px;color:#C9A84C;margin-bottom:4px">'+z.sign.toUpperCase()+'</div>'
-          +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:1.5px;color:'+col+';margin-bottom:3px">'+z.el.toUpperCase()+'</div>'
-          +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;color:rgba(138,134,118,.5)">'+z.dates+'</div>'
+          +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C;margin-bottom:4px">'+z.sign.toUpperCase()+'</div>'
+          +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;color:'+col+';margin-bottom:3px">'+z.el.toUpperCase()+'</div>'
+          +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;color:rgba(138,134,118,.5)">'+z.dates+'</div>'
           +'</div>';
       }).join('')
       +'</div>'
       +'<div id="ob-detail" style="display:none;border:1px solid rgba(201,168,76,.25);padding:16px;border-radius:2px;background:rgba(201,168,76,.04);margin-bottom:16px;text-align:center"></div>'
       +'<div style="text-align:center">'
-        +'<button id="ob-confirm" onclick="window.__obConfirm()" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:11px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
+        +'<button id="ob-confirm" onclick="window.__obConfirm()" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
       +'</div>'
     +'</div>';
     document.body.appendChild(ov);
@@ -72,7 +72,7 @@
       if(det){
         det.style.display='block';
         det.innerHTML='<div style="font-family:\'Cinzel Decorative\',serif;font-size:13px;color:'+col+';margin-bottom:8px">'+z.glyph+' '+z.sign.toUpperCase()+'</div>'
-          +'<div style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.6);line-height:2">'
+          +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);line-height:2">'
           +'ELEMENT: <span style="color:'+col+'">'+z.el.toUpperCase()+'</span> &nbsp;&bull;&nbsp; '
           +'OLYMPIAN: <span style="color:#C9A84C">'+z.god.toUpperCase()+'</span> &nbsp;&bull;&nbsp; '
           +'AGENT: <span style="color:#00E5FF">'+z.agent.toUpperCase()+'</span> &nbsp;&bull;&nbsp; '

@@ -23,8 +23,8 @@
     '.omg-lock>*{filter:blur(6px);pointer-events:none;user-select:none}',
     '.omg-seal{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(6,6,12,.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:inherit;font-family:"Courier Prime",monospace;text-align:center;padding:10px}',
     '.omg-seal .ic{font-size:26px;color:#C9A84C}',
-    '.omg-seal .rq{font-size:11px;letter-spacing:2px;color:#E2C86D}',
-    '.omg-seal .hint{font-size:10px;letter-spacing:1px;color:#8a8676}'
+    '.omg-seal .rq{font-size:12px;letter-spacing:2px;color:#E2C86D}',
+    '.omg-seal .hint{font-size:12px;letter-spacing:1px;color:#8a8676}'
   ].join('');
   var st = document.createElement('style'); st.id = 'omg-gate-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);

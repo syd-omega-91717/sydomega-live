@@ -203,9 +203,9 @@
 
       var ROMAN = ['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
       _showBanner(
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:4px;color:' + accentColor + ';margin-bottom:6px">GATE ' + (ROMAN[gateNum] || gateNum) + ' UNLOCKED</div>' +
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:4px;color:' + accentColor + ';margin-bottom:6px">GATE ' + (ROMAN[gateNum] || gateNum) + ' UNLOCKED</div>' +
         '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(16px,3vw,22px);color:#e9e6dc;letter-spacing:2px">' + (gateName || '').toUpperCase() + '</div>' +
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:7.5px;letter-spacing:2px;color:rgba(233,230,220,.45);margin-top:6px">AUTHORITY THRESHOLD CROSSED &middot; SYD OMEGA 91717</div>',
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(233,230,220,.45);margin-top:6px">AUTHORITY THRESHOLD CROSSED &middot; SYD OMEGA 91717</div>',
         accentColor, 4000
       );
     },
@@ -214,7 +214,7 @@
       var cx = _centerX(), cy = _centerY();
       _spawnBurst(cx, cy, 50, { speed: 4, upBias: 2, size: 5, color: '#3fb27f' });
       _showBanner(
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:3px;color:#3fb27f;margin-bottom:5px">MILESTONE REACHED</div>' +
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:#3fb27f;margin-bottom:5px">MILESTONE REACHED</div>' +
         '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(13px,2.5vw,18px);color:#e9e6dc">' + String(text || 'SOVEREIGN MILESTONE').toUpperCase() + '</div>',
         '#3fb27f', 3000
       );
@@ -232,9 +232,9 @@
         }, d);
       });
       _showBanner(
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:4px;color:#E2C86D;margin-bottom:8px">GATE XII &middot; SOVEREIGN APEX</div>' +
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:4px;color:#E2C86D;margin-bottom:8px">GATE XII &middot; SOVEREIGN APEX</div>' +
         '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(18px,4vw,28px);color:#E2C86D;text-shadow:0 0 20px rgba(226,200,109,.5)">&#937; APEX SOVEREIGN &#937;</div>' +
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:3px;color:rgba(226,200,109,.6);margin-top:8px">AUTH = 27.8367 &middot; A=9 B=9 C=9 &middot; LATTICE COMPLETE</div>',
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:rgba(226,200,109,.6);margin-top:8px">AUTH = 27.8367 &middot; A=9 B=9 C=9 &middot; LATTICE COMPLETE</div>',
         '#E2C86D', 6000
       );
     }

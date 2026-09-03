@@ -148,10 +148,10 @@
     var footer = document.createElement('div');
     footer.id = 'omega-unified-footer';
     footer.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad,20px);border-top:1px solid rgba(201,168,76,.15);flex-wrap:wrap;margin-top:auto';
-    footer.innerHTML = '<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5)">'
+    footer.innerHTML = '<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)">'
       +'&#937; '+(_meta.label||_slug).toUpperCase()+' &middot; SYD OMEGA 91717'
       +'</span>'
-      +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5)">'
+      +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)">'
       +'AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367'
       +'</span>';
     main.appendChild(footer);
@@ -175,14 +175,14 @@
     if(footer){
       var c = document.createElement('span');
       c.id = 'omega-copyright';
-      c.style.cssText = 'font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5)';
+      c.style.cssText = 'font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)';
       c.textContent = text;
       footer.appendChild(c);
       return;
     }
     var badge = document.createElement('div');
     badge.id = 'omega-copyright';
-    badge.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;text-align:center;padding:6px 10px;font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.45);background:rgba(2,2,6,.7);pointer-events:none';
+    badge.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;text-align:center;padding:6px 10px;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.45);background:rgba(2,2,6,.7);pointer-events:none';
     badge.textContent = text;
     document.body.appendChild(badge);
   }
@@ -199,7 +199,7 @@
     nav.setAttribute('aria-label','Page navigation');
     if(_meta.prev){
       var prev = document.createElement('button');
-      prev.style.cssText = 'font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s';
+      prev.style.cssText = 'font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s';
       prev.textContent = '\u2190';
       prev.title = 'Previous: '+(_meta.prev.charAt(0).toUpperCase()+_meta.prev.slice(1));
       prev.setAttribute('aria-label','Previous page');
@@ -210,7 +210,7 @@
     }
     if(_meta.next){
       var next = document.createElement('button');
-      next.style.cssText = 'font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s';
+      next.style.cssText = 'font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s';
       next.textContent = '\u2192';
       next.title = 'Next: '+(_meta.next.charAt(0).toUpperCase()+_meta.next.slice(1));
       next.setAttribute('aria-label','Next page');
@@ -231,7 +231,7 @@
     btn.href='/dashboard.html';
     btn.title='Back to Command Bridge';
     btn.setAttribute('aria-label','Command Bridge');
-    btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap;flex-shrink:0';
+    btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap;flex-shrink:0';
     btn.textContent='\u03A9 CMD';
     btn.addEventListener('mouseenter',function(){btn.style.color='var(--gold,#C9A84C)';btn.style.borderColor='rgba(201,168,76,.3)';});
     btn.addEventListener('mouseleave',function(){btn.style.color='rgba(138,134,118,.5)';btn.style.borderColor='rgba(201,168,76,.12)';});

@@ -10,7 +10,7 @@
   window.__omegaFeedback = 1;
 
   var css = [
-    '#ofb-btn{position:fixed;left:12px;bottom:16px;z-index:9000;height:38px;padding:0 14px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;border-radius:19px;cursor:pointer;transition:all .2s}',
+    '#ofb-btn{position:fixed;left:12px;bottom:16px;z-index:9000;height:38px;padding:0 14px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;border-radius:19px;cursor:pointer;transition:all .2s}',
     '#ofb-btn:hover{border-color:rgba(201,168,76,.6);color:#E2C86D}',
     '#ofb-ov{position:fixed;inset:0;z-index:9500;background:rgba(2,2,6,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}',
     '#ofb-ov.open{display:flex}',
@@ -22,7 +22,7 @@
     '.ofb-star.on{color:#E2C86D}',
     '#ofb-msg{width:100%;min-height:110px;background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:#e8e6df;font-family:inherit;font-size:13px;padding:11px;resize:vertical;box-sizing:border-box}',
     '#ofb-row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}',
-    '.ofb-b{height:38px;padding:0 18px;border-radius:19px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer;border:1px solid rgba(201,168,76,.3);background:none;color:#c8c5ba}',
+    '.ofb-b{height:38px;padding:0 18px;border-radius:19px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer;border:1px solid rgba(201,168,76,.3);background:none;color:#c8c5ba}',
     '.ofb-b.primary{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.6);color:#E2C86D}',
     '.ofb-b:disabled{opacity:.5;cursor:default}',
     '#ofb-note{font-size:12px;margin-top:10px;min-height:16px}',

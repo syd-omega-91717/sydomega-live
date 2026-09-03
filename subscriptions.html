@@ -12,35 +12,35 @@
 .sb-right{padding:18px clamp(14px,2.5vw,28px);border-left:1px solid var(--line);text-align:right}
 .sb-center{display:flex;align-items:center;justify-content:center;padding:0 20px}
 .sb-stat{font-family:var(--D);font-size:clamp(14px,2.5vw,22px);color:var(--gold);line-height:1}
-.sb-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
+.sb-lbl{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
 .tiers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px}
 .tier-card{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:20px;position:relative;overflow:hidden;transition:border-color .2s,transform .18s;cursor:pointer;border-top:2px solid var(--tc,var(--gold))}
 .tier-card:hover{transform:translateY(-3px)}
 .tier-card.current{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05)}
-.tier-card.current::after{content:"CURRENT";position:absolute;top:12px;right:12px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:2px 6px}
-.tier-n{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.tier-card.current::after{content:"CURRENT";position:absolute;top:12px;right:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:2px 6px}
+.tier-n{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
 .tier-name{font-family:var(--D);font-size:14px;margin-bottom:4px}
 .tier-price{font-family:var(--D);font-size:22px;line-height:1;margin-bottom:4px}
-.tier-period{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px}
+.tier-period{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px}
 .tier-perks{list-style:none;padding:0}
-.tier-perks li{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:4px 0;border-bottom:1px solid rgba(201,168,76,.06);display:flex;align-items:center;gap:6px}
-.tier-perks li::before{content:"\25b8";color:var(--gold);font-size:8px}
-.tier-btn{width:100%;margin-top:14px;font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.06);cursor:pointer;transition:.2s}
+.tier-perks li{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 0;border-bottom:1px solid rgba(201,168,76,.06);display:flex;align-items:center;gap:6px}
+.tier-perks li::before{content:"\25b8";color:var(--gold);font-size:12px}
+.tier-btn{width:100%;margin-top:14px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.06);cursor:pointer;transition:.2s}
 .tier-btn:hover{background:rgba(201,168,76,.16)}
 .plan-card{border:1px solid var(--line);padding:20px;background:rgba(10,10,15,.5);margin-bottom:18px}
 .plan-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;gap:8px}
-.plan-key{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
-.plan-val{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)}
+.plan-key{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.plan-val{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
 .trial-band{border:1px solid rgba(201,168,76,.25);padding:16px;background:rgba(201,168,76,.04);margin-bottom:18px}
 .trial-title{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px}
 .trial-desc{font-size:12px;color:var(--ink);opacity:.75;line-height:1.7}
 .trial-countdown{font-family:var(--D);font-size:24px;color:var(--gold);margin-top:10px}
 .pay-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap}
 .pay-row:hover{background:rgba(201,168,76,.02)}
-.pay-date{font-family:var(--M);font-size:9px;color:var(--muted);width:80px;flex-shrink:0}
+.pay-date{font-family:var(--M);font-size:12px;color:var(--muted);width:80px;flex-shrink:0}
 .pay-desc{flex:1;font-size:12px}
-.pay-amt{font-family:var(--M);font-size:11px;font-weight:700}
-.pay-status{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border:1px solid}
+.pay-amt{font-family:var(--M);font-size:12px;font-weight:700}
+.pay-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid}
 @media(max-width:760px){.status-band{grid-template-columns:1fr}.sb-center{display:none}.sb-left{border-right:none;border-bottom:1px solid var(--line)}.sb-right{border-left:none;text-align:left}}
 </style>
 </head>
@@ -83,7 +83,7 @@
     <div class="trial-title">&#937; SOVEREIGN TRIAL SESSION</div>
     <div class="trial-desc">You have been granted sovereign trial access to the Order. Your session is timed. Access to the full platform is available during your trial. Request permanent membership from the Sovereign Architect.</div>
     <div class="trial-countdown" id="plan-countdown">--:--</div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">TIME REMAINING &middot; 9.1717-MINUTE SOVEREIGN SESSION</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">TIME REMAINING &middot; 9.1717-MINUTE SOVEREIGN SESSION</div>
   </div>
   <div class="plan-card card" id="plan-card">
     <div class="plan-row"><span class="plan-key">MEMBER ID</span><span class="plan-val" id="plan-uid">--</span></div>
@@ -96,7 +96,7 @@
     <div class="plan-row"><span class="plan-key">MATRIX NODES</span><span class="plan-val" id="plan-nodes">--</span></div>
   </div>
   <div class="glass" style="padding:16px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">&#937; 9 HOURS &middot; 17 MINUTES &middot; 17 SECONDS</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">&#937; 9 HOURS &middot; 17 MINUTES &middot; 17 SECONDS</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8">The Architect dedicates 9 hours, 17 minutes and 17 seconds to the Order as the sovereign commitment to every member. This is the foundation period &mdash; the time of genesis.</div>
   </div>
 </div>
@@ -105,7 +105,7 @@
   <div class="sechead">SOVEREIGN MEMBERSHIP TIERS</div>
   <div class="tiers-grid" id="tiers-grid"></div>
   <div class="glass" style="padding:16px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">PAYMENT ACTIVATION</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">PAYMENT ACTIVATION</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8">Payment processing activates after legal review (KYC/AML, money-transmission compliance). Until then, access is granted by the Sovereign Architect. Contact the Order for membership inquiries.</div>
   </div>
 </div>
@@ -230,11 +230,11 @@ function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
        Those are different claims and only one of them is true here. */
     var txns=txRes.data||[];
     if(txRes.error){
-      ph.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">'
+      ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">'
         +'PAYMENT LEDGER NOT AVAILABLE YET. Payment infrastructure is dormant pending legal review — '
         +'no ledger exists to read, so this is not a record of zero payments.</div>';
     } else if(!txns.length){
-      ph.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">NO PAYMENT RECORDS YET. PAYMENT ACTIVATION PENDING LEGAL REVIEW.</div>';
+      ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">NO PAYMENT RECORDS YET. PAYMENT ACTIVATION PENDING LEGAL REVIEW.</div>';
     } else {
       ph.innerHTML='';
       txns.forEach(function(tx){

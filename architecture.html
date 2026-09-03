@@ -16,13 +16,13 @@
     .arc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
     .arc-b{padding:14px 16px;border-radius:4px;border:1px solid rgba(201,168,76,.15);
            background:rgba(201,168,76,.04);position:relative;overflow:hidden}
-    .arc-b .n{font-family:var(--M,monospace);font-size:7px;letter-spacing:2px;
+    .arc-b .n{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;
               color:var(--muted,rgba(138,134,118,.55))}
-    .arc-b .t{font-family:var(--M,monospace);font-size:11px;letter-spacing:1.5px;
+    .arc-b .t{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;
               color:var(--ink,rgba(220,210,180,.85));margin:6px 0 8px}
-    .arc-b .e{font-family:var(--M,monospace);font-size:9px;line-height:1.7;
+    .arc-b .e{font-family:var(--M,monospace);font-size:12px;line-height:1.7;
               color:var(--muted,rgba(138,134,118,.6))}
-    .arc-s{font-family:var(--M,monospace);font-size:7px;letter-spacing:2px;padding:3px 8px;
+    .arc-s{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;padding:3px 8px;
            border-radius:2px;display:inline-block}
     .arc-s.built{color:var(--gold,#C9A84C);border:1px solid rgba(201,168,76,.35)}
     .arc-s.conn{color:var(--green,#3fb27f);border:1px solid rgba(63,178,127,.4)}
@@ -31,7 +31,7 @@
     .arc-b.conn::before{background:var(--green,#3fb27f)}
     .skip-link{position:absolute;left:-9999px}
     .skip-link:focus{left:8px;top:8px;background:var(--gold,#C9A84C);color:#000;padding:4px 8px;
-                     font-family:var(--M,monospace);font-size:10px;z-index:1000}
+                     font-family:var(--M,monospace);font-size:12px;z-index:1000}
   </style>
 </head>
 <body>
@@ -43,16 +43,16 @@
     <aside class="side" id="omega-side" data-page="architecture" aria-label="Navigation"></aside>
     <main class="main" role="main" id="main-content">
       <div class="pad">
-        <div style="font-family:var(--M,monospace);font-size:7px;letter-spacing:3px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:4px">GOVERN &middot; RUNTIME</div>
+        <div style="font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:4px">GOVERN &middot; RUNTIME</div>
         <h1 style="font-family:var(--M,monospace);font-size:18px;color:var(--gold,#C9A84C);margin:0 0 6px;letter-spacing:2px">ARCHITECTURE</h1>
-        <p style="font-family:var(--M,monospace);font-size:10px;line-height:1.8;color:var(--muted,rgba(138,134,118,.6));max-width:70ch;margin-bottom:18px">
+        <p style="font-family:var(--M,monospace);font-size:12px;line-height:1.8;color:var(--muted,rgba(138,134,118,.6));max-width:70ch;margin-bottom:18px">
           The sixteen runtime blocks this platform actually runs, read live from
           <code>__omegaArchitecture.status()</code> rather than written down here.
           <strong style="color:var(--ink,rgba(220,210,180,.85))">BUILT</strong> means the adapter exists in this page's
           JavaScript. <strong style="color:var(--green,#3fb27f)">CONNECTED</strong> means it was additionally probed
           against something real in this browser session. Neither claims infrastructure that is not there.
         </p>
-        <div id="arc-status" style="font-family:var(--M,monospace);font-size:9px;letter-spacing:1.5px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:12px">reading runtime&hellip;</div>
+        <div id="arc-status" style="font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:12px">reading runtime&hellip;</div>
         <div class="arc-grid" id="architecture-diagram"></div>
       </div>
     </main>

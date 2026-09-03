@@ -90,7 +90,7 @@
     skip.style.cssText = [
       'position:fixed;top:-100px;left:8px;z-index:99999;',
       'background:#0A0A0F;color:#C9A84C;',
-      'font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;',
+      'font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;',
       'padding:8px 16px;border:1px solid rgba(201,168,76,.4);border-radius:2px;',
       'text-decoration:none;',
       'transition:top .2s ease',

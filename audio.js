@@ -142,7 +142,7 @@
     // eslint-disable-next-line no-unreachable
     if(document.getElementById('omega-audio-btn')) return;
     var btn=document.createElement('button'); btn.id='omega-audio-btn';
-    btn.style.cssText='position:fixed;top:42px;right:16px;z-index:9995;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:5px 10px;background:rgba(7,7,11,0.92);border:1px solid rgba(201,168,76,0.18);color:#85837b;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;border-radius:0';
+    btn.style.cssText='position:fixed;top:42px;right:16px;z-index:9995;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;padding:5px 10px;background:rgba(7,7,11,0.92);border:1px solid rgba(201,168,76,0.18);color:#85837b;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;border-radius:0';
     btn.innerHTML='<span id="audio-icon">\u266A</span><span id="audio-lbl">SOUND</span>';
     btn.title='Toggle ambient sound';
     /* Start on first click (browser autoplay policy) */

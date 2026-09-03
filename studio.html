@@ -9,14 +9,14 @@
 .pipe-col{border:1px solid var(--line);background:rgba(255,255,255,.02);border-radius:2px;overflow:hidden}
 .pipe-head{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
 .pipe-icon{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.pipe-head-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
-.pipe-count{font-family:var(--D);font-size:11px;margin-left:auto}
+.pipe-head-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.pipe-count{font-family:var(--D);font-size:12px;margin-left:auto}
 .pipe-body{padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
 .pipe-card{border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.02);padding:10px 12px;border-radius:1px;cursor:pointer;transition:.15s}
 .pipe-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
-.pipe-card-title{font-family:var(--M);font-size:9px;color:var(--ink);letter-spacing:.5px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pipe-card-meta{font-family:var(--M);font-size:7px;color:var(--muted);letter-spacing:1px}
-.pipe-empty{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.35);letter-spacing:1px;text-align:center;padding:24px 0;flex:1;display:flex;align-items:center;justify-content:center}
+.pipe-card-title{font-family:var(--M);font-size:12px;color:var(--ink);letter-spacing:.5px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pipe-card-meta{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px}
+.pipe-empty{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.35);letter-spacing:1px;text-align:center;padding:24px 0;flex:1;display:flex;align-items:center;justify-content:center}
 /* create grid */
 .create-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .create-card{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:18px 16px;border-radius:2px;cursor:pointer;transition:.2s;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;text-decoration:none;color:inherit}
@@ -24,33 +24,33 @@
 .create-card:hover{border-color:rgba(201,168,76,.35)}
 .create-card:hover::before{opacity:1}
 .create-icon{font-size:20px;margin-bottom:4px}
-.create-title{font-family:var(--D);font-size:11px;color:var(--gold)}
-.create-desc{font-family:var(--M);font-size:7.5px;color:var(--muted);letter-spacing:.5px;line-height:1.6}
-.create-axis{font-family:var(--M);font-size:7px;letter-spacing:1.5px;margin-top:4px}
+.create-title{font-family:var(--D);font-size:12px;color:var(--gold)}
+.create-desc{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:.5px;line-height:1.6}
+.create-axis{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-top:4px}
 /* axis */
 .axis-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:24px}
 .axis-card{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:18px;border-radius:2px;position:relative}
 .axis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac)}
 .axis-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.axis-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
+.axis-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .axis-val{font-family:var(--D);font-size:clamp(18px,2vw,22px);color:var(--ac);margin-bottom:6px}
 .axis-bar-track{height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;margin-bottom:8px}
 .axis-bar-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
-.axis-sublabel{font-family:var(--M);font-size:7px;color:var(--muted);letter-spacing:1px}
+.axis-sublabel{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px}
 /* charts */
 .chart-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
 .chart-wrap{border:1px solid var(--line);background:rgba(255,255,255,.02);border-radius:2px;overflow:hidden}
-.chart-head{padding:10px 14px;background:rgba(0,229,255,.04);border-bottom:1px solid rgba(0,229,255,.1);font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan)}
+.chart-head{padding:10px 14px;background:rgba(0,229,255,.04);border-bottom:1px solid rgba(0,229,255,.1);font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan)}
 .chart-body{padding:16px;position:relative;height:200px}
 /* archive */
 .archive-list{display:flex;flex-direction:column;gap:8px}
 .archive-row{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 16px;border-radius:2px;display:grid;grid-template-columns:1fr auto auto auto;gap:14px;align-items:center;cursor:pointer;transition:.15s}
 .archive-row:hover{border-color:rgba(201,168,76,.3)}
-.archive-title{font-family:var(--M);font-size:10px;color:var(--ink);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.archive-kind{font-family:var(--M);font-size:7.5px;color:var(--muted);letter-spacing:1.5px;white-space:nowrap}
-.archive-date{font-family:var(--M);font-size:7.5px;color:var(--muted);white-space:nowrap}
-.archive-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:3px 8px;border:1px solid;border-radius:1px}
-.studio-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.3);padding:12px 22px;font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;border-radius:2px}
+.archive-title{font-family:var(--M);font-size:12px;color:var(--ink);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.archive-kind{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1.5px;white-space:nowrap}
+.archive-date{font-family:var(--M);font-size:12px;color:var(--muted);white-space:nowrap}
+.archive-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:3px 8px;border:1px solid;border-radius:1px}
+.studio-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.3);padding:12px 22px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;border-radius:2px}
 .studio-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:700px){.pipeline{grid-template-columns:1fr}.axis-grid{grid-template-columns:1fr}.archive-row{grid-template-columns:1fr auto}.archive-date,.archive-kind{display:none}}
 </style>
@@ -80,7 +80,7 @@
     <div class="kpi-card"><div class="kpi-val" id="st-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
   </div>
 
-  <div class="sechead" style="margin-top:20px">CREATION PIPELINE<a href="/publishing.html" class="btn-gold" style="font-size:8px;padding:4px 12px;margin-left:auto">+ COMMIT WORK</a></div>
+  <div class="sechead" style="margin-top:20px">CREATION PIPELINE<a href="/publishing.html" class="btn-gold" style="font-size:12px;padding:4px 12px;margin-left:auto">+ COMMIT WORK</a></div>
   <div class="pipeline">
     <div class="pipe-col">
       <div class="pipe-head"><div class="pipe-icon" style="background:var(--muted)"></div><div class="pipe-head-title">DRAFT</div><div class="pipe-count" style="color:var(--muted)" id="count-draft">0</div></div>
@@ -193,7 +193,7 @@
 
 <!-- ARCHIVE TAB -->
 <div class="tab-panel" id="tab-archive">
-  <div class="sechead">YOUR ARCHIVE<span id="archive-count" style="font-family:var(--D);font-size:11px;color:var(--gold);letter-spacing:0;margin-left:8px"></span></div>
+  <div class="sechead">YOUR ARCHIVE<span id="archive-count" style="font-family:var(--D);font-size:12px;color:var(--gold);letter-spacing:0;margin-left:8px"></span></div>
   <div class="archive-list" id="archive-list" data-loading></div>
 </div>
 
@@ -203,12 +203,12 @@
   <div class="card-grid">
     <div class="card">
       <div class="card-title">AXIS C — CONTRIBUTION</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Axis C measures your sovereign contribution to the Order's collective knowledge. Every committed work — manuscript, treatise, report, article, codex entry — advances Axis C. Contribution is one of the three inputs to the authority formula: AUTH = √(A³+B³+C³) × φ/e.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Axis C measures your sovereign contribution to the Order's collective knowledge. Every committed work — manuscript, treatise, report, article, codex entry — advances Axis C. Contribution is one of the three inputs to the authority formula: AUTH = √(A³+B³+C³) × φ/e.</div>
     </div>
     <div class="card">
       <div class="card-title">CREATION PIPELINE STAGES</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:7.5px">
+        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr">
             <div style="text-align:left;padding:4px 0;color:var(--gold)">Stage</div>
             <div style="text-align:left;padding:4px 0;color:var(--gold)">Description</div>
@@ -235,7 +235,7 @@
     <div class="card">
       <div class="card-title">WORK TYPES &amp; AXIS WEIGHT</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:7.5px">
+        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr">
             <div style="text-align:left;padding:4px 0;color:var(--gold)">Type</div>
             <div style="text-align:left;padding:4px 0;color:var(--gold)">Axes Advanced</div>
@@ -265,7 +265,7 @@
     </div>
     <div class="card">
       <div class="card-title">AUTHORITY FORMULA</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">AUTH = √(A³+B³+C³) × φ/e<br><br>φ = 1.6180339887 (golden ratio) · e = 2.7182818285 · APEX = 27.8367. Each axis maxes at 9.000. A sovereign with all three axes at 9.000 achieves APEX authority of 27.8367.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">AUTH = √(A³+B³+C³) × φ/e<br><br>φ = 1.6180339887 (golden ratio) · e = 2.7182818285 · APEX = 27.8367. Each axis maxes at 9.000. A sovereign with all three axes at 9.000 achieves APEX authority of 27.8367.</div>
     </div>
   </div>
 </div>
@@ -355,7 +355,7 @@ function populateArchive(works){
   var cnt=document.getElementById('archive-count');
   if(cnt) cnt.textContent='('+works.length+')';
   if(!list) return;
-  if(!works.length){list.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">YOUR ARCHIVE IS EMPTY — COMMIT YOUR FIRST WORK ABOVE.</div>';return;}
+  if(!works.length){list.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">YOUR ARCHIVE IS EMPTY — COMMIT YOUR FIRST WORK ABOVE.</div>';return;}
   list.innerHTML=works.map(function(w){
     var dt=w.created_at?new Date(w.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'';
     var st=(w.status||'private').toLowerCase();

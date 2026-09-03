@@ -78,7 +78,7 @@ return;
 }
 var ad = candidates[Math.floor(Math.random() * candidates.length)];
 recordImpression(ad.id);
-var html = '<div class=oad-unit style=border:1px solid ' + ad.color + '33;background:' + ad.color + '08;border-radius:3px;padding:12px 14px;position:relative>' + '<div style=display:flex;justify-content:space-between;align-items:flex-start;gap:12px>' + '<div style=min-width:0>' + '<div style=font-family:var(--M);font-size:6px;letter-spacing:1.5px;color:' + ad.color + ';margin-bottom:4px>AD · ' + ad.advertiser.toUpperCase() + '</div>' + '<div style=font-family:var(--M);font-size:11px;color:var(--ink);margin-bottom:4px>' + ad.headline + '</div>' + '<div style=font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:8px>' + ad.body + '</div>' + '<button style=font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid ' + ad.color + '55;color:' + ad.color + ';border-radius:2px;cursor:pointer>' + ad.cta + '</button>' + '</div>' + '</div>' + '<div style=position:absolute;top:4px;right:6px;font-family:var(--M);font-size:6px;color:var(--muted);opacity:.5>Ω AD</div>' + '</div>';
+var html = '<div class=oad-unit style=border:1px solid ' + ad.color + '33;background:' + ad.color + '08;border-radius:3px;padding:12px 14px;position:relative>' + '<div style=display:flex;justify-content:space-between;align-items:flex-start;gap:12px>' + '<div style=min-width:0>' + '<div style=font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:' + ad.color + ';margin-bottom:4px>AD · ' + ad.advertiser.toUpperCase() + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px>' + ad.headline + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px>' + ad.body + '</div>' + '<button style=font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid ' + ad.color + '55;color:' + ad.color + ';border-radius:2px;cursor:pointer>' + ad.cta + '</button>' + '</div>' + '</div>' + '<div style=position:absolute;top:4px;right:6px;font-family:var(--M);font-size:12px;color:var(--muted);opacity:.5>Ω AD</div>' + '</div>';
 container.innerHTML = html;
 container.style.display = 'block';
 }
@@ -95,16 +95,16 @@ return a + b;
 }, 0);
 var adRows = SAMPLE_ADS.map(function(ad) {
 var count = log[ad.id] || 0;
-return '<div style=display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)><span style=font-family:var(--M);font-size:9px;color:var(--ink)>' + ad.advertiser + '</span><span style=font-family:var(--M);font-size:9px;color:var(--gold)>' + count + ' impressions</span></div>';
+return '<div style=display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)><span style=font-family:var(--M);font-size:12px;color:var(--ink)>' + ad.advertiser + '</span><span style=font-family:var(--M);font-size:12px;color:var(--gold)>' + count + ' impressions</span></div>';
 }).join('');
 /* Three of the four cards here reported dollars that did not exist. What the
    module can honestly count is impressions and campaigns, so that is what it
    reports; the money cards are replaced by the rate card, stated as intent. */
 function card(label, value, colour, sub) {
 return '<div class=glass style=padding:16px>' +
-'<div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>' + label + '</div>' +
+'<div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>' + label + '</div>' +
 '<div style=font-family:var(--D);font-size:clamp(22px,3vw,32px);color:' + colour + '>' + value + '</div>' +
-(sub ? '<div style=font-family:var(--M);font-size:8px;color:var(--muted);margin-top:6px>' + sub + '</div>' : '') +
+(sub ? '<div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-top:6px>' + sub + '</div>' : '') +
 '</div>';
 }
 el.innerHTML = '<div style=display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px>' +
@@ -113,7 +113,7 @@ card('CAMPAIGNS', SAMPLE_ADS.length, 'var(--cyan)', 'Specimen creative, not sold
 card('INTENDED CREATOR SHARE', RATE_CARD.creator_share_pct + '%', 'var(--green)', 'Planned rate. No payout has run.') +
 card('EARNED TO DATE', '&mdash;', 'var(--muted)', 'No advertiser has been billed.') +
 '</div>' +
-'<div class=glass style=padding:16px;margin-top:16px><div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>SPECIMEN CREATIVE</div>' + adRows + '</div>';
+'<div class=glass style=padding:16px;margin-top:16px><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>SPECIMEN CREATIVE</div>' + adRows + '</div>';
 }
 window.OmegaAdNetwork = {
 slots: AD_SLOTS, ads: SAMPLE_ADS, rateCard: function() {

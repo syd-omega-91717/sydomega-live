@@ -98,7 +98,7 @@
     var badge=document.createElement('div');
     badge.id='omega-cap-badge';
     badge.setAttribute('aria-label','Capability: '+cap.cap);
-    badge.style.cssText='position:fixed;bottom:24px;right:80px;z-index:200;font-family:var(--M,"Courier Prime",monospace);font-size:6.5px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;text-align:right;line-height:1.6';
+    badge.style.cssText='position:fixed;bottom:24px;right:80px;z-index:200;font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;text-align:right;line-height:1.6';
     /* bottom:24px with z-index 200 puts this entirely inside nav.js's 66px
        #omega-mob bar (z-index 9990), so on a phone it has always been 100%
        covered -- measured at 375px as y 655..676 against the bar's 651..700.

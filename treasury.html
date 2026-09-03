@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">TREASURY<small>FINANCE &middot; ASSETS &middot; RESERVES &middot; CASH FLOWS</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -29,9 +29,9 @@
     </div>
 
     <div class="pad" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
-      <button onclick="OmegaLocalBackup.exportKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],'omega-treasury-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
-      <button onclick="OmegaLocalBackup.importKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],'omega-treasury-backup.json')" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
     </div>
 
     <!-- OVERVIEW TAB -->
@@ -55,11 +55,11 @@
       <div id="add-asset-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">ASSET NAME</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">ASSET NAME</div>
             <input id="a-name" class="inp" style="width:100%" placeholder="e.g. Primary Residence">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TYPE</div>
             <select id="a-type" class="inp" style="width:100%">
               <option value="liquid">Liquid (Cash/Savings)</option>
               <option value="equity">Equity/Stocks</option>
@@ -71,16 +71,16 @@
             </select>
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">CURRENT VALUE (USD)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">CURRENT VALUE (USD)</div>
             <input id="a-value" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">COST BASIS (USD)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">COST BASIS (USD)</div>
             <input id="a-cost" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">NOTES</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">NOTES</div>
           <input id="a-notes" class="inp" style="width:100%" placeholder="Any relevant notes...">
         </div>
         <button class="btn" onclick="addAsset()">SAVE ASSET</button>
@@ -94,42 +94,42 @@
       <div class="sechead">SOVEREIGN RESERVES</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:18px">
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--gold);padding:16px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">EMERGENCY FUND</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">EMERGENCY FUND</div>
           <div class="kpi-n" id="r-emerg">$0</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TARGET (6-month expenses)</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TARGET (6-month expenses)</div>
           <input id="r-emerg-target" class="inp" type="number" style="width:100%;margin-bottom:8px" placeholder="Target amount...">
           <div id="r-emerg-bar-wrap" style="background:rgba(201,168,76,.1);border-radius:2px;height:6px;margin-bottom:4px">
             <div id="r-emerg-bar" style="height:6px;background:var(--gold);border-radius:2px;width:0%"></div>
           </div>
-          <div id="r-emerg-pct" style="font-family:var(--M);font-size:8px;color:var(--muted)">0% funded</div>
+          <div id="r-emerg-pct" style="font-family:var(--M);font-size:12px;color:var(--muted)">0% funded</div>
         </div>
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--cyan);padding:16px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">OPPORTUNITY RESERVE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">OPPORTUNITY RESERVE</div>
           <div class="kpi-n" id="r-opp">$0</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
           <div style="font-size:12px;line-height:1.7;opacity:.75">Capital set aside to deploy rapidly when high-conviction opportunities arise. The sovereign stays liquid for asymmetric bets.</div>
         </div>
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--green);padding:16px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-bottom:10px">LEGACY RESERVE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:10px">LEGACY RESERVE</div>
           <div class="kpi-n" id="r-legacy">$0</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
           <div style="font-size:12px;line-height:1.7;opacity:.75">Capital designated for generational transfer — family trusts, endowments, or children's education. Sovereignty extends beyond a single life.</div>
         </div>
       </div>
       <div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:14px;border-radius:2px">
-        <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">UPDATE RESERVES</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">UPDATE RESERVES</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
           <div>
-            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">EMERGENCY ($)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">EMERGENCY ($)</div>
             <input id="ru-emerg" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">OPPORTUNITY ($)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">OPPORTUNITY ($)</div>
             <input id="ru-opp" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">LEGACY ($)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">LEGACY ($)</div>
             <input id="ru-legacy" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
         </div>
@@ -146,15 +146,15 @@
       <div id="add-flow-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DESCRIPTION</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">DESCRIPTION</div>
             <input id="f-desc" class="inp" style="width:100%" placeholder="What is this flow?">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">AMOUNT ($)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">AMOUNT ($)</div>
             <input id="f-amount" class="inp" type="number" style="width:100%" placeholder="0">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TYPE</div>
             <select id="f-type" class="inp" style="width:100%">
               <option value="in">Inflow (+)</option><option value="out">Outflow (−)</option>
             </select>
@@ -188,10 +188,10 @@
 <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>ASSETS &middot; RESERVES &middot; CASH FLOWS</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -254,7 +254,7 @@ function renderOverview(){
 
 function renderAssets(){
   var el=document.getElementById('asset-list');if(!el)return;
-  if(!assets.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ASSETS RECORDED</div>';return;}
+  if(!assets.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO ASSETS RECORDED</div>';return;}
   el.innerHTML=[].concat(assets).reverse().map(function(a){
     var col=TYPE_COL[a.type]||'#888';
     var pnl=Number(a.value||0)-Number(a.cost||0);
@@ -262,14 +262,14 @@ function renderAssets(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="flex:1">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+a.type.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+a.type.toUpperCase()+'</div>'
       +'<div style="font-size:13px;font-weight:600">'+a.name+'</div>'
       +'</div>'
-      +(a.notes?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+a.notes+'</div>':'')
+      +(a.notes?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+a.notes+'</div>':'')
       +'</div>'
       +'<div style="text-align:right;flex-shrink:0">'
       +'<div style="font-family:var(--D);font-size:14px;color:'+col+'">'+fmt(a.value)+'</div>'
-      +(ret!==null?'<div style="font-family:var(--M);font-size:8px;color:'+(pnl>=0?'var(--green)':'#FF4444')+'">'+(pnl>=0?'+':'')+ret+'%</div>':'')
+      +(ret!==null?'<div style="font-family:var(--M);font-size:12px;color:'+(pnl>=0?'var(--green)':'#FF4444')+'">'+(pnl>=0?'+':'')+ret+'%</div>':'')
       +'</div>'
       +'</div>';
   }).join('');
@@ -294,14 +294,14 @@ function renderFlows(){
   document.getElementById('f-total-out').textContent=fmt(tout);
   var net=tin-tout;document.getElementById('f-net').textContent=(net>=0?'+':'')+fmt(Math.abs(net));
   document.getElementById('f-net').style.color=net>=0?'var(--green)':'#FF4444';
-  if(!flows.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO FLOWS LOGGED</div>';return;}
+  if(!flows.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO FLOWS LOGGED</div>';return;}
   el.innerHTML=[].concat(flows).reverse().slice(0,50).map(function(f){
     var col=f.type==='in'?'var(--green)':'#FF4444';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
-      +'<div style="font-family:var(--M);font-size:8px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
       +'<div style="flex:1;font-size:12px">'+f.desc+'</div>'
       +'<div style="font-family:var(--D);font-size:13px;color:'+col+'">'+fmt(f.amount)+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+f.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+f.date+'</div>'
       +'</div>';
   }).join('');
 }

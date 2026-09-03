@@ -83,7 +83,7 @@
       var btn=document.createElement('button');
       btn.setAttribute('data-lang',lg.code);
       btn.title=lg.name;
-      btn.style.cssText='font-family:"Courier Prime",monospace;font-size:8.5px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s;white-space:nowrap';
+      btn.style.cssText='font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s;white-space:nowrap';
       btn.textContent=lg.label;
       if((localStorage.getItem('omega_lang')||'en')===lg.code){
         btn.style.color='#C9A84C';btn.style.borderColor='rgba(201,168,76,.5)';btn.style.background='rgba(201,168,76,.07)';
@@ -106,7 +106,7 @@
     sel.id='omega-lang-select';
     sel.setAttribute('aria-label','Language');
     sel.title='Language';
-    sel.style.cssText='font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1px;padding:4px 6px;border:1px solid rgba(201,168,76,.2);color:#C9A84C;background:rgba(2,2,6,.9);cursor:pointer;border-radius:2px';
+    sel.style.cssText='font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;padding:4px 6px;border:1px solid rgba(201,168,76,.2);color:#C9A84C;background:rgba(2,2,6,.9);cursor:pointer;border-radius:2px';
     LANGS.forEach(function(lg){
       var o=document.createElement('option');
       o.value=lg.code; o.textContent=lg.label+' · '+lg.name;
@@ -135,7 +135,7 @@
     var snd=document.createElement('button');
     snd.id='omega-sound-btn';
     snd.title='Toggle ambient sound';
-    snd.style.cssText='font-family:"Courier Prime",monospace;font-size:8.5px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
+    snd.style.cssText='font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
     snd.textContent=_soundOn?'\u266a ON':'\u266a OFF';
     snd.onclick=function(){
       // audio.js exposes __omegaAudioToggle specifically for this dock to
@@ -161,7 +161,7 @@
     srch.setAttribute('data-search-trigger','');
     srch.title='Search the platform (Ctrl+K)';
     srch.setAttribute('aria-label','Search the platform');
-    srch.style.cssText='font-family:"Courier Prime",monospace;font-size:8.5px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
+    srch.style.cssText='font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
     srch.textContent='⌕ SEARCH';
     srch.onmouseenter=function(){srch.style.color='#C9A84C';srch.style.borderColor='rgba(201,168,76,.5)';};
     srch.onmouseleave=function(){srch.style.color='#8a8676';srch.style.borderColor='rgba(201,168,76,.2)';};

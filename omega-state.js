@@ -55,19 +55,19 @@
 
   /* ── LOADING SPINNER HTML ─────────────────────────────────────── */
   var SPINNER = '<div style="width:16px;height:16px;border:2px solid rgba(201,168,76,.15);border-top-color:var(--gold,#C9A84C);border-radius:50%;animation:oa-spin 1s linear infinite"></div>'
-    +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:2px;color:var(--muted,#8a8676)">LOADING</span>';
+    +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">LOADING</span>';
 
   var ERROR_HTML = function(msg){
     return '<div style="padding:14px;border:1px solid rgba(139,0,0,.25);border-radius:2px;background:rgba(139,0,0,.04);text-align:center">'
-      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">&#9888; ERROR</div>'
-      +'<div style="font-size:11px;color:rgba(233,230,220,.6)">'+(msg||'Failed to load data. Please refresh.')+'</div>'
+      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">&#9888; ERROR</div>'
+      +'<div style="font-size:12px;color:rgba(233,230,220,.6)">'+(msg||'Failed to load data. Please refresh.')+'</div>'
       +'</div>';
   };
 
   var EMPTY_HTML = function(msg, icon){
     return '<div style="padding:28px;text-align:center">'
       +'<div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:36px;color:rgba(201,168,76,.12);margin-bottom:10px">'+(icon||'\u03A9')+'</div>'
-      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:9px;letter-spacing:3px;color:rgba(138,134,118,.4)">'+(msg||'NO DATA AVAILABLE')+'</div>'
+      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.4)">'+(msg||'NO DATA AVAILABLE')+'</div>'
       +'</div>';
   };
 

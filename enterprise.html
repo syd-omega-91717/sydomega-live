@@ -9,19 +9,19 @@
 <style>
 .tier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:20px}
 .tier-card{border:1px solid var(--line);border-top:3px solid var(--tc,var(--gold));background:var(--surface);padding:18px;position:relative;text-align:center}
-.tier-name{font-family:var(--D);font-size:11px;color:var(--tc,var(--gold));margin-bottom:5px}
+.tier-name{font-family:var(--D);font-size:12px;color:var(--tc,var(--gold));margin-bottom:5px}
 .tier-price{font-family:var(--D);font-size:26px;color:var(--ink);line-height:1;margin-bottom:3px}
-.tier-period{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.tier-period{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
 .tier-features{list-style:none;text-align:left;margin-bottom:14px}
-.tier-features li{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--ink);padding:4px 0;border-bottom:1px solid rgba(201,168,76,.05);opacity:.8}
+.tier-features li{font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--ink);padding:4px 0;border-bottom:1px solid rgba(201,168,76,.05);opacity:.8}
 .tier-features li::before{content:"\2713  ";color:var(--tc,var(--green))}
-.tier-cta{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 16px;border:1px solid var(--tc,var(--gold));background:none;color:var(--tc,var(--gold));cursor:pointer;transition:.18s;width:100%}
+.tier-cta{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 16px;border:1px solid var(--tc,var(--gold));background:none;color:var(--tc,var(--gold));cursor:pointer;transition:.18s;width:100%}
 .tier-cta:hover{background:rgba(201,168,76,.08)}
-.popular-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:2px 8px}
+.popular-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:2px 8px}
 .mrr-hero{border:1px solid var(--line);padding:20px;background:var(--surface);text-align:center;margin-bottom:16px}
 .mrr-num{font-family:var(--D);font-size:clamp(32px,6vw,52px);color:var(--gold);line-height:1}
-.mrr-label{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:5px}
-.mrr-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-top:10px}
+.mrr-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-top:5px}
+.mrr-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-top:10px}
 </style>
 </head>
 <body>
@@ -97,12 +97,12 @@
   <div class="sechead">ENTERPRISE ACCOUNTS &middot; <span id="acc-count">LOADING</span></div>
   <div class="tbl-wrap">
     <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>ORGANISATION</span><span>LICENSE</span><span>STATUS</span><span>MRR</span></div>
-    <div id="acc-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:9px;color:var(--muted)">NO ENTERPRISE ACCOUNTS YET &middot; OWNER ONLY</div></div>
+    <div id="acc-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">NO ENTERPRISE ACCOUNTS YET &middot; OWNER ONLY</div></div>
   </div>
   <div class="sechead" style="margin-top:20px">API KEY MANAGEMENT &middot; OWNER VIEW</div>
   <div class="tbl-wrap">
     <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>KEY NAME</span><span>PREFIX</span><span>TYPE</span><span>REQUESTS</span></div>
-    <div id="key-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:9px;color:var(--muted)">NO API KEYS ISSUED</div></div>
+    <div id="key-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">NO API KEYS ISSUED</div></div>
   </div>
 </div>
 
@@ -179,9 +179,9 @@ function setTab(name){
         if(rows){rows.innerHTML=accs.data.map(function(a){
           var col={active:'var(--green)',pending:'var(--solar)',suspended:'var(--crim)',expired:'var(--muted)'}[a.status]||'var(--muted)';
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
-            +'<div style="font-family:var(--M);font-size:8px">'+String(a.license_type||'').toUpperCase()+'</div>'
-            +'<div style="font-family:var(--M);font-size:8px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
+            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+String(a.license_type||'').toUpperCase()+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--D);font-size:13px;color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'
             +'</div>';
         }).join('');}
@@ -194,10 +194,10 @@ function setTab(name){
         var kr=document.getElementById('key-rows');
         if(kr){kr.innerHTML=keys.data.map(function(k){
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div style="font-family:var(--M);font-size:9px">'+String(k.key_name||'').replace(/</g,'&lt;')+'</div>'
-            +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+String(k.key_prefix||'')+'&hellip;</div>'
-            +'<div style="font-family:var(--M);font-size:8px">'+String(k.key_type||'').toUpperCase()+'</div>'
-            +'<div style="font-family:var(--M);font-size:9px;color:var(--gold)">'+String(k.requests_total||0)+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+String(k.key_name||'').replace(/</g,'&lt;')+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(k.key_prefix||'')+'&hellip;</div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+String(k.key_type||'').toUpperCase()+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">'+String(k.requests_total||0)+'</div>'
             +'</div>';
         }).join('');}
       }

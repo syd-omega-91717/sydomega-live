@@ -5442,3 +5442,123 @@ before/after evidence.
 
 `node scripts/verify-runtime.js --all`: **PASS (186 pages)** after all of this
 session's page changes.
+
+## The platform was set in microtype: 78% of visible text below 12px (2026-09-03)
+
+Asked to raise the visual design of the whole project to a professional
+standard. The first thing measured, before changing anything, was what the
+platform actually looks like — and the measurement inverted the diagnosis.
+
+### Every screenshot this repo had ever taken showed the wrong typeface
+
+`harness/session.js` stubs `fonts.googleapis.com` with an **empty** stylesheet,
+deliberately, so correctness scans stay offline and deterministic. The cost was
+invisible: no screenshot from this harness has ever shown Cinzel Decorative,
+Rajdhani or Courier Prime. Every one showed the browser's fallback serif/sans.
+
+The check that settles it — repeat this rather than trusting a screenshot —
+renders one string in the brand face and in the generic fallback and compares
+widths. On `dashboard.html` `"Cinzel Decorative",serif` and bare `serif` both
+measured **589px**, and Rajdhani vs sans-serif both **622px**. Identical means
+fallback. `document.fonts.size` was 0.
+
+Un-stubbing was not enough. From `http://localhost:8765` the font FILES never
+arrive in this sandbox — Node fetches the CSS fine, and a page rendered from
+`about:blank` gets real Cinzel (which is why `scripts/build-og-image.js` was
+correct all along), but from a real http origin gstatic does not resolve.
+Injecting the CSS moved `document.fonts.size` to 10 and changed nothing: the
+faces were declared and never downloaded. **`document.fonts.size` counts
+DECLARED faces, not applied ones** — it is not evidence.
+
+`scripts/visual-review.js` fixes it with no page-origin network at all: Node
+downloads the `.ttf` files and base64-inlines them into `@font-face`. Verified:
+`cinzel 613 vs serif 589 | rajdhani 465 vs sans 622`. `session.js` gained an
+opt-in `webfonts` flag rather than being forked; the default is unchanged so
+every existing scan stays offline.
+
+### What the real render then showed
+
+| | |
+|---|---|
+| visible text at <=11px, 6 pages | **2540 / 3261 = 78%** |
+| `dashboard.html` alone | 502 of 599 text nodes |
+| sizes in use | 6px, 6.5px, 7px, 7.5px, 8px, 8.5px, 9px, 9.5px, 10px, 10.5px, 11px |
+
+The interface was not "too dark" — that was the wrong diagnosis, and the palette
+disproves it. Measured against `--void #0A0A0F`: `--ink` 15.82:1, `--gold`
+8.64:1, `--cyan` 12.84:1, `--muted` 5.41:1, `--green` 7.42:1 — every one clears
+WCAG body contrast. Only `--crim` (4.01:1) misses body, and CLAUDE.md already
+records that as a deliberate 3:1 choice. **The problem was size, not contrast**,
+and a palette change would have been a fix for a defect that did not exist.
+
+### Why it could not be fixed from bg.js
+
+There is no type scale to change: `:root` defines three family tokens and a
+spacing scale, and **no size scale at all**. Every size is a hardcoded literal,
+and they are not where a single fix could reach them:
+
+    2,423  page <style> blocks       (172 pages)
+    1,350  inline style= attributes
+      280  root .js injected CSS     (bg.js 34, nav.js 11, 40+ omega-* modules)
+
+bg.js holds 1% of them, and CLAUDE.md section 4 records it as stylesheet **1 of
+53**, so it loses every equal-specificity tie and cannot override the pages from
+above. Sweeping only `<style>` blocks moved 78% to 63% — the rest genuinely was
+elsewhere. All three surfaces are swept by `scripts/type-scale.py`.
+
+**Result: 78% -> 4%.** `dashboard.html` went from 502 elements at <=11px to
+**zero**. The 4% that remains is `em`/`%` sizing that compounds down a nesting
+chain (8.8px, 9.6px, 9.28px on `profile.html`); those need per-rule judgement,
+not a blind sweep, and are deliberately out of scope.
+
+### The tool was wrong twice before it was right
+
+**Not idempotent.** The first map spread 4-11px across 11/12/13px. Its outputs
+were also inputs, so a second `--apply` re-lifted 11px to 13px and kept
+inflating. A sweep over 172 pages that silently grows the type each run is a
+trap, and only running it against its own output exposed it.
+
+**It inverted the hierarchy.** That same map lifted 11px to 13px while leaving
+12px alone, making former-11px text LARGER than former-12px text. One floor —
+everything below 12px becomes 12px, nothing at or above it moves — fixes both:
+inputs and outputs are disjoint, and no pair can swap order.
+
+**And the claim about the typeface was wrong.** The first docstring called the
+52 elements using Cinzel Decorative at <=14px "the single most amateur-looking
+thing in the interface". Reading the selectors corrected it: the 116 such rules
+across 60 pages are overwhelmingly ENTITY NAMES (`.award-name`, `.cer-title`,
+`.ec-name`, `.ad-title`), where a display face is deliberate brand expression —
+and bg.js already uses `--D` correctly, on exactly five title/value rules.
+Sweeping the family would have stripped brand character from 60 pages to fix a
+problem that did not exist. It is reported and never rewritten.
+
+### The floating copilot button sat on top of the mobile navigation
+
+Found by rendering at 390x844 once the type was legible. Measured, offsets from
+the bottom edge:
+
+       0.. 56  x   0..390   #omega-mob            (the tab bar)
+      24.. 76  x 314..366   #cp-btn               <- 32px INTO the tab bar
+      66.. 94  x   0..390   #omega-ticker-strip   <- and 10px into the ticker
+
+Reproduced identically on 6 of 6 pages. bg.js's desktop ladder is scoped to
+`>=761px` and its comment says the mobile ladder "was measured separately at
+375px" — which was true for `#ofb-btn`, `#omega-voice-btn`, `#omega-ded-widget`,
+`#osh-btn` and `#omega-cap-badge`, every one of which carries a
+`@media(max-width:760px)` rule. **`#cp-btn` has none anywhere in the repo**, so
+it kept the `bottom:24px` from its own inline cssText. A mobile ladder now
+places it at the next free rung (262 + 8 = 270), verified clear before use.
+
+The same scan then found a **pre-existing desktop collision**: `#omega-cap-badge`
+overlapping `#omega-ded-widget` by 5px on 6 of 6 pages. The ladder's own comment
+shows the cause — it computed `bottom:215 = 146 + 61 + 8`, but the widget
+measures 146..220, i.e. **74px tall, not 61**. Corrected to 228, and the
+arithmetic in the comment corrected with it.
+
+Both scans re-run after the fix: **0 overlapping pairs at 390px and at 1440px**,
+on all 6 pages. The false-positive pass section 8.4 requires (excluding
+`pointer-events:none` and full-bleed backdrops) was applied before trusting any
+of these numbers.
+
+`scripts/type-scale.py --check` is now a blocking gate in `contract-suite.py`,
+so the floor cannot erode back.

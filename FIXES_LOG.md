@@ -6473,7 +6473,12 @@ parent-identity diff, 181 pages:       skipped 0
                                        parent unchanged 158
                                        moved (were stretched) 23
                                        MOVED THOUGH ALREADY CORRECT 0
+verify-runtime.js --all:               PASS (187 pages)
 ```
+
+The runtime figure is a re-run, not the earlier one: the first PASS(187) was
+measured against the module before the axis guard existed, so it said nothing
+about the code that actually ships.
 
 One incidental gate failure worth recording as a success: `omega-registry.py`
 failed on this change because the module census tracks total `omega-*.js` bytes

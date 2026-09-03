@@ -406,7 +406,8 @@
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
       var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
-      head.innerHTML='<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
+      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){

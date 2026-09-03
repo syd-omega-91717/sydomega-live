@@ -6485,3 +6485,64 @@ failed on this change because the module census tracks total `omega-*.js` bytes
 and the edit moved it 1134 KB -> 1136 KB. That is the "put the number in the
 generator, not the paragraph" rule doing exactly its job.
 
+
+## The four system pages a member actually sees had no emblem (2026-09-03)
+
+After the reseat fix, 181 of 187 pages mount `[data-page-emblem]` and all 181
+render correctly. The six that do not: `verify-deployment` and `verify-modules`
+(internal harnesses nobody browses to, and the only two the runtime a11y pass
+flags for having no `<main>`), plus `enter`, `reset`, `404` and `offline` --
+which a member *does* see, `enter` being the first thing anyone sees at all.
+
+Those four now carry both a mount and their own registry entry, so each draws
+its own mark instead of the generic 12-fold omega: `enter` a hollow diamond,
+`reset` a return arrow, `404` a circled slash, `offline` a dotted ring.
+
+**A registry entry does not make a page a gateway destination.** `omega-gateway.js`
+builds its tile list from `OmegaPageEmblem.pages` and keeps its own `EXCLUDE`
+map (`404, enter, offline, reset, terms, pending, account, gateway, sovereign`),
+so these stay out of it. Its header comment claimed those pages "deliberately
+carry no registry entry" -- true when written, false the moment this landed, so
+it now says EXCLUDE is what keeps them out, not the absence of a row.
+
+### Two real defects, and a probe that called them OK
+
+The first render check printed `ALL 4 OK`. Two of the four were broken; the
+pass criteria only tested for a missing mount, a hidden ancestor, a zero box and
+horizontal scroll:
+
+```
+reset.html   box 241x652  content 175   parent body., flex/row
+404.html     box 299x29   content 29
+```
+
+**`reset.html` reproduced the bug this session just fixed, on a page I had just
+edited.** `<body>` there resolves to `display:flex; flex-direction:row`, so a
+mount placed as a body-level sibling of the wrapper became a stretched second
+column -- 652px for 175px of content. `reseat()` did not rescue it: the page has
+no sidebar, so the shell-row guard correctly declined. Moving the mount inside
+`div.wrap` fixes it (241x175).
+
+**`404.html:18` was a bare `canvas` selector** --
+`canvas{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}`
+for the page's own backdrop. It captured the emblem's canvas too, taking it out
+of flow so the mount collapsed to its caption (29px) and painting the mark
+full-screen at .4 opacity behind the page. Scoping the rule to `#cv` fixes it
+(299x161).
+
+**Five other pages have bare `canvas` rules and are all fine** -- `clarity`,
+`contacts`, `expenses`, `fasting`, `physiology`, each setting
+`display:block;width:100%;max-width:...`. Measured rather than assumed: every
+one renders the mark at 132x132 from a 264x264 buffer, identical to the
+controls, because `draw()` sets width and height inline and inline wins.
+The discriminator is *which property* the page rule touches -- `width`/`height`
+are already claimed inline, `position` is not. Five edits avoided by measuring.
+
+The probe now fails a box more than 60px taller than its own content, and a
+content height under 140px (a drawn mark plus caption is ~161). Both failures
+above would have been caught by those two lines.
+
+Final: all four at 161-175px with a sized canvas, no hidden ancestor, no
+horizontal scroll; `ci-local.sh` 22/22, 175 tests, registry regenerated
+(1137 -> 1138 KB).
+

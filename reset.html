@@ -124,6 +124,10 @@
       </div>
     </div>
   </div>
+  <!-- Inside the wrapper, not a sibling of it: <body> here resolves to
+       display:flex/row, so a top-level mount became a stretched second
+       column (241x652 for 175px of content). -->
+  <div data-page-emblem="reset" style="margin:20px auto 28px"></div>
 </div>
 
 <script>

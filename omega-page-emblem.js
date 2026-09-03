@@ -25,6 +25,14 @@
     /* gateway: the door into the platform -- a gate mark, not a generic
        Omega. omega-visual-home: the visual showcase, a frame mark. */
     gateway:[12,'a','\u26E9'], 'omega-visual-home':[12,'c','\u2394'],
+    /* The four system pages that a member actually sees. They are STATES, not
+       destinations -- omega-gateway.js keeps its own EXCLUDE map so a registry
+       entry here never turns one into a gateway tile. They carry entries only
+       so each draws its own mark instead of the generic 12-fold omega. The two
+       internal harnesses (verify-deployment, verify-modules) stay out: nobody
+       browses to them. */
+    enter:[12,'b','\u25C7'], reset:[12,'a','\u21BB'],
+    '404':[9,'a','\u2298'], offline:[9,'a','\u25CC'],
     academy:[12,'a','\u2727'], research:[9,'a','\u2732'], intelligence:[9,'a','\u25C9'],
     prediction:[12,'a','\u2609'], travel:[9,'a','\u2708'], news:[12,'a','\u25C8'],
     search:[12,'a','\u2315'], houses:[12,'a','\u2302'], chatbot:[12,'a','\u2756'],

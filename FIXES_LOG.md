@@ -6136,3 +6136,155 @@ written against `─` matched nothing; and inserting CSS into that
 single-quoted JS string requires escaping backslashes, then apostrophes, then
 newlines — getting the order wrong broke the file, `node --check` caught it,
 and it was restored from git rather than patched over.
+
+### Card titles get a subordinate mark, and the runner doc gets the case that blocked it
+
+**393 `.card-title` elements across 82 pages** were text-only, the same shape
+the 614 section headings had. `.card-title` is defined once, in `bg.js`, at
+`:where()` specificity, and `.card-title::before` was free — checked at runtime
+by enumerating every stylesheet rule whose selector matches, not by grep.
+
+**The design decision was to NOT repeat the section emblem.** Putting the
+page's ringed glyph on card titles too would show twenty identical rings on a
+twenty-card page: that is noise, not hierarchy, and it would spend the
+readability the type-floor work bought. Instead a card title gets a 7px open
+diamond in the page's axis colour — the ring marks a section, the diamond marks
+an item inside it. Two marks, one system.
+
+It is **still at rest** and makes a half turn when its card is hovered. 614
+rings already turn platform-wide at 90s; 393 more turning marks makes a page
+swarm. Motion as a reward for attention costs nothing when nobody is pointing.
+
+`content` is `""` — an empty box, not text — so unlike the `.sechead` mark this
+one is structurally immune to the inherited `-webkit-text-fill-color` from
+`.ofx-sheen` that cost four wrong theories on the previous change.
+
+Verified by A/B, pinning `bg.js` with the block removed against the real file:
+
+```
+                 BEFORE                           AFTER
+ops.html         557x193 557x193 557x182 557x182  identical
+fasting.html     813x218 813x458                  identical
+expenses.html    778x298 778x160                  identical
+```
+
+**A false negative in the probe itself, worth recording.** The first version
+measured where each title's TEXT started, via
+`range.selectNodeContents(el).getBoundingClientRect().left - el.rect.left`, and
+returned **0 both with and without** a `padding-left:16px` that
+`getComputedStyle` confirmed was applied. A Range over an element's contents
+does not reliably report the content box's left edge. Had the mark actually
+shifted a layout, that probe would have said it did not. Card box size is the
+metric that works.
+
+The first A/B run also reported `0x0` for every card on `agents.html` — those
+cards live in the SCIENCE tab, `display:none` at rest, the same trap that
+produced the earlier seven false positives. Re-run against pages whose cards
+are visible without interaction.
+
+### `docs/CI_RUNNER_RECOVERY.md` had no entry for the case that actually blocked recovery
+
+Three consecutive attempts to install the runner service failed identically:
+
+```
+Cannot configure the runner because it is already configured.
+To reconfigure the runner, run 'config.cmd remove' or './config.sh remove' first.
+```
+
+Two causes, neither documented:
+
+1. **`--replace` does not clear a local config.** It replaces the registration
+   *GitHub* holds under that name. `C:\actions-runner` already had
+   `.runner`/`.credentials` from an earlier attempt, and `config.cmd` refuses on
+   those **before it ever reads the token**. `.\config.cmd remove --local`
+   clears them offline, without a token — which is what an orphaned
+   registration needs.
+2. **The literal placeholder was pasted as the token**, in every attempt. The
+   command is long enough that `PASTE_TOKEN_HERE` reads as part of it. The doc
+   now puts the token in a `$T` variable first, so there is exactly one
+   substitution and it sits on its own line.
+
+Also recorded: `Get-Service actions.runner.*` printing **nothing at all** means
+no service was ever created, so the run stopped at the config step. A service
+that exists but is not running prints a row reading `Stopped`. Those two states
+look identical if you are only checking whether jobs move.
+
+## The active tab was a 3px flat border on 519 tabs across 128 pages (2026-09-03)
+
+`.tab-btn` is the last large text-only repeated surface in the shared design
+system, after section headings (614) and card titles (393). Measured, not
+estimated:
+
+```
+tab-btn:    519 uses / 128 files
+card-title: 403 uses /  83 files
+sechead:    614 uses / 109 files
+kpi-label:  165 uses /  34 files
+chip:        49 uses /  16 files
+```
+
+Its entire active-state signal was `border-bottom-color:var(--gold)` plus a
+gold text colour — the same for every page, with no motion and no relationship
+to the page it belongs to.
+
+**`::after` was free, and that was checked properly.** 40 pages carry their own
+`.tab-btn` CSS rules, and a page `<style>` wins over `bg.js` (stylesheet 1 of
+53) at equal specificity — so a rule written here for a property those 40 pages
+also set would be dead code that looks correct in the diff. The check was a
+parse of every `<style>` block in every `.html` file for a selector containing
+`.tab-btn`, not a grep over whole files (which would have counted the far more
+common `querySelectorAll('.tab-btn')` in page JS as a CSS rule):
+
+```
+pages with a page-local .tab-btn CSS rule: 40
+pages with .tab-btn::before or ::after:     0
+```
+
+The same pass answered the one prerequisite the block has — it needs
+`position:relative` on `.tab-btn`, which `bg.js` does not set. Two pages
+already establish it themselves (`approvals.html` for a `.tab-btn .badge`
+absolute badge, `profile.html` for `.tab-btn.access-tab`), both to the same
+value, so nothing conflicts.
+
+**A positioned box, not a border.** `bottom:-3px` resolves against the padding
+box, which places a 3px-high absolutely positioned bar exactly over the 3px
+border it replaces — so no page-local padding, border width or background can
+displace it, and it costs no layout, because absolutely positioned descendants
+are out of flow.
+
+The beam grows out of the tab centre when the tab becomes active, is filled
+with a gradient in the page's own axis colour (`--pg-col`, published to the
+document element by `omega-page-emblem.js` for 183 pages) with `--solar` as its
+bright core, and previews at a quarter width on hover — the same
+reward-for-attention rule the card marks use, and the reason 519 more
+permanently-animating marks were not added to a platform that already turns 614
+section rings.
+
+Verified by A/B, pinning `bg.js` with the block removed against the real file:
+
+```
+                BEFORE tab boxes                  AFTER
+academy.html    127x41 101x41 136x41 119x41       identical  (barH 42 -> 42)
+wealth.html     110x41 153x41 145x41 119x41       identical
+library.html    127x41 127x41 101x41 119x41       identical
+command.html    145x41 127x41 110x41 119x41       identical
+cosmos.html     110x76 110x76 101x76 119x76       identical  (barH 77 -> 77)
+habits.html     101x41 145x41 101x41 119x41       identical
+```
+
+`scrollsX` was `false` on all six before and after. Computed `::after` on the
+active tab went from `position:static / background:none` (i.e. the rule did not
+exist) to:
+
+```
+academy  h=3px op=1 bottom=-3px left=0 right=0  gradient rgb(0,229,255)   shadow rgb(0,229,255)
+wealth   h=3px op=1 bottom=-3px left=0 right=0  gradient rgb(201,168,76)  shadow rgb(201,168,76)
+```
+
+— i.e. the axis colour really does differ per page rather than being gold
+everywhere. On an idle tab it reads `op=0` with `left`/`right` collapsed to the
+tab's centre (`50.53px` each on academy), and hovering that same idle tab moves
+it to `op=0.55 left=38.41px right=38.41px`. Screenshots at 4x confirm the beam
+paints at rest on the active tab only, and that the hover preview appears under
+the pointed-at tab.
+

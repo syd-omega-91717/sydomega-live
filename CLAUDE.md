@@ -203,6 +203,11 @@ through this one file with no per-page markup changes:
   hover-only masking hides them only during a simultaneous hover. Check a class
   against those two failure modes before adding `.card`; the per-class list,
   the scanner and the verification are in `FIXES_LOG.md`.
+- **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
+  growing from the tab centre in the page axis colour, quarter-width on hover.
+  40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
+  fact established by parsing `<style>` blocks, since a whole-file grep counts
+  every `querySelectorAll('.tab-btn')` as a CSS rule.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
@@ -504,10 +509,6 @@ open, recorded in `FIXES_LOG.md`:
   `approvals.html` calls it at 3 sites, `updateBadge()` repaints every 2s.*
 - **`omega-threat.js` is the digital-thread traceability engine**
   (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
-- **`supabase/migrations/` is validated only against a blank database.** Do not
-  run the full sequence against production expecting it to catch up existing
-  state — `task_completions` is a proven counterexample. The flat
-  `supabase/*.sql` bag remains the source of truth for new changes.
 - **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
   remaining).** Both INFO-level. The "unused" signal reflects a platform with
   9 real profiles and near-zero traffic, not badly designed indexes — nearly
@@ -581,14 +582,12 @@ open, recorded in `FIXES_LOG.md`:
   k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
   bypasses it — not resolved.** Fails open reporting `checked:false`; never
   render "not breached" on that (`scripts/tests/test_password_guard.py`).
-- **`scripts/audit.py` reports 8 warnings**, and the tool now
-  reports which parts of each are real risk vs. known noise. They cannot be
-  driven to 0 from source alone without live-schema verification, and forcing
-  them down would trade a known-unknown for an unverified "fixed". Seven were
-  reviewed and understood when this item was written; the count has since moved
-  from 7 to 8 without the list being re-read, so treat "all understood" as
-  covering the seven, not the current set — run the tool and check which one is
-  new before assuming a warning is old news.
+- **`scripts/audit.py` reports 0 critical / 7 warnings**, each labelled by the
+  tool as real risk vs. known noise. They cannot be driven to 0 from source
+  alone without live-schema verification, and forcing them down would trade a
+  known-unknown for an unverified "fixed". The count has drifted between 7 and
+  8 across sessions — re-run and diff the list rather than assuming a warning
+  is old news.
 - **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
   nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
   and does real work on every page. Self-activation with no caller is the norm
@@ -605,7 +604,7 @@ entries (which were accurate when written):
 | `python3 -m unittest discover -s scripts/tests` | **175** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
+| `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |

@@ -220,16 +220,10 @@ through this one file with no per-page markup changes:
   element with its own page-local class or inline `style=` (inline
   always wins the cascade regardless) is left untouched. This was
   chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
-  raw `<button>`s with no shared class — hand-editing every occurrence
-  across 178 pages wasn't attempted; this reaches them all from one
-  file instead. (This paragraph used to say "27 pages still use native
-  `<table>` markup" — that is **stale**: a repo-wide grep now finds zero
-  `<table>` elements anywhere, so the conversion is complete. See `FIXES_LOG.md`'s
-  correction, including what the conversion cost in ARIA semantics.)
-  Pages with page-local table classes are
-  *not* addressed by the fallback skin (they already have their own
-  classes, so `:not([class])` correctly skips them) and still open,
-  page-by-page, structural work — not a quick CSS fix.
+  raw `<button>`s with no shared class — this reaches them all from one file
+  instead of hand-editing every occurrence. Pages with page-local table classes
+  are *not* addressed by it (`:not([class])` correctly skips them) and remain
+  open, page-by-page structural work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
   Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
   or asset in this repo ever loaded them — zero `@font-face` rules, zero
@@ -239,13 +233,10 @@ through this one file with no per-page markup changes:
   entire time. `bg.js` now injects a Google Fonts `<link>` (plus
   `preconnect`) once per page, guarded by `#omega-fonts` so it never
   double-injects.
-- **Ambient noise overlay**: a fixed, `pointer-events:none`,
-  `opacity:.035` `<div id="omega-noise-overlay">`, injected by bg.js —
-  deliberately a real DOM element rather than a `body::before`
-  pseudo-element, since 5 pages (`cosmos.html`, `family.html`,
-  `offline.html`, `reset.html`, `terms.html`) already define their own
-  `body::before` and a bare-selector CSS rule would have collided with
-  those.
+- **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
+  `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
+  `body::before`, because 5 pages already define their own and a bare-selector
+  rule would collide.
 - **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
   diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
   real link. It draws no artwork: it emits `data-omega-emblem` for
@@ -692,6 +683,15 @@ entries (which were accurate when written):
   `:focus-visible` or scroll. Diff same-build pairs first, then compare.
   Decoding PNGs needs no PIL (absent here) — draw them to a canvas in the
   already-running Chromium and read `getImageData`.
+- **A pseudo whose box paints but whose text never does is
+  `-webkit-text-fill-color`, not `content`.** `bg.js:1290` adds `.ofx-sheen` to
+  every childless `.sechead` under 48 chars; that class fills heading text via
+  `background-clip:text` + `-webkit-text-fill-color:transparent`, which
+  **inherits into pseudo-elements**. Borders are not text fill, so a `::before`
+  ring drew perfectly with nothing inside it, through four wrong theories.
+  Forcing `content:"X" !important` settles it in one step: a pseudo that cannot
+  paint a plain letter has no glyph, font or `var()` problem. Generated text on
+  a sheened element needs its own `-webkit-text-fill-color`.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine

@@ -152,6 +152,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/resilience-audit.py']).returncode)
+      - name: Commerce contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/commerce-contract.py']).returncode)
       - name: Context budget
         shell: python
         run: |

@@ -215,6 +215,33 @@ function __omegaAppend(el){
   }
 })();
 
+/* ===== FLAG GATE: hide first, reveal on a confirmed flag ====================
+   Same reasoning as the approval guard below, for the same reason it exists.
+   omega-flags.js does the RPC and the reveal, but it is injected as a dynamic
+   script and therefore loads ASYNCHRONOUSLY -- it cannot be relied on to have
+   parsed before `omega-approved` reveals the shell. So the hide rule is written
+   here, synchronously, where the guard's own rule is written.
+
+   Unlike the approval guard this is NOT skipped on public pages: a signed-out
+   visitor must not see a dormant revenue figure either. Revealing is an
+   attribute flip (`data-omega-flag-on`) that only omega-flags.js performs, and
+   only after `get_platform_flag` answers true. If that module never loads, the
+   gated content stays hidden -- which is the correct failure direction.
+   ========================================================================== */
+(function(){try{
+  if(document.getElementById('omega-flag-css')) return;
+  var fs=document.createElement('style');
+  fs.id='omega-flag-css';
+  fs.textContent='[data-omega-flag]:not([data-omega-flag-on]){display:none!important}'+
+    '.omega-flag-dormant{border:1px solid rgba(201,168,76,.18);background:rgba(201,168,76,.04);'+
+    'border-radius:4px;padding:14px 16px;font-family:var(--M,monospace);font-size:10px;'+
+    'line-height:1.7;color:var(--muted,rgba(138,134,118,.7))}'+
+    '.omega-flag-dormant b{display:block;font-size:7px;letter-spacing:2.5px;'+
+    'color:var(--gold,#C9A84C);margin-bottom:6px;font-weight:400}'+
+    '.omega-flag-dormant code{color:var(--ink,rgba(220,210,180,.8))}';
+  (document.head||document.documentElement).appendChild(fs);
+}catch(e){}})();
+
   try{
     var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
@@ -1830,3 +1857,9 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-member-state]')){var _omst=document.createElement('script');_omst.src='/omega-member-state.js';_omst.setAttribute('data-omega-member-state','1');_omst.defer=true;__omegaAppend(_omst);}
   /* Loaded platform-wide so every page can hand the member their data back. It reached only 7 finance pages before; 43 pages held localStorage-only data with no export path at all. */
   if(!document.querySelector('script[data-omega-local-backup]')){var _olb=document.createElement('script');_olb.src='/omega-local-backup.js';_olb.setAttribute('data-omega-local-backup','1');_olb.defer=true;__omegaAppend(_olb);}
+  /* Platform-wide because CLAUDE.md section 9's dormancy rule is platform-wide: any page may
+     gate a monetizable surface with data-omega-flag, so the gate cannot be a per-page opt-in.
+     This module only performs the RPC and the reveal; the hide-first CSS is written
+     synchronously further up, because a dynamic script like this one is async and cannot be
+     relied on to parse before the approval guard reveals the shell. */
+  if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}

@@ -5034,4 +5034,6 @@ stubbed to throw, all four stay `display:none` — the 44-page
 `!important`.
 
 Full estate before this session's runtime work: **22 pages failing**. After:
-**0**.
+`node scripts/verify-runtime.js --all` reports **PASS (186 pages)** — zero
+failures across the whole estate, confirmed by a full sweep rather than by the
+subset runs that guided each individual fix.

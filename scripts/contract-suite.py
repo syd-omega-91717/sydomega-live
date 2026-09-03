@@ -89,6 +89,9 @@ GATES = [
     ('workflow-contract-lint',
      'no workflow carries a forbidden production hazard',
      ['scripts/workflow-contract-lint.py']),
+    ('absolute-asset',
+     'every absolute URL on our own domain resolves to a committed file',
+     ['scripts/absolute-asset-check.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

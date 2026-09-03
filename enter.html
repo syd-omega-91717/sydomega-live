@@ -73,6 +73,15 @@
 .si-dot.cyan{background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:dot-pulse 1.8s ease-in-out infinite}
 @keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .si-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(200,190,160,.7)}
+/* A probe that has not answered must not look like one that passed, so
+   pending and unverified are muted and static -- only a real pass pulses. */
+.si-dot.pending{background:rgba(138,134,118,.45)}
+.si-dot.fail{background:var(--crim,#C4453C);box-shadow:0 0 6px rgba(196,69,60,.6)}
+.si-dot.decl{background:rgba(201,168,76,.28)}
+.si-state{margin-left:auto;font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.75)}
+.si-state.ok{color:#4ade80}.si-state.bad{color:var(--crim,#C4453C)}
+.si-head{font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.55);margin:0 0 8px}
+.si-row.declared{opacity:.72}
 /* Protocol items */
 .proto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .proto-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2)}
@@ -139,17 +148,29 @@
 
     <!-- TAB 2: STATUS -->
     <div class="tab-pane" id="tab-status">
+      <!-- Every row below used to be hard-coded: eight green/gold dots
+           asserting SUPABASE: CONNECTED and AUTH LAYER: ONLINE, under a
+           LAST CHECK clock that ticked every second while nothing was ever
+           checked. CLAUDE.md 8.1 class 9, on the platform's front door.
+           These three are now real, and each starts as CHECKING. -->
+      <div class="si-head">LIVE CHECKS &middot; THIS BROWSER SESSION</div>
       <div class="status-items">
-        <div class="si-row"><div class="si-dot green"></div><div class="si-label">SYSTEM ONLINE</div></div>
-        <div class="si-row"><div class="si-dot gold"></div><div class="si-label">9.17Hz RESONANCE LOCK</div></div>
-        <div class="si-row"><div class="si-dot cyan"></div><div class="si-label">TLS ENCRYPTED (HTTPS)</div></div>
-        <div class="si-row"><div class="si-dot green"></div><div class="si-label">NODE GOVERNANCE: ACTIVE</div></div>
-        <div class="si-row"><div class="si-dot gold"></div><div class="si-label">&#937; RESERVE: PLANNED (DORMANT)</div></div>
-        <div class="si-row"><div class="si-dot green"></div><div class="si-label">AUTH LAYER: ONLINE</div></div>
-        <div class="si-row"><div class="si-dot cyan"></div><div class="si-label">SUPABASE: CONNECTED</div></div>
-        <div class="si-row"><div class="si-dot gold"></div><div class="si-label">MATRIX SYNC: ACTIVE</div></div>
+        <div class="si-row" id="si-tls"><div class="si-dot pending"></div><div class="si-label">TRANSPORT ENCRYPTION</div><div class="si-state">CHECKING</div></div>
+        <div class="si-row" id="si-rt"><div class="si-dot pending"></div><div class="si-label">PLATFORM RUNTIME</div><div class="si-state">CHECKING</div></div>
+        <div class="si-row" id="si-sb"><div class="si-dot pending"></div><div class="si-label">SUPABASE CLIENT</div><div class="si-state">CHECKING</div></div>
       </div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);text-align:center;margin-top:12px" id="status-ts">LAST CHECK: --</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);text-align:center;margin:10px 0 18px" id="status-ts">LAST CHECK: &mdash;</div>
+
+      <!-- Design constants, not measurements. They were indistinguishable from
+           the checked rows above, which is what made the whole panel a claim
+           the page could not support. -->
+      <div class="si-head">DECLARED CONSTANTS &middot; NOT MEASURED</div>
+      <div class="status-items">
+        <div class="si-row declared"><div class="si-dot decl"></div><div class="si-label">9.17Hz RESONANCE LOCK</div></div>
+        <div class="si-row declared"><div class="si-dot decl"></div><div class="si-label">NODE GOVERNANCE MODEL</div></div>
+        <div class="si-row declared"><div class="si-dot decl"></div><div class="si-label">MATRIX SYNC MODEL</div></div>
+        <div class="si-row declared"><div class="si-dot decl"></div><div class="si-label">&#937; RESERVE: PLANNED (DORMANT)</div></div>
+      </div>
     </div>
 
     <!-- TAB 3: PROTOCOL -->
@@ -238,7 +259,6 @@ function clock(){
   var ts=h+':'+m+':'+s;
   var el=document.getElementById('sb-time-top');if(el)el.textContent=ts;
   var gts=document.getElementById('gw-ts');if(gts)gts.textContent=ts+' UTC';
-  var sts=document.getElementById('status-ts');if(sts)sts.textContent='LAST CHECK: '+ts;
 }
 clock(); setInterval(clock,1000);
 
@@ -357,6 +377,55 @@ countdown();
     requestAnimationFrame(frame);
   }
   frame();
+})();
+
+/* STATUS tab: three real checks. Each starts CHECKING and only ever moves to a
+   state this page can actually stand behind.
+
+   Three outcomes, never two -- the same discipline as omega-password-guard.js:
+   OK when verified, UNAVAILABLE when verified absent, and UNVERIFIED when the
+   check could not complete. An unverified probe stays muted rather than turning
+   green (a false all-clear) or red (a false alarm). */
+(function(){
+  function set(id, state, text){
+    var row=document.getElementById(id); if(!row) return;
+    var dot=row.querySelector('.si-dot'), st=row.querySelector('.si-state');
+    if(dot) dot.className='si-dot '+(state==='ok'?'green':state==='bad'?'fail':'pending');
+    if(st){ st.className='si-state '+(state==='ok'?'ok':state==='bad'?'bad':''); st.textContent=text; }
+    var ts=document.getElementById('status-ts');
+    if(ts){
+      var n=new Date();
+      ts.textContent='LAST CHECK: '+String(n.getHours()).padStart(2,'0')+':'+
+        String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+    }
+  }
+
+  /* Directly observable, no network. */
+  var https = location.protocol === 'https:';
+  set('si-tls', https?'ok':'bad', https?'ENCRYPTED':'NOT HTTPS');
+
+  /* bg.js is deferred, so poll briefly rather than reading once and reporting a
+     false negative -- the mistake omega-ad-network.js made (FIXES_LOG.md). */
+  var tries=0;
+  (function wait(){
+    if(window.OmegaSB && typeof window.OmegaSB.get==='function'){
+      set('si-rt','ok','LOADED');
+      window.OmegaSB.get().then(function(sb){
+        /* A client object means the vendored bundle parsed and constructed
+           against the project URL. It does NOT prove the API answered, so the
+           label says CLIENT, not CONNECTED -- which is exactly the overclaim
+           this panel used to make. */
+        set('si-sb', sb?'ok':'bad', sb?'READY':'UNAVAILABLE');
+      }, function(){ set('si-sb','bad','UNAVAILABLE'); });
+      return;
+    }
+    if(tries++ > 120){                 /* ~2s at 60fps */
+      set('si-rt','pending','UNVERIFIED');
+      set('si-sb','pending','UNVERIFIED');
+      return;
+    }
+    requestAnimationFrame(wait);
+  })();
 })();
 
 /* Enter gateway: biometric sequence */

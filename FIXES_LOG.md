@@ -5257,3 +5257,126 @@ unaffected: `signInWithPassword` is not gated, only `signUp` and `updateUser`.
 One test assertion was wrong before it was right: `assertNotIn('password', url)`
 fails on the hostname `api.pwnedpasswords.com`, which contains that substring.
 Asserting on the path after `/range/` is the real property.
+
+## Production audit of www.sydomega.com: GitHub, Vercel, Supabase (2026-09-03)
+
+Asked to find whatever blocks the redesigned platform going live. Checked all
+three surfaces. **Two of the three were clean**, which is worth recording as
+plainly as the failures:
+
+- **Vercel**: every one of the last 20 deployments `state: READY`. Production is
+  `dpl_CrdkAqkaof8t6qKraqB5arzu5n1c` on `9c8707f1`, i.e. current `main`.
+  `get_runtime_errors` over 7 days: **"No runtime errors found."** The build is
+  not a blocker and never was — `vercel.json` disables install/build, so a
+  static deploy cannot fail the way a bundled one can.
+- **Supabase**: project `ydqhzvvoyufiiqvzcjns` `ACTIVE_HEALTHY`. Performance
+  advisors: **244, every one INFO** (172 `unused_index`, 72
+  `unindexed_foreign_keys`) — no ERROR, no WARN. Those two counts have moved
+  from the 125/61 recorded in §8.2 but the classification has not; they are the
+  same known noise on a platform with 9 profiles.
+- Security advisors: **one** finding, `auth_leaked_password_protection`, already
+  handled in this session's earlier entry.
+
+`www.sydomega.com` itself returns **HTTP 200** with the enforced CSP intact.
+The site is up. What was broken was the part nobody looks at from inside it.
+
+### og-image.png was a 404 in production, on 11 pages
+
+Every page's Open Graph and Twitter card pointed at
+`https://www.sydomega.com/og-image.png` — **21 references across 11 pages** —
+and the file does not exist in the repo. Fetched against the live domain it
+returned **HTTP 404**, with Vercel serving the `404.html` body in its place. So
+every share of this platform on WhatsApp, iMessage, Slack, X, LinkedIn or
+Facebook has rendered a preview card with no image, for as long as those tags
+have existed.
+
+**Why no gate caught it.** `ci-local.sh`'s broken-asset check and `ci.yml` step 4
+both resolve *local* `src=`/`href=` paths. An absolute URL is skipped, because an
+absolute URL normally points at a third party nobody can validate offline. But a
+URL on **our own domain** is a local path wearing an absolute URL, and is exactly
+as checkable. `scripts/absolute-asset-check.py` now gates that (blocking, added
+to `contract-suite.py`), and it was verified by hiding the file and watching it
+fail with the real 11-page reference list, then restoring it.
+
+The asset is produced by `scripts/build-og-image.js`, not hand-drawn: 1200×630
+rendered in headless Chromium from bg.js's `:root` tokens and the platform's
+three font families, with omega-share-card.js's ring/glow/grid vocabulary. The
+`image-pipeline` skill names this the one legitimate raster case ("an OG-style
+share PNG") — social scrapers do not render SVG for `og:image`. `--check`
+validates dimensions by reading the PNG header, so a truncated or wrong-size
+file fails rather than passing as present.
+
+### The same gate immediately found a second live 404
+
+`interface-omni.html` declared `og:url` as
+`https://www.sydomega.com/interface_omni.html` — **underscore, where every real
+path uses a hyphen**. The canonical share URL for the Control Deck was a 404.
+
+Fixing it exposed a third, quieter bug in the same file. `nav.js:6` keys off
+`data-page`, and that page said `data-page="interface_omni"` while `nav.js`'s
+`PS` map holds `'interface-omni':'order'`. The lookup missed and fell through to
+`nav.js:220`'s `PS[dp]||'command'` default, so the Control Deck highlighted
+**COMMAND** instead of **ORDER** — a member was told they were in the wrong
+section of the platform. Confirmed in a render before and after:
+
+```
+before   {"dataPage":"interface_omni","active":["COMMAND","COMMAND"]}
+after    {"dataPage":"interface-omni","active":["⋔ORDER","ORDER"]}
+```
+
+`reachability-contract.py` cannot see this: it compares `nav.js`'s two maps
+against the page set, and never reads a page's own `data-page` attribute.
+
+**A measurement error worth recording.** The first render of this reported
+`data-page: "account"` on `interface-omni.html` *and* on `dashboard.html`, which
+would have made it look like a platform-wide fault. Both pages had simply
+redirected to `account.html` — the plain Playwright context had no signed-in
+stub. §8.4 already records this exact trap ("academy.html leaks content — FALSE.
+Page had redirected; I measured /account.html") and it still caught a session
+that had read the warning. The harness's `session.js` `launch()` is the fix;
+an ad-hoc `chromium.launch()` against a gated page measures the redirect.
+
+### enter.html asserted eight system states and checked none of them
+
+The site's front door. Its STATUS tab shipped eight hard-coded rows with
+pulsing green/gold dots:
+
+```
+SYSTEM ONLINE · 9.17Hz RESONANCE LOCK · TLS ENCRYPTED (HTTPS)
+NODE GOVERNANCE: ACTIVE · Ω RESERVE: PLANNED (DORMANT)
+AUTH LAYER: ONLINE · SUPABASE: CONNECTED · MATRIX SYNC: ACTIVE
+```
+
+with `LAST CHECK: HH:MM:SS` underneath, driven by the wall clock on a
+`setInterval(clock,1000)`. Nothing was ever checked. The ticking timestamp made
+it worse than static copy: it asserted a verification *at that exact second*.
+CLAUDE.md §8.1 class 9 (fabricated data rendered as fact) and §9's "never show a
+success state without checking the actual result", on the first page any visitor
+sees.
+
+Rebuilt as three real probes plus a separated, honestly-labelled constants group:
+
+- `TRANSPORT ENCRYPTION` — `location.protocol === 'https:'`
+- `PLATFORM RUNTIME` — `window.OmegaSB` published by bg.js
+- `SUPABASE CLIENT` — `OmegaSB.get()` resolving to a client object
+
+**Three states, not two**, the same discipline as `omega-password-guard.js`: OK,
+UNAVAILABLE, or UNVERIFIED when the check could not complete. Only a verified
+pass turns green; a probe that never answers stays muted rather than becoming a
+false all-clear *or* a false alarm. `LAST CHECK` is written only by a completed
+probe.
+
+The label deliberately reads **SUPABASE CLIENT / READY**, not "CONNECTED": a
+constructed client proves the vendored bundle parsed against the project URL, it
+does **not** prove the API answered. Claiming otherwise is the same overclaim in
+a smaller font. A live network probe was considered and **rejected as
+unverifiable from here** — `api.pwnedpasswords.com`, `supabase.co` and
+`sydomega.com` are all 403 at this environment's egress proxy, so a CORS
+surprise in production would have pinned the front page to a permanent false
+"UNREACHABLE". Shipping an unverifiable probe on the front door trades one
+wrong claim for another.
+
+Verified in a render: `{"tls":"NOT HTTPS","rt":"LOADED","sb":"READY"}` with zero
+page errors. The TLS row reporting **NOT HTTPS** over the `http://localhost`
+harness is the proof the check is real — a hard-coded panel would have said
+ENCRYPTED.

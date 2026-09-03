@@ -6,16 +6,12 @@
 <title>Ω SYDOMEGA — Agent Network</title>
 <style>
 :root {
-  --void: #0a0e15;
-  --void2: #1a1f2e;
-  --gold: #ffd700;
-  --solar: #ffb700;
-  --cyan: #00e5ff;
-  --crim: #ff3b5c;
-  --green: #2ecc71;
-  --purple: #9b59b6;
-  --muted: #7f8c8d;
-  --ink: #ecf0f1;
+  /* Canonical tokens are deliberately NOT redefined here. bg.js owns --void,
+     --gold, --cyan and the rest for every page; this file carried its own
+     divergent set (--gold:#ffd700 against the brand's #C9A84C, and nine more),
+     and a page <style> beats bg.js, so it would have rendered in a palette no
+     other page uses -- CLAUDE.md 8.1 class 8, two divergent copies of one
+     canonical table. Variables genuinely local to this page are kept below. */
   --D: 'Cinzel Decorative', serif;
   --R: 'Rajdhani', sans-serif;
   --M: 'Courier Prime', monospace;
@@ -219,7 +215,7 @@ body {
   
   <main class="main">
     <div class="topbar">
-      <h1>⚡ AGENT NETWORK</h1>
+      <h1>⚡︎ AGENT NETWORK</h1>
       <p>12 Sovereign Executors • Archetypal Command Lattice • Click any node to explore</p>
     </div>
     
@@ -250,24 +246,25 @@ body {
       <button class="close-panel" onclick="closePanel()">✕</button>
       <div id="agent-content"></div>
     </div>
-  </main>
+    <div data-page-emblem="agent-network" style="margin:20px auto 0"></div>
+</main>
 </div>
 
 <script src="/bg.js"></script>
 <script>
 const agents = [
-  { id: 'sentinel', name: 'Sentinel', domain: 'Security & Gates', symbol: '♐', color: '#ffd700', status: 'active' },
-  { id: 'merchant', name: 'Merchant', domain: 'Commerce & Revenue', symbol: '♑', color: '#ffb700', status: 'active' },
-  { id: 'scout', name: 'Scout', domain: 'Discovery & Exploration', symbol: '♒', color: '#00e5ff', status: 'active' },
-  { id: 'warden', name: 'Warden', domain: 'Family & Privacy', symbol: '♓', color: '#9b59b6', status: 'active' },
-  { id: 'sovereign', name: 'Sovereign', domain: 'Governance & Authority', symbol: '♈', color: '#ffd700', status: 'core' },
-  { id: 'auditor', name: 'Auditor', domain: 'Validation & Verification', symbol: '♉', color: '#2ecc71', status: 'active' },
-  { id: 'proxy', name: 'Proxy', domain: 'Execution & Dispatch', symbol: '♊', color: '#00e5ff', status: 'active' },
-  { id: 'oracle', name: 'Oracle', domain: 'Prediction & Insight', symbol: '♋', color: '#9b59b6', status: 'active' },
-  { id: 'beacon', name: 'Beacon', domain: 'Onboarding & Welcome', symbol: '♌', color: '#2ecc71', status: 'active' },
-  { id: 'analyst', name: 'Analyst', domain: 'Analytics & Intelligence', symbol: '♍', color: '#00e5ff', status: 'active' },
-  { id: 'tutor', name: 'Tutor', domain: 'Education & Learning', symbol: '♎', color: '#ffb700', status: 'active' },
-  { id: 'historian', name: 'Historian', domain: 'Archive & Record', symbol: '♏', color: '#9b59b6', status: 'active' }
+  { id: 'sentinel', name: 'Sentinel', domain: 'Security & Gates', symbol: '♐︎', color: '#ffd700', status: 'active' },
+  { id: 'merchant', name: 'Merchant', domain: 'Commerce & Revenue', symbol: '♑︎', color: '#ffb700', status: 'active' },
+  { id: 'scout', name: 'Scout', domain: 'Discovery & Exploration', symbol: '♒︎', color: '#00e5ff', status: 'active' },
+  { id: 'warden', name: 'Warden', domain: 'Family & Privacy', symbol: '♓︎', color: '#9b59b6', status: 'active' },
+  { id: 'sovereign', name: 'Sovereign', domain: 'Governance & Authority', symbol: '♈︎', color: '#ffd700', status: 'core' },
+  { id: 'auditor', name: 'Auditor', domain: 'Validation & Verification', symbol: '♉︎', color: '#2ecc71', status: 'active' },
+  { id: 'proxy', name: 'Proxy', domain: 'Execution & Dispatch', symbol: '♊︎', color: '#00e5ff', status: 'active' },
+  { id: 'oracle', name: 'Oracle', domain: 'Prediction & Insight', symbol: '♋︎', color: '#9b59b6', status: 'active' },
+  { id: 'beacon', name: 'Beacon', domain: 'Onboarding & Welcome', symbol: '♌︎', color: '#2ecc71', status: 'active' },
+  { id: 'analyst', name: 'Analyst', domain: 'Analytics & Intelligence', symbol: '♍︎', color: '#00e5ff', status: 'active' },
+  { id: 'tutor', name: 'Tutor', domain: 'Education & Learning', symbol: '♎︎', color: '#ffb700', status: 'active' },
+  { id: 'historian', name: 'Historian', domain: 'Archive & Record', symbol: '♏︎', color: '#9b59b6', status: 'active' }
 ];
 
 function drawNetwork() {

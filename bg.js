@@ -287,10 +287,22 @@ function __omegaAppend(el){
     /* 6. CINEMATIC MOTION ON ALL INTERACTIVE ELEMENTS */
     var interactiveElements = document.querySelectorAll('button, a, [role="button"], .card, .kpi, .btn, [class*="card"], input, select, textarea');
     interactiveElements.forEach(function(el){
-      /* Spring-physics 3D perspective */
-      el.style.transition = 'all 0.18s cubic-bezier(0.34, 1.4, 0.64, 1)';
+      /* Wire each element ONCE. Without this flag the MutationObserver below
+         re-ran the whole activation on every DOM insertion and attached a fresh
+         pair of closures every time -- measured on dashboard.html at 62,245
+         hover listeners for 580 elements on load alone, with ten ordinary
+         insertions adding 4,640 more. */
+      if (el.__omgCdWired) return;
+      el.__omgCdWired = 1;
+      /* An explicit property list, not `all`: `transition:all` inline animates
+         every property including layout ones, and beats the design system's own
+         transitions on .card, .kpi and .btn, which bg.js and
+         omega-visual-evolution.css already own. */
+      el.style.transition = 'transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s ease';
       el.style.transformStyle = 'preserve-3d';
-      el.style.willChange = 'transform';
+      /* No will-change here: it was promoting all 580 matched elements to their
+         own compositing layer at once, which costs far more than the hover
+         transform it was meant to smooth. */
 
       /* Hover: 3D tilt + lift + glow */
       el.addEventListener('mouseenter', function(){
@@ -314,8 +326,13 @@ function __omegaAppend(el){
 
     /* 7. SCROLL-REACTIVE 3D PARALLAX ON CARDS */
     var parallaxElements = document.querySelectorAll('[data-parallax="1"]');
-    if(parallaxElements.length > 0 && window.requestAnimationFrame){
+    /* Bind once. This sat inside the activation, so every DOM insertion added
+       another scroll listener, each one walking every parallax element on every
+       scroll event. */
+    if(parallaxElements.length > 0 && window.requestAnimationFrame && !window.__omgCdScrollBound){
+      window.__omgCdScrollBound = 1;
       window.addEventListener('scroll', function(){
+        parallaxElements = document.querySelectorAll('[data-parallax="1"]');
         var scrollY = window.scrollY || 0;
         parallaxElements.forEach(function(el){
           var rect = el.getBoundingClientRect();
@@ -380,8 +397,16 @@ function __omegaAppend(el){
 
   /* REACTIVATE ON DYNAMIC CONTENT INSERTION */
   if(window.MutationObserver){
+    /* Coalesced to one run per frame. Unthrottled, a page that renders a list
+       ran the full document-wide querySelectorAll once per inserted node. */
+    var queued = false;
     var observer = new MutationObserver(function(){
-      activateCinematicDesign();
+      if (queued) return;
+      queued = true;
+      (window.requestAnimationFrame || setTimeout)(function(){
+        queued = false;
+        activateCinematicDesign();
+      });
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }

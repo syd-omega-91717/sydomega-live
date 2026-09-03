@@ -464,7 +464,12 @@ are listed in rough order of how often they have recurred.
 9. **Fabricated data rendered as fact.** `hercules.html` drew
    `Math.random() * 100` as the member's own progress. Worse than a false
    success toast. If the data model records completion, show completion — do
-   not invent a percentage it cannot support.
+   not invent a percentage it cannot support. **Recurred on money**:
+   `ad-network.html` rendered "TOTAL REVENUE $0.10 / CREATOR SHARE $0.07" from
+   `REVENUE.total += 0.05` per specimen-ad paint, under "Creators earn 70%
+   revenue share". `scripts/commerce-contract.py` gates both shapes (blocking).
+   §9's dormancy rule had no shared implementation until `omega-flags.js` /
+   `data-omega-flag` — so it depended on memory, and memory failed.
 
 ### 8.2 What is genuinely open — each on purpose, with a reason
 
@@ -508,11 +513,9 @@ open, recorded in `FIXES_LOG.md`:
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
   `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
   fix means history rewrite + force-push — never without explicit permission.
-- **`map.html`'s `profiles.lat/lon/gate` reads are gone** (fixed in `3f8a17d7`,
-  not by the live-verification pass). Confirmed against production on
-  2026-08-29: `profiles.country` exists (`text`); `lat`, `lon` and `gate` do
-  not. Collecting member location remains a feature and privacy decision, not a
-  bug fix, so nothing here proposes adding it.
+- **Member location is not collected.** Live 2026-08-29: `profiles.country`
+  exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
+  in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
   `#evt-metrics-body`, an id that exists nowhere. Building the container means
   designing UI that was never built.
@@ -538,16 +541,12 @@ open, recorded in `FIXES_LOG.md`:
   RLS is enabled with no policies, which is the *safe* state (total lockout),
   and they are empty. Inventing policies for schema of unknown purpose would
   be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
-- **The `WITH CHECK(true)` item was overstated — corrected against live
-  2026-08-29.** Neither table is the §8.1(6b) spoofing shape.
-  `platform_events`'s INSERT policy is `member inserts own events`,
-  `WITH CHECK ((SELECT auth.uid()) = user_id)` — **correctly scoped**, not
-  `true`. `platform_metrics` *does* have `WITH CHECK(true)`, but the table has
-  **no `user_id` column at all**, so there is no attribution to spoof; the
-  residual risk is arbitrary metric rows (data integrity), not impersonation.
-  `authenticated` is confirmed **not** granted INSERT on either, so both are
-  unreachable regardless. Scope `platform_metrics` before that grant is ever
-  added, but it is not the security hole this entry used to describe.
+- **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
+  claim one). `platform_events` is correctly scoped to `auth.uid() = user_id`.
+  `platform_metrics` does have `WITH CHECK(true)` but no `user_id` column, so
+  there is nothing to spoof — the residual risk is junk rows, not impersonation
+  — and `authenticated` is not granted INSERT on either, so both are unreachable
+  anyway. Scope `platform_metrics` before that grant is ever added.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
   `is_platform_owner() OR status='active'` respectively). Both look deliberate
@@ -599,13 +598,12 @@ open, recorded in `FIXES_LOG.md`:
   adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
   Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
   returns on its own. That is how 70 previously-revoked functions became 23.
-- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is
-  Pro-and-above; the org is `free`, so the toggle is absent from the dashboard
-  and the advisor line cannot be cleared without upgrading. Raising minimum
-  password length and required characters (Auth → Providers → Email) is the
-  free-tier substitute for the same credential-stuffing threat.
-- **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
-  not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
+- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is a
+  Supabase Auth *dashboard* toggle, not a SQL object, so `apply_migration` /
+  `execute_sql` cannot reach it — and it is Pro-and-above while the org is
+  `free`, so the toggle is absent and the advisor line cannot be cleared without
+  upgrading. Raising minimum password length and required characters (Auth →
+  Providers → Email) is the free-tier substitute for the same threat.
 - **`scripts/audit.py` reports 8 warnings**, and the tool now
   reports which parts of each are real risk vs. known noise. They cannot be
   driven to 0 from source alone without live-schema verification, and forcing
@@ -627,7 +625,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **126** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **144** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -637,8 +635,9 @@ entries (which were accurate when written):
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
+| `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **19** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **20** blocking checks, all passing |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -759,15 +758,15 @@ entries (which were accurate when written):
   documentation belongs and how to read this repo's very large files cheaply
   (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
   the entire auto-loaded context).
-- **Runtime verification is automated now — use it before claiming a UI or
+- **Runtime verification is automated — use it before claiming a UI or
   data-layer change works.** `node scripts/verify-runtime.js` renders the
-  capability entrypoints in headless Chrome/Edge (zero repo deps; `SKIPPED`
-  when no browser) and asserts load / approval-guard-lifts / no-throw /
-  no-overflow / no-dup-id plus an advisory a11y pass; `--all` sweeps every
-  page. It found the `bg.js`-loaded-twice class on 29 pages and the
-  eager-`window.OmegaSupabase.sb` read on 6 (both fixed, `FIXES_LOG.md`). It
-  stubs Supabase, so it proves the client is wired, never production RLS.
-  Details in the `runtime-verify` skill.
+  capability entrypoints headless and asserts load / approval-guard-lifts /
+  no-throw / no-overflow / no-dup-id plus an advisory a11y pass; `--all` sweeps
+  every page. It stubs Supabase, so it proves the client is wired, never
+  production RLS. **A `SKIPPED` is usually a browser *layout* mismatch, not a
+  missing browser** — the `runtime-verify` skill has the symlink fix and the
+  `OMEGA_SCRATCHPAD` variable it needs. Do not substitute an ad-hoc harness:
+  this one asserts the §10 capability contracts.
 
 
 ## 9. Working in this repo — practical rules

@@ -33,6 +33,14 @@
     evolution:[12,'b','\u25B2'], ledger:[12,'b','\u2261'], approvals:[12,'b','\u2713'],
     events:[12,'c','\u2691'], social:[12,'c','\u25CE'], publishing:[12,'c','\u270E'],
     contributions:[12,'c','\u2724'], consultancy:[9,'c','\u269C'], family:[9,'c','\u2635'],
+    /* The five pages merged on 2026-09-02 carried no registry entry, so each drew
+       the generic 12-fold omega fallback and none of them appeared in the gateway
+       (which derives its whole destination list from this object). Axis follows
+       the domain: creation is CONTRIBUTION, the ad network is MASTERY (economy),
+       the two operator surfaces are KNOWLEDGE. */
+    creator:[12,'c','\u2692'], 'project-studio':[9,'c','\u25F0'],
+    'ad-network':[12,'b','\u25EC'],
+    'control-plane':[9,'a','\u2318'], 'world-shell':[12,'a','\u25D4'],
     factions:[12,'c','\u2694'], sovereigns:[12,'c','\u265B'], hall:[12,'c','\u2620'],
     city:[9,'c','\u25A6'], marketing:[12,'c','\u2600'], services:[12,'c','\u2723'],
     beacon:[12,'c','\u2691'], notifications:[12,'c','\u2609'],

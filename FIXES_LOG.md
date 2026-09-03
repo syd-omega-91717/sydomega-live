@@ -4612,3 +4612,170 @@ than assuming. `scripts/verify-runtime.js` could not run: the scratchpad's
 `playwright-core` expects `chromium_headless_shell-1234` and this environment
 ships `chromium-1194`, so it reports SKIPPED — the checks above were run
 against `/opt/pw-browsers/chromium-1194` with an explicit `executablePath`.
+
+## Revenue that did not exist, rendered as fact (2026-09-02)
+
+`ad-network.html` reached `main` and showed every approved member three
+figures:
+
+```
+TOTAL REVENUE  $0.10      CREATOR SHARE  $0.07      PLATFORM SHARE  $0.03
+```
+
+directly above the sentence **"Creators earn 70% revenue share."**
+
+Measured, not inferred — a headless render of `0ec01227` returns exactly
+`["$0.10","$0.07","$0.03"]` from `document.body.innerText`.
+
+### Where the money came from
+
+`omega-ad-network.js:50-52`, inside `recordImpression()`:
+
+```js
+REVENUE.total         += 0.05;
+REVENUE.creator_share += 0.035;
+REVENUE.platform_share += 0.015;
+```
+
+`recordImpression()` fires when one of five **hard-coded specimen
+advertisements** is painted. No advertiser was ever billed, no payout path
+exists, and `REVENUE` is a module-level variable, so the total resets to zero on
+reload — it was not even a persistent fiction. The $0.10 was two ad previews at
+five cents each, split 70/30.
+
+That is §8.1 class 9 (fabricated data rendered as fact) landing on a financial
+surface, plus §9's dormancy rule going unapplied. The expensive half is not the
+broken number: it is a member-visible written statement that people are owed a
+70% share of money that does not exist.
+
+### Why the rule did not hold
+
+§9's mechanism existed and was never shared. `get_platform_flag(p_key)` has been
+in the schema since `chunk_02b_migrations.sql:532`, but a repo-wide grep finds
+**three** pages that only *mention* a flag in prose (`vault`,
+`sovereign-covenant`, `compliance`) and exactly **one** that calls the RPC
+(`interface-omni.html:215`, to toggle it). There was no shared reader, so
+gating was whatever each page's author remembered to do.
+
+### The fix
+
+`omega-flags.js` makes it declarative and platform-wide:
+
+```html
+<div data-omega-flag="ad_network_enabled"> … </div>
+```
+
+hidden until `get_platform_flag` answers `true`, with a dormancy notice naming
+the flag put in its place. Two flags added, both default false
+(`supabase/omega_commerce_flags.sql`, `migrations/0106`):
+`ad_network_enabled` and `creator_earnings_enabled` — deliberately separate, so
+enabling advertising cannot silently promise a member payout.
+
+Three things this got right only after being tested:
+
+**The hide rule cannot live in the module.** `bg.js` injects `omega-flags.js`
+through `__omegaAppend`, and a dynamically-created script is **async** — it is
+not guaranteed to parse before the approval guard adds `omega-approved` and
+reveals the shell. So the `[data-omega-flag]:not([data-omega-flag-on])` rule is
+written synchronously in `bg.js`, beside the approval guard's own rule, and
+`omega-flags.js` only performs the RPC and the reveal. Unlike the approval
+guard it is **not** skipped on public pages: a signed-out visitor must not see a
+dormant revenue figure either.
+
+**Failing closed is not the same as never opening.** The first version of
+`adsAllowed()` read `window.OmegaFlags` once and returned `false` if absent.
+Because of the same async injection, `OmegaFlags` is usually absent when the ad
+module's `DOMContentLoaded` runs — so the gate was shut *permanently*, and would
+have stayed shut after the owner enabled the network, reading exactly like a
+broken feature. Caught by testing the **open** direction, not just the closed
+one. Fixed with a bounded frame wait (§8.1 class 5: defer, do not discard);
+exhausting the wait still resolves `false`.
+
+**A gate proven only closed is not proven.** All three directions are now
+tested in a real browser — flag off: hidden, notice present, 0 ad units; flag
+on: revealed, 2 ad units; RPC error: hidden, 0 units, notice present.
+
+### The durable gate
+
+`scripts/commerce-contract.py` (blocking, `ci-local.sh` step 2m, `ci.yml`)
+fails on either shape: an earnings claim in a client file that names no gate, or
+a hard-coded amount accumulated into a revenue-shaped variable in a file that
+renders currency. Cross-checked against the pre-fix commit rather than trusted:
+run at `0ec01227` it reports `omega-ad-network.js:50`, `:51`, `:52` and
+`ad-network.html` — the exact lines above.
+
+**The false-positive pass mattered more than the detector.** A first run
+reported 20 files; 13 were noise, and the noise was measured, not guessed:
+`decommission` matching `commission` (`audio.js`, `nav.js`, `omega-a11y.js`),
+"earn **points**" matching "you earn" (`i18n.js`), a 20% share of *effort*
+(`matrix.html`), a `<label>` over the member's own calculator input
+(`contracts.html`), and a code comment quoting the offending label text
+(`omega-a11y.js`). The gate now blanks comments and `<label>` text before
+matching — replacing with spaces, not deleting, so reported line numbers stay
+true.
+
+The seven that survived were real, and none was whitelisted. `marketplace`,
+`blockchain`, `income`, `contracts`, `automation`, `cosmos` and `chatbot` all
+stated a 9.17%/17% commission in the present tense on an Ω economy that is
+dormant behind `tokens_enabled=false`. Each now states that, the way `vault.html`
+already did.
+
+Scope was checked before assuming: a render of `contracts`, `income`,
+`marketplace`, `blockchain`, `subscriptions`, `revenue`, `investment`, `wealth`,
+`treasury` and `payments` found **zero** non-zero currency amounts, so
+`ad-network.html` was the only page inventing money and the gate starts with no
+legitimate violations to suppress.
+
+### Also fixed: seven pages nothing linked to
+
+A separate finding from the same pass, and the first framing of it was **wrong**
+— worth recording, because the two concerns look like one. `nav.js` has two
+independent maps: `SECTIONS` decides which links render, `PS` decides which
+section highlights as active. A first count said "15 pages unreachable"; the
+real numbers are **7 unreachable** (`ad-network`, `architecture`,
+`control-plane`, `creator`, `exam`, `project-studio`, `world-shell`) and **15
+without an active-state entry** — including `gateway`, the page whose entire
+purpose is to be the way in.
+
+Both are now zero. The active-state check first reported all 11 sampled pages
+failing *including `dashboard`*, which has always had a `PS` entry — the
+selector was wrong, not the nav (§8.4: a scanner needs its own false-positive
+pass). nav.js marks `.on-icon.on-active`; with that selector every page
+highlights its correct section.
+
+`architecture.html` deserved more than a link. It was a 1.4 KB stub whose only
+content read *"See browser console for runtime registration"* — no `#omega-side`
+container, so it was the one page in the estate rendering no sidebar at all, and
+its own `:root` tokens had drifted from the platform's. Linking it would have
+delivered members to a page telling them to open devtools.
+`omega-architecture-runtime.js` already exposes `status()` with all 16 blocks
+and their evidence, so the page now renders them: 16 blocks, 1 probed as
+CONNECTED in-session, no console instruction, no overflow, no errors.
+
+Five emblem registry entries were added for the merged pages, which had none —
+so each drew the generic fallback mark and none appeared in the gateway, whose
+destination list derives entirely from `OmegaPageEmblem.pages`. Gateway now
+renders **176** destinations (was 171), 0 dead links, 0 duplicates.
+
+### Verification
+
+**20/20 blocking checks** (was 19; commerce-contract is new), **144 tests**
+(was 126; 18 new in `scripts/tests/test_commerce_contract.py`, covering both
+real shapes, all five measured false positives, and each of the three accepted
+gate references).
+
+`node scripts/verify-runtime.js` **ran for real this time** — PASS on all 13
+capability entrypoints. The previous
+entry recorded it as SKIPPED; the cause was a layout mismatch, not a missing
+browser. `migrations/0106` was applied against a real scratch PostgreSQL 16 instance
+rather than eyeballed: it applies clean, re-applies clean, and — the property
+that actually matters — after `ad_network_enabled` is set true, re-running
+leaves it true. `ON CONFLICT DO NOTHING` means the file can never switch a flag
+back off after the owner has enabled it.
+
+`playwright-core` resolves `chromium-1234/chrome-linux64/chrome` and
+`chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell`,
+while the image ships `chromium-1194/chrome-linux/chrome` and a headless binary
+named `headless_shell`. Symlinking both expected layouts onto the installed 1194
+build makes the repo's own verifier run unmodified — worth doing rather than
+substituting an ad-hoc harness, since it asserts the capability contracts.

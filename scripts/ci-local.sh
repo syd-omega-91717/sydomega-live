@@ -107,6 +107,7 @@ step "2h.  Context budget"                     python3 scripts/context-budget.py
 step "2j.  Skill/agent registry"               python3 scripts/omega-registry.py --check
 step "2k.  i18n contract"                      python3 scripts/i18n-contract.py
 step "2l.  Resilience audit"                   python3 scripts/resilience-audit.py
+step "2m.  Commerce contract"                  python3 scripts/commerce-contract.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan
 step "7.   Service worker precache"             sw_precache

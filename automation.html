@@ -318,7 +318,7 @@ var SYSTEM_RULES=[
    default_on:true},
   {name:'INCOME ALLOCATION TRIGGER',icon:'&#x03A9;',kind:'sys',
    trigger:'IF platform revenue event fires (subscription / consultancy / marketplace)',
-   action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool',
+   action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool (planned split; dormant behind platform_settings.tokens_enabled)',
    desc:'Every income event routes automatically through the sovereign allocation engine, distributing to the Master Vault, operational reserves, and the commission pool in real time.',
    default_on:true},
   {name:'VOID ASCENSION GUARD',icon:'&#x25A1;',kind:'sys',

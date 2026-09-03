@@ -27,6 +27,16 @@
     /* Below: each key's final/effective value — earlier duplicate keys with a
        different value that this silently overrode have been removed (JS object
        literals keep only the last assignment); see REPOSITORY_AUDIT.md §5. */
+    /* Fifteen deployed pages had no PS entry, so nav rendered with NO section
+       highlighted on any of them -- including gateway, the page whose whole
+       purpose is to be the way in. Reachability (a link in SECTIONS) and active
+       state (a key here) are separate concerns and had drifted apart. */
+    gateway:'command',points:'achieve',houses:'cosmos',evolution:'ascend',
+    ledger:'vault',subscriptions:'vault',advertising:'vault','ad-network':'vault',
+    'sovereign-covenant':'vault',
+    creator:'services','project-studio':'services',
+    architecture:'govern','control-plane':'govern','world-shell':'govern',
+    'interface-omni':'order',
     analytics:'intel',achievements:'achieve',leaderboard:'achieve',
     bloodline:'archive',character:'archive',charter:'archive',
     cinema:'media',credentials:'archive',design_system:'govern',
@@ -63,7 +73,7 @@
           ['achievements','MY RECORD','/honors.html#record'],
           ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
-          ['exam','EXAM HALL','/gaming.html#exam'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
+          ['exam','EXAM HALL','/gaming.html#exam'],['exam-hall','EXAM','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
@@ -78,7 +88,7 @@
           ['payments','PAYMENTS','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/profile.html#portfolio'],
           ['income','INCOME','/income.html'],['payments','PAYMENTS','/payments.html'],['evolution','EVOLUTION','/evolution.html'],
-          ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
+          ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/family.html',   col:'#D9B86A',
      sub:[['family','FAMILY','/family.html'],['bloodline','BLOODLINE','/family.html#bloodline'],
           ['heritage','HERITAGE','/family.html#heritage'],['hall','HALL','/hall.html'],
@@ -86,7 +96,7 @@
           ['city','OMEGA CITY','/city.html'],['beacon','BEACON','/beacon.html'],['chatbot','CONCIERGE AI','/chatbot.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','OMNI INTERFACE','/interface-omni.html']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
      sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
-          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['marketing','MARKETING','/marketing.html'],
+          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['creator','IDEA FORGE','/creator.html'],['project-studio','PROJECT STUDIO','/project-studio.html'],['marketing','MARKETING','/marketing.html'],
           ['news','NEWS WIRE','/news.html'],['social','SOCIAL HUB','/social.html'],
           ['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
           ['health','HEALTH & WELLNESS','/health.html'],['marketplace','MARKETPLACE','/marketplace.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
@@ -105,7 +115,7 @@
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
           ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
-          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html']]},
+          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','CONTROL PLANE','/control-plane.html'],['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
      sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],
           ['revenue','REVENUE','/revenue.html'],['wallet','WALLET','/wallet.html'],

@@ -19,6 +19,41 @@ description: Verify a change to sydomega-live at runtime — render the real cap
      global install and prints `SKIPPED` (exit 0) when neither it nor a system
      browser is present. Blocking step in `.github/workflows/capability-evidence.yml`,
      advisory in `scripts/ci-local.sh --all`.
+
+### `SKIPPED` is usually a layout mismatch, not a missing browser
+
+Two sessions in a row wrote this verifier off as unrunnable here and fell back
+to an ad-hoc harness. Don't — this one asserts the §10 capability contracts; an
+ad-hoc script does not. The browser IS installed, under different paths than the
+bundled `playwright-core` revision expects.
+
+Ask it what it wants rather than reading the error, which truncates the path:
+
+```sh
+node -e "console.log(require('\$OMEGA_SCRATCHPAD/node_modules/playwright-core').chromium.executablePath())"
+```
+
+Observed here: it wants `chromium-1234/chrome-linux64/chrome` and
+`chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell`,
+while `/opt/pw-browsers` ships `chromium-1194/chrome-linux/chrome` and a headless
+binary named `headless_shell`. Three differences at once: revision, `linux` vs
+`linux64`, and the binary name. Bridge all three with symlinks onto the installed
+build (`/opt/pw-browsers` is writable):
+
+```sh
+for pair in "chromium-1234/chrome-linux64:chromium-1194/chrome-linux" \
+            "chromium_headless_shell-1234/chrome-headless-shell-linux64:chromium_headless_shell-1194/chrome-linux"; do
+  dst=/opt/pw-browsers/${pair%%:*}; src=/opt/pw-browsers/${pair##*:}
+  mkdir -p "$dst"; for f in "$src"/*; do ln -sf "$f" "$dst/$(basename "$f")"; done
+done
+ln -sf /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell \
+       /opt/pw-browsers/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+OMEGA_SCRATCHPAD=<scratchpad> node scripts/verify-runtime.js
+```
+
+Confirm with `chromium.launch()` directly before blaming the verifier. The
+revision number moves with `playwright-core`, so re-read it rather than copying
+`1234` from here.
    - Reuses `.claude/skills/verify-in-browser/harness/sbstub.js` for the
      signed-in stub. All the `verify-in-browser` gotchas apply (esm.sh, the
      four overlays, blocked CDNs). Its `BENIGN` list suppresses the known

@@ -4923,3 +4923,68 @@ precisely the seven pages that were unreachable at that commit. 10 new tests
 **Note for the next session: CLAUDE.md is now at exactly 16,000 of its 16,000
 token budget.** Adding any standing fact to section 8 now requires removing one
 first. Two items were compressed to fit this entry's baseline updates.
+
+## skills.html rendered nothing, ever (2026-09-03)
+
+`skills.html:83` was
+
+```html
+<div class="shell" id="app" style="display:none">
+```
+
+and **nothing on the page ever removed that inline style**. The page has no auth
+boot at all — its five `getSession` matches are its own `getSessions()` helper,
+not Supabase Auth — so the container stayed `display:none` for every visitor,
+approved or not. A whole page, reachable from navigation, showing a blank
+screen.
+
+It is the only page in this state: a scan for an inline-hidden `#app` with no
+code that reveals it returns exactly one file.
+
+**Fixed by deleting the inline style, not by adding a reveal.** `bg.js`'s
+approval guard already owns this element —
+`body:not(.omega-approved) #app, .shell, main.main {display:none!important}` —
+so the inline hide was redundant for safety and fatal for visibility.
+`charter.html` is the same shape without the inline style and works correctly;
+`skills.html` now matches it. Verified in both directions: an unapproved visitor
+gets `shell.display:none` with the guard style present, and an approved one gets
+`flex`.
+
+## habits.html rendered every habit twice with the same id (2026-09-03)
+
+`renderHabitCard()` emitted `id="hc-${habit.id}"`, and `renderToday()` /
+`renderAll()` both call it for the same habits into `#today-list` and
+`#all-list`. A five-habit account therefore produced `hc-h0`…`hc-h4` twice each:
+invalid HTML, and any `getElementById` would silently return whichever came
+first. The `showAll` flag already distinguishes the two lists, so it now
+namespaces the id (`hc-today-…` / `hc-all-…`). Nothing reads the id — grepped
+before changing it — so this is inert beyond correctness. Duplicate count in a
+render: 5 → 0.
+
+## Two scanner false positives worth recording (2026-09-03)
+
+Both were produced while chasing the above, both looked alarming, and both were
+wrong. They are §8.4's "a scanner needs its own false-positive pass" in two new
+shapes.
+
+**"academy.html leaks content to an unapproved visitor."** A harness loaded
+`academy.html` with no session and measured `.shell` at `display:flex` with 3,593
+characters of visible text. The page had in fact **redirected**: `location.pathname`
+was `/account.html`, a public page that is correctly visible and correctly has no
+approval guard. The scanner was measuring a different document than the one it
+named. **Assert the URL after any page whose auth path can navigate.**
+
+**"settings.html fails open."** 44 pages reveal `#app` from inside a `catch`
+block — `}catch(e){document.getElementById('app').style.display='flex';}` — which
+is genuinely fail-open in shape. Tested against a stubbed profile read that
+throws, `academy`, `dashboard` and `vault` all stayed hidden: `bg.js`'s guard
+uses `display:none!important`, and an `!important` stylesheet rule beats a normal
+inline style, which is exactly what `bg.js:106` says it is for. `settings.html`
+reported `(absent)` only because the harness looked for `.shell` and that page
+uses `#app` with no such class — the guard covers all three selectors, the
+harness covered one. Corrected to check the same three, and **no page fails
+open**: unapproved members bounce to `/pending.html`, and a throwing profile read
+leaves every page hidden.
+
+So the 44-page `catch`-reveals pattern is safe as written *because* of the
+`!important` guard. Worth knowing before anyone "simplifies" that rule.

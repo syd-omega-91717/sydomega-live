@@ -4,22 +4,22 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Sovereign Oath</title>
 <style>
 /* COMPOSE */
-.compose-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.6)}
+.compose-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6)}
 .oath-textarea{width:100%;min-height:120px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.12);border-radius:3px;color:rgba(255,255,255,.9);font-family:var(--M);font-size:13px;line-height:1.7;padding:14px;resize:vertical;outline:none;transition:.15s;letter-spacing:.3px}
 .oath-textarea:focus{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.05)}
-.oath-textarea::placeholder{color:rgba(201,168,76,.2);font-style:italic;font-size:11px}
-.char-count{font-family:var(--M);font-size:7px;color:var(--muted);text-align:right;margin-top:4px}
+.oath-textarea::placeholder{color:rgba(201,168,76,.2);font-style:italic;font-size:12px}
+.char-count{font-family:var(--M);font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
 
 /* CATEGORY */
 .category-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.cat-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 12px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.cat-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 12px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .cat-btn.active,.cat-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
 
 /* HASH PREVIEW */
 .hash-preview{background:rgba(0,0,0,.3);border:1px solid rgba(0,229,255,.1);border-radius:3px;padding:10px 14px;display:none;flex-direction:column;gap:6px;margin-bottom:10px}
 .hash-preview.visible{display:flex}
-.hash-line{font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(0,229,255,.6);word-break:break-all;line-height:1.6}
-.hash-label{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:rgba(0,229,255,.35)}
+.hash-line{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(0,229,255,.6);word-break:break-all;line-height:1.6}
+.hash-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(0,229,255,.35)}
 
 /* OATH CARDS */
 .oath-list{display:flex;flex-direction:column;gap:10px}
@@ -28,16 +28,16 @@
 .oath-card.verified{border-left:3px solid var(--gold)}
 .oath-card.personal{border-left:3px solid var(--cyan)}
 .oc-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.oc-cat{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:1px;color:rgba(201,168,76,.7)}
-.oc-author{font-family:var(--M);font-size:7px;color:var(--muted)}
-.oc-ts{font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto}
+.oc-cat{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:1px;color:rgba(201,168,76,.7)}
+.oc-author{font-family:var(--M);font-size:12px;color:var(--muted)}
+.oc-ts{font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto}
 .oc-text{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.8);line-height:1.65;margin-bottom:10px;letter-spacing:.2px}
-.oc-hash{font-family:var(--M);font-size:6.5px;color:rgba(0,229,255,.3);word-break:break-all;line-height:1.5}
-.oc-verify{font-family:var(--M);font-size:6px;letter-spacing:1px;color:rgba(0,255,136,.4);margin-top:4px}
+.oc-hash{font-family:var(--M);font-size:12px;color:rgba(0,229,255,.3);word-break:break-all;line-height:1.5}
+.oc-verify{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(0,255,136,.4);margin-top:4px}
 
 /* FILTER */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-.filter-select{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.7);font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:5px 10px;border-radius:2px;outline:none;cursor:pointer}
+.filter-select{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.7);font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border-radius:2px;outline:none;cursor:pointer}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px}
@@ -46,12 +46,12 @@
 .modal-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)}
 .modal-close{position:absolute;top:12px;right:16px;font-size:18px;cursor:pointer;color:var(--muted);background:none;border:none;line-height:1}
 .modal-body{font-family:var(--M);font-size:13px;color:rgba(255,255,255,.85);line-height:1.7}
-.modal-hash-full{font-family:var(--M);font-size:7.5px;color:rgba(0,229,255,.5);word-break:break-all;background:rgba(0,0,0,.3);padding:10px;border-radius:2px;margin-top:8px;white-space:pre-wrap}
+.modal-hash-full{font-family:var(--M);font-size:12px;color:rgba(0,229,255,.5);word-break:break-all;background:rgba(0,0,0,.3);padding:10px;border-radius:2px;margin-top:8px;white-space:pre-wrap}
 
 .spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
-#oth-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+#oth-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -112,7 +112,7 @@
       <option value="">ALL MEMBERS</option>
       <option value="mine">MY OATHS ONLY</option>
     </select>
-    <span style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto" id="ledgerCount">0 OATHS</span>
+    <span style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto" id="ledgerCount">0 OATHS</span>
   </div>
   <div class="oath-list" id="oathList">
     <div class="empty"><span class="spin"></span>LOADING LEDGER...</div>
@@ -121,7 +121,7 @@
 
 <!-- ARCHIVE TAB -->
 <div class="tab-panel" id="tab-archive">
-  <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; LOCALLY SEALED OATHS (PENDING SYNC)</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; LOCALLY SEALED OATHS (PENDING SYNC)</div>
   <div class="oath-list" id="localList">
     <div class="empty">NO LOCAL ARCHIVE ENTRIES</div>
   </div>
@@ -141,8 +141,8 @@
       <div class="card-title">&#9670; SHA-256 CRYPTOGRAPHIC SEAL</div>
       <div class="card-body">
         Every oath is hashed using SHA-256 via the browser&rsquo;s native Web Crypto API
-        (<code style="font-family:var(--M);font-size:9px;color:var(--cyan)">crypto.subtle.digest</code>).
-        No external libraries. The hash input is <code style="font-family:var(--M);font-size:9px;color:var(--gold)">CATEGORY|text|ISO-timestamp</code>.
+        (<code style="font-family:var(--M);font-size:12px;color:var(--cyan)">crypto.subtle.digest</code>).
+        No external libraries. The hash input is <code style="font-family:var(--M);font-size:12px;color:var(--gold)">CATEGORY|text|ISO-timestamp</code>.
         This produces a unique 256-bit fingerprint for every oath — collision probability &lt;2&sup;;&minus;128.
       </div>
     </div>
@@ -158,7 +158,7 @@
     <div class="card">
       <div class="card-title">&#9685; OATH CATEGORIES</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:8px">
+        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr; border-bottom:1px solid var(--line)"><div style="padding:5px 0;color:var(--gold)">SOVEREIGNTY</div><div style="color:var(--muted)">Authority, self-governance, independence</div></div>
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr; border-bottom:1px solid var(--line)"><div style="padding:5px 0;color:var(--gold)">DISCIPLINE</div><div style="color:var(--muted)">Habit, consistency, the daily sovereign act</div></div>
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr; border-bottom:1px solid var(--line)"><div style="padding:5px 0;color:var(--gold)">EXCELLENCE</div><div style="color:var(--muted)">Mastery, craft, performance standards</div></div>
@@ -190,7 +190,7 @@
     <div class="modal-title" id="modalTitle">SOVEREIGN OATH</div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-hash-full" id="modalHash"></div>
-    <div style="font-family:var(--M);font-size:7px;color:rgba(0,255,136,.4);margin-top:6px" id="modalVerify"></div>
+    <div style="font-family:var(--M);font-size:12px;color:rgba(0,255,136,.4);margin-top:6px" id="modalVerify"></div>
   </div>
 </div>
 <div id="oth-toast"><div data-page-emblem="oath" style="margin:20px auto 0"></div>
@@ -342,7 +342,7 @@ function renderList(){
     var hash=document.createElement('div');hash.className='oc-hash';hash.textContent='SHA-256: '+(o.hash_sha256||'').slice(0,20)+'...';
     card.appendChild(meta);card.appendChild(text);card.appendChild(hash);
     if(isOwn){var ver=document.createElement('div');ver.className='oc-verify';ver.textContent='✓ YOUR SOVEREIGN OATH — IMMUTABLE RECORD';card.appendChild(ver);}
-    if(o.local){var loc=document.createElement('div');loc.style.cssText='font-family:var(--M);font-size:6px;color:rgba(255,153,0,.4);margin-top:2px';loc.textContent='⚡ LOCALLY SEALED — PENDING LEDGER SYNC';card.appendChild(loc);}
+    if(o.local){var loc=document.createElement('div');loc.style.cssText='font-family:var(--M);font-size:12px;color:rgba(255,153,0,.4);margin-top:2px';loc.textContent='⚡︎ LOCALLY SEALED — PENDING LEDGER SYNC';card.appendChild(loc);}
     card.addEventListener('click',function(){openModal(o);});
     list.appendChild(card);
   });

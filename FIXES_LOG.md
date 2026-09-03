@@ -4612,3 +4612,2015 @@ than assuming. `scripts/verify-runtime.js` could not run: the scratchpad's
 `playwright-core` expects `chromium_headless_shell-1234` and this environment
 ships `chromium-1194`, so it reports SKIPPED — the checks above were run
 against `/opt/pw-browsers/chromium-1194` with an explicit `executablePath`.
+
+## Revenue that did not exist, rendered as fact (2026-09-02)
+
+`ad-network.html` reached `main` and showed every approved member three
+figures:
+
+```
+TOTAL REVENUE  $0.10      CREATOR SHARE  $0.07      PLATFORM SHARE  $0.03
+```
+
+directly above the sentence **"Creators earn 70% revenue share."**
+
+Measured, not inferred — a headless render of `0ec01227` returns exactly
+`["$0.10","$0.07","$0.03"]` from `document.body.innerText`.
+
+### Where the money came from
+
+`omega-ad-network.js:50-52`, inside `recordImpression()`:
+
+```js
+REVENUE.total         += 0.05;
+REVENUE.creator_share += 0.035;
+REVENUE.platform_share += 0.015;
+```
+
+`recordImpression()` fires when one of five **hard-coded specimen
+advertisements** is painted. No advertiser was ever billed, no payout path
+exists, and `REVENUE` is a module-level variable, so the total resets to zero on
+reload — it was not even a persistent fiction. The $0.10 was two ad previews at
+five cents each, split 70/30.
+
+That is §8.1 class 9 (fabricated data rendered as fact) landing on a financial
+surface, plus §9's dormancy rule going unapplied. The expensive half is not the
+broken number: it is a member-visible written statement that people are owed a
+70% share of money that does not exist.
+
+### Why the rule did not hold
+
+§9's mechanism existed and was never shared. `get_platform_flag(p_key)` has been
+in the schema since `chunk_02b_migrations.sql:532`, but a repo-wide grep finds
+**three** pages that only *mention* a flag in prose (`vault`,
+`sovereign-covenant`, `compliance`) and exactly **one** that calls the RPC
+(`interface-omni.html:215`, to toggle it). There was no shared reader, so
+gating was whatever each page's author remembered to do.
+
+### The fix
+
+`omega-flags.js` makes it declarative and platform-wide:
+
+```html
+<div data-omega-flag="ad_network_enabled"> … </div>
+```
+
+hidden until `get_platform_flag` answers `true`, with a dormancy notice naming
+the flag put in its place. Two flags added, both default false
+(`supabase/omega_commerce_flags.sql`, `migrations/0106`):
+`ad_network_enabled` and `creator_earnings_enabled` — deliberately separate, so
+enabling advertising cannot silently promise a member payout.
+
+Three things this got right only after being tested:
+
+**The hide rule cannot live in the module.** `bg.js` injects `omega-flags.js`
+through `__omegaAppend`, and a dynamically-created script is **async** — it is
+not guaranteed to parse before the approval guard adds `omega-approved` and
+reveals the shell. So the `[data-omega-flag]:not([data-omega-flag-on])` rule is
+written synchronously in `bg.js`, beside the approval guard's own rule, and
+`omega-flags.js` only performs the RPC and the reveal. Unlike the approval
+guard it is **not** skipped on public pages: a signed-out visitor must not see a
+dormant revenue figure either.
+
+**Failing closed is not the same as never opening.** The first version of
+`adsAllowed()` read `window.OmegaFlags` once and returned `false` if absent.
+Because of the same async injection, `OmegaFlags` is usually absent when the ad
+module's `DOMContentLoaded` runs — so the gate was shut *permanently*, and would
+have stayed shut after the owner enabled the network, reading exactly like a
+broken feature. Caught by testing the **open** direction, not just the closed
+one. Fixed with a bounded frame wait (§8.1 class 5: defer, do not discard);
+exhausting the wait still resolves `false`.
+
+**A gate proven only closed is not proven.** All three directions are now
+tested in a real browser — flag off: hidden, notice present, 0 ad units; flag
+on: revealed, 2 ad units; RPC error: hidden, 0 units, notice present.
+
+### The durable gate
+
+`scripts/commerce-contract.py` (blocking, `ci-local.sh` step 2m, `ci.yml`)
+fails on either shape: an earnings claim in a client file that names no gate, or
+a hard-coded amount accumulated into a revenue-shaped variable in a file that
+renders currency. Cross-checked against the pre-fix commit rather than trusted:
+run at `0ec01227` it reports `omega-ad-network.js:50`, `:51`, `:52` and
+`ad-network.html` — the exact lines above.
+
+**The false-positive pass mattered more than the detector.** A first run
+reported 20 files; 13 were noise, and the noise was measured, not guessed:
+`decommission` matching `commission` (`audio.js`, `nav.js`, `omega-a11y.js`),
+"earn **points**" matching "you earn" (`i18n.js`), a 20% share of *effort*
+(`matrix.html`), a `<label>` over the member's own calculator input
+(`contracts.html`), and a code comment quoting the offending label text
+(`omega-a11y.js`). The gate now blanks comments and `<label>` text before
+matching — replacing with spaces, not deleting, so reported line numbers stay
+true.
+
+The seven that survived were real, and none was whitelisted. `marketplace`,
+`blockchain`, `income`, `contracts`, `automation`, `cosmos` and `chatbot` all
+stated a 9.17%/17% commission in the present tense on an Ω economy that is
+dormant behind `tokens_enabled=false`. Each now states that, the way `vault.html`
+already did.
+
+Scope was checked before assuming: a render of `contracts`, `income`,
+`marketplace`, `blockchain`, `subscriptions`, `revenue`, `investment`, `wealth`,
+`treasury` and `payments` found **zero** non-zero currency amounts, so
+`ad-network.html` was the only page inventing money and the gate starts with no
+legitimate violations to suppress.
+
+### Also fixed: seven pages nothing linked to
+
+A separate finding from the same pass, and the first framing of it was **wrong**
+— worth recording, because the two concerns look like one. `nav.js` has two
+independent maps: `SECTIONS` decides which links render, `PS` decides which
+section highlights as active. A first count said "15 pages unreachable"; the
+real numbers are **7 unreachable** (`ad-network`, `architecture`,
+`control-plane`, `creator`, `exam`, `project-studio`, `world-shell`) and **15
+without an active-state entry** — including `gateway`, the page whose entire
+purpose is to be the way in.
+
+Both are now zero. The active-state check first reported all 11 sampled pages
+failing *including `dashboard`*, which has always had a `PS` entry — the
+selector was wrong, not the nav (§8.4: a scanner needs its own false-positive
+pass). nav.js marks `.on-icon.on-active`; with that selector every page
+highlights its correct section.
+
+`architecture.html` deserved more than a link. It was a 1.4 KB stub whose only
+content read *"See browser console for runtime registration"* — no `#omega-side`
+container, so it was the one page in the estate rendering no sidebar at all, and
+its own `:root` tokens had drifted from the platform's. Linking it would have
+delivered members to a page telling them to open devtools.
+`omega-architecture-runtime.js` already exposes `status()` with all 16 blocks
+and their evidence, so the page now renders them: 16 blocks, 1 probed as
+CONNECTED in-session, no console instruction, no overflow, no errors.
+
+Five emblem registry entries were added for the merged pages, which had none —
+so each drew the generic fallback mark and none appeared in the gateway, whose
+destination list derives entirely from `OmegaPageEmblem.pages`. Gateway now
+renders **176** destinations (was 171), 0 dead links, 0 duplicates.
+
+### Verification
+
+**20/20 blocking checks** (was 19; commerce-contract is new), **144 tests**
+(was 126; 18 new in `scripts/tests/test_commerce_contract.py`, covering both
+real shapes, all five measured false positives, and each of the three accepted
+gate references).
+
+`node scripts/verify-runtime.js` **ran for real this time** — PASS on all 13
+capability entrypoints. The previous
+entry recorded it as SKIPPED; the cause was a layout mismatch, not a missing
+browser. `migrations/0106` was applied against a real scratch PostgreSQL 16 instance
+rather than eyeballed: it applies clean, re-applies clean, and — the property
+that actually matters — after `ad_network_enabled` is set true, re-running
+leaves it true. `ON CONFLICT DO NOTHING` means the file can never switch a flag
+back off after the owner has enabled it.
+
+`playwright-core` resolves `chromium-1234/chrome-linux64/chrome` and
+`chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell`,
+while the image ships `chromium-1194/chrome-linux/chrome` and a headless binary
+named `headless_shell`. Symlinking both expected layouts onto the installed 1194
+build makes the repo's own verifier run unmodified — worth doing rather than
+substituting an ad-hoc harness, since it asserts the capability contracts.
+
+## A pointer event before the first resize killed the background canvas (2026-09-03)
+
+`bg.js:1145` normalised the pointer against the viewport:
+
+```js
+window.addEventListener('pointermove',function(e){tmx=e.clientX/W;tmy=e.clientY/H;},{passive:true});
+```
+
+`W` and `H` are declared `var W=0,H=0` (`bg.js:870`) and only get real values when
+`resize()` first runs. A `pointermove` arriving inside that startup window
+divides by zero: `e.clientX/0` is `Infinity`, and `0/0` is `NaN`.
+
+Neither is caught anywhere. `tmx` feeds `mx`, `mx` feeds
+`gOff()` → `{x:(mx-0.5)*60}`, and that reaches
+
+```js
+var hg=ctx.createRadialGradient(CX+o.x,CY+o.y,2,CX+o.x,CY+o.y,hr);
+```
+
+which throws **`Failed to execute 'createRadialGradient' on
+'CanvasRenderingContext2D': The provided double value is non-finite.`**
+
+It never recovers. `mx` is eased toward `tmx` every frame, so once `tmx` is
+`Infinity` the value stays poisoned and the entire orrery/nebula background is
+dead for the rest of the session, on every page — `bg.js` loads on all of them.
+
+### How it was found, and why it looked like something else
+
+`node scripts/verify-runtime.js --all` reported **22 failing pages**. The obvious
+reading was that the session's own `bg.js` edit had broken them. It had not, and
+the evidence that settled it is worth recording because the first two comparisons
+were both misleading:
+
+- A **targeted before/after harness** on the 8 loudest pages reported `0` errors
+  at both commits — it simply never hit the race, so it could not discriminate
+  at all. A harness that reproduces neither side is not a comparison.
+- The **full `--all` sweep at `0ec01227`** reported 19 failures — but the sets
+  differed in *both* directions: 10 pages failed only after, and **7 failed only
+  before**. A regression cannot fix pages. Re-running those 7 at the *same* HEAD
+  commit failed 2 of them again, which proved the failing set is not stable
+  across runs of identical code.
+
+So the sweep's page list is noise; only a deterministic reproduction means
+anything. Firing `pointermove` repeatedly at 1 ms intervals from
+`addInitScript` forces the race every time, and reproduces the throw at
+`0ec01227` **and** at HEAD — the same result on both, which is what actually
+exonerated the session's change.
+
+Two earlier "0 findings" in this same investigation were also false and are
+worth naming: a `nohup`'d sweep was killed with its parent shell and left an
+empty file, and `grep -c FAIL` on that empty file returned `0`. That is §8.4's
+"verify a 0 findings result is real" and §8.2's Windows note (a crashed child
+yields empty stdout) recurring on Linux.
+
+### The fix
+
+Guard the divisor, which is the whole bug:
+
+```js
+window.addEventListener('pointermove',function(e){
+  if(!(W>0)||!(H>0))return;
+  tmx=e.clientX/W;tmy=e.clientY/H;
+},{passive:true});
+```
+
+`!(W>0)` rather than `W===0` so a `NaN` width is rejected too.
+
+The `deviceorientation` handler two lines below had the same class of hole:
+it guarded `e.gamma != null` but then read `e.beta`, and `(null-45)` is `NaN`,
+which `Math.min`/`Math.max` propagate rather than clamp. Each axis now checks
+its own value.
+
+### Verification
+
+The deterministic reproduction goes **1 throw → 0**. 20/20 blocking checks and
+144 tests still pass. This is a pre-existing defect, present at `0ec01227` and
+every commit before it — not introduced by the commerce-flag work in the same
+branch, which the dual-commit reproduction is the proof of.
+
+## An unenforced rule drifts within hours: the reachability gate (2026-09-03)
+
+CLAUDE.md section 9 has always said it: *"Don't write a new page without ...
+adding it to `nav.js`'s `PS` map and the relevant `SECTIONS` entry — otherwise
+it's unreachable from navigation."* Like section 9's dormancy rule before
+`commerce-contract.py`, it had no enforcement, so it held only as long as
+someone remembered.
+
+It did not hold. Seven pages linked from nowhere and fifteen with no
+active-state entry were driven to zero earlier the same day; a merge brought
+**two more unreachable pages** (`verify-deployment.html`, `verify-modules.html`)
+within hours. Two unenforced rules, two identical outcomes — which is the
+argument for the gate rather than another sweep.
+
+`scripts/reachability-contract.py` (blocking, `ci-local.sh` step 2n, `ci.yml`).
+
+### The distinction that had to be built in
+
+`nav.js` holds two independent maps, and reporting them as one produced a wrong
+number the first time:
+
+| map | decides | a page missing from it |
+|---|---|---|
+| `SECTIONS` `sub[]` | which links render | **unreachable** — nothing points to it |
+| `PS` | which section shows active | renders nav, highlights nothing |
+
+A first pass checked only `PS` and reported "15 pages unreachable". The real
+numbers were **7** and **15**. So unreachability blocks and active-state is
+advisory, reported separately.
+
+### Keying on the href, not the slug
+
+Several `SECTIONS` entries deep-link into another page:
+`['gates','12 GATES','/elements.html#gates']`. That makes `elements.html`
+reachable and leaves `gates.html` exactly as unreachable as before. Keying on
+the entry's *slug* would have called `gates.html` linked because an entry named
+`gates` exists. The gate resolves the href, strips the fragment, and both
+behaviours are pinned by tests.
+
+### Exemptions carry their reason
+
+`SYSTEM_PAGES` lists the ten pages that are not member destinations — error
+states, the signed-out pages, the two owner diagnostics from the merge — each
+with why. "Exempt" with no reason recorded is how an unreachable page gets
+quietly normalised. The gate also reports a *stale* exemption (a listed page
+that no longer exists); it caught one in its own first run (`sovereign`, a
+`vercel.json` redirect target with no file), which was removed.
+
+### What it cannot check
+
+That the sidebar actually appears. `nav.js` returns immediately without an
+element with id `omega-side`, so a perfectly-registered page can still render no
+navigation — `architecture.html` was exactly that. The `no_nav_container` check
+is a best-effort grep; `scripts/verify-runtime.js` is what proves it.
+
+### Verification
+
+Cross-checked against `0ec01227` rather than trusted: run there it reports
+precisely the seven pages that were unreachable at that commit. 10 new tests
+(154 total), 21/21 blocking checks.
+
+**Note for the next session: CLAUDE.md is now at exactly 16,000 of its 16,000
+token budget.** Adding any standing fact to section 8 now requires removing one
+first. Two items were compressed to fit this entry's baseline updates.
+
+## skills.html rendered nothing, ever (2026-09-03)
+
+`skills.html:83` was
+
+```html
+<div class="shell" id="app" style="display:none">
+```
+
+and **nothing on the page ever removed that inline style**. The page has no auth
+boot at all — its five `getSession` matches are its own `getSessions()` helper,
+not Supabase Auth — so the container stayed `display:none` for every visitor,
+approved or not. A whole page, reachable from navigation, showing a blank
+screen.
+
+It is the only page in this state: a scan for an inline-hidden `#app` with no
+code that reveals it returns exactly one file.
+
+**Fixed by deleting the inline style, not by adding a reveal.** `bg.js`'s
+approval guard already owns this element —
+`body:not(.omega-approved) #app, .shell, main.main {display:none!important}` —
+so the inline hide was redundant for safety and fatal for visibility.
+`charter.html` is the same shape without the inline style and works correctly;
+`skills.html` now matches it. Verified in both directions: an unapproved visitor
+gets `shell.display:none` with the guard style present, and an approved one gets
+`flex`.
+
+## habits.html rendered every habit twice with the same id (2026-09-03)
+
+`renderHabitCard()` emitted `id="hc-${habit.id}"`, and `renderToday()` /
+`renderAll()` both call it for the same habits into `#today-list` and
+`#all-list`. A five-habit account therefore produced `hc-h0`…`hc-h4` twice each:
+invalid HTML, and any `getElementById` would silently return whichever came
+first. The `showAll` flag already distinguishes the two lists, so it now
+namespaces the id (`hc-today-…` / `hc-all-…`). Nothing reads the id — grepped
+before changing it — so this is inert beyond correctness. Duplicate count in a
+render: 5 → 0.
+
+## Two scanner false positives worth recording (2026-09-03)
+
+Both were produced while chasing the above, both looked alarming, and both were
+wrong. They are §8.4's "a scanner needs its own false-positive pass" in two new
+shapes.
+
+**"academy.html leaks content to an unapproved visitor."** A harness loaded
+`academy.html` with no session and measured `.shell` at `display:flex` with 3,593
+characters of visible text. The page had in fact **redirected**: `location.pathname`
+was `/account.html`, a public page that is correctly visible and correctly has no
+approval guard. The scanner was measuring a different document than the one it
+named. **Assert the URL after any page whose auth path can navigate.**
+
+**"settings.html fails open."** 44 pages reveal `#app` from inside a `catch`
+block — `}catch(e){document.getElementById('app').style.display='flex';}` — which
+is genuinely fail-open in shape. Tested against a stubbed profile read that
+throws, `academy`, `dashboard` and `vault` all stayed hidden: `bg.js`'s guard
+uses `display:none!important`, and an `!important` stylesheet rule beats a normal
+inline style, which is exactly what `bg.js:106` says it is for. `settings.html`
+reported `(absent)` only because the harness looked for `.shell` and that page
+uses `#app` with no such class — the guard covers all three selectors, the
+harness covered one. Corrected to check the same three, and **no page fails
+open**: unapproved members bounce to `/pending.html`, and a throwing profile read
+leaves every page hidden.
+
+So the 44-page `catch`-reveals pattern is safe as written *because* of the
+`!important` guard. Worth knowing before anyone "simplifies" that rule.
+
+## charter.html rendered nothing, because two exempt lists disagreed (2026-09-03)
+
+The last failing page in the full-estate sweep, and the same *symptom* as
+`skills.html` from an entirely different cause. `bg.js` keeps two independent
+exemption lists and they had drifted apart:
+
+| list | line | contents |
+|---|---|---|
+| approval guard's `PUBLIC` | `bg.js:219` | account, enter, reset, terms, pending, index, / |
+| access guard's `EX` | `bg.js:1231` | '', index, account, terms, **charter**, reset, enter, pending |
+
+`charter` was in one and not the other. So the approval guard **did** inject
+`body:not(.omega-approved) .shell{display:none!important}` on charter.html,
+while the access guard that calls `__omegaApprove(true)` hit
+`if(EX[pg])return;` and never ran. The page was hidden with nothing left to
+unhide it — blank for every visitor, approved or not, permanently.
+
+This is CLAUDE.md section 8.1 class 8 (two divergent copies of one canonical
+list) in a new place: the previous instances were the 12 signs and the 12
+labors, not a pair of security exemption lists.
+
+### Which way to reconcile, and why
+
+Both directions were available. `charter.html` makes **zero** Supabase calls —
+`grep -c "supabase\|OmegaSB\|\.from("` returns 0 — so it is static governance
+text holding no member data, and `EX` already groups it with `terms`. Gating it
+instead would hide the governing document from exactly the pending members it
+governs. So `charter` was added to `PUBLIC`, and the comment on that line now
+says the two lists must change together.
+
+**This is a visibility change and should be read as one:** charter.html is now
+readable without approval, like terms.html. It was previously readable by
+nobody, so nothing regressed, but if the owner wants it member-only the fix is
+to drop `'charter'` from `EX` instead — one line, the other direction.
+
+### Verification
+
+Runtime verification on `charter` plus two controls (`governance`, `dashboard`)
+passes. The guard still holds everywhere it should: an unapproved member bounces
+to `/pending.html` on academy/dashboard/vault/settings, and with a profile read
+stubbed to throw, all four stay `display:none` — the 44-page
+`catch{ #app.style.display='flex' }` pattern remains covered by the guard's
+`!important`.
+
+Full estate before this session's runtime work: **22 pages failing**. After:
+`node scripts/verify-runtime.js --all` reports **PASS (186 pages)** — zero
+failures across the whole estate, confirmed by a full sweep rather than by the
+subset runs that guided each individual fix.
+
+## CLAUDE.md described OmegaGuardian wrongly on two of three counts (2026-09-03)
+
+§8.2 carried this, loaded into every session:
+
+> **`OmegaGuardian.gate()` is defined but never called**, and the
+> `threat_signal` event it listens for is never emitted. The topbar badge
+> therefore always effectively reads 100.
+
+Two of those three claims are false, and the corrected version is a **more**
+interesting finding than the wrong one.
+
+### `gate()` is called
+
+`approvals.html` calls it at **three** sites — 541, 568, 613 — each wrapping a
+real privileged write:
+
+```js
+await window.OmegaGuardian.gate('admin', async function(){
+  var ok = await rpcOk('grant_permanent_access', {p_uid: uid});
+```
+
+`'admin'` requires a score of 100 in `ACTION_LEVELS`, so the gate is not
+decorative: it stands in front of granting permanent access.
+
+### The badge is not frozen at 100
+
+`injectGuardianBadge()` hard-codes `textContent='100'` at injection, which is
+probably where the claim came from. But `updateBadge()` runs on
+`setInterval(updateBadge, 2000)` and assigns `badge.textContent=_sessionScore`,
+recolouring at the 70/40 thresholds. The badge tracks the real score every two
+seconds.
+
+And the score does move. `adjustScore` has three callers:
+
+| site | effect | live? |
+|---|---|---|
+| `omega-guardian.js:104` | `-5` when a gated action throws | yes — inside `gate()`'s own `catch` |
+| `omega-guardian.js:122` | `-10` after 30 min idle | yes — `setInterval(…, 300000)` with real activity listeners |
+| `omega-guardian.js:129` | `RISK_EVENTS[event](d)` | **no** |
+
+### What is actually true
+
+The third row is the real finding. All six risk events —
+`threat_signal`, `rate_limit`, `ua_change`, `console_clear`, `iframe_embed`,
+`long_idle` — are **listened for and never emitted**. Checked one by one:
+
+```
+threat_signal   emitted in 0 place(s)
+rate_limit      emitted in 0 place(s)
+ua_change       emitted in 0 place(s)
+console_clear   emitted in 0 place(s)
+iframe_embed    emitted in 0 place(s)
+long_idle       emitted in 0 place(s)
+```
+
+So the whole `RISK_EVENTS` table is dead wiring, and the score only ever falls
+for idle or a thrown action — never because anything detected a threat. That is
+a narrower and more accurate statement of the gap than "never called".
+
+### Two near-misses while establishing this
+
+**A guessed identifier.** `grep -n "_adjust("` returned nothing and briefly
+looked like proof that the score can never change. The function is called
+`adjustScore`; the name was mine, not the file's. The correct conclusion was the
+opposite of the one that grep implied. §8.4's "a repo-wide grep is a candidate
+generator, not a verdict", in the shape where the *pattern* is wrong rather than
+the results.
+
+**An unterminated comment that was terminated.** `omega-guardian.js:46` renders
+as `/* ── SESSION HEALTH SCORE ────…` with no visible `*/`, which would put
+`adjustScore` inside a comment and make three call sites throw. It is fine: the
+box-drawing run is long and the terminal truncated the line. Counting delimiters
+before line 47 gives 12 `/*` and 12 `*/`, and `node --check` passes. Verified
+rather than reported.
+
+### Left alone, deliberately
+
+Emitting the six risk signals means building threat detection, which is the
+architecture decision §8.2 says it is. `ops.html`'s `#evt-metrics-body` was
+re-checked in the same pass and that entry is **correct** — `ops.html:485` looks
+the id up and no HTML anywhere defines it.
+
+## CI had not concluded a single run in two days (2026-09-03)
+
+The visible symptom was a wall of failing checks and a runner log reading
+`Job Page estate quality completed with result: Failed` nine times over. Neither
+was what was happening.
+
+**Measured, via the Actions API rather than the runner log.** Of the last **30
+CI runs on `main`** — reaching back to `2026-09-01T14:34Z` — every one had
+`conclusion: cancelled`. Zero `success`, zero `failure`. `page-estate-quality.yml`
+over its entire history: **68 runs**, not one with a `success` or `failure`
+conclusion. One job checked directly, `run_id 33707164446` → job `100498665358`:
+`"conclusion":"cancelled"`, `completed_at 2026-09-03T02:35:08Z` — the exact
+second the next push landed.
+
+The self-hosted runner logs a cancelled job as `completed with result: Failed`.
+So two days of *no CI at all* presented as two days of *failing CI*. The runner
+log and the Actions API disagreed, and only the API was right.
+
+**Cause.** Twenty workflows targeted the one serial self-hosted Windows runner.
+Eleven of them were a full checkout wrapped around a single short Python script.
+Each push queued twenty jobs behind one worker; the next push superseded them
+before the runner arrived. Sum of the declared `timeout-minutes` across those
+workflows is ~265 minutes of worst-case serial work per commit, against a push
+cadence of minutes.
+
+**The gates were never the cost.** Timed locally, all eleven run in **0.79s
+combined**. The eleven checkouts around them were the entire expense.
+
+Fixed by `scripts/contract-suite.py` (one list, one process, every gate reported
+before exiting non-zero) plus `.github/workflows/contracts.yml` replacing the
+eleven. Per-push runs on `main`: 20 → 9. Actions stops a job at the first failing
+step and `workflow-contract-lint.py:22` forbids `continue-on-error: true`, so one
+process is the only way to learn about more than one failure per queued hour.
+
+Deliberately **not** fixed by moving to a hosted runner: §8.2 forbids it and
+`docs/CI_RUNNER_RECOVERY.md` records why.
+
+### Two gates were genuinely red, and the local gate could not see them
+
+`content-uniqueness-contract` and `page-experience-contract` were blocking
+workflows on GitHub but absent from `ci-local.sh`'s step list, so
+`./scripts/ci-local.sh` and `.githooks/pre-push` both reported green over a red
+`main`. §8.4's "verify a 0 findings result is real" in its most literal form: a
+clean report from a check that never ran. Both now come from the one shared list.
+
+`page-experience-contract.py` reported `defaults: missing primaryAction`. The
+fix exposed a second defect: `config/page-experience.schema.json` sets
+`"additionalProperties":false` on `defaults` and does not list `primaryAction`,
+so the data file could not satisfy the schema and the gate at the same time —
+§8.1 class 8, two divergent copies of one canonical spec. Schema updated to
+match the gate. Nothing validates that schema today (`grep -rn '\.schema\.json'
+scripts/ .github/` returns only `content-registry-contract.py:9`), which is why
+the contradiction survived; it is still checked in, and a spec that contradicts
+the live gate misleads whoever reads it next.
+
+`content-uniqueness-contract.py` reported 2 duplicate titles and 3 duplicate
+description groups across 13 pages. `subscriptions.html` was titled `Membership`
+like `membership.html`; `rune.html` `SIGIL` like `sigil.html`. Thirteen pages
+carried the site-wide tagline (`The Code. The Frequency. The Legacy…`) as their
+own `<meta name="description">`. Each was rewritten from that page's actual
+rendered text — `rune.html` is the `OmegaSigil` SVG generator, `subscriptions.html`
+is plan/tier/payment-history — not invented. Billing copy stays future tense:
+that feature is dormant (§8.2) and §9 forbids present-tense copy for a feature
+that is not on.
+
+### A workflow that could never have passed
+
+`supabase-runtime-contract.yml` declared `shell: python` with the body
+`python scripts/supabase-runtime-contract.py`. `shell: python` feeds the block
+to the interpreter **as source**, so that line is a `SyntaxError` on line 1 —
+reproduced directly:
+
+```
+  File "asif.py", line 1
+    python scripts/supabase-runtime-contract.py
+           ^^^^^^^
+SyntaxError: invalid syntax
+```
+
+That is the 28-second `Supabase runtime health` failure in the runner log
+(02:38:59 → 02:39:27): a checkout, then a parse error, never the contract.
+`runner-probe.yml` uses `shell: python` correctly, with real Python in the body;
+this one wanted a shell and got pwsh.
+
+## The leaked-password advisory, closed where it actually could be (2026-09-03)
+
+`get_advisors` reports `auth_leaked_password_protection` WARN. §8.2 already said
+it could not be enabled on this plan; that claim was **re-verified rather than
+repeated**, because three §8.2 claims had turned out wrong in the preceding days.
+`get_organization(vztvuckpdsoriyvpdkzx)` → `"plan":"free"`, and the Supabase docs
+page the advisory links states verbatim: *"Leaked password protection is
+available on the Pro Plan and above."* It is an Auth dashboard property, so
+neither `apply_migration` nor `execute_sql` can reach it. The claim stands.
+
+The **corpus** behind the feature is not gated, though. `omega-password-guard.js`
+checks strength and HaveIBeenPwned's Pwned Passwords range API at the only two
+places this platform sets a password — `account.html` (`signUp`) and
+`reset.html` (`updatePw`). k-anonymity: SHA-1 locally, send the first five hex
+characters, match the returned suffixes in the browser. `vercel.json`'s enforced
+CSP already permits it (`connect-src 'self' https: wss:`), so no CSP change.
+
+**Stated plainly: this is client-side and a direct Auth API call bypasses it.**
+Only the Pro-plan server setting is unbypassable. The advisory is not resolved,
+and §8.2 says so.
+
+**Verification.** `api.pwnedpasswords.com` is **403 at this environment's egress
+proxy** (`curl: (56) CONNECT tunnel failed, response 403`), the same class of
+block §8.4 records for `github.com` and `codeload` — so every live call returned
+`checked:false`, which is indistinguishable from a broken implementation. That
+had to be resolved rather than assumed:
+
+- SHA-1 correctness against the published digest of `"password"`
+  (`5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8`), so a wrong digest or a wrong
+  prefix/suffix split fails instead of silently agreeing with itself.
+- Real-format range responses (CRLF-delimited, `SUFFIX:count`) through a stubbed
+  `fetch`, asserting the requested URL is `…/range/5BAA6` and nothing more.
+- **In a real browser**, via Playwright with only the remote host routed: this
+  exercises the actual `crypto.subtle` SHA-1 path and the real page wiring.
+  `window.OmegaPasswordGuard` present on both pages, `breachCheck('password')`
+  → `{"breached":true,"count":10382543,"checked":true}`, zero page errors.
+
+The property that matters is that an unreachable API degrades to **unknown**,
+never to clean — otherwise the sign-up page tells a member a compromised
+password is fine. HTTP 503 and a thrown fetch both return
+`{"breached":null,"checked":false}`, and `scripts/tests/test_password_guard.py`
+pins it (13 tests; `test_*_degrades_to_unknown_not_to_clean` is the reason the
+file exists). It fails **open** on purpose — a third-party outage must not stop
+account creation, which is Supabase's own behaviour too — but it never claims a
+check it did not perform, §8.1 class 1.
+
+Password floor raised from 6 characters to 12 plus three of four character
+classes, per the same docs page's free-tier guidance. Existing members are
+unaffected: `signInWithPassword` is not gated, only `signUp` and `updateUser`.
+
+One test assertion was wrong before it was right: `assertNotIn('password', url)`
+fails on the hostname `api.pwnedpasswords.com`, which contains that substring.
+Asserting on the path after `/range/` is the real property.
+
+## Production audit of www.sydomega.com: GitHub, Vercel, Supabase (2026-09-03)
+
+Asked to find whatever blocks the redesigned platform going live. Checked all
+three surfaces. **Two of the three were clean**, which is worth recording as
+plainly as the failures:
+
+- **Vercel**: every one of the last 20 deployments `state: READY`. Production is
+  `dpl_CrdkAqkaof8t6qKraqB5arzu5n1c` on `9c8707f1`, i.e. current `main`.
+  `get_runtime_errors` over 7 days: **"No runtime errors found."** The build is
+  not a blocker and never was — `vercel.json` disables install/build, so a
+  static deploy cannot fail the way a bundled one can.
+- **Supabase**: project `ydqhzvvoyufiiqvzcjns` `ACTIVE_HEALTHY`. Performance
+  advisors: **244, every one INFO** (172 `unused_index`, 72
+  `unindexed_foreign_keys`) — no ERROR, no WARN. Those two counts have moved
+  from the 125/61 recorded in §8.2 but the classification has not; they are the
+  same known noise on a platform with 9 profiles.
+- Security advisors: **one** finding, `auth_leaked_password_protection`, already
+  handled in this session's earlier entry.
+
+`www.sydomega.com` itself returns **HTTP 200** with the enforced CSP intact.
+The site is up. What was broken was the part nobody looks at from inside it.
+
+### og-image.png was a 404 in production, on 11 pages
+
+Every page's Open Graph and Twitter card pointed at
+`https://www.sydomega.com/og-image.png` — **21 references across 11 pages** —
+and the file does not exist in the repo. Fetched against the live domain it
+returned **HTTP 404**, with Vercel serving the `404.html` body in its place. So
+every share of this platform on WhatsApp, iMessage, Slack, X, LinkedIn or
+Facebook has rendered a preview card with no image, for as long as those tags
+have existed.
+
+**Why no gate caught it.** `ci-local.sh`'s broken-asset check and `ci.yml` step 4
+both resolve *local* `src=`/`href=` paths. An absolute URL is skipped, because an
+absolute URL normally points at a third party nobody can validate offline. But a
+URL on **our own domain** is a local path wearing an absolute URL, and is exactly
+as checkable. `scripts/absolute-asset-check.py` now gates that (blocking, added
+to `contract-suite.py`), and it was verified by hiding the file and watching it
+fail with the real 11-page reference list, then restoring it.
+
+The asset is produced by `scripts/build-og-image.js`, not hand-drawn: 1200×630
+rendered in headless Chromium from bg.js's `:root` tokens and the platform's
+three font families, with omega-share-card.js's ring/glow/grid vocabulary. The
+`image-pipeline` skill names this the one legitimate raster case ("an OG-style
+share PNG") — social scrapers do not render SVG for `og:image`. `--check`
+validates dimensions by reading the PNG header, so a truncated or wrong-size
+file fails rather than passing as present.
+
+### The same gate immediately found a second live 404
+
+`interface-omni.html` declared `og:url` as
+`https://www.sydomega.com/interface_omni.html` — **underscore, where every real
+path uses a hyphen**. The canonical share URL for the Control Deck was a 404.
+
+Fixing it exposed a third, quieter bug in the same file. `nav.js:6` keys off
+`data-page`, and that page said `data-page="interface_omni"` while `nav.js`'s
+`PS` map holds `'interface-omni':'order'`. The lookup missed and fell through to
+`nav.js:220`'s `PS[dp]||'command'` default, so the Control Deck highlighted
+**COMMAND** instead of **ORDER** — a member was told they were in the wrong
+section of the platform. Confirmed in a render before and after:
+
+```
+before   {"dataPage":"interface_omni","active":["COMMAND","COMMAND"]}
+after    {"dataPage":"interface-omni","active":["⋔ORDER","ORDER"]}
+```
+
+`reachability-contract.py` cannot see this: it compares `nav.js`'s two maps
+against the page set, and never reads a page's own `data-page` attribute.
+
+**A measurement error worth recording.** The first render of this reported
+`data-page: "account"` on `interface-omni.html` *and* on `dashboard.html`, which
+would have made it look like a platform-wide fault. Both pages had simply
+redirected to `account.html` — the plain Playwright context had no signed-in
+stub. §8.4 already records this exact trap ("academy.html leaks content — FALSE.
+Page had redirected; I measured /account.html") and it still caught a session
+that had read the warning. The harness's `session.js` `launch()` is the fix;
+an ad-hoc `chromium.launch()` against a gated page measures the redirect.
+
+### enter.html asserted eight system states and checked none of them
+
+The site's front door. Its STATUS tab shipped eight hard-coded rows with
+pulsing green/gold dots:
+
+```
+SYSTEM ONLINE · 9.17Hz RESONANCE LOCK · TLS ENCRYPTED (HTTPS)
+NODE GOVERNANCE: ACTIVE · Ω RESERVE: PLANNED (DORMANT)
+AUTH LAYER: ONLINE · SUPABASE: CONNECTED · MATRIX SYNC: ACTIVE
+```
+
+with `LAST CHECK: HH:MM:SS` underneath, driven by the wall clock on a
+`setInterval(clock,1000)`. Nothing was ever checked. The ticking timestamp made
+it worse than static copy: it asserted a verification *at that exact second*.
+CLAUDE.md §8.1 class 9 (fabricated data rendered as fact) and §9's "never show a
+success state without checking the actual result", on the first page any visitor
+sees.
+
+Rebuilt as three real probes plus a separated, honestly-labelled constants group:
+
+- `TRANSPORT ENCRYPTION` — `location.protocol === 'https:'`
+- `PLATFORM RUNTIME` — `window.OmegaSB` published by bg.js
+- `SUPABASE CLIENT` — `OmegaSB.get()` resolving to a client object
+
+**Three states, not two**, the same discipline as `omega-password-guard.js`: OK,
+UNAVAILABLE, or UNVERIFIED when the check could not complete. Only a verified
+pass turns green; a probe that never answers stays muted rather than becoming a
+false all-clear *or* a false alarm. `LAST CHECK` is written only by a completed
+probe.
+
+The label deliberately reads **SUPABASE CLIENT / READY**, not "CONNECTED": a
+constructed client proves the vendored bundle parsed against the project URL, it
+does **not** prove the API answered. Claiming otherwise is the same overclaim in
+a smaller font. A live network probe was considered and **rejected as
+unverifiable from here** — `api.pwnedpasswords.com`, `supabase.co` and
+`sydomega.com` are all 403 at this environment's egress proxy, so a CORS
+surprise in production would have pinned the front page to a permanent false
+"UNREACHABLE". Shipping an unverifiable probe on the front door trades one
+wrong claim for another.
+
+Verified in a render: `{"tls":"NOT HTTPS","rt":"LOADED","sb":"READY"}` with zero
+page errors. The TLS row reporting **NOT HTTPS** over the `http://localhost`
+harness is the proof the check is real — a hard-coded panel would have said
+ENCRYPTED.
+
+## The front door rendered all four tabs at once (2026-09-03)
+
+Found by screenshotting `enter.html` to confirm the rebuilt STATUS panel looked
+right — the panel was fine, and the screenshot showed the GATEWAY, STATUS and
+PROTOCOL panes all painted on top of each other.
+
+`bg.js` defines the shared tab primitive as **`.tab-panel`**:
+
+```
+.tab-panel,.tab-panels>.tab-panel{display:none}
+.tab-panel.active,.tab-panel.on,.tab-panel.act{display:block}
+```
+
+`enter.html` wrote **`.tab-pane`** — one letter short. Nothing in the repo
+defines that class (`grep -rn --include=*.css --include=*.js '\.tab-pane\b[^l]'`
+returns nothing), so `display:none` never applied and all four panes rendered
+stacked. The tab bar was decorative: clicking toggled an `active` class that
+changed nothing. `/` rewrites to `/enter`, so this was the first thing every
+visitor saw. Measured in a render:
+
+```
+before   {"total":4,"visible":4}
+after    on load {"visible":["tab-gateway"]}   after status {"visible":["tab-status"]}
+         after protocol {"visible":["tab-protocol"]}   after science {"visible":["tab-science"]}
+```
+
+### Two measurement errors on the way to a one-page answer
+
+**The grep overcounted six-fold.** `grep -l 'class="tab-pane' *.html` reported
+**159 pages** and it looked like a platform-wide failure. `tab-pane` is a prefix
+of `tab-panel`, so the pattern matched every *correct* page too. A render across
+all 159 gave the real split: 131 use `.tab-panel` correctly, 22 use `.tab-pane`
+and define it in their own `<style>`, and **1** — `enter.html` — used it with no
+definition anywhere. §8.4's "a repo-wide grep is a candidate generator, not a
+verdict", in its most expensive form yet.
+
+A first scan also reported "1 broken, 22 OK" while silently skipping 136 pages
+that returned no panes. That number happened to be right, but it was right by
+luck until the skips were classified (131 no-`.tab-pane`-in-DOM, 5 redirected to
+`/dashboard.html`, 0 errored). Getting the right number by luck is not
+measuring.
+
+**The gate written for this bug could not catch it.** `shared-class-check.py`'s
+first version collected "locally defined" classes from the whole page source, so
+`enter.html`'s own `document.querySelectorAll('.tab-pane')` counted as a
+definition and the script reported **0 findings against the broken file**. A
+selector in JavaScript is a *use*, not a definition. Only `<style>` blocks
+define. Corrected, then verified in both directions before shipping: it reports
+`.tab-pane / 1 page(s): enter.html` against `git show HEAD:enter.html`, and 0
+findings across the current 186-page estate. This is exactly §8.4's "verify a 0
+findings result is real" — a gate that cannot catch its own founding bug is
+worse than no gate, because its green is read as evidence.
+
+Scope is deliberately narrow: only class tokens starting with a shared-primitive
+prefix (`tab- kpi card glass bar- chip tbl- btn`) are checked, and class
+attributes containing a quote or `+` are skipped as JavaScript template
+fragments. 0 false positives across the estate; widen only with the same
+before/after evidence.
+
+`node scripts/verify-runtime.js --all`: **PASS (186 pages)** after all of this
+session's page changes.
+
+## The platform was set in microtype: 78% of visible text below 12px (2026-09-03)
+
+Asked to raise the visual design of the whole project to a professional
+standard. The first thing measured, before changing anything, was what the
+platform actually looks like — and the measurement inverted the diagnosis.
+
+### Every screenshot this repo had ever taken showed the wrong typeface
+
+`harness/session.js` stubs `fonts.googleapis.com` with an **empty** stylesheet,
+deliberately, so correctness scans stay offline and deterministic. The cost was
+invisible: no screenshot from this harness has ever shown Cinzel Decorative,
+Rajdhani or Courier Prime. Every one showed the browser's fallback serif/sans.
+
+The check that settles it — repeat this rather than trusting a screenshot —
+renders one string in the brand face and in the generic fallback and compares
+widths. On `dashboard.html` `"Cinzel Decorative",serif` and bare `serif` both
+measured **589px**, and Rajdhani vs sans-serif both **622px**. Identical means
+fallback. `document.fonts.size` was 0.
+
+Un-stubbing was not enough. From `http://localhost:8765` the font FILES never
+arrive in this sandbox — Node fetches the CSS fine, and a page rendered from
+`about:blank` gets real Cinzel (which is why `scripts/build-og-image.js` was
+correct all along), but from a real http origin gstatic does not resolve.
+Injecting the CSS moved `document.fonts.size` to 10 and changed nothing: the
+faces were declared and never downloaded. **`document.fonts.size` counts
+DECLARED faces, not applied ones** — it is not evidence.
+
+`scripts/visual-review.js` fixes it with no page-origin network at all: Node
+downloads the `.ttf` files and base64-inlines them into `@font-face`. Verified:
+`cinzel 613 vs serif 589 | rajdhani 465 vs sans 622`. `session.js` gained an
+opt-in `webfonts` flag rather than being forked; the default is unchanged so
+every existing scan stays offline.
+
+### What the real render then showed
+
+| | |
+|---|---|
+| visible text at <=11px, 6 pages | **2540 / 3261 = 78%** |
+| `dashboard.html` alone | 502 of 599 text nodes |
+| sizes in use | 6px, 6.5px, 7px, 7.5px, 8px, 8.5px, 9px, 9.5px, 10px, 10.5px, 11px |
+
+The interface was not "too dark" — that was the wrong diagnosis, and the palette
+disproves it. Measured against `--void #0A0A0F`: `--ink` 15.82:1, `--gold`
+8.64:1, `--cyan` 12.84:1, `--muted` 5.41:1, `--green` 7.42:1 — every one clears
+WCAG body contrast. Only `--crim` (4.01:1) misses body, and CLAUDE.md already
+records that as a deliberate 3:1 choice. **The problem was size, not contrast**,
+and a palette change would have been a fix for a defect that did not exist.
+
+### Why it could not be fixed from bg.js
+
+There is no type scale to change: `:root` defines three family tokens and a
+spacing scale, and **no size scale at all**. Every size is a hardcoded literal,
+and they are not where a single fix could reach them:
+
+    2,423  page <style> blocks       (172 pages)
+    1,350  inline style= attributes
+      280  root .js injected CSS     (bg.js 34, nav.js 11, 40+ omega-* modules)
+
+bg.js holds 1% of them, and CLAUDE.md section 4 records it as stylesheet **1 of
+53**, so it loses every equal-specificity tie and cannot override the pages from
+above. Sweeping only `<style>` blocks moved 78% to 63% — the rest genuinely was
+elsewhere. All three surfaces are swept by `scripts/type-scale.py`.
+
+**Result: 78% -> 4%.** `dashboard.html` went from 502 elements at <=11px to
+**zero**. The 4% that remains is `em`/`%` sizing that compounds down a nesting
+chain (8.8px, 9.6px, 9.28px on `profile.html`); those need per-rule judgement,
+not a blind sweep, and are deliberately out of scope.
+
+### The tool was wrong twice before it was right
+
+**Not idempotent.** The first map spread 4-11px across 11/12/13px. Its outputs
+were also inputs, so a second `--apply` re-lifted 11px to 13px and kept
+inflating. A sweep over 172 pages that silently grows the type each run is a
+trap, and only running it against its own output exposed it.
+
+**It inverted the hierarchy.** That same map lifted 11px to 13px while leaving
+12px alone, making former-11px text LARGER than former-12px text. One floor —
+everything below 12px becomes 12px, nothing at or above it moves — fixes both:
+inputs and outputs are disjoint, and no pair can swap order.
+
+**And the claim about the typeface was wrong.** The first docstring called the
+52 elements using Cinzel Decorative at <=14px "the single most amateur-looking
+thing in the interface". Reading the selectors corrected it: the 116 such rules
+across 60 pages are overwhelmingly ENTITY NAMES (`.award-name`, `.cer-title`,
+`.ec-name`, `.ad-title`), where a display face is deliberate brand expression —
+and bg.js already uses `--D` correctly, on exactly five title/value rules.
+Sweeping the family would have stripped brand character from 60 pages to fix a
+problem that did not exist. It is reported and never rewritten.
+
+### The floating copilot button sat on top of the mobile navigation
+
+Found by rendering at 390x844 once the type was legible. Measured, offsets from
+the bottom edge:
+
+       0.. 56  x   0..390   #omega-mob            (the tab bar)
+      24.. 76  x 314..366   #cp-btn               <- 32px INTO the tab bar
+      66.. 94  x   0..390   #omega-ticker-strip   <- and 10px into the ticker
+
+Reproduced identically on 6 of 6 pages. bg.js's desktop ladder is scoped to
+`>=761px` and its comment says the mobile ladder "was measured separately at
+375px" — which was true for `#ofb-btn`, `#omega-voice-btn`, `#omega-ded-widget`,
+`#osh-btn` and `#omega-cap-badge`, every one of which carries a
+`@media(max-width:760px)` rule. **`#cp-btn` has none anywhere in the repo**, so
+it kept the `bottom:24px` from its own inline cssText. A mobile ladder now
+places it at the next free rung (262 + 8 = 270), verified clear before use.
+
+The same scan then found a **pre-existing desktop collision**: `#omega-cap-badge`
+overlapping `#omega-ded-widget` by 5px on 6 of 6 pages. The ladder's own comment
+shows the cause — it computed `bottom:215 = 146 + 61 + 8`, but the widget
+measures 146..220, i.e. **74px tall, not 61**. Corrected to 228, and the
+arithmetic in the comment corrected with it.
+
+Both scans re-run after the fix: **0 overlapping pairs at 390px and at 1440px**,
+on all 6 pages. The false-positive pass section 8.4 requires (excluding
+`pointer-events:none` and full-bleed backdrops) was applied before trusting any
+of these numbers.
+
+`scripts/type-scale.py --check` is now a blocking gate in `contract-suite.py`,
+so the floor cannot erode back.
+
+## main arrived red: a visual page merged with no bg.js, while CI was down (2026-09-03)
+
+Rebasing the type-scale work onto a freshly-merged `main` turned 22/22 blocking
+checks into **4 failures**. None were mine — verified by running the gates in a
+clean worktree of `origin/main` with no local changes:
+
+```
+RELEASE GATE: FAILED    ERROR: public page does not load /bg.js: omega-visual-home.html
+REACHABILITY:  FAILED    omega-visual-home.html -- 1 unreachable page(s)
+PRODUCTION:    FAILED    missing /bg.js runtime
+REGISTRY:      FAILED    OMEGA_SKILL_REGISTRY.md out of date
+```
+
+`omega-visual-home.html` (627de839, "Omega visual universe foundation") is a
+genuine new visual gateway — six realm cards into dashboard/cosmos/intelligence/
+media/marketplace/creator. It was merged **without `bg.js`** and **unregistered
+in nav.js**, and it landed in the window when the self-hosted runner was offline,
+so no check ran on it. Exactly the gap the CI-consolidation work exists to close,
+arriving in the one interval where CI could not fire.
+
+Fixed:
+
+* `bg.js` added to the page. Section 9 makes this non-negotiable and two
+  separate gates encode it.
+* Added to **all three** of bg.js's exempt lists — `PUBLIC` (line 254) and BOTH
+  `EX` maps (1288, 1362). This is the charter.html trap: that page rendered
+  blank for every visitor because it sat in one list and not the other. Verified
+  with a **signed-out** context, which is the only way to see it: no redirect,
+  `.omega-main` visible, 6 cards, 0 page errors.
+* Exempted in `reachability-contract.py` with its reason — it is a landing page
+  like `enter`, linking out to the realms and back to `/enter.html` with nothing
+  linking in. Whether it should replace or sit beside `/enter` as the site root
+  is a product decision, not a gate finding, and is left to the owner.
+* Registry census regenerated.
+
+### The same merge shipped two modules nothing loads
+
+`omega-platform-visual-integration.js` and `omega-platform-visual.css` (PR #213,
+"integrate platform visual runtime") are referenced by **nothing** — no HTML, no
+`bg.js` injection. `audit.py` lists the .js among its orphaned modules. The
+"integration" does not run, which is the only reason the platform is unaffected.
+
+Deliberately **not** wired in, because doing so unreviewed would ship three
+conflicts with this repo's own rules:
+
+1. **Divergent duplicate tokens.** It defines its own palette, and two values
+   disagree with canonical: `--omega-ink #f5f1e6` vs `--ink #e9e6dc`, and
+   `--omega-muted #aaa6a0` vs `--muted #8a8676`. Section 8.1 class 8, and the
+   `visual-assets` skill's explicit "use the token, never the hex".
+2. **A vignette at `z-index:2147483000`**, against a highest-in-bg.js of
+   `100001` — roughly 21,000x above every existing layer, painting a permanent
+   dark radial over the entire interface including the genesis overlay.
+3. **It sets `body{background-image}`**, a surface CLAUDE.md section 4 records as
+   owned by `omega-backdrop.js` with `!important` ("tints to the member's
+   element and page; a feature, don't fight it").
+
+Enabling it changes the look of all 186 pages, so it is reported for the owner
+rather than switched on by a session that did not author it.
+
+---
+
+## Session 2026-09-03 (continued) — the interface stops asserting things it does not know
+
+### `UNKNOWN_CAPABILITY` was printed to members on 163 of 187 pages
+
+Found by looking at a real render rather than at the code: a screenshot of
+`social.html` carried a badge at the right edge reading **"UNKNOWN_CAPABILITY /
+PLATFORM · SOVEREIGN"**.
+
+`omega-capability.js:62` (before the fix) defaulted every unregistered page to:
+
+```js
+cap: 'UNKNOWN_CAPABILITY', domain: 'Platform', owner: 'Sovereign',
+slo: {p95: 1000, avail: 99.0}
+```
+
+and `injectCapabilityBadge()` rendered all of it, plus a `title` tooltip
+asserting `SLO: p95<1000ms | Avail: 99.0%`. Measured:
+
+```
+CAP_DEFS entries: 24
+pages: 187
+pages with NO definition -> UNKNOWN_CAPABILITY: 163
+```
+
+So the majority of the estate told the member which domain owned the page, which
+of the twelve agents was accountable for it, and what availability the platform
+committed to — none of it declared anywhere. That is section 8.1 class 9,
+fabricated data rendered as fact, and it is the same shape as `hercules.html`'s
+`Math.random()*100` and `ad-network.html`'s revenue figures.
+
+Fixed by making "undeclared" an honest state rather than a placeholder:
+
+* `declared:false` and `cap/domain/owner/slo: null` when no `CAP_DEFS` entry and
+  no explicit override supplied a capability name. `cap.declared = !!cap.cap`,
+  so the flag can never disagree with the data.
+* `injectCapabilityBadge()` returns early unless `cap.declared` — an undeclared
+  page shows nothing.
+* `checkSLO()` returns `null` unless `cap.declared`, so no `capability:slo_breach`
+  event is ever published against an invented target.
+* The telemetry event now carries `declared` and `page`, so the fact that most
+  pages are undeclared is *measurable* instead of hidden behind a placeholder.
+
+Verified with a real before/after render, the "before" pinned via `gitShow` so
+it ran the actual old module (section 8.4's rule — a `git stash` "before" runs
+the fixed code once the change is committed):
+
+```
+BEFORE  dashboard.html  COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN
+        social.html     UNKNOWN_CAPABILITY / PLATFORM · SOVEREIGN
+        vault.html      TREASURY_RESERVE / FINANCE · MERCHANT
+        habits.html     UNKNOWN_CAPABILITY / PLATFORM · SOVEREIGN
+AFTER   dashboard.html  COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN
+        social.html     (no badge)
+        vault.html      TREASURY_RESERVE / FINANCE · MERCHANT
+        habits.html     (no badge)
+```
+
+`window.OmegaCapability` has no consumers anywhere in the repo (grepped: one
+hit, its own definition), so the blast radius is exactly the badge, the event
+and the telemetry payload.
+
+### The keyboard-shortcut hint was shown to devices with no keyboard
+
+`omega-keyboard.js` popped "PRESS ? FOR KEYBOARD SHORTCUTS" once per session on
+every page — including phones, where there is no `?` to press and where it
+landed in the middle of a bottom chrome stack that is already short of room
+(nav bar 66px, controls dock, copilot button).
+
+Gated on `(hover:hover) and (pointer:fine)` — the media query for "there is a
+real pointer", which tracks having a real keyboard on every current browser. The
+shortcuts themselves stay bound, so an attached keyboard still works; only the
+unusable prompt is withheld. Measured:
+
+```
+BEFORE 390 mobile    pointer:coarse hover:none  ->  PRESS ? FOR KEYBOARD SHORTCUTS
+BEFORE 1440 desktop  pointer:fine   hover:hover ->  PRESS ? FOR KEYBOARD SHORTCUTS
+AFTER  390 mobile    pointer:coarse hover:none  ->  (no hint)
+AFTER  1440 desktop  pointer:fine   hover:hover ->  PRESS ? FOR KEYBOARD SHORTCUTS
+```
+
+### 92 glyph sequences rendered as colour emoji — the zodiac signs among them
+
+The brand is one palette on near-black. A colour emoji ignores it completely:
+the font supplies its own bitmap, so `color:var(--gold)` does nothing and the
+glyph lands as a saturated multicolour sticker inside monochrome typography.
+
+**A grep for the emoji planes is not the measurement.** It over-reports (✓ ★ ✕
+☰ ☱ ☲ ✦ ⚔ are typographic marks that belong here) and under-reports (the zodiac
+signs are ordinary BMP codepoints). The measurement that decided it: draw each
+candidate white-on-black to a canvas in the harness Chromium and read the pixels
+back — any channel spread means the font supplied a colour glyph.
+
+That measurement over every symbol in every client-shipped file returned **92
+colour sequences of 226 tested**, and two of them were not decoration:
+
+* **U+2648..U+2653, the twelve zodiac signs** — the platform's own sign system,
+  named in `omega-agents.json` and drawn on `agents`, `cosmos`, `horoscope`,
+  `houses`, `elements`. Their *default* Unicode presentation is emoji, so every
+  one of them had always shipped as a colour sticker rather than as gold type.
+* `⚡ ⚔ ❄ ❤ ☀ ☁ ⛈ 🌫` carried **U+FE0F (VS16)**, the selector that explicitly
+  *asks* for the colour form.
+
+The same measurement proved the fix: with **U+FE0E (VS15)** appended, all of
+`⏳ ☀ ♈..♓ ⚔ ⚡ ⛅ ⛈ ✍ ✨ ❄ ❤` came back monochrome. The astral plane
+(U+1F300..U+1FAFF) has no text form at all, so those 70 had to be replaced.
+
+Applied in three passes over every root `.html`/`.js`/`.json` (35 files
+rewritten):
+
+1. Astral-plane pictographs → a curated brand mark, one per glyph, each verified
+   monochrome and non-blank in the same canvas measurement. The map is
+   thematic, not arbitrary: `🔥→△` and `🌊→▽` are the fire and water triangles
+   the element system already uses, `🌑..🌘 → ○ ◔ ◑ ◕ ● ◕ ◐ ◔` is the moon
+   filling, `📖→▤ 📚→▥ 📜→▧ 📓→▦ 📋→▨ 📊→▩` reads as a page-density series,
+   `🏆→♔ 👑→♕ 🔱→♆ 🔬→⚗ 🔐→⚿ 🏠→⌂`. Within-file collisions were checked
+   programmatically and resolved (`🌦→⌇` away from `🌧→☂`, `🌀→⊙` away from
+   `🔮→⌾`).
+2. Every remaining U+FE0F → U+FE0E.
+3. Every bare BMP codepoint with `Emoji_Presentation=Yes` → same character plus
+   U+FE0E. The character is *pinned*, never removed, so the zodiac signs keep
+   their meaning and gain the brand's colour.
+
+Re-measured after the sweep: **175 distinct glyph sequences remain across the
+whole shipped surface and 0 render in colour.**
+
+Gated by `scripts/brand-glyph-check.py` (blocking, gate 15 of the contract
+suite). Its "0 findings" was verified real per section 8.4 — run against the
+pre-sweep tree from `git archive HEAD` it reports **277 occurrences in 35 files
+and exits 1**. First implementation looped per character and cost 9.3s across
+357 files, more than every other static gate combined on the serial runner; a
+compiled character class brought it to **0.097s**.
+
+Not covered, deliberately: four `supabase/*.sql` files carry an emoji inside a
+SQL comment. They are not client-shipped, and editing an already-applied
+migration is a worse idea than the comment.
+
+### The 12px type floor was enforced on three surfaces out of five
+
+Found by reading the glyph-sweep diff, not by the gate: `sigil.html`'s "LOCALLY
+SEALED — PENDING LEDGER SYNC" notice sits at **6px**, and
+`scripts/type-scale.py --check` reported clean. The floor was real; the sweep's
+coverage was not.
+
+`process()` looked at `<style>` blocks and quoted `style="…"` attributes in
+pages, plus whole root `.js` files. Two surfaces were invisible to it:
+
+```
+33 declarations, 9 pages   font-size inside a page's own <script> block
+                           (control-plane 20, world-shell 4, chatbot 2, …)
+                           sizes 6,7,8,9,10,11px
+
+28 declarations, 5 pages   font-size inside an UNQUOTED style= attribute
+                           (ad-network 13, creator 6, project-studio 4, …)
+                           sizes 7,8,9,10px
+```
+
+The second is the subtler one. Several pages ship minified with no attribute
+quotes at all — `style=font-family:var(--M);font-size:7px;color:var(--muted)` —
+and the quoted `STYLE_ATTR` pattern cannot match that. An unquoted attribute
+value ends at whitespace or `>`, so `STYLE_ATTR_UNQ` matches exactly that shape
+and the rewritten attribute stays unquoted.
+
+Both surfaces are now swept, with the same guarantee as the root-`.js` pass:
+only a bare `px` literal is rewritten, so a computed size (`'font-size:'+n+'px'`)
+has no digits to match and is skipped, and only the number changes so the
+surrounding JS or markup syntax cannot move. 61 declarations rescaled, all of
+them *up* to the 12px floor.
+
+Verified: `--check` clean and idempotent (a second `--apply` rescales 0);
+`scripts/check-inline-js.py` still parses every inline block; the diff on
+`ad-network.html` shows the attributes still unquoted with only the numeral
+changed.
+
+---
+
+## Session 2026-09-03 (continued) — the signature diagram, and the module it needed that had never loaded
+
+Driven by five reference boards the owner supplied. Their strongest shared
+motif is a ring of emblems orbiting a central Ω — the platform's own twelve
+agents drawn as a constellation rather than a list. Translating it meant
+finding out what this repo already had, and one answer was a surprise.
+
+### `omega-emblems.js` had never loaded on any page — two modules shared one guard
+
+`bg.js` injects each module behind a `data-omega-*` attribute guard so nothing
+double-loads. Two different modules were using the same attribute:
+
+```
+bg.js:90   omega-emblems-catalog.js   guard: data-omega-emblems
+bg.js:611  omega-emblems.js           guard: data-omega-emblems   <-- same
+```
+
+Line 90 runs first, so by the time line 611 asks
+`document.querySelector('script[data-omega-emblems]')` the answer is always
+yes, and `omega-emblems.js` — the 12 living zodiac marks, twin counter-rotating
+rings, element-coloured glyph — was never injected. Confirmed in a render
+before touching anything, on three pages:
+
+```
+   emblem/sigil/ring scripts in DOM: omega-emblems-catalog.js,
+     omega-emblem-integration.js, emblem.js, omega-emblem-panel.js,
+     omega-page-emblem.js, omega-ring.js, omega-sigil-gen.js
+   holding data-omega-emblems  : omega-emblems-catalog.js
+   OmegaEmblems=object   <- the CATALOG's export (plural)
+   OmegaEmblem =undefined <- this module's export (singular)
+```
+
+The near-identical export names are why the collision read as working:
+`window.OmegaEmblems` existed, so a spot check found "the emblem module" and
+moved on.
+
+**The honest scope, which is smaller than it first looked.** A repo-wide grep
+for real mounts — `data-omega-emblem="<Sign>"` and `data-omega-sigil` — returns
+**zero** across all 187 pages. So nothing visible was broken; this was a latent
+guard collision plus 7 KB of finished brand artwork that nothing had ever
+asked for. `audit.py` cannot see it either: the injection *exists* in bg.js
+source, so the module is not orphaned — only the runtime knows it never ran.
+
+Fixed by giving it its own guard, `data-omega-emblem-living`. **The rule the
+collision teaches: a guard attribute is the module's identity, not the feature
+area's.** Two modules in the same area must never share one.
+
+Two follow-ups this forced, because the module is now live on 187 pages for the
+first time:
+
+* **Its MutationObserver was unthrottled** — a whole-document
+  `querySelectorAll('[data-omega-emblem]')` on *every* mutation. Free while the
+  module was unreachable; real work now, since the activity ticker, the
+  dedication chronometer and the chat panes all mutate the DOM on a timer.
+  Coalesced to one scan per animation frame.
+* **`color(sign)` added to its export.** Anything composing these marks needs
+  the same colour that painted the mark it wraps. Reading
+  `omega-sigil-gen.js`'s `ELEM_PALETTES` instead would put two different Fires
+  (`#E86A3A` here, `#FF6B35` there — the drift the `visual-assets` skill
+  records) on one node. This keeps a composed mark internally consistent; it
+  does **not** resolve the underlying drift, which is still open.
+
+### `omega-constellation.js` — the ring-of-emblems diagram
+
+`<div data-omega-constellation="agents">` renders the twelve agents from the
+real `/omega-agents.json` — the same file `agents.html` already consumes, with
+the same fallback posture — as marks on an orbit around a central Ω, joined by
+hairline spokes. Every node is a real `<a>`: the emblem is the door.
+
+Mounted on `agents.html`'s Council tab, above the existing dossier grid.
+**Not** mounted on `cosmos.html`, which already has a working radial agent
+wheel — measured before deciding, 50,616 painted pixels in `#agent-wheel`'s
+1040x1040 buffer. Two agent wheels on one page would have been the duplication
+this repo keeps having to undo.
+
+Three construction decisions, each avoiding a bug class already shipped here:
+
+1. **Nodes are HTML; only spokes and orbit are SVG.** An SVG `<text>` label
+   scales with its viewBox, so markup reading 15px on a desktop renders about
+   7px on a phone — under the 12px floor, and *invisible* to
+   `scripts/type-scale.py`, which matches `font-size:Npx` declarations while an
+   SVG font-size attribute is a bare number. HTML labels are real text at a
+   real 12px (verified in the render), selectable, translatable, and each node
+   is a genuine link with its own focus ring.
+2. **It draws no emblem of its own** — it emits `data-omega-emblem="Aries"` and
+   lets the owning module fill it. That module scans on boot *and* observes, so
+   load order does not matter: no polling, no ordering contract, no second copy
+   of a canonical table (§8.1 class 8).
+3. **No canvas, so no zero-sized buffer.** Geometry is percentage-positioned in
+   an `aspect-ratio:1` box; nothing reads a rendered dimension, so §8.1 class
+   3 — a canvas measured at `DOMContentLoaded` while the approval guard still
+   hides the page — cannot apply.
+
+### The geometry was wrong twice, and only a render said so
+
+**First version: every one of the 12 nodes overlapped its neighbour.** A node
+was `width:23%` on an orbit of radius `.345W`; twelve nodes on that circle get
+`2*pi*R/12 = .181W` of arc each, so a `.26W` node overlaps at *every* width. On
+an `<a>` that means the wrong link catches a click. Measured 12/12 overlapping
+pairs at 390px.
+
+Widening the diagram and narrowing the node to 17% cut it to 4 — and **arc was
+the wrong measure**. Overlap is tested on axis-aligned boxes, so what matters
+is the centre-to-centre delta between adjacent nodes, `dx = dy = R*W*(cos30 -
+cos60)` = 108px at W=860. A 146x125 node overlapped by exactly `146-108` by
+`125-108` — the measured `38x16px`, at the four shoulder positions.
+
+Both dimensions had to come under that delta, which fixed three things at once:
+the box hugs its content (`width:max-content`, capped at 17%) instead of taking
+a fixed share, the mark became a fixed 64px rather than a percentage of a box
+that no longer has a fixed width, and W rose to 900 so the delta is 113.6px
+against a node measured at 90x105. **Result: 0 overlapping pairs, every node
+hit-testable, no sub line clipped** (widest 137px box against 133px of ink).
+
+**A scanner false positive on the way.** The same probe reported 3 of 12 nodes
+"not hit-testable at their own centre" — `AUDITOR`, `PROXY`, `ORACLE`, all with
+`elementFromPoint` returning `null`. Nothing covered them: their centres were
+at y 962–1002 in a 1000px viewport. `elementFromPoint` returns null *outside*
+the viewport, so a node below the fold reads as covered. The probe now skips
+off-viewport centres. §8.4's rule again — a scanner needs its own
+false-positive pass before its number means anything.
+
+Verified at 390px mobile, 390px with `prefers-reduced-motion: reduce`
+(`animation-name: none`, every mark still drawn) and 1024px: 12 nodes, 12 marks
+filled, labels 12px, 0 page-level horizontal scroll — the wrap scrolls inside
+itself, which is what `verify-runtime.js` asserts.
+
+### Correction: "nothing visible was broken" by the emblem guard collision was wrong
+
+The entry above claimed the `data-omega-emblems` guard collision had no visible
+effect, on this evidence: a repo-wide grep for `data-omega-emblem="<Sign>"` and
+`data-omega-sigil` markup mounts returns zero across 187 pages.
+
+**The grep was the wrong instrument.** Pages do not mount these marks through
+the data attribute — they call the module's JS API directly, and six files do:
+
+```
+cosmos.html            7 call sites
+omega-emblem-panel.js  7
+omega-emblem-integration.js  5
+honors.html            4
+verify-deployment.html 4
+omega-sign-codex.js    3
+elements.html          3
+omega-menu.js          2
+family.html            2
+```
+
+Each follows the same shape — try `window.OmegaEmblem`, else poll for it:
+
+```js
+function fillRing(el, glyph, col, locked){
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph,col,{locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){ tries++;
+    if(window.OmegaEmblem){ ...; clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }   // gives up after 3s, leaves it EMPTY
+  },150);
+}
+```
+
+The poll is bounded (20 tries at 150ms), so this was not the never-terminating
+poll of section 8.1 class 4b — but after three seconds it cleared the interval
+and left the container empty. Every one of those call sites drew nothing.
+
+Measured by A/B, isolating exactly one variable: the current `bg.js` with the
+colliding guard string put back, against the current `bg.js`. Pinning an older
+commit would have dragged in main's other changes.
+
+```
+BEFORE (guard collision)   AFTER (own guard)
+cosmos.html      0 marks   ->  94
+agents.html      0         ->  82
+honors.html      0         ->  70
+elements.html    0         ->  70
+family.html      0         ->  70
+dashboard.html   0         ->  70
+profile.html     0         ->  70
+                 0         -> 526 across 7 pages
+```
+
+**And a second correction, in the other direction — 526 would also mislead.**
+A mark in the DOM is not a mark on screen. Filtering to marks with a real
+laid-out size returns **0 painted on every page at rest**, including
+`agents.html`, where a screenshot plainly shows twelve. The reason, measured
+rather than assumed by walking up to the ancestor that hides them:
+
+```
+agents.html at rest       hidden by DIV#tab-council.tab-panel {display:none}
+agents.html COUNCIL open  12 painted
+cosmos.html at rest       hidden by DIV#tab-gates.tab-panel   {display:none}
+honors.html at rest       hidden by DIV#om-ov                 {display:none}
+```
+
+So the accurate statement is narrower than either number on its own: **the fix
+restores emblem rendering that was entirely dead across six files, on surfaces
+a member reaches by opening a tab or a panel. It changes nothing about what any
+page shows on first paint.**
+
+Both errors are the same one twice: section 8.4 says a repo-wide grep is a
+candidate generator, not a verdict, and that a scanner needs its own
+false-positive pass before its number means anything. The first claim trusted a
+grep; the second trusted a DOM count. Only the third measurement — computed
+size, then the hiding ancestor — was worth reporting.
+
+### 16 pages carried no emblem of their own — the artwork existed, the mount did not
+
+A survey of all 187 pages at rest (1440x900) measured what each actually shows
+before any interaction:
+
+```
+living zodiac emblems visible at rest : 0
+[data-page-emblem] visible            : 158   (29 pages without)
+pages with NO svg and NO canvas above the fold: 0
+```
+
+**The last line killed the change that survey was commissioned to justify.** The
+plan had been to add graphics to page resting states, on the impression that the
+estate was mostly type. Zero pages lack a graphic above the fold. That work was
+unnecessary and would have shipped on a hunch.
+
+The 29 without a visible page emblem split into two causes, and only one is a
+gap. Measured per page by walking up to the ancestor doing the hiding:
+
+* **7 are correct as they stand** — `approvals`, `family`, `honors`,
+  `interface-omni`, `journal`, `media`, `profile`. Every one has its mount, the
+  canvas is filled, the CSS size is the normal 132x132; each simply sits on a
+  view that is not the default (`#j-main`, `#mtab-record`, `#tab-matrix`,
+  `#mtab-bloodline`, `#mtab-science`, `#main`). `approvals` is hidden by
+  `#app.shell` — the approval guard itself, on the owner-gated page
+  `verify-runtime.js` already reports as expected. Nothing to fix; a second
+  measurement stopping a second unnecessary change.
+* **22 have no `[data-page-emblem]` in markup at all.** Six of those are public
+  or internal-tool pages where no member-facing mark belongs — `404`, `enter`,
+  `offline`, `reset`, `verify-deployment`, `verify-modules`. The remaining
+  **16 are real content pages that simply never mounted one.**
+
+And the mark was already designed for almost all of them: `omega-page-emblem.js`
+carries **181 per-page configs**, and 14 of the 16 were already in that map with
+their own fold count, axis colour and glyph — `ad-network` U+25EC, `hercules`
+U+2694, `graphify` U+2B21, `council` U+2630, and so on. The artwork existed and
+nothing asked for it. A one-line mount per page turns each on.
+
+`gateway` and `omega-visual-home` had no config and would have fallen back to a
+generic Omega, so they got real ones: a gate mark (U+26E9) and a frame mark
+(U+2394), both checked against the 87 glyphs already in use so no page borrows
+another's character, and both rendered white-on-black in the harness first —
+they come back monochrome, so `scripts/brand-glyph-check.py` still passes.
+
+Placement anchors on `</main>`, which every one of the 16 has exactly once.
+Verified by **reading the canvas pixels back**, not by trusting a box size — a
+filled-looking element proves nothing, as the 7 above demonstrate:
+
+```
+ok  ad-network        334x166  ink 8062   "12-FOLD ..."
+ok  graph-timeline    299x161  ink 6520   "9-FOLD ..."
+ok  world-shell      1360x166  ink 6269   "12-FOLD ..."
+...
+16/16 pages now paint their own emblem at rest
+```
+
+Estate total moves 158 -> 174 of 187. The remaining 13 are the 7 tab-hosted
+marks and the 6 public/utility pages, both correct as they are.
+
+### Every section heading now carries its page's emblem — and why the glyph would not paint
+
+614 `.sechead` elements across 109 pages were text-only. Each now shows the
+glyph from that page's own canon config, inside a slowly-rotating dashed ring,
+in that page's axis colour: gold `⌘` on dashboard, green `◆` on vault, gold
+`⚖` on compliance, cyan `⍛` on cosmos. One rule in `bg.js`, no per-page markup.
+
+`--pg-glyph` and `--pg-col` are published on `<html>` by `omega-page-emblem.js`
+— the module that owns the 183-entry `PAGES` table — so the stylesheet reads
+the canonical values rather than carrying a second copy (§8.1 class 8).
+`publishVars()` runs regardless of whether the page mounts
+`[data-page-emblem]`, because 13 pages legitimately have no mount and their
+headings still want the mark.
+
+**The mark rendered as an empty ring for four attempts.** The box drew — right
+size, right place, dashed border — and the glyph inside it never did.
+
+What each attempt ruled out, in order:
+
+* A background on the pseudo proved the box existed, 17x17, exactly inside the
+  ring. So placement was right and only text was missing.
+* The same declarations on a plain `div` rendered the glyph fine. So the rule
+  was not wrong in isolation.
+* Collapsing two pseudos into one changed nothing, which killed the theory that
+  generating two absolutely-positioned pseudos on a `display:flex` parent was
+  at fault.
+* `getComputedStyle(h,'::before')` reported everything correct: `content:"⚖"`,
+  `display:block`, `18x18`, `borderTopStyle:dashed`, gold, 11px, and exactly
+  **one** rule in the whole cascade targeting the selector.
+
+**The test that found it: forcing `content:"X" !important`. Still nothing.** A
+pseudo that cannot paint a plain ASCII letter is not a glyph problem, a font
+problem, or a `var()` problem.
+
+Root cause, `bg.js:1290`:
+
+```js
+[].slice.call(document.querySelectorAll('.sechead')).forEach(function(el){
+  if(el.children.length===0&&(el.textContent||'').trim().length<48)
+    el.classList.add('ofx-sheen');
+});
+```
+
+`.ofx-sheen` fills heading text with a gradient via
+`background-clip:text` + **`-webkit-text-fill-color:transparent`**. That
+property **inherits into pseudo-elements**. Borders are not text fill, so the
+ring painted; the glyph was filled with transparent. Fixed with an explicit
+`-webkit-text-fill-color:var(--pg-col)` on the pseudo.
+
+**Standing hazard worth carrying forward: any `::before`/`::after` text on an
+element that receives `.ofx-sheen` is invisible unless it sets its own
+`-webkit-text-fill-color`.** The symptom — box paints, text does not — looks
+nothing like a text-fill problem.
+
+Two further constraints, both measured rather than assumed:
+
+* **Absolute positioning is required, not stylistic.** `.sechead` is
+  `display:flex` with `justify-content:space-between`; a static pseudo becomes
+  a flex item and springs each heading's own right-hand content to the far
+  edge. Out of flow it cannot disturb anything — A/B on `vault.html`, pinning
+  `bg.js` without the rule, measured first-content offset delta **0 across all
+  10 headings**. `position:relative` was already set by `omega-content.js`.
+* **90s rotation, not the 34s/42s of `omega-emblems.js`'s rings.** 614 of these
+  can share one page; anything quicker reads as a swarm. The keyframes repeat
+  the transform rather than relying on the declared one, per §4.2's
+  animation-beats-declaration trap.
+
+Two process notes from the same work, both already in §8.4 and both hit anyway:
+`bg.js`'s CSS section headers use real box-drawing characters, so a `replace()`
+written against `─` matched nothing; and inserting CSS into that
+single-quoted JS string requires escaping backslashes, then apostrophes, then
+newlines — getting the order wrong broke the file, `node --check` caught it,
+and it was restored from git rather than patched over.
+
+### Card titles get a subordinate mark, and the runner doc gets the case that blocked it
+
+**393 `.card-title` elements across 82 pages** were text-only, the same shape
+the 614 section headings had. `.card-title` is defined once, in `bg.js`, at
+`:where()` specificity, and `.card-title::before` was free — checked at runtime
+by enumerating every stylesheet rule whose selector matches, not by grep.
+
+**The design decision was to NOT repeat the section emblem.** Putting the
+page's ringed glyph on card titles too would show twenty identical rings on a
+twenty-card page: that is noise, not hierarchy, and it would spend the
+readability the type-floor work bought. Instead a card title gets a 7px open
+diamond in the page's axis colour — the ring marks a section, the diamond marks
+an item inside it. Two marks, one system.
+
+It is **still at rest** and makes a half turn when its card is hovered. 614
+rings already turn platform-wide at 90s; 393 more turning marks makes a page
+swarm. Motion as a reward for attention costs nothing when nobody is pointing.
+
+`content` is `""` — an empty box, not text — so unlike the `.sechead` mark this
+one is structurally immune to the inherited `-webkit-text-fill-color` from
+`.ofx-sheen` that cost four wrong theories on the previous change.
+
+Verified by A/B, pinning `bg.js` with the block removed against the real file:
+
+```
+                 BEFORE                           AFTER
+ops.html         557x193 557x193 557x182 557x182  identical
+fasting.html     813x218 813x458                  identical
+expenses.html    778x298 778x160                  identical
+```
+
+**A false negative in the probe itself, worth recording.** The first version
+measured where each title's TEXT started, via
+`range.selectNodeContents(el).getBoundingClientRect().left - el.rect.left`, and
+returned **0 both with and without** a `padding-left:16px` that
+`getComputedStyle` confirmed was applied. A Range over an element's contents
+does not reliably report the content box's left edge. Had the mark actually
+shifted a layout, that probe would have said it did not. Card box size is the
+metric that works.
+
+The first A/B run also reported `0x0` for every card on `agents.html` — those
+cards live in the SCIENCE tab, `display:none` at rest, the same trap that
+produced the earlier seven false positives. Re-run against pages whose cards
+are visible without interaction.
+
+### `docs/CI_RUNNER_RECOVERY.md` had no entry for the case that actually blocked recovery
+
+Three consecutive attempts to install the runner service failed identically:
+
+```
+Cannot configure the runner because it is already configured.
+To reconfigure the runner, run 'config.cmd remove' or './config.sh remove' first.
+```
+
+Two causes, neither documented:
+
+1. **`--replace` does not clear a local config.** It replaces the registration
+   *GitHub* holds under that name. `C:\actions-runner` already had
+   `.runner`/`.credentials` from an earlier attempt, and `config.cmd` refuses on
+   those **before it ever reads the token**. `.\config.cmd remove --local`
+   clears them offline, without a token — which is what an orphaned
+   registration needs.
+2. **The literal placeholder was pasted as the token**, in every attempt. The
+   command is long enough that `PASTE_TOKEN_HERE` reads as part of it. The doc
+   now puts the token in a `$T` variable first, so there is exactly one
+   substitution and it sits on its own line.
+
+Also recorded: `Get-Service actions.runner.*` printing **nothing at all** means
+no service was ever created, so the run stopped at the config step. A service
+that exists but is not running prints a row reading `Stopped`. Those two states
+look identical if you are only checking whether jobs move.
+
+## The active tab was a 3px flat border on 519 tabs across 128 pages (2026-09-03)
+
+`.tab-btn` is the last large text-only repeated surface in the shared design
+system, after section headings (614) and card titles (393). Measured, not
+estimated:
+
+```
+tab-btn:    519 uses / 128 files
+card-title: 403 uses /  83 files
+sechead:    614 uses / 109 files
+kpi-label:  165 uses /  34 files
+chip:        49 uses /  16 files
+```
+
+Its entire active-state signal was `border-bottom-color:var(--gold)` plus a
+gold text colour — the same for every page, with no motion and no relationship
+to the page it belongs to.
+
+**`::after` was free, and that was checked properly.** 40 pages carry their own
+`.tab-btn` CSS rules, and a page `<style>` wins over `bg.js` (stylesheet 1 of
+53) at equal specificity — so a rule written here for a property those 40 pages
+also set would be dead code that looks correct in the diff. The check was a
+parse of every `<style>` block in every `.html` file for a selector containing
+`.tab-btn`, not a grep over whole files (which would have counted the far more
+common `querySelectorAll('.tab-btn')` in page JS as a CSS rule):
+
+```
+pages with a page-local .tab-btn CSS rule: 40
+pages with .tab-btn::before or ::after:     0
+```
+
+The same pass answered the one prerequisite the block has — it needs
+`position:relative` on `.tab-btn`, which `bg.js` does not set. Two pages
+already establish it themselves (`approvals.html` for a `.tab-btn .badge`
+absolute badge, `profile.html` for `.tab-btn.access-tab`), both to the same
+value, so nothing conflicts.
+
+**A positioned box, not a border.** `bottom:-3px` resolves against the padding
+box, which places a 3px-high absolutely positioned bar exactly over the 3px
+border it replaces — so no page-local padding, border width or background can
+displace it, and it costs no layout, because absolutely positioned descendants
+are out of flow.
+
+The beam grows out of the tab centre when the tab becomes active, is filled
+with a gradient in the page's own axis colour (`--pg-col`, published to the
+document element by `omega-page-emblem.js` for 183 pages) with `--solar` as its
+bright core, and previews at a quarter width on hover — the same
+reward-for-attention rule the card marks use, and the reason 519 more
+permanently-animating marks were not added to a platform that already turns 614
+section rings.
+
+Verified by A/B, pinning `bg.js` with the block removed against the real file:
+
+```
+                BEFORE tab boxes                  AFTER
+academy.html    127x41 101x41 136x41 119x41       identical  (barH 42 -> 42)
+wealth.html     110x41 153x41 145x41 119x41       identical
+library.html    127x41 127x41 101x41 119x41       identical
+command.html    145x41 127x41 110x41 119x41       identical
+cosmos.html     110x76 110x76 101x76 119x76       identical  (barH 77 -> 77)
+habits.html     101x41 145x41 101x41 119x41       identical
+```
+
+`scrollsX` was `false` on all six before and after. Computed `::after` on the
+active tab went from `position:static / background:none` (i.e. the rule did not
+exist) to:
+
+```
+academy  h=3px op=1 bottom=-3px left=0 right=0  gradient rgb(0,229,255)   shadow rgb(0,229,255)
+wealth   h=3px op=1 bottom=-3px left=0 right=0  gradient rgb(201,168,76)  shadow rgb(201,168,76)
+```
+
+— i.e. the axis colour really does differ per page rather than being gold
+everywhere. On an idle tab it reads `op=0` with `left`/`right` collapsed to the
+tab's centre (`50.53px` each on academy), and hovering that same idle tab moves
+it to `op=0.55 left=38.41px right=38.41px`. Screenshots at 4x confirm the beam
+paints at rest on the active tab only, and that the hover preview appears under
+the pointed-at tab.
+
+
+## `.omg-ring` had shipped in bg.js and no page had ever used it (2026-09-03)
+
+The Ω-HORIZON layer added a conic progress gauge — `@property --omg-p` so the
+sweep interpolates instead of snapping, an inner disc via `::after`, a `.cyan`
+variant. Adoption, measured:
+
+```
+$ grep -oh 'omg-ring' *.html | wc -l
+0
+```
+
+Shipped CSS reaching every page, drawn by none of them. Meanwhile the reference
+boards for this platform's design language lead with ring gauges, and 30 pages
+already compute a real percentage and assign it to a bar width:
+
+```
+$ grep -lE "style\.width\s*=[^;]*\+\s*['\"]%" *.html | wc -l
+30
+```
+
+**Two of those 30 were converted, not all thirty.** The rest were checked and
+rejected on the merits rather than skipped for time: `missions.html`'s day strip
+is a compact 6px bar inside a 12px-padded box, where a 150px ring would be
+heavier than the thing it measures; `ascension.html`'s three axis bars sit in a
+hidden tab beside a canvas that already draws the same three values.
+`levels.html` and `phases.html` were the two hero blocks — a headline
+"PROGRESS TO APEX" / "% to Apex" that was a bar, a label and a number in a row.
+
+Both now read as one gauge with the number inside it, which is also less text:
+`phases.html`'s readout went from the sentence `19.2% to Apex` to `19.2%` over a
+static `TO APEX` label.
+
+The JS changed from setting a width to setting the custom property, so the value
+still comes from the same computation and the same `setTimeout` that let the
+old bar animate:
+
+```js
+var ring=document.getElementById('my-auth-ring');
+if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
+```
+
+Verified in a render with the harness Supabase stub, which produces a real
+non-zero value rather than an empty gauge:
+
+```
+levels.html  my-auth-ring   184x184  --p 19.2%  conic-gradient(rgb(201,168,76) 19.2%, ...)  "19.2% AUTHORITY"
+phases.html  my-phase-ring  172x172  --p 19.2%  conic-gradient(rgb(0,229,255) 19.2%, ...)   "19.2% TO APEX"
+```
+
+no page errors, no horizontal scroll on either.
+
+**Both rings live in a `tab-my` panel that is `display:none` at rest**, so the
+first probe reported `0x0 / visible:false` — the same hidden-tab trap that has
+now produced false readings three times in this repo. The probe has to click
+`.tab-btn[data-tab="my"]` first. That is pre-existing page structure, not
+something this change introduced: the bar was equally hidden.
+
+Screenshots also needed the fixed chrome hidden — the keyboard-shortcut hint and
+the language bar are `position:fixed` and composite over any clip taken at their
+viewport position, which made the first shot look like the ring was broken.
+
+**One real defect found while looking at the result:** `.omg-ring.cyan` set
+`--ring` but not the unfilled track, which stayed hard-coded
+`rgba(201,168,76,.12)` — a gold remainder behind a cyan arc. The track is now a
+`--track` custom property that the variant overrides, confirmed in the render:
+`conic-gradient(rgb(0,229,255) 19.2%, rgba(0,229,255,0.12) 0deg)`. Nothing else
+used the class, so this could not regress an existing adopter.
+
+
+## 23 pages rendered a third narrower than they should, because of where one div sat (2026-09-03)
+
+`[data-page-emblem]` is mounted by 181 of 187 pages. A grep says that and stops
+there; a render says which of them actually work. Measuring the mount's box
+against the height of its own content, across all 181:
+
+```
+mounting pages measured: 181
+correctly sized:         158
+node absent at runtime:    0
+STRETCHED:                23
+  matrix.html        box=334x2801  content=161  parent=<div class="shell"> flex
+  cosmos.html        box=334x1707  content=161  parent=<div class="shell"> flex
+  clarity.html       box=299x1627  content=161  parent=<div class="shell"> flex
+  achievements.html  box=334x1441  content=161  parent=<div class="shell"> flex
+  ... 19 more, every one parented to <div class="shell">
+```
+
+**The cause is a single character of placement.** These pages write the mount
+after `</main>` and before the `.shell` close:
+
+```html
+</main>
+<div data-page-emblem="clarity" style="margin:20px auto 0"></div>
+</div>
+```
+
+`.shell` is `display:flex`, so that div is not "below the content" — it is a
+**third flex column**, beside the sidebar and the content, stretched by the
+default `align-items` to the full height of the page (2801px on `matrix.html`
+for 161px of content) and taking its own width out of the row. The A/B, pinning
+the module without the fix:
+
+```
+                   BEFORE                          AFTER
+achievements.html  emblem 334x1441  main  850px    334x161   main 1184px
+clarity.html       emblem 299x1627  main  885px    299x161   main 1184px
+cosmos.html        emblem 334x1707  main  866px    334x161   main 1200px
+matrix.html        emblem 334x2801  main  n/a      334x161   (column widened)
+academy.html       emblem 334x161   main 1200px    unchanged
+dashboard.html     emblem 334x161   main 1200px    unchanged
+```
+
+The stretched emblem was the visible symptom; **the content column being 850px
+instead of 1184px was the actual damage**, and nothing in the repo was looking
+for it. `scrollsX` was `false` throughout, so no overflow check would have
+caught it either — the page simply gave a third of its width away.
+
+**A source scan does not find these.** Testing whether the mount sits between
+`<main>` and `</main>` reports 24 offenders and 75 pages with "no `<main>` at
+all" — but `analytics.html` is in that second group and renders perfectly
+(334x161), because its shell is not a stretching flex row. Source position is
+not the predictor; the rendered box is. The runtime a11y pass also reports only
+2 pages missing a `<main>` landmark, against the source scan's 75 — the same
+disagreement, in the same direction.
+
+Fixed in `omega-page-emblem.js`, once, for all of them: `reseat()` runs before
+`draw()` and moves a host whose parent is a flex container into that parent's
+content column. **Relocation rather than a CSS rule, because nothing in CSS
+un-columns a flex item** — `align-self:start` stops the vertical stretch but
+leaves the column in the row, so the page stays narrowed.
+
+Finding the column takes two rules, and the second one is why the first is not
+enough: prefer a `MAIN`/`.main` sibling, else the sibling that **grows**.
+`matrix.html` wraps its whole page in an anonymous `<div style="flex:1;
+min-width:0">` with no class and no `<main>`, so the named lookup found nothing
+and left it at 334x2801 — correct behaviour for the guard, wrong outcome for the
+page. `flex-grow > 0` identifies the content column on every layout here, since
+the sidebar is `flex-shrink:0` at a fixed width and never grows. With the
+fallback, `matrix.html` joins the rest at 334x161.
+
+**The third correction is the one worth reading, and it was a regression I had
+already pushed.** The first working version fired on any flex parent, and the
+"0 stretched" sweep cannot show what is wrong with that: it counts heights, and
+a mount that was already correct reads 161 -> 161 whether or not it was moved.
+The parent-identity diff across all 181 pages found it --
+**`graph.html`'s correct mount was being relocated into `#tab-graph.tab-panel`**,
+a container that is `display:none` whenever another tab is selected, so the
+emblem would have vanished from that page depending on the open tab.
+
+Adding a sidebar-sibling requirement did not fix it; `#app.page-shell` has a
+sidebar. The missing condition is the flex **axis**:
+
+```
+page                    container          direction  sidebar  stretched
+clarity/matrix (+21)    .shell             row        yes      yes
+graph.html              #app.page-shell    column     yes      NO
+analytics.html          #app.page-shell    column     no       NO
+```
+
+A vertical stretch is only possible in a row-direction container. In a column
+container the cross axis is horizontal and a full-width block is exactly what
+the page wanted -- which is why `graph.html` measured 161px in place. The guard
+requires `row`/`row-reverse`, which excludes it and cannot affect the 23, all of
+which are `.shell` at `flex-direction:row`. `analytics.html` shows the sidebar
+check was doing real work too: same container, no sidebar, never touched.
+
+**The false-positive pass itself returned a wrong answer first, and it was the
+documented kind.** Its first run printed a clean `0 / 0 / 0` while all 181 of
+its lines said `SKIP`: the static server was down, every page load errored, and
+a total failure rendered as a perfect score -- §8.4's "verify a 0 findings
+result is real", walked into directly. The probe now asserts its own coverage
+and exits non-zero if more than five pages fail to load. The server had been
+killed by `pkill -f 'harness/serve.js'`, which matches the invoking shell's own
+command line because that string appears in it, so the command took down its own
+process group including the runtime sweep beside it.
+
+Final measurements, all on the shipped code:
+
+```
+emblem box sweep, 181 mounting pages:  181 correctly sized, 0 stretched
+parent-identity diff, 181 pages:       skipped 0
+                                       parent unchanged 158
+                                       moved (were stretched) 23
+                                       MOVED THOUGH ALREADY CORRECT 0
+verify-runtime.js --all:               PASS (187 pages)
+```
+
+The runtime figure is a re-run, not the earlier one: the first PASS(187) was
+measured against the module before the axis guard existed, so it said nothing
+about the code that actually ships.
+
+One incidental gate failure worth recording as a success: `omega-registry.py`
+failed on this change because the module census tracks total `omega-*.js` bytes
+and the edit moved it 1134 KB -> 1136 KB. That is the "put the number in the
+generator, not the paragraph" rule doing exactly its job.
+
+
+## The four system pages a member actually sees had no emblem (2026-09-03)
+
+After the reseat fix, 181 of 187 pages mount `[data-page-emblem]` and all 181
+render correctly. The six that do not: `verify-deployment` and `verify-modules`
+(internal harnesses nobody browses to, and the only two the runtime a11y pass
+flags for having no `<main>`), plus `enter`, `reset`, `404` and `offline` --
+which a member *does* see, `enter` being the first thing anyone sees at all.
+
+Those four now carry both a mount and their own registry entry, so each draws
+its own mark instead of the generic 12-fold omega: `enter` a hollow diamond,
+`reset` a return arrow, `404` a circled slash, `offline` a dotted ring.
+
+**A registry entry does not make a page a gateway destination.** `omega-gateway.js`
+builds its tile list from `OmegaPageEmblem.pages` and keeps its own `EXCLUDE`
+map (`404, enter, offline, reset, terms, pending, account, gateway, sovereign`),
+so these stay out of it. Its header comment claimed those pages "deliberately
+carry no registry entry" -- true when written, false the moment this landed, so
+it now says EXCLUDE is what keeps them out, not the absence of a row.
+
+### Two real defects, and a probe that called them OK
+
+The first render check printed `ALL 4 OK`. Two of the four were broken; the
+pass criteria only tested for a missing mount, a hidden ancestor, a zero box and
+horizontal scroll:
+
+```
+reset.html   box 241x652  content 175   parent body., flex/row
+404.html     box 299x29   content 29
+```
+
+**`reset.html` reproduced the bug this session just fixed, on a page I had just
+edited.** `<body>` there resolves to `display:flex; flex-direction:row`, so a
+mount placed as a body-level sibling of the wrapper became a stretched second
+column -- 652px for 175px of content. `reseat()` did not rescue it: the page has
+no sidebar, so the shell-row guard correctly declined. Moving the mount inside
+`div.wrap` fixes it (241x175).
+
+**`404.html:18` was a bare `canvas` selector** --
+`canvas{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}`
+for the page's own backdrop. It captured the emblem's canvas too, taking it out
+of flow so the mount collapsed to its caption (29px) and painting the mark
+full-screen at .4 opacity behind the page. Scoping the rule to `#cv` fixes it
+(299x161).
+
+**Five other pages have bare `canvas` rules and are all fine** -- `clarity`,
+`contacts`, `expenses`, `fasting`, `physiology`, each setting
+`display:block;width:100%;max-width:...`. Measured rather than assumed: every
+one renders the mark at 132x132 from a 264x264 buffer, identical to the
+controls, because `draw()` sets width and height inline and inline wins.
+The discriminator is *which property* the page rule touches -- `width`/`height`
+are already claimed inline, `position` is not. Five edits avoided by measuring.
+
+The probe now fails a box more than 60px taller than its own content, and a
+content height under 140px (a drawn mark plus caption is ~161). Both failures
+above would have been caught by those two lines.
+
+Final, all measured on the shipped code: the four render at 161-175px with a
+sized canvas, no hidden ancestor and no horizontal scroll; `ci-local.sh` 22/22,
+175 tests, registry regenerated (1137 -> 1138 KB), and
+`verify-runtime.js --all` **PASS (187 pages)**. The advisory still names
+`verify-deployment` and `verify-modules` as the only two pages with no `<main>`
+landmark -- the same two deliberately left without an emblem, which is a useful
+cross-check that the excluded set is the internal one.
+
+
+## 116 colour emoji shipped past the gate built to stop them (2026-09-03)
+
+`scripts/brand-glyph-check.py` exists to keep colour emoji out of a monochrome
+interface, and it reported the repo clean. It was reading only one of the three
+ways a codepoint reaches the screen.
+
+```
+literal      🌽                  scanned
+entity       &#127805;           NOT scanned  -- 116 occurrences, 18 files
+JS escape    '\u{1F311}'         NOT scanned  --  11 occurrences,  3 files
+```
+
+Both forms are decoded before anything is painted, so the page renders exactly
+the same colour sticker. Measured before touching anything: a render of the 10
+worst files found **9 of them painting colour emoji**, 35 distinct, while the
+gate was green -- `achievements.html` alone had 9.
+
+`horoscope.html` is the case that proves source scanning alone was never
+enough. Its lunar display is computed: the source holds `\u{1F311}` and the
+render showed `U+1F316`, a different phase, picked at runtime from a table of
+eight escapes.
+
+### The gate over-reported at the same time
+
+Extending it surfaced `consultancy.html:105`, which draws `\u{1F701}` -- an
+**alchemical symbol**, ordinary monochrome type. The rule was
+`[\U0001F300-\U0001FAFF]`, a span that also contains Ornamental Dingbats,
+Alchemical, Geometric Shapes Extended, Supplemental Arrows-C and Chess Symbols.
+Measured the way CLAUDE.md prescribes -- each candidate drawn white-on-black to
+a canvas in the harness Chromium, pixels read back, channel spread as the
+signal:
+
+```
+U+1F701 alchemical           spread   0  monochrome
+U+1F780 geometric extended   spread   0  monochrome
+U+1FA00 chess                spread   0  monochrome
+U+25CF  black circle         spread   0  monochrome   (control)
+U+1F3A4 microphone           spread  76  COLOUR
+U+1F3C6 trophy               spread 231  COLOUR
+```
+
+So the rule is now the emoji sub-ranges, not the span between them. Had it been
+left as it was, this change would have destroyed a legitimate alchemical mark
+to satisfy a false positive.
+
+### The fix, in two classes
+
+**73 pinned, not replaced.** Every BMP codepoint with `Emoji_Presentation=Yes`
+already has a text form; appending U+FE0E (`&#65038;`) keeps the exact glyph and
+drops the colour. **60 of those 73 are the platform's own twelve zodiac signs**
+across `horoscope`, `series` and `omega-emblems.js` -- the brand's own
+vocabulary had been shipping as colour stickers.
+
+**43 replaced**, per context rather than per codepoint, because the same emoji
+means different things in different places: `&#128293;` is fasting's FAT
+BURNING stage, mapped to the alchemical fire triangle, and also Hestia's
+`Hearth & Home`, mapped to `⌂`. Examples: trophy → `★`, books → `▤`,
+handshake → `⊜`, DNA → `≋`, Hephaestus → `⚒`, Hera → `♔`, Athena → `♘`,
+Demeter → `⁂`. The eight lunar phases became the monochrome disc series
+(`●  ☽  ◐  ◕  ○  ◔  ◑  ☾`), which reads as a real moon cycle rather than a
+row of stickers.
+
+### Verified in a render, with a positive control
+
+19 pages, all loaded, **0 rendering a colour emoji**. The probe injects a known
+emoji into each page and asserts its own walker sees it before trusting a clean
+result -- **0 control failures** -- because a clean sweep of nothing has already
+been reported twice in this session as a perfect score.
+
+Four tests added (12 in the file, 179 in the suite): entity form caught, both
+JS escape forms caught, an already-pinned entity accepted, and the monochrome
+blocks accepted while real emoji are still rejected.
+

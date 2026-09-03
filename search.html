@@ -10,7 +10,7 @@
 .searchwrap{position:relative;margin:0 0 10px}
 #q{width:100%;font-size:18px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);padding:16px 18px;outline:none;font-family:var(--R);color-scheme:dark}
 #q:focus{border-color:var(--cyan);border-left-color:var(--gold)}
-.search-count{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
+.search-count{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
 .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .res{display:block;border:1px solid var(--line);background:var(--surface);padding:15px 17px;cursor:pointer;transition:transform .14s,border-color .14s;text-decoration:none;color:inherit}
 .res:hover,.res.hot{transform:translateY(-2px);border-color:var(--gold);background:rgba(201,168,76,.05)}
@@ -18,18 +18,18 @@
 .res-ic{width:28px;height:28px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--D);font-weight:700;color:var(--gold);font-size:13px;flex-shrink:0}
 .res-label{font-family:var(--D);font-weight:700;color:var(--gold);font-size:14px;letter-spacing:.5px}
 .res-desc{color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:8px}
-.res-go{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan)}
+.res-go{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan)}
 .res.owner-only{border-left:2px solid var(--solar)}
-.empty{font-family:var(--M);font-size:11px;color:var(--muted);padding:20px 0}
+.empty{font-family:var(--M);font-size:12px;color:var(--muted);padding:20px 0}
 .browse-section{margin-bottom:20px}
-.browse-title{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.browse-title{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
 .browse-links{display:flex;flex-wrap:wrap;gap:6px}
-.browse-link{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--ink);border:1px solid var(--line);padding:5px 10px;text-decoration:none;transition:.15s}
+.browse-link{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink);border:1px solid var(--line);padding:5px 10px;text-decoration:none;transition:.15s}
 .browse-link:hover{border-color:var(--gold);color:var(--gold)}
 .recent-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
-.recent-link{font-family:var(--M);font-size:11px;color:var(--solar);text-decoration:none}
+.recent-link{font-family:var(--M);font-size:12px;color:var(--solar);text-decoration:none}
 .recent-link:hover{color:var(--gold)}
-.recent-go{font-family:var(--M);font-size:8px;color:var(--muted)}
+.recent-go{font-family:var(--M);font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -57,7 +57,7 @@
 <div class="tab-panel" id="tab-recent">
   <div class="sechead">RECENTLY VISITED</div>
   <div id="recent-list">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px 0">No recent searches yet. Use the search tab to explore the Order.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px 0">No recent searches yet. Use the search tab to explore the Order.</div>
   </div>
 </div>
 
@@ -228,7 +228,7 @@ function render(list){
 function renderRecent(){
   var box=document.getElementById('recent-list');
   var r=getRecent();
-  if(!r.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px 0">No recent searches yet.</div>';return;}
+  if(!r.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px 0">No recent searches yet.</div>';return;}
   box.innerHTML=r.map(function(item){
     return '<div class="recent-item"><a class="recent-link" href="'+item.p+'">'+item.l+'</a><span class="recent-go">'+item.p+'</span></div>';
   }).join('');

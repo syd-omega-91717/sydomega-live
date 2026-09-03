@@ -12,17 +12,20 @@ body{background:var(--void);color:var(--ink);font-family:sans-serif;min-height:1
 .omega{font-family:var(--D);font-size:clamp(80px,20vw,160px);color:rgba(201,168,76,.08);line-height:1;margin-bottom:-20px}
 .code{font-family:var(--D);font-size:clamp(14px,3vw,20px);color:var(--gold);letter-spacing:6px;margin-bottom:12px}
 .msg{font-family:var(--M);font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
-.sub{font-family:var(--M);font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:20px}
-a{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:10px 20px;border-radius:2px;margin:4px;display:inline-block;transition:.18s}
+.sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:20px}
+a{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:10px 20px;border-radius:2px;margin:4px;display:inline-block;transition:.18s}
 a:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
-canvas{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}
+/* Scoped to the backdrop canvas by id. As a bare `canvas` selector this also
+   captured the page-emblem canvas, pulling it out of flow (the mount collapsed
+   to its caption, 29px) and painting it full-screen at .4 opacity. */
+#cv{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;width:100%;max-width:620px}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
 .tab-panel{display:none;width:100%;max-width:620px;padding:20px 0}.tab-panel.act{display:block}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
-.kpi-n{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-n{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -67,6 +70,9 @@ canvas{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}
     <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
   </div>
 </div>
+<!-- Outside the tab panels on purpose: a mount inside one is display:none
+     whenever another tab is selected. -->
+<div data-page-emblem="404" style="margin:20px auto 28px"></div>
 <script>
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));

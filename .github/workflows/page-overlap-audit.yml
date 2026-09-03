@@ -1,10 +1,12 @@
 name: Page Overlap Audit
 
+# Advisory only, and O(n^2) over the whole page estate: measured at 2-5
+# minutes locally, against 0.79s for all eleven blocking gates combined. On a
+# single serial self-hosted runner that cost bought nothing per-push, since a
+# PASS here never blocked a merge. It runs nightly and on demand instead.
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+  schedule:
+    - cron: '30 4 * * *'
   workflow_dispatch:
 
 permissions:

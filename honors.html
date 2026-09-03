@@ -205,10 +205,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; HONORS CATALOG</div>
-    <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; ASCENSION</div>
-    <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; MY RECORD</div>
-    <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
+    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; HONORS CATALOG</div>
+    <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; ASCENSION</div>
+    <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; MY RECORD</div>
+    <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
   <div class="mtab-panel" id="mtab-catalog">
@@ -596,7 +596,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <div class="mtab-panel" id="mtab-record" style="display:none">
     
-    <div class="topbar"><div class="t">THE ACHIEVEMENTS &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS <span data-canon-lattice="nine"></span></small><button id="hn-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button></div>
+    <div class="topbar"><div class="t">THE ACHIEVEMENTS &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS <span data-canon-lattice="nine"></span></small><button id="hn-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button></div>
     <div class="hero">
       <div class="stats3">
         <div class="stat3"><div class="v" id="h-grade">--</div><div class="l">GRADE</div></div>
@@ -792,7 +792,7 @@ window.bootAscension = bootAscension;
     for(var i=1;i<=12;i++){ var on=earnedSet.has(i); var d=document.createElement('div');
       var nm=canonName(id,i);
       d.className='slot t'+tier(i)+(on?' earned':''); d.title=nm||('#'+i);
-      d.innerHTML='<div class="n">'+i+'</div>'+(nm?'<div style="font-size:8px;line-height:1.1;margin-top:3px;opacity:.85">'+nm.replace(/^(Medal|Trophy|Certificate) of /,'')+'</div>':(on?'':'<div>&#8226;</div>')); box.appendChild(d); } }
+      d.innerHTML='<div class="n">'+i+'</div>'+(nm?'<div style="font-size:12px;line-height:1.1;margin-top:3px;opacity:.85">'+nm.replace(/^(Medal|Trophy|Certificate) of /,'')+'</div>':(on?'':'<div>&#8226;</div>')); box.appendChild(d); } }
   // relabel once the canon loads
   document.addEventListener('omega-canon-ready',function(){ if(window.__lastFill) window.__lastFill(); });
   function bootAchievements(){ supabase.auth.getSession().then(function(r){
@@ -923,7 +923,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     <div class="sechead">AUTHORITY FORMULA</div>
     <div style="border:1px solid var(--border);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
       <div style="font-family:serif;font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
-      <div style="font-family:monospace;font-size:9px;color:var(--muted);line-height:2">
+      <div style="font-family:monospace;font-size:12px;color:var(--muted);line-height:2">
         &phi; (PHI) = 1.6180339887<br>
         e (EULER) = 2.7182818285<br>
         APEX AUTH = 27.8367 (A=B=C=9)<br>
@@ -932,13 +932,13 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     </div>
     <div class="sechead">SYSTEM CONSTANTS</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
     </div>
     <div class="sechead">GATE THRESHOLDS</div>
-    <div style="font-family:monospace;font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--border);padding:16px">
+    <div style="font-family:monospace;font-size:12px;line-height:2;color:var(--muted);border:1px solid var(--border);padding:16px">
       SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
       GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
       IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>

@@ -159,7 +159,7 @@ window.addEventListener('omega:user-loaded',function(){
   btn.setAttribute('data-passport-download','1');
   btn.setAttribute('aria-label','Download Sovereign Passport PDF');
   btn.textContent='↓ DOWNLOAD SOVEREIGN PASSPORT';
-  btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:7.5px;letter-spacing:2px;padding:10px 18px;border:1px solid var(--solar,#E2C86D);color:var(--solar,#E2C86D);background:rgba(201,168,76,.05);cursor:pointer;border-radius:2px;display:block;margin:16px auto;transition:.18s;';
+  btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:2px;padding:10px 18px;border:1px solid var(--solar,#E2C86D);color:var(--solar,#E2C86D);background:rgba(201,168,76,.05);cursor:pointer;border-radius:2px;display:block;margin:16px auto;transition:.18s;';
   btn.addEventListener('mouseenter',function(){this.style.background='rgba(201,168,76,.15)';});
   btn.addEventListener('mouseleave',function(){this.style.background='rgba(201,168,76,.05)';});
   var target=document.querySelector('.pad')||document.querySelector('main');

@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">GATES<small>PROGRESSION &middot; 12 MASTERY THRESHOLDS &middot; SOVEREIGN CURRICULUM</small></div>
       <canvas id="g-ring" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -44,18 +44,18 @@
       <div class="sechead">LOG GATE ATTEMPT</div>
       <div style="max-width:520px">
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">SELECT GATE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">SELECT GATE</div>
           <select id="a-gate" class="inp" style="width:100%"></select>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">OUTCOME</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">OUTCOME</div>
           <div style="display:flex;gap:8px">
             <button class="btn" id="btn-pass" onclick="logAttempt('pass')" style="flex:1;background:rgba(63,178,127,.2);border-color:var(--green);color:var(--green)">PASSED</button>
             <button class="btn" id="btn-fail" onclick="logAttempt('fail')" style="flex:1;background:rgba(255,68,68,.15);border-color:#FF4444;color:#FF4444">FAILED</button>
           </div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">NOTES</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">NOTES</div>
           <textarea id="a-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="What did you learn? What held you back?"></textarea>
         </div>
       </div>
@@ -84,10 +84,10 @@
 <div class="lf"><span>&#937; GATES &middot; SYD OMEGA 91717</span><span>12 SOVEREIGN MASTERY THRESHOLDS</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -137,18 +137,18 @@ function renderGates(auth){
     var passes=(gateData[g.id]&&gateData[g.id].passes)||0;
     return '<div style="border:1px solid '+(st==='mastered'?dc:st==='open'?'rgba(201,168,76,.35)':'var(--line)')+';background:rgba(10,10,15,'+(st==='locked'?'.3':'.55')+');padding:14px;border-radius:2px;opacity:'+(st==='locked'?.55:1)+'">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">GATE '+g.id+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:'+dc+';border:1px solid '+dc+';padding:1px 5px">'+g.domain+'</div>'
-      +(st==='mastered'?'<div style="font-family:var(--M);font-size:7px;color:var(--green);margin-left:auto">&#10003; MASTERED</div>'
-        :st==='open'?'<div style="font-family:var(--M);font-size:7px;color:var(--gold);margin-left:auto">UNLOCKED</div>'
-        :'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">&#128274; AUTH&ge;'+g.auth.toFixed(2)+'</div>')
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE '+g.id+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:'+dc+';border:1px solid '+dc+';padding:1px 5px">'+g.domain+'</div>'
+      +(st==='mastered'?'<div style="font-family:var(--M);font-size:12px;color:var(--green);margin-left:auto">&#10003; MASTERED</div>'
+        :st==='open'?'<div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">UNLOCKED</div>'
+        :'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">&#9635; AUTH&ge;'+g.auth.toFixed(2)+'</div>')
       +'</div>'
       +'<div style="font-family:var(--D);font-size:12px;color:'+(st==='mastered'?dc:st==='open'?'var(--gold)':'var(--muted)')+';margin-bottom:6px">'+g.title+'</div>'
-      +'<div style="font-size:11px;color:var(--ink);opacity:.75;line-height:1.6;margin-bottom:8px">'+g.desc+'</div>'
+      +'<div style="font-size:12px;color:var(--ink);opacity:.75;line-height:1.6;margin-bottom:8px">'+g.desc+'</div>'
       +(st!=='locked'?'<div style="display:flex;gap:8px;margin-top:6px">'
-        +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+attempts+' attempts</div>'
-        +'<div style="font-family:var(--M);font-size:8px;color:var(--green)">'+passes+' passed</div>'
-        +(st==='open'?'<button onclick="masterGate('+g.id+')" style="margin-left:auto;background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:8px;padding:3px 8px;cursor:pointer;letter-spacing:1px">MARK MASTERED</button>':'')
+        +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+attempts+' attempts</div>'
+        +'<div style="font-family:var(--M);font-size:12px;color:var(--green)">'+passes+' passed</div>'
+        +(st==='open'?'<button onclick="masterGate('+g.id+')" style="margin-left:auto;background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:12px;padding:3px 8px;cursor:pointer;letter-spacing:1px">MARK MASTERED</button>':'')
         +'</div>':'')
       +'</div>';
   }).join('');
@@ -160,16 +160,16 @@ function renderGates(auth){
 
 function renderHistory(){
   var el=document.getElementById('history-list');
-  if(!history.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ATTEMPTS LOGGED YET</div>';return;}
+  if(!history.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO ATTEMPTS LOGGED YET</div>';return;}
   var sorted=[].concat(history).reverse().slice(0,50);
   el.innerHTML=sorted.map(function(h){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(h.outcome==='pass'?'var(--green)':'#FF4444')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--M);font-size:8px;color:'+(h.outcome==='pass'?'var(--green)':'#FF4444')+'">'+(h.outcome==='pass'?'PASSED':'FAILED')+'</div>'
-      +'<div style="font-family:var(--D);font-size:11px;color:var(--gold)">'+h.gateTitle+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-left:auto">'+h.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+(h.outcome==='pass'?'var(--green)':'#FF4444')+'">'+(h.outcome==='pass'?'PASSED':'FAILED')+'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+h.gateTitle+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+h.date+'</div>'
       +'</div>'
-      +(h.notes?'<div style="font-size:11px;color:var(--ink);opacity:.75">'+h.notes+'</div>':'')
+      +(h.notes?'<div style="font-size:12px;color:var(--ink);opacity:.75">'+h.notes+'</div>':'')
       +'</div>';
   }).join('');
 }

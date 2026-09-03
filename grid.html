@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">GRID<small>M12 &middot; LATTICE GRID VIEW &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -37,15 +37,15 @@
       </div>
       <div class="sechead">12×12 SOVEREIGN LATTICE GRID</div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:7.5px;color:var(--muted)">UNLOCKED</span></div>
-        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:7.5px;color:var(--muted)">ACTIVE</span></div>
-        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(255,255,255,.03);border-radius:1px"></div><span style="font-family:var(--M);font-size:7.5px;color:var(--muted)">LOCKED</span></div>
-        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(63,178,127,.2);border:1px solid rgba(63,178,127,.4);border-radius:1px"></div><span style="font-family:var(--M);font-size:7.5px;color:var(--muted)">APEX</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">UNLOCKED</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">ACTIVE</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(255,255,255,.03);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOCKED</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(63,178,127,.2);border:1px solid rgba(63,178,127,.4);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">APEX</span></div>
       </div>
       <div style="overflow-x:auto">
-        <div id="grd-table" style="width:100%;font-size:10px">
+        <div id="grd-table" style="width:100%;font-size:12px">
           <div id="grd-head" class="tbl-row" style="display:grid;grid-template-columns:repeat(13,minmax(24px,1fr));gap:0">
-            <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);padding:7px 6px;text-align:left;border-bottom:1px solid var(--line)">GATE</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);padding:7px 6px;text-align:left;border-bottom:1px solid var(--line)">GATE</div>
           </div>
           <div id="grd-tbody"></div>
         </div>
@@ -58,13 +58,13 @@
       <div class="glass" style="margin-bottom:14px">
         <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">CURRENT POSITION</div>
         <div style="display:flex;gap:20px;flex-wrap:wrap">
-          <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">SIGN</div><div style="font-family:var(--D);font-size:16px;color:var(--solar)" id="grd-my-sign">—</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">AUTH SCORE</div><div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="grd-my-auth">—</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">ACTIVE GATE</div><div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="grd-my-gate">—</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">SIGN</div><div style="font-family:var(--D);font-size:16px;color:var(--solar)" id="grd-my-sign">—</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">AUTH SCORE</div><div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="grd-my-auth">—</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">ACTIVE GATE</div><div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="grd-my-gate">—</div></div>
         </div>
       </div>
       <div class="glass">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">GATE PROGRESSION</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">GATE PROGRESSION</div>
         <div id="grd-path-bars" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
     </div>
@@ -82,7 +82,7 @@
       </div>
       <div class="sechead">MATHEMATICAL BREAKDOWN</div>
       <div class="glass">
-        <div style="display:grid;gap:8px;font-size:11px;line-height:1.8;color:var(--muted)">
+        <div style="display:grid;gap:8px;font-size:12px;line-height:1.8;color:var(--muted)">
           <div><span style="color:var(--gold);font-family:var(--M)">12 SIGNS</span> (Zodiac axis) × <span style="color:var(--cyan);font-family:var(--M)">12 GATES</span> (Authority axis) = <span style="color:var(--solar);font-family:var(--M)">144</span> unique intersections</div>
           <div>144 intersections × <span style="color:var(--purple);font-family:var(--M)">729</span> axis states (9³) = <span style="color:var(--solar);font-family:var(--M)">104,976</span> canonical lattice nodes</div>
           <div>Kings expansion: <span style="color:var(--gold);font-family:var(--M)">28</span> levels × <span style="color:var(--cyan);font-family:var(--M)">28</span> gates × 729 = <span style="color:var(--solar);font-family:var(--M)">571,536</span> extended nodes</div>
@@ -97,19 +97,19 @@
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">THE 12×12 LATTICE</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">The Sovereign Lattice maps 12 zodiac signs (columns) against 12 authority gates (rows). Each intersection represents a unique evolutionary position. The complete grid has 144 cells, each containing 729 axis states.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">The Sovereign Lattice maps 12 zodiac signs (columns) against 12 authority gates (rows). Each intersection represents a unique evolutionary position. The complete grid has 144 cells, each containing 729 axis states.</div>
         </div>
         <div class="card" style="--card-accent:var(--gold)">
           <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">ZODIAC ALIGNMENT</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Each sovereign's sign determines their column in the lattice. The sign isn't merely symbolic — it determines which energy patterns, Olympian archetypes, and elemental forces amplify each axis. Aries amplifies Axis A; Libra amplifies Axis C.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each sovereign's sign determines their column in the lattice. The sign isn't merely symbolic — it determines which energy patterns, Olympian archetypes, and elemental forces amplify each axis. Aries amplifies Axis A; Libra amplifies Axis C.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
           <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">GATE PROGRESSION</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Gates unlock sequentially as AUTH score rises. Each gate unlocks a new row in the lattice, new platform capabilities, and deeper access to sovereign content. Gate XII (Apex) is only reachable at A=B=C=9, AUTH=27.8367.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Gates unlock sequentially as AUTH score rises. Each gate unlocks a new row in the lattice, new platform capabilities, and deeper access to sovereign content. Gate XII (Apex) is only reachable at A=B=C=9, AUTH=27.8367.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
           <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">9³ INNER CUBE</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Each lattice intersection has 729 internal states (9×9×9), representing all possible combinations of Axis A, B, and C (each ranging 0–9 in discrete steps). 9 is the number of completion in Pythagorean numerology.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each lattice intersection has 729 internal states (9×9×9), representing all possible combinations of Axis A, B, and C (each ranging 0–9 in discrete steps). 9 is the number of completion in Pythagorean numerology.</div>
         </div>
       </div>
     </div>
@@ -119,10 +119,10 @@
   </main>
 </div>
 <style>.pad{padding:var(--pad)}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .tab-btn:hover{color:var(--cyan);background:rgba(0,229,255,.04)}
 .tab-btn.active{border-bottom-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
-.gc{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:1px;font-family:var(--M);font-size:7px}
+.gc{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:1px;font-family:var(--M);font-size:12px}
 .gc-locked{background:rgba(255,255,255,.03);color:rgba(255,255,255,.2)}
 .gc-done{background:rgba(201,168,76,.15);color:var(--solar);border:1px solid rgba(201,168,76,.3)}
 .gc-active{background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
@@ -134,12 +134,12 @@ var GATES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 var THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 function buildGrid(auth){
   var head=document.getElementById('grd-head');
-  if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
+  if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
   var tb=document.getElementById('grd-tbody');
   if(!tb)return;
   var html='';
   GATES.forEach(function(g,gi){
-    html+='<div class="tbl-row" style="display:grid;grid-template-columns:repeat(13,minmax(24px,1fr));gap:0;border-bottom:1px solid rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:8px;color:var(--cyan);white-space:nowrap;padding:4px 6px">GATE '+g+'</div>';
+    html+='<div class="tbl-row" style="display:grid;grid-template-columns:repeat(13,minmax(24px,1fr));gap:0;border-bottom:1px solid rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:12px;color:var(--cyan);white-space:nowrap;padding:4px 6px">GATE '+g+'</div>';
     SIGNS.forEach(function(){
       var cls=auth>=THRESH[gi]?gi===11?'gc-apex':'gc-done':auth>=THRESH[Math.max(0,gi-1)]&&gi===Math.ceil(auth/27.8367*11)?'gc-active':'gc-locked';
       html+='<div style="padding:3px"><div class="gc '+cls+'">'+g+'</div></div>';
@@ -153,9 +153,9 @@ function buildGrid(auth){
     var color=done?'var(--solar)':active?'var(--cyan)':'rgba(255,255,255,.06)';
     var tc=done?'var(--solar)':active?'var(--cyan)':'var(--muted)';
     var pct=done?100:active?Math.round((auth-THRESH[Math.max(0,gi-1)])/(THRESH[gi]-THRESH[Math.max(0,gi-1)])*100):0;
-    ph+='<div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:8px;color:'+tc+';width:70px">GATE '+g+'</span>'
+    ph+='<div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:12px;color:'+tc+';width:70px">GATE '+g+'</span>'
       +'<div style="flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+color+'"></div></div>'
-      +'<span style="font-family:var(--M);font-size:7px;color:var(--muted);width:45px;text-align:right">'+THRESH[gi]+'</span></div>';
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--muted);width:45px;text-align:right">'+THRESH[gi]+'</span></div>';
   });pathBars.innerHTML=ph;}
 }
 function setTab(name){

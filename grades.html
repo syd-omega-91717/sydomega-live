@@ -9,7 +9,7 @@
 <style>
 .grade-tbl{border:1px solid var(--line);overflow:hidden;margin-bottom:16px}
 .grade-head{display:grid;grid-template-columns:50px 1fr 110px 100px 80px;padding:8px 14px;background:rgba(226,200,109,.06);border-bottom:1px solid var(--line)}
-.grade-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.grade-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .grade-row{display:grid;grid-template-columns:50px 1fr 110px 100px 80px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);align-items:center}
 .grade-row:last-child{border-bottom:none}
 .grade-row.earned{background:rgba(63,178,127,.04)}
@@ -17,13 +17,13 @@
 .gr-roman{font-family:var(--D);font-size:16px;color:var(--solar);text-align:center}
 .grade-row.earned .gr-roman{color:var(--green)}
 .gr-name{font-family:var(--D);font-size:12px;color:var(--ink)}
-.gr-gate{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
-.gr-auth{font-family:var(--M);font-size:9px;color:var(--solar)}
-.gr-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 8px;border:1px solid var(--line);color:var(--muted)}
+.gr-gate{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
+.gr-auth{font-family:var(--M);font-size:12px;color:var(--solar)}
+.gr-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid var(--line);color:var(--muted)}
 .gr-status.earned{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.06)}
 .prog-item{margin-bottom:14px}
 .prog-label{display:flex;justify-content:space-between;margin-bottom:5px}
-.prog-name{font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--ink)}
+.prog-name{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
 .prog-val{font-family:var(--D);font-size:12px;color:var(--solar)}
 .prog-track{height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden}
 .prog-fill{height:100%;border-radius:4px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
@@ -32,7 +32,7 @@
 .req-roman{font-family:var(--D);font-size:20px;color:var(--rc,var(--solar));margin-bottom:3px}
 .req-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:8px}
 .req-list{list-style:none;padding:0;margin:0}
-.req-list li{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:4px;display:flex;gap:6px}
+.req-list li{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:4px;display:flex;gap:6px}
 .req-list li::before{content:"·";color:var(--solar);flex-shrink:0}
 @media(max-width:600px){.grade-head,.grade-row{grid-template-columns:40px 1fr 80px;}.grade-hcell:nth-child(4),.grade-hcell:nth-child(5),.gr-auth,.gr-status{display:none}}
 </style>
@@ -69,21 +69,21 @@
     <div class="grade-row locked" id="gr-row-12"><div class="gr-roman">XII</div><div><div class="gr-name">APEX SOVEREIGN</div></div><div class="gr-gate">GATE XII</div><div class="gr-auth">27.84</div><div class="gr-status" id="gr-s12">LOCKED</div></div>
   </div>
   <div class="glass">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY FORMULA</div>
-    <div style="font-family:var(--M);font-size:11px;color:var(--ink)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:6px">&phi; = 1.6180339887 &nbsp;&middot;&nbsp; e = 2.7182818285 &nbsp;&middot;&nbsp; APEX at A=B=C=9 &rarr; 27.8367</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY FORMULA</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--ink)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:6px">&phi; = 1.6180339887 &nbsp;&middot;&nbsp; e = 2.7182818285 &nbsp;&middot;&nbsp; APEX at A=B=C=9 &rarr; 27.8367</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-progress">
   <div class="sechead">YOUR GRADE PROGRESSION</div>
   <div id="progress-bars">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading&hellip;</div>
   </div>
   <div class="glass" style="margin-top:16px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">CURRENT GRADE</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">CURRENT GRADE</div>
     <div style="font-family:var(--D);font-size:24px;color:var(--solar)" id="cur-grade-name">—</div>
-    <div style="font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:6px" id="cur-grade-info">Loading&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:6px" id="cur-grade-info">Loading&hellip;</div>
   </div>
 </div>
 

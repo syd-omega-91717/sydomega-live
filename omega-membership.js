@@ -27,15 +27,15 @@
   var css = [
     '.omc{border:1px solid rgba(201,168,76,.18);background:linear-gradient(160deg,rgba(201,168,76,.06),rgba(10,10,15,.5));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:3px;padding:18px;font-family:"Rajdhani",sans-serif}',
     '.omc-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}',
-    '.omc-label{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2.5px;color:#8a8676}',
+    '.omc-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2.5px;color:#8a8676}',
     '.omc-tier{font-family:"Cinzel Decorative",serif;font-size:20px;color:#C9A84C;line-height:1.1}',
-    '.omc-status{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1.5px;padding:3px 9px;border:1px solid;border-radius:2px}',
+    '.omc-status{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;padding:3px 9px;border:1px solid;border-radius:2px}',
     '.omc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}',
     '.omc-cell{border:1px solid rgba(201,168,76,.12);border-radius:2px;padding:10px 12px;background:rgba(10,10,15,.35)}',
-    '.omc-k{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:1.5px;color:#8a8676;margin-bottom:5px}',
+    '.omc-k{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:#8a8676;margin-bottom:5px}',
     '.omc-v{font-size:14px;color:#e9e6dc;font-weight:600}',
-    '.omc-note{font-size:11.5px;color:#8a8676;line-height:1.8;margin-top:12px}',
-    '.omc-cta{display:inline-block;margin-top:12px;font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:2px;padding:10px 18px;background:linear-gradient(90deg,#C9A84C,#E2C86D);color:#0A0A0F;text-decoration:none;border-radius:2px;font-weight:700}',
+    '.omc-note{font-size:12px;color:#8a8676;line-height:1.8;margin-top:12px}',
+    '.omc-cta{display:inline-block;margin-top:12px;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;padding:10px 18px;background:linear-gradient(90deg,#C9A84C,#E2C86D);color:#0A0A0F;text-decoration:none;border-radius:2px;font-weight:700}',
     '.omc-cta.ghost{background:transparent;color:#C9A84C;border:1px solid rgba(201,168,76,.4)}'
   ].join('');
   var st = document.createElement('style');

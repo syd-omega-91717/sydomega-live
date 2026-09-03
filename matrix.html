@@ -221,17 +221,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <div class="page">
   <div class="hero-band" data-reveal="fade-up">
     <div class="hero-eyebrow" data-i18n="mat_topbar_subtitle">CORE ENGINE // 9x9x9</div>
-    <h1 class="hero-title" data-i18n="mat_topbar_title">The 104,976-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
+    <h1 class="hero-title" data-i18n="mat_topbar_title">The 104,976-Node Matrix <span data-canon="mechanic" style="font-size:12px;vertical-align:middle"></span></h1>
     <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A³+B³+C³)×φ/e = 27.8367
     A³=B³=C³=729.000 at apex | sqrt(729+729+729)=sqrt(2187)×φ/e
 φ=1.6180339887  e=2.7182818285  i²=−1 &middot; 3×104,976 = 314,928 total</p>
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="matrix" data-i18n="mat_tab_matrix" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE MATRIX</div>
-    <div class="mtab-btn" data-mtab="triads" data-i18n="mat_tab_triads" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE TRIADS</div>
-    <div class="mtab-btn" data-mtab="grid" data-i18n="mat_tab_grid" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE GRID</div>
-    <div class="mtab-btn" data-mtab="science" data-i18n="mat_tab_science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
+    <div class="mtab-btn active" data-mtab="matrix" data-i18n="mat_tab_matrix" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; THE MATRIX</div>
+    <div class="mtab-btn" data-mtab="triads" data-i18n="mat_tab_triads" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; THE TRIADS</div>
+    <div class="mtab-btn" data-mtab="grid" data-i18n="mat_tab_grid" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; THE GRID</div>
+    <div class="mtab-btn" data-mtab="science" data-i18n="mat_tab_science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
   <div class="mtab-panel" id="mtab-matrix">
@@ -609,15 +609,15 @@ async function loadRealMatrix(){
       tg.innerHTML = rows.map(function(r){
         return '<div style="border:1px solid var(--border);padding:.6rem;text-align:center">'+
           '<span data-omega-emblem="'+r.sign+'" style="display:inline-block;width:38px;height:38px"></span>'+
-          '<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold);margin-top:4px">'+r.sign.toUpperCase()+'</div>'+
-          '<div style="font-family:\'Courier Prime\',monospace;font-size:8px;color:var(--muted)">('+r.a+','+r.b+','+r.c+') &middot; '+r.pct+'%</div>'+
+          '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--gold);margin-top:4px">'+r.sign.toUpperCase()+'</div>'+
+          '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted)">('+r.a+','+r.b+','+r.c+') &middot; '+r.pct+'%</div>'+
           '</div>';
       }).join('');
     } else {
-      tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:11px;color:var(--muted)">Track data unavailable.</div>';
+      tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted)">Track data unavailable.</div>';
     }
   }catch(e){
-    tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:11px;color:var(--muted)">Track data unavailable.</div>';
+    tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted)">Track data unavailable.</div>';
   }
 }
 loadRealMatrix();
@@ -789,7 +789,7 @@ function renderMemory(){
   MEMORY_LAYERS.forEach((m,i)=>{
     const c=document.createElement('div');
     c.style.cssText=`border:1px solid ${m.col}33;background:rgba(201,168,76,.04);padding:16px;border-top:2px solid ${m.col}`;
-    c.innerHTML=`<div style="font-family:monospace;font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">LAYER ${i+1}</div><div style="font-family:serif;font-size:13px;color:${m.col};font-weight:700;margin-bottom:3px">${m.name}</div><div style="font-family:monospace;font-size:9px;color:var(--cyan);margin-bottom:8px">${m.tech}</div><div style="font-size:11px;font-weight:300;color:var(--muted);line-height:1.5">${m.desc}</div>`;
+    c.innerHTML=`<div style="font-family:monospace;font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">LAYER ${i+1}</div><div style="font-family:serif;font-size:13px;color:${m.col};font-weight:700;margin-bottom:3px">${m.name}</div><div style="font-family:monospace;font-size:12px;color:var(--cyan);margin-bottom:8px">${m.tech}</div><div style="font-size:12px;font-weight:300;color:var(--muted);line-height:1.5">${m.desc}</div>`;
     g.appendChild(c);
   });
 }

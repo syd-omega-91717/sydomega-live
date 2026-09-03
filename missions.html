@@ -6,33 +6,33 @@
 /* DAY PROGRESS */
 .day-progress{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:3px;padding:12px 16px;margin-bottom:12px}
 .dp-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.dp-title{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5)}
+.dp-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5)}
 .dp-pct{font-family:var(--M);font-size:14px;color:var(--gold)}
 .dp-bar-wrap{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
 .dp-bar{height:100%;background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.6));border-radius:3px;transition:width 1s ease}
-.dp-xp{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:5px;text-align:right}
+.dp-xp{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:5px;text-align:right}
 
 /* MISSION CARD */
 .missions-list{display:flex;flex-direction:column;gap:10px}
 .mission-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:4px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:.15s;position:relative;overflow:hidden}
 .mission-card:hover:not(.completed){border-color:rgba(201,168,76,.3)}
 .mission-card.completed{border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.02)}
-.mission-card.completed::after{content:'COMPLETE';position:absolute;top:8px;right:12px;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--green)}
+.mission-card.completed::after{content:'COMPLETE';position:absolute;top:8px;right:12px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--green)}
 .mission-card.legendary-card{border-color:rgba(155,89,182,.25);background:rgba(155,89,182,.02)}
 .mc-icon{font-size:26px;flex-shrink:0;line-height:1;margin-top:2px}
 .mc-body{flex:1;min-width:0}
 .mc-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px}
 .mc-title{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.9);letter-spacing:.4px}
-.mc-tier{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border-radius:1px;border:1px solid}
+.mc-tier{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border-radius:1px;border:1px solid}
 .mc-tier.daily{color:rgba(201,168,76,.7);border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.05)}
 .mc-tier.weekly{color:rgba(0,229,255,.7);border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.05)}
 .mc-tier.legendary{color:rgba(155,89,182,.8);border-color:rgba(155,89,182,.25);background:rgba(155,89,182,.05)}
-.mc-desc{font-family:var(--M);font-size:8px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:8px}
+.mc-desc{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:8px}
 .mc-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.mc-xp{font-family:var(--M);font-size:11px;color:var(--gold)}
-.mc-element{font-family:var(--M);font-size:7px;color:var(--muted)}
-.mc-time{font-family:var(--M);font-size:7px;color:var(--muted)}
-.mc-action{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 14px;border:1px solid rgba(201,168,76,.25);color:var(--gold);background:none;border-radius:2px;cursor:pointer;transition:.12s;flex-shrink:0;margin-left:auto}
+.mc-xp{font-family:var(--M);font-size:12px;color:var(--gold)}
+.mc-element{font-family:var(--M);font-size:12px;color:var(--muted)}
+.mc-time{font-family:var(--M);font-size:12px;color:var(--muted)}
+.mc-action{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 14px;border:1px solid rgba(201,168,76,.25);color:var(--gold);background:none;border-radius:2px;cursor:pointer;transition:.12s;flex-shrink:0;margin-left:auto}
 .mc-action:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
 .mc-action.done{border-color:rgba(0,255,136,.2);color:var(--green);cursor:default}
 .mc-progress{height:2px;background:rgba(255,255,255,.04);border-radius:1px;overflow:hidden;margin-top:8px}
@@ -41,9 +41,9 @@
 /* HISTORY */
 .hist-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:2px;margin-bottom:6px}
 .hi-icon{font-size:14px}
-.hi-title{font-family:var(--M);font-size:11px;color:rgba(255,255,255,.7);flex:1}
+.hi-title{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.7);flex:1}
 .hi-xp{font-family:var(--M);font-size:12px;color:var(--gold)}
-.hi-date{font-family:var(--M);font-size:7px;color:var(--muted)}
+.hi-date{font-family:var(--M);font-size:12px;color:var(--muted)}
 
 /* HEATMAP */
 .heatmap-wrap{overflow-x:auto;padding-bottom:4px}
@@ -51,8 +51,8 @@
 .hm-cell{width:12px;height:12px;border-radius:1px;transition:.15s;cursor:pointer;flex-shrink:0}
 .hm-cell:hover{transform:scale(1.3)}
 
-.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
-#msn-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:10px 24px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+#msn-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:10px 24px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .xp-popup{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);font-family:var(--M);font-size:22px;color:var(--gold);z-index:9999;opacity:0;pointer-events:none;text-shadow:0 0 20px rgba(201,168,76,.5);transition:opacity .4s,transform .4s}
 </style>
 </head>
@@ -91,15 +91,15 @@
 <!-- WEEKLY TAB -->
 <div class="tab-panel" id="tab-weekly">
   <div class="missions-list" id="weeklyList"></div>
-  <div style="margin-top:16px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">&#9670; LEGENDARY QUESTS</div>
+  <div style="margin-top:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">&#9670; LEGENDARY QUESTS</div>
   <div class="missions-list" id="legendaryList"></div>
 </div>
 
 <!-- PROGRESS TAB -->
 <div class="tab-panel" id="tab-progress">
-  <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; MISSION HISTORY</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; MISSION HISTORY</div>
   <div id="historyList"></div>
-  <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin:16px 0 12px">&#9670; 90-DAY ACTIVITY MAP</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin:16px 0 12px">&#9670; 90-DAY ACTIVITY MAP</div>
   <div class="heatmap-wrap"><div class="heatmap" id="heatmapGrid"></div></div>
 </div>
 
@@ -116,7 +116,7 @@
     <div class="card">
       <div class="card-title">&#9733; SOVEREIGN XP RANKS</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:8px">
+        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr; color:var(--muted);border-bottom:1px solid var(--line)"><div style="padding:4px 0">RANK</div><div>XP REQUIRED</div></div>
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">INITIATE</div><div style="color:var(--gold)">0</div></div>
           <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">SOVEREIGN I</div><div style="color:var(--gold)">500</div></div>
@@ -130,9 +130,9 @@
     <div class="card">
       <div class="card-title">&#9670; AUTHORITY FORMULA</div>
       <div class="card-body">
-        <code style="font-family:var(--M);font-size:11px;color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</code>
+        <code style="font-family:var(--M);font-size:12px;color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</code>
         <br><br>
-        <span style="font-family:var(--M);font-size:8px;color:var(--muted)">&phi; = 1.6180339887 (Golden Ratio)<br>
+        <span style="font-family:var(--M);font-size:12px;color:var(--muted)">&phi; = 1.6180339887 (Golden Ratio)<br>
         e = 2.7182818285 (Euler&rsquo;s Number)<br>
         APEX = 27.8367</span>
         <br><br>
@@ -192,26 +192,26 @@ var __omegaUser=null;
 })();
 
 var DAILY_MISSIONS=[
-  {id:'d01',icon:'📖',title:'SOVEREIGN READING',desc:'Read for 20 uninterrupted minutes from any source in your Codex.',xp:50,element:'MIND',tier:'daily',est:'20 min'},
+  {id:'d01',icon:'▤',title:'SOVEREIGN READING',desc:'Read for 20 uninterrupted minutes from any source in your Codex.',xp:50,element:'MIND',tier:'daily',est:'20 min'},
   {id:'d02',icon:'⚔',title:'DISCIPLINE HOLD',desc:'Complete one task you have been delaying for more than 24 hours.',xp:75,element:'METAL',tier:'daily',est:'Variable'},
-  {id:'d03',icon:'🔥',title:'MORNING PROTOCOL',desc:'Log in before 09:00 and activate your dedication chronometer.',xp:40,element:'FIRE',tier:'daily',est:'5 min'},
-  {id:'d04',icon:'🌊',title:'STRATEGIC PAUSE',desc:'Spend 10 minutes in structured stillness — no screens, no sound.',xp:60,element:'WATER',tier:'daily',est:'10 min'},
-  {id:'d05',icon:'✍',title:'SOVEREIGN OATH',desc:'Write and seal a new sworn declaration in the Oath Registry.',xp:80,element:'SOUL',tier:'daily',est:'10 min'},
-  {id:'d06',icon:'📊',title:'INTELLIGENCE REVIEW',desc:'Review the Signal board and note 3 meaningful insights.',xp:55,element:'WIND',tier:'daily',est:'15 min'},
-  {id:'d07',icon:'🌐',title:'CODEX EXPEDITION',desc:'Search and bookmark one new article from the Knowledge Codex.',xp:45,element:'SPACE',tier:'daily',est:'10 min'},
+  {id:'d03',icon:'△',title:'MORNING PROTOCOL',desc:'Log in before 09:00 and activate your dedication chronometer.',xp:40,element:'FIRE',tier:'daily',est:'5 min'},
+  {id:'d04',icon:'▽',title:'STRATEGIC PAUSE',desc:'Spend 10 minutes in structured stillness — no screens, no sound.',xp:60,element:'WATER',tier:'daily',est:'10 min'},
+  {id:'d05',icon:'✍︎',title:'SOVEREIGN OATH',desc:'Write and seal a new sworn declaration in the Oath Registry.',xp:80,element:'SOUL',tier:'daily',est:'10 min'},
+  {id:'d06',icon:'▩',title:'INTELLIGENCE REVIEW',desc:'Review the Signal board and note 3 meaningful insights.',xp:55,element:'WIND',tier:'daily',est:'15 min'},
+  {id:'d07',icon:'⊛',title:'CODEX EXPEDITION',desc:'Search and bookmark one new article from the Knowledge Codex.',xp:45,element:'SPACE',tier:'daily',est:'10 min'},
 ];
 var WEEKLY_MISSIONS=[
-  {id:'w01',icon:'🏆',title:'GATE ADVANCEMENT',desc:'Increase your Authority score by at least 0.05 points this week.',xp:300,element:'ALL',tier:'weekly',est:'7 days',progress:60},
-  {id:'w02',icon:'🔬',title:'RESEARCH SUBMISSION',desc:'Save and annotate 5 arXiv papers in your Knowledge Codex.',xp:250,element:'MIND',tier:'weekly',est:'3-4 hours',progress:40},
-  {id:'w03',icon:'⚡',title:'STREAK FORGE',desc:'Complete your daily dedication for 7 consecutive days.',xp:500,element:'FIRE',tier:'weekly',est:'7 days',progress:28},
-  {id:'w04',icon:'🌍',title:'TRIBE ENGAGEMENT',desc:'View and engage with 3 members of a different element tribe.',xp:200,element:'COSMOS',tier:'weekly',est:'30 min',progress:66},
-  {id:'w05',icon:'💡',title:'INNOVATION LOG',desc:'Write 3 new ideas in the Forge and complete at least one.',xp:350,element:'WIND',tier:'weekly',est:'2 hours',progress:33},
+  {id:'w01',icon:'♔',title:'GATE ADVANCEMENT',desc:'Increase your Authority score by at least 0.05 points this week.',xp:300,element:'ALL',tier:'weekly',est:'7 days',progress:60},
+  {id:'w02',icon:'⚗',title:'RESEARCH SUBMISSION',desc:'Save and annotate 5 arXiv papers in your Knowledge Codex.',xp:250,element:'MIND',tier:'weekly',est:'3-4 hours',progress:40},
+  {id:'w03',icon:'⚡︎',title:'STREAK FORGE',desc:'Complete your daily dedication for 7 consecutive days.',xp:500,element:'FIRE',tier:'weekly',est:'7 days',progress:28},
+  {id:'w04',icon:'⊕',title:'TRIBE ENGAGEMENT',desc:'View and engage with 3 members of a different element tribe.',xp:200,element:'COSMOS',tier:'weekly',est:'30 min',progress:66},
+  {id:'w05',icon:'✧',title:'INNOVATION LOG',desc:'Write 3 new ideas in the Forge and complete at least one.',xp:350,element:'WIND',tier:'weekly',est:'2 hours',progress:33},
 ];
 var LEGENDARY_MISSIONS=[
-  {id:'l01',icon:'👑',title:'THE SOVEREIGN TRIAL',desc:'Maintain a 30-day unbroken daily dedication streak.',xp:5000,element:'THE ALL',tier:'legendary',est:'30 days',progress:0},
+  {id:'l01',icon:'♕',title:'THE SOVEREIGN TRIAL',desc:'Maintain a 30-day unbroken daily dedication streak.',xp:5000,element:'THE ALL',tier:'legendary',est:'30 days',progress:0},
   {id:'l02',icon:'⚔',title:'GATE XII ASCENSION',desc:'Reach Gate XII — the APEX threshold. Authority must surpass 27.1.',xp:10000,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
-  {id:'l03',icon:'📜',title:'THE CODEX MASTER',desc:'Bookmark 100 items across Wikipedia, arXiv, and Open Library.',xp:3000,element:'MIND',tier:'legendary',est:'30+ days',progress:0},
-  {id:'l04',icon:'🌌',title:'ELEMENT CONVERGENCE',desc:'Score above 80 on all 8 Sovereign DNA attributes simultaneously.',xp:7500,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
+  {id:'l03',icon:'▧',title:'THE CODEX MASTER',desc:'Bookmark 100 items across Wikipedia, arXiv, and Open Library.',xp:3000,element:'MIND',tier:'legendary',est:'30+ days',progress:0},
+  {id:'l04',icon:'✷',title:'ELEMENT CONVERGENCE',desc:'Score above 80 on all 8 Sovereign DNA attributes simultaneously.',xp:7500,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
 ];
 
 var today=new Date().toISOString().slice(0,10);
@@ -362,7 +362,7 @@ function renderHeatmap(){
     var cell=document.createElement('div');cell.className='hm-cell';cell.style.background=col;
     cell.title=key+': '+xp+' XP';
     wrap.appendChild(cell);
-    if(d%7===0){var lbl=document.createElement('div');lbl.style.cssText='font-family:var(--M);font-size:6px;color:var(--muted);text-align:center;margin-top:2px';lbl.textContent=date.getDate();wrap.appendChild(lbl);}
+    if(d%7===0){var lbl=document.createElement('div');lbl.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;margin-top:2px';lbl.textContent=date.getDate();wrap.appendChild(lbl);}
     grid.appendChild(wrap);
   }
 }

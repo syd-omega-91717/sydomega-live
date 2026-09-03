@@ -5,55 +5,55 @@
 <style>
 /* CHECK-IN CARD */
 .checkin-card{background:rgba(155,89,182,.03);border:1px solid rgba(155,89,182,.2);border-radius:4px;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
-.ci-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(155,89,182,.6)}
-.ci-already{font-family:var(--M);font-size:8px;color:rgba(0,255,136,.5);text-align:center;padding:12px;line-height:2}
+.ci-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(155,89,182,.6)}
+.ci-already{font-family:var(--M);font-size:12px;color:rgba(0,255,136,.5);text-align:center;padding:12px;line-height:2}
 
 /* MOOD GRID */
 .mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .mood-btn{padding:8px 4px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.1);border-radius:3px;cursor:pointer;text-align:center;transition:.15s;font-size:18px}
 .mood-btn:hover,.mood-btn.active{border-color:rgba(155,89,182,.5);background:rgba(155,89,182,.08)}
-.mood-label{font-family:var(--M);font-size:6px;letter-spacing:1px;color:var(--muted);margin-top:3px}
+.mood-label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
 
 /* SLIDERS */
 .slider-row{display:flex;flex-direction:column;gap:6px}
 .slider-header{display:flex;justify-content:space-between;align-items:center}
-.slider-label{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.6)}
+.slider-label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.6)}
 .slider-val{font-family:var(--M);font-size:14px;color:var(--gold)}
 input[type=range]{width:100%;accent-color:var(--gold);height:4px;cursor:pointer}
 
 /* TAGS */
 .ci-tags{display:flex;gap:6px;flex-wrap:wrap}
-.ci-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 12px;border:1px solid rgba(155,89,182,.15);color:rgba(155,89,182,.5);border-radius:12px;cursor:pointer;transition:.12s}
+.ci-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 12px;border:1px solid rgba(155,89,182,.15);color:rgba(155,89,182,.5);border-radius:12px;cursor:pointer;transition:.12s}
 .ci-tag.active,.ci-tag:hover{border-color:rgba(218,112,214,.5);color:rgba(218,112,214,.8);background:rgba(155,89,182,.08)}
 
 /* REFLECTION */
 .ref-textarea{background:rgba(155,89,182,.03);border:1px solid rgba(155,89,182,.15);color:rgba(255,255,255,.85);font-family:var(--M);font-size:12px;line-height:1.7;padding:12px;resize:vertical;min-height:80px;outline:none;border-radius:3px;letter-spacing:.3px;transition:.15s;width:100%}
 .ref-textarea:focus{border-color:rgba(155,89,182,.4);background:rgba(155,89,182,.05)}
-.ref-textarea::placeholder{color:rgba(155,89,182,.2);font-style:italic;font-size:11px}
+.ref-textarea::placeholder{color:rgba(155,89,182,.2);font-style:italic;font-size:12px}
 
-.submit-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px 24px;background:linear-gradient(135deg,rgba(155,89,182,.15),rgba(155,89,182,.05));border:1px solid rgba(155,89,182,.35);color:rgba(218,112,214,.9);cursor:pointer;border-radius:3px;transition:.2s;align-self:flex-end}
+.submit-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 24px;background:linear-gradient(135deg,rgba(155,89,182,.15),rgba(155,89,182,.05));border:1px solid rgba(155,89,182,.35);color:rgba(218,112,214,.9);cursor:pointer;border-radius:3px;transition:.2s;align-self:flex-end}
 .submit-btn:hover{background:rgba(155,89,182,.2);box-shadow:0 0 20px rgba(155,89,182,.15)}
 
 /* JOURNAL */
 .journal-entry{background:rgba(255,255,255,.03);border:1px solid rgba(155,89,182,.12);border-left:3px solid transparent;border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.je-date{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+.je-date{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 .je-metrics{display:flex;gap:12px;flex-wrap:wrap}
 .je-metric{text-align:center}
 .je-m-val{font-family:var(--M);font-size:14px;color:var(--gold)}
-.je-m-lbl{font-family:var(--M);font-size:6px;letter-spacing:1px;color:var(--muted)}
+.je-m-lbl{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .je-mood{font-size:16px}
-.je-text{font-family:var(--M);font-size:11px;color:rgba(255,255,255,.6);line-height:1.6;font-style:italic;letter-spacing:.2px}
+.je-text{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;font-style:italic;letter-spacing:.2px}
 .je-tags{display:flex;gap:4px;flex-wrap:wrap}
-.je-tag{font-family:var(--M);font-size:6.5px;padding:2px 8px;background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.15);color:rgba(218,112,214,.5);border-radius:8px}
+.je-tag{font-family:var(--M);font-size:12px;padding:2px 8px;background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.15);color:rgba(218,112,214,.5);border-radius:8px}
 
 /* PATTERN CHART */
 .pattern-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .pattern-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:14px}
-.pc-title{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:10px}
+.pc-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:10px}
 canvas.pattern-canvas{width:100%;display:block}
 
-.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
-#mir-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(155,89,182,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(218,112,214,.9);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+#mir-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(155,89,182,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(218,112,214,.9);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 @media(max-width:640px){.pattern-grid{grid-template-columns:1fr}.mood-grid{grid-template-columns:repeat(5,1fr)}}
 </style>
 </head>
@@ -84,16 +84,16 @@ canvas.pattern-canvas{width:100%;display:block}
   <div class="checkin-card card" id="checkinCard">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div class="ci-label">&#9685; TODAY&rsquo;S CHECK-IN</div>
-      <div style="font-family:var(--M);font-size:11px;color:var(--gold)" id="ciDateLabel"></div>
+      <div style="font-family:var(--M);font-size:12px;color:var(--gold)" id="ciDateLabel"></div>
     </div>
     <div>
       <div class="slider-label" style="margin-bottom:8px">EMOTIONAL STATE</div>
       <div class="mood-grid" id="moodGrid">
-        <div class="mood-btn" data-mood="1">😤<div class="mood-label">TURBULENT</div></div>
-        <div class="mood-btn" data-mood="2">😔<div class="mood-label">SUBDUED</div></div>
-        <div class="mood-btn" data-mood="3">😐<div class="mood-label">NEUTRAL</div></div>
-        <div class="mood-btn" data-mood="4">😌<div class="mood-label">FOCUSED</div></div>
-        <div class="mood-btn" data-mood="5">⚡<div class="mood-label">SOVEREIGN</div></div>
+        <div class="mood-btn" data-mood="1">○<div class="mood-label">TURBULENT</div></div>
+        <div class="mood-btn" data-mood="2">◔<div class="mood-label">SUBDUED</div></div>
+        <div class="mood-btn" data-mood="3">◑<div class="mood-label">NEUTRAL</div></div>
+        <div class="mood-btn" data-mood="4">◕<div class="mood-label">FOCUSED</div></div>
+        <div class="mood-btn" data-mood="5">⚡︎<div class="mood-label">SOVEREIGN</div></div>
       </div>
     </div>
     <div class="slider-row">
@@ -136,7 +136,7 @@ canvas.pattern-canvas{width:100%;display:block}
 
 <!-- PATTERNS TAB -->
 <div class="tab-panel" id="tab-patterns">
-  <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; 30-DAY ENERGY &amp; FOCUS PATTERNS</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; 30-DAY ENERGY &amp; FOCUS PATTERNS</div>
   <div class="pattern-grid">
     <div class="pattern-card card"><div class="pc-title">ENERGY TREND</div><canvas class="pattern-canvas" id="energyChart" height="120"></canvas></div>
     <div class="pattern-card card"><div class="pc-title">FOCUS TREND</div><canvas class="pattern-canvas" id="focusChart" height="120"></canvas></div>
@@ -178,7 +178,7 @@ canvas.pattern-canvas{width:100%;display:block}
       <div class="card-body">
         The five sovereign mood states map to a valence-arousal model:
         <br><br>
-        <span style="font-family:var(--M);font-size:8px">TURBULENT &mdash; high arousal, negative valence<br>
+        <span style="font-family:var(--M);font-size:12px">TURBULENT &mdash; high arousal, negative valence<br>
         SUBDUED &mdash; low arousal, negative valence<br>
         NEUTRAL &mdash; baseline state<br>
         FOCUSED &mdash; moderate arousal, positive valence<br>
@@ -235,11 +235,11 @@ var selectedTags=new Set();
 var todayEntry=entries.find(function(e){return e.date===today;});
 
 var MOODS=[
-  {icon:'😤',label:'TURBULENT',color:'rgba(200,50,50,.6)'},
-  {icon:'😔',label:'SUBDUED',color:'rgba(100,100,200,.6)'},
-  {icon:'😐',label:'NEUTRAL',color:'rgba(138,134,118,.5)'},
-  {icon:'😌',label:'FOCUSED',color:'rgba(201,168,76,.7)'},
-  {icon:'⚡',label:'SOVEREIGN',color:'rgba(0,255,136,.7)'}
+  {icon:'○',label:'TURBULENT',color:'rgba(200,50,50,.6)'},
+  {icon:'◔',label:'SUBDUED',color:'rgba(100,100,200,.6)'},
+  {icon:'◑',label:'NEUTRAL',color:'rgba(138,134,118,.5)'},
+  {icon:'◕',label:'FOCUSED',color:'rgba(201,168,76,.7)'},
+  {icon:'⚡︎',label:'SOVEREIGN',color:'rgba(0,255,136,.7)'}
 ];
 
 function toast(msg){

@@ -9,10 +9,10 @@
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
 .kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
-.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#9b59b6;--orange:#e67e22}
 .card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
-.card-title{font-size:11px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.card-title{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
 input,select,textarea{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
@@ -317,7 +317,7 @@ function renderContacts(){
       +'<div class="contact-avatar" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44">'+initials(c.name)+'</div>'
       +'<button class="btn-red" onclick="deleteContact('+c.id+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'
       +'</div>'
-      +'<div class="contact-name">'+c.name+(c.vip?' &#11088;':'')+'</div>'
+      +'<div class="contact-name">'+c.name+(c.vip?' &#11088;&#65038;':'')+'</div>'
       +'<div class="contact-role">'+(c.role||'')+(c.company?' &middot; '+c.company:'')+'</div>'
       +'<div class="contact-tags">'
       +'<span class="tag" style="color:'+(TIER_COLORS[c.tier]||'#888')+'">'+c.tier.toUpperCase()+'</span>'

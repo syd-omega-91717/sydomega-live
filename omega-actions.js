@@ -31,14 +31,14 @@
   var CSS = `
     .oa-panel{position:fixed;z-index:3900;background:rgba(2,2,6,.97);border:1px solid rgba(201,168,76,.25);border-radius:4px;padding:14px;min-width:220px;max-width:280px;box-shadow:0 16px 48px rgba(0,0,0,.7);backdrop-filter:blur(12px);pointer-events:none;opacity:0;transform:translateY(6px) scale(.97);transition:opacity .15s ease,transform .15s ease}
     .oa-panel.visible{opacity:1;transform:none;pointer-events:auto}
-    .oa-panel-title{font-family:var(--D,"Cinzel Decorative",serif);font-size:9px;color:var(--gold,#C9A84C);margin-bottom:6px;letter-spacing:.5px}
-    .oa-panel-meta{font-family:var(--M,"Courier Prime",monospace);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.6);margin-bottom:8px;line-height:1.8}
-    .oa-panel-insight{font-size:10.5px;line-height:1.65;color:rgba(233,230,220,.75);margin-bottom:10px;border-left:2px solid rgba(201,168,76,.3);padding-left:8px;min-height:24px}
+    .oa-panel-title{font-family:var(--D,"Cinzel Decorative",serif);font-size:12px;color:var(--gold,#C9A84C);margin-bottom:6px;letter-spacing:.5px}
+    .oa-panel-meta{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.6);margin-bottom:8px;line-height:1.8}
+    .oa-panel-insight{font-size:12px;line-height:1.65;color:rgba(233,230,220,.75);margin-bottom:10px;border-left:2px solid rgba(201,168,76,.3);padding-left:8px;min-height:24px}
     .oa-actions{display:flex;flex-wrap:wrap;gap:5px}
-    .oa-action-btn{font-family:var(--M,"Courier Prime",monospace);font-size:7px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);background:none;border-radius:2px;cursor:pointer;transition:.12s;white-space:nowrap}
+    .oa-action-btn{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);background:none;border-radius:2px;cursor:pointer;transition:.12s;white-space:nowrap}
     .oa-action-btn:hover{background:rgba(201,168,76,.1);color:var(--gold,#C9A84C)}
     .oa-ctx{position:fixed;z-index:4000;background:rgba(2,2,6,.97);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:4px;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
-    .oa-ctx-item{font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:1px;padding:6px 12px;cursor:pointer;color:rgba(233,230,220,.8);border-radius:2px;transition:.1s;display:flex;align-items:center;gap:8px}
+    .oa-ctx-item{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;padding:6px 12px;cursor:pointer;color:rgba(233,230,220,.8);border-radius:2px;transition:.1s;display:flex;align-items:center;gap:8px}
     .oa-ctx-item:hover{background:rgba(201,168,76,.08);color:var(--gold,#C9A84C)}
     .oa-ctx-sep{height:1px;background:rgba(201,168,76,.08);margin:3px 0}
     .oa-ping{animation:oa-ping .4s ease both}

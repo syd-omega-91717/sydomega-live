@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Cosmos</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
+<meta name="description" content="The cosmology hub: the twelve executor agents, your sign's horoscope, the nine elements, and the twelve gates."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -42,29 +42,29 @@ a{color:inherit;text-decoration:none}
 .tab-btn.active{border-bottom-color:var(--gold);background:rgba(201,168,76,0.05)}
 .tab-btn .tb-icon{font-size:18px;transition:transform .25s}
 .tab-btn:hover .tb-icon,.tab-btn.active .tb-icon{transform:scale(1.15) rotate(5deg)}
-.tab-btn .tb-label{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;color:var(--muted);white-space:nowrap}
+.tab-btn .tb-label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);white-space:nowrap}
 .tab-btn.active .tb-label{color:var(--gold)}
 .tab-btn.active .tb-icon{color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,0.5)}
 /* TAB PANELS */
 .tab-panel{display:none;padding:22px clamp(14px,3vw,32px)}
 .tab-panel.active{display:block}
-.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin-top:24px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-top:24px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
 /* ---- AGENTS (Tab 1) ---- */
 .agent-wheel-wrap{position:relative;width:100%;max-width:520px;margin:0 auto 28px;aspect-ratio:1}
 #agent-wheel{display:block;width:100%;height:100%}
-.wheel-hint{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:20px}
+.wheel-hint{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:20px}
 .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
 .ag-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:13px;cursor:pointer;transition:border-color .18s}
 .ag-card:hover,.ag-card.sel{border-color:rgba(201,168,76,.4);background:rgba(13,13,24,.9)}
-.ag-card .ac-n{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.ag-card .ac-n{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
 .ag-card .ac-nm{font-family:var(--D);font-size:12px;font-weight:700;margin-bottom:3px}
-.ag-card .ac-rl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}
-.ag-card .ac-st{display:flex;align-items:center;gap:5px;font-family:var(--M);font-size:8px}
+.ag-card .ac-rl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}
+.ag-card .ac-st{display:flex;align-items:center;gap:5px;font-family:var(--M);font-size:12px}
 .ac-dot{width:5px;height:5px;border-radius:50%}
 #agent-detail{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin-bottom:20px;display:none}
 .ad-name{font-family:var(--D);font-size:18px;font-weight:700;margin-bottom:5px}
-.ad-role{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-bottom:10px}
+.ad-role{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:10px}
 .ad-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.8}
 
 /* ---- HOROSCOPE (Tab 2) ---- */
@@ -72,13 +72,13 @@ a{color:inherit;text-decoration:none}
 .sh-canvas{flex-shrink:0}
 .sh-meta .shm-glyph{font-family:var(--D);font-size:36px;color:var(--gold);margin-bottom:5px}
 .sh-meta .shm-name{font-family:var(--D);font-size:22px;color:var(--gold);font-weight:700;margin-bottom:3px}
-.sh-meta .shm-dates{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.sh-meta .shm-dates{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
 .sh-meta .shm-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;max-width:50ch}
 .sign-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
 .smg-item{border:1px solid var(--line);padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s}
 .smg-item:hover,.smg-item.active{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
 .smg-item .smg-glyph{font-size:18px;display:block;margin-bottom:3px}
-.smg-item .smg-name{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
+.smg-item .smg-name{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 
 /* ---- ELEMENTS (Tab 3) ---- */
 .element-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
@@ -86,10 +86,10 @@ a{color:inherit;text-decoration:none}
 .el-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
 .el-num{font-family:var(--D);font-size:36px;font-weight:700;margin-bottom:5px;opacity:.7}
 .el-name{font-family:var(--D);font-size:16px;font-weight:700;margin-bottom:5px}
-.el-type{font-family:var(--M);font-size:8px;letter-spacing:3px;margin-bottom:8px}
-.el-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.6}
+.el-type{font-family:var(--M);font-size:12px;letter-spacing:3px;margin-bottom:8px}
+.el-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6}
 .el-signs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.el-sign-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:1px 5px;border:1px solid rgba(201,168,76,.2);color:var(--muted)}
+.el-sign-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:1px 5px;border:1px solid rgba(201,168,76,.2);color:var(--muted)}
 
 /* ---- GATES (Tab 4) ---- */
 .gates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
@@ -99,9 +99,9 @@ a{color:inherit;text-decoration:none}
 .gate-card.locked{opacity:.5}
 .gc-n{font-family:var(--D);font-size:28px;font-weight:700;margin-bottom:4px}
 .gc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:5px}
-.gc-auth{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:7px}
-.gc-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.5}
-.gc-status{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block;margin-top:8px}
+.gc-auth{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:7px}
+.gc-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.5}
+.gc-status{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block;margin-top:8px}
 
 @media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.agent-wheel-wrap{max-width:280px}}
 
@@ -183,7 +183,7 @@ a{color:inherit;text-decoration:none}
         <div class="ht-title" id="ht-title">THE CELESTIAL ORACLE</div>
         <div class="ht-sub" id="ht-sub">DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT</div>
         <div class="ht-desc" id="ht-desc">The cosmos has been tracking your matrix coordinates since before you drew your first breath. Every planetary position at your moment of birth locked a code into your sovereign cosmology. That code is evolving with you, right now.</div>
-        <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:monospace;font-size:9px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
+        <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:monospace;font-size:12px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
       </div>
       <div class="hero-canvas-wrap">
         <canvas id="hero-wheel" width="320" height="320" style="width:160px;height:160px"></canvas>
@@ -299,7 +299,7 @@ const AGENTS=[
   {n:3,name:'ANALYST',role:'FINANCIAL ARCHITECT',el:'Water',col:'#34C6E6',glyph:'\u25C8',desc:'Processes all economic data, portfolio valuations, and runs the 41% auto-split investment engine.'},
   {n:4,name:'HISTORIAN',role:'MEMORY KEEPER',el:'Sand',col:'#D9B86A',glyph:'\u2736',desc:'Manages the 5-layer memory stack, heritage vault, and ensures every record is hash-verified and tamper-proof.'},
   {n:5,name:'TUTOR',role:'KNOWLEDGE ENGINE',el:'Wind',col:'#A9C2D8',glyph:'\u2726',desc:'Orchestrates the academy, exam hall, and knowledge axis progression through personalised learning paths.'},
-  {n:6,name:'MERCHANT',role:'COMMERCE MASTER',el:'Water',col:'#34C6E6',glyph:'\u21C4',desc:'Runs the marketplace, manages listings, processes settlement flows, and enforces the 9.17% commission protocol.'},
+  {n:6,name:'MERCHANT',role:'COMMERCE MASTER',el:'Water',col:'#34C6E6',glyph:'\u21C4',desc:'Runs the marketplace, manages listings, processes settlement flows, and is intended to enforce the 9.17% commission protocol once platform_settings.tokens_enabled is on.'},
   {n:7,name:'PROXY',role:'EXECUTION DELEGATE',el:'Aether',col:'#E8E8FF',glyph:'\u25B6',desc:'Handles task delegation and authority routing. Coordinates execution across multiple services simultaneously.'},
   {n:8,name:'ORACLE',role:'PREDICTION ENGINE',el:'Space',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),glyph:'\u2609',desc:'Generates daily celestial readings, operates the prediction network, and models civilizational trajectories.'},
   {n:9,name:'SCOUT',role:'DISCOVERY AGENT',el:'Wind',col:'#A9C2D8',glyph:'\u25C9',desc:'Monitors news feeds, trend signals, and research discoveries. Ranks information by relevance to the sovereign matrix.'},
@@ -457,7 +457,7 @@ function buildAgentsGrid(){
   const g=document.getElementById('agents-grid');g.innerHTML='';
   AGENTS.forEach((ag,i)=>{
     const c=document.createElement('div');c.className='ag-card card';
-    c.innerHTML=`<div class="ac-n">AGENT ${String(ag.n).padStart(2,'0')}</div><div class="ac-nm" style="color:${ag.col}">${ag.name}</div><div class="ac-rl">${ag.role}</div><div class="ac-st"><div class="ac-dot" style="background:var(--green)"></div><span style="color:var(--green);font-family:var(--M);font-size:8px">ACTIVE</span></div>`;
+    c.innerHTML=`<div class="ac-n">AGENT ${String(ag.n).padStart(2,'0')}</div><div class="ac-nm" style="color:${ag.col}">${ag.name}</div><div class="ac-rl">${ag.role}</div><div class="ac-st"><div class="ac-dot" style="background:var(--green)"></div><span style="color:var(--green);font-family:var(--M);font-size:12px">ACTIVE</span></div>`;
     c.addEventListener('click',()=>selectAgent(ag));
     g.appendChild(c);
   });
@@ -501,7 +501,7 @@ function buildElements(){
     const c=document.createElement('div');c.className='el-card card';
     c.style.setProperty('--col',e.col);
     c.style.cssText+=`border-left:3px solid ${e.col}77`;
-    c.innerHTML=`<canvas class="el-canvas" width="200" height="90" style="width:100%;height:90px;display:block;margin-bottom:8px"></canvas><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:7px;color:var(--muted)">${e.signs}</span></div>`;
+    c.innerHTML=`<canvas class="el-canvas" width="200" height="90" style="width:100%;height:90px;display:block;margin-bottom:8px"></canvas><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">${e.signs}</span></div>`;
     g.appendChild(c);
     mountMotif(c.querySelector('.el-canvas'), e.motif||e.name.toLowerCase(), e.col);
   });

@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">PHASES<small>M18 &middot; 12 SOVEREIGN PHASES &middot; 12&times;12&times;9&times;9&times;9 = 104,976 NODES</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -49,12 +49,19 @@
     <div class="tab-panel pad" id="tab-my" style="display:none">
       <div class="sechead">YOUR CURRENT PHASE</div>
       <div class="glass-cyan" style="text-align:center;padding:32px;margin-bottom:20px">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT PHASE</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT PHASE</div>
         <div style="font-family:var(--D);font-size:clamp(20px,4vw,32px);color:var(--cyan)" id="my-phase-name">--</div>
-        <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:8px" id="my-phase-gate">--</div>
-        <div style="margin:20px auto 0;max-width:400px">
-          <div class="bar-track"><div class="bar-fill" id="my-phase-bar" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div>
-          <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px" id="my-phase-pct">0% to Apex</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:8px" id="my-phase-gate">--</div>
+        <!-- Same conic gauge as levels.html, in the cyan variant. The label is
+             static text beneath the value so the readout itself is one number,
+             not a sentence. -->
+        <div style="margin:20px auto 0;display:flex;justify-content:center">
+          <div class="omg-ring cyan" id="my-phase-ring" style="--size:clamp(142px,26vw,172px)">
+            <div style="text-align:center;line-height:1.25">
+              <div style="font-family:var(--D);font-size:clamp(20px,4vw,26px);color:var(--cyan)" id="my-phase-pct">0%</div>
+              <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">TO APEX</div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="my-phase-detail"></div>
@@ -66,19 +73,19 @@
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">THE PHASE SYSTEM</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">12 Sovereign Phases map the complete journey from Awakening to Apex. Each phase corresponds to a Gate of the lattice. Progress is gated by AUTH score, which compounds from three axes: Knowledge, Mastery, and Contribution.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 Sovereign Phases map the complete journey from Awakening to Apex. Each phase corresponds to a Gate of the lattice. Progress is gated by AUTH score, which compounds from three axes: Knowledge, Mastery, and Contribution.</div>
         </div>
         <div class="card" style="--card-accent:var(--gold)">
           <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">THE NUMBER 12</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">12 is the foundation of cosmic structure: 12 zodiac signs, 12 Olympian gods, 12 months, 12 hours. The Sovereign Platform mirrors this cosmic architecture with 12 tracks, 12 phases, and 12 gates — aligned with natural law.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 is the foundation of cosmic structure: 12 zodiac signs, 12 Olympian gods, 12 months, 12 hours. The Sovereign Platform mirrors this cosmic architecture with 12 tracks, 12 phases, and 12 gates — aligned with natural law.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
           <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">AUTHORITY GATING</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Phase progression requires AUTH score thresholds. AUTH = sqrt(A&#179;+B&#179;+C&#179;)×φ/e. The cubic relationship ensures that balanced growth across all three axes is rewarded with non-linear authority gains.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Phase progression requires AUTH score thresholds. AUTH = sqrt(A&#179;+B&#179;+C&#179;)×φ/e. The cubic relationship ensures that balanced growth across all three axes is rewarded with non-linear authority gains.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
           <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">FROM INITIATE TO APEX</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Phase I (Awakening) begins the journey with AUTH ≥ 0. Phase XII (Apex) requires all three axes at 9.000 — A=B=C=9, yielding AUTH = 27.8367. The journey is the curriculum; the lattice is the school.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Phase I (Awakening) begins the journey with AUTH ≥ 0. Phase XII (Apex) requires all three axes at 9.000 — A=B=C=9, yielding AUTH = 27.8367. The journey is the curriculum; the lattice is the school.</div>
         </div>
       </div>
       <div class="sechead" style="margin-top:20px">AUTH THRESHOLDS PER PHASE</div>
@@ -90,7 +97,7 @@
   </main>
 </div>
 <style>.pad{padding:var(--pad)}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .tab-btn:hover{color:var(--cyan);background:rgba(0,229,255,.04)}
 .tab-btn.active{border-bottom-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
 .phase-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-left:3px solid var(--pc,var(--cyan));padding:16px;transition:.18s}
@@ -118,11 +125,11 @@ function build(){
   var pg=document.getElementById('phase-grid');
   if(pg){pg.innerHTML=PHASES.map(function(p){
     return '<div class="phase-card card" style="--pc:'+p.color+'">'
-      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">PHASE '+ROM[p.n-1]+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">PHASE '+ROM[p.n-1]+'</div>'
       +'<div style="font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px">'+p.name+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:'+p.color+';margin-bottom:8px">'+p.gate+'</div>'
-      +'<div style="font-size:11px;line-height:1.7;color:var(--muted)">'+p.desc+'</div>'
-      +'<div style="margin-top:8px;font-family:var(--M);font-size:7.5px;color:var(--muted)">AUTH &ge; '+p.thr+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:'+p.color+';margin-bottom:8px">'+p.gate+'</div>'
+      +'<div style="font-size:12px;line-height:1.7;color:var(--muted)">'+p.desc+'</div>'
+      +'<div style="margin-top:8px;font-family:var(--M);font-size:12px;color:var(--muted)">AUTH &ge; '+p.thr+'</div>'
       +'</div>';
   }).join('');}
   var jl=document.getElementById('journey-line');
@@ -131,16 +138,16 @@ function build(){
     jl.innerHTML='<div style="position:absolute;left:9px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--cyan),transparent)"></div>'
       +PHASES.map(function(p){
       return '<div class="journey-stop" style="--pc:'+p.color+'">'
-        +'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:'+p.color+';margin-bottom:3px">PHASE '+ROM[p.n-1]+' · '+p.gate+'</div>'
+        +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+p.color+';margin-bottom:3px">PHASE '+ROM[p.n-1]+' · '+p.gate+'</div>'
         +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:3px">'+p.name+'</div>'
-        +'<div style="font-size:11px;color:var(--muted)">'+p.desc+' AUTH &ge; '+p.thr+'</div>'
+        +'<div style="font-size:12px;color:var(--muted)">'+p.desc+' AUTH &ge; '+p.thr+'</div>'
         +'</div>';
     }).join('');}
   var st=document.getElementById('science-thresholds');
   if(st){st.innerHTML=PHASES.map(function(p){
     return '<div style="display:flex;align-items:center;gap:12px;padding:6px 10px;border:1px solid var(--line);border-left:3px solid '+p.color+'">'
-      +'<span style="font-family:var(--M);font-size:8px;min-width:60px;color:'+p.color+'">PHASE '+ROM[p.n-1]+'</span>'
-      +'<span style="font-family:var(--M);font-size:8px;color:var(--ink);flex:1">'+p.name+' · '+p.gate+'</span>'
+      +'<span style="font-family:var(--M);font-size:12px;min-width:60px;color:'+p.color+'">PHASE '+ROM[p.n-1]+'</span>'
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--ink);flex:1">'+p.name+' · '+p.gate+'</span>'
       +'<span style="font-family:var(--D);font-size:12px;color:var(--muted)">AUTH &ge; '+p.thr+'</span>'
       +'</div>';
   }).join('');}
@@ -160,13 +167,14 @@ function updateMyPhase(auth){
   function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v);}
   sid('my-phase-name',p.name);sid('my-phase-gate',p.gate);
   var pct=(auth/27.8367*100).toFixed(1);
-  sid('my-phase-pct',pct+'% to Apex');
-  var bar=document.getElementById('my-phase-bar');if(bar)setTimeout(function(){bar.style.width=pct+'%';},100);
+  sid('my-phase-pct',pct+'%');
+  var ring=document.getElementById('my-phase-ring');
+  if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
   var det=document.getElementById('my-phase-detail');
   if(det){det.innerHTML='<div class="glass" style="--card-accent:'+p.color+'">'
     +'<div style="font-family:var(--D);font-size:13px;color:'+p.color+';margin-bottom:8px">'+p.name+' &middot; '+p.gate+'</div>'
-    +'<div style="font-size:11px;line-height:1.8;color:var(--muted)">'+p.desc+'</div>'
-    +'<div style="margin-top:10px;font-family:var(--M);font-size:8px;color:var(--muted)">THRESHOLD: AUTH &ge; '+p.thr+' &middot; NEXT: '+(phIdx<11?PHASES[phIdx+1].name+' (AUTH &ge; '+PHASES[phIdx+1].thr+')'  :'APEX REACHED')+'</div>'
+    +'<div style="font-size:12px;line-height:1.8;color:var(--muted)">'+p.desc+'</div>'
+    +'<div style="margin-top:10px;font-family:var(--M);font-size:12px;color:var(--muted)">THRESHOLD: AUTH &ge; '+p.thr+' &middot; NEXT: '+(phIdx<11?PHASES[phIdx+1].name+' (AUTH &ge; '+PHASES[phIdx+1].thr+')'  :'APEX REACHED')+'</div>'
     +'</div>';}
 }
 </script>

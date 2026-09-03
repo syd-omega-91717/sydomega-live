@@ -4,7 +4,7 @@
 
 The production gates require real execution evidence: a non-zero runner ID, executed steps, and a retrievable log. The GitHub-hosted lane was observed returning `runner_id: 0` with `steps: []`, so the repository does not treat that state as success.
 
-The four verification workflows therefore use the repository's Windows x64 self-hosted runner labels:
+**Twenty** workflows therefore use the repository's Windows x64 self-hosted runner labels (count derived from `.github/workflows/`, not written down here — it said "four" while the real number was 20):
 
 ```yaml
 runs-on: [self-hosted, Windows, X64]
@@ -12,41 +12,229 @@ runs-on: [self-hosted, Windows, X64]
 
 The runner is intentionally repository-scoped and the repository is private.
 
-## One-time Windows registration
+## Recovery — start here
 
-Run PowerShell as the Windows user that owns `C:\actions-runner`:
+**This section assumes something is already broken**, because that is when this
+document gets read. It needs no PAT and no repository checkout on the runner
+host; both of those have been the thing that failed.
 
-```powershell
-Set-Location C:\actions-runner
-& (Join-Path (git rev-parse --show-toplevel) 'scripts\bootstrap-github-runner.ps1')
+`runs-on` is `[self-hosted, Windows, X64]` in **all 20** self-hosted workflows,
+and **no workflow references a runner name**. So the defaults `config.cmd`
+offers interactively are sufficient: pressing Enter through the prompts gives
+the machine hostname as the runner name and exactly those three labels. Neither
+the name nor the extra `syd-omega` label is required for a job to be picked up.
+
+### 1. Get a registration token from GitHub
+
+<https://github.com/syd-omega-91717/sydomega-live/settings/actions/runners/new>
+
+Copy the value after `--token` in the snippet GitHub displays. It expires in one
+hour, so generate it immediately before the next step.
+
+### 2. Register, then install the service — in an ELEVATED PowerShell
+
+Elevation matters here and is the step most often missed. `config.cmd` will
+offer to install the service and then refuse:
+
+```
+Would you like to run the runner as service? (Y/N) y
+Needs Administrator privileges for configuring runner as windows service.
 ```
 
-If the repository is not checked out locally, copy `scripts/bootstrap-github-runner.ps1` from the repository into `C:\actions-runner` and run it there.
+Registration still succeeds; only the service is skipped, leaving a runner that
+is registered but not running. Start elevated and it works the first time:
 
-The script prompts for a GitHub PAT without displaying it. The PAT must have repository access sufficient to create a self-hosted runner registration token. For a private repository, GitHub documents repository `repo` scope for classic PATs; fine-grained tokens require repository Administration: write for the registration-token endpoint.
+```powershell
+cd C:\actions-runner
+.\config.cmd --unattended --replace --runasservice --url https://github.com/syd-omega-91717/sydomega-live --token PASTE_TOKEN_HERE --name SYD-OMEGA-WIN --labels self-hosted,Windows,X64,syd-omega --work _work
+Get-Service actions.runner.*      # expect Running
+```
 
-The script then:
+`--replace` is required whenever GitHub still knows a runner of that name;
+without it `config.cmd` stops with *"A runner exists with the same name"*.
 
-1. verifies access to the exact repository;
-2. requests a fresh one-hour registration token through the GitHub API;
-3. removes only incomplete local runner credentials;
-4. registers the runner with `self-hosted,Windows,X64` labels;
-5. refuses to start if `.runner` was not created;
-6. optionally installs the runner as a Windows service with `-InstallService`.
+### `--replace` does NOT clear a local config — this cost three attempts
 
-Never paste a registration token, PAT, service credential, or other secret into the repository.
+**`--replace` is about the registration GitHub holds, not the files on disk.**
+If `C:\actions-runner` already contains `.runner` / `.credentials` from an
+earlier registration, `config.cmd` refuses before it ever reads the token:
 
-## Manual fallback
+```
+Cannot configure the runner because it is already configured.
+To reconfigure the runner, run 'config.cmd remove' or './config.sh remove' first.
+```
 
-If the bootstrap script is unavailable, GitHub's repository runner page is:
+Clear the local config first. `--local` does it offline and needs no token,
+which is what you want when the old registration is orphaned:
 
-`Settings → Actions → Runners → New self-hosted runner`
+```powershell
+cd C:\actions-runner
+.\config.cmd remove --local
+```
 
-Use the exact repository URL:
+Then run the registration command above. If `--local` is not recognised on the
+installed runner build, `.\config.cmd remove --token <TOKEN>` does the same
+with a token from the same page.
 
-`https://github.com/syd-omega-91717/sydomega-live`
+**Prompt for the token; never hand over a command to edit.** Every failed
+attempt on record sent the literal placeholder text as the token — first
+inline, then again after it was moved into a `$T = "..."` assignment. Both
+times the command was long enough that the substitution read as part of it. An
+invalid token gives a **404**, not an auth message, which does not look like a
+token problem:
 
-Generate the token immediately before running `config.cmd`; registration tokens expire after one hour.
+```
+Http response code: NotFound from 'POST https://api.github.com/actions/runner-registration'
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+```
+
+`Read-Host` removes the substitution entirely — it prompts, you paste, nothing
+in the command needs editing:
+
+```powershell
+$T = Read-Host "Paste the runner token"
+.\config.cmd --unattended --replace --runasservice --url https://github.com/syd-omega-91717/sydomega-live --token $T --name SYD-OMEGA-WIN --labels self-hosted,Windows,X64,syd-omega --work _work
+```
+
+`Get-Service actions.runner.*` printing **nothing at all** means no service was
+ever created — the run stopped at the config step. A service that exists but is
+stopped prints a row with `Stopped`.
+
+**`--runasservice` is the whole service story. Do not call `svc.cmd`.**
+
+An earlier version of this document said *"`svc.cmd` is generated by
+`config.cmd`"* and told operators to run `.\svc.cmd install`. That is **wrong,
+and it wasted three attempts.** `svc.cmd` is generated by the *service
+step*, not by `config.cmd` generally — and that step only runs when
+`--runasservice` is passed (or when the interactive prompt is answered `y` **in
+an elevated session**). Register without it and `svc.cmd` never appears, so
+every `.\svc.cmd install` returns:
+
+```
+.\svc.cmd : The term '.\svc.cmd' is not recognized as the name of a cmdlet...
+```
+
+which reads like a broken install and is in fact a step that never ran.
+`--runasservice` installs *and* starts the service, so there is nothing left to
+call afterwards.
+
+### 3. If the service was skipped because the shell was not elevated
+
+The registration itself is fine; the service step is the part that needs
+elevation. **There is no way to add the service afterwards without re-running
+`config.cmd`** — this is the trap, because nothing on disk suggests it. Get a
+fresh token (the previous one has likely expired) and re-run the command above
+from an elevated PowerShell.
+
+To get jobs moving immediately without elevation, the runner is already
+registered, so:
+
+```powershell
+cd C:\actions-runner
+.\run.cmd
+```
+
+starts it listening at once. That window must stay open — use it to drain a
+queue that is about to expire, then do the service properly.
+
+### Why a service rather than `run.cmd`
+
+`run.cmd` runs in the foreground and the runner lives only as long as that
+window: closing it, logging out, or rebooting stops it, and queued jobs then sit
+until GitHub expires them after **24 hours**. That is the observed failure mode
+— no job was picked up between **2026-08-31 03:46 UTC** and **2026-09-03** while
+jobs queued and expired. Use `run.cmd` only to confirm the runner connects, then
+switch to the service.
+
+## The scripted path
+
+`scripts/bootstrap-github-runner.ps1` automates the same thing and additionally
+pins and SHA256-verifies the runner package. It needs a PAT **and** a checkout of
+this repository on the runner host — if either is missing or the PAT is refused,
+use the recovery section above instead of debugging the script.
+
+```powershell
+# elevated
+& (Join-Path (git rev-parse --show-toplevel) 'scripts\bootstrap-github-runner.ps1') -InstallService -Replace
+```
+
+The script prompts for the PAT without displaying it, then:
+
+1. downloads the pinned runner package and verifies its SHA256;
+2. checks for elevation **before** prompting, when `-InstallService` was passed;
+3. requests a fresh one-hour registration token through the GitHub API;
+4. removes local runner credentials — **only after** a registration token is in hand;
+5. registers the runner with `self-hosted,Windows,X64,syd-omega` labels;
+6. refuses to start if `.runner` and `.credentials` were not created;
+7. installs and starts a Windows service with `-InstallService`, otherwise runs
+   in the foreground and says so.
+
+Never paste a registration token, PAT, service credential, or other secret into
+the repository.
+
+## When the PAT is rejected (HTTP 401)
+
+The registration-token endpoint needs repository **admin** rights, which is more
+than read/write:
+
+| token type | what it needs |
+|---|---|
+| fine-grained | Repository permissions → **Administration: Read and write**, and `syd-omega-91717/sydomega-live` listed under Repository access |
+| classic | **`repo`** scope |
+
+A **404** on this endpoint usually means the token is valid but cannot see this
+private repository — not that the URL is wrong.
+
+Split the two possibilities in one command rather than guessing; a valid token
+returns a login, so a 401 here means the token itself is bad and a 401 only on
+the registration endpoint means permissions:
+
+```powershell
+$p = Read-Host 'PAT' -AsSecureString
+$t = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p))
+"length: $($t.Length)"    # classic = 40, fine-grained ~93; anything else means the paste carried something extra
+Invoke-RestMethod -Uri 'https://api.github.com/user' -Headers @{Authorization="Bearer $t";'User-Agent'='x'} | Select-Object login
+```
+
+Nothing on the machine is modified when the token is refused, so the fix is
+simply to re-run with a corrected token — **or to skip the PAT entirely** using
+the recovery section at the top.
+
+## Three corrections to this document
+
+Both of the following were stated here and were **not true of the script**. They
+are recorded rather than quietly deleted, because both cost real recovery time.
+
+**`-InstallService` did not exist.** Item 6 above previously promised it;
+`grep -c InstallService scripts/bootstrap-github-runner.ps1` returned **0**. An
+operator following this document ran `.\svc.cmd install` and got
+`CommandNotFoundException` — correctly, since **`svc.cmd` does not ship in the
+download; `config.cmd` generates it**, and registration had not completed. The
+parameter now exists and does what the document says.
+
+**"removes only incomplete local runner credentials" was false**, and this is the
+one that did damage. The removal was unconditional *and* shared a line with
+`config.cmd`:
+
+```powershell
+Remove-Item '.\.runner','.\.credentials','.\.credentials_rsaparams' -Force -ErrorAction SilentlyContinue; & $Config ...
+```
+
+Those are two statements. When the token request failed with a 401, the
+`Remove-Item` had already run, so a **working** registration was destroyed before
+anything could replace it — turning a bad-PAT annoyance into an unregistered
+runner. The removal now happens only after a registration token has been
+obtained, and a 401/403/404 aborts with the message *"Nothing on this machine was
+changed."*
+
+**"`svc.cmd` is generated by `config.cmd`" was wrong**, and it is the correction
+that cost the most: three separate attempts ended at
+`CommandNotFoundException`. `svc.cmd` is a by-product of the *service step*,
+which runs only under `--runasservice` or an elevated interactive `y`. The
+script had the same defect — `-InstallService` called `config.cmd` **without**
+`--runasservice` and then tested for `svc.cmd`, a condition it could never
+satisfy. Both now pass `--runasservice` and verify with `Get-Service
+actions.runner.*` instead.
 
 ## Acceptance test
 
@@ -62,10 +250,17 @@ Only after those conditions are present may code-level failures be evaluated.
 
 ## Workflows protected by this lane
 
-- `CI`
-- `Production Contract`
-- `Capability Evidence`
-- `Workflow Contract`
-- `Runner Probe`
+Derived, not listed — this section previously named five while the real number
+was twenty, which is CLAUDE.md section 8.4's "a number stored in prose drifts;
+derive it instead" landing on this document:
 
-All contain explicit runner diagnostics and execution markers. The repository's `scripts/workflow-contract.py` also validates the structural contract and does not fabricate runtime evidence.
+```sh
+grep -rl 'runs-on: \[self-hosted, Windows, X64\]' .github/workflows/
+```
+
+Every one of them stops at `queued` when the runner is down, and GitHub expires
+a queued job after 24 hours — so an outage longer than a day silently discards
+the runs rather than holding them.
+
+`scripts/workflow-contract.py` validates the structural contract and does not
+fabricate runtime evidence.

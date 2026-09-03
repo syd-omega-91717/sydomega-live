@@ -9,14 +9,14 @@
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
 .kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
-.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--green:#27ae60;--red:#e74c3c}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat{background:var(--b);border:1px solid #222;padding:14px;text-align:center}
 .stat-val{font-size:1.4rem;color:var(--gold);font-weight:bold;margin-bottom:4px;font-family:'Courier New',monospace}
 .stat-lbl{font-size:.55rem;color:var(--d);letter-spacing:.1em;font-family:'Courier New',monospace}
 .card{background:var(--b);border:1px solid #222;padding:16px;margin-bottom:16px}
-.card-title{font-size:11px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px;font-family:'Courier New',monospace}
+.card-title{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px;font-family:'Courier New',monospace}
 label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px;font-family:'Courier New',monospace}
 input,select,textarea{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:8px;font-family:'Courier New',monospace;font-size:.75rem}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
@@ -179,15 +179,15 @@ function switchTab(id,btn){
 }
 
 var DEFAULT_STEPS=[
-  {name:'NO PHONE — FIRST 30 MINUTES',duration:0,desc:'No social media, email, or news. Protect the cortisol awakening window.',icon:'📵'},
-  {name:'HYDRATION',duration:2,desc:'500ml water (add electrolytes or lemon). Rehydrate after 7-9h fasted.',icon:'💧'},
-  {name:'MORNING SUNLIGHT',duration:10,desc:'Outside or near bright window. Anchors circadian rhythm (Huberman 2022). No sunglasses.',icon:'☀️'},
-  {name:'MOVEMENT / EXERCISE',duration:20,desc:'Resistance training, cardio, or mobility. Elevates BDNF, dopamine, serotonin.',icon:'🏋️'},
-  {name:'COLD EXPOSURE',duration:2,desc:'Cold shower 1-3 min. 200-300% dopamine spike lasting 2-4 hours (Søberg 2021).',icon:'🧊'},
-  {name:'MEDITATION / STILLNESS',duration:10,desc:'Breathwork, body scan, or seated meditation. Reduces cortisol, improves HRV.',icon:'🧘'},
-  {name:'JOURNALING',duration:10,desc:'3 gratitudes + 1 intention + 1 affirmation. Prefrontal activation before reactive mind.',icon:'📓'},
-  {name:'REVIEW GOALS / PRIORITIES',duration:5,desc:'Read your targets. Speak your top 3 priorities aloud. Primes RAS toward opportunity.',icon:'🎯'},
-  {name:'LEARNING BLOCK',duration:20,desc:'Read, podcast, or deliberate study. Feed the mind before feeding the inbox.',icon:'📚'},
+  {name:'NO PHONE — FIRST 30 MINUTES',duration:0,desc:'No social media, email, or news. Protect the cortisol awakening window.',icon:'⊝'},
+  {name:'HYDRATION',duration:2,desc:'500ml water (add electrolytes or lemon). Rehydrate after 7-9h fasted.',icon:'▽'},
+  {name:'MORNING SUNLIGHT',duration:10,desc:'Outside or near bright window. Anchors circadian rhythm (Huberman 2022). No sunglasses.',icon:'☀︎'},
+  {name:'MOVEMENT / EXERCISE',duration:20,desc:'Resistance training, cardio, or mobility. Elevates BDNF, dopamine, serotonin.',icon:'⚒'},
+  {name:'COLD EXPOSURE',duration:2,desc:'Cold shower 1-3 min. 200-300% dopamine spike lasting 2-4 hours (Søberg 2021).',icon:'❄︎'},
+  {name:'MEDITATION / STILLNESS',duration:10,desc:'Breathwork, body scan, or seated meditation. Reduces cortisol, improves HRV.',icon:'⊙'},
+  {name:'JOURNALING',duration:10,desc:'3 gratitudes + 1 intention + 1 affirmation. Prefrontal activation before reactive mind.',icon:'▦'},
+  {name:'REVIEW GOALS / PRIORITIES',duration:5,desc:'Read your targets. Speak your top 3 priorities aloud. Primes RAS toward opportunity.',icon:'◎'},
+  {name:'LEARNING BLOCK',duration:20,desc:'Read, podcast, or deliberate study. Feed the mind before feeding the inbox.',icon:'▥'},
 ];
 
 var steps=JSON.parse(localStorage.getItem('omega_clarity_steps')||'null')||JSON.parse(JSON.stringify(DEFAULT_STEPS));

@@ -11,7 +11,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- My Profile</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
+<meta name="description" content="Your member identity card: rank, authority index, matrix coordinate, achievements, and downloadable passport."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -47,21 +47,21 @@ a{color:inherit;text-decoration:none}
 .ph-inner{position:relative;z-index:2;display:flex;align-items:flex-end;gap:24px;padding:clamp(80px,12vw,120px) clamp(14px,3vw,36px) 24px;flex-wrap:wrap}
 .ph-avatar-wrap{flex-shrink:0;position:relative}
 #av-canvas{display:block;border:2px solid var(--gold);border-radius:50%}
-.ph-rank{position:absolute;bottom:-4px;right:-4px;background:var(--void);border:1px solid var(--gold);padding:3px 7px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold);white-space:nowrap}
+.ph-rank{position:absolute;bottom:-4px;right:-4px;background:var(--void);border:1px solid var(--gold);padding:3px 7px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);white-space:nowrap}
 .ph-meta{flex:1;min-width:200px;padding-bottom:4px}
-.phm-id{font-family:var(--M);font-size:8px;letter-spacing:4px;color:var(--muted);margin-bottom:4px}
+.phm-id{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--muted);margin-bottom:4px}
 .phm-name{font-family:var(--D);font-size:clamp(18px,4vw,36px);font-weight:900;color:var(--gold);margin-bottom:2px;animation:name-glow 5s ease-in-out infinite}
 @keyframes name-glow{0%,100%{text-shadow:0 0 10px rgba(201,168,76,.2)}50%{text-shadow:0 0 30px rgba(201,168,76,.6),0 0 60px rgba(201,168,76,.15)}}
-.phm-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px}
+.phm-title{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px}
 .phm-badges{display:flex;gap:6px;flex-wrap:wrap}
-.phm-badge{font-family:var(--M);font-size:7px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-flex;align-items:center;gap:4px}
+.phm-badge{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-flex;align-items:center;gap:4px}
 .pb-dot{width:5px;height:5px;border-radius:50%;animation:dot-pulse 1.5s ease-in-out infinite}
 @keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* IDENTITY TABS (inspired by Image 1-B) */
 .tab-nav{display:flex;border-bottom:1px solid var(--line);background:rgba(8,8,15,.95);position:sticky;top:0;z-index:50;overflow-x:auto;scrollbar-width:none}
 .tab-nav::-webkit-scrollbar{display:none}
-.tab-btn{flex:1;min-width:100px;padding:14px 10px;font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;color:var(--muted);border-bottom:2px solid transparent;border-right:1px solid var(--line);cursor:pointer;text-align:center;transition:all .18s;white-space:nowrap}
+.tab-btn{flex:1;min-width:100px;padding:14px 10px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);border-bottom:2px solid transparent;border-right:1px solid var(--line);cursor:pointer;text-align:center;transition:all .18s;white-space:nowrap}
 .tab-btn:last-child{border-right:none}
 .tab-btn:hover{background:rgba(201,168,76,.04);color:var(--solar)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.06)}
@@ -74,21 +74,21 @@ a{color:inherit;text-decoration:none}
 .sg-item:hover{background:rgba(201,168,76,.04)}
 .sg-item::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--c,var(--gold));transform:scaleX(0);transition:transform .3s;transform-origin:left}
 .sg-item:hover::after{transform:scaleX(1)}
-.sgi-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.sgi-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .sgi-val{font-family:var(--D);font-size:clamp(16px,3vw,26px);font-weight:700;animation:val-breathe 5s ease-in-out infinite}
 @keyframes val-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
-.sgi-sub{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:3px}
+.sgi-sub{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:3px}
 
 /* CREDENTIALS CARD (Engineers Order) */
 .credential-card{border:1px solid rgba(201,168,76,.4);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(7,7,11,.9));padding:22px;position:relative;overflow:hidden;margin:0 clamp(14px,3vw,36px)}
 .cc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:10px}
 .cc-logo{font-family:var(--D);font-size:clamp(14px,3vw,20px);color:var(--gold);font-weight:700;line-height:1.3}
-.cc-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.cc-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
 .cc-num{font-family:var(--D);font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--gold);text-align:right}
 .cc-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .ccf{border:1px dashed rgba(201,168,76,.2);padding:10px}
-.ccf-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
-.ccf-val{font-family:var(--M);font-size:11px;color:var(--solar)}
+.ccf-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.ccf-val{font-family:var(--M);font-size:12px;color:var(--solar)}
 .cc-chip{position:absolute;bottom:18px;right:22px;width:40px;height:30px;border:1px solid rgba(201,168,76,.4);background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));display:flex;align-items:center;justify-content:center}
 .cc-chip-lines{display:flex;flex-direction:column;gap:3px;width:26px}
 .cc-chip-lines div{height:2px;background:rgba(201,168,76,.5);border-radius:1px}
@@ -98,26 +98,26 @@ a{color:inherit;text-decoration:none}
 .axis-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .axis-row:last-child{margin-bottom:0}
 .ar-id{font-family:var(--D);font-size:13px;font-weight:700;min-width:26px}
-.ar-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);min-width:108px}
+.ar-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);min-width:108px}
 .ar-wrap{flex:1;height:6px;background:rgba(201,168,76,.07);border-radius:3px;overflow:hidden;position:relative}
 .ar-fill{height:100%;border-radius:3px;transition:width 2s cubic-bezier(.25,.46,.45,.94);position:relative}
 .ar-fill::after{content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;animation:node-pulse 1.5s ease-in-out infinite}
 .ar-val{font-family:var(--D);font-size:16px;font-weight:700;min-width:48px;text-align:right}
-.ar-apex{font-family:var(--M);font-size:8px;color:var(--green);min-width:48px;letter-spacing:1px}
+.ar-apex{font-family:var(--M);font-size:12px;color:var(--green);min-width:48px;letter-spacing:1px}
 
 /* ACHIEVEMENT GRID (inspired by Image 1-B badges) */
 .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
 .ach-badge{border:1px solid;background:linear-gradient(160deg,var(--panel),transparent);padding:12px;text-align:center;position:relative;overflow:hidden;transition:all .2s;cursor:default}
 .ach-badge:hover{transform:translateY(-3px)}
 .ab-canvas{display:block;margin:0 auto 6px}
-.ab-name{font-family:var(--M);font-size:7px;letter-spacing:1px;margin-bottom:3px}
-.ab-tier{font-family:var(--M);font-size:6px;letter-spacing:2px;padding:1px 5px;border:1px solid;display:inline-block}
+.ab-name{font-family:var(--M);font-size:12px;letter-spacing:1px;margin-bottom:3px}
+.ab-tier{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:1px 5px;border:1px solid;display:inline-block}
 
 /* IDENTITY FIELDS */
 .id-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border:1px solid var(--line);margin:0 clamp(14px,3vw,36px)}
 .id-field{padding:14px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .id-field:nth-child(2n){border-right:none}
-.idf-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.idf-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .idf-val{font-family:var(--M);font-size:12px;color:var(--solar)}
 
 /* SOCIAL PANEL (inspired by Image 4) */
@@ -125,8 +125,8 @@ a{color:inherit;text-decoration:none}
 .social-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:14px 16px;flex:1;min-width:200px;display:flex;align-items:center;gap:12px;transition:all .18s;text-decoration:none}
 .social-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
 .sc-icon{font-size:22px;flex-shrink:0}
-.sc-body .scb-handle{font-family:var(--M);font-size:10px;color:var(--solar);margin-bottom:2px}
-.sc-body .scb-desc{font-size:11px;color:var(--muted);font-weight:300}
+.sc-body .scb-handle{font-family:var(--M);font-size:12px;color:var(--solar);margin-bottom:2px}
+.sc-body .scb-desc{font-size:12px;color:var(--muted);font-weight:300}
 
 /* ARCHITECT CONSOLE */
 .arch-console{display:none;border:2px solid rgba(139,0,0,.35);background:linear-gradient(160deg,rgba(139,0,0,.06),transparent);padding:24px;margin:28px clamp(14px,3vw,36px) 0;position:relative;overflow:hidden}
@@ -134,35 +134,35 @@ a{color:inherit;text-decoration:none}
 @keyframes arch-scan{0%,100%{opacity:.4}50%{opacity:1}}
 .ac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .ac-title{font-family:var(--D);font-size:18px;color:var(--crim);font-weight:700;letter-spacing:2px}
-.ac-badge{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:4px 12px;border:1px solid rgba(139,0,0,.5);color:var(--crim);background:rgba(139,0,0,.1);display:flex;align-items:center;gap:6px}
+.ac-badge{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:4px 12px;border:1px solid rgba(139,0,0,.5);color:var(--crim);background:rgba(139,0,0,.1);display:flex;align-items:center;gap:6px}
 .ac-dot{width:6px;height:6px;border-radius:50%;background:var(--crim);animation:blink 1.2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .console-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
 .console-btn{border:1px solid rgba(139,0,0,.3);background:transparent;padding:14px;cursor:pointer;text-align:left;transition:all .18s}
 .console-btn:hover{border-color:rgba(139,0,0,.6);background:rgba(139,0,0,.08)}
 .cb-glyph{font-size:18px;color:var(--crim);margin-bottom:6px;display:block}
-.cb-title{font-family:var(--D);font-size:11px;color:var(--crim);font-weight:700;margin-bottom:3px}
-.cb-desc{font-size:10px;color:var(--muted);font-weight:300}
+.cb-title{font-family:var(--D);font-size:12px;color:var(--crim);font-weight:700;margin-bottom:3px}
+.cb-desc{font-size:12px;color:var(--muted);font-weight:300}
 
 /* SECHEAD */
-.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
 @media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.ph-inner{flex-direction:column;align-items:flex-start}}
 
 /* ACCESS CONTROL TAB -- OWNER ONLY */
 .tab-btn.access-tab{display:none;position:relative}
-.access-badge{position:absolute;top:4px;right:4px;background:var(--crim);color:#fff;font-family:var(--M);font-size:7px;font-weight:700;min-width:14px;height:14px;border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 3px;animation:ab-pulse 1.2s ease-in-out infinite;z-index:2}
+.access-badge{position:absolute;top:4px;right:4px;background:var(--crim);color:#fff;font-family:var(--M);font-size:12px;font-weight:700;min-width:14px;height:14px;border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 3px;animation:ab-pulse 1.2s ease-in-out infinite;z-index:2}
 @keyframes ab-pulse{0%,100%{box-shadow:0 0 4px rgba(139,0,0,.7)}50%{box-shadow:0 0 14px rgba(139,0,0,1),0 0 24px rgba(139,0,0,.4)}}
 .ac-alert{border:1px solid rgba(139,0,0,.5);background:linear-gradient(135deg,rgba(139,0,0,.1),rgba(7,7,11,.9));padding:18px;margin:0 clamp(14px,3vw,36px) 16px;display:none;position:relative;overflow:hidden;animation:ac-breathe 2s ease-in-out infinite}
 @keyframes ac-breathe{0%,100%{border-color:rgba(139,0,0,.35)}50%{border-color:rgba(139,0,0,.7)}}
 .ac-alert::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--crim),rgba(139,0,0,.3),var(--crim));animation:arch-scan 2s ease-in-out infinite}
 .aca-count{font-family:var(--D);font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--crim);animation:crim-pulse 2s ease-in-out infinite}
 @keyframes crim-pulse{0%,100%{text-shadow:0 0 8px rgba(139,0,0,.3)}50%{text-shadow:0 0 24px rgba(139,0,0,.8),0 0 48px rgba(139,0,0,.2)}}
-.aca-label{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted)}
-.aca-sub{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--crim);margin-top:4px}
+.aca-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted)}
+.aca-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--crim);margin-top:4px}
 /* Period selector */
 .period-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.pr-opt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:5px 10px;border:1px solid var(--line);background:transparent;cursor:pointer;transition:all .14s;color:var(--muted)}
+.pr-opt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:5px 10px;border:1px solid var(--line);background:transparent;cursor:pointer;transition:all .14s;color:var(--muted)}
 .pr-opt:hover,.pr-opt.sel{border-color:rgba(201,168,76,.5);color:var(--gold);background:rgba(201,168,76,.07)}
 /* Member rows */
 .mbr-list{display:flex;flex-direction:column;gap:0}
@@ -170,13 +170,13 @@ a{color:inherit;text-decoration:none}
 .mbr-row:hover{background:rgba(13,13,24,.7)}
 .mbr-init{width:38px;height:38px;border-radius:50%;border:1px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;flex-shrink:0}
 .mbr-meta{flex:1;min-width:160px}
-.mbr-email{font-family:var(--M);font-size:11px;color:var(--solar);margin-bottom:2px}
-.mbr-detail{font-family:var(--M);font-size:8px;color:var(--muted);letter-spacing:1px}
+.mbr-email{font-family:var(--M);font-size:12px;color:var(--solar);margin-bottom:2px}
+.mbr-detail{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px}
 .mbr-status{flex-shrink:0;text-align:center;min-width:80px}
-.mbr-pill{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 8px;border:1px solid;display:inline-block;margin-bottom:3px}
+.mbr-pill{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 8px;border:1px solid;display:inline-block;margin-bottom:3px}
 .mbr-timer{font-family:var(--D);font-size:14px;font-weight:700;color:var(--gold);display:block;margin-top:2px}
 .mbr-actions{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap}
-.mbr-btn{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:6px 12px;border:1px solid;background:transparent;cursor:pointer;transition:all .14s;white-space:nowrap}
+.mbr-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;border:1px solid;background:transparent;cursor:pointer;transition:all .14s;white-space:nowrap}
 .btn-gtrial{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .btn-gtrial:hover{background:rgba(201,168,76,.1)}
 .btn-gperm{color:var(--green);border-color:rgba(63,178,127,.4)}
@@ -188,7 +188,7 @@ a{color:inherit;text-decoration:none}
 /* Section filters */
 .ac-filter{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 clamp(14px,3vw,36px);overflow-x:auto;scrollbar-width:none}
 .ac-filter::-webkit-scrollbar{display:none}
-.acf-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 16px;border-bottom:2px solid transparent;cursor:pointer;transition:all .14s;color:var(--muted);white-space:nowrap;border-right:1px solid var(--line)}
+.acf-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 16px;border-bottom:2px solid transparent;cursor:pointer;transition:all .14s;color:var(--muted);white-space:nowrap;border-right:1px solid var(--line)}
 .acf-btn:hover,.acf-btn.acf-on{color:var(--gold);border-bottom-color:var(--gold)}
 
 /* ===== PASSPORT + KYC + CHARACTER TABS (ported, styling rebuilt) ===== */
@@ -423,9 +423,9 @@ a{color:inherit;text-decoration:none}
           </div>
           <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
             <canvas id="ph-ring-auth" data-omega-ring data-ring-size="64" data-ring-color="gold" data-ring-value="0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:3px">AUTHORITY INDEX <span data-canon="mechanic"></span></div><div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="ph-auth">--</div></div>
-            <button id="ph-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button>
-            <button data-passport-download style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(226,200,109,.4);color:var(--solar);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.08)'" onmouseout="this.style.background='transparent'" aria-label="Download sovereign passport PDF">&#8595; PASSPORT PDF</button>
+            <div><div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px">AUTHORITY INDEX <span data-canon="mechanic"></span></div><div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="ph-auth">--</div></div>
+            <button id="ph-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button>
+            <button data-passport-download style="margin-left:8px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(226,200,109,.4);color:var(--solar);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.08)'" onmouseout="this.style.background='transparent'" aria-label="Download sovereign passport PDF">&#8595; PASSPORT PDF</button>
             <div id="ph-sigil" class="omega-spin-slow" data-sigil-mount style="width:56px;height:56px;flex-shrink:0" role="img" aria-label="Sovereign sigil — procedurally generated from your element, axis values, and gate"></div>
           </div>
         </div>
@@ -469,7 +469,7 @@ a{color:inherit;text-decoration:none}
       <div class="arch-console" id="arch-console">
         <div class="ac-header">
           <div>
-            <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:rgba(139,0,0,.6);margin-bottom:3px">CLASSIFIED ACCESS -- LOADING... -- &#937;-91717-SYD-001</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:4px;color:rgba(139,0,0,.6);margin-bottom:3px">CLASSIFIED ACCESS -- LOADING... -- &#937;-91717-SYD-001</div>
             <div class="ac-title">ARCHITECT CONSOLE</div>
           </div>
           <div class="ac-badge"><div class="ac-dot"></div>ABSOLUTE OWNER ACCESS</div>
@@ -512,7 +512,7 @@ a{color:inherit;text-decoration:none}
             </div>
             <div>
               <div class="cc-num">#30875</div>
-              <div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:right;letter-spacing:2px">MEMBER NO.</div>
+              <div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:right;letter-spacing:2px">MEMBER NO.</div>
             </div>
           </div>
           <div class="cc-fields">
@@ -527,7 +527,7 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
       </div>
-      <div id="member-credentials-note" style="display:none;padding:40px 20px;text-align:center;font-family:var(--M);font-size:11px;color:var(--muted)">
+      <div id="member-credentials-note" style="display:none;padding:40px 20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">
         Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
       </div>
       <!-- 12 Certs - all issued -->
@@ -540,36 +540,36 @@ a{color:inherit;text-decoration:none}
 <div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
   <canvas id="cv-matx" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
   <div>
-    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--gold);margin-bottom:3px" id="hd-title-matx">&#937; SOVEREIGN ENGINE</div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+    <div style="font-family:var(--D);font-size:12px;letter-spacing:.05em;color:var(--gold);margin-bottom:3px" id="hd-title-matx">&#937; SOVEREIGN ENGINE</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
   </div>
   <div style="margin-left:auto;text-align:right">
     <div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="hd-auth-matx">27.8367</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
   </div>
 <div data-page-emblem="profile" style="margin:20px auto 0"></div>
 </div>
 <script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_a">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_a">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
     <div style="height:3px;background:rgba(201,168,76,.08);margin-top:8px;border-radius:1px"><div id="mat-a-pb" style="height:100%;background:var(--gold);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(0,229,255,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--cyan)" id="mat-b-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_b">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_b">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
     <div style="height:3px;background:rgba(0,229,255,.06);margin-top:8px;border-radius:1px"><div id="mat-b-pb" style="height:100%;background:var(--cyan);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(63,178,127,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="mat-c-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_c">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_c">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
     <div style="height:3px;background:rgba(63,178,127,.06);margin-top:8px;border-radius:1px"><div id="mat-c-pb" style="height:100%;background:var(--green);width:0%;transition:width 1s"></div></div>
   </div>
 </div>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.4rem">
   <canvas id="mat-cv" width="120" height="120" style="width:60px;height:60px;flex-shrink:0"></canvas>
-  <div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:9px;letter-spacing:2px;color:var(--muted,#8a8676)">
+  <div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">
     AUTH = sqrt(A³+B³+C³)×φ/e = 27.8367 | A³=B³=C³=729 | sqrt(2187)×φ/e<br>
     12×12×9×9×9 = 104,976 &middot; 3×104,976 = 314,928
   </div>
@@ -593,19 +593,19 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.4rem">
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--gold)" id="lat-track">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_track">TRACK / 12</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_track">TRACK / 12</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--cyan)" id="lat-phase">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_phase">PHASE / 12</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_phase">PHASE / 12</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--green)" id="lat-pct">--%</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_percentage">LATTICE %</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_percentage">LATTICE %</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--solar)" id="lat-node">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_node">NODE / 104,976</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_node">NODE / 104,976</div>
         </div>
       </div>
       <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-bottom:1.4rem">
@@ -614,25 +614,25 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem" data-i18n="profile_section_axis_map">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
         <div style="border:1px solid rgba(0,229,255,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px" data-i18n="profile_axis_knowledge_label">A &middot; KNOWLEDGE<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px" data-i18n="profile_axis_knowledge_label">A &middot; KNOWLEDGE<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="mat-a">--</div>
           <div style="height:4px;background:rgba(0,229,255,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-a-bar" style="display:block;height:100%;width:0;background:var(--cyan);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px" data-i18n="profile_axis_mastery_label">B &middot; MASTERY<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px" data-i18n="profile_axis_mastery_label">B &middot; MASTERY<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="mat-b">--</div>
           <div style="height:4px;background:rgba(201,168,76,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-b-bar" style="display:block;height:100%;width:0;background:var(--gold);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(63,178,127,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green);margin-bottom:8px" data-i18n="profile_axis_contribution_label">C &middot; CONTRIBUTION<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:8px" data-i18n="profile_axis_contribution_label">C &middot; CONTRIBUTION<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--green)" id="mat-c">--</div>
           <div style="height:4px;background:rgba(63,178,127,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-c-bar" style="display:block;height:100%;width:0;background:var(--green);transition:width .6s"></i></div>
         </div>
       </div>
       <div style="border:1px solid var(--line);padding:14px;border-radius:2px">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px" data-i18n="profile_authority_score">AUTHORITY SCORE</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px" data-i18n="profile_authority_score">AUTHORITY SCORE</div>
         <div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="mat-auth">--</div>
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:4px">/ 27.8367 APEX &middot; 12 GATES</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px">/ 27.8367 APEX &middot; 12 GATES</div>
       </div>
     </div>
     </div>
@@ -648,10 +648,10 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="sechead" data-reveal="fade-up" data-i18n="prof_social_identification_header">SOVEREIGN IDENTIFICATION</div>
       <div style="padding:0 clamp(14px,3vw,36px)">
         <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_handle_label">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_rank_label">RANK</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">9.9.9 -- ABSOLUTE</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_frequency_label">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_node_label">NODE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">NODE 9.9.9</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_handle_label">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_rank_label">RANK</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">9.9.9 -- ABSOLUTE</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_frequency_label">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_node_label">NODE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">NODE 9.9.9</div></div>
         </div>
       </div>
     </div>
@@ -666,48 +666,48 @@ function frame(){ctx.clearRect(0,0,120,120);
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px">
     <a href="/approvals.html" style="display:block;border:1px solid rgba(201,168,76,.4);padding:14px;text-decoration:none;border-radius:2px;background:rgba(201,168,76,.06);transition:.2s"
        onmouseenter="this.style.background='rgba(201,168,76,.12)'" onmouseleave="this.style.background='rgba(201,168,76,.06)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:5px" data-i18n="prof_access_approval_queue">&Omega; APPROVAL QUEUE</div>
-      <div id="owner-pending-count" style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)">LOADING...</div><div id="owner-trial-count" style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px"></div>
+      <div style="font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:5px" data-i18n="prof_access_approval_queue">&Omega; APPROVAL QUEUE</div>
+      <div id="owner-pending-count" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)">LOADING...</div><div id="owner-trial-count" style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px"></div>
     </a>
     <a href="/matrix.html" style="display:block;border:1px solid rgba(0,229,255,.3);padding:14px;text-decoration:none;border-radius:2px;background:rgba(0,229,255,.03);transition:.2s"
        onmouseenter="this.style.background='rgba(0,229,255,.07)'" onmouseleave="this.style.background='rgba(0,229,255,.03)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--cyan);margin-bottom:5px" data-i18n="prof_access_matrix_engine">MATRIX ENGINE</div>
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_matrix_subtitle">104,976-NODE LATTICE</div>
+      <div style="font-family:var(--D);font-size:12px;color:var(--cyan);margin-bottom:5px" data-i18n="prof_access_matrix_engine">MATRIX ENGINE</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_matrix_subtitle">104,976-NODE LATTICE</div>
     </a>
     <a href="/advertising.html" style="display:block;border:1px solid rgba(139,0,0,.3);padding:14px;text-decoration:none;border-radius:2px;background:rgba(139,0,0,.04);transition:.2s"
        onmouseenter="this.style.background='rgba(139,0,0,.08)'" onmouseleave="this.style.background='rgba(139,0,0,.04)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--crim);margin-bottom:5px" data-i18n="prof_access_advertising">ADVERTISING</div>
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_advertising_subtitle">SOVEREIGN PLACEMENTS</div>
+      <div style="font-family:var(--D);font-size:12px;color:var(--crim);margin-bottom:5px" data-i18n="prof_access_advertising">ADVERTISING</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_advertising_subtitle">SOVEREIGN PLACEMENTS</div>
     </a>
   </div>
   <!-- OWNER APEX STATUS -->
   <div style="border:1px solid rgba(201,168,76,.25);padding:16px;border-radius:2px;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.8))">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px" data-i18n="prof_access_apex_status">SOVEREIGN APEX STATUS</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px" data-i18n="prof_access_apex_status">SOVEREIGN APEX STATUS</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--gold)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_a">AXIS A</div>
-        <div style="font-family:var(--M);font-size:7px;color:var(--muted)">A&sup3;=729.000</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_a">AXIS A</div>
+        <div style="font-family:var(--M);font-size:12px;color:var(--muted)">A&sup3;=729.000</div>
       </div>
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--cyan)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_b">AXIS B</div>
-        <div style="font-family:var(--M);font-size:7px;color:var(--muted)">B&sup3;=729.000</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_b">AXIS B</div>
+        <div style="font-family:var(--M);font-size:12px;color:var(--muted)">B&sup3;=729.000</div>
       </div>
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--green)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_c">AXIS C</div>
-        <div style="font-family:var(--M);font-size:7px;color:var(--muted)">C&sup3;=729.000</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_c">AXIS C</div>
+        <div style="font-family:var(--M);font-size:12px;color:var(--muted)">C&sup3;=729.000</div>
       </div>
     </div>
-    <div style="margin-top:12px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold);text-align:center">
+    <div style="margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);text-align:center">
       AUTH = sqrt(2187) &times; &phi;/e = <strong>27.8367</strong> &middot; ABSOLUTE APEX
     </div>
   </div>
 </div>
 
       <!-- PRIVACY SEAL -->
-      <div style="margin:16px clamp(14px,3vw,36px) 0;padding:10px 14px;border:1px solid rgba(139,0,0,.3);background:rgba(139,0,0,.05);font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(139,0,0,.8);display:flex;align-items:center;gap:8px">
+      <div style="margin:16px clamp(14px,3vw,36px) 0;padding:10px 14px;border:1px solid rgba(139,0,0,.3);background:rgba(139,0,0,.05);font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(139,0,0,.8);display:flex;align-items:center;gap:8px">
         <div style="width:6px;height:6px;border-radius:50%;background:var(--crim);animation:blink 1.2s ease-in-out infinite;flex-shrink:0"></div>
         CLASSIFIED -- THIS SECTION IS VISIBLE ONLY TO THE ARCHITECT. NO MEMBER CAN SEE THIS. NO MEMBER CAN SEE OTHER MEMBERS. ABSOLUTE PRIVACY ENFORCED.
       </div>
@@ -720,7 +720,7 @@ function frame(){ctx.clearRect(0,0,120,120);
           </div>
           <div style="flex:1">
             <div class="aca-sub">ACCESS REQUEST QUEUE -- ARCHITECT REVIEW REQUIRED</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:1px">
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:1px">
               Select a trial duration below, then tap GRANT TRIAL or GRANT PERMANENT next to each member.
             </div>
           </div>
@@ -730,9 +730,9 @@ function frame(){ctx.clearRect(0,0,120,120);
       <!-- SOVEREIGN TRIAL -- FIXED AT 9.1717 MINUTES -->
       <div style="margin:0 clamp(14px,3vw,36px) 16px;border:1px solid rgba(201,168,76,.35);background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(7,7,11,.9));padding:16px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--solar),var(--gold));animation:arch-scan 3s ease-in-out infinite"></div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:var(--muted);margin-bottom:5px">SOVEREIGN TRIAL DURATION -- ABSOLUTE AND FIXED</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--muted);margin-bottom:5px">SOVEREIGN TRIAL DURATION -- ABSOLUTE AND FIXED</div>
         <div style="font-family:var(--D);font-size:clamp(24px,5vw,40px);font-weight:700;color:var(--gold);animation:val-breathe 4s ease-in-out infinite">9.1717 MINUTES</div>
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:5px;letter-spacing:2px">After 9.1717 minutes the member is automatically logged out. Only you can grant access. Only you can extend or make permanent.</div>
+        <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:2px">After 9.1717 minutes the member is automatically logged out. Only you can grant access. Only you can extend or make permanent.</div>
       </div>
 
       <!-- FILTER TABS -->
@@ -1202,8 +1202,8 @@ function frame(){ctx.clearRect(0,0,120,120);
 <div style="display:flex;align-items:center;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(201,168,76,.15)">
   <canvas id="phb-cv-character" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
   <div>
-    <div style="font-family:var(--D),serif;font-size:9px;letter-spacing:2px;color:var(--muted)">SOVEREIGN CHARACTER &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></div>
-    <div style="font-family:var(--D),serif;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:3px">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX 27.8367</div>
+    <div style="font-family:var(--D),serif;font-size:12px;letter-spacing:2px;color:var(--muted)">SOVEREIGN CHARACTER &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></div>
+    <div style="font-family:var(--D),serif;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX 27.8367</div>
   </div>
 </div>
 <script>
@@ -1249,7 +1249,7 @@ t++;requestAnimationFrame(f);}f();})();
 
     <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_inheritance_settings">CHARACTER INHERITANCE SETTINGS</div>
     <div class="save-form">
-      <p style="font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px" data-i18n="profile_text_define_inheritance">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
+      <p style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px" data-i18n="profile_text_define_inheritance">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
       <div class="sf-row">
         <div class="sf-field"><label data-i18n="profile_field_character_name">CHARACTER NAME</label><input type="text" id="char-name-in" placeholder="Your sovereign name..." data-i18n-placeholder="profile_placeholder_character_name"/></div>
         <div class="sf-field"><label data-i18n="profile_field_dominant_trait">DOMINANT TRAIT</label>
@@ -1272,7 +1272,7 @@ t++;requestAnimationFrame(f);}f();})();
         <div class="sechead" data-i18n="prof_science_formula_header">AUTHORITY FORMULA</div>
         <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
           <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2">
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2">
             &phi; (PHI) = 1.6180339887<br>
             e (EULER) = 2.7182818285<br>
             APEX AUTH = 27.8367 (A=B=C=9)<br>
@@ -1281,13 +1281,13 @@ t++;requestAnimationFrame(f);}f();})();
         </div>
         <div class="sechead" data-i18n="prof_science_constants_header">SYSTEM CONSTANTS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_frequency">SOVEREIGN FREQUENCY</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_lattice_nodes">LATTICE NODES</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_golden_ratio">GOLDEN RATIO / EULER</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_apex_auth">APEX AUTHORITY</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_frequency">SOVEREIGN FREQUENCY</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_lattice_nodes">LATTICE NODES</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_golden_ratio">GOLDEN RATIO / EULER</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_apex_auth">APEX AUTHORITY</div></div>
         </div>
         <div class="sechead" data-i18n="prof_science_gate_thresholds">GATE THRESHOLDS</div>
-        <div style="font-family:var(--M);font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
+        <div style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
           <span data-i18n="prof_gate_sand_genesis">SAND GENESIS</span> &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
           <span data-i18n="prof_gate_glass_awakening">GLASS AWAKENING</span> &bull; AUTH &ge; 2.99<br>
           <span data-i18n="prof_gate_iron_forging">IRON FORGING</span> &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
@@ -1553,7 +1553,7 @@ async function buildMembershipCard(){
     const noMembershipText=window.OmegaI18n?window.OmegaI18n.t('profile_msg_no_active_membership',lang):'NO ACTIVE MEMBERSHIP';
     const chooseText=window.OmegaI18n?window.OmegaI18n.t('profile_action_choose_tier',lang):'Choose your tier';
     const noTierText=window.OmegaI18n?window.OmegaI18n.t('profile_msg_no_active_tier',lang):'No active tier';
-    card.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted)">'+noMembershipText+'</div><div style="margin-top:6px;font-size:13px">You haven&#39;t chosen a tier yet. <a href="/subscriptions.html" style="color:var(--gold)">'+chooseText+' &rarr;</a></div>';
+    card.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+noMembershipText+'</div><div style="margin-top:6px;font-size:13px">You haven&#39;t chosen a tier yet. <a href="/subscriptions.html" style="color:var(--gold)">'+chooseText+' &rarr;</a></div>';
     if(sgMember) sgMember.textContent='NONE';
     if(sgMemberSub) sgMemberSub.textContent=noTierText;
     return;
@@ -1568,8 +1568,8 @@ async function buildMembershipCard(){
   card.innerHTML=
     '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">'+
     '<div><div style="font-family:var(--D);font-size:16px;color:var(--gold)">'+tier.toUpperCase()+'</div>'+
-    '<div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-top:4px">'+status.toUpperCase()+'</div></div>'+
-    '<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">'+statusText+'</div>'+
+    '<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-top:4px">'+status.toUpperCase()+'</div></div>'+
+    '<div style="text-align:right"><div style="font-size:12px;color:var(--muted)">'+statusText+'</div>'+
     '<div style="font-size:13px;color:var(--ink)">'+endStr+(daysLeft!==null?' ('+daysLeft+' days)':'')+'</div></div>'+
     '</div>'+
     '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">'+manageText+' &rarr;</a></div>';
@@ -1640,7 +1640,7 @@ function buildMemberList(members){
   /* Skip owner in list */
   const display=rows.filter(m=>!m.is_owner);
   if(!display.length){
-    g.innerHTML='<div style="padding:24px clamp(14px,3vw,36px);font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:2px">NO MEMBERS IN THIS CATEGORY</div>';
+    g.innerHTML='<div style="padding:24px clamp(14px,3vw,36px);font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:2px">NO MEMBERS IN THIS CATEGORY</div>';
     return;
   }
   g.innerHTML='';
@@ -2262,7 +2262,7 @@ function buildCerts(uid){
   certs.forEach((cert)=>{
     const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
     const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
-    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:9px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
+    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:12px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
     g.appendChild(c);
   });
 }
@@ -2283,7 +2283,7 @@ function buildUnlocks(){
   UNLOCKS.forEach(u=>{
     const c=document.createElement('div');
     c.style.cssText=`border:1px solid ${u.col}33;background:linear-gradient(160deg,var(--panel),transparent);padding:16px;border-top:2px solid ${u.col}55`;
-    c.innerHTML=`<div style="font-size:22px;margin-bottom:8px">${u.icon}</div><div style="font-family:var(--D);font-size:12px;color:${u.col};font-weight:700;margin-bottom:5px">${u.title}</div><div style="font-size:11px;font-weight:300;color:var(--muted);line-height:1.5">${u.desc}</div>`;
+    c.innerHTML=`<div style="font-size:22px;margin-bottom:8px">${u.icon}</div><div style="font-family:var(--D);font-size:12px;color:${u.col};font-weight:700;margin-bottom:5px">${u.title}</div><div style="font-size:12px;font-weight:300;color:var(--muted);line-height:1.5">${u.desc}</div>`;
     g.appendChild(c);
   });
 }

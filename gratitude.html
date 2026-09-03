@@ -10,47 +10,47 @@
 
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
-.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
 .lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
 .tab-pane{display:none}.tab-pane.active{display:block}
 
 /* TODAY TAB */
-.today-date{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:20px}
+.today-date{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--dim);margin-bottom:20px}
 .g-entry-block{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px;background:rgba(201,168,76,.02);position:relative}
-.g-entry-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.g-entry-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
 .g-cats{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
-.g-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.g-cat{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
 .g-cat.on{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08)}
-.g-area{width:100%;min-height:68px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;line-height:1.75;resize:none;outline:none;letter-spacing:.3px}
+.g-area{width:100%;min-height:68px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:12px;line-height:1.75;resize:none;outline:none;letter-spacing:.3px}
 .g-area:focus{border-color:rgba(201,168,76,.28)}
 .g-area::placeholder{color:rgba(138,134,118,.25)}
 
 .g-note-wrap{margin-bottom:16px}
-.g-note-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px}
-.g-note{width:100%;min-height:60px;padding:10px;background:rgba(201,168,76,.02);border:1px solid rgba(201,168,76,.08);color:#c8c4b0;font-family:var(--M);font-size:11px;line-height:1.75;resize:vertical;outline:none}
+.g-note-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:6px}
+.g-note{width:100%;min-height:60px;padding:10px;background:rgba(201,168,76,.02);border:1px solid rgba(201,168,76,.08);color:#c8c4b0;font-family:var(--M);font-size:12px;line-height:1.75;resize:vertical;outline:none}
 .g-note:focus{border-color:rgba(201,168,76,.25)}
 .g-note::placeholder{color:rgba(138,134,118,.2)}
 
 .g-save-row{display:flex;align-items:center;gap:12px}
-.g-save-btn{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 24px;border:1px solid var(--gold);color:var(--gold);background:none;cursor:pointer;transition:.15s}
+.g-save-btn{font-family:var(--M);font-size:12px;letter-spacing:3px;padding:10px 24px;border:1px solid var(--gold);color:var(--gold);background:none;cursor:pointer;transition:.15s}
 .g-save-btn:hover{background:rgba(201,168,76,.08)}
-.g-flash{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);opacity:0;transition:opacity .3s}
+.g-flash{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);opacity:0;transition:opacity .3s}
 
 /* HISTORY TAB */
 .g-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:20px}
-.g-cal-hd{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);text-align:center;padding:4px 0}
-.g-cal-day{font-family:var(--M);font-size:8px;letter-spacing:.5px;text-align:center;padding:6px 2px;border:1px solid transparent;cursor:default;transition:.1s}
+.g-cal-hd{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);text-align:center;padding:4px 0}
+.g-cal-day{font-family:var(--M);font-size:12px;letter-spacing:.5px;text-align:center;padding:6px 2px;border:1px solid transparent;cursor:default;transition:.1s}
 .g-cal-day.has-entry{border-color:rgba(201,168,76,.3);color:var(--gold);cursor:pointer}
 .g-cal-day.has-entry:hover{background:rgba(201,168,76,.08)}
 .g-cal-day.today{border-color:rgba(201,168,76,.6)!important;color:var(--gold)!important}
 .g-cal-day.empty{color:rgba(138,134,118,.15)}
 
 .g-hist-entry{border:1px solid rgba(201,168,76,.1);padding:14px;margin-bottom:10px;background:rgba(201,168,76,.02)}
-.g-he-date{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.g-he-date{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
 .g-he-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
-.g-he-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.2);color:var(--dim);flex-shrink:0;margin-top:1px}
-.g-he-text{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.75);line-height:1.6}
-.g-he-note{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.45);line-height:1.6;margin-top:6px;font-style:italic;padding-left:4px;border-left:1px solid rgba(201,168,76,.15)}
+.g-he-cat{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.2);color:var(--dim);flex-shrink:0;margin-top:1px}
+.g-he-text{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.75);line-height:1.6}
+.g-he-note{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.45);line-height:1.6;margin-top:6px;font-style:italic;padding-left:4px;border-left:1px solid rgba(201,168,76,.15)}
 
 /* STREAK CALENDAR */
 .streak-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px}
@@ -60,22 +60,22 @@
 .jar-wrap{text-align:center;padding:20px 0}
 .jar-icon{font-size:48px;margin-bottom:16px}
 .jar-quote{font-family:var(--M);font-size:13px;color:#c8c4b0;line-height:1.9;max-width:500px;margin:0 auto 16px;letter-spacing:.3px;font-style:italic;min-height:80px}
-.jar-meta{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:24px}
-.jar-btn{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 28px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.15s}
+.jar-meta{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:24px}
+.jar-btn{font-family:var(--M);font-size:12px;letter-spacing:3px;padding:10px 28px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.15s}
 .jar-btn:hover{background:rgba(201,168,76,.08)}
 .jar-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-top:32px}
 .kpi{border:1px solid rgba(201,168,76,.1);padding:14px 10px;text-align:center}
 .kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 /* SCIENCE TAB */
 .stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
-.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .sci-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
-.sci-body{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.7);line-height:1.85;letter-spacing:.2px}
-.sci-source{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.35);margin-top:8px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.7);line-height:1.85;letter-spacing:.2px}
+.sci-source{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.35);margin-top:8px}
 </style>
   <script src="/bg.js"></script>
 </head>
@@ -83,7 +83,7 @@
 <div class="shell">
 <aside class="side" id="omega-side" data-page="gratitude"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">GRATITUDE<small>SOVEREIGN PRACTICE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="g-tb-meta">— ENTRIES</span></div>
+  <div class="topbar"><div class="t">GRATITUDE<small>SOVEREIGN PRACTICE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="g-tb-meta">— ENTRIES</span></div>
   <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
@@ -113,7 +113,7 @@
   <!-- HISTORY -->
   <div class="tab-pane" id="tab-history">
     <div style="margin-bottom:12px">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:10px">30-DAY STREAK TRACKER</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:10px">30-DAY STREAK TRACKER</div>
       <div class="streak-row" id="g-streak-dots"></div>
     </div>
     <div id="g-hist-cal" style="margin-bottom:20px"></div>
@@ -123,7 +123,7 @@
   <!-- GRATITUDE JAR -->
   <div class="tab-pane" id="tab-jar">
     <div class="jar-wrap">
-      <div class="jar-icon">🏺</div>
+      <div class="jar-icon">⏧</div>
       <div class="jar-quote" id="jar-quote">Your gratitude jar is empty — fill it with today's entry.</div>
       <div class="jar-meta" id="jar-meta"></div>
       <button class="jar-btn" id="jar-draw">DRAW FROM THE JAR</button>
@@ -326,7 +326,7 @@ function renderStreakDots() {
 function renderHistList() {
   const el = document.getElementById('g-hist-list');
   if (!_log.length) {
-    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:32px 0;text-align:center">NO ENTRIES YET</p>';
+    el.innerHTML = '<p style="font-family:var(--M);font-size:12px;color:var(--dim);padding:32px 0;text-align:center">NO ENTRIES YET</p>';
     return;
   }
   el.innerHTML = _log.slice(0,30).map(e => `

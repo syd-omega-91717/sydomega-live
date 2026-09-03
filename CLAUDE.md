@@ -149,7 +149,11 @@ which already own `opacity` on what they manage.
   `--M` (Courier Prime, labels/mono/letter-spaced UI chrome).
 - Layout primitives: `.shell`/`.side`/`.main` (sidebar + content), `.kpi`/
   `.kpi-row`, `.card`/`.card-grid`, `.tbl-*`, `.tab-*`, `.chip`, `.glass`/
-  `.glass-cyan`, `.bar-track`/`.bar-fill`.
+  `.glass-cyan`, `.bar-track`/`.bar-fill`. **`.shell` is a flex _row_**, so a
+  page-level block written after `</main>` is not below the content — it is a
+  third column, stretched full height, taking its own width out of the page.
+  23 pages were rendering ~300px narrow this way. Put page-level blocks inside
+  the content column.
 - Responsive breakpoints at 1200/900/700/480px, all defined in the same
   block.
 
@@ -172,62 +176,42 @@ through this one file with no per-page markup changes:
   bg.js — one `getBoundingClientRect()` per frame, only while hovering a
   matched element; GPU-cheap, no layout thrash).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + box-shadow glow, both **hover-only**, not static). Deliberately not
-  applied to `.kpi` itself, since `.kpi` already uses a per-instance
-  `--kc` custom property for its top-accent color (e.g.
-  `style="--kc:var(--cyan)"`) — `.kpi` gets a matching hover glow in
-  that same color instead, so the existing color-coding isn't
-  overridden. The hover-only gating was a correction, not the original
-  design: `border-image` always wins the border paint regardless of
-  selector specificity, so a *static* version silently discarded any
-  page's own per-instance border customization the moment `.card` was
-  added to its markup — found while extending `.card` to more pages
-  (`profile.html`, `cosmos.html`, `matrix.html`, `family.html`,
-  `journal.html`) and testing each one for real, not just in the
-  isolated harness: `matrix.html`'s Authority Score `.astat` sets
-  `style="border-color:rgba(0,229,255,.3)"` inline to distinguish it
-  from the other 3 axis cards; `family.html`'s
-  `.mc.heir{border-left:3px solid var(--gold)}` marks succession heirs;
-  `cosmos.html`'s `.el-card` sets a per-element colored left border via
-  `c.style.cssText+=` in JS (fire/water/earth/etc.) — all three would
-  have been silently overridden by a static `border-image`. Fixed by
-  moving `border-image` into the existing `:hover` rule so every page's
-  resting-state border stays exactly as that page intended, and the
-  gradient border is a hover reward, not a default override — this also
-  retroactively protects every pre-existing `.card` usage platform-wide
-  (`vault.html`, `media.html`, etc.) that this session never even
-  touched. `honors.html`'s `.honor-card` was never given the `.card`
-  class at all — its own `::before` rule does 5-way tier color-coding
-  (omega/gold/silver/bronze/cyan) which `.card`'s pre-existing v3
-  `::before` top-accent bar would override. **The mechanism stated here was
-  wrong** ("`::before` can only render one rule's declarations, never
-  merges"): pseudo-elements cascade per *property* like any element, proven
-  live — `.card::before` renders `content`/`position`/`height` from bg.js
-  merged with `box-shadow` from `omega-visual-evolution.css`. The exclusion
-  still stands, because both rules set `background` and only one can win
-  that, but the reason is a property collision, not an all-or-nothing one —
-  so re-check the excluded classes below against *which properties*
-  actually collide rather than against the presence of a pseudo. That
-  conflict isn't fixable by hover-gating since it's about the
-  achievement badges' permanent resting-state appearance, not a hover
-  effect — left on its own local styling instead.
+  + box-shadow glow, both **hover-only**, never static). Hover-only is a
+  correction, not the original design, and the reason is the standing
+  rule: `border-image` wins the border paint regardless of selector
+  specificity, so a *static* version silently discarded any page's own
+  per-instance border the moment `.card` was added to its markup
+  (`matrix.html`'s inline `border-color`, `family.html`'s `.mc.heir`,
+  `cosmos.html`'s JS-set `.el-card` left border — all three). Confining it
+  to `:hover` keeps every page's resting-state border exactly as that page
+  intended, retroactively for pre-existing `.card` usage too. `.kpi` is
+  excluded outright: it already carries a per-instance `--kc` accent color,
+  so it gets a matching hover glow in that color instead.
+  `honors.html`'s `.honor-card` was never given `.card` at all — both its
+  `::before` and `.card`'s set `background`, and only one can win. **The
+  mechanism this used to cite was wrong** ("a `::before` can only render one
+  rule, never merges"): pseudo-elements cascade per *property* like any
+  element, proven live. The exclusion still stands on the property
+  collision — so check the excluded classes below against *which properties*
+  collide, not against the presence of a pseudo. That one is not
+  hover-fixable: it is the badges' resting appearance.
 - **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
-  `*-card` classes across 117 files with a scanner, not by hand. **The
-  standing fact:** ~34 classes across as many pages were deliberately
-  **not** swept because `.card`'s hover-only `border-image`/glow would
-  collide with something they already own — either a page-local
-  `::before`/`::after` rule (pseudo-elements cascade per *property*, and
-  both rules set `background`, so one wins), or a per-instance border set
-  on the card element itself (inline `style=`, JS `.style.border*`/
-  `.style.cssText+=`, or a same-element modifier combo like
-  `.mc.heir{border-left:…}`). State-modifier classes
-  (`.sel`/`.active`/`.unlocked`…) that set `border-color` were swept in —
-  hover-only masking only ever hides them during a simultaneous hover.
-  The full per-class exclusion list, the scanner logic, and the
-  verification (regex round-trip, `querySelector` scan, headless-Chromium
-  resting-state computed-style check) are in `FIXES_LOG.md` — "the full
-  per-class exclusion list" and "Platform-wide `.card` sweep". Check a
-  class against those two failure modes before adding `.card` to it.
+  `*-card` classes across 117 files by scanner. **The standing fact:** ~34
+  classes were deliberately **not** swept, because `.card`'s hover-only
+  `border-image`/glow collides with something they already own — a page-local
+  `::before`/`::after` that sets `background` (pseudo-elements cascade per
+  *property*, and only one can win that one), or a per-instance border on the
+  card element itself (inline `style=`, JS `.style.border*`, or a same-element
+  modifier like `.mc.heir{border-left:…}`). State-modifier classes
+  (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
+  hover-only masking hides them only during a simultaneous hover. Check a class
+  against those two failure modes before adding `.card`; the per-class list,
+  the scanner and the verification are in `FIXES_LOG.md`.
+- **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
+  growing from the tab centre in the page axis colour, quarter-width on hover.
+  40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
+  fact established by parsing `<style>` blocks, since a whole-file grep counts
+  every `querySelectorAll('.tab-btn')` as a CSS rule.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
@@ -245,16 +229,10 @@ through this one file with no per-page markup changes:
   element with its own page-local class or inline `style=` (inline
   always wins the cascade regardless) is left untouched. This was
   chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
-  raw `<button>`s with no shared class — hand-editing every occurrence
-  across 178 pages wasn't attempted; this reaches them all from one
-  file instead. (This paragraph used to say "27 pages still use native
-  `<table>` markup" — that is **stale**: a repo-wide grep now finds zero
-  `<table>` elements anywhere, so the conversion is complete. See `FIXES_LOG.md`'s
-  correction, including what the conversion cost in ARIA semantics.)
-  Pages with page-local table classes are
-  *not* addressed by the fallback skin (they already have their own
-  classes, so `:not([class])` correctly skips them) and still open,
-  page-by-page, structural work — not a quick CSS fix.
+  raw `<button>`s with no shared class — this reaches them all from one file
+  instead of hand-editing every occurrence. Pages with page-local table classes
+  are *not* addressed by it (`:not([class])` correctly skips them) and remain
+  open, page-by-page structural work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
   Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
   or asset in this repo ever loaded them — zero `@font-face` rules, zero
@@ -264,13 +242,15 @@ through this one file with no per-page markup changes:
   entire time. `bg.js` now injects a Google Fonts `<link>` (plus
   `preconnect`) once per page, guarded by `#omega-fonts` so it never
   double-injects.
-- **Ambient noise overlay**: a fixed, `pointer-events:none`,
-  `opacity:.035` `<div id="omega-noise-overlay">`, injected by bg.js —
-  deliberately a real DOM element rather than a `body::before`
-  pseudo-element, since 5 pages (`cosmos.html`, `family.html`,
-  `offline.html`, `reset.html`, `terms.html`) already define their own
-  `body::before` and a bare-selector CSS rule would have collided with
-  those.
+- **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
+  `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
+  `body::before`, because 5 pages already define their own and a bare-selector
+  rule would collide.
+- **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
+  diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
+  real link. It draws no artwork: it emits `data-omega-emblem` for
+  `omega-emblems.js` to fill. Node size is a geometric constraint, not a taste;
+  read its header first. `cosmos.html` has its own agent wheel already.
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
   linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
   `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
@@ -433,10 +413,17 @@ are listed in rough order of how often they have recurred.
    publishes it from `OmegaSB.get()`. The same shape broke `omega-hercules.js`,
    which guarded on `window.sb`, a global nothing assigns. **Before using a
    `window.*` accessor, grep for its assignment, not just its readers.**
-5. **An injection guard that discards instead of deferring.**
-   `if (document.body) document.body.appendChild(x)` drops the work entirely
-   when body does not exist yet. `bg.js` now routes every injection through
-   `__omegaAppend()`, which queues to `DOMContentLoaded` instead.
+5. **An injection guard that discards, or that two modules share.** Two
+   shapes. (a) `if (document.body) document.body.appendChild(x)` drops the work
+   entirely when body does not exist yet; `bg.js` now routes every injection
+   through `__omegaAppend()`, which queues to `DOMContentLoaded`. (b) **Two
+   modules behind one `data-omega-*` attribute.** `omega-emblems-catalog.js`
+   (bg.js:90) and `omega-emblems.js` (bg.js:611) both used
+   `data-omega-emblems`, so the first to run permanently satisfied the
+   second's guard and the second never loaded on any page — invisible to
+   `audit.py` (the injection exists in source) and disguised by near-identical
+   exports (`OmegaEmblems` vs `OmegaEmblem`). **A guard
+   attribute is the module's identity, not the feature area's.**
 6. **A privilege and a policy that do not meet.** Three faces of one class:
    (a) Postgres grants `EXECUTE` to `PUBLIC` automatically on
    `CREATE FUNCTION`, so a narrowing `GRANT ... TO authenticated` is decorative
@@ -464,7 +451,12 @@ are listed in rough order of how often they have recurred.
 9. **Fabricated data rendered as fact.** `hercules.html` drew
    `Math.random() * 100` as the member's own progress. Worse than a false
    success toast. If the data model records completion, show completion — do
-   not invent a percentage it cannot support.
+   not invent a percentage it cannot support. **Recurred on money**:
+   `ad-network.html` rendered "TOTAL REVENUE $0.10 / CREATOR SHARE $0.07" from
+   `REVENUE.total += 0.05` per specimen-ad paint, under "Creators earn 70%
+   revenue share". `scripts/commerce-contract.py` gates both shapes (blocking).
+   §9's dormancy rule had no shared implementation until `omega-flags.js` /
+   `data-omega-flag` — so it depended on memory, and memory failed.
 
 ### 8.2 What is genuinely open — each on purpose, with a reason
 
@@ -505,29 +497,22 @@ open, recorded in `FIXES_LOG.md`:
 - **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
-  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
-  fix means history rewrite + force-push — never without explicit permission.
-- **`map.html`'s `profiles.lat/lon/gate` reads are gone** (fixed in `3f8a17d7`,
-  not by the live-verification pass). Confirmed against production on
-  2026-08-29: `profiles.country` exists (`text`); `lat`, `lon` and `gate` do
-  not. Collecting member location remains a feature and privacy decision, not a
-  bug fix, so nothing here proposes adding it.
+- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined.
+  `.vercelignore` keeps both out of the deploy; a fix needs a history rewrite,
+  never without explicit permission.
+- **Member location is not collected.** Live 2026-08-29: `profiles.country`
+  exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
+  in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
   `#evt-metrics-body`, an id that exists nowhere. Building the container means
   designing UI that was never built.
-- **`OmegaGuardian.gate()` is defined but never called**, and the
-  `threat_signal` event it listens for is never emitted. The topbar badge
-  therefore always effectively reads 100. Not a security hole on its own
-  (client-side gating was never the boundary — RLS is, §5), but the badge
-  implies protection that is not happening. Wiring it is an architecture
-  decision; removing the badge is a product one.
-- **`omega-threat.js` is not threat detection** — it is the digital-thread
-  traceability engine (`window.OmegaThread`). Filename mismatch left as-is.
-- **`supabase/migrations/` is validated only against a blank database.** Do not
-  run the full sequence against production expecting it to catch up existing
-  state — `task_completions` is a proven counterexample. The flat
-  `supabase/*.sql` bag remains the source of truth for new changes.
+- **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
+  so the score moves only on 30-min idle (`-10`) and a failed gated action
+  (`-5`), never on a threat. Detection is an architecture decision. *This entry
+  claimed `gate()` is never called and the badge always reads 100; both false —
+  `approvals.html` calls it at 3 sites, `updateBadge()` repaints every 2s.*
+- **`omega-threat.js` is the digital-thread traceability engine**
+  (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
 - **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
   remaining).** Both INFO-level. The "unused" signal reflects a platform with
   9 real profiles and near-zero traffic, not badly designed indexes — nearly
@@ -538,16 +523,12 @@ open, recorded in `FIXES_LOG.md`:
   RLS is enabled with no policies, which is the *safe* state (total lockout),
   and they are empty. Inventing policies for schema of unknown purpose would
   be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
-- **The `WITH CHECK(true)` item was overstated — corrected against live
-  2026-08-29.** Neither table is the §8.1(6b) spoofing shape.
-  `platform_events`'s INSERT policy is `member inserts own events`,
-  `WITH CHECK ((SELECT auth.uid()) = user_id)` — **correctly scoped**, not
-  `true`. `platform_metrics` *does* have `WITH CHECK(true)`, but the table has
-  **no `user_id` column at all**, so there is no attribution to spoof; the
-  residual risk is arbitrary metric rows (data integrity), not impersonation.
-  `authenticated` is confirmed **not** granted INSERT on either, so both are
-  unreachable regardless. Scope `platform_metrics` before that grant is ever
-  added, but it is not the security hole this entry used to describe.
+- **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
+  claim one). `platform_events` is correctly scoped to `auth.uid() = user_id`.
+  `platform_metrics` does have `WITH CHECK(true)` but no `user_id` column, so
+  there is nothing to spoof — the residual risk is junk rows, not impersonation
+  — and `authenticated` is not granted INSERT on either, so both are unreachable
+  anyway. Scope `platform_metrics` before that grant is ever added.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
   `is_platform_owner() OR status='active'` respectively). Both look deliberate
@@ -599,21 +580,18 @@ open, recorded in `FIXES_LOG.md`:
   adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
   Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
   returns on its own. That is how 70 previously-revoked functions became 23.
-- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is
-  Pro-and-above; the org is `free`, so the toggle is absent from the dashboard
-  and the advisor line cannot be cleared without upgrading. Raising minimum
-  password length and required characters (Auth → Providers → Email) is the
-  free-tier substitute for the same credential-stuffing threat.
-- **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
-  not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
-- **`scripts/audit.py` reports 8 warnings**, and the tool now
-  reports which parts of each are real risk vs. known noise. They cannot be
-  driven to 0 from source alone without live-schema verification, and forcing
-  them down would trade a known-unknown for an unverified "fixed". Seven were
-  reviewed and understood when this item was written; the count has since moved
-  from 7 to 8 without the list being re-read, so treat "all understood" as
-  covering the seven, not the current set — run the tool and check which one is
-  new before assuming a warning is old news.
+- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
+  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
+  Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
+  k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
+  bypasses it — not resolved.** Fails open reporting `checked:false`; never
+  render "not breached" on that (`scripts/tests/test_password_guard.py`).
+- **`scripts/audit.py` reports 0 critical / 7 warnings**, each labelled by the
+  tool as real risk vs. known noise. They cannot be driven to 0 from source
+  alone without live-schema verification, and forcing them down would trade a
+  known-unknown for an unverified "fixed". The count has drifted between 7 and
+  8 across sessions — re-run and diff the list rather than assuming a warning
+  is old news.
 - **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
   nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
   and does real work on every page. Self-activation with no caller is the norm
@@ -627,18 +605,21 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **126** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **179** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
+| `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
+| `python3 scripts/commerce-contract.py` | 0 findings |
+| `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
+| `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **19** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **22** blocking checks, all passing |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -705,6 +686,15 @@ entries (which were accurate when written):
   `:focus-visible` or scroll. Diff same-build pairs first, then compare.
   Decoding PNGs needs no PIL (absent here) — draw them to a canvas in the
   already-running Chromium and read `getImageData`.
+- **A pseudo whose box paints but whose text never does is
+  `-webkit-text-fill-color`, not `content`.** `bg.js:1290` adds `.ofx-sheen` to
+  every childless `.sechead` under 48 chars; that class fills heading text via
+  `background-clip:text` + `-webkit-text-fill-color:transparent`, which
+  **inherits into pseudo-elements**. Borders are not text fill, so a `::before`
+  ring drew perfectly with nothing inside it, through four wrong theories.
+  Forcing `content:"X" !important` settles it in one step: a pseudo that cannot
+  paint a plain letter has no glyph, font or `var()` problem. Generated text on
+  a sheened element needs its own `-webkit-text-fill-color`.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine
@@ -740,11 +730,9 @@ entries (which were accurate when written):
   `python3 scripts/omega-registry.py --check` regenerates the whole census and
   fails on drift. When adding a fact that is a *number*, put it in the generator,
   not the paragraph.
-- **Ask a script what it does before reading it.** All 18 `scripts/*.py|sh` now
-  answer `--help` with their module docstring and exit 0 (they previously ran the
-  full job instead, which for the five `register-*`/`patch-*`/`fix-*` writers was
-  an unrequested write). One `--help` call is far cheaper than reading the file,
-  which matters here for the reason §8.4's context note gives.
+- **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
+  answers `--help` with its docstring and exits 0 — far cheaper than reading the
+  file, and a test keeps it true.
 - **External repo research is partly blocked at the egress proxy.**
   `raw.githubusercontent.com` returns 200, so named files (`README.md`,
   `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
@@ -759,15 +747,25 @@ entries (which were accurate when written):
   documentation belongs and how to read this repo's very large files cheaply
   (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
   the entire auto-loaded context).
-- **Runtime verification is automated now — use it before claiming a UI or
+- **Presentation is measured in a render, never reasoned from the codepoint.**
+  A grep over-reports (✓ ★ ☰ ✦ ⚔ are pure typography) and under-reports — the
+  twelve zodiac signs are ordinary BMP symbols that default to *emoji*
+  presentation, so the platform's own sign system shipped as colour stickers.
+  Draw each candidate white-on-black to a canvas in the harness Chromium and
+  read the pixels back: channel spread means a colour glyph, and U+FE0E fixes
+  the BMP ones in place. `scripts/brand-glyph-check.py` gates it, and must scan
+  all three encodings — literal, `&#127805;`, `'\u{1F311}'` — since every one
+  decodes before paint; it flags only the emoji sub-ranges, because Alchemical,
+  Chess and Geometric-Extended sit in the same span and are monochrome type.
+- **Runtime verification is automated — use it before claiming a UI or
   data-layer change works.** `node scripts/verify-runtime.js` renders the
-  capability entrypoints in headless Chrome/Edge (zero repo deps; `SKIPPED`
-  when no browser) and asserts load / approval-guard-lifts / no-throw /
-  no-overflow / no-dup-id plus an advisory a11y pass; `--all` sweeps every
-  page. It found the `bg.js`-loaded-twice class on 29 pages and the
-  eager-`window.OmegaSupabase.sb` read on 6 (both fixed, `FIXES_LOG.md`). It
-  stubs Supabase, so it proves the client is wired, never production RLS.
-  Details in the `runtime-verify` skill.
+  capability entrypoints headless and asserts load / approval-guard-lifts /
+  no-throw / no-overflow / no-dup-id plus an advisory a11y pass; `--all` sweeps
+  every page. It stubs Supabase, so it proves the client is wired, never
+  production RLS. **A `SKIPPED` is usually a browser *layout* mismatch, not a
+  missing browser** — the `runtime-verify` skill has the symlink fix and the
+  `OMEGA_SCRATCHPAD` variable it needs. Do not substitute an ad-hoc harness:
+  this one asserts the §10 capability contracts.
 
 
 ## 9. Working in this repo — practical rules
@@ -928,9 +926,6 @@ the above; the GitHub REST API, `github.com` HTML and `codeload` tarballs are al
 403 at the egress proxy, so stars/activity/dependency dimensions stay
 **NOT VERIFIED** until a session has API access.
 
-Marketing/course URLs (e.g. contentcreator.com's AI creator course) are
-reading material, not sources of adoptable code — nothing in them maps to a
-file in this repo, so they are noted and not acted on.
 
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
 

@@ -9,14 +9,14 @@
 <style>
 .mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .mkt-card{border:1px solid var(--line);background:var(--surface);padding:16px;position:relative}
-.mkt-kind{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
+.mkt-kind{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
 .mkt-title{font-family:var(--D);font-size:14px;color:var(--solar);margin-bottom:5px;line-height:1.3}
-.mkt-desc{font-size:11px;color:var(--muted);line-height:1.65;margin-bottom:10px}
+.mkt-desc{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:10px}
 .mkt-price{font-family:var(--D);font-size:18px;color:var(--gold)}
-.mkt-meta{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
-.mkt-mine{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);border:1px solid rgba(0,229,255,.3);padding:2px 6px}
-.form-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
-.form-input{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
+.mkt-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
+.mkt-mine{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);border:1px solid rgba(0,229,255,.3);padding:2px 6px}
+.form-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.form-input{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
 .howit-step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
 .howit-num{font-family:var(--D);font-size:22px;color:var(--gold);min-width:32px;flex-shrink:0}
@@ -58,7 +58,7 @@
     </div>
     <textarea id="f-desc" class="form-input" placeholder="Describe your listing — what it contains, what the buyer receives, any conditions…" style="resize:vertical;min-height:80px;margin-bottom:12px"></textarea>
     <button id="btn-pub" class="btn-gold">LIST IN MARKETPLACE</button>
-    <div id="msg" style="font-family:var(--M);font-size:10px;margin-top:10px;display:none"></div>
+    <div id="msg" style="font-family:var(--M);font-size:12px;margin-top:10px;display:none"></div>
   </div>
 </div>
 
@@ -70,7 +70,7 @@
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SOVEREIGN EXCHANGE ARCHITECTURE</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission feeds the sovereign treasury.</div></div>
+    <div class="card"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
     <div class="card"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access is tier-gated. Free members can browse. Sovereign tier members can list. (Buying isn't built yet — see EARN ON SALE below.) The OmegaCanon.tierUnlocks() function evaluates this at listing time — the tier guard runs entirely in the client against the member's profile.</div></div>
     <div class="card"><div class="card-title">FILE DELIVERY</div><div class="card-body">File listings are stored in Supabase Storage via OmegaStorage.upload() and the path is recorded in marketplace_listings. There is no purchase step yet, so there's nothing to gate delivery on — this is upload/listing only, not a buy-then-receive flow.</div></div>
     <div class="card"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Completing a sale earns additional XP. The marketplace is not just commerce — it is the sovereign economy layer of the contribution axis, recognising economic action as an act of sovereignty.</div></div>
@@ -115,7 +115,7 @@ async function load(){
   var r=await sb.from('marketplace_listings').select('*').eq('status','active').order('created_at',{ascending:false}).limit(60);
   var rows=r.data||[];
   document.getElementById('count').textContent=rows.length+' ACTIVE';
-  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;grid-column:1/-1">NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.</div>';return;}
+  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.</div>';return;}
   grid.innerHTML=rows.map(function(it){return cardHtml(it,it.seller_id===uid);}).join('');
 }
 
@@ -123,7 +123,7 @@ async function loadMine(){
   var grid=document.getElementById('my-grid');
   var r=await sb.from('marketplace_listings').select('*').eq('seller_id',uid).order('created_at',{ascending:false}).limit(30);
   var rows=r.data||[];
-  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;grid-column:1/-1">YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.</div>';return;}
+  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.</div>';return;}
   grid.innerHTML=rows.map(function(it){return cardHtml(it,true);}).join('');
 }
 

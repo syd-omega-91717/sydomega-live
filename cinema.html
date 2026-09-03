@@ -10,23 +10,23 @@
 .film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .film-card{border:1px solid var(--line);background:var(--surface);border-top:3px solid var(--fc,var(--gold));padding:16px;transition:.18s;position:relative;overflow:hidden}
 .film-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.film-num{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
-.film-god{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--fc,var(--gold));margin-bottom:4px}
+.film-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.film-god{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--fc,var(--gold));margin-bottom:4px}
 .film-title{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px;line-height:1.3}
-.film-desc{font-size:11px;line-height:1.7;color:var(--muted)}
+.film-desc{font-size:12px;line-height:1.7;color:var(--muted)}
 .film-meta{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
-.film-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
+.film-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
 .olym-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
 .olym-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--oc,var(--gold));padding:14px 16px}
-.olym-god{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--oc,var(--gold));margin-bottom:4px}
+.olym-god{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--oc,var(--gold));margin-bottom:4px}
 .olym-film{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px}
-.olym-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.olym-sign{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .elem-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
 .elem-row{border:1px solid var(--line);background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:14px}
 .elem-glyph{font-family:var(--D);font-size:18px;flex-shrink:0;width:32px;text-align:center}
 .elem-info{flex:1;min-width:0}
 .elem-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
-.elem-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.elem-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -95,7 +95,7 @@
     <div class="elem-row"><div class="elem-glyph" style="color:#C9A84C">&#9843;</div><div class="elem-info"><div class="elem-title">Metal &middot; Films II &amp; X</div><div class="elem-meta">Love Sovereign &middot; Hearth Sovereign</div></div></div>
     <div class="elem-row"><div class="elem-glyph" style="color:#D9B86A">&#9733;</div><div class="elem-info"><div class="elem-title">Sand &middot; Film VI</div><div class="elem-meta">Wisdom Sovereign &mdash; amplifier track</div></div></div>
   </div>
-  <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:8px">Soul, Space, Void, and The All are metaphysical elements &mdash; class-based, not tied to an individual sign or film, per the platform's own 9-element structure.</div>
+  <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px">Soul, Space, Void, and The All are metaphysical elements &mdash; class-based, not tied to an individual sign or film, per the platform's own 9-element structure.</div>
   <div class="sechead" style="margin-top:12px">FEATURED SERIES &middot; 12 PER FILM = 144 TOTAL</div>
   <div class="elem-band">
     <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">I</div><div class="elem-info"><div class="elem-title">Twelve Houses</div><div class="elem-meta">War Sovereign universe &middot; 12 episodes &middot; Gate I+</div></div></div>
@@ -115,7 +115,7 @@
 
 <div class="tab-panel" id="tab-mythology">
   <div class="sechead">THE REAL OLYMPIANS &middot; SOURCED LIVE FROM WIKIPEDIA</div>
-  <div style="font-size:11px;line-height:1.7;color:var(--muted);margin-bottom:14px;max-width:640px">Every film above is fronted by a real Greek god. This tab is the non-fiction companion — genuine mythology, fetched live from Wikipedia (no login, no key), not sovereign-universe lore. Click a name to load its real summary.</div>
+  <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:14px;max-width:640px">Every film above is fronted by a real Greek god. This tab is the non-fiction companion — genuine mythology, fetched live from Wikipedia (no login, no key), not sovereign-universe lore. Click a name to load its real summary.</div>
   <div class="olym-grid" id="myth-grid"></div>
 </div>
 
@@ -169,7 +169,7 @@ function buildMythGrid(){
 function loadMyth(i){
   var g=REAL_OLYMPIANS[i];
   var el=document.getElementById('myth-body-'+i);
-  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING&hellip;</span>';
   fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(g.name)+'_(mythology)')
     .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
     .catch(function(){
@@ -179,11 +179,11 @@ function loadMyth(i){
     .then(function(data){
       var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(g.name));
-      el.innerHTML='<div style="font-size:11px;line-height:1.7;color:var(--ink);opacity:.85">'+extract+'</div>'
-        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:8px">READ FULL ARTICLE ON WIKIPEDIA &#x2192;</a>';
+      el.innerHTML='<div style="font-size:12px;line-height:1.7;color:var(--ink);opacity:.85">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:8px">READ FULL ARTICLE ON WIKIPEDIA &#x2192;</a>';
     })
     .catch(function(){
-      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia — check your connection and try again.</span>'
+      el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--crim)">Could not reach Wikipedia — check your connection and try again.</span>'
         +'<div style="margin-top:6px"><button class="film-tag" style="cursor:pointer;background:none" onclick="loadMyth('+i+')">RETRY</button></div>';
     });
 }

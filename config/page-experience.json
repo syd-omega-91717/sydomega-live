@@ -4,6 +4,7 @@
     "motion":"ambient",
     "depth":"layered",
     "contentDensity":"balanced",
+    "primaryAction":"Enter",
     "reducedMotion":"Respect prefers-reduced-motion and provide equivalent static interaction."
   },
   "archetypes":{

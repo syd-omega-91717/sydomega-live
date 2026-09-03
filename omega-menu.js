@@ -119,9 +119,9 @@
     /* owner-only group: hidden unless bg.js confirms is_owner (body.omega-owner) */
     '.om-grp-owner{display:none}',
     'body.omega-owner .om-grp-owner{display:block}',
-    '.om-grp h4{font-family:"Courier Prime",monospace;color:#00E5FF;font-size:11px;letter-spacing:3px;margin:0 0 10px;opacity:.85}',
+    '.om-grp h4{font-family:"Courier Prime",monospace;color:#00E5FF;font-size:12px;letter-spacing:3px;margin:0 0 10px;opacity:.85}',
     '.om-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}',
-    '.om-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:1px solid rgba(201,168,76,.22);background:rgba(255,255,255,.02);border-radius:12px;color:#d8d5cb;text-decoration:none;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1px;transition:all .2s}',
+    '.om-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:1px solid rgba(201,168,76,.22);background:rgba(255,255,255,.02);border-radius:12px;color:#d8d5cb;text-decoration:none;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;transition:all .2s}',
     '.om-card:hover{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.08);color:#E2C86D;transform:translateY(-2px)}',
     '.om-ic{width:40px;height:40px;display:inline-block}',
     '.om-card:hover .om-ic{filter:brightness(1.3)}',

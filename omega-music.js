@@ -236,7 +236,7 @@ window.addEventListener('omega:user-loaded',function(){
   btn.setAttribute('title','Play generative music');
   btn.setAttribute('aria-label','Toggle generative music');
   btn.textContent='♬ MUSIC OFF';
-  btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:7px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.3);color:var(--muted,#8a8676);background:none;cursor:pointer;border-radius:1px;flex-shrink:0;transition:.18s;';
+  btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.3);color:var(--muted,#8a8676);background:none;cursor:pointer;border-radius:1px;flex-shrink:0;transition:.18s;';
   btn.addEventListener('mouseenter',function(){this.style.borderColor='var(--solar,#E2C86D)';this.style.color='var(--solar,#E2C86D)';});
   btn.addEventListener('mouseleave',function(){this.style.borderColor='rgba(201,168,76,.3)';this.style.color='var(--muted,#8a8676)';});
   topbar.appendChild(btn);

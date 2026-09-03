@@ -191,7 +191,7 @@ window.__omegaPopulate = function(pr, user){
   /* ── HERO BADGES (cosmology chain) ── */
   var hb=document.getElementById('hero-badges');
   if(hb&&d.sign){
-    hb.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:9px;letter-spacing:1.5px;color:var(--gold,#C9A84C)">'
+    hb.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:var(--gold,#C9A84C)">'
       +sign+' \u00b7 '+elem+' \u00b7 '+god+' \u00b7 '+agent+' \u00b7 '+token
       +'</span>';
   }

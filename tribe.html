@@ -9,10 +9,10 @@
 .elem-card{padding:16px 18px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;border:1px solid}
 .elem-card:hover{transform:translateY(-2px)}
 .elem-icon{font-size:28px;margin-bottom:8px;display:block;line-height:1}
-.elem-name{font-family:var(--D);font-size:10px;letter-spacing:2px;margin-bottom:4px}
-.elem-principle{font-family:var(--M);font-size:7px;letter-spacing:1.5px;opacity:.6;margin-bottom:10px}
+.elem-name{font-family:var(--D);font-size:12px;letter-spacing:2px;margin-bottom:4px}
+.elem-principle{font-family:var(--M);font-size:12px;letter-spacing:1.5px;opacity:.6;margin-bottom:10px}
 .elem-count{font-family:var(--D);font-size:22px;line-height:1}
-.elem-count-label{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;opacity:.5;margin-top:2px}
+.elem-count-label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;opacity:.5;margin-top:2px}
 .elem-bar{height:3px;background:rgba(255,255,255,.06);margin-top:10px;overflow:hidden}
 .elem-bar-fill{height:100%;transition:width 1s ease}
 
@@ -20,20 +20,20 @@
 .tribe-rank-card{background:var(--surface);border:1px solid rgba(201,168,76,.12);padding:16px 18px}
 .trc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .trc-icon{font-size:20px}
-.trc-name{font-family:var(--D);font-size:10px;letter-spacing:2px}
-.trc-count{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto}
+.trc-name{font-family:var(--D);font-size:12px;letter-spacing:2px}
+.trc-count{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto}
 .member-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .member-row:last-child{border-bottom:none}
-.mr-rank{font-family:var(--D);font-size:11px;color:rgba(201,168,76,.4);width:24px;flex-shrink:0;text-align:center}
+.mr-rank{font-family:var(--D);font-size:12px;color:rgba(201,168,76,.4);width:24px;flex-shrink:0;text-align:center}
 .mr-rank.gold-r{color:var(--gold)}
 .mr-rank.silver-r{color:rgba(192,192,192,.7)}
 .mr-rank.bronze-r{color:rgba(205,127,50,.7)}
-.mr-name{font-size:10px;flex:1;color:rgba(255,255,255,.75)}
-.mr-auth{font-family:var(--M);font-size:7px;color:var(--gold);text-align:right}
-.mr-gate{font-family:var(--M);font-size:6.5px;color:rgba(0,229,255,.4);text-align:right}
+.mr-name{font-size:12px;flex:1;color:rgba(255,255,255,.75)}
+.mr-auth{font-family:var(--M);font-size:12px;color:var(--gold);text-align:right}
+.mr-gate{font-family:var(--M);font-size:12px;color:rgba(0,229,255,.4);text-align:right}
 
 .matrix-wrap{overflow-x:auto}
-table.affinity-matrix{border-collapse:collapse;width:100%;font-family:var(--M);font-size:7.5px}
+table.affinity-matrix{border-collapse:collapse;width:100%;font-family:var(--M);font-size:12px}
 table.affinity-matrix th,table.affinity-matrix td{padding:6px 8px;text-align:center;border:1px solid rgba(255,255,255,.04)}
 table.affinity-matrix th{color:rgba(138,134,118,.5);letter-spacing:1px}
 table.affinity-matrix .cell-self{background:rgba(201,168,76,.05);color:rgba(201,168,76,.4)}
@@ -42,11 +42,11 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 .dominance-wrap{height:200px;margin-bottom:20px}
 #dominanceCanvas{width:100%;height:200px}
 
-.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.3)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-#tribe-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(0,229,255,.3);padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#tribe-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(0,229,255,.3);padding:8px 20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 
 /* science */
 </style>
@@ -98,7 +98,7 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 <!-- MATRIX TAB -->
 <div class="tab-panel" id="tab-matrix">
   <div class="sechead">INTER-ELEMENT AFFINITY MATRIX</div>
-  <p style="font-family:var(--M);font-size:10px;color:var(--muted);margin-bottom:14px;letter-spacing:1px">100 = PERFECT HARMONY · VALUES REPRESENT ELEMENTAL RESONANCE COEFFICIENT (0–100)</p>
+  <p style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:14px;letter-spacing:1px">100 = PERFECT HARMONY · VALUES REPRESENT ELEMENTAL RESONANCE COEFFICIENT (0–100)</p>
   <div class="matrix-wrap" id="matrixWrap">
     <div class="empty"><span class="spin"></span>COMPUTING RESONANCE...</div>
   </div>
@@ -130,9 +130,9 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 
   <div class="sechead">ELEMENT PRINCIPLES</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">PHYSICAL ELEMENTS (5)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">Fire · Water · Wind · Metal · Sand<br><span style="color:var(--solar)">Assigned at birth through astrological sign</span></div></div>
-    <div class="card"><div class="card-title">TRANSCENDENT ELEMENTS (3)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">Soul (AUTH ≥ 5.20) · Space (AUTH ≥ 9.17) · Void (AUTH ≥ 12.72)<br><span style="color:var(--cyan)">Unlocked through authority progression</span></div></div>
-    <div class="card"><div class="card-title">APEX ELEMENT (1)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">The All (AUTH ≥ 27.8367)<br><span style="color:var(--gold)">Convergence of all nine elemental forces</span></div></div>
+    <div class="card"><div class="card-title">PHYSICAL ELEMENTS (5)</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">Fire · Water · Wind · Metal · Sand<br><span style="color:var(--solar)">Assigned at birth through astrological sign</span></div></div>
+    <div class="card"><div class="card-title">TRANSCENDENT ELEMENTS (3)</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">Soul (AUTH ≥ 5.20) · Space (AUTH ≥ 9.17) · Void (AUTH ≥ 12.72)<br><span style="color:var(--cyan)">Unlocked through authority progression</span></div></div>
+    <div class="card"><div class="card-title">APEX ELEMENT (1)</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">The All (AUTH ≥ 27.8367)<br><span style="color:var(--gold)">Convergence of all nine elemental forces</span></div></div>
   </div>
 </div>
 
@@ -307,7 +307,7 @@ function renderMatrix(){
     }).join('');
     return'<div class="tbl-row" style="grid-template-columns:'+gridColsTemplate+'">'+cells+'</div>';
   }).join('');
-  document.getElementById('matrixWrap').innerHTML='<div class="tbl-wrap" style="font-family:var(--M);font-size:7.5px"><div class="tbl-row" style="grid-template-columns:'+gridColsTemplate+'">'+headerCells+'</div>'+rows+'</div>';
+  document.getElementById('matrixWrap').innerHTML='<div class="tbl-wrap" style="font-family:var(--M);font-size:12px"><div class="tbl-row" style="grid-template-columns:'+gridColsTemplate+'">'+headerCells+'</div>'+rows+'</div>';
 }
 
 function drawDominanceChart(){

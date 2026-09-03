@@ -5,32 +5,32 @@
 <style>
 .forge-hero{background:linear-gradient(135deg,rgba(255,102,0,.05),rgba(201,168,76,.03));border:1px solid rgba(255,102,0,.2);border-radius:4px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px}
 .fh-text h2{font-family:var(--D);font-size:clamp(13px,2vw,18px);color:#FF6600;letter-spacing:3px;margin-bottom:4px}
-.fh-text p{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(255,102,0,.4);line-height:1.8}
+.fh-text p{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(255,102,0,.4);line-height:1.8}
 .fh-score{text-align:center;margin-left:auto}
 .fh-score-n{font-family:var(--D);font-size:28px;color:var(--gold);line-height:1}
-.fh-score-l{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--muted)}
+.fh-score-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .ex-card{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:4px;padding:16px 18px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:8px}
 .ex-card:hover{border-color:rgba(255,102,0,.3);transform:translateY(-1px)}
 .ex-icon{font-size:32px;margin-bottom:2px}
 .ex-title{font-family:var(--D);font-size:12px;color:rgba(255,255,255,.9);letter-spacing:.5px}
-.ex-desc{font-family:var(--M);font-size:7.5px;color:rgba(255,255,255,.5);line-height:1.6}
+.ex-desc{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
 .ex-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
-.ex-diff{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border-radius:1px;border:1px solid}
+.ex-diff{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border-radius:1px;border:1px solid}
 .ex-diff.easy{color:rgba(0,255,136,.6);border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
 .ex-diff.med{color:rgba(201,168,76,.7);border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.04)}
 .ex-diff.hard{color:rgba(255,102,0,.7);border-color:rgba(255,102,0,.2);background:rgba(255,102,0,.04)}
 .ex-diff.apex{color:rgba(200,50,50,.7);border-color:rgba(200,50,50,.25);background:rgba(200,50,50,.04)}
-.ex-xp{font-family:var(--D);font-size:11px;color:var(--gold)}
-.ex-time{font-family:var(--M);font-size:7px;color:var(--muted)}
-.ex-best{font-family:var(--M);font-size:7px;color:rgba(0,229,255,.5)}
+.ex-xp{font-family:var(--D);font-size:12px;color:var(--gold)}
+.ex-time{font-family:var(--M);font-size:12px;color:var(--muted)}
+.ex-best{font-family:var(--M);font-size:12px;color:rgba(0,229,255,.5)}
 .active-ex{background:rgba(255,102,0,.03);border:1px solid rgba(255,102,0,.2);border-radius:4px;padding:20px 24px;display:flex;flex-direction:column;gap:16px;margin-bottom:16px}
 .ae-header{display:flex;align-items:center;gap:12px}
 .ae-icon{font-size:36px}
 .ae-title{font-family:var(--D);font-size:14px;color:#FF6600;letter-spacing:2px}
-.ae-subtitle{font-family:var(--M);font-size:7.5px;color:rgba(255,102,0,.4);letter-spacing:1.5px;margin-top:2px}
+.ae-subtitle{font-family:var(--M);font-size:12px;color:rgba(255,102,0,.4);letter-spacing:1.5px;margin-top:2px}
 .timer-display{font-family:var(--D);font-size:clamp(32px,5vw,52px);color:var(--gold);text-align:center;letter-spacing:4px;line-height:1}
-.timer-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);text-align:center;margin-top:4px}
+.timer-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-align:center;margin-top:4px}
 .timer-bar-wrap{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
 .timer-bar{height:100%;background:linear-gradient(90deg,#FF6600,var(--gold));border-radius:2px;transition:width .1s linear}
 .ex-content{background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.08);border-radius:3px;padding:16px 20px;font-family:var(--D);font-size:14px;color:rgba(255,255,255,.9);line-height:1.7;letter-spacing:.3px;min-height:80px}
@@ -38,20 +38,20 @@
 .ex-input:focus{border-color:rgba(255,102,0,.4);background:rgba(255,102,0,.03)}
 .ex-textarea{width:100%;min-height:100px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.15);color:rgba(255,255,255,.9);font-family:var(--D);font-size:12px;padding:12px;border-radius:3px;outline:none;letter-spacing:.3px;resize:vertical;transition:.15s;line-height:1.7}
 .ex-textarea:focus{border-color:rgba(255,102,0,.4);background:rgba(255,102,0,.03)}
-.ex-btn{font-family:var(--D);font-size:9px;letter-spacing:2px;padding:10px 22px;background:linear-gradient(135deg,rgba(255,102,0,.15),rgba(255,102,0,.05));border:1px solid rgba(255,102,0,.3);color:#FF6600;cursor:pointer;border-radius:3px;transition:.2s}
+.ex-btn{font-family:var(--D);font-size:12px;letter-spacing:2px;padding:10px 22px;background:linear-gradient(135deg,rgba(255,102,0,.15),rgba(255,102,0,.05));border:1px solid rgba(255,102,0,.3);color:#FF6600;cursor:pointer;border-radius:3px;transition:.2s}
 .ex-btn:hover{background:rgba(255,102,0,.2);box-shadow:0 0 16px rgba(255,102,0,.15)}
 .ex-btn.secondary{border-color:rgba(201,168,76,.2);color:rgba(201,168,76,.6);background:none}
 .ex-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-.ex-result{background:rgba(0,255,136,.02);border:1px solid rgba(0,255,136,.15);border-radius:3px;padding:14px 18px;font-family:var(--M);font-size:8px;color:rgba(0,255,136,.7);line-height:1.8;display:none}
+.ex-result{background:rgba(0,255,136,.02);border:1px solid rgba(0,255,136,.15);border-radius:3px;padding:14px 18px;font-family:var(--M);font-size:12px;color:rgba(0,255,136,.7);line-height:1.8;display:none}
 .ex-result.visible{display:block}
 .forge-scores{display:flex;flex-direction:column;gap:6px}
 .fs-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:2px}
 .fs-rank{font-family:var(--D);font-size:12px;color:rgba(201,168,76,.4);width:28px;text-align:center}
-.fs-name{font-family:var(--D);font-size:11px;flex:1}
+.fs-name{font-family:var(--D);font-size:12px;flex:1}
 .fs-score{font-family:var(--D);font-size:12px;color:var(--gold)}
-.fs-type{font-family:var(--M);font-size:7px;color:var(--muted)}
-#forge-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(255,102,0,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:#FF6600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.fs-type{font-family:var(--M);font-size:12px;color:var(--muted)}
+#forge-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(255,102,0,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:#FF6600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 @media(max-width:640px){.ex-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -99,7 +99,7 @@
     <div class="kpi-card"><div class="kpi-val" id="recTrials">0</div><div class="kpi-label">TRIALS COMPLETED</div></div>
     <div class="kpi-card"><div class="kpi-val" id="recBest">—</div><div class="kpi-label">HIGHEST SINGLE SCORE</div></div>
   </div>
-  <div style="margin-top:16px;font-family:var(--M);font-size:7.5px;color:var(--muted);text-align:center;padding:24px 0">Realm-wide leaderboard coming with next forge update.</div>
+  <div style="margin-top:16px;font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:24px 0">Realm-wide leaderboard coming with next forge update.</div>
 </div>
 
 <div class="tab-panel" id="tab-science">
@@ -107,28 +107,28 @@
   <div class="card-grid">
     <div class="card">
       <div class="card-title">SPEED ARITHMETIC</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Mental arithmetic activates prefrontal cortex pathways governing executive decision-making. Regular practice compresses reaction time across all cognitive domains — the forge effect. Score = (correct × 100) + (60 − elapsed) × 5.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Mental arithmetic activates prefrontal cortex pathways governing executive decision-making. Regular practice compresses reaction time across all cognitive domains — the forge effect. Score = (correct × 100) + (60 − elapsed) × 5.</div>
     </div>
     <div class="card">
       <div class="card-title">SEQUENCE RECOGNITION</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Pattern recognition is the foundation of sovereign intelligence. Sequences tested: geometric progression (×2), perfect squares (n²), triangular numbers, Fibonacci series, cubic sequences (n³). Speed bonus = max(50, 200 − elapsed×2).</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Pattern recognition is the foundation of sovereign intelligence. Sequences tested: geometric progression (×2), perfect squares (n²), triangular numbers, Fibonacci series, cubic sequences (n³). Speed bonus = max(50, 200 − elapsed×2).</div>
     </div>
     <div class="card">
       <div class="card-title">MEMORY MATRIX</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Working memory capacity directly correlates with fluid intelligence. The 12-symbol grid forces chunking and encoding under time pressure. Perfect recall awards a 100-point bonus on top of the per-symbol score (12 × 20 = 240 base).</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Working memory capacity directly correlates with fluid intelligence. The 12-symbol grid forces chunking and encoding under time pressure. Perfect recall awards a 100-point bonus on top of the per-symbol score (12 × 20 = 240 base).</div>
     </div>
     <div class="card">
       <div class="card-title">CIPHER BREAK</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Caesar cipher: each letter is shifted by a fixed offset (2–6). Frequency analysis reveals the shift — E is the most common letter in English. Score = similarity × 300 + (similarity &gt; 90% ? 100 : 0). Maximum possible: 400 points.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Caesar cipher: each letter is shifted by a fixed offset (2–6). Frequency analysis reveals the shift — E is the most common letter in English. Score = similarity × 300 + (similarity &gt; 90% ? 100 : 0). Maximum possible: 400 points.</div>
     </div>
     <div class="card">
       <div class="card-title">CREATIVE FIRE</div>
-      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Divergent thinking is measured by fluency (idea count) and originality. 3-minute ideation sessions under open prompts maximize creative output. Score = ideas × 20 + remaining_seconds × 2, capped at 300.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Divergent thinking is measured by fluency (idea count) and originality. 3-minute ideation sessions under open prompts maximize creative output. Score = ideas × 20 + remaining_seconds × 2, capped at 300.</div>
     </div>
     <div class="card">
       <div class="card-title">FORGE XP WEIGHTS</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="font-family:var(--M);font-size:7.5px">
+        <div class="tbl-wrap" style="font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns:1fr 50px 1fr;color:var(--gold);border-bottom:1px solid rgba(201,168,76,.15)">
             <div style="text-align:left;padding:3px 0">Trial</div>
             <div style="text-align:left">XP</div>
@@ -194,14 +194,14 @@ function setTab(name){
 }
 
 var EXERCISES=[
-  {id:'math_speed', icon:'⚡',title:'SPEED ARITHMETIC', desc:'Solve 10 arithmetic problems as fast as possible.',diff:'easy',xp:40,time:'~60 sec',type:'arithmetic'},
-  {id:'logic_seq',  icon:'🔢',title:'SEQUENCE CIPHER',  desc:'Find the next number in a logical sequence.',diff:'med', xp:80,time:'~90 sec',type:'sequence'},
-  {id:'word_vault', icon:'📖',title:'WORD VAULT',       desc:'Define 5 advanced vocabulary words.',diff:'med', xp:70,time:'~2 min',type:'vocabulary'},
-  {id:'memory_grid',icon:'🧠',title:'MEMORY MATRIX',    desc:'Memorize a 12-symbol grid in 15 seconds, then reproduce it.',diff:'hard',xp:120,time:'~30 sec',type:'memory'},
-  {id:'creative_fire',icon:'🔥',title:'CREATIVE FIRE',  desc:'Generate 10+ unique ideas for a prompt in 3 minutes.',diff:'med',xp:90,time:'3 min',type:'creative'},
+  {id:'math_speed', icon:'⚡︎',title:'SPEED ARITHMETIC', desc:'Solve 10 arithmetic problems as fast as possible.',diff:'easy',xp:40,time:'~60 sec',type:'arithmetic'},
+  {id:'logic_seq',  icon:'⌗',title:'SEQUENCE CIPHER',  desc:'Find the next number in a logical sequence.',diff:'med', xp:80,time:'~90 sec',type:'sequence'},
+  {id:'word_vault', icon:'▤',title:'WORD VAULT',       desc:'Define 5 advanced vocabulary words.',diff:'med', xp:70,time:'~2 min',type:'vocabulary'},
+  {id:'memory_grid',icon:'⌬',title:'MEMORY MATRIX',    desc:'Memorize a 12-symbol grid in 15 seconds, then reproduce it.',diff:'hard',xp:120,time:'~30 sec',type:'memory'},
+  {id:'creative_fire',icon:'△',title:'CREATIVE FIRE',  desc:'Generate 10+ unique ideas for a prompt in 3 minutes.',diff:'med',xp:90,time:'3 min',type:'creative'},
   {id:'logic_deduct',icon:'⚔',title:'DEDUCTION TRIAL', desc:'Solve a multi-step logical deduction puzzle.',diff:'hard',xp:150,time:'~3 min',type:'logic'},
-  {id:'speed_read',icon:'👁', title:'SOVEREIGN SCAN',   desc:'Read a passage and answer comprehension questions.',diff:'med',xp:100,time:'~2 min',type:'reading'},
-  {id:'cipher_break',icon:'🔐',title:'CIPHER BREAK',   desc:'Decode a message encrypted with a substitution cipher.',diff:'apex',xp:200,time:'~5 min',type:'cipher'},
+  {id:'speed_read',icon:'◉', title:'SOVEREIGN SCAN',   desc:'Read a passage and answer comprehension questions.',diff:'med',xp:100,time:'~2 min',type:'reading'},
+  {id:'cipher_break',icon:'⚿',title:'CIPHER BREAK',   desc:'Decode a message encrypted with a substitution cipher.',diff:'apex',xp:200,time:'~5 min',type:'cipher'},
 ];
 
 var scores=JSON.parse(localStorage.getItem('omega_forge_scores')||'{}');
@@ -278,7 +278,7 @@ function createTimer(sec,onTick,onEnd){
 function renderScores(){
   var panel=document.getElementById('scoresPanel');if(!panel) return;
   var entries=EXERCISES.map(function(ex){return Object.assign({},ex,{best:(scores[ex.id]&&scores[ex.id].best)||0,attempts:(scores[ex.id]&&scores[ex.id].attempts)||0});}).sort(function(a,b){return b.best-a.best;});
-  if(!entries.some(function(e){return e.best>0;})){panel.innerHTML='<div style="text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">NO SCORES YET — FORGE YOUR FIRST TRIAL</div>';return;}
+  if(!entries.some(function(e){return e.best>0;})){panel.innerHTML='<div style="text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">NO SCORES YET — FORGE YOUR FIRST TRIAL</div>';return;}
   panel.innerHTML=entries.map(function(e,i){
     return '<div class="fs-item">'+
       '<div class="fs-rank">'+(i+1)+'</div>'+
@@ -329,7 +329,7 @@ arithmetic:function(ex){
         if(idx>=problems.length){
           var elapsed=Math.round((Date.now()-startTime)/1000);
           var score=Math.round(correct*100+(60-Math.min(60,elapsed))*5);
-          document.getElementById('activeEx').innerHTML='<div class="ae-title">TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+correct+'/10 CORRECT · '+elapsed+'s · +'+ex.xp+' XP</div>';
+          document.getElementById('activeEx').innerHTML='<div class="ae-title">TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center">'+correct+'/10 CORRECT · '+elapsed+'s · +'+ex.xp+' XP</div>';
           endExercise(score,ex.xp,ex.id);
         } else renderP();
       },900);
@@ -401,7 +401,7 @@ creative:function(ex){
     var lines=document.getElementById('creativeInput').value.split('\n').filter(function(l){return l.trim().length>3;});
     var count=lines.length;
     var score=Math.min(300,count*20+(timer.remaining()*2));
-    document.getElementById('activeEx').innerHTML='<div class="ae-title">CREATIVE TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+count+' IDEAS GENERATED · +'+ex.xp+' XP</div>';
+    document.getElementById('activeEx').innerHTML='<div class="ae-title">CREATIVE TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center">'+count+' IDEAS GENERATED · +'+ex.xp+' XP</div>';
     endExercise(score,ex.xp,ex.id);
   }
   document.getElementById('submitCreative').addEventListener('click',submit);
@@ -470,7 +470,7 @@ memory:function(ex){
           grid.map(function(s,i){return '<div style="font-size:22px;background:'+(input[i]===s?'rgba(0,255,136,.08)':'rgba(200,50,50,.08)')+';border:1px solid '+(input[i]===s?'rgba(0,255,136,.2)':'rgba(200,50,50,.2)')+';border-radius:3px;padding:8px">'+s+'</div>';}).join('')+
         '</div>'+
         '<div style="font-family:var(--D);font-size:32px;color:var(--gold);text-align:center">'+score+' pts</div>'+
-        '<div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+correct+'/12 CORRECT · +'+ex.xp+' XP</div>';
+        '<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center">'+correct+'/12 CORRECT · +'+ex.xp+' XP</div>';
       endExercise(score,ex.xp,ex.id);
     });
   }
@@ -514,7 +514,7 @@ vocabulary:function(ex){
     if(idx>=set.length){
       var elapsed=Math.round((Date.now()-startTime)/1000);
       var score=correct*100+Math.max(0,120-elapsed)*2;
-      document.getElementById('activeEx').innerHTML='<div class="ae-title">VOCABULARY TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+correct+'/5 CORRECT · +'+ex.xp+' XP</div>';
+      document.getElementById('activeEx').innerHTML='<div class="ae-title">VOCABULARY TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">'+score+' pts</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center">'+correct+'/5 CORRECT · +'+ex.xp+' XP</div>';
       endExercise(score,ex.xp,ex.id);
     } else renderWord();
   }
@@ -531,7 +531,7 @@ cipher:function(ex){
   document.getElementById('activeEx').innerHTML=
     '<div class="ae-header"><div class="ae-icon">'+ex.icon+'</div><div><div class="ae-title">'+ex.title+'</div><div class="ae-subtitle">CAESAR CIPHER — FIND THE SHIFT AND DECODE</div></div><button class="ex-btn secondary" class="exitBtn">✕ EXIT</button></div>'+
     '<div class="ex-content" style="font-size:16px;letter-spacing:3px;color:#FF6600">'+encoded+'</div>'+
-    '<div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:-8px">EACH LETTER HAS BEEN SHIFTED BY A FIXED AMOUNT. FIND THE SHIFT, DECODE THE MESSAGE.</div>'+
+    '<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:-8px">EACH LETTER HAS BEEN SHIFTED BY A FIXED AMOUNT. FIND THE SHIFT, DECODE THE MESSAGE.</div>'+
     '<input class="ex-input" id="cipherAns" placeholder="Type your decoded message..." autofocus>'+
     '<div class="btn-row"><button class="ex-btn" id="cipherSubmit">DECODE →</button></div>'+
     '<div class="ex-result" id="cipherResult"></div>';

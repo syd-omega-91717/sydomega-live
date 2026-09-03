@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 95 |
 | `PARTIAL` | 24 |
 | `LOCAL_ONLY` | 48 |
-| `STATIC` | 9 |
+| `STATIC` | 15 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 6 |
-| **total** | **184** |
+| `UNREACHABLE` | 2 |
+| **total** | **186** |
 
 ## BUILT (95)
 
@@ -226,19 +226,25 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
 
-## STATIC (9)
+## STATIC (15)
 
 | page | evidence |
 |---|---|
 | `404.html` | no backend call, no stored state |
+| `ad-network.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
+| `architecture.html` | no backend call, no stored state |
+| `control-plane.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
+| `creator.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
 | `ops.html` | no backend call, no stored state |
+| `project-studio.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
+| `world-shell.html` | no backend call, no stored state |
 
 ## BROKEN (2)
 
@@ -247,16 +253,12 @@ This scanner reads the repository. It has no database connection, so:
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
 
-## UNREACHABLE (6)
+## UNREACHABLE (2)
 
 | page | evidence |
 |---|---|
-| `ad-network.html` | not referenced by nav.js and not a public page |
-| `architecture.html` | not referenced by nav.js and not a public page |
-| `control-plane.html` | not referenced by nav.js and not a public page |
-| `creator.html` | not referenced by nav.js and not a public page |
-| `project-studio.html` | not referenced by nav.js and not a public page |
-| `world-shell.html` | not referenced by nav.js and not a public page |
+| `verify-deployment.html` | not referenced by nav.js and not a public page |
+| `verify-modules.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
 

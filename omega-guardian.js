@@ -144,7 +144,7 @@
     if(document.getElementById('omega-guardian-badge')) return;
     var badge=document.createElement('span');
     badge.id='omega-guardian-badge';
-    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:7.5px;letter-spacing:1px;color:var(--green,#3fb27f);cursor:pointer;flex-shrink:0;min-width:28px;text-align:center';
+    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;color:var(--green,#3fb27f);cursor:pointer;flex-shrink:0;min-width:28px;text-align:center';
     badge.setAttribute('aria-label','Session security score');
     badge.title='Guardian Score: 100/100';
     badge.textContent='100';

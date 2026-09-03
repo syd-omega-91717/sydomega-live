@@ -7,11 +7,12 @@
     "version":{"type":"string"},
     "defaults":{
       "type":"object",
-      "required":["motion","depth","contentDensity","reducedMotion"],
+      "required":["motion","depth","contentDensity","primaryAction","reducedMotion"],
       "properties":{
         "motion":{"enum":["none","micro","ambient","cinematic","immersive"]},
         "depth":{"enum":["flat","layered","3d"]},
         "contentDensity":{"enum":["minimal","balanced","rich"]},
+        "primaryAction":{"type":"string","minLength":1},
         "reducedMotion":{"type":"string"}
       },"additionalProperties":false
     },

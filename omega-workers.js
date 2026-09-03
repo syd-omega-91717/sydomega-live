@@ -146,7 +146,7 @@ var notifWorker=new Worker({
     var feed=document.getElementById('omega-notif-feed');
     if(feed){
       var item=document.createElement('div');
-      item.style.cssText='padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M,"Courier Prime",monospace);font-size:8px;color:rgba(226,200,109,.6)';
+      item.style.cssText='padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M,"Courier Prime",monospace);font-size:12px;color:rgba(226,200,109,.6)';
       item.textContent='['+new Date().toTimeString().slice(0,8)+'] '+evt.name+' — '+(evt.payload.name||'');
       feed.insertBefore(item,feed.firstChild);
       while(feed.children.length>20)feed.removeChild(feed.lastChild);
@@ -201,7 +201,7 @@ var recWorker=new Worker({
     /* Inject recommended pages into any [data-recommendations] slot */
     document.querySelectorAll('[data-recommendations]').forEach(function(el){
       el.innerHTML=pages.slice(0,3).map(function(p){
-        return '<a href="/'+p+'.html" style="display:inline-block;font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(226,200,109,.6);margin:3px;border-radius:2px">'+p.toUpperCase()+'</a>';
+        return '<a href="/'+p+'.html" style="display:inline-block;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(226,200,109,.6);margin:3px;border-radius:2px">'+p.toUpperCase()+'</a>';
       }).join('');
     });
   }

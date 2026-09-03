@@ -29,7 +29,7 @@ effectively invisible unless invoked by exact name.
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
-| `runtime-verify` | yes | — | 1,288 | CLAUDE.md, README.md | 2026-08-30 |
+| `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
@@ -38,7 +38,7 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**19 skills, ~34,142 tokens** if every SKILL.md were read in one
+**19 skills, ~34,585 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 ### Purpose of each
@@ -82,12 +82,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 184 |
-| pages loading `bg.js` | 184 of 184 |
-| `omega-*.js` modules | 138 (1094 KB) |
-| root `.js` files | 147 |
-| `supabase/*.sql` (flat bag) | 125 |
-| `supabase/migrations/*.sql` | 153 (105 numbered `NNNN_`, 48 timestamped) |
+| `.html` pages | 187 |
+| pages loading `bg.js` | 187 of 187 |
+| `omega-*.js` modules | 144 (1138 KB) |
+| root `.js` files | 153 |
+| `supabase/*.sql` (flat bag) | 126 |
+| `supabase/migrations/*.sql` | 157 (106 numbered `NNNN_`, 51 timestamped) |
 | Edge Functions | 11 |
 | skills | 19 |
 | agent definitions | 1 |
@@ -111,11 +111,11 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 59 files added since (numbered and
+end-to-end for the first time"*. The 63 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 153. Treat the validated scope as `0001`–`0094` only.
+all 157. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 184 pages.** It is a hard single point of
+**`bg.js` is loaded by all 187 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

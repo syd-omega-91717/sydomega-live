@@ -12,31 +12,31 @@
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.07) 0%,transparent 65%)}
 .shell{position:relative;z-index:1}
 .layer-tabs{display:flex;gap:2px;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
 .lt.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-pane{display:none}.tab-pane.active{display:block}
 .emblem-wrap{display:flex;justify-content:center;margin:20px 0 28px}
 .headline{font-family:var(--D);font-size:clamp(20px,5vw,32px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;text-align:center}
-.sub{font-family:var(--M);font-size:11px;color:var(--dim);letter-spacing:1px;max-width:50ch;line-height:1.85;margin:0 auto 24px;text-align:center}
+.sub{font-family:var(--M);font-size:12px;color:var(--dim);letter-spacing:1px;max-width:50ch;line-height:1.85;margin:0 auto 24px;text-align:center}
 .status-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:24px}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--crim);animation:blink 1.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.status-text{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--dim)}
+.status-text{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim)}
 .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
-.obtn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px 20px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s}
+.obtn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 20px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s}
 .obtn:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
 .obtn.solid{background:var(--gold);color:#000;border-color:var(--gold)}
 .obtn.solid:hover{background:transparent;color:var(--gold)}
-.code-block{border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.4);padding:16px 20px;font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(201,168,76,.5);line-height:2;margin:0 auto 24px;max-width:480px}
+.code-block{border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.4);padding:16px 20px;font-family:var(--M);font-size:12px;letter-spacing:.5px;color:rgba(201,168,76,.5);line-height:2;margin:0 auto 24px;max-width:480px}
 .code-block .hl{color:var(--gold)}
 .info-block{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.1)}
-.info-block .ib-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
-.info-block .ib-row{font-family:var(--M);font-size:11px;color:rgba(200,190,160,.7);padding:5px 0;border-bottom:1px solid rgba(201,168,76,.05);display:flex;gap:12px}
+.info-block .ib-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.info-block .ib-row{font-family:var(--M);font-size:12px;color:rgba(200,190,160,.7);padding:5px 0;border-bottom:1px solid rgba(201,168,76,.05);display:flex;gap:12px}
 .info-block .ib-row:last-child{border-bottom:none}
 .info-block .ib-key{color:var(--dim);min-width:130px}
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
-.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes spin-rev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
 @media(prefers-reduced-motion:reduce){#ring1,#ring2{animation:none!important}.status-dot{animation:none!important;opacity:.5}}
@@ -165,6 +165,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     </div>
 
   </div>
+  <div data-page-emblem="offline" style="margin:20px auto 0"></div>
   <div class="lf"><span>&#937; OFFLINE &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>

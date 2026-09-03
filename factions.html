@@ -12,19 +12,19 @@
 .faction-card:hover{transform:translateY(-2px)}
 .faction-card.mine{border-color:rgba(0,229,255,.4);box-shadow:0 0 18px rgba(0,229,255,.08)}
 .fc-name{font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:6px}
-.fc-sign{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px}
-.fc-el{display:inline-block;font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:2px 8px;margin-bottom:8px;background:var(--fc,var(--gold));color:var(--void)}
-.fc-creed{font-size:11px;line-height:1.6;color:var(--muted);font-style:italic}
+.fc-sign{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px}
+.fc-el{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;margin-bottom:8px;background:var(--fc,var(--gold));color:var(--void)}
+.fc-creed{font-size:12px;line-height:1.6;color:var(--muted);font-style:italic}
 .mine-banner{border:1px solid rgba(0,229,255,.3);background:rgba(0,229,255,.04);border-left:3px solid var(--cyan);padding:16px 18px;margin-bottom:16px}
-.mine-banner .mb-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.mine-banner .mb-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
 .mine-banner .mb-name{font-family:var(--D);font-size:20px;color:var(--gold);margin-bottom:6px}
-.mine-banner .mb-meta{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.mine-banner .mb-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
 .mine-banner .mb-creed{font-size:12px;line-height:1.7;color:var(--ink);opacity:.75;font-style:italic}
 .knight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .knight-card{border:1px solid var(--line);border-left:2px solid var(--kc,var(--solar));background:var(--surface);padding:14px}
 .kn-name{font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:4px}
-.kn-faction{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px}
-.kn-role{font-size:11px;line-height:1.6;color:var(--ink);opacity:.75}
+.kn-faction{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px}
+.kn-role{font-size:12px;line-height:1.6;color:var(--ink);opacity:.75}
 </style>
 </head>
 <body>
@@ -44,17 +44,17 @@
 <div class="tab-panel active" id="tab-myfaction">
   <div class="sechead">YOUR SOVEREIGN FACTION</div>
   <div id="my-faction-panel">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Loading your faction&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Loading your faction&hellip;</div>
   </div>
   <div class="sechead" style="margin-top:20px">YOUR CELESTIAL KNIGHT &mdash; ZODIAC WARS</div>
   <div id="my-knight-panel">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Loading knight data&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Loading knight data&hellip;</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-all">
   <div class="sechead">THE TWELVE HOUSES</div>
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);line-height:1.8;margin-bottom:14px;padding:10px 14px;border:1px solid var(--line)">Twelve Factions divide the Order — one sovereign house per sign, bound to its element and its Olympian. Your sign sets your Faction; it is your banner among the sovereigns.</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.8;margin-bottom:14px;padding:10px 14px;border:1px solid var(--line)">Twelve Factions divide the Order — one sovereign house per sign, bound to its element and its Olympian. Your sign sets your Faction; it is your banner among the sovereigns.</div>
   <div class="faction-grid" id="faction-grid"></div>
 </div>
 
@@ -79,18 +79,18 @@
 <script>
 var EC={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
 var F=[
-  ['Aries','♈','The Aegis Order','Fire','Ares','We think before we strike, and strike but once.','Kael Marren','Mars foundry apprentice, 22. Not chosen — found. Protagonist of THE ORIGIN.'],
-  ['Taurus','♉','The Gilded Hand','Metal','Aphrodite','What is built with beauty endures; what is traded with honour multiplies.','Isolde Vey','Runs Venus\'s largest atmospheric-engineering guild. Trusts contracts more than destiny.'],
-  ['Gemini','♊','The Lumen Choir','Wind','Hermes','Let the word travel faster than the sword.','Rune & Ash Corvin','Twin Mercury reconnaissance pilots — one Knight role, shared between two people.'],
-  ['Cancer','♋','The Tidewardens','Water','Artemis','We carry our own across every threshold.','Sable Thorne','Selene-trained combat medic. The Knight the others actually trust with their lives.'],
-  ['Leo','♌','The Solar Crown','Fire','Apollo','To rule is to be answerable to all you light.','Corin Blaze','Solar Sanctum diplomat. Legitimizes the other Knights\' authority while privately doubting their own.'],
-  ['Virgo','♍','The Grain Covenant','Sand','Athena','Nothing rises that was not first verified in the dark.','Meret Solane','Ceres Grand Archive researcher — first to decode the reactivated frequency\'s data-bursts.'],
-  ['Libra','♎','The Forge Guild','Wind','Hera','Balance is not found; it is hammered.','Adaeze Okonkwo-Reyes','Earth\'s youngest-ever Balance Court mediator. The Order\'s real counterweight to Kael.'],
-  ['Scorpio','♏','The Crimson Veil','Water','Demeter','We read the ending before it is written.','Vesper Noct','Pluto\'s Obsidian Watch intelligence officer — suspected the Shadow Zodiac before the Accord admitted it.'],
-  ['Sagittarius','♐','The Wild Hunt','Fire','Zeus','Every newcomer is quarry worth crowning.','Thane Rourke','Jupiter Tempest Fleet explorer-captain. First to confront a Shadow Zodiac vessel.'],
-  ['Capricorn','♑','The Hearth Bastion','Metal','Hestia','Order is the slow fire that never goes out.','Priya Vashtar','Saturn Ring Guard logistics commander. Keeps the other eleven Knights\' ambitions from collapsing.'],
-  ['Aquarius','♒','The Aether Senate','Wind','Hephaestus','We govern minds, and so we need no chains.','Zephyr Nakai','Uranus Aurora Corps innovator — built the shielding tech the Shadow Zodiac later weaponized.'],
-  ['Pisces','♓','The Deep Concord','Water','Poseidon','All rivers remember the sea.','Marin Calder','Neptune Tide Fleet cultural officer. Keeper of the Accord\'s collective memory.']
+  ['Aries','♈︎','The Aegis Order','Fire','Ares','We think before we strike, and strike but once.','Kael Marren','Mars foundry apprentice, 22. Not chosen — found. Protagonist of THE ORIGIN.'],
+  ['Taurus','♉︎','The Gilded Hand','Metal','Aphrodite','What is built with beauty endures; what is traded with honour multiplies.','Isolde Vey','Runs Venus\'s largest atmospheric-engineering guild. Trusts contracts more than destiny.'],
+  ['Gemini','♊︎','The Lumen Choir','Wind','Hermes','Let the word travel faster than the sword.','Rune & Ash Corvin','Twin Mercury reconnaissance pilots — one Knight role, shared between two people.'],
+  ['Cancer','♋︎','The Tidewardens','Water','Artemis','We carry our own across every threshold.','Sable Thorne','Selene-trained combat medic. The Knight the others actually trust with their lives.'],
+  ['Leo','♌︎','The Solar Crown','Fire','Apollo','To rule is to be answerable to all you light.','Corin Blaze','Solar Sanctum diplomat. Legitimizes the other Knights\' authority while privately doubting their own.'],
+  ['Virgo','♍︎','The Grain Covenant','Sand','Athena','Nothing rises that was not first verified in the dark.','Meret Solane','Ceres Grand Archive researcher — first to decode the reactivated frequency\'s data-bursts.'],
+  ['Libra','♎︎','The Forge Guild','Wind','Hera','Balance is not found; it is hammered.','Adaeze Okonkwo-Reyes','Earth\'s youngest-ever Balance Court mediator. The Order\'s real counterweight to Kael.'],
+  ['Scorpio','♏︎','The Crimson Veil','Water','Demeter','We read the ending before it is written.','Vesper Noct','Pluto\'s Obsidian Watch intelligence officer — suspected the Shadow Zodiac before the Accord admitted it.'],
+  ['Sagittarius','♐︎','The Wild Hunt','Fire','Zeus','Every newcomer is quarry worth crowning.','Thane Rourke','Jupiter Tempest Fleet explorer-captain. First to confront a Shadow Zodiac vessel.'],
+  ['Capricorn','♑︎','The Hearth Bastion','Metal','Hestia','Order is the slow fire that never goes out.','Priya Vashtar','Saturn Ring Guard logistics commander. Keeps the other eleven Knights\' ambitions from collapsing.'],
+  ['Aquarius','♒︎','The Aether Senate','Wind','Hephaestus','We govern minds, and so we need no chains.','Zephyr Nakai','Uranus Aurora Corps innovator — built the shielding tech the Shadow Zodiac later weaponized.'],
+  ['Pisces','♓︎','The Deep Concord','Water','Poseidon','All rivers remember the sea.','Marin Calder','Neptune Tide Fleet cultural officer. Keeper of the Accord\'s collective memory.']
 ];
 </script>
 <script type="module">
@@ -107,12 +107,12 @@ function renderMyFaction(sign){
   var panel=document.getElementById('my-faction-panel');
   var knightPanel=document.getElementById('my-knight-panel');
   if(!sign){
-    panel.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Set your sign in Profile to discover your faction.</div>';
-    knightPanel.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Set your sign to see your Celestial Knight.</div>';
+    panel.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Set your sign in Profile to discover your faction.</div>';
+    knightPanel.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Set your sign to see your Celestial Knight.</div>';
     return;
   }
   var f=F.find(function(x){return x[0]===sign;});
-  if(!f){panel.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Faction not found for '+sign+'.</div>';return;}
+  if(!f){panel.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Faction not found for '+sign+'.</div>';return;}
   var col=EC[f[3]]||'#C9A84C';
   panel.innerHTML='<div class="mine-banner">'
     +'<div class="mb-label">YOUR FACTION</div>'
@@ -136,7 +136,7 @@ function renderAllFactions(mySign){
     var card=document.createElement('div');
     card.className='faction-card card'+(isMe?' mine':'');
     card.style.setProperty('--fc',col);
-    card.innerHTML=(isMe?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">YOUR FACTION</div>':'')
+    card.innerHTML=(isMe?'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">YOUR FACTION</div>':'')
       +'<div style="font-size:20px;margin-bottom:6px">'+f[1]+'</div>'
       +'<div class="fc-name">'+f[2]+'</div>'
       +'<div class="fc-sign">'+f[0].toUpperCase()+' &middot; '+f[4].toUpperCase()+'</div>'

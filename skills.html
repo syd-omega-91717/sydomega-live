@@ -13,34 +13,34 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px var(--pad);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
 .t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .pad{padding:var(--pad)}
 .layer-tabs{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:40}
 .layer-tabs::-webkit-scrollbar{display:none}
-.ltab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.ltab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .ltab.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.04)}
 .panel{display:none}.panel.active{display:block}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-.btn{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 14px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:rgba(201,168,76,.06);border-radius:2px;cursor:pointer;transition:.15s}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 14px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:rgba(201,168,76,.06);border-radius:2px;cursor:pointer;transition:.15s}
 .btn:hover{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.5)}
-.btn-sm{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:var(--muted);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.btn-sm{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:var(--muted);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .btn-sm:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px 14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
 .kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 /* SKILL CARD */
 .skill-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;border-left:3px solid var(--sc,var(--gold));transition:.18s;margin-bottom:8px}
 .skill-card:hover{border-color:rgba(201,168,76,.25);box-shadow:0 4px 16px rgba(0,0,0,.3)}
 .sk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
-.sk-name{font-family:var(--D);font-size:11px;color:var(--ink)}
-.sk-domain{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--sc,var(--gold));margin-top:2px}
+.sk-name{font-family:var(--D);font-size:12px;color:var(--ink)}
+.sk-domain{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--sc,var(--gold));margin-top:2px}
 .sk-actions{display:flex;gap:6px;flex-shrink:0}
 /* LEVEL BAR */
 .level-wrap{margin-bottom:6px}
 .level-label{display:flex;justify-content:space-between;margin-bottom:4px}
-.level-tag{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
-.level-val{font-family:var(--D);font-size:10px;color:var(--sc,var(--gold))}
+.level-tag{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.level-val{font-family:var(--D);font-size:12px;color:var(--sc,var(--gold))}
 .level-track{height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden}
 .level-fill{height:100%;border-radius:2px;transition:width .6s ease}
 .level-dots{display:flex;gap:3px;margin-top:5px}
@@ -50,27 +50,27 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .domain-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;text-align:center}
 .domain-card:hover{border-color:rgba(201,168,76,.25);transform:translateY(-1px)}
 .domain-icon{font-size:22px;margin-bottom:6px}
-.domain-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--ink);margin-bottom:4px}
-.domain-count{font-family:var(--M);font-size:7px;color:var(--muted)}
+.domain-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);margin-bottom:4px}
+.domain-count{font-family:var(--M);font-size:12px;color:var(--muted)}
 /* FORM */
 .form-wrap{border:1px solid rgba(201,168,76,.15);border-radius:2px;background:rgba(10,10,15,.7);padding:16px;margin-bottom:16px}
 .fg{margin-bottom:10px}
-.fg label{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px}
-.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none;transition:.12s}
+.fg label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px;border-radius:2px;outline:none;transition:.12s}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4);background:rgba(255,255,255,.06)}
 .fg select option{background:#0d0d18}
 .fg textarea{resize:vertical;min-height:60px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 /* SCIENCE */
 .sci-block{border:1px solid var(--line);border-left:3px solid var(--sc,var(--cyan));background:rgba(10,10,15,.4);padding:14px;border-radius:2px;margin-bottom:10px}
-.sci-title{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
-.sci-body{font-size:11px;line-height:1.7;color:var(--ink);opacity:.8}
-.sci-cite{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:6px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+.sci-cite{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:6px}
 /* SESSION LOG */
 .slog-item{border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
 .slog-dot{width:8px;height:8px;border-radius:50%;background:var(--sc,var(--gold));flex-shrink:0}
-.slog-text{flex:1;font-size:10px;line-height:1.5}
-.slog-time{font-family:var(--M);font-size:7px;color:var(--muted)}
+.slog-text{flex:1;font-size:12px;line-height:1.5}
+.slog-time{font-family:var(--M);font-size:12px;color:var(--muted)}
 /* CHART */
 .chart-wrap{border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.9);padding:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center}
 /* PROGRESS BAR ANIMATION */
@@ -80,7 +80,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
+<div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="skills" aria-label="Navigation"></aside>
   <main class="main" role="main">
     <div class="topbar">
@@ -107,7 +107,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
 
         <!-- RADAR CHART -->
-        <div class="sechead">SKILL DOMAIN RADAR <span style="font-family:var(--M);font-size:7px;color:var(--muted)">AVG LEVEL PER DOMAIN</span></div>
+        <div class="sechead">SKILL DOMAIN RADAR <span style="font-family:var(--M);font-size:12px;color:var(--muted)">AVG LEVEL PER DOMAIN</span></div>
         <div class="chart-wrap" style="height:280px">
           <canvas id="domain-radar" style="max-width:260px;max-height:260px"></canvas>
         </div>
@@ -118,7 +118,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
         <!-- STACK SUGGESTION -->
         <div class="sechead" style="margin-top:16px">SKILL STACK INSIGHT</div>
-        <div id="stack-insight" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:14px;border-radius:2px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8">
+        <div id="stack-insight" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:14px;border-radius:2px;font-size:12px;line-height:1.7;color:var(--ink);opacity:.8">
           Add skills across multiple domains to unlock Stack Insight — how your unique combination of skills creates asymmetric leverage.
         </div>
       </div>
@@ -129,23 +129,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <div class="pad">
         <!-- FILTER ROW -->
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-          <select id="filter-domain" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:8px;padding:6px 10px;border-radius:2px;outline:none">
+          <select id="filter-domain" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:6px 10px;border-radius:2px;outline:none">
             <option value="">ALL DOMAINS</option>
           </select>
-          <select id="filter-sort" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:8px;padding:6px 10px;border-radius:2px;outline:none">
+          <select id="filter-sort" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:6px 10px;border-radius:2px;outline:none">
             <option value="level-desc">LEVEL: HIGH → LOW</option>
             <option value="level-asc">LEVEL: LOW → HIGH</option>
             <option value="name">NAME A–Z</option>
             <option value="gap">LARGEST GAP</option>
             <option value="recent">RECENTLY PRACTICED</option>
           </select>
-          <div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto" id="skills-count-label"></div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto" id="skills-count-label"></div>
         </div>
         <div id="skills-list"></div>
         <div id="skills-empty" style="display:none;text-align:center;padding:40px;border:1px solid var(--line);border-radius:2px">
           <div style="font-family:var(--D);font-size:28px;color:rgba(201,168,76,.15);margin-bottom:10px">&#9670;</div>
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">NO SKILLS YET</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:6px;margin-bottom:14px">Start building your sovereign skill stack</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">NO SKILLS YET</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;margin-bottom:14px">Start building your sovereign skill stack</div>
           <button class="btn" onclick="openAddSkill()">+ ADD FIRST SKILL</button>
         </div>
       </div>
@@ -154,7 +154,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- PRACTICE (domains + sessions) -->
     <div id="t-practice" class="panel">
       <div class="pad">
-        <div class="sechead">LOG PRACTICE SESSION <span class="btn" onclick="openLogSession()" style="font-size:7.5px;padding:5px 10px">+ LOG SESSION</span></div>
+        <div class="sechead">LOG PRACTICE SESSION <span class="btn" onclick="openLogSession()" style="font-size:12px;padding:5px 10px">+ LOG SESSION</span></div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="s-total">0</div><div class="kpi-l">TOTAL SESSIONS</div></div>
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="s-week">0</div><div class="kpi-l">THIS WEEK</div></div>
@@ -216,7 +216,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div id="modal-add" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;padding:20px">
   <div style="background:#0d0d18;border:1px solid rgba(201,168,76,.2);border-radius:2px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto">
     <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold)" id="modal-add-title">ADD SKILL</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold)" id="modal-add-title">ADD SKILL</div>
       <button onclick="closeAddSkill()" class="btn-sm">&#10005;</button>
     </div>
     <div style="padding:16px" class="form-wrap" style="border:none;margin:0">
@@ -270,13 +270,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div id="modal-session" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;padding:20px">
   <div style="background:#0d0d18;border:1px solid rgba(201,168,76,.2);border-radius:2px;width:100%;max-width:440px">
     <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold)">LOG PRACTICE SESSION</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold)">LOG PRACTICE SESSION</div>
       <button onclick="closeLogSession()" class="btn-sm">&#10005;</button>
     </div>
     <div style="padding:16px">
       <div class="fg">
         <label>SKILL</label>
-        <select id="sess-skill" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+        <select id="sess-skill" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px;border-radius:2px;outline:none">
           <option value="">SELECT SKILL</option>
         </select>
       </div>
@@ -287,7 +287,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
         <div class="fg">
           <label>QUALITY (1–5)</label>
-          <select id="sess-quality" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+          <select id="sess-quality" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px;border-radius:2px;outline:none">
             <option value="5">5 — PEAK FLOW</option>
             <option value="4" selected>4 — FOCUSED</option>
             <option value="3">3 — PRODUCTIVE</option>
@@ -298,7 +298,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
       <div class="fg">
         <label>WHAT DID YOU PRACTISE? (optional)</label>
-        <input type="text" id="sess-note" placeholder="e.g. Built a REST API with Flask, resolved 3 bugs" maxlength="100" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+        <input type="text" id="sess-note" placeholder="e.g. Built a REST API with Flask, resolved 3 bugs" maxlength="100" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px;border-radius:2px;outline:none">
       </div>
       <div class="fg">
         <label>LEVEL AFTER SESSION</label>
@@ -323,7 +323,7 @@ var DOMAINS = {
   creative:   {label:'CREATIVE',   color:'#9C6FD6', icon:'&#9728;'},
   physical:   {label:'PHYSICAL',   color:'#4CAF50', icon:'&#9878;'},
   social:     {label:'SOCIAL',     color:'#26C6DA', icon:'&#9678;'},
-  mental:     {label:'MENTAL',     color:'#FF9800', icon:'&#9889;'},
+  mental:     {label:'MENTAL',     color:'#FF9800', icon:'&#9889;&#65038;'},
   spiritual:  {label:'SPIRITUAL',  color:'#E57373', icon:'&#9733;'},
   language:   {label:'LANGUAGE',   color:'#90A4AE', icon:'&#9660;'},
 };
@@ -370,7 +370,7 @@ function renderOverview(){
   var top=[].concat(skills).sort(function(a,b){return b.current-a.current;}).slice(0,5);
   var tEl=document.getElementById('top-skills-list');
   if(tEl){
-    if(!top.length){tEl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">Add skills to see your top performers</div>';return;}
+    if(!top.length){tEl.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">Add skills to see your top performers</div>';return;}
     tEl.innerHTML=top.map(function(s){
       var d=DOMAINS[s.domain]||{color:'var(--gold)',label:'OTHER'};
       return renderSkillBar(s,d,false);
@@ -524,17 +524,17 @@ function renderDomains(){
     breakdown.innerHTML=dominated.map(function(item){
       return '<div style="margin-bottom:10px">'
         +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
-        +'<span style="font-family:var(--M);font-size:8px;color:'+item.d.color+'">'+item.d.label+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+item.skills.length+' skills &middot; avg '+item.avg.toFixed(1)+'/10</span>'
+        +'<span style="font-family:var(--M);font-size:12px;color:'+item.d.color+'">'+item.d.label+'</span>'
+        +'<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+item.skills.length+' skills &middot; avg '+item.avg.toFixed(1)+'/10</span>'
         +'</div>'
         +'<div class="level-track"><div class="level-fill" style="width:'+(item.avg/10*100)+'%;background:'+item.d.color+'"></div></div>'
         +'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">'
         +item.skills.map(function(s){
-          return '<a href="#" onclick="setTab(\'skills\')" style="font-family:var(--M);font-size:7px;padding:3px 7px;border:1px solid rgba(255,255,255,.06);color:var(--muted);border-radius:2px;text-decoration:none">'+escH(s.name)+'</a>';
+          return '<a href="#" onclick="setTab(\'skills\')" style="font-family:var(--M);font-size:12px;padding:3px 7px;border:1px solid rgba(255,255,255,.06);color:var(--muted);border-radius:2px;text-decoration:none">'+escH(s.name)+'</a>';
         }).join('')
         +'</div></div>';
     }).join('');
-    if(!dominated.length)breakdown.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">Add skills to see domain breakdown</div>';
+    if(!dominated.length)breakdown.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">Add skills to see domain breakdown</div>';
   }
 }
 
@@ -578,7 +578,7 @@ function renderSessions(){
   var log=document.getElementById('session-log');
   if(!log) return;
   var sorted=[].concat(sessions).sort(function(a,b){return b.date.localeCompare(a.date)||b.id.localeCompare(a.id);});
-  if(!sorted.length){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">No sessions logged yet. Start practising!</div>';return;}
+  if(!sorted.length){log.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">No sessions logged yet. Start practising!</div>';return;}
   var QLABELS=['','STRUGGLED','DISTRACTED','PRODUCTIVE','FOCUSED','PEAK FLOW'];
   var QCOLS=['','var(--crim)','#FF9800','var(--muted)','var(--cyan)','var(--gold)'];
   log.innerHTML=sorted.slice(0,50).map(function(sess){
@@ -587,12 +587,12 @@ function renderSessions(){
     return '<div class="slog-item">'
       +'<div class="slog-dot" style="background:'+d.color+'"></div>'
       +'<div class="slog-text">'
-      +'<span style="font-family:var(--M);font-size:8.5px;color:var(--ink)">'+(sk?escH(sk.name):'[DELETED SKILL]')+'</span>'
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--ink)">'+(sk?escH(sk.name):'[DELETED SKILL]')+'</span>'
       +(sess.note?' &mdash; '+escH(sess.note):'')
       +'<div style="margin-top:2px;display:flex;gap:8px">'
-      +'<span style="font-family:var(--M);font-size:7px;color:var(--muted)">'+sess.duration+'min</span>'
-      +'<span style="font-family:var(--M);font-size:7px;color:'+QCOLS[sess.quality||3]+'">'+QLABELS[sess.quality||3]+'</span>'
-      +(sess.newLevel?'<span style="font-family:var(--M);font-size:7px;color:var(--green)">&uarr; '+sess.newLevel+'</span>':'')
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+sess.duration+'min</span>'
+      +'<span style="font-family:var(--M);font-size:12px;color:'+QCOLS[sess.quality||3]+'">'+QLABELS[sess.quality||3]+'</span>'
+      +(sess.newLevel?'<span style="font-family:var(--M);font-size:12px;color:var(--green)">&uarr; '+sess.newLevel+'</span>':'')
       +'</div></div>'
       +'<div class="slog-time">'+sess.date+'</div>'
       +'</div>';

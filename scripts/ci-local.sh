@@ -107,6 +107,14 @@ step "2h.  Context budget"                     python3 scripts/context-budget.py
 step "2j.  Skill/agent registry"               python3 scripts/omega-registry.py --check
 step "2k.  i18n contract"                      python3 scripts/i18n-contract.py
 step "2l.  Resilience audit"                   python3 scripts/resilience-audit.py
+step "2m.  Commerce contract"                  python3 scripts/commerce-contract.py
+step "2n.  Reachability contract"              python3 scripts/reachability-contract.py
+# One step, eleven gates -- the same scripts/contract-suite.py that
+# .github/workflows/contracts.yml runs, so this list and GitHub's cannot drift.
+# They HAD drifted: content-uniqueness-contract and page-experience-contract
+# were blocking workflows on GitHub and absent here, so this script and the
+# pre-push hook both reported green while main carried two failing gates.
+step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan
 step "7.   Service worker precache"             sw_precache

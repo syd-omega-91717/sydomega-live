@@ -17,18 +17,18 @@
 .mission-bar{background:rgba(2,2,6,.98);border-bottom:1px solid rgba(201,168,76,.12);padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
 .mb-title{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold)}
 .mb-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.mb-item{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.mb-item{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5);display:flex;align-items:center;gap:6px;white-space:nowrap}
 .mb-dot{width:6px;height:6px;border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
 /* MISSION STATUS STRIP */
 .status-strip{background:rgba(2,2,6,.7);border-bottom:1px solid rgba(201,168,76,.06);padding:6px var(--pad);display:flex;gap:clamp(10px,2vw,24px);overflow-x:auto;scrollbar-width:none;align-items:center}
 .status-strip::-webkit-scrollbar{display:none}
 .ss-item{flex-shrink:0;display:flex;align-items:center;gap:7px}
-.ss-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.45)}
+.ss-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.45)}
 .ss-val{font-family:var(--D);font-size:12px;color:var(--vc,var(--gold))}
 /* 5-LAYER TAB SYSTEM */
 .layer-tabs{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;position:sticky;top:44px;z-index:50}
 .layer-tabs::-webkit-scrollbar{display:none}
-.ltab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.ltab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .ltab.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.04)}
 .layer-panel{display:none}.layer-panel.active{display:block}
 /* GRID SYSTEMS */
@@ -37,8 +37,8 @@
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));cursor:pointer;transition:.18s;position:relative}
 .kpi:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.kpi-sub{font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:3px}
+.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-sub{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:3px}
 /* SYSTEM GALAXY */
 .galaxy-wrap{border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(2,2,6,.95);margin-bottom:16px;position:relative}
 #galaxy-canvas{display:block;width:100%}
@@ -48,25 +48,25 @@
 .cmd-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;border-left:3px solid var(--cc,var(--gold))}
 .cmd-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .cc-icon{font-family:var(--D);font-size:22px;color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
-.cc-name{font-family:var(--D);font-size:10px;color:var(--ink);margin-bottom:4px}
-.cc-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;margin-bottom:6px}
-.cc-desc{font-size:10px;line-height:1.6;color:var(--ink);opacity:.6}
+.cc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:4px}
+.cc-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-bottom:6px}
+.cc-desc{font-size:12px;line-height:1.6;color:var(--ink);opacity:.6}
 /* ALERTS + RECOMMENDATIONS */
 .alert-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .alert-item{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:11px 14px;border-radius:2px;display:flex;align-items:flex-start;gap:10px;border-left:3px solid var(--ac,var(--gold))}
 .alert-icon{font-family:var(--M);font-size:12px;color:var(--ac,var(--gold));flex-shrink:0;line-height:1.5}
-.alert-text{font-size:11px;line-height:1.65;color:var(--ink);opacity:.8}
-.alert-meta{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:3px}
+.alert-text{font-size:12px;line-height:1.65;color:var(--ink);opacity:.8}
+.alert-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
 /* TIMELINE */
 .timeline{display:flex;flex-direction:column;gap:6px;padding:var(--pad);border-top:1px solid var(--line)}
 .tl-item{display:flex;gap:10px;align-items:flex-start}
 .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--td,var(--muted));flex-shrink:0;margin-top:4px}
 .tl-content{flex:1}
-.tl-title{font-size:11px;color:var(--ink)}
-.tl-time{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:2px}
+.tl-title{font-size:12px;color:var(--ink)}
+.tl-time{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
 /* SECHEAD */
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-.sechead-action{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);cursor:pointer;padding:3px 8px;border:1px solid rgba(201,168,76,.15);border-radius:2px;transition:.12s}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.sechead-action{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);cursor:pointer;padding:3px 8px;border:1px solid rgba(201,168,76,.15);border-radius:2px;transition:.12s}
 .sechead-action:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 /* HEALTH BAR */
 .health-bar-wrap{height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:14px}
@@ -75,19 +75,19 @@
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 /* FOOTER */
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-bottom:28px}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 /* CONTRIBUTION HEATMAP (cell size/intensity scale/legend match habits.html's convention) */
 .heatmap-wrap{overflow-x:auto;padding-bottom:4px}
 .heatmap-row{display:flex;flex-wrap:wrap;gap:3px;max-width:100%}
 .heatmap-cell{width:9px;height:9px;border-radius:1px;flex-shrink:0}
-.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
+.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
 .heatmap-legend-dot{width:10px;height:10px;border-radius:1px}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.mission-bar{flex-wrap:wrap;height:auto;padding:8px var(--pad)}}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="dashboard" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
@@ -97,7 +97,7 @@
       <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
       <div class="mb-meta">
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
-        <div class="mb-item">&#128336; <span id="mb-time">--:--:--</span></div>
+        <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
         <div class="mb-item">&#9670; <span id="mb-date">--</span></div>
         <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:13px">--</span></div>
         <div class="mb-item">PMI <span style="color:rgba(63,178,127,.5)" id="mb-pmi">87</span></div>
@@ -114,7 +114,7 @@
       <div class="ss-item"><div class="ss-label" data-i18n="sql_files">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="formula">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:8px">A&#179;+B&#179;+C&#179;</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="formula">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:12px">A&#179;+B&#179;+C&#179;</div></div>
     </div>
 
     <!-- PLATFORM HEALTH BAR -->
@@ -150,7 +150,7 @@
           <canvas id="galaxy-canvas" role="img" aria-label="Sovereign platform module galaxy"></canvas>
           <div class="galaxy-center-label">
             <div style="font-family:var(--D);font-size:clamp(24px,4vw,40px);color:rgba(201,168,76,.2)">&#937;</div>
-            <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.15)">SOVEREIGN CORE</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.15)">SOVEREIGN CORE</div>
           </div>
         </div>
 
@@ -197,12 +197,12 @@
           <div>
             <div class="sechead" data-i18n="todays_quick_actions">TODAY&#39;S QUICK ACTIONS</div>
             <div style="display:flex;flex-direction:column;gap:7px" id="personal-actions">
-              <a href="/journal.html"   style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--purple);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(155,107,240,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9998;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="write_in_journal">WRITE IN JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px"><span data-i18n="encrypted_private">ENCRYPTED &middot; PRIVATE</span></div></div></a>
-              <a href="/gratitude.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#10024;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_gratitude">LOG GRATITUDE</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px"><span data-i18n="three_things">3 THINGS</span> &middot; SELIGMAN METHOD</div></div></a>
-              <a href="/flashcard.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(0,229,255,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span id="pa-cards-label" style="font-size:16px">&#128278;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="study_flashcards">STUDY FLASHCARDS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-cards-sub" data-i18n="sm2_spaced_repetition">SM-2 SPACED REPETITION</div></div></a>
-              <a href="/body.html"      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--green);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(63,178,127,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_body_stats">LOG BODY STATS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" data-i18n="weight_bf_measurements">WEIGHT &middot; BF% &middot; MEASUREMENTS</div></div></a>
-              <a href="/budget.html"    style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--solar);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9874;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="track_budget">TRACK BUDGET</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-budget-sub" data-i18n="monthly_overview">MONTHLY OVERVIEW</div></div></a>
-              <a href="/decisions.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid rgba(201,168,76,.4);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.04)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="decision_journal">DECISION JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" data-i18n="frameworks_bias_guard">5 FRAMEWORKS &middot; BIAS GUARD</div></div></a>
+              <a href="/journal.html"   style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--purple);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(155,107,240,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9998;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="write_in_journal">WRITE IN JOURNAL</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px"><span data-i18n="encrypted_private">ENCRYPTED &middot; PRIVATE</span></div></div></a>
+              <a href="/gratitude.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#10024;&#65038;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_gratitude">LOG GRATITUDE</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px"><span data-i18n="three_things">3 THINGS</span> &middot; SELIGMAN METHOD</div></div></a>
+              <a href="/flashcard.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(0,229,255,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span id="pa-cards-label" style="font-size:16px">&#9873;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="study_flashcards">STUDY FLASHCARDS</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px" id="pa-cards-sub" data-i18n="sm2_spaced_repetition">SM-2 SPACED REPETITION</div></div></a>
+              <a href="/body.html"      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--green);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(63,178,127,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_body_stats">LOG BODY STATS</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px" data-i18n="weight_bf_measurements">WEIGHT &middot; BF% &middot; MEASUREMENTS</div></div></a>
+              <a href="/budget.html"    style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--solar);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9874;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="track_budget">TRACK BUDGET</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px" id="pa-budget-sub" data-i18n="monthly_overview">MONTHLY OVERVIEW</div></div></a>
+              <a href="/decisions.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid rgba(201,168,76,.4);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.04)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)" data-i18n="decision_journal">DECISION JOURNAL</div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px" data-i18n="frameworks_bias_guard">5 FRAMEWORKS &middot; BIAS GUARD</div></div></a>
             </div>
           </div>
         </div>
@@ -215,12 +215,12 @@
         <div class="sechead" style="margin-top:16px" data-i18n="dash_personal_tools">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
-          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
+          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;&#65038;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
           <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
-          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
+          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;&#65038;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
           <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
           <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
-          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#128278;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
+          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#9873;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
           <div class="cmd-card card" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
         </div>
       </div>
@@ -250,10 +250,10 @@
           <div>
             <div class="sechead" data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
             <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
-              <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)" data-i18n="ai_intelligence_standby">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
+              <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:12px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)" data-i18n="ai_intelligence_standby">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
               <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
-                <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" data-i18n="ai_query_placeholder" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
-                <button onclick="askAI()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer" data-i18n="btn_ask">ASK &#8594;</button>
+                <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" data-i18n="ai_query_placeholder" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
+                <button onclick="askAI()" style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer" data-i18n="btn_ask">ASK &#8594;</button>
               </div>
             </div>
           </div>
@@ -284,12 +284,12 @@
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
         <div class="sechead" data-i18n="dash_admin_actions">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
-          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
-          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_sre_observatory">&#8594; SRE OBSERVATORY</button>
-          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_enterprise_control">&#8594; ENTERPRISE CONTROL</button>
-          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_governance_board">&#8594; GOVERNANCE BOARD</button>
-          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_evolution_roadmap">&#8594; EVOLUTION ROADMAP</button>
-          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_privacy_centre">&#8594; PRIVACY CENTRE</button>
+          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
+          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_sre_observatory">&#8594; SRE OBSERVATORY</button>
+          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_enterprise_control">&#8594; ENTERPRISE CONTROL</button>
+          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_governance_board">&#8594; GOVERNANCE BOARD</button>
+          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_evolution_roadmap">&#8594; EVOLUTION ROADMAP</button>
+          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_privacy_centre">&#8594; PRIVACY CENTRE</button>
         </div>
       </div>
     </div>
@@ -299,12 +299,12 @@
       <div class="pad">
         <div class="sechead" data-i18n="sovereign_constants_system_architecture">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
         <div style="margin-bottom:24px">
-          <div style="font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px">
             AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
             A = B = C = 9 &rarr; A&#179;+B&#179;+C&#179; = 2187<br>
             sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
           </div>
-          <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:12px;letter-spacing:1px;line-height:2">
             <span style="color:var(--muted)" data-i18n="constant_phi">PHI (&phi;)</span><span style="color:var(--gold)">1.6180339887</span>
             <span style="color:var(--muted)" data-i18n="constant_euler">EULER (e)</span><span style="color:var(--gold)">2.7182818285</span>
             <span style="color:var(--muted)" data-i18n="constant_authority_apex">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
@@ -315,7 +315,7 @@
           </div>
         </div>
         <div class="sechead" data-i18n="gate_thresholds_12_levels">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
-        <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:12px;letter-spacing:1px;line-height:2">
           <span style="color:var(--muted)" data-i18n="gate_1_initiate">GATE 1 — INITIATE</span><span>AUTH &ge; 2.3197</span>
           <span style="color:var(--muted)" data-i18n="gate_2_acolyte">GATE 2 — ACOLYTE</span><span>AUTH &ge; 4.6394</span>
           <span style="color:var(--muted)" data-i18n="gate_3_scholar">GATE 3 — SCHOLAR</span><span>AUTH &ge; 6.9592</span>
@@ -583,11 +583,11 @@ function loadAILayer(){
     qg.innerHTML=agents.map(function(ag){
       var col=EL[(ag.element||'fire').toLowerCase()]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
       return '<div style="border:1px solid rgba(201,168,76,.15);padding:10px;border-radius:2px;cursor:pointer;border-left:2px solid '+col+';transition:.15s" onclick="location.href=\'/agents.html\'" onmouseover="this.style.background=\'rgba(201,168,76,.04)\'" onmouseout="this.style.background=\'none\'">'
-        +'<div style="font-family:var(--D);font-size:10px;color:'+col+'">'+ag.name+'</div>'
-        +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
+        +'<div style="font-family:var(--D);font-size:12px;color:'+col+'">'+ag.name+'</div>'
+        +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
         +'</div>';
     }).join('');
-  }).catch(function(){qg.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">Load agents.html to view all 12 agents.</div>';});
+  }).catch(function(){qg.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">Load agents.html to view all 12 agents.</div>';});
 }
 
 /* ── PERSONAL OS RENDERER ───────────────────────────────────── */
@@ -789,10 +789,10 @@ function renderPlatformSections(){
   ];
   el.innerHTML=SECTIONS.map(function(sec){
     return '<div style="margin-bottom:20px">'
-      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:'+sec.col+';padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px">'+sec.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:'+sec.col+';padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px">'+sec.name+'</div>'
       +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
       +sec.pages.map(function(p){
-        return '<a href="'+p.u+'" style="font-family:var(--M);font-size:8px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
+        return '<a href="'+p.u+'" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
       }).join('')
       +'</div></div>';
   }).join('');
@@ -955,8 +955,8 @@ function sid(id,v){
         if(tpEl&&tp.data&&tp.data.length){
           tpEl.innerHTML=tp.data.map(function(p){
             return '<div style="border:1px solid var(--line);padding:10px;border-radius:2px;background:rgba(10,10,15,.5)">'
-              +'<div style="font-family:var(--M);font-size:8.5px;color:var(--gold)">'+p.page.toUpperCase().replace(/^\//,'').replace('.HTML','')+'</div>'
-              +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">'+p.total_views+' VIEWS &middot; '+p.unique_users+' MEMBERS</div>'
+              +'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">'+p.page.toUpperCase().replace(/^\//,'').replace('.HTML','')+'</div>'
+              +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:3px">'+p.total_views+' VIEWS &middot; '+p.unique_users+' MEMBERS</div>'
               +'</div>';
           }).join('');
         }

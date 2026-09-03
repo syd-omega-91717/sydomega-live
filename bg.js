@@ -243,7 +243,15 @@ function __omegaAppend(el){
 }catch(e){}})();
 
   try{
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/'];
+    /* Must stay in step with the ACCESS GUARD's own EX list further down
+       (search "ACCESS GUARD + TRIAL ENGINE"). They had drifted: EX exempted
+       'charter' and this list did not, so charter.html got the hiding CSS while
+       the code that lifts it returned early -- the page rendered nothing, for
+       anyone, permanently. charter.html makes zero Supabase calls; it is static
+       governance text sitting beside terms in that same EX list, so the two are
+       reconciled in this direction. Changing either list means changing both.
+       CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
@@ -1142,9 +1150,24 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }
 
   window.addEventListener('resize',function(){resize();buildAll();if(REDUCE)frame();});
-  window.addEventListener('pointermove',function(e){tmx=e.clientX/W;tmy=e.clientY/H;},{passive:true});
+  /* W and H are 0 until resize() first runs, and a pointermove can arrive before
+     it: e.clientX/0 is Infinity (0/0 is NaN), which flows through mx/my into
+     gOff() and reaches createRadialGradient as a non-finite centre, throwing
+     "The provided double value is non-finite" and killing the whole background
+     canvas for the rest of the session. It never recovers, because mx is then
+     eased toward a poisoned tmx forever. Intermittent by nature -- it needs a
+     pointer event inside that startup window -- which is why a full-estate
+     headless sweep reported a DIFFERENT set of 19-22 failing pages on each run
+     of identical code. Guarding the divisor is the whole fix. */
+  window.addEventListener('pointermove',function(e){
+    if(!(W>0)||!(H>0))return;
+    tmx=e.clientX/W;tmy=e.clientY/H;
+  },{passive:true});
   window.addEventListener('deviceorientation',function(e){
-    if(e.gamma!=null){tmx=0.5+Math.max(-1,Math.min(1,e.gamma/45))*0.5;tmy=0.42+Math.max(-1,Math.min(1,(e.beta-45)/45))*0.3;}
+    /* Same class: gamma was checked, beta was not, and (null-45) is NaN --
+       Math.min/max propagate NaN rather than clamping it. */
+    if(e.gamma!=null){tmx=0.5+Math.max(-1,Math.min(1,e.gamma/45))*0.5;}
+    if(e.beta!=null){tmy=0.42+Math.max(-1,Math.min(1,(e.beta-45)/45))*0.3;}
   },{passive:true});
   window.addEventListener('scroll',function(){
     var y=window.pageYOffset||document.documentElement.scrollTop||0;

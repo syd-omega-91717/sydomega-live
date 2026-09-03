@@ -29,7 +29,7 @@ effectively invisible unless invoked by exact name.
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
-| `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-08-30 |
+| `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
@@ -82,12 +82,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 184 |
-| pages loading `bg.js` | 184 of 184 |
+| `.html` pages | 186 |
+| pages loading `bg.js` | 186 of 186 |
 | `omega-*.js` modules | 139 (1104 KB) |
 | root `.js` files | 148 |
 | `supabase/*.sql` (flat bag) | 126 |
-| `supabase/migrations/*.sql` | 154 (106 numbered `NNNN_`, 48 timestamped) |
+| `supabase/migrations/*.sql` | 155 (106 numbered `NNNN_`, 49 timestamped) |
 | Edge Functions | 11 |
 | skills | 19 |
 | agent definitions | 1 |
@@ -111,11 +111,11 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 60 files added since (numbered and
+end-to-end for the first time"*. The 61 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 154. Treat the validated scope as `0001`–`0094` only.
+all 155. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 184 pages.** It is a hard single point of
+**`bg.js` is loaded by all 186 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

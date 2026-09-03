@@ -4779,3 +4779,261 @@ while the image ships `chromium-1194/chrome-linux/chrome` and a headless binary
 named `headless_shell`. Symlinking both expected layouts onto the installed 1194
 build makes the repo's own verifier run unmodified — worth doing rather than
 substituting an ad-hoc harness, since it asserts the capability contracts.
+
+## A pointer event before the first resize killed the background canvas (2026-09-03)
+
+`bg.js:1145` normalised the pointer against the viewport:
+
+```js
+window.addEventListener('pointermove',function(e){tmx=e.clientX/W;tmy=e.clientY/H;},{passive:true});
+```
+
+`W` and `H` are declared `var W=0,H=0` (`bg.js:870`) and only get real values when
+`resize()` first runs. A `pointermove` arriving inside that startup window
+divides by zero: `e.clientX/0` is `Infinity`, and `0/0` is `NaN`.
+
+Neither is caught anywhere. `tmx` feeds `mx`, `mx` feeds
+`gOff()` → `{x:(mx-0.5)*60}`, and that reaches
+
+```js
+var hg=ctx.createRadialGradient(CX+o.x,CY+o.y,2,CX+o.x,CY+o.y,hr);
+```
+
+which throws **`Failed to execute 'createRadialGradient' on
+'CanvasRenderingContext2D': The provided double value is non-finite.`**
+
+It never recovers. `mx` is eased toward `tmx` every frame, so once `tmx` is
+`Infinity` the value stays poisoned and the entire orrery/nebula background is
+dead for the rest of the session, on every page — `bg.js` loads on all of them.
+
+### How it was found, and why it looked like something else
+
+`node scripts/verify-runtime.js --all` reported **22 failing pages**. The obvious
+reading was that the session's own `bg.js` edit had broken them. It had not, and
+the evidence that settled it is worth recording because the first two comparisons
+were both misleading:
+
+- A **targeted before/after harness** on the 8 loudest pages reported `0` errors
+  at both commits — it simply never hit the race, so it could not discriminate
+  at all. A harness that reproduces neither side is not a comparison.
+- The **full `--all` sweep at `0ec01227`** reported 19 failures — but the sets
+  differed in *both* directions: 10 pages failed only after, and **7 failed only
+  before**. A regression cannot fix pages. Re-running those 7 at the *same* HEAD
+  commit failed 2 of them again, which proved the failing set is not stable
+  across runs of identical code.
+
+So the sweep's page list is noise; only a deterministic reproduction means
+anything. Firing `pointermove` repeatedly at 1 ms intervals from
+`addInitScript` forces the race every time, and reproduces the throw at
+`0ec01227` **and** at HEAD — the same result on both, which is what actually
+exonerated the session's change.
+
+Two earlier "0 findings" in this same investigation were also false and are
+worth naming: a `nohup`'d sweep was killed with its parent shell and left an
+empty file, and `grep -c FAIL` on that empty file returned `0`. That is §8.4's
+"verify a 0 findings result is real" and §8.2's Windows note (a crashed child
+yields empty stdout) recurring on Linux.
+
+### The fix
+
+Guard the divisor, which is the whole bug:
+
+```js
+window.addEventListener('pointermove',function(e){
+  if(!(W>0)||!(H>0))return;
+  tmx=e.clientX/W;tmy=e.clientY/H;
+},{passive:true});
+```
+
+`!(W>0)` rather than `W===0` so a `NaN` width is rejected too.
+
+The `deviceorientation` handler two lines below had the same class of hole:
+it guarded `e.gamma != null` but then read `e.beta`, and `(null-45)` is `NaN`,
+which `Math.min`/`Math.max` propagate rather than clamp. Each axis now checks
+its own value.
+
+### Verification
+
+The deterministic reproduction goes **1 throw → 0**. 20/20 blocking checks and
+144 tests still pass. This is a pre-existing defect, present at `0ec01227` and
+every commit before it — not introduced by the commerce-flag work in the same
+branch, which the dual-commit reproduction is the proof of.
+
+## An unenforced rule drifts within hours: the reachability gate (2026-09-03)
+
+CLAUDE.md section 9 has always said it: *"Don't write a new page without ...
+adding it to `nav.js`'s `PS` map and the relevant `SECTIONS` entry — otherwise
+it's unreachable from navigation."* Like section 9's dormancy rule before
+`commerce-contract.py`, it had no enforcement, so it held only as long as
+someone remembered.
+
+It did not hold. Seven pages linked from nowhere and fifteen with no
+active-state entry were driven to zero earlier the same day; a merge brought
+**two more unreachable pages** (`verify-deployment.html`, `verify-modules.html`)
+within hours. Two unenforced rules, two identical outcomes — which is the
+argument for the gate rather than another sweep.
+
+`scripts/reachability-contract.py` (blocking, `ci-local.sh` step 2n, `ci.yml`).
+
+### The distinction that had to be built in
+
+`nav.js` holds two independent maps, and reporting them as one produced a wrong
+number the first time:
+
+| map | decides | a page missing from it |
+|---|---|---|
+| `SECTIONS` `sub[]` | which links render | **unreachable** — nothing points to it |
+| `PS` | which section shows active | renders nav, highlights nothing |
+
+A first pass checked only `PS` and reported "15 pages unreachable". The real
+numbers were **7** and **15**. So unreachability blocks and active-state is
+advisory, reported separately.
+
+### Keying on the href, not the slug
+
+Several `SECTIONS` entries deep-link into another page:
+`['gates','12 GATES','/elements.html#gates']`. That makes `elements.html`
+reachable and leaves `gates.html` exactly as unreachable as before. Keying on
+the entry's *slug* would have called `gates.html` linked because an entry named
+`gates` exists. The gate resolves the href, strips the fragment, and both
+behaviours are pinned by tests.
+
+### Exemptions carry their reason
+
+`SYSTEM_PAGES` lists the ten pages that are not member destinations — error
+states, the signed-out pages, the two owner diagnostics from the merge — each
+with why. "Exempt" with no reason recorded is how an unreachable page gets
+quietly normalised. The gate also reports a *stale* exemption (a listed page
+that no longer exists); it caught one in its own first run (`sovereign`, a
+`vercel.json` redirect target with no file), which was removed.
+
+### What it cannot check
+
+That the sidebar actually appears. `nav.js` returns immediately without an
+element with id `omega-side`, so a perfectly-registered page can still render no
+navigation — `architecture.html` was exactly that. The `no_nav_container` check
+is a best-effort grep; `scripts/verify-runtime.js` is what proves it.
+
+### Verification
+
+Cross-checked against `0ec01227` rather than trusted: run there it reports
+precisely the seven pages that were unreachable at that commit. 10 new tests
+(154 total), 21/21 blocking checks.
+
+**Note for the next session: CLAUDE.md is now at exactly 16,000 of its 16,000
+token budget.** Adding any standing fact to section 8 now requires removing one
+first. Two items were compressed to fit this entry's baseline updates.
+
+## skills.html rendered nothing, ever (2026-09-03)
+
+`skills.html:83` was
+
+```html
+<div class="shell" id="app" style="display:none">
+```
+
+and **nothing on the page ever removed that inline style**. The page has no auth
+boot at all — its five `getSession` matches are its own `getSessions()` helper,
+not Supabase Auth — so the container stayed `display:none` for every visitor,
+approved or not. A whole page, reachable from navigation, showing a blank
+screen.
+
+It is the only page in this state: a scan for an inline-hidden `#app` with no
+code that reveals it returns exactly one file.
+
+**Fixed by deleting the inline style, not by adding a reveal.** `bg.js`'s
+approval guard already owns this element —
+`body:not(.omega-approved) #app, .shell, main.main {display:none!important}` —
+so the inline hide was redundant for safety and fatal for visibility.
+`charter.html` is the same shape without the inline style and works correctly;
+`skills.html` now matches it. Verified in both directions: an unapproved visitor
+gets `shell.display:none` with the guard style present, and an approved one gets
+`flex`.
+
+## habits.html rendered every habit twice with the same id (2026-09-03)
+
+`renderHabitCard()` emitted `id="hc-${habit.id}"`, and `renderToday()` /
+`renderAll()` both call it for the same habits into `#today-list` and
+`#all-list`. A five-habit account therefore produced `hc-h0`…`hc-h4` twice each:
+invalid HTML, and any `getElementById` would silently return whichever came
+first. The `showAll` flag already distinguishes the two lists, so it now
+namespaces the id (`hc-today-…` / `hc-all-…`). Nothing reads the id — grepped
+before changing it — so this is inert beyond correctness. Duplicate count in a
+render: 5 → 0.
+
+## Two scanner false positives worth recording (2026-09-03)
+
+Both were produced while chasing the above, both looked alarming, and both were
+wrong. They are §8.4's "a scanner needs its own false-positive pass" in two new
+shapes.
+
+**"academy.html leaks content to an unapproved visitor."** A harness loaded
+`academy.html` with no session and measured `.shell` at `display:flex` with 3,593
+characters of visible text. The page had in fact **redirected**: `location.pathname`
+was `/account.html`, a public page that is correctly visible and correctly has no
+approval guard. The scanner was measuring a different document than the one it
+named. **Assert the URL after any page whose auth path can navigate.**
+
+**"settings.html fails open."** 44 pages reveal `#app` from inside a `catch`
+block — `}catch(e){document.getElementById('app').style.display='flex';}` — which
+is genuinely fail-open in shape. Tested against a stubbed profile read that
+throws, `academy`, `dashboard` and `vault` all stayed hidden: `bg.js`'s guard
+uses `display:none!important`, and an `!important` stylesheet rule beats a normal
+inline style, which is exactly what `bg.js:106` says it is for. `settings.html`
+reported `(absent)` only because the harness looked for `.shell` and that page
+uses `#app` with no such class — the guard covers all three selectors, the
+harness covered one. Corrected to check the same three, and **no page fails
+open**: unapproved members bounce to `/pending.html`, and a throwing profile read
+leaves every page hidden.
+
+So the 44-page `catch`-reveals pattern is safe as written *because* of the
+`!important` guard. Worth knowing before anyone "simplifies" that rule.
+
+## charter.html rendered nothing, because two exempt lists disagreed (2026-09-03)
+
+The last failing page in the full-estate sweep, and the same *symptom* as
+`skills.html` from an entirely different cause. `bg.js` keeps two independent
+exemption lists and they had drifted apart:
+
+| list | line | contents |
+|---|---|---|
+| approval guard's `PUBLIC` | `bg.js:219` | account, enter, reset, terms, pending, index, / |
+| access guard's `EX` | `bg.js:1231` | '', index, account, terms, **charter**, reset, enter, pending |
+
+`charter` was in one and not the other. So the approval guard **did** inject
+`body:not(.omega-approved) .shell{display:none!important}` on charter.html,
+while the access guard that calls `__omegaApprove(true)` hit
+`if(EX[pg])return;` and never ran. The page was hidden with nothing left to
+unhide it — blank for every visitor, approved or not, permanently.
+
+This is CLAUDE.md section 8.1 class 8 (two divergent copies of one canonical
+list) in a new place: the previous instances were the 12 signs and the 12
+labors, not a pair of security exemption lists.
+
+### Which way to reconcile, and why
+
+Both directions were available. `charter.html` makes **zero** Supabase calls —
+`grep -c "supabase\|OmegaSB\|\.from("` returns 0 — so it is static governance
+text holding no member data, and `EX` already groups it with `terms`. Gating it
+instead would hide the governing document from exactly the pending members it
+governs. So `charter` was added to `PUBLIC`, and the comment on that line now
+says the two lists must change together.
+
+**This is a visibility change and should be read as one:** charter.html is now
+readable without approval, like terms.html. It was previously readable by
+nobody, so nothing regressed, but if the owner wants it member-only the fix is
+to drop `'charter'` from `EX` instead — one line, the other direction.
+
+### Verification
+
+Runtime verification on `charter` plus two controls (`governance`, `dashboard`)
+passes. The guard still holds everywhere it should: an unapproved member bounces
+to `/pending.html` on academy/dashboard/vault/settings, and with a profile read
+stubbed to throw, all four stay `display:none` — the 44-page
+`catch{ #app.style.display='flex' }` pattern remains covered by the guard's
+`!important`.
+
+Full estate before this session's runtime work: **22 pages failing**. After:
+`node scripts/verify-runtime.js --all` reports **PASS (186 pages)** — zero
+failures across the whole estate, confirmed by a full sweep rather than by the
+subset runs that guided each individual fix.

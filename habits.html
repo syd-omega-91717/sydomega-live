@@ -393,7 +393,12 @@ function renderHabitCard(habit, showAll=false){
   const dots=getStreakDots(habit);
   const icon=CAT_ICONS[habit.cat]||'●';
   const shouldDo=shouldDoToday(habit);
-  return `<div class="habit-card card ${done?'done-today':''}" id="hc-${habit.id}">
+  /* The same habit is rendered into BOTH #today-list and #all-list, so a bare
+     "hc-<habit id>" produced a duplicate id for every habit (hc-h0..hc-h4 in a
+     5-habit account) — invalid HTML, and getElementById would silently return
+     whichever came first. showAll is what already distinguishes the two lists,
+     so it namespaces the id. Nothing reads this id; it exists for the DOM. */
+  return `<div class="habit-card card ${done?'done-today':''}" id="hc-${showAll?'all':'today'}-${habit.id}">
     <div class="habit-card-header" onclick="toggleHabit('${habit.id}')">
       <div class="hc-check">${done?'✓':''}</div>
       <div class="hc-info">

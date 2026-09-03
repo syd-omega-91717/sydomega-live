@@ -511,8 +511,8 @@ open, recorded in `FIXES_LOG.md`:
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
-  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A real
-  fix means history rewrite + force-push — never without explicit permission.
+  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A fix
+  means history rewrite + force-push — never without explicit permission.
 - **Member location is not collected.** Live 2026-08-29: `profiles.country`
   exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
   in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
@@ -525,8 +525,8 @@ open, recorded in `FIXES_LOG.md`:
   (client-side gating was never the boundary — RLS is, §5), but the badge
   implies protection that is not happening. Wiring it is an architecture
   decision; removing the badge is a product one.
-- **`omega-threat.js` is not threat detection** — it is the digital-thread
-  traceability engine (`window.OmegaThread`). Filename mismatch left as-is.
+- **`omega-threat.js` is the digital-thread traceability engine**
+  (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
 - **`supabase/migrations/` is validated only against a blank database.** Do not
   run the full sequence against production expecting it to catch up existing
   state — `task_completions` is a proven counterexample. The flat
@@ -625,7 +625,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **144** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **154** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -636,8 +636,9 @@ entries (which were accurate when written):
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/commerce-contract.py` | 0 findings |
+| `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **20** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **21** blocking checks, all passing |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

@@ -5925,3 +5925,81 @@ Verified at 390px mobile, 390px with `prefers-reduced-motion: reduce`
 (`animation-name: none`, every mark still drawn) and 1024px: 12 nodes, 12 marks
 filled, labels 12px, 0 page-level horizontal scroll — the wrap scrolls inside
 itself, which is what `verify-runtime.js` asserts.
+
+### Correction: "nothing visible was broken" by the emblem guard collision was wrong
+
+The entry above claimed the `data-omega-emblems` guard collision had no visible
+effect, on this evidence: a repo-wide grep for `data-omega-emblem="<Sign>"` and
+`data-omega-sigil` markup mounts returns zero across 187 pages.
+
+**The grep was the wrong instrument.** Pages do not mount these marks through
+the data attribute — they call the module's JS API directly, and six files do:
+
+```
+cosmos.html            7 call sites
+omega-emblem-panel.js  7
+omega-emblem-integration.js  5
+honors.html            4
+verify-deployment.html 4
+omega-sign-codex.js    3
+elements.html          3
+omega-menu.js          2
+family.html            2
+```
+
+Each follows the same shape — try `window.OmegaEmblem`, else poll for it:
+
+```js
+function fillRing(el, glyph, col, locked){
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph,col,{locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){ tries++;
+    if(window.OmegaEmblem){ ...; clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }   // gives up after 3s, leaves it EMPTY
+  },150);
+}
+```
+
+The poll is bounded (20 tries at 150ms), so this was not the never-terminating
+poll of section 8.1 class 4b — but after three seconds it cleared the interval
+and left the container empty. Every one of those call sites drew nothing.
+
+Measured by A/B, isolating exactly one variable: the current `bg.js` with the
+colliding guard string put back, against the current `bg.js`. Pinning an older
+commit would have dragged in main's other changes.
+
+```
+BEFORE (guard collision)   AFTER (own guard)
+cosmos.html      0 marks   ->  94
+agents.html      0         ->  82
+honors.html      0         ->  70
+elements.html    0         ->  70
+family.html      0         ->  70
+dashboard.html   0         ->  70
+profile.html     0         ->  70
+                 0         -> 526 across 7 pages
+```
+
+**And a second correction, in the other direction — 526 would also mislead.**
+A mark in the DOM is not a mark on screen. Filtering to marks with a real
+laid-out size returns **0 painted on every page at rest**, including
+`agents.html`, where a screenshot plainly shows twelve. The reason, measured
+rather than assumed by walking up to the ancestor that hides them:
+
+```
+agents.html at rest       hidden by DIV#tab-council.tab-panel {display:none}
+agents.html COUNCIL open  12 painted
+cosmos.html at rest       hidden by DIV#tab-gates.tab-panel   {display:none}
+honors.html at rest       hidden by DIV#om-ov                 {display:none}
+```
+
+So the accurate statement is narrower than either number on its own: **the fix
+restores emblem rendering that was entirely dead across six files, on surfaces
+a member reaches by opening a tab or a panel. It changes nothing about what any
+page shows on first paint.**
+
+Both errors are the same one twice: section 8.4 says a repo-wide grep is a
+candidate generator, not a verdict, and that a scanner needs its own
+false-positive pass before its number means anything. The first claim trusted a
+grep; the second trusted a DOM count. Only the third measurement — computed
+size, then the hiding ancestor — was worth reporting.

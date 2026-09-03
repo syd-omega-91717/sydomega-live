@@ -4988,3 +4988,50 @@ leaves every page hidden.
 
 So the 44-page `catch`-reveals pattern is safe as written *because* of the
 `!important` guard. Worth knowing before anyone "simplifies" that rule.
+
+## charter.html rendered nothing, because two exempt lists disagreed (2026-09-03)
+
+The last failing page in the full-estate sweep, and the same *symptom* as
+`skills.html` from an entirely different cause. `bg.js` keeps two independent
+exemption lists and they had drifted apart:
+
+| list | line | contents |
+|---|---|---|
+| approval guard's `PUBLIC` | `bg.js:219` | account, enter, reset, terms, pending, index, / |
+| access guard's `EX` | `bg.js:1231` | '', index, account, terms, **charter**, reset, enter, pending |
+
+`charter` was in one and not the other. So the approval guard **did** inject
+`body:not(.omega-approved) .shell{display:none!important}` on charter.html,
+while the access guard that calls `__omegaApprove(true)` hit
+`if(EX[pg])return;` and never ran. The page was hidden with nothing left to
+unhide it — blank for every visitor, approved or not, permanently.
+
+This is CLAUDE.md section 8.1 class 8 (two divergent copies of one canonical
+list) in a new place: the previous instances were the 12 signs and the 12
+labors, not a pair of security exemption lists.
+
+### Which way to reconcile, and why
+
+Both directions were available. `charter.html` makes **zero** Supabase calls —
+`grep -c "supabase\|OmegaSB\|\.from("` returns 0 — so it is static governance
+text holding no member data, and `EX` already groups it with `terms`. Gating it
+instead would hide the governing document from exactly the pending members it
+governs. So `charter` was added to `PUBLIC`, and the comment on that line now
+says the two lists must change together.
+
+**This is a visibility change and should be read as one:** charter.html is now
+readable without approval, like terms.html. It was previously readable by
+nobody, so nothing regressed, but if the owner wants it member-only the fix is
+to drop `'charter'` from `EX` instead — one line, the other direction.
+
+### Verification
+
+Runtime verification on `charter` plus two controls (`governance`, `dashboard`)
+passes. The guard still holds everywhere it should: an unapproved member bounces
+to `/pending.html` on academy/dashboard/vault/settings, and with a profile read
+stubbed to throw, all four stay `display:none` — the 44-page
+`catch{ #app.style.display='flex' }` pattern remains covered by the guard's
+`!important`.
+
+Full estate before this session's runtime work: **22 pages failing**. After:
+**0**.

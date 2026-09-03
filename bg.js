@@ -243,7 +243,15 @@ function __omegaAppend(el){
 }catch(e){}})();
 
   try{
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/'];
+    /* Must stay in step with the ACCESS GUARD's own EX list further down
+       (search "ACCESS GUARD + TRIAL ENGINE"). They had drifted: EX exempted
+       'charter' and this list did not, so charter.html got the hiding CSS while
+       the code that lifts it returned early -- the page rendered nothing, for
+       anyone, permanently. charter.html makes zero Supabase calls; it is static
+       governance text sitting beside terms in that same EX list, so the two are
+       reconciled in this direction. Changing either list means changing both.
+       CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 

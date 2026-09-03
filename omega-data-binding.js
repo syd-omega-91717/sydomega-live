@@ -95,9 +95,9 @@
         if(window.OmegaSB && binding.query.indexOf('rpc') === -1){
           var table = binding.query;
           var subscription = window.OmegaSB.sb
-            .from(table)
-            .on('*', function(payload){
-              binding.cache = payload.new;
+            .channel('public:' + table)
+            .on('postgres_changes', { event: '*', schema: 'public', table: table }, function(payload){
+              binding.cache = payload.new || payload.old;
               renderBinding(binding);
             })
             .subscribe();
@@ -187,7 +187,7 @@
     if(queryPart.indexOf('rpc:') === 0){
       // RPC call
       var rpcName = queryPart.replace('rpc:', '');
-      return window.OmegaSB.sb.rpc(rpcName).then(function(response){
+      return window.OmegaSB.sb.rpc(rpcName, {}).then(function(response){
         if(response.error) throw response.error;
         return response.data;
       });
@@ -201,13 +201,20 @@
         pairs.forEach(function(pair){
           var kv = pair.split('=');
           var key = kv[0];
-          var val = kv[1];
+          var val = decodeURIComponent(kv[1]);
 
           if(key.indexOf('.') > -1){
             var keyParts = key.split('.');
             var col = keyParts[0];
             var op = keyParts[1];
-            tableQuery = tableQuery.filter(col, op, val);
+            if(op === 'eq') tableQuery = tableQuery.eq(col, val);
+            else if(op === 'neq') tableQuery = tableQuery.neq(col, val);
+            else if(op === 'gt') tableQuery = tableQuery.gt(col, val);
+            else if(op === 'gte') tableQuery = tableQuery.gte(col, val);
+            else if(op === 'lt') tableQuery = tableQuery.lt(col, val);
+            else if(op === 'lte') tableQuery = tableQuery.lte(col, val);
+            else if(op === 'like') tableQuery = tableQuery.like(col, val);
+            else if(op === 'in') tableQuery = tableQuery.in(col, val.split(','));
           } else {
             tableQuery = tableQuery.eq(key, val);
           }

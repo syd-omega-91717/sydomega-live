@@ -607,8 +607,21 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 (function(){if(!document.querySelector('script[data-omega-hero-wire]')){var s=document.createElement('script');s.src='/omega-hero-wire.js';s.setAttribute('data-omega-hero-wire','1');__omegaAppend(s);}})();
 /* ===== SOVEREIGN BACKDROP -- warm element-tinted base, per-page shade ===== */
 (function(){if(!document.querySelector('script[data-omega-backdrop]')){var s=document.createElement('script');s.src='/omega-backdrop.js';s.setAttribute('data-omega-backdrop','1');__omegaAppend(s);}})();
-/* ===== 12 LIVING EMBLEMS -- per-sign animated marks ===== */
-(function(){if(!document.querySelector('script[data-omega-emblems]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblems','1');__omegaAppend(s);}})();
+/* ===== 12 LIVING EMBLEMS -- per-sign animated marks =====
+   The guard is `data-omega-emblem-living`, NOT `data-omega-emblems`. It used
+   to be the latter, which is the attribute bg.js:90 already sets when it
+   injects `omega-emblems-catalog.js` -- a different module. Line 90 runs
+   first, so this querySelector always found its tag and `omega-emblems.js`
+   was never injected on any page. Confirmed in a render before the fix: the
+   only script holding `data-omega-emblems` was the catalog, and
+   `window.OmegaEmblem` (this module's export, singular) was undefined while
+   `window.OmegaEmblems` (the catalog's, plural) was an object -- which is
+   exactly why the collision read as working.
+   Two modules must never share a guard attribute; the guard is the module's
+   identity, not the feature area's. */
+(function(){if(!document.querySelector('script[data-omega-emblem-living]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblem-living','1');__omegaAppend(s);}})();
+/* ===== SOVEREIGN CONSTELLATION -- the ring-of-emblems diagram ===== */
+(function(){if(!document.querySelector('script[data-omega-constellation-js]')){var s=document.createElement('script');s.src='/omega-constellation.js';s.setAttribute('data-omega-constellation-js','1');__omegaAppend(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */
 (function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');__omegaAppend(s);}})();
 /* ===== 9D ENGINE -- parallax, holographic glow, cinematic transitions, reactive audio ===== */

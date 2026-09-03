@@ -192,22 +192,17 @@ through this one file with no per-page markup changes:
   collide, not against the presence of a pseudo. That one is not
   hover-fixable: it is the badges' resting appearance.
 - **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
-  `*-card` classes across 117 files with a scanner, not by hand. **The
-  standing fact:** ~34 classes across as many pages were deliberately
-  **not** swept because `.card`'s hover-only `border-image`/glow would
-  collide with something they already own — either a page-local
-  `::before`/`::after` rule (pseudo-elements cascade per *property*, and
-  both rules set `background`, so one wins), or a per-instance border set
-  on the card element itself (inline `style=`, JS `.style.border*`/
-  `.style.cssText+=`, or a same-element modifier combo like
-  `.mc.heir{border-left:…}`). State-modifier classes
-  (`.sel`/`.active`/`.unlocked`…) that set `border-color` were swept in —
-  hover-only masking only ever hides them during a simultaneous hover.
-  The full per-class exclusion list, the scanner logic, and the
-  verification (regex round-trip, `querySelector` scan, headless-Chromium
-  resting-state computed-style check) are in `FIXES_LOG.md` — "the full
-  per-class exclusion list" and "Platform-wide `.card` sweep". Check a
-  class against those two failure modes before adding `.card` to it.
+  `*-card` classes across 117 files by scanner. **The standing fact:** ~34
+  classes were deliberately **not** swept, because `.card`'s hover-only
+  `border-image`/glow collides with something they already own — a page-local
+  `::before`/`::after` that sets `background` (pseudo-elements cascade per
+  *property*, and only one can win that one), or a per-instance border on the
+  card element itself (inline `style=`, JS `.style.border*`, or a same-element
+  modifier like `.mc.heir{border-left:…}`). State-modifier classes
+  (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
+  hover-only masking hides them only during a simultaneous hover. Check a class
+  against those two failure modes before adding `.card`; the per-class list,
+  the scanner and the verification are in `FIXES_LOG.md`.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
@@ -251,6 +246,11 @@ through this one file with no per-page markup changes:
   `offline.html`, `reset.html`, `terms.html`) already define their own
   `body::before` and a bare-selector CSS rule would have collided with
   those.
+- **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
+  diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
+  real link. It draws no artwork: it emits `data-omega-emblem` for
+  `omega-emblems.js` to fill. Node size is a geometric constraint, not a taste;
+  read its header first. `cosmos.html` has its own agent wheel already.
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
   linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
   `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
@@ -413,10 +413,17 @@ are listed in rough order of how often they have recurred.
    publishes it from `OmegaSB.get()`. The same shape broke `omega-hercules.js`,
    which guarded on `window.sb`, a global nothing assigns. **Before using a
    `window.*` accessor, grep for its assignment, not just its readers.**
-5. **An injection guard that discards instead of deferring.**
-   `if (document.body) document.body.appendChild(x)` drops the work entirely
-   when body does not exist yet. `bg.js` now routes every injection through
-   `__omegaAppend()`, which queues to `DOMContentLoaded` instead.
+5. **An injection guard that discards, or that two modules share.** Two
+   shapes. (a) `if (document.body) document.body.appendChild(x)` drops the work
+   entirely when body does not exist yet; `bg.js` now routes every injection
+   through `__omegaAppend()`, which queues to `DOMContentLoaded`. (b) **Two
+   modules behind one `data-omega-*` attribute.** `omega-emblems-catalog.js`
+   (bg.js:90) and `omega-emblems.js` (bg.js:611) both used
+   `data-omega-emblems`, so the first to run permanently satisfied the
+   second's guard and the second never loaded on any page — invisible to
+   `audit.py` (the injection exists in source) and disguised by near-identical
+   exports (`OmegaEmblems` vs `OmegaEmblem`). **A guard
+   attribute is the module's identity, not the feature area's.**
 6. **A privilege and a policy that do not meet.** Three faces of one class:
    (a) Postgres grants `EXECUTE` to `PUBLIC` automatically on
    `CREATE FUNCTION`, so a narrowing `GRANT ... TO authenticated` is decorative
@@ -740,15 +747,12 @@ entries (which were accurate when written):
   (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
   the entire auto-loaded context).
 - **Presentation is measured in a render, never reasoned from the codepoint.**
-  Whether a glyph paints in colour or in the brand's gold is decided by the
-  font stack, not by the character's block: the twelve zodiac signs
-  (U+2648..U+2653) are ordinary BMP symbols and default to *emoji*
-  presentation, so the platform's own sign system shipped as multicolour
-  stickers; meanwhile ✓ ★ ☰ ✦ ⚔ look like emoji to a grep and are pure
-  typography. Draw each candidate white-on-black to a canvas in the harness
-  Chromium and read the pixels back — channel spread means a colour glyph.
-  That is what found the 92, and what proved U+FE0E fixes the BMP ones
-  in place. `scripts/brand-glyph-check.py` gates it.
+  A grep over-reports (✓ ★ ☰ ✦ ⚔ are pure typography) and under-reports — the
+  twelve zodiac signs are ordinary BMP symbols that default to *emoji*
+  presentation, so the platform's own sign system shipped as colour stickers.
+  Draw each candidate white-on-black to a canvas in the harness Chromium and
+  read the pixels back: channel spread means a colour glyph, and U+FE0E fixes
+  the BMP ones in place. `scripts/brand-glyph-check.py` gates it.
 - **Runtime verification is automated — use it before claiming a UI or
   data-layer change works.** `node scripts/verify-runtime.js` renders the
   capability entrypoints headless and asserts load / approval-guard-lifts /

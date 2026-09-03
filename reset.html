@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717  --  Password Recovery</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="Recover access to your account: request a secure link by email, then set a new password."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -82,7 +82,7 @@
       <div id="view-reset" class="hidden">
         <p class="lead">Set a new password for your sovereign account.</p>
         <label for="r-pw">NEW PASSWORD</label>
-        <input type="password" id="r-pw" placeholder="at least 6 characters" autocomplete="new-password" />
+        <input type="password" id="r-pw" placeholder="at least 12 characters" autocomplete="new-password" />
         <label for="r-pw2">CONFIRM PASSWORD</label>
         <input type="password" id="r-pw2" placeholder="repeat it" autocomplete="new-password" />
         <button class="btn" id="r-update">UPDATE PASSWORD</button>
@@ -134,6 +134,7 @@ function switchTab(id,btn){
   document.getElementById('tab-'+id).classList.add('act');
 }
 </script>
+<script src="/omega-password-guard.js"></script>
 <script type="module">
   import { createClient } from '/vendor/supabase-js.js';
   var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
@@ -165,9 +166,20 @@ function switchTab(id,btn){
   async function updatePw(){
     var pw=document.getElementById('r-pw').value, pw2=document.getElementById('r-pw2').value;
     var msg=document.getElementById('r-msg2'), btn=document.getElementById('r-update');
-    if(pw.length<6){ msg.className='msg bad'; msg.textContent='Password must be at least 6 characters.'; return; }
     if(pw!==pw2){ msg.className='msg bad'; msg.textContent='Passwords do not match.'; return; }
-    btn.disabled=true; msg.className='msg info'; msg.textContent='Updating...';
+
+    /* Same gate as sign-up: a recovery flow that let a breached password
+       through would leave the account exactly as exposed as before. */
+    btn.disabled=true; msg.className='msg info'; msg.textContent='Checking password...';
+    var guard = window.OmegaPasswordGuard;
+    if(guard){
+      var verdict = await guard.evaluate(pw, (document.getElementById('r-email')||{}).value || '');
+      if(!verdict.allow){
+        btn.disabled=false; msg.className='msg bad'; msg.textContent=verdict.reasons.join(' ');
+        return;
+      }
+    }
+    msg.className='msg info'; msg.textContent='Updating...';
     var r = await supabase.auth.updateUser({ password: pw });
     btn.disabled=false;
     if(r.error){ msg.className='msg bad'; msg.textContent=r.error.message||'Could not update. Request a fresh link.'; return; }

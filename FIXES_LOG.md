@@ -5119,3 +5119,326 @@ Emitting the six risk signals means building threat detection, which is the
 architecture decision §8.2 says it is. `ops.html`'s `#evt-metrics-body` was
 re-checked in the same pass and that entry is **correct** — `ops.html:485` looks
 the id up and no HTML anywhere defines it.
+
+## CI had not concluded a single run in two days (2026-09-03)
+
+The visible symptom was a wall of failing checks and a runner log reading
+`Job Page estate quality completed with result: Failed` nine times over. Neither
+was what was happening.
+
+**Measured, via the Actions API rather than the runner log.** Of the last **30
+CI runs on `main`** — reaching back to `2026-09-01T14:34Z` — every one had
+`conclusion: cancelled`. Zero `success`, zero `failure`. `page-estate-quality.yml`
+over its entire history: **68 runs**, not one with a `success` or `failure`
+conclusion. One job checked directly, `run_id 33707164446` → job `100498665358`:
+`"conclusion":"cancelled"`, `completed_at 2026-09-03T02:35:08Z` — the exact
+second the next push landed.
+
+The self-hosted runner logs a cancelled job as `completed with result: Failed`.
+So two days of *no CI at all* presented as two days of *failing CI*. The runner
+log and the Actions API disagreed, and only the API was right.
+
+**Cause.** Twenty workflows targeted the one serial self-hosted Windows runner.
+Eleven of them were a full checkout wrapped around a single short Python script.
+Each push queued twenty jobs behind one worker; the next push superseded them
+before the runner arrived. Sum of the declared `timeout-minutes` across those
+workflows is ~265 minutes of worst-case serial work per commit, against a push
+cadence of minutes.
+
+**The gates were never the cost.** Timed locally, all eleven run in **0.79s
+combined**. The eleven checkouts around them were the entire expense.
+
+Fixed by `scripts/contract-suite.py` (one list, one process, every gate reported
+before exiting non-zero) plus `.github/workflows/contracts.yml` replacing the
+eleven. Per-push runs on `main`: 20 → 9. Actions stops a job at the first failing
+step and `workflow-contract-lint.py:22` forbids `continue-on-error: true`, so one
+process is the only way to learn about more than one failure per queued hour.
+
+Deliberately **not** fixed by moving to a hosted runner: §8.2 forbids it and
+`docs/CI_RUNNER_RECOVERY.md` records why.
+
+### Two gates were genuinely red, and the local gate could not see them
+
+`content-uniqueness-contract` and `page-experience-contract` were blocking
+workflows on GitHub but absent from `ci-local.sh`'s step list, so
+`./scripts/ci-local.sh` and `.githooks/pre-push` both reported green over a red
+`main`. §8.4's "verify a 0 findings result is real" in its most literal form: a
+clean report from a check that never ran. Both now come from the one shared list.
+
+`page-experience-contract.py` reported `defaults: missing primaryAction`. The
+fix exposed a second defect: `config/page-experience.schema.json` sets
+`"additionalProperties":false` on `defaults` and does not list `primaryAction`,
+so the data file could not satisfy the schema and the gate at the same time —
+§8.1 class 8, two divergent copies of one canonical spec. Schema updated to
+match the gate. Nothing validates that schema today (`grep -rn '\.schema\.json'
+scripts/ .github/` returns only `content-registry-contract.py:9`), which is why
+the contradiction survived; it is still checked in, and a spec that contradicts
+the live gate misleads whoever reads it next.
+
+`content-uniqueness-contract.py` reported 2 duplicate titles and 3 duplicate
+description groups across 13 pages. `subscriptions.html` was titled `Membership`
+like `membership.html`; `rune.html` `SIGIL` like `sigil.html`. Thirteen pages
+carried the site-wide tagline (`The Code. The Frequency. The Legacy…`) as their
+own `<meta name="description">`. Each was rewritten from that page's actual
+rendered text — `rune.html` is the `OmegaSigil` SVG generator, `subscriptions.html`
+is plan/tier/payment-history — not invented. Billing copy stays future tense:
+that feature is dormant (§8.2) and §9 forbids present-tense copy for a feature
+that is not on.
+
+### A workflow that could never have passed
+
+`supabase-runtime-contract.yml` declared `shell: python` with the body
+`python scripts/supabase-runtime-contract.py`. `shell: python` feeds the block
+to the interpreter **as source**, so that line is a `SyntaxError` on line 1 —
+reproduced directly:
+
+```
+  File "asif.py", line 1
+    python scripts/supabase-runtime-contract.py
+           ^^^^^^^
+SyntaxError: invalid syntax
+```
+
+That is the 28-second `Supabase runtime health` failure in the runner log
+(02:38:59 → 02:39:27): a checkout, then a parse error, never the contract.
+`runner-probe.yml` uses `shell: python` correctly, with real Python in the body;
+this one wanted a shell and got pwsh.
+
+## The leaked-password advisory, closed where it actually could be (2026-09-03)
+
+`get_advisors` reports `auth_leaked_password_protection` WARN. §8.2 already said
+it could not be enabled on this plan; that claim was **re-verified rather than
+repeated**, because three §8.2 claims had turned out wrong in the preceding days.
+`get_organization(vztvuckpdsoriyvpdkzx)` → `"plan":"free"`, and the Supabase docs
+page the advisory links states verbatim: *"Leaked password protection is
+available on the Pro Plan and above."* It is an Auth dashboard property, so
+neither `apply_migration` nor `execute_sql` can reach it. The claim stands.
+
+The **corpus** behind the feature is not gated, though. `omega-password-guard.js`
+checks strength and HaveIBeenPwned's Pwned Passwords range API at the only two
+places this platform sets a password — `account.html` (`signUp`) and
+`reset.html` (`updatePw`). k-anonymity: SHA-1 locally, send the first five hex
+characters, match the returned suffixes in the browser. `vercel.json`'s enforced
+CSP already permits it (`connect-src 'self' https: wss:`), so no CSP change.
+
+**Stated plainly: this is client-side and a direct Auth API call bypasses it.**
+Only the Pro-plan server setting is unbypassable. The advisory is not resolved,
+and §8.2 says so.
+
+**Verification.** `api.pwnedpasswords.com` is **403 at this environment's egress
+proxy** (`curl: (56) CONNECT tunnel failed, response 403`), the same class of
+block §8.4 records for `github.com` and `codeload` — so every live call returned
+`checked:false`, which is indistinguishable from a broken implementation. That
+had to be resolved rather than assumed:
+
+- SHA-1 correctness against the published digest of `"password"`
+  (`5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8`), so a wrong digest or a wrong
+  prefix/suffix split fails instead of silently agreeing with itself.
+- Real-format range responses (CRLF-delimited, `SUFFIX:count`) through a stubbed
+  `fetch`, asserting the requested URL is `…/range/5BAA6` and nothing more.
+- **In a real browser**, via Playwright with only the remote host routed: this
+  exercises the actual `crypto.subtle` SHA-1 path and the real page wiring.
+  `window.OmegaPasswordGuard` present on both pages, `breachCheck('password')`
+  → `{"breached":true,"count":10382543,"checked":true}`, zero page errors.
+
+The property that matters is that an unreachable API degrades to **unknown**,
+never to clean — otherwise the sign-up page tells a member a compromised
+password is fine. HTTP 503 and a thrown fetch both return
+`{"breached":null,"checked":false}`, and `scripts/tests/test_password_guard.py`
+pins it (13 tests; `test_*_degrades_to_unknown_not_to_clean` is the reason the
+file exists). It fails **open** on purpose — a third-party outage must not stop
+account creation, which is Supabase's own behaviour too — but it never claims a
+check it did not perform, §8.1 class 1.
+
+Password floor raised from 6 characters to 12 plus three of four character
+classes, per the same docs page's free-tier guidance. Existing members are
+unaffected: `signInWithPassword` is not gated, only `signUp` and `updateUser`.
+
+One test assertion was wrong before it was right: `assertNotIn('password', url)`
+fails on the hostname `api.pwnedpasswords.com`, which contains that substring.
+Asserting on the path after `/range/` is the real property.
+
+## Production audit of www.sydomega.com: GitHub, Vercel, Supabase (2026-09-03)
+
+Asked to find whatever blocks the redesigned platform going live. Checked all
+three surfaces. **Two of the three were clean**, which is worth recording as
+plainly as the failures:
+
+- **Vercel**: every one of the last 20 deployments `state: READY`. Production is
+  `dpl_CrdkAqkaof8t6qKraqB5arzu5n1c` on `9c8707f1`, i.e. current `main`.
+  `get_runtime_errors` over 7 days: **"No runtime errors found."** The build is
+  not a blocker and never was — `vercel.json` disables install/build, so a
+  static deploy cannot fail the way a bundled one can.
+- **Supabase**: project `ydqhzvvoyufiiqvzcjns` `ACTIVE_HEALTHY`. Performance
+  advisors: **244, every one INFO** (172 `unused_index`, 72
+  `unindexed_foreign_keys`) — no ERROR, no WARN. Those two counts have moved
+  from the 125/61 recorded in §8.2 but the classification has not; they are the
+  same known noise on a platform with 9 profiles.
+- Security advisors: **one** finding, `auth_leaked_password_protection`, already
+  handled in this session's earlier entry.
+
+`www.sydomega.com` itself returns **HTTP 200** with the enforced CSP intact.
+The site is up. What was broken was the part nobody looks at from inside it.
+
+### og-image.png was a 404 in production, on 11 pages
+
+Every page's Open Graph and Twitter card pointed at
+`https://www.sydomega.com/og-image.png` — **21 references across 11 pages** —
+and the file does not exist in the repo. Fetched against the live domain it
+returned **HTTP 404**, with Vercel serving the `404.html` body in its place. So
+every share of this platform on WhatsApp, iMessage, Slack, X, LinkedIn or
+Facebook has rendered a preview card with no image, for as long as those tags
+have existed.
+
+**Why no gate caught it.** `ci-local.sh`'s broken-asset check and `ci.yml` step 4
+both resolve *local* `src=`/`href=` paths. An absolute URL is skipped, because an
+absolute URL normally points at a third party nobody can validate offline. But a
+URL on **our own domain** is a local path wearing an absolute URL, and is exactly
+as checkable. `scripts/absolute-asset-check.py` now gates that (blocking, added
+to `contract-suite.py`), and it was verified by hiding the file and watching it
+fail with the real 11-page reference list, then restoring it.
+
+The asset is produced by `scripts/build-og-image.js`, not hand-drawn: 1200×630
+rendered in headless Chromium from bg.js's `:root` tokens and the platform's
+three font families, with omega-share-card.js's ring/glow/grid vocabulary. The
+`image-pipeline` skill names this the one legitimate raster case ("an OG-style
+share PNG") — social scrapers do not render SVG for `og:image`. `--check`
+validates dimensions by reading the PNG header, so a truncated or wrong-size
+file fails rather than passing as present.
+
+### The same gate immediately found a second live 404
+
+`interface-omni.html` declared `og:url` as
+`https://www.sydomega.com/interface_omni.html` — **underscore, where every real
+path uses a hyphen**. The canonical share URL for the Control Deck was a 404.
+
+Fixing it exposed a third, quieter bug in the same file. `nav.js:6` keys off
+`data-page`, and that page said `data-page="interface_omni"` while `nav.js`'s
+`PS` map holds `'interface-omni':'order'`. The lookup missed and fell through to
+`nav.js:220`'s `PS[dp]||'command'` default, so the Control Deck highlighted
+**COMMAND** instead of **ORDER** — a member was told they were in the wrong
+section of the platform. Confirmed in a render before and after:
+
+```
+before   {"dataPage":"interface_omni","active":["COMMAND","COMMAND"]}
+after    {"dataPage":"interface-omni","active":["⋔ORDER","ORDER"]}
+```
+
+`reachability-contract.py` cannot see this: it compares `nav.js`'s two maps
+against the page set, and never reads a page's own `data-page` attribute.
+
+**A measurement error worth recording.** The first render of this reported
+`data-page: "account"` on `interface-omni.html` *and* on `dashboard.html`, which
+would have made it look like a platform-wide fault. Both pages had simply
+redirected to `account.html` — the plain Playwright context had no signed-in
+stub. §8.4 already records this exact trap ("academy.html leaks content — FALSE.
+Page had redirected; I measured /account.html") and it still caught a session
+that had read the warning. The harness's `session.js` `launch()` is the fix;
+an ad-hoc `chromium.launch()` against a gated page measures the redirect.
+
+### enter.html asserted eight system states and checked none of them
+
+The site's front door. Its STATUS tab shipped eight hard-coded rows with
+pulsing green/gold dots:
+
+```
+SYSTEM ONLINE · 9.17Hz RESONANCE LOCK · TLS ENCRYPTED (HTTPS)
+NODE GOVERNANCE: ACTIVE · Ω RESERVE: PLANNED (DORMANT)
+AUTH LAYER: ONLINE · SUPABASE: CONNECTED · MATRIX SYNC: ACTIVE
+```
+
+with `LAST CHECK: HH:MM:SS` underneath, driven by the wall clock on a
+`setInterval(clock,1000)`. Nothing was ever checked. The ticking timestamp made
+it worse than static copy: it asserted a verification *at that exact second*.
+CLAUDE.md §8.1 class 9 (fabricated data rendered as fact) and §9's "never show a
+success state without checking the actual result", on the first page any visitor
+sees.
+
+Rebuilt as three real probes plus a separated, honestly-labelled constants group:
+
+- `TRANSPORT ENCRYPTION` — `location.protocol === 'https:'`
+- `PLATFORM RUNTIME` — `window.OmegaSB` published by bg.js
+- `SUPABASE CLIENT` — `OmegaSB.get()` resolving to a client object
+
+**Three states, not two**, the same discipline as `omega-password-guard.js`: OK,
+UNAVAILABLE, or UNVERIFIED when the check could not complete. Only a verified
+pass turns green; a probe that never answers stays muted rather than becoming a
+false all-clear *or* a false alarm. `LAST CHECK` is written only by a completed
+probe.
+
+The label deliberately reads **SUPABASE CLIENT / READY**, not "CONNECTED": a
+constructed client proves the vendored bundle parsed against the project URL, it
+does **not** prove the API answered. Claiming otherwise is the same overclaim in
+a smaller font. A live network probe was considered and **rejected as
+unverifiable from here** — `api.pwnedpasswords.com`, `supabase.co` and
+`sydomega.com` are all 403 at this environment's egress proxy, so a CORS
+surprise in production would have pinned the front page to a permanent false
+"UNREACHABLE". Shipping an unverifiable probe on the front door trades one
+wrong claim for another.
+
+Verified in a render: `{"tls":"NOT HTTPS","rt":"LOADED","sb":"READY"}` with zero
+page errors. The TLS row reporting **NOT HTTPS** over the `http://localhost`
+harness is the proof the check is real — a hard-coded panel would have said
+ENCRYPTED.
+
+## The front door rendered all four tabs at once (2026-09-03)
+
+Found by screenshotting `enter.html` to confirm the rebuilt STATUS panel looked
+right — the panel was fine, and the screenshot showed the GATEWAY, STATUS and
+PROTOCOL panes all painted on top of each other.
+
+`bg.js` defines the shared tab primitive as **`.tab-panel`**:
+
+```
+.tab-panel,.tab-panels>.tab-panel{display:none}
+.tab-panel.active,.tab-panel.on,.tab-panel.act{display:block}
+```
+
+`enter.html` wrote **`.tab-pane`** — one letter short. Nothing in the repo
+defines that class (`grep -rn --include=*.css --include=*.js '\.tab-pane\b[^l]'`
+returns nothing), so `display:none` never applied and all four panes rendered
+stacked. The tab bar was decorative: clicking toggled an `active` class that
+changed nothing. `/` rewrites to `/enter`, so this was the first thing every
+visitor saw. Measured in a render:
+
+```
+before   {"total":4,"visible":4}
+after    on load {"visible":["tab-gateway"]}   after status {"visible":["tab-status"]}
+         after protocol {"visible":["tab-protocol"]}   after science {"visible":["tab-science"]}
+```
+
+### Two measurement errors on the way to a one-page answer
+
+**The grep overcounted six-fold.** `grep -l 'class="tab-pane' *.html` reported
+**159 pages** and it looked like a platform-wide failure. `tab-pane` is a prefix
+of `tab-panel`, so the pattern matched every *correct* page too. A render across
+all 159 gave the real split: 131 use `.tab-panel` correctly, 22 use `.tab-pane`
+and define it in their own `<style>`, and **1** — `enter.html` — used it with no
+definition anywhere. §8.4's "a repo-wide grep is a candidate generator, not a
+verdict", in its most expensive form yet.
+
+A first scan also reported "1 broken, 22 OK" while silently skipping 136 pages
+that returned no panes. That number happened to be right, but it was right by
+luck until the skips were classified (131 no-`.tab-pane`-in-DOM, 5 redirected to
+`/dashboard.html`, 0 errored). Getting the right number by luck is not
+measuring.
+
+**The gate written for this bug could not catch it.** `shared-class-check.py`'s
+first version collected "locally defined" classes from the whole page source, so
+`enter.html`'s own `document.querySelectorAll('.tab-pane')` counted as a
+definition and the script reported **0 findings against the broken file**. A
+selector in JavaScript is a *use*, not a definition. Only `<style>` blocks
+define. Corrected, then verified in both directions before shipping: it reports
+`.tab-pane / 1 page(s): enter.html` against `git show HEAD:enter.html`, and 0
+findings across the current 186-page estate. This is exactly §8.4's "verify a 0
+findings result is real" — a gate that cannot catch its own founding bug is
+worse than no gate, because its green is read as evidence.
+
+Scope is deliberately narrow: only class tokens starting with a shared-primitive
+prefix (`tab- kpi card glass bar- chip tbl- btn`) are checked, and class
+attributes containing a quote or `+` are skipped as JavaScript template
+fragments. 0 false positives across the estate; widen only with the same
+before/after evidence.
+
+`node scripts/verify-runtime.js --all`: **PASS (186 pages)** after all of this
+session's page changes.

@@ -54,7 +54,6 @@ $RunnerRoot = 'C:\actions-runner'
 $Zip        = Join-Path $RunnerRoot "actions-runner-win-x64-$RunnerVersion.zip"
 $Config     = Join-Path $RunnerRoot 'config.cmd'
 $Run        = Join-Path $RunnerRoot 'run.cmd'
-$Svc        = Join-Path $RunnerRoot 'svc.cmd'
 $Api        = 'https://api.github.com/repos/syd-omega-91717/sydomega-live/actions/runners/registration-token'
 $Download   = "https://github.com/actions/runner/releases/download/v$RunnerVersion/actions-runner-win-x64-$RunnerVersion.zip"
 
@@ -144,6 +143,11 @@ $ConfigArgs = @(
   '--work', '_work'
 )
 if ($Replace) { $ConfigArgs += '--replace' }
+# --runasservice is what makes config.cmd perform the service step. Without it
+# the step never runs, svc.cmd is never generated, and any later `svc.cmd
+# install` fails with CommandNotFoundException -- which is exactly what an
+# earlier version of this script did to an operator.
+if ($InstallService) { $ConfigArgs += '--runasservice' }
 
 & $Config @ConfigArgs
 if ($LASTEXITCODE -ne 0) {
@@ -158,16 +162,26 @@ $Pat = $null; $RegistrationToken = $null; $Headers = $null
 
 # ---------------------------------------------------------------- start
 if ($InstallService) {
-  # svc.cmd does not ship in the download -- config.cmd generates it. Anyone who
-  # tries `.\svc.cmd install` before registering gets CommandNotFoundException,
-  # which reads like a missing file rather than a missing step.
-  if (-not (Test-Path $Svc)) { throw "config.cmd did not generate svc.cmd at $Svc." }
-  & $Svc install
-  if ($LASTEXITCODE -ne 0) { throw "svc.cmd install failed with exit code $LASTEXITCODE." }
-  & $Svc start
-  if ($LASTEXITCODE -ne 0) { throw "svc.cmd start failed with exit code $LASTEXITCODE." }
+  # config.cmd --runasservice has already installed AND started the service, so
+  # there is nothing further to call here. svc.cmd exists only as a by-product of
+  # that step, which is why it must not be a prerequisite for it: a previous
+  # version tested for svc.cmd first and could never pass.
+  $svcObj = Get-Service -Name 'actions.runner.*' -ErrorAction SilentlyContinue
+  if (-not $svcObj) {
+    throw @"
+config.cmd reported success but no 'actions.runner.*' service exists.
+
+The service step is the part that needs elevation. If the transcript above
+contains "Needs Administrator privileges for configuring runner as windows
+service", registration succeeded and only the service was skipped -- re-run this
+script from an elevated PowerShell.
+"@
+  }
+  foreach ($sv in $svcObj) {
+    if ($sv.Status -ne 'Running') { Start-Service -Name $sv.Name }
+  }
+  Get-Service -Name 'actions.runner.*' | Format-Table -AutoSize Name, Status
   Write-Host 'REGISTERED as a Windows service. It now survives logout and reboot.' -ForegroundColor Green
-  Write-Host 'Verify with: Get-Service actions.runner.*   (expect Running)' -ForegroundColor Green
   exit 0
 }
 

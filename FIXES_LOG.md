@@ -6136,3 +6136,75 @@ written against `─` matched nothing; and inserting CSS into that
 single-quoted JS string requires escaping backslashes, then apostrophes, then
 newlines — getting the order wrong broke the file, `node --check` caught it,
 and it was restored from git rather than patched over.
+
+### Card titles get a subordinate mark, and the runner doc gets the case that blocked it
+
+**393 `.card-title` elements across 82 pages** were text-only, the same shape
+the 614 section headings had. `.card-title` is defined once, in `bg.js`, at
+`:where()` specificity, and `.card-title::before` was free — checked at runtime
+by enumerating every stylesheet rule whose selector matches, not by grep.
+
+**The design decision was to NOT repeat the section emblem.** Putting the
+page's ringed glyph on card titles too would show twenty identical rings on a
+twenty-card page: that is noise, not hierarchy, and it would spend the
+readability the type-floor work bought. Instead a card title gets a 7px open
+diamond in the page's axis colour — the ring marks a section, the diamond marks
+an item inside it. Two marks, one system.
+
+It is **still at rest** and makes a half turn when its card is hovered. 614
+rings already turn platform-wide at 90s; 393 more turning marks makes a page
+swarm. Motion as a reward for attention costs nothing when nobody is pointing.
+
+`content` is `""` — an empty box, not text — so unlike the `.sechead` mark this
+one is structurally immune to the inherited `-webkit-text-fill-color` from
+`.ofx-sheen` that cost four wrong theories on the previous change.
+
+Verified by A/B, pinning `bg.js` with the block removed against the real file:
+
+```
+                 BEFORE                           AFTER
+ops.html         557x193 557x193 557x182 557x182  identical
+fasting.html     813x218 813x458                  identical
+expenses.html    778x298 778x160                  identical
+```
+
+**A false negative in the probe itself, worth recording.** The first version
+measured where each title's TEXT started, via
+`range.selectNodeContents(el).getBoundingClientRect().left - el.rect.left`, and
+returned **0 both with and without** a `padding-left:16px` that
+`getComputedStyle` confirmed was applied. A Range over an element's contents
+does not reliably report the content box's left edge. Had the mark actually
+shifted a layout, that probe would have said it did not. Card box size is the
+metric that works.
+
+The first A/B run also reported `0x0` for every card on `agents.html` — those
+cards live in the SCIENCE tab, `display:none` at rest, the same trap that
+produced the earlier seven false positives. Re-run against pages whose cards
+are visible without interaction.
+
+### `docs/CI_RUNNER_RECOVERY.md` had no entry for the case that actually blocked recovery
+
+Three consecutive attempts to install the runner service failed identically:
+
+```
+Cannot configure the runner because it is already configured.
+To reconfigure the runner, run 'config.cmd remove' or './config.sh remove' first.
+```
+
+Two causes, neither documented:
+
+1. **`--replace` does not clear a local config.** It replaces the registration
+   *GitHub* holds under that name. `C:\actions-runner` already had
+   `.runner`/`.credentials` from an earlier attempt, and `config.cmd` refuses on
+   those **before it ever reads the token**. `.\config.cmd remove --local`
+   clears them offline, without a token — which is what an orphaned
+   registration needs.
+2. **The literal placeholder was pasted as the token**, in every attempt. The
+   command is long enough that `PASTE_TOKEN_HERE` reads as part of it. The doc
+   now puts the token in a `$T` variable first, so there is exactly one
+   substitution and it sits on its own line.
+
+Also recorded: `Get-Service actions.runner.*` printing **nothing at all** means
+no service was ever created, so the run stopped at the config step. A service
+that exists but is not running prints a row reading `Stopped`. Those two states
+look identical if you are only checking whether jobs move.

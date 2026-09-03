@@ -60,7 +60,7 @@
     if (el.querySelector(':scope > .omg-seal')) return;
     el.classList.add('omg-lock');
     var seal = document.createElement('div'); seal.className = 'omg-seal';
-    seal.innerHTML = '<div class="ic">&#128274;</div><div class="rq">UNLOCKS AT ' + label(req) + '</div><div class="hint">advance the matrix to reveal</div>';
+    seal.innerHTML = '<div class="ic">&#9635;</div><div class="rq">UNLOCKS AT ' + label(req) + '</div><div class="hint">advance the matrix to reveal</div>';
     el.appendChild(seal);
   }
   function unlock(el) {

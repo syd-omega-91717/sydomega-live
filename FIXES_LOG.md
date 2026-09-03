@@ -6550,3 +6550,77 @@ sized canvas, no hidden ancestor and no horizontal scroll; `ci-local.sh` 22/22,
 landmark -- the same two deliberately left without an emblem, which is a useful
 cross-check that the excluded set is the internal one.
 
+
+## 116 colour emoji shipped past the gate built to stop them (2026-09-03)
+
+`scripts/brand-glyph-check.py` exists to keep colour emoji out of a monochrome
+interface, and it reported the repo clean. It was reading only one of the three
+ways a codepoint reaches the screen.
+
+```
+literal      🌽                  scanned
+entity       &#127805;           NOT scanned  -- 116 occurrences, 18 files
+JS escape    '\u{1F311}'         NOT scanned  --  11 occurrences,  3 files
+```
+
+Both forms are decoded before anything is painted, so the page renders exactly
+the same colour sticker. Measured before touching anything: a render of the 10
+worst files found **9 of them painting colour emoji**, 35 distinct, while the
+gate was green -- `achievements.html` alone had 9.
+
+`horoscope.html` is the case that proves source scanning alone was never
+enough. Its lunar display is computed: the source holds `\u{1F311}` and the
+render showed `U+1F316`, a different phase, picked at runtime from a table of
+eight escapes.
+
+### The gate over-reported at the same time
+
+Extending it surfaced `consultancy.html:105`, which draws `\u{1F701}` -- an
+**alchemical symbol**, ordinary monochrome type. The rule was
+`[\U0001F300-\U0001FAFF]`, a span that also contains Ornamental Dingbats,
+Alchemical, Geometric Shapes Extended, Supplemental Arrows-C and Chess Symbols.
+Measured the way CLAUDE.md prescribes -- each candidate drawn white-on-black to
+a canvas in the harness Chromium, pixels read back, channel spread as the
+signal:
+
+```
+U+1F701 alchemical           spread   0  monochrome
+U+1F780 geometric extended   spread   0  monochrome
+U+1FA00 chess                spread   0  monochrome
+U+25CF  black circle         spread   0  monochrome   (control)
+U+1F3A4 microphone           spread  76  COLOUR
+U+1F3C6 trophy               spread 231  COLOUR
+```
+
+So the rule is now the emoji sub-ranges, not the span between them. Had it been
+left as it was, this change would have destroyed a legitimate alchemical mark
+to satisfy a false positive.
+
+### The fix, in two classes
+
+**73 pinned, not replaced.** Every BMP codepoint with `Emoji_Presentation=Yes`
+already has a text form; appending U+FE0E (`&#65038;`) keeps the exact glyph and
+drops the colour. **60 of those 73 are the platform's own twelve zodiac signs**
+across `horoscope`, `series` and `omega-emblems.js` -- the brand's own
+vocabulary had been shipping as colour stickers.
+
+**43 replaced**, per context rather than per codepoint, because the same emoji
+means different things in different places: `&#128293;` is fasting's FAT
+BURNING stage, mapped to the alchemical fire triangle, and also Hestia's
+`Hearth & Home`, mapped to `⌂`. Examples: trophy → `★`, books → `▤`,
+handshake → `⊜`, DNA → `≋`, Hephaestus → `⚒`, Hera → `♔`, Athena → `♘`,
+Demeter → `⁂`. The eight lunar phases became the monochrome disc series
+(`●  ☽  ◐  ◕  ○  ◔  ◑  ☾`), which reads as a real moon cycle rather than a
+row of stickers.
+
+### Verified in a render, with a positive control
+
+19 pages, all loaded, **0 rendering a colour emoji**. The probe injects a known
+emoji into each page and asserts its own walker sees it before trusting a clean
+result -- **0 control failures** -- because a clean sweep of nothing has already
+been reported twice in this session as a perfect score.
+
+Four tests added (12 in the file, 179 in the suite): entity form caught, both
+JS escape forms caught, an already-pinned entity accepted, and the monochrome
+blocks accepted while real emoji are still rejected.
+

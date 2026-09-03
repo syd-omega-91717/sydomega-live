@@ -128,7 +128,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>ICON (emoji)</label>
-          <input type="text" id="c-icon" placeholder="&#127942;" maxlength="4">
+          <input type="text" id="c-icon" placeholder="&#9733;" maxlength="4">
         </div>
         <div class="form-group">
           <label>CATEGORY</label>
@@ -252,18 +252,18 @@ var RANKS = [
 var CAT_COLORS = {mastery:'#9B6BF0',wealth:'#FFD700',health:'#4CAF50',identity:'#00E5FF',relations:'#FF9800',custom:'#888'};
 
 var SEED_ACHIEVEMENTS = [
-  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'&#128099;',cat:'identity',rarity:'common',unlocked:false,seed:true},
-  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'&#128218;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'&#128057;',cat:'identity',rarity:'rare',unlocked:false,seed:true},
-  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'&#128506;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'&#128170;',cat:'health',rarity:'rare',unlocked:false,seed:true},
-  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'&#9889;',cat:'health',rarity:'epic',unlocked:false,seed:true},
-  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'&#128142;',cat:'wealth',rarity:'common',unlocked:false,seed:true},
-  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'&#127974;',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
-  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'&#129309;',cat:'relations',rarity:'rare',unlocked:false,seed:true},
+  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'&#9702;',cat:'identity',rarity:'common',unlocked:false,seed:true},
+  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'&#9636;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'&#8734;',cat:'identity',rarity:'rare',unlocked:false,seed:true},
+  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'&#8862;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'&#9650;',cat:'health',rarity:'rare',unlocked:false,seed:true},
+  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'&#9889;&#65038;',cat:'health',rarity:'epic',unlocked:false,seed:true},
+  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'&#9670;',cat:'wealth',rarity:'common',unlocked:false,seed:true},
+  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'&#9707;',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
+  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'&#8860;',cat:'relations',rarity:'rare',unlocked:false,seed:true},
   {id:'s10',name:'Philosopher',desc:'Write 100 principles',icon:'&#9878;',cat:'identity',rarity:'epic',unlocked:false,seed:true},
-  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'&#127758;',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
-  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'&#9889;',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
+  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'&#9673;',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
+  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'&#9889;&#65038;',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
 ];
 
 function load(){
@@ -363,7 +363,7 @@ function showNotif(msg){
 function createAchievement(){
   var name=document.getElementById('c-name').value.trim();
   var desc=document.getElementById('c-desc').value.trim();
-  var icon=document.getElementById('c-icon').value.trim()||'&#127942;';
+  var icon=document.getElementById('c-icon').value.trim()||'&#9733;';
   var cat=document.getElementById('c-cat').value;
   var rarity=document.getElementById('c-rarity').value;
   var doUnlock=document.getElementById('c-unlock').value==='yes';
@@ -391,7 +391,7 @@ function renderLog(){
   el.innerHTML=unlockLog.map(function(l){
     var col=CAT_COLORS[l.cat]||'#888';
     return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid #111;">'
-      +'<span style="font-size:20px;">&#127942;</span>'
+      +'<span style="font-size:20px;">&#9733;</span>'
       +'<div style="flex:1;"><div style="font-family:\'Courier New\',monospace;font-size:12px;color:#e0e0e0;">'+esc(l.name)+'</div>'
       +'<div style="font-family:\'Courier New\',monospace;font-size:12px;color:#555;">'+new Date(l.date).toLocaleString()+'</div></div>'
       +'<span style="font-family:\'Courier New\',monospace;font-size:12px;color:'+col+';">+'+l.xp+' XP</span>'

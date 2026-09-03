@@ -519,12 +519,11 @@ open, recorded in `FIXES_LOG.md`:
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
   `#evt-metrics-body`, an id that exists nowhere. Building the container means
   designing UI that was never built.
-- **`OmegaGuardian.gate()` is defined but never called**, and the
-  `threat_signal` event it listens for is never emitted. The topbar badge
-  therefore always effectively reads 100. Not a security hole on its own
-  (client-side gating was never the boundary — RLS is, §5), but the badge
-  implies protection that is not happening. Wiring it is an architecture
-  decision; removing the badge is a product one.
+- **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
+  so the score moves only on 30-min idle (`-10`) and a failed gated action
+  (`-5`), never on a threat. Detection is an architecture decision. *This entry
+  claimed `gate()` is never called and the badge always reads 100; both false —
+  `approvals.html` calls it at 3 sites, `updateBadge()` repaints every 2s.*
 - **`omega-threat.js` is the digital-thread traceability engine**
   (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
 - **`supabase/migrations/` is validated only against a blank database.** Do not

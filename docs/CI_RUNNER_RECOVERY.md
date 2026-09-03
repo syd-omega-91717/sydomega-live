@@ -27,14 +27,74 @@ The script prompts for a GitHub PAT without displaying it. The PAT must have rep
 
 The script then:
 
-1. verifies access to the exact repository;
-2. requests a fresh one-hour registration token through the GitHub API;
-3. removes only incomplete local runner credentials;
-4. registers the runner with `self-hosted,Windows,X64` labels;
-5. refuses to start if `.runner` was not created;
-6. optionally installs the runner as a Windows service with `-InstallService`.
+1. downloads the pinned runner package and verifies its SHA256;
+2. checks for elevation **before** prompting, when `-InstallService` was passed;
+3. requests a fresh one-hour registration token through the GitHub API;
+4. removes local runner credentials — **only after** a registration token is in hand;
+5. registers the runner with `self-hosted,Windows,X64,syd-omega` labels;
+6. refuses to start if `.runner` and `.credentials` were not created;
+7. installs and starts a Windows service with `-InstallService`, otherwise runs
+   in the foreground and says so.
+
+**Use `-InstallService`.** Without it the runner lives only as long as the
+PowerShell window: closing it, logging out, or rebooting stops it, and queued
+jobs then sit until GitHub expires them after 24 hours. That is the observed
+failure mode — the runner picked up no job between 2026-08-31 03:46 UTC and
+2026-09-03 while jobs queued and expired.
+
+```powershell
+# Run PowerShell as Administrator
+& (Join-Path (git rev-parse --show-toplevel) 'scripts\bootstrap-github-runner.ps1') -InstallService
+```
+
+Add `-Replace` when a runner of the same name is still registered on GitHub;
+without it `config.cmd` refuses with *"a runner exists with the same name"*.
 
 Never paste a registration token, PAT, service credential, or other secret into the repository.
+
+## Two corrections to this document
+
+Both of the following were stated here and were **not true of the script**. They
+are recorded rather than quietly deleted, because both cost real recovery time.
+
+**`-InstallService` did not exist.** Item 6 above previously promised it;
+`grep -c InstallService scripts/bootstrap-github-runner.ps1` returned **0**. An
+operator following this document ran `.\svc.cmd install` and got
+`CommandNotFoundException` — correctly, since **`svc.cmd` does not ship in the
+download; `config.cmd` generates it**, and registration had not completed. The
+parameter now exists and does what the document says.
+
+**"removes only incomplete local runner credentials" was false**, and this is the
+one that did damage. The removal was unconditional *and* shared a line with
+`config.cmd`:
+
+```powershell
+Remove-Item '.\.runner','.\.credentials','.\.credentials_rsaparams' -Force -ErrorAction SilentlyContinue; & $Config ...
+```
+
+Those are two statements. When the token request failed with a 401, the
+`Remove-Item` had already run, so a **working** registration was destroyed before
+anything could replace it — turning a bad-PAT annoyance into an unregistered
+runner. The removal now happens only after a registration token has been
+obtained, and a 401/403/404 aborts with the message *"Nothing on this machine was
+changed."*
+
+## When the PAT is rejected (HTTP 401)
+
+The registration-token endpoint needs repository **admin** rights, which is more
+than read/write:
+
+| token type | what it needs |
+|---|---|
+| fine-grained | Repository permissions → **Administration: Read and write**, and `syd-omega-91717/sydomega-live` listed under Repository access |
+| classic | **`repo`** scope |
+
+Also check the token has not expired and was pasted whole. A **404** on this
+endpoint usually means the token is valid but cannot see this private repository
+— not that the URL is wrong.
+
+Nothing on the machine is modified when the token is refused, so the fix is
+simply to re-run with a corrected token.
 
 ## Manual fallback
 

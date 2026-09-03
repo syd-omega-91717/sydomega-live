@@ -59,6 +59,12 @@ three places:
     2,423  page <style> blocks        (172 pages)
     1,350  inline style= attributes   (per-instance, but overwhelmingly static)
       280  root .js injected CSS      (bg.js 34, nav.js 11, 40+ omega-* modules)
+       33  page <script> blocks       (9 pages, down to 6px -- added later, see
+                                       SCRIPT_BLOCK; the gate had been blind
+                                       to this surface and reported clean)
+       28  unquoted style= attributes (5 minified pages, down to 7px -- the
+                                       quoted STYLE_ATTR pattern cannot see
+                                       these; see STYLE_ATTR_UNQ)
 
 The .js ones matter most per line: bg.js reaches all 186 pages, so one
 declaration there sets thousands of elements. All three are swept.
@@ -126,6 +132,22 @@ FONT_SIZE = re.compile(r'(font-size\s*:\s*)([0-9]+(?:\.[0-9]+)?)(px)')
 
 STYLE_ATTR = re.compile(r'(style=")([^"]*)(")')
 
+# A page's own <script> block builds CSS too -- `el.style.cssText='...6px...'`
+# and template literals are the two shapes that occur here. The first version
+# of this file swept <style> blocks, inline style= attributes and ROOT .js
+# files, and missed this fourth surface entirely: 33 declarations across 9
+# pages, down to 6px, one of them `sigil.html`'s "LOCALLY SEALED" notice at
+# 6px. Found by reading a diff, not by the gate -- so the gate now looks here.
+SCRIPT_BLOCK = re.compile(r'(<script[^>]*>)(.*?)(</script>)', re.S | re.I)
+
+# And the fifth surface: an UNQUOTED style attribute. Several pages ship
+# minified with `style=font-size:7px;color:...` -- no quotes at all, so the
+# quoted STYLE_ATTR pattern above never sees them. 28 declarations across 5
+# pages (`ad-network`, `creator`, `project-studio`, `world-shell`,
+# `control-plane`), down to 7px. An unquoted value ends at whitespace or `>`,
+# which is exactly what this matches.
+STYLE_ATTR_UNQ = re.compile(r'(style=)([^"\'\s>][^\s>]*)')
+
 
 def pages():
     return sorted(f for f in os.listdir(ROOT)
@@ -162,14 +184,25 @@ def rescale_css(css, stats):
 
 
 def process(text, stats):
-    """A page: its <style> blocks and its inline style= attributes."""
+    """A page: <style> blocks, inline style= attributes, and <script> blocks.
+
+    Rescaling is idempotent -- below the floor becomes the floor, at or above
+    it nothing moves -- so a declaration matched by two of these passes (a
+    `style=""` written inside a script's template literal, say) is rewritten
+    once and left alone the second time.
+    """
     def block(m):
         return m.group(1) + rescale_css(m.group(2), stats) + m.group(3)
     text = STYLE_BLOCK.sub(block, text)
+    text = SCRIPT_BLOCK.sub(block, text)
 
     def attr(m):
         return m.group(1) + rescale_css(m.group(2), stats) + m.group(3)
-    return STYLE_ATTR.sub(attr, text)
+    text = STYLE_ATTR.sub(attr, text)
+
+    def attr_unq(m):
+        return m.group(1) + rescale_css(m.group(2), stats)
+    return STYLE_ATTR_UNQ.sub(attr_unq, text)
 
 
 def process_script(text, stats):

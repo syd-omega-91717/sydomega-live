@@ -230,7 +230,7 @@
 <script type="module">
 const HABITS_KEY = 'omega_habits_v2';
 const LOGS_KEY   = 'omega_habit_logs_v2';
-const CAT_ICONS  = {mind:'🧠',body:'⚡',wealth:'💎',social:'🌐',spirit:'✨',craft:'⚒'};
+const CAT_ICONS  = {mind:'⌬',body:'⚡︎',wealth:'◇',social:'⊛',spirit:'✨︎',craft:'⚒'};
 const FREQ_LABEL = {daily:'DAILY',weekdays:'WEEKDAYS',weekends:'WEEKENDS',weekly:'WEEKLY'};
 
 const DEFAULTS = [
@@ -405,7 +405,7 @@ function renderHabitCard(habit, showAll=false){
         <div class="hc-name">${icon} ${habit.name}</div>
         <div class="hc-meta">${habit.cue} · <span class="freq-badge">${FREQ_LABEL[habit.freq]||habit.freq}</span> · ${rate}% rate</div>
       </div>
-      <div class="hc-streak">🔥 ${streak}d</div>
+      <div class="hc-streak">△ ${streak}d</div>
       ${showAll?`<button class="del-btn" onclick="event.stopPropagation();deleteHabit('${habit.id}')">✕</button>`:''}
     </div>
     <div class="habit-streak-row">

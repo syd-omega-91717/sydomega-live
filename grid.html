@@ -134,7 +134,7 @@ var GATES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 var THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 function buildGrid(auth){
   var head=document.getElementById('grd-head');
-  if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
+  if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
   var tb=document.getElementById('grd-tbody');
   if(!tb)return;
   var html='';

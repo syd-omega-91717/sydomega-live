@@ -15,7 +15,7 @@
 .water-cups{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .water-cup{width:38px;height:46px;border:1.5px solid rgba(201,168,76,.2);border-radius:0 0 6px 6px;cursor:pointer;transition:.12s;background:rgba(201,168,76,.03);position:relative;overflow:hidden}
 .water-cup.filled{background:rgba(100,160,220,.2);border-color:rgba(100,160,220,.4)}
-.water-cup::after{content:'💧';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;opacity:.4}
+.water-cup::after{content:'▽';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;opacity:.4}
 .water-cup.filled::after{opacity:1}
 .water-cup:hover{border-color:rgba(201,168,76,.5)}
 .water-label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
@@ -91,7 +91,7 @@
       <!-- Hydration -->
       <div class="water-track">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C)">💧 HYDRATION PROTOCOL</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C)">▽ HYDRATION PROTOCOL</div>
           <div><span class="water-count" id="water-count">0</span><span class="water-label"> / 8 GLASSES</span></div>
         </div>
         <div class="water-cups" id="water-cups"></div>

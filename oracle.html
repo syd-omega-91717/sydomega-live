@@ -269,7 +269,7 @@ function getSunSign(date){
   return 'Capricorn';
 }
 
-var MOON_PHASES=['🌑 NEW','🌒 WAXING CRESCENT','🌓 FIRST QUARTER','🌔 WAXING GIBBOUS','🌕 FULL','🌖 WANING GIBBOUS','🌗 LAST QUARTER','🌘 WANING CRESCENT'];
+var MOON_PHASES=['○ NEW','◔ WAXING CRESCENT','◑ FIRST QUARTER','◕ WAXING GIBBOUS','● FULL','◕ WANING GIBBOUS','◐ LAST QUARTER','◔ WANING CRESCENT'];
 function getMoonPhase(date){
   var known=new Date('2000-01-06T18:14:00Z');
   var diff=(date-known)/(1000*60*60*24);

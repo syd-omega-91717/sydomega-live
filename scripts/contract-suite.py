@@ -13,8 +13,8 @@ Two separate defects, one fix.
    runner's own log reports a cancelled job as "completed with result: Failed",
    which is what a stack of red checks in the UI was actually showing.
 
-   The gates were never the cost. Measured locally, the ten static gates run in
-   well under a second combined; the eleven checkouts around them were the whole
+   The gates were never the cost. Measured locally, the static gates run in
+   well under a second combined (`--list` prints the current set); the eleven checkouts around them were the whole
    expense. Folding them into one job removes ten checkouts per commit.
 
 2. THE LOCAL GATE DISAGREED WITH GITHUB. `content-uniqueness-contract` and
@@ -40,7 +40,7 @@ every gate runs, and the exit code is set at the end.
 WHAT IS DELIBERATELY NOT HERE
 
 `page-overlap-audit.py` is advisory and O(n^2) over the page estate -- measured
-at 2 to 5 minutes locally, which on this runner is longer than the ten static
+at 2 to 5 minutes locally, which on this runner is longer than the static
 gates put together by two orders of magnitude. It is scheduled, not per-push.
 
 `supabase-runtime-contract.py` talks to the live Supabase project. Mixing a
@@ -98,6 +98,9 @@ GATES = [
     ('type-scale',
      'no page or module declares interface type below the 12px floor',
      ['scripts/type-scale.py', '--check']),
+    ('brand-glyph',
+     'no symbol renders as a colour emoji against the monochrome palette',
+     ['scripts/brand-glyph-check.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

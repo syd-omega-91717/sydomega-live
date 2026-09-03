@@ -172,45 +172,25 @@ through this one file with no per-page markup changes:
   bg.js — one `getBoundingClientRect()` per frame, only while hovering a
   matched element; GPU-cheap, no layout thrash).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + box-shadow glow, both **hover-only**, not static). Deliberately not
-  applied to `.kpi` itself, since `.kpi` already uses a per-instance
-  `--kc` custom property for its top-accent color (e.g.
-  `style="--kc:var(--cyan)"`) — `.kpi` gets a matching hover glow in
-  that same color instead, so the existing color-coding isn't
-  overridden. The hover-only gating was a correction, not the original
-  design: `border-image` always wins the border paint regardless of
-  selector specificity, so a *static* version silently discarded any
-  page's own per-instance border customization the moment `.card` was
-  added to its markup — found while extending `.card` to more pages
-  (`profile.html`, `cosmos.html`, `matrix.html`, `family.html`,
-  `journal.html`) and testing each one for real, not just in the
-  isolated harness: `matrix.html`'s Authority Score `.astat` sets
-  `style="border-color:rgba(0,229,255,.3)"` inline to distinguish it
-  from the other 3 axis cards; `family.html`'s
-  `.mc.heir{border-left:3px solid var(--gold)}` marks succession heirs;
-  `cosmos.html`'s `.el-card` sets a per-element colored left border via
-  `c.style.cssText+=` in JS (fire/water/earth/etc.) — all three would
-  have been silently overridden by a static `border-image`. Fixed by
-  moving `border-image` into the existing `:hover` rule so every page's
-  resting-state border stays exactly as that page intended, and the
-  gradient border is a hover reward, not a default override — this also
-  retroactively protects every pre-existing `.card` usage platform-wide
-  (`vault.html`, `media.html`, etc.) that this session never even
-  touched. `honors.html`'s `.honor-card` was never given the `.card`
-  class at all — its own `::before` rule does 5-way tier color-coding
-  (omega/gold/silver/bronze/cyan) which `.card`'s pre-existing v3
-  `::before` top-accent bar would override. **The mechanism stated here was
-  wrong** ("`::before` can only render one rule's declarations, never
-  merges"): pseudo-elements cascade per *property* like any element, proven
-  live — `.card::before` renders `content`/`position`/`height` from bg.js
-  merged with `box-shadow` from `omega-visual-evolution.css`. The exclusion
-  still stands, because both rules set `background` and only one can win
-  that, but the reason is a property collision, not an all-or-nothing one —
-  so re-check the excluded classes below against *which properties*
-  actually collide rather than against the presence of a pseudo. That
-  conflict isn't fixable by hover-gating since it's about the
-  achievement badges' permanent resting-state appearance, not a hover
-  effect — left on its own local styling instead.
+  + box-shadow glow, both **hover-only**, never static). Hover-only is a
+  correction, not the original design, and the reason is the standing
+  rule: `border-image` wins the border paint regardless of selector
+  specificity, so a *static* version silently discarded any page's own
+  per-instance border the moment `.card` was added to its markup
+  (`matrix.html`'s inline `border-color`, `family.html`'s `.mc.heir`,
+  `cosmos.html`'s JS-set `.el-card` left border — all three). Confining it
+  to `:hover` keeps every page's resting-state border exactly as that page
+  intended, retroactively for pre-existing `.card` usage too. `.kpi` is
+  excluded outright: it already carries a per-instance `--kc` accent color,
+  so it gets a matching hover glow in that color instead.
+  `honors.html`'s `.honor-card` was never given `.card` at all — both its
+  `::before` and `.card`'s set `background`, and only one can win. **The
+  mechanism this used to cite was wrong** ("a `::before` can only render one
+  rule, never merges"): pseudo-elements cascade per *property* like any
+  element, proven live. The exclusion still stands on the property
+  collision — so check the excluded classes below against *which properties*
+  collide, not against the presence of a pseudo. That one is not
+  hover-fixable: it is the badges' resting appearance.
 - **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
   `*-card` classes across 117 files with a scanner, not by hand. **The
   standing fact:** ~34 classes across as many pages were deliberately
@@ -624,7 +604,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **167** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **175** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -635,6 +615,7 @@ entries (which were accurate when written):
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/commerce-contract.py` | 0 findings |
+| `python3 scripts/brand-glyph-check.py` | 0 colour-emoji glyphs across 357 shipped files |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
 | `./scripts/ci-local.sh` | **22** blocking checks, all passing |
@@ -758,6 +739,16 @@ entries (which were accurate when written):
   documentation belongs and how to read this repo's very large files cheaply
   (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
   the entire auto-loaded context).
+- **Presentation is measured in a render, never reasoned from the codepoint.**
+  Whether a glyph paints in colour or in the brand's gold is decided by the
+  font stack, not by the character's block: the twelve zodiac signs
+  (U+2648..U+2653) are ordinary BMP symbols and default to *emoji*
+  presentation, so the platform's own sign system shipped as multicolour
+  stickers; meanwhile ✓ ★ ☰ ✦ ⚔ look like emoji to a grep and are pure
+  typography. Draw each candidate white-on-black to a canvas in the harness
+  Chromium and read the pixels back — channel spread means a colour glyph.
+  That is what found the 92, and what proved U+FE0E fixes the BMP ones
+  in place. `scripts/brand-glyph-check.py` gates it.
 - **Runtime verification is automated — use it before claiming a UI or
   data-layer change works.** `node scripts/verify-runtime.js` renders the
   capability entrypoints headless and asserts load / approval-guard-lifts /

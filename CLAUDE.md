@@ -597,12 +597,12 @@ open, recorded in `FIXES_LOG.md`:
   adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
   Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
   returns on its own. That is how 70 previously-revoked functions became 23.
-- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is a
-  Supabase Auth *dashboard* toggle, not a SQL object, so `apply_migration` /
-  `execute_sql` cannot reach it — and it is Pro-and-above while the org is
-  `free`, so the toggle is absent and the advisor line cannot be cleared without
-  upgrading. Raising minimum password length and required characters (Auth →
-  Providers → Email) is the free-tier substitute for the same threat.
+- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
+  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
+  Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
+  k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
+  bypasses it — not resolved.** Fails open reporting `checked:false`; never
+  render "not breached" on that (`scripts/tests/test_password_guard.py`).
 - **`scripts/audit.py` reports 8 warnings**, and the tool now
   reports which parts of each are real risk vs. known noise. They cannot be
   driven to 0 from source alone without live-schema verification, and forcing
@@ -624,7 +624,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **154** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **167** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,600** approx tokens (LF) / 16,000 budget — `.gitattributes` pins CLAUDE.md to LF so the byte-count is identical on every platform (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -637,7 +637,7 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **21** blocking checks, all passing |
+| `./scripts/ci-local.sh` | **22** blocking checks, all passing |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

@@ -5119,3 +5119,141 @@ Emitting the six risk signals means building threat detection, which is the
 architecture decision §8.2 says it is. `ops.html`'s `#evt-metrics-body` was
 re-checked in the same pass and that entry is **correct** — `ops.html:485` looks
 the id up and no HTML anywhere defines it.
+
+## CI had not concluded a single run in two days (2026-09-03)
+
+The visible symptom was a wall of failing checks and a runner log reading
+`Job Page estate quality completed with result: Failed` nine times over. Neither
+was what was happening.
+
+**Measured, via the Actions API rather than the runner log.** Of the last **30
+CI runs on `main`** — reaching back to `2026-09-01T14:34Z` — every one had
+`conclusion: cancelled`. Zero `success`, zero `failure`. `page-estate-quality.yml`
+over its entire history: **68 runs**, not one with a `success` or `failure`
+conclusion. One job checked directly, `run_id 33707164446` → job `100498665358`:
+`"conclusion":"cancelled"`, `completed_at 2026-09-03T02:35:08Z` — the exact
+second the next push landed.
+
+The self-hosted runner logs a cancelled job as `completed with result: Failed`.
+So two days of *no CI at all* presented as two days of *failing CI*. The runner
+log and the Actions API disagreed, and only the API was right.
+
+**Cause.** Twenty workflows targeted the one serial self-hosted Windows runner.
+Eleven of them were a full checkout wrapped around a single short Python script.
+Each push queued twenty jobs behind one worker; the next push superseded them
+before the runner arrived. Sum of the declared `timeout-minutes` across those
+workflows is ~265 minutes of worst-case serial work per commit, against a push
+cadence of minutes.
+
+**The gates were never the cost.** Timed locally, all eleven run in **0.79s
+combined**. The eleven checkouts around them were the entire expense.
+
+Fixed by `scripts/contract-suite.py` (one list, one process, every gate reported
+before exiting non-zero) plus `.github/workflows/contracts.yml` replacing the
+eleven. Per-push runs on `main`: 20 → 9. Actions stops a job at the first failing
+step and `workflow-contract-lint.py:22` forbids `continue-on-error: true`, so one
+process is the only way to learn about more than one failure per queued hour.
+
+Deliberately **not** fixed by moving to a hosted runner: §8.2 forbids it and
+`docs/CI_RUNNER_RECOVERY.md` records why.
+
+### Two gates were genuinely red, and the local gate could not see them
+
+`content-uniqueness-contract` and `page-experience-contract` were blocking
+workflows on GitHub but absent from `ci-local.sh`'s step list, so
+`./scripts/ci-local.sh` and `.githooks/pre-push` both reported green over a red
+`main`. §8.4's "verify a 0 findings result is real" in its most literal form: a
+clean report from a check that never ran. Both now come from the one shared list.
+
+`page-experience-contract.py` reported `defaults: missing primaryAction`. The
+fix exposed a second defect: `config/page-experience.schema.json` sets
+`"additionalProperties":false` on `defaults` and does not list `primaryAction`,
+so the data file could not satisfy the schema and the gate at the same time —
+§8.1 class 8, two divergent copies of one canonical spec. Schema updated to
+match the gate. Nothing validates that schema today (`grep -rn '\.schema\.json'
+scripts/ .github/` returns only `content-registry-contract.py:9`), which is why
+the contradiction survived; it is still checked in, and a spec that contradicts
+the live gate misleads whoever reads it next.
+
+`content-uniqueness-contract.py` reported 2 duplicate titles and 3 duplicate
+description groups across 13 pages. `subscriptions.html` was titled `Membership`
+like `membership.html`; `rune.html` `SIGIL` like `sigil.html`. Thirteen pages
+carried the site-wide tagline (`The Code. The Frequency. The Legacy…`) as their
+own `<meta name="description">`. Each was rewritten from that page's actual
+rendered text — `rune.html` is the `OmegaSigil` SVG generator, `subscriptions.html`
+is plan/tier/payment-history — not invented. Billing copy stays future tense:
+that feature is dormant (§8.2) and §9 forbids present-tense copy for a feature
+that is not on.
+
+### A workflow that could never have passed
+
+`supabase-runtime-contract.yml` declared `shell: python` with the body
+`python scripts/supabase-runtime-contract.py`. `shell: python` feeds the block
+to the interpreter **as source**, so that line is a `SyntaxError` on line 1 —
+reproduced directly:
+
+```
+  File "asif.py", line 1
+    python scripts/supabase-runtime-contract.py
+           ^^^^^^^
+SyntaxError: invalid syntax
+```
+
+That is the 28-second `Supabase runtime health` failure in the runner log
+(02:38:59 → 02:39:27): a checkout, then a parse error, never the contract.
+`runner-probe.yml` uses `shell: python` correctly, with real Python in the body;
+this one wanted a shell and got pwsh.
+
+## The leaked-password advisory, closed where it actually could be (2026-09-03)
+
+`get_advisors` reports `auth_leaked_password_protection` WARN. §8.2 already said
+it could not be enabled on this plan; that claim was **re-verified rather than
+repeated**, because three §8.2 claims had turned out wrong in the preceding days.
+`get_organization(vztvuckpdsoriyvpdkzx)` → `"plan":"free"`, and the Supabase docs
+page the advisory links states verbatim: *"Leaked password protection is
+available on the Pro Plan and above."* It is an Auth dashboard property, so
+neither `apply_migration` nor `execute_sql` can reach it. The claim stands.
+
+The **corpus** behind the feature is not gated, though. `omega-password-guard.js`
+checks strength and HaveIBeenPwned's Pwned Passwords range API at the only two
+places this platform sets a password — `account.html` (`signUp`) and
+`reset.html` (`updatePw`). k-anonymity: SHA-1 locally, send the first five hex
+characters, match the returned suffixes in the browser. `vercel.json`'s enforced
+CSP already permits it (`connect-src 'self' https: wss:`), so no CSP change.
+
+**Stated plainly: this is client-side and a direct Auth API call bypasses it.**
+Only the Pro-plan server setting is unbypassable. The advisory is not resolved,
+and §8.2 says so.
+
+**Verification.** `api.pwnedpasswords.com` is **403 at this environment's egress
+proxy** (`curl: (56) CONNECT tunnel failed, response 403`), the same class of
+block §8.4 records for `github.com` and `codeload` — so every live call returned
+`checked:false`, which is indistinguishable from a broken implementation. That
+had to be resolved rather than assumed:
+
+- SHA-1 correctness against the published digest of `"password"`
+  (`5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8`), so a wrong digest or a wrong
+  prefix/suffix split fails instead of silently agreeing with itself.
+- Real-format range responses (CRLF-delimited, `SUFFIX:count`) through a stubbed
+  `fetch`, asserting the requested URL is `…/range/5BAA6` and nothing more.
+- **In a real browser**, via Playwright with only the remote host routed: this
+  exercises the actual `crypto.subtle` SHA-1 path and the real page wiring.
+  `window.OmegaPasswordGuard` present on both pages, `breachCheck('password')`
+  → `{"breached":true,"count":10382543,"checked":true}`, zero page errors.
+
+The property that matters is that an unreachable API degrades to **unknown**,
+never to clean — otherwise the sign-up page tells a member a compromised
+password is fine. HTTP 503 and a thrown fetch both return
+`{"breached":null,"checked":false}`, and `scripts/tests/test_password_guard.py`
+pins it (13 tests; `test_*_degrades_to_unknown_not_to_clean` is the reason the
+file exists). It fails **open** on purpose — a third-party outage must not stop
+account creation, which is Supabase's own behaviour too — but it never claims a
+check it did not perform, §8.1 class 1.
+
+Password floor raised from 6 characters to 12 plus three of four character
+classes, per the same docs page's free-tier guidance. Existing members are
+unaffected: `signInWithPassword` is not gated, only `signUp` and `updateUser`.
+
+One test assertion was wrong before it was right: `assertNotIn('password', url)`
+fails on the hostname `api.pwnedpasswords.com`, which contains that substring.
+Asserting on the path after `/range/` is the real property.

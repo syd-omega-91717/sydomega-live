@@ -41,10 +41,7 @@ jobs:
           $files = Get-ChildItem -Path config -Filter '*.json' -File -Recurse
           foreach ($f in $files) { Get-Content $f.FullName -Raw | ConvertFrom-Json | Out-Null }
           Write-Host "Checked $($files.Count) JSON configuration files."
-      - name: Validate Python contracts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          python scripts/content-registry-contract.py
-          python scripts/page-estate-quality.py
-          python scripts/page-experience-contract.py
+      # The three Python contracts this step used to re-run
+      # (content-registry, page-estate-quality, page-experience) now live in
+      # contracts.yml with the other eight. Running them twice per commit on a
+      # single serial runner bought no extra signal -- same scripts, same tree.

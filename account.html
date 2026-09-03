@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717 -- Member Access</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="Sign in, or create the account that holds your cosmology and your position in the matrix."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -171,7 +171,7 @@
           <label for="au-email">EMAIL</label>
           <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />
           <label for="au-pw">PASSWORD</label>
-          <input type="password" id="au-pw" placeholder="at least 6 characters" autocomplete="current-password" />
+          <input type="password" id="au-pw" placeholder="at least 12 characters" autocomplete="current-password" />
           <div class="row2">
             <button class="btn" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
             <button class="btn" id="btn-login" data-i18n="account_login">LOG IN</button>
@@ -284,6 +284,7 @@
 </main>
 </div>
 
+<script src="/omega-password-guard.js"></script>
 <script type="module">
   /* Tab switching */
   document.querySelectorAll('.lt').forEach(function(b){
@@ -367,8 +368,32 @@
     const email=document.getElementById('au-email').value.trim();
     const pw=document.getElementById('au-pw').value;
     const msg=document.getElementById('au-msg');
-    if(!email || pw.length<6){ msg.className='msg bad'; msg.textContent='Enter an email and a password of at least 6 characters.'; return; }
-    msg.className='msg'; msg.textContent='Creating your account...';
+    if(!email){ msg.className='msg bad'; msg.textContent='Enter your email address.'; return; }
+
+    /* Strength, then the known-breach corpus, BEFORE the password reaches
+       Supabase Auth. Supabase's own leaked-password protection is a Pro-plan
+       Auth setting and this organisation is on `free`, so this is where that
+       threat gets closed. See omega-password-guard.js for what this does and
+       does not cover. */
+    msg.className='msg'; msg.textContent='Checking password...';
+    const guard = window.OmegaPasswordGuard;
+    if(guard){
+      const verdict = await guard.evaluate(pw, email);
+      if(!verdict.allow){
+        msg.className='msg bad'; msg.textContent=verdict.reasons.join(' ');
+        return;
+      }
+      /* Never claim a check that did not run: `checked` is false when the
+         breach corpus was unreachable, and saying nothing is the honest
+         option there. */
+      if(verdict.checked && verdict.breached === false){
+        msg.className='msg'; msg.textContent='Password accepted. Creating your account...';
+      } else {
+        msg.className='msg'; msg.textContent='Creating your account...';
+      }
+    } else {
+      msg.className='msg'; msg.textContent='Creating your account...';
+    }
     const { data, error } = await supabase.auth.signUp({
       email, password:pw,
       options:{ emailRedirectTo: window.location.origin + '/account.html' }

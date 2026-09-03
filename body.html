@@ -7,38 +7,38 @@
 <style>
 :root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:monospace}
 .layer-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--dim);padding-bottom:8px;flex-wrap:wrap}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.2px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
 .tab-btn.active{color:var(--gold);border-color:var(--dim)}
 .tab-pane{display:none}.tab-pane.active{display:block}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .kpi{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:10px 12px}
-.kpi .lv{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.kpi .lv{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
 .kpi .vv{font-family:var(--M);font-size:18px;color:var(--gold);margin-top:3px}
 .log-form{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:18px;margin-bottom:16px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .form-row.trio{grid-template-columns:1fr 1fr 1fr}
 .form-row.quad{grid-template-columns:1fr 1fr 1fr 1fr}
-.form-grp label{display:block;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-bottom:5px}
-.form-grp input,.form-grp select{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--dim);border-radius:2px;padding:7px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:11px;box-sizing:border-box}
-.btn-gold{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 20px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.12s}
+.form-grp label{display:block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-bottom:5px}
+.form-grp input,.form-grp select{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--dim);border-radius:2px;padding:7px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;box-sizing:border-box}
+.btn-gold{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 20px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.12s}
 .btn-gold:hover{background:rgba(201,168,76,.08)}
 .chart-box{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-bottom:14px}
-.chart-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px}
+.chart-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px}
 .entry-row{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:10px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-.er-date{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5);min-width:80px}
+.er-date{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);min-width:80px}
 .er-val{font-family:var(--M);font-size:16px;color:var(--gold)}
-.er-unit{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
-.er-tag{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:2px 6px;border:1px solid var(--dim);border-radius:1px;color:rgba(201,168,76,.5)}
-.er-del{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.3);cursor:pointer;background:none;border:none;margin-left:auto}
+.er-unit{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
+.er-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;border:1px solid var(--dim);border-radius:1px;color:rgba(201,168,76,.5)}
+.er-del{font-family:var(--M);font-size:12px;color:rgba(201,168,76,.3);cursor:pointer;background:none;border:none;margin-left:auto}
 .er-del:hover{color:var(--gold)}
 .measurement-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .science-card{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px;margin-bottom:10px}
-.science-card h3{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
-.science-card p{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.7;margin:0}
+.science-card h3{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
+.science-card p{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.65);line-height:1.7;margin:0}
 .goal-bar-wrap{background:rgba(0,0,0,.3);border-radius:2px;height:6px;margin:6px 0;overflow:hidden}
 .goal-bar-fill{height:100%;border-radius:2px;background:rgba(201,168,76,.6);transition:width .5s}
 .metric-selector{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.metric-chip{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--dim);border-radius:2px;cursor:pointer;color:rgba(138,134,118,.5);background:none;transition:.1s}
+.metric-chip{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--dim);border-radius:2px;cursor:pointer;color:rgba(138,134,118,.5);background:none;transition:.1s}
 .metric-chip.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06)}
 @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr}.form-row,.form-row.trio,.form-row.quad{grid-template-columns:1fr}.measurement-grid{grid-template-columns:1fr}}
 </style>
@@ -51,7 +51,7 @@
   <div class="topbar"><div class="t">BODY COMPOSITION<small>IDENTITY &middot; PHYSICAL &middot; SYD OMEGA 91717</small></div></div>
   <div style="padding:20px var(--pad,20px)">
 
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHYSICAL</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHYSICAL</div>
     <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">BODY COMPOSITION</h1>
 
     <div class="kpi-row">
@@ -71,7 +71,7 @@
     <!-- LOG TAB -->
     <div class="tab-pane active" id="tab-log">
       <div class="log-form">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY METRICS</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY METRICS</div>
         <div class="form-row">
           <div class="form-grp"><label>DATE</label><input type="date" id="lDate"></div>
           <div class="form-grp"><label>UNIT SYSTEM</label><select id="lUnit" onchange="updateUnits()"><option value="metric">Metric (kg / cm)</option><option value="imperial">Imperial (lbs / in)</option></select></div>
@@ -112,7 +112,7 @@
         </div>
         <div class="chart-box">
           <div class="chart-title">CHANGE SINCE START</div>
-          <div id="changeStats" style="font-family:var(--M);font-size:11px;color:rgba(138,134,118,.6);line-height:2"></div>
+          <div id="changeStats" style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:2"></div>
         </div>
       </div>
     </div>
@@ -120,7 +120,7 @@
     <!-- TRACK TAB: goals + measurements -->
     <div class="tab-pane" id="tab-track">
       <div class="log-form">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">SET COMPOSITION GOALS</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">SET COMPOSITION GOALS</div>
         <div class="form-row trio">
           <div class="form-grp"><label id="gwLabel">GOAL WEIGHT (kg)</label><input type="number" id="gWeight" step="0.1" placeholder="Target weight"></div>
           <div class="form-grp"><label>GOAL BODY FAT %</label><input type="number" id="gBF" step="0.1" placeholder="Target BF%"></div>
@@ -136,12 +136,12 @@
       <div id="goalProgress" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px"></div>
 
       <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">RATE OF PROGRESS GUIDE</div>
-        <div id="rateGuide" style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:2"></div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">RATE OF PROGRESS GUIDE</div>
+        <div id="rateGuide" style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:2"></div>
       </div>
 
       <div class="log-form">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY MEASUREMENTS (cm)</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY MEASUREMENTS (cm)</div>
         <div class="form-row">
           <div class="form-grp"><label>DATE</label><input type="date" id="mDate"></div>
           <div class="form-grp"><label>NECK</label><input type="number" id="mNeck" step="0.1" placeholder="cm"></div>
@@ -162,7 +162,7 @@
           <div class="form-grp"><label>SHOULDERS</label><input type="number" id="mShoulder" step="0.1" placeholder="cm"></div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px">NAVY BF% ESTIMATE (auto-calculated from neck/waist/hips/height)</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px">NAVY BF% ESTIMATE (auto-calculated from neck/waist/hips/height)</div>
           <div style="font-family:var(--M);font-size:14px;color:var(--gold)" id="navyBF">Enter measurements to calculate</div>
         </div>
         <button class="btn-gold" onclick="addMeasurement()">LOG MEASUREMENTS</button>
@@ -285,7 +285,7 @@ function renderKPIs(){
 function renderLogEntries(){
   var el=document.getElementById('logEntries');
   var sorted=bodyLog.slice().reverse().slice(0,30);
-  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No logs yet. Start tracking your body composition.</div>';return;}
+  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:10px 0">No logs yet. Start tracking your body composition.</div>';return;}
   el.innerHTML=sorted.map(function(e){
     var h=localStorage.getItem(HEIGHT_KEY),bmi=h?calcBMI(e.weight,+h):null;
     return '<div class="entry-row">'
@@ -428,10 +428,10 @@ function renderGoalProgress(){
   }
   el.innerHTML=items.map(function(item){
     return '<div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px">'
-      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">'+item.label+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">'+item.label+'</div>'
       +'<div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:4px"><span>'+item.curr+'</span><span style="color:rgba(138,134,118,.4)">→ '+item.target+'</span></div>'
       +'<div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:'+item.pct+'%"></div></div>'
-      +'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);text-align:right">'+Math.round(item.pct)+'% progress</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);text-align:right">'+Math.round(item.pct)+'% progress</div>'
       +'</div>';
   }).join('');
 }
@@ -465,10 +465,10 @@ function addMeasurement(){
 }
 function renderMeasurements(){
   var el=document.getElementById('measurementLog');
-  if(!measLog.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No measurements yet.</div>';return;}
+  if(!measLog.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:10px 0">No measurements yet.</div>';return;}
   var FIELDS={neck:'Neck',chest:'Chest',waist:'Waist',hips:'Hips',armL:'L.Arm',armR:'R.Arm',thighL:'L.Thigh',thighR:'R.Thigh',calf:'Calves',shoulder:'Shoulders'};
   el.innerHTML=measLog.slice(0,10).map(function(m){
-    var stats=Object.entries(FIELDS).filter(function(x){return m[x[0]];}).map(function(x){return '<span style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5)">'+x[1]+': </span><span style="font-family:var(--M);font-size:9px;color:var(--gold)">'+m[x[0]]+'</span>';}).join(' · ');
+    var stats=Object.entries(FIELDS).filter(function(x){return m[x[0]];}).map(function(x){return '<span style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)">'+x[1]+': </span><span style="font-family:var(--M);font-size:12px;color:var(--gold)">'+m[x[0]]+'</span>';}).join(' · ');
     return '<div class="entry-row"><div class="er-date">'+m.date+'</div><div style="flex:1;flex-wrap:wrap">'+stats+'</div></div>';
   }).join('');
 }

@@ -12,23 +12,23 @@
 .axis-cell:last-child{border-right:none}
 .axis-cell::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--ax-color,var(--gold))}
 .axis-n{font-family:var(--D);font-size:clamp(22px,4vw,34px);line-height:1;color:var(--ax-color,var(--gold))}
-.axis-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:3px}
-.axis-sub{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:5px}
+.axis-lbl{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-top:3px}
+.axis-sub{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:5px}
 .axis-bar{height:4px;background:rgba(255,255,255,.05);overflow:hidden;margin-top:10px}
 .axis-fill{height:100%;transition:width 1s cubic-bezier(.4,0,.2,1)}
 .formula-display{display:flex;align-items:center;justify-content:center;gap:20px;padding:14px 16px;flex-wrap:wrap}
 .f-item{text-align:center}
 .f-n{font-family:var(--D);font-size:clamp(13px,2vw,18px);color:var(--gold)}
-.f-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.f-eq{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.4);padding:0 6px}
+.f-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.f-eq{font-family:var(--M);font-size:12px;color:rgba(201,168,76,.4);padding:0 6px}
 .radar-wrap{display:flex;justify-content:center;padding:20px 0}
 .task-grid{display:flex;flex-direction:column;gap:6px}
 .task-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid rgba(201,168,76,.08);background:var(--surface);transition:.15s}
 .task-row:hover{background:rgba(201,168,76,.03)}
-.task-type{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:2px 8px;white-space:nowrap;flex-shrink:0;border:1px solid}
+.task-type{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;white-space:nowrap;flex-shrink:0;border:1px solid}
 .task-name{flex:1;font-size:12px}
 .task-pts{font-family:var(--D);font-size:13px;color:var(--gold)}
-.task-date{font-family:var(--M);font-size:8px;color:var(--muted);width:70px;text-align:right;flex-shrink:0}
+.task-date{font-family:var(--M);font-size:12px;color:var(--muted);width:70px;text-align:right;flex-shrink:0}
 @media(max-width:600px){.axis-band{grid-template-columns:1fr}.axis-cell{border-right:none;border-bottom:1px solid var(--line)}.axis-cell:last-child{border-bottom:none}}
 </style>
 </head>
@@ -88,9 +88,9 @@
     <canvas id="radar-cv" width="300" height="300" style="width:150px;height:150px"></canvas>
   </div>
   <div class="sechead" style="margin-top:8px">LATTICE PLANE &middot; 9&times;9 INNER CUBE</div>
-  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">YOUR AXIS A NODES &middot; 9&times;9&times;9 = 729</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">YOUR AXIS A NODES &middot; 9&times;9&times;9 = 729</div>
   <div id="lattice-plane" data-lattice="plane" style="overflow-x:auto">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:8px">Lattice visualization loads when module is available.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:8px">Lattice visualization loads when module is available.</div>
   </div>
 </div>
 
@@ -176,7 +176,7 @@ function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-di
     try{
       var r=await sb.from('task_completions').select('*').eq('user_id',s.user.id).order('completed_at',{ascending:false}).limit(20);
       var tasks=r.data||[];
-      if(!tasks.length){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO VERIFIED ACTIONS YET. COMPLETE TASKS TO EARN SOVEREIGN POINTS.</div>';return;}
+      if(!tasks.length){log.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">NO VERIFIED ACTIONS YET. COMPLETE TASKS TO EARN SOVEREIGN POINTS.</div>';return;}
       var TC={'knowledge':'#C9A84C','mastery':'#00E5FF','contribution':'#3fb27f'};
       log.innerHTML='';
       tasks.forEach(function(tk){
@@ -189,7 +189,7 @@ function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-di
         row.appendChild(type);row.appendChild(name);row.appendChild(pts);row.appendChild(dt);
         log.appendChild(row);
       });
-    }catch(e){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">POINT LOG UNAVAILABLE.</div>';}
+    }catch(e){log.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">POINT LOG UNAVAILABLE.</div>';}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">HERITAGE<small>HERITAGE &middot; ANCESTRY &middot; CULTURE &middot; ROOTS</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -32,13 +32,13 @@
       <div class="sechead">SOVEREIGN HERITAGE PROFILE</div>
       <div style="max-width:560px;margin-bottom:18px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">ETHNIC HERITAGE</div><input id="h-ethnic" class="inp" style="width:100%" placeholder="e.g. Lebanese, Irish, Japanese..."></div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">COUNTRY OF ORIGIN</div><input id="h-country" class="inp" style="width:100%" placeholder="Ancestral homeland..."></div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">NATIVE LANGUAGE(S)</div><input id="h-lang" class="inp" style="width:100%" placeholder="e.g. Arabic, Gaelic..."></div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAMILY NAME MEANING</div><input id="h-surname" class="inp" style="width:100%" placeholder="Origin of your surname..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">ETHNIC HERITAGE</div><input id="h-ethnic" class="inp" style="width:100%" placeholder="e.g. Lebanese, Irish, Japanese..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">COUNTRY OF ORIGIN</div><input id="h-country" class="inp" style="width:100%" placeholder="Ancestral homeland..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">NATIVE LANGUAGE(S)</div><input id="h-lang" class="inp" style="width:100%" placeholder="e.g. Arabic, Gaelic..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">FAMILY NAME MEANING</div><input id="h-surname" class="inp" style="width:100%" placeholder="Origin of your surname..."></div>
         </div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAMILY MOTTO</div><input id="h-motto" class="inp" style="width:100%" placeholder="Your family's guiding principle..."></div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">HERITAGE NOTES</div><textarea id="h-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Background, migration history, cultural practices..."></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">FAMILY MOTTO</div><input id="h-motto" class="inp" style="width:100%" placeholder="Your family's guiding principle..."></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">HERITAGE NOTES</div><textarea id="h-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Background, migration history, cultural practices..."></textarea></div>
         <button class="btn" onclick="saveHeritage()">SAVE HERITAGE PROFILE</button>
       </div>
       <div id="heritage-display" style="display:none;border:1px solid var(--line);border-top:3px solid var(--gold);background:rgba(10,10,15,.55);padding:18px;border-radius:2px"></div>
@@ -80,19 +80,19 @@
       <div class="sechead">CULTURAL INVENTORY</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:14px">
         <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">TRADITIONS</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px">TRADITIONS</div>
           <textarea id="cult-traditions" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Annual traditions, rituals, ceremonies your family keeps..."></textarea>
         </div>
         <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">FOODS &amp; RECIPES</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--cyan);margin-bottom:8px">FOODS &amp; RECIPES</div>
           <textarea id="cult-foods" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Heritage foods, traditional dishes, family recipes..."></textarea>
         </div>
         <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">VALUES INHERITED</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--green);margin-bottom:8px">VALUES INHERITED</div>
           <textarea id="cult-values" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Core values passed down through your lineage..."></textarea>
         </div>
         <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--purple);margin-bottom:8px">ARTS &amp; MUSIC</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--purple);margin-bottom:8px">ARTS &amp; MUSIC</div>
           <textarea id="cult-arts" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Traditional arts, music, dance, crafts from your heritage..."></textarea>
         </div>
       </div>
@@ -116,10 +116,10 @@
 <div class="lf"><span>&#937; HERITAGE &middot; SYD OMEGA 91717</span><span>ANCESTRY &middot; CULTURE &middot; ROOTS</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -137,7 +137,7 @@ function renderProfile(){
   el.style.display='block';
   el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">'
     +[['ETHNIC HERITAGE',profile.ethnic],['COUNTRY OF ORIGIN',profile.country],['NATIVE LANGUAGE',profile.lang],['SURNAME ORIGIN',profile.surname],['FAMILY MOTTO',profile.motto]].filter(function(r){return r[1];}).map(function(r){
-      return '<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+r[1]+'</div></div>';
+      return '<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+r[1]+'</div></div>';
     }).join('')+'</div>'
     +(profile.notes?'<div style="margin-top:10px;font-size:12px;line-height:1.7;opacity:.8">'+profile.notes+'</div>':'');
   document.getElementById('h-ethnic').value=profile.ethnic||'';
@@ -150,28 +150,28 @@ function renderProfile(){
 
 function renderAncestors(){
   var el=document.getElementById('ancestor-list');
-  if(!ancestors.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:10px">No ancestors logged yet.</div>';return;}
+  if(!ancestors.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:10px">No ancestors logged yet.</div>';return;}
   el.innerHTML=[].concat(ancestors).reverse().map(function(a){
     return '<div style="border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">'
       +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+a.name+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+a.relation+'</div>'
-      +(a.born?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">b. '+a.born+'</div>':'')
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+a.relation+'</div>'
+      +(a.born?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">b. '+a.born+'</div>':'')
       +'</div>'
-      +(a.note?'<div style="font-size:11px;opacity:.75">'+a.note+'</div>':'')
+      +(a.note?'<div style="font-size:12px;opacity:.75">'+a.note+'</div>':'')
       +'</div>';
   }).join('');
 }
 
 function renderStories(){
   var el=document.getElementById('story-list');
-  if(!stories.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO STORIES RECORDED YET</div>';return;}
+  if(!stories.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO STORIES RECORDED YET</div>';return;}
   el.innerHTML=[].concat(stories).reverse().map(function(s){
     return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">'
       +'<div style="font-family:var(--D);font-size:12px;color:var(--gold);flex:1">'+s.title+'</div>'
-      +(s.who?'<div style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+s.who+'</div>':'')
-      +(s.era?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+s.era+'</div>':'')
+      +(s.who?'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+s.who+'</div>':'')
+      +(s.era?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+s.era+'</div>':'')
       +'</div>'
       +'<div style="font-size:12px;line-height:1.8;opacity:.85">'+s.body.replace(/\n/g,'<br>')+'</div>'
       +'</div>';

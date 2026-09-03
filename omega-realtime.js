@@ -120,9 +120,9 @@
       (document.head||document.documentElement).appendChild(ss);
     }
     strip.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(2,2,6,.9);border-top:1px solid rgba(201,168,76,.08);padding:5px var(--pad,20px);display:flex;align-items:center;gap:12px;overflow:hidden;height:28px';
-    strip.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:3px;color:rgba(201,168,76,.4);flex-shrink:0">\u03A9 LIVE</span>'
-      +'<span id="omega-ticker-text" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">LOADING LIVE FEED\u2026</span>'
-      +'<span id="omega-rt-members" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.3);flex-shrink:0">\u25cf <span data-live-members>--</span> SOVEREIGN</span>';
+    strip.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.4);flex-shrink:0">\u03A9 LIVE</span>'
+      +'<span id="omega-ticker-text" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">LOADING LIVE FEED\u2026</span>'
+      +'<span id="omega-rt-members" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.3);flex-shrink:0">\u25cf <span data-live-members>--</span> SOVEREIGN</span>';
     document.body.appendChild(strip);
     /* Adjust page bottom padding */
     var main=document.querySelector('.main,main');

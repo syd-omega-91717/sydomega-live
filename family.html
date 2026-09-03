@@ -34,7 +34,7 @@ a{color:inherit;text-decoration:none}
 .side{width:80px;flex-shrink:0}
 .main{flex:1;min-width:0;padding-bottom:80px}
 .pad{padding:0 clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
 /* FAMILY TOPBAR (like Image 6: "WELCOME, DAGHER FAMILY") */
 .family-topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.95);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -42,8 +42,8 @@ a{color:inherit;text-decoration:none}
 .ft-omega{font-family:var(--D);font-size:22px;color:var(--gold);animation:omega-spin 12s linear infinite}
 @keyframes omega-spin{0%{filter:brightness(1)}50%{filter:brightness(1.5)}100%{filter:brightness(1)}}
 .ft-title{font-family:var(--D);font-size:clamp(14px,3vw,22px);color:var(--gold);font-weight:700;letter-spacing:2px}
-.ft-sub{font-family:var(--M);font-size:8px;color:var(--muted);letter-spacing:3px;margin-top:2px}
-.ft-status{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:6px 14px;border:1px solid rgba(63,178,127,.4);color:var(--green);display:flex;align-items:center;gap:6px}
+.ft-sub{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:3px;margin-top:2px}
+.ft-status{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:6px 14px;border:1px solid rgba(63,178,127,.4);color:var(--green);display:flex;align-items:center;gap:6px}
 .fts-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
@@ -53,20 +53,20 @@ a{color:inherit;text-decoration:none}
 .sg-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),rgba(7,7,11,.7));padding:18px;position:relative;overflow:hidden;transition:all .2s}
 .sg-card:hover{border-color:rgba(201,168,76,.3)}
 .sg-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px}
-.sgc-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.sgc-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
 .sgc-title{font-family:var(--D);font-size:16px;font-weight:700;margin-bottom:5px}
 .sgc-val{font-family:var(--D);font-size:clamp(22px,3.5vw,32px);font-weight:700;margin-bottom:4px}
-.sgc-sub{font-size:11px;font-weight:300;color:var(--muted);line-height:1.6}
+.sgc-sub{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6}
 .sgc-progress{height:4px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;margin-top:10px}
 .sgcp-fill{height:100%;border-radius:2px;transition:width 2s ease}
-.sgc-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:7px 16px;border:1px solid;background:transparent;cursor:pointer;margin-top:12px;transition:all .15s;display:inline-block}
+.sgc-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid;background:transparent;cursor:pointer;margin-top:12px;transition:all .15s;display:inline-block}
 .sgc-btn:hover{background:rgba(201,168,76,.08)}
 
 /* DAILY CARE STATUS */
 .care-circle{width:80px;height:80px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:10px auto;animation:care-pulse 3s ease-in-out infinite;position:relative}
 @keyframes care-pulse{0%,100%{box-shadow:0 0 10px rgba(201,168,76,.2)}50%{box-shadow:0 0 24px rgba(201,168,76,.5)}}
 .cc-pct{font-family:var(--D);font-size:16px;font-weight:700;color:var(--gold)}
-.cc-label{font-family:var(--M);font-size:6px;letter-spacing:1px;color:var(--muted)}
+.cc-label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 
 /* FAMILY MEMBERS */
 .family-roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 clamp(14px,3vw,36px);margin-bottom:14px}
@@ -74,49 +74,49 @@ a{color:inherit;text-decoration:none}
 .fr-card.founder{border-left:3px solid var(--gold)}
 .fr-card.heir{border-left:3px solid var(--cyan)}
 .fr-card.chairperson{border-left:3px solid var(--purple)}
-.frc-role{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.frc-role{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
 .frc-name{font-family:var(--D);font-size:14px;font-weight:700;margin-bottom:4px}
-.frc-status{font-size:10px;font-weight:300;color:var(--muted);margin-bottom:8px}
-.frc-pulse{display:flex;align-items:center;gap:6px;font-family:var(--M);font-size:9px;margin-bottom:6px}
+.frc-status{font-size:12px;font-weight:300;color:var(--muted);margin-bottom:8px}
+.frc-pulse{display:flex;align-items:center;gap:6px;font-family:var(--M);font-size:12px;margin-bottom:6px}
 .fp-dot{width:5px;height:5px;border-radius:50%;animation:blink 1.5s ease-in-out infinite}
-.frc-badge{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-block}
+.frc-badge{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-block}
 
 /* CHILDREN TRUST TIMER */
 .trust-timer{border:1px solid rgba(201,168,76,.3);background:linear-gradient(160deg,rgba(201,168,76,.06),transparent);padding:16px;margin-top:8px}
-.tt-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.tt-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
 .tt-time{font-family:var(--D);font-size:clamp(16px,3vw,22px);color:var(--gold);font-weight:700;margin-bottom:4px;animation:tt-breathe 3s ease-in-out infinite}
 @keyframes tt-breathe{0%,100%{text-shadow:0 0 6px rgba(201,168,76,.2)}50%{text-shadow:0 0 16px rgba(201,168,76,.5)}}
 .tt-bar{height:3px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;margin-top:8px}
 .ttb-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--solar));border-radius:2px;transition:width 1.5s ease}
-.tt-sub{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:5px;letter-spacing:1px}
-.tt-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:8px 18px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;margin-top:12px;width:100%;transition:box-shadow .2s}
+.tt-sub{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:1px}
+.tt-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 18px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;margin-top:12px;width:100%;transition:box-shadow .2s}
 .tt-btn:hover{box-shadow:0 0 16px rgba(201,168,76,.4)}
 
 /* CONSTELLATION */
 .constellation-wrap{width:100%;border-bottom:1px solid var(--line);position:relative}
 #con-cv{display:block;width:100%;cursor:crosshair}
-.cv-hint{font-family:var(--M);font-size:8px;color:var(--muted);text-align:center;padding:6px;letter-spacing:2px}
+.cv-hint{font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:6px;letter-spacing:2px}
 
 /* ADD MEMBER */
 .add-panel{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin:0 clamp(14px,3vw,36px)}
 .af-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:14px}
-.af-field label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
-.af-field input,.af-field select{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:rgba(7,7,11,.9);border:1px solid var(--line);padding:8px 10px;outline:none;transition:border-color .15s}
+.af-field label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.af-field input,.af-field select{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:rgba(7,7,11,.9);border:1px solid var(--line);padding:8px 10px;outline:none;transition:border-color .15s}
 .af-field input:focus,.af-field select:focus{border-color:rgba(201,168,76,.4)}
-.btn-add{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:10px 24px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s}
+.btn-add{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 24px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s}
 .btn-add:hover{box-shadow:0 0 20px rgba(201,168,76,.4)}
-.add-msg{font-family:var(--M);font-size:10px;color:var(--green);margin-top:10px;display:none;letter-spacing:2px}
+.add-msg{font-family:var(--M);font-size:12px;color:var(--green);margin-top:10px;display:none;letter-spacing:2px}
 
 /* MEMBER CARDS */
 .member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .mc{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:14px;transition:all .2s}
 .mc:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
 .mc.heir{border-left:3px solid var(--gold)}
-.mc-rel{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.mc-rel{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
 .mc-name{font-family:var(--D);font-size:13px;font-weight:700;color:var(--solar);margin-bottom:3px}
-.mc-sign{font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:8px}
+.mc-sign{font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px}
 .mc-actions{display:flex;gap:6px}
-.mc-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 9px;border:1px solid;background:transparent;cursor:pointer;transition:all .14s}
+.mc-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 9px;border:1px solid;background:transparent;cursor:pointer;transition:all .14s}
 .mc-heir-btn{color:var(--gold);border-color:rgba(201,168,76,.3)}
 .mc-del{color:var(--crim);border-color:rgba(139,0,0,.3)}
 
@@ -174,8 +174,8 @@ a{color:inherit;text-decoration:none}
 /* small real gaps found in final audit pass */
 .form-section{border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:1.2rem;margin-bottom:1rem}
 .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1rem}
-.btn-save{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:10px 24px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s}
-.notice-saved{display:none;margin-top:.6rem;font-family:var(--M);font-size:11px;color:var(--green)}
+.btn-save{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 24px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s}
+.notice-saved{display:none;margin-top:.6rem;font-family:var(--M);font-size:12px;color:var(--green)}
 .notice-saved.show{display:block}
 </style>
 </head>
@@ -196,10 +196,10 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-      <div class="mtab-btn active" data-mtab="family" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; FAMILY VAULT</div>
-      <div class="mtab-btn" data-mtab="bloodline" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; BLOODLINE</div>
-      <div class="mtab-btn" data-mtab="heritage" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; HERITAGE ARCHIVE</div>
-      <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
+      <div class="mtab-btn active" data-mtab="family" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; FAMILY VAULT</div>
+      <div class="mtab-btn" data-mtab="bloodline" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; BLOODLINE</div>
+      <div class="mtab-btn" data-mtab="heritage" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; HERITAGE ARCHIVE</div>
+      <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
     </div>
 
     <div class="mtab-panel" id="mtab-family">
@@ -249,8 +249,8 @@ a{color:inherit;text-decoration:none}
         <div class="sgc-title" style="color:var(--purple)">FULLY OPERATIONAL</div>
         <div class="sgc-sub" style="margin-bottom:10px">Platform: ONLINE . Heritage: DESIGNATED . Assets: PROTECTED . Access: ALL-TIME</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <div style="border:1px dashed rgba(201,168,76,.15);padding:8px;text-align:center"><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">PLATFORM</div><div style="font-family:var(--D);font-size:12px;color:var(--green)">ACTIVE</div></div>
-          <div style="border:1px dashed rgba(201,168,76,.15);padding:8px;text-align:center"><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">VAULT</div><div style="font-family:var(--D);font-size:12px;color:var(--green)">DESIGNATED</div></div>
+          <div style="border:1px dashed rgba(201,168,76,.15);padding:8px;text-align:center"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">PLATFORM</div><div style="font-family:var(--D);font-size:12px;color:var(--green)">ACTIVE</div></div>
+          <div style="border:1px dashed rgba(201,168,76,.15);padding:8px;text-align:center"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">VAULT</div><div style="font-family:var(--D);font-size:12px;color:var(--green)">DESIGNATED</div></div>
         </div>
       </div>
     </div>
@@ -263,7 +263,7 @@ a{color:inherit;text-decoration:none}
         <div class="frc-role">FOUNDER & ARCHITECT</div>
         <div class="frc-name" style="color:var(--gold)"><span id="family-founder-name" style="display:none">MAJOR SLEIMAN YOUSSEF DAGHER</span></div>
         <div class="frc-status">Sovereign Founder . Lebanese Engineer #30875 . Architecture<br/>Born: 19 April 1982, Tripoli, Lebanon</div>
-        <div class="frc-pulse"><div class="fp-dot" style="background:var(--gold)"></div><span style="font-size:10px;color:var(--gold)">SOVEREIGNTY PULSE: OMEGA</span></div>
+        <div class="frc-pulse"><div class="fp-dot" style="background:var(--gold)"></div><span style="font-size:12px;color:var(--gold)">SOVEREIGNTY PULSE: OMEGA</span></div>
         <span class="frc-badge" style="color:var(--gold);border-color:rgba(201,168,76,.4)">RANK 9.9.9 -- ALL-TIME ACCESS</span>
       </div>
       <!-- WIFE - CHAIRPERSON (Image 6 inspired) -->
@@ -271,9 +271,9 @@ a{color:inherit;text-decoration:none}
         <div class="frc-role">WIFE -- CHAIRPERSON</div>
         <div class="frc-name" style="color:var(--purple)" id="wife-name">DAGHER FAMILY CHAIRPERSON</div>
         <div class="frc-status" id="wife-status">Designated successor . Sovereign trustee . Family vault access</div>
-        <div class="frc-pulse"><div class="fp-dot" style="background:var(--purple)"></div><span style="font-size:10px;color:var(--purple)">SOVEREIGNTY PULSE: STABLE &#x2713;</span></div>
+        <div class="frc-pulse"><div class="fp-dot" style="background:var(--purple)"></div><span style="font-size:12px;color:var(--purple)">SOVEREIGNTY PULSE: STABLE &#x2713;</span></div>
         <div style="margin-bottom:6px">
-          <div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">PROGRESS STAGE</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">PROGRESS STAGE</div>
           <div style="font-family:var(--D);font-size:13px;color:var(--purple)">4 (PIONEER)</div>
         </div>
         <span class="frc-badge" style="color:var(--purple);border-color:rgba(155,107,240,.4)">CHAIRPERSON -- FULL TRUST ACCESS</span>
@@ -284,9 +284,9 @@ a{color:inherit;text-decoration:none}
         <div class="frc-name" style="color:var(--cyan)">DAGHER LINEAGE HEIRS</div>
         <div class="frc-status">Succession structure designated by the Founder. Children's Trust intended to activate at maturity.</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px" id="children-list">
-          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">HEIR STATUS</div><div style="font-family:var(--D);font-size:13px;color:var(--cyan)">AUTHORIZED</div></div>
-          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">TRUST VAULT</div><div style="font-family:var(--D);font-size:13px;color:var(--cyan)">DESIGNATED</div></div>
-          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-bottom:3px">CLAIM CERT</div><div style="font-family:var(--M);font-size:10px;color:var(--green)">AVAILABLE AT MATURITY</div></div>
+          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">HEIR STATUS</div><div style="font-family:var(--D);font-size:13px;color:var(--cyan)">AUTHORIZED</div></div>
+          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">TRUST VAULT</div><div style="font-family:var(--D);font-size:13px;color:var(--cyan)">DESIGNATED</div></div>
+          <div style="border:1px dashed rgba(0,229,255,.2);padding:10px 14px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">CLAIM CERT</div><div style="font-family:var(--M);font-size:12px;color:var(--green)">AVAILABLE AT MATURITY</div></div>
         </div>
         <span class="frc-badge" style="color:var(--cyan);border-color:rgba(0,229,255,.3);margin-top:10px">HEIRS -- AUTHORIZED ALLOWANCE ACCESS</span>
       </div>
@@ -296,7 +296,7 @@ a{color:inherit;text-decoration:none}
     <!-- FAMILY CONSTELLATION NODES -->
     <div class="sechead" data-reveal="fade-up" id="nodes-sechead">FAMILY NODES -- YOUR REGISTRY <span data-canon-lattice="nine"></span></div>
     <div class="pad" data-reveal="fade-up">
-      <div style="margin-bottom:16px;border:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.03);padding:12px 16px;font-family:var(--M);font-size:9px;color:var(--cyan);letter-spacing:1px;line-height:1.8">
+      <div style="margin-bottom:16px;border:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.03);padding:12px 16px;font-family:var(--M);font-size:12px;color:var(--cyan);letter-spacing:1px;line-height:1.8">
         &#x25CF; PRIVACY PROTOCOL ACTIVE -- This registry is private to your account. Only you (and the Architect, for platform administration) can see it.
       </div>
       <div class="member-grid" id="member-grid"></div>
@@ -307,7 +307,7 @@ a{color:inherit;text-decoration:none}
     <div class="pad" data-reveal="fade-up">
       <div class="add-panel">
         <div style="font-family:var(--D);font-size:14px;color:var(--solar);font-weight:700;margin-bottom:4px">SEAL A BLOODLINE NODE</div>
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:16px">ADD A FAMILY MEMBER TO THE DAGHER CONSTELLATION</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:16px">ADD A FAMILY MEMBER TO THE DAGHER CONSTELLATION</div>
         <div class="af-grid">
           <div class="af-field"><label>FULL NAME</label><input type="text" id="af-name" placeholder="Full name..."/></div>
           <div class="af-field"><label>RELATION</label>
@@ -345,17 +345,17 @@ a{color:inherit;text-decoration:none}
 .phb-right{padding:18px clamp(14px,2.5vw,28px);border-left:1px solid rgba(201,168,76,.15);text-align:right}
 .phb-center{display:flex;align-items:center;justify-content:center;padding:0 20px}
 .phb-stat{font-family:"Cinzel Decorative",serif;font-size:clamp(13px,2vw,18px);color:var(--gold);line-height:1}
-.phb-lbl{font-family:"Courier Prime",monospace;font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
+.phb-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
 @media(max-width:660px){.pg-hero-band{grid-template-columns:1fr}.phb-center{display:none}.phb-left{border-right:none;border-bottom:1px solid rgba(201,168,76,.15)}.phb-right{border-left:none;text-align:left}}
 </style><div class="pg-hero-band"><div class="phb-left"><div class="phb-stat" id="phb-l-family">--</div><div class="phb-lbl">FAMILY STATUS</div></div><div class="phb-center"><canvas id="phb-cv-family" width="100" height="100" style="width:50px;height:50px;display:block"></canvas></div><div class="phb-right"><div class="phb-stat" id="phb-r-family">--</div><div class="phb-lbl">AUTHORITY</div></div><div data-page-emblem="family" style="margin:20px auto 0"></div>
 </div><script>(function(){var cv=document.getElementById("phb-cv-family");if(!cv||!cv.getContext)return;var ctx=cv.getContext("2d"),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">The Bloodline Vault is the eternal succession engine of the Order. Every sovereign node &mdash; living or passed &mdash; is recorded here. Assets, matrix coordinates, and sovereign rights pass through the bloodline according to the succession protocol. The Vault is intended to be altered only by the Architect and legitimate heirs. What is built here lasts beyond a single life.</p>
 
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px">
-      <div style="border:1px solid rgba(139,0,0,.4);background:rgba(139,0,0,.05);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">VAULT STATUS</div><div style="font-family:var(--D);font-size:18px;color:var(--crim)">DESIGNATED</div></div>
-      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">BLOODLINE NODES</div><div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="node-count">--</div></div>
-      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">SUCCESSION PLAN</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">FAMILY-DESIGNATED</div></div>
-      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">ARCHITECT</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">S.Y.D.</div></div>
+      <div style="border:1px solid rgba(139,0,0,.4);background:rgba(139,0,0,.05);padding:14px 18px;font-family:var(--M)"><div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">VAULT STATUS</div><div style="font-family:var(--D);font-size:18px;color:var(--crim)">DESIGNATED</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">BLOODLINE NODES</div><div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="node-count">--</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">SUCCESSION PLAN</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">FAMILY-DESIGNATED</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">ARCHITECT</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">S.Y.D.</div></div>
     </div>
 
     <div class="sechead" data-reveal="fade-up">BLOODLINE CONSTELLATION <span data-canon-lattice="nine"></span></div>
@@ -525,7 +525,7 @@ function drawConstellation(mems){
 
 function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
-  if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:11px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
+  if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:12px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
   rows.forEach(m=>{
     const c=document.createElement('div');c.className='mc card'+(m.is_heir?' heir':'');c.id='node-'+m.id;
     c.innerHTML='<div class="mc-rel">'+((m.relation||'FAMILY').toUpperCase())+'</div><div class="mc-name">'+m.name+'</div><div class="mc-sign">'+(m.sign||'SIGN NOT SET')+'</div><div class="mc-actions"><button class="mc-btn mc-heir-btn">'+((m.is_heir?'REVOKE HEIR':'SET HEIR'))+'</button><button class="mc-btn mc-del">REMOVE</button></div>';
@@ -598,7 +598,7 @@ async function loadNodes(){
   const stored=(data||[]).map(n=>({name:n.name,rel:n.rel,birth:n.birth,notes:n.notes,ts:n.created_at}));
   const g=document.getElementById('node-grid'); g.innerHTML='';
   if(!stored.length){
-    g.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
+    g.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
   } else {
     stored.forEach(n=>{
       const c=document.createElement('div'); c.className='node-card card';
@@ -801,7 +801,7 @@ window.bootHeritage = bootHeritage;
     <div class="sechead">AUTHORITY FORMULA</div>
     <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
       <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
-      <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2">
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2">
         &phi; (PHI) = 1.6180339887<br>
         e (EULER) = 2.7182818285<br>
         APEX AUTH = 27.8367 (A=B=C=9)<br>
@@ -810,13 +810,13 @@ window.bootHeritage = bootHeritage;
     </div>
     <div class="sechead">SYSTEM CONSTANTS</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
-      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
-      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
-      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
     </div>
     <div class="sechead">GATE THRESHOLDS</div>
-    <div style="font-family:var(--M);font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
+    <div style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
       SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
       GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
       IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>

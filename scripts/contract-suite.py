@@ -95,6 +95,9 @@ GATES = [
     ('shared-class',
      'markup never asks for a shared primitive no stylesheet defines',
      ['scripts/shared-class-check.py']),
+    ('type-scale',
+     'no page or module declares interface type below the 12px floor',
+     ['scripts/type-scale.py', '--check']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

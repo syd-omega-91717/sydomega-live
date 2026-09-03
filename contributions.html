@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">CONTRIBUTIONS<small>MASTERY &middot; AXIS C &middot; SOVEREIGN IMPACT &amp; GIVING</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -52,12 +52,12 @@
       <div class="sechead">LOG NEW CONTRIBUTION</div>
       <div style="max-width:520px">
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">WHAT DID YOU CONTRIBUTE?</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">WHAT DID YOU CONTRIBUTE?</div>
           <textarea id="c-text" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Describe the contribution..."></textarea>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TYPE</div>
             <select id="c-type" class="inp" style="width:100%">
               <option value="knowledge">Knowledge (Teaching/Writing)</option>
               <option value="creative">Creative (Art/Design/Code)</option>
@@ -67,11 +67,11 @@
             </select>
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">PEOPLE IMPACTED (EST.)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">PEOPLE IMPACTED (EST.)</div>
             <input id="c-people" class="inp" type="number" style="width:100%" placeholder="0" min="0">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">IMPACT SCALE</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">IMPACT SCALE</div>
             <select id="c-scale" class="inp" style="width:100%">
               <option value="1">1 — Individual</option>
               <option value="2" selected>2 — Small Group</option>
@@ -81,7 +81,7 @@
             </select>
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FINANCIAL VALUE ($)</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">FINANCIAL VALUE ($)</div>
             <input id="c-value" class="inp" type="number" style="width:100%" placeholder="0" min="0">
           </div>
         </div>
@@ -99,16 +99,16 @@
           <div class="kpi"><div class="kpi-n" id="g-pct">0%</div><div class="kpi-l">OF INCOME</div></div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">GIVING TARGET (% of income)</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">GIVING TARGET (% of income)</div>
           <div style="display:flex;gap:8px;align-items:center">
             <input id="g-target" class="inp" type="number" min="0" max="100" style="width:80px" placeholder="10">
-            <span style="font-family:var(--M);font-size:9px;color:var(--muted)">%</span>
+            <span style="font-family:var(--M);font-size:12px;color:var(--muted)">%</span>
             <input id="g-income" class="inp" type="number" style="width:130px" placeholder="Annual income ($)">
             <button class="btn" onclick="saveGivingTarget()">SET</button>
           </div>
         </div>
         <div style="border:1px solid var(--line);padding:12px;border-radius:2px;margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:8px">LOG GIFT</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">LOG GIFT</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
             <input id="gl-org" class="inp" style="width:100%" placeholder="Recipient / Organization">
             <input id="gl-amount" class="inp" type="number" style="width:100%" placeholder="Amount ($)">
@@ -136,10 +136,10 @@
 <div class="lf"><span>&#937; CONTRIBUTIONS &middot; SYD OMEGA 91717</span><span>AXIS C &middot; SOVEREIGN IMPACT &amp; GIVING</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -171,16 +171,16 @@ function calcKPIs(){
 function renderContribs(){
   var el=document.getElementById('contrib-list');
   var list=activeFilter==='all'?contribs:contribs.filter(function(c){return c.type===activeFilter;});
-  if(!list.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO CONTRIBUTIONS LOGGED YET</div>';return;}
+  if(!list.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO CONTRIBUTIONS LOGGED YET</div>';return;}
   var SCALE=['','Individual','Small Group','Community','Regional','Global'];
   el.innerHTML=[].concat(list).reverse().map(function(c){
     var col=TYPE_COL[c.type]||'#888';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+c.type.toUpperCase()+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">SCALE '+c.scale+' — '+SCALE[parseInt(c.scale)]+'</div>'
-      +(c.people?'<div style="font-family:var(--M);font-size:8px;color:var(--green)">'+Number(c.people).toLocaleString()+' people</div>':'')
-      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">'+c.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+c.type.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">SCALE '+c.scale+' — '+SCALE[parseInt(c.scale)]+'</div>'
+      +(c.people?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">'+Number(c.people).toLocaleString()+' people</div>':'')
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+c.date+'</div>'
       +'</div>'
       +'<div style="font-size:12px;line-height:1.5">'+c.text+'</div>'
       +'</div>';
@@ -199,12 +199,12 @@ function renderGifts(){
   document.getElementById('g-pct').textContent=pct+(pct!=='--'?'%':'');
   document.getElementById('g-target').value=givingTarget.pct||10;
   document.getElementById('g-income').value=givingTarget.income||'';
-  if(!gifts.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO GIFTS LOGGED</div>';return;}
+  if(!gifts.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO GIFTS LOGGED</div>';return;}
   el.innerHTML=[].concat(gifts).reverse().map(function(g){
     return '<div style="border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="flex:1;font-size:12px">'+g.org+'</div>'
       +'<div style="font-family:var(--D);font-size:14px;color:var(--gold)">'+fmt(g.amount)+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+g.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+g.date+'</div>'
       +'</div>';
   }).join('');
 }

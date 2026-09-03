@@ -6,8 +6,8 @@
 /* Gate distribution bars */
 .gate-bar-wrap{margin-bottom:8px}
 .gate-bar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.gate-bar-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.gate-bar-cnt{font-family:var(--D);font-size:11px;color:var(--gold)}
+.gate-bar-name{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.gate-bar-cnt{font-family:var(--D);font-size:12px;color:var(--gold)}
 .gate-bar-track{height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
 .gate-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width 1.2s cubic-bezier(.4,0,.2,1)}
 /* Element tile grid */
@@ -15,9 +15,9 @@
 .elem-tile{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:12px;text-align:center;border-radius:2px;transition:.18s;cursor:default}
 .elem-tile:hover{background:rgba(201,168,76,.06);border-color:var(--solar)}
 .elem-sigil{font-size:24px;display:block;margin-bottom:4px}
-.elem-name{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.elem-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .elem-count{font-family:var(--D);font-size:16px}
-.elem-pct{font-family:var(--M);font-size:7px;color:var(--muted)}
+.elem-pct{font-family:var(--M);font-size:12px;color:var(--muted)}
 /* Percentile bar */
 .pctile-track{height:12px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative;margin:8px 0}
 .pctile-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple,var(--purple)),var(--cyan),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
@@ -30,13 +30,13 @@
 .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:sigma-pulse 1.8s ease-in-out infinite;flex-shrink:0}
 @keyframes sigma-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(63,178,127,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(63,178,127,0)}}
 /* Formula */
-.formula-block{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.12);padding:16px;border-radius:2px;font-family:var(--M);font-size:10px;color:var(--solar);line-height:2;overflow-x:auto}
+.formula-block{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.12);padding:16px;border-radius:2px;font-family:var(--M);font-size:12px;color:var(--solar);line-height:2;overflow-x:auto}
 .formula-var{color:var(--cyan)}
 .formula-result{color:var(--green);font-size:14px;font-family:var(--D);display:block;margin-top:4px}
 /* Constants table */
-#gate-thresh-tbl .tbl-row,#const-tbl-body .tbl-row{padding:7px 0;font-family:var(--M);font-size:8.5px}
+#gate-thresh-tbl .tbl-row,#const-tbl-body .tbl-row{padding:7px 0;font-family:var(--M);font-size:12px}
 #gate-thresh-tbl .tbl-row span:first-child,#const-tbl-body .tbl-row span:first-child{color:var(--muted);letter-spacing:1px}
-#gate-thresh-tbl .tbl-row span:last-child,#const-tbl-body .tbl-row span:last-child{color:var(--solar);text-align:right;font-size:9.5px}
+#gate-thresh-tbl .tbl-row span:last-child,#const-tbl-body .tbl-row span:last-child{color:var(--solar);text-align:right;font-size:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}.elem-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
@@ -76,14 +76,14 @@
     </div>
     <div class="card">
       <div class="sechead">YOUR STANDING</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">AUTHORITY SCORE</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">AUTHORITY SCORE</div>
       <div style="font-family:var(--D);font-size:clamp(28px,5vw,48px);color:var(--gold);line-height:1" id="my-auth-big">—</div>
-      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin:6px 0 4px" id="my-gate-label">—</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin:6px 0 4px" id="my-gate-label">—</div>
       <div class="pctile-track">
         <div class="pctile-fill" id="pctile-fill" style="width:0%"></div>
         <div class="pctile-mark" id="pctile-mark" style="left:0%"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:7px;color:var(--muted)">
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;color:var(--muted)">
         <span>0</span><span style="color:var(--gold)" id="pctile-label">—</span><span>27.8367</span>
       </div>
     </div>
@@ -91,7 +91,7 @@
 
   <div class="card">
     <div class="sechead">TOP SOVEREIGNS</div>
-    <div id="top-list" style="font-family:var(--M);font-size:8.5px;color:var(--muted)">Loading…</div>
+    <div id="top-list" style="font-family:var(--M);font-size:12px;color:var(--muted)">Loading…</div>
   </div>
 </div>
 
@@ -106,25 +106,25 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
       <div>
-        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS A</label>
+        <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS A</label>
         <input id="calc-a" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
         <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-a-val">5.000</div>
       </div>
       <div>
-        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS B</label>
+        <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS B</label>
         <input id="calc-b" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
         <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-b-val">5.000</div>
       </div>
       <div>
-        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS C</label>
+        <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS C</label>
         <input id="calc-c" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
         <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-c-val">5.000</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:16px;padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">COMPUTED AUTHORITY</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">COMPUTED AUTHORITY</div>
       <span class="formula-result" id="calc-result">9.6453</span>
-      <div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:6px" id="calc-gate-label">GATE 5 · GUARDIAN</div>
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:6px" id="calc-gate-label">GATE 5 · GUARDIAN</div>
     </div>
     <canvas id="sigma-auth-curve" style="display:block;width:100%;height:160px;margin-top:16px"></canvas>
   </div>
@@ -136,7 +136,7 @@
     </div>
     <div class="card">
       <div class="sechead">CONVERGENCE ANALYSIS</div>
-      <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2">
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2">
         The authority function <code style="color:var(--solar)">f(A,B,C)=sqrt(A³+B³+C³)·φ/e</code> achieves its global maximum when A=B=C=10, yielding AUTH=27.8367 (APEX SOVEREIGN threshold).<br><br>
         The ratio φ/e ≈ 0.5957 acts as a sovereign compression factor. Sensitivity at midpoint (5,5,5): ∂AUTH/∂A = 1.031. Near APEX (9.8,9.8,9.8): ∂AUTH/∂A = 3.42 — superlinear returns confirm cubic scaling.
       </div>
@@ -187,17 +187,17 @@
       </div>
       <div>
         <div style="font-family:var(--D);font-size:14px;color:var(--green)" id="sig-status">SOVEREIGN SIGNAL: STRONG</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)" id="sig-latency">Measuring latency…</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)" id="sig-latency">Measuring latency…</div>
       </div>
     </div>
-    <div id="sig-realtime-log" style="background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.08);padding:12px;font-family:var(--M);font-size:8px;color:var(--muted);height:180px;overflow-y:auto;line-height:2">
+    <div id="sig-realtime-log" style="background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.08);padding:12px;font-family:var(--M);font-size:12px;color:var(--muted);height:180px;overflow-y:auto;line-height:2">
       <div style="color:var(--cyan)">▶ SOVEREIGN SIGNAL MONITOR INITIALISED</div>
     </div>
   </div>
 
   <div class="card" style="margin-bottom:14px">
     <div class="sechead">AUTHORITY FORMULA DERIVATION</div>
-    <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2.2">
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2.2">
       <div style="color:var(--solar);margin-bottom:10px">AUTH = √(A³ + B³ + C³) × φ / e</div>
       <strong style="color:var(--ink)">Why cubic terms?</strong> Cubic growth rewards consistent multi-axis development — a sovereign who specialises (high in one axis) scores lower than one who distributes effort equally across all three axes. The cubic function amplifies this effect: 10³ = 1000, but 5³+5³+5³ = 375, producing a 2.65× incentive for balance.<br><br>
       <strong style="color:var(--ink)">Why φ/e?</strong> The ratio of the Golden Ratio to Euler's Number (≈ 0.5957) is not arbitrary — it compresses the raw cubic sum into a human-readable range of 0–27.8367, anchoring APEX to a value with geometric elegance. The APEX threshold itself (≈ 27.8367) equals √3000 × φ/e, achievable only at perfect axis saturation (A=B=C=10).<br><br>
@@ -207,7 +207,7 @@
 
   <div class="card">
     <div class="sechead">12-GATE SYSTEM REFERENCE</div>
-    <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2">
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2">
       The 12-gate system mirrors the 12 zodiac signs, creating a harmonic resonance between the member's celestial element and their authority tier. Each gate name reflects a stage of sovereign mastery: from INITIATE (first awakening) through PRIME (near-perfect convergence) to APEX SOVEREIGN (full realisation). Gate thresholds are visible in the ANALYTICS tab.
     </div>
   </div>

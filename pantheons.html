@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">PANTHEONS<small>COSMOS &middot; 12 OLYMPIANS &middot; SOVEREIGN ARCHETYPES</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -39,12 +39,12 @@
       <div id="my-archetype" style="max-width:560px">
         <div style="font-size:12px;line-height:1.8;opacity:.8;margin-bottom:16px">Your patron archetype shapes how you approach mastery, conflict, creation, and legacy. It is not your identity — it is your primary operating mode. The sovereign consciously selects and evolves their archetype.</div>
         <div style="margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:5px">SELECT YOUR PRIMARY ARCHETYPE</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:5px">SELECT YOUR PRIMARY ARCHETYPE</div>
           <select id="arch-select" class="inp" style="width:100%"></select>
         </div>
         <div id="arch-detail" style="margin-bottom:12px"></div>
         <div style="margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:5px">NOTES ON YOUR ARCHETYPE</div>
+          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:5px">NOTES ON YOUR ARCHETYPE</div>
           <textarea id="arch-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="How does this archetype manifest in your life?"></textarea>
         </div>
         <button class="btn" onclick="saveArchetype()">SAVE ARCHETYPE</button>
@@ -55,12 +55,12 @@
     <div class="tab-panel pad" id="tab-pantheons" style="display:none">
       <div class="sechead">WORLD PANTHEONS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
-        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">GREEK / ROMAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The 12 Olympians map the full spectrum of human capacity: intellect (Athena), power (Zeus), beauty (Aphrodite), war (Ares), craft (Hephaestus), harvest (Demeter), commerce (Hermes), sun (Apollo), moon (Artemis), ocean (Poseidon), underworld (Hades), hearth (Hestia).</div></div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">NORSE</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Aesir and Vanir: Odin (wisdom, war, death), Thor (strength, protection), Freya (love, fertility, magic), Loki (trickster, change), Tyr (justice), Baldur (beauty, light), Skadi (mountains, winter), Bragi (poetry), Frigg (home), Heimdall (vigilance).</div></div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-bottom:8px">EGYPTIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Ennead and beyond: Ra/Amun (sun, creation), Osiris (resurrection), Isis (magic, wisdom), Horus (kingship), Set (chaos, strength), Thoth (knowledge), Anubis (death, judgment), Sekhmet (war), Bastet (protection), Ma'at (truth, order).</div></div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--purple);margin-bottom:8px">HINDU</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Trimurti and Deva: Brahma (creation), Vishnu (preservation), Shiva (destruction/transformation), Lakshmi (wealth, prosperity), Saraswati (knowledge, arts), Durga (power), Ganesh (obstacles, beginnings), Indra (thunder, rain, war), Kali (time, death, liberation).</div></div>
-        <div style="border:1px solid var(--line);border-top:2px solid #FF9800;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:#FF9800;margin-bottom:8px">MESOPOTAMIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Sumerian and Akkadian: Anu (sky), Enlil (wind), Enki/Ea (wisdom, water), Inanna/Ishtar (love, war), Nanna/Sin (moon), Utu/Shamash (sun, justice), Nergal (underworld), Nabu (writing, wisdom), Marduk (sovereignty), Gilgamesh (heroic journey).</div></div>
-        <div style="border:1px solid var(--line);border-top:2px solid #E86A3A;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">AZTEC / MAYAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Quetzalcoatl (wisdom, wind, creation), Huitzilopochtli (war, sun), Tlaloc (rain, agriculture), Tezcatlipoca (night sky, sorcery), Xipe Totec (renewal), Coatlicue (earth mother), Itzamná (lord of heavens, Maya), Kukulcán (feathered serpent, Maya).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">GREEK / ROMAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The 12 Olympians map the full spectrum of human capacity: intellect (Athena), power (Zeus), beauty (Aphrodite), war (Ares), craft (Hephaestus), harvest (Demeter), commerce (Hermes), sun (Apollo), moon (Artemis), ocean (Poseidon), underworld (Hades), hearth (Hestia).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">NORSE</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Aesir and Vanir: Odin (wisdom, war, death), Thor (strength, protection), Freya (love, fertility, magic), Loki (trickster, change), Tyr (justice), Baldur (beauty, light), Skadi (mountains, winter), Bragi (poetry), Frigg (home), Heimdall (vigilance).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:8px">EGYPTIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Ennead and beyond: Ra/Amun (sun, creation), Osiris (resurrection), Isis (magic, wisdom), Horus (kingship), Set (chaos, strength), Thoth (knowledge), Anubis (death, judgment), Sekhmet (war), Bastet (protection), Ma'at (truth, order).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:8px">HINDU</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Trimurti and Deva: Brahma (creation), Vishnu (preservation), Shiva (destruction/transformation), Lakshmi (wealth, prosperity), Saraswati (knowledge, arts), Durga (power), Ganesh (obstacles, beginnings), Indra (thunder, rain, war), Kali (time, death, liberation).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid #FF9800;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:#FF9800;margin-bottom:8px">MESOPOTAMIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Sumerian and Akkadian: Anu (sky), Enlil (wind), Enki/Ea (wisdom, water), Inanna/Ishtar (love, war), Nanna/Sin (moon), Utu/Shamash (sun, justice), Nergal (underworld), Nabu (writing, wisdom), Marduk (sovereignty), Gilgamesh (heroic journey).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid #E86A3A;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">AZTEC / MAYAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Quetzalcoatl (wisdom, wind, creation), Huitzilopochtli (war, sun), Tlaloc (rain, agriculture), Tezcatlipoca (night sky, sorcery), Xipe Totec (renewal), Coatlicue (earth mother), Itzamná (lord of heavens, Maya), Kukulcán (feathered serpent, Maya).</div></div>
       </div>
     </div>
 
@@ -81,10 +81,10 @@
 <div class="lf"><span>&#937; PANTHEONS &middot; SYD OMEGA 91717</span><span>12 OLYMPIANS &middot; SOVEREIGN ARCHETYPES</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -113,16 +113,16 @@ function renderGods(){
   document.getElementById('god-grid').innerHTML=GODS.map(function(g){
     return '<div style="border:1px solid var(--line);border-top:2px solid '+g.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">OLYMPIAN '+g.n+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+g.color+';border:1px solid '+g.color+';padding:1px 5px">'+g.element.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">OLYMPIAN '+g.n+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+g.color+';border:1px solid '+g.color+';padding:1px 5px">'+g.element.toUpperCase()+'</div>'
       +'<div style="font-size:16px;margin-left:auto">'+g.symbol+'</div>'
       +'</div>'
       +'<div style="font-family:var(--D);font-size:14px;color:'+g.color+';margin-bottom:2px">'+g.name+' &middot; '+g.roman+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:8px">'+g.domain.toUpperCase()+' &middot; '+g.sign.toUpperCase()+'</div>'
-      +'<div style="font-size:11px;line-height:1.6;opacity:.8;margin-bottom:8px">'+g.desc+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">'+g.domain.toUpperCase()+' &middot; '+g.sign.toUpperCase()+'</div>'
+      +'<div style="font-size:12px;line-height:1.6;opacity:.8;margin-bottom:8px">'+g.desc+'</div>'
       +'<div style="display:flex;gap:8px">'
-      +'<div style="font-family:var(--M);font-size:7px;color:var(--green);background:rgba(63,178,127,.1);border:1px solid rgba(63,178,127,.3);padding:2px 6px">'+g.archetype+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:#FF9800;background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);padding:2px 6px">SHADOW: '+g.shadow+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--green);background:rgba(63,178,127,.1);border:1px solid rgba(63,178,127,.3);padding:2px 6px">'+g.archetype+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:#FF9800;background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);padding:2px 6px">SHADOW: '+g.shadow+'</div>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -144,8 +144,8 @@ function showArchDetail(gid){
     +'<div style="font-family:var(--D);font-size:16px;color:'+g.color+';margin-bottom:6px">'+g.name+' &mdash; '+g.archetype+'</div>'
     +'<div style="font-size:12px;line-height:1.7;opacity:.85;margin-bottom:10px">'+g.desc+'</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    +'<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">SOVEREIGN GIFT</div><div style="font-size:12px;color:var(--green)">'+g.gift+'</div></div>'
-    +'<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">SHADOW TO INTEGRATE</div><div style="font-size:12px;color:#FF9800">'+g.shadow+'</div></div>'
+    +'<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">SOVEREIGN GIFT</div><div style="font-size:12px;color:var(--green)">'+g.gift+'</div></div>'
+    +'<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">SHADOW TO INTEGRATE</div><div style="font-size:12px;color:#FF9800">'+g.shadow+'</div></div>'
     +'</div></div>';
 }
 

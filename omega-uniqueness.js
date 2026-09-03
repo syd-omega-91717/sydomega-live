@@ -51,16 +51,16 @@ issues = JSON.parse(sessionStorage.getItem('omega:uniqueness:log') || '[]');
 }
 catch (e) {
 }
-var html = '<div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:8px>CONTENT UNIQUENESS GUARD</div>';
+var html = '<div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px>CONTENT UNIQUENESS GUARD</div>';
 if (issues.length === 0) {
-html += '<div style=font-family:var(--M);font-size:9px;color:var(--green)>✦ NO DUPLICATES DETECTED THIS SESSION</div>';
+html += '<div style=font-family:var(--M);font-size:12px;color:var(--green)>✦ NO DUPLICATES DETECTED THIS SESSION</div>';
 }
 else {
-html += '<div style=font-family:var(--M);font-size:9px;color:var(--crim);margin-bottom:8px>● ' + issues.length + ' VIOLATION(S) LOGGED</div>';
+html += '<div style=font-family:var(--M);font-size:12px;color:var(--crim);margin-bottom:8px>● ' + issues.length + ' VIOLATION(S) LOGGED</div>';
 issues.forEach(function (v) {
-html += '<div style=margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(139,0,0,.1)><div style=font-family:var(--M);font-size:9px;color:var(--crim)>' + v.page + '</div>';
+html += '<div style=margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(139,0,0,.1)><div style=font-family:var(--M);font-size:12px;color:var(--crim)>' + v.page + '</div>';
 v.issues.forEach(function (i) {
-html += '<div style=font-family:var(--M);font-size:7px;color:var(--muted);padding-left:8px>→ ' + i.type + ': ' + i.msg + '</div>';
+html += '<div style=font-family:var(--M);font-size:12px;color:var(--muted);padding-left:8px>→ ' + i.type + ': ' + i.msg + '</div>';
 });
 html += '</div>';
 });

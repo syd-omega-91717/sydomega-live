@@ -86,31 +86,31 @@
       +'display:flex;align-items:center;justify-content:space-between">'
       +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:13px;color:#C9A84C">'
       +'&#937; KEYBOARD SHORTCUTS</span>'
-      +'<button id="omega-kb-close" style="font-family:\'Courier Prime\',monospace;font-size:9px;'
+      +'<button id="omega-kb-close" style="font-family:\'Courier Prime\',monospace;font-size:12px;'
       +'color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;letter-spacing:1px"'
       +' aria-label="Close keyboard shortcuts">'
       +'ESC × CLOSE</button></div>';
     var body = '<div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px">'
       +SHORTCUT_HELP.map(function(grp){
-        return '<div><div style="font-family:\'Courier Prime\',monospace;font-size:8px;'
+        return '<div><div style="font-family:\'Courier Prime\',monospace;font-size:12px;'
           +'letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">'
           +grp.group.toUpperCase()+'</div>'
           +grp.shortcuts.map(function(sc){
             var keys=sc.keys.map(function(k){
-              return '<kbd style="font-family:\'Courier Prime\',monospace;font-size:9px;'
+              return '<kbd style="font-family:\'Courier Prime\',monospace;font-size:12px;'
                 +'background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);'
                 +'border-radius:2px;padding:2px 7px;color:#E2C86D;letter-spacing:1px">'
                 +k+'</kbd>';
-            }).join('<span style="color:rgba(138,134,118,.4);margin:0 3px;font-size:9px"> then </span>');
+            }).join('<span style="color:rgba(138,134,118,.4);margin:0 3px;font-size:12px"> then </span>');
             return '<div style="display:flex;align-items:center;justify-content:space-between;'
               +'padding:6px 0;border-bottom:1px solid rgba(201,168,76,.05)">'
-              +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;'
+              +'<span style="font-family:\'Courier Prime\',monospace;font-size:12px;'
               +'letter-spacing:1px;color:rgba(233,230,220,.6)">'
               +sc.desc+'</span><div>'+keys+'</div></div>';
           }).join('')+'</div>';
       }).join('')+'</div>'
       +'<div style="padding:12px 20px;border-top:1px solid rgba(201,168,76,.08);'
-      +'font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:1.5px;'
+      +'font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;'
       +'color:rgba(138,134,118,.4);text-align:center">'
       +'SHORTCUTS DISABLED WHILE TYPING IN FIELDS · PRESS ESC TO CLOSE</div>';
     box.innerHTML = head+body;
@@ -226,7 +226,7 @@
       }
       hint.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);'
         +'z-index:9000;background:rgba(10,10,15,.92);border:1px solid rgba(201,168,76,.2);'
-        +'border-radius:3px;padding:8px 16px;font-family:"Courier Prime",monospace;font-size:9px;'
+        +'border-radius:3px;padding:8px 16px;font-family:"Courier Prime",monospace;font-size:12px;'
         +'letter-spacing:2px;color:rgba(201,168,76,.7);white-space:nowrap;'
         +'opacity:0;transition:opacity .3s,transform .3s;pointer-events:none';
       hint.innerHTML='PRESS <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);'

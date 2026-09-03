@@ -12,19 +12,19 @@
 .trophy-card:hover{transform:translateY(-3px)}
 .trophy-card.earned{border-color:rgba(201,168,76,.4)}
 .tc-canvas{display:block;margin:0 auto 12px}
-.tc-num{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.tc-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
 .tc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:4px}
-.tc-element{font-family:var(--M);font-size:8px;letter-spacing:2px;margin-bottom:6px}
-.tc-tier{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-block;margin-bottom:6px}
-.tc-date{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:4px}
-.tc-locked{font-family:var(--M);font-size:8px;color:rgba(133,131,123,.4);margin-top:8px;letter-spacing:1px}
+.tc-element{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:6px}
+.tc-tier{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 9px;border:1px solid;display:inline-block;margin-bottom:6px}
+.tc-date{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px}
+.tc-locked{font-family:var(--M);font-size:12px;color:rgba(133,131,123,.4);margin-top:8px;letter-spacing:1px}
 .medal-rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .medal-card{border:1px solid var(--line);background:var(--surface);padding:14px;display:flex;gap:12px;align-items:center;transition:all .2s}
 .medal-card:hover{border-color:rgba(201,168,76,.3)}
 .medal-card.earned{border-left:3px solid var(--mc,var(--gold))}
 .mc-icon{width:36px;height:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;flex-shrink:0}
-.mc-body .mcb-name{font-family:var(--D);font-size:11px;font-weight:700;margin-bottom:2px}
-.mc-body .mcb-cat{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.mc-body .mcb-name{font-family:var(--D);font-size:12px;font-weight:700;margin-bottom:2px}
+.mc-body .mcb-cat{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .cert-list{display:flex;flex-direction:column;gap:0}
 .cert-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px dashed rgba(201,168,76,.06);transition:background .15s}
 .cert-row:hover{background:rgba(201,168,76,.03)}
@@ -32,13 +32,13 @@
 .cr-num{font-family:var(--D);font-size:18px;font-weight:700;min-width:28px;opacity:.6}
 .cr-body{flex:1}
 .cr-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:2px}
-.cr-domain{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
-.cr-grade{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 8px;border:1px solid;display:inline-block}
-.cr-date{font-family:var(--M);font-size:8px;color:var(--muted);text-align:right;flex-shrink:0}
+.cr-domain{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.cr-grade{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 8px;border:1px solid;display:inline-block}
+.cr-date{font-family:var(--M);font-size:12px;color:var(--muted);text-align:right;flex-shrink:0}
 .vault-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));border:1px solid var(--line);margin-bottom:16px}
 .vs-item{padding:16px 20px;border-right:1px solid var(--line);text-align:center}
 .vs-item:last-child{border-right:none}
-.vs-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.vs-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
 .vs-val{font-family:var(--D);font-size:clamp(20px,3vw,30px);font-weight:700}
 </style>
 </head>
@@ -48,7 +48,7 @@
 <header class="topbar">
   <div class="topbar-title">ACHIEVEMENT VAULT<span class="topbar-sub">12 TROPHIES &middot; 12 MEDALS &middot; 12 CERTIFICATES &middot; SOVEREIGN RECORD</span></div>
   <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
-  <button id="tr-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button>
+  <button id="tr-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button>
 </header>
 <div class="tab-bar">
   <button class="tab-btn active" onclick="setTab('trophies')">TROPHIES</button>

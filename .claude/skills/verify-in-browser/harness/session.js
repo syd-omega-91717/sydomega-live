@@ -92,9 +92,22 @@ async function launch(opts = {}) {
     await ctx.route('https://esm.sh/**', r =>
       r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));
   }
-  await ctx.route('https://fonts.googleapis.com/**', r =>
-    r.fulfill({ status: 200, contentType: 'text/css', body: '' }));
-  await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
+  /* Webfonts are stubbed with an EMPTY stylesheet by default, so scans stay
+     deterministic and offline. The cost is invisible and was: every screenshot
+     this harness has ever produced showed the browser's fallback serif/sans,
+     NOT Cinzel Decorative / Rajdhani / Courier Prime. Measured on
+     dashboard.html -- `"Cinzel Decorative",serif` and bare `serif` rendered the
+     same string at an identical 589px, and `document.fonts.size` was 0.
+
+     That is fine for a correctness scan and WRONG for judging visual design:
+     type is most of the brand. Pass `webfonts: true` to let the real faces
+     load, and use it for any screenshot a design decision rests on. It needs
+     network, so never enable it in a check that must run offline. */
+  if (!opts.webfonts) {
+    await ctx.route('https://fonts.googleapis.com/**', r =>
+      r.fulfill({ status: 200, contentType: 'text/css', body: '' }));
+    await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
+  }
 
   if (pin) {
     /* Content type must follow the extension. Serving a pinned .html as

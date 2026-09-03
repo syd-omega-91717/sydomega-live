@@ -12,21 +12,21 @@
 .pod-gold{border-color:rgba(226,200,109,.4);background:rgba(226,200,109,.04);border-top:3px solid var(--solar)}
 .pod-silver{border-color:rgba(192,192,192,.25);background:rgba(192,192,192,.02);border-top:2px solid rgba(192,192,192,.4)}
 .pod-bronze{border-color:rgba(205,127,50,.25);background:rgba(205,127,50,.02);border-top:2px solid rgba(205,127,50,.4)}
-.pod-name{font-family:var(--D);font-size:10px;color:var(--ink);margin:8px 0 4px}
+.pod-name{font-family:var(--D);font-size:12px;color:var(--ink);margin:8px 0 4px}
 .pod-auth{font-family:var(--D);font-size:clamp(16px,3vw,24px);color:var(--gold);line-height:1}
-.pod-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pod-el{font-family:var(--M);font-size:8px;letter-spacing:1.5px;margin-top:6px}
+.pod-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pod-el{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-top:6px}
 /* Leaderboard-specific styling (extends shared .tbl-* system) */
 .tbl-head{background:rgba(201,168,76,.04)!important;border-bottom:1px solid rgba(201,168,76,.12)!important}
-.tbl-hcell{color:var(--solar)!important;font-size:7px!important}
+.tbl-hcell{color:var(--solar)!important;font-size:12px!important}
 .tbl-row{grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:11px 12px;align-items:center}
 .tbl-row:hover{background:rgba(201,168,76,.025)!important}
 .tbl-row.me{background:rgba(201,168,76,.04)!important;border-left:2px solid var(--gold)!important}
 .lb-rank{font-family:var(--D);font-size:14px;text-align:center}
 .lb-name-val{font-family:var(--M);font-size:12px}
-.lb-sign-val{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+.lb-sign-val{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 .lb-auth-val{font-family:var(--D);font-size:13px;color:var(--gold)}
-.lb-axis-val{font-family:var(--M);font-size:8px;text-align:center}
+.lb-axis-val{font-family:var(--M);font-size:12px;text-align:center}
 .lb-row-loading{grid-template-columns:1fr!important;padding:20px!important;text-align:center}
 .my-rank-banner{border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 @media(max-width:700px){
@@ -67,9 +67,9 @@
       <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_axis_b">AXIS B</div>
       <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_elem">ELEMENT</div>
     </div>
-    <div id="lb-rows" role="rowgroup"><div class="tbl-row lb-row-loading" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
+    <div id="lb-rows" role="rowgroup"><div class="tbl-row lb-row-loading" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
   </div>
-  <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:1.8" data-i18n="lead_ranking_methodology">
+  <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.8" data-i18n="lead_ranking_methodology">
     LEADERBOARD METHODOLOGY &middot; Ranking uses AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e computed daily at midnight.<br>
     Inspired by Google PageRank: authority flows from demonstrated knowledge, mastery, and contribution — not follower count.<br>
     Daily snapshots prevent gaming. No real-time rank manipulation. Rank recalculates every 24 hours.
@@ -84,7 +84,7 @@
     <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
   </div>
   <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px" data-i18n="lead_podium_methodology">PODIUM METHODOLOGY</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px" data-i18n="lead_podium_methodology">PODIUM METHODOLOGY</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_podium_methodology_text">Top 3 sovereigns ranked by AUTH = sqrt(A³+B³+C³)×φ/e. Gold position at center elevated to signify apex standing. Daily snapshot sourced from leaderboard_snapshots table or live profiles query as fallback.</div>
   </div>
 </div>
@@ -95,7 +95,7 @@
     <div style="font-family:var(--D);font-size:28px;color:var(--gold);line-height:1">#<span id="banner-rank">--</span></div>
     <div>
       <div style="font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px" id="banner-name">--</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH <span id="banner-auth" style="color:var(--gold)">--</span> &middot; <span id="banner-element">--</span> &middot; A:<span id="banner-a">--</span> B:<span id="banner-b">--</span> C:<span id="banner-c">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH <span id="banner-auth" style="color:var(--gold)">--</span> &middot; <span id="banner-element">--</span> &middot; A:<span id="banner-a">--</span> B:<span id="banner-b">--</span> C:<span id="banner-c">--</span></div>
     </div>
   </div>
   <div class="kpi-row">
@@ -105,7 +105,7 @@
     <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_total">TOTAL MEMBERS</div></div>
   </div>
   <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px" data-i18n="lead_myrank_formula_title">AUTHORITY FORMULA</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px" data-i18n="lead_myrank_formula_title">AUTHORITY FORMULA</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_myrank_formula_text">AUTH = sqrt(A³ + B³ + C³) × φ / e &nbsp;&nbsp;where φ=1.6180339887 and e=2.7182818285. Apex AUTH = 27.8367 achieved when A=B=C=9 (all three axes at maximum). Your rank updates daily at midnight UTC.</div>
   </div>
 </div>

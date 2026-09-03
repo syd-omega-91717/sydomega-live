@@ -6,11 +6,11 @@
 .id-card{border:1px solid var(--line);background:var(--surface);border-radius:8px;border-top:3px solid var(--cyan);padding:clamp(18px,3vw,32px);margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0}
 .id-card-left{border-right:1px solid var(--line);padding-right:24px}
 .id-card-right{padding-left:24px}
-.id-header{font-family:var(--M);font-size:7px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+.id-header{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
 .id-name{font-family:var(--M);font-size:clamp(16px,3vw,22px);color:var(--ink);margin-bottom:4px}
-.id-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
+.id-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
 .id-field{margin-bottom:10px}
-.id-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
+.id-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
 .id-value{font-family:var(--M);font-size:13px;color:var(--cyan)}
 .id-value.gold{color:var(--gold)}
 .id-value.green{color:var(--green)}
@@ -20,20 +20,20 @@
 .elem-card{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:12px;text-align:center;transition:border-color .18s,background .18s}
 .elem-card.active{border-color:rgba(0,229,255,.5);background:rgba(0,229,255,.06)}
 .elem-glyph{font-size:22px;margin-bottom:5px;line-height:1}
-.elem-name{font-family:var(--M);font-size:9px;color:var(--ink);margin-bottom:2px}
-.elem-role{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
+.elem-name{font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:2px}
+.elem-role{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .axis-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
 .axis-cell{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:16px;text-align:center}
 .axis-letter{font-size:28px;color:var(--ac,var(--cyan));line-height:1;margin-bottom:4px}
 .axis-val{font-family:var(--M);font-size:18px;color:var(--ink);margin-bottom:6px}
-.axis-name{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.axis-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .axis-bar{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:8px}
 .axis-fill{height:100%;border-radius:2px;background:var(--ac,var(--cyan))}
 .token-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1rem}
 .token-card{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:12px;border-top:2px solid var(--tc,var(--cyan))}
 .token-sym{font-size:18px;margin-bottom:5px}
-.token-name{font-family:var(--M);font-size:10px;color:var(--ink);margin-bottom:2px}
-.token-type{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
+.token-name{font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:2px}
+.token-type{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .lore-panel{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:18px;margin-bottom:1rem}
 .lore-title{font-family:var(--M);font-size:clamp(13px,2vw,18px);color:var(--cyan);margin-bottom:8px}
 .lore-body{font-size:12px;line-height:1.9;color:var(--ink);opacity:.8}
@@ -86,12 +86,12 @@
       </div>
     </div>
     <div class="glass" style="margin-bottom:1rem">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">SOVEREIGN ARCHETYPE</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">SOVEREIGN ARCHETYPE</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
-        <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">AGENT CLASS</div><div style="font-family:var(--M);font-size:12px;color:var(--cyan)" id="chr-agent">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">SOVEREIGN TOKEN</div><div style="font-family:var(--M);font-size:12px;color:var(--gold)" id="chr-token">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">LATTICE TRACK</div><div style="font-family:var(--M);font-size:12px;color:var(--solar)" id="chr-track">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">TRIAD POSITION</div><div style="font-family:var(--M);font-size:12px;color:var(--green)" id="chr-triad">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">AGENT CLASS</div><div style="font-family:var(--M);font-size:12px;color:var(--cyan)" id="chr-agent">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">SOVEREIGN TOKEN</div><div style="font-family:var(--M);font-size:12px;color:var(--gold)" id="chr-token">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">LATTICE TRACK</div><div style="font-family:var(--M);font-size:12px;color:var(--solar)" id="chr-track">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">TRIAD POSITION</div><div style="font-family:var(--M);font-size:12px;color:var(--green)" id="chr-triad">--</div></div>
       </div>
     </div>
   </div>
@@ -113,9 +113,9 @@
       <div class="elem-card card" id="el-all"><div class="elem-glyph">Ω</div><div class="elem-name">THE ALL</div><div class="elem-role">Supreme · Apex</div></div>
     </div>
     <div class="glass" style="margin-bottom:1rem">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">YOUR ELEMENT AFFINITY</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">YOUR ELEMENT AFFINITY</div>
       <div style="font-family:var(--M);font-size:clamp(16px,3vw,20px);color:var(--cyan)" id="chr-elem-display">--</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:6px" id="chr-elem-desc">Set your element affinity in your profile to unlock elemental resonance.</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:6px" id="chr-elem-desc">Set your element affinity in your profile to unlock elemental resonance.</div>
     </div>
     <p class="sechead">YOUR SOVEREIGN SIGN LORE</p>
     <div class="lore-panel">
@@ -150,12 +150,12 @@
       </div>
     </div>
     <div class="glass" style="margin-bottom:1rem">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY COMPUTATION</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY COMPUTATION</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-        <div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:3px">A³ + B³ + C³</div><div style="font-family:var(--M);font-size:14px;color:var(--ink)" id="mx-cube-sum">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:3px">&radic;(A³+B³+C³)</div><div style="font-family:var(--M);font-size:14px;color:var(--ink)" id="mx-sqrt">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:3px">× φ/e = AUTH</div><div style="font-family:var(--M);font-size:14px;color:var(--solar)" id="mx-auth">--</div></div>
-        <div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:3px">% TO APEX</div><div style="font-family:var(--M);font-size:14px;color:var(--green)" id="mx-pct">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">A³ + B³ + C³</div><div style="font-family:var(--M);font-size:14px;color:var(--ink)" id="mx-cube-sum">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">&radic;(A³+B³+C³)</div><div style="font-family:var(--M);font-size:14px;color:var(--ink)" id="mx-sqrt">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">× φ/e = AUTH</div><div style="font-family:var(--M);font-size:14px;color:var(--solar)" id="mx-auth">--</div></div>
+        <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">% TO APEX</div><div style="font-family:var(--M);font-size:14px;color:var(--green)" id="mx-pct">--</div></div>
       </div>
     </div>
     <p class="sechead">SOVEREIGN TOKENS · 9-ELEMENT ECONOMY</p>
@@ -171,9 +171,9 @@
       <div class="token-card card" style="--tc:#E2C86D"><div class="token-sym">Ω</div><div class="token-name">OMEGA TOKEN</div><div class="token-type">The All · Apex</div></div>
     </div>
     <div class="glass">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">YOUR SOVEREIGN TOKEN</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">YOUR SOVEREIGN TOKEN</div>
       <div style="font-family:var(--M);font-size:clamp(15px,2.5vw,20px);color:var(--gold)" id="chr-token-display">--</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:6px">Tokens are earned through axis advancement and gate progression. Each element confers its token when the corresponding gate is crossed.</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:6px">Tokens are earned through axis advancement and gate progression. Each element confers its token when the corresponding gate is crossed.</div>
     </div>
   </div>
 </div>

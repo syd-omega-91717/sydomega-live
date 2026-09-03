@@ -71,7 +71,7 @@ window.renderTrackGrid = function(el, system, nodesEarned, opts){
     html+='<div style="aspect-ratio:1;background:'+bg+';border:1px solid rgba(201,168,76,.06);border-radius:1px;transition:.3s" title="Track '+(i+1)+'/'+(totalOuter)+'"></div>';
   }
   html+='</div>';
-  html+='<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:6px;text-align:center">'+sys.label+'</div>';
+  html+='<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:6px;text-align:center">'+sys.label+'</div>';
   el.innerHTML=html;
 };
 

@@ -23,7 +23,7 @@
       '  border:1px solid rgba(201,168,76,.35);',
       '  border-radius:2px;',
       '  font-family:"Courier Prime",monospace;',
-      '  font-size:9px;',
+      '  font-size:12px;',
       '  letter-spacing:1.5px;',
       '  color:#e9e6dc;',
       '  box-shadow:0 8px 32px rgba(0,0,0,.7),0 0 12px rgba(201,168,76,.08);',

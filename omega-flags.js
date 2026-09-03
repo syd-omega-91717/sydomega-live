@@ -50,9 +50,9 @@
         SEL + ':not([data-omega-flag-on]){display:none!important}' +
         '.omega-flag-dormant{border:1px solid rgba(201,168,76,.18);' +
         'background:rgba(201,168,76,.04);border-radius:4px;padding:14px 16px;' +
-        'font-family:var(--M,monospace);font-size:10px;line-height:1.7;' +
+        'font-family:var(--M,monospace);font-size:12px;line-height:1.7;' +
         'color:var(--muted,rgba(138,134,118,.7))}' +
-        '.omega-flag-dormant b{display:block;font-size:7px;letter-spacing:2.5px;' +
+        '.omega-flag-dormant b{display:block;font-size:12px;letter-spacing:2.5px;' +
         'color:var(--gold,#C9A84C);margin-bottom:6px;font-weight:400}' +
         '.omega-flag-dormant code{color:var(--ink,rgba(220,210,180,.8))}';
       (document.head || document.documentElement).appendChild(st);

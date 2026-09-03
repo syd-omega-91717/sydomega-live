@@ -9,10 +9,10 @@
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
 .kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
-.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--c:#222;--t:#fff;--d:#888;--gold:#c9a84c;--red:#e74c3c;--green:#27ae60;--blue:#3498db;--acc:var(--gold)}
 .card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
-.card-title{font-size:11px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.card-title{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.trio{grid-template-columns:1fr 1fr 1fr}
 label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
@@ -67,9 +67,9 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
   <div style="padding:20px var(--pad,20px)">
 
     <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
-      <button onclick="OmegaLocalBackup.exportKeys(['omega_budgets','omega_expenses'],'omega-expenses-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
-      <button onclick="OmegaLocalBackup.importKeys(['omega_budgets','omega_expenses'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_budgets','omega_expenses'],'omega-expenses-backup.json')" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_budgets','omega_expenses'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
     </div>
 
     <div class="stat-grid">

@@ -8,27 +8,27 @@
 <meta name="theme-color" content="#C9A84C"/>
 <style>
 .form-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
-.form-row label{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
-.form-row input,.form-row textarea,.form-row select{background:var(--void);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;padding:8px 10px;width:100%;box-sizing:border-box;outline:none}
+.form-row label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.form-row input,.form-row textarea,.form-row select{background:var(--void);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px 10px;width:100%;box-sizing:border-box;outline:none}
 .form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--gold)}
 .form-row textarea{resize:vertical;min-height:70px}
 .calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
 .calc-cell{border:1px solid var(--line);background:var(--surface);padding:10px;text-align:center}
 .calc-val{font-family:var(--D);font-size:18px;color:var(--solar)}
-.calc-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-top:4px}
+.calc-lbl{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:4px}
 .contract-row{border:1px solid var(--line);background:var(--surface);padding:12px 14px;margin-bottom:8px;cursor:pointer}
 .contract-row:hover{border-color:var(--gold)}
 .cr-header{display:flex;justify-content:space-between;align-items:center}
-.cr-ref{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
-.cr-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 8px}
+.cr-ref{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.cr-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px}
 .cr-status.active{background:rgba(0,229,255,.12);color:var(--cyan)}
 .cr-status.closed{background:rgba(255,255,255,.05);color:var(--muted)}
 .cr-status.pending{background:rgba(201,168,76,.12);color:var(--gold)}
 .cr-party{font-family:var(--D);font-size:13px;color:var(--ink);margin-top:4px}
-.cr-val{font-family:var(--M);font-size:9px;color:var(--gold);margin-top:2px}
-.cr-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted)}
+.cr-val{font-family:var(--M);font-size:12px;color:var(--gold);margin-top:2px}
+.cr-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;line-height:1.7;color:var(--muted)}
 .contract-row.open .cr-body{display:block}
-.ref-block{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold);padding:8px 12px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);margin-bottom:12px}
+.ref-block{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);padding:8px 12px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -83,14 +83,14 @@
       </select>
     </div>
     <button class="btn-gold" id="submit-btn" onclick="submitContract()">SEAL CONTRACT</button>
-    <div id="draft-msg" style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:8px"></div>
+    <div id="draft-msg" style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px"></div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-contracts">
   <div class="sechead">MY CONTRACTS</div>
   <div id="contracts-list">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading contracts&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading contracts&hellip;</div>
   </div>
 </div>
 
@@ -158,7 +158,7 @@ document.getElementById('draft-ref').textContent=genRef();
 function renderContracts(list){
   var el=document.getElementById('contracts-list');
   if(!list||!list.length){
-    el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">No contracts on record.</div>';
+    el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">No contracts on record.</div>';
     return;
   }
   el.innerHTML=list.map(function(c){

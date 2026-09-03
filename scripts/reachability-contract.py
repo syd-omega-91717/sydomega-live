@@ -69,6 +69,13 @@ SYSTEM_PAGES = {
     'index':               'no such file; / is rewritten to /enter',
     'verify-deployment':   'owner deployment diagnostic, not member navigation',
     'verify-modules':      'owner module-load diagnostic, not member navigation',
+    # Merged in 627de839 as a standalone visual gateway. It is a landing page
+    # like `enter`, not a destination inside the app: it links OUT to the realms
+    # (dashboard, cosmos, intelligence, media, marketplace, creator) and back to
+    # /enter.html, and nothing links in. Exempt on the same grounds as `enter`.
+    # Whether it should replace or sit beside /enter as the site root is a
+    # product decision, not a gate finding.
+    'omega-visual-home':   'standalone visual gateway, a landing page like enter',
 }
 
 

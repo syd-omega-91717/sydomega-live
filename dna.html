@@ -5,41 +5,41 @@
 <style>
 .dna-card{background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(0,229,255,.02));border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:28px 32px;position:relative;overflow:hidden;margin-bottom:16px}
 .dna-card::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,.06),transparent 70%);border-radius:50%}
-.dna-id{font-family:var(--M);font-size:7.5px;letter-spacing:3px;color:rgba(201,168,76,.4);margin-bottom:10px}
+.dna-id{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.4);margin-bottom:10px}
 .dna-code{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--gold);letter-spacing:4px;word-break:break-all;margin-bottom:8px;line-height:1.4}
 .dna-type{font-family:var(--D);font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.9);letter-spacing:2px;margin-bottom:4px}
-.dna-principle{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.5)}
+.dna-principle{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5)}
 .dna-elem{font-size:42px;position:absolute;bottom:16px;right:24px;opacity:.2}
 .archetype-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:10px 16px;margin-top:12px}
 .ab-icon{font-size:28px}
-.ab-name{font-family:var(--D);font-size:11px;color:var(--gold);letter-spacing:2px}
-.ab-desc{font-family:var(--M);font-size:7.5px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.ab-name{font-family:var(--D);font-size:12px;color:var(--gold);letter-spacing:2px}
+.ab-desc{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px}
 .formula-card{background:rgba(0,0,0,.3);border:1px solid rgba(0,229,255,.12);border-radius:3px;padding:16px 20px;font-family:var(--M);line-height:2}
 .formula-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.f-label{font-size:7.5px;letter-spacing:2px;color:rgba(0,229,255,.4);flex-shrink:0}
+.f-label{font-size:12px;letter-spacing:2px;color:rgba(0,229,255,.4);flex-shrink:0}
 .f-value{font-size:clamp(13px,1.8vw,16px);color:var(--cyan)}
 .f-computed{font-family:var(--D);font-size:18px;color:var(--gold)}
 .canvas-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;margin-bottom:24px}
 .canvas-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px;text-align:center}
-.canvas-title{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px}
+.canvas-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px}
 .attributes-grid{display:flex;flex-direction:column;gap:8px}
 .attr-row{display:flex;align-items:center;gap:10px}
-.attr-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);width:130px;flex-shrink:0}
+.attr-name{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);width:130px;flex-shrink:0}
 .attr-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
 .attr-bar{height:100%;border-radius:2px;transition:width 1.2s ease}
-.attr-val{font-family:var(--M);font-size:7.5px;color:var(--gold);width:36px;text-align:right;flex-shrink:0}
+.attr-val{font-family:var(--M);font-size:12px;color:var(--gold);width:36px;text-align:right;flex-shrink:0}
 .personality-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pcard{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:14px}
-.pcard-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px}
+.pcard-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px}
 .pcard-val{font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:3px}
-.pcard-label{font-family:var(--M);font-size:8px;color:rgba(255,255,255,.7)}
-.pcard-desc{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:4px;line-height:1.5}
+.pcard-label{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.7)}
+.pcard-desc{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
 .timeline{display:flex;flex-direction:column}
 .tl-item{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .tl-body{flex:1}
-.tl-title{font-family:var(--D);font-size:11px;color:rgba(255,255,255,.8);margin-bottom:3px}
-.tl-desc{font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.5}
+.tl-title{font-family:var(--D);font-size:12px;color:rgba(255,255,255,.8);margin-bottom:3px}
+.tl-desc{font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.5}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:640px){.canvas-section{grid-template-columns:1fr}.personality-grid{grid-template-columns:1fr}}
@@ -62,7 +62,7 @@
 </div>
 
 <div class="tab-panel active" id="tab-dna">
-  <div id="dnaCard"><div style="padding:40px;text-align:center;font-family:monospace;font-size:8px;letter-spacing:2px;color:var(--muted)"><span class="spin"></span>COMPUTING SOVEREIGN DNA...</div></div>
+  <div id="dnaCard"><div style="padding:40px;text-align:center;font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted)"><span class="spin"></span>COMPUTING SOVEREIGN DNA...</div></div>
 </div>
 
 <div class="tab-panel" id="tab-attributes">
@@ -79,14 +79,14 @@
     <div class="card">
       <div class="card-title">AUTHORITY FORMULA</div>
       <div class="card-body">
-        <p style="font-family:var(--M);font-size:10px;line-height:1.8;color:var(--cyan)">AUTH = √(A³+B³+C³) × φ/e</p>
-        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:8px;line-height:1.6">φ = 1.6180339887 (golden ratio) · e = 2.7182818285 (Euler) · APEX = 27.8367. Cubic sums weight exponential growth across Achievement (A), Behavioral integrity (B), and Community impact (C).</p>
+        <p style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--cyan)">AUTH = √(A³+B³+C³) × φ/e</p>
+        <p style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6">φ = 1.6180339887 (golden ratio) · e = 2.7182818285 (Euler) · APEX = 27.8367. Cubic sums weight exponential growth across Achievement (A), Behavioral integrity (B), and Community impact (C).</p>
       </div>
     </div>
     <div class="card">
       <div class="card-title">9 SOVEREIGN ELEMENTS</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="font-family:var(--M);font-size:7.5px">
+        <div class="tbl-wrap" style="font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns:1fr 40px 1fr;color:var(--gold);border-bottom:1px solid rgba(201,168,76,.15)">
             <div style="text-align:left;padding:4px 0">Element</div>
             <div style="padding:4px 6px;text-align:center">Sigil</div>
@@ -143,14 +143,14 @@
     <div class="card">
       <div class="card-title">27 ARCHETYPES</div>
       <div class="card-body">
-        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">9 Elements × 3 Gate Clusters = 27 unique sovereign archetypes. Gate clusters: Early (I–IV), Mid (V–IX), Apex (X–XII). Each archetype expresses a distinct sovereign authority pattern.</p>
-        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7;margin-top:8px">Apex archetypes represent the highest expression: Solar Emperor (FIRE), Oceanic Sage (WATER), Celestial Poet (WIND), The Architect (METAL), Stone Sovereign (SAND), Soul Sovereign (SOUL), The Infinite (SPACE), Void Master (VOID), Omega Sovereign (THE ALL).</p>
+        <p style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">9 Elements × 3 Gate Clusters = 27 unique sovereign archetypes. Gate clusters: Early (I–IV), Mid (V–IX), Apex (X–XII). Each archetype expresses a distinct sovereign authority pattern.</p>
+        <p style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7;margin-top:8px">Apex archetypes represent the highest expression: Solar Emperor (FIRE), Oceanic Sage (WATER), Celestial Poet (WIND), The Architect (METAL), Stone Sovereign (SAND), Soul Sovereign (SOUL), The Infinite (SPACE), Void Master (VOID), Omega Sovereign (THE ALL).</p>
       </div>
     </div>
     <div class="card">
       <div class="card-title">8 SOVEREIGNTY DIMENSIONS</div>
       <div class="card-body">
-        <div class="tbl-wrap" style="font-family:var(--M);font-size:7.5px">
+        <div class="tbl-wrap" style="font-family:var(--M);font-size:12px">
           <div class="tbl-row" style="grid-template-columns:1fr 1fr;color:var(--gold);border-bottom:1px solid rgba(201,168,76,.15)">
             <div style="text-align:left;padding:4px 0">Dimension</div>
             <div style="text-align:left;padding:4px 0">Peak Element</div>
@@ -193,8 +193,8 @@
     <div class="card" style="grid-column:1/-1">
       <div class="card-title">DNA CODE ANATOMY</div>
       <div class="card-body">
-        <p style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">Ω · ELEM · GATE · CLUSTER · AUTH</p>
-        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:8px;line-height:1.7">The DNA Code is a compressed sovereign identifier. Ω marks the omega lineage. ELEM is the first 4 characters of your element. GATE is the roman numeral of your current gate (I–XII). CLUSTER identifies your gate tier (EARLY, MID, APEX). AUTH is your authority score to 2 decimal places. Example: Ω·FIRE·VII·MID·18.45 = Fire sovereign, Gate VII, mid cluster, authority 18.45.</p>
+        <p style="font-family:var(--M);font-size:12px;color:var(--cyan);letter-spacing:2px">Ω · ELEM · GATE · CLUSTER · AUTH</p>
+        <p style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">The DNA Code is a compressed sovereign identifier. Ω marks the omega lineage. ELEM is the first 4 characters of your element. GATE is the roman numeral of your current gate (I–XII). CLUSTER identifies your gate tier (EARLY, MID, APEX). AUTH is your authority score to 2 decimal places. Example: Ω·FIRE·VII·MID·18.45 = Fire sovereign, Gate VII, mid cluster, authority 18.45.</p>
       </div>
     </div>
   </div>
@@ -329,7 +329,7 @@ function render(pr,u){
         '<span class="f-label">YOUR AUTHORITY</span>'+
         '<span class="f-computed">'+auth.toFixed(4)+'</span>'+
         '<span class="f-label">/ APEX '+APEX+'</span>'+
-        '<span style="font-family:var(--M);font-size:7.5px;color:var(--green)"> '+(auth/APEX*100).toFixed(1)+'% OF APEX</span>'+
+        '<span style="font-family:var(--M);font-size:12px;color:var(--green)"> '+(auth/APEX*100).toFixed(1)+'% OF APEX</span>'+
       '</div>'+
     '</div>';
 

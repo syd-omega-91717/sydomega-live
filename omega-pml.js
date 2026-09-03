@@ -37,7 +37,7 @@
     if(!topbar) return;
     var badge=document.createElement('div');
     badge.id='omega-pmi-badge';
-    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;flex-shrink:0;text-align:right';
+    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;flex-shrink:0;text-align:right';
     var pmi=PAGE_DATA.pmi;
     badge.innerHTML='PMI <span style="color:'+(pmi>=85?'rgba(63,178,127,.4)':pmi>=70?'rgba(226,200,109,.4)':'rgba(139,0,0,.4)')+'">'+(pmi||'--')+'</span>';
     badge.title='Platform Meaning Index: '+pmi+'/100 for this page';
@@ -82,7 +82,7 @@
     if(!topbar) return;
     var banner=document.createElement('div');
     banner.id='omega-mission-banner';
-    banner.style.cssText='background:rgba(2,2,6,.6);border-bottom:1px solid rgba(201,168,76,.06);padding:5px var(--pad,20px);font-family:var(--M,"Courier Prime",monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.4);line-height:1.6;display:flex;align-items:center;gap:8px';
+    banner.style.cssText='background:rgba(2,2,6,.6);border-bottom:1px solid rgba(201,168,76,.06);padding:5px var(--pad,20px);font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.4);line-height:1.6;display:flex;align-items:center;gap:8px';
     banner.innerHTML='<span style="color:rgba(201,168,76,.25)">\u03A9</span><span>'+mission+'</span>';
     banner.setAttribute('aria-label','Page mission: '+mission);
     topbar.insertAdjacentElement('afterend',banner);

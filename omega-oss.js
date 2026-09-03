@@ -201,7 +201,7 @@
           s.id='omega-tippy-css';
           s.textContent=[
             '.tippy-box[data-theme~="omega"]{background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.3);',
-            'border-radius:3px;font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:1px;',
+            'border-radius:3px;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;',
             'color:#e9e6dc;box-shadow:0 8px 24px rgba(0,0,0,.5)}',
             '.tippy-box[data-theme~="omega"] .tippy-arrow{color:rgba(201,168,76,.3)}'
           ].join('');

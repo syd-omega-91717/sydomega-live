@@ -15,29 +15,29 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px}
 .t{font-family:var(--D);font-size:.82rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;flex-shrink:0;position:sticky;top:0;z-index:40}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 20px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:3px solid transparent;background:none;color:var(--muted);font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;white-space:nowrap;border-top:none;border-left:none}
+.tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 20px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:3px solid transparent;background:none;color:var(--muted);font-family:var(--M);font-size:12px;letter-spacing:1.5px;white-space:nowrap;border-top:none;border-left:none}
 .tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.06)}
 .tab-icon{font-size:18px;line-height:1}
 .tab-panels{flex:1;overflow-y:auto}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}
 .tab-panel.active{display:block}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .sechead-gold{color:var(--gold)}
 .sechead-purple{color:var(--purple)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
 .kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .reserve-hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 .rh-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5)}
-.rh-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.rh-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
 .rh-val{font-family:var(--D);font-size:clamp(16px,3vw,26px);color:var(--gold);line-height:1;margin-bottom:4px}
-.rh-sub{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
-.status-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 10px;border:1px solid;border-radius:20px;margin-top:8px}
+.rh-sub{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:4px 10px;border:1px solid;border-radius:20px;margin-top:8px}
 .sp-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse-dot 1.4s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 @keyframes div-glow{0%,100%{text-shadow:0 0 8px rgba(63,178,127,.6)}50%{text-shadow:0 0 20px rgba(63,178,127,.9)}}
@@ -45,39 +45,39 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:14px}
 .token-card{border:1px solid rgba(201,168,76,.18);background:rgba(10,10,15,.5);padding:12px;border-radius:2px;text-align:center;transition:.18s}
 .token-card:hover{border-color:rgba(201,168,76,.35)}
-.tk-sym{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.tk-sym{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .tk-bal{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1;margin-bottom:3px}
-.tk-name{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.5)}
+.tk-name{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)}
 .nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
 .nft-card{border:1px solid rgba(155,107,240,.2);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;transition:.18s}
 .nft-card:hover{border-color:rgba(155,107,240,.4)}
-.nft-line{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--purple);margin-bottom:5px}
-.nft-name{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:5px}
-.nft-meta{font-family:var(--M);font-size:7.5px;color:var(--muted)}
+.nft-line{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:5px}
+.nft-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:5px}
+.nft-meta{font-family:var(--M);font-size:12px;color:var(--muted)}
 .ledger-table.tbl-wrap{border:1px solid var(--line)!important;border-radius:2px!important;overflow:hidden!important}
 .ledger-head.tbl-head{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(226,200,109,.04)!important;border-bottom:1px solid rgba(226,200,109,.1)!important}
-.ledger-hcell.tbl-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)!important}
-.ledger-row.tbl-row{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)!important;font-size:11px;transition:.15s}
+.ledger-hcell.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)!important}
+.ledger-row.tbl-row{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)!important;font-size:12px;transition:.15s}
 .ledger-row.tbl-row:hover{background:rgba(201,168,76,.02)!important}
-.ledger-ts{font-family:var(--M);font-size:8px;color:var(--muted)}
-.ledger-pts{font-family:var(--D);font-size:11px}
+.ledger-ts{font-family:var(--M);font-size:12px;color:var(--muted)}
+.ledger-pts{font-family:var(--D);font-size:12px}
 .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px}
 .article-card{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);position:relative;overflow:hidden;transition:.18s}
 .article-card:hover{border-color:rgba(201,168,76,.3)}
 .article-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
 .art-n{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:8px;right:14px;line-height:1}
-.art-title{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
-.art-text{font-size:11px;line-height:1.75;color:var(--ink);opacity:.75}
+.art-title{font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
+.art-text{font-size:12px;line-height:1.75;color:var(--ink);opacity:.75}
 .audit-table.tbl-wrap{border:1px solid rgba(0,229,255,.1)!important;border-radius:2px!important;overflow:hidden!important}
 .audit-head.tbl-head{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.04)!important;border-bottom:1px solid rgba(0,229,255,.1)!important}
-.audit-hcell.tbl-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)!important}
-.audit-row.tbl-row{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04)!important;font-size:11px}
+.audit-hcell.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan)!important}
+.audit-row.tbl-row{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04)!important;font-size:12px}
 .sci-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:12px}
-.sci-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px}
+.sci-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px}
 .sci-val{font-family:var(--D);font-size:clamp(20px,3.5vw,32px);color:var(--gold);line-height:1.2;margin-bottom:6px}
-.sci-sub{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:2}
+.sci-sub{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:2}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;flex-shrink:0}
-.lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){
   .reserve-hero{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr 1fr}
@@ -97,7 +97,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <small data-i18n="vault_topbar_subtitle">M7 &middot; RESERVE &middot; HOLDINGS &middot; LEDGER &middot; SCIENCE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
       </div>
       <canvas id="vault-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <!-- TAB BAR -->
@@ -129,7 +129,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div class="status-pill" style="color:var(--solar);border-color:rgba(226,200,109,.4)">
             <div class="sp-dot"></div>PENDING &middot; PHASE III ACTIVATION
           </div>
-          <div style="margin-top:14px;font-family:var(--M);font-size:8.5px;letter-spacing:1px;line-height:1.9;color:var(--muted)">
+          <div style="margin-top:14px;font-family:var(--M);font-size:12px;letter-spacing:1px;line-height:1.9;color:var(--muted)">
             PHYSICAL &mdash; <span style="color:var(--muted)">PLANNED</span><br>
             DIGITAL &mdash; <span style="color:var(--cyan)">LIVE (PLATFORM)</span><br>
             51% RESERVE: <span style="color:var(--muted)">PLANNED</span><br>
@@ -138,25 +138,25 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
         <div class="emblem-block">
           <canvas id="vault-cv" width="240" height="240" style="width:120px;height:120px" title="Sovereign Vault Emblem — 9&times;9&times;9=729"></canvas>
-          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);text-align:center">VAULT EMBLEM<br>9&times;9&times;9 = 729 INNER CUBE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-align:center">VAULT EMBLEM<br>9&times;9&times;9 = 729 INNER CUBE</div>
           <canvas id="dist-cv" width="120" height="120" style="width:80px;height:80px" title="Distribution Ring"></canvas>
-          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);text-align:center">DISTRIBUTION EMBLEM<br>12-FOLD SOVEREIGN</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-align:center">DISTRIBUTION EMBLEM<br>12-FOLD SOVEREIGN</div>
         </div>
       </div>
 
       <div class="sechead sechead-gold" data-i18n="vault_reserve_arch_title">RESERVE ARCHITECTURE &middot; SOVEREIGN COVENANT LOCKS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:14px">
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--gold);margin-bottom:6px" data-i18n="vault_reserve_card1_title">MASTER STAKE &middot; PLANNED</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card1_desc">467,756,700,000 &#937; designed as a permanent 51% sovereign majority once the token economy activates. No token is issued and no stake is locked yet.</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:6px" data-i18n="vault_reserve_card1_title">MASTER STAKE &middot; PLANNED</div>
+          <div style="font-size:12px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card1_desc">467,756,700,000 &#937; designed as a permanent 51% sovereign majority once the token economy activates. No token is issued and no stake is locked yet.</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px" data-i18n="vault_reserve_card2_title">GENESIS BLOCK SEAL &middot; PLANNED</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card2_desc">Designed to hash property documents, identity proofs, and covenant articles into a Genesis Block once built. No hash-chaining runs today.</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px" data-i18n="vault_reserve_card2_title">GENESIS BLOCK SEAL &middot; PLANNED</div>
+          <div style="font-size:12px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card2_desc">Designed to hash property documents, identity proofs, and covenant articles into a Genesis Block once built. No hash-chaining runs today.</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--purple);margin-bottom:6px" data-i18n="vault_reserve_card3_title">TOKEN ECONOMY STATUS</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card3_desc">12 sovereign token types pending legal review. KYC/AML compliance required. Activation in Phase III.</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:6px" data-i18n="vault_reserve_card3_title">TOKEN ECONOMY STATUS</div>
+          <div style="font-size:12px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card3_desc">12 sovereign token types pending legal review. KYC/AML compliance required. Activation in Phase III.</div>
         </div>
       </div>
 
@@ -191,7 +191,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="token-card card"><div class="tk-sym">PISCITE</div><div class="tk-bal">--</div><div class="tk-name">PISCES SOVEREIGN</div></div>
       </div>
 
-      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.4);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:2;margin-bottom:20px">
+      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.4);font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:2;margin-bottom:20px">
         12 SOVEREIGN TOKEN TYPES &middot; ONE PER ZODIAC TRACK &middot; ARENITE IS THE FOUNDER TOKEN (ARIES)<br>
         TOKEN ECONOMY ACTIVATES IN PHASE III &middot; KYC/AML COMPLIANCE &middot; LEGAL REVIEW REQUIRED PER JURISDICTION<br>
         CURRENT STATUS: TREASURY SIMULATION &middot; BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES LIVE
@@ -212,7 +212,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="nft-card card"><div class="nft-line">AQUARIUS LINE</div><div class="nft-name">AQUITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
         <div class="nft-card card"><div class="nft-line">PISCES LINE</div><div class="nft-name">PISCITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
       </div>
-      <div style="border:1px solid rgba(155,107,240,.15);padding:14px;border-radius:2px;background:rgba(155,107,240,.03);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:2">
+      <div style="border:1px solid rgba(155,107,240,.15);padding:14px;border-radius:2px;background:rgba(155,107,240,.03);font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:2">
         PUBLIC MINTING &amp; MARKETPLACE &mdash; PHASE II &middot; TOKEN ECONOMY PENDING LEGAL REVIEW<br>
         12 SOVEREIGN LINES &times; 9 TIERS = 108 TOTAL NFT TYPES &middot; METADATA SEALED IN GENESIS BLOCK<br>
         EACH NFT LINE IS ALIGNED TO ONE OF THE 12 OLYMPIAN GODS &amp; ONE OF THE 12 ZODIAC TRACKS
@@ -238,12 +238,12 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_axis">AXIS</div>
           <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_points">POINTS</div>
         </div>
-        <div id="earn-log"><div class="tbl-row ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
+        <div id="earn-log"><div class="tbl-row ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
       </div>
 
       <div class="sechead" style="color:var(--cyan)">
         <span data-i18n="vault_ledger_audit_title">TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
-        <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px" data-i18n="vault_ledger_refresh_btn">&#8635; REFRESH</button>
+        <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px" data-i18n="vault_ledger_refresh_btn">&#8635; REFRESH</button>
       </div>
       <div class="tbl-wrap audit-table">
         <div class="tbl-head audit-head">
@@ -269,7 +269,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
 
       <div class="sechead sechead-gold" data-i18n="vault_science_formula_title">AUTHORITY FORMULA &middot; LIVE CALCULATION ENGINE</div>
-      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;border-radius:2px;background:rgba(10,10,15,.8);margin-bottom:20px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;line-height:2.2;color:var(--muted)">
+      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;border-radius:2px;background:rgba(10,10,15,.8);margin-bottom:20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;line-height:2.2;color:var(--muted)">
         <div style="font-family:var(--D);font-size:18px;color:var(--gold);margin-bottom:12px">AUTH = &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e</div>
         A = KNOWLEDGE &middot; Axis A tracks learning events<br>
         B = MASTERY &middot; Axis B tracks demonstrated skills<br>
@@ -281,25 +281,25 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
       <div class="sechead sechead-gold" data-i18n="vault_science_gates_title">12 AUTHORITY GATES &middot; PROGRESSION THRESHOLDS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:20px">
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE I</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">2.3197</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate1_label">INITIATE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE II</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">4.6394</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate2_label">ACOLYTE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE III</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">6.9592</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate3_label">SCHOLAR</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IV</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2789</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate4_label">KEEPER</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE V</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">11.5986</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate5_label">GUARDIAN</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">13.9183</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate6_label">ARCHITECT</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">16.2381</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate7_label">SOVEREIGN</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VIII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">18.5578</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate8_label">VANGUARD</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IX</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">20.8775</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate9_label">HERALD</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE X</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">23.1972</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate10_label">ORACLE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE XI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">25.5170</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate11_label">PRIME</div></div>
-        <div style="border:1px solid rgba(201,168,76,.4);padding:10px 14px;border-radius:2px;background:rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold)">GATE XII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:8px;color:var(--gold)" data-i18n="vault_science_gate12_label">APEX &middot; SOVEREIGN FOUNDER</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE I</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">2.3197</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate1_label">INITIATE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE II</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">4.6394</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate2_label">ACOLYTE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE III</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">6.9592</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate3_label">SCHOLAR</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE IV</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2789</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate4_label">KEEPER</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE V</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">11.5986</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate5_label">GUARDIAN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE VI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">13.9183</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate6_label">ARCHITECT</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE VII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">16.2381</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate7_label">SOVEREIGN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE VIII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">18.5578</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate8_label">VANGUARD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE IX</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">20.8775</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate9_label">HERALD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE X</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">23.1972</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate10_label">ORACLE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">GATE XI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">25.5170</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)" data-i18n="vault_science_gate11_label">PRIME</div></div>
+        <div style="border:1px solid rgba(201,168,76,.4);padding:10px 14px;border-radius:2px;background:rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)">GATE XII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:12px;color:var(--gold)" data-i18n="vault_science_gate12_label">APEX &middot; SOVEREIGN FOUNDER</div></div>
       </div>
 
       <div class="sechead sechead-gold" data-i18n="vault_science_articles_title">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03)">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03)">
         SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875
       </div>
-      <div style="margin:0 0 16px;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:9.5px;letter-spacing:.6px;line-height:1.7;color:var(--ink)">
+      <div style="margin:0 0 16px;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)">
         <b style="color:#E2967A">&#9888; DESIGN, NOT LIVE STATUS.</b> These 11 Articles are the platform's governance <i>design</i> —
         real and documented (matching <code>sovereign-covenant.html</code>), but "sealed into the Genesis Block"
         and "hash-chained" describe a mechanism not yet built: no article is currently hash-chained, and the
@@ -543,17 +543,17 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
             var row=document.createElement('div');row.className='tbl-row ledger-row';
             row.innerHTML='<span class="ledger-ts">'+fmt(t.completed_at)+'</span>'
               +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
-              +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
+              +'<span style="font-family:var(--M);font-size:12px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
               +'<span class="ledger-pts" style="color:'+col+'">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>';
             el.appendChild(row);
           });
         }else{
-          el.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">NO EARNINGS YET · COMPLETE MATRIX TASKS TO BEGIN</span></div>';
+          el.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">NO EARNINGS YET · COMPLETE MATRIX TASKS TO BEGIN</span></div>';
         }
       }
     }catch(e){
       var el2=document.getElementById('earn-log');
-      if(el2)el2.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">RUN MATRIX_ENGINE.SQL TO ACTIVATE EARNING LEDGER</span></div>';
+      if(el2)el2.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">RUN MATRIX_ENGINE.SQL TO ACTIVATE EARNING LEDGER</span></div>';
     }
 
     loadAuditLog();
@@ -583,10 +583,10 @@ window.loadAuditLog=async function(){
       var stat=/granted$/.test(actionRaw)?'GRANTED':/rejected/.test(actionRaw)?'REJECTED':/revoked/.test(actionRaw)?'REVOKED':/expired/.test(actionRaw)?'EXPIRED':'LOGGED';
       var col=stat==='GRANTED'?'var(--green)':(stat==='REJECTED'||stat==='REVOKED')?'var(--crim)':stat==='EXPIRED'?'var(--gold)':'var(--muted)';
       var r2=document.createElement('div');r2.className='tbl-row audit-row';
-      r2.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span>'
+      r2.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+ts+'</span>'
         +'<span>'+evt+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+subj+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat+'</span>';
+        +'<span style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+subj+'</span>'
+        +'<span style="font-family:var(--M);font-size:12px;color:'+col+'">'+stat+'</span>';
       list.appendChild(r2);
     });
   }catch(e){
@@ -603,7 +603,7 @@ window.loadAuditLog=async function(){
       DEMO.forEach(function(r){
         var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';
         var row=document.createElement('div');row.className='tbl-row audit-row';
-        row.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:8px;color:'+col+'">'+r.st+'</span>';
+        row.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:12px;color:'+col+'">'+r.st+'</span>';
         list.appendChild(row);
       });
     }

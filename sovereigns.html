@@ -16,9 +16,9 @@
 .rank-other{color:var(--muted)}
 .sov-you{color:var(--cyan)}
 .sov-other{color:var(--ink)}
-.sign-badge{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--solar)}
+.sign-badge{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--solar)}
 .auth-val{font-family:var(--D);font-size:14px}
-.mat-badge{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:2px 7px;border:1px solid}
+.mat-badge{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid}
 .tier-bar{height:3px;background:rgba(201,168,76,.1);margin-top:4px}
 .tier-fill{height:100%}
 .throne-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
@@ -28,9 +28,9 @@
 .throne-card.t3{border-color:rgba(217,184,106,.3)}
 .tc-rank{font-family:var(--D);font-size:32px;margin-bottom:8px}
 .tc-label{font-family:var(--D);font-size:13px;margin-bottom:4px}
-.tc-auth{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--muted)}
-.tc-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-top:8px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);display:inline-block;color:var(--solar)}
-.priv-notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:12px 16px;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.7;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+.tc-auth{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.tc-sign{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-top:8px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);display:inline-block;color:var(--solar)}
+.priv-notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:12px 16px;font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px;line-height:1.7;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
 .empty{font-family:var(--M);font-size:12px;color:var(--muted);padding:24px;text-align:center}
 @media(max-width:600px){#lb-table .tbl-row span:nth-child(5),#lb-table .tbl-head span:nth-child(5){display:none}}
 </style>
@@ -147,7 +147,7 @@ function renderThrone(){
       +'<div class="tc-label" style="color:'+col+'">'+label+'</div>'
       +'<div class="tc-auth">AUTHORITY '+r.auth.toFixed(2)+'</div>'
       +'<div class="tc-sign">'+esc(r.sign)+'</div>'
-      +'<div style="font-family:var(--M);font-size:9px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px">'+MATS[mi]+'</div>';
+      +'<div style="font-family:var(--M);font-size:12px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px">'+MATS[mi]+'</div>';
     tr.appendChild(d);
   });
 }

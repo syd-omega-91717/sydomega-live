@@ -33,10 +33,10 @@
   .main{flex:1;min-width:0}
   .topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
   .topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(16px,2.5vw,24px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:3px;margin-top:3px}
-  .sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .topbar .t small{display:block;font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:3px;margin-top:3px}
+  .sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
   .pad{padding:0 clamp(14px,3vw,36px) 60px}
-  .state{display:flex;align-items:center;gap:14px;margin:4px clamp(14px,3vw,36px) 0;font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)}
+  .state{display:flex;align-items:center;gap:14px;margin:4px clamp(14px,3vw,36px) 0;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
   .state .dot{width:8px;height:8px;background:var(--green);border-radius:0;box-shadow:0 0 10px var(--green);animation:pulse 2.4s ease-in-out infinite}
   .state b{color:var(--solar);letter-spacing:3px}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -47,11 +47,11 @@
   .card h3{font-family:var(--D);font-size:15px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;font-weight:700}
   .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.1)}
   .row:last-child{border-bottom:none}
-  .row .k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+  .row .k{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
   .row .v{font-family:var(--D);font-size:16px;color:var(--cyan)}
   .row .v.gold{color:var(--solar)}
   .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-  .tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+  .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
   .tab-panel{display:none}.tab-panel.active{display:block}
 </style>
 </head>
@@ -139,8 +139,8 @@
             <div class="row"><span class="k">Subscriptions</span><span class="v" id="flag-payments">Loading...</span></div>
             <div class="row"><span class="k">Token Economy</span><span class="v" id="flag-tokens">Loading...</span></div>
             <div style="display:flex;gap:8px;margin-top:10px">
-              <button class="btn" id="btn-toggle-payments" style="cursor:pointer;font-size:9px">TOGGLE SUBSCRIPTIONS</button>
-              <button class="btn" id="btn-toggle-tokens" style="cursor:pointer;font-size:9px">TOGGLE TOKENS</button>
+              <button class="btn" id="btn-toggle-payments" style="cursor:pointer;font-size:12px">TOGGLE SUBSCRIPTIONS</button>
+              <button class="btn" id="btn-toggle-tokens" style="cursor:pointer;font-size:12px">TOGGLE TOKENS</button>
             </div>
           </div>
         </div>
@@ -150,16 +150,16 @@
       <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
       <div class="pad">
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px">
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTH</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.6180</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">PHI &phi;</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.7183</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">EULER e</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:13px;color:var(--gold);line-height:1">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AUTH FORMULA</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">27.8367</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTH</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.6180</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">PHI &phi;</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.7183</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">EULER e</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:13px;color:var(--gold);line-height:1">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">AUTH FORMULA</div></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px">
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">0.001</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">INITIATE GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.618</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.718</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">PRIME GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">9.000</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">0.001</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">INITIATE GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.618</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.718</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">PRIME GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">9.000</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX GATE</div></div>
         </div>
       </div>
     </div>
@@ -198,8 +198,8 @@ async function boot(){
     document.getElementById('gate').innerHTML=`
       <div style="font-size:56px;color:var(--crim)">&#937;</div>
       <div style="font-family:serif;font-size:16px;color:var(--crim);font-weight:700">ACCESS DENIED</div>
-      <div style="font-family:monospace;font-size:11px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
-      <a href="/dashboard.html" style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
+      <div style="font-family:monospace;font-size:12px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
+      <a href="/dashboard.html" style="font-family:monospace;font-size:12px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
     return;
   }
   document.getElementById('gate').style.display='none';

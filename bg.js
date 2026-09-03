@@ -215,6 +215,152 @@ function __omegaAppend(el){
   }
 })();
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   Phase C/D GLOBAL ACTIVATION — CINEMATIC VISUAL EVOLUTION v2
+   Wires all 8 archetype, emblem, motion and density systems globally on every
+   page. Adds cinematic 3D transforms, parallax, scroll-reactive lighting,
+   and aggressive motion saturation with zero page changes needed.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function(){
+  if(window.__omegaPhaseCD_active) return;
+  window.__omegaPhaseCD_active = true;
+
+  function activateCinematicDesign(){
+    /* 1. AUTO-DETECT ARCHETYPE AND APPLY SYSTEM */
+    if(window.OmegaArchetype && typeof window.OmegaArchetype.applyToPage === 'function'){
+      window.OmegaArchetype.applyToPage(document.body);
+    }
+
+    /* 2. GLOBAL MOTION ACTIVATION */
+    if(window.OmegaArchetypeMotion && typeof window.OmegaArchetypeMotion.activateGlobally === 'function'){
+      window.OmegaArchetypeMotion.activateGlobally();
+    }
+
+    /* 3. APPLY VISUAL DENSITY BASED ON ARCHETYPE */
+    if(window.OmegaArchetypeSurfaces && typeof window.OmegaArchetypeSurfaces.applyDensity === 'function'){
+      var arch = document.body.getAttribute('data-archetype') || 'neutral';
+      var densityMap = {
+        'sentinel':'regular', 'merchant':'comfortable', 'scout':'sparse',
+        'warden':'dense', 'sovereign':'ultra', 'auditor':'regular',
+        'proxy':'comfortable', 'oracle':'sparse', 'beacon':'comfortable',
+        'analyst':'regular', 'tutor':'comfortable', 'historian':'sparse'
+      };
+      window.OmegaArchetypeSurfaces.applyDensity(densityMap[arch] || 'regular');
+    }
+
+    /* 4. RENDER EMBLEMS ACROSS THE PAGE */
+    if(window.OmegaEmblemIntegration && typeof window.OmegaEmblemIntegration.renderEmblems === 'function'){
+      window.OmegaEmblemIntegration.renderEmblems();
+    }
+
+    /* 5. DETECT ALL PLATFORM CAPABILITIES */
+    if(window.OmegaPageFeatures && typeof window.OmegaPageFeatures.detectAllCapabilities === 'function'){
+      window.OmegaPageFeatures.detectAllCapabilities();
+    }
+
+    /* 6. CINEMATIC MOTION ON ALL INTERACTIVE ELEMENTS */
+    var interactiveElements = document.querySelectorAll('button, a, [role="button"], .card, .kpi, .btn, [class*="card"], input, select, textarea');
+    interactiveElements.forEach(function(el){
+      /* Spring-physics 3D perspective */
+      el.style.transition = 'all 0.18s cubic-bezier(0.34, 1.4, 0.64, 1)';
+      el.style.transformStyle = 'preserve-3d';
+      el.style.willChange = 'transform';
+
+      /* Hover: 3D tilt + lift + glow */
+      el.addEventListener('mouseenter', function(){
+        if(!el.classList.contains('omg-no-tilt')){
+          el.style.transform = 'perspective(1000px) translateZ(8px) rotateX(2deg) rotateY(-2deg)';
+        }
+        if(window.OmegaArchetypeMotion && typeof window.OmegaArchetypeMotion.activateMotion === 'function'){
+          window.OmegaArchetypeMotion.activateMotion(el);
+        }
+      });
+
+      el.addEventListener('mouseleave', function(){
+        el.style.transform = 'perspective(1000px) translateZ(0) rotateX(0) rotateY(0)';
+      });
+
+      /* Scroll-reactive parallax on cards */
+      if(el.classList.contains('card') || el.classList.contains('kpi') || el.classList.contains('kpi-card')){
+        el.setAttribute('data-parallax', '1');
+      }
+    });
+
+    /* 7. SCROLL-REACTIVE 3D PARALLAX ON CARDS */
+    var parallaxElements = document.querySelectorAll('[data-parallax="1"]');
+    if(parallaxElements.length > 0 && window.requestAnimationFrame){
+      window.addEventListener('scroll', function(){
+        var scrollY = window.scrollY || 0;
+        parallaxElements.forEach(function(el){
+          var rect = el.getBoundingClientRect();
+          var elementCenter = rect.top + rect.height / 2;
+          var screenCenter = window.innerHeight / 2;
+          var distance = (screenCenter - elementCenter) / window.innerHeight;
+          var rotX = Math.max(-6, Math.min(6, distance * 12));
+          var scale = 1 + Math.abs(distance) * 0.04;
+          el.style.transform = 'perspective(800px) rotateX('+rotX.toFixed(2)+'deg) scale('+scale.toFixed(3)+')';
+        });
+      }, {passive: true});
+    }
+
+    /* 8. EMBLEM ANIMATION ON PAGE (if Ω sigil exists, spin it) */
+    var omegaSigils = document.querySelectorAll('[class*="sigil"], [class*="emblem-mark"], #ph-sigil');
+    omegaSigils.forEach(function(el){
+      if(!el.classList.contains('omega-spin-slow')){
+        el.classList.add('omega-spin-slow');
+      }
+    });
+
+    /* 9. GLOW ANIMATION ON FEATURED CARDS */
+    var featuredCards = document.querySelectorAll('.card[data-featured], .kpi-card[data-featured], .glass[data-featured]');
+    featuredCards.forEach(function(el){
+      el.style.animation = 'cinematic-glow 4s ease-in-out infinite';
+    });
+  }
+
+  /* INJECT CINEMATIC GLOW KEYFRAME */
+  if(!document.getElementById('omg-cinematic-css')){
+    var cinemaStyle = document.createElement('style');
+    cinemaStyle.id = 'omg-cinematic-css';
+    cinemaStyle.textContent = `
+      @keyframes cinematic-glow{
+        0%, 100%{
+          box-shadow: 0 0 20px -4px rgba(201,168,76,.3),
+                      inset 0 1px 0 rgba(255,255,255,.055)
+        }
+        50%{
+          box-shadow: 0 0 40px 0px rgba(201,168,76,.5),
+                      0 12px 32px rgba(0,0,0,.5),
+                      inset 0 1px 0 rgba(255,255,255,.09)
+        }
+      }
+      @keyframes cinematic-shimmer{
+        0%{background-position: -1000px 0}
+        100%{background-position: 1000px 0}
+      }
+      .cinematic-motion{
+        animation: cinematic-shimmer 3s ease-in-out infinite;
+      }
+    `;
+    (document.head || document.documentElement).appendChild(cinemaStyle);
+  }
+
+  /* ACTIVATE ON DOM READY OR IMMEDIATELY */
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', activateCinematicDesign);
+  } else {
+    setTimeout(activateCinematicDesign, 50);
+  }
+
+  /* REACTIVATE ON DYNAMIC CONTENT INSERTION */
+  if(window.MutationObserver){
+    var observer = new MutationObserver(function(){
+      activateCinematicDesign();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+})();
+
   try{
     var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/'];
     var path = (location.pathname || '/').replace(/\.html$/,'');

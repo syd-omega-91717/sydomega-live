@@ -9,7 +9,7 @@
   /* Map every page to a section */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
-    command:'command',
+    command:'command',gateway:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',academy:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
@@ -41,7 +41,7 @@
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
     universe:'media',wallet:'invest',council:'govern',hercules:'achieve',
-    'sovereign-ai':'arena','design-system':'govern',
+    'sovereign-ai':'arena','design-system':'govern','agent-network':'arena','design-showcase':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
@@ -96,7 +96,7 @@
           ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
     /* ── NEW SECTIONS — Full 102-page coverage ─────────────── */
     {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#9B6BF0',
-     sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
+     sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
           ['agents','12 AGENTS','/agents.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
           ['research','RESEARCH','/research.html'],['queue','SOVEREIGN QUEUE','/queue.html']]},
@@ -104,7 +104,7 @@
      sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
-          ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
+          ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],
           ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
      sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],

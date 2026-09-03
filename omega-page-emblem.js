@@ -284,6 +284,47 @@
     root.setAttribute('data-pg-fold', String(cfg[0]));
   }
 
+  /* A mount written between </main> and the .shell close is a direct flex
+     child of .shell, so flex stretches it into a third full-height column
+     beside the sidebar and the content -- and that column also takes its own
+     width out of the page. Measured across all 181 mounting pages: 23 were in
+     this state, every one of them parented to <div class="shell">, boxes up to
+     334x2801 holding 161px of content.
+
+     Relocating is the fix rather than a CSS rule, because nothing in CSS
+     un-columns a flex item -- align-self stops the stretch but leaves the
+     column, and the page stays narrowed. Runs before draw() so the canvas is
+     measured in its final container. If the flex parent has no content column
+     to move into, the host is left exactly where it is. */
+  function reseat(host) {
+    var p = host.parentElement, d;
+    if (!p) return;
+    try { d = getComputedStyle(p).display; } catch (e) { return; }
+    if (d !== 'flex' && d !== 'inline-flex') return;
+    /* Narrow to the app shell specifically. Being a flex parent is not enough:
+       a page may deliberately mount the emblem inside a flex header or card
+       row, and relocating that would move a correct mount. The shell row is the
+       one that holds the sidebar, so require that sibling before touching
+       anything. */
+    if (!p.querySelector('aside, .side, #omega-side')) return;
+    var named = null, grower = null, growth = 0;
+    for (var i = 0; i < p.children.length; i++) {
+      var c = p.children[i];
+      if (c === host) continue;
+      if (!named && (c.tagName === 'MAIN' ||
+          /(^|\s)main(\s|$)/.test(String(c.className || '')))) { named = c; continue; }
+      /* Not every page names its content column. matrix.html wraps the whole
+         page in an anonymous <div style="flex:1;min-width:0">, so the general
+         rule is the flex sibling that GROWS -- the sidebar is flex-shrink:0 at
+         a fixed width and never does. */
+      var g = 0;
+      try { g = parseFloat(getComputedStyle(c).flexGrow) || 0; } catch (e) { g = 0; }
+      if (g > growth) { growth = g; grower = c; }
+    }
+    var col = named || grower;
+    if (col) col.appendChild(host);
+  }
+
   function boot() {
     publishVars();
     var hosts = document.querySelectorAll('[data-page-emblem]');
@@ -294,6 +335,7 @@
                 (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
       var cfg = PAGES[key] || [12, 'b', '\u03A9'];
       host.setAttribute('data-emblem-done', '1');
+      reseat(host);
       draw(host, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
       var cap = document.createElement('div');
       cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';

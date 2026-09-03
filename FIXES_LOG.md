@@ -6357,3 +6357,94 @@ viewport position, which made the first shot look like the ring was broken.
 `conic-gradient(rgb(0,229,255) 19.2%, rgba(0,229,255,0.12) 0deg)`. Nothing else
 used the class, so this could not regress an existing adopter.
 
+
+## 23 pages rendered a third narrower than they should, because of where one div sat (2026-09-03)
+
+`[data-page-emblem]` is mounted by 181 of 187 pages. A grep says that and stops
+there; a render says which of them actually work. Measuring the mount's box
+against the height of its own content, across all 181:
+
+```
+mounting pages measured: 181
+correctly sized:         158
+node absent at runtime:    0
+STRETCHED:                23
+  matrix.html        box=334x2801  content=161  parent=<div class="shell"> flex
+  cosmos.html        box=334x1707  content=161  parent=<div class="shell"> flex
+  clarity.html       box=299x1627  content=161  parent=<div class="shell"> flex
+  achievements.html  box=334x1441  content=161  parent=<div class="shell"> flex
+  ... 19 more, every one parented to <div class="shell">
+```
+
+**The cause is a single character of placement.** These pages write the mount
+after `</main>` and before the `.shell` close:
+
+```html
+</main>
+<div data-page-emblem="clarity" style="margin:20px auto 0"></div>
+</div>
+```
+
+`.shell` is `display:flex`, so that div is not "below the content" — it is a
+**third flex column**, beside the sidebar and the content, stretched by the
+default `align-items` to the full height of the page (2801px on `matrix.html`
+for 161px of content) and taking its own width out of the row. The A/B, pinning
+the module without the fix:
+
+```
+                   BEFORE                          AFTER
+achievements.html  emblem 334x1441  main  850px    334x161   main 1184px
+clarity.html       emblem 299x1627  main  885px    299x161   main 1184px
+cosmos.html        emblem 334x1707  main  866px    334x161   main 1200px
+matrix.html        emblem 334x2801  main  n/a      334x161   (column widened)
+academy.html       emblem 334x161   main 1200px    unchanged
+dashboard.html     emblem 334x161   main 1200px    unchanged
+```
+
+The stretched emblem was the visible symptom; **the content column being 850px
+instead of 1184px was the actual damage**, and nothing in the repo was looking
+for it. `scrollsX` was `false` throughout, so no overflow check would have
+caught it either — the page simply gave a third of its width away.
+
+**A source scan does not find these.** Testing whether the mount sits between
+`<main>` and `</main>` reports 24 offenders and 75 pages with "no `<main>` at
+all" — but `analytics.html` is in that second group and renders perfectly
+(334x161), because its shell is not a stretching flex row. Source position is
+not the predictor; the rendered box is. The runtime a11y pass also reports only
+2 pages missing a `<main>` landmark, against the source scan's 75 — the same
+disagreement, in the same direction.
+
+Fixed in `omega-page-emblem.js`, once, for all of them: `reseat()` runs before
+`draw()` and moves a host whose parent is a flex container into that parent's
+content column. **Relocation rather than a CSS rule, because nothing in CSS
+un-columns a flex item** — `align-self:start` stops the vertical stretch but
+leaves the column in the row, so the page stays narrowed.
+
+Finding the column takes two rules, and the second one is why the first is not
+enough: prefer a `MAIN`/`.main` sibling, else the sibling that **grows**.
+`matrix.html` wraps its whole page in an anonymous `<div style="flex:1;
+min-width:0">` with no class and no `<main>`, so the named lookup found nothing
+and left it at 334x2801 — correct behaviour for the guard, wrong outcome for the
+page. `flex-grow > 0` identifies the content column on every layout here, since
+the sidebar is `flex-shrink:0` at a fixed width and never grows. With the
+fallback, `matrix.html` joins the rest at 334x161.
+
+A third correction, and the one that mattered most. The first working version
+fired on **any** flex parent, which is wrong in a way the "0 stretched" result
+cannot show: a page that deliberately mounts the emblem inside a flex header or
+card row would have had a correct mount relocated. The guard now also requires
+the parent to contain a sidebar (`aside, .side, #omega-side`), so only the shell
+row qualifies. A "correctly sized" count proves nothing about that case -- it
+needs a parent-identity diff across all 181 pages, before vs. after, which is
+running as this is written.
+
+Re-measured after the fix (before the sidebar guard was added):
+**181 of 181 correctly sized, 0 stretched.** The full-estate
+`verify-runtime.js --all` re-run and the parent-identity false-positive pass
+are both still in flight; neither result is claimed here yet.
+
+One incidental gate failure worth recording as a success: `omega-registry.py`
+failed on this change because the module census tracks total `omega-*.js` bytes
+and the edit moved it 1134 KB -> 1136 KB. That is the "put the number in the
+generator, not the paragraph" rule doing exactly its job.
+

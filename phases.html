@@ -52,9 +52,16 @@
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT PHASE</div>
         <div style="font-family:var(--D);font-size:clamp(20px,4vw,32px);color:var(--cyan)" id="my-phase-name">--</div>
         <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:8px" id="my-phase-gate">--</div>
-        <div style="margin:20px auto 0;max-width:400px">
-          <div class="bar-track"><div class="bar-fill" id="my-phase-bar" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div>
-          <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px" id="my-phase-pct">0% to Apex</div>
+        <!-- Same conic gauge as levels.html, in the cyan variant. The label is
+             static text beneath the value so the readout itself is one number,
+             not a sentence. -->
+        <div style="margin:20px auto 0;display:flex;justify-content:center">
+          <div class="omg-ring cyan" id="my-phase-ring" style="--size:clamp(142px,26vw,172px)">
+            <div style="text-align:center;line-height:1.25">
+              <div style="font-family:var(--D);font-size:clamp(20px,4vw,26px);color:var(--cyan)" id="my-phase-pct">0%</div>
+              <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">TO APEX</div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="my-phase-detail"></div>
@@ -160,8 +167,9 @@ function updateMyPhase(auth){
   function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v);}
   sid('my-phase-name',p.name);sid('my-phase-gate',p.gate);
   var pct=(auth/27.8367*100).toFixed(1);
-  sid('my-phase-pct',pct+'% to Apex');
-  var bar=document.getElementById('my-phase-bar');if(bar)setTimeout(function(){bar.style.width=pct+'%';},100);
+  sid('my-phase-pct',pct+'%');
+  var ring=document.getElementById('my-phase-ring');
+  if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
   var det=document.getElementById('my-phase-detail');
   if(det){det.innerHTML='<div class="glass" style="--card-accent:'+p.color+'">'
     +'<div style="font-family:var(--D);font-size:13px;color:'+p.color+';margin-bottom:8px">'+p.name+' &middot; '+p.gate+'</div>'

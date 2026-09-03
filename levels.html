@@ -81,10 +81,17 @@
         <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:12px" id="my-lv-next">--</div>
       </div>
       <div class="sechead">PROGRESS TO APEX</div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-        <span style="font-family:var(--M);font-size:12px;color:var(--muted);min-width:100px">AUTHORITY</span>
-        <div class="bar-track" style="flex:1"><div class="bar-fill" id="my-auth-bar" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div>
-        <span style="font-family:var(--M);font-size:12px;color:var(--muted);min-width:60px;text-align:right" id="my-auth-pct">0%</span>
+      <!-- A conic gauge rather than a bar plus a number: .omg-ring has shipped
+           in bg.js since the O-HORIZON layer and had never been used by any
+           page. --p is registered with @property, so the sweep interpolates
+           instead of snapping when updateLevel() sets it. -->
+      <div style="display:flex;justify-content:center;margin-bottom:8px">
+        <div class="omg-ring" id="my-auth-ring" style="--size:clamp(150px,28vw,184px)">
+          <div style="text-align:center;line-height:1.25">
+            <div style="font-family:var(--D);font-size:clamp(21px,4.2vw,27px);color:var(--gold)" id="my-auth-pct">0%</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTHORITY</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -177,7 +184,8 @@ function updateLevel(auth){
   if(nextIdx<12)sid('my-lv-next','NEXT: '+LVLS[nextIdx].name+' at AUTH ≥ '+LVLS[nextIdx].thr);
   else sid('my-lv-next','APEX SOVEREIGN — LATTICE COMPLETE');
   var pct=(auth/27.8367*100).toFixed(1);
-  var bar=document.getElementById('my-auth-bar');if(bar)setTimeout(function(){bar.style.width=Math.min(100,pct)+'%';},100);
+  var ring=document.getElementById('my-auth-ring');
+  if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
   var pctEl=document.getElementById('my-auth-pct');if(pctEl)pctEl.textContent=pct+'%';
 }
 function setTab(name){

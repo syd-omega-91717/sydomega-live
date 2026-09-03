@@ -6288,3 +6288,72 @@ it to `op=0.55 left=38.41px right=38.41px`. Screenshots at 4x confirm the beam
 paints at rest on the active tab only, and that the hover preview appears under
 the pointed-at tab.
 
+
+## `.omg-ring` had shipped in bg.js and no page had ever used it (2026-09-03)
+
+The Ω-HORIZON layer added a conic progress gauge — `@property --omg-p` so the
+sweep interpolates instead of snapping, an inner disc via `::after`, a `.cyan`
+variant. Adoption, measured:
+
+```
+$ grep -oh 'omg-ring' *.html | wc -l
+0
+```
+
+Shipped CSS reaching every page, drawn by none of them. Meanwhile the reference
+boards for this platform's design language lead with ring gauges, and 30 pages
+already compute a real percentage and assign it to a bar width:
+
+```
+$ grep -lE "style\.width\s*=[^;]*\+\s*['\"]%" *.html | wc -l
+30
+```
+
+**Two of those 30 were converted, not all thirty.** The rest were checked and
+rejected on the merits rather than skipped for time: `missions.html`'s day strip
+is a compact 6px bar inside a 12px-padded box, where a 150px ring would be
+heavier than the thing it measures; `ascension.html`'s three axis bars sit in a
+hidden tab beside a canvas that already draws the same three values.
+`levels.html` and `phases.html` were the two hero blocks — a headline
+"PROGRESS TO APEX" / "% to Apex" that was a bar, a label and a number in a row.
+
+Both now read as one gauge with the number inside it, which is also less text:
+`phases.html`'s readout went from the sentence `19.2% to Apex` to `19.2%` over a
+static `TO APEX` label.
+
+The JS changed from setting a width to setting the custom property, so the value
+still comes from the same computation and the same `setTimeout` that let the
+old bar animate:
+
+```js
+var ring=document.getElementById('my-auth-ring');
+if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
+```
+
+Verified in a render with the harness Supabase stub, which produces a real
+non-zero value rather than an empty gauge:
+
+```
+levels.html  my-auth-ring   184x184  --p 19.2%  conic-gradient(rgb(201,168,76) 19.2%, ...)  "19.2% AUTHORITY"
+phases.html  my-phase-ring  172x172  --p 19.2%  conic-gradient(rgb(0,229,255) 19.2%, ...)   "19.2% TO APEX"
+```
+
+no page errors, no horizontal scroll on either.
+
+**Both rings live in a `tab-my` panel that is `display:none` at rest**, so the
+first probe reported `0x0 / visible:false` — the same hidden-tab trap that has
+now produced false readings three times in this repo. The probe has to click
+`.tab-btn[data-tab="my"]` first. That is pre-existing page structure, not
+something this change introduced: the bar was equally hidden.
+
+Screenshots also needed the fixed chrome hidden — the keyboard-shortcut hint and
+the language bar are `position:fixed` and composite over any clip taken at their
+viewport position, which made the first shot look like the ring was broken.
+
+**One real defect found while looking at the result:** `.omg-ring.cyan` set
+`--ring` but not the unfilled track, which stayed hard-coded
+`rgba(201,168,76,.12)` — a gold remainder behind a cyan arc. The track is now a
+`--track` custom property that the variant overrides, confirmed in the render:
+`conic-gradient(rgb(0,229,255) 19.2%, rgba(0,229,255,0.12) 0deg)`. Nothing else
+used the class, so this could not regress an existing adopter.
+

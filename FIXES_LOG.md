@@ -6003,3 +6003,62 @@ candidate generator, not a verdict, and that a scanner needs its own
 false-positive pass before its number means anything. The first claim trusted a
 grep; the second trusted a DOM count. Only the third measurement — computed
 size, then the hiding ancestor — was worth reporting.
+
+### 16 pages carried no emblem of their own — the artwork existed, the mount did not
+
+A survey of all 187 pages at rest (1440x900) measured what each actually shows
+before any interaction:
+
+```
+living zodiac emblems visible at rest : 0
+[data-page-emblem] visible            : 158   (29 pages without)
+pages with NO svg and NO canvas above the fold: 0
+```
+
+**The last line killed the change that survey was commissioned to justify.** The
+plan had been to add graphics to page resting states, on the impression that the
+estate was mostly type. Zero pages lack a graphic above the fold. That work was
+unnecessary and would have shipped on a hunch.
+
+The 29 without a visible page emblem split into two causes, and only one is a
+gap. Measured per page by walking up to the ancestor doing the hiding:
+
+* **7 are correct as they stand** — `approvals`, `family`, `honors`,
+  `interface-omni`, `journal`, `media`, `profile`. Every one has its mount, the
+  canvas is filled, the CSS size is the normal 132x132; each simply sits on a
+  view that is not the default (`#j-main`, `#mtab-record`, `#tab-matrix`,
+  `#mtab-bloodline`, `#mtab-science`, `#main`). `approvals` is hidden by
+  `#app.shell` — the approval guard itself, on the owner-gated page
+  `verify-runtime.js` already reports as expected. Nothing to fix; a second
+  measurement stopping a second unnecessary change.
+* **22 have no `[data-page-emblem]` in markup at all.** Six of those are public
+  or internal-tool pages where no member-facing mark belongs — `404`, `enter`,
+  `offline`, `reset`, `verify-deployment`, `verify-modules`. The remaining
+  **16 are real content pages that simply never mounted one.**
+
+And the mark was already designed for almost all of them: `omega-page-emblem.js`
+carries **181 per-page configs**, and 14 of the 16 were already in that map with
+their own fold count, axis colour and glyph — `ad-network` U+25EC, `hercules`
+U+2694, `graphify` U+2B21, `council` U+2630, and so on. The artwork existed and
+nothing asked for it. A one-line mount per page turns each on.
+
+`gateway` and `omega-visual-home` had no config and would have fallen back to a
+generic Omega, so they got real ones: a gate mark (U+26E9) and a frame mark
+(U+2394), both checked against the 87 glyphs already in use so no page borrows
+another's character, and both rendered white-on-black in the harness first —
+they come back monochrome, so `scripts/brand-glyph-check.py` still passes.
+
+Placement anchors on `</main>`, which every one of the 16 has exactly once.
+Verified by **reading the canvas pixels back**, not by trusting a box size — a
+filled-looking element proves nothing, as the 7 above demonstrate:
+
+```
+ok  ad-network        334x166  ink 8062   "12-FOLD ..."
+ok  graph-timeline    299x161  ink 6520   "9-FOLD ..."
+ok  world-shell      1360x166  ink 6269   "12-FOLD ..."
+...
+16/16 pages now paint their own emblem at rest
+```
+
+Estate total moves 158 -> 174 of 187. The remaining 13 are the 7 tab-hosted
+marks and the 6 public/utility pages, both correct as they are.

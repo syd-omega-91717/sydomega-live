@@ -22,6 +22,9 @@
   if (window.OmegaPageEmblem) return;
 
   var PAGES = {
+    /* gateway: the door into the platform -- a gate mark, not a generic
+       Omega. omega-visual-home: the visual showcase, a frame mark. */
+    gateway:[12,'a','\u26E9'], 'omega-visual-home':[12,'c','\u2394'],
     academy:[12,'a','\u2727'], research:[9,'a','\u2732'], intelligence:[9,'a','\u25C9'],
     prediction:[12,'a','\u2609'], travel:[9,'a','\u2708'], news:[12,'a','\u25C8'],
     search:[12,'a','\u2315'], houses:[12,'a','\u2302'], chatbot:[12,'a','\u2756'],

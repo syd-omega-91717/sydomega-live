@@ -374,7 +374,10 @@ body {
 <body>
 <div id="omega-noise-overlay"></div>
 
-<div class="container" id="app" style="display:none">
+<!-- See agent-network.html: an inline display:none is unliftable by the
+     approval guard, which reveals #app with a CSS rule, not by clearing a
+     style attribute. This page rendered blank until it was removed. -->
+<div class="container" id="app">
   <div class="page-header">
     <h1 class="page-title">Ω DESIGN SYSTEM</h1>
     <p class="page-subtitle">━━━ Visual Language & Component Library ━━━</p>
@@ -385,59 +388,59 @@ body {
     <h2 class="section-title">COLOR PALETTE</h2>
     <div class="color-grid">
       <div class="color-swatch">
-        <div class="color-sample" style="background: #ffd700;">Ω</div>
+        <div class="color-sample" style="background: #C9A84C;">Ω</div>
         <div class="color-info">
           <div class="color-name">Gold</div>
-          <div class="color-code">#FFD700</div>
+          <div class="color-code">#C9A84C</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #ffb700;">◆</div>
+        <div class="color-sample" style="background: #E2C86D;">◆</div>
         <div class="color-info">
           <div class="color-name">Solar</div>
-          <div class="color-code">#FFB700</div>
+          <div class="color-code">#E2C86D</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #00e5ff;">◈</div>
+        <div class="color-sample" style="background: #00E5FF;">◈</div>
         <div class="color-info">
           <div class="color-name">Cyan</div>
           <div class="color-code">#00E5FF</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #2ecc71;">✓</div>
+        <div class="color-sample" style="background: #3fb27f;">✓</div>
         <div class="color-info">
           <div class="color-name">Green</div>
-          <div class="color-code">#2ECC71</div>
+          <div class="color-code">#3FB27F</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #9b59b6;">✦</div>
+        <div class="color-sample" style="background: #9B6BF0;">✦</div>
         <div class="color-info">
           <div class="color-name">Purple</div>
-          <div class="color-code">#9B59B6</div>
+          <div class="color-code">#9B6BF0</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #ff3b5c;">✕</div>
+        <div class="color-sample" style="background: #C4453C;">✕</div>
         <div class="color-info">
           <div class="color-name">Crimson</div>
-          <div class="color-code">#FF3B5C</div>
+          <div class="color-code">#C4453C</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #0a0e15; color: #ecf0f1;">◯</div>
+        <div class="color-sample" style="background: #0A0A0F; color: #e9e6dc;">◯</div>
         <div class="color-info">
           <div class="color-name">Void</div>
-          <div class="color-code">#0A0E15</div>
+          <div class="color-code">#0A0A0F</div>
         </div>
       </div>
       <div class="color-swatch">
-        <div class="color-sample" style="background: #1a1f2e; color: #ecf0f1;">◮</div>
+        <div class="color-sample" style="background: #020206; color: #e9e6dc;">◮</div>
         <div class="color-info">
           <div class="color-name">Void 2</div>
-          <div class="color-code">#1A1F2E</div>
+          <div class="color-code">#020206</div>
         </div>
       </div>
     </div>

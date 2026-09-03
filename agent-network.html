@@ -210,7 +210,11 @@ body {
 <body>
 <div id="omega-noise-overlay"></div>
 
-<div class="shell" id="app" style="display:none">
+<!-- No inline display:none here. bg.js hides #app with a CSS rule keyed on
+     `body:not(.omega-approved)` and lifts it by adding that class; an INLINE
+     display:none cannot be lifted by any rule, so this page rendered blank
+     permanently -- nothing in it ever removed the attribute. -->
+<div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="agent-network" aria-label="Navigation"></aside>
   
   <main class="main">
@@ -252,20 +256,72 @@ body {
 
 <script src="/bg.js"></script>
 <script>
-const agents = [
-  { id: 'sentinel', name: 'Sentinel', domain: 'Security & Gates', symbol: '♐︎', color: '#ffd700', status: 'active' },
-  { id: 'merchant', name: 'Merchant', domain: 'Commerce & Revenue', symbol: '♑︎', color: '#ffb700', status: 'active' },
-  { id: 'scout', name: 'Scout', domain: 'Discovery & Exploration', symbol: '♒︎', color: '#00e5ff', status: 'active' },
-  { id: 'warden', name: 'Warden', domain: 'Family & Privacy', symbol: '♓︎', color: '#9b59b6', status: 'active' },
-  { id: 'sovereign', name: 'Sovereign', domain: 'Governance & Authority', symbol: '♈︎', color: '#ffd700', status: 'core' },
-  { id: 'auditor', name: 'Auditor', domain: 'Validation & Verification', symbol: '♉︎', color: '#2ecc71', status: 'active' },
-  { id: 'proxy', name: 'Proxy', domain: 'Execution & Dispatch', symbol: '♊︎', color: '#00e5ff', status: 'active' },
-  { id: 'oracle', name: 'Oracle', domain: 'Prediction & Insight', symbol: '♋︎', color: '#9b59b6', status: 'active' },
-  { id: 'beacon', name: 'Beacon', domain: 'Onboarding & Welcome', symbol: '♌︎', color: '#2ecc71', status: 'active' },
-  { id: 'analyst', name: 'Analyst', domain: 'Analytics & Intelligence', symbol: '♍︎', color: '#00e5ff', status: 'active' },
-  { id: 'tutor', name: 'Tutor', domain: 'Education & Learning', symbol: '♎︎', color: '#ffb700', status: 'active' },
-  { id: 'historian', name: 'Historian', domain: 'Archive & Record', symbol: '♏︎', color: '#9b59b6', status: 'active' }
+/* The roster is DERIVED, never restated. This page previously carried its own
+   twelve-agent list and every single sign in it was wrong -- offset by four
+   positions, so Sentinel read Sagittarius where the canon says Aries, and
+   12 of 12 disagreed with omega-agents.json. That is CLAUDE.md 8.1 class 8,
+   the failure that once had the live onboarding flow assigning the wrong god
+   to nine of twelve signs.
+
+   Colour is not restated either: omega-emblems.js owns the per-sign palette
+   and exposes color(sign). The old literals were a third problem again --
+   #ffd700 where the brand is #C9A84C.
+
+   Same fetch-with-fallback posture as omega-constellation.js and agents.html
+   use for the same file: names and signs only, nothing derived, so an offline
+   render shows the real roster or the same twelve names, never an invention. */
+const SIGN_GLYPH = {
+  Aries:'\u2648\uFE0E', Taurus:'\u2649\uFE0E', Gemini:'\u264A\uFE0E',
+  Cancer:'\u264B\uFE0E', Leo:'\u264C\uFE0E', Virgo:'\u264D\uFE0E',
+  Libra:'\u264E\uFE0E', Scorpio:'\u264F\uFE0E', Sagittarius:'\u2650\uFE0E',
+  Capricorn:'\u2651\uFE0E', Aquarius:'\u2652\uFE0E', Pisces:'\u2653\uFE0E'
+};
+const FALLBACK_AGENTS = [
+  { name:'Sentinel', sign:'Aries',       role:'Security Guardian' },
+  { name:'Merchant', sign:'Taurus',      role:'Commerce Steward' },
+  { name:'Scout',    sign:'Gemini',      role:'Discovery Scout' },
+  { name:'Warden',   sign:'Cancer',      role:'Family Warden' },
+  { name:'Sovereign',sign:'Leo',         role:'Governance Sovereign' },
+  { name:'Auditor',  sign:'Virgo',       role:'Validation Auditor' },
+  { name:'Proxy',    sign:'Libra',       role:'Execution Proxy' },
+  { name:'Oracle',   sign:'Scorpio',     role:'Prediction Oracle' },
+  { name:'Beacon',   sign:'Sagittarius', role:'Onboarding Beacon' },
+  { name:'Analyst',  sign:'Capricorn',   role:'Finance Analyst' },
+  { name:'Tutor',    sign:'Aquarius',    role:'Education Tutor' },
+  { name:'Historian',sign:'Pisces',      role:'Archive Historian' }
 ];
+
+let agents = [];
+
+function shapeAgent(a) {
+  const sign = a.sign || 'Aries';
+  let colour = 'var(--gold)';
+  try {
+    if (window.OmegaEmblem && typeof window.OmegaEmblem.color === 'function') {
+      colour = window.OmegaEmblem.color(sign);
+    }
+  } catch (e) { /* keep the token fallback */ }
+  return {
+    id: String(a.name || '').toLowerCase(),
+    name: a.name,
+    domain: a.role || (Array.isArray(a.domains) ? a.domains.slice(0, 2).join(' & ') : ''),
+    sign: sign,
+    symbol: SIGN_GLYPH[sign] || '\u03A9',
+    color: colour,
+    status: a.name === 'Sovereign' ? 'core' : 'active'
+  };
+}
+
+function loadAgents() {
+  return fetch('/omega-agents.json')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      const list = j && (j.agents || j);
+      return (Array.isArray(list) && list.length) ? list : FALLBACK_AGENTS;
+    })
+    .catch(function () { return FALLBACK_AGENTS; })
+    .then(function (list) { agents = list.map(shapeAgent); return agents; });
+}
 
 function drawNetwork() {
   const canvas = document.getElementById('network-canvas');
@@ -305,7 +361,10 @@ function drawNetwork() {
   ctx.arc(centerX, centerY, radius * 0.5, 0, Math.PI * 2);
   ctx.fill();
   
-  ctx.fillStyle = '#ffd700';
+  /* A canvas 2d context cannot resolve var(), so read the canonical token
+     off the document rather than restating a hex here. */
+  ctx.fillStyle = (getComputedStyle(document.documentElement)
+    .getPropertyValue('--gold') || '#C9A84C').trim();
   ctx.font = 'bold 48px serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -372,7 +431,7 @@ function openPanel(agentId) {
     </div>
     <div class="agent-stat">
       <div class="agent-stat-label">Status</div>
-      <div class="agent-info" style="color: ${agent.status === 'core' ? '#ffd700' : '#2ecc71'}">${agent.status.toUpperCase()}</div>
+      <div class="agent-info" style="color: ${agent.status === 'core' ? 'var(--gold)' : 'var(--green)'}">${agent.status.toUpperCase()}</div>
     </div>
     <div class="agent-stat">
       <div class="agent-stat-label">Authority</div>
@@ -408,17 +467,32 @@ function setupCanvasClickListener() {
   });
 }
 
+/* Draw once, and again only when the box actually changes size. This ran
+   drawNetwork() inside an unbroken requestAnimationFrame loop -- a full
+   canvas clear, buffer reallocation (canvas.width = ...) and twelve-node
+   redraw, sixty times a second, forever, for a diagram that never moves.
+   omega-gateway.js's own header records the same lesson: draw statically and
+   let CSS carry any motion.
+
+   A ResizeObserver rather than a resize event, because the approval guard
+   reveals the shell without firing one (CLAUDE.md 8.1 class 3) -- that reveal
+   is exactly when this canvas first gets a non-zero width. */
 window.addEventListener('load', () => {
-  drawNetwork();
-  setupCanvasClickListener();
-  window.addEventListener('resize', drawNetwork);
+  loadAgents().then(() => {
+    drawNetwork();
+    setupCanvasClickListener();
+  });
 });
 
-// Redraw on scroll to maintain responsiveness
-requestAnimationFrame(function animateNetwork() {
-  drawNetwork();
-  requestAnimationFrame(animateNetwork);
-});
+(function observeCanvasSize() {
+  const canvas = document.getElementById('network-canvas');
+  if (!canvas) return;
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => { if (agents.length) drawNetwork(); }).observe(canvas);
+  } else {
+    window.addEventListener('resize', () => { if (agents.length) drawNetwork(); });
+  }
+})();
 </script>
 </body>
 </html>

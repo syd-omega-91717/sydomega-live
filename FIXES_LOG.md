@@ -6542,7 +6542,11 @@ The probe now fails a box more than 60px taller than its own content, and a
 content height under 140px (a drawn mark plus caption is ~161). Both failures
 above would have been caught by those two lines.
 
-Final: all four at 161-175px with a sized canvas, no hidden ancestor, no
-horizontal scroll; `ci-local.sh` 22/22, 175 tests, registry regenerated
-(1137 -> 1138 KB).
+Final, all measured on the shipped code: the four render at 161-175px with a
+sized canvas, no hidden ancestor and no horizontal scroll; `ci-local.sh` 22/22,
+175 tests, registry regenerated (1137 -> 1138 KB), and
+`verify-runtime.js --all` **PASS (187 pages)**. The advisory still names
+`verify-deployment` and `verify-modules` as the only two pages with no `<main>`
+landmark -- the same two deliberately left without an emblem, which is a useful
+cross-check that the excluded set is the internal one.
 

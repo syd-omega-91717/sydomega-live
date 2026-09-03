@@ -254,7 +254,7 @@ function __omegaAppend(el){
   function activateCinematicDesign(){
     /* 1. AUTO-DETECT ARCHETYPE AND APPLY SYSTEM */
     if(window.OmegaArchetype && typeof window.OmegaArchetype.applyToPage === 'function'){
-      window.OmegaArchetype.applyToPage(document.body);
+      if(document.body) window.OmegaArchetype.applyToPage(document.body);
     }
 
     /* 2. GLOBAL MOTION ACTIVATION */
@@ -388,12 +388,30 @@ function __omegaAppend(el){
     (document.head || document.documentElement).appendChild(cinemaStyle);
   }
 
-  /* ACTIVATE ON DOM READY OR IMMEDIATELY */
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', activateCinematicDesign);
-  } else {
-    setTimeout(activateCinematicDesign, 50);
+  /* ACTIVATE ONCE THERE IS A BODY TO ACT ON.
+     `readyState !== 'loading'` does NOT imply document.body exists, and every
+     entry point below touches it -- applyToPage(document.body), a
+     document-wide querySelectorAll, and observe(document.body). bg.js is
+     loaded from <head> on much of the estate, so this ran with body === null
+     and threw "parameter 1 is not of type 'Node'", which killed the rest of
+     bg.js on 40 pages: 38 with an uncaught error and 2 whose approval guard
+     then never lifted. CLAUDE.md 8.1 class 5a, which is why bg.js routes its
+     own injections through __omegaAppend(). */
+  function whenBodyReady(fn){
+    if(document.body){ fn(); return; }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      /* Parsed but bodyless: poll the next frames rather than give up. */
+      var tries = 0;
+      (function wait(){
+        if(document.body) return fn();
+        if(++tries > 60) return;
+        (window.requestAnimationFrame || setTimeout)(wait, 16);
+      })();
+    }
   }
+  whenBodyReady(function(){ setTimeout(activateCinematicDesign, 50); });
 
   /* REACTIVATE ON DYNAMIC CONTENT INSERTION */
   if(window.MutationObserver){
@@ -408,7 +426,7 @@ function __omegaAppend(el){
         activateCinematicDesign();
       });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    whenBodyReady(function(){ observer.observe(document.body, { childList: true, subtree: true }); });
   }
 })();
 

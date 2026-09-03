@@ -6692,3 +6692,90 @@ Both new pages also gained a registry entry and an emblem mount, so the
 "every page a member sees carries its own mark" invariant is not lost on the
 next merge.
 
+
+## 40 of 189 pages broken on main, from one unguarded document.body (2026-09-03)
+
+A clean full sweep against main after PR #224 merged:
+
+```
+RUNTIME VERIFICATION: 40 page(s) failed
+  FAIL affirmations.html   x 1 uncaught error(s):
+       EXC Failed to execute 'observe' on 'MutationObserver':
+           parameter 1 is not of type 'Node'.
+  FAIL agent-network.html  x approval guard never lifted (#app still display:none)
+```
+
+Three defects, all from #224, all invisible to every static gate -- `ci-local.sh`
+was 22/22 and the 179 tests passed the whole time.
+
+### 1. bg.js threw on every page that loads it from `<head>`
+
+The Phase C/D block called `observer.observe(document.body, ...)` at parse
+time. `document.body` is null until the parser reaches it, so on the large part
+of the estate that loads `bg.js` from the head this threw immediately -- and
+**everything after it in bg.js never ran**: 38 pages with an uncaught error, 2
+whose approval guard consequently never lifted.
+
+CLAUDE.md 8.1 class 5a, which is precisely why `bg.js` routes its own injections
+through `__omegaAppend()`. `readyState !== 'loading'` does not imply a body
+exists, so the gate is `whenBodyReady()`: run now if there is a body, else wait
+for `DOMContentLoaded`, else poll a bounded number of frames. Every body-touching
+entry point in the block now goes through it -- the activation, the observer,
+and `applyToPage(document.body)`.
+
+### 2. Both new pages rendered completely blank
+
+`agent-network.html` and `design-showcase.html` each ship
+
+```html
+<div id="app" class="shell" style="display:none">
+```
+
+and nothing anywhere removes it. The approval guard hides `#app` with a CSS rule
+keyed on `body:not(.omega-approved)` and reveals it by adding that class -- an
+**inline** `display:none` cannot be lifted by any rule, at any specificity. Both
+pages were permanently empty. The cascade probe is what settled it: every
+matching rule said `display:flex`, and the element still computed `none`, because
+the value was on the element itself.
+
+Measured on `agent-network.html` before and after removing the attribute:
+
+```
+                       before        after
+canvas#network-canvas   0x0         505x276
+div#app.shell           0x0  none   1280x840  flex
+painted pixels            0          47,106
+```
+
+### 3. All twelve agent signs were wrong
+
+`agent-network.html` carried its own twelve-agent roster, offset by four
+positions against `omega-agents.json` -- **12 of 12 mismatched**:
+
+```
+Sentinel  page=Sagittarius  canonical=Aries
+Merchant  page=Capricorn    canonical=Taurus
+...
+```
+
+CLAUDE.md 8.1 class 8, the failure that once had the live onboarding flow
+assigning the wrong god to nine of twelve signs. The roster is now derived from
+`omega-agents.json` with the same fetch-and-fallback posture
+`omega-constellation.js` and `agents.html` already use for that file, and colour
+comes from `OmegaEmblem.color(sign)` rather than a third copy of the palette.
+Verified at runtime: 12 rows, **0 sign mismatches**, 0 stale-gold colours,
+`Sentinel -> Aries -> #E86A3A`.
+
+Two more from the same page while there: an unbroken `requestAnimationFrame`
+loop that cleared, reallocated (`canvas.width = ...`) and redrew the whole canvas
+sixty times a second forever for a diagram that never moves -- replaced with a
+draw on load plus a `ResizeObserver`, because the guard's reveal fires no resize
+event; and `design-showcase.html`, a palette **reference** page, was documenting
+`#FFD700` as the brand gold. Nineteen swatch values and labels corrected.
+
+**The method note.** Every static gate was green through all of this. Nothing in
+the repo can see a page that renders nothing, or a roster that disagrees with its
+own source file. Only the runtime sweep catches those -- and the one run before
+merging #224 was invalid, because it had been measured across a branch switch.
+A sweep is only evidence if the tree held still underneath it.
+

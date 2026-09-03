@@ -149,7 +149,11 @@ which already own `opacity` on what they manage.
   `--M` (Courier Prime, labels/mono/letter-spaced UI chrome).
 - Layout primitives: `.shell`/`.side`/`.main` (sidebar + content), `.kpi`/
   `.kpi-row`, `.card`/`.card-grid`, `.tbl-*`, `.tab-*`, `.chip`, `.glass`/
-  `.glass-cyan`, `.bar-track`/`.bar-fill`.
+  `.glass-cyan`, `.bar-track`/`.bar-fill`. **`.shell` is a flex _row_**, so a
+  page-level block written after `</main>` is not below the content — it is a
+  third column, stretched full height, taking its own width out of the page.
+  23 pages were rendering ~300px narrow this way. Put page-level blocks inside
+  the content column.
 - Responsive breakpoints at 1200/900/700/480px, all defined in the same
   block.
 
@@ -921,9 +925,6 @@ the above; the GitHub REST API, `github.com` HTML and `codeload` tarballs are al
 403 at the egress proxy, so stars/activity/dependency dimensions stay
 **NOT VERIFIED** until a session has API access.
 
-Marketing/course URLs (e.g. contentcreator.com's AI creator course) are
-reading material, not sources of adoptable code — nothing in them maps to a
-file in this repo, so they are noted and not acted on.
 
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
 

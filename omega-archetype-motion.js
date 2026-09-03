@@ -8,6 +8,7 @@ var API=window.OmegaArchetypeMotion={
 };
 function inject(level,archetype){var id='omega-archetype-motion-'+level+'-'+archetype;if(document.getElementById(id))return;var t=API.getMotionTiming(level),e=API.getEasingFunction(level),s=document.createElement('style');s.id=id;s.textContent='\
 [data-motion-level="'+level+'"] .card,[data-motion-level="'+level+'"] .kpi{transition:transform '+t+'ms '+e+',opacity '+t+'ms ease,box-shadow '+t+'ms ease,border-color '+t+'ms ease;transform-style:preserve-3d;backface-visibility:hidden}\
+[data-motion-level="'+level+'"] .card{position:relative;overflow:hidden}\
 [data-motion-level="'+level+'"] .card:hover{transform:translateY('+(-2+level*2)+'px) translateZ(8px);box-shadow:0 '+(8+level*3)+'px '+(20+level*7)+'px rgba(0,0,0,.38),0 0 24px rgba(201,168,76,'+(0.04+level*.012)+')}\
 [data-motion-level="'+level+'"] .btn:hover{transform:translateY(-1px) scale('+(1+level*.015)+');filter:brightness(1.1)}\
 [data-motion-level="'+level+'"] .card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.055) 50%,transparent 70%);background-size:220% 100%;opacity:0;transition:opacity .35s ease,background-position .8s ease}\

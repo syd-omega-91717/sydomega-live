@@ -1,0 +1,33 @@
+name: Supabase Migration Security Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/supabase-migration-security-audit.py'
+      - '.github/workflows/supabase-migration-security-audit.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/supabase-migration-security-audit.py'
+      - '.github/workflows/supabase-migration-security-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Fail-closed migration security audit
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Audit migrations
+        shell: pwsh
+        run: python scripts/supabase-migration-security-audit.py

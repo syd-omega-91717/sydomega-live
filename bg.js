@@ -1142,9 +1142,24 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }
 
   window.addEventListener('resize',function(){resize();buildAll();if(REDUCE)frame();});
-  window.addEventListener('pointermove',function(e){tmx=e.clientX/W;tmy=e.clientY/H;},{passive:true});
+  /* W and H are 0 until resize() first runs, and a pointermove can arrive before
+     it: e.clientX/0 is Infinity (0/0 is NaN), which flows through mx/my into
+     gOff() and reaches createRadialGradient as a non-finite centre, throwing
+     "The provided double value is non-finite" and killing the whole background
+     canvas for the rest of the session. It never recovers, because mx is then
+     eased toward a poisoned tmx forever. Intermittent by nature -- it needs a
+     pointer event inside that startup window -- which is why a full-estate
+     headless sweep reported a DIFFERENT set of 19-22 failing pages on each run
+     of identical code. Guarding the divisor is the whole fix. */
+  window.addEventListener('pointermove',function(e){
+    if(!(W>0)||!(H>0))return;
+    tmx=e.clientX/W;tmy=e.clientY/H;
+  },{passive:true});
   window.addEventListener('deviceorientation',function(e){
-    if(e.gamma!=null){tmx=0.5+Math.max(-1,Math.min(1,e.gamma/45))*0.5;tmy=0.42+Math.max(-1,Math.min(1,(e.beta-45)/45))*0.3;}
+    /* Same class: gamma was checked, beta was not, and (null-45) is NaN --
+       Math.min/max propagate NaN rather than clamping it. */
+    if(e.gamma!=null){tmx=0.5+Math.max(-1,Math.min(1,e.gamma/45))*0.5;}
+    if(e.beta!=null){tmy=0.42+Math.max(-1,Math.min(1,(e.beta-45)/45))*0.3;}
   },{passive:true});
   window.addEventListener('scroll',function(){
     var y=window.pageYOffset||document.documentElement.scrollTop||0;

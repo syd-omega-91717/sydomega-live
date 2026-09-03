@@ -29,7 +29,7 @@ effectively invisible unless invoked by exact name.
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
-| `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-08-30 |
+| `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |

@@ -4779,3 +4779,82 @@ while the image ships `chromium-1194/chrome-linux/chrome` and a headless binary
 named `headless_shell`. Symlinking both expected layouts onto the installed 1194
 build makes the repo's own verifier run unmodified — worth doing rather than
 substituting an ad-hoc harness, since it asserts the capability contracts.
+
+## A pointer event before the first resize killed the background canvas (2026-09-03)
+
+`bg.js:1145` normalised the pointer against the viewport:
+
+```js
+window.addEventListener('pointermove',function(e){tmx=e.clientX/W;tmy=e.clientY/H;},{passive:true});
+```
+
+`W` and `H` are declared `var W=0,H=0` (`bg.js:870`) and only get real values when
+`resize()` first runs. A `pointermove` arriving inside that startup window
+divides by zero: `e.clientX/0` is `Infinity`, and `0/0` is `NaN`.
+
+Neither is caught anywhere. `tmx` feeds `mx`, `mx` feeds
+`gOff()` → `{x:(mx-0.5)*60}`, and that reaches
+
+```js
+var hg=ctx.createRadialGradient(CX+o.x,CY+o.y,2,CX+o.x,CY+o.y,hr);
+```
+
+which throws **`Failed to execute 'createRadialGradient' on
+'CanvasRenderingContext2D': The provided double value is non-finite.`**
+
+It never recovers. `mx` is eased toward `tmx` every frame, so once `tmx` is
+`Infinity` the value stays poisoned and the entire orrery/nebula background is
+dead for the rest of the session, on every page — `bg.js` loads on all of them.
+
+### How it was found, and why it looked like something else
+
+`node scripts/verify-runtime.js --all` reported **22 failing pages**. The obvious
+reading was that the session's own `bg.js` edit had broken them. It had not, and
+the evidence that settled it is worth recording because the first two comparisons
+were both misleading:
+
+- A **targeted before/after harness** on the 8 loudest pages reported `0` errors
+  at both commits — it simply never hit the race, so it could not discriminate
+  at all. A harness that reproduces neither side is not a comparison.
+- The **full `--all` sweep at `0ec01227`** reported 19 failures — but the sets
+  differed in *both* directions: 10 pages failed only after, and **7 failed only
+  before**. A regression cannot fix pages. Re-running those 7 at the *same* HEAD
+  commit failed 2 of them again, which proved the failing set is not stable
+  across runs of identical code.
+
+So the sweep's page list is noise; only a deterministic reproduction means
+anything. Firing `pointermove` repeatedly at 1 ms intervals from
+`addInitScript` forces the race every time, and reproduces the throw at
+`0ec01227` **and** at HEAD — the same result on both, which is what actually
+exonerated the session's change.
+
+Two earlier "0 findings" in this same investigation were also false and are
+worth naming: a `nohup`'d sweep was killed with its parent shell and left an
+empty file, and `grep -c FAIL` on that empty file returned `0`. That is §8.4's
+"verify a 0 findings result is real" and §8.2's Windows note (a crashed child
+yields empty stdout) recurring on Linux.
+
+### The fix
+
+Guard the divisor, which is the whole bug:
+
+```js
+window.addEventListener('pointermove',function(e){
+  if(!(W>0)||!(H>0))return;
+  tmx=e.clientX/W;tmy=e.clientY/H;
+},{passive:true});
+```
+
+`!(W>0)` rather than `W===0` so a `NaN` width is rejected too.
+
+The `deviceorientation` handler two lines below had the same class of hole:
+it guarded `e.gamma != null` but then read `e.beta`, and `(null-45)` is `NaN`,
+which `Math.min`/`Math.max` propagate rather than clamp. Each axis now checks
+its own value.
+
+### Verification
+
+The deterministic reproduction goes **1 throw → 0**. 20/20 blocking checks and
+144 tests still pass. This is a pre-existing defect, present at `0ec01227` and
+every commit before it — not introduced by the commerce-flag work in the same
+branch, which the dual-commit reproduction is the proof of.

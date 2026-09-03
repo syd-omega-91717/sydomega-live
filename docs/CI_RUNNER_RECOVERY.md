@@ -76,12 +76,23 @@ Then run the registration command above. If `--local` is not recognised on the
 installed runner build, `.\config.cmd remove --token <TOKEN>` does the same
 with a token from the same page.
 
-**Put the token in a variable first.** Every failed attempt on record pasted
-the literal placeholder text instead of a token, because the command is long
-enough that the substitution is easy to miss:
+**Prompt for the token; never hand over a command to edit.** Every failed
+attempt on record sent the literal placeholder text as the token — first
+inline, then again after it was moved into a `$T = "..."` assignment. Both
+times the command was long enough that the substitution read as part of it. An
+invalid token gives a **404**, not an auth message, which does not look like a
+token problem:
+
+```
+Http response code: NotFound from 'POST https://api.github.com/actions/runner-registration'
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+```
+
+`Read-Host` removes the substitution entirely — it prompts, you paste, nothing
+in the command needs editing:
 
 ```powershell
-$T = "paste_the_real_token_between_these_quotes"
+$T = Read-Host "Paste the runner token"
 .\config.cmd --unattended --replace --runasservice --url https://github.com/syd-omega-91717/sydomega-live --token $T --name SYD-OMEGA-WIN --labels self-hosted,Windows,X64,syd-omega --work _work
 ```
 

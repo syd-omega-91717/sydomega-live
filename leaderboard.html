@@ -162,7 +162,7 @@ function renderTable(rows,myUid){
     var authEl=document.createElement('div');authEl.className='lb-auth-val';authEl.textContent=typeof auth==='number'?auth.toFixed(4):String(auth);
     var axaEl=document.createElement('div');axaEl.className='lb-axis-val';axaEl.style.color='var(--gold)';axaEl.textContent=Number(r.axis_a||0).toFixed(3);
     var axbEl=document.createElement('div');axbEl.className='lb-axis-val';axbEl.style.color='var(--cyan)';axbEl.textContent=Number(r.axis_b||0).toFixed(3);
-    var elemEl=document.createElement('div');elemEl.style.cssText='font-family:var(--M);font-size:8px;color:var(--muted);text-align:center';elemEl.textContent=(r.element||'?').toUpperCase().slice(0,5);
+    var elemEl=document.createElement('div');elemEl.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center';elemEl.textContent=(r.element||'?').toUpperCase().slice(0,5);
     row.appendChild(rankEl);row.appendChild(nameWrap);row.appendChild(authEl);row.appendChild(axaEl);row.appendChild(axbEl);row.appendChild(elemEl);
     el.appendChild(row);
   });

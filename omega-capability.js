@@ -55,34 +55,57 @@
   };
 
   /* ── REGISTER CAPABILITY ──────────────────────────────────────── */
+  /* A page with no CAP_DEFS entry has NO declared capability, and the
+     registration says so instead of inventing one.
+
+     This used to default to cap:'UNKNOWN_CAPABILITY', domain:'Platform',
+     owner:'Sovereign', slo:{p95:1000,avail:99.0} -- and the badge below
+     printed all four to the member. Measured 2026-09-03: 24 of 187 pages
+     have a definition, so 163 rendered the literal string
+     "UNKNOWN_CAPABILITY / PLATFORM . SOVEREIGN" at the right edge, with a
+     tooltip asserting an availability target nobody had committed to. That
+     is CLAUDE.md section 8.1 class 9 -- fabricated data rendered as fact --
+     on the majority of the estate.
+
+     Undeclared is now an honest, checkable state: `declared:false`, every
+     field it cannot know left null, no badge, no SLO evaluation. Declaring a
+     capability is adding it to CAP_DEFS, which is the one place that fact
+     lives. */
   function register(pageId, overrides){
-    var def = CAP_DEFS[pageId] || {};
+    var def = CAP_DEFS[pageId] || null;
     var cap = Object.assign({
       id: pageId,
-      cap: 'UNKNOWN_CAPABILITY',
-      domain: 'Platform',
-      owner: 'Sovereign',
+      declared: false,
+      cap: null,
+      domain: null,
+      owner: null,
       kpis: [],
-      slo: {p95: 1000, avail: 99.0},
+      slo: null,
       lifecycle: 'live',
       health: 'healthy',
       registered_at: Date.now(),
       page: location.pathname,
       version: '1.0'
-    }, def, overrides||{});
+    }, def||{}, overrides||{});
+    /* Declared means a real definition supplied the capability name -- from
+       CAP_DEFS or from an explicit override -- never from the defaults. */
+    cap.declared = !!cap.cap;
     REGISTRY[pageId] = cap;
     _currentCap = cap;
     /* Emit to OmegaOS event bus */
     if(window.OmegaOS) window.OmegaOS.events.emit('capability:registered', cap);
     /* Emit to telemetry */
-    if(window.OmegaTelemetry) window.OmegaTelemetry.track('capability_loaded', {cap:cap.cap, domain:cap.domain});
+    if(window.OmegaTelemetry) window.OmegaTelemetry.track('capability_loaded', {cap:cap.cap, domain:cap.domain, declared:cap.declared, page:cap.id});
     return cap;
   }
 
   /* ── SLO MONITORING ───────────────────────────────────────────── */
   function checkSLO(capId, actualP95Ms){
     var cap = REGISTRY[capId];
-    if(!cap) return null;
+    /* No declared capability means no declared SLO. Measuring a page against
+       an invented p95 would publish a breach event about a target the
+       platform never set. */
+    if(!cap || !cap.declared || !cap.slo) return null;
     var target = cap.slo.p95;
     var breach = actualP95Ms > target;
     if(breach){
@@ -94,7 +117,9 @@
 
   /* ── HEALTH BADGE INJECTION ───────────────────────────────────── */
   function injectCapabilityBadge(cap){
-    if(!cap||document.getElementById('omega-cap-badge')) return;
+    /* Only a declared capability gets a badge. An undeclared page shows
+       nothing rather than a placeholder that reads like data. */
+    if(!cap||!cap.declared||document.getElementById('omega-cap-badge')) return;
     var badge=document.createElement('div');
     badge.id='omega-cap-badge';
     badge.setAttribute('aria-label','Capability: '+cap.cap);

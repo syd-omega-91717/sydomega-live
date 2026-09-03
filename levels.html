@@ -166,7 +166,7 @@ function updateLevel(auth){
     var st=document.getElementById('lvst-'+l.n);
     if(auth>=l.thr){
       if(card)card.classList.add('earned');
-      if(st){st.textContent='EARNED';st.style.cssText='font-family:var(--M);font-size:7px;padding:2px 8px;border:1px solid rgba(63,178,127,.4);border-radius:10px;color:var(--green);background:rgba(63,178,127,.08)';}
+      if(st){st.textContent='EARNED';st.style.cssText='font-family:var(--M);font-size:12px;padding:2px 8px;border:1px solid rgba(63,178,127,.4);border-radius:10px;color:var(--green);background:rgba(63,178,127,.08)';}
     }
   });
   function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v);}

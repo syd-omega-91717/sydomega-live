@@ -5621,3 +5621,178 @@ conflicts with this repo's own rules:
 
 Enabling it changes the look of all 186 pages, so it is reported for the owner
 rather than switched on by a session that did not author it.
+
+---
+
+## Session 2026-09-03 (continued) — the interface stops asserting things it does not know
+
+### `UNKNOWN_CAPABILITY` was printed to members on 163 of 187 pages
+
+Found by looking at a real render rather than at the code: a screenshot of
+`social.html` carried a badge at the right edge reading **"UNKNOWN_CAPABILITY /
+PLATFORM · SOVEREIGN"**.
+
+`omega-capability.js:62` (before the fix) defaulted every unregistered page to:
+
+```js
+cap: 'UNKNOWN_CAPABILITY', domain: 'Platform', owner: 'Sovereign',
+slo: {p95: 1000, avail: 99.0}
+```
+
+and `injectCapabilityBadge()` rendered all of it, plus a `title` tooltip
+asserting `SLO: p95<1000ms | Avail: 99.0%`. Measured:
+
+```
+CAP_DEFS entries: 24
+pages: 187
+pages with NO definition -> UNKNOWN_CAPABILITY: 163
+```
+
+So the majority of the estate told the member which domain owned the page, which
+of the twelve agents was accountable for it, and what availability the platform
+committed to — none of it declared anywhere. That is section 8.1 class 9,
+fabricated data rendered as fact, and it is the same shape as `hercules.html`'s
+`Math.random()*100` and `ad-network.html`'s revenue figures.
+
+Fixed by making "undeclared" an honest state rather than a placeholder:
+
+* `declared:false` and `cap/domain/owner/slo: null` when no `CAP_DEFS` entry and
+  no explicit override supplied a capability name. `cap.declared = !!cap.cap`,
+  so the flag can never disagree with the data.
+* `injectCapabilityBadge()` returns early unless `cap.declared` — an undeclared
+  page shows nothing.
+* `checkSLO()` returns `null` unless `cap.declared`, so no `capability:slo_breach`
+  event is ever published against an invented target.
+* The telemetry event now carries `declared` and `page`, so the fact that most
+  pages are undeclared is *measurable* instead of hidden behind a placeholder.
+
+Verified with a real before/after render, the "before" pinned via `gitShow` so
+it ran the actual old module (section 8.4's rule — a `git stash` "before" runs
+the fixed code once the change is committed):
+
+```
+BEFORE  dashboard.html  COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN
+        social.html     UNKNOWN_CAPABILITY / PLATFORM · SOVEREIGN
+        vault.html      TREASURY_RESERVE / FINANCE · MERCHANT
+        habits.html     UNKNOWN_CAPABILITY / PLATFORM · SOVEREIGN
+AFTER   dashboard.html  COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN
+        social.html     (no badge)
+        vault.html      TREASURY_RESERVE / FINANCE · MERCHANT
+        habits.html     (no badge)
+```
+
+`window.OmegaCapability` has no consumers anywhere in the repo (grepped: one
+hit, its own definition), so the blast radius is exactly the badge, the event
+and the telemetry payload.
+
+### The keyboard-shortcut hint was shown to devices with no keyboard
+
+`omega-keyboard.js` popped "PRESS ? FOR KEYBOARD SHORTCUTS" once per session on
+every page — including phones, where there is no `?` to press and where it
+landed in the middle of a bottom chrome stack that is already short of room
+(nav bar 66px, controls dock, copilot button).
+
+Gated on `(hover:hover) and (pointer:fine)` — the media query for "there is a
+real pointer", which tracks having a real keyboard on every current browser. The
+shortcuts themselves stay bound, so an attached keyboard still works; only the
+unusable prompt is withheld. Measured:
+
+```
+BEFORE 390 mobile    pointer:coarse hover:none  ->  PRESS ? FOR KEYBOARD SHORTCUTS
+BEFORE 1440 desktop  pointer:fine   hover:hover ->  PRESS ? FOR KEYBOARD SHORTCUTS
+AFTER  390 mobile    pointer:coarse hover:none  ->  (no hint)
+AFTER  1440 desktop  pointer:fine   hover:hover ->  PRESS ? FOR KEYBOARD SHORTCUTS
+```
+
+### 92 glyph sequences rendered as colour emoji — the zodiac signs among them
+
+The brand is one palette on near-black. A colour emoji ignores it completely:
+the font supplies its own bitmap, so `color:var(--gold)` does nothing and the
+glyph lands as a saturated multicolour sticker inside monochrome typography.
+
+**A grep for the emoji planes is not the measurement.** It over-reports (✓ ★ ✕
+☰ ☱ ☲ ✦ ⚔ are typographic marks that belong here) and under-reports (the zodiac
+signs are ordinary BMP codepoints). The measurement that decided it: draw each
+candidate white-on-black to a canvas in the harness Chromium and read the pixels
+back — any channel spread means the font supplied a colour glyph.
+
+That measurement over every symbol in every client-shipped file returned **92
+colour sequences of 226 tested**, and two of them were not decoration:
+
+* **U+2648..U+2653, the twelve zodiac signs** — the platform's own sign system,
+  named in `omega-agents.json` and drawn on `agents`, `cosmos`, `horoscope`,
+  `houses`, `elements`. Their *default* Unicode presentation is emoji, so every
+  one of them had always shipped as a colour sticker rather than as gold type.
+* `⚡ ⚔ ❄ ❤ ☀ ☁ ⛈ 🌫` carried **U+FE0F (VS16)**, the selector that explicitly
+  *asks* for the colour form.
+
+The same measurement proved the fix: with **U+FE0E (VS15)** appended, all of
+`⏳ ☀ ♈..♓ ⚔ ⚡ ⛅ ⛈ ✍ ✨ ❄ ❤` came back monochrome. The astral plane
+(U+1F300..U+1FAFF) has no text form at all, so those 70 had to be replaced.
+
+Applied in three passes over every root `.html`/`.js`/`.json` (35 files
+rewritten):
+
+1. Astral-plane pictographs → a curated brand mark, one per glyph, each verified
+   monochrome and non-blank in the same canvas measurement. The map is
+   thematic, not arbitrary: `🔥→△` and `🌊→▽` are the fire and water triangles
+   the element system already uses, `🌑..🌘 → ○ ◔ ◑ ◕ ● ◕ ◐ ◔` is the moon
+   filling, `📖→▤ 📚→▥ 📜→▧ 📓→▦ 📋→▨ 📊→▩` reads as a page-density series,
+   `🏆→♔ 👑→♕ 🔱→♆ 🔬→⚗ 🔐→⚿ 🏠→⌂`. Within-file collisions were checked
+   programmatically and resolved (`🌦→⌇` away from `🌧→☂`, `🌀→⊙` away from
+   `🔮→⌾`).
+2. Every remaining U+FE0F → U+FE0E.
+3. Every bare BMP codepoint with `Emoji_Presentation=Yes` → same character plus
+   U+FE0E. The character is *pinned*, never removed, so the zodiac signs keep
+   their meaning and gain the brand's colour.
+
+Re-measured after the sweep: **175 distinct glyph sequences remain across the
+whole shipped surface and 0 render in colour.**
+
+Gated by `scripts/brand-glyph-check.py` (blocking, gate 15 of the contract
+suite). Its "0 findings" was verified real per section 8.4 — run against the
+pre-sweep tree from `git archive HEAD` it reports **277 occurrences in 35 files
+and exits 1**. First implementation looped per character and cost 9.3s across
+357 files, more than every other static gate combined on the serial runner; a
+compiled character class brought it to **0.097s**.
+
+Not covered, deliberately: four `supabase/*.sql` files carry an emoji inside a
+SQL comment. They are not client-shipped, and editing an already-applied
+migration is a worse idea than the comment.
+
+### The 12px type floor was enforced on three surfaces out of five
+
+Found by reading the glyph-sweep diff, not by the gate: `sigil.html`'s "LOCALLY
+SEALED — PENDING LEDGER SYNC" notice sits at **6px**, and
+`scripts/type-scale.py --check` reported clean. The floor was real; the sweep's
+coverage was not.
+
+`process()` looked at `<style>` blocks and quoted `style="…"` attributes in
+pages, plus whole root `.js` files. Two surfaces were invisible to it:
+
+```
+33 declarations, 9 pages   font-size inside a page's own <script> block
+                           (control-plane 20, world-shell 4, chatbot 2, …)
+                           sizes 6,7,8,9,10,11px
+
+28 declarations, 5 pages   font-size inside an UNQUOTED style= attribute
+                           (ad-network 13, creator 6, project-studio 4, …)
+                           sizes 7,8,9,10px
+```
+
+The second is the subtler one. Several pages ship minified with no attribute
+quotes at all — `style=font-family:var(--M);font-size:7px;color:var(--muted)` —
+and the quoted `STYLE_ATTR` pattern cannot match that. An unquoted attribute
+value ends at whitespace or `>`, so `STYLE_ATTR_UNQ` matches exactly that shape
+and the rewritten attribute stays unquoted.
+
+Both surfaces are now swept, with the same guarantee as the root-`.js` pass:
+only a bare `px` literal is rewritten, so a computed size (`'font-size:'+n+'px'`)
+has no digits to match and is skipped, and only the number changes so the
+surrounding JS or markup syntax cannot move. 61 declarations rescaled, all of
+them *up* to the 12px floor.
+
+Verified: `--check` clean and idempotent (a second `--apply` rescales 0);
+`scripts/check-inline-js.py` still parses every inline block; the diff on
+`ad-network.html` shows the attributes still unquoted with only the numeral
+changed.

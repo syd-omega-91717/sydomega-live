@@ -396,10 +396,10 @@ function renderInsights(){
     if(rituals.filter(r=>done[r.id]).length===rituals.length) hit++;
   }
   const insights=[
-    {icon:'⚡',text:`You completed full protocol on <strong style="color:var(--gold)">${hit}/7</strong> days this week. ${hit>=5?'Sovereign consistency achieved.':hit>=3?'Solid foundation — push to 5+ days.':'Build the chain — one day at a time.'}`},
-    {icon:'🌅',text:`Morning rituals prime your prefrontal cortex. Each morning completion increases your day-quality score by an estimated <strong style="color:var(--gold)">23%</strong> based on neuroscience research.`},
-    {icon:'🌙',text:`Evening shutdown rituals reduce next-day cognitive overhead by clearing open loops. Aim for 100% completion of your wind-down protocol.`},
-    {icon:'📈',text:`Compound effect: completing just 3 rituals daily for 30 days creates <strong style="color:var(--gold)">90 completion events</strong> — each one reinforcing neural pathways for sovereignty.`},
+    {icon:'⚡︎',text:`You completed full protocol on <strong style="color:var(--gold)">${hit}/7</strong> days this week. ${hit>=5?'Sovereign consistency achieved.':hit>=3?'Solid foundation — push to 5+ days.':'Build the chain — one day at a time.'}`},
+    {icon:'☀︎',text:`Morning rituals prime your prefrontal cortex. Each morning completion increases your day-quality score by an estimated <strong style="color:var(--gold)">23%</strong> based on neuroscience research.`},
+    {icon:'☾',text:`Evening shutdown rituals reduce next-day cognitive overhead by clearing open loops. Aim for 100% completion of your wind-down protocol.`},
+    {icon:'▲',text:`Compound effect: completing just 3 rituals daily for 30 days creates <strong style="color:var(--gold)">90 completion events</strong> — each one reinforcing neural pathways for sovereignty.`},
   ];
   document.getElementById('insight-list').innerHTML=insights.map(i=>`
     <div class="insight-box">

@@ -415,7 +415,7 @@ function toggleBookmark(item){
 window.renderBookmarks=function(){
   var list=document.getElementById('bookmarksList');
   if(!bookmarks.length){list.innerHTML='<div class="empty">NO BOOKMARKS YET<br><br>DISCOVER KNOWLEDGE AND SAVE TO BUILD YOUR SOVEREIGN CODEX</div>';return;}
-  var icons={wikipedia:'📖',arxiv:'🔬',openlibrary:'📚'};
+  var icons={wikipedia:'▤',arxiv:'⚗',openlibrary:'▥'};
   list.innerHTML='';
   bookmarks.forEach(function(b,i){
     var item=document.createElement('div');item.className='bm-item';

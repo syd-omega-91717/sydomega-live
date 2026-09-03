@@ -192,26 +192,26 @@ var __omegaUser=null;
 })();
 
 var DAILY_MISSIONS=[
-  {id:'d01',icon:'📖',title:'SOVEREIGN READING',desc:'Read for 20 uninterrupted minutes from any source in your Codex.',xp:50,element:'MIND',tier:'daily',est:'20 min'},
+  {id:'d01',icon:'▤',title:'SOVEREIGN READING',desc:'Read for 20 uninterrupted minutes from any source in your Codex.',xp:50,element:'MIND',tier:'daily',est:'20 min'},
   {id:'d02',icon:'⚔',title:'DISCIPLINE HOLD',desc:'Complete one task you have been delaying for more than 24 hours.',xp:75,element:'METAL',tier:'daily',est:'Variable'},
-  {id:'d03',icon:'🔥',title:'MORNING PROTOCOL',desc:'Log in before 09:00 and activate your dedication chronometer.',xp:40,element:'FIRE',tier:'daily',est:'5 min'},
-  {id:'d04',icon:'🌊',title:'STRATEGIC PAUSE',desc:'Spend 10 minutes in structured stillness — no screens, no sound.',xp:60,element:'WATER',tier:'daily',est:'10 min'},
-  {id:'d05',icon:'✍',title:'SOVEREIGN OATH',desc:'Write and seal a new sworn declaration in the Oath Registry.',xp:80,element:'SOUL',tier:'daily',est:'10 min'},
-  {id:'d06',icon:'📊',title:'INTELLIGENCE REVIEW',desc:'Review the Signal board and note 3 meaningful insights.',xp:55,element:'WIND',tier:'daily',est:'15 min'},
-  {id:'d07',icon:'🌐',title:'CODEX EXPEDITION',desc:'Search and bookmark one new article from the Knowledge Codex.',xp:45,element:'SPACE',tier:'daily',est:'10 min'},
+  {id:'d03',icon:'△',title:'MORNING PROTOCOL',desc:'Log in before 09:00 and activate your dedication chronometer.',xp:40,element:'FIRE',tier:'daily',est:'5 min'},
+  {id:'d04',icon:'▽',title:'STRATEGIC PAUSE',desc:'Spend 10 minutes in structured stillness — no screens, no sound.',xp:60,element:'WATER',tier:'daily',est:'10 min'},
+  {id:'d05',icon:'✍︎',title:'SOVEREIGN OATH',desc:'Write and seal a new sworn declaration in the Oath Registry.',xp:80,element:'SOUL',tier:'daily',est:'10 min'},
+  {id:'d06',icon:'▩',title:'INTELLIGENCE REVIEW',desc:'Review the Signal board and note 3 meaningful insights.',xp:55,element:'WIND',tier:'daily',est:'15 min'},
+  {id:'d07',icon:'⊛',title:'CODEX EXPEDITION',desc:'Search and bookmark one new article from the Knowledge Codex.',xp:45,element:'SPACE',tier:'daily',est:'10 min'},
 ];
 var WEEKLY_MISSIONS=[
-  {id:'w01',icon:'🏆',title:'GATE ADVANCEMENT',desc:'Increase your Authority score by at least 0.05 points this week.',xp:300,element:'ALL',tier:'weekly',est:'7 days',progress:60},
-  {id:'w02',icon:'🔬',title:'RESEARCH SUBMISSION',desc:'Save and annotate 5 arXiv papers in your Knowledge Codex.',xp:250,element:'MIND',tier:'weekly',est:'3-4 hours',progress:40},
-  {id:'w03',icon:'⚡',title:'STREAK FORGE',desc:'Complete your daily dedication for 7 consecutive days.',xp:500,element:'FIRE',tier:'weekly',est:'7 days',progress:28},
-  {id:'w04',icon:'🌍',title:'TRIBE ENGAGEMENT',desc:'View and engage with 3 members of a different element tribe.',xp:200,element:'COSMOS',tier:'weekly',est:'30 min',progress:66},
-  {id:'w05',icon:'💡',title:'INNOVATION LOG',desc:'Write 3 new ideas in the Forge and complete at least one.',xp:350,element:'WIND',tier:'weekly',est:'2 hours',progress:33},
+  {id:'w01',icon:'♔',title:'GATE ADVANCEMENT',desc:'Increase your Authority score by at least 0.05 points this week.',xp:300,element:'ALL',tier:'weekly',est:'7 days',progress:60},
+  {id:'w02',icon:'⚗',title:'RESEARCH SUBMISSION',desc:'Save and annotate 5 arXiv papers in your Knowledge Codex.',xp:250,element:'MIND',tier:'weekly',est:'3-4 hours',progress:40},
+  {id:'w03',icon:'⚡︎',title:'STREAK FORGE',desc:'Complete your daily dedication for 7 consecutive days.',xp:500,element:'FIRE',tier:'weekly',est:'7 days',progress:28},
+  {id:'w04',icon:'⊕',title:'TRIBE ENGAGEMENT',desc:'View and engage with 3 members of a different element tribe.',xp:200,element:'COSMOS',tier:'weekly',est:'30 min',progress:66},
+  {id:'w05',icon:'✧',title:'INNOVATION LOG',desc:'Write 3 new ideas in the Forge and complete at least one.',xp:350,element:'WIND',tier:'weekly',est:'2 hours',progress:33},
 ];
 var LEGENDARY_MISSIONS=[
-  {id:'l01',icon:'👑',title:'THE SOVEREIGN TRIAL',desc:'Maintain a 30-day unbroken daily dedication streak.',xp:5000,element:'THE ALL',tier:'legendary',est:'30 days',progress:0},
+  {id:'l01',icon:'♕',title:'THE SOVEREIGN TRIAL',desc:'Maintain a 30-day unbroken daily dedication streak.',xp:5000,element:'THE ALL',tier:'legendary',est:'30 days',progress:0},
   {id:'l02',icon:'⚔',title:'GATE XII ASCENSION',desc:'Reach Gate XII — the APEX threshold. Authority must surpass 27.1.',xp:10000,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
-  {id:'l03',icon:'📜',title:'THE CODEX MASTER',desc:'Bookmark 100 items across Wikipedia, arXiv, and Open Library.',xp:3000,element:'MIND',tier:'legendary',est:'30+ days',progress:0},
-  {id:'l04',icon:'🌌',title:'ELEMENT CONVERGENCE',desc:'Score above 80 on all 8 Sovereign DNA attributes simultaneously.',xp:7500,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
+  {id:'l03',icon:'▧',title:'THE CODEX MASTER',desc:'Bookmark 100 items across Wikipedia, arXiv, and Open Library.',xp:3000,element:'MIND',tier:'legendary',est:'30+ days',progress:0},
+  {id:'l04',icon:'✷',title:'ELEMENT CONVERGENCE',desc:'Score above 80 on all 8 Sovereign DNA attributes simultaneously.',xp:7500,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
 ];
 
 var today=new Date().toISOString().slice(0,10);
@@ -362,7 +362,7 @@ function renderHeatmap(){
     var cell=document.createElement('div');cell.className='hm-cell';cell.style.background=col;
     cell.title=key+': '+xp+' XP';
     wrap.appendChild(cell);
-    if(d%7===0){var lbl=document.createElement('div');lbl.style.cssText='font-family:var(--M);font-size:6px;color:var(--muted);text-align:center;margin-top:2px';lbl.textContent=date.getDate();wrap.appendChild(lbl);}
+    if(d%7===0){var lbl=document.createElement('div');lbl.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;margin-top:2px';lbl.textContent=date.getDate();wrap.appendChild(lbl);}
     grid.appendChild(wrap);
   }
 }

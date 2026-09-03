@@ -207,6 +207,19 @@
 
   /* ── VISUAL FEEDBACK: page-top shortcut hint (first-time users) ── */
   (function showFirstTimeHint(){
+    /* A touch device has no `?` key to press, so the hint there is an
+       instruction the member cannot follow -- and it lands in the middle of
+       the bottom chrome stack (nav bar, controls dock, copilot button) that
+       a phone is already short of room for. `(hover:hover) and
+       (pointer:fine)` is the media query for "there is a real pointer", which
+       on every current browser tracks having a real keyboard too; a desktop
+       browser in responsive-preview mode correctly reports coarse, so the
+       hint is suppressed exactly where the shortcut does not exist.
+       The shortcuts themselves stay bound -- an attached keyboard still
+       works; only the unusable prompt is withheld. */
+    try{
+      if(window.matchMedia && !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    }catch(e){ /* no matchMedia -- fall through and show it */ }
     try{
       if(sessionStorage.getItem('omega_kb_hint_shown')) return;
       sessionStorage.setItem('omega_kb_hint_shown','1');

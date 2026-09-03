@@ -79,7 +79,7 @@
       <div class="weather-panel">
         <div class="wx-loc" id="wxLoc">DETECTING LOCATION…</div>
         <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:36px" id="wxIcon">🌤</span>
+          <span style="font-size:36px" id="wxIcon">☀︎</span>
           <div>
             <div class="wx-temp" id="wxTemp">—°</div>
             <div class="wx-desc" id="wxDesc" style="min-height:9px" data-loading></div>
@@ -229,18 +229,18 @@ if(!todayBrief){
 /* WEATHER via Open-Meteo (free, no key) */
 (function(){
   var WMO={0:'CLEAR SKY',1:'MAINLY CLEAR',2:'PARTLY CLOUDY',3:'OVERCAST',45:'FOG',48:'ICY FOG',51:'LIGHT DRIZZLE',53:'DRIZZLE',55:'HEAVY DRIZZLE',61:'LIGHT RAIN',63:'RAIN',65:'HEAVY RAIN',71:'LIGHT SNOW',73:'SNOW',75:'HEAVY SNOW',80:'LIGHT SHOWERS',81:'SHOWERS',82:'HEAVY SHOWERS',95:'THUNDERSTORM',96:'THUNDERSTORM+HAIL'};
-  var ICONS={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌧',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'❄️',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈'};
+  var ICONS={0:'☀︎',1:'☀︎',2:'⛅︎',3:'☁︎',45:'≋',48:'≋',51:'⌇',53:'☂',55:'☂',61:'☂',63:'☂',65:'☂',71:'❄︎',73:'❄︎',75:'❄︎',80:'⌇',81:'☂',82:'⛈︎',95:'⛈︎',96:'⛈︎'};
   if(!navigator.geolocation){document.getElementById('wxLoc').textContent='GEOLOCATION NOT SUPPORTED';return;}
   navigator.geolocation.getCurrentPosition(function(pos){
     var lat=pos.coords.latitude.toFixed(4),lon=pos.coords.longitude.toFixed(4);
     fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,uv_index&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto')
       .then(function(r){return r.json();}).then(function(d){
         var c=d.current,code=c.weather_code;
-        document.getElementById('wxIcon').textContent=ICONS[code]||'🌤';
+        document.getElementById('wxIcon').textContent=ICONS[code]||'☀︎';
         document.getElementById('wxTemp').textContent=Math.round(c.temperature_2m)+'°C';
         document.getElementById('wxDesc').textContent=WMO[code]||'CLEAR';
         document.getElementById('wxDetail').textContent='Wind '+Math.round(c.wind_speed_10m)+' km/h · Humidity '+c.relative_humidity_2m+'% · UV '+Math.round(c.uv_index||0);
-        document.getElementById('wxLoc').textContent='📍 '+lat+'°N '+lon+'°E';
+        document.getElementById('wxLoc').textContent='⌖ '+lat+'°N '+lon+'°E';
       }).catch(function(){document.getElementById('wxLoc').textContent='WEATHER UNAVAILABLE';});
   },function(){document.getElementById('wxLoc').textContent='LOCATION PERMISSION DENIED';document.getElementById('wxDesc').textContent='ENABLE LOCATION FOR WEATHER';});
 })();

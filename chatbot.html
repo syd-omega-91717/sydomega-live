@@ -122,7 +122,7 @@ function addMsg(role,text){
 function addTyping(){
   var log=document.getElementById('chat-log');if(!log)return null;
   var d=document.createElement('div');d.className='bub ai';
-  d.style.cssText='color:rgba(201,168,76,.5);font-family:var(--M);font-size:10px;letter-spacing:3px';d.textContent='...';
+  d.style.cssText='color:rgba(201,168,76,.5);font-family:var(--M);font-size:12px;letter-spacing:3px';d.textContent='...';
   log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
 }
 
@@ -132,7 +132,7 @@ function renderSessionLog(){
   box.innerHTML='';
   _history.forEach(function(h){
     var d=document.createElement('div');
-    d.style.cssText='font-family:var(--M);font-size:9px;letter-spacing:.5px;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.08);color:'+(h.role==='user'?'var(--cyan)':'var(--ink)');
+    d.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:.5px;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.08);color:'+(h.role==='user'?'var(--cyan)':'var(--ink)');
     d.textContent=(h.role==='user'?'YOU: ':'Ω ')+h.content;
     box.appendChild(d);
   });

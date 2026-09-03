@@ -286,14 +286,14 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
       row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)';
       var isMe=m.name===(pr.display_name||'Sovereign');
       var numSpan=document.createElement('span');
-      numSpan.style.cssText='font-family:var(--D);font-size:10px;color:var(--muted);margin-right:10px';
+      numSpan.style.cssText='font-family:var(--D);font-size:12px;color:var(--muted);margin-right:10px';
       numSpan.textContent=String(i+1).padStart(2,'0');
       var nameSpan=document.createElement('span');
       nameSpan.style.color=isMe?'var(--gold)':'var(--muted)';
       nameSpan.appendChild(numSpan);
       nameSpan.appendChild(document.createTextNode(m.name));
       var authSpan=document.createElement('span');
-      authSpan.style.cssText='font-family:var(--D);font-size:11px;color:'+(isMe?'var(--solar)':'var(--ink)');
+      authSpan.style.cssText='font-family:var(--D);font-size:12px;color:'+(isMe?'var(--solar)':'var(--ink)');
       authSpan.textContent=m.auth.toFixed(4);
       row.appendChild(nameSpan);
       row.appendChild(authSpan);

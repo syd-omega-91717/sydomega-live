@@ -222,7 +222,7 @@ async function searchBooks(){
       const added=inShelf(key);
       return `<div class="book-card card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
         ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
-          :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span><span>${title.slice(0,30)}</span></div>`}
+          :`<div class="book-cover-placeholder"><span style="font-size:28px">▥</span><span>${title.slice(0,30)}</span></div>`}
         <div class="book-info">
           <div class="book-title">${title}</div>
           <div class="book-author">${author}</div>
@@ -268,7 +268,7 @@ async function loadFeatured(){
           const added=inShelf(key);
           return `<div class="book-card card">
             ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
-              :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span></div>`}
+              :`<div class="book-cover-placeholder"><span style="font-size:28px">▥</span></div>`}
             <div class="book-info">
               <div class="book-title">${title}</div>
               <div class="book-author">${author}</div>
@@ -301,7 +301,7 @@ function renderShelf(){
     shelf.map(b=>`
       <div class="shelf-item">
         <div class="shelf-cover">
-          ${b.cover?`<img src="${b.cover}" alt="${b.title}">`:'📚'}
+          ${b.cover?`<img src="${b.cover}" alt="${b.title}">`:'▥'}
         </div>
         <div class="shelf-body">
           <div class="sb-title">${b.title}</div>

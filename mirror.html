@@ -89,11 +89,11 @@ canvas.pattern-canvas{width:100%;display:block}
     <div>
       <div class="slider-label" style="margin-bottom:8px">EMOTIONAL STATE</div>
       <div class="mood-grid" id="moodGrid">
-        <div class="mood-btn" data-mood="1">😤<div class="mood-label">TURBULENT</div></div>
-        <div class="mood-btn" data-mood="2">😔<div class="mood-label">SUBDUED</div></div>
-        <div class="mood-btn" data-mood="3">😐<div class="mood-label">NEUTRAL</div></div>
-        <div class="mood-btn" data-mood="4">😌<div class="mood-label">FOCUSED</div></div>
-        <div class="mood-btn" data-mood="5">⚡<div class="mood-label">SOVEREIGN</div></div>
+        <div class="mood-btn" data-mood="1">○<div class="mood-label">TURBULENT</div></div>
+        <div class="mood-btn" data-mood="2">◔<div class="mood-label">SUBDUED</div></div>
+        <div class="mood-btn" data-mood="3">◑<div class="mood-label">NEUTRAL</div></div>
+        <div class="mood-btn" data-mood="4">◕<div class="mood-label">FOCUSED</div></div>
+        <div class="mood-btn" data-mood="5">⚡︎<div class="mood-label">SOVEREIGN</div></div>
       </div>
     </div>
     <div class="slider-row">
@@ -235,11 +235,11 @@ var selectedTags=new Set();
 var todayEntry=entries.find(function(e){return e.date===today;});
 
 var MOODS=[
-  {icon:'😤',label:'TURBULENT',color:'rgba(200,50,50,.6)'},
-  {icon:'😔',label:'SUBDUED',color:'rgba(100,100,200,.6)'},
-  {icon:'😐',label:'NEUTRAL',color:'rgba(138,134,118,.5)'},
-  {icon:'😌',label:'FOCUSED',color:'rgba(201,168,76,.7)'},
-  {icon:'⚡',label:'SOVEREIGN',color:'rgba(0,255,136,.7)'}
+  {icon:'○',label:'TURBULENT',color:'rgba(200,50,50,.6)'},
+  {icon:'◔',label:'SUBDUED',color:'rgba(100,100,200,.6)'},
+  {icon:'◑',label:'NEUTRAL',color:'rgba(138,134,118,.5)'},
+  {icon:'◕',label:'FOCUSED',color:'rgba(201,168,76,.7)'},
+  {icon:'⚡︎',label:'SOVEREIGN',color:'rgba(0,255,136,.7)'}
 ];
 
 function toast(msg){

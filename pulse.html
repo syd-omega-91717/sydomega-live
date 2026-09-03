@@ -526,7 +526,7 @@ var CITIES=[
   {name:'RIYADH',lat:24.69,lon:46.72,tz:'Asia/Riyadh'},
 ];
 var WMO_CODES={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Icy fog',51:'Light drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',80:'Showers',85:'Snow showers',95:'Thunderstorm',99:'Heavy thunderstorm'};
-var WMO_ICONS={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',61:'🌧️',63:'🌧️',65:'🌧️',71:'❄️',73:'❄️',80:'🌦️',85:'🌨️',95:'⛈️',99:'⛈️'};
+var WMO_ICONS={0:'☀︎',1:'☀︎',2:'⛅︎',3:'☁︎',45:'≋',48:'≋',51:'⌇',61:'☂',63:'☂',65:'☂',71:'❄︎',73:'❄︎',80:'⌇',85:'❄︎',95:'⛈︎',99:'⛈︎'};
 async function fetchWeather(){
   var grid=document.getElementById('weather-grid');
   if(grid)grid.innerHTML='<div class="loading" style="grid-column:1/-1">LOADING WEATHER</div>';
@@ -549,7 +549,7 @@ function renderWeather(results){
   grid.innerHTML=results.map(function(r){
     var d=r.data;
     var code=d.weather_code||0;
-    var icon=WMO_ICONS[code]||'🌐';
+    var icon=WMO_ICONS[code]||'⊛';
     var desc=WMO_CODES[code]||'Unknown';
     var temp=typeof d.temperature_2m==='number'?d.temperature_2m.toFixed(1)+'°C':'--';
     var humidity=d.relative_humidity_2m||'--';

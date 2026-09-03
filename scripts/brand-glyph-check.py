@@ -50,6 +50,7 @@ Usage:
 
 import io
 import os
+import html as _html
 import re
 import sys
 
@@ -59,7 +60,32 @@ VS16 = '️'   # requests the colour (emoji) form
 VS15 = '︎'   # requests the monochrome (text) form
 
 # No text presentation exists for these -- they can only be replaced.
-ASTRAL = re.compile('[\U0001F300-\U0001FAFF]')
+#
+# NOT the whole 1F300-1FAFF span, which was the first version of this rule and
+# over-reported. That span also contains blocks that are ordinary monochrome
+# typography, and this repo uses one of them: consultancy.html draws U+1F701,
+# an ALCHEMICAL SYMBOL, which the old range called a colour emoji. Measured by
+# drawing each candidate white-on-black to a canvas in the harness Chromium and
+# reading the pixels back -- channel spread means the font supplied its own
+# colour:
+#
+#     U+1F701 alchemical           spread   0  monochrome
+#     U+1F780 geometric extended   spread   0  monochrome
+#     U+1FA00 chess                spread   0  monochrome
+#     U+1F3A4 microphone           spread  76  COLOUR
+#     U+1F3C6 trophy               spread 231  COLOUR
+#     U+25CF  black circle         spread   0  monochrome  (control)
+#
+# So the rule is the emoji sub-ranges, not the span between them. The excluded
+# blocks are Ornamental Dingbats, Alchemical, Geometric Shapes Extended,
+# Supplemental Arrows-C and Chess Symbols.
+ASTRAL = re.compile(
+    '[\U0001F300-\U0001F64F'     # pictographs, transport start, emoticons
+    '\U0001F680-\U0001F6FF'      # transport and map
+    '\U0001F7E0-\U0001F7EB'      # the coloured circles and squares
+    '\U0001F900-\U0001F9FF'      # supplemental symbols and pictographs
+    '\U0001FA70-\U0001FAFF]'     # symbols and pictographs extended-A
+)
 
 # BMP codepoints with Emoji_Presentation=Yes: colour unless pinned with VS15.
 # Ranges are inclusive pairs, from the Unicode emoji-data property file.
@@ -102,8 +128,79 @@ def surfaces():
                 yield 'i18n/' + name, os.path.join(i18n, name)
 
 
+# An entity is decoded by the browser before it is ever painted, so
+# `&#127805;` renders exactly the same corn emoji as the literal character --
+# but a scan over raw source sees six ASCII digits and reports nothing.
+# Measured 2026-09-03: 11 shipped files carried astral-plane codepoints in this
+# form and 9 of them painted a colour emoji in a real render, with this gate
+# green the whole time. Decoding a short window rather than the entity alone
+# lets a FOLLOWING variation selector (itself often an entity) be seen, so
+# `&#9889;&#65038;` is correctly read as already pinned to its text form.
+ENTITY = re.compile(r'&(?:#[xX][0-9A-Fa-f]{1,6}|#[0-9]{1,7}|[A-Za-z][A-Za-z0-9]{1,31});')
+
+
+def decoded_window(text, start):
+    """The characters this entity actually paints, plus what follows it."""
+    try:
+        return _html.unescape(text[start:start + 48])
+    except Exception:
+        return ''
+
+
+def scan_entities(text):
+    out = []
+    for m in ENTITY.finditer(text):
+        win = decoded_window(text, m.start())
+        if not win or win.startswith('&'):
+            continue
+        head = win[0]
+        if ASTRAL.match(head):
+            out.append((m.start(), head,
+                        'astral-plane pictograph written as %s -- the browser decodes '
+                        'it, so it paints in colour; replace it' % m.group(0)))
+        elif win[1:2] == VS16:
+            out.append((m.start(), head,
+                        '%s is followed by U+FE0F, which requests the colour '
+                        'form -- use U+FE0E' % m.group(0)))
+        elif EMOJI_DEFAULT.match(win):
+            out.append((m.start(), head,
+                        '%s defaults to colour -- append U+FE0E (&#65038;)' % m.group(0)))
+    return out
+
+
+# A third encoding, found the same way: `'\u{1F311}'` in a JS source file is
+# eight ASCII characters, so neither the literal-codepoint scan nor the entity
+# scan sees it -- yet the engine turns it into a colour emoji before it is ever
+# painted. horoscope.html builds its whole lunar-phase table this way, and a
+# real render showed U+1F316 on the page while this gate was green.
+JS_ESCAPE = re.compile(r'\\u\{([0-9A-Fa-f]{1,6})\}|\\u([Dd][89ABab][0-9A-Fa-f]{2})\\u([Dd][C-Fc-f][0-9A-Fa-f]{2})')
+
+
+def scan_js_escapes(text):
+    out = []
+    for m in JS_ESCAPE.finditer(text):
+        if m.group(1):
+            cp = int(m.group(1), 16)
+        else:
+            hi, lo = int(m.group(2), 16), int(m.group(3), 16)
+            cp = 0x10000 + ((hi - 0xD800) << 10) + (lo - 0xDC00)
+        if cp > 0x10FFFF:
+            continue
+        ch = chr(cp)
+        if ASTRAL.match(ch):
+            out.append((m.start(), ch,
+                        'astral-plane pictograph written as the escape %s -- the engine '
+                        'decodes it, so it paints in colour; replace it' % m.group(0)))
+        elif EMOJI_DEFAULT.match(ch):
+            out.append((m.start(), ch,
+                        'escape %s defaults to colour -- append U+FE0E' % m.group(0)))
+    return out
+
+
 def scan(name, text):
     out = []
+    out.extend(scan_entities(text))
+    out.extend(scan_js_escapes(text))
     for m in ASTRAL.finditer(text):
         out.append((m.start(), m.group(0), 'astral-plane pictograph, no text form -- replace it'))
     for m in re.finditer(VS16, text):

@@ -89,7 +89,7 @@
       _btn.style.background=state?'rgba(0,229,255,.2)':'linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.05))';
       _btn.style.borderColor=state?'var(--cyan,#00E5FF)':'rgba(201,168,76,.3)';
       _btn.setAttribute('aria-pressed',state?'true':'false');
-      _btn.textContent=state?'\uD83C\uDFA4':'';  /* mic emoji when listening */
+      _btn.textContent=state?'\u25C9':'';  /* a live mark while listening -- U+25C9, not the colour mic emoji */
       _btn.style.fontSize=state?'18px':'14px';
     }
   }

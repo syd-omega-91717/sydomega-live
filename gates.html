@@ -141,7 +141,7 @@ function renderGates(auth){
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:'+dc+';border:1px solid '+dc+';padding:1px 5px">'+g.domain+'</div>'
       +(st==='mastered'?'<div style="font-family:var(--M);font-size:12px;color:var(--green);margin-left:auto">&#10003; MASTERED</div>'
         :st==='open'?'<div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">UNLOCKED</div>'
-        :'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">&#128274; AUTH&ge;'+g.auth.toFixed(2)+'</div>')
+        :'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">&#9635; AUTH&ge;'+g.auth.toFixed(2)+'</div>')
       +'</div>'
       +'<div style="font-family:var(--D);font-size:12px;color:'+(st==='mastered'?dc:st==='open'?'var(--gold)':'var(--muted)')+';margin-bottom:6px">'+g.title+'</div>'
       +'<div style="font-size:12px;color:var(--ink);opacity:.75;line-height:1.6;margin-bottom:8px">'+g.desc+'</div>'

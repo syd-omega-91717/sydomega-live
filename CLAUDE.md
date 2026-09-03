@@ -497,9 +497,9 @@ open, recorded in `FIXES_LOG.md`:
 - **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined;
-  `.vercelignore` keeps both out of the deploy, so this is hygiene debt. A fix
-  means history rewrite + force-push — never without explicit permission.
+- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined.
+  `.vercelignore` keeps both out of the deploy; a fix needs a history rewrite,
+  never without explicit permission.
 - **Member location is not collected.** Live 2026-08-29: `profiles.country`
   exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
   in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
@@ -605,7 +605,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **175** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **179** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -616,7 +616,7 @@ entries (which were accurate when written):
 | `python3 scripts/release-gate.py` | PASSED |
 | `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
 | `python3 scripts/commerce-contract.py` | 0 findings |
-| `python3 scripts/brand-glyph-check.py` | 0 colour-emoji glyphs across 357 shipped files |
+| `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
 | `./scripts/ci-local.sh` | **22** blocking checks, all passing |
@@ -730,11 +730,9 @@ entries (which were accurate when written):
   `python3 scripts/omega-registry.py --check` regenerates the whole census and
   fails on drift. When adding a fact that is a *number*, put it in the generator,
   not the paragraph.
-- **Ask a script what it does before reading it.** All 18 `scripts/*.py|sh` now
-  answer `--help` with their module docstring and exit 0 (they previously ran the
-  full job instead, which for the five `register-*`/`patch-*`/`fix-*` writers was
-  an unrequested write). One `--help` call is far cheaper than reading the file,
-  which matters here for the reason §8.4's context note gives.
+- **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
+  answers `--help` with its docstring and exits 0 — far cheaper than reading the
+  file, and a test keeps it true.
 - **External repo research is partly blocked at the egress proxy.**
   `raw.githubusercontent.com` returns 200, so named files (`README.md`,
   `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
@@ -755,7 +753,10 @@ entries (which were accurate when written):
   presentation, so the platform's own sign system shipped as colour stickers.
   Draw each candidate white-on-black to a canvas in the harness Chromium and
   read the pixels back: channel spread means a colour glyph, and U+FE0E fixes
-  the BMP ones in place. `scripts/brand-glyph-check.py` gates it.
+  the BMP ones in place. `scripts/brand-glyph-check.py` gates it, and must scan
+  all three encodings — literal, `&#127805;`, `'\u{1F311}'` — since every one
+  decodes before paint; it flags only the emoji sub-ranges, because Alchemical,
+  Chess and Geometric-Extended sit in the same span and are monochrome type.
 - **Runtime verification is automated — use it before claiming a UI or
   data-layer change works.** `node scripts/verify-runtime.js` renders the
   capability entrypoints headless and asserts load / approval-guard-lifts /

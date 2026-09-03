@@ -17,18 +17,18 @@
 
   // sign -> { glyph entity, colour (element-anchored) }
   var SIGN = {
-    Aries:      { g: '&#x2648;', c: '#E86A3A' }, // Fire
-    Leo:        { g: '&#x264C;', c: '#E2A63A' }, // Fire
-    Sagittarius:{ g: '&#x2650;', c: '#E8863A' }, // Fire
-    Cancer:     { g: '&#x264B;', c: '#34C6E6' }, // Water
-    Scorpio:    { g: '&#x264F;', c: '#2E6ED2' }, // Water
-    Pisces:     { g: '&#x2653;', c: '#00E5FF' }, // Water
-    Gemini:     { g: '&#x264A;', c: '#8FE3D4' }, // Wind
-    Libra:      { g: '&#x264E;', c: '#A9C2D8' }, // Wind
-    Aquarius:   { g: '&#x2652;', c: '#7FD9E0' }, // Wind
-    Taurus:     { g: '&#x2649;', c: '#C8CDD6' }, // Metal
-    Capricorn:  { g: '&#x2651;', c: '#9AA6B4' }, // Metal
-    Virgo:      { g: '&#x264D;', c: '#D9B86A' }  // Sand
+    Aries:      { g: '&#x2648;&#65038;', c: '#E86A3A' }, // Fire
+    Leo:        { g: '&#x264C;&#65038;', c: '#E2A63A' }, // Fire
+    Sagittarius:{ g: '&#x2650;&#65038;', c: '#E8863A' }, // Fire
+    Cancer:     { g: '&#x264B;&#65038;', c: '#34C6E6' }, // Water
+    Scorpio:    { g: '&#x264F;&#65038;', c: '#2E6ED2' }, // Water
+    Pisces:     { g: '&#x2653;&#65038;', c: '#00E5FF' }, // Water
+    Gemini:     { g: '&#x264A;&#65038;', c: '#8FE3D4' }, // Wind
+    Libra:      { g: '&#x264E;&#65038;', c: '#A9C2D8' }, // Wind
+    Aquarius:   { g: '&#x2652;&#65038;', c: '#7FD9E0' }, // Wind
+    Taurus:     { g: '&#x2649;&#65038;', c: '#C8CDD6' }, // Metal
+    Capricorn:  { g: '&#x2651;&#65038;', c: '#9AA6B4' }, // Metal
+    Virgo:      { g: '&#x264D;&#65038;', c: '#D9B86A' }  // Sand
   };
 
   // one-time stylesheet

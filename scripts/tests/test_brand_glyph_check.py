@@ -88,6 +88,44 @@ class BrandGlyphCheck(unittest.TestCase):
         self.assertIn('probe.html', out)
         self.assertIn(':3', out)
 
+    def test_entity_encoded_emoji_is_caught(self):
+        """A browser decodes &#127942; before painting, so the gate must too.
+
+        Measured 2026-09-03: 11 shipped files carried astral codepoints in this
+        form and 9 of them painted a colour emoji in a real render, with this
+        gate green throughout.
+        """
+        rc, out = run_against(u'<p>&#127942;</p>\n')
+        self.assertEqual(rc, 1, out)
+        self.assertIn('&#127942;', out)
+
+    def test_js_escape_encoded_emoji_is_caught(self):
+        """`'\\u{1F311}'` is eight ASCII characters in source, an emoji on screen."""
+        rc, out = run_against(u"<script>var a='\\u{1F311}';</script>\n")
+        self.assertEqual(rc, 1, out)
+        rc2, out2 = run_against(u"<script>var a='\\uD83C\\uDFA4';</script>\n")
+        self.assertEqual(rc2, 1, out2)
+
+    def test_entity_already_pinned_to_text_form_passes(self):
+        """&#9889;&#65038; is lightning pinned to its text form -- not a finding."""
+        rc, out = run_against(u'<p>&#9889;&#65038;</p>\n')
+        self.assertEqual(rc, 0, out)
+
+    def test_monochrome_blocks_are_not_flagged(self):
+        """Alchemical, geometric-extended and chess symbols are ordinary type.
+
+        The first version of the astral rule spanned 1F300-1FAFF and called
+        consultancy.html's U+1F701 a colour emoji. Canvas pixel readback in the
+        harness Chromium measured spread 0 for each of these and 76-231 for a
+        real emoji, so the rule is the emoji sub-ranges, not the whole span.
+        """
+        for ch in (u'\U0001F701', u'\U0001F780', u'\U0001FA00', u'\U0001F650'):
+            rc, out = run_against(u'<p>%s</p>\n' % ch)
+            self.assertEqual(rc, 0, 'U+%05X should not be flagged\n%s' % (ord(ch), out))
+        for ch in (u'\U0001F3A4', u'\U0001F3C6', u'\U0001F9EC'):
+            rc, out = run_against(u'<p>%s</p>\n' % ch)
+            self.assertEqual(rc, 1, 'U+%05X should be flagged\n%s' % (ord(ch), out))
+
     def test_help_does_not_run_the_job(self):
         """CLAUDE.md 8.4: every agent-facing script answers --help and exits 0."""
         proc = subprocess.run([sys.executable, GATE, '--help'],

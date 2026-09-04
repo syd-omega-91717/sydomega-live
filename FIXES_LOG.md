@@ -7153,3 +7153,119 @@ Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
 ~15,976 of 16,000 (five more §8.2 paragraphs compressed to make room for the
 two corrected facts in §4.1), `node scripts/verify-runtime.js --all` PASS on
 all 189 pages, exit 0.
+
+## The re-stepped crimson never reached the screen: one late sheet and nine literals (2026-09-04)
+
+**CLAUDE.md records `--crim` as fixed.** bg.js carries the re-step and the
+reason, verbatim in its own comment: *"was #8B0000 -- measured at 1.74:1
+against this surface, i.e. barely visible, and 77 of its uses are text
+`color`. Re-stepped to the deepest crimson that still clears 3:1."* The token
+was corrected. **The pixels were not.** Measured across 23 pages, every one of
+them painted visible text at `rgb(139, 0, 0)`.
+
+### How the search went wrong first, and what corrected it
+
+A source scan found **62 of 189 pages** redefining canonical tokens in their own
+`:root` — 176 overrides, led by `--M` (47), `--crim` (23), `--D` (21), `--R`
+(17). The obvious reading was a 62-page regression: `--M:monospace` and
+`--D:serif` would mean the brand webfonts never load, and `--crim:#8B0000` would
+mean the contrast failure is back.
+
+The render says otherwise, and the two halves disagree *on the same page*:
+
+```
+dashboard.html  :root declares  --M:monospace   --crim:#8B0000
+resolved        --M="Courier Prime",monospace   --crim=#8B0000
+```
+
+Enumerating every sheet that declares them settles it:
+
+```
+sheet# 0  <STYLE>                    --M="monospace"                 --crim="#8B0000"
+sheet# 1  <style id=omega-global-css> --M="Courier Prime",monospace   --crim="#C4453C"
+sheet#19  <style id=omega-theme-css>  --M=""                          --crim="#8B0000"
+RESOLVED                              --M="Courier Prime",monospace   --crim="#8B0000"
+```
+
+Two facts, neither of them in this repo's docs:
+
+1. **A page's own `<style>` is sheet 0, so bg.js at sheet 1 beats it.** All 176
+   page-local token overrides are dead code. CLAUDE.md §4's "bg.js is sheet 1 of
+   53, so every later sheet wins" is true of the 51 *module* sheets and the
+   opposite of true for the page's own block. The 62-page edit would have been
+   62 files changed for no rendered difference.
+2. **`theme.js` (`#omega-theme-css`, sheet 19) re-declares the palette** and,
+   being later, beats bg.js. It is a deliberate "Sovereign Dusk" layer — `--void`
+   darkened to `#08080F`, `--ink` brightened to `#F0EDE6` — but it also carried
+   `--crim:#8B0000`, reinstating the value bg.js had measured its way out of.
+   §4's stylesheet-owner table did not list it at all.
+
+Against theme.js's own `--void` (`#08080F`):
+
+```
+--crim OLD  #8B0000   1.99:1   FAIL (<3:1 floor)
+--crim NEW  #C4453C   4.05:1   passes
+--gold      #C9A84C   8.74:1     --solar #E2C86D  12.09:1
+--cyan      #00E5FF  12.98:1     --green #3fb27f   7.50:1
+--ink       #F0EDE6  17.07:1     --muted #8A8880   5.62:1
+```
+
+Every other token in that palette clears 4.5:1. `--crim` was the only failure.
+
+### The token fix alone did not finish the job
+
+After correcting theme.js, `--crim` resolved to `#C4453C` on all 23 pages — and
+the probe *still* found `rgb(139, 0, 0)` text. The word it kept naming was
+`UNIVERSE`, a nav item. The colour was never coming from the token:
+
+```
+nav.js:82   {key:'universe', label:'UNIVERSE', col:'#8B0000', ...}
+nav.js:377  {label:'UNIVERSE', col:'#8B0000', ...}
+```
+
+`sec.col` drives `.on-glyph` colour, `.tip-head` colour and `.dss-emblem`
+colour — text, on every page that renders the sidebar. Nine hardcoded literals
+were painting text or strokes, each verified individually before being touched:
+
+| file | what the literal paints |
+|---|---|
+| `nav.js` ×2 | the UNIVERSE section colour — the text found on 21 pages |
+| `omega-chrono.js` ×2 | `td.style.color` on the trial countdown — a warning that must be legible |
+| `omega-menu.js` | a menu section colour, beside `#C9A84C` and friends |
+| `omega-chart.js` ×2 | chart `line`/`point` stroke on a dark canvas |
+| `omega-world-shell.js` | a realm colour, beside `#D9B86A` / `#E86A3A` / `#C9A84C` |
+| `emblem.js` ×3 | `col` drives a label `color` plus canvas stroke/fill at alpha .42–.75 |
+
+Eight stale `var(--crim,#8B0000)` fallbacks were corrected too — they only fire
+if the token is undefined, which it never is, but a wrong fallback is a wrong
+fallback.
+
+**Two sites were deliberately left**, and the reason is the false-positive
+discipline: `omega-realm.js`'s `Fire:{...outer:'#8B0000'}` is a gradient's dark
+outer stop and every other element has one too (`#003366`, `#546E7A`,
+`#5D4037`) — it is the dark end by design, not text. `omega-protect.js:91` is a
+`console.log` style string.
+
+The first pass at `emblem.js` fixed only the entry the grep had shown
+(`factions`); the all-pages sweep then found `cinema` and `settings` still dark,
+because the replace had matched one exact string rather than the file's
+remaining occurrences. Two more, found by measuring rather than by assuming the
+first edit was complete.
+
+### Result
+
+```
+BEFORE   23 of 23 sampled pages painting sub-3:1 crimson text
+AFTER    189 pages, 0 load failures,
+         sub-3:1 crimson text nodes = 0
+         re-stepped crimson text nodes = 221
+```
+
+The 221 is the positive control and the reason the zero means anything: a probe
+that found nothing anywhere would report the same zero. It found the new colour
+painting in 221 places and the old colour in none.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,953 of 16,000 (three §8.2 entries compressed to make room for the new
+stylesheet-owner row in §4), `node scripts/verify-runtime.js --all` PASS on all
+189 pages, exit 0.

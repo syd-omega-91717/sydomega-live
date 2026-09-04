@@ -209,7 +209,7 @@ window.__omegaPopulate = function(pr, user){
         var trial=members.filter(function(m){return m.access_approved&&m.is_trial&&m.trial_expires_at&&new Date(m.trial_expires_at)>now;}).length;
         var perm=members.filter(function(m){return m.access_approved&&!m.is_trial;}).length;
         var el=document.getElementById('owner-pending-count');
-        if(el) el.innerHTML=(pending>0?'<span style="color:var(--crim,#8B0000)">\u25b2 '+pending+' PENDING</span>':'\u2713 NO PENDING')+' \u00b7 '+trial+' TRIAL \u00b7 '+perm+' PERMANENT';
+        if(el) el.innerHTML=(pending>0?'<span style="color:var(--crim,#C4453C)">\u25b2 '+pending+' PENDING</span>':'\u2713 NO PENDING')+' \u00b7 '+trial+' TRIAL \u00b7 '+perm+' PERMANENT';
         var el2=document.getElementById('owner-trial-count');
         if(el2) el2.textContent=members.length+' TOTAL MEMBERS IN THE ORDER';
       }).catch(function(){});

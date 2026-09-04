@@ -31,7 +31,7 @@
     if(!badge){
       badge=document.createElement('div');
       badge.id='omega-notif-badge';
-      badge.style.cssText='position:fixed;top:16px;right:16px;z-index:500;background:var(--crim,#8B0000);color:#fff;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;font-weight:bold;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(139,0,0,.5)';
+      badge.style.cssText='position:fixed;top:16px;right:16px;z-index:500;background:var(--crim,#C4453C);color:#fff;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;font-weight:bold;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(139,0,0,.5)';
       badge.setAttribute('role','status');badge.setAttribute('aria-label','Notifications');
       badge.addEventListener('click',togglePanel);
       document.body.appendChild(badge);
@@ -42,7 +42,7 @@
 
   /* ── TOAST ───────────────────────────────────────────────────── */
   function showToast(msg,type){
-    var col={info:'var(--cyan,#00E5FF)',success:'var(--green,#3fb27f)',warning:'var(--solar,#E2C86D)',error:'var(--crim,#8B0000)'}[type||'info'];
+    var col={info:'var(--cyan,#00E5FF)',success:'var(--green,#3fb27f)',warning:'var(--solar,#E2C86D)',error:'var(--crim,#C4453C)'}[type||'info'];
     var t=document.createElement('div');
     t.setAttribute('role','alert');t.setAttribute('aria-live','polite');
     t.style.cssText='position:fixed;bottom:100px;right:16px;z-index:5000;min-width:240px;max-width:320px;background:#0A0A0F;border:1px solid '+col.replace('var','').replace(/[()]/g,'')+'33;border-left:3px solid '+col+';border-radius:2px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:slideIn .25s ease';

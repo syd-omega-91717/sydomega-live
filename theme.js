@@ -18,7 +18,13 @@
       --gold:#C9A84C;
       --solar:#E2C86D;
       --cyan:#00E5FF;
-      --crim:#8B0000;
+      /* Was #8B0000. theme.js is injected after bg.js and wins the tie, so
+         this line silently reinstated the value bg.js had deliberately
+         re-stepped away from: measured against this file's own --void
+         (#08080F) the old red is 1.99:1, under the 3:1 floor for any
+         content, and it was painting real text on every page. #C4453C is
+         4.05:1. Every other token in this palette clears 4.5:1. */
+      --crim:#C4453C;
       --green:#3fb27f;
       --ink:#F0EDE6;
       --ink-dim:#D8D5CE;

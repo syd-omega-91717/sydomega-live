@@ -175,7 +175,7 @@
     error: function(el, msg){
       if(!el) return;
       el.innerHTML = '<div style="padding:16px;text-align:center;border:1px solid rgba(139,0,0,.3);border-radius:2px;background:rgba(139,0,0,.05)">'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">ERROR</div>'
+        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#C4453C);margin-bottom:4px">ERROR</div>'
         +'<div style="font-size:12px;color:rgba(233,230,220,.7)">'+(msg||'Failed to load data')+'</div>'
         +'</div>';
     },

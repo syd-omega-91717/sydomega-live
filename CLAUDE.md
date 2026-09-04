@@ -121,6 +121,11 @@ before styling a shared class:
 | `.card`/`.kpi`/`.kpi-card` shadow + border, `.topbar`, `.sechead`, `body::before` field | `omega-visual-evolution.css` (13) |
 | `#omega-side` (with `!important`) | `nav.js` (16) |
 | `body{background}` (with `!important`) | `omega-backdrop.js` (20) — tints to the member's element and page; a feature, don't fight it |
+| **the palette itself** — `--void`, `--crim`, `--ink`, `--muted`, `--line` | `theme.js` (`#omega-theme-css`, 19) — a "Sovereign Dusk" layer that re-declares them and, being later, **beats bg.js**. Change a token there too, or the change does not ship |
+
+A page's own `<style>` is sheet **0**, so bg.js (1) beats it: 62 pages redefine
+canonical tokens in their own `:root` and every one of those is dead code
+(measured). Only the 51 sheets after bg.js can win.
 
 A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
@@ -479,17 +484,14 @@ open, recorded in `FIXES_LOG.md`:
   `subscriptions.html`'s own copy already says so. The user was asked directly
   and chose to keep it dormant.
 - **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
-  (`wealth`, `wallet`, `treasury`, `revenue`, `investment`, `expenses`,
-  `budget`) were a decision, not a default: unusually sensitive data, hard to
-  walk back once member data lives server-side, mitigated with
-  `omega-local-backup.js` export/import. `scripts/evidence-audit.py` shows the
-  same shape reaches 48 pages, and only 5 of them carry that export path — 43
-  store member data with no server copy and no way to get it out
-  (`achievements`, `notes`, `projects`, `passport`, `targets`, `mood`,
-  `reading`, `workout` …). That is a scope finding, not a decision: nobody has
-  chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
-  write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
-  for the current list rather than quoting these numbers.
+  were a decision, not a default: sensitive data, hard to walk back once it
+  lives server-side, mitigated with `omega-local-backup.js` export/import.
+  `scripts/evidence-audit.py` shows the shape reaches 48 pages and only 5 carry
+  that export path — 43 store member data with no way to get it out
+  (`achievements`, `notes`, `projects`, `passport`, `mood`, `workout` …). That
+  is a scope finding, not a decision: nobody chose it for the other 41. A
+  further 24 pages are `PARTIAL` (Postgres *and* a parallel local copy). Run
+  the scanner rather than quoting these numbers.
   **Fixed and applied 2026-08-24**: `public.member_state`
   (`supabase/omega_member_state.sql`, `migrations/0095`) plus
   `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
@@ -541,17 +543,14 @@ open, recorded in `FIXES_LOG.md`:
   *reachable* only when the missing grants were added, so they are recorded
   rather than assumed fine. All 10 visible governance rows are
   `status='active'`; no drafts leak.
-- **39 tables have RLS policies and no grant** (was 38; re-counted live
-  2026-08-29). Left locked out — the safe state — rather than granted on the
-  assumption that a policy's existence implies it should be reachable. **Now
-  measured against live rather than inferred:** of 202 public tables, RLS is
-  enabled on **all 202** (the `audit.py` check-4 invariant holds in production,
-  not just in source), 74 have both policies and a grant, 39 have policies and
-  no grant, and 1 has a grant but no policy — which is still locked, since RLS
-  with no policy denies by default. Every one of the 39 was cross-referenced
-  against client `.from(...)` calls: **none is reachable from any page**, so
-  this remains locked-but-unused, not a broken feature. Do not "fix" it by
-  granting without deciding the feature is wanted.
+- **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
+  Left locked out — the safe state. **Measured, not inferred:** of 202 public
+  tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
+  in production), 74 have policies *and* a grant, 39 have policies and no
+  grant, 1 has a grant and no policy (still locked — RLS with no policy denies).
+  All 39 were cross-referenced against client `.from(...)` calls: **none is
+  reachable from any page**. Do not "fix" it by granting without deciding the
+  feature is wanted.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only
@@ -576,15 +575,15 @@ open, recorded in `FIXES_LOG.md`:
   `.githooks/pre-push` runs it on every push — enable per clone with
   `git config core.hooksPath .githooks`, bypass with `--no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
-  The advisor reports 93; reading the bodies, the owner-sensitive ones guard
-  themselves via `public.omega_is_owner()`, which a substring classifier looking
-  for `is_platform_owner` misses. Three unguarded-and-uncalled functions were
-  revoked (`migrations/0097`); the rest have real callers and are unguarded on
-  purpose. Cross-member leakage was tested directly by member impersonation
-  across 17 tables — every populated table scoped, `profiles` included. **When
-  adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
-  Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
-  returns on its own. That is how 70 previously-revoked functions became 23.
+  The advisor reports 93; the owner-sensitive ones guard themselves via
+  `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
+  misses. Three unguarded-and-uncalled functions were revoked
+  (`migrations/0097`); the rest have real callers. Cross-member leakage was
+  tested by member impersonation across 17 tables — every populated table
+  scoped, `profiles` included. **When adding any function,
+  `REVOKE EXECUTE ... FROM PUBLIC` in the same file**: Postgres grants it to
+  PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its own —
+  that is how 70 revoked functions became 23.
 - **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
   `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
   Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned

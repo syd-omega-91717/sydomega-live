@@ -170,7 +170,7 @@
     /* Simple heuristic: green if no open incidents, yellow if score < 90, red if < 70 */
     var score=87; /* default */
     bar.style.width=score+'%';
-    bar.style.background=score>=85?'var(--green,#3fb27f)':score>=70?'var(--solar,#E2C86D)':'var(--crim,#8B0000)';
+    bar.style.background=score>=85?'var(--green,#3fb27f)':score>=70?'var(--solar,#E2C86D)':'var(--crim,#C4453C)';
     bar.title='Platform health: '+score+'/100';
   }
 

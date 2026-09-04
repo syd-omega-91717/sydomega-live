@@ -8183,3 +8183,69 @@ value containing a space also returns 0 across every `.html` and `.js`.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, every touched page `ok`.
+
+---
+
+## The member-state mirror's coverage, verified rather than assumed (2026-09-04)
+
+`CLAUDE.md` §8.2 records `omega-member-state.js` as the fix for 43 pages that
+store member data in `localStorage` with no way to get it out. What it did not
+establish is whether the mirror actually *reaches* those pages: the module
+mirrors any key beginning with `omega` (`mirrored()` at
+`omega-member-state.js:150`), so a page using any other key name is silently
+outside it, and that would be invisible.
+
+**Source side.** A literal-key scan finds 0 pages using a non-`omega`
+`localStorage` key. That is not enough on its own — 89 call sites across 56
+files pass the key as a *variable* (`SK`, `HABITS_KEY`, `DIST_KEY`, …).
+Resolving each identifier against its assignment in the same file:
+
+```
+KEYS THAT ESCAPE THE `omega` MIRROR PREFIX
+  0 keys across 0 pages
+
+STILL UNRESOLVED (computed/templated keys): 8 sites across 8 files
+    body.html  command.html  omega-appearance.js  omega-local-backup.js
+    omega-member-state.js  search.html  sleep.html  stoic.html
+```
+
+All eight are loop variables (`k`, iterating `localStorage.key(i)`) or the
+persistence modules themselves, except `search.html:199`, which is
+`function recentKey(){return 'omega_recent_searches';}` — inside the prefix.
+
+**Runtime side**, on `kings.html` (a LOCAL_ONLY page holding
+`omega_study_notes` and `omega_model_king`):
+
+```
+{"isMemberKey_study": true, "isMemberKey_model": true,
+ "isMemberKey_lang": false,          // in SKIP, correctly excluded
+ "mirroredBefore": 2, "mirroredAfter": 6}
+```
+
+**A measurement that measured nothing, first.** The initial probe called
+`M.collect()` and reported `collectsStudyNotes: false`. `collect` is not in the
+module's public API — the exports are `prefix, skip, isMemberKey, status,
+syncNow, restore, list` — so `M.collect ? M.collect() : []` returned `[]`
+unconditionally and the "finding" was an artefact of the probe. Reading the
+exported surface, rather than guessing a method name, is what produced the
+numbers above. **Check that a probe's accessor exists before believing what it
+reports** — the same shape as §8.1 class 4(b), applied to a test rather than to
+shipped code.
+
+No code change: the mirror already covers the estate. Recorded so the next
+session does not re-derive it, and so §8.2's entry is not read as an untested
+claim.
+
+### Also this session: a scan abandoned rather than reported
+
+A third scan was attempted — page-local CSS classes defined in a page's own
+`<style>` that match zero elements in the render, the generalisation of the
+`.page-badge` and `.svc-card` finds. It reported 0 across 189 pages. Its
+positive control did not fire, and a synthetic fixture (a `<style>` defining
+`.never-lands` against markup carrying `never-lands-typo`) did not fire either:
+the "was it meant to be applied?" filter required the class to appear inside a
+`class=` literal, which is precisely what a class that never lands does not do.
+The filter suppressed exactly the cases it was written to find. Removed and
+abandoned rather than published as a zero — dead CSS is mostly noise, so the
+signal-to-noise did not justify rebuilding it. Noted so it is not re-attempted
+in the same shape.

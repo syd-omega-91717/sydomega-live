@@ -8844,3 +8844,63 @@ different file, and nobody went back to the entry. Checking cost one render;
 building the feature again would have cost a day and produced a duplicate.
 
 No code change.
+
+---
+
+## The 11 Edge Functions parse clean; a CI gate for it would cost more than it saves (2026-09-04)
+
+`CLAUDE.md` §7 point 6 records that **nothing type- or syntax-checks the Edge
+Functions** — their only automated coverage is `resilience-audit.py`'s
+import-pin rules — and recommends parsing them with `npx typescript@5` in a
+scratchpad before deploying. Confirmed still true: `deno`, `edge` and
+`functions/` return zero hits across `.github/workflows/*.yml` and
+`scripts/ci-local.sh`.
+
+That is payment-critical code (`checkout`, `stripe-webhook`) with no parse gate,
+so the recommended check was run over all eleven, with a positive control:
+
+```
+  ok                  checkout
+  ok                  concierge
+  ok                  graphify-ai-ingest
+  ok                  graphify-ai-query
+  ok                  intel-feed
+  ok                  market-price
+  ok                  notify-access
+  ok                  rankings
+  ok                  snapshot-leaderboard
+  ok                  stripe-webhook
+  ok                  weekly-digest
+  PARSE ERRORS (3)    __CONTROL__
+       :1:14  Property assignment expected.
+       :2:10  Identifier expected.
+       :3:1  ')' expected.
+
+functions parsed: 11   with parse errors: 0
+```
+
+The control is a deliberately malformed file parsed through the same code path;
+without it, eleven `ok`s prove only that the script ran.
+
+`ts.createSourceFile` + `parseDiagnostics` is syntax-only. These are Deno modules
+importing from remote URLs, so a full type-check is not possible in this
+environment — but a syntax error is a syntax error, and one would currently ship.
+
+### Why this did not become a 23rd gate
+
+The obvious next step is wiring it into `scripts/ci-local.sh`. It was not done,
+because the check needs the `typescript` package, and **no build step and no
+`node_modules` is a deliberate, load-bearing property of this deploy**
+(`vercel.json` disables install; CI is `node --check` only; §9's first rule).
+The alternatives are all worse: `deno check` is not installed, vendoring
+TypeScript is tens of megabytes into a repo that ships every file as-is, and
+stripping type annotations by regex to reach `node --check` would invent
+failures of its own.
+
+That is very likely why §7 recommends it as a *manual pre-deploy step* rather
+than a gate. The honest position is that this remains a real gap with a real
+reason, and the eleven are clean **as of this run** — not that it is now
+guarded. `scripts/check-secrets.sh` and this parse are both things a human must
+still remember before `supabase functions deploy`.
+
+No code change.

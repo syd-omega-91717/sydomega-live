@@ -522,9 +522,6 @@ open, recorded in `FIXES_LOG.md`:
 - **Member location is not collected.** Live 2026-08-29: `profiles.country`
   exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
   in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
-- **`ops.html`'s event-bus metrics table never renders** — it looks up
-  `#evt-metrics-body`, an id that exists nowhere. The container would be new UI,
-  not a fix.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
   so the score moves only on 30-min idle (`-10`) and a failed gated action
   (`-5`), never on a threat. Detection is an architecture decision. (`gate()`

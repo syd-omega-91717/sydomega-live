@@ -8694,3 +8694,103 @@ literals stripped, and any scanner reporting a zero needs a planted positive
 before that zero means anything. Both are cheap; neither is optional.
 
 No code change.
+
+---
+
+## chronicle.html is not missing anything, and the card-adoption vein is worked out (2026-09-04)
+
+Two entries above record `chronicle.html`'s 17 `.event-card` timeline entries as
+**blocked** from `.card`, because `.event-card::before` already draws the 14px
+connector line to the timeline spine and two rules on one pseudo cascade per
+property. That is true, and it was written in a way that implies the page is
+losing something. Measured, it is not.
+
+```
+eventCard    {bg:"rgba(10, 10, 15, 0.68)", border:"rgba(201, 168, 76, 0.22)",
+              shadow:"present", radius:"2px", pad:"14px"}
+platformCard {bg:"rgba(10, 10, 15, 0.68)", border:"rgba(201, 168, 76, 0.25)",
+              shadow:"present", radius:"2px", pad:"20px"}
+```
+
+Identical ground, identical shadow, identical radius, border within 0.03 alpha.
+`omega-visual-evolution.css` styles `[class*="card"]` — a **substring** selector
+— so `.event-card` already receives the whole platform surface without carrying
+the class. The only real difference is padding, and 14px is the better value for
+a dense timeline; `.card`'s `clamp(14px,2.5vw,20px)` would loosen it.
+
+Adding `.card` would therefore buy the 2px accent bar and the hover elevation,
+in exchange for moving the connector off `::before` onto the dot column — a
+refactor of a bespoke grid timeline, where `.card{overflow:hidden}` would also
+clip any child-element replacement drawn at `right:-14px`. **The blocker is
+real; the thing it blocks is not worth having.**
+
+### The vein is worked out
+
+Re-deriving the density ranking after this session's conversions:
+
+```
+ad-network.html   1221   dormancy statement -- deliberately plain, not to be touched
+matrix.html        487   13 visual elements already
+approvals.html     417   owner-gated, 1252 chars
+stoic.html         417   .virtue-card already carries .card
+chronicle.html     388   above
+```
+
+The top of the list is now pages where the metric is misleading or the work is
+correctly refused, not pages with a real gap — the earlier leaders (1266, 1221,
+677, 668, 601) were the KPI family, and it is retired. Further sweeping would be
+forcing the metric rather than following it.
+
+Also checked and needing nothing: **emblem coverage is 187 of 189 pages**; the
+two exceptions are `verify-deployment.html` and `verify-modules.html`, internal
+verification pages that correctly have none.
+
+No code change.
+
+---
+
+## ops.html's event-bus metrics table: the missing 10% of a built feature (2026-09-04)
+
+`CLAUDE.md` §8.2 listed this as open, with the reason "The container would be
+new UI, not a fix." Reading the page, that framing was wrong — and the entry is
+now closed.
+
+Three of the four parts already existed:
+
+- the **renderer**, `ops.html:485`, reads `window.OmegaBus.metrics()`, skips
+  events with no traffic, colours `errors` red and `dlq` amber, formats latency
+  to 2dp, and has a proper empty state (`No events emitted yet`);
+- the **styling**, `.evt-tbl` / `.evt-tbl th` / `.evt-tbl td` at
+  `ops.html:77-80`, complete with a gold first column;
+- the **data source**, `omega-event-bus.js`, tracking
+  `emitted/consumed/errors/dlq/lastSeen/avgLatencyMs` per event across a
+  15-event catalogue.
+
+Only the `<table>` markup was missing, so `getElementById('evt-metrics-body')`
+returned `null` and the entire block was skipped. A page-local CSS class styling
+a table that does not exist is strong evidence the markup was written and lost,
+not that it was never designed.
+
+Measured, BEFORE pinned with `git show HEAD:`:
+
+```
+BEFORE {"tbodyExists":false,"tableRendered":false,"headers":null,"rowsRendered":0,
+        "bodyText":null,"catalogSize":15}
+AFTER  {"tbodyExists":true,"tableRendered":true,
+        "headers":["EVENT","EMITTED","CONSUMED","ERRORS","DLQ","AVG LATENCY","LAST SEEN"],
+        "rowsRendered":1,"bodyText":"platform.worker.started 6 0 0 0 0.00ms 23:05:26",
+        "catalogSize":15,"overflowX":false,"errors":0}
+```
+
+The single row is **real live data**, not a placeholder:
+`platform.worker.started`, emitted 6, consumed 0, no errors, no DLQ, last seen
+23:05:26. One row of a 15-event catalogue is exactly what the renderer's
+zero-traffic filter is written to produce — the other 14 have not fired in a
+fresh session.
+
+Fourteen lines of markup, no new CSS, no new JavaScript. **§8.2's entry is
+removed**, which also returns ~40 tokens to the `CLAUDE.md` budget rather than
+spending them.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok ops.html`.

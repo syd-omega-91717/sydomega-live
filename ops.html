@@ -185,6 +185,22 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
         <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:12px;letter-spacing:.5px;line-height:1.7"></div>
       </div>
     </div>
+    <!-- The renderer for this table has always existed (the `evt-metrics-body`
+         lookup below), and so has its .evt-tbl styling, but the markup was
+         missing, so the lookup returned null and the whole block was skipped.
+         Columns match exactly what OmegaBus.metrics() returns per event. -->
+    <div class="card">
+      <div class="card-title">&#9679; EVENT BUS METRICS</div>
+      <div style="overflow-x:auto">
+        <table class="evt-tbl">
+          <thead><tr>
+            <th>EVENT</th><th>EMITTED</th><th>CONSUMED</th><th>ERRORS</th>
+            <th>DLQ</th><th>AVG LATENCY</th><th>LAST SEEN</th>
+          </tr></thead>
+          <tbody id="evt-metrics-body"></tbody>
+        </table>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">&#9679; DEAD LETTER QUEUE</div>
       <div id="dlq-list"><div style="font-size:12px;color:var(--green)">&#10003; DLQ empty</div></div>

@@ -42,7 +42,10 @@
 label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
 input,select{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px;box-sizing:border-box}
 input:focus,select:focus{outline:none;border-color:var(--gold)}
-.btn-gold{background:var(--gold);color:#000;padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
+/* was .btn-gold, which is bg.js's GHOST button: its color:var(--gold) won
+   and left gold text on this rule's gold background, an exactly 1:1 button.
+   The shared filled component owns the colour now. */
+.btn-fill{padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border-radius:2px;font-family:inherit}
 .btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
 .empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
@@ -121,7 +124,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
           <label>CENTRAL TOPIC</label>
           <input id="create-central" type="text" placeholder="e.g. SOVEREIGN MISSION">
         </div>
-        <button class="btn-gold" onclick="createMapFromTab()">CREATE MAP</button>
+        <button class="btn btn-fill" onclick="createMapFromTab()">CREATE MAP</button>
       </div>
     </div>
 

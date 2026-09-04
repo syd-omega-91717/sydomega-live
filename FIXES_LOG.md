@@ -7269,3 +7269,115 @@ Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
 ~15,953 of 16,000 (three §8.2 entries compressed to make room for the new
 stylesheet-owner row in §4), `node scripts/verify-runtime.js --all` PASS on all
 189 pages, exit 0.
+
+## Six buttons nobody could read, found by auditing contrast instead of grepping (2026-09-04)
+
+The crimson fix in the previous entry chased one literal. **The general form is
+cheaper and finds more**: walk every visible text node in a render, compute its
+contrast against its own effective background, and report what fails the WCAG
+floor. Effective background means walking ancestors until something opaque
+paints — a naive read of `backgroundColor` returns `rgba(0,0,0,0)` and every
+ratio comes out wrong.
+
+First run: **189 pages, 0 load failures, 58,628 passing text nodes, 66 distinct
+failing (selector, colour, background) combinations.** The 58,628 is the
+positive control; a probe that measured nothing would report zero failures too.
+
+### The worst of it: three pages where the primary action was invisible
+
+```
+1.01:1   account.html   #btn-signup  "CREATE ACCOUNT"   rgb(8,8,15) on rgb(7,7,8)
+1.01:1   account.html   #btn-login   "LOG IN"
+1.01:1   reset.html     #r-send      "SEND RECOVERY LINK"
+1:1      mindmap.html   .btn-gold    "CREATE MAP"       gold on gold
+```
+
+`account.html` and `reset.html` are **public** pages — in bg.js's signed-out
+exemption list — so this is the sign-up, sign-in and password-recovery path.
+The `account.html` numbers are a real BEFORE, pinned from `HEAD` with the
+harness's `pin` option rather than reasoned from the diff.
+
+**Root cause, one shape, three pages.** bg.js only ever had *ghost* buttons:
+
+```
+.btn{ … background:none; … }
+.btn-gold{color:var(--gold);border-color:rgba(201,168,76,.3)}
+```
+
+A page wanting a solid button hand-rolled
+`.btn{background:var(--gold);color:var(--void)}` — the same (0,1,0) specificity,
+and bg.js's sheet loads *after* the page block, so bg.js wins. The background is
+wiped and dark text is left on the dark page. `mindmap.html` hit the mirror
+image: it named its button `.btn-gold`, bg.js's ghost rule won the *colour*, and
+gold text sat on the page's own gold background at exactly 1:1.
+
+`terms.html` escaped only because it happens to use a descendant selector,
+`.accept .btn` at (0,2,0).
+
+**The fix is the missing component, not a specificity fight.** CLAUDE.md §4 says
+to extend the shared block rather than define page-local styles that drift, so
+`.btn-fill` now exists in bg.js — a filled primary action, retintable with
+`--btn-fill` (the same custom-property pattern as `--card-accent`). The three
+pages dropped their colour/background overrides, kept their layout rules, and
+took `class="btn btn-fill"`. Measured after: all six buttons at **8.74:1**.
+
+### The widest-reaching failure was in the nav dock
+
+```
+2.57:1   179 pages   .on-lbl / .on-logout   #55534e on --void
+```
+
+Seven occurrences of `#55534e`, an off-palette grey, for the inactive icon-dock
+labels. That is not "dim", it is unreadable. Replaced with `var(--muted)`, which
+measures 5.41:1 on bg.js's `--void` and 5.47:1 on theme.js's — and, being a
+token, follows theme.js instead of drifting from it.
+
+### A gap the Ω-GVP fallback skin explicitly could not reach
+
+```
+2.33:1   8 pages   button.btn-gold   "SEND"   gold on rgb(107,107,107)
+```
+
+`rgb(107,107,107)` is the **browser's default button face**. These are
+`<button class="btn-gold">` without `.btn`, so bg.js's `background:none` never
+applied, and the GVP fallback skin is scoped `button:not([class])` — which
+correctly skips them, exactly as §4.1 records. Fixed at the source: the ghost
+variants (`.btn-gold`, `.btn-cyan`, `.btn-crim`) now declare `background:none`
+themselves, so they no longer depend on `.btn` being present.
+
+### Result, and what is deliberately left
+
+```
+                        failing combinations   passing text nodes
+before                          66                   58,628
+after .btn-fill + nav           61                   61,355
+after ghost-variant fix         60                   61,371
+```
+
+Two findings were measured and **not** changed, on purpose:
+
+- **`.tip-head` at 3.92:1 on 180 pages** is the re-stepped `--crim` at 12px on a
+  panel. bg.js's own comment says it was chosen as "the deepest crimson that
+  still clears 3:1" — this is a stated brand trade-off, not a regression, and
+  re-stepping the danger colour again is a design decision rather than a bug fix.
+- **~59 page-local grey combinations** (`#666`, `#555`, `#333`), each reaching
+  1–9 pages. Real, but several are deliberate de-emphasis that happens to be too
+  dim, and a bulk sweep of 59 combinations without per-page judgement is the
+  antipattern this log keeps recording.
+
+### Method notes
+
+The first filled-button run measured only 9 of 25 buttons and printed
+`COVERAGE FAILED`; the other 16 sat in modals or closed tabs. Since *colour* was
+under test and not layout, unhiding the ancestors and re-measuring lifted
+coverage to 21 and is what surfaced `mindmap.html`. Four remained unreachable
+and were reported as unmeasured rather than assumed fine.
+
+`account.html` stayed unmeasured even then — because the harness defaults to a
+**signed-in** stub and a public auth page redirects a signed-in visitor away.
+`launch({signedIn:false})` is required for `account`/`reset`/`terms`/`enter`,
+and it is what produced the 1.01:1 reading above.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,999 of 16,000 (four §8.4 method notes compressed to make room),
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.

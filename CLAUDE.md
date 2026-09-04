@@ -237,6 +237,16 @@ through this one file with no per-page markup changes:
   6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
+- **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
+  pages hand-rolled `.btn{background:var(--gold);color:var(--void)}` at the same
+  (0,1,0) specificity — and lost, since this sheet loads after the page block.
+  Measured: `account.html`'s CREATE ACCOUNT/LOG IN and `reset.html`'s SEND
+  RECOVERY LINK at **1.01:1**, invisible to signed-out visitors;
+  `mindmap.html`'s CREATE MAP at exactly **1:1**, gold on gold. Use
+  `.btn.btn-fill` (retint with `--btn-fill`), never a page-local override. The
+  ghost variants now set `background:none` themselves — without it a
+  `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
+  (2.33:1, 8 pages).
 - **Fallback skin for genuinely bare elements**: `input:not([class])`,
   `textarea:not([class])`, `select:not([class])`, and
   `button:not([class])` get the same glass treatment as `.inp`/`.btn`,
@@ -660,45 +670,40 @@ entries (which were accurate when written):
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
 - **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** So any per-file date derived that way is a guess the moment the real
-  commit sits beyond the boundary — at `--depth 1` every file dates to the clone
-  itself. `actions/checkout@v4` is shallow by default, so this made
-  `omega-registry.py --check` a guaranteed CI failure and had already put three
-  wrong dates in the committed registry (`90c310d7` turned out to *be* a boundary
-  commit; the real date was 2026-08-11, not the 2026-08-15 recorded). The generator
-  now compares the reported SHA against `.git/shallow` and refuses rather than
-  writing a date it cannot know, and `ci.yml` sets `fetch-depth: 0`. Being shallow
-  is not itself the problem — this session's clone was shallow at 480 commits and
-  still correct for most files — so detect the boundary, not the shallowness.
+  not fail.** Any per-file date derived that way is a guess once the real commit
+  sits beyond the boundary — at `--depth 1` every file dates to the clone itself.
+  `actions/checkout@v4` is shallow by default, which made `omega-registry.py
+  --check` a guaranteed CI failure and had already put three wrong dates in the
+  committed registry. The generator now compares the SHA against `.git/shallow`
+  and refuses rather than writing a date it cannot know; `ci.yml` sets
+  `fetch-depth: 0`. Detect the boundary, not the shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
-  auto-applies `localStorage['omega_lang']` on load, and `localStorage` survives
+  auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches
-  language, then moves to the next page is comparing against whatever the previous
-  iteration selected, not English. A first run of exactly that reported plausible
-  numbers that happened to be right; the re-run with a fresh context per (page,
-  language) is what actually measured them. Any per-page state the code under test
-  persists — theme, language, a dismissed banner — needs a fresh context, not a
-  fresh `goto`.
+  language, then moves on compares against the *previous* iteration's choice. The
+  first such run happened to be right; the re-run with a fresh context per (page,
+  language) is what measured it. Any state the code under test persists — theme,
+  language, a dismissed banner — needs a fresh context, not a fresh `goto`. The
+  harness also defaults to a **signed-in** stub, and a public auth page redirects
+  a signed-in visitor away, so its buttons report absent: use
+  `launch({signedIn:false})` for `account`/`reset`/`terms`/`enter`.
 - **A visual change needs a noise floor before it means anything.** A
-  before/after screenshot diff on this platform reads ~1.6% of pixels as
-  "changed" with *no change at all* — the particle canvas and drift
-  keyframes never settle, so two shots of the same build 1.2s apart differ
-  that much (`prefers-reduced-motion` narrows it, it does not reach zero).
-  A design layer measured at 0.66–2.21% was therefore inside its own noise
-  and invisible at rest, which no amount of computed-style checking would
-  have revealed: every rule *applied*, all of it just sat behind `:hover`,
-  `:focus-visible` or scroll. Diff same-build pairs first, then compare.
-  Decoding PNGs needs no PIL (absent here) — draw them to a canvas in the
-  already-running Chromium and read `getImageData`.
+  before/after screenshot diff here reads ~1.6% of pixels as "changed" with *no
+  change at all* — the particle canvas and drift keyframes never settle
+  (`prefers-reduced-motion` narrows it, never to zero). A design layer measured
+  at 0.66–2.21% was inside its own noise and invisible at rest, which no
+  computed-style check would reveal: every rule *applied*, all of it behind
+  `:hover`, `:focus-visible` or scroll. Diff same-build pairs first. Decoding
+  PNGs needs no PIL — draw them to a canvas in the running Chromium and read
+  `getImageData`.
 - **A pseudo whose box paints but whose text never does is
   `-webkit-text-fill-color`, not `content`.** `bg.js:1290` adds `.ofx-sheen` to
-  every childless `.sechead` under 48 chars; that class fills heading text via
+  every childless `.sechead` under 48 chars; it fills heading text via
   `background-clip:text` + `-webkit-text-fill-color:transparent`, which
   **inherits into pseudo-elements**. Borders are not text fill, so a `::before`
-  ring drew perfectly with nothing inside it, through four wrong theories.
-  Forcing `content:"X" !important` settles it in one step: a pseudo that cannot
-  paint a plain letter has no glyph, font or `var()` problem. Generated text on
-  a sheened element needs its own `-webkit-text-fill-color`.
+  ring drew perfectly with nothing inside it. Forcing `content:"X" !important`
+  settles it in one step. Generated text on a sheened element needs its own
+  `-webkit-text-fill-color`.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine
@@ -706,10 +711,9 @@ entries (which were accurate when written):
 - **A scanner needs its own false-positive pass before its number means
   anything.** A fixed-widget collision scan first reported 177/178 pages by
   counting full-viewport backdrops (`omega-fx`, the particle canvas, the noise
-  overlay) as colliding with everything on screen. Excluding
-  `pointer-events:none` and full-bleed elements gave the real answer — which
-  happened to be the same number, for entirely different and genuine reasons.
-  Getting the right number by luck is not the same as measuring.
+  overlay) as colliding with everything. Excluding `pointer-events:none` and
+  full-bleed elements gave the real answer — the same number, for entirely
+  different and genuine reasons. Right by luck is not measured.
 - **A programmatic edit inside `bg.js`'s injected stylesheet can silently
   no-op.** That CSS is one single-quoted JS string, and its section headers use
   real box-drawing characters (`──`), not escapes — so a `replace()` written

@@ -8746,3 +8746,51 @@ two exceptions are `verify-deployment.html` and `verify-modules.html`, internal
 verification pages that correctly have none.
 
 No code change.
+
+---
+
+## ops.html's event-bus metrics table: the missing 10% of a built feature (2026-09-04)
+
+`CLAUDE.md` §8.2 listed this as open, with the reason "The container would be
+new UI, not a fix." Reading the page, that framing was wrong — and the entry is
+now closed.
+
+Three of the four parts already existed:
+
+- the **renderer**, `ops.html:485`, reads `window.OmegaBus.metrics()`, skips
+  events with no traffic, colours `errors` red and `dlq` amber, formats latency
+  to 2dp, and has a proper empty state (`No events emitted yet`);
+- the **styling**, `.evt-tbl` / `.evt-tbl th` / `.evt-tbl td` at
+  `ops.html:77-80`, complete with a gold first column;
+- the **data source**, `omega-event-bus.js`, tracking
+  `emitted/consumed/errors/dlq/lastSeen/avgLatencyMs` per event across a
+  15-event catalogue.
+
+Only the `<table>` markup was missing, so `getElementById('evt-metrics-body')`
+returned `null` and the entire block was skipped. A page-local CSS class styling
+a table that does not exist is strong evidence the markup was written and lost,
+not that it was never designed.
+
+Measured, BEFORE pinned with `git show HEAD:`:
+
+```
+BEFORE {"tbodyExists":false,"tableRendered":false,"headers":null,"rowsRendered":0,
+        "bodyText":null,"catalogSize":15}
+AFTER  {"tbodyExists":true,"tableRendered":true,
+        "headers":["EVENT","EMITTED","CONSUMED","ERRORS","DLQ","AVG LATENCY","LAST SEEN"],
+        "rowsRendered":1,"bodyText":"platform.worker.started 6 0 0 0 0.00ms 23:05:26",
+        "catalogSize":15,"overflowX":false,"errors":0}
+```
+
+The single row is **real live data**, not a placeholder:
+`platform.worker.started`, emitted 6, consumed 0, no errors, no DLQ, last seen
+23:05:26. One row of a 15-event catalogue is exactly what the renderer's
+zero-traffic filter is written to produce — the other 14 have not fired in a
+fresh session.
+
+Fourteen lines of markup, no new CSS, no new JavaScript. **§8.2's entry is
+removed**, which also returns ~40 tokens to the `CLAUDE.md` budget rather than
+spending them.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok ops.html`.

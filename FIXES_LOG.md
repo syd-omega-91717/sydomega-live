@@ -7381,3 +7381,74 @@ and it is what produced the 1.01:1 reading above.
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
 ~15,999 of 16,000 (four §8.4 method notes compressed to make room),
 `node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## main landed red: PR #235 reintroduced 18 colour emoji and sub-12px type (2026-09-04)
+
+Merging `origin/main` into this branch turned **three blocking gates and one
+unit test red**, none of them from this branch's work. `2d4638bc` (PR #235,
+"Phase C/D: Enhance dashboard with cinematic emblems and 3D visual elements")
+had merged with those gates failing.
+
+```
+FAIL  brand-glyph   18 colour-emoji occurrences in dashboard.html
+FAIL  type-scale    dashboard.html declares type below the 12px floor
+FAIL  registry      omega-*.js modules 1147 KB -> 1152 KB, uncommitted
+FAIL  test_brand_glyph_check.test_repo_is_clean
+```
+
+**The first is a same-day regression of a swept fix.** Earlier in this session
+116 colour emoji were removed platform-wide and
+`scripts/brand-glyph-check.py` was extended to catch all three encodings
+(literal, `&#127805;`, `'\u{1F311}'`). PR #235 put 18 back on
+`dashboard.html` — the flagship page — as `.emblem-orb` marks:
+
+```
+📖 🧠 🎯 💰 🤝 💪 🛡        astral-plane pictographs, no text form
+♈ ♓ ♎ ♏ ♑ ⚡ ✨ ♂          BMP, default to colour presentation
+```
+
+The gate did exactly its job: it caught the regression before deploy rather
+than after. That is the argument for the gate, recorded as evidence.
+
+**The same file already mixed conventions** — `⚖`, `♦`, `✦`, `◈`, `⊕`, `☯`
+were monochrome in the very same KPI rows — so the fix was to finish the
+convention, not invent one. Seven pictographs were replaced with BMP marks
+already in this repo's vocabulary, chosen for meaning:
+
+| KPI | was | now | why |
+|---|---|---|---|
+| JOURNAL ENTRIES | 📖 | `▤` | square with horizontal fill, a lined page |
+| CARDS DUE TODAY | 🧠 | `◉` | the emblem registry's "intelligence" mark |
+| VISION SCORE AVG | 🎯 | `◎` | bullseye |
+| SAVINGS RATE | 💰 | `⊙` | circled dot |
+| CONTACTS DUE | 🤝 | `⊛` | circled asterisk |
+| BODY WEIGHT | 💪 | `✹` | the agent-network mark |
+| ADMIN ACTIONS | 🛡 | `⌘` | the repo's "command" glyph, and these are owner controls |
+
+Twelve BMP symbols were pinned with `U+FE0E`.
+
+**Verified by pixel readback, not by the codepoint tables** — the repo's
+standing rule. Each replacement drawn white-on-black at 34px and read back:
+
+```
+mono   "▤"  spread=0  ink=292      mono   "♈︎"  spread=0  ink=142
+mono   "◉"  spread=0  ink=326      mono   "♓︎"  spread=0  ink=184
+mono   "◎"  spread=0  ink=218      mono   "⚡︎"  spread=0  ink=100
+mono   "⊙"  spread=0  ink=186      mono   "✨︎"  spread=0  ink=162
+mono   "⊛"  spread=0  ink=243      mono   "♂︎"  spread=0  ink=177
+mono   "✹"  spread=0  ink=226      mono   "⌘"   spread=0  ink=229
+mono   "●"  spread=0  ink=355
+COLOUR "📖" spread=186 ink=978     <- positive control
+```
+
+13 of 13 monochrome, none with zero ink (a missing glyph draws an empty box,
+which passes a colour check while looking broken), and the control emoji
+registers colour at spread 186 — so the detector is detecting.
+
+**The type floor** was `.status-indicator{font-size:8px}` with a `10px`
+`::before`. Raised to the 12px floor, with the dot's smaller optical size kept
+as `.85em` rather than a second absolute value below the floor.
+
+Gates after: `./scripts/ci-local.sh` 22/22, 179 tests, `brand-glyph-check.py`
+clean across 362 shipped files, `node scripts/verify-runtime.js --all` PASS on
+all 189 pages, exit 0.

@@ -168,16 +168,16 @@ textarea.form-input{min-height:72px;resize:none;line-height:1.75}
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-box"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-box"><div class="stat-val">21</div><div class="stat-lbl">HABIT DAYS</div></div>
-      <div class="stat-box"><div class="stat-val">φ/e</div><div class="stat-lbl">IDENTITY RATIO</div></div>
-      <div class="stat-box"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box card"><div class="stat-val">21</div><div class="stat-lbl">HABIT DAYS</div></div>
+      <div class="stat-box card"><div class="stat-val">φ/e</div><div class="stat-lbl">IDENTITY RATIO</div></div>
+      <div class="stat-box card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-box"><div class="stat-val">3×</div><div class="stat-lbl">DAILY TARGET</div></div>
-      <div class="stat-box"><div class="stat-val">66</div><div class="stat-lbl">AUTO-PILOT DAYS</div></div>
-      <div class="stat-box"><div class="stat-val">vmPFC</div><div class="stat-lbl">BRAIN REGION</div></div>
-      <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-box card"><div class="stat-val">3×</div><div class="stat-lbl">DAILY TARGET</div></div>
+      <div class="stat-box card"><div class="stat-val">66</div><div class="stat-lbl">AUTO-PILOT DAYS</div></div>
+      <div class="stat-box card"><div class="stat-val">vmPFC</div><div class="stat-lbl">BRAIN REGION</div></div>
+      <div class="stat-box card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="sci-card card">
       <div class="sci-title">SELF-AFFIRMATION THEORY</div>
@@ -423,7 +423,7 @@ function renderTracking(){
     {v:streak,l:'DAY STREAK'},
     {v:allAffirmations.length,l:'LIBRARY SIZE'},
     {v:favCount,l:'FAVORITES'},
-  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   /* 30-day streak dots */
   var sd = document.getElementById('streak-display');

@@ -51,7 +51,7 @@
       ['\u2740', 'Payments', '/payments.html'],
       ['\u25B3', 'Subscriptions', '/subscriptions.html']
     ]],
-    ['THE ORDER', '#8B0000', [
+    ['THE ORDER', '#C4453C', [
       ['\u2318', 'Family', '/family.html'],
       ['\u265A', 'Kings', '/elements.html#kings'],
       ['\u2691', 'Hall', '/hall.html'],

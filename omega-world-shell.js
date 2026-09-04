@@ -16,7 +16,7 @@ name: 'Library', color: '#D9B86A', emblem: '◈', motion: 1, desc: 'Academy and 
 }, gaming: {
 name: 'Arena', color: '#E86A3A', emblem: '◉', motion: 4, desc: 'Competition and play'
 }, media: {
-name: 'Studio', color: '#8B0000', emblem: '▶', motion: 3, desc: 'Media and creation'
+name: 'Studio', color: '#C4453C', emblem: '▶', motion: 3, desc: 'Media and creation'
 }, commerce: {
 name: 'Exchange', color: '#C9A84C', emblem: '◉', motion: 1, desc: 'Marketplace'
 }, creation: {

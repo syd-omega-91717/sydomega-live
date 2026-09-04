@@ -509,7 +509,7 @@ function renderAudit(){
     {v:fmtDur(avgDay),l:'AVG / DAY'},
     {v:fmtDur(deepSecs),l:'DEEP WORK'},
     {v:logs.length,l:'SESSIONS'},
-  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   /* category breakdown */
   var catTotals={};

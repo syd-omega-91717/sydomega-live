@@ -79,7 +79,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
       <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
       <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL FASTS</div></div>
       <div class="stat"><div class="stat-val" id="st-best">0h</div><div class="stat-lbl">PERSONAL BEST</div></div>
-      <div class="stat"><div class="stat-val" id="st-avg">0h</div><div class="stat-lbl">AVG DURATION</div></div>
+      <div class="stat"><div class="stat-val" id="st-avg">0h</div><div class="stat-lbl">AVG DURATION</div><div data-omega-spark id="spark-fast" data-spark-label="DURATION OF RECENT COMPLETED FASTS" data-spark-unit=" hours" data-spark-digits="1" hidden style="margin-top:8px"></div></div>
     </div>
 
     <div class="tab-row">
@@ -459,6 +459,14 @@ function updateStats(){
     else break;
   }
   document.getElementById('st-streak').textContent=streak;
+  var spark=document.getElementById('spark-fast');
+  if(spark){
+    /* log is newest-first and only completed fasts carry a meaningful
+       duration -- a broken fast is not a shorter fast, it is a different
+       event, so it is excluded rather than plotted as a dip. */
+    var hours=completed.slice(0,12).reverse().map(function(l){return l.elapsed/3600;});
+    spark.setAttribute('data-spark-values',JSON.stringify(hours));
+  }
 }
 
 function restoreActive(){
@@ -479,5 +487,6 @@ updateStats();
 restoreActive();
 </script>
 <script src="/bg.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 </body>
 </html>

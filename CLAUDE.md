@@ -121,6 +121,11 @@ before styling a shared class:
 | `.card`/`.kpi`/`.kpi-card` shadow + border, `.topbar`, `.sechead`, `body::before` field | `omega-visual-evolution.css` (13) |
 | `#omega-side` (with `!important`) | `nav.js` (16) |
 | `body{background}` (with `!important`) | `omega-backdrop.js` (20) — tints to the member's element and page; a feature, don't fight it |
+| **the palette itself** — `--void`, `--crim`, `--ink`, `--muted`, `--line` | `theme.js` (`#omega-theme-css`, 19) — a "Sovereign Dusk" layer that re-declares them and, being later, **beats bg.js**. Change a token there too, or the change does not ship |
+
+A page's own `<style>` is sheet **0**, so bg.js (1) beats it: 62 pages redefine
+canonical tokens in their own `:root` and every one of those is dead code
+(measured). Only the 51 sheets after bg.js can win.
 
 A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
@@ -151,9 +156,8 @@ which already own `opacity` on what they manage.
   `.kpi-row`, `.card`/`.card-grid`, `.tbl-*`, `.tab-*`, `.chip`, `.glass`/
   `.glass-cyan`, `.bar-track`/`.bar-fill`. **`.shell` is a flex _row_**, so a
   page-level block written after `</main>` is not below the content — it is a
-  third column, stretched full height, taking its own width out of the page.
-  23 pages were rendering ~300px narrow this way. Put page-level blocks inside
-  the content column.
+  third column taking its own width out of the page (23 pages once rendered
+  ~300px narrow this way). Put page-level blocks inside the content column.
 - Responsive breakpoints at 1200/900/700/480px, all defined in the same
   block.
 
@@ -187,14 +191,15 @@ through this one file with no per-page markup changes:
   intended, retroactively for pre-existing `.card` usage too. `.kpi` is
   excluded outright: it already carries a per-instance `--kc` accent color,
   so it gets a matching hover glow in that color instead.
-  `honors.html`'s `.honor-card` was never given `.card` at all — both its
-  `::before` and `.card`'s set `background`, and only one can win. **The
-  mechanism this used to cite was wrong** ("a `::before` can only render one
-  rule, never merges"): pseudo-elements cascade per *property* like any
-  element, proven live. The exclusion still stands on the property
-  collision — so check the excluded classes below against *which properties*
-  collide, not against the presence of a pseudo. That one is not
-  hover-fixable: it is the badges' resting appearance.
+  A page-local `::before` that sets `background` collides with `.card::before`
+  per *property* (pseudo-elements cascade like any element). **That collision
+  is solvable, and this file twice said it was not**: `.card::before` is the
+  same 2px top bar those classes draw and it reads `--card-accent`, which takes
+  a colour *or* a gradient (both proven in a render). So set
+  `--card-accent` on the page-local class and delete its own pseudo —
+  `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
+  translated losslessly. Check *which properties* collide, never the mere
+  presence of a pseudo.
 - **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
   `*-card` classes across 117 files by scanner. **The standing fact:** ~34
   classes were deliberately **not** swept, because `.card`'s hover-only
@@ -206,20 +211,30 @@ through this one file with no per-page markup changes:
   (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
   hover-only masking hides them only during a simultaneous hover. Check a class
   against those two failure modes before adding `.card`; the per-class list,
-  the scanner and the verification are in `FIXES_LOG.md`.
+  the scanner and the verification are in `FIXES_LOG.md`. Two facts before any
+  sweep. **A sweep is not additive**: `omega-visual-evolution.css` styles
+  `.card,…,[class*="card"]` — that substring selector already gives *every*
+  `*-card` class the glass surface — and it loads after the page's `<style>`,
+  so at equal specificity it wins; measured, it rewrote resting
+  border/background/padding/radius on 130 swept elements. Re-assert anything
+  the page means at `.x.card`. **And `.card` enrols the element in the
+  `oa-fade-up` reveal**, whose last keyframe pins `opacity:1` — that silently
+  un-dimmed 16 `.honor-card.locked` badges; an animation beats a plain
+  declaration, and only `!important` outranks it.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
   growing from the tab centre in the page axis colour, quarter-width on hover.
   40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
   fact established by parsing `<style>` blocks, since a whole-file grep counts
   every `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry table utilities** (opt-in, not yet used by any page):
-  `.trend.up`/`.trend.down` badges (colored, glowing, with a
-  `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
-  zebra striping, `.sparkline` (stroke/glow styling for an inline SVG
-  polyline a page renders itself). `.trend` sets `justify-self:start`
-  deliberately — `.tbl-row` is `display:grid`, and without that, a
-  `.trend` child stretches to fill the implicit grid track by default
-  (confirmed by rendering a test harness before shipping).
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges (`▲`/`▼`/`▬`),
+  `.tbl-row.up`/`.down` row coloring, zebra striping, `.sparkline` (stroke/glow
+  for an SVG polyline). `.trend` sets `justify-self:start` deliberately —
+  `.tbl-row` is `display:grid`, and without it a `.trend` child stretches to
+  fill the implicit track. **Draw them through `omega-sparkline.js`**
+  (`data-omega-spark` + `data-spark-values`; loaded per page, not by `bg.js`),
+  never by hand: a badge asserts a direction, so it draws nothing below two
+  real readings, `.flat` on equality, an absolute delta from a prior 0, and its
+  6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **Fallback skin for genuinely bare elements**: `input:not([class])`,
@@ -469,17 +484,14 @@ open, recorded in `FIXES_LOG.md`:
   `subscriptions.html`'s own copy already says so. The user was asked directly
   and chose to keep it dormant.
 - **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
-  (`wealth`, `wallet`, `treasury`, `revenue`, `investment`, `expenses`,
-  `budget`) were a decision, not a default: unusually sensitive data, hard to
-  walk back once member data lives server-side, mitigated with
-  `omega-local-backup.js` export/import. `scripts/evidence-audit.py` shows the
-  same shape reaches 48 pages, and only 5 of them carry that export path — 43
-  store member data with no server copy and no way to get it out
-  (`achievements`, `notes`, `projects`, `passport`, `targets`, `mood`,
-  `reading`, `workout` …). That is a scope finding, not a decision: nobody has
-  chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
-  write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
-  for the current list rather than quoting these numbers.
+  were a decision, not a default: sensitive data, hard to walk back once it
+  lives server-side, mitigated with `omega-local-backup.js` export/import.
+  `scripts/evidence-audit.py` shows the shape reaches 48 pages and only 5 carry
+  that export path — 43 store member data with no way to get it out
+  (`achievements`, `notes`, `projects`, `passport`, `mood`, `workout` …). That
+  is a scope finding, not a decision: nobody chose it for the other 41. A
+  further 24 pages are `PARTIAL` (Postgres *and* a parallel local copy). Run
+  the scanner rather than quoting these numbers.
   **Fixed and applied 2026-08-24**: `public.member_state`
   (`supabase/omega_member_state.sql`, `migrations/0095`) plus
   `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
@@ -488,12 +500,10 @@ open, recorded in `FIXES_LOG.md`:
   would let an empty-cache render overwrite good server data. RLS verified live
   by two-member impersonation (own-row write OK, write-as-other 42501, other
   member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
-  trigger. Client-side encryption was considered and rejected — no stable client
-  secret exists, so the key would either die with the cache it exists to survive
-  or rest on a forgettable passphrase; and this changes no trust boundary, since
-  `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
-  `bloodline_nodes` already hold comparable data server-side under the same,
-  tested RLS.
+  trigger. Client-side encryption was considered and rejected: no stable client
+  secret exists, and it changes no trust boundary anyway — `health_logs`,
+  `ai_memory`, `family_nodes` and `heritage_records` already hold comparable
+  data server-side under the same, tested RLS.
 - **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
@@ -504,59 +514,53 @@ open, recorded in `FIXES_LOG.md`:
   exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
   in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
-  `#evt-metrics-body`, an id that exists nowhere. Building the container means
-  designing UI that was never built.
+  `#evt-metrics-body`, an id that exists nowhere. The container would be new UI,
+  not a fix.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
   so the score moves only on 30-min idle (`-10`) and a failed gated action
-  (`-5`), never on a threat. Detection is an architecture decision. *This entry
-  claimed `gate()` is never called and the badge always reads 100; both false —
-  `approvals.html` calls it at 3 sites, `updateBadge()` repaints every 2s.*
+  (`-5`), never on a threat. Detection is an architecture decision. (`gate()`
+  *is* called — `approvals.html`, 3 sites — and `updateBadge()` repaints every
+  2s; an earlier claim here that neither ran was wrong.)
 - **`omega-threat.js` is the digital-thread traceability engine**
-  (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
+  (`window.OmegaThread`), not threat detection; filename left as-is.
 - **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
-  remaining).** Both INFO-level. The "unused" signal reflects a platform with
-  9 real profiles and near-zero traffic, not badly designed indexes — nearly
-  every one is the `user_id` pattern every RLS policy filters on. The 61
-  remaining unindexed FKs are all on the 45-table scaffold schema below.
+  remaining).** Both INFO-level and expected: "unused" reflects 9 profiles and
+  near-zero traffic, not bad indexes — nearly every one is the `user_id`
+  pattern RLS filters on — and the 61 FKs are all on the scaffold below.
 - **~83 tables live on production that this repo's SQL never created** — a
   generic multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars).
-  RLS is enabled with no policies, which is the *safe* state (total lockout),
-  and they are empty. Inventing policies for schema of unknown purpose would
-  be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
+  RLS on, no policies — the *safe* state (total lockout) — and empty. Inventing
+  policies for schema of unknown purpose fabricates behaviour. Needs a human
+  decision: drop, adopt, or leave.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
-  claim one). `platform_events` is correctly scoped to `auth.uid() = user_id`.
-  `platform_metrics` does have `WITH CHECK(true)` but no `user_id` column, so
-  there is nothing to spoof — the residual risk is junk rows, not impersonation
-  — and `authenticated` is not granted INSERT on either, so both are unreachable
-  anyway. Scope `platform_metrics` before that grant is ever added.
+  claim one). `platform_events` is scoped to `auth.uid() = user_id`.
+  `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
+  nothing to spoof — junk rows, not impersonation — and `authenticated` lacks
+  INSERT on both anyway. Scope it before that grant is ever added.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
-  `is_platform_owner() OR status='active'` respectively). Both look deliberate
-  — published governance policies and feature flags are meant to be visible —
-  but they became *reachable* only when the missing grants were added, so they
-  are recorded here rather than assumed fine. 10 governance rows are visible to
-  a non-owner and all 10 are `status='active'`; no drafts leak.
-- **39 tables have RLS policies and no grant** (was 38; re-counted live
-  2026-08-29). Left locked out — the safe state — rather than granted on the
-  assumption that a policy's existence implies it should be reachable. **Now
-  measured against live rather than inferred:** of 202 public tables, RLS is
-  enabled on **all 202** (the `audit.py` check-4 invariant holds in production,
-  not just in source), 74 have both policies and a grant, 39 have policies and
-  no grant, and 1 has a grant but no policy — which is still locked, since RLS
-  with no policy denies by default. Every one of the 39 was cross-referenced
-  against client `.from(...)` calls: **none is reachable from any page**, so
-  this remains locked-but-unused, not a broken feature. Do not "fix" it by
-  granting without deciding the feature is wanted.
+  `is_platform_owner() OR status='active'`). Both look deliberate, but became
+  *reachable* only when the missing grants were added, so they are recorded
+  rather than assumed fine. All 10 visible governance rows are
+  `status='active'`; no drafts leak.
+- **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
+  Left locked out — the safe state. **Measured, not inferred:** of 202 public
+  tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
+  in production), 74 have policies *and* a grant, 39 have policies and no
+  grant, 1 has a grant and no policy (still locked — RLS with no policy denies).
+  All 39 were cross-referenced against client `.from(...)` calls: **none is
+  reachable from any page**. Do not "fix" it by granting without deciding the
+  feature is wanted.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only
   CSP violations in a real browser surfaced them. Resolve versions from
   `registry.npmjs.org` (the CDNs are 403), never memory. `vercel.json`'s CSP is
-  now **enforced**, verified at 0 violations across all pages; as written before
-  it would have killed the webfonts and four features. Stripe is fixed in code,
-  not by pinning: `periodEndSeconds()` reads both pre-basil and basil shapes,
-  since two of three read sites take the *inbound webhook* payload, whose
-  version is a dashboard property no repo change can pin. **Still open: the
+  **enforced**, verified at 0 violations; as written before it would have killed
+  the webfonts and four features. Stripe is fixed in code, not by pinning:
+  `periodEndSeconds()` reads both pre-basil and basil shapes, since two of three
+  read sites take the *inbound webhook* payload, whose version is a dashboard
+  property no repo change can pin. **Still open: the
   single physical CI runner** — never "fix" it with a hosted lane;
   `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
@@ -571,15 +575,15 @@ open, recorded in `FIXES_LOG.md`:
   `.githooks/pre-push` runs it on every push — enable per clone with
   `git config core.hooksPath .githooks`, bypass with `--no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
-  The advisor reports 93; reading the bodies, the owner-sensitive ones guard
-  themselves via `public.omega_is_owner()`, which a substring classifier looking
-  for `is_platform_owner` misses. Three unguarded-and-uncalled functions were
-  revoked (`migrations/0097`); the rest have real callers and are unguarded on
-  purpose. Cross-member leakage was tested directly by member impersonation
-  across 17 tables — every populated table scoped, `profiles` included. **When
-  adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
-  Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
-  returns on its own. That is how 70 previously-revoked functions became 23.
+  The advisor reports 93; the owner-sensitive ones guard themselves via
+  `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
+  misses. Three unguarded-and-uncalled functions were revoked
+  (`migrations/0097`); the rest have real callers. Cross-member leakage was
+  tested by member impersonation across 17 tables — every populated table
+  scoped, `profiles` included. **When adding any function,
+  `REVOKE EXECUTE ... FROM PUBLIC` in the same file**: Postgres grants it to
+  PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its own —
+  that is how 70 revoked functions became 23.
 - **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
   `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
   Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
@@ -910,15 +914,14 @@ the same repositories:
 
 | source | what it is | outcome |
 |---|---|---|
-| `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug affecting 173 pages. Which rules transfer and which are React-only is recorded in `.claude/skills/interface-guidelines/SKILL.md` — read that rather than importing the upstream list wholesale. |
-| `vercel-labs/skills` → `find-skills` | discovery wrapper over `npx skills find/add` | **Not installed.** This session already has skill discovery. Its quality-gate criteria are adopted above; that was the transferable part. |
-| `anthropics/claude-plugins-official` | official plugin directory, 39 internal + external plugins | **`claude-md-management` was the find.** Its conciseness/currency rubric is what prompted measuring CLAUDE.md, which turned out to be ~68,900 tokens loaded per session with §8 as 88% of it — see `FIXES_LOG.md`'s header. The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`, `code-review` and `pr-review-toolkit` duplicate what this session already provides. |
-| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills (UGC ads, video hooks, ad copy) | **0 applicable.** Built for public paid-acquisition funnels. This platform is `noindex, nofollow` and invite-gated — it has no ad surface to produce for. Evaluated twice; do not re-evaluate without a change in what the platform is. |
-| `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** Nothing to adopt. |
-| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted.** `template/SKILL.md` confirms `name`+`description` are the whole required frontmatter contract, and that a description must say *when* to use the skill — which is what `grill-me-codex` was missing. Nothing installed. |
-| `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s review criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
-| `affaan-m/everything-claude-code` (+ the 4 forks) | Claude Code config collection | **WATCH.** The four separately-listed repos are forks of this one upstream. Stars/activity unverifiable — GitHub API is egress-blocked. |
-| `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook` | agent harnesses, generative-UI framework, other providers' SDKs | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic server runtime. `agent-browser` duplicates the existing `verify-in-browser` harness. |
+| `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug on 173 pages. Which rules transfer is in `.claude/skills/interface-guidelines/SKILL.md` — read that, do not import the upstream list. |
+| `vercel-labs/skills` → `find-skills` | wrapper over `npx skills find/add` | **Not installed** — this session already has skill discovery. Its quality-gate criteria (adopted above) were the transferable part. |
+| `anthropics/claude-plugins-official` | official plugin directory, 39 plugins | **`claude-md-management` was the find** — its conciseness rubric is what prompted measuring CLAUDE.md at ~68,900 tokens per session, §8 being 88% (`FIXES_LOG.md` header). The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`/`code-review`/`pr-review-toolkit` duplicate this session. |
+| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex` and invite-gated, with no ad surface. Evaluated twice — do not re-evaluate unless what the platform is changes. |
+| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and that a description must say *when* to use the skill — what `grill-me-codex` was missing. |
+| `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
+| `affaan-m/everything-claude-code` (+ 4 forks of it) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
+| `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |
 
 Full evidence, per-repo blockers, and what could not be verified this session:
 **`OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`**. Read that before re-evaluating any of

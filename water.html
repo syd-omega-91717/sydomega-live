@@ -65,6 +65,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .empty-state{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
 </style>
   <script src="/bg.js"></script>
+  <script src="/omega-sparkline.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -356,7 +357,25 @@ function renderHistory(){
     {v:avgDay+'ml',l:'DAILY AVG'},
     {v:streak,l:'GOAL STREAK'},
     {v:days.size,l:'ACTIVE DAYS'},
-  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('')
+    +'<div class="stat-box card"><div class="stat-val" id="st-yesterday">&mdash;</div><div class="stat-lbl">YESTERDAY VS PRIOR DAY</div>'
+    +'<div data-omega-spark id="spark-water" data-spark-line="off" hidden style="margin-top:8px;justify-content:center"></div></div>';
+
+  /* Yesterday against the day before it: two finished days. The canvas below
+     already draws the seven-day shape, so this box adds the one thing it does
+     not state -- the direction of the last complete change. Today is left out
+     of the comparison because it is still being logged. */
+  (function(){
+    var y=new Date(); y.setDate(y.getDate()-1);
+    var p2=new Date(); p2.setDate(p2.getDate()-2);
+    var yMl=dayTotal(y.toISOString().slice(0,10));
+    var pMl=dayTotal(p2.toISOString().slice(0,10));
+    var box=document.getElementById('st-yesterday');
+    var el=document.getElementById('spark-water');
+    if(box) box.textContent=yMl+'ml';
+    /* Two logged-nothing days are a real zero, not a trend: say nothing. */
+    if(el) el.setAttribute('data-spark-values',(yMl||pMl)?JSON.stringify([pMl,yMl]):'[]');
+  })();
 
   /* 30-day dots */
   var sd=document.getElementById('streak-dots'); sd.innerHTML='';

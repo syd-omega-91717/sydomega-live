@@ -6692,3 +6692,580 @@ Both new pages also gained a registry entry and an emblem mount, so the
 "every page a member sees carries its own mark" invariant is not lost on the
 next merge.
 
+
+## 40 of 189 pages broken on main, from one unguarded document.body (2026-09-03)
+
+A clean full sweep against main after PR #224 merged:
+
+```
+RUNTIME VERIFICATION: 40 page(s) failed
+  FAIL affirmations.html   x 1 uncaught error(s):
+       EXC Failed to execute 'observe' on 'MutationObserver':
+           parameter 1 is not of type 'Node'.
+  FAIL agent-network.html  x approval guard never lifted (#app still display:none)
+```
+
+Three defects, all from #224, all invisible to every static gate -- `ci-local.sh`
+was 22/22 and the 179 tests passed the whole time.
+
+### 1. bg.js threw on every page that loads it from `<head>`
+
+The Phase C/D block called `observer.observe(document.body, ...)` at parse
+time. `document.body` is null until the parser reaches it, so on the large part
+of the estate that loads `bg.js` from the head this threw immediately -- and
+**everything after it in bg.js never ran**: 38 pages with an uncaught error, 2
+whose approval guard consequently never lifted.
+
+CLAUDE.md 8.1 class 5a, which is precisely why `bg.js` routes its own injections
+through `__omegaAppend()`. `readyState !== 'loading'` does not imply a body
+exists, so the gate is `whenBodyReady()`: run now if there is a body, else wait
+for `DOMContentLoaded`, else poll a bounded number of frames. Every body-touching
+entry point in the block now goes through it -- the activation, the observer,
+and `applyToPage(document.body)`.
+
+### 2. Both new pages rendered completely blank
+
+`agent-network.html` and `design-showcase.html` each ship
+
+```html
+<div id="app" class="shell" style="display:none">
+```
+
+and nothing anywhere removes it. The approval guard hides `#app` with a CSS rule
+keyed on `body:not(.omega-approved)` and reveals it by adding that class -- an
+**inline** `display:none` cannot be lifted by any rule, at any specificity. Both
+pages were permanently empty. The cascade probe is what settled it: every
+matching rule said `display:flex`, and the element still computed `none`, because
+the value was on the element itself.
+
+Measured on `agent-network.html` before and after removing the attribute:
+
+```
+                       before        after
+canvas#network-canvas   0x0         505x276
+div#app.shell           0x0  none   1280x840  flex
+painted pixels            0          47,106
+```
+
+### 3. All twelve agent signs were wrong
+
+`agent-network.html` carried its own twelve-agent roster, offset by four
+positions against `omega-agents.json` -- **12 of 12 mismatched**:
+
+```
+Sentinel  page=Sagittarius  canonical=Aries
+Merchant  page=Capricorn    canonical=Taurus
+...
+```
+
+CLAUDE.md 8.1 class 8, the failure that once had the live onboarding flow
+assigning the wrong god to nine of twelve signs. The roster is now derived from
+`omega-agents.json` with the same fetch-and-fallback posture
+`omega-constellation.js` and `agents.html` already use for that file, and colour
+comes from `OmegaEmblem.color(sign)` rather than a third copy of the palette.
+Verified at runtime: 12 rows, **0 sign mismatches**, 0 stale-gold colours,
+`Sentinel -> Aries -> #E86A3A`.
+
+Two more from the same page while there: an unbroken `requestAnimationFrame`
+loop that cleared, reallocated (`canvas.width = ...`) and redrew the whole canvas
+sixty times a second forever for a diagram that never moves -- replaced with a
+draw on load plus a `ResizeObserver`, because the guard's reveal fires no resize
+event; and `design-showcase.html`, a palette **reference** page, was documenting
+`#FFD700` as the brand gold. Nineteen swatch values and labels corrected.
+
+**The method note.** Every static gate was green through all of this. Nothing in
+the repo can see a page that renders nothing, or a roster that disagrees with its
+own source file. Only the runtime sweep catches those -- and the one run before
+merging #224 was invalid, because it had been measured across a branch switch.
+A sweep is only evidence if the tree held still underneath it.
+
+
+## The signature ring reaches a second page, and the candidates that were rejected (2026-09-04)
+
+`omega-constellation.js` — the ring of living emblems around a central Ω — had
+been mounted on exactly one page (`agents.html`, the Council tab) since it was
+written. Which other pages could take it was measured, not guessed: a render of
+fourteen candidates looking for a container whose children are a uniform set of
+twelve or nine.
+
+```
+cosmos.html      12x .ag-card      1136x346
+houses.html      12x .hcard        1112x690
+pantheons.html   12x (no class)    1112x765
+levels.html      12x .lv-card      1112x262
+phases.html      12x .phase-card   1112x565
+elements/factions/triads/sovereigns/hall/realm/universe/matrix/agents   none
+```
+
+**Four of the five were rejected, and the reasons are the useful part.**
+`cosmos.html` and `houses.html` each already draw their own circular diagram —
+`houses.html` has a 500x500 `#wheel-canvas` behind its WHEEL tab — so a second
+ring would duplicate a diagram, not add one. `levels.html` and `phases.html`
+hold a *progression*, not a set of peers; a ring implies equal standing, and
+both had just gained a ring gauge for their own headline percentage, so a second
+ring on the same page would compete with it.
+
+`pantheons.html` was the one real candidate: twelve Olympians, each already
+carrying a `sign` the emblem module can draw, and no circular diagram anywhere
+on the page.
+
+**Fed from the page's own array, not a copy.** `ringNodes()` maps the existing
+`GODS` array, so the ring cannot disagree with the cards below it — the failure
+that had `agent-network.html` showing all twelve signs wrong on the same day.
+Nodes carry no `href`: the gods have no destination pages, and the module
+renders a `<div>` rather than a dead link when `href` is absent.
+
+One real trap in the wiring. `domain` is stored with an HTML entity
+(`'Sovereignty &amp; Law'`), and the constellation escapes what it renders — so
+passing it through raw painted the literal characters `&amp;`. Decoding through
+a detached `<textarea>` before handing it over fixes it; verified in the render
+as `SOVEREIGNTY & LAW`. The module also observes `childList`, not attributes, so
+setting `data-cn-nodes` after its boot scan needs an explicit
+`OmegaConstellation.scan()`.
+
+Measured after mounting: `data-cn-state="ready"`, **12 nodes, 12 marks, 12
+filled** with emblem artwork, box 1112x908, no hidden ancestor, no horizontal
+scroll, no page errors.
+
+`verify-runtime.js --all`: **PASS (189 pages)**, measured on the shipped code.
+
+**Also corrected: Zeus was `#FFD700`.** The other eleven gods carry deliberate
+per-deity accents (silver for Artemis, tan for Hestia) which are page content,
+not a palette — measured as 12 distinct values with only 3 overlapping the brand
+set, so they were left alone. Zeus's was the stale gold from the same family as
+the divergent palettes cleared earlier that day, reading as an off-key gold
+beside the real `#C9A84C`.
+
+
+## The shipped telemetry utilities get a drawing engine, and six honest adopters (2026-09-04)
+
+**Same shape as the `.omg-ring` finding: CSS that ships and nothing renders.**
+`bg.js` has styled `.trend.up` / `.trend.down` badges, `.tbl-row.up`/`.down`
+row coloring and `.sparkline` (stroke + glow for an SVG polyline) since the
+Ω-GVP layer landed, and CLAUDE.md §4.1 recorded them as "opt-in, not yet used
+by any page". Measured rather than assumed, with an exact class-token match:
+
+```
+.trend      0 uses
+.sparkline  1 use   (ops.html)
+.up         4 uses  (profile.html, unrelated)
+.down       0 uses
+```
+
+A `\b`-anchored grep first reported "trend: 15 uses" — wrong, because `-` is a
+word boundary in that regex, so it counted page-local `trend-chip`,
+`trend-row`, `trend-wrap`, `trends-month-row` and `trend-yr-btn`. One step from
+"correcting" a CLAUDE.md claim that was accurate.
+
+**Why this was not "add trend badges to the 34 `.tbl-row` pages".** A
+`.trend.up` badge asserts a *direction* — that a number moved against a real
+previous value. Most of those pages hold no prior value, and rendering a
+direction from nothing is §8.1 class 9 exactly: `hercules.html` drawing
+`Math.random()*100` as member progress, `ad-network.html` inventing
+`REVENUE.total += 0.05`. So the adoption set was derived from what the pages
+actually persist and read back, not from where the markup would fit.
+
+Of 34 pages carrying shared `.tbl-row`, only 4 showed any series signal. Of the
+8 pages that provably persist *and* re-read a dated history, reading each
+storage shape rather than trusting the regex:
+
+| page | key | shape | verdict |
+|---|---|---|---|
+| `mirror.html` | `omega_mirror_entries` | `{date,energy,focus,clarity}` per day | 3 numeric series |
+| `expenses.html` | `omega_expenses` | `{date,amount,type}` | monthly totals |
+| `fasting.html` | `omega_fasting_log` | `{start,elapsed,completed}` | duration per fast |
+| `missions.html` | `omega_missions_activity` | `{date: xp}` | XP per day |
+| `rituals.html` | `omega_ritual_logs` | `{date:{id:true}}` | kept-count per day |
+| `water.html` | `omega_water_log` | `{ts,ml}` | ml per day |
+| `gates.html` | `omega_gate_history` | `{outcome,date}` | **no magnitude — skipped** |
+| `charter.html` | `omega_charter_history` | version records | **not numeric — skipped** |
+
+**`omega-sparkline.js`** (new, 6.6 KB, loaded per page rather than added to the
+90-modules-on-every-page debt in §8.2) draws the geometry once so six pages do
+not repeat min/max/scale arithmetic, and encodes the honesty rules in code
+instead of in a reviewer's memory:
+
+- fewer than two finite readings -> nothing renders and the mount stays
+  `hidden`; there is no placeholder state
+- the badge compares the last two *real* values only
+- equal values render a new `.trend.flat` (`▬`, muted), never an invented
+  direction
+- a prior value of 0 renders the absolute delta, because no percentage change
+  exists from zero
+- every adopter excludes the in-progress day or month from the comparison: a
+  half-earned day against a finished one reports a fall that has not happened
+
+Load order is not a hazard: pages set `data-spark-values` from their own render
+pass, and the module both scans on load and observes that attribute. This is
+the correction to `omega-constellation.js`, which observed `childList` only and
+needed an explicit `scan()` from every adopter.
+
+**Verified in a render, with controls, because no static gate can see this.**
+`sparkprobe.js` seeds each page's real storage keys, renders, and reads the
+drawn SVG back — 10 cases, 0 failures, 0 load failures:
+
+```
+OK   mirror rising energy       drawn=3  [3pt up 80%] [3pt up 17%] [3pt up 33%]
+OK   CONTROL mirror no data     drawn=0
+OK   CONTROL mirror one reading drawn=0
+OK   expenses spend falling     spark-exp     [6pt  down 56%   241x32]
+OK   fasting shorter last fast  spark-fast    [3pt  down 33%   241x32]
+OK   missions rising xp         spark-xp      [14pt up   167%  138x32]
+OK   rituals kept per day       spark-rituals [14pt up   200%  239x28]
+OK   BRANCH equal values flat   spark-fast    [2pt  flat NO CHANGE]
+OK   BRANCH zero prior absolute spark-xp      [14pt up   320]
+OK   water yesterday vs prior   spark-water   [0pt  up   57%   102x19]
+```
+
+Every percentage was checked against the seeded numbers by hand (5→9 = +80%,
+900→400 = −55.6%, 120→320 = +166.7%, 1→3 = +200%, 1400→2200 = +57.1%). The two
+CONTROL rows are the reason the run means anything: a probe that cannot report
+a failure proves nothing, and both no-data and one-reading must draw nothing.
+The two BRANCH rows cover the honesty paths that would otherwise never execute.
+
+The probe found two real problems on its first run, neither of them in the
+sparkline code:
+
+- `water.html`'s stat grid lives in the History tab and only renders when
+  `switchTab(this,'t2')` fires, so the mount did not exist at load. The probe
+  now clicks the tab — the badge is in the right place, the probe was reading
+  the wrong moment.
+- the expenses fixture wrote `recurring: false` where the page's own writer
+  stores the select's *string* value, and `e.recurring.toUpperCase` threw. A
+  fixture bug, not a page bug, but it is the reason the run was FAIL rather
+  than a quiet pass with one page erroring underneath.
+
+`water.html` takes the badge without a line (`data-spark-line="off"`): the
+seven-day bar canvas below it already draws the shape, so the badge adds the
+one thing that canvas does not state — the direction of the last complete
+change — rather than duplicating it. `missions.html` takes the line *because*
+its 90-day heatmap buckets a day into five intensities, so every day above
+600 XP looks identical there.
+
+Gates after the change: `./scripts/ci-local.sh` 22/22, `unittest discover`
+179 passing, `scripts/audit.py` 0 critical / 7 warnings, `context-budget.py`
+PASS at ~15,997 of 16,000 (six paragraphs elsewhere in CLAUDE.md were trimmed
+to make room for the §4.1 rewrite), `verify-runtime.js` PASS on the 13
+capability entrypoints and `--all` PASS on all 189 pages (exit 0, run to
+completion — not a claim written ahead of the run). `omega-registry.py`
+regenerated for the new module.
+
+## Which pages are flat text, measured — and what the card sweep actually does (2026-09-04)
+
+**The measurement.** "More graphic than text" is a taste claim until something
+counts it. A runtime scan measured, inside the content column only (the sidebar
+is identical everywhere and swamps the signal), visible `innerText` characters
+against the weight of what actually paints — `canvas`×6 + `svg`×3 + emblem×4 +
+`img`×2 + `.card` + bar×2 — over 187 pages, 0 load failures.
+
+The control is what makes it mean anything: `dashboard`, `cosmos` and `matrix`
+are the known-cinematic pages, and they ranked 109, 101 and 126 of 187 — the
+visual half. A metric that put them at the text end would have been measuring
+the wrong thing and nothing else in the output would have counted.
+
+**The top three results were false positives, and checking them was the point.**
+
+```
+approvals.html       2662 chars, visual=0
+interface-omni.html  2045 chars, visual=0
+journal.html          941 chars, visual=0
+```
+
+`visual=0` on pages that every emblem census says carry a mount. Walking the
+ancestor chain in the browser rather than guessing:
+
+```
+journal.html        MAIN.main 0x0 -> DIV.shell 0x0 -> DIV. 0x0 display=none
+approvals.html      MAIN.main 0x0 -> DIV.shell 0x0 display=none
+interface-omni.html MAIN.main 0x0 -> DIV.shell 0x0 -> DIV. 0x0 display=none
+```
+
+`body.omega-approved` was set on all three, so this is not the approval guard.
+Reading the source: `approvals.html:149` is `<div class="shell" id="app"
+style="display:none">` revealed after an owner check, `interface-omni.html:63`
+is `<div id="main" style="display:none">` revealed only for
+`profiles.is_owner`, and `journal.html:130` is `<div id="j-main"
+style="display:none">` behind a passphrase. All three are correct behaviour
+under a non-owner stub. The scan found gates, not design gaps. `innerText`
+still returned characters because an unrendered element returns its
+`textContent` — which is exactly how a blank page can score as a wall of text.
+
+**Emblem coverage was already complete**, checked before building anything:
+188 registry entries in `omega-page-emblem.js`, 187 of 189 pages carrying a
+mount, and the 2 without are `verify-deployment` and `verify-modules`, the
+internal harnesses the module header excludes on purpose. Nothing to do there.
+
+**What was left was the genuine finding**: the flattest *rendering* pages carry
+canvases and SVG but zero `.card` — their content blocks sit raw on the
+background under page-local class names. Checked against the two documented
+sweep failure modes (a page-local `::before`/`::after` that sets `background`;
+a per-instance border via inline `style=`, JS `.style.border*`, or a
+same-element modifier):
+
+| class | files | verdict |
+|---|---|---|
+| `.stat-box` | 20 | clear -> swept (118) |
+| `.future-card` | chronicle | clear -> swept (4) |
+| `.prog-block` | gaming | clear -> swept (2) |
+| `.shelf-item` | library | clear -> swept (1) |
+| `.event-card` | graph-timeline | clear -> swept (1) |
+| `.e-card`, `.g-card` | gaming | **`::before` sets `background`** — excluded |
+| `.event-card` | chronicle | **`::before` sets `background` + 17 inline `border-left`** — excluded |
+| `.sci-card`, `.book-card` | — | already carried `.card` |
+
+130 elements swept across 23 files.
+
+**A `.card` sweep is not additive, and this session assumed it was.** The
+prediction was that a page's own `<style>` would win the tie and only the
+hover-only glow would be added. Measured before and after on real pages, that
+is false — `omega-visual-evolution.css` re-declares `.card` and is injected
+*after* the page's sheet, so at equal specificity it wins:
+
+```
+focus.html .stat-box     border  rgba(201,168,76,.1)  -> rgba(201,168,76,.22)
+                         background  transparent      -> rgba(10,10,15,.68)
+                         padding     16px             -> 20px
+                         shadow      none             -> inset + glow
+                         hover.shadow none            -> 0 8px 24px rgba(0,0,0,.35)
+achievements.html        border  rgb(26,26,26)        -> rgba(201,168,76,.22)
+                         radius  0px                  -> 2px
+```
+
+For a bare page-local box that unification is the point of having a design
+system. For one whose own value carries meaning it is a loss, and there was
+exactly one: `chronicle.html`'s `.future-card` used a **dashed** border to say
+"not yet real", and `.card`'s shorthand made it solid. Fixed by re-asserting it
+at `.future-card.card` specificity (0,2,0), which beats `.card` regardless of
+sheet order — verified back to `borderStyle: "dashed"` in a render.
+
+**A second scanner false positive, caught the same way.** A stuck-invisible
+sweep reported `chronicle.html` 4/21 elements at `opacity: 0` inside an open
+panel at full 268x205 size — which is what shipping invisible content looks
+like. It was the probe: `.card` enrolls an element in `omega-content.js`'s
+`.oc-hidden` reveal, and the probe clicked every tab but never scrolled.
+Scrolling each card into view the way a member reaches it returned
+`opacity: 1`, `revealed` on all four. Across the other 22 pages, 143 elements
+checked, 0 stuck.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `sparkprobe.js` 10/10 still
+passing after the sweep, `context-budget.py` PASS at ~15,996 of 16,000 (nine
+more paragraphs trimmed; the `cporter202/ai-growth-stack` row was merged into
+the catch-all 0-applicable row rather than dropped, so the do-not-re-evaluate
+record survives — the full evidence is in `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`),
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## The card-sweep exclusion list was not permanent: --card-accent, and two traps it exposed (2026-09-04)
+
+**The standing claim, twice recorded in CLAUDE.md §4.1, was wrong.**
+`honors.html`'s `.honor-card` was documented as un-sweepable because "both its
+`::before` and `.card`'s set `background`, and only one can win... That one is
+not hover-fixable: it is the badges' resting appearance." The collision is real.
+The conclusion was not.
+
+Reading what `.card::before` actually is:
+
+```
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+              background:var(--card-accent,var(--gold))}
+```
+
+It is the *same 2px top accent bar* those classes draw, and it takes the colour
+from a custom property. So the fix is one declaration per class, not an
+exclusion. Verified in an isolated harness rendered through headless Chromium
+before touching a page — a colour token, a gradient token, and the default:
+
+```
+.e-card   --card-accent:var(--gold)       -> ::before  rgb(201, 168, 76)
+.g-card   --card-accent:var(--purple)     -> ::before  rgb(155, 107, 240)
+.tier-omega --card-accent:linear-gradient(...) -> ::before  linear-gradient(90deg,
+                                    rgba(0,0,0,0), rgb(201,168,76), rgba(0,0,0,0))
+no token                              -> ::before  rgb(201, 168, 76)  (default)
+```
+
+A gradient works as well as a colour, which is what `honors.html` needed: its
+base `::before` carried geometry only and five `.tier-*` modifiers carried the
+paint. All five translated to `--card-accent` losslessly — measured after the
+change, four distinct gradients still rendering across the 16 badges (gold
+`rgb(201,…)`, solar `rgb(226,…)`, silver `rgb(192,…)`, cyan `rgb(0,22…)`).
+
+**The scanner found 42 candidate classes; most were noise.** A false-positive
+pass is why that number is not the answer: `t`, `a`, `section`, `toggle` and
+`toggle-slider` are utility names, not card containers, and `honors.html`'s five
+`tier-*` entries are modifiers on `.honor-card`, not classes of their own. The
+genuinely-clean accent-bar-plus-anchored set is 21 classes across 18 files.
+**Only 3 were adopted here** — `gaming.html`'s `.e-card`/`.g-card` (the flattest
+measured page in the repo, ratio 211) and `honors.html`'s `.honor-card` (the
+documented counterexample). The other 18 are feature-defining containers
+(`charter-doc`, `passport-doc`, `arch-console`…) and sweeping them wholesale
+would flatten exactly the per-page character this platform is supposed to have.
+They are recorded as unblocked, to be taken one page at a time with judgement.
+
+### Trap 1 — `[class*="card"]` was already doing half the job
+
+Asking the browser which rule supplied the border, rather than reasoning about
+it, turned up a selector nothing in this repo's docs records:
+
+```
+omega-visual-evolution.css
+.card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer,
+[class*="card"],[class*="panel"]{ background-color:var(--omega-glass);
+  border-color:var(--omega-edge); box-shadow:... }
+```
+
+A **substring** attribute selector. Every class whose *name merely contains*
+"card" — `.e-card`, `.honor-card`, `.event-card`, `.future-card` — already
+receives the glass surface, edge colour and shadow without ever carrying
+`.card`. That is why the excluded classes still looked like cards, and it
+sharpens the previous entry's finding: what a sweep actually adds to a `*-card`
+class is the hover glow, the shimmer `::after`, the cursor light, `padding:20px`
+and enrolment in the reveal systems — not the surface, which was already there.
+It also explains the asymmetry in that entry's own before/after: `.stat-box`
+(no "card" substring) showed `shadow: none` before, `.future-card` did not.
+
+### Trap 2 — the animation-beats-declaration trap, recurred
+
+Adding `.card` enrols the element in `omega-animated.js`'s `oa-fade-up`, whose
+final keyframe sets `opacity:1`. Measured after the sweep:
+
+```
+before   .honor-card.locked   opacity 0.45   filter grayscale(0.6)
+after    .honor-card.locked   opacity 1      filter grayscale(0.6)
+```
+
+`.honor-card.locked{opacity:.45}` is specificity (0,2,0) and still lost, because
+**an animation outranks a plain declaration regardless of specificity** — the
+same trap §4.2 records the Ω-HORIZON layer hitting. Sixteen locked honors
+stopped looking locked. `!important` is the one author declaration that outranks
+an animation; applying it restored `opacity: 0.45` in a render.
+
+The same reveal enrolment produced a false alarm worth recording: a visibility
+probe reported 2 of 60 `.e-card`s at `opacity: 0.098` and `0.085`. Those are
+rising values mid-`oa-fade-up`, not stuck elements — raising the settle from
+1000ms to 2600ms gave 132 open elements, **0 transparent**. A single opacity
+reading during a 0.5s animation is a measurement, not a finding.
+
+`.honor-card` also needed `padding:0` re-asserted at `.honor-card.card`: it
+carries no padding of its own and wraps a full-bleed `.honor-visual`, so
+`.card`'s 20px would have inset it. Verified: `firstKidW` unchanged at 267,
+box unchanged at 269x430.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,976 of 16,000 (five more §8.2 paragraphs compressed to make room for the
+two corrected facts in §4.1), `node scripts/verify-runtime.js --all` PASS on
+all 189 pages, exit 0.
+
+## The re-stepped crimson never reached the screen: one late sheet and nine literals (2026-09-04)
+
+**CLAUDE.md records `--crim` as fixed.** bg.js carries the re-step and the
+reason, verbatim in its own comment: *"was #8B0000 -- measured at 1.74:1
+against this surface, i.e. barely visible, and 77 of its uses are text
+`color`. Re-stepped to the deepest crimson that still clears 3:1."* The token
+was corrected. **The pixels were not.** Measured across 23 pages, every one of
+them painted visible text at `rgb(139, 0, 0)`.
+
+### How the search went wrong first, and what corrected it
+
+A source scan found **62 of 189 pages** redefining canonical tokens in their own
+`:root` — 176 overrides, led by `--M` (47), `--crim` (23), `--D` (21), `--R`
+(17). The obvious reading was a 62-page regression: `--M:monospace` and
+`--D:serif` would mean the brand webfonts never load, and `--crim:#8B0000` would
+mean the contrast failure is back.
+
+The render says otherwise, and the two halves disagree *on the same page*:
+
+```
+dashboard.html  :root declares  --M:monospace   --crim:#8B0000
+resolved        --M="Courier Prime",monospace   --crim=#8B0000
+```
+
+Enumerating every sheet that declares them settles it:
+
+```
+sheet# 0  <STYLE>                    --M="monospace"                 --crim="#8B0000"
+sheet# 1  <style id=omega-global-css> --M="Courier Prime",monospace   --crim="#C4453C"
+sheet#19  <style id=omega-theme-css>  --M=""                          --crim="#8B0000"
+RESOLVED                              --M="Courier Prime",monospace   --crim="#8B0000"
+```
+
+Two facts, neither of them in this repo's docs:
+
+1. **A page's own `<style>` is sheet 0, so bg.js at sheet 1 beats it.** All 176
+   page-local token overrides are dead code. CLAUDE.md §4's "bg.js is sheet 1 of
+   53, so every later sheet wins" is true of the 51 *module* sheets and the
+   opposite of true for the page's own block. The 62-page edit would have been
+   62 files changed for no rendered difference.
+2. **`theme.js` (`#omega-theme-css`, sheet 19) re-declares the palette** and,
+   being later, beats bg.js. It is a deliberate "Sovereign Dusk" layer — `--void`
+   darkened to `#08080F`, `--ink` brightened to `#F0EDE6` — but it also carried
+   `--crim:#8B0000`, reinstating the value bg.js had measured its way out of.
+   §4's stylesheet-owner table did not list it at all.
+
+Against theme.js's own `--void` (`#08080F`):
+
+```
+--crim OLD  #8B0000   1.99:1   FAIL (<3:1 floor)
+--crim NEW  #C4453C   4.05:1   passes
+--gold      #C9A84C   8.74:1     --solar #E2C86D  12.09:1
+--cyan      #00E5FF  12.98:1     --green #3fb27f   7.50:1
+--ink       #F0EDE6  17.07:1     --muted #8A8880   5.62:1
+```
+
+Every other token in that palette clears 4.5:1. `--crim` was the only failure.
+
+### The token fix alone did not finish the job
+
+After correcting theme.js, `--crim` resolved to `#C4453C` on all 23 pages — and
+the probe *still* found `rgb(139, 0, 0)` text. The word it kept naming was
+`UNIVERSE`, a nav item. The colour was never coming from the token:
+
+```
+nav.js:82   {key:'universe', label:'UNIVERSE', col:'#8B0000', ...}
+nav.js:377  {label:'UNIVERSE', col:'#8B0000', ...}
+```
+
+`sec.col` drives `.on-glyph` colour, `.tip-head` colour and `.dss-emblem`
+colour — text, on every page that renders the sidebar. Nine hardcoded literals
+were painting text or strokes, each verified individually before being touched:
+
+| file | what the literal paints |
+|---|---|
+| `nav.js` ×2 | the UNIVERSE section colour — the text found on 21 pages |
+| `omega-chrono.js` ×2 | `td.style.color` on the trial countdown — a warning that must be legible |
+| `omega-menu.js` | a menu section colour, beside `#C9A84C` and friends |
+| `omega-chart.js` ×2 | chart `line`/`point` stroke on a dark canvas |
+| `omega-world-shell.js` | a realm colour, beside `#D9B86A` / `#E86A3A` / `#C9A84C` |
+| `emblem.js` ×3 | `col` drives a label `color` plus canvas stroke/fill at alpha .42–.75 |
+
+Eight stale `var(--crim,#8B0000)` fallbacks were corrected too — they only fire
+if the token is undefined, which it never is, but a wrong fallback is a wrong
+fallback.
+
+**Two sites were deliberately left**, and the reason is the false-positive
+discipline: `omega-realm.js`'s `Fire:{...outer:'#8B0000'}` is a gradient's dark
+outer stop and every other element has one too (`#003366`, `#546E7A`,
+`#5D4037`) — it is the dark end by design, not text. `omega-protect.js:91` is a
+`console.log` style string.
+
+The first pass at `emblem.js` fixed only the entry the grep had shown
+(`factions`); the all-pages sweep then found `cinema` and `settings` still dark,
+because the replace had matched one exact string rather than the file's
+remaining occurrences. Two more, found by measuring rather than by assuming the
+first edit was complete.
+
+### Result
+
+```
+BEFORE   23 of 23 sampled pages painting sub-3:1 crimson text
+AFTER    189 pages, 0 load failures,
+         sub-3:1 crimson text nodes = 0
+         re-stepped crimson text nodes = 221
+```
+
+The 221 is the positive control and the reason the zero means anything: a probe
+that found nothing anywhere would report the same zero. It found the new colour
+painting in 221 places and the old colour in none.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,953 of 16,000 (three §8.2 entries compressed to make room for the new
+stylesheet-owner row in §4), `node scripts/verify-runtime.js --all` PASS on all
+189 pages, exit 0.

@@ -135,7 +135,7 @@
   function updateBadge(){
     var badge=document.getElementById('omega-guardian-badge');
     if(!badge) return;
-    var col=_sessionScore>=70?'var(--green,#3fb27f)':_sessionScore>=40?'var(--solar,#E2C86D)':'var(--crim,#8B0000)';
+    var col=_sessionScore>=70?'var(--green,#3fb27f)':_sessionScore>=40?'var(--solar,#E2C86D)':'var(--crim,#C4453C)';
     badge.style.color=col;
     badge.title='Guardian Score: '+_sessionScore+'/100';
     badge.textContent=_sessionScore;

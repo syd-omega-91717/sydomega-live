@@ -30,6 +30,17 @@
     <!-- OLYMPIANS TAB -->
     <div class="tab-panel active pad" id="tab-olympians">
       <div class="sechead">THE 12 OLYMPIAN ARCHETYPES</div>
+      <!-- The signature ring, fed from this page's own GODS array so there is
+           no second roster to drift. omega-constellation.js draws no artwork:
+           each node emits data-omega-emblem and omega-emblems.js fills it, so
+           the twelve marks and their colours come from the module that owns
+           them. Nodes carry no href -- the gods have no destination pages, and
+           the module renders a <div> rather than a dead link when href is
+           absent. cosmos and houses were considered and rejected: each already
+           has its own wheel, and a second ring would duplicate it. -->
+      <div data-omega-constellation="custom" id="pantheon-ring"
+           data-cn-title="OLYMPIANS" data-cn-sub="TWELVE ARCHETYPES"
+           style="margin:0 auto 26px"></div>
       <div id="god-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
     </div>
 
@@ -92,7 +103,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var GODS=[
-  {n:1,name:'Zeus',   roman:'Jupiter', domain:'Sovereignty &amp; Law',    sign:'Sagittarius',element:'Fire', color:'#FFD700',symbol:'&#9889;&#65038;',archetype:'The King',       shadow:'Tyranny',   gift:'Vision &amp; Authority',   desc:'The supreme sovereign — wielder of thunderbolt and law. Zeus governs through vision, authority, and expansive judgment. His shadow is tyranny and hubris. The Zeus archetype leads; it does not follow.'},
+  {n:1,name:'Zeus',   roman:'Jupiter', domain:'Sovereignty &amp; Law',    sign:'Sagittarius',element:'Fire', color:'#C9A84C',symbol:'&#9889;&#65038;',archetype:'The King',       shadow:'Tyranny',   gift:'Vision &amp; Authority',   desc:'The supreme sovereign — wielder of thunderbolt and law. Zeus governs through vision, authority, and expansive judgment. His shadow is tyranny and hubris. The Zeus archetype leads; it does not follow.'},
   {n:2,name:'Ares',   roman:'Mars',    domain:'War &amp; Courage',       sign:'Aries',      element:'Fire', color:'#FF4444',symbol:'&#9876;',archetype:'The Warrior',     shadow:'Aggression',gift:'Courage &amp; Force',      desc:'God of war and raw courage. Ares embodies the capacity to fight, to defend, and to act decisively in the face of opposition. His shadow is brutality without purpose.'},
   {n:3,name:'Athena', roman:'Minerva', domain:'Wisdom &amp; Strategy',   sign:'Virgo',      element:'Sand', color:'#00E5FF',symbol:'&#9816;',archetype:'The Strategist',  shadow:'Coldness',  gift:'Wisdom &amp; Craft',       desc:'Goddess of wisdom and strategic war. Athena plans, analyzes, and executes with precision. Born fully armored — wisdom that is already battle-ready. Shadow: coldness, intellectual arrogance.'},
   {n:4,name:'Apollo', roman:'Apollo',  domain:'Truth &amp; Arts',        sign:'Leo',        element:'Fire', color:'#E2C86D',symbol:'&#9728;', archetype:'The Creator',     shadow:'Perfectionism',gift:'Beauty &amp; Truth',     desc:'God of the sun, truth, poetry, music, and prophecy. Apollo represents the sovereign creative drive — the pursuit of excellence and the light of truth. Shadow: perfectionism and narcissism.'},
@@ -108,6 +119,26 @@ var GODS=[
 
 var KEY='omega_archetype';
 var stored=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+/* The ring reads the same GODS array the cards below do. domain carries an
+   HTML entity (&amp;), so it is decoded through a textarea before being handed
+   over: the constellation escapes what it renders, and an entity passed
+   through raw would paint the literal characters "&amp;". */
+function ringNodes(){
+  var dec = document.createElement('textarea');
+  return GODS.map(function(g){
+    dec.innerHTML = g.domain || '';
+    return { name: (g.name || '').toUpperCase(), sub: dec.value.toUpperCase(), sign: g.sign };
+  });
+}
+function mountRing(){
+  var el = document.getElementById('pantheon-ring');
+  if (!el) return;
+  el.setAttribute('data-cn-nodes', JSON.stringify(ringNodes()));
+  /* The module observes childList, not attributes, so an attribute set after
+     its boot scan needs an explicit re-scan. */
+  try { if (window.OmegaConstellation) window.OmegaConstellation.scan(); } catch (e) {}
+}
 
 function renderGods(){
   document.getElementById('god-grid').innerHTML=GODS.map(function(g){
@@ -170,7 +201,7 @@ window.saveArchetype=function(){
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     document.getElementById('hdr-auth').textContent=auth.toFixed(4);
-    renderGods();
+    renderGods();mountRing();
     buildArchSelect();
     document.querySelectorAll('.tab').forEach(function(btn){
       btn.onclick=function(){

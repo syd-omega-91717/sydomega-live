@@ -7452,3 +7452,74 @@ as `.85em` rather than a second absolute value below the floor.
 Gates after: `./scripts/ci-local.sh` 22/22, 179 tests, `brand-glyph-check.py`
 clean across 362 shipped files, `node scripts/verify-runtime.js --all` PASS on
 all 189 pages, exit 0.
+
+## The rest of the sub-floor text: 137 greys to the canonical token (2026-09-04)
+
+The previous entry fixed the six invisible buttons and the 179-page nav dock,
+and left ~59 page-local grey combinations as "each needs judgement". Reading
+them together, they were not 59 judgements — they were **four values**, used the
+same way everywhere: `#666`, `#555`, `#444`, `#333` as a de-emphasised label
+colour on a near-black page.
+
+```
+#666  3.44:1     #555  2.65:1     #444  2.03:1     #333  1.56:1
+var(--muted) #8a8676  5.41:1 on bg.js's --void, 5.47:1 on theme.js's
+```
+
+**The static list would have misled, and the runtime audit is what stopped it.**
+A scan of `color:` declarations against `--void` also flagged `#000` — 34 uses
+across 28 pages at a nominal 1.06:1. Every one of those is dark text on a
+*filled* button, and the runtime probe measures them at 7.5–15:1 because it
+resolves the effective background. Sweeping the static list would have destroyed
+28 pages' button labels to fix a number that was never real.
+
+So the sweep took only the four values the runtime audit showed failing on a
+dark surface: **116 declarations in `<style>` blocks across 16 files**, then a
+second pass for **21 more in inline `style=` attributes** (markup and JS-built
+strings) that a stylesheet-only sweep cannot see — `investment.html`'s
+"NO HOLDINGS YET — ADD HOLDING" at 1.56:1 and `passport.html`'s "PERSONAL
+SOVEREIGNTY RECORD" at 2.65:1 were both in that second group.
+
+```
+                              failing combinations   passing text nodes
+before (previous entry)               60                   61,371
+after the <style> sweep               39                   61,504
+after the inline sweep                37                   61,561
+```
+
+### A probe "fix" that was reverted
+
+Two rows still read 1.01:1 — `chronicle.html`'s `.era-badge` and
+`family.html`'s `.btn-add`. Both were checked by hand earlier and are fine:
+their backgrounds are `--solar` and a gold gradient, and the probe's `effBg`
+only reads `backgroundColor`, so it walks past them to the page ground.
+
+Teaching it to read gradient stops looked like the obvious correction. It made
+the probe **worse** — 37 failing combinations became 50, because picking the
+first opaque stop is arbitrary when text sits across a gradient's range, and the
+new rows sat on invented backgrounds like `rgb(33,17,13)` and `rgb(35,20,14)`.
+Reverted. Two documented false positives beat thirteen unexamined ones, and the
+reason is now a comment in the probe so the next session does not retry it.
+
+### What remains, and why it is not swept
+
+All 37 survivors sit between **3.09:1 and 4.23:1** except those two artifacts:
+they clear the 3:1 floor for UI and large text, and miss 4.5:1 at 9–14px. The
+overwhelming majority are the crimson family — `rgb(196,69,60)` (the canonical
+`--crim`, 4.01:1) plus page-local reds `rgb(192,57,43)`, `rgba(200,50,50,.7)`,
+`rgba(200,60,60,.7)` — with a few purples and one LinkedIn brand blue
+(`rgb(10,102,194)`, 3.47:1).
+
+bg.js's own comment says `--crim` was re-stepped to "the deepest crimson that
+still clears 3:1". Pushing the danger colour brighter again to clear 4.5:1 at
+12px is a brand decision, not a bug fix, and a third-party brand blue is not
+this platform's to restyle. Recorded, not swept.
+
+### Method note
+
+A concurrent 189-page sweep reported `loadFail=1` once and `loadFail=0` on
+re-run with an identical tree. A single load failure under concurrency is a
+timeout, not a finding — re-run before acting on one.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.

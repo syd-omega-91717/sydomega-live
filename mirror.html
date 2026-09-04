@@ -77,9 +77,9 @@ canvas.pattern-canvas{width:100%;display:block}
 <div class="tab-panel active" id="tab-checkin">
   <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-val" id="entryCount">0</div><div class="kpi-label">CHECK-INS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgEnergy">&mdash;</div><div class="kpi-label">AVG ENERGY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgFocus">&mdash;</div><div class="kpi-label">AVG FOCUS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgClarity">&mdash;</div><div class="kpi-label">AVG CLARITY</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="avgEnergy">&mdash;</div><div class="kpi-label">AVG ENERGY</div><div data-omega-spark data-spark-label="ENERGY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
+    <div class="kpi-card"><div class="kpi-val" id="avgFocus">&mdash;</div><div class="kpi-label">AVG FOCUS</div><div data-omega-spark data-spark-label="FOCUS OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
+    <div class="kpi-card"><div class="kpi-val" id="avgClarity">&mdash;</div><div class="kpi-label">AVG CLARITY</div><div data-omega-spark data-spark-label="CLARITY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
   </div>
   <div class="checkin-card card" id="checkinCard">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -316,6 +316,21 @@ function updateKPIs(){
     document.getElementById('avgFocus').textContent=(last7.reduce(function(s,e){return s+e.focus;},0)/last7.length).toFixed(1);
     document.getElementById('avgClarity').textContent=(last7.reduce(function(s,e){return s+e.clarity;},0)/last7.length).toFixed(1);
   }
+  drawSparks();
+}
+
+/* entries is newest-first; a sparkline reads left-to-right in time, so the
+   slice is reversed. Only real sealed check-ins are passed -- omega-sparkline
+   draws nothing at all below two readings rather than inventing a direction. */
+function drawSparks(){
+  var recent=entries.slice(0,14).reverse();
+  [['avgEnergy','energy'],['avgFocus','focus'],['avgClarity','clarity']].forEach(function(pair){
+    var card=document.getElementById(pair[0]);
+    var mount=card&&card.parentElement?card.parentElement.querySelector('[data-omega-spark]'):null;
+    if(!mount) return;
+    var vals=recent.map(function(e){return e[pair[1]];}).filter(function(v){return typeof v==='number'&&isFinite(v);});
+    mount.setAttribute('data-spark-values',JSON.stringify(vals));
+  });
 }
 
 function renderJournal(){
@@ -421,4 +436,5 @@ function renderCharts(){
 window.renderCharts=renderCharts;
 </script>
 <script src="/bg.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 </body></html>

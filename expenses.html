@@ -73,8 +73,8 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
     </div>
 
     <div class="stat-grid">
-      <div class="stat"><div class="stat-val" id="st-month-exp">$0</div><div class="stat-lbl">THIS MONTH</div></div>
-      <div class="stat"><div class="stat-val" id="st-month-inc" style="color:var(--green)">$0</div><div class="stat-lbl">INCOME</div></div>
+      <div class="stat"><div class="stat-val" id="st-month-exp">$0</div><div class="stat-lbl">THIS MONTH</div><div data-omega-spark id="spark-exp" data-spark-label="SPEND, LAST SIX COMPLETE MONTHS" data-spark-unit=" dollars" hidden style="margin-top:8px"></div></div>
+      <div class="stat"><div class="stat-val" id="st-month-inc" style="color:var(--green)">$0</div><div class="stat-lbl">INCOME</div><div data-omega-spark id="spark-inc" data-spark-label="INCOME, LAST SIX COMPLETE MONTHS" data-spark-unit=" dollars" hidden style="margin-top:8px"></div></div>
       <div class="stat"><div class="stat-val" id="st-net">$0</div><div class="stat-lbl">NET FLOW</div></div>
       <div class="stat"><div class="stat-val" id="st-savings-rate">0%</div><div class="stat-lbl">SAVINGS RATE</div></div>
     </div>
@@ -306,6 +306,34 @@ function updateStats(){
   var rateEl=document.getElementById('st-savings-rate');
   rateEl.textContent=Math.max(0,rate)+'%';
   rateEl.style.color=rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)';
+  drawMonthSparks();
+}
+
+/* The current month is still in progress, so comparing it against a finished
+   month would report a fall that has not happened. These series therefore run
+   over the last six COMPLETE months only, and the trend badge omega-sparkline
+   derives is a comparison of two finished months. */
+function drawMonthSparks(){
+  var now=new Date();
+  var keys=[];
+  for(var i=6;i>=1;i--){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    keys.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));
+  }
+  var expSeries=[],incSeries=[];
+  keys.forEach(function(k){
+    var rows=entries.filter(function(e){return typeof e.date==='string'&&e.date.slice(0,7)===k;});
+    expSeries.push(rows.filter(function(e){return e.type==='expense';}).reduce(function(a,e){return a+e.amount;},0));
+    incSeries.push(rows.filter(function(e){return e.type==='income';}).reduce(function(a,e){return a+e.amount;},0));
+  });
+  /* A member who started this month has six zeroes, which is a real reading of
+     nothing rather than a trend: suppress the line until a month is non-zero. */
+  var expLive=expSeries.some(function(v){return v>0;});
+  var incLive=incSeries.some(function(v){return v>0;});
+  var se=document.getElementById('spark-exp');
+  var si=document.getElementById('spark-inc');
+  if(se) se.setAttribute('data-spark-values',JSON.stringify(expLive?expSeries:[]));
+  if(si) si.setAttribute('data-spark-values',JSON.stringify(incLive?incSeries:[]));
 }
 
 function renderRecent(){
@@ -523,5 +551,6 @@ updateAll();
 </script>
 <script src="/omega-local-backup.js"></script>
 <script src="/bg.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 </body>
 </html>

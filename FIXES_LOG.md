@@ -8957,3 +8957,71 @@ about the most visible page on the site. The same class as §8.4's "a number
 stored in prose drifts; derive it instead", but in code.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests.
+
+---
+
+## A guard that silently stopped guarding: the single-runner warning (2026-09-04)
+
+Re-deriving §8.3's baselines after the `evidence-audit.py` fix turned up a
+second mismatch, and this one ran the opposite way — **the documentation was
+right and the tool had drifted.**
+
+```
+§8.3 baseline : resilience-audit.py -> 0 findings; 1 warning (the single CI runner)
+measured      : resilience-audit.py -> 0 findings; 0 warnings
+```
+
+The tempting move is to "correct" the doc to 0 warnings. That would have buried
+a live risk, because the check had stopped firing while the risk it names was
+untouched:
+
+```
+11  runs-on: [self-hosted, Windows, X64]
+ 1  runs-on: ubuntu-latest
+```
+
+`check_ci_runner_spof()` required `len(labels) == 1` — *every* workflow on one
+label set. When `omega-update.yml` moved to `ubuntu-latest`, that made two
+distinct label sets and the warning went silent, even though **11 of 12
+workflows still depend on one physical machine**. One unrelated cloud job
+switched off a warning about the other eleven. §8.2 still lists the single
+physical runner as open, so nothing about the exposure had changed.
+
+The fix scopes the test to self-hosted pools — concentration is the risk, not
+uniformity, and an unrelated `ubuntu-latest` job is not a fallback machine:
+
+```python
+selfhosted = {k: v for k, v in labels.items() if "self-hosted" in k}
+if len(selfhosted) == 1:
+    ...  "%d of %d workflows target the single label set %s"
+```
+
+```
+WARNINGS -- owner decisions, not blocking (1):
+      11 of 12 workflows target the single label set [self-hosted, Windows, X64]
+```
+
+**Both directions controlled.** Adding a fixture workflow on
+`[self-hosted, Linux, ARM64]` — a genuine second pool — silences it (0 matches);
+removing it restores the warning (1 match). Without the negative control this
+would only be demonstrably noisier, not demonstrably correct.
+
+### A threshold I got wrong on the way
+
+The first attempt also required `len(selfhosted[only]) >= 2`, which broke two
+existing tests: `test_single_runner_label_set_warns` builds a fixture with a
+*single* self-hosted workflow, and `test_strict_promotes_warnings_to_failures`
+depends on that warning existing. The tests were right — one machine gating
+everything is the risk whether it runs 1 workflow or 11 — so the threshold came
+out rather than the tests being adjusted to fit it. **179 tests passing is what
+caught it**, not review.
+
+### The shape
+
+Two stale-baseline findings in a row, pointing opposite ways: `evidence-audit`
+drifted *from* the truth and the doc was stale; `resilience-audit` drifted from
+the doc and the doc was right. Neither could be resolved by trusting one side —
+only by asking *why* they disagreed. A baseline table is worth keeping precisely
+because a silent guard cannot be noticed any other way.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.

@@ -277,12 +277,19 @@ def check_ci_runner_spof():
             labels.setdefault(m.group(1).strip(), []).append(y.name)
     if not labels:
         return
-    if len(labels) == 1:
-        only = next(iter(labels))
-        if "self-hosted" in only:
-            add(warnings, ".github/workflows/",
-                "all %d workflows target the single label set %s"
-                % (len(labels[only]), only),
+    # Concentration is the risk, not uniformity. This used to require
+    # len(labels) == 1, so a SINGLE cloud-runner workflow (omega-update.yml on
+    # ubuntu-latest) silenced the warning while 11 of 12 workflows still shared
+    # one physical machine. What matters is whether the self-hosted workflows
+    # have a second pool to fall back to -- an unrelated ubuntu job is not one.
+    selfhosted = {k: v for k, v in labels.items() if "self-hosted" in k}
+    # One pool is the risk whether it runs 1 workflow or 11.
+    if len(selfhosted) == 1:
+        only = next(iter(selfhosted))
+        add(warnings, ".github/workflows/",
+            "%d of %d workflows target the single label set %s"
+            % (len(selfhosted[only]),
+               sum(len(v) for v in labels.values()), only),
                 "That is one physical machine. While it is offline every gate "
                 "is unrunnable, jobs queue indefinitely, and nothing can be "
                 "validated or merged -- CI failure becomes total, not partial.",

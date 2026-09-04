@@ -167,6 +167,81 @@ const CHECK_JS = `(() => {
     if (!ok) unl.push(el.name || el.id || el.type || 'input');
   });
   out.unlabelledInputs = unl.slice(0, 8);
+  /* --- TEXT CONTRAST ---------------------------------------------------
+     Blocking below 3:1, the floor for any content. Six buttons shipped at
+     1.01:1 and 1:1 on the public sign-up and password-recovery path, and
+     15 nav-dock labels at 2.60:1 on 179 pages, with every static gate
+     green -- only a render can see this. Verified against those pinned
+     pre-fix trees: 3, 15 and 20 findings respectively. 3-4.5:1 is
+     advisory, not blocking: --crim was deliberately re-stepped to the
+     deepest crimson that still clears 3:1. */
+
+  const lin = v => { v/=255; return v<=.03928 ? v/12.92 : Math.pow((v+.055)/1.055,2.4); };
+  const L = c => .2126*lin(c[0]) + .7152*lin(c[1]) + .0722*lin(c[2]);
+  const px = t => { const m = String(t).match(/[\\d.]+/g); return m ? m.map(Number) : null; };
+  const alpha = c => (c && c.length > 3) ? c[3] : 1;
+  const cLow = []; let cMid = 0, cOk = 0, cSeen = 0;
+  document.querySelectorAll('body *').forEach(el => {
+    const txt = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
+    if (txt.length < 2) return;
+    const cs = getComputedStyle(el), r = el.getBoundingClientRect();
+    if (r.width < 6 || r.height < 6) return;
+    if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < .35) return;
+    if (String(cs.webkitTextFillColor).indexOf('rgba(0, 0, 0, 0)') >= 0) return;
+    const fg = px(cs.color);
+    if (!fg || alpha(fg) < .35) return;
+    /* Resolve the surface the way a browser composites it. This platform's
+       glass is rgba(10,10,15,.68) and its sidebar is an OPAQUE near-uniform
+       gradient under a low-alpha tint, so "opaque colour or give up" measures
+       almost nothing. Translucent layers are collected and alpha-blended over
+       the first opaque surface; a gradient with opaque stops IS that surface,
+       and every one of its stops is a candidate -- text is judged against the
+       WORST of them, which is the only honest standard for a gradient. */
+    let n = el, bases = null; const layers = [];
+    while (n && n !== document.documentElement) {
+      const s = getComputedStyle(n);
+      const c = px(s.backgroundColor);
+      if (c) {
+        const a = alpha(c);
+        if (a > .995) { bases = [c.slice(0,3)]; break; }
+        if (a > .02) layers.push([c.slice(0,3), a]);
+      }
+      const bi = s.backgroundImage;
+      if (bi && bi !== 'none') {
+        const stops = (bi.match(/rgba?\\([^)]*\\)/g) || []).map(px).filter(Boolean);
+        const solid = stops.filter(t => alpha(t) > .85).map(t => t.slice(0,3));
+        if (solid.length) { bases = solid; break; }
+      }
+      n = n.parentElement;
+    }
+    if (!bases) {
+      const h = px(getComputedStyle(document.documentElement).backgroundColor);
+      bases = [(h && alpha(h) > .99) ? h.slice(0,3) : [10,10,15]];
+    }
+    const l1 = L(fg.slice(0,3));
+    let worst = Infinity, worstBg = null;
+    bases.forEach(b => {
+      let bg = b;
+      for (let k = layers.length - 1; k >= 0; k--) {
+        const c = layers[k][0], a = layers[k][1];
+        bg = [0,1,2].map(q => a*c[q] + (1-a)*bg[q]);
+      }
+      const l2 = L(bg);
+      const ratio = (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);
+      if (ratio < worst) { worst = ratio; worstBg = bg.map(Math.round); }
+    });
+    cSeen++;
+    const size = parseFloat(cs.fontSize) || 12;
+    const large = size >= 24 || (size >= 18.66 && (parseInt(cs.fontWeight,10)||400) >= 700);
+    if (worst + 0.005 < 3) {
+      cLow.push({ sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
+                 ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
+                 px: Math.round(size), text: txt.slice(0,26) });
+    } else if (worst + 0.005 < (large ? 3 : 4.5)) cMid++; else cOk++;
+  });
+  out.lowContrast = cLow.slice(0, 6);
+  out.lowContrastCount = cLow.length;
+  out.midContrast = cMid;
   return out;
 })()`;
 
@@ -237,6 +312,9 @@ async function main() {
       if (info.hasMain === false && !landedPublic) advisories.push('no <main> landmark');
       if (info.smallTapTargets && info.smallTapTargets.length) advisories.push('tap targets < 24px: ' + info.smallTapTargets.join('; '));
       if (info.unlabelledInputs && info.unlabelledInputs.length) advisories.push('unlabelled inputs: ' + info.unlabelledInputs.join(', '));
+      if (info.lowContrastCount) problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
+        info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' ' + JSON.stringify(c.text)).join(' | '));
+      if (info.midContrast) advisories.push('contrast 3-4.5:1: ' + info.midContrast);
       results.push({ page: pg, landedOn: landed, problems, advisories, benignSuppressed: errs.length - realErrs.length });
     }
   } catch (e) {
@@ -257,18 +335,20 @@ async function main() {
       for (const p of r.problems) console.log('        x ' + p);
     }
     // Advisories aggregated - they are platform-wide (bg.js chrome), not per-page.
-    const tapSel = new Set(), unlabelled = new Set(), noMain = [], owner = [];
+    const tapSel = new Set(), unlabelled = new Set(), noMain = [], owner = []; let midC = 0;
     for (const r of results) for (const a of r.advisories) {
       if (a.startsWith('tap targets')) a.replace(/tap targets < 24px: /, '').split('; ').forEach(s => tapSel.add(s.replace(/ \d+x\d+$/, '')));
       else if (a.startsWith('unlabelled')) a.replace(/unlabelled inputs: /, '').split(', ').forEach(s => unlabelled.add(s));
       else if (a.startsWith('no <main>')) noMain.push(r.page);
       else if (a.startsWith('owner-gated')) owner.push(r.page);
+      else if (a.startsWith('contrast 3-4.5')) midC += parseInt(a.split(': ')[1], 10) || 0;
     }
     console.log('\nadvisory (tracked as the `accessibility` capability, not gating):');
     if (tapSel.size) console.log('  tap targets < 24px, distinct selectors: ' + [...tapSel].join(', '));
     if (unlabelled.size) console.log('  unlabelled inputs: ' + [...unlabelled].join(', '));
     if (noMain.length) console.log('  no <main> landmark: ' + noMain.join(', '));
     if (owner.length) console.log('  owner-gated (expected): ' + owner.join(', '));
+    if (midC) console.log('  text contrast 3-4.5:1 (clears the 3:1 floor, misses AA at small sizes): ' + midC);
   }
   const failed = results.filter(r => r.problems.length);
   if (code === 0 && failed.length) code = 1;

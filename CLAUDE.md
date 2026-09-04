@@ -628,7 +628,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill. **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 (259, mostly the deliberately-3:1 `--crim`) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
@@ -641,15 +641,17 @@ entries (which were accurate when written):
 ### 8.4 Method notes that save a session real time
 
 - **Stub `esm.sh` before any browser scan, or the results are worthless.**
-  Every gated page does `import{createClient}from'https://esm.sh/...'` at the
-  top of a module script, the sandbox blocks that host, and a failed top-level
-  import means *none* of that module's code runs — so every `window.`-exposed
-  function reports as missing. A scan once reported 44 broken pages this way;
-  the real number was 6. `.claude/skills/verify-in-browser/` handles this.
+  Gated pages import the client at the top of a module script; the sandbox
+  blocks that host, and a failed top-level import runs *none* of that module's
+  code — so every `window.`-exposed function reports missing. A scan once
+  reported 44 broken pages this way; the real number was 6.
+  `.claude/skills/verify-in-browser/` handles it.
 - **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects
-  to `terms.html` and the page under test never renders.
-- **Verify a "0 findings" result is real.** A scan against a stopped static
-  server also reports 0. Cross-check with a scan that should find something.
+  to `terms.html` and the page never renders.
+- **Verify a "0 findings" result is real.** A stopped static server reports 0;
+  so does a regex damaged in transit (a rule moved out of a template literal
+  kept doubled backslashes, matched no digits, reported a serene zero).
+  Cross-check with a run that must find something.
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
@@ -704,10 +706,10 @@ entries (which were accurate when written):
   ring drew perfectly with nothing inside it. Forcing `content:"X" !important`
   settles it in one step. Generated text on a sheened element needs its own
   `-webkit-text-fill-color`.
-- **A repo-wide grep is a candidate generator, not a verdict.** Several
-  confident source-grep findings (missing `theme-color` on 121 pages,
-  131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine
-  for both, because `bg.js` injects them.
+- **A repo-wide grep is a candidate generator, not a verdict.** Confident
+  source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
+  `outline:none`) were false — the runtime showed 172/173 fine, because `bg.js`
+  injects them.
 - **A scanner needs its own false-positive pass before its number means
   anything.** A fixed-widget collision scan first reported 177/178 pages by
   counting full-viewport backdrops (`omega-fx`, the particle canvas, the noise
@@ -731,16 +733,13 @@ entries (which were accurate when written):
   and its policy are all still unverified, and each has been a real shipped bug
   (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
-  describing this repo — skills (3 documented values, all wrong), `.html` pages
-  (~250 vs 178), bg.js coverage (104+ vs all 178), module size (747 vs 807 KB) —
-  had gone stale, and one (`grill-me-codex`'s missing frontmatter) had silently
-  broken skill discovery. Before quoting a count from any doc, re-derive it:
-  `python3 scripts/omega-registry.py --check` regenerates the whole census and
-  fails on drift. When adding a fact that is a *number*, put it in the generator,
-  not the paragraph.
+  describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
+  module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)
+  had silently broken skill discovery. Re-derive before quoting:
+  `python3 scripts/omega-registry.py --check` regenerates the census and fails on
+  drift. A fact that is a *number* belongs in the generator, not a paragraph.
 - **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
-  answers `--help` with its docstring and exits 0 — far cheaper than reading the
-  file, and a test keeps it true.
+  answers `--help` with its docstring and exits 0; a test keeps it true.
 - **External repo research is partly blocked at the egress proxy.**
   `raw.githubusercontent.com` returns 200, so named files (`README.md`,
   `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
@@ -750,11 +749,11 @@ entries (which were accurate when written):
   cannot be cloned or its tree listed. Do not present those dimensions as
   assessed; `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` marks them NOT VERIFIED. Also:
   the file tree cannot be enumerated, so a path guess that 404s means nothing.
-- **Per-session context cost is now gated.** `scripts/context-budget.py` runs
-  blocking in CI. See `.claude/skills/context-budget/` for where new
-  documentation belongs and how to read this repo's very large files cheaply
-  (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
-  the entire auto-loaded context).
+- **Per-session context cost is gated.** `scripts/context-budget.py` is blocking
+  in CI; `.claude/skills/context-budget/` says where new documentation belongs
+  and how to read this repo's very large files cheaply (`FIXES_LOG.md`,
+  `profile.html`, `bg.js` each cost more in one read than the whole auto-loaded
+  context).
 - **Presentation is measured in a render, never reasoned from the codepoint.**
   A grep over-reports (✓ ★ ☰ ✦ ⚔ are pure typography) and under-reports — the
   twelve zodiac signs are ordinary BMP symbols that default to *emoji*

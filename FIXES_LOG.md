@@ -7523,3 +7523,82 @@ timeout, not a finding — re-run before acting on one.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
 `node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## The contrast audit becomes a gate (2026-09-04)
+
+Three entries in this log fixed contrast bugs that **every static gate passed**:
+six buttons at 1.01:1 and 1:1 on the public sign-up and password-recovery path,
+15 nav-dock labels at 2.60:1 across 179 pages, and 137 sub-floor greys. Nothing
+in CI would have caught the seventh.
+
+That is not hypothetical. PR #235 reintroduced 18 colour emoji on
+`dashboard.html` the same day the platform-wide sweep removed 116 — and
+`brand-glyph-check.py` caught it before deploy, because that class *has* a gate.
+Contrast had none.
+
+`scripts/verify-runtime.js` now measures it: **blocking under 3:1**, advisory
+between 3:1 and 4.5:1. Baseline across 189 pages: **0 blocking, 259 advisory,
+61,522 passing, 61,781 text elements measured.**
+
+### Getting the surface right took four wrong rules
+
+Contrast is only as good as the background you compare against, and on this
+platform almost nothing paints an opaque colour on the element itself.
+
+1. **Opaque-colour-or-page-ground** (the original probe). Missed that `.card`'s
+   glass is `rgba(10,10,15,.68)`.
+2. **Read the gradient's first opaque stop.** Tried in the previous entry and
+   reverted: 37 findings became 50 on invented backgrounds like `rgb(33,17,13)`.
+3. **Skip any element on a gradient as unmeasurable.** Called **7,520** elements
+   unmeasurable — 12% of all text — because the GVP shimmer is a
+   `background-image` laid over the real colour.
+4. **Composite translucent layers, then treat a gradient as unmeasurable.**
+   Better (4,223 unmeasurable) but still missed the nav dock entirely: the
+   sidebar is `linear-gradient(rgba(201,168,76,.09) 0%, transparent 42%,
+   rgba(0,229,255,.06) 100%), linear-gradient(rgb(8,8,15), rgb(5,5,12))` — a
+   low-alpha tint over an **opaque, near-uniform** gradient. Unmeasurable is the
+   wrong answer for a surface that is flat dark in practice.
+
+The rule that works: collect translucent layers walking up, alpha-blend them
+over the first opaque surface, and where that surface is a gradient treat
+**every opaque stop as a candidate and judge the text against the worst one**.
+That is the only honest standard for a gradient — if text fails against any part
+of what it sits on, it fails — and it removed the unmeasurable bucket entirely.
+`html` carries the real ground (`rgb(12,8,6)`) behind `body`'s backdrop tint.
+
+### Proven against the bugs it exists for
+
+A gate that reports 0 on a clean tree but would not have caught the original
+bugs is worthless, so each fix was pinned back with `gitShow` and re-measured:
+
+```
+CAUGHT  invisible auth buttons (a0073e2d~1)   3 findings   1:1, 1:1, 1.01:1
+CAUGHT  nav dock #55534e     (a0073e2d~1)    15 findings   2.6:1 x15
+CAUGHT  sub-floor greys      (b65a329b~1)    20 findings   2.36-2.65:1
+```
+
+Then end-to-end: dropping the pre-fix `nav.js` into the working tree makes
+`verify-runtime.js` **FAIL** 13 of 13 entrypoints with the exact ratios and
+element names; restoring it returns PASS, `git diff --quiet nav.js` clean.
+
+**The first proof run reported all three MISSED**, and that was the probe, not
+the gate: extracting the rule from a JS template literal into a plain file left
+`[\\d.]+`, which matches backslashes rather than digits, so every colour parse
+failed and the run reported a serene zero. §8.4's "verify a 0 findings result is
+real" now names this shape.
+
+### Why 3:1 blocks and 4.5:1 does not
+
+bg.js's own comment says `--crim` was re-stepped to "the deepest crimson that
+still clears 3:1". Blocking at 4.5:1 would fail the platform's own deliberate
+brand decision on 180 pages. 3:1 is the floor below which text is not
+legible at any size; between the two is a report, not a verdict.
+
+One collision found on wiring: `CHECK_JS` already declared `seen` for the
+duplicate-id scan, so the contrast locals are namespaced `cLow`/`cMid`/`cOk`/
+`cSeen`. It failed loudly at evaluate time rather than silently, which is the
+good case.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS on the
+13 entrypoints and `--all` PASS on 189 pages, `context-budget.py` PASS at
+~15,996 of 16,000 (six §8.4 notes compressed to make room for the baseline row).

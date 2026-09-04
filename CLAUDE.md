@@ -322,10 +322,10 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   live-verified fix files (`trial_access.sql`, `migrations/0013`,
   `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
   root is unchanged and still the source of truth for new schema changes
-  — see `REPOSITORY_AUDIT.md` §4 for the still-open duplicate-table-
-  definitions list (47 tables defined in more than one file; not
-  deduplicated by the migrations/ work, only reordered — consolidating
-  needs a per-table live-schema check, not a bulk sweep).
+  — see `REPOSITORY_AUDIT.md` §4 for the duplicate-table-definitions list;
+  derive the count from `evidence-audit.py`, never quote it (the 47 that stood
+  here had drifted to 48). Not deduplicated by migrations/, only reordered —
+  consolidating needs a per-table live-schema check, not a bulk sweep.
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching

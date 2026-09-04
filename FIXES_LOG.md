@@ -9025,3 +9025,70 @@ only by asking *why* they disagreed. A baseline table is worth keeping precisely
 because a silent guard cannot be noticed any other way.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests.
+
+---
+
+## Three sources, three duplicate-table counts — and my own was the wrong one (2026-09-04)
+
+`CLAUDE.md` §5 quoted "47 tables defined in more than one file"; a run of
+`evidence-audit.py` reported 48. Cross-checking produced a third number:
+
+```
+CLAUDE.md / REPOSITORY_AUDIT.md   47
+evidence-audit.py                 48
+an independent derivation         53
+```
+
+**The independent derivation was the wrong one, and it was mine.** Two wrong
+conclusions were reached on the way there and are recorded because each is the
+kind that ships:
+
+1. **"The scanner recurses into `migrations/`, so it double-counts the bag
+   against its own mirror."** It does call `Path('supabase').rglob('*.sql')` —
+   but four lines later it restricts duplicate accounting to the root bag,
+   with a comment naming exactly that hazard:
+
+   ```python
+   # Only the flat bag at supabase/ counts toward duplicate-definition
+   # reporting; supabase/migrations/ is a deliberate ordered copy of that
+   # same content (CLAUDE.md §5), so counting it would report every table
+   # as duplicated.
+   if path.parent.name == 'supabase':
+   ```
+
+   Reading the `rglob` and stopping there produced a confident accusation
+   against code that had already handled the case.
+
+2. **The 53.** `evidence-audit.py` strips SQL comments before matching; the
+   quick derivation did not, so it counted commented-out DDL. Proven rather
+   than assumed:
+
+   ```
+   raw                  duplicates: 53
+   comments stripped    duplicates: 48
+   ```
+
+So 48 is authoritative and 47 had drifted by one.
+
+### The fix is not 47 → 48
+
+Editing the number re-arms the same trap for whoever reads it next. §8.4 already
+prescribes the durable form — *"a number stored in prose drifts; derive it
+instead… put it in the generator, not the paragraph"* — so §5 now points at
+`evidence-audit.py` and tells the reader to derive it, noting that the quoted 47
+had already drifted. `REPOSITORY_AUDIT.md`'s three mentions are left alone: they
+are narrative about a past audit ("The 47-duplicate-tables 'safe because
+idempotent' claim…"), and rewriting history to match today's count would be a
+different error.
+
+### Why this is worth a log entry at all
+
+The count does not change any decision — the item stays open either way, and
+consolidating still needs a per-table live-schema check. What is worth keeping
+is the failure mode: **the number I trusted least should have been my own.**
+Three disagreeing sources are not a three-way tie; the one built with care
+(comment-stripping, an explicit scope guard) beat the one written in thirty
+seconds, and saying "no source is authoritative" would have been a false
+symmetry that stalled the question instead of answering it.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.

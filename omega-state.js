@@ -59,7 +59,7 @@
 
   var ERROR_HTML = function(msg){
     return '<div style="padding:14px;border:1px solid rgba(139,0,0,.25);border-radius:2px;background:rgba(139,0,0,.04);text-align:center">'
-      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#8B0000);margin-bottom:4px">&#9888; ERROR</div>'
+      +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#C4453C);margin-bottom:4px">&#9888; ERROR</div>'
       +'<div style="font-size:12px;color:rgba(233,230,220,.6)">'+(msg||'Failed to load data. Please refresh.')+'</div>'
       +'</div>';
   };

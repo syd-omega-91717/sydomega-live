@@ -114,7 +114,7 @@ window.omegaTaskButton = function(el, taskName, taskType, onDone){
       el.textContent='\u2713 RECORDED';
       if(onDone) onDone(r.data);
     } else {
-      el.style.borderColor='var(--crim,#8B0000)';
+      el.style.borderColor='var(--crim,#C4453C)';
       setTimeout(function(){el.style.borderColor='';},2000);
     }
   });

@@ -7053,3 +7053,103 @@ more paragraphs trimmed; the `cporter202/ai-growth-stack` row was merged into
 the catch-all 0-applicable row rather than dropped, so the do-not-re-evaluate
 record survives — the full evidence is in `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`),
 `node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## The card-sweep exclusion list was not permanent: --card-accent, and two traps it exposed (2026-09-04)
+
+**The standing claim, twice recorded in CLAUDE.md §4.1, was wrong.**
+`honors.html`'s `.honor-card` was documented as un-sweepable because "both its
+`::before` and `.card`'s set `background`, and only one can win... That one is
+not hover-fixable: it is the badges' resting appearance." The collision is real.
+The conclusion was not.
+
+Reading what `.card::before` actually is:
+
+```
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+              background:var(--card-accent,var(--gold))}
+```
+
+It is the *same 2px top accent bar* those classes draw, and it takes the colour
+from a custom property. So the fix is one declaration per class, not an
+exclusion. Verified in an isolated harness rendered through headless Chromium
+before touching a page — a colour token, a gradient token, and the default:
+
+```
+.e-card   --card-accent:var(--gold)       -> ::before  rgb(201, 168, 76)
+.g-card   --card-accent:var(--purple)     -> ::before  rgb(155, 107, 240)
+.tier-omega --card-accent:linear-gradient(...) -> ::before  linear-gradient(90deg,
+                                    rgba(0,0,0,0), rgb(201,168,76), rgba(0,0,0,0))
+no token                              -> ::before  rgb(201, 168, 76)  (default)
+```
+
+A gradient works as well as a colour, which is what `honors.html` needed: its
+base `::before` carried geometry only and five `.tier-*` modifiers carried the
+paint. All five translated to `--card-accent` losslessly — measured after the
+change, four distinct gradients still rendering across the 16 badges (gold
+`rgb(201,…)`, solar `rgb(226,…)`, silver `rgb(192,…)`, cyan `rgb(0,22…)`).
+
+**The scanner found 42 candidate classes; most were noise.** A false-positive
+pass is why that number is not the answer: `t`, `a`, `section`, `toggle` and
+`toggle-slider` are utility names, not card containers, and `honors.html`'s five
+`tier-*` entries are modifiers on `.honor-card`, not classes of their own. The
+genuinely-clean accent-bar-plus-anchored set is 21 classes across 18 files.
+**Only 3 were adopted here** — `gaming.html`'s `.e-card`/`.g-card` (the flattest
+measured page in the repo, ratio 211) and `honors.html`'s `.honor-card` (the
+documented counterexample). The other 18 are feature-defining containers
+(`charter-doc`, `passport-doc`, `arch-console`…) and sweeping them wholesale
+would flatten exactly the per-page character this platform is supposed to have.
+They are recorded as unblocked, to be taken one page at a time with judgement.
+
+### Trap 1 — `[class*="card"]` was already doing half the job
+
+Asking the browser which rule supplied the border, rather than reasoning about
+it, turned up a selector nothing in this repo's docs records:
+
+```
+omega-visual-evolution.css
+.card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer,
+[class*="card"],[class*="panel"]{ background-color:var(--omega-glass);
+  border-color:var(--omega-edge); box-shadow:... }
+```
+
+A **substring** attribute selector. Every class whose *name merely contains*
+"card" — `.e-card`, `.honor-card`, `.event-card`, `.future-card` — already
+receives the glass surface, edge colour and shadow without ever carrying
+`.card`. That is why the excluded classes still looked like cards, and it
+sharpens the previous entry's finding: what a sweep actually adds to a `*-card`
+class is the hover glow, the shimmer `::after`, the cursor light, `padding:20px`
+and enrolment in the reveal systems — not the surface, which was already there.
+It also explains the asymmetry in that entry's own before/after: `.stat-box`
+(no "card" substring) showed `shadow: none` before, `.future-card` did not.
+
+### Trap 2 — the animation-beats-declaration trap, recurred
+
+Adding `.card` enrols the element in `omega-animated.js`'s `oa-fade-up`, whose
+final keyframe sets `opacity:1`. Measured after the sweep:
+
+```
+before   .honor-card.locked   opacity 0.45   filter grayscale(0.6)
+after    .honor-card.locked   opacity 1      filter grayscale(0.6)
+```
+
+`.honor-card.locked{opacity:.45}` is specificity (0,2,0) and still lost, because
+**an animation outranks a plain declaration regardless of specificity** — the
+same trap §4.2 records the Ω-HORIZON layer hitting. Sixteen locked honors
+stopped looking locked. `!important` is the one author declaration that outranks
+an animation; applying it restored `opacity: 0.45` in a render.
+
+The same reveal enrolment produced a false alarm worth recording: a visibility
+probe reported 2 of 60 `.e-card`s at `opacity: 0.098` and `0.085`. Those are
+rising values mid-`oa-fade-up`, not stuck elements — raising the settle from
+1000ms to 2600ms gave 132 open elements, **0 transparent**. A single opacity
+reading during a 0.5s animation is a measurement, not a finding.
+
+`.honor-card` also needed `padding:0` re-asserted at `.honor-card.card`: it
+carries no padding of its own and wraps a full-bleed `.honor-visual`, so
+`.card`'s 20px would have inset it. Verified: `firstKidW` unchanged at 267,
+box unchanged at 269x430.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,976 of 16,000 (five more §8.2 paragraphs compressed to make room for the
+two corrected facts in §4.1), `node scripts/verify-runtime.js --all` PASS on
+all 189 pages, exit 0.

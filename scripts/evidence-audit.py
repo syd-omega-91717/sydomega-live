@@ -83,6 +83,11 @@ os.chdir(ROOT)
 # (see CLAUDE.md §3) plus the error/offline shells the service worker serves.
 PUBLIC_PAGES = {
     'index', 'enter', 'account', 'reset', 'terms', 'pending', '404', 'offline',
+    # bg.js:442's list also carries these two, and this set had drifted from the
+    # list it claims to mirror. omega-visual-home is the site ROOT --
+    # vercel.json:20 rewrites "/" to it -- so reporting it UNREACHABLE was
+    # reporting the homepage as orphaned.
+    'charter', 'omega-visual-home',
 }
 
 # Edge Functions that are invoked by Stripe, pg_cron, or the Supabase

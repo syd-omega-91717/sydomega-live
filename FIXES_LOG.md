@@ -8904,3 +8904,56 @@ guarded. `scripts/check-secrets.sh` and this parse are both things a human must
 still remember before `supabase functions deploy`.
 
 No code change.
+
+---
+
+## evidence-audit.py called the site's homepage UNREACHABLE (2026-09-04)
+
+`CLAUDE.md` §9 requires `EVIDENCE_MATRIX.md` to be kept current as part of the
+same change. Checking it against §8.3's recorded baseline found drift, and the
+drift turned out to be a scanner bug rather than an estate change.
+
+```
+§8.3 baseline : 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY /  8 STATIC / 2 BROKEN / 1 UNREACHABLE
+measured      : 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 17 STATIC / 2 BROKEN / 3 UNREACHABLE
+```
+
+The baseline row sums to **178**; the estate is **189**. It was written before
+eleven pages were added, and nobody re-derived it — the drift §8.4 warns about,
+in the table that exists to prevent it.
+
+### The bug
+
+`UNREACHABLE` means "deployed, but `nav.js` does not reference it **and it is
+not a public page**". The three flagged were `verify-deployment.html`,
+`verify-modules.html` — internal tooling, correctly flagged — and
+**`omega-visual-home.html`**, which is the site's **root**:
+
+```
+vercel.json:20  "rewrites":[{"source":"/","destination":"/omega-visual-home.html"}]
+bg.js:442       var PUBLIC = ['/account','/enter','/reset','/terms','/pending',
+                              '/index','/','/charter','/omega-visual-home'];
+```
+
+It is the first page every visitor sees, and `bg.js` already treats it as
+public. The scanner's own comment says its set *"Mirrors bg.js's public-page
+list (see CLAUDE.md §3)"* — but it had drifted from the list it claims to
+mirror, missing both `charter` and `omega-visual-home`.
+
+Adding the two:
+
+```
+UNREACHABLE  3 -> 2   (only the two internal verify pages, correctly)
+STATIC      17 -> 18   (omega-visual-home reclassified, not removed)
+```
+
+§8.3's row is corrected to the measured values, with the page total noted so the
+next reader can see at a glance whether it has gone stale again.
+
+**The shape worth remembering:** a scanner that says it mirrors another file's
+list, and does so by copying the values rather than reading them, will drift the
+first time that file changes — and will then report a confident false positive
+about the most visible page on the site. The same class as §8.4's "a number
+stored in prose drifts; derive it instead", but in code.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.

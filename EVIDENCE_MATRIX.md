@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 95 |
 | `PARTIAL` | 24 |
 | `LOCAL_ONLY` | 48 |
-| `STATIC` | 15 |
+| `STATIC` | 18 |
 | `BROKEN` | 2 |
 | `UNREACHABLE` | 2 |
-| **total** | **186** |
+| **total** | **189** |
 
 ## BUILT (95)
 
@@ -226,21 +226,24 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
 
-## STATIC (15)
+## STATIC (18)
 
 | page | evidence |
 |---|---|
 | `404.html` | no backend call, no stored state |
 | `ad-network.html` | no backend call, no stored state |
+| `agent-network.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
 | `architecture.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
 | `creator.html` | no backend call, no stored state |
+| `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
+| `omega-visual-home.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
@@ -281,7 +284,7 @@ This scanner reads the repository. It has no database connection, so:
 | | count |
 |---|---:|
 | tables + views declared in `supabase/` | 119 |
-| functions declared in `supabase/` | 129 |
+| functions declared in `supabase/` | 130 |
 | tables defined in more than one root SQL file | 48 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a

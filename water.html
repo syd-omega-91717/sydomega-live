@@ -357,8 +357,8 @@ function renderHistory(){
     {v:avgDay+'ml',l:'DAILY AVG'},
     {v:streak,l:'GOAL STREAK'},
     {v:days.size,l:'ACTIVE DAYS'},
-  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('')
-    +'<div class="stat-box"><div class="stat-val" id="st-yesterday">&mdash;</div><div class="stat-lbl">YESTERDAY VS PRIOR DAY</div>'
+  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('')
+    +'<div class="stat-box card"><div class="stat-val" id="st-yesterday">&mdash;</div><div class="stat-lbl">YESTERDAY VS PRIOR DAY</div>'
     +'<div data-omega-spark id="spark-water" data-spark-line="off" hidden style="margin-top:8px;justify-content:center"></div></div>';
 
   /* Yesterday against the day before it: two finished days. The canvas below

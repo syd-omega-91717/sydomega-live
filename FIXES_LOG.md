@@ -8543,3 +8543,55 @@ so this is recorded as a consistency change only.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok habits.html`.
+
+---
+
+## The same three primitives, reinvented on three more pages (2026-09-04)
+
+`habits.html` was not one page's habit. `targets.html`, `nutrition.html` and
+`rituals.html` are built from the same template and reinvent the same
+primitives under different names:
+
+| page | page-local | count | platform equivalent |
+|---|---|---|---|
+| `targets.html` | `.okr-stat` + `.sv`/`.sk` | 12 | `.kpi` |
+| `nutrition.html` | `.ds-box` + `.dv`/`.dl` | 13 | `.kpi` |
+| `rituals.html` | `.streak-box` + `.sv`/`.sk` | 12 | `.kpi` |
+| all three | `.section-hd` | 12 | `.sechead` |
+
+The three definitions are near-identical and all descend from the same
+ancestor:
+
+```css
+.okr-stat   {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+.ds-box     {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center}
+.streak-box {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+```
+
+None of them, and no `.section-hd`, has a `::before` or `::after`, so neither
+documented collision applies. Measured with BEFORE pinned via `git show HEAD:`:
+
+```
+targets.html    BEFORE {"boxes":12,"withKpi":0, "bg":"rgba(0, 0, 0, 0)","borderTop":"1px rgba(201, 168, 76, 0.1)","sechead":0}
+                AFTER  {"boxes":12,"withKpi":12,"bg":"rgba(10, 10, 15, 0.68)","borderTop":"2px rgba(201, 168, 76, 0.22)","sechead":3,"errors":0}
+nutrition.html  BEFORE {"boxes":13,"withKpi":0, …}   AFTER {"boxes":13,"withKpi":13, … "sechead":6,"errors":0}
+rituals.html    BEFORE {"boxes":12,"withKpi":0, …}   AFTER {"boxes":12,"withKpi":12, … "sechead":3,"errors":0}
+```
+
+37 stat boxes across the three had **no background at all** — outlines on the
+page ground, exactly as on `habits.html` — and now carry the platform glass and
+the 2px KPI accent. 62 hand-mixed `rgba(138,134,118,.N)` greys became
+`var(--muted)` (23 + 22 + 17).
+
+The section headings move from `rgba(201,168,76,.5)` to `rgb(0,229,255)`, the
+platform value confirmed against four other pages in the previous entry.
+
+**One count that does not tie out, stated rather than smoothed over.**
+`targets.html` had 4 `class="section-hd"` substitutions in source but renders 3
+`.section-hd.sechead`. The fourth is not in the DOM at load — most likely inside
+a template string that has not been rendered — so the substitution is correct
+and the render count is simply lower. It is recorded because a 4-vs-3 mismatch
+that goes unexplained is how a wrong number gets into a document.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, all three `ok`.

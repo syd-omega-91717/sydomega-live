@@ -114,12 +114,21 @@ var modelKing=JSON.parse(localStorage.getItem(MK)||'{}');
 
 function renderKings(){
   document.getElementById('kings-grid').innerHTML=KINGS_DATA.map(function(k,i){
-    return '<div style="border:1px solid var(--line);border-top:2px solid '+k.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+    /* The shared .card surface, not a hand-rolled one. The per-king
+       `border-top:2px solid <colour>` this used to set on the element is the
+       collision CLAUDE.md §4.1 describes, and its documented lossless
+       translation: .card::before already draws a 2px top bar and reads
+       --card-accent, so the colour moves there and the card gains the
+       platform's glass, rim shadow, hover elevation and glow edge -- none of
+       which this page had (measured: box-shadow "none" before). The realm
+       badge becomes a .chip, whose `border:1px solid` takes currentColor, so
+       one `color` carries both. */
+    return '<div class="card" style="--card-accent:'+k.color+'">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+k.era+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+k.color+';border:1px solid '+k.color+';padding:1px 5px">'+k.realm.toUpperCase()+'</div>'
+      +'<span class="chip" style="color:'+k.color+'">'+k.realm.toUpperCase()+'</span>'
       +'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+k.color+';margin-bottom:4px">'+k.name+'</div>'
+      +'<div class="card-title" style="font-family:var(--D);font-size:13px;color:'+k.color+';margin-bottom:4px;letter-spacing:0">'+k.name+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px">VIRTUE: '+k.virtue.toUpperCase()+'</div>'
       +'<div style="font-size:12px;line-height:1.6;opacity:.8;margin-bottom:8px">'+k.desc+'</div>'
       +'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px">'
@@ -127,7 +136,7 @@ function renderKings(){
       +'<div style="font-size:12px;font-style:italic;opacity:.75">'+k.lesson+'</div>'
       +'</div>'
       +'<div id="king-bio-'+i+'" style="margin-top:10px">'
-      +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted);background:none;cursor:pointer">READ REAL BIOGRAPHY (WIKIPEDIA)</button>'
+      +'<button class="btn" onclick="loadKingBio('+i+')" style="color:var(--muted);border-color:rgba(201,168,76,.25)">READ REAL BIOGRAPHY (WIKIPEDIA)</button>'
       +'</div>'
       +'</div>';
   }).join('');

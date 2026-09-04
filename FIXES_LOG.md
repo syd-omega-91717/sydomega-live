@@ -8249,3 +8249,54 @@ The filter suppressed exactly the cases it was written to find. Removed and
 abandoned rather than published as a zero — dead CSS is mostly noise, so the
 signal-to-noise did not justify rebuilding it. Noted so it is not re-attempted
 in the same shape.
+
+---
+
+## kings.html adopts the shared card surface (2026-09-04)
+
+The nine ruler cards were hand-rolled inline, with no shared class at all:
+
+```js
+'<div style="border:1px solid var(--line);border-top:2px solid '+k.color+
+ ';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+```
+
+Measured before: 9 cards, **0** carrying `.card`, `box-shadow: none`.
+
+The per-king `border-top:2px solid <colour>` on the element is precisely the
+collision CLAUDE.md §4.1 names as a reason a class was *not* swept — and the
+same section gives its lossless translation: `.card::before` is already a 2px
+top bar reading `--card-accent`. So the colour moves to the custom property and
+the element takes `.card`. The realm badge becomes a `.chip`, whose
+`border:1px solid` resolves to `currentColor`, so one `color` declaration
+carries both text and border; the bio button becomes a shared ghost `.btn`; the
+ruler's name takes `.card-title`, whose inline per-king `color` still wins
+(inline beats a class) while gaining the platform's item diamond.
+
+Measured after:
+
+```
+cards: 9
+accentBar: {h:"2px", top:"0px", bg:"rgb(201, 168, 76)"}   // Alexander, gold
+secondCardAccent: "rgb(226, 200, 109)"                    // Marcus Aurelius, solar
+surface: {bg:"rgba(10, 10, 15, 0.68)", pad:"20px", radius:"2px", shadow:"present"}
+chip:    {radius:"20px", border:"rgb(201, 168, 76)", color:"rgb(201, 168, 76)"}
+btnBg:   "rgba(0, 0, 0, 0)"        // ghost, not the browser's grey face
+titleMark: "7px matrix(0.707107, 0.707…"   // the .card-title diamond, at 45deg
+overflowX: false   errors: []
+```
+
+The accent bar reproduces each king's colour exactly, so nothing the page meant
+was lost; what it gains is the glass ground, the rim shadow it did not have,
+hover elevation, the hover glow edge and the cursor-reactive light — all from
+one class, no new CSS.
+
+**One thing checked and found not to be a bug.** `KINGS_DATA` stores virtues
+containing `&amp;` (`'Vision &amp; Conquest'`), and the template calls
+`.toUpperCase()` on them before `innerHTML`, which yields `&AMP;`. That looks
+like it would render literally. It does not — `&AMP;` is in HTML5's named
+character reference table — and the render confirms `VIRTUE: VISION &
+CONQUEST`. Measured rather than "fixed" on the strength of reading the code.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok kings.html`.

@@ -200,13 +200,18 @@ const CHECK_JS = `(() => {
     let n = el, bases = null; const layers = [];
     while (n && n !== document.documentElement) {
       const s = getComputedStyle(n);
-      const c = px(s.backgroundColor);
+      /* background-clip:text means the background paints INSIDE the
+         glyphs, not behind them -- .ofx-sheen is exactly this. Treating
+         its gradient as a surface reported six .sec-prog spans at 1:1
+         against their own text fill. */
+      const clipsToText = (s.backgroundClip || s.webkitBackgroundClip) === 'text';
+      const c = clipsToText ? null : px(s.backgroundColor);
       if (c) {
         const a = alpha(c);
         if (a > .995) { bases = [c.slice(0,3)]; break; }
         if (a > .02) layers.push([c.slice(0,3), a]);
       }
-      const bi = s.backgroundImage;
+      const bi = clipsToText ? 'none' : s.backgroundImage;
       if (bi && bi !== 'none') {
         const stops = (bi.match(/rgba?\\([^)]*\\)/g) || []).map(px).filter(Boolean);
         const solid = stops.filter(t => alpha(t) > .85).map(t => t.slice(0,3));

@@ -7602,3 +7602,120 @@ good case.
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS on the
 13 entrypoints and `--all` PASS on 189 pages, `context-budget.py` PASS at
 ~15,996 of 16,000 (six §8.4 notes compressed to make room for the baseline row).
+
+## gaming.html: completed cards looked unstarted, and eleven headers said the same thing (2026-09-04)
+
+`gaming.html` is the most text-dense page in the repo (11,403 characters, ratio
+204 on the density scan — twice the next page). Two things were wrong with it,
+and both had the data to be right already sitting on the page.
+
+**Completed cards showed no completion.** The click handler was the only thing
+that ever marked one:
+
+```js
+var r = await window.omegaCompleteTask(n, ty);
+if (r.ok) { card.style.borderTopColor = 'var(--green)'; ... }
+```
+
+So a member who finished Chess Master yesterday saw it as untouched today. The
+page already queries `task_completions` twice — a count, and the last 20 rows
+for the activity log — so the data was fetched and then not used for the 132
+cards it describes. Now one more query builds a set of completed `task_name`s
+(**the same column the activity log already reads**, so no new name is
+introduced — §8.1 class 2) and marks each matching card.
+
+The mark goes through `--card-accent`, the mechanism established earlier today:
+`.card::before` reads it, so the top bar turns green without a second pseudo
+fighting the first. The click handler was changed to the same mechanism instead
+of setting `borderTopColor` directly, so both paths agree.
+
+Per §9: `doneQ.error` is checked explicitly. Supabase resolves to
+`{data:null,error}` rather than throwing, and on an error **no card is marked**
+— a card claiming completion it cannot support is exactly §8.1 class 9.
+
+**Eleven headers repeated one string.** Every section carried
+`· 12 GAMES · AXIS B MASTERY · 12×12×9×9×9 = 104,976` — 605 characters of
+repetition on the page that least needed more text. The formula is now stated
+once, in the topbar where it belongs, and each header carries that section's
+real progress instead:
+
+```
+STRATEGY & BOARD · AXIS B MASTERY · 2 / 12 COMPLETE
+```
+
+The first attempt did this rewrite at runtime. That was wrong twice over: the
+source stayed repetitive, and the cleanup was coupled to a successful query —
+a failed fetch would have left the formula in place. The headers are now clean
+in the markup and JS only appends the live count.
+
+### The sheen trap, caught by measuring paint rather than text
+
+Cleaning the markup made those headers **childless and under 48 characters** at
+the moment `bg.js:1290` applies `.ofx-sheen` — which fills heading text with
+`background-clip:text` + `-webkit-text-fill-color:transparent`, and that
+**inherits into children**. The sheened count went from 3 to 14, and the
+appended span measured:
+
+```
+webkitTextFillColor: rgba(0, 0, 0, 0)   color: rgb(155, 107, 240)   width: 174px
+```
+
+174 pixels wide, painting nothing. The probe had reported PASS the whole time
+because it read `textContent`, which is present whether or not the text paints —
+the same shape as measuring a colour without measuring whether it renders.
+Fixed with `-webkit-text-fill-color: currentColor` on the span, which restores
+both the section colour and the green completed state; verified `fill` now
+equals `color`.
+
+### Verified in a render, both states
+
+The harness stub returns `[]` for every non-single query, which only exercises
+the empty case — so a second stub variant returns three real completion rows:
+
+```
+no completions      11 headers · 0 formula repeats · 0 cards marked
+three completions   11 headers · 0 formula repeats · 3 cards marked
+                    Chess Master, Go / Weiqi, Sudoku Grand Master
+                    ::before background rgb(63, 178, 127)  = --green
+                    .c-pts "✓ RECORDED"
+                    STRATEGY & BOARD header reads 2 / 12
+```
+
+The header reading **2 / 12** rather than 3 is the useful detail: Sudoku is in
+the Puzzle panel, so the per-section count is genuinely per-section and not a
+global total wearing a section's name.
+
+### The gate caught this change, and then a flaw in itself
+
+`verify-runtime.js`'s new contrast gate — added two commits earlier — failed
+`gaming.html` on the first run after this change:
+
+```
+FAIL gaming.html
+  x 6 text element(s) under the 3:1 contrast floor:
+    1:1 SPAN.sec-prog "· 0 / 12 COMPLETE"  (x6)
+```
+
+A gate catching a bug in a change made minutes later is the whole point of
+having it. But the finding was the **gate's own flaw**, not the span's:
+
+```css
+.ofx-sheen{background-image:linear-gradient(100deg,currentColor 38%,…);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent}
+```
+
+`background-clip:text` means that gradient paints **inside the glyphs**, not as
+a surface behind them. The surface walk was treating it as the background and
+comparing the span's text colour against its own text fill — hence exactly 1:1.
+
+Fixed in the walk: an element whose `background-clip` is `text` contributes
+neither its colour nor its image as a surface. The gate proof still holds
+afterwards (3, 15 and 20 findings on the pinned pre-fix trees) and the baseline
+is unchanged at **0 blocking, 259 advisory, 61,475 passing across 189 pages**.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`verify-runtime.js` PASS on the 13 entrypoints and `--all` PASS on 189 pages.
+One `--all` run failed `architecture.html` with `page.goto: Timeout 30000ms` and
+passed on re-run against an identical tree — the concurrency timeout this log
+already records, not a finding.

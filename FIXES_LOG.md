@@ -7957,3 +7957,91 @@ had already run over them.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all` PASS,
 0 page errors and no horizontal overflow on `architecture.html`.
+
+---
+
+## control-plane.html: 171 status badges that were never styled, because three attributes were delimited with curly quotes (2026-09-04)
+
+The inventory tab builds a row per registered page and tags each with a
+COMPLETE/INCOMPLETE badge, green or crimson. Rendered through the harness, the
+badge class never existed:
+
+```
+rows: 171
+document.querySelectorAll('#page-list .page-badge').length  ->  0
+badge span className: "”page-badge"
+badge span attributes: [ 'class=”page-badge', 'ok”=' ]
+badge computed color: rgb(240, 237, 230)      // plain --ink, not green
+```
+
+Three attributes in the row template were delimited with **U+201D RIGHT DOUBLE
+QUOTATION MARK** rather than ASCII `"`:
+
+```js
+'<div class=page-row data-key='+key+' data-purpose=”'+page.purpose+'” data-character=”'+page.character+'”>'
+… '<span class=”page-badge '+status+'”>'+statusText+'</span>'
+```
+
+To the HTML parser those are unquoted attribute values, so each one terminates
+at the first space. `class` became the single token `”page-badge`, `ok”` became
+a stray boolean attribute, and every `.page-badge`, `.page-badge.ok` and
+`.page-badge.warning` rule in the page's own stylesheet matched nothing. The
+same cut hit the data attributes:
+
+```
+first row dataset  ->  { key: '404', purpose: '”Not', character: '”system”' }
+first row attributes -> class, data-key, data-purpose, found”, data-character
+```
+
+`data-purpose` held `”Not` and the rest of the value (`found”`) became an
+attribute *name* — on all 171 rows. `filterPages()` reads
+`row.dataset.purpose`, so the search box was matching one mangled word.
+
+A second, independent bug in the same function: the query is lowercased,
+the dataset values were not, so a search only ever matched purposes and
+characters that happened to be lowercase already.
+
+### Measured before and after
+
+`git show HEAD:control-plane.html` pinned as the BEFORE and served with the
+right content type (never `git stash` — the change is in the working tree):
+
+| | before | after |
+|---|---|---|
+| rows carrying `.page-badge` | **0** of 171 | **171** of 171 |
+| stray attributes parsed off the rows | 171 | 0 |
+| `dataset.purpose` on row 1 | `”Not` | `Not found` |
+| search `"sovereign"` | 4 rows | **11** rows |
+| search `"not found"` | 0 rows | **1** row |
+| search `"SECURITY"` | 1 | 1 |
+
+The four `"sovereign"` hits before were key matches only; the seven additional
+rows live in purpose/character text the truncated dataset could not reach. The
+badges now resolve `rgb(63,178,127)` on `.ok`, and all 171 read COMPLETE —
+independently corroborated by the page's own audit tab, which computes
+`MISSING EMBLEMS (0) / MISSING RELATED (0)` from the same registry.
+
+**This is not a repo-wide class.** A scan for a curly quote used as an attribute
+delimiter (`=` immediately followed by U+201C/U+201D) returns this file and
+nothing else; the other seven hits in `.html`/`.js` are `=−1` and `=√(A³…` in
+formula text, not markup.
+
+### The dead token block, measured rather than assumed
+
+The page opened with a `:root` redeclaring the canonical palette and type
+tokens. CLAUDE.md §4 says 62 pages do this and every one is dead code; measured
+on *this* page's render, the values that actually resolve are the platform's:
+
+```
+--crim = #C4453C    (page wrote #8b0000 -- the pre-fix crimson, 1.99:1)
+--muted = #8A8880   (page wrote rgba(138,134,118,.5))
+--M = "Courier Prime",monospace   (page wrote monospace)
+```
+
+Removed, keeping only `--dim` and `--pad`, which this page genuinely owns.
+Re-measured after: identical values. One hardcoded leftover of the same old
+crimson (`.page-badge.warning{border-color:rgba(139,0,0,.4)}`) was re-stepped to
+match the token it sits beside.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS,
+0 page errors and no horizontal overflow on `control-plane.html`.

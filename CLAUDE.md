@@ -205,7 +205,12 @@ through this one file with no per-page markup changes:
   (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
   hover-only masking hides them only during a simultaneous hover. Check a class
   against those two failure modes before adding `.card`; the per-class list,
-  the scanner and the verification are in `FIXES_LOG.md`.
+  the scanner and the verification are in `FIXES_LOG.md`. **A sweep is not
+  additive**: `.card` is re-declared in `omega-visual-evolution.css`, injected
+  *after* the page's `<style>`, so at equal specificity it wins — measured, it
+  rewrote resting border/background/padding/radius on 130 swept elements. Fine
+  for a bare box; where the page's value carries meaning (`chronicle.html`'s
+  dashed "not yet real" border) re-assert it at `.x.card`.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
   growing from the tab centre in the page axis colour, quarter-width on hover.
   40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
@@ -909,15 +914,14 @@ the same repositories:
 
 | source | what it is | outcome |
 |---|---|---|
-| `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug affecting 173 pages. Which rules transfer and which are React-only is recorded in `.claude/skills/interface-guidelines/SKILL.md` — read that rather than importing the upstream list wholesale. |
-| `vercel-labs/skills` → `find-skills` | discovery wrapper over `npx skills find/add` | **Not installed.** This session already has skill discovery. Its quality-gate criteria are adopted above; that was the transferable part. |
-| `anthropics/claude-plugins-official` | official plugin directory, 39 internal + external plugins | **`claude-md-management` was the find.** Its conciseness/currency rubric is what prompted measuring CLAUDE.md, which turned out to be ~68,900 tokens loaded per session with §8 as 88% of it — see `FIXES_LOG.md`'s header. The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`, `code-review` and `pr-review-toolkit` duplicate what this session already provides. |
-| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills (UGC ads, video hooks, ad copy) | **0 applicable.** Built for public paid-acquisition funnels. This platform is `noindex, nofollow` and invite-gated — it has no ad surface to produce for. Evaluated twice; do not re-evaluate without a change in what the platform is. |
-| `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** |
-| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted.** `template/SKILL.md` confirms `name`+`description` are the whole required frontmatter contract, and that a description must say *when* to use the skill — which is what `grill-me-codex` was missing. Nothing installed. |
-| `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s review criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
-| `affaan-m/everything-claude-code` (+ the 4 forks) | Claude Code config collection | **WATCH.** The four separately-listed repos are forks of this one upstream. Stars/activity unverifiable — GitHub API is egress-blocked. |
-| `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook` | agent harnesses, generative-UI framework, other providers' SDKs | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic server runtime. `agent-browser` duplicates the existing `verify-in-browser` harness. |
+| `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug on 173 pages. Which rules transfer is in `.claude/skills/interface-guidelines/SKILL.md` — read that, do not import the upstream list. |
+| `vercel-labs/skills` → `find-skills` | wrapper over `npx skills find/add` | **Not installed** — this session already has skill discovery. Its quality-gate criteria (adopted above) were the transferable part. |
+| `anthropics/claude-plugins-official` | official plugin directory, 39 plugins | **`claude-md-management` was the find** — its conciseness rubric is what prompted measuring CLAUDE.md at ~68,900 tokens per session, §8 being 88% (`FIXES_LOG.md` header). The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`/`code-review`/`pr-review-toolkit` duplicate this session. |
+| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex` and invite-gated, with no ad surface. Evaluated twice — do not re-evaluate unless what the platform is changes. |
+| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and that a description must say *when* to use the skill — what `grill-me-codex` was missing. |
+| `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
+| `affaan-m/everything-claude-code` (+ 4 forks of it) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
+| `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |
 
 Full evidence, per-repo blockers, and what could not be verified this session:
 **`OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`**. Read that before re-evaluating any of

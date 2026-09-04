@@ -102,10 +102,10 @@
     <!-- STATS TAB -->
     <div class="tab-panel" id="tab-stats">
       <div class="stat-row">
-        <div class="stat-box"><div class="sv" id="stat-total">0</div><div class="sk">TOTAL BOOKS</div></div>
-        <div class="stat-box"><div class="sv" id="stat-read">0</div><div class="sk">COMPLETED</div></div>
-        <div class="stat-box"><div class="sv" id="stat-reading">0</div><div class="sk">IN PROGRESS</div></div>
-        <div class="stat-box"><div class="sv" id="stat-avg">—</div><div class="sk">AVG RATING</div></div>
+        <div class="stat-box card"><div class="sv" id="stat-total">0</div><div class="sk">TOTAL BOOKS</div></div>
+        <div class="stat-box card"><div class="sv" id="stat-read">0</div><div class="sk">COMPLETED</div></div>
+        <div class="stat-box card"><div class="sv" id="stat-reading">0</div><div class="sk">IN PROGRESS</div></div>
+        <div class="stat-box card"><div class="sv" id="stat-avg">—</div><div class="sk">AVG RATING</div></div>
       </div>
       <div class="section-hd">GENRE BREAKDOWN</div>
       <div id="genre-breakdown"></div>
@@ -114,16 +114,16 @@
     <!-- SCIENCE -->
     <div class="tab-panel" id="tab-science">
       <div class="stat-row">
-        <div class="stat-box"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-        <div class="stat-box"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
-        <div class="stat-box"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
-        <div class="stat-box"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+        <div class="stat-box card"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="stat-box card"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+        <div class="stat-box card"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+        <div class="stat-box card"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
       </div>
       <div class="stat-row">
-        <div class="stat-box"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
-        <div class="stat-box"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
-        <div class="stat-box"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
-        <div class="stat-box"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+        <div class="stat-box card"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+        <div class="stat-box card"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+        <div class="stat-box card"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+        <div class="stat-box card"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
       </div>
       <div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:20px;font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:1.9">
         <strong style="color:rgba(201,168,76,.7)">THE COMPOUNDING READER</strong> — Reading 30 minutes per day = 13 books per year = 390 books per 30 years. Charlie Munger's mental model lattice was built entirely through voracious reading. One idea absorbed changes a decision; one decision changes a decade.<br><br>
@@ -299,7 +299,7 @@ function renderShelf(){
   const shelf=getShelf().filter(b=>shelfFilter==='all'||b.status===shelfFilter);
   document.getElementById('shelf-list').innerHTML=shelf.length?
     shelf.map(b=>`
-      <div class="shelf-item">
+      <div class="shelf-item card">
         <div class="shelf-cover">
           ${b.cover?`<img src="${b.cover}" alt="${b.title}">`:'▥'}
         </div>

@@ -178,16 +178,16 @@ textarea.q-area.sm{min-height:54px}
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-box"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-box"><div class="stat-val">52</div><div class="stat-lbl">REVIEWS/YEAR</div></div>
-      <div class="stat-box"><div class="stat-val">φ/e</div><div class="stat-lbl">REVIEW RATIO</div></div>
-      <div class="stat-box"><div class="stat-val">6</div><div class="stat-lbl">LIFE DOMAINS</div></div>
+      <div class="stat-box card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box card"><div class="stat-val">52</div><div class="stat-lbl">REVIEWS/YEAR</div></div>
+      <div class="stat-box card"><div class="stat-val">φ/e</div><div class="stat-lbl">REVIEW RATIO</div></div>
+      <div class="stat-box card"><div class="stat-val">6</div><div class="stat-lbl">LIFE DOMAINS</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-box"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-box"><div class="stat-val">90</div><div class="stat-lbl">DAY CYCLE</div></div>
-      <div class="stat-box"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
-      <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-box card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box card"><div class="stat-val">90</div><div class="stat-lbl">DAY CYCLE</div></div>
+      <div class="stat-box card"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
+      <div class="stat-box card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="sci-card card">
       <div class="sci-title">THE WEEKLY REVIEW — DAVID ALLEN</div>
@@ -516,7 +516,7 @@ function renderTrends(){
     {v:overallAvg+'/10',l:'AVG SCORE'},
     {v:totalWins,l:'WINS LOGGED'},
     {v:streak,l:'WEEK STREAK'},
-  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
   drawTrend(reviews);
 }
 

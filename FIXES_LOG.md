@@ -6949,3 +6949,107 @@ to make room for the §4.1 rewrite), `verify-runtime.js` PASS on the 13
 capability entrypoints and `--all` PASS on all 189 pages (exit 0, run to
 completion — not a claim written ahead of the run). `omega-registry.py`
 regenerated for the new module.
+
+## Which pages are flat text, measured — and what the card sweep actually does (2026-09-04)
+
+**The measurement.** "More graphic than text" is a taste claim until something
+counts it. A runtime scan measured, inside the content column only (the sidebar
+is identical everywhere and swamps the signal), visible `innerText` characters
+against the weight of what actually paints — `canvas`×6 + `svg`×3 + emblem×4 +
+`img`×2 + `.card` + bar×2 — over 187 pages, 0 load failures.
+
+The control is what makes it mean anything: `dashboard`, `cosmos` and `matrix`
+are the known-cinematic pages, and they ranked 109, 101 and 126 of 187 — the
+visual half. A metric that put them at the text end would have been measuring
+the wrong thing and nothing else in the output would have counted.
+
+**The top three results were false positives, and checking them was the point.**
+
+```
+approvals.html       2662 chars, visual=0
+interface-omni.html  2045 chars, visual=0
+journal.html          941 chars, visual=0
+```
+
+`visual=0` on pages that every emblem census says carry a mount. Walking the
+ancestor chain in the browser rather than guessing:
+
+```
+journal.html        MAIN.main 0x0 -> DIV.shell 0x0 -> DIV. 0x0 display=none
+approvals.html      MAIN.main 0x0 -> DIV.shell 0x0 display=none
+interface-omni.html MAIN.main 0x0 -> DIV.shell 0x0 -> DIV. 0x0 display=none
+```
+
+`body.omega-approved` was set on all three, so this is not the approval guard.
+Reading the source: `approvals.html:149` is `<div class="shell" id="app"
+style="display:none">` revealed after an owner check, `interface-omni.html:63`
+is `<div id="main" style="display:none">` revealed only for
+`profiles.is_owner`, and `journal.html:130` is `<div id="j-main"
+style="display:none">` behind a passphrase. All three are correct behaviour
+under a non-owner stub. The scan found gates, not design gaps. `innerText`
+still returned characters because an unrendered element returns its
+`textContent` — which is exactly how a blank page can score as a wall of text.
+
+**Emblem coverage was already complete**, checked before building anything:
+188 registry entries in `omega-page-emblem.js`, 187 of 189 pages carrying a
+mount, and the 2 without are `verify-deployment` and `verify-modules`, the
+internal harnesses the module header excludes on purpose. Nothing to do there.
+
+**What was left was the genuine finding**: the flattest *rendering* pages carry
+canvases and SVG but zero `.card` — their content blocks sit raw on the
+background under page-local class names. Checked against the two documented
+sweep failure modes (a page-local `::before`/`::after` that sets `background`;
+a per-instance border via inline `style=`, JS `.style.border*`, or a
+same-element modifier):
+
+| class | files | verdict |
+|---|---|---|
+| `.stat-box` | 20 | clear -> swept (118) |
+| `.future-card` | chronicle | clear -> swept (4) |
+| `.prog-block` | gaming | clear -> swept (2) |
+| `.shelf-item` | library | clear -> swept (1) |
+| `.event-card` | graph-timeline | clear -> swept (1) |
+| `.e-card`, `.g-card` | gaming | **`::before` sets `background`** — excluded |
+| `.event-card` | chronicle | **`::before` sets `background` + 17 inline `border-left`** — excluded |
+| `.sci-card`, `.book-card` | — | already carried `.card` |
+
+130 elements swept across 23 files.
+
+**A `.card` sweep is not additive, and this session assumed it was.** The
+prediction was that a page's own `<style>` would win the tie and only the
+hover-only glow would be added. Measured before and after on real pages, that
+is false — `omega-visual-evolution.css` re-declares `.card` and is injected
+*after* the page's sheet, so at equal specificity it wins:
+
+```
+focus.html .stat-box     border  rgba(201,168,76,.1)  -> rgba(201,168,76,.22)
+                         background  transparent      -> rgba(10,10,15,.68)
+                         padding     16px             -> 20px
+                         shadow      none             -> inset + glow
+                         hover.shadow none            -> 0 8px 24px rgba(0,0,0,.35)
+achievements.html        border  rgb(26,26,26)        -> rgba(201,168,76,.22)
+                         radius  0px                  -> 2px
+```
+
+For a bare page-local box that unification is the point of having a design
+system. For one whose own value carries meaning it is a loss, and there was
+exactly one: `chronicle.html`'s `.future-card` used a **dashed** border to say
+"not yet real", and `.card`'s shorthand made it solid. Fixed by re-asserting it
+at `.future-card.card` specificity (0,2,0), which beats `.card` regardless of
+sheet order — verified back to `borderStyle: "dashed"` in a render.
+
+**A second scanner false positive, caught the same way.** A stuck-invisible
+sweep reported `chronicle.html` 4/21 elements at `opacity: 0` inside an open
+panel at full 268x205 size — which is what shipping invisible content looks
+like. It was the probe: `.card` enrolls an element in `omega-content.js`'s
+`.oc-hidden` reveal, and the probe clicked every tab but never scrolled.
+Scrolling each card into view the way a member reaches it returned
+`opacity: 1`, `revealed` on all four. Across the other 22 pages, 143 elements
+checked, 0 stuck.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `sparkprobe.js` 10/10 still
+passing after the sweep, `context-budget.py` PASS at ~15,996 of 16,000 (nine
+more paragraphs trimmed; the `cporter202/ai-growth-stack` row was merged into
+the catch-all 0-applicable row rather than dropped, so the do-not-re-evaluate
+record survives — the full evidence is in `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`),
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.

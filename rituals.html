@@ -68,6 +68,7 @@
 .insight-text{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.7);line-height:1.6}
 </style>
   <script src="/bg.js"></script>
+  <script src="/omega-sparkline.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -88,7 +89,7 @@
       <div class="streak-box"><div class="sv" id="str-total">0</div><div class="sk">TOTAL DAYS</div></div>
       <div class="streak-box"><div class="sv" id="str-streak">0</div><div class="sk">CURRENT STREAK</div></div>
       <div class="streak-box"><div class="sv" id="str-best">0</div><div class="sk">BEST STREAK</div></div>
-      <div class="streak-box"><div class="sv" id="str-rate">0%</div><div class="sk">30-DAY RATE</div></div>
+      <div class="streak-box"><div class="sv" id="str-rate">0%</div><div class="sk">30-DAY RATE</div><div data-omega-spark id="spark-rituals" data-spark-label="RITUALS KEPT PER DAY, LAST FOURTEEN COMPLETE DAYS" hidden style="margin-top:8px;justify-content:center;display:flex"></div></div>
     </div>
 
     <div class="section-hd">THIS WEEK</div>
@@ -354,6 +355,26 @@ function renderStreaks(){
   document.getElementById('str-streak').textContent=run;
   document.getElementById('str-best').textContent=b;
   document.getElementById('str-rate').textContent=Math.round(last30Complete/30*100)+'%';
+  drawRitualSpark(logs,rituals,today);
+}
+
+/* Rituals kept per day, not the all-or-nothing "full day" the streak boxes
+   count -- eleven of twelve reads as a zero there and as an eleven here.
+   Today is excluded: it is still open, so a partial day against a finished
+   one would show a fall that has not happened. */
+function drawRitualSpark(logs,rituals,today){
+  const el=document.getElementById('spark-rituals');
+  if(!el) return;
+  if(!rituals.length){el.setAttribute('data-spark-values','[]');return;}
+  const vals=[];let live=false;
+  for(let i=14;i>=1;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const done=logs[d.toISOString().slice(0,10)]||{};
+    const n=rituals.filter(r=>done[r.id]).length;
+    if(n>0) live=true;
+    vals.push(n);
+  }
+  el.setAttribute('data-spark-values',JSON.stringify(live?vals:[]));
 }
 function isYesterday(d,logs,rituals){
   const prev=new Date(d);prev.setDate(d.getDate()+1);

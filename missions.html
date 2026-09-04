@@ -76,7 +76,7 @@
 <div class="tab-panel active" id="tab-missions">
   <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-val" id="streakCount">0</div><div class="kpi-label">DAY STREAK</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="totalXp">0</div><div class="kpi-label">TOTAL XP</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="totalXp">0</div><div class="kpi-label">TOTAL XP</div><div data-omega-spark id="spark-xp" data-spark-label="XP PER DAY, LAST FOURTEEN COMPLETE DAYS" data-spark-unit=" XP" hidden style="margin-top:8px"></div></div>
     <div class="kpi-card"><div class="kpi-val" id="totalComplete">0</div><div class="kpi-label">COMPLETED</div></div>
     <div class="kpi-card"><div class="kpi-val" id="rank">&mdash;</div><div class="kpi-label">MISSION RANK</div></div>
   </div>
@@ -266,6 +266,25 @@ function renderHeader(){
   document.getElementById('dayPct').textContent=pct+'%';
   document.getElementById('dayBar').style.width=pct+'%';
   document.getElementById('dayXp').textContent=doneXp+' / '+totalXp+' XP TODAY';
+  drawXpSpark();
+}
+
+/* The heatmap buckets a day into five intensities, so every day above 600 XP
+   looks identical. This is the magnitude reading the heatmap cannot give.
+   Today is deliberately excluded: it is still being earned, and comparing a
+   half-finished day against a finished one would report a fall that has not
+   happened. */
+function drawXpSpark(){
+  var el=document.getElementById('spark-xp');
+  if(!el) return;
+  var vals=[],now=new Date(),live=false;
+  for(var d=14;d>=1;d--){
+    var date=new Date(now);date.setDate(date.getDate()-d);
+    var xp=state.activity[date.toISOString().slice(0,10)]||0;
+    if(xp>0) live=true;
+    vals.push(xp);
+  }
+  el.setAttribute('data-spark-values',JSON.stringify(live?vals:[]));
 }
 
 function renderMissions(missions,containerId,stateKey){
@@ -376,4 +395,5 @@ function renderAll(){
 }
 </script>
 <script src="/bg.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 </body></html>

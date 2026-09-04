@@ -151,9 +151,8 @@ which already own `opacity` on what they manage.
   `.kpi-row`, `.card`/`.card-grid`, `.tbl-*`, `.tab-*`, `.chip`, `.glass`/
   `.glass-cyan`, `.bar-track`/`.bar-fill`. **`.shell` is a flex _row_**, so a
   page-level block written after `</main>` is not below the content — it is a
-  third column, stretched full height, taking its own width out of the page.
-  23 pages were rendering ~300px narrow this way. Put page-level blocks inside
-  the content column.
+  third column taking its own width out of the page (23 pages once rendered
+  ~300px narrow this way). Put page-level blocks inside the content column.
 - Responsive breakpoints at 1200/900/700/480px, all defined in the same
   block.
 
@@ -212,14 +211,15 @@ through this one file with no per-page markup changes:
   40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
   fact established by parsing `<style>` blocks, since a whole-file grep counts
   every `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry table utilities** (opt-in, not yet used by any page):
-  `.trend.up`/`.trend.down` badges (colored, glowing, with a
-  `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
-  zebra striping, `.sparkline` (stroke/glow styling for an inline SVG
-  polyline a page renders itself). `.trend` sets `justify-self:start`
-  deliberately — `.tbl-row` is `display:grid`, and without that, a
-  `.trend` child stretches to fill the implicit grid track by default
-  (confirmed by rendering a test harness before shipping).
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges (`▲`/`▼`/`▬`),
+  `.tbl-row.up`/`.down` row coloring, zebra striping, `.sparkline` (stroke/glow
+  for an SVG polyline). `.trend` sets `justify-self:start` deliberately —
+  `.tbl-row` is `display:grid`, and without it a `.trend` child stretches to
+  fill the implicit track. **Draw them through `omega-sparkline.js`**
+  (`data-omega-spark` + `data-spark-values`; loaded per page, not by `bg.js`),
+  never by hand: a badge asserts a direction, so it draws nothing below two
+  real readings, `.flat` on equality, an absolute delta from a prior 0, and its
+  6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **Fallback skin for genuinely bare elements**: `input:not([class])`,
@@ -504,20 +504,19 @@ open, recorded in `FIXES_LOG.md`:
   exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
   in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
 - **`ops.html`'s event-bus metrics table never renders** — it looks up
-  `#evt-metrics-body`, an id that exists nowhere. Building the container means
-  designing UI that was never built.
+  `#evt-metrics-body`, an id that exists nowhere. The container would be new UI,
+  not a fix.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
   so the score moves only on 30-min idle (`-10`) and a failed gated action
-  (`-5`), never on a threat. Detection is an architecture decision. *This entry
-  claimed `gate()` is never called and the badge always reads 100; both false —
-  `approvals.html` calls it at 3 sites, `updateBadge()` repaints every 2s.*
+  (`-5`), never on a threat. Detection is an architecture decision. (`gate()`
+  *is* called — `approvals.html`, 3 sites — and `updateBadge()` repaints every
+  2s; an earlier claim here that neither ran was wrong.)
 - **`omega-threat.js` is the digital-thread traceability engine**
-  (`window.OmegaThread`), not threat detection. Filename mismatch left as-is.
+  (`window.OmegaThread`), not threat detection; filename left as-is.
 - **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
-  remaining).** Both INFO-level. The "unused" signal reflects a platform with
-  9 real profiles and near-zero traffic, not badly designed indexes — nearly
-  every one is the `user_id` pattern every RLS policy filters on. The 61
-  remaining unindexed FKs are all on the 45-table scaffold schema below.
+  remaining).** Both INFO-level and expected: "unused" reflects 9 profiles and
+  near-zero traffic, not bad indexes — nearly every one is the `user_id`
+  pattern RLS filters on — and the 61 FKs are all on the scaffold below.
 - **~83 tables live on production that this repo's SQL never created** — a
   generic multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars).
   RLS is enabled with no policies, which is the *safe* state (total lockout),
@@ -914,7 +913,7 @@ the same repositories:
 | `vercel-labs/skills` → `find-skills` | discovery wrapper over `npx skills find/add` | **Not installed.** This session already has skill discovery. Its quality-gate criteria are adopted above; that was the transferable part. |
 | `anthropics/claude-plugins-official` | official plugin directory, 39 internal + external plugins | **`claude-md-management` was the find.** Its conciseness/currency rubric is what prompted measuring CLAUDE.md, which turned out to be ~68,900 tokens loaded per session with §8 as 88% of it — see `FIXES_LOG.md`'s header. The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`, `code-review` and `pr-review-toolkit` duplicate what this session already provides. |
 | `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills (UGC ads, video hooks, ad copy) | **0 applicable.** Built for public paid-acquisition funnels. This platform is `noindex, nofollow` and invite-gated — it has no ad surface to produce for. Evaluated twice; do not re-evaluate without a change in what the platform is. |
-| `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** Nothing to adopt. |
+| `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** |
 | `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted.** `template/SKILL.md` confirms `name`+`description` are the whole required frontmatter contract, and that a description must say *when* to use the skill — which is what `grill-me-codex` was missing. Nothing installed. |
 | `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s review criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
 | `affaan-m/everything-claude-code` (+ the 4 forks) | Claude Code config collection | **WATCH.** The four separately-listed repos are forks of this one upstream. Stars/activity unverifiable — GitHub API is egress-blocked. |

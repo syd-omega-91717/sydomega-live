@@ -6836,3 +6836,116 @@ set, so they were left alone. Zeus's was the stale gold from the same family as
 the divergent palettes cleared earlier that day, reading as an off-key gold
 beside the real `#C9A84C`.
 
+
+## The shipped telemetry utilities get a drawing engine, and six honest adopters (2026-09-04)
+
+**Same shape as the `.omg-ring` finding: CSS that ships and nothing renders.**
+`bg.js` has styled `.trend.up` / `.trend.down` badges, `.tbl-row.up`/`.down`
+row coloring and `.sparkline` (stroke + glow for an SVG polyline) since the
+Ω-GVP layer landed, and CLAUDE.md §4.1 recorded them as "opt-in, not yet used
+by any page". Measured rather than assumed, with an exact class-token match:
+
+```
+.trend      0 uses
+.sparkline  1 use   (ops.html)
+.up         4 uses  (profile.html, unrelated)
+.down       0 uses
+```
+
+A `\b`-anchored grep first reported "trend: 15 uses" — wrong, because `-` is a
+word boundary in that regex, so it counted page-local `trend-chip`,
+`trend-row`, `trend-wrap`, `trends-month-row` and `trend-yr-btn`. One step from
+"correcting" a CLAUDE.md claim that was accurate.
+
+**Why this was not "add trend badges to the 34 `.tbl-row` pages".** A
+`.trend.up` badge asserts a *direction* — that a number moved against a real
+previous value. Most of those pages hold no prior value, and rendering a
+direction from nothing is §8.1 class 9 exactly: `hercules.html` drawing
+`Math.random()*100` as member progress, `ad-network.html` inventing
+`REVENUE.total += 0.05`. So the adoption set was derived from what the pages
+actually persist and read back, not from where the markup would fit.
+
+Of 34 pages carrying shared `.tbl-row`, only 4 showed any series signal. Of the
+8 pages that provably persist *and* re-read a dated history, reading each
+storage shape rather than trusting the regex:
+
+| page | key | shape | verdict |
+|---|---|---|---|
+| `mirror.html` | `omega_mirror_entries` | `{date,energy,focus,clarity}` per day | 3 numeric series |
+| `expenses.html` | `omega_expenses` | `{date,amount,type}` | monthly totals |
+| `fasting.html` | `omega_fasting_log` | `{start,elapsed,completed}` | duration per fast |
+| `missions.html` | `omega_missions_activity` | `{date: xp}` | XP per day |
+| `rituals.html` | `omega_ritual_logs` | `{date:{id:true}}` | kept-count per day |
+| `water.html` | `omega_water_log` | `{ts,ml}` | ml per day |
+| `gates.html` | `omega_gate_history` | `{outcome,date}` | **no magnitude — skipped** |
+| `charter.html` | `omega_charter_history` | version records | **not numeric — skipped** |
+
+**`omega-sparkline.js`** (new, 6.6 KB, loaded per page rather than added to the
+90-modules-on-every-page debt in §8.2) draws the geometry once so six pages do
+not repeat min/max/scale arithmetic, and encodes the honesty rules in code
+instead of in a reviewer's memory:
+
+- fewer than two finite readings -> nothing renders and the mount stays
+  `hidden`; there is no placeholder state
+- the badge compares the last two *real* values only
+- equal values render a new `.trend.flat` (`▬`, muted), never an invented
+  direction
+- a prior value of 0 renders the absolute delta, because no percentage change
+  exists from zero
+- every adopter excludes the in-progress day or month from the comparison: a
+  half-earned day against a finished one reports a fall that has not happened
+
+Load order is not a hazard: pages set `data-spark-values` from their own render
+pass, and the module both scans on load and observes that attribute. This is
+the correction to `omega-constellation.js`, which observed `childList` only and
+needed an explicit `scan()` from every adopter.
+
+**Verified in a render, with controls, because no static gate can see this.**
+`sparkprobe.js` seeds each page's real storage keys, renders, and reads the
+drawn SVG back — 10 cases, 0 failures, 0 load failures:
+
+```
+OK   mirror rising energy       drawn=3  [3pt up 80%] [3pt up 17%] [3pt up 33%]
+OK   CONTROL mirror no data     drawn=0
+OK   CONTROL mirror one reading drawn=0
+OK   expenses spend falling     spark-exp     [6pt  down 56%   241x32]
+OK   fasting shorter last fast  spark-fast    [3pt  down 33%   241x32]
+OK   missions rising xp         spark-xp      [14pt up   167%  138x32]
+OK   rituals kept per day       spark-rituals [14pt up   200%  239x28]
+OK   BRANCH equal values flat   spark-fast    [2pt  flat NO CHANGE]
+OK   BRANCH zero prior absolute spark-xp      [14pt up   320]
+OK   water yesterday vs prior   spark-water   [0pt  up   57%   102x19]
+```
+
+Every percentage was checked against the seeded numbers by hand (5→9 = +80%,
+900→400 = −55.6%, 120→320 = +166.7%, 1→3 = +200%, 1400→2200 = +57.1%). The two
+CONTROL rows are the reason the run means anything: a probe that cannot report
+a failure proves nothing, and both no-data and one-reading must draw nothing.
+The two BRANCH rows cover the honesty paths that would otherwise never execute.
+
+The probe found two real problems on its first run, neither of them in the
+sparkline code:
+
+- `water.html`'s stat grid lives in the History tab and only renders when
+  `switchTab(this,'t2')` fires, so the mount did not exist at load. The probe
+  now clicks the tab — the badge is in the right place, the probe was reading
+  the wrong moment.
+- the expenses fixture wrote `recurring: false` where the page's own writer
+  stores the select's *string* value, and `e.recurring.toUpperCase` threw. A
+  fixture bug, not a page bug, but it is the reason the run was FAIL rather
+  than a quiet pass with one page erroring underneath.
+
+`water.html` takes the badge without a line (`data-spark-line="off"`): the
+seven-day bar canvas below it already draws the shape, so the badge adds the
+one thing that canvas does not state — the direction of the last complete
+change — rather than duplicating it. `missions.html` takes the line *because*
+its 90-day heatmap buckets a day into five intensities, so every day above
+600 XP looks identical there.
+
+Gates after the change: `./scripts/ci-local.sh` 22/22, `unittest discover`
+179 passing, `scripts/audit.py` 0 critical / 7 warnings, `context-budget.py`
+PASS at ~15,997 of 16,000 (six paragraphs elsewhere in CLAUDE.md were trimmed
+to make room for the §4.1 rewrite), `verify-runtime.js` PASS on the 13
+capability entrypoints and `--all` PASS on all 189 pages (exit 0, run to
+completion — not a claim written ahead of the run). `omega-registry.py`
+regenerated for the new module.

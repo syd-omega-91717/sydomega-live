@@ -75,6 +75,7 @@
 .dec-hd{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .dec-title{font-family:var(--M);font-size:12px;color:#c8c4b0;flex:1;letter-spacing:.3px}
 .dec-status{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 8px;border:1px solid}
+.dec-quad{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 8px;border:1px solid;margin-bottom:8px}
 .dec-meta{font-family:var(--M);font-size:12px;color:var(--dim);margin-bottom:8px}
 .dec-chosen{font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:6px}
 .dec-outcome{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.65);font-style:italic;border-left:2px solid rgba(201,168,76,.2);padding-left:10px;margin-bottom:8px;line-height:1.7}
@@ -128,6 +129,13 @@
         <option value="medium" selected>MEDIUM — Should decide within a week</option>
         <option value="high">HIGH — Need to decide today or tomorrow</option>
         <option value="immediate">IMMEDIATE — Must decide right now</option>
+      </select>
+      <div class="d-label">IMPORTANCE</div>
+      <select class="d-in" id="d-importance" style="cursor:pointer">
+        <option value="low">LOW — Little changes either way</option>
+        <option value="medium" selected>MEDIUM — Meaningful but recoverable</option>
+        <option value="high">HIGH — Hard to reverse, real consequences</option>
+        <option value="critical">CRITICAL — Life-shaping, irreversible</option>
       </select>
     </div>
 
@@ -221,8 +229,11 @@
         Q1 URGENT + IMPORTANT → Decide &amp; act immediately<br>
         Q2 NOT URGENT + IMPORTANT → Schedule, plan carefully<br>
         Q3 URGENT + NOT IMPORTANT → Delegate or simplify<br>
-        Q4 NOT URGENT + NOT IMPORTANT → Eliminate or ignore<br>
-        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Prioritizing which decisions deserve deep analysis.
+        Q4 NOT URGENT + NOT IMPORTANT &rarr; Eliminate or ignore<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Prioritizing which decisions deserve deep analysis.<br>
+        <b style="color:rgba(201,168,76,.6)">ON THIS PAGE:</b> This one is not an analysis framework you pick in step &#9314; &mdash;
+        it classifies every decision from the URGENCY and IMPORTANCE you set in step &#9312;. The quadrant
+        appears on each journal entry, and the distribution across your journal is in the SCIENCE tab.
       </div>
     </div>
     <div class="ref-card card">
@@ -238,18 +249,31 @@
 
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
+    <!-- Row 1: platform canon. These are constants, not readings -- they are
+         labelled as canon so they are never mistaken for the member's own
+         numbers. Row 2 is the member's, and every value there is derived. -->
+    <div class="sect-title">CANON CONSTANTS</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
       <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card card"><div class="stat-val">10/10</div><div class="stat-lbl">REGRET HORIZON</div></div>
-      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">DECISION RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">95%</div><div class="stat-lbl">PRE-MORTEM ACCURACY</div></div>
+      <div class="stat-card card"><div class="stat-val">1.6180</div><div class="stat-lbl">GOLDEN RATIO &phi;</div></div>
+      <div class="stat-card card"><div class="stat-val">2.7183</div><div class="stat-lbl">EULER&rsquo;S e</div></div>
+      <div class="stat-card card"><div class="stat-val">0.5950</div><div class="stat-lbl">&phi; / e</div></div>
     </div>
+    <div class="sect-title">THIS JOURNAL</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">Q2</div><div class="stat-lbl">EISENHOWER QUADRANT</div></div>
-      <div class="stat-card card"><div class="stat-val">6</div><div class="stat-lbl">BIAS PATTERNS</div></div>
-      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-frameworks">--</div><div class="stat-lbl">FRAMEWORKS</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-biases">--</div><div class="stat-lbl">BIAS PATTERNS</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-logged">--</div><div class="stat-lbl">DECISIONS LOGGED</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-committed">--</div><div class="stat-lbl">COMMITTED</div></div>
     </div>
+    <div class="sect-title">EISENHOWER DISTRIBUTION</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      <div class="stat-card card"><div class="stat-val" id="s-q1">--</div><div class="stat-lbl">Q1 DECIDE &amp; ACT</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-q2">--</div><div class="stat-lbl">Q2 SCHEDULE</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-q3">--</div><div class="stat-lbl">Q3 DELEGATE</div></div>
+      <div class="stat-card card"><div class="stat-val" id="s-q4">--</div><div class="stat-lbl">Q4 ELIMINATE</div></div>
+    </div>
+    <p id="s-quad-note" style="font-family:var(--M);font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:24px"></p>
   </div>
 
 </div>
@@ -307,6 +331,36 @@ function today(){ return new Date().toISOString().slice(0,10); }
 function updateTopMeta() {
   const decided = _decisions.filter(d=>d.status==='decided').length;
   document.getElementById('d-tb-meta').textContent = _decisions.length + ' DECISIONS  ·  ' + decided + ' COMMITTED';
+  renderScience(decided);
+}
+
+/* The SCIENCE tab used to assert "95% PRE-MORTEM ACCURACY", "Q2 EISENHOWER
+   QUADRANT" and "6 BIAS PATTERNS" as if they were readings. None was: the
+   first two are claims nothing on this page supports, and the third
+   contradicted the page's own BIASES array, which has nine entries. Every
+   value below is derived from what the member actually has, and a quadrant
+   is counted only for decisions that carry both axes. */
+function renderScience(decided) {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('s-frameworks', FRAMEWORKS.length);
+  set('s-biases',     BIASES.length);
+  set('s-logged',     _decisions.length);
+  set('s-committed',  decided);
+
+  const counts = {Q1:0, Q2:0, Q3:0, Q4:0};
+  let classified = 0;
+  _decisions.forEach(d => { const q = quadrant(d); if (q) { counts[q]++; classified++; } });
+  ['Q1','Q2','Q3','Q4'].forEach(q => set('s-' + q.toLowerCase(), classified ? counts[q] : '--'));
+
+  const note = document.getElementById('s-quad-note');
+  if (!note) return;
+  const unclassified = _decisions.length - classified;
+  note.textContent = !_decisions.length
+    ? 'No decisions logged yet. The distribution fills in as you record urgency and importance.'
+    : classified === 0
+      ? 'None of your ' + _decisions.length + ' decisions carries both axes yet, so no quadrant can be assigned. Edit one and set IMPORTANCE to place it.'
+      : classified + ' of ' + _decisions.length + ' decisions placed.' +
+        (unclassified ? ' ' + unclassified + ' predate the IMPORTANCE field and stay unplaced until edited.' : '');
 }
 
 /* ── INIT FORM ───────────────────────────────────────────────────────── */
@@ -491,6 +545,31 @@ window.pickChoice = o => {
   });
 };
 
+/* ── EISENHOWER QUADRANT ──────────────────────────────────────────────
+   The FRAMEWORKS tab has always documented the urgency x importance
+   matrix, but the form only ever recorded urgency, so the matrix was
+   reference copy for a capability the page did not have. It records both
+   axes now.
+
+   A decision saved before IMPORTANCE existed carries only one axis, so it
+   gets no quadrant at all rather than a guessed one -- half a matrix is
+   not a quadrant, and asserting Q2 for a decision the member never
+   classified is exactly the fabricated-fact class this repo keeps
+   hitting (CLAUDE.md 8.1 class 9). */
+const URGENT    = { high: 1, immediate: 1 };
+const IMPORTANT = { high: 1, critical: 1 };
+const QUADRANTS = {
+  Q1: { act: 'DECIDE & ACT',  col: 'rgba(229,115,115,.55)' },
+  Q2: { act: 'SCHEDULE',      col: 'rgba(102,187,106,.55)' },
+  Q3: { act: 'DELEGATE',      col: 'rgba(92,143,214,.55)'  },
+  Q4: { act: 'ELIMINATE',     col: 'rgba(138,134,118,.45)' }
+};
+function quadrant(d) {
+  if (!d || !d.urgency || !d.importance) return null;
+  const u = !!URGENT[d.urgency], i = !!IMPORTANT[d.importance];
+  return i ? (u ? 'Q1' : 'Q2') : (u ? 'Q3' : 'Q4');
+}
+
 /* ── SAVE DECISION ───────────────────────────────────────────────────── */
 
 function buildDecision(status) {
@@ -499,6 +578,7 @@ function buildDecision(status) {
     title:       document.getElementById('d-title').value.trim(),
     context:     document.getElementById('d-context').value.trim(),
     urgency:     document.getElementById('d-urgency').value,
+    importance:  document.getElementById('d-importance').value,
     options:     _options.filter(o=>o.trim()),
     framework:   _fw,
     fw_data:     {..._fw_data},
@@ -542,7 +622,8 @@ function clearForm() {
   document.getElementById('d-context').value   = '';
   document.getElementById('d-commit-stmt').value='';
   document.getElementById('d-urgency').value   = 'medium';
-  _options=['',' ']; _fw='pros_cons'; _fw_data={}; _biases=new Set(); _chosenOpt='';
+  document.getElementById('d-importance').value= 'medium';
+  _options=['','']; _fw='pros_cons'; _fw_data={}; _biases=new Set(); _chosenOpt='';
   initForm();
 }
 
@@ -566,6 +647,7 @@ function renderJournal() {
         <span class="dec-status" style="color:${col};border-color:${col}">${(d.status||'DRAFT').toUpperCase()}</span>
       </div>
       <div class="dec-meta">${d.decidedAt||'DRAFT'}  ·  ${d.urgency?.toUpperCase()||''}  ·  ${FRAMEWORKS.find(f=>f.id===d.framework)?.name||''}</div>
+      ${(()=>{const q=quadrant(d); return q?`<div class="dec-quad" style="color:${QUADRANTS[q].col};border-color:${QUADRANTS[q].col}">${q} · ${QUADRANTS[q].act}</div>`:'';})()}
       ${d.chosenOption?`<div class="dec-chosen">→ CHOSE: ${esc(d.chosenOption)}</div>`:''}
       ${d.commitStmt?`<div class="dec-outcome">"${esc(d.commitStmt)}"</div>`:''}
       ${d.outcome?`<div class="dec-outcome" style="border-color:rgba(102,187,106,.3)"><b style="color:rgba(102,187,106,.7)">OUTCOME:</b> ${esc(d.outcome)}</div>`:''}
@@ -584,6 +666,7 @@ window.editDecision = id => {
   document.getElementById('d-title').value      = d.title||'';
   document.getElementById('d-context').value    = d.context||'';
   document.getElementById('d-urgency').value    = d.urgency||'medium';
+  document.getElementById('d-importance').value = d.importance||'medium';
   document.getElementById('d-commit-stmt').value= d.commitStmt||'';
   document.getElementById('d-review-date').value= d.reviewDate||'';
   _options = d.options?.length>=2 ? [...d.options] : ['',''];

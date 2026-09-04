@@ -221,6 +221,12 @@ through this one file with no per-page markup changes:
   `oa-fade-up` reveal**, whose last keyframe pins `opacity:1` — that silently
   un-dimmed 16 `.honor-card.locked` badges; an animation beats a plain
   declaration, and only `!important` outranks it.
+- **`.card-edge`, the left-edge accent.** `.card::before` is a *top* bar, which
+  is why 124 hand-rolled `border-left:Npx solid <colour>` sites across 68 files
+  were all excluded from the sweep. `.card.card-edge` runs the same
+  `--card-accent` bar down the left instead (width `--card-edge-w`, default
+  3px). Check the element's own `::before` first — `chronicle.html`'s
+  `.event-card` draws its timeline connector there, so it stays excluded.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
   growing from the tab centre in the page axis colour, quarter-width on hover.
   40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
@@ -247,26 +253,17 @@ through this one file with no per-page markup changes:
   ghost variants now set `background:none` themselves — without it a
   `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
   (2.33:1, 8 pages).
-- **Fallback skin for genuinely bare elements**: `input:not([class])`,
-  `textarea:not([class])`, `select:not([class])`, and
-  `button:not([class])` get the same glass treatment as `.inp`/`.btn`,
-  scoped strictly to elements with *no* `class` attribute at all, so any
-  element with its own page-local class or inline `style=` (inline
-  always wins the cascade regardless) is left untouched. This was
-  chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
-  raw `<button>`s with no shared class — this reaches them all from one file
-  instead of hand-editing every occurrence. Pages with page-local table classes
-  are *not* addressed by it (`:not([class])` correctly skips them) and remain
-  open, page-by-page structural work.
-- **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
-  Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
-  or asset in this repo ever loaded them — zero `@font-face` rules, zero
-  font files, zero Google Fonts links existed anywhere (confirmed by a
-  repo-wide grep before writing the fix), so every page has silently
-  rendered in the browser's default serif/sans-serif/monospace the
-  entire time. `bg.js` now injects a Google Fonts `<link>` (plus
-  `preconnect`) once per page, guarded by `#omega-fonts` so it never
-  double-injects.
+- **Fallback skin for genuinely bare elements**: `input`/`textarea`/`select`/
+  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment. Scoped to
+  elements with *no* class attribute, so anything with a page-local class or
+  inline `style=` is untouched. Chosen after an audit found ~380 raw `<input>`s
+  and dozens of raw `<button>`s with no shared class — one file reaches them
+  all. Page-local table classes are correctly skipped and remain open work.
+- **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
+  Decorative / Rajdhani / Courier Prime but nothing ever loaded them — zero
+  `@font-face`, zero font files, zero Google Fonts links anywhere — so every
+  page rendered in the browser defaults. `bg.js` injects the Google Fonts
+  `<link>` (plus `preconnect`) once per page, guarded by `#omega-fonts`.
 - **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
   `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
   `body::before`, because 5 pages already define their own and a bare-selector

@@ -8349,3 +8349,73 @@ motif, not a regex.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, all five files `ok`.
+
+---
+
+## `.card-edge`: the accent motif `.card` could not express (2026-09-04)
+
+The `.card` sweep has always had a hard exclusion: `.card::before` is a 2px bar
+across the **top**, so any element drawing a coloured bar down its **left** edge
+could not adopt the class without losing the motif. That is not a niche case —
+scanning for `border-left:Npx solid <colour>` finds **124 sites across 68
+files** (80 of them 3px, 33 at 2px), every one hand-rolled.
+
+`bg.js` gains the variant, immediately after `.card::before` in the same block:
+
+```css
+.card.card-edge::before{top:0;bottom:0;left:0;right:auto;
+  width:var(--card-edge-w,3px);height:auto}
+```
+
+It reuses `--card-accent` for the colour, takes `--card-edge-w` for the width
+(3px matches 80 of the 124 sites), and is both higher-specificity and later in
+the same sheet than the rule it overrides, so it wins either way. Verified on a
+fixture through the real `bg.js`, not reasoned about:
+
+```
+topAccent      {w:"566.703px", h:"2px",  top:"0px", left:"0px", bg:"rgb(0, 229, 255)"}   // control
+leftAccent     {w:"3px",       h:"58px", top:"0px", left:"0px", bg:"rgb(63, 178, 127)"}
+leftAccent4px  {w:"4px",       h:"58px", top:"0px", left:"0px", bg:"rgb(255, 107, 53)"}  // --card-edge-w
+```
+
+The card is 60px tall and the bar 58px — the 1px borders top and bottom, as
+intended.
+
+### The adopter, and the one that was correctly refused
+
+`intelligence.html`'s four `.swot-box` panels. `.swot-box` has no `::before` or
+`::after` rule at all (`intelligence.html:50` is a plain declaration block), so
+neither documented failure mode applies. Measured:
+
+```
+BEFORE {"boxes":4,"withCard":0,"bars":["autoxauto rgba(0, 0, 0, 0)", …],
+        "surface":"rgb(13, 13, 13)",       "leftBorder":"3px rgb(76, 175, 80)"}
+AFTER  {"boxes":4,"withCard":4,
+        "bars":["3pxxauto rgb(76, 175, 80)","3pxxauto rgb(255, 68, 68)",
+                "3pxxauto rgb(255, 215, 0)","3pxxauto rgb(255, 152, 0)"],
+        "surface":"rgba(10, 10, 15, 0.68)","leftBorder":"1px rgba(201, 168, 76, 0.22)",
+        "errors":0}
+```
+
+All four SWOT colours preserved exactly, and the page drops its off-palette
+`#0d0d0d` ground and `#1a1a1a` border for the platform's.
+
+**`chronicle.html` (17 sites, the largest single holding) was refused.**
+`.event-card::before` already exists at `chronicle.html:54` and sets
+`background:var(--line)` — it draws the 14px connector line to the timeline
+spine. Two rules on one pseudo-element cascade per *property*, and only one
+`background` can win, so adopting `.card` would delete the timeline connectors.
+This is §4.1's check doing its job.
+
+**A candidate scanner that was written and then not trusted.** To find the other
+clean sites, a scan classified each left-bar element by whether any of its
+classes has a `::before`/`::after` rule setting `background`. It reported
+`chronicle.html`'s 16 `.event-card` sites as **clean** — contradicting the
+manual reading above, which is correct. The scanner has a false negative in its
+pseudo-element regex. Its "clean" list was therefore discarded rather than
+swept, and only the sites checked by hand were changed. A scanner whose output
+is known to disagree with a verified fact is not a list to act on; the number of
+remaining candidates (6) did not justify repairing it.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok intelligence.html`.

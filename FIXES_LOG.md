@@ -9025,3 +9025,170 @@ only by asking *why* they disagreed. A baseline table is worth keeping precisely
 because a silent guard cannot be noticed any other way.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests.
+
+---
+
+## Three sources, three duplicate-table counts — and my own was the wrong one (2026-09-04)
+
+`CLAUDE.md` §5 quoted "47 tables defined in more than one file"; a run of
+`evidence-audit.py` reported 48. Cross-checking produced a third number:
+
+```
+CLAUDE.md / REPOSITORY_AUDIT.md   47
+evidence-audit.py                 48
+an independent derivation         53
+```
+
+**The independent derivation was the wrong one, and it was mine.** Two wrong
+conclusions were reached on the way there and are recorded because each is the
+kind that ships:
+
+1. **"The scanner recurses into `migrations/`, so it double-counts the bag
+   against its own mirror."** It does call `Path('supabase').rglob('*.sql')` —
+   but four lines later it restricts duplicate accounting to the root bag,
+   with a comment naming exactly that hazard:
+
+   ```python
+   # Only the flat bag at supabase/ counts toward duplicate-definition
+   # reporting; supabase/migrations/ is a deliberate ordered copy of that
+   # same content (CLAUDE.md §5), so counting it would report every table
+   # as duplicated.
+   if path.parent.name == 'supabase':
+   ```
+
+   Reading the `rglob` and stopping there produced a confident accusation
+   against code that had already handled the case.
+
+2. **The 53.** `evidence-audit.py` strips SQL comments before matching; the
+   quick derivation did not, so it counted commented-out DDL. Proven rather
+   than assumed:
+
+   ```
+   raw                  duplicates: 53
+   comments stripped    duplicates: 48
+   ```
+
+So 48 is authoritative and 47 had drifted by one.
+
+### The fix is not 47 → 48
+
+Editing the number re-arms the same trap for whoever reads it next. §8.4 already
+prescribes the durable form — *"a number stored in prose drifts; derive it
+instead… put it in the generator, not the paragraph"* — so §5 now points at
+`evidence-audit.py` and tells the reader to derive it, noting that the quoted 47
+had already drifted. `REPOSITORY_AUDIT.md`'s three mentions are left alone: they
+are narrative about a past audit ("The 47-duplicate-tables 'safe because
+idempotent' claim…"), and rewriting history to match today's count would be a
+different error.
+
+### Why this is worth a log entry at all
+
+The count does not change any decision — the item stays open either way, and
+consolidating still needs a per-table live-schema check. What is worth keeping
+is the failure mode: **the number I trusted least should have been my own.**
+Three disagreeing sources are not a three-way tie; the one built with care
+(comment-stripping, an explicit scope guard) beat the one written in thirty
+seconds, and saying "no source is authoritative" would have been a false
+symmetry that stalled the question instead of answering it.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.
+
+---
+
+## decisions.html asserted three things it could not know, and documented a framework it did not have (2026-09-04)
+
+### What was on the page
+
+The SCIENCE tab rendered eight `.stat-card` boxes — `.stat-val` over
+`.stat-lbl`, the platform's KPI visual language, the same shape a member reads
+as *their own* numbers. Three of the eight were not numbers the page could
+produce:
+
+| value | label | what it actually was |
+|---|---|---|
+| `95%` | PRE-MORTEM ACCURACY | an efficacy claim about the technique. No source, no derivation, nothing on the page computes it |
+| `Q2` | EISENHOWER QUADRANT | a classification of the member's decision, asserted before any decision exists |
+| `6` | BIAS PATTERNS | contradicted by the page's own data — `const BIASES` has **9** entries |
+
+This is `CLAUDE.md` §8.1 class 9, the class that produced `hercules.html`'s
+`Math.random() * 100` and `ad-network.html`'s `REVENUE.total += 0.05`.
+
+### What was NOT a finding, checked before acting
+
+The other five were suspected first and cleared:
+
+- `27.8367 / APEX AUTH` appears on **~70 pages** and is platform canon with a
+  published derivation — `account.html:205`: `AUTH = √(A³+B³+C³) × φ / e`, apex
+  at node (9,9,9). `sovereigns.html:77` computes it live (`id="stat-apex"`,
+  starting at `--`). A constant, honestly labelled. Left alone.
+- `1.618` and `2.718` are φ and e. True. Left alone, moved under an explicit
+  `CANON CONSTANTS` heading so they cannot be misread as readings.
+- A first grep for `1.618\|2.718\|GOLDEN RATIO\|EULER` returned **129 files** —
+  over-matching CSS values and line-heights. Narrowing to the rendered labels
+  gave the real picture. The scanner needed the false-positive pass before its
+  number meant anything (§8.4).
+
+### The Eisenhower gap was real, and larger than the card
+
+The FRAMEWORKS tab has always documented `EISENHOWER MATRIX (URGENCY ×
+IMPORTANCE)` with all four quadrants — but the form recorded **urgency only**
+(`<select id="d-urgency">`, four levels). There was no importance axis anywhere
+in the data model, so the documented matrix was reference copy for a capability
+the page did not have, and the `Q2` card was the visible symptom.
+
+Fixed by adding the missing axis rather than deleting the card:
+
+- `<select id="d-importance">` in step ① beside URGENCY, four levels.
+- `buildDecision()` persists it; `editDecision()` restores it; `clearForm()`
+  resets it.
+- `quadrant(d)` returns `Q1`–`Q4` from the two axes, and **`null` when either
+  is absent**. A decision saved before this change carries one axis, so it gets
+  no quadrant rather than a guessed one — half a matrix is not a quadrant, and
+  guessing the missing half would have reintroduced the exact fault being fixed.
+- Each journal entry gets a `.dec-quad` chip; the SCIENCE tab shows the
+  distribution plus a note naming how many decisions are placed and how many
+  predate the field.
+
+`clearForm()` also reset `_options` to `['',' ']` — a space, not an empty
+string, so the second option input came back pre-filled with a space. Fixed to
+`['','']`.
+
+### Every SCIENCE value is now derived
+
+`renderScience()` is called from `updateTopMeta()`, which already ran on init,
+upsert and delete. `FRAMEWORKS.length`, `BIASES.length`, `_decisions.length`,
+the committed count and the four quadrant counts all come from live state; the
+quadrant cards show `--` until at least one decision carries both axes.
+
+### Measured in a render, not reasoned from the diff
+
+Harness: `.claude/skills/verify-in-browser/harness/session.js`, signed-in stub.
+
+```
+EMPTY    {"fw":"5","bias":"9","logged":"0","committed":"0","q":["--","--","--","--"],
+          "note":"No decisions logged yet. The distribution fills in as you record
+                  urgency and importance."}
+ERR(empty) 0
+
+  (two decisions planted in localStorage: one with both axes, one legacy urgency-only)
+
+FILLED   {"logged":"2","committed":"1","q":["1","0","0","0"],
+          "note":"1 of 2 decisions placed. 1 predate the IMPORTANCE field and stay
+                  unplaced until edited.",
+          "importanceSelect":true,"chips":["Q1 · DECIDE & ACT"],
+          "topbar":"2 DECISIONS  ·  1 COMMITTED"}
+ERR(filled) 0
+```
+
+The legacy decision is counted in `logged` and correctly excluded from every
+quadrant — the backwards-compatibility case proven, not assumed.
+
+The render check also flagged `95%` and `PRE-MORTEM ACCURACY` as still present:
+they matched `document.body.innerHTML`, which includes `<script>` text, and the
+only remaining occurrence is `decisions.html:337`, the comment explaining the
+fix. A grep confirmed one hit, in a JS comment. **The assertion was written
+against the wrong surface** — rendered claims need `innerText`.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests OK, `scripts/audit.py`
+0 critical / 7 warnings, `scripts/check-inline-js.py` clean,
+`node scripts/verify-runtime.js` PASS on the 13 capability entrypoints.

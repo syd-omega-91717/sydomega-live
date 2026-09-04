@@ -30,6 +30,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const ARGV = process.argv.slice(2);
 const JSON_OUT = ARGV.includes('--json');
+const SELF_TEST = ARGV.includes('--self-test');
 const pagesFlag = ARGV.indexOf('--pages');
 const PAGES_ARG = pagesFlag >= 0 && ARGV[pagesFlag + 1] ? ARGV[pagesFlag + 1]
   : (ARGV.find(a => a.startsWith('--pages=')) || '').split('=')[1] || '';
@@ -126,10 +127,43 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon',
   '.webmanifest': 'application/manifest+json', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.txt': 'text/plain' };
 
+/* Known-ratio fixture for --self-test. Every value here is computed from the
+   WCAG formula against this platform's own surfaces, so the classifier is
+   checked against arithmetic rather than against itself. It deliberately
+   includes the three surface shapes that each broke an earlier version of the
+   rule: translucent glass, an opaque near-uniform gradient, and an element
+   whose background is clipped to its text. */
+const FIXTURE = `<!doctype html><html><head><meta charset="utf-8"><style>
+  html{background:#0A0A0F}
+  body{margin:0;padding:20px;font:16px/1.6 monospace;background:transparent}
+  div{padding:10px;width:600px}
+  /* the platform's glass: translucent over the ground, must be composited */
+  .glass{background:rgba(10,10,15,.68)}
+  /* the sidebar's shape: a low-alpha tint over an opaque near-uniform gradient */
+  .side{background-image:linear-gradient(rgba(201,168,76,.09) 0%,rgba(0,0,0,0) 100%),
+        linear-gradient(rgb(8,8,15),rgb(5,5,12))}
+  /* .ofx-sheen's shape: the gradient paints INSIDE the glyphs, not behind them */
+  .sheen{background-image:linear-gradient(100deg,rgb(255,247,214) 38%,rgb(255,247,214) 62%);
+         -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sheen span{-webkit-text-fill-color:currentColor}
+</style></head><body>
+  <div id="t-block-1" style="color:#08080F">void on void, 1.01 to 1, must BLOCK</div>
+  <div id="t-block-2" style="color:#55534e">the old dock grey, 2.57 to 1, must BLOCK</div>
+  <div id="t-mid-1"   style="color:#C4453C">re-stepped crimson, 4.01 to 1, must be ADVISORY</div>
+  <div id="t-pass-1"  style="color:#C9A84C">brand gold, 8.74 to 1, must PASS</div>
+  <div id="t-pass-2"  class="glass" style="color:#C9A84C">gold on composited glass, must PASS</div>
+  <div id="t-pass-3"  class="side"  style="color:#C9A84C">gold on the opaque gradient, must PASS</div>
+  <div class="sheen"><span id="t-pass-4" style="color:#C9A84C">gold in a clip-to-text parent, must PASS</span></div>
+</body></html>`;
+
 function startServer() {
   return new Promise((resolve) => {
     const srv = http.createServer((req, res) => {
       let u = decodeURIComponent(req.url.split('?')[0]);
+      if (u === '/__contrast-fixture.html') {
+        res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
+        return res.end(FIXTURE);
+      }
       if (u === '/') u = '/enter.html';
       const f = path.join(ROOT, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
       if (!f.startsWith(ROOT)) { res.writeHead(403); return res.end(); }
@@ -180,7 +214,7 @@ const CHECK_JS = `(() => {
   const L = c => .2126*lin(c[0]) + .7152*lin(c[1]) + .0722*lin(c[2]);
   const px = t => { const m = String(t).match(/[\\d.]+/g); return m ? m.map(Number) : null; };
   const alpha = c => (c && c.length > 3) ? c[3] : 1;
-  const cLow = []; let cMid = 0, cOk = 0, cSeen = 0;
+  const cLow = [], cMidIds = [], cOkIds = []; let cMid = 0, cOk = 0, cSeen = 0;
   document.querySelectorAll('body *').forEach(el => {
     const txt = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
     if (txt.length < 2) return;
@@ -239,16 +273,53 @@ const CHECK_JS = `(() => {
     const size = parseFloat(cs.fontSize) || 12;
     const large = size >= 24 || (size >= 18.66 && (parseInt(cs.fontWeight,10)||400) >= 700);
     if (worst + 0.005 < 3) {
-      cLow.push({ sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
+      cLow.push({ id: el.id, sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
                  ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
                  px: Math.round(size), text: txt.slice(0,26) });
-    } else if (worst + 0.005 < (large ? 3 : 4.5)) cMid++; else cOk++;
+    } else if (worst + 0.005 < (large ? 3 : 4.5)) { cMid++; if (el.id) cMidIds.push(el.id); }
+    else { cOk++; if (el.id) cOkIds.push(el.id); }
   });
+  out.lowContrastIds = cLow.map(x => x.id).filter(Boolean);
   out.lowContrast = cLow.slice(0, 6);
   out.lowContrastCount = cLow.length;
   out.midContrast = cMid;
+  out.midContrastIds = cMidIds;
+  out.okContrastIds = cOkIds;
   return out;
 })()`;
+
+/* --self-test: prove the contrast classifier against arithmetic, not against
+   itself. Without this the gate's correctness was only ever demonstrated once,
+   by pinning pre-fix files out of git history -- which the next person changing
+   the rule has no way to repeat. */
+async function selfTest(pw, channel) {
+  const EXPECT = {
+    block: ['t-block-1', 't-block-2'],
+    mid:   ['t-mid-1'],
+    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4']
+  };
+  const { srv, port } = await startServer();
+  const browser = await (channel ? pw.chromium.launch({ channel }) : pw.chromium.launch());
+  let info;
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://127.0.0.1:' + port + '/__contrast-fixture.html', { waitUntil: 'load' });
+    info = await page.evaluate(CHECK_JS);
+  } finally { await browser.close(); srv.close(); }
+
+  const got = { block: (info.lowContrastIds||[]).sort(), mid: (info.midContrastIds||[]).sort(),
+                ok: (info.okContrastIds||[]).sort() };
+  let bad = 0;
+  for (const k of ['block', 'mid', 'ok']) {
+    const want = EXPECT[k].slice().sort();
+    const same = want.length === got[k].length && want.every((v, i) => v === got[k][i]);
+    if (!same) bad++;
+    console.log((same ? '  ok   ' : '  FAIL ') + k.padEnd(6) +
+      ' expected [' + want.join(', ') + ']  got [' + got[k].join(', ') + ']');
+  }
+  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (7 known ratios binned correctly)');
+  return bad ? 1 : 0;
+}
 
 async function main() {
   const pw = loadPlaywright();
@@ -257,6 +328,14 @@ async function main() {
     console.log('SKIPPED: playwright-core not resolvable' + (channel ? '' : ' and no system Chrome/Edge') +
       '. Install with `npm i -g playwright-core`. Runtime verification not run.');
     return 0;
+  }
+  if (SELF_TEST) return selfTest(pw, channel);
+  /* Run it as a PRECONDITION of every sweep, not as a separate step someone
+     has to remember: if the classifier is wrong, the sweep's verdict about 189
+     pages is meaningless. Costs one extra page load. */
+  if (await selfTest(pw, channel) !== 0) {
+    console.log('RUNTIME VERIFICATION: aborted -- the contrast classifier failed its own fixture');
+    return 2;
   }
   const { chromium } = pw;
   const pages = PAGES_ARG ? PAGES_ARG.split(',').map(s => s.trim()).filter(Boolean)

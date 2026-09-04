@@ -165,7 +165,10 @@
       '.on-icon.on-active{box-shadow:0 0 10px rgba(201,168,76,0.15)}',
       '.on-glyph{font-size:16px;line-height:1;transition:transform .2s}',
       '.on-icon:hover .on-glyph,.on-icon.on-active .on-glyph{transform:scale(1.15)}',
-      '.on-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:#55534e;text-align:center;line-height:1;transition:color .15s}',
+      /* was #55534e -- 2.57:1 on --void, measured across 179 pages as the
+         widest-reaching contrast failure in the repo. var(--muted) is 5.41:1
+         and follows theme.js, so the dock stays dim without being unreadable. */
+      '.on-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);text-align:center;line-height:1;transition:color .15s}',
       '.on-icon:hover .on-lbl,.on-icon.on-active .on-lbl{color:var(--col,#C9A84C)}',
       /* Fly-out tooltip */
       '.on-tip{position:absolute;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
@@ -176,7 +179,7 @@
       '.tip-a.tip-on{color:#C9A84C}',
       '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
       /* Logout */
-      '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#55534e;padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
+      '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted);padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
       '.on-logout:hover{color:#C9A84C}',
       /* Mobile bottom nav */
       /* top/height/padding/border-bottom are declared DEFENSIVELY, not because
@@ -205,7 +208,7 @@
       '#omega-mob ul li{flex:1}',
       '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
       '#omega-mob ul li a .mi{font-size:18px;line-height:1;transition:all .15s;color:#353330}',
-      '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:#55534e}',
+      '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
       '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
       '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}aside.omega-side,aside.side{display:none!important}}',
@@ -230,7 +233,7 @@
   SECTIONS.forEach(function(sec){
     var isAct=sec.key===activeSection;
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
-    h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'#55534e')+'">'+sec.icon+'</span>';
+    h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
     h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
     /* Tooltip */
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
@@ -297,7 +300,7 @@
       '#omega-mob-bar{display:flex;list-style:none;margin:0;padding:0}',
       '.mob-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 12px;cursor:pointer;text-decoration:none;gap:3px;border:none;background:transparent}',
       '.mob-item .mi{font-size:20px;line-height:1;color:#353330;transition:all .15s}',
-      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:#55534e;transition:all .15s}',
+      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);transition:all .15s}',
       '.mob-item.m-on .mi,.mob-item:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,.6);transform:translateY(-2px)}',
       '.mob-item.m-on .ml,.mob-item:hover .ml{color:#C9A84C}',
       '.mob-item.mob-menu-btn .mi{color:#85837b}',
@@ -318,12 +321,12 @@
          and far under 44px. The text size is left alone; only the hit area
          grows. */
       '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
-      '.dss-icon{font-size:18px;color:#55534e}',
+      '.dss-icon{font-size:18px;color:var(--muted)}',
       '.dss-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b}',
       '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
       '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
       '.ds-links{display:flex;flex-direction:column;gap:3px;padding-left:4px}',
-      '.ds-link{font-family:"Courier Prime",monospace;font-size:12px;color:#55534e;text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
+      '.ds-link{font-family:"Courier Prime",monospace;font-size:12px;color:var(--muted);text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
       '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
       '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',

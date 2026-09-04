@@ -55,7 +55,9 @@
   label{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--muted)}
   input,select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
   input:focus,select:focus{outline:none;border-color:var(--cyan)}
-  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;color:var(--void);background:var(--gold);padding:15px 26px;border:1px solid var(--gold);cursor:pointer;transition:all .25s ease;width:100%}
+  /* colour and background come from .btn-fill in bg.js: a bare .btn rule here
+     is the same specificity as bg.js's ghost .btn and loses to it. */
+  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;padding:15px 26px;cursor:pointer;transition:all .25s ease;width:100%}
   .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
   .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
   .btn:disabled{opacity:.5;cursor:default}
@@ -173,8 +175,8 @@
           <label for="au-pw">PASSWORD</label>
           <input type="password" id="au-pw" placeholder="at least 12 characters" autocomplete="current-password" />
           <div class="row2">
-            <button class="btn" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
-            <button class="btn" id="btn-login" data-i18n="account_login">LOG IN</button>
+            <button class="btn btn-fill" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
+            <button class="btn btn-fill" id="btn-login" data-i18n="account_login">LOG IN</button>
           </div>
           <div class="msg" id="au-msg"></div>
           <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:12px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
@@ -189,7 +191,7 @@
         <div class="form">
           <label for="dob" data-i18n="account_dob">YOUR DATE OF BIRTH</label>
           <input type="date" id="dob" min="1900-01-01" />
-          <button class="btn" id="gate-go" data-i18n="account_reveal_save">REVEAL &amp; SAVE</button>
+          <button class="btn btn-fill" id="gate-go" data-i18n="account_reveal_save">REVEAL &amp; SAVE</button>
           <div class="msg bad" id="gate-err"></div>
         </div>
       </section>

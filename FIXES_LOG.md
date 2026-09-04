@@ -7269,3 +7269,186 @@ Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
 ~15,953 of 16,000 (three §8.2 entries compressed to make room for the new
 stylesheet-owner row in §4), `node scripts/verify-runtime.js --all` PASS on all
 189 pages, exit 0.
+
+## Six buttons nobody could read, found by auditing contrast instead of grepping (2026-09-04)
+
+The crimson fix in the previous entry chased one literal. **The general form is
+cheaper and finds more**: walk every visible text node in a render, compute its
+contrast against its own effective background, and report what fails the WCAG
+floor. Effective background means walking ancestors until something opaque
+paints — a naive read of `backgroundColor` returns `rgba(0,0,0,0)` and every
+ratio comes out wrong.
+
+First run: **189 pages, 0 load failures, 58,628 passing text nodes, 66 distinct
+failing (selector, colour, background) combinations.** The 58,628 is the
+positive control; a probe that measured nothing would report zero failures too.
+
+### The worst of it: three pages where the primary action was invisible
+
+```
+1.01:1   account.html   #btn-signup  "CREATE ACCOUNT"   rgb(8,8,15) on rgb(7,7,8)
+1.01:1   account.html   #btn-login   "LOG IN"
+1.01:1   reset.html     #r-send      "SEND RECOVERY LINK"
+1:1      mindmap.html   .btn-gold    "CREATE MAP"       gold on gold
+```
+
+`account.html` and `reset.html` are **public** pages — in bg.js's signed-out
+exemption list — so this is the sign-up, sign-in and password-recovery path.
+The `account.html` numbers are a real BEFORE, pinned from `HEAD` with the
+harness's `pin` option rather than reasoned from the diff.
+
+**Root cause, one shape, three pages.** bg.js only ever had *ghost* buttons:
+
+```
+.btn{ … background:none; … }
+.btn-gold{color:var(--gold);border-color:rgba(201,168,76,.3)}
+```
+
+A page wanting a solid button hand-rolled
+`.btn{background:var(--gold);color:var(--void)}` — the same (0,1,0) specificity,
+and bg.js's sheet loads *after* the page block, so bg.js wins. The background is
+wiped and dark text is left on the dark page. `mindmap.html` hit the mirror
+image: it named its button `.btn-gold`, bg.js's ghost rule won the *colour*, and
+gold text sat on the page's own gold background at exactly 1:1.
+
+`terms.html` escaped only because it happens to use a descendant selector,
+`.accept .btn` at (0,2,0).
+
+**The fix is the missing component, not a specificity fight.** CLAUDE.md §4 says
+to extend the shared block rather than define page-local styles that drift, so
+`.btn-fill` now exists in bg.js — a filled primary action, retintable with
+`--btn-fill` (the same custom-property pattern as `--card-accent`). The three
+pages dropped their colour/background overrides, kept their layout rules, and
+took `class="btn btn-fill"`. Measured after: all six buttons at **8.74:1**.
+
+### The widest-reaching failure was in the nav dock
+
+```
+2.57:1   179 pages   .on-lbl / .on-logout   #55534e on --void
+```
+
+Seven occurrences of `#55534e`, an off-palette grey, for the inactive icon-dock
+labels. That is not "dim", it is unreadable. Replaced with `var(--muted)`, which
+measures 5.41:1 on bg.js's `--void` and 5.47:1 on theme.js's — and, being a
+token, follows theme.js instead of drifting from it.
+
+### A gap the Ω-GVP fallback skin explicitly could not reach
+
+```
+2.33:1   8 pages   button.btn-gold   "SEND"   gold on rgb(107,107,107)
+```
+
+`rgb(107,107,107)` is the **browser's default button face**. These are
+`<button class="btn-gold">` without `.btn`, so bg.js's `background:none` never
+applied, and the GVP fallback skin is scoped `button:not([class])` — which
+correctly skips them, exactly as §4.1 records. Fixed at the source: the ghost
+variants (`.btn-gold`, `.btn-cyan`, `.btn-crim`) now declare `background:none`
+themselves, so they no longer depend on `.btn` being present.
+
+### Result, and what is deliberately left
+
+```
+                        failing combinations   passing text nodes
+before                          66                   58,628
+after .btn-fill + nav           61                   61,355
+after ghost-variant fix         60                   61,371
+```
+
+Two findings were measured and **not** changed, on purpose:
+
+- **`.tip-head` at 3.92:1 on 180 pages** is the re-stepped `--crim` at 12px on a
+  panel. bg.js's own comment says it was chosen as "the deepest crimson that
+  still clears 3:1" — this is a stated brand trade-off, not a regression, and
+  re-stepping the danger colour again is a design decision rather than a bug fix.
+- **~59 page-local grey combinations** (`#666`, `#555`, `#333`), each reaching
+  1–9 pages. Real, but several are deliberate de-emphasis that happens to be too
+  dim, and a bulk sweep of 59 combinations without per-page judgement is the
+  antipattern this log keeps recording.
+
+### Method notes
+
+The first filled-button run measured only 9 of 25 buttons and printed
+`COVERAGE FAILED`; the other 16 sat in modals or closed tabs. Since *colour* was
+under test and not layout, unhiding the ancestors and re-measuring lifted
+coverage to 21 and is what surfaced `mindmap.html`. Four remained unreachable
+and were reported as unmeasured rather than assumed fine.
+
+`account.html` stayed unmeasured even then — because the harness defaults to a
+**signed-in** stub and a public auth page redirects a signed-in visitor away.
+`launch({signedIn:false})` is required for `account`/`reset`/`terms`/`enter`,
+and it is what produced the 1.01:1 reading above.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `context-budget.py` PASS at
+~15,999 of 16,000 (four §8.4 method notes compressed to make room),
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## main landed red: PR #235 reintroduced 18 colour emoji and sub-12px type (2026-09-04)
+
+Merging `origin/main` into this branch turned **three blocking gates and one
+unit test red**, none of them from this branch's work. `2d4638bc` (PR #235,
+"Phase C/D: Enhance dashboard with cinematic emblems and 3D visual elements")
+had merged with those gates failing.
+
+```
+FAIL  brand-glyph   18 colour-emoji occurrences in dashboard.html
+FAIL  type-scale    dashboard.html declares type below the 12px floor
+FAIL  registry      omega-*.js modules 1147 KB -> 1152 KB, uncommitted
+FAIL  test_brand_glyph_check.test_repo_is_clean
+```
+
+**The first is a same-day regression of a swept fix.** Earlier in this session
+116 colour emoji were removed platform-wide and
+`scripts/brand-glyph-check.py` was extended to catch all three encodings
+(literal, `&#127805;`, `'\u{1F311}'`). PR #235 put 18 back on
+`dashboard.html` — the flagship page — as `.emblem-orb` marks:
+
+```
+📖 🧠 🎯 💰 🤝 💪 🛡        astral-plane pictographs, no text form
+♈ ♓ ♎ ♏ ♑ ⚡ ✨ ♂          BMP, default to colour presentation
+```
+
+The gate did exactly its job: it caught the regression before deploy rather
+than after. That is the argument for the gate, recorded as evidence.
+
+**The same file already mixed conventions** — `⚖`, `♦`, `✦`, `◈`, `⊕`, `☯`
+were monochrome in the very same KPI rows — so the fix was to finish the
+convention, not invent one. Seven pictographs were replaced with BMP marks
+already in this repo's vocabulary, chosen for meaning:
+
+| KPI | was | now | why |
+|---|---|---|---|
+| JOURNAL ENTRIES | 📖 | `▤` | square with horizontal fill, a lined page |
+| CARDS DUE TODAY | 🧠 | `◉` | the emblem registry's "intelligence" mark |
+| VISION SCORE AVG | 🎯 | `◎` | bullseye |
+| SAVINGS RATE | 💰 | `⊙` | circled dot |
+| CONTACTS DUE | 🤝 | `⊛` | circled asterisk |
+| BODY WEIGHT | 💪 | `✹` | the agent-network mark |
+| ADMIN ACTIONS | 🛡 | `⌘` | the repo's "command" glyph, and these are owner controls |
+
+Twelve BMP symbols were pinned with `U+FE0E`.
+
+**Verified by pixel readback, not by the codepoint tables** — the repo's
+standing rule. Each replacement drawn white-on-black at 34px and read back:
+
+```
+mono   "▤"  spread=0  ink=292      mono   "♈︎"  spread=0  ink=142
+mono   "◉"  spread=0  ink=326      mono   "♓︎"  spread=0  ink=184
+mono   "◎"  spread=0  ink=218      mono   "⚡︎"  spread=0  ink=100
+mono   "⊙"  spread=0  ink=186      mono   "✨︎"  spread=0  ink=162
+mono   "⊛"  spread=0  ink=243      mono   "♂︎"  spread=0  ink=177
+mono   "✹"  spread=0  ink=226      mono   "⌘"   spread=0  ink=229
+mono   "●"  spread=0  ink=355
+COLOUR "📖" spread=186 ink=978     <- positive control
+```
+
+13 of 13 monochrome, none with zero ink (a missing glyph draws an empty box,
+which passes a colour check while looking broken), and the control emoji
+registers colour at spread 186 — so the detector is detecting.
+
+**The type floor** was `.status-indicator{font-size:8px}` with a `10px`
+`::before`. Raised to the 12px floor, with the dot's smaller optical size kept
+as `.85em` rather than a second absolute value below the floor.
+
+Gates after: `./scripts/ci-local.sh` 22/22, 179 tests, `brand-glyph-check.py`
+clean across 362 shipped files, `node scripts/verify-runtime.js --all` PASS on
+all 189 pages, exit 0.

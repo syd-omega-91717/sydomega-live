@@ -8045,3 +8045,141 @@ match the token it sits beside.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS,
 0 page errors and no horizontal overflow on `control-plane.html`.
+
+---
+
+## Three pages rendered completely blank on arrival: unquoted attribute values (2026-09-04)
+
+An unquoted HTML attribute value ends at the first space. Every word after that
+space becomes a valueless attribute of its own — so the intended value is
+truncated and the remainder is silently discarded. That is the same root cause
+as the curly-quote entry above, and a render-based scan found it on eight pages.
+
+### The scanner, and why the first result was worthless
+
+The runtime signature is an element carrying an attribute with an **empty
+value** that is not a legitimate valueless attribute (`disabled`, `defer`,
+`selected`, `data-*`, `aria-*`, …). The first sweep reported a serene
+**0 findings across 189 pages** — because the static server had died and every
+page returned `ERR_CONNECTION_REFUSED`. §8.4's rule, hit exactly as written.
+With the server up:
+
+```
+pages scanned: 189   load errors: 0
+pages affected: 8
+truncated attribute sites: 294   fragments lost: 685
+by attribute: {"style":271,"placeholder":10,"class":6,"content":5,"onclick":1}
+```
+
+### The severe one: the default tab pane loses `active`
+
+```html
+<div class=tab-pane active id=tab-inventory>
+```
+
+`class` ends at the space, so it is `"tab-pane"` and `active` becomes a stray
+attribute. `.tab-pane{display:none}` then hides everything, and only
+`.tab-pane.active` would have lifted it. Measured on three pages:
+
+```
+control-plane.html {"panes":5,"panesWithActiveClass":0,"panesWithStrayActiveAttr":1,
+                    "visiblePanes":0,"firstPaneDisplay":"none","firstPaneHeight":0}
+creator.html       {"panes":3, … "visiblePanes":0,"firstPaneDisplay":"none"}
+project-studio.html{"panes":3, … "visiblePanes":0,"firstPaneDisplay":"none"}
+```
+
+**All three pages rendered nothing below the tab bar until a tab was clicked.**
+The matching `<button class=tab-btn active>` lost its highlight the same way, so
+nothing even indicated which tab was supposed to be open.
+
+After:
+
+```
+control-plane.html  visiblePanes 1/5   visible height 9855px   btnActive 1
+creator.html        visiblePanes 1/3   visible height  401px   btnActive 1
+project-studio.html visiblePanes 1/3   visible height  470px   btnActive 1
+```
+
+Nine thousand pixels of content on `control-plane.html` that no visitor could
+see. Note that an earlier session measured that page's inventory rows with
+`querySelectorAll` and reported 171 rows present — which was true and
+irrelevant: the rows were in the DOM inside a `display:none` panel. **Presence
+in the DOM is not visibility**; check `getComputedStyle`/`offsetParent`.
+
+### The rest
+
+| site | what was lost |
+|---|---|
+| `<meta name=description content=Operational brain of…>` | everything after the first word, on 5 pages |
+| `<h1 style=…margin:0 0 16px;letter-spacing:2px>` | `margin-bottom` and `letter-spacing`, on 5 pages |
+| `<input placeholder=Search pages by name, purpose…>` | placeholder became `"Search"` |
+| `omega-control-plane.js:109,110` `style=…padding:4px 0;border-bottom:…` | every realm/motion row's separator |
+| `omega-ad-network.js`, `omega-creator.js`, `omega-project-studio.js`, `omega-layered-ui.js`, `omega-uniqueness.js` | 29 inline styles cut mid-declaration |
+| `sovereign-ai.html:158` | see below |
+| `architect.html:269` | prose reading `scans <script src> basenames` was parsed as a real `<script src>` element and vanished from the cell |
+
+**`sovereign-ai.html:158` — an escape that covered the wrong character.**
+
+```js
+onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;')+',…
+```
+
+`JSON.stringify` emits double quotes, and the attribute is delimited with double
+quotes, so the handler was cut at `activateAgent({` — inert. `<` was escaped;
+`"` was not. Adding `.replace(/"/g,'&quot;')` gives a 329-character handler that
+ends `…'#E25800','♈︎');setTab('chat')` and passes `new Function()`.
+
+**`services.html:151` — two bugs on one line.**
+
+```js
++'<div class="svc-badge" style="color:'+COL[s.s]+';border-color:'
+ +COL[s.s].replace('var(--','rgba(').replace(')',',0.3)')+'>'+s.s.toUpperCase()+'</div>'
+```
+
+The style attribute never closed, so it swallowed `>LIVE</div>` and ran on to the
+**next** card's `style="--sc:` — the badge text never rendered and the following
+card lost its `class="svc-card card"`. And `'var(--green)'` through those two
+`replace` calls yields `rgba(green,0.3)`, which is not a colour: a custom
+property cannot be turned into an `rgba()` by string surgery. Replaced with
+`color-mix(in srgb, <col> 40%, transparent)`, which does it for real — verified
+in the render, not assumed:
+
+```
+services.html {"cardsWithBothClasses":21,"badges":21,"badgeText":["LIVE","LIVE","LIVE"],
+               "badgeColor":"rgb(63, 178, 127)",
+               "badgeBorder":"color(srgb 0.247059 0.698039 0.498039 / 0.4)"}
+```
+
+### One transform mistake, caught by reading the diff
+
+The bulk quoting pass was mechanical, and on two sites the value spanned a JS
+concatenation:
+
+```js
+placeholder=Enter '+f+'…      →   placeholder="Enter "'+f+'…     // wrong
+                              →   placeholder="Enter '+f+'…"     // right
+```
+
+The closing quote has to land where the *value* ends, not where the string
+literal does. Re-reading the generated diff is what caught it.
+
+### Result, with a positive control
+
+```
+pages scanned: 189   load errors: 0
+pages affected: 0    truncated attribute sites: 0   fragments lost: 0
+```
+
+A zero here already lied once, so it is paired with a control — the committed
+pre-fix `control-plane.html` pinned via `git show HEAD:`:
+
+```
+BEFORE (HEAD, pre-fix): {"strayAttrs":296,"panes":5,"visiblePanes":0}
+AFTER  (working tree):  {"strayAttrs":0,  "panes":5,"visiblePanes":1}
+```
+
+A source-side sweep for any remaining unquoted `style`/`placeholder`/`class`
+value containing a space also returns 0 across every `.html` and `.js`.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, every touched page `ok`.

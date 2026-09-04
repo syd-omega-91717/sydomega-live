@@ -148,7 +148,7 @@ function build(){
         +'<div class="svc-num">SERVICE '+ROM[i]+' &middot; 21&#215;21&#215;9&#215;9&#215;9</div>'
         +'<div class="svc-name">'+s.n+'</div>'
         +'<div class="svc-desc">'+s.d+'</div>'
-        +'<div class="svc-badge" style="color:'+COL[s.s]+';border-color:'+COL[s.s].replace('var(--','rgba(').replace(')',',0.3)')+'>'+s.s.toUpperCase()+'</div>'
+        +'<div class="svc-badge" style="color:'+COL[s.s]+';border-color:color-mix(in srgb,'+COL[s.s]+' 40%,transparent)">'+s.s.toUpperCase()+'</div>'
         +'</div>';
     }).join('');
   }

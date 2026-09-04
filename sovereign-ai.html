@@ -155,7 +155,7 @@ function renderMyAgent(agents,profile){
     +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+col+';margin-bottom:8px">'+ag.role.toUpperCase()+'</div>'
     +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:10px">'+ag.sign.toUpperCase()+' &middot; '+(ag.element||'').toUpperCase()+' &middot; '+(ag.god||'').toUpperCase()+'</div>'
     +'<div style="font-family:var(--M);font-size:12px;border-left:2px solid '+col+';padding-left:10px;color:var(--muted);line-height:1.7;margin-bottom:12px">&ldquo;'+ag.greeting+'&rdquo;</div>'
-    +'<button class="btn-gold" onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;')+',\''+col+'\',\''+glyph+'\');setTab(\'chat\')">OPEN CHANNEL &rarr;</button>'
+    +'<button class="btn-gold" onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;').replace(/"/g,'&quot;')+',\''+col+'\',\''+glyph+'\');setTab(\'chat\')">OPEN CHANNEL &rarr;</button>'
     +'</div>';
 }
 

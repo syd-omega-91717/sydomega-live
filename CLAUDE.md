@@ -312,17 +312,14 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
   only scripts). The 94-file numbered sequence (`0001`–`0094`) applies
   cleanly end-to-end against a fresh scratch PostgreSQL 16 instance
-  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — that is
-  the only such run on record, and the directory has grown well past it since,
-  so re-derive both numbers from `scripts/omega-registry.py` rather than
-  trusting a count quoted here. Everything added after `0094` — later numbered
-  files as well as timestamped ones — was never part of that validation, and no
-  run has covered the directory in full — and even the validated part only proves the sequence is
-  internally consistent on a **blank** database, not that it matches the
-  owner's actual live schema; `task_completions` is a proven
-  counterexample (live `id bigint` + `axis`/`increment` columns match none
-  of the 3 competing `CREATE TABLE IF NOT EXISTS` definitions in the SQL
-  bag). Do not run the full `migrations/` sequence against the live
+  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — the only
+  such run on record. The directory has grown well past it since, so re-derive
+  the count from `scripts/omega-registry.py`; everything after `0094` is
+  unvalidated, and even the validated part only proves the sequence is
+  internally consistent on a **blank** database, not that it matches the owner's
+  live schema. `task_completions` is a proven counterexample (live `id bigint` +
+  `axis`/`increment` match none of the 3 competing `CREATE TABLE IF NOT EXISTS`
+  definitions in the SQL bag). Do not run the full `migrations/` sequence against the live
   production database expecting it to safely "catch up" existing state —
   use it for a scratch/staging project, and use the individually
   live-verified fix files (`trial_access.sql`, `migrations/0013`,
@@ -428,16 +425,15 @@ are listed in rough order of how often they have recurred.
    canvas sized that way gets a zero drawing buffer and can never paint. Use a
    `ResizeObserver`, or check for an already-set value before overriding.
 4. **A global that only one page ever assigns.** Two shapes. (a) A function
-   declared inside `<script type="module">` but called from an inline
-   `onclick=` — module top-level declarations are not global, so the click
-   throws `ReferenceError` silently; fix with `window.fn = fn`. Swept to 0.
-   (b) **A shared accessor that nothing publishes.** `window.OmegaSupabase` was
-   read by 11 files and assigned by exactly one (`graphify.html:168`), so the
-   entire knowledge-graph and council feature set never initialised anywhere
-   else — `graph-admin.html:83` re-polled every 100ms forever. `bg.js` now
-   publishes it from `OmegaSB.get()`. The same shape broke `omega-hercules.js`,
-   which guarded on `window.sb`, a global nothing assigns. **Before using a
-   `window.*` accessor, grep for its assignment, not just its readers.**
+   declared inside `<script type="module">` but called from an inline `onclick=`
+   is not global, so the click throws `ReferenceError` silently; `window.fn = fn`.
+   Swept to 0. (b) **A shared accessor that nothing publishes.**
+   `window.OmegaSupabase` was read by 11 files and assigned by one
+   (`graphify.html:168`), so the knowledge-graph and council features never
+   initialised — `graph-admin.html:83` re-polled every 100ms forever. `bg.js`
+   now publishes it from `OmegaSB.get()`; the same shape broke
+   `omega-hercules.js`, which guarded on `window.sb`. **Grep a `window.*`
+   accessor's assignment, not just its readers.**
 5. **An injection guard that discards, or that two modules share.** Two
    shapes. (a) `if (document.body) document.body.appendChild(x)` drops the work
    entirely when body does not exist yet; `bg.js` now routes every injection
@@ -482,6 +478,14 @@ are listed in rough order of how often they have recurred.
    revenue share". `scripts/commerce-contract.py` gates both shapes (blocking).
    §9's dormancy rule had no shared implementation until `omega-flags.js` /
    `data-omega-flag` — so it depended on memory, and memory failed.
+10. **An attribute value the parser never received.** An unquoted value ends at
+   the first space, and a curly quote is not a delimiter at all — so
+   `class=tab-pane active` gives class `"tab-pane"` plus a stray `active`, and
+   three pages rendered **blank** because `.tab-pane.active` never matched. 294
+   such sites on 8 pages, plus 171 unstyled badges from `class=”page-badge`.
+   Detect it in a render, never a grep: an attribute whose value is `""` and
+   which is not a real valueless attribute. **DOM presence is not visibility** —
+   `querySelectorAll` happily counts 171 rows inside a `display:none` panel.
 
 ### 8.2 What is genuinely open — each on purpose, with a reason
 
@@ -503,17 +507,15 @@ open, recorded in `FIXES_LOG.md`:
   further 24 pages are `PARTIAL` (Postgres *and* a parallel local copy). Run
   the scanner rather than quoting these numbers.
   **Fixed and applied 2026-08-24**: `public.member_state`
-  (`supabase/omega_member_state.sql`, `migrations/0095`) plus
-  `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
-  sync**: writes go up only, restore is explicit (`OmegaMemberState.restore()`),
-  because a hydrating two-way sync races each page's synchronous render and
-  would let an empty-cache render overwrite good server data. RLS verified live
-  by two-member impersonation (own-row write OK, write-as-other 42501, other
-  member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
-  trigger. Client-side encryption was considered and rejected: no stable client
-  secret exists, and it changes no trust boundary anyway — `health_logs`,
-  `ai_memory`, `family_nodes` and `heritage_records` already hold comparable
-  data server-side under the same, tested RLS.
+  (`supabase/omega_member_state.sql`, `migrations/0095`) + `omega-member-state.js`
+  mirror those keys server-side. A **mirror, not a sync**: writes go up only,
+  restore is explicit (`OmegaMemberState.restore()`), because a hydrating
+  two-way sync races each page's synchronous render and would let an empty-cache
+  render overwrite good server data. RLS verified live by two-member
+  impersonation; `updated_at` is trigger-authoritative. Client-side encryption
+  was rejected: no stable client secret exists, and it changes no trust boundary
+  — `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` already hold
+  comparable data under the same tested RLS.
 - **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
@@ -574,23 +576,22 @@ open, recorded in `FIXES_LOG.md`:
   single physical CI runner** — never "fix" it with a hosted lane;
   `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
-  in the job log). Cloud minutes still look unavailable — this repo is private
-  on a personal account — so queued jobs drain slowly, one at a time, and a
-  check can sit `queued` for a long while. But a red check is now real output
-  from a real run, to be read rather than dismissed as the old
-  `runner_id: 0` infra no-op. Two Windows-specific traps: paths and the console
-  codec differ, and a crashed child process yields empty stdout, which makes
-  any assertion on that stdout misreport (see `FIXES_LOG.md`).
+  in the job log). Cloud minutes look unavailable — private repo, personal
+  account — so jobs drain one at a time and a check can sit `queued` a long
+  while. But a red check is real output from a real run, to be read, not
+  dismissed as the old `runner_id: 0` no-op. Two Windows traps: paths and the
+  console codec differ, and a crashed child yields empty stdout, so any
+  assertion on that stdout misreports (see `FIXES_LOG.md`).
   `./scripts/ci-local.sh` still runs every blocking step locally, and
   `.githooks/pre-push` runs it on every push — enable per clone with
   `git config core.hooksPath .githooks`, bypass with `--no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
-  The advisor reports 93; the owner-sensitive ones guard themselves via
+  The advisor reports 93; the owner-sensitive ones guard via
   `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
-  misses. Three unguarded-and-uncalled functions were revoked
-  (`migrations/0097`); the rest have real callers. Cross-member leakage was
-  tested by member impersonation across 17 tables — every populated table
-  scoped, `profiles` included. **When adding any function,
+  misses. Three unguarded-and-uncalled ones were revoked (`migrations/0097`); the
+  rest have callers. Cross-member leakage was tested by impersonation across 17
+  tables — every populated table scoped, `profiles` included. **When adding any
+  function,
   `REVOKE EXECUTE ... FROM PUBLIC` in the same file**: Postgres grants it to
   PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its own —
   that is how 70 revoked functions became 23.
@@ -606,10 +607,10 @@ open, recorded in `FIXES_LOG.md`:
   known-unknown for an unverified "fixed". The count has drifted between 7 and
   8 across sessions — re-run and diff the list rather than assuming a warning
   is old news.
-- **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
-  nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
-  and does real work on every page. Self-activation with no caller is the norm
-  here. Establishing which are genuinely page-specific is a real audit.
+- **90 `omega-*.js` modules load on every page.** 41 expose a global nothing
+  calls — a trap of a metric: `omega-a11y.js` is one and does real work on every
+  page. Self-activation with no caller is the norm. Which are genuinely
+  page-specific is a real audit.
 
 ### 8.3 Current verification baseline
 

@@ -8300,3 +8300,52 @@ CONQUEST`. Measured rather than "fixed" on the strength of reading the code.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok kings.html`.
+
+---
+
+## 27 hand-rolled card surfaces swept to the shared class — and 66 deliberately not (2026-09-04)
+
+`kings.html` was not unique. A scan for bg.js's own `.card` declarations written
+out inline instead of using the class — a `1px solid var(--line)` border plus
+the `rgba(10,10,15,…)` glass in one style attribute — finds **87 sites across 22
+files**.
+
+A blanket sweep is exactly what §4.1 warns against, so the sites were classified
+by what the style actually says, not by the pattern that found them:
+
+| type | shape | decision |
+|---|---|---|
+| A | `border` + `background:.5` + `padding:14px` + `radius:2px`, nothing else | **sweep** — literally `.card` |
+| B | type A plus `border-top:2px solid <colour>` | **sweep**, colour → `--card-accent` |
+| C | `border-left:3px solid …` | **left alone** — `.card::before` is a *top* bar; translating it changes the design (§4.1's `cosmos.html` precedent) |
+| D | `padding:10px 14px` / `12px`, alpha `.4`/`.45`, extra font or `display:none` declarations | **left alone** — denser list rows and collapsed forms, not cards; `.card`'s `clamp(14px,2.5vw,20px)` padding would change their density |
+
+That leaves **27 sites in 5 files** that are exactly `.card`, 23 of them with a
+top accent that translates losslessly. Both documented failure modes were
+checked per site first: none of the 27 elements carries **any** class attribute,
+so there is no page-local `::before` to collide with and no same-element
+modifier setting a border.
+
+Measured, BEFORE pinned with `git show HEAD:`:
+
+| page | `.card` count | distinct accent colours |
+|---|---|---|
+| `bloodline.html` | 6 → **15** | 1 → **6** |
+| `pantheons.html` | 6 → **12** | 1 → **6** |
+| `heritage.html` | 6 → **10** | 1 → **4** |
+| `governance.html` | 6 → **10** | 1 → **4** |
+| `vault.html` | 35 → **38** | 1 → 1 (its 3 sites carried no accent — correct) |
+
+The accent colours are preserved exactly — cyan `rgb(0,229,255)`, purple
+`rgb(155,107,240)`, green `rgb(63,178,127)`, orange `rgb(255,152,0)`, red
+`rgb(255,68,68)`, ember `rgb(232,106,58)` — now drawn as the card's own 2px top
+bar rather than a border on the element. Every card resolves a box-shadow, no
+page gained horizontal overflow, and all five report 0 page errors before and
+after.
+
+The 66 sites left alone are recorded here rather than swept quietly: they are a
+real backlog, and each needs a per-site decision about density or a left-bar
+motif, not a regex.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, all five files `ok`.

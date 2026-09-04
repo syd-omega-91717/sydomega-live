@@ -8483,3 +8483,63 @@ about; it is corrected before anyone relies on it.
 
 No code change. The remaining 86 need a per-element density judgement, which is
 a design decision, not a sweep.
+
+---
+
+## habits.html had reinvented three platform primitives (2026-09-04)
+
+A density pass over the estate — visible characters per platform visual element
+— put `habits.html` at the top. That metric needs stating honestly: it counts
+`.card`/`.kpi`/`.chip`/`<canvas>`/`<svg>`/emblems, so a score of 2 on a 32 KB
+page does **not** mean "no visuals". It means the page is visually rich in a
+vocabulary of its own, outside the design system. Which it was:
+
+| page-local | count | platform equivalent |
+|---|---|---|
+| `.hero-stat` + `.sv` + `.sk` | 12 | `.kpi` |
+| `.insight-item` | 9 | `.card` |
+| `.section-hd` | 5 | `.sechead` |
+
+None of the three has a `::before` or `::after`, so neither documented collision
+applies. Measured, BEFORE pinned with `git show HEAD:`:
+
+```
+BEFORE {"heroStatKpi":0,"insightCard":0,"sectionSechead":0,
+        "hsBorderTop":"1px rgba(201, 168, 76, 0.12)","hsBg":"rgba(0, 0, 0, 0)",
+        "iiBg":"rgba(0, 0, 0, 0)","iiShadow":"none",
+        "skColour":"rgba(138, 134, 118, 0.5)","shColour":"rgba(201, 168, 76, 0.5)"}
+AFTER  {"heroStatKpi":12,"insightCard":9,"sectionSechead":5,
+        "hsBorderTop":"2px rgba(201, 168, 76, 0.22)","hsBg":"rgba(10, 10, 15, 0.68)",
+        "iiBg":"rgba(10, 10, 15, 0.68)","iiShadow":"present",
+        "skColour":"rgb(138, 136, 128)","shColour":"rgb(0, 229, 255)","errors":0}
+```
+
+The stat boxes and insight panels had **no background at all** before — they
+were outlines on the page ground. They now sit on the platform glass with the
+KPI accent bar and the card's rim shadow. Fourteen hand-mixed
+`rgba(138,134,118,.N)` greys became `var(--muted)`, the same sweep the rest of
+the estate had; this file was not among the 16 it covered.
+
+**The section-heading colour change was checked against the norm, not assumed.**
+Adopting `.sechead` moves it from `rgba(201,168,76,.5)` to `rgb(0,229,255)`,
+which is a visible change. Rendering three other pages confirms that *is* the
+platform value, so the page now matches rather than becoming an outlier:
+
+```
+habits.html    {"colour":"rgb(0, 229, 255)"}
+dashboard.html {"colour":"rgb(0, 229, 255)"}
+vault.html     {"colour":"rgb(0, 229, 255)"}
+kings.html     {"colour":"rgb(0, 229, 255)"}
+```
+
+**A contrast claim that was NOT made.** An ad-hoc probe computed those greys at
+2.12–2.85:1 and it was tempting to call this an accessibility fix. That probe
+read the body ground as `rgba(0,0,0,0)` — transparent, since `omega-backdrop.js`
+paints elsewhere — so it composited against an *assumed* black. The repo's own
+contrast gate is validated against seven known ratios and blocks under 3:1, and
+it passes this page; its advisory band is unchanged at 259, matching §8.3's
+baseline. A throwaway calculation does not get to overrule the validated tool,
+so this is recorded as a consistency change only.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok habits.html`.

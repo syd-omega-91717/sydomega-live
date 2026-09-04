@@ -9,7 +9,7 @@
 @media(max-width:640px){.habit-hero{grid-template-columns:1fr 1fr}}
 .hero-stat{border:1px solid rgba(201,168,76,.12);border-radius:2px;padding:16px;text-align:center}
 .hero-stat .sv{font-family:var(--M);font-size:26px;letter-spacing:2px;color:var(--gold,var(--gold))}
-.hero-stat .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.hero-stat .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .section-hd{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .habit-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;margin-bottom:10px;overflow:hidden}
 .habit-card-header{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:.12s}
@@ -18,7 +18,7 @@
 .habit-card.done-today .hc-check{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.7);color:var(--gold,var(--gold))}
 .hc-info{flex:1;min-width:0}
 .hc-name{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.85)}
-.hc-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:2px}
+.hc-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
 .hc-streak{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 9px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(201,168,76,.7);white-space:nowrap}
 .habit-streak-row{display:flex;gap:4px;padding:8px 14px 12px;overflow-x:auto}
 .streak-dot{width:12px;height:12px;border-radius:2px;flex-shrink:0;cursor:default}
@@ -26,10 +26,10 @@
 .habit-expand{padding:0 14px 14px;border-top:1px solid rgba(201,168,76,.06)}
 .cue-effect-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;font-family:var(--M);font-size:12px;letter-spacing:1px}
 .cue-box{border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:8px}
-.cue-box .cb-label{color:rgba(138,134,118,.5);margin-bottom:4px;letter-spacing:1.5px}
+.cue-box .cb-label{color:var(--muted);margin-bottom:4px;letter-spacing:1.5px}
 .cue-box .cb-val{color:rgba(201,168,76,.7)}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
@@ -37,13 +37,13 @@
 .modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(440px,90vw);max-height:85vh;overflow-y:auto}
 .modal-box h3{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold,var(--gold));margin:0 0 20px}
 .fg{margin-bottom:14px}
-.fg label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
+.fg label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:5px}
 .fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:12px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4)}
 .fg select option{background:#0a0a08}
 .ma{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .btn-s{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
-.btn-c{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
+.btn-c{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;border-radius:2px;cursor:pointer}
 .add-habit-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 20px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s;margin-bottom:20px}
 .add-habit-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.4)}
 .chain-node{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:4px}
@@ -52,11 +52,11 @@
 .cn-arrow{color:rgba(201,168,76,.2);font-size:14px}
 .insight-item{border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:14px;margin-bottom:8px}
 .insight-item .ii-title{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold,var(--gold));margin-bottom:6px}
-.insight-item .ii-body{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.7}
+.insight-item .ii-body{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.7}
 .del-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(200,60,60,.2);color:rgba(200,60,60,.5);background:none;border-radius:2px;cursor:pointer;margin-left:auto}
 .del-btn:hover{border-color:rgba(200,60,60,.5);color:rgba(200,60,60,.8)}
-.freq-badge{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(138,134,118,.5)}
-.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
+.freq-badge{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:var(--muted)}
+.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:8px}
 .heatmap-legend-dot{width:10px;height:10px;border-radius:1px}
 </style>
   <script src="/bg.js"></script>
@@ -68,10 +68,10 @@
   <div class="topbar"><div class="t">HABITS<small>ATOMIC HABIT STACK &middot; SYD OMEGA 91717</small></div><button class="add-habit-btn" onclick="openModal()">&#43; NEW HABIT</button></div>
   <div style="padding:20px var(--pad,20px)">
     <div class="habit-hero" id="habit-hero">
-      <div class="hero-stat"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
-      <div class="hero-stat"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
-      <div class="hero-stat"><div class="sv" id="stat-streak">0</div><div class="sk">BEST STREAK</div></div>
-      <div class="hero-stat"><div class="sv" id="stat-rate">0%</div><div class="sk">30-DAY RATE</div></div>
+      <div class="hero-stat kpi"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
+      <div class="hero-stat kpi"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
+      <div class="hero-stat kpi"><div class="sv" id="stat-streak">0</div><div class="sk">BEST STREAK</div></div>
+      <div class="hero-stat kpi"><div class="sv" id="stat-rate">0%</div><div class="sk">30-DAY RATE</div></div>
     </div>
 
     <div class="tab-row">
@@ -89,48 +89,48 @@
     <!-- ALL HABITS -->
     <div class="tab-panel" id="tab-all">
       <div id="all-list"></div>
-      <div class="section-hd" style="margin-top:24px">BACKUP &amp; RESTORE</div>
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.7;margin-bottom:12px">
+      <div class="section-hd sechead" style="margin-top:24px">BACKUP &amp; RESTORE</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.7;margin-bottom:12px">
         Habits, daily logs, and streak freezes live only in this browser — clearing site
         data or switching devices loses them permanently. Export a backup periodically.
       </div>
       <button class="btn-s" onclick="exportHabitsBackup()">EXPORT BACKUP</button>
       <button class="btn-c" onclick="document.getElementById('habits-import-file').click()">IMPORT BACKUP</button>
       <input type="file" id="habits-import-file" accept=".json" style="display:none">
-      <div id="habits-backup-msg" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:8px"></div>
+      <div id="habits-backup-msg" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:8px"></div>
     </div>
 
     <!-- CHAIN TAB: habit chain + heatmap -->
     <div class="tab-panel" id="tab-chain">
-      <div class="section-hd">ATOMIC HABIT CHAIN</div>
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.7;margin-bottom:16px">
+      <div class="section-hd sechead">ATOMIC HABIT CHAIN</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.7;margin-bottom:16px">
         Stack habits together so one triggers the next. Build an automatic morning machine.
         Each habit becomes a cue for the one that follows.
       </div>
       <div id="chain-list"></div>
-      <div class="section-hd" style="margin-top:24px">INSIGHTS</div>
+      <div class="section-hd sechead" style="margin-top:24px">INSIGHTS</div>
       <div id="insight-list"></div>
-      <div class="section-hd" style="margin-top:24px">90-DAY HEATMAP</div>
+      <div class="section-hd sechead" style="margin-top:24px">90-DAY HEATMAP</div>
       <div id="heatmap-container"></div>
     </div>
 
     <!-- SCIENCE -->
     <div class="tab-panel" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="hero-stat"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-        <div class="hero-stat"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
-        <div class="hero-stat"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
-        <div class="hero-stat"><div class="sv">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+        <div class="hero-stat kpi"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="hero-stat kpi"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+        <div class="hero-stat kpi"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+        <div class="hero-stat kpi"><div class="sv">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="hero-stat"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
-        <div class="hero-stat"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
-        <div class="hero-stat"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
-        <div class="hero-stat"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+        <div class="hero-stat kpi"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+        <div class="hero-stat kpi"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+        <div class="hero-stat kpi"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+        <div class="hero-stat kpi"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
       </div>
-      <div class="section-hd">THE HABIT LOOP SCIENCE</div>
+      <div class="section-hd sechead">THE HABIT LOOP SCIENCE</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">THE 4-LAW FRAMEWORK (JAMES CLEAR)</div>
           <div class="ii-body">
             <strong style="color:rgba(201,168,76,.7)">1. Make it Obvious</strong> — Design your environment. Place triggers in sight.<br>
@@ -139,7 +139,7 @@
             <strong style="color:rgba(201,168,76,.7)">4. Make it Satisfying</strong> — Immediate reward. Track on a calendar.
           </div>
         </div>
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">THE 1% PRINCIPLE</div>
           <div class="ii-body">
             If you improve by just 1% each day for one year, you end up 37 times better.<br><br>
@@ -148,7 +148,7 @@
             Small choices compound into sovereign outcomes.
           </div>
         </div>
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">HABIT STACKING FORMULA</div>
           <div class="ii-body">
             <em style="color:rgba(201,168,76,.6)">"After I [CURRENT HABIT], I will [NEW HABIT]."</em><br><br>
@@ -156,7 +156,7 @@
             Example: <em style="color:rgba(201,168,76,.5)">"After I pour my morning coffee, I will meditate for 2 minutes."</em>
           </div>
         </div>
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">THE PLATEAU OF LATENT POTENTIAL</div>
           <div class="ii-body">
             Habits often produce no visible results for weeks or months, then break through suddenly. This is the "valley of disappointment."<br><br>
@@ -164,7 +164,7 @@
             <strong style="color:rgba(201,168,76,.7)">Trust the compound curve.</strong> The results are being stored — not lost.
           </div>
         </div>
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">IDENTITY-BASED HABITS</div>
           <div class="ii-body">
             The most effective long-term habit formation comes from shifting your identity, not just your goals.<br><br>
@@ -173,7 +173,7 @@
             Every habit vote is a vote for the person you wish to become.
           </div>
         </div>
-        <div class="insight-item">
+        <div class="insight-item card">
           <div class="ii-title">ENVIRONMENT DESIGN</div>
           <div class="ii-body">
             Motivation is overrated. Environment is architecture.<br><br>
@@ -418,7 +418,7 @@ function renderHabitCard(habit, showAll=false){
         <div class="cue-box"><div class="cb-label">ROUTINE</div><div class="cb-val">${habit.routine||habit.name}</div></div>
         <div class="cue-box"><div class="cb-label">REWARD</div><div class="cb-val">${habit.reward||'—'}</div></div>
       </div>
-      ${habit.identity?`<div style="margin-top:10px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);font-style:italic">"I am ${habit.identity}"</div>`:''}
+      ${habit.identity?`<div style="margin-top:10px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);font-style:italic">"I am ${habit.identity}"</div>`:''}
     </div>
   </div>`;
 }
@@ -452,7 +452,7 @@ function renderChain(){
       <div class="cn-name">${CAT_ICONS[h.cat]||'●'} ${h.name}</div>
       ${i<habits.length-1?'<div class="cn-arrow">→</div>':''}
     </div>`).join('');
-  document.getElementById('chain-list').innerHTML=chainHtml||'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)">NO DAILY HABITS YET</div>';
+  document.getElementById('chain-list').innerHTML=chainHtml||'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">NO DAILY HABITS YET</div>';
   // Insights
   const habits2=getHabits()||DEFAULTS;
   const bestStreak=Math.max(0,...habits2.map(getStreak));
@@ -463,7 +463,7 @@ function renderChain(){
     {title:'SOVEREIGN STACK ANALYSIS',body:`You have ${habits2.filter(h=>h.freq==='daily').length} daily + ${habits2.filter(h=>h.freq==='weekly').length} weekly habits. Daily habits compound fastest. Build your stack around non-negotiables.`},
   ];
   document.getElementById('insight-list').innerHTML=insights.map(i=>`
-    <div class="insight-item">
+    <div class="insight-item card">
       <div class="ii-title">${i.title}</div>
       <div class="ii-body">${i.body}</div>
     </div>`).join('');

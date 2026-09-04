@@ -186,14 +186,15 @@ through this one file with no per-page markup changes:
   intended, retroactively for pre-existing `.card` usage too. `.kpi` is
   excluded outright: it already carries a per-instance `--kc` accent color,
   so it gets a matching hover glow in that color instead.
-  `honors.html`'s `.honor-card` was never given `.card` at all — both its
-  `::before` and `.card`'s set `background`, and only one can win. **The
-  mechanism this used to cite was wrong** ("a `::before` can only render one
-  rule, never merges"): pseudo-elements cascade per *property* like any
-  element, proven live. The exclusion still stands on the property
-  collision — so check the excluded classes below against *which properties*
-  collide, not against the presence of a pseudo. That one is not
-  hover-fixable: it is the badges' resting appearance.
+  A page-local `::before` that sets `background` collides with `.card::before`
+  per *property* (pseudo-elements cascade like any element). **That collision
+  is solvable, and this file twice said it was not**: `.card::before` is the
+  same 2px top bar those classes draw and it reads `--card-accent`, which takes
+  a colour *or* a gradient (both proven in a render). So set
+  `--card-accent` on the page-local class and delete its own pseudo —
+  `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
+  translated losslessly. Check *which properties* collide, never the mere
+  presence of a pseudo.
 - **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
   `*-card` classes across 117 files by scanner. **The standing fact:** ~34
   classes were deliberately **not** swept, because `.card`'s hover-only
@@ -205,12 +206,16 @@ through this one file with no per-page markup changes:
   (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
   hover-only masking hides them only during a simultaneous hover. Check a class
   against those two failure modes before adding `.card`; the per-class list,
-  the scanner and the verification are in `FIXES_LOG.md`. **A sweep is not
-  additive**: `.card` is re-declared in `omega-visual-evolution.css`, injected
-  *after* the page's `<style>`, so at equal specificity it wins — measured, it
-  rewrote resting border/background/padding/radius on 130 swept elements. Fine
-  for a bare box; where the page's value carries meaning (`chronicle.html`'s
-  dashed "not yet real" border) re-assert it at `.x.card`.
+  the scanner and the verification are in `FIXES_LOG.md`. Two facts before any
+  sweep. **A sweep is not additive**: `omega-visual-evolution.css` styles
+  `.card,…,[class*="card"]` — that substring selector already gives *every*
+  `*-card` class the glass surface — and it loads after the page's `<style>`,
+  so at equal specificity it wins; measured, it rewrote resting
+  border/background/padding/radius on 130 swept elements. Re-assert anything
+  the page means at `.x.card`. **And `.card` enrols the element in the
+  `oa-fade-up` reveal**, whose last keyframe pins `opacity:1` — that silently
+  un-dimmed 16 `.honor-card.locked` badges; an animation beats a plain
+  declaration, and only `!important` outranks it.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
   growing from the tab centre in the page axis colour, quarter-width on hover.
   40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
@@ -493,12 +498,10 @@ open, recorded in `FIXES_LOG.md`:
   would let an empty-cache render overwrite good server data. RLS verified live
   by two-member impersonation (own-row write OK, write-as-other 42501, other
   member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
-  trigger. Client-side encryption was considered and rejected — no stable client
-  secret exists, so the key would either die with the cache it exists to survive
-  or rest on a forgettable passphrase; and this changes no trust boundary, since
-  `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
-  `bloodline_nodes` already hold comparable data server-side under the same,
-  tested RLS.
+  trigger. Client-side encryption was considered and rejected: no stable client
+  secret exists, and it changes no trust boundary anyway — `health_logs`,
+  `ai_memory`, `family_nodes` and `heritage_records` already hold comparable
+  data server-side under the same, tested RLS.
 - **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
   to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
   offers a delete — a gap, and a product decision.
@@ -524,22 +527,20 @@ open, recorded in `FIXES_LOG.md`:
   pattern RLS filters on — and the 61 FKs are all on the scaffold below.
 - **~83 tables live on production that this repo's SQL never created** — a
   generic multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars).
-  RLS is enabled with no policies, which is the *safe* state (total lockout),
-  and they are empty. Inventing policies for schema of unknown purpose would
-  be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
+  RLS on, no policies — the *safe* state (total lockout) — and empty. Inventing
+  policies for schema of unknown purpose fabricates behaviour. Needs a human
+  decision: drop, adopt, or leave.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
-  claim one). `platform_events` is correctly scoped to `auth.uid() = user_id`.
-  `platform_metrics` does have `WITH CHECK(true)` but no `user_id` column, so
-  there is nothing to spoof — the residual risk is junk rows, not impersonation
-  — and `authenticated` is not granted INSERT on either, so both are unreachable
-  anyway. Scope `platform_metrics` before that grant is ever added.
+  claim one). `platform_events` is scoped to `auth.uid() = user_id`.
+  `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
+  nothing to spoof — junk rows, not impersonation — and `authenticated` lacks
+  INSERT on both anyway. Scope it before that grant is ever added.
 - **`feature_flags` and `governance_policies` are readable by every approved
   member**, by pre-existing policy (`USING(true)`, and
-  `is_platform_owner() OR status='active'` respectively). Both look deliberate
-  — published governance policies and feature flags are meant to be visible —
-  but they became *reachable* only when the missing grants were added, so they
-  are recorded here rather than assumed fine. 10 governance rows are visible to
-  a non-owner and all 10 are `status='active'`; no drafts leak.
+  `is_platform_owner() OR status='active'`). Both look deliberate, but became
+  *reachable* only when the missing grants were added, so they are recorded
+  rather than assumed fine. All 10 visible governance rows are
+  `status='active'`; no drafts leak.
 - **39 tables have RLS policies and no grant** (was 38; re-counted live
   2026-08-29). Left locked out — the safe state — rather than granted on the
   assumption that a policy's existence implies it should be reachable. **Now
@@ -556,11 +557,11 @@ open, recorded in `FIXES_LOG.md`:
   **A grep cannot find these — they are injected at runtime, not markup**; only
   CSP violations in a real browser surfaced them. Resolve versions from
   `registry.npmjs.org` (the CDNs are 403), never memory. `vercel.json`'s CSP is
-  now **enforced**, verified at 0 violations across all pages; as written before
-  it would have killed the webfonts and four features. Stripe is fixed in code,
-  not by pinning: `periodEndSeconds()` reads both pre-basil and basil shapes,
-  since two of three read sites take the *inbound webhook* payload, whose
-  version is a dashboard property no repo change can pin. **Still open: the
+  **enforced**, verified at 0 violations; as written before it would have killed
+  the webfonts and four features. Stripe is fixed in code, not by pinning:
+  `periodEndSeconds()` reads both pre-basil and basil shapes, since two of three
+  read sites take the *inbound webhook* payload, whose version is a dashboard
+  property no repo change can pin. **Still open: the
   single physical CI runner** — never "fix" it with a hosted lane;
   `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`

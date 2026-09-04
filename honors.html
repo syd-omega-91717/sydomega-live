@@ -55,13 +55,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 .honor-card{border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
 .honor-card:hover{border-color:var(--gold);transform:translateY(-4px)}
-.honor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.honor-card.tier-omega::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.honor-card.tier-gold::before{background:linear-gradient(90deg,transparent,var(--solar),transparent)}
-.honor-card.tier-silver::before{background:linear-gradient(90deg,transparent,var(--silver),transparent)}
-.honor-card.tier-bronze::before{background:linear-gradient(90deg,transparent,var(--bronze),transparent)}
-.honor-card.tier-cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
-.honor-card.locked{opacity:.45;filter:grayscale(.6)}
+/* .honor-visual is full-bleed: .card's padding would inset it. */
+.honor-card.card{padding:0}
+.honor-card.tier-omega{--card-accent:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.honor-card.tier-gold{--card-accent:linear-gradient(90deg,transparent,var(--solar),transparent)}
+.honor-card.tier-silver{--card-accent:linear-gradient(90deg,transparent,var(--silver),transparent)}
+.honor-card.tier-bronze{--card-accent:linear-gradient(90deg,transparent,var(--bronze),transparent)}
+.honor-card.tier-cyan{--card-accent:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+/* Adding .card enrols these in the oa-fade-up reveal, whose final keyframe
+   sets opacity:1 -- and an animation beats a plain declaration, so a locked
+   honor stopped looking locked. An !important author declaration outranks an
+   animation, which is the one thing that does. Measured, not assumed. */
+.honor-card.locked{opacity:.45!important;filter:grayscale(.6)}
 
 .honor-visual{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .honor-glyph{font-family:serif;font-size:3rem;position:relative;z-index:1;transition:transform .35s}
@@ -261,7 +266,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="honors-grid" id="honors-grid">
 
     <!-- TROPHY: OMEGA SOVEREIGN -->
-    <div class="honor-card tier-omega" data-cat="trophy">
+    <div class="honor-card card tier-omega" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -279,7 +284,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- TROPHY: SENTINEL PRIME -->
-    <div class="honor-card tier-omega" data-cat="trophy">
+    <div class="honor-card card tier-omega" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -297,7 +302,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- TROPHY: ARCHITECT'S SEAL -->
-    <div class="honor-card tier-gold" data-cat="trophy">
+    <div class="honor-card card tier-gold" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -315,7 +320,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- TROPHY: FIRE ASCENDANT -->
-    <div class="honor-card tier-gold" data-cat="trophy">
+    <div class="honor-card card tier-gold" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -333,7 +338,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- MEDAL: GENESIS CONTRIBUTOR -->
-    <div class="honor-card tier-omega" data-cat="medal">
+    <div class="honor-card card tier-omega" data-cat="medal">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -351,7 +356,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- MEDAL: SOVEREIGN FOUNDER -->
-    <div class="honor-card tier-gold" data-cat="medal">
+    <div class="honor-card card tier-gold" data-cat="medal">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -369,7 +374,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- MEDAL: ORACLE OF ARES -->
-    <div class="honor-card tier-gold" data-cat="medal">
+    <div class="honor-card card tier-gold" data-cat="medal">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -387,7 +392,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- MEDAL: VAULT MASTER -->
-    <div class="honor-card tier-silver" data-cat="medal">
+    <div class="honor-card card tier-silver" data-cat="medal">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -405,7 +410,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- CERTIFICATE: KNOWLEDGE APEX -->
-    <div class="honor-card tier-cyan" data-cat="cert">
+    <div class="honor-card card tier-cyan" data-cat="cert">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -423,7 +428,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- CERTIFICATE: ARCHITECTURE MASTER -->
-    <div class="honor-card tier-cyan" data-cat="cert">
+    <div class="honor-card card tier-cyan" data-cat="cert">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -441,7 +446,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- CERTIFICATE: PLATFORM BUILDER -->
-    <div class="honor-card tier-silver" data-cat="cert">
+    <div class="honor-card card tier-silver" data-cat="cert">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -459,7 +464,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- LEVEL BADGE: 9.9.9 APEX -->
-    <div class="honor-card tier-omega" data-cat="badge">
+    <div class="honor-card card tier-omega" data-cat="badge">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -477,7 +482,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- GRADE CARD: GRADE 12 -->
-    <div class="honor-card tier-omega" data-cat="grade">
+    <div class="honor-card card tier-omega" data-cat="grade">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -495,7 +500,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- TROPHY: GENESIS BLOCK -->
-    <div class="honor-card tier-gold" data-cat="trophy">
+    <div class="honor-card card tier-gold" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -513,7 +518,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- TROPHY: 9D ARCHITECT (locked) -->
-    <div class="honor-card tier-silver locked" data-cat="trophy">
+    <div class="honor-card card tier-silver locked" data-cat="trophy">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
@@ -531,7 +536,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- MEDAL: TOKEN LAUNCHER (locked) -->
-    <div class="honor-card tier-silver locked" data-cat="medal">
+    <div class="honor-card card tier-silver locked" data-cat="medal">
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>

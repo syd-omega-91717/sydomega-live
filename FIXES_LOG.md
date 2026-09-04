@@ -6779,3 +6779,60 @@ own source file. Only the runtime sweep catches those -- and the one run before
 merging #224 was invalid, because it had been measured across a branch switch.
 A sweep is only evidence if the tree held still underneath it.
 
+
+## The signature ring reaches a second page, and the candidates that were rejected (2026-09-04)
+
+`omega-constellation.js` — the ring of living emblems around a central Ω — had
+been mounted on exactly one page (`agents.html`, the Council tab) since it was
+written. Which other pages could take it was measured, not guessed: a render of
+fourteen candidates looking for a container whose children are a uniform set of
+twelve or nine.
+
+```
+cosmos.html      12x .ag-card      1136x346
+houses.html      12x .hcard        1112x690
+pantheons.html   12x (no class)    1112x765
+levels.html      12x .lv-card      1112x262
+phases.html      12x .phase-card   1112x565
+elements/factions/triads/sovereigns/hall/realm/universe/matrix/agents   none
+```
+
+**Four of the five were rejected, and the reasons are the useful part.**
+`cosmos.html` and `houses.html` each already draw their own circular diagram —
+`houses.html` has a 500x500 `#wheel-canvas` behind its WHEEL tab — so a second
+ring would duplicate a diagram, not add one. `levels.html` and `phases.html`
+hold a *progression*, not a set of peers; a ring implies equal standing, and
+both had just gained a ring gauge for their own headline percentage, so a second
+ring on the same page would compete with it.
+
+`pantheons.html` was the one real candidate: twelve Olympians, each already
+carrying a `sign` the emblem module can draw, and no circular diagram anywhere
+on the page.
+
+**Fed from the page's own array, not a copy.** `ringNodes()` maps the existing
+`GODS` array, so the ring cannot disagree with the cards below it — the failure
+that had `agent-network.html` showing all twelve signs wrong on the same day.
+Nodes carry no `href`: the gods have no destination pages, and the module
+renders a `<div>` rather than a dead link when `href` is absent.
+
+One real trap in the wiring. `domain` is stored with an HTML entity
+(`'Sovereignty &amp; Law'`), and the constellation escapes what it renders — so
+passing it through raw painted the literal characters `&amp;`. Decoding through
+a detached `<textarea>` before handing it over fixes it; verified in the render
+as `SOVEREIGNTY & LAW`. The module also observes `childList`, not attributes, so
+setting `data-cn-nodes` after its boot scan needs an explicit
+`OmegaConstellation.scan()`.
+
+Measured after mounting: `data-cn-state="ready"`, **12 nodes, 12 marks, 12
+filled** with emblem artwork, box 1112x908, no hidden ancestor, no horizontal
+scroll, no page errors.
+
+`verify-runtime.js --all`: **PASS (189 pages)**, measured on the shipped code.
+
+**Also corrected: Zeus was `#FFD700`.** The other eleven gods carry deliberate
+per-deity accents (silver for Artemis, tan for Hestia) which are page content,
+not a palette — measured as 12 distinct values with only 3 overlapping the brand
+set, so they were left alone. Zeus's was the stale gold from the same family as
+the divergent palettes cleared earlier that day, reading as an off-key gold
+beside the real `#C9A84C`.
+

@@ -55,7 +55,7 @@
   <div class="sechead" data-reveal="fade-up">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
   <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D view"></div>
 </div><div class="tab-panel" id="tab-stem">
-  <div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#00E5FF" data-task="Mathematics Olympiad" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">MATHEMATICS OLYMPIAD</div>
@@ -155,7 +155,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-professional">
-  <div class="sechead" data-reveal="fade-up">PROFESSIONAL &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">PROFESSIONAL &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="CFA Level I–III" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CFA LEVEL I–III</div>
@@ -255,7 +255,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-language">
-  <div class="sechead" data-reveal="fade-up">LANGUAGE & ARTS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">LANGUAGE & ARTS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Arabic — Sovereign Language" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">ARABIC — SOVEREIGN LANGUAGE</div>
@@ -355,7 +355,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-sovereign_cert">
-  <div class="sechead" data-reveal="fade-up">SOVEREIGN CERTIFICATIONS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SOVEREIGN CERTIFICATIONS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="Omega Initiate Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 1 &middot; AXIS A+B+C</div>
   <div class="ec-name">OMEGA INITIATE CERTIFICATE</div>
@@ -455,7 +455,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-security">
-  <div class="sechead" data-reveal="fade-up">SECURITY & LAW &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SECURITY & LAW &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#8B0000" data-task="CISSP — Full Domain" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CISSP — FULL DOMAIN</div>
@@ -555,7 +555,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-technology">
-  <div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#9B6BF0" data-task="Python Advanced Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
   <div class="ec-name">PYTHON ADVANCED EXAM</div>
@@ -655,7 +655,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-healthcare">
-  <div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Anatomy & Physiology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
   <div class="ec-name">ANATOMY & PHYSIOLOGY</div>
@@ -755,7 +755,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-business">
-  <div class="sechead" data-reveal="fade-up">BUSINESS & FINANCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">BUSINESS & FINANCE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#E2C86D" data-task="Financial Modeling" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
   <div class="ec-name">FINANCIAL MODELING</div>
@@ -913,7 +913,51 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('ex-auth',auth.toFixed(4)); sid('ex-certs',Number(pr.certificates_earned||0));
     try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id).eq('task_type','knowledge');sid('ex-passed',tc.count||0);}catch(e){sid('ex-passed','0');}
     /* wire exam cards */
-    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){card.style.borderTopColor='var(--green)';var lbl=card.querySelector('.ec-meta');if(lbl)lbl.innerHTML+='<span style="font-family:var(--M);font-size:12px;color:var(--green);margin-top:4px">&#10003; RECORDED</span>';}}};});
+    /* A completed exam looked untouched on every load: only the click handler
+       ever marked one, while the exam log below already read the same table.
+       Same column the log reads (task_name), so no new name is introduced. */
+    function markDone(card){
+      if(card.getAttribute('data-done')) return;
+      card.setAttribute('data-done','1');
+      /* .exam-card::before draws its accent from --ec, so this is the page's
+         own mechanism rather than a second rule fighting it. */
+      card.style.setProperty('--ec','var(--green)');
+      var lbl=card.querySelector('.ec-meta');
+      if(lbl && !lbl.querySelector('.ec-done')){
+        var sp=document.createElement('span');
+        sp.className='ec-done';
+        sp.style.cssText='font-family:var(--M);font-size:12px;color:var(--green);margin-top:4px';
+        sp.textContent='\u2713 RECORDED';
+        lbl.appendChild(sp);
+      }
+    }
+    try{
+      var doneQ = await sb.from('task_completions').select('task_name').eq('user_id', s.user.id).eq('task_type','knowledge');
+      /* Supabase resolves to {data:null,error}; it does not throw. Mark nothing
+         on an error rather than assert a completion we cannot support. */
+      if(!doneQ.error){
+        var done = new Set((doneQ.data||[]).map(function(t){return String(t.task_name||'').trim();}));
+        document.querySelectorAll('[data-task]').forEach(function(card){
+          if(done.has(String(card.getAttribute('data-task')||'').trim())) markDone(card);
+        });
+        document.querySelectorAll('.tab-panel').forEach(function(panel){
+          var head=panel.querySelector('.sechead');
+          var cards=panel.querySelectorAll('[data-task]');
+          if(!head||!cards.length||head.querySelector('.sec-prog')) return;
+          var c=0; cards.forEach(function(x){ if(x.getAttribute('data-done')) c++; });
+          var sp=document.createElement('span');
+          sp.className='sec-prog';
+          sp.textContent=' \u00b7 '+c+' / '+cards.length+' COMPLETE';
+          sp.style.color = c===cards.length ? 'var(--green)' : 'inherit';
+          /* These headers are childless and under 48 chars, so bg.js sheens
+             them and -webkit-text-fill-color:transparent inherits into this
+             span. currentColor restores the paint. */
+          sp.style.setProperty('-webkit-text-fill-color','currentColor');
+          head.appendChild(sp);
+        });
+      }
+    }catch(e){}
+    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){markDone(card);}}};});
     /* exam log */
     try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px"><span style="font-family:var(--M);font-size:12px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}

@@ -7719,3 +7719,62 @@ Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
 One `--all` run failed `architecture.html` with `page.goto: Timeout 30000ms` and
 passed on re-run against an identical tree — the concurrency timeout this log
 already records, not a finding.
+
+## The same gap on academy.html, found by asking where else it could be (2026-09-04)
+
+The gaming.html fix was a bug *class*, not a one-off, so the obvious question is
+where else it lives. Two pages call `omegaCompleteTask`; both also read
+`task_completions` back:
+
+```
+academy.html   reads=2
+gaming.html    reads=3
+```
+
+`academy.html` had the identical shape — the click handler was the only thing
+that marked a card:
+
+```js
+if(r.ok){ card.style.borderTopColor='var(--green)';
+          lbl.innerHTML += '<span …>&#10003; RECORDED</span>'; }
+```
+
+…while the page already fetched 30 rows for its exam log. 96 exam cards, none
+of them reflecting a completion the page had in hand.
+
+**Fixed through the page's own mechanism, not gaming's.** `.exam-card` does not
+carry `.card`, so `--card-accent` means nothing to it. It has its own:
+
+```css
+.exam-card::before{…background:var(--ec)}
+```
+
+so the mark sets `--ec` to green. Same shape, page's own property — which is the
+point of the `--card-accent` finding generalised: a page-local accent bar driven
+by a custom property is the pattern, and the property name is per-page.
+
+The click handler now calls the same `markDone(card)` the load path uses, so
+both agree and neither double-appends. `doneQ.error` is checked; nothing is
+marked on failure.
+
+Eight headers repeated `· 12 EXAMS · AXIS A`. `AXIS A` is the actual meaning and
+stays; `12 EXAMS` is redundant once the header carries `n / 12 COMPLETE`. These
+headers were *already* childless and under 48 characters, so they were already
+sheened — the appended span got `-webkit-text-fill-color: currentColor` from the
+start rather than after being caught.
+
+Verified in a render, both states, with a stub variant returning two real rows:
+
+```
+no completions     8 headers · 0 cards marked
+two completions    8 headers · 2 cards marked (Mathematics Olympiad, Physics
+                   Grand Exam) · ::before rgb(63,178,127) · STEM & SCIENCE
+                   header reads 2 / 12 · span fill == color (paints)
+```
+
+One `104,976` remains on the page and should: it is the canonical LATTICE
+POSITION header, which is where the formula belongs.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`node scripts/verify-runtime.js --all` PASS on all 189 pages — including the
+contrast gate, which the previous entry's change had failed.

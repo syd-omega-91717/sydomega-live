@@ -8794,3 +8794,234 @@ spending them.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok ops.html`.
+
+---
+
+## The 43-page export gap was already closed; the doc was stale (2026-09-04)
+
+Next on the list was building an export path for the 43 `LOCAL_ONLY` pages that
+`CLAUDE.md` §8.2 described as holding member data "with no way to get it out".
+It was not built, because checking first showed it already exists.
+
+`omega-local-backup.js` was originally written for the 7 finance pages, and its
+`exportKeys`/`importKeys` require the caller to enumerate its own key list —
+which is exactly why it only ever reached those 7. But the module has since
+grown three more methods that take **no key list at all**:
+
+```
+api: ["exportKeys","memberKeys","exportAll","importAll","importKeys"]
+```
+
+`memberKeys()` matches whatever the member actually has under the `omega`
+prefix, which also covers runtime-built keys (`omega_wr_draft_<id>`) that no
+static list could enumerate. `settings.html:174-182` calls `exportAll` and
+`importAll`, and `bg.js:2130` loads the module on every page.
+
+Verified end to end rather than by reading: member data was written on three
+different `LOCAL_ONLY` pages, then `memberKeys()` was read from Settings:
+
+```
+{"module":"present","memberKeyCount":10,
+ "coversHabits":true,"coversNotes":true,"coversProjects":true,
+ "sample":["omega_consent_v1","omega_ded_date","omega_dedication_today",
+           "omega_demo_watched_at","omega_habit_logs_v2","omega_habits",
+           "omega_habits_v2","omega_notes"],
+ "exportControl":true,"errors":0}
+```
+
+All three pages' keys are covered, from a Settings page that never knew they
+existed.
+
+§8.2's sentence — "only 5 carry that export path — 43 store member data with no
+way to get it out" — described the state before `exportAll` was written and has
+been corrected in place. The surrounding facts (48 `LOCAL_ONLY`, 24 `PARTIAL`,
+run the scanner rather than quoting) are unchanged, as is the separate
+`member_state` server-mirror note.
+
+**The point worth keeping:** a documented open item is a claim with a date on
+it, not a standing truth. This one had been closed by a later change to a
+different file, and nobody went back to the entry. Checking cost one render;
+building the feature again would have cost a day and produced a duplicate.
+
+No code change.
+
+---
+
+## The 11 Edge Functions parse clean; a CI gate for it would cost more than it saves (2026-09-04)
+
+`CLAUDE.md` §7 point 6 records that **nothing type- or syntax-checks the Edge
+Functions** — their only automated coverage is `resilience-audit.py`'s
+import-pin rules — and recommends parsing them with `npx typescript@5` in a
+scratchpad before deploying. Confirmed still true: `deno`, `edge` and
+`functions/` return zero hits across `.github/workflows/*.yml` and
+`scripts/ci-local.sh`.
+
+That is payment-critical code (`checkout`, `stripe-webhook`) with no parse gate,
+so the recommended check was run over all eleven, with a positive control:
+
+```
+  ok                  checkout
+  ok                  concierge
+  ok                  graphify-ai-ingest
+  ok                  graphify-ai-query
+  ok                  intel-feed
+  ok                  market-price
+  ok                  notify-access
+  ok                  rankings
+  ok                  snapshot-leaderboard
+  ok                  stripe-webhook
+  ok                  weekly-digest
+  PARSE ERRORS (3)    __CONTROL__
+       :1:14  Property assignment expected.
+       :2:10  Identifier expected.
+       :3:1  ')' expected.
+
+functions parsed: 11   with parse errors: 0
+```
+
+The control is a deliberately malformed file parsed through the same code path;
+without it, eleven `ok`s prove only that the script ran.
+
+`ts.createSourceFile` + `parseDiagnostics` is syntax-only. These are Deno modules
+importing from remote URLs, so a full type-check is not possible in this
+environment — but a syntax error is a syntax error, and one would currently ship.
+
+### Why this did not become a 23rd gate
+
+The obvious next step is wiring it into `scripts/ci-local.sh`. It was not done,
+because the check needs the `typescript` package, and **no build step and no
+`node_modules` is a deliberate, load-bearing property of this deploy**
+(`vercel.json` disables install; CI is `node --check` only; §9's first rule).
+The alternatives are all worse: `deno check` is not installed, vendoring
+TypeScript is tens of megabytes into a repo that ships every file as-is, and
+stripping type annotations by regex to reach `node --check` would invent
+failures of its own.
+
+That is very likely why §7 recommends it as a *manual pre-deploy step* rather
+than a gate. The honest position is that this remains a real gap with a real
+reason, and the eleven are clean **as of this run** — not that it is now
+guarded. `scripts/check-secrets.sh` and this parse are both things a human must
+still remember before `supabase functions deploy`.
+
+No code change.
+
+---
+
+## evidence-audit.py called the site's homepage UNREACHABLE (2026-09-04)
+
+`CLAUDE.md` §9 requires `EVIDENCE_MATRIX.md` to be kept current as part of the
+same change. Checking it against §8.3's recorded baseline found drift, and the
+drift turned out to be a scanner bug rather than an estate change.
+
+```
+§8.3 baseline : 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY /  8 STATIC / 2 BROKEN / 1 UNREACHABLE
+measured      : 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 17 STATIC / 2 BROKEN / 3 UNREACHABLE
+```
+
+The baseline row sums to **178**; the estate is **189**. It was written before
+eleven pages were added, and nobody re-derived it — the drift §8.4 warns about,
+in the table that exists to prevent it.
+
+### The bug
+
+`UNREACHABLE` means "deployed, but `nav.js` does not reference it **and it is
+not a public page**". The three flagged were `verify-deployment.html`,
+`verify-modules.html` — internal tooling, correctly flagged — and
+**`omega-visual-home.html`**, which is the site's **root**:
+
+```
+vercel.json:20  "rewrites":[{"source":"/","destination":"/omega-visual-home.html"}]
+bg.js:442       var PUBLIC = ['/account','/enter','/reset','/terms','/pending',
+                              '/index','/','/charter','/omega-visual-home'];
+```
+
+It is the first page every visitor sees, and `bg.js` already treats it as
+public. The scanner's own comment says its set *"Mirrors bg.js's public-page
+list (see CLAUDE.md §3)"* — but it had drifted from the list it claims to
+mirror, missing both `charter` and `omega-visual-home`.
+
+Adding the two:
+
+```
+UNREACHABLE  3 -> 2   (only the two internal verify pages, correctly)
+STATIC      17 -> 18   (omega-visual-home reclassified, not removed)
+```
+
+§8.3's row is corrected to the measured values, with the page total noted so the
+next reader can see at a glance whether it has gone stale again.
+
+**The shape worth remembering:** a scanner that says it mirrors another file's
+list, and does so by copying the values rather than reading them, will drift the
+first time that file changes — and will then report a confident false positive
+about the most visible page on the site. The same class as §8.4's "a number
+stored in prose drifts; derive it instead", but in code.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.
+
+---
+
+## A guard that silently stopped guarding: the single-runner warning (2026-09-04)
+
+Re-deriving §8.3's baselines after the `evidence-audit.py` fix turned up a
+second mismatch, and this one ran the opposite way — **the documentation was
+right and the tool had drifted.**
+
+```
+§8.3 baseline : resilience-audit.py -> 0 findings; 1 warning (the single CI runner)
+measured      : resilience-audit.py -> 0 findings; 0 warnings
+```
+
+The tempting move is to "correct" the doc to 0 warnings. That would have buried
+a live risk, because the check had stopped firing while the risk it names was
+untouched:
+
+```
+11  runs-on: [self-hosted, Windows, X64]
+ 1  runs-on: ubuntu-latest
+```
+
+`check_ci_runner_spof()` required `len(labels) == 1` — *every* workflow on one
+label set. When `omega-update.yml` moved to `ubuntu-latest`, that made two
+distinct label sets and the warning went silent, even though **11 of 12
+workflows still depend on one physical machine**. One unrelated cloud job
+switched off a warning about the other eleven. §8.2 still lists the single
+physical runner as open, so nothing about the exposure had changed.
+
+The fix scopes the test to self-hosted pools — concentration is the risk, not
+uniformity, and an unrelated `ubuntu-latest` job is not a fallback machine:
+
+```python
+selfhosted = {k: v for k, v in labels.items() if "self-hosted" in k}
+if len(selfhosted) == 1:
+    ...  "%d of %d workflows target the single label set %s"
+```
+
+```
+WARNINGS -- owner decisions, not blocking (1):
+      11 of 12 workflows target the single label set [self-hosted, Windows, X64]
+```
+
+**Both directions controlled.** Adding a fixture workflow on
+`[self-hosted, Linux, ARM64]` — a genuine second pool — silences it (0 matches);
+removing it restores the warning (1 match). Without the negative control this
+would only be demonstrably noisier, not demonstrably correct.
+
+### A threshold I got wrong on the way
+
+The first attempt also required `len(selfhosted[only]) >= 2`, which broke two
+existing tests: `test_single_runner_label_set_warns` builds a fixture with a
+*single* self-hosted workflow, and `test_strict_promotes_warnings_to_failures`
+depends on that warning existing. The tests were right — one machine gating
+everything is the risk whether it runs 1 workflow or 11 — so the threshold came
+out rather than the tests being adjusted to fit it. **179 tests passing is what
+caught it**, not review.
+
+### The shape
+
+Two stale-baseline findings in a row, pointing opposite ways: `evidence-audit`
+drifted *from* the truth and the doc was stale; `resilience-audit` drifted from
+the doc and the doc was right. Neither could be resolved by trusting one side —
+only by asking *why* they disagreed. A baseline table is worth keeping precisely
+because a silent guard cannot be noticed any other way.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests.

@@ -497,12 +497,13 @@ open, recorded in `FIXES_LOG.md`:
 - **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
   were a decision, not a default: sensitive data, hard to walk back once it
   lives server-side, mitigated with `omega-local-backup.js` export/import.
-  `scripts/evidence-audit.py` shows the shape reaches 48 pages and only 5 carry
-  that export path — 43 store member data with no way to get it out
-  (`achievements`, `notes`, `projects`, `passport`, `mood`, `workout` …). That
-  is a scope finding, not a decision: nobody chose it for the other 41. A
-  further 24 pages are `PARTIAL` (Postgres *and* a parallel local copy). Run
-  the scanner rather than quoting these numbers.
+  `scripts/evidence-audit.py` shows the shape reaches 48 pages; a further 24 are
+  `PARTIAL` (Postgres *and* a parallel local copy). Run the scanner rather than
+  quoting these numbers. **The "43 pages with no way to get the data out" gap is
+  closed** (verified live 2026-09-04): `exportAll`/`importAll`/`memberKeys` take
+  no key list, so they cover every `omega`-prefixed key including runtime-built
+  ones, and `settings.html` exposes both. A render that wrote data on
+  `habits`/`notes`/`projects` then read `memberKeys()` in Settings saw all three.
   **Fixed and applied 2026-08-24**: `public.member_state`
   (`supabase/omega_member_state.sql`, `migrations/0095`) + `omega-member-state.js`
   mirror those keys server-side. A **mirror, not a sync**: writes go up only,

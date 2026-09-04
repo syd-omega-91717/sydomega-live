@@ -8794,3 +8794,53 @@ spending them.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok ops.html`.
+
+---
+
+## The 43-page export gap was already closed; the doc was stale (2026-09-04)
+
+Next on the list was building an export path for the 43 `LOCAL_ONLY` pages that
+`CLAUDE.md` §8.2 described as holding member data "with no way to get it out".
+It was not built, because checking first showed it already exists.
+
+`omega-local-backup.js` was originally written for the 7 finance pages, and its
+`exportKeys`/`importKeys` require the caller to enumerate its own key list —
+which is exactly why it only ever reached those 7. But the module has since
+grown three more methods that take **no key list at all**:
+
+```
+api: ["exportKeys","memberKeys","exportAll","importAll","importKeys"]
+```
+
+`memberKeys()` matches whatever the member actually has under the `omega`
+prefix, which also covers runtime-built keys (`omega_wr_draft_<id>`) that no
+static list could enumerate. `settings.html:174-182` calls `exportAll` and
+`importAll`, and `bg.js:2130` loads the module on every page.
+
+Verified end to end rather than by reading: member data was written on three
+different `LOCAL_ONLY` pages, then `memberKeys()` was read from Settings:
+
+```
+{"module":"present","memberKeyCount":10,
+ "coversHabits":true,"coversNotes":true,"coversProjects":true,
+ "sample":["omega_consent_v1","omega_ded_date","omega_dedication_today",
+           "omega_demo_watched_at","omega_habit_logs_v2","omega_habits",
+           "omega_habits_v2","omega_notes"],
+ "exportControl":true,"errors":0}
+```
+
+All three pages' keys are covered, from a Settings page that never knew they
+existed.
+
+§8.2's sentence — "only 5 carry that export path — 43 store member data with no
+way to get it out" — described the state before `exportAll` was written and has
+been corrected in place. The surrounding facts (48 `LOCAL_ONLY`, 24 `PARTIAL`,
+run the scanner rather than quoting) are unchanged, as is the separate
+`member_state` server-mirror note.
+
+**The point worth keeping:** a documented open item is a claim with a date on
+it, not a standing truth. This one had been closed by a later change to a
+different file, and nobody went back to the entry. Checking cost one render;
+building the feature again would have cost a day and produced a duplicate.
+
+No code change.

@@ -8651,3 +8651,46 @@ Running total for this family across the session: **7 pages, 69 stat boxes**
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, all three `ok`.
+
+---
+
+## Re-verified: 0 dead inline handlers, after three wrong scanners (2026-09-04)
+
+`CLAUDE.md` §8.1 class 4(a) records inline `onclick=` handlers calling functions
+that are not on `window` as "swept to 0". This session edited markup on about
+fifteen pages, so the claim was re-checked rather than left on trust.
+
+Getting a trustworthy zero took three attempts, and the first two produced
+confident nonsense:
+
+1. **First identifier only** — `/^\s*([A-Za-z_$][\w$]*)\s*\(/` reported **162
+   dead handlers across 14 pages**. Every one was the keyword `if`: the regex
+   reads `if(event.key==='Enter')…` as a call to a function named `if`.
+2. **Keywords excluded, all identifiers** — reported **7**, one on each finance
+   page, all named `item`. The handler is
+   `alert(ok?('Restored '+n+' item(s). Reloading...'):…)` — `item(` inside a
+   *string literal*. `OmegaLocalBackup.importKeys` is real
+   (`omega-local-backup.js:111`).
+3. **String literals stripped first**, and the scan **refuses to report until a
+   control fires** — a button carrying
+   `onclick="thisFunctionDoesNotExist_control()"` is injected into a live page
+   and must be caught:
+
+```
+CONTROL (injected undefined handler must be caught): PASS
+
+pages: 189  load errors: 0
+dead inline handlers: 0
+```
+
+The zero is real: 189 pages loaded, no load errors, and the scanner demonstrably
+catches a planted case. §8.1 class 4(a) holds.
+
+**Why this is written down.** Two of the three scanners were confidently wrong
+in a way that would have produced work — 162 "bugs" that are the word `if`, or
+7 that are a plural inside an `alert`. The general shape recurs: extracting
+identifiers from JavaScript with a regex needs keywords excluded and string
+literals stripped, and any scanner reporting a zero needs a planted positive
+before that zero means anything. Both are cheap; neither is optional.
+
+No code change.

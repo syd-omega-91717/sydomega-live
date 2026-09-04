@@ -7824,3 +7824,224 @@ meaningless. One extra page load per run, and both CI invocation sites
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all` PASS
 on 189 pages with the self-test running first.
+
+---
+
+## architecture.html: the one block reporting CONNECTED was the one block nothing probed (2026-09-04)
+
+`architecture.html` renders sixteen runtime blocks from
+`__omegaArchitecture.status()`, and its own legend defines the two states it
+draws:
+
+> **BUILT** means the adapter exists. **CONNECTED** means it was additionally
+> probed against something real in this browser session.
+
+Rendered through the harness, the page reported:
+
+```
+16 blocks · 1 probed as connected in this session · v1.0.0
+cdn=CONNECTED     database=BUILT           object-blob-storage=BUILT
+                  observability=BUILT      security-identity=BUILT
+window.__omegaSb: true     window.__omegaOS: true
+```
+
+Both halves of that are wrong, in opposite directions.
+
+**The single CONNECTED block had never been probed.**
+`omega-architecture-runtime.js:…` set it unconditionally:
+
+```js
+set('cdn', 'CONNECTED', ['same-origin static deployment probe']);
+```
+
+`cdnProbe()` — the function that would make that evidence true — is called from
+nowhere:
+
+```
+$ grep -rn "cdnProbe" --include=*.js --include=*.html .
+./omega-architecture-runtime.js:    cdnProbe: function () { … }
+```
+
+One definition, zero call sites. This is §8.1 class 9 (fabricated data rendered
+as fact) applied to the platform's own status page: a green badge asserting a
+probe result where no probe ran.
+
+**The four blocks that could honestly have been CONNECTED never re-checked.**
+The sixteen `set()` calls run synchronously at parse time, and the module is a
+plain `<script>` in the body while `bg.js` is `defer` — so every one of them
+evaluates `window.__omegaSb` and `window.__omegaOS` strictly *before* bg.js has
+had the chance to publish either. The render above shows both globals live at
++4s with all four blocks still reading BUILT. The page had `subscribe(render)`
+wired and correct; nothing ever emitted, so it never fired.
+
+### The fix
+
+`cdn` starts at `BUILT` with evidence that claims only what is true
+(`same-origin static deployment`), and a probe pass runs at `DOMContentLoaded`,
+after the deferred modules. Each probe performs a **real operation in this
+browser** and records what it returned, or leaves its block at BUILT with the
+reason:
+
+| block | operation | recorded evidence |
+|---|---|---|
+| `cdn` | `cdnProbe()` | `GET /robots.txt 200` |
+| `caching` | `caches.open('omega-runtime-v1')` | `omega-runtime-v1 opened` |
+| `message-queues` | `indexedDB.open('omega-runtime',1)` | `outbox store present (1)` |
+| `database` | client resolved, `.from` is callable | `PostgREST client live` |
+| `object-blob-storage` | `storage.from` is callable | `storage client live` |
+| `security-identity` | `auth.getSession()` **called** | `session present` / `no session -- gate closed` |
+| `observability` | `window.__omegaOS` published | `window.__omegaOS published` |
+
+The client is read through `window.OmegaSB.get()` with a bounded poll, not from
+an assumed global — §8.1 class 4(b), the shape that left `window.OmegaSupabase`
+readable by eleven files and assigned by one.
+
+Measured after, same harness:
+
+```
+16 blocks · 7 probed as connected in this session · v1.0.0
+cdn=CONNECTED [same-origin static asset fetched in this session | GET /robots.txt 200]
+security-identity=CONNECTED [auth.getSession() answered in this session | session present]
+message-queues=CONNECTED [IndexedDB outbox opened in this session | outbox store present (1)]
+```
+
+**Negative control — the probe can fail.** Routing `**/robots.txt` to a 503 in
+the same harness:
+
+```
+16 blocks · 6 probed as connected in this session
+cdn = BUILT [same-origin static deployment | not probed: GET /robots.txt 503]
+badge text "BUILT", ::before background rgb(201,168,76)   // gold, not green
+```
+
+The count drops, the badge reverts, the accent bar goes back to gold, and the
+evidence names the status code it actually got. Without this control the AFTER
+run proves only that seven `set()` calls exist.
+
+### The visual half
+
+The blocks now carry the shared `.card` surface. `.arc-b` had a private 2px
+**left** accent bar:
+
+```css
+.arc-b::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+               background:rgba(201,168,76,.3)}
+.arc-b.conn::before{background:var(--green,#3fb27f)}
+```
+
+which is the documented collision — a page-local `::before` that sets
+`background`, against `.card::before`'s 2px **top** bar, cascading per property
+with bg.js (sheet 1) beating the page block (sheet 0). Per §4.1 the collision is
+solvable rather than disqualifying: `.card::before` reads `--card-accent`, so
+the private pseudo is deleted and the meaning it carried moves to the custom
+property:
+
+```css
+.arc-b{--card-accent:var(--gold)}
+.arc-b.conn{--card-accent:var(--green)}
+```
+
+Measured on the rendered page: 16 of 16 blocks resolve `.arc-b.card`, the bar is
+`2px` tall at `top:0` spanning the block width, `rgb(63,178,127)` on connected
+and `rgb(201,168,76)` on built, on the shared glass ground
+(`rgba(10,10,15,.68)`, `--omega-glass` from `omega-visual-evolution.css`) with
+the platform's rim shadow — none of which the private surface had. Padding,
+radius, border and background declarations were **removed** rather than kept:
+bg.js beats sheet 0 on every one of them, so leaving them in would have been
+dead code that looks correct in the diff.
+
+The grid is also built once and patched in place now. Seven probes resolve over
+several seconds and each emits, so the previous full `innerHTML` rebuild would
+have torn down and re-created sixteen elements per event — after the reveal pass
+had already run over them.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all` PASS,
+0 page errors and no horizontal overflow on `architecture.html`.
+
+---
+
+## control-plane.html: 171 status badges that were never styled, because three attributes were delimited with curly quotes (2026-09-04)
+
+The inventory tab builds a row per registered page and tags each with a
+COMPLETE/INCOMPLETE badge, green or crimson. Rendered through the harness, the
+badge class never existed:
+
+```
+rows: 171
+document.querySelectorAll('#page-list .page-badge').length  ->  0
+badge span className: "”page-badge"
+badge span attributes: [ 'class=”page-badge', 'ok”=' ]
+badge computed color: rgb(240, 237, 230)      // plain --ink, not green
+```
+
+Three attributes in the row template were delimited with **U+201D RIGHT DOUBLE
+QUOTATION MARK** rather than ASCII `"`:
+
+```js
+'<div class=page-row data-key='+key+' data-purpose=”'+page.purpose+'” data-character=”'+page.character+'”>'
+… '<span class=”page-badge '+status+'”>'+statusText+'</span>'
+```
+
+To the HTML parser those are unquoted attribute values, so each one terminates
+at the first space. `class` became the single token `”page-badge`, `ok”` became
+a stray boolean attribute, and every `.page-badge`, `.page-badge.ok` and
+`.page-badge.warning` rule in the page's own stylesheet matched nothing. The
+same cut hit the data attributes:
+
+```
+first row dataset  ->  { key: '404', purpose: '”Not', character: '”system”' }
+first row attributes -> class, data-key, data-purpose, found”, data-character
+```
+
+`data-purpose` held `”Not` and the rest of the value (`found”`) became an
+attribute *name* — on all 171 rows. `filterPages()` reads
+`row.dataset.purpose`, so the search box was matching one mangled word.
+
+A second, independent bug in the same function: the query is lowercased,
+the dataset values were not, so a search only ever matched purposes and
+characters that happened to be lowercase already.
+
+### Measured before and after
+
+`git show HEAD:control-plane.html` pinned as the BEFORE and served with the
+right content type (never `git stash` — the change is in the working tree):
+
+| | before | after |
+|---|---|---|
+| rows carrying `.page-badge` | **0** of 171 | **171** of 171 |
+| stray attributes parsed off the rows | 171 | 0 |
+| `dataset.purpose` on row 1 | `”Not` | `Not found` |
+| search `"sovereign"` | 4 rows | **11** rows |
+| search `"not found"` | 0 rows | **1** row |
+| search `"SECURITY"` | 1 | 1 |
+
+The four `"sovereign"` hits before were key matches only; the seven additional
+rows live in purpose/character text the truncated dataset could not reach. The
+badges now resolve `rgb(63,178,127)` on `.ok`, and all 171 read COMPLETE —
+independently corroborated by the page's own audit tab, which computes
+`MISSING EMBLEMS (0) / MISSING RELATED (0)` from the same registry.
+
+**This is not a repo-wide class.** A scan for a curly quote used as an attribute
+delimiter (`=` immediately followed by U+201C/U+201D) returns this file and
+nothing else; the other seven hits in `.html`/`.js` are `=−1` and `=√(A³…` in
+formula text, not markup.
+
+### The dead token block, measured rather than assumed
+
+The page opened with a `:root` redeclaring the canonical palette and type
+tokens. CLAUDE.md §4 says 62 pages do this and every one is dead code; measured
+on *this* page's render, the values that actually resolve are the platform's:
+
+```
+--crim = #C4453C    (page wrote #8b0000 -- the pre-fix crimson, 1.99:1)
+--muted = #8A8880   (page wrote rgba(138,134,118,.5))
+--M = "Courier Prime",monospace   (page wrote monospace)
+```
+
+Removed, keeping only `--dim` and `--pad`, which this page genuinely owns.
+Re-measured after: identical values. One hardcoded leftover of the same old
+crimson (`.page-badge.warning{border-color:rgba(139,0,0,.4)}`) was re-stepped to
+match the token it sits beside.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS,
+0 page errors and no horizontal overflow on `control-plane.html`.

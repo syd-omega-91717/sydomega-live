@@ -8694,3 +8694,55 @@ literals stripped, and any scanner reporting a zero needs a planted positive
 before that zero means anything. Both are cheap; neither is optional.
 
 No code change.
+
+---
+
+## chronicle.html is not missing anything, and the card-adoption vein is worked out (2026-09-04)
+
+Two entries above record `chronicle.html`'s 17 `.event-card` timeline entries as
+**blocked** from `.card`, because `.event-card::before` already draws the 14px
+connector line to the timeline spine and two rules on one pseudo cascade per
+property. That is true, and it was written in a way that implies the page is
+losing something. Measured, it is not.
+
+```
+eventCard    {bg:"rgba(10, 10, 15, 0.68)", border:"rgba(201, 168, 76, 0.22)",
+              shadow:"present", radius:"2px", pad:"14px"}
+platformCard {bg:"rgba(10, 10, 15, 0.68)", border:"rgba(201, 168, 76, 0.25)",
+              shadow:"present", radius:"2px", pad:"20px"}
+```
+
+Identical ground, identical shadow, identical radius, border within 0.03 alpha.
+`omega-visual-evolution.css` styles `[class*="card"]` — a **substring** selector
+— so `.event-card` already receives the whole platform surface without carrying
+the class. The only real difference is padding, and 14px is the better value for
+a dense timeline; `.card`'s `clamp(14px,2.5vw,20px)` would loosen it.
+
+Adding `.card` would therefore buy the 2px accent bar and the hover elevation,
+in exchange for moving the connector off `::before` onto the dot column — a
+refactor of a bespoke grid timeline, where `.card{overflow:hidden}` would also
+clip any child-element replacement drawn at `right:-14px`. **The blocker is
+real; the thing it blocks is not worth having.**
+
+### The vein is worked out
+
+Re-deriving the density ranking after this session's conversions:
+
+```
+ad-network.html   1221   dormancy statement -- deliberately plain, not to be touched
+matrix.html        487   13 visual elements already
+approvals.html     417   owner-gated, 1252 chars
+stoic.html         417   .virtue-card already carries .card
+chronicle.html     388   above
+```
+
+The top of the list is now pages where the metric is misleading or the work is
+correctly refused, not pages with a real gap — the earlier leaders (1266, 1221,
+677, 668, 601) were the KPI family, and it is retired. Further sweeping would be
+forcing the metric rather than following it.
+
+Also checked and needing nothing: **emblem coverage is 187 of 189 pages**; the
+two exceptions are `verify-deployment.html` and `verify-modules.html`, internal
+verification pages that correctly have none.
+
+No code change.

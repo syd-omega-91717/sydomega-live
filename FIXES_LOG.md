@@ -8419,3 +8419,67 @@ remaining candidates (6) did not justify repairing it.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok intelligence.html`.
+
+---
+
+## Correction: `.card-edge`'s realistic reach is not 124 sites (2026-09-04)
+
+The entry above justified `.card-edge` with "124 sites across 68 files". That
+count is real but it measures the **motif**, not the adoption candidates, and
+the commit message and PR body let the two run together. Corrected here.
+
+### The classifier, third attempt, with controls that gate its output
+
+Two earlier attempts produced numbers that were simply wrong:
+
+1. **Source regex over `<style>` text** — reported 22 clean, including
+   `chronicle.html`'s 16 `.event-card` sites, which are provably blocked. It
+   read `.event` out of `.event:nth-child(odd) .event-card::before`, matched
+   `.25` inside an `rgba()` as a class name, and let `[^{,]*` swallow across
+   lines so the one rule that mattered was absorbed into a neighbour.
+2. **Computed style, over-strict** — reported 2 clean of 103. The
+   `otherBorder` test was `/border(?!-left)[a-z-]*\s*:/`, which matches
+   `border-radius` (not a border colour) and a generic
+   `border:1px solid var(--line)` (exactly what `.card` sets anyway).
+
+The third asks the rendered element both questions — `getComputedStyle(el,
+'::before').content !== 'none'`, and a per-instance *coloured* border on a
+non-left side — and **refuses to print any count until two controls pass**:
+
+```
+CONTROL swot-box (must be CLEAN):     4 sites, blocked=0   -> PASS
+CONTROL event-card (must be BLOCKED): 17 sites, blocked=17 -> PASS
+
+load errors: 0
+CLEAN: 86   BLOCKED: 17
+```
+
+Both controls are cases established by hand earlier in this session, and the
+pre-`.card` `intelligence.html` is pinned with `git show 1482129c:` so the
+first control is not measuring the fix.
+
+### What the 86 actually are — and why almost none should become a card
+
+The classifier answers *"would adopting `.card` collide"*. It does not answer
+*"should this element be a card"*, and that second question disqualifies nearly
+all of them:
+
+| population | sites | why not |
+|---|---|---|
+| `omega-notify.js:48` notification rows, injected per page | 36 | a compact toast row, not a card |
+| `services.html` status board | 21 | `padding:8px 12px` |
+| `levels.html`, `phases.html` | 24 | `padding:6px 10px` — `.card`'s `clamp(14px,2.5vw,20px)` would roughly triple their vertical rhythm |
+| `notifications.html`, `sovereign-ai.html`, `media.html` | 5 | one-offs, individually judgeable |
+
+And the one genuinely card-shaped population — `chronicle.html`'s 17
+`.event-card` timeline entries — is the blocked one.
+
+So `.card-edge` is still correct and still worth having: it removes a real
+structural gap in the design system, and the four `.swot-box` panels are a
+genuine adopter. But its reach today is those four plus whatever card-shaped
+left-bar elements are written next — not 124. Claiming otherwise would have
+been a number in prose drifting away from what it counts, which §8.4 warns
+about; it is corrected before anyone relies on it.
+
+No code change. The remaining 86 need a per-element density judgement, which is
+a design decision, not a sweep.

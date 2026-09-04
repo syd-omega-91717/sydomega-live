@@ -8045,3 +8045,307 @@ match the token it sits beside.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS,
 0 page errors and no horizontal overflow on `control-plane.html`.
+
+---
+
+## Three pages rendered completely blank on arrival: unquoted attribute values (2026-09-04)
+
+An unquoted HTML attribute value ends at the first space. Every word after that
+space becomes a valueless attribute of its own — so the intended value is
+truncated and the remainder is silently discarded. That is the same root cause
+as the curly-quote entry above, and a render-based scan found it on eight pages.
+
+### The scanner, and why the first result was worthless
+
+The runtime signature is an element carrying an attribute with an **empty
+value** that is not a legitimate valueless attribute (`disabled`, `defer`,
+`selected`, `data-*`, `aria-*`, …). The first sweep reported a serene
+**0 findings across 189 pages** — because the static server had died and every
+page returned `ERR_CONNECTION_REFUSED`. §8.4's rule, hit exactly as written.
+With the server up:
+
+```
+pages scanned: 189   load errors: 0
+pages affected: 8
+truncated attribute sites: 294   fragments lost: 685
+by attribute: {"style":271,"placeholder":10,"class":6,"content":5,"onclick":1}
+```
+
+### The severe one: the default tab pane loses `active`
+
+```html
+<div class=tab-pane active id=tab-inventory>
+```
+
+`class` ends at the space, so it is `"tab-pane"` and `active` becomes a stray
+attribute. `.tab-pane{display:none}` then hides everything, and only
+`.tab-pane.active` would have lifted it. Measured on three pages:
+
+```
+control-plane.html {"panes":5,"panesWithActiveClass":0,"panesWithStrayActiveAttr":1,
+                    "visiblePanes":0,"firstPaneDisplay":"none","firstPaneHeight":0}
+creator.html       {"panes":3, … "visiblePanes":0,"firstPaneDisplay":"none"}
+project-studio.html{"panes":3, … "visiblePanes":0,"firstPaneDisplay":"none"}
+```
+
+**All three pages rendered nothing below the tab bar until a tab was clicked.**
+The matching `<button class=tab-btn active>` lost its highlight the same way, so
+nothing even indicated which tab was supposed to be open.
+
+After:
+
+```
+control-plane.html  visiblePanes 1/5   visible height 9855px   btnActive 1
+creator.html        visiblePanes 1/3   visible height  401px   btnActive 1
+project-studio.html visiblePanes 1/3   visible height  470px   btnActive 1
+```
+
+Nine thousand pixels of content on `control-plane.html` that no visitor could
+see. Note that an earlier session measured that page's inventory rows with
+`querySelectorAll` and reported 171 rows present — which was true and
+irrelevant: the rows were in the DOM inside a `display:none` panel. **Presence
+in the DOM is not visibility**; check `getComputedStyle`/`offsetParent`.
+
+### The rest
+
+| site | what was lost |
+|---|---|
+| `<meta name=description content=Operational brain of…>` | everything after the first word, on 5 pages |
+| `<h1 style=…margin:0 0 16px;letter-spacing:2px>` | `margin-bottom` and `letter-spacing`, on 5 pages |
+| `<input placeholder=Search pages by name, purpose…>` | placeholder became `"Search"` |
+| `omega-control-plane.js:109,110` `style=…padding:4px 0;border-bottom:…` | every realm/motion row's separator |
+| `omega-ad-network.js`, `omega-creator.js`, `omega-project-studio.js`, `omega-layered-ui.js`, `omega-uniqueness.js` | 29 inline styles cut mid-declaration |
+| `sovereign-ai.html:158` | see below |
+| `architect.html:269` | prose reading `scans <script src> basenames` was parsed as a real `<script src>` element and vanished from the cell |
+
+**`sovereign-ai.html:158` — an escape that covered the wrong character.**
+
+```js
+onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;')+',…
+```
+
+`JSON.stringify` emits double quotes, and the attribute is delimited with double
+quotes, so the handler was cut at `activateAgent({` — inert. `<` was escaped;
+`"` was not. Adding `.replace(/"/g,'&quot;')` gives a 329-character handler that
+ends `…'#E25800','♈︎');setTab('chat')` and passes `new Function()`.
+
+**`services.html:151` — two bugs on one line.**
+
+```js
++'<div class="svc-badge" style="color:'+COL[s.s]+';border-color:'
+ +COL[s.s].replace('var(--','rgba(').replace(')',',0.3)')+'>'+s.s.toUpperCase()+'</div>'
+```
+
+The style attribute never closed, so it swallowed `>LIVE</div>` and ran on to the
+**next** card's `style="--sc:` — the badge text never rendered and the following
+card lost its `class="svc-card card"`. And `'var(--green)'` through those two
+`replace` calls yields `rgba(green,0.3)`, which is not a colour: a custom
+property cannot be turned into an `rgba()` by string surgery. Replaced with
+`color-mix(in srgb, <col> 40%, transparent)`, which does it for real — verified
+in the render, not assumed:
+
+```
+services.html {"cardsWithBothClasses":21,"badges":21,"badgeText":["LIVE","LIVE","LIVE"],
+               "badgeColor":"rgb(63, 178, 127)",
+               "badgeBorder":"color(srgb 0.247059 0.698039 0.498039 / 0.4)"}
+```
+
+### One transform mistake, caught by reading the diff
+
+The bulk quoting pass was mechanical, and on two sites the value spanned a JS
+concatenation:
+
+```js
+placeholder=Enter '+f+'…      →   placeholder="Enter "'+f+'…     // wrong
+                              →   placeholder="Enter '+f+'…"     // right
+```
+
+The closing quote has to land where the *value* ends, not where the string
+literal does. Re-reading the generated diff is what caught it.
+
+### Result, with a positive control
+
+```
+pages scanned: 189   load errors: 0
+pages affected: 0    truncated attribute sites: 0   fragments lost: 0
+```
+
+A zero here already lied once, so it is paired with a control — the committed
+pre-fix `control-plane.html` pinned via `git show HEAD:`:
+
+```
+BEFORE (HEAD, pre-fix): {"strayAttrs":296,"panes":5,"visiblePanes":0}
+AFTER  (working tree):  {"strayAttrs":0,  "panes":5,"visiblePanes":1}
+```
+
+A source-side sweep for any remaining unquoted `style`/`placeholder`/`class`
+value containing a space also returns 0 across every `.html` and `.js`.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, every touched page `ok`.
+
+---
+
+## The member-state mirror's coverage, verified rather than assumed (2026-09-04)
+
+`CLAUDE.md` §8.2 records `omega-member-state.js` as the fix for 43 pages that
+store member data in `localStorage` with no way to get it out. What it did not
+establish is whether the mirror actually *reaches* those pages: the module
+mirrors any key beginning with `omega` (`mirrored()` at
+`omega-member-state.js:150`), so a page using any other key name is silently
+outside it, and that would be invisible.
+
+**Source side.** A literal-key scan finds 0 pages using a non-`omega`
+`localStorage` key. That is not enough on its own — 89 call sites across 56
+files pass the key as a *variable* (`SK`, `HABITS_KEY`, `DIST_KEY`, …).
+Resolving each identifier against its assignment in the same file:
+
+```
+KEYS THAT ESCAPE THE `omega` MIRROR PREFIX
+  0 keys across 0 pages
+
+STILL UNRESOLVED (computed/templated keys): 8 sites across 8 files
+    body.html  command.html  omega-appearance.js  omega-local-backup.js
+    omega-member-state.js  search.html  sleep.html  stoic.html
+```
+
+All eight are loop variables (`k`, iterating `localStorage.key(i)`) or the
+persistence modules themselves, except `search.html:199`, which is
+`function recentKey(){return 'omega_recent_searches';}` — inside the prefix.
+
+**Runtime side**, on `kings.html` (a LOCAL_ONLY page holding
+`omega_study_notes` and `omega_model_king`):
+
+```
+{"isMemberKey_study": true, "isMemberKey_model": true,
+ "isMemberKey_lang": false,          // in SKIP, correctly excluded
+ "mirroredBefore": 2, "mirroredAfter": 6}
+```
+
+**A measurement that measured nothing, first.** The initial probe called
+`M.collect()` and reported `collectsStudyNotes: false`. `collect` is not in the
+module's public API — the exports are `prefix, skip, isMemberKey, status,
+syncNow, restore, list` — so `M.collect ? M.collect() : []` returned `[]`
+unconditionally and the "finding" was an artefact of the probe. Reading the
+exported surface, rather than guessing a method name, is what produced the
+numbers above. **Check that a probe's accessor exists before believing what it
+reports** — the same shape as §8.1 class 4(b), applied to a test rather than to
+shipped code.
+
+No code change: the mirror already covers the estate. Recorded so the next
+session does not re-derive it, and so §8.2's entry is not read as an untested
+claim.
+
+### Also this session: a scan abandoned rather than reported
+
+A third scan was attempted — page-local CSS classes defined in a page's own
+`<style>` that match zero elements in the render, the generalisation of the
+`.page-badge` and `.svc-card` finds. It reported 0 across 189 pages. Its
+positive control did not fire, and a synthetic fixture (a `<style>` defining
+`.never-lands` against markup carrying `never-lands-typo`) did not fire either:
+the "was it meant to be applied?" filter required the class to appear inside a
+`class=` literal, which is precisely what a class that never lands does not do.
+The filter suppressed exactly the cases it was written to find. Removed and
+abandoned rather than published as a zero — dead CSS is mostly noise, so the
+signal-to-noise did not justify rebuilding it. Noted so it is not re-attempted
+in the same shape.
+
+---
+
+## kings.html adopts the shared card surface (2026-09-04)
+
+The nine ruler cards were hand-rolled inline, with no shared class at all:
+
+```js
+'<div style="border:1px solid var(--line);border-top:2px solid '+k.color+
+ ';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+```
+
+Measured before: 9 cards, **0** carrying `.card`, `box-shadow: none`.
+
+The per-king `border-top:2px solid <colour>` on the element is precisely the
+collision CLAUDE.md §4.1 names as a reason a class was *not* swept — and the
+same section gives its lossless translation: `.card::before` is already a 2px
+top bar reading `--card-accent`. So the colour moves to the custom property and
+the element takes `.card`. The realm badge becomes a `.chip`, whose
+`border:1px solid` resolves to `currentColor`, so one `color` declaration
+carries both text and border; the bio button becomes a shared ghost `.btn`; the
+ruler's name takes `.card-title`, whose inline per-king `color` still wins
+(inline beats a class) while gaining the platform's item diamond.
+
+Measured after:
+
+```
+cards: 9
+accentBar: {h:"2px", top:"0px", bg:"rgb(201, 168, 76)"}   // Alexander, gold
+secondCardAccent: "rgb(226, 200, 109)"                    // Marcus Aurelius, solar
+surface: {bg:"rgba(10, 10, 15, 0.68)", pad:"20px", radius:"2px", shadow:"present"}
+chip:    {radius:"20px", border:"rgb(201, 168, 76)", color:"rgb(201, 168, 76)"}
+btnBg:   "rgba(0, 0, 0, 0)"        // ghost, not the browser's grey face
+titleMark: "7px matrix(0.707107, 0.707…"   // the .card-title diamond, at 45deg
+overflowX: false   errors: []
+```
+
+The accent bar reproduces each king's colour exactly, so nothing the page meant
+was lost; what it gains is the glass ground, the rim shadow it did not have,
+hover elevation, the hover glow edge and the cursor-reactive light — all from
+one class, no new CSS.
+
+**One thing checked and found not to be a bug.** `KINGS_DATA` stores virtues
+containing `&amp;` (`'Vision &amp; Conquest'`), and the template calls
+`.toUpperCase()` on them before `innerHTML`, which yields `&AMP;`. That looks
+like it would render literally. It does not — `&AMP;` is in HTML5's named
+character reference table — and the render confirms `VIRTUE: VISION &
+CONQUEST`. Measured rather than "fixed" on the strength of reading the code.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, `ok kings.html`.
+
+---
+
+## 27 hand-rolled card surfaces swept to the shared class — and 66 deliberately not (2026-09-04)
+
+`kings.html` was not unique. A scan for bg.js's own `.card` declarations written
+out inline instead of using the class — a `1px solid var(--line)` border plus
+the `rgba(10,10,15,…)` glass in one style attribute — finds **87 sites across 22
+files**.
+
+A blanket sweep is exactly what §4.1 warns against, so the sites were classified
+by what the style actually says, not by the pattern that found them:
+
+| type | shape | decision |
+|---|---|---|
+| A | `border` + `background:.5` + `padding:14px` + `radius:2px`, nothing else | **sweep** — literally `.card` |
+| B | type A plus `border-top:2px solid <colour>` | **sweep**, colour → `--card-accent` |
+| C | `border-left:3px solid …` | **left alone** — `.card::before` is a *top* bar; translating it changes the design (§4.1's `cosmos.html` precedent) |
+| D | `padding:10px 14px` / `12px`, alpha `.4`/`.45`, extra font or `display:none` declarations | **left alone** — denser list rows and collapsed forms, not cards; `.card`'s `clamp(14px,2.5vw,20px)` padding would change their density |
+
+That leaves **27 sites in 5 files** that are exactly `.card`, 23 of them with a
+top accent that translates losslessly. Both documented failure modes were
+checked per site first: none of the 27 elements carries **any** class attribute,
+so there is no page-local `::before` to collide with and no same-element
+modifier setting a border.
+
+Measured, BEFORE pinned with `git show HEAD:`:
+
+| page | `.card` count | distinct accent colours |
+|---|---|---|
+| `bloodline.html` | 6 → **15** | 1 → **6** |
+| `pantheons.html` | 6 → **12** | 1 → **6** |
+| `heritage.html` | 6 → **10** | 1 → **4** |
+| `governance.html` | 6 → **10** | 1 → **4** |
+| `vault.html` | 35 → **38** | 1 → 1 (its 3 sites carried no accent — correct) |
+
+The accent colours are preserved exactly — cyan `rgb(0,229,255)`, purple
+`rgb(155,107,240)`, green `rgb(63,178,127)`, orange `rgb(255,152,0)`, red
+`rgb(255,68,68)`, ember `rgb(232,106,58)` — now drawn as the card's own 2px top
+bar rather than a border on the element. Every card resolves a box-shadow, no
+page gained horizontal overflow, and all five report 0 page errors before and
+after.
+
+The 66 sites left alone are recorded here rather than swept quietly: they are a
+real backlog, and each needs a per-site decision about density or a left-bar
+motif, not a regex.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, all five files `ok`.

@@ -58,7 +58,7 @@ html += '<div style=font-family:var(--M);font-size:12px;color:var(--green)>✦ N
 else {
 html += '<div style=font-family:var(--M);font-size:12px;color:var(--crim);margin-bottom:8px>● ' + issues.length + ' VIOLATION(S) LOGGED</div>';
 issues.forEach(function (v) {
-html += '<div style=margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(139,0,0,.1)><div style=font-family:var(--M);font-size:12px;color:var(--crim)>' + v.page + '</div>';
+html += '<div style="margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(139,0,0,.1)"><div style=font-family:var(--M);font-size:12px;color:var(--crim)>' + v.page + '</div>';
 v.issues.forEach(function (i) {
 html += '<div style=font-family:var(--M);font-size:12px;color:var(--muted);padding-left:8px>→ ' + i.type + ': ' + i.msg + '</div>';
 });

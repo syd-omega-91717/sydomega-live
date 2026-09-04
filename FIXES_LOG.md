@@ -8543,3 +8543,111 @@ so this is recorded as a consistency change only.
 
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
 PASS on 189 pages, `ok habits.html`.
+
+---
+
+## The same three primitives, reinvented on three more pages (2026-09-04)
+
+`habits.html` was not one page's habit. `targets.html`, `nutrition.html` and
+`rituals.html` are built from the same template and reinvent the same
+primitives under different names:
+
+| page | page-local | count | platform equivalent |
+|---|---|---|---|
+| `targets.html` | `.okr-stat` + `.sv`/`.sk` | 12 | `.kpi` |
+| `nutrition.html` | `.ds-box` + `.dv`/`.dl` | 13 | `.kpi` |
+| `rituals.html` | `.streak-box` + `.sv`/`.sk` | 12 | `.kpi` |
+| all three | `.section-hd` | 12 | `.sechead` |
+
+The three definitions are near-identical and all descend from the same
+ancestor:
+
+```css
+.okr-stat   {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+.ds-box     {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center}
+.streak-box {border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+```
+
+None of them, and no `.section-hd`, has a `::before` or `::after`, so neither
+documented collision applies. Measured with BEFORE pinned via `git show HEAD:`:
+
+```
+targets.html    BEFORE {"boxes":12,"withKpi":0, "bg":"rgba(0, 0, 0, 0)","borderTop":"1px rgba(201, 168, 76, 0.1)","sechead":0}
+                AFTER  {"boxes":12,"withKpi":12,"bg":"rgba(10, 10, 15, 0.68)","borderTop":"2px rgba(201, 168, 76, 0.22)","sechead":3,"errors":0}
+nutrition.html  BEFORE {"boxes":13,"withKpi":0, …}   AFTER {"boxes":13,"withKpi":13, … "sechead":6,"errors":0}
+rituals.html    BEFORE {"boxes":12,"withKpi":0, …}   AFTER {"boxes":12,"withKpi":12, … "sechead":3,"errors":0}
+```
+
+37 stat boxes across the three had **no background at all** — outlines on the
+page ground, exactly as on `habits.html` — and now carry the platform glass and
+the 2px KPI accent. 62 hand-mixed `rgba(138,134,118,.N)` greys became
+`var(--muted)` (23 + 22 + 17).
+
+The section headings move from `rgba(201,168,76,.5)` to `rgb(0,229,255)`, the
+platform value confirmed against four other pages in the previous entry.
+
+**One count that does not tie out, stated rather than smoothed over.**
+`targets.html` had 4 `class="section-hd"` substitutions in source but renders 3
+`.section-hd.sechead`. The fourth is not in the DOM at load — most likely inside
+a template string that has not been rendered — so the substitution is correct
+and the render count is simply lower. It is recorded because a 4-vs-3 mismatch
+that goes unexplained is how a wrong number gets into a document.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, all three `ok`.
+
+---
+
+## The last of the hand-rolled KPI family, found by shape rather than by name (2026-09-04)
+
+Four pages had already been converted by recognising the class *names*
+(`.hero-stat`, `.okr-stat`, `.ds-box`, `.streak-box`). Names run out, so the
+remainder were found by matching the **shape** — a centred, hairline-bordered
+box, which is `bg.js`'s `.kpi` written out longhand:
+
+```python
+SIG = r'\.([-\w]+)\s*\{([^}]*border:1px solid rgba\(201,168,76,\.\d+\)[^}]*text-align:center[^}]*)\}'
+```
+
+**That matcher over-reported, and its output was filtered by hand rather than
+applied.** It returned 70 sites across 18 pages, but a centred box with a gold
+hairline is also a button (`.np-btn`, `.mood-btn`, `.btn-logout`), a text input
+(`.set-input`), a canvas wrapper (`.canvas-wrap`), a page hero (`.codex-hero`,
+`.oracle-hero`, `.affirmation-stage`) and, 26 times on `architect.html`, a
+diagram node. None of those is a KPI. Reading the 18 candidates left three:
+
+| page | class | sites | definition |
+|---|---|---|---|
+| `meditate.html` | `.session-stat` | 12 | `border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center` |
+| `mentors.html` | `.stat` | 4 | `background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.15);padding:14px;text-align:center` |
+| `vocabulary.html` | `.stat` | 4 | identical to `mentors.html` |
+
+`meditate.html`'s definition is character-for-character the family ancestor.
+`mentors`/`vocabulary` already carried `rgba(10,10,15,.55)` — bg.js's own `.kpi`
+background — so they were the closest of all to the class they were avoiding.
+`.stat` is a generic name, so it was checked for other selectors in those files
+first; there are none. No `::before`/`::after` on any of the three.
+
+Measured, BEFORE pinned with `git show HEAD:`:
+
+```
+meditate.html    BEFORE {"boxes":12,"withKpi":0,"bg":"rgba(0, 0, 0, 0)",       "borderTop":"1px rgba(201, 168, 76, 0.1)"}
+                 AFTER  {"boxes":12,"withKpi":12,"bg":"rgba(10, 10, 15, 0.68)","borderTop":"2px rgba(201, 168, 76, 0.22)","errors":0}
+mentors.html     BEFORE {"boxes":4,"withKpi":0,"bg":"rgba(10, 10, 15, 0.55)",  "borderTop":"1px rgba(201, 168, 76, 0.15)"}
+                 AFTER  {"boxes":4,"withKpi":4,"bg":"rgba(10, 10, 15, 0.68)",  "borderTop":"2px rgba(201, 168, 76, 0.22)","errors":0}
+vocabulary.html  BEFORE {"boxes":4,"withKpi":0, …}   AFTER {"boxes":4,"withKpi":4, … "errors":0}
+```
+
+Plus 3 `.section-hd` → `.sechead` and 20 greys → `var(--muted)` on
+`meditate.html`.
+
+**`stoic.html` needed nothing** — its 8 `.virtue-card` elements already carry
+`class="virtue-card card"`. Checked before assuming, because the density metric
+listed it as a candidate.
+
+Running total for this family across the session: **7 pages, 69 stat boxes**
+(12 + 12 + 13 + 12 + 12 + 4 + 4) moved from a private hairline box to the shared
+`.kpi`, and 82 hand-mixed greys to `var(--muted)`.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all`
+PASS on 189 pages, all three `ok`.

@@ -7778,3 +7778,49 @@ POSITION header, which is where the formula belongs.
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
 `node scripts/verify-runtime.js --all` PASS on all 189 pages — including the
 contrast gate, which the previous entry's change had failed.
+
+## The contrast gate proves itself now, not just once (2026-09-04)
+
+The gate's correctness was demonstrated exactly once, by pinning pre-fix files
+out of git history with `gitShow` and confirming it caught 3, 15 and 20
+findings. That proof lived in a scratchpad. **The next person to change the
+surface-resolution rule had no way to repeat it** — and that rule went through
+four wrong versions in one afternoon, so it will be changed again.
+
+`node scripts/verify-runtime.js --self-test` renders a fixture whose ratios are
+computed from the WCAG formula rather than from the classifier, and asserts the
+binning:
+
+```
+  ok   block  expected [t-block-1, t-block-2]  got [t-block-1, t-block-2]
+  ok   mid    expected [t-mid-1]               got [t-mid-1]
+  ok   ok     expected [t-pass-1 … t-pass-4]   got [t-pass-1 … t-pass-4]
+CONTRAST SELF-TEST: PASS (7 known ratios binned correctly)
+```
+
+The fixture deliberately includes **the three surface shapes that each broke an
+earlier version of the rule**:
+
+| case | shape | earlier failure it reproduces |
+|---|---|---|
+| `t-pass-2` | `rgba(10,10,15,.68)` glass | "opaque colour or give up" measured nothing |
+| `t-pass-3` | low-alpha tint over an opaque near-uniform gradient | the nav dock was called unmeasurable |
+| `t-pass-4` | gold text inside a `background-clip:text` parent | the gradient was read as a surface, giving 1:1 |
+
+`t-pass-4` is the sharpest of the three: gold clears 8.74:1 against the page
+ground but would fail at ~1.9:1 against the sheen's near-white gradient, so it
+lands in a different bin depending on whether the rule is right.
+
+**Proven to be able to fail.** Setting `clipsToText = false` — breaking exactly
+the rule that case exists for — moves `t-pass-4` into the blocking list and the
+self-test reports FAILED with the ids named. Restoring returns PASS. A test that
+cannot fail proves nothing, which is the same discipline the positive controls
+in this log's earlier entries exist for.
+
+**It runs as a precondition of every sweep**, not as a separate step someone has
+to remember: if the classifier is wrong, a verdict about 189 pages is
+meaningless. One extra page load per run, and both CI invocation sites
+(`ci-local.sh` and `capability-evidence.yml`) get it for free.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js --all` PASS
+on 189 pages with the self-test running first.

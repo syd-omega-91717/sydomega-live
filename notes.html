@@ -15,17 +15,17 @@
 .note-card:hover{border-color:var(--cyan);background:#111}
 .note-card.pinned{border-left-color:#FFD700}
 .note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
-.note-preview{font-size:12px;color:#666;line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
+.note-preview{font-size:12px;color:var(--muted);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
 .note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
-.note-date{font-size:12px;color:#444;font-family:'Courier New',monospace}
+.note-date{font-size:12px;color:var(--muted);font-family:'Courier New',monospace}
 .tag-chip{display:inline-block;padding:2px 8px;background:#1a1a2e;border:1px solid #333;color:var(--cyan);font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;border-radius:2px}
 .tag-chip.active,.tag-chip:hover{background:var(--cyan);color:#000;cursor:pointer}
-.pin-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:14px}
+.pin-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px}
 .pin-btn.pinned{color:#FFD700}
-.del-btn{position:absolute;top:10px;right:34px;background:none;border:none;color:#333;cursor:pointer;font-size:12px;letter-spacing:1px}
+.del-btn{position:absolute;top:10px;right:34px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:1px}
 .del-btn:hover{color:#FF4444}
 .form-group{margin-bottom:14px}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:6px}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
 .form-group textarea{min-height:220px;resize:vertical;line-height:1.6}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--cyan)}
@@ -47,9 +47,9 @@
 .search-bar input{flex:1;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px}
 .search-bar input:focus{outline:none;border-color:var(--cyan)}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:var(--muted);font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
 .filter-tag.active{background:#1a1a2e;border-color:var(--cyan);color:var(--cyan)}
-.empty-state{text-align:center;padding:60px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
 .note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px}
 .note-view-title{font-family:'Courier New',monospace;font-size:16px;color:var(--cyan);margin-bottom:4px}
 .note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
@@ -67,12 +67,12 @@
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
 .stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--cyan);font-weight:700}
-.stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:1px;margin-top:4px}
+.stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}
 .sci-title{font-family:'Courier New',monospace;font-size:12px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
 .sci-body{font-size:12px;color:#888;line-height:1.65}
-.sci-ref{font-size:12px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
+.sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
 .all-tags-cloud{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 </style>
 </head>
@@ -365,7 +365,7 @@ function viewNote(id){
   document.getElementById('view-area').innerHTML=
     '<div class="note-view">'
     +'<div class="note-view-title" style="color:'+col+'">'+esc(n.title)+'</div>'
-    +'<div style="font-size:12px;color:#444;font-family:\'Courier New\',monospace;">'
+    +'<div style="font-size:12px;color:var(--muted);font-family:\'Courier New\',monospace;">'
     +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+n.cat.toUpperCase()
     +n.tags.map(function(t){return ' · <span class="tag-chip">'+esc(t)+'</span>';}).join('')+'</div>'
     +'<div class="note-view-body">'+html+'</div>'

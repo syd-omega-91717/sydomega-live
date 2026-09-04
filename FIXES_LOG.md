@@ -7452,3 +7452,329 @@ as `.85em` rather than a second absolute value below the floor.
 Gates after: `./scripts/ci-local.sh` 22/22, 179 tests, `brand-glyph-check.py`
 clean across 362 shipped files, `node scripts/verify-runtime.js --all` PASS on
 all 189 pages, exit 0.
+
+## The rest of the sub-floor text: 137 greys to the canonical token (2026-09-04)
+
+The previous entry fixed the six invisible buttons and the 179-page nav dock,
+and left ~59 page-local grey combinations as "each needs judgement". Reading
+them together, they were not 59 judgements — they were **four values**, used the
+same way everywhere: `#666`, `#555`, `#444`, `#333` as a de-emphasised label
+colour on a near-black page.
+
+```
+#666  3.44:1     #555  2.65:1     #444  2.03:1     #333  1.56:1
+var(--muted) #8a8676  5.41:1 on bg.js's --void, 5.47:1 on theme.js's
+```
+
+**The static list would have misled, and the runtime audit is what stopped it.**
+A scan of `color:` declarations against `--void` also flagged `#000` — 34 uses
+across 28 pages at a nominal 1.06:1. Every one of those is dark text on a
+*filled* button, and the runtime probe measures them at 7.5–15:1 because it
+resolves the effective background. Sweeping the static list would have destroyed
+28 pages' button labels to fix a number that was never real.
+
+So the sweep took only the four values the runtime audit showed failing on a
+dark surface: **116 declarations in `<style>` blocks across 16 files**, then a
+second pass for **21 more in inline `style=` attributes** (markup and JS-built
+strings) that a stylesheet-only sweep cannot see — `investment.html`'s
+"NO HOLDINGS YET — ADD HOLDING" at 1.56:1 and `passport.html`'s "PERSONAL
+SOVEREIGNTY RECORD" at 2.65:1 were both in that second group.
+
+```
+                              failing combinations   passing text nodes
+before (previous entry)               60                   61,371
+after the <style> sweep               39                   61,504
+after the inline sweep                37                   61,561
+```
+
+### A probe "fix" that was reverted
+
+Two rows still read 1.01:1 — `chronicle.html`'s `.era-badge` and
+`family.html`'s `.btn-add`. Both were checked by hand earlier and are fine:
+their backgrounds are `--solar` and a gold gradient, and the probe's `effBg`
+only reads `backgroundColor`, so it walks past them to the page ground.
+
+Teaching it to read gradient stops looked like the obvious correction. It made
+the probe **worse** — 37 failing combinations became 50, because picking the
+first opaque stop is arbitrary when text sits across a gradient's range, and the
+new rows sat on invented backgrounds like `rgb(33,17,13)` and `rgb(35,20,14)`.
+Reverted. Two documented false positives beat thirteen unexamined ones, and the
+reason is now a comment in the probe so the next session does not retry it.
+
+### What remains, and why it is not swept
+
+All 37 survivors sit between **3.09:1 and 4.23:1** except those two artifacts:
+they clear the 3:1 floor for UI and large text, and miss 4.5:1 at 9–14px. The
+overwhelming majority are the crimson family — `rgb(196,69,60)` (the canonical
+`--crim`, 4.01:1) plus page-local reds `rgb(192,57,43)`, `rgba(200,50,50,.7)`,
+`rgba(200,60,60,.7)` — with a few purples and one LinkedIn brand blue
+(`rgb(10,102,194)`, 3.47:1).
+
+bg.js's own comment says `--crim` was re-stepped to "the deepest crimson that
+still clears 3:1". Pushing the danger colour brighter again to clear 4.5:1 at
+12px is a brand decision, not a bug fix, and a third-party brand blue is not
+this platform's to restyle. Recorded, not swept.
+
+### Method note
+
+A concurrent 189-page sweep reported `loadFail=1` once and `loadFail=0` on
+re-run with an identical tree. A single load failure under concurrency is a
+timeout, not a finding — re-run before acting on one.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`node scripts/verify-runtime.js --all` PASS on all 189 pages, exit 0.
+
+## The contrast audit becomes a gate (2026-09-04)
+
+Three entries in this log fixed contrast bugs that **every static gate passed**:
+six buttons at 1.01:1 and 1:1 on the public sign-up and password-recovery path,
+15 nav-dock labels at 2.60:1 across 179 pages, and 137 sub-floor greys. Nothing
+in CI would have caught the seventh.
+
+That is not hypothetical. PR #235 reintroduced 18 colour emoji on
+`dashboard.html` the same day the platform-wide sweep removed 116 — and
+`brand-glyph-check.py` caught it before deploy, because that class *has* a gate.
+Contrast had none.
+
+`scripts/verify-runtime.js` now measures it: **blocking under 3:1**, advisory
+between 3:1 and 4.5:1. Baseline across 189 pages: **0 blocking, 259 advisory,
+61,522 passing, 61,781 text elements measured.**
+
+### Getting the surface right took four wrong rules
+
+Contrast is only as good as the background you compare against, and on this
+platform almost nothing paints an opaque colour on the element itself.
+
+1. **Opaque-colour-or-page-ground** (the original probe). Missed that `.card`'s
+   glass is `rgba(10,10,15,.68)`.
+2. **Read the gradient's first opaque stop.** Tried in the previous entry and
+   reverted: 37 findings became 50 on invented backgrounds like `rgb(33,17,13)`.
+3. **Skip any element on a gradient as unmeasurable.** Called **7,520** elements
+   unmeasurable — 12% of all text — because the GVP shimmer is a
+   `background-image` laid over the real colour.
+4. **Composite translucent layers, then treat a gradient as unmeasurable.**
+   Better (4,223 unmeasurable) but still missed the nav dock entirely: the
+   sidebar is `linear-gradient(rgba(201,168,76,.09) 0%, transparent 42%,
+   rgba(0,229,255,.06) 100%), linear-gradient(rgb(8,8,15), rgb(5,5,12))` — a
+   low-alpha tint over an **opaque, near-uniform** gradient. Unmeasurable is the
+   wrong answer for a surface that is flat dark in practice.
+
+The rule that works: collect translucent layers walking up, alpha-blend them
+over the first opaque surface, and where that surface is a gradient treat
+**every opaque stop as a candidate and judge the text against the worst one**.
+That is the only honest standard for a gradient — if text fails against any part
+of what it sits on, it fails — and it removed the unmeasurable bucket entirely.
+`html` carries the real ground (`rgb(12,8,6)`) behind `body`'s backdrop tint.
+
+### Proven against the bugs it exists for
+
+A gate that reports 0 on a clean tree but would not have caught the original
+bugs is worthless, so each fix was pinned back with `gitShow` and re-measured:
+
+```
+CAUGHT  invisible auth buttons (a0073e2d~1)   3 findings   1:1, 1:1, 1.01:1
+CAUGHT  nav dock #55534e     (a0073e2d~1)    15 findings   2.6:1 x15
+CAUGHT  sub-floor greys      (b65a329b~1)    20 findings   2.36-2.65:1
+```
+
+Then end-to-end: dropping the pre-fix `nav.js` into the working tree makes
+`verify-runtime.js` **FAIL** 13 of 13 entrypoints with the exact ratios and
+element names; restoring it returns PASS, `git diff --quiet nav.js` clean.
+
+**The first proof run reported all three MISSED**, and that was the probe, not
+the gate: extracting the rule from a JS template literal into a plain file left
+`[\\d.]+`, which matches backslashes rather than digits, so every colour parse
+failed and the run reported a serene zero. §8.4's "verify a 0 findings result is
+real" now names this shape.
+
+### Why 3:1 blocks and 4.5:1 does not
+
+bg.js's own comment says `--crim` was re-stepped to "the deepest crimson that
+still clears 3:1". Blocking at 4.5:1 would fail the platform's own deliberate
+brand decision on 180 pages. 3:1 is the floor below which text is not
+legible at any size; between the two is a report, not a verdict.
+
+One collision found on wiring: `CHECK_JS` already declared `seen` for the
+duplicate-id scan, so the contrast locals are namespaced `cLow`/`cMid`/`cOk`/
+`cSeen`. It failed loudly at evaluate time rather than silently, which is the
+good case.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `verify-runtime.js` PASS on the
+13 entrypoints and `--all` PASS on 189 pages, `context-budget.py` PASS at
+~15,996 of 16,000 (six §8.4 notes compressed to make room for the baseline row).
+
+## gaming.html: completed cards looked unstarted, and eleven headers said the same thing (2026-09-04)
+
+`gaming.html` is the most text-dense page in the repo (11,403 characters, ratio
+204 on the density scan — twice the next page). Two things were wrong with it,
+and both had the data to be right already sitting on the page.
+
+**Completed cards showed no completion.** The click handler was the only thing
+that ever marked one:
+
+```js
+var r = await window.omegaCompleteTask(n, ty);
+if (r.ok) { card.style.borderTopColor = 'var(--green)'; ... }
+```
+
+So a member who finished Chess Master yesterday saw it as untouched today. The
+page already queries `task_completions` twice — a count, and the last 20 rows
+for the activity log — so the data was fetched and then not used for the 132
+cards it describes. Now one more query builds a set of completed `task_name`s
+(**the same column the activity log already reads**, so no new name is
+introduced — §8.1 class 2) and marks each matching card.
+
+The mark goes through `--card-accent`, the mechanism established earlier today:
+`.card::before` reads it, so the top bar turns green without a second pseudo
+fighting the first. The click handler was changed to the same mechanism instead
+of setting `borderTopColor` directly, so both paths agree.
+
+Per §9: `doneQ.error` is checked explicitly. Supabase resolves to
+`{data:null,error}` rather than throwing, and on an error **no card is marked**
+— a card claiming completion it cannot support is exactly §8.1 class 9.
+
+**Eleven headers repeated one string.** Every section carried
+`· 12 GAMES · AXIS B MASTERY · 12×12×9×9×9 = 104,976` — 605 characters of
+repetition on the page that least needed more text. The formula is now stated
+once, in the topbar where it belongs, and each header carries that section's
+real progress instead:
+
+```
+STRATEGY & BOARD · AXIS B MASTERY · 2 / 12 COMPLETE
+```
+
+The first attempt did this rewrite at runtime. That was wrong twice over: the
+source stayed repetitive, and the cleanup was coupled to a successful query —
+a failed fetch would have left the formula in place. The headers are now clean
+in the markup and JS only appends the live count.
+
+### The sheen trap, caught by measuring paint rather than text
+
+Cleaning the markup made those headers **childless and under 48 characters** at
+the moment `bg.js:1290` applies `.ofx-sheen` — which fills heading text with
+`background-clip:text` + `-webkit-text-fill-color:transparent`, and that
+**inherits into children**. The sheened count went from 3 to 14, and the
+appended span measured:
+
+```
+webkitTextFillColor: rgba(0, 0, 0, 0)   color: rgb(155, 107, 240)   width: 174px
+```
+
+174 pixels wide, painting nothing. The probe had reported PASS the whole time
+because it read `textContent`, which is present whether or not the text paints —
+the same shape as measuring a colour without measuring whether it renders.
+Fixed with `-webkit-text-fill-color: currentColor` on the span, which restores
+both the section colour and the green completed state; verified `fill` now
+equals `color`.
+
+### Verified in a render, both states
+
+The harness stub returns `[]` for every non-single query, which only exercises
+the empty case — so a second stub variant returns three real completion rows:
+
+```
+no completions      11 headers · 0 formula repeats · 0 cards marked
+three completions   11 headers · 0 formula repeats · 3 cards marked
+                    Chess Master, Go / Weiqi, Sudoku Grand Master
+                    ::before background rgb(63, 178, 127)  = --green
+                    .c-pts "✓ RECORDED"
+                    STRATEGY & BOARD header reads 2 / 12
+```
+
+The header reading **2 / 12** rather than 3 is the useful detail: Sudoku is in
+the Puzzle panel, so the per-section count is genuinely per-section and not a
+global total wearing a section's name.
+
+### The gate caught this change, and then a flaw in itself
+
+`verify-runtime.js`'s new contrast gate — added two commits earlier — failed
+`gaming.html` on the first run after this change:
+
+```
+FAIL gaming.html
+  x 6 text element(s) under the 3:1 contrast floor:
+    1:1 SPAN.sec-prog "· 0 / 12 COMPLETE"  (x6)
+```
+
+A gate catching a bug in a change made minutes later is the whole point of
+having it. But the finding was the **gate's own flaw**, not the span's:
+
+```css
+.ofx-sheen{background-image:linear-gradient(100deg,currentColor 38%,…);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent}
+```
+
+`background-clip:text` means that gradient paints **inside the glyphs**, not as
+a surface behind them. The surface walk was treating it as the background and
+comparing the span's text colour against its own text fill — hence exactly 1:1.
+
+Fixed in the walk: an element whose `background-clip` is `text` contributes
+neither its colour nor its image as a surface. The gate proof still holds
+afterwards (3, 15 and 20 findings on the pinned pre-fix trees) and the baseline
+is unchanged at **0 blocking, 259 advisory, 61,475 passing across 189 pages**.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`verify-runtime.js` PASS on the 13 entrypoints and `--all` PASS on 189 pages.
+One `--all` run failed `architecture.html` with `page.goto: Timeout 30000ms` and
+passed on re-run against an identical tree — the concurrency timeout this log
+already records, not a finding.
+
+## The same gap on academy.html, found by asking where else it could be (2026-09-04)
+
+The gaming.html fix was a bug *class*, not a one-off, so the obvious question is
+where else it lives. Two pages call `omegaCompleteTask`; both also read
+`task_completions` back:
+
+```
+academy.html   reads=2
+gaming.html    reads=3
+```
+
+`academy.html` had the identical shape — the click handler was the only thing
+that marked a card:
+
+```js
+if(r.ok){ card.style.borderTopColor='var(--green)';
+          lbl.innerHTML += '<span …>&#10003; RECORDED</span>'; }
+```
+
+…while the page already fetched 30 rows for its exam log. 96 exam cards, none
+of them reflecting a completion the page had in hand.
+
+**Fixed through the page's own mechanism, not gaming's.** `.exam-card` does not
+carry `.card`, so `--card-accent` means nothing to it. It has its own:
+
+```css
+.exam-card::before{…background:var(--ec)}
+```
+
+so the mark sets `--ec` to green. Same shape, page's own property — which is the
+point of the `--card-accent` finding generalised: a page-local accent bar driven
+by a custom property is the pattern, and the property name is per-page.
+
+The click handler now calls the same `markDone(card)` the load path uses, so
+both agree and neither double-appends. `doneQ.error` is checked; nothing is
+marked on failure.
+
+Eight headers repeated `· 12 EXAMS · AXIS A`. `AXIS A` is the actual meaning and
+stays; `12 EXAMS` is redundant once the header carries `n / 12 COMPLETE`. These
+headers were *already* childless and under 48 characters, so they were already
+sheened — the appended span got `-webkit-text-fill-color: currentColor` from the
+start rather than after being caught.
+
+Verified in a render, both states, with a stub variant returning two real rows:
+
+```
+no completions     8 headers · 0 cards marked
+two completions    8 headers · 2 cards marked (Mathematics Olympiad, Physics
+                   Grand Exam) · ::before rgb(63,178,127) · STEM & SCIENCE
+                   header reads 2 / 12 · span fill == color (paints)
+```
+
+One `104,976` remains on the page and should: it is the canonical LATTICE
+POSITION header, which is where the formula belongs.
+
+Gates: `./scripts/ci-local.sh` 22/22, 179 tests, `check-inline-js.py` clean,
+`node scripts/verify-runtime.js --all` PASS on all 189 pages — including the
+contrast gate, which the previous entry's change had failed.

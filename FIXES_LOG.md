@@ -6827,6 +6827,8 @@ Measured after mounting: `data-cn-state="ready"`, **12 nodes, 12 marks, 12
 filled** with emblem artwork, box 1112x908, no hidden ancestor, no horizontal
 scroll, no page errors.
 
+`verify-runtime.js --all`: **PASS (189 pages)**, measured on the shipped code.
+
 **Also corrected: Zeus was `#FFD700`.** The other eleven gods carry deliberate
 per-deity accents (silver for Artemis, tan for Hestia) which are page content,
 not a palette — measured as 12 distinct values with only 3 overlapping the brand

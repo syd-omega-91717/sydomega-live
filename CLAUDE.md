@@ -527,9 +527,12 @@ Only what changes what you do in the **first minutes** stays here:
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
 - **`Production Surface Smoke` is red because production is 404ing, not because of code.** Its
   `curl --fail https://www.sydomega.com/` 404s while the Vercel alias stays pinned to
-  `31f9180d` by an Instant Rollback; no commit clears it, only cancelling the rollback does
-  (`FIXES_LOG.md` 95). The one gate here that fetches the live system — read its failure as an
-  outage report, not a code defect.
+  `31f9180d` by an Instant Rollback; only promoting/cancelling clears it, no commit
+  (`FIXES_LOG.md` 95, 100). Confirm which it is by fetching the **project's own**
+  `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means the production pointer is
+  pinned; a detached custom domain would leave it serving the new build. `get_project`'s
+  `domains` omits the custom hosts and `live:false` — both are trimmed projections, neither
+  means detached or paused. Read this gate's failure as an outage report, not a code defect.
 - **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
   the web surface into `public/` from a fixed directory allow-list, so a top-level directory
   not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages

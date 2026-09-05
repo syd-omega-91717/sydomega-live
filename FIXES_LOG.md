@@ -11822,3 +11822,84 @@ change. Ledger 170, `migrations/` 170, snapshot `_count` 170;
 BLOCKING CHECKS PASSED**; `omega-registry.py --check` regenerated for the new
 migration file and matching; `context-budget.py` PASS (CLAUDE.md 15,878 after
 §5 was compressed). Control: a planted flat-only table is reported by name.
+
+## 100. The deploy pipeline and the artifact are both verified good; only the promotion is pinned
+
+The dashboard shows **"Failed to deploy to Production" on every production
+deployment for 9+ hours**, including `416e503b`. That reads like a broken build,
+and it is not. Measured 2026-09-05 18:33Z.
+
+### The build is clean and it is the fixed one
+
+`get_deployment_build_logs` for `dpl_usqjdUYNHTtLR7AXWpgN48maRGut` (416e503b,
+`target: production`, `state: READY`), whole log, no errors:
+
+```
+Skipping "install" command...
+Ω VERCEL STATIC BUILD
+VERCEL_BUILD=PASS
+output=public   html=189   js=160   css=13
+Build Completed in /vercel/output [972ms]
+Deploying outputs...
+Deployment completed
+```
+
+`js=160` is 159 root modules plus `vendor/supabase-js.js` — entry 97's fix
+running in production. Build and deploy both succeeded.
+
+### The artifact serves perfectly at its own URL
+
+`https://sydomega-live-qe3nzo58p-…vercel.app/` → **HTTP 200**, the full
+`index.html`: `<title>Ω SYD OMEGA 91717</title>`, all six door links
+(dashboard, cosmos, intelligence, media, marketplace, creator), the world-shell
+action, every repo header (CSP, HSTS, `x-robots-tag: noindex`),
+`x-vercel-cache: MISS`, `age: 0`.
+
+### The discriminator that names the cause
+
+A pinned alias and a detached custom domain look identical from
+`www.sydomega.com`. They are told apart by the **project's own production
+`.vercel.app` alias**, which always tracks whatever Vercel considers current
+production:
+
+```
+https://sydomega-live-syd-omega-91717s-projects.vercel.app/
+→ 404, x-vercel-cache: HIT, age: 42211, last-modified: Sat, 05 Sep 2026 06:50:36 GMT
+```
+
+That is the pinned deployment's own timestamp. A detached *domain* would leave
+this alias serving the new deployment; it does not. **So the production pointer
+itself is pinned — an Instant Rollback, exactly as entry 95 recorded.**
+
+This check was run because `get_project` returns
+`"domains": ["…vercel.app", "…git-main…vercel.app"]` with neither
+`sydomega.com` nor `www.sydomega.com`, which looks like a detached domain. It is
+not: that field is a trimmed projection. Acting on it would have sent the next
+session into Vercel's domain settings for a problem that is not there. **Two
+signals that imply different remedies need a test that separates them.**
+
+`"live": false` on the same object is likewise not a paused project — production
+serves this repo's own `404.html`, so the deployment is being served, just the
+wrong one.
+
+### Why nothing here can fix it
+
+`Failed to deploy to Production` on every deployment is the *symptom* of the
+pin: Vercel builds and readies each one, then declines to promote it. Clearing
+it needs the Vercel dashboard or CLI, and this session has none of the three
+routes — the MCP exposes read tools plus project/file deployment but **no
+promote, alias or cancel-rollback tool** (searched twice), there is no
+`VERCEL_TOKEN` or `.vercel/` in the environment, no `vercel` CLI, and
+`api.vercel.com` is blocked at the egress proxy (`HTTP 000`).
+
+`deploy_to_vercel` with `target: "production"` was considered and **rejected**:
+it uploads a file tree as a non-git deployment, severing the git linkage every
+other deployment in this project has, and it is speculative whether an
+API-created deployment clears a rollback at all. A messy, hard-to-reverse
+production action is the wrong trade against a one-click fix the owner can make
+in seconds.
+
+**The fix:** promote `dpl_usqjdUYNHTtLR7AXWpgN48maRGut` (or cancel the rollback)
+at
+`https://vercel.com/syd-omega-91717s-projects/sydomega-live/usqjdUYNHTtLR7AXWpgN48maRGut`.
+Everything else is already correct and verified.

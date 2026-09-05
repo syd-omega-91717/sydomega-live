@@ -215,5 +215,5 @@ document.getElementById('btn-logout').addEventListener('click',async(e)=>{
 <script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
 <span data-canon-lattice="twelve" style="display:none"></span>
 <script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
-<script type="module" src="/omega-analytics-init.js"></script></body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

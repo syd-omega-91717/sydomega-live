@@ -72,6 +72,17 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
+      # The Intelligence Fabric's tests live in tests/, not scripts/tests/.
+      # They ran only in omega-intelligence-fabric.yml, behind a paths: filter
+      # on core/ and scripts/omega_fabric_audit.py -- so editing
+      # omega-agents.json or docs/capabilities/registry.json could break them
+      # with no check noticing. Same divergence class as the one
+      # scripts/contract-suite.py's header was written about.
+      - name: Intelligence fabric tests
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'tests', '-v']).returncode)
       - name: Production contract
         shell: python
         run: |

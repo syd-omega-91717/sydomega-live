@@ -102,6 +102,10 @@ step "1.   JavaScript syntax"                  js_syntax
 step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
 step "2.   Repository audit"                   python3 scripts/audit.py
 step "2b.  Audit tooling self-tests"           python3 -m unittest discover -s scripts/tests
+# The fabric tests live in tests/, not scripts/tests/, and GitHub ran them
+# (omega-intelligence-fabric.yml) while this script did not -- the same
+# local/GitHub divergence contract-suite.py's header was written about.
+step "2c.  Intelligence fabric self-tests"     python3 -m unittest discover -s tests
 step "2g.  TypeScript types from schema"       python3 scripts/types-from-schema.py
 step "2h.  Context budget"                     python3 scripts/context-budget.py
 step "2j.  Skill/agent registry"               python3 scripts/omega-registry.py --check

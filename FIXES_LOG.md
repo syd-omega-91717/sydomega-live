@@ -10300,3 +10300,151 @@ Gates: `./scripts/ci-local.sh` 22/22 (17 contract gates), **201** tests OK (was
 196), `scripts/audit.py` 0 critical / 7 warnings,
 `scripts/omega-registry.py --check` regenerated (the census caught the 9 new
 migration files, 157 → 166).
+
+---
+
+## 86. The platform's front door returned 404 in production, and the Ω Intelligence Fabric that should have noticed was a file-existence check
+
+**Date:** 2026-09-05
+**Reported by:** the owner, with a photograph of the live site at its bare root.
+
+### What was actually wrong
+
+`https://sydomega-live-a6zu0aglq-syd-omega-91717s-projects.vercel.app/` — no
+path, the front door — rendered `404.html`. Fetched through the Vercel MCP
+rather than reasoned about:
+
+```
+status: 404  Not Found
+content-disposition: inline; filename="404"
+<title>Ω SYD OMEGA 91717 — 404 Node Not Found</title>
+```
+
+The same response carried this repository's `Content-Security-Policy`,
+`Strict-Transport-Security` and `Permissions-Policy` headers verbatim — so
+`vercel.json` was being read, and its
+
+```json
+"rewrites":[{"source":"/","destination":"/omega-visual-home.html"}]
+```
+
+still did not apply. There was **no `index.html` at the repository root**: the
+entire front door depended on that one rewrite, and the rewrite did not fire.
+
+The repository was already written as though `index.html` existed:
+`bg.js:442`'s public-page list contained `'/index'`, its two `EX` maps
+contained `'index':1`, `omega-emblems-catalog.js:537` carried an `'index.html'`
+entry, and the browser harness `serve.js:10` maps `/` to `/index.html`. Every
+one of those was aimed at a file that had never shipped.
+
+### The fix, and why it is a rename rather than a second page
+
+`git mv omega-visual-home.html index.html`. The filesystem is checked before
+any rewrite and cannot silently stop working; a second page with the same
+content would have failed `content-uniqueness-contract` and left two front
+doors to drift apart. The old path keeps working through the pattern
+`vercel.json` already used for `/entreprise`:
+
+```json
+{"source":"/omega-visual-home","destination":"/","permanent":true},
+{"source":"/omega-visual-home.html","destination":"/","permanent":true}
+```
+
+and the `/` rewrite is gone. Followed through `bg.js` (three sites),
+`omega-page-emblem.js` (the emblem key and its comment), and the two generated
+registries.
+
+**Rendered, not assumed.** Headless Chromium against the harness, which serves
+`/` from `index.html` exactly as Vercel now will:
+
+```
+status 200 · title "Ω SYD OMEGA 91717" · h1 "ENTER THE OMEGA WORLD."
+6 doors: /dashboard /cosmos /intelligence /media /marketplace /creator
+emblem mount painted (2 children) · 1376 chars visible · 52 stylesheets
+hOverflow false · dupIds [] · pageerrors []
+```
+
+### The gate was checking the wrong thing
+
+`scripts/user-journey-contract.py` had two journeys starting at `/` and passed
+throughout, because `resolves()` accepted a `vercel.json` rewrite whose
+`source` was `/` as proof the root resolved. **It was not proof.** A gate that
+asserts a rewrite exists cannot observe whether it applies. It now checks the
+filesystem for `index.html` and refuses the rewrite as evidence. Control:
+moving `index.html` aside makes it exit 1 naming both journeys; restoring it
+returns PASS.
+
+### The fabric: adopted, not duplicated
+
+`core/intelligence_fabric/` had landed on `main` in thirteen commits
+(`c72df1fc`…`31f9180d`) — 420 lines of typed, dependency-free primitives: an
+execution boundary, a policy firewall, a model router, a proof engine, a skill
+registry, an evidence matrix. All six were **empty containers**. Nothing in the
+repository ever constructed an `IntelligenceFabric` with real agents or an
+`EvidenceMatrix` with real points, so the fabric could not observe anything,
+and `scripts/omega_fabric_audit.py` asserted only that nine files existed and
+parsed before printing `FABRIC_AUDIT=PASS files=9` — a syntax check wearing an
+audit's name, green throughout the 404 above.
+
+It also ran that whole job on `--help`, so **`main` was red**:
+
+```
+FAIL: test_every_script_answers_help_from_its_docstring
+omega_fabric_audit.py: --help printed something other than its docstring (ran the job?)
+```
+
+Rather than build a second fabric, `omega_fabric_audit.py` was rewritten to
+*drive* those primitives against the platform's real state, across the three
+evidence planes this repository already proves things in and never joined:
+
+| point | plane | what it reads |
+|---|---|---|
+| SRC-01 | source | `index.html` on disk, and no `/` rewrite shadowing it |
+| SRC-02 | source | the nine fabric modules parse (the old gate, at its real weight) |
+| SRC-03 | source | 15 capabilities × 6 contract fields, none empty |
+| SRC-04 | source | the real 12 agents from `omega-agents.json` bound to the boundary — each authorizes its own domain and is **refused a foreign tool** |
+| SRC-05 | source | `PolicyFirewall`'s 5 irreversible tools blocked without approval, released with it, read path open |
+| RND-01 | render | capability entrypoint files exist; verdict stays UNVERIFIED |
+| LIVE-01/02 | live | age of `live-schema.json` / `remote-migrations.json` |
+| LIVE-03 | live | capabilities whose `live_verification` still starts `BLOCKED` |
+
+Two properties are deliberate. **`UNVERIFIED` is a first-class outcome**:
+RND-01 cannot be promoted without a browser, and the audit reports that instead
+of guessing — asserting a render it did not perform is §8.1 class 9. And
+**snapshot age is evidence nothing here measured before**: CLAUDE.md warns
+twice that a dated snapshot lies in both directions (on 2026-08-29
+`live-schema.json` reported eight relations "absent live" and one had existed
+all along), so LIVE-01/02 degrade to PARTIAL past 14 days rather than failing —
+staleness is a known-unknown, not a defect.
+
+Current matrix on this commit: `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60
+governed skills.
+
+### Every point is proven able to fail
+
+`tests/test_fabric_audit.py`, 14 cases, each planting a violator first: no
+`index.html` → SRC-01 FAILED; the `/` rewrite restored → SRC-01 PARTIAL and
+blocking; a deleted module and a syntax error → SRC-02 FAILED; an emptied
+contract field → SRC-03 FAILED; an empty roster → SRC-04 FAILED; an entrypoint
+pointed at a missing page → RND-01 FAILED; `_captured: 2020-01-01` → LIVE-01
+PARTIAL **and the gate still exits 0**; a `BLOCKED` live_verification → LIVE-03
+PARTIAL. Two defects the tests found in the audit itself were fixed rather than
+asserted around: `--json` was appending the human `FABRIC_AUDIT=` line after
+the JSON, so `| python3 -m json.tool` choked, and the `--help` assertion had
+been written against a string the docstring itself quotes.
+
+### Wiring, and one workflow removed
+
+Registered in `scripts/contract-suite.py` as `intelligence-fabric`, so it runs
+blocking in the one list `contracts.yml` and `ci-local.sh` both read.
+`tests/` was discovered only by `omega-intelligence-fabric.yml`, behind a
+`paths:` filter on `core/**` — so editing `omega-agents.json` or
+`docs/capabilities/registry.json` could break the fabric tests with nothing
+noticing. `ci.yml` and `ci-local.sh` now both discover `tests/`, which makes
+that hosted-lane workflow entirely redundant, and it was removed (13 workflows
+→ 12).
+
+Gates: `./scripts/ci-local.sh` **23/23** blocking (was 22), `contract-suite.py`
+**17** gates, **201** tests in `scripts/tests` + **22** in `tests/`,
+`scripts/audit.py` 0 critical / 7 warnings, `omega-registry.py --check` matches
+(189 pages), `node scripts/verify-runtime.js` **PASS on 13 pages**.

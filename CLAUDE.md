@@ -60,6 +60,11 @@ supabase/functions/  Edge Functions (Deno/TypeScript) — 11: checkout,
                      access, weekly-digest, and the pg_cron jobs (rankings,
                      snapshot-leaderboard, …). Full map: the `edge-functions`
                      skill. Deployed by hand via the Supabase CLI, not CI.
+core/                The Ω Intelligence Fabric — provider-neutral Python
+                     primitives (execution boundary, policy firewall, model
+                     router, proof engine, skill registry, evidence matrix).
+                     Never deployed (`*.py` is in `.vercelignore`); driven
+                     against the real platform by `scripts/omega_fabric_audit.py`.
 scripts/             Repo tooling: audit.py (CI-gating integrity check),
                      verify-runtime.js (headless render check),
                      capability-audit.py / release-gate.py (the §10 registry
@@ -525,7 +530,9 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **196** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **201** tests, all passing |
+| `python3 -m unittest discover -s tests` | **22** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
+| `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -538,8 +545,8 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** (was 8; 7 applied and 1 was snapshot staleness, 2026-09-05) |
-| `./scripts/ci-local.sh` | **22** blocking checks, all passing |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** (was 8; 7 applied and 1 was snapshot staleness, 2026-09-05) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -612,6 +619,14 @@ entries (which were accurate when written):
   ring drew perfectly with nothing inside it. Forcing `content:"X" !important`
   settles it in one step. Generated text on a sheened element needs its own
   `-webkit-text-fill-color`.
+- **A gate that asserts a rewrite exists cannot observe whether it fires.**
+  The site's front door was a lone `vercel.json` rewrite `{"source":"/"}` with no
+  `index.html` behind it, and it served **404 in production** while the same
+  response carried this repo's CSP and HSTS headers — the file was read, the
+  rewrite was not applied. `user-journey-contract.py` had passed throughout by
+  checking the rewrite's presence. Routing evidence is a **filesystem** entry or
+  a real fetch, never a config line; `omega_fabric_audit.py`'s SRC-01 now holds
+  both halves (index present, and no `/` rewrite left to shadow it).
 - **A repo-wide grep is a candidate generator, not a verdict.** Confident
   source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
   `outline:none`) were false — the runtime showed 172/173 fine, because `bg.js`

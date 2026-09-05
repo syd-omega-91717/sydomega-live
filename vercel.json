@@ -15,7 +15,8 @@
     {"source":"/entreprise","destination":"/enterprise","permanent":true},
     {"source":"/entreprise.html","destination":"/enterprise.html","permanent":true},
     {"source":"/sovereign","destination":"/sovereign-ai","permanent":true},
-    {"source":"/sovereign.html","destination":"/sovereign-ai.html","permanent":true}
-  ],
-  "rewrites":[{"source":"/","destination":"/omega-visual-home.html"}]
+    {"source":"/sovereign.html","destination":"/sovereign-ai.html","permanent":true},
+    {"source":"/omega-visual-home","destination":"/","permanent":true},
+    {"source":"/omega-visual-home.html","destination":"/","permanent":true}
+  ]
 }

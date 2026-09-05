@@ -11095,3 +11095,167 @@ reports `OK — all client calls reference existing columns`.
 **Result:** `./scripts/ci-local.sh` → `ALL 23 BLOCKING CHECKS PASSED`,
 `audit.py` 0 critical / 7 warnings, `scripts/tests` 201 passing, `tests` 23
 passing, `context-budget.py` PASS.
+
+## 93. The RLS auditor blocked every PR with 39 CRITICAL findings, and the live database had none of them
+
+**Found by** PR #267's `CI / verify` job failing at the RLS audit step, on a diff
+of nine files that touched no `supabase/*.sql`. `scripts/rls-auditor.py` exits 1
+with `CRITICAL — 39 RLS policy issue(s)` on a **pristine `origin/main`
+worktree** at `a887870f`, so the failure was never that PR's.
+
+### Why it appeared on 2026-09-05 and not five days earlier
+
+`71a464db` (2026-08-31, *"ci: make security and database audits blocking
+gates"*) removed `continue-on-error: true` from five audit steps in `ci.yml`.
+Nothing reported it because the `CI` workflow almost never concluded on the
+self-hosted Windows runner — `main`'s five most recent runs are four
+`cancelled` and one still `pending`. `2017fbf5` moved primary CI to a hosted
+runner; the job then ran to completion for the first time and immediately hit
+the step. **The estate merge did not break this. It revealed it.**
+
+### The live database disagreed with all 39
+
+Before touching the scanner, the findings were checked against production
+(`mcp__Supabase__execute_sql`, project `ydqhzvvoyufiiqvzcjns`):
+
+```
+policies_total              304
+with_check_present          197
+with_check_literally_true     0     <-- the reported shape, live count
+using_literally_true         19
+```
+
+**No live policy has `WITH CHECK(true)`.** The zero is real by its own control:
+the same row proves 197 policies *do* carry a WITH CHECK clause, so the
+expression is being read, and the sibling predicate found 19 `USING(true)`
+(CLAUDE.md §8.4 — verify a "0 findings" result is real).
+
+All 19 `USING(true)` policies are SELECT. Only a reachable policy on a table
+with `user_id` can leak between members; four qualify
+(`leaderboard_snapshots`, `member_presence`, `oaths`, `member_events`), **all
+empty**, and the first three are shared by design. Seven more are reachable but
+have no `user_id` (catalog data: `feature_flags`, `token_catalog`,
+`platform_settings`, …). The remaining eight are unreachable anyway — no SELECT
+grant for `authenticated`, §8.1 class 6(c) — including `platform_owners`, which
+has `USING(true)` and 2 rows and is locked out by the missing grant.
+
+### Defect 1 — the clause search ran to the end of the file
+
+`parse_rls_policies()` searched for `USING (` and `WITH CHECK (` in
+`content[start_pos:]`, the whole remainder of the file. A policy with no
+`WITH CHECK` therefore inherited the **next** policy's. Proven, not inferred —
+`supabase/refinements.sql:8` is
+
+```sql
+create policy "owner reads publications" on public.publications
+  for select to authenticated using (public.is_platform_owner());
+```
+
+with no `WITH CHECK` and no possibility of one (Postgres rejects `WITH CHECK`
+on `FOR SELECT`). The parser reported `with_check='true'`, scavenged from
+line 10. A `statement_end()` helper now bounds the search at the terminating
+`;`, skipping semicolons inside parentheses and string literals, and a
+`WITH CHECK` matched on a SELECT or DELETE policy is discarded as a parse error
+rather than reported as SQL.
+
+### Defect 2 — "unconditional" was judged without reading `USING`
+
+`chunk_05_migrations.sql:39` is
+`for update ... using (public.is_platform_owner()) with check (true)` and was
+reported as *"grants unconditional UPDATE to authenticated"*. `USING` restricts
+the rows the statement may touch, so this lets the **owner** write any value
+into rows only the owner can reach. The finding now requires that the policy is
+an INSERT (which has no `USING` clause at all, so `WITH CHECK` is the only
+gate — the genuine §8.1 class 6(b) shape) or that its `USING` is absent or
+`true`. The duplicate second finding for the same condition on a `user_id`
+table is folded into one message.
+
+This is CLAUDE.md §8.4's *"Classifying a policy by substring is not reading
+it"*, in the opposite direction: there a classifier called an owner-gated
+policy owner-only and missed a second branch; here it ignored the gate entirely.
+
+### What survived, and what it turned out to be
+
+39 → **6**, every one an INSERT policy whose only gate is `WITH CHECK(true)`.
+Each was then checked against live, and **all six are already correctly scoped
+in production**:
+
+| table | flat bag declared | live enforces |
+|---|---|---|
+| `capability_kpi_log` | `WITH CHECK(true)` | `is_platform_owner()`; `authenticated` has no INSERT |
+| `policy_eval_log` | `WITH CHECK(true)` | `is_platform_owner()`; no INSERT grant |
+| `platform_metrics` | `WITH CHECK(true)` | a validating predicate; no INSERT grant |
+| `telemetry_events` | `WITH CHECK(true)` | `(select auth.uid()) = user_id` |
+| `platform_events` | `WITH CHECK(true)` | `(select auth.uid()) = user_id` |
+| `threat_events` | `WITH CHECK(true)` | `is_platform_owner() OR user_id = (select auth.uid())` |
+
+So production was never exposed — but a database built from the repository
+would have been **born** with unconditional INSERT on three tables carrying
+`user_id`. The six declarations were aligned with the predicates live already
+enforces, in the flat bag **and** their `migrations/` copies (`0061`, `0065`,
+`0066`, `0067`) — the same both-copies rule entry 91 followed, and the
+`migrations/` copies matter because `rls-auditor.py` globs `supabase/*.sql`
+only and never sees them. **No live policy was changed by this entry.**
+
+### The gate still fails on a real violator
+
+Five tests added to `scripts/tests/test_rls_auditor.py` (6 → 11), each planting
+its case: the `refinements.sql` clause-bleed shape, the owner-gated UPDATE, an
+unscoped INSERT on a `user_id` table (**must** exit 1), an `USING(true)` UPDATE
+(must exit 1), and one asserting exactly one finding per policy rather than two.
+Without the two violators the first three tests would be satisfied by an
+auditor that reports nothing at all.
+
+### A second divergence, found while measuring the first
+
+All **five** audits blocking in `ci.yml:121-146` sit in `ci-local.sh` under a
+header reading *"advisory (never blocks a merge)"*, with `|| true` swallowing
+their exit codes — so the local script printed `ALL 23 BLOCKING CHECKS PASSED`
+on a tree GitHub rejects. Measured now: `schema-dictionary` 0, `rls-auditor` 0
+(this entry), `silent-failure-detector` **1**, `migration-consistency` **1**,
+`upsert-conflict-check` 0. The header is corrected to say these block on GitHub
+and to name the two still failing; they are deliberately not fixed here, being
+separate changes (`silent-failure-detector`: 8 sites, one of which,
+`vendor/supabase-js.js:43`, is the vendored client's own `.rpc()` and a false
+positive; `migration-consistency`: 7 bag/`migrations` divergences that CLAUDE.md
+§5 says need a per-table live check, never a bulk sweep).
+
+**Result:** `rls-auditor.py` exit 0 (was 1), `./scripts/ci-local.sh`
+`ALL 23 BLOCKING CHECKS PASSED`, `scripts/tests` **206** passing (was 201),
+`tests` 23 passing, `audit.py` 0 critical / 7 warnings.
+
+### 93a. The merge race recurred in a new shape: a force-push to an already-open PR
+
+The RLS fix above was first delivered by **amending** the single commit of the
+open PR #267 (`df6fa6c2` → `0ae2f7a2`) and force-pushing, precisely to preserve
+the one-commit-per-PR rule that had protected #264, #265 and #266.
+
+It did not protect this. GitHub merged #267 while the amend was in flight:
+
+```
+$ git log --oneline -2 origin/main
+62cf790f Merge pull request #267 from …/claude/future-proof-infrastructure-athee6
+df6fa6c2 fix: restore main to green after the estate merge, …
+
+$ git merge-base --is-ancestor 0ae2f7a2 origin/main; echo $?
+1                     # the RLS fix did NOT land
+$ git merge-base --is-ancestor df6fa6c2 origin/main; echo $?
+0                     # the pre-amend commit did
+```
+
+**The standing rule was wrong, or rather incomplete.** "One commit per PR"
+addresses a multi-commit PR whose trailing commit is dropped. It says nothing
+about *rewriting* the commit a merge has already been computed against. Both are
+the same underlying race — GitHub merges the head it knew about — and a
+force-push loses just as much as an extra commit does.
+
+The corrected rule: **once a PR is open, its head is frozen.** Do not amend it,
+do not force-push to it. Follow-up work is a new commit on a branch restarted
+from the merged `main`, in a new PR. Amending is only safe before the PR exists.
+
+Recovered by extracting the unmerged delta rather than redoing the work —
+`git diff df6fa6c2 0ae2f7a2` is exactly the RLS change, since the amend's other
+half had already merged. Branch restarted from the new `main`
+(`git checkout -B <branch> origin/main`), the delta reapplied with
+`git apply --3way` (13 files, all clean), re-verified: `rls-auditor.py` exit 0,
+`scripts/tests` 206 passing, `ci-local.sh` 23/23.

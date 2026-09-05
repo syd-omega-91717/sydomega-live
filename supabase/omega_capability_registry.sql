@@ -173,7 +173,7 @@ ALTER TABLE public.capability_kpi_log ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "owner reads kpi log" ON public.capability_kpi_log;
 CREATE POLICY "owner reads kpi log" ON public.capability_kpi_log FOR SELECT USING(public.is_platform_owner());
 DROP POLICY IF EXISTS "member inserts kpi" ON public.capability_kpi_log;
-CREATE POLICY "member inserts kpi" ON public.capability_kpi_log FOR INSERT TO authenticated WITH CHECK(true);
+CREATE POLICY "member inserts kpi" ON public.capability_kpi_log FOR INSERT TO authenticated WITH CHECK(public.is_platform_owner());
 
 -- ── CAPABILITY HEALTH RPC ─────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.get_capability_health()

@@ -127,5 +127,134 @@ class RLSAuditorTests(unittest.TestCase):
         self.assertIn("WARNING", out)
 
 
+class ClauseBoundaryTests(unittest.TestCase):
+    """A policy must be judged on its OWN clauses.
+
+    Both cases here were real: on origin/main the auditor reported 39 CRITICAL
+    findings against a database that, measured live on 2026-09-05, had 304
+    policies, 197 carrying a WITH CHECK clause, and zero whose WITH CHECK was
+    `true`. These are the two defects that produced them.
+    """
+
+    def setUp(self):
+        self.fx = RLSFixture()
+
+    def tearDown(self):
+        self.fx.cleanup()
+
+    def test_select_policy_does_not_inherit_a_later_policys_with_check(self):
+        # Verbatim shape of supabase/refinements.sql lines 8-10. The SELECT
+        # policy has no WITH CHECK and cannot have one -- Postgres rejects
+        # WITH CHECK on FOR SELECT. The clause search used to run to the end of
+        # the FILE, so it picked up the UPDATE policy's `true` two lines down.
+        self.fx.write_sql(
+            "refinements.sql",
+            """
+            CREATE TABLE IF NOT EXISTS public.publications (
+              id uuid PRIMARY KEY,
+              user_id uuid
+            );
+            ALTER TABLE public.publications ENABLE ROW LEVEL SECURITY;
+
+            CREATE POLICY "owner reads publications" ON public.publications
+              FOR SELECT TO authenticated USING (public.is_platform_owner());
+            CREATE POLICY "owner updates publications" ON public.publications
+              FOR UPDATE TO authenticated
+              USING (public.is_platform_owner()) WITH CHECK (true);
+            """,
+        )
+        code, out = self.fx.run()
+        self.assertNotIn("owner reads publications", out,
+                         "a FOR SELECT policy was reported for a WITH CHECK it "
+                         "cannot have and does not declare")
+        self.assertEqual(code, 0, out)
+
+    def test_owner_gated_update_is_not_called_unconditional(self):
+        # supabase/chunk_05_migrations.sql:39's shape. USING restricts the rows
+        # to the owner; WITH CHECK(true) then lets the owner write any value
+        # into rows only the owner can reach. That is what "owner" means.
+        self.fx.write_sql(
+            "schema.sql",
+            """
+            CREATE TABLE IF NOT EXISTS public.publications (
+              id uuid PRIMARY KEY,
+              user_id uuid
+            );
+            ALTER TABLE public.publications ENABLE ROW LEVEL SECURITY;
+
+            CREATE POLICY "owner updates" ON public.publications FOR UPDATE
+              TO authenticated
+              USING (public.is_platform_owner()) WITH CHECK (true);
+            """,
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, out)
+
+    def test_unscoped_insert_still_fails_the_gate(self):
+        # THE VIOLATOR. Without this the two tests above would be satisfied by
+        # an auditor that reports nothing at all -- CLAUDE.md 8.4, verify a
+        # "0 findings" result is real. An INSERT policy has no USING clause, so
+        # WITH CHECK is the only gate and `true` admits any row, attributed to
+        # anyone (8.1 class 6b).
+        self.fx.write_sql(
+            "schema.sql",
+            """
+            CREATE TABLE IF NOT EXISTS public.telemetry_events (
+              id uuid PRIMARY KEY,
+              user_id uuid
+            );
+            ALTER TABLE public.telemetry_events ENABLE ROW LEVEL SECURITY;
+
+            CREATE POLICY "member inserts telemetry" ON public.telemetry_events
+              FOR INSERT TO authenticated WITH CHECK (true);
+            """,
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("CRITICAL", out)
+        self.assertIn("user_id", out, "the user_id case should say what is at risk")
+
+    def test_ungated_update_still_fails_the_gate(self):
+        # The other half of the violator: an UPDATE whose USING is `true` has
+        # no gate either, so WITH CHECK(true) really is unconditional.
+        self.fx.write_sql(
+            "schema.sql",
+            """
+            CREATE TABLE IF NOT EXISTS public.notes (
+              id uuid PRIMARY KEY,
+              user_id uuid
+            );
+            ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
+
+            CREATE POLICY "anyone updates" ON public.notes FOR UPDATE
+              TO authenticated USING (true) WITH CHECK (true);
+            """,
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("CRITICAL", out)
+
+    def test_one_finding_per_policy_not_two(self):
+        # The old code emitted "WITH CHECK(true)" AND a separate "Permissive X
+        # without auth.uid()" for the same condition, double-counting every hit
+        # on a table with a user_id column.
+        self.fx.write_sql(
+            "schema.sql",
+            """
+            CREATE TABLE IF NOT EXISTS public.telemetry_events (
+              id uuid PRIMARY KEY,
+              user_id uuid
+            );
+            ALTER TABLE public.telemetry_events ENABLE ROW LEVEL SECURITY;
+
+            CREATE POLICY "member inserts telemetry" ON public.telemetry_events
+              FOR INSERT TO authenticated WITH CHECK (true);
+            """,
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("CRITICAL — 1 RLS policy issue(s)", out)
+
+
 if __name__ == "__main__":
     unittest.main()

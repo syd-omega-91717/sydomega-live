@@ -548,7 +548,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **206** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **216** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -556,6 +556,7 @@ entries (which were accurate when written):
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/rls-auditor.py` | 0 findings, exit 0 (was 39 CRITICAL, blocking every PR; the live database had none of them — `FIXES_LOG.md` 93) |
+| `python3 scripts/silent-failure-detector.py` | 0 findings, exit 0 (was **51**; 42 were scanner noise and 9 were real §8.1 class 1 bugs, all fixed — `FIXES_LOG.md` 94) |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
@@ -565,7 +566,7 @@ entries (which were accurate when written):
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
-| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — all five audits there block in `ci.yml`, and `silent-failure-detector` and `migration-consistency` still exit 1 (`FIXES_LOG.md` 93) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — all five audits there block in `ci.yml`; four are now green and only `migration-consistency` still exits 1 (`FIXES_LOG.md` 93, 94) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

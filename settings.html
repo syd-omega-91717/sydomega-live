@@ -266,7 +266,17 @@ async function refreshPrivacy(){
     if(stat)stat.textContent='Your profile is currently '+(pub?'PUBLIC — visible to other members.':'PRIVATE — visible only to you and the Order.');
   }catch(e){if(stat)stat.textContent='';}
 }
-async function setVis(v){try{await sb.rpc('set_profile_visibility',{p_public:v});refreshPrivacy();}catch(e){}}
+/* The try/catch here caught nothing: Supabase resolves {data:null,error}
+   rather than throwing, so a rejected visibility change was silent and
+   refreshPrivacy() simply repainted the old value (CLAUDE.md 8.1 class 1). */
+async function setVis(v){
+  var stat=document.getElementById('pv-status');
+  try{
+    var r=await sb.rpc('set_profile_visibility',{p_public:v});
+    if(r&&r.error){if(stat)stat.textContent='Could not change visibility — '+r.error.message;return;}
+    refreshPrivacy();
+  }catch(e){if(stat)stat.textContent='Could not change visibility.';}
+}
 document.getElementById('pv-private').addEventListener('click',function(){setVis(false);});
 document.getElementById('pv-public').addEventListener('click',function(){setVis(true);});
 refreshPrivacy();

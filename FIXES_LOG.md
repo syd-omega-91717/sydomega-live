@@ -11259,3 +11259,90 @@ half had already merged. Branch restarted from the new `main`
 (`git checkout -B <branch> origin/main`), the delta reapplied with
 `git apply --3way` (13 files, all clean), re-verified: `rls-auditor.py` exit 0,
 `scripts/tests` 206 passing, `ci-local.sh` 23/23.
+
+## 94. The silent-failure gate reported 51 unchecked writes; 42 were noise and 9 were real
+
+**Found by** `scripts/silent-failure-detector.py` exiting 1 in `ci.yml` — one of
+the five audits that block on GitHub while `ci-local.sh` listed them as
+"advisory" (entry 93's second half). With the RLS gate fixed, CI reached this
+step for the first time.
+
+`FOUND 51 UNCHECKED WRITE(S)` on `origin/main`. After a false-positive pass:
+**51 → 9 real, all 9 fixed, gate now exits 0.**
+
+A note on measuring: an early pass of this analysis grepped the output for
+`^\s+\S+\.js:` and reported "24 findings". The scanner also scans `*.html`, so
+that number was wrong by more than half. It was corrected by reading the
+scanner's own `FOUND n` line instead of a filtered view of its output.
+
+### The scanner defects — 42 findings that were not bugs
+
+| defect | example | why it was wrong |
+|---|---|---|
+| No JS comment stripping | `omega-ring.js:20` | The match was `OmegaRing.update(canvas, newValue)` inside a `/* */` block documenting OmegaRing's own API. Same class as the `as` read from a SQL string literal in entry 92d. |
+| Any receiver matched | `omega-confetti.js:115` | `_particles.forEach(function (p) { p.update(); … })` — a particle in a `requestAnimationFrame` loop, reported as a database write. A write now needs a Supabase receiver in the same statement. |
+| `vendor/` scanned | `vendor/supabase-js.js:43` | `.rpc(e,t,n)` is the vendored client *defining* `.rpc` (CLAUDE.md §4). Third-party code is never edited here, so a finding in it can never be acted on. |
+| Only looked forward | `omega-council.js:219` | The commonest correct form puts the check to the **left**: `const { error } = await sb.from(…).update(…)`. |
+| `.catch()` window too small | `omega-onboard.js:106` | A fixed 200 characters, so a `.catch(function(){})` after a multi-line argument object was missed — in the file CLAUDE.md §9 names as getting this right. |
+| Reads treated as writes | `get_all_members`, `get_platform_flag`, `check_trial_status` | The gate's own stated risk is a **write** silently failing. A failed read yields empty data — a different defect (§8.1 class 9) with its own gate. |
+| No notion of a bound result | `omega-feedback.js:81` | `var r = await sb.rpc('submit_feedback',…)` then `if (r.data && r.data.ok) {…} else {…'Could not send.'…}` is a genuine outcome check with a failure branch; it was flagged only because the literal token `.error` does not appear. |
+
+**A false negative was introduced and caught during this work.** Widening the
+`.catch()` search to a flat 500-character window made `bg.js:1520` disappear —
+an unrelated outer chain's `.catch`, six lines below, vouched for a call that
+checked nothing. Hiding a real finding is worse than reporting a false one, so
+the search is now bounded by the statement, tracking parenthesis depth so a `;`
+inside a callback body does not end it early. `test_an_unrelated_later_catch_
+does_not_vouch_for_this_call` pins it.
+
+### The 9 real ones, all fixed
+
+The shape that matters is a `.then()` whose callback takes **no argument**: it
+runs identically on success and on `{data:null,error}`, so it cannot have
+checked anything.
+
+- **`bg.js:1640`** — the most privileged write in the file, its result
+  discarded: `await sb.from('profiles').update({access_approved:true, …,
+  membership_tier:9}).eq('id',uid)`. A policy, grant or constraint rejecting it
+  left the owner un-elevated while execution continued to the pending-member
+  count as though it had worked.
+- **`bg.js:1520` and `bg.js:1563`** — `sb.rpc('expire_trial',…).then(function(){
+  location.replace('/pending.html?t=expired'); })`. The member was told their
+  trial had ended and redirected **whether or not the server expired it**; the
+  second writes "SESSION ENDED · RESETTING PROGRESS…" before the call. The
+  redirect is still correct (their time is up by the clock) so it is kept, but
+  the failure is now logged instead of invisible.
+- **`bg.js:1529`** — `try{ sb.rpc('ping_session'); }catch(e){}`, the literal
+  §8.1 class 1 trap: the guard cannot fire because nothing throws.
+- **`omega-workflow.js:103` and `:167`** — `try{ await …rpc('record_sovereign_event',
+  …) }catch(e){} return {ok:true,recorded:true}`. The second asserts
+  `recorded:true` unconditionally, from inside a catch that cannot see the
+  failure. Both now report what actually happened.
+- **`omega-notify.js:103`** — `.update({read_at:…}).then(function(){updateBadge(0);
+  _count=0;})` cleared the unread badge on failure too, so it reappeared on the
+  next page load.
+- **`omega-graphify-integration.js:312`** — an `insert` into `notifications`
+  inside a `try/catch` that logs `err`; since Supabase does not throw, the
+  notification could silently not exist.
+- **`omega-export.js:120`** — the GDPR export's own audit record, swallowed the
+  same way.
+- **`settings.html:269`** — `async function setVis(v){try{ await
+  sb.rpc('set_profile_visibility',{p_public:v}); refreshPrivacy(); }catch(e){}}`.
+  Now surfaces the failure in `#pv-status`, the element the neighbouring
+  `refreshPrivacy()` already writes to.
+
+### Verification
+
+Ten tests added (7 → 17), each pairing a "must not fire" case with a violator,
+because the negatives alone are satisfied by a scanner that reports nothing.
+`bg.js` is the platform's single point of failure, so it was checked with
+`node --check` **and** `node scripts/verify-runtime.js`: **PASS on 13 pages**,
+including `settings.html`, which this entry edits.
+
+`silent-failure-detector.py` exit 0 (was 1, 51 findings); `./scripts/ci-local.sh`
+ALL 23 BLOCKING CHECKS PASSED; `scripts/tests` **216** passing (was 206).
+Four of the five audits that block in `ci.yml` are now green
+(`schema-dictionary`, `rls-auditor`, `silent-failure-detector`,
+`upsert-conflict-check`); **`migration-consistency` remains at 1** and is the
+last one, deliberately untouched here — CLAUDE.md §5 says its 7 divergences need
+a per-table live-schema check rather than a bulk sweep.

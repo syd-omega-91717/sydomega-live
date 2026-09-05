@@ -201,6 +201,42 @@ const CHECK_JS = `(() => {
     if (!ok) unl.push(el.name || el.id || el.type || 'input');
   });
   out.unlabelledInputs = unl.slice(0, 8);
+  /* --- FIXED-CHROME OCCLUSION ------------------------------------------
+     Two modules independently claimed position:fixed;bottom:0;left:0;right:0
+     at z-index 9990 -- omega-legal.js's consent bar and omega-pwa.js's install
+     bar -- neither aware of the other, so the later paint intercepted every
+     click on the earlier one. Measured on the front door at 1280x800: 61px of
+     overlap, ACCEPT ALL blocked by #pwa-dismiss-btn and ESSENTIAL ONLY by
+     #pwa-install-btn. A member could not record a cookie choice, so the
+     consent bar could never clear. No static check can see this: both rules
+     are correct in isolation and only collide once painted.
+
+     Only an occluder under a DIFFERENT position:fixed ancestor counts. That
+     is what stops a full-viewport pointer-events:none backdrop -- omega-fx,
+     the particle canvas, the noise overlay -- from reporting against every
+     control on the page, which is the mistake an earlier collision scan made
+     on 177 of 178 pages. Advisory: a deliberately-open modal is a legitimate
+     occluder, and this must not gate on one. */
+  const fixedRoot = el => {
+    for (let n = el; n && n !== document.documentElement; n = n.parentElement)
+      if (getComputedStyle(n).position === 'fixed') return n;
+    return null;
+  };
+  const occ = [];
+  document.querySelectorAll('a[href], button, [role=button], input:not([type=hidden]), select').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none' || cs.pointerEvents === 'none') return;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) return;
+    const top = document.elementFromPoint(cx, cy);
+    if (!top || top === el || el.contains(top) || top.contains(el)) return;
+    const mine = fixedRoot(el), theirs = fixedRoot(top);
+    if (!theirs || theirs === mine) return;
+    occ.push((el.id || el.textContent.trim().slice(0, 18) || el.tagName) + ' <- #' + (theirs.id || theirs.tagName));
+  });
+  out.occluded = occ.slice(0, 8);
   /* --- TEXT CONTRAST ---------------------------------------------------
      Blocking below 3:1, the floor for any content. Six buttons shipped at
      1.01:1 and 1:1 on the public sign-up and password-recovery path, and
@@ -396,6 +432,7 @@ async function main() {
       if (info.hasMain === false && !landedPublic) advisories.push('no <main> landmark');
       if (info.smallTapTargets && info.smallTapTargets.length) advisories.push('tap targets < 24px: ' + info.smallTapTargets.join('; '));
       if (info.unlabelledInputs && info.unlabelledInputs.length) advisories.push('unlabelled inputs: ' + info.unlabelledInputs.join(', '));
+      if (info.occluded && info.occluded.length) advisories.push('occluded by fixed chrome: ' + info.occluded.join(', '));
       if (info.lowContrastCount) problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
         info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' ' + JSON.stringify(c.text)).join(' | '));
       if (info.midContrast) advisories.push('contrast 3-4.5:1: ' + info.midContrast);
@@ -419,17 +456,19 @@ async function main() {
       for (const p of r.problems) console.log('        x ' + p);
     }
     // Advisories aggregated - they are platform-wide (bg.js chrome), not per-page.
-    const tapSel = new Set(), unlabelled = new Set(), noMain = [], owner = []; let midC = 0;
+    const tapSel = new Set(), unlabelled = new Set(), occluded = new Set(), noMain = [], owner = []; let midC = 0;
     for (const r of results) for (const a of r.advisories) {
       if (a.startsWith('tap targets')) a.replace(/tap targets < 24px: /, '').split('; ').forEach(s => tapSel.add(s.replace(/ \d+x\d+$/, '')));
       else if (a.startsWith('unlabelled')) a.replace(/unlabelled inputs: /, '').split(', ').forEach(s => unlabelled.add(s));
       else if (a.startsWith('no <main>')) noMain.push(r.page);
       else if (a.startsWith('owner-gated')) owner.push(r.page);
+      else if (a.startsWith('occluded by fixed chrome')) a.replace(/occluded by fixed chrome: /, '').split(', ').forEach(s => occluded.add(s));
       else if (a.startsWith('contrast 3-4.5')) midC += parseInt(a.split(': ')[1], 10) || 0;
     }
     console.log('\nadvisory (tracked as the `accessibility` capability, not gating):');
     if (tapSel.size) console.log('  tap targets < 24px, distinct selectors: ' + [...tapSel].join(', '));
     if (unlabelled.size) console.log('  unlabelled inputs: ' + [...unlabelled].join(', '));
+    if (occluded.size) console.log('  interactive controls occluded by other fixed chrome: ' + [...occluded].join(', '));
     if (noMain.length) console.log('  no <main> landmark: ' + noMain.join(', '));
     if (owner.length) console.log('  owner-gated (expected): ' + owner.join(', '));
     if (midC) console.log('  text contrast 3-4.5:1 (clears the 3:1 floor, misses AA at small sizes): ' + midC);

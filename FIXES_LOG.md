@@ -10448,3 +10448,109 @@ Gates: `./scripts/ci-local.sh` **23/23** blocking (was 22), `contract-suite.py`
 **17** gates, **201** tests in `scripts/tests` + **22** in `tests/`,
 `scripts/audit.py` 0 critical / 7 warnings, `omega-registry.py --check` matches
 (189 pages), `node scripts/verify-runtime.js` **PASS on 13 pages**.
+
+---
+
+## 87. Two fixed bottom bars at the same z-index made the cookie consent controls unclickable
+
+**Date:** 2026-09-05
+**Reported by:** the owner, in the same photograph as entry 86 — the consent
+text cut off mid-sentence, its buttons behind the install prompt.
+
+### Measured, not inferred
+
+`omega-legal.js:68` and `omega-pwa.js:41` both inject
+
+```
+position:fixed; bottom:0; left:0; right:0; z-index:9990
+```
+
+— identical anchoring, identical stacking context, neither module aware of the
+other. At equal `z-index` the later paint wins outright. Rendered at 1280×800
+on the front door, with `beforeinstallprompt` dispatched (headless Chromium
+never fires it; the event is exactly what `omega-pwa.js:197` listens for) and
+its 12 s `SHOW_DELAY` elapsed:
+
+```
+consent  top 720  h 80   z 9990  fixed
+install  top 739  h 61   z 9990  fixed
+overlap  61px
+omega-consent-accept     -> BLOCKED by #pwa-dismiss-btn
+omega-consent-essential  -> BLOCKED by #pwa-install-btn
+pwa-install-btn          -> reachable
+```
+
+Both consent controls were unreachable: a click landed on the install banner.
+Since `omega-legal.js` removes `#omega-consent` only from those two click
+handlers, the consent banner could also never be dismissed.
+
+### The fix
+
+Consent outranks the install invitation, and that is not a preference — it is a
+legal gate whose controls must work. `omega-pwa.js`'s `showBannerIfEligible()`
+now defers while `#omega-consent` is on screen and resumes when it goes, via a
+`MutationObserver` on `document.body` (one edge to observe, no interval to
+leak; guarded on `document.body` existing, per §8.1 class 5a). Raising a
+`z-index` was rejected: it would only have hidden the other bar's text instead.
+
+Verified in a render, fresh context per phase because the consent choice
+persists in `localStorage` (§8.4):
+
+```
+while consent pending : install absent, ACCEPT ALL reachable, ESSENTIAL ONLY reachable
+after ESSENTIAL ONLY  : consent gone, install banner shown (h 61, top 739)
+```
+
+The invitation is sequenced, not lost.
+
+### A detector, because this is a class and not an incident
+
+No static check can see this — both CSS rules are correct in isolation and only
+collide once painted. `scripts/verify-runtime.js` now hit-tests every visible
+interactive control and reports any occluded by an element under a **different**
+`position:fixed` ancestor. That last qualifier is the whole design: without it a
+full-viewport `pointer-events:none` backdrop reports against every control on
+the page, which is the mistake an earlier collision scan made on 177 of 178
+pages (§8.4). Advisory, not blocking — a deliberately-open modal is a
+legitimate occluder.
+
+**Control, run against the gate's own detector text rather than a paraphrase**:
+with the fix in place the consent buttons are absent from its output; planting a
+second `position:fixed; bottom:0; z-index:9990` bar reproduces the report
+exactly —
+
+```
+omega-consent-essential <- #planted-bottom-bar
+omega-consent-accept    <- #planted-bottom-bar
+```
+
+### What it found immediately — 20 more, none of them regressions
+
+On the 13 capability entrypoints, first run:
+
+```
+TERMS, PRIVACY, COMPLIANCE, ARENA, ✶GOVERN,
+CONNECT SNAPCHAT, CONNECT REDDIT   <- #omega-ticker-strip
+EN AR FR ES NL ZH HI, omega-sound-btn  <- #gate
+INTEL, ●ARENA                      <- #omega-voice-btn
+TERMS, PRIVACY                     <- #omega-controls-dock
+⌂                                  <- #om-open
+```
+
+and on the front door, `#omega-consent` itself covers the language switcher and
+the sound/search buttons.
+
+**Root cause of the class, and why it is recorded rather than fixed here.** The
+bottom chrome is already stacked — by hand-tuned pixel offsets:
+`omega-controls.js:59` sets `#omega-controls-dock{bottom:102px!important}` and
+`omega-realtime.js:119` sets `#omega-ticker-strip{bottom:66px!important}`, both
+inside `@media(max-width:760px)`. Offsets tuned for one viewport are wrong at
+every other one, and none of them tracks a bar's actual height. The correct fix
+is a single shared bottom inset that each dock reads, which is a change across
+four modules needing its own verification across viewports and pages — see
+`GAP_ANALYSIS.md` §S. Shipping half of it would trade a measured problem for an
+unmeasured one.
+
+Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
+PASS on 13 pages (occlusions reported as advisory), `node --check` clean on
+`omega-pwa.js` and `scripts/verify-runtime.js`.

@@ -244,7 +244,7 @@ def parse_sql_files():
 
 
 def _object_body(content, brace_pos):
-    """Return the text inside a { ... } starting at brace_pos, brace-matched.
+    r"""Return the text inside a { ... } starting at brace_pos, brace-matched.
 
     The patterns below previously captured the object with `\{([^}]+)\}`, which
     stops at the FIRST closing brace. For a payload like

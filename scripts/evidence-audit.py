@@ -70,6 +70,7 @@ if '--help' in sys.argv[1:] or '-h' in sys.argv[1:]:
     print(__doc__.strip())
     raise SystemExit(0)
 
+import json
 import os
 import re
 from collections import defaultdict
@@ -182,6 +183,66 @@ AUTH_RE = re.compile(
 # before they lose the cache. Worth reporting because it splits LOCAL_ONLY
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
+
+
+def live_surface():
+    """Relations the LIVE database actually had, from supabase/live-schema.json.
+
+    Why this exists, and why it is a separate axis from sql_surface().
+
+    Every class above answers "what does this repository declare". None of them
+    answers "does it exist in production". CLAUDE.md 8.4 states the gap
+    outright: a BUILT row means the *client* is wired and nothing more -- the
+    live table, its columns, its GRANT and its policy are all still unverified,
+    and each has been a real shipped bug (8.1 classes 2 and 6). A relation the
+    SQL bag declares but production never received answers every query with
+    {data:null,error}: an empty page, no exception, no console error.
+
+    live-schema.json is a DATED SNAPSHOT, not a connection. It is the same file
+    audit.py, schema-dictionary.py, upsert-conflict-check.py and
+    resilience-audit.py already trust, and CLAUDE.md 8.1 class 2 warns that a
+    stale snapshot re-opens false positives. So the capture date is reported
+    with every finding, and this axis never overrides a class -- it is reported
+    alongside, and only the subset a client actually reads can gate.
+
+    Returns (relations, captured) with relations lowercased, or (None, None)
+    when the snapshot is absent or unreadable -- in which case the whole axis
+    reports "not checked" rather than a misleading zero.
+    """
+    path = ROOT / 'supabase' / 'live-schema.json'
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        return None, None
+    tables = data.get('tables')
+    if not isinstance(tables, dict) or not tables:
+        return None, None
+    return {str(k).lower() for k in tables}, str(data.get('_captured', 'unknown'))
+
+
+def live_gap(rows, rels, live):
+    """Relations the bag declares that the live snapshot lacks, and who reads them.
+
+    Severity is decided by one thing only: whether client code queries it.
+
+      read by a page  -> a silent empty state shipping to members right now
+      read by nothing -> schema written and never applied; latent, not live
+
+    The second is the larger set here and is deliberately NOT a failure: this
+    repo ships dormant backends on purpose (CLAUDE.md 9). It is reported so
+    that wiring a page to one of them is a decision, not a surprise.
+    """
+    if live is None:
+        return None
+    missing = sorted(t for t in rels if t not in live)
+    consumers = {t: [] for t in missing}
+    for name, _cls, _why, info in rows:
+        for tbl in info['tables']:
+            if tbl.lower() in consumers:
+                consumers[tbl.lower()].append(name)
+    for t in consumers:
+        consumers[t] = sorted(set(consumers[t]))
+    return consumers
 
 
 def scan_client(path):
@@ -345,24 +406,44 @@ def main():
         with_backup = sum(1 for _n, _w, i in lo if i['backup'])
         print('  device-local pages: %d with an export path, %d with none'
               % (with_backup, len(lo) - with_backup))
+    live, captured = live_surface()
+    gap = live_gap(rows, rels, live)
+    if gap is None:
+        print('  live-schema cross-check:            NOT CHECKED '
+              '(supabase/live-schema.json absent or unreadable)')
+    else:
+        read = {k: v for k, v in gap.items() if v}
+        print('  declared in supabase/, absent from the live snapshot (%s): %d'
+              % (captured, len(gap)))
+        print('    of those, read by client code:    %d%s'
+              % (len(read), '' if read else '   (none -- latent, not live)'))
     print()
     print('  UNVERIFIED: every row above is repository evidence only. No live')
     print('  database was reached, so no table, column, GRANT or RLS policy is')
-    print('  confirmed to exist in production by this run.')
+    print('  confirmed to exist in production by this run. The live-schema line')
+    print('  is a dated snapshot, not a connection -- regenerate it whenever')
+    print('  schema is applied live, or its findings go stale in both')
+    print('  directions (CLAUDE.md 8.1 class 2).')
 
     if summary_only:
         return 0
 
-    write_report(rows, by_class, edge_rows, dupes, rels, fns)
+    write_report(rows, by_class, edge_rows, dupes, rels, fns, gap, captured)
     print()
     print('wrote EVIDENCE_MATRIX.md')
 
     if strict and by_class.get('BROKEN'):
         return 1
+    # A relation absent from production AND read by a page is a silent empty
+    # state already shipping. Absent-and-unread is dormant backend, which this
+    # repo does on purpose, so it never gates.
+    if strict and gap and any(v for v in gap.values()):
+        return 1
     return 0
 
 
-def write_report(rows, by_class, edge_rows, dupes, rels, fns):
+def write_report(rows, by_class, edge_rows, dupes, rels, fns,
+                 gap=None, captured=None):
     out = []
     w = out.append
 
@@ -456,6 +537,58 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
         w('</details>')
         w('')
 
+    # ---- live-schema cross-check -----------------------------------------
+    w('## LIVE SCHEMA CROSS-CHECK')
+    w('')
+    if gap is None:
+        w('`supabase/live-schema.json` is absent or unreadable, so this axis was')
+        w('**not checked**. That is reported rather than scored as zero: a')
+        w('missing snapshot and a clean snapshot look identical in a count.')
+    else:
+        read = {k: v for k, v in gap.items() if v}
+        w('Every class above answers *what does this repository declare*. This')
+        w('section answers a different question: **does production actually have')
+        w('it?** A relation the SQL bag declares but the database never received')
+        w('answers every query with `{data:null,error}` — an empty page, no')
+        w('exception, no console error (CLAUDE.md §8.1 class 2).')
+        w('')
+        w('Source: `supabase/live-schema.json`, captured **%s**. A dated' % captured)
+        w('snapshot, not a connection. Regenerate it whenever schema is applied')
+        w('live; a stale snapshot produces false findings in both directions.')
+        w('')
+        w('| relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |')
+        w('|---|---|---|')
+        w('| %d | %d | %d |' % (len(rels), len(gap), len(read)))
+        w('')
+        if read:
+            w('### Absent live AND read by client code — silent empty state')
+            w('')
+            w('These ship to members today. Every query against them returns no')
+            w('rows and no error.')
+            w('')
+            w('| relation | read by |')
+            w('|---|---|')
+            for rel in sorted(read):
+                w('| `%s` | %s |' % (rel, ', '.join('`%s`' % c for c in read[rel])))
+            w('')
+        else:
+            w('**No absent relation is read by any page.** Nothing is silently')
+            w('empty on this axis today.')
+            w('')
+        latent = sorted(k for k in gap if not gap[k])
+        if latent:
+            w('### Absent live, read by nothing — declared and never applied')
+            w('')
+            w('Not a failure, and deliberately not gated: this repo ships dormant')
+            w('backends on purpose (CLAUDE.md §9). Recorded so that wiring a page')
+            w('to one of these is a decision rather than a surprise — the page')
+            w('would classify `BUILT` while returning nothing.')
+            w('')
+            for rel in latent:
+                w('- `%s`' % rel)
+            w('')
+    w('')
+
     w('## UNVERIFIED — what no repository scan can settle')
     w('')
     w('These are not open questions because nobody looked. They are open')
@@ -464,7 +597,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
     w('')
     w('| question | why the repo cannot answer it |')
     w('|---|---|')
-    w('| Does the live database have every table `supabase/` declares? | The SQL bag is applied by hand. `supabase/migrations/` is validated against a *blank* database only, and `task_completions` is a proven case where live and declared disagree (CLAUDE.md §5). |')
+    w('| Does the live database have every table `supabase/` declares? | **Partly answered above** — the LIVE SCHEMA CROSS-CHECK compares the bag against `live-schema.json`. That snapshot is dated, and proves nothing about columns, grants or policies. |')
     w('| Do the columns match? | PostgREST rejects the whole query when one column name is unknown, emptying a page with no visible error (CLAUDE.md §8.1 class 2). |')
     w('| Can a member actually reach each table? | A `GRANT` is checked *before* row security, so a correct RLS policy on a table with no grant fails every query with `42501`. 60 tables were once in this state (CLAUDE.md §8.1 class 6). |')
     w('| Do the policies scope rows correctly? | Only reproducible by impersonating a real member in-database; a privileged `execute_sql` proves nothing (CLAUDE.md §8.4). |')

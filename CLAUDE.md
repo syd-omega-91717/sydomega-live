@@ -339,8 +339,7 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
   root is unchanged and still the source of truth for new schema changes
   — see `REPOSITORY_AUDIT.md` §4 for the duplicate-table-definitions list;
-  derive the count from `evidence-audit.py`, never quote it (the 47 that stood
-  here had drifted to 48). Not deduplicated by migrations/, only reordered —
+  derive the count from `evidence-audit.py`, never quote it (47 had drifted to 48). Not deduplicated by migrations/, only reordered —
   consolidating needs a per-table live-schema check, not a bulk sweep.
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
@@ -533,11 +532,17 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **`Production Surface Smoke` is red because production is 404ing, not because of code.** It
-  runs `curl --fail https://www.sydomega.com/`, which returns 404 while the Vercel alias stays
-  pinned to `31f9180d` (pre-`index.html`) by an Instant Rollback. No commit clears it; only
-  cancelling the rollback does (`FIXES_LOG.md` 95). It is the one gate here that fetches the
-  live system, so read its failure as an outage report before hunting a code defect.
+- **`Production Surface Smoke` is red because production is 404ing, not because of code.** Its
+  `curl --fail https://www.sydomega.com/` 404s while the Vercel alias stays pinned to
+  `31f9180d` by an Instant Rollback; no commit clears it, only cancelling the rollback does
+  (`FIXES_LOG.md` 95). The one gate here that fetches the live system — read its failure as an
+  outage report, not a code defect.
+- **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
+  the web surface into `public/` from a fixed directory allow-list, so a top-level directory
+  not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages
+  while printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). It self-verifies now, but **add any
+  new web directory to that list**; never commit `public/`. The dashboard's *Framework Settings
+  Override* notice is expected: those keys are load-bearing.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`), so jobs drain
   one at a time and `queued` is normal. A red check is real output now, not the old
   `runner_id: 0` no-op. Two Windows traps: paths and console codec differ, and a crashed child
@@ -553,12 +558,12 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **216** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **230** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
-| `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
+| `python3 scripts/context-budget.py` | PASS — CLAUDE.md is at its 16,000-token budget, so a new paragraph means trimming an old one. `.gitattributes` pins LF (`core.autocrlf` inflated it ~250 tokens on Windows) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/rls-auditor.py` | 0 findings, exit 0 (was 39 CRITICAL, blocking every PR; the live database had none of them — `FIXES_LOG.md` 93) |
 | `python3 scripts/silent-failure-detector.py` | 0 findings, exit 0 (was **51**; 42 were scanner noise and 9 were real §8.1 class 1 bugs, all fixed — `FIXES_LOG.md` 94) |
@@ -566,7 +571,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill. **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 (259, mostly the deliberately-3:1 `--crim`) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
@@ -896,7 +901,7 @@ the same repositories:
 | `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex` and invite-gated, with no ad surface. Evaluated twice — do not re-evaluate unless what the platform is changes. |
 | `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and that a description must say *when* to use the skill — what `grill-me-codex` was missing. |
 | `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
-| `affaan-m/everything-claude-code` (+ 4 forks of it) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
+| `affaan-m/everything-claude-code` (+ 4 forks) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
 | `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |
 
 Full evidence, per-repo blockers, and what could not be verified this session:

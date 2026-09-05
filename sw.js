@@ -19,7 +19,7 @@
      the request entirely. v4 guards it.
 
    FIXED — 3. PRECACHE OF A NON-EXISTENT FILE
-     v3 precached '/omega-tokens.json', which does not exist in the repository.
+     v3 precached omega-tokens.json, which does not exist in the repository.
      Silently swallowed, but it meant the precache list was never verified.
      Removed. Keep this list honest — CI checks it.
 

@@ -150,7 +150,7 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `ascension.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `codex.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
+| `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes |
 | `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |

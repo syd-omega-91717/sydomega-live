@@ -10790,3 +10790,84 @@ overwrite a live reading with the English literal on the next language change.
 
 Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
 PASS on 13 pages, 0 page errors on the rendered dashboard.
+
+---
+
+## 90. `codex.html`'s bookmarks lived only in the browser cache while their table sat live and empty
+
+**Date:** 2026-09-05
+
+### The gap
+
+`public.codex_bookmarks` was applied live earlier today (migration
+`20260905012909`) with RLS scoped to `auth.uid() = user_id` and a `GRANT` to
+`authenticated` — both halves, so §8.1 class 6 is satisfied. Nothing ever wrote
+to it. `codex.html` kept every bookmark in
+`localStorage['omega_codex_bookmarks']` across three write sites, so a member's
+saved knowledge died with their browser cache and was invisible on any other
+device.
+
+### The two traps checked before writing a line
+
+**A non-primary-key unique index.** The table carries
+`UNIQUE (user_id, url)`. PostgREST defaults an upsert's conflict target to the
+*primary key*, and with no `id` in the payload the write would succeed exactly
+once and raise `23505` on every later save of the same URL — the feature frozen
+at its first bookmark, silently (§8.1 class 7). The upsert names
+`onConflict:'user_id,url'` explicitly.
+
+**A narrow CHECK on `source`.** The column allows only
+`wikipedia | arxiv | openlibrary`. The page's three result builders emit exactly
+those three literals — verified before wiring, because one unknown value makes
+PostgREST reject the whole statement (§8.1 class 2).
+
+### What it does, and deliberately does not do
+
+Write-up only, matching `omega-member-state.js`: a hydrating two-way read would
+race this page's synchronous render, and a render from an empty cache could
+overwrite good server rows. `localStorage` remains what the page reads.
+
+`.error` is checked on both the upsert and the delete. Supabase resolves to
+`{data:null,error}` and does not throw, so a `try/catch` around either would
+catch nothing (§8.1 class 1). Signed-out visitors keep working: no session
+means no mirror attempt and no error.
+
+**The success toast was left telling the truth.** `★ SAVED TO CODEX` reports the
+*local* write, which really did happen. The mirror is a separate claim, so when
+it fails the page says so — `SAVED ON THIS DEVICE ONLY — NOT SYNCED` — rather
+than letting one toast stand for two different outcomes (§9).
+
+### Verified through the page's own click handler, not a hand-called internal
+
+The sandbox blocks `wikipedia.org`/`arxiv.org`/`openlibrary.org`, so no result
+cards render and the save path never runs. Stubbing those three hosts through
+the harness context made real cards appear with their real handlers attached;
+`window.__omegaSb` is the same object the module closed over, so patching it
+captures exactly what the page sends:
+
+```
+add      upsert codex_bookmarks {"onConflict":"user_id,url"}
+         payload: user_id, source:"wikipedia", title, url, excerpt:null,
+                  authors:null, published:null          -- local count 1
+remove   delete codex_bookmarks                          -- local count 0
+failure  upsert forced to {error:'permission denied'}
+         -> "NOT SYNCED" shown, bookmark still stored locally
+```
+
+Zero page errors on the add and remove phases.
+
+### A related finding, recorded rather than built
+
+`public.signal_saves` is live, with the same RLS-and-grant shape and its own
+`UNIQUE (user_id, url)`. **`signal.html` has no save feature at all** — no
+`localStorage`, no bookmark control, nothing to mirror. It is a backend for a
+feature that was never built. Wiring it would mean *inventing* the feature, so
+it stays unwired and is recorded in `GAP_ANALYSIS.md` §S instead.
+
+`EVIDENCE_MATRIX.md` moves `codex.html` from "1 table, 1 auth call" to
+"2 tables, 2 auth calls". It was already `PARTIAL` — `profiles` was the first
+table — so the class does not change; what changes is that bookmarks now
+survive the cache.
+
+Gates: `./scripts/ci-local.sh` 23/23 blocking, `check-inline-js.py` clean,
+`upsert-conflict-check.py` 0 findings.

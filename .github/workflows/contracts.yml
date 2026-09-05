@@ -1,27 +1,4 @@
-# Every static contract gate, in one job, on one checkout.
-#
-# This workflow replaces eleven separate ones: content-registry-contract,
-# content-uniqueness-contract, experience-principles, page-estate-inventory,
-# page-estate-quality, page-experience-contract, platform-principles,
-# production-surface-contract, repository-integrity-contract,
-# user-journey-contract and workflow-contract-lint.
-#
-# Each of those was a full Windows checkout wrapped around one short Python
-# script. Together the eleven gates run in under a second (measured 0.79s);
-# the eleven checkouts around them were the entire cost, and they queued behind
-# one serial self-hosted runner along with nine other workflows per commit.
-#
-# The consequence was not slow CI, it was NO CI: of the last thirty runs on
-# `main` on 2026-09-03 -- reaching back to 2026-09-01 -- every single one
-# concluded `cancelled`, superseded by the next push before the runner reached
-# it. Zero successes and zero failures in two days. Because the runner logs a
-# cancelled job as "completed with result: Failed", this read as a wall of
-# failing checks.
-#
-# scripts/contract-suite.py holds the gate list and is what scripts/ci-local.sh
-# runs too, so the local gate and this one cannot drift apart -- which they had:
-# content-uniqueness and page-experience were blocking here and absent there,
-# so the pre-push hook reported green over a red `main`.
+# Unified static contract gate. One checkout and one deterministic suite.
 name: Contracts
 
 on:
@@ -41,26 +18,14 @@ concurrency:
 jobs:
   contracts:
     name: Static contract gates
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Pinned rather than relying on whatever is on the runner's PATH.
-      # runner-probe.yml records that `pwsh` was absent at step 1 on this
-      # runner but present later; setup-python removes the same class of
-      # positional surprise for the interpreter this suite needs.
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      # One step, every gate. Actions stops a job at the first failing step and
-      # workflow-contract-lint.py forbids continue-on-error, so running the
-      # gates inside one process is the only way to report all of them at once.
-      # On a runner where a job can sit queued for an hour, that is the
-      # difference between one fix cycle and six.
       - name: Run contract suite
-        shell: pwsh
         run: python scripts/contract-suite.py

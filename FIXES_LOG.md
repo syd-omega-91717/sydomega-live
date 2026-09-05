@@ -11722,3 +11722,103 @@ PASSED**; `scripts/tests` 230 passing; `node scripts/verify-runtime.js` **PASS
 The copilot stays dormant until `ANTHROPIC_API_KEY` is set in Supabase secrets
 and `concierge` is deployed — both owner actions. The surfaces now say that in
 member language instead of leaking the runbook.
+
+## 99. Production settled the flat-bag/migrations contradiction, and the gate was asserting the losing side
+
+Two committed documents contradicted each other, and `migration-consistency.py`
+encoded one of them, so it exited 1 on every PR (#272 and #273 both).
+
+- `CLAUDE.md` §5: the flat `supabase/*.sql` bag "is still the source of truth for new schema changes."
+- `supabase/migrations/README.md:69`: "loose `supabase/*.sql` files are reference/legacy material and are not the deployment sequence."
+
+Neither document can settle it. **Production can**, and did:
+
+```sql
+select count(*), min(version), max(version) from supabase_migrations.schema_migrations;
+-- 169 | 0001 | 20260905080109
+```
+
+169 recorded migrations against **169** files in `supabase/migrations/`, in that
+directory's exact numbering scheme. The live database's own ledger tracks
+`migrations/`. The flat bag has no ledger and is applied by hand. So
+`migrations/` is authoritative and `CLAUDE.md` §5 was the stale document; it now
+says so, with this evidence.
+
+### What the gate was checking, and what it checks now
+
+It required the two directories to hold identical CREATE-definition **hash
+sets** — symmetric. Under the correct architecture that is meaningless in both
+directions: the flat bag legitimately carries stale and duplicate variants, and
+`migrations/` legitimately carries definitions with no flat-bag twin. All 7 of
+its findings were of exactly those two shapes.
+
+One asymmetry does matter: **schema declared only in the flat bag never
+deploys**. That is what it checks now, and the rewrite made it *stricter*, not
+weaker, in two ways:
+
+1. A table in the flat bag with no definition in `migrations/` is now reported.
+   The old gate never looked.
+2. The column check was `if flat_cols and not mig_cols` — any unrelated
+   `ADD COLUMN` in `migrations/` cleared the whole table, so a genuinely missing
+   column hid behind a present one. Now it is a per-column set difference, minus
+   columns `migrations/` declares inline in its `CREATE TABLE` body.
+
+`scripts/tests/test_migration_consistency.py` 3 → **8 tests**, two of them
+deliberately inverted from their original form with the reason recorded, each
+passing case paired with a violator.
+
+### It immediately found three real things the old gate never reported
+
+- **`advertisements`** (flat: `chunk_06_migrations.sql`) and
+  **`council_deliberations`** (flat: `omega_council_schema.sql`) — declared only
+  in the flat bag. Both **exist live** (`pg_class`), so they were applied by
+  hand and the sequence has no record of them.
+- **`private.is_platform_owner()`** — the live `advertisements` policies call
+  it, and `migrations/` defines only `public.is_platform_owner()` (13 matches,
+  all `public.`). The function exists live; the sequence never creates it. The
+  gate did not catch this one either — it checks tables and columns, not
+  functions.
+
+And the reason those two tables **were not** simply recorded in this change:
+
+- **The sequence is not fresh-appliable, and cannot be made so under its own
+  rules.** `20260819071913_optimize_auth_rls_initplan_seven_policies.sql` runs
+  an unguarded `ALTER POLICY member_reads_owns_deliberations ON
+  public.council_deliberations` — a table nothing earlier in the sequence
+  creates (the file contains zero `DO $$` / `IF EXISTS` / `to_regclass` guards).
+  A fresh `supabase db push` fails there. Recording the table at a 2026-09-05
+  timestamp does not fix that: the fix needs the table to exist *before*
+  `20260819071913`, which means renumbering or rewriting an applied migration,
+  both forbidden by `README.md:60`.
+
+So a migration recording those two tables would have turned the gate green
+without making anything more deployable — gaming the gate, not fixing it. They
+stay reported. `migration-consistency` still exits 1, now on 2 real findings
+instead of 7 architecturally meaningless ones. Closing them is a scoped
+migration-history repair that also needs `private.is_platform_owner()` and, per
+§10, a `grill-me-codex` pass, since it recreates RLS policies.
+
+### What was applied live
+
+`graph_entities.verified` and `graph_relationships.verified` were the one flat-bag
+finding with no ordering dependency, so they were recorded properly. `pg_attribute`
+reports both live as `boolean NOT NULL DEFAULT false`, so the migration is an exact
+no-op:
+
+```sql
+ALTER TABLE public.graph_entities      ADD COLUMN IF NOT EXISTS verified boolean NOT NULL DEFAULT false;
+ALTER TABLE public.graph_relationships ADD COLUMN IF NOT EXISTS verified boolean NOT NULL DEFAULT false;
+```
+
+Applied via `apply_migration` as version **`20260905180909`**. That tool writes a
+remote ledger row and no local file — the failure mode `remote-migrations.json`'s
+own header documents — so the local file and the snapshot were written in the same
+change. Ledger 170, `migrations/` 170, snapshot `_count` 170;
+`migration-drift.py`: `PASS (170 versions, local and remote agree)`.
+
+### Verification
+
+`scripts/tests` 230 → **235**, all passing; `./scripts/ci-local.sh` **ALL 23
+BLOCKING CHECKS PASSED**; `omega-registry.py --check` regenerated for the new
+migration file and matching; `context-budget.py` PASS (CLAUDE.md 15,878 after
+§5 was compressed). Control: a planted flat-only table is reported by name.

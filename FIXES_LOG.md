@@ -12379,6 +12379,48 @@ probes.
 
 `python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
 both files parse as YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
-PASSED**; `scripts/tests` **252** passing; `context-budget` PASS (CLAUDE.md
-~15,989 / 16,000). The real proof is the next run of each workflow reaching a
-conclusion at all — the first time either ever has.
+PASSED**; `context-budget` PASS (CLAUDE.md ~15,989 / 16,000).
+
+### What running it revealed, 40 seconds later
+
+`Supabase runtime health` executed for the first time in its life and **failed**
+— which is the whole point of moving it. The reason was immediate and real:
+
+```
+env:
+  SUPABASE_URL:
+  SUPABASE_ANON_KEY:
+::error::SUPABASE_URL is not configured in the CI secret store
+```
+
+Both repository secrets are empty. Nobody had ever set them, and nothing could
+notice, because the job that reads them had never started.
+
+**They were never secrets.** `bg.js:1506` hands both to every visitor —
+`createClient("https://<project>.supabase.co", "sb_publishable_…")` — because
+RLS, not key custody, is the authorization boundary here (§§1, 5). The project
+URL is committed unsecreted in `production-surface-smoke.yml`'s `env` block too.
+So the gate was permanently red waiting on a secret that does not exist and
+should not.
+
+The contract now reads the pair the platform actually ships, with the CI
+secrets kept as an override, and prints `credential_source=` so which one was
+used is never a guess. That is **stronger** than a stored copy, not weaker: a
+secret can drift from what production serves, and a value read out of the
+shipped bootstrap cannot. It is §8.4's own rule — derive the fact rather than
+keep a second copy of it.
+
+A service-role key could never arrive this way: the pattern is anchored on the
+`sb_publishable_` prefix, such a key is never in client code, and `ci.yml`'s
+scan blocks it regardless. `test_supabase_runtime_contract.py` proves all of
+that with violators — a `createClient` missing its key does not match, an
+`sb_secret_…` value does not match, a missing `bg.js` returns empty instead of
+raising, and the live key appears nowhere in the script's own source.
+
+### Verification
+
+`scripts/tests` 252 → **258**, all passing; `./scripts/ci-local.sh` **ALL 23
+BLOCKING CHECKS PASSED**. Locally the contract now resolves
+`credential_source=shipped_client` and then fails at the network hop — this
+session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
+does not.

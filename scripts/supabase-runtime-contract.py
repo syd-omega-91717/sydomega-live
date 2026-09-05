@@ -13,10 +13,12 @@ project. Schema/migration verification remains a separate controlled gate.
 from __future__ import annotations
 
 import os
+import re
 import socket
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 from urllib.parse import urlparse
 
 # CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
@@ -47,14 +49,51 @@ def get(url: str, headers: dict[str, str] | None = None) -> tuple[int, bytes]:
         return response.status, response.read(4096)
 
 
+# The credentials this contract needs are NOT secrets, and treating them as
+# secrets is what kept this gate permanently red. bg.js:1506 ships both to every
+# visitor -- `createClient("https://<project>.supabase.co", "sb_publishable_...")`
+# -- because RLS, not key custody, is the authorization boundary here (CLAUDE.md
+# 1 and 5). The project URL is also committed unsecreted in
+# production-surface-smoke.yml's env block.
+#
+# So read what the platform actually ships, and let the CI secrets override it.
+# That is strictly stronger than a separately-maintained copy: a secret can
+# drift from what production uses, and this cannot. It is also CLAUDE.md 8.4's
+# rule -- derive the fact, do not store a second copy of it.
+#
+# A service-role key would never be sourced this way; it is never in client code
+# at all, and ci.yml's scan blocks it (CLAUDE.md 5).
+CLIENT_BOOTSTRAP = Path(__file__).resolve().parents[1] / "bg.js"
+SHIPPED_CLIENT_RE = re.compile(
+    r"""createClient\(\s*["'](https://[a-z0-9-]+\.supabase\.co)["']\s*,\s*["'](sb_publishable_[A-Za-z0-9_-]+)["']"""
+)
+
+
+def shipped_credentials() -> tuple[str, str]:
+    """The (url, publishable key) pair bg.js hands to every page, or ("", "")."""
+    try:
+        match = SHIPPED_CLIENT_RE.search(CLIENT_BOOTSTRAP.read_text(encoding="utf-8", errors="replace"))
+    except OSError:
+        return "", ""
+    return (match.group(1), match.group(2)) if match else ("", "")
+
+
 def main() -> int:
     url = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
     anon = os.environ.get("SUPABASE_ANON_KEY", "").strip()
 
+    source = "ci_secrets"
+    if not url or not anon:
+        shipped_url, shipped_anon = shipped_credentials()
+        url = url or shipped_url
+        anon = anon or shipped_anon
+        source = "shipped_client" if (shipped_url or shipped_anon) else source
+
     if not url:
-        return fail("SUPABASE_URL is not configured in the CI secret store")
+        return fail("SUPABASE_URL is not set and bg.js does not declare a project URL")
     if not anon:
-        return fail("SUPABASE_ANON_KEY is not configured in the CI secret store")
+        return fail("SUPABASE_ANON_KEY is not set and bg.js does not declare a publishable key")
+    print(f"credential_source={source}")
 
     parsed = urlparse(url)
     if parsed.scheme != "https" or not parsed.netloc:

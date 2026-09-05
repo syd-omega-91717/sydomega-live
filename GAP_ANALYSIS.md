@@ -253,6 +253,23 @@ approved member the owner doesn't remember approving, per `0003_privilege_lockdo
 verification section, which applies identically here — remains open and worth a look, since
 verifying the *current* guard says nothing about what may have happened before it existed.
 
+- **`advertisements` has owner-only UPDATE and DELETE policies with no matching
+  table-level `GRANT`** (opened 2026-09-05; `FIXES_LOG.md` 102). Live,
+  `authenticated` holds only `SELECT` and `INSERT` on `public.advertisements`,
+  while `advertisements_owner_update` and `advertisements_owner_delete` both
+  gate on `private.is_platform_owner()`. A `GRANT` is checked *before* row
+  security, so neither policy can ever run — §8.1 class 6, the same shape that
+  put 60 tables behind `42501`.
+
+  It is open rather than fixed because nothing exercises it: `advertising.html`
+  selects at `:172` and `:222` and inserts at `:206`, and no page or Edge
+  Function updates or deletes an advertisement. Closing it means
+  `GRANT UPDATE, DELETE ON public.advertisements TO authenticated` — safe,
+  since RLS then restricts both verbs to the owner — and that is the change to
+  make **in the same session that builds an owner-facing approval surface**,
+  not before, so the grant and the code path that needs it are verified
+  together.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |

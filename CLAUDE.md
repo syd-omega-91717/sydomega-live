@@ -319,17 +319,19 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   `supabase/*.sql` bag is reference material.** This file said the opposite until
   2026-09-05, and the contradiction with `migrations/README.md:69` made
   `migration-consistency` fail every PR. Production settled it: the live
-  `supabase_migrations.schema_migrations` ledger held **169 rows** (`0001` ..
-  `20260905080109`) against **169** files in `migrations/` — exact. The flat bag
+  `supabase_migrations.schema_migrations` ledger matches `migrations/` file for
+  file (**171** on 2026-09-05, `0001` .. `20260905211725`). The flat bag
   has no ledger and is applied by hand, so **schema declared only there never
   deploys** — the one asymmetry the gate now checks (`FIXES_LOG.md` 99). New
   schema goes in a **new** timestamped migration; never renumber or rewrite an
   applied one (`README.md:60`), and `apply_migration` writes a remote row with no
   local file, so add both plus `remote-migrations.json` in the same change.
-  **The sequence is not fresh-appliable**: `20260819071913` does an unguarded
-  `ALTER POLICY … ON public.council_deliberations`, a table nothing in the
-  sequence creates (`advertisements` and `private.is_platform_owner()` are
-  missing too) — so use it for scratch/staging with that caveat, and for
+  **The sequence is still not fresh-appliable, but only by ordering now**:
+  `20260819071913` does an unguarded `ALTER POLICY … ON
+  public.council_deliberations` and sorts *before* `20260905211725`, which is
+  what finally creates that table and `advertisements` — both transcribed from
+  live, so a fresh apply reproduces production (`FIXES_LOG.md` 102) — so use it
+  for scratch/staging with that caveat, and for
   production use the individually live-verified files. A migration is also not
   proof of live state: `task_completions` (live `id bigint` + `axis`/`increment`)
   matches none of its 3 competing definitions in the bag. Duplicate-definition
@@ -572,7 +574,7 @@ entries (which were accurate when written):
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
-| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — all five audits there block in `ci.yml`; four are now green and only `migration-consistency` still exits 1 (`FIXES_LOG.md` 93, 94) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — all five audits there block in `ci.yml`, and all five are now green (`FIXES_LOG.md` 93, 94, 102) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

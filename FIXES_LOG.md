@@ -12001,3 +12001,84 @@ vendor i18n`, the `public/vendor/supabase-js.js` assertion and
 `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
 `node scripts/verify-runtime.js` **PASS (13 pages)**;
 `bash scripts/vercel-build.sh` → `VERCEL_BUILD=PASS` html=189 js=160 css=13.
+
+---
+
+## 102. The last two undeployable tables, adopted into the sequence from live
+
+`scripts/migration-consistency.py` was the only gate still failing `verify` on
+`main`, and — after entry 99 rebuilt it around the real invariant — its two
+findings were genuine:
+
+```
+FOUND 2 UNDEPLOYABLE DECLARATION(S):
+  advertisements: declared in the flat bag but absent from migrations/
+    Flat bag: chunk_06_migrations.sql
+  council_deliberations: declared in the flat bag but absent from migrations/
+    Flat bag: omega_council_schema.sql
+```
+
+Both tables are **live** — created by hand from the flat bag, which is exactly
+the asymmetry §5 describes: `supabase db push` against a fresh database would
+create neither.
+
+### The migration was transcribed from production, not from the flat bag
+
+The flat-bag definitions are reference material and may be stale (§5), so the
+new file was written from what the live database actually holds, read through
+the Supabase MCP: `information_schema.columns` for the column list and
+defaults, `pg_constraint` for keys and CHECKs, `pg_indexes` for the three
+non-PK indexes, `pg_policy` for the seven policies' full `qual`/`WITH CHECK`
+expressions, and `information_schema.role_table_grants` for the grants.
+
+Every statement is guarded (`CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT
+EXISTS`, `DROP POLICY IF EXISTS` + `CREATE POLICY`), so it reproduces
+production on a fresh database and is a no-op against production.
+
+### Proven a no-op, not assumed one
+
+Policies and grants were captured before applying and re-read after. Both
+tables came back **byte-identical** on all seven policies' `qual` and `check`
+expressions and on every `anon`/`authenticated` grant:
+
+| table | grants, before and after |
+|---|---|
+| `advertisements` | `anon:SELECT`, `authenticated:SELECT`, `authenticated:INSERT` |
+| `council_deliberations` | `authenticated:SELECT`, `authenticated:INSERT`, `authenticated:UPDATE` |
+
+### A grant gap found and deliberately left open
+
+`advertisements` carries `advertisements_owner_update` and
+`advertisements_owner_delete` — both `private.is_platform_owner()` — with **no
+table-level `GRANT UPDATE` or `GRANT DELETE` to `authenticated`**. That is
+§8.1 class 6: the grant is checked before row security, so neither policy can
+ever run.
+
+It was **not** closed here. `advertising.html` only selects (`:172`, `:222`)
+and inserts (`:206`); nothing in the estate updates or deletes an
+advertisement, so widening authorization would buy nothing and would take this
+migration out of no-op territory. Recorded in `GAP_ANALYSIS.md` §S instead.
+
+### The version-renaming step
+
+`apply_migration` names the remote row itself: the ledger recorded
+**`20260905211725`**, not the `20260905214500` the local file was written as.
+Left alone that is precisely the drift `migration-drift` exists to catch, and
+it did — `has never been applied — db push would run it`. The local file was
+renamed to the ledger's version and `supabase/remote-migrations.json` updated
+in the same change (`_count` 170 → **171**).
+
+### What this does *not* fix
+
+The sequence is still not fresh-appliable. `20260819071913` does an unguarded
+`ALTER POLICY … ON public.council_deliberations` and sorts **before**
+`20260905211725`, so a fresh apply still fails there. Applied migrations are
+never rewritten (`migrations/README.md:60`), so that ordering stands; §5's
+caveat is unchanged.
+
+### Verification
+
+`scripts/migration-consistency.py` → `OK — everything the flat bag declares is
+reachable through migrations/`, exit **0** (was exit 1, 2 findings).
+`./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. Live ledger 171 =
+local `migrations/*.sql` 171 = `remote-migrations.json` `_count` 171.

@@ -29,7 +29,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
       - name: Compile fabric
         run: python -m compileall -q core/intelligence_fabric scripts/omega_fabric_audit.py
       - name: Structural audit

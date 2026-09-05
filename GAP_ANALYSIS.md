@@ -18,6 +18,28 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **The bottom chrome stack is coordinated by hand-tuned pixel offsets, and
+  collides** (measured 2026-09-05, `FIXES_LOG.md` entry 87). At least four
+  modules anchor fixed bars to the bottom of the viewport — `omega-legal.js`'s
+  `#omega-consent`, `omega-pwa.js`'s `#omega-install-banner`, `omega-controls.js`'s
+  `#omega-controls-dock`, `omega-realtime.js`'s `#omega-ticker-strip` — and the
+  only coordination between them is two hardcoded numbers inside
+  `@media(max-width:760px)`: `bottom:102px!important` and `bottom:66px!important`.
+  Neither tracks a bar's real height, so both are wrong at every other viewport.
+  One pair of them (consent × install, both at `bottom:0; z-index:9990`) made the
+  cookie-consent buttons genuinely unclickable and is **fixed** by sequencing.
+  The rest are not: `scripts/verify-runtime.js`'s new occlusion advisory reports
+  20 interactive controls occluded across the 13 capability entrypoints —
+  `TERMS`/`PRIVACY`/`COMPLIANCE`/`ARENA`/`GOVERN` and two CONNECT buttons behind
+  `#omega-ticker-strip`, the whole language switcher plus `omega-sound-btn` behind
+  `#gate`, two links behind `#omega-voice-btn`, two behind `#omega-controls-dock`.
+  **The fix is a single shared bottom inset each dock reads** (a CSS custom
+  property set from measured heights) rather than more tuned constants. It is
+  open because it spans four modules and needs verification across viewports and
+  pages of its own; shipping half of it would trade a measured problem for an
+  unmeasured one. The advisory keeps the whole class visible on every run in the
+  meantime.
+
 - **`transactions` / `wallet_balances` tables do not exist** (queried by
   `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
   infrastructure is dormant pending legal review, per §9's gating rule.

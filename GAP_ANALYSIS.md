@@ -4,10 +4,143 @@
 [`CAPABILITY_INVENTORY.md`](./CAPABILITY_INVENTORY.md).
 
 Every item below is either a **confirmed, fixed-in-code gap still pending an owner action**
-(applying SQL to a live database — no session in this project's history has held live
-Supabase credentials), a **confirmed, still-open gap**, or a **product decision deliberately
+(applying SQL to a live database — which sessions *can* now do: live Supabase access was
+first exercised on 2026-09-05, and seven declared-but-never-applied tables were applied and
+verified that day, so "pending an owner action" no longer means "impossible here"), a **confirmed, still-open gap**, or a **product decision deliberately
 left undone**. Nothing here is speculative; each cites the evidence. Priority follows this
 project's own established convention (security/data-integrity first).
+
+
+---
+
+## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+
+Nothing below is a bug masquerading as done. Each has an explicit reason it is
+open, recorded in `FIXES_LOG.md`:
+
+- **`transactions` / `wallet_balances` tables do not exist** (queried by
+  `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
+  infrastructure is dormant pending legal review, per §9's gating rule.
+  `subscriptions.html`'s own copy already says so. The user was asked directly
+  and chose to keep it dormant.
+- **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
+  were a decision, not a default: sensitive data, hard to walk back once it
+  lives server-side, mitigated with `omega-local-backup.js` export/import.
+  `scripts/evidence-audit.py` shows the shape reaches 48 pages; a further 24 are
+  `PARTIAL` (Postgres *and* a parallel local copy). Run the scanner rather than
+  quoting these numbers. **The "43 pages with no way to get the data out" gap is
+  closed** (verified live 2026-09-04): `exportAll`/`importAll`/`memberKeys` take
+  no key list, so they cover every `omega`-prefixed key including runtime-built
+  ones, and `settings.html` exposes both. A render that wrote data on
+  `habits`/`notes`/`projects` then read `memberKeys()` in Settings saw all three.
+  **Fixed and applied 2026-08-24**: `public.member_state`
+  (`supabase/omega_member_state.sql`, `migrations/0095`) + `omega-member-state.js`
+  mirror those keys server-side. A **mirror, not a sync**: writes go up only,
+  restore is explicit (`OmegaMemberState.restore()`), because a hydrating
+  two-way sync races each page's synchronous render and would let an empty-cache
+  render overwrite good server data. RLS verified live by two-member
+  impersonation; `updated_at` is trigger-authoritative. Client-side encryption
+  was rejected: no stable client secret exists, and it changes no trust boundary
+  — `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` already hold
+  comparable data under the same tested RLS.
+- **No DELETE policy on `storage.objects`** (live 2026-08-31): writes scoped to
+  own `<uid>/`, but deleting one's own upload is 42501. No client offers a
+  delete — a gap, and a product decision.
+- **`.mp4` (3.7 MB) and `.docx` committed, no LFS.** Asked and declined;
+  `.vercelignore` keeps both out of the deploy. A fix needs a history rewrite.
+- **Member location is not collected** (live 2026-08-29): `profiles.country`
+  exists; `lat`/`lon`/`gate` do not (`map.html`'s reads removed in `3f8a17d7`).
+  Adding it is a privacy decision, not a bug fix.
+- **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
+  the score moves only on 30-min idle and a failed gated action, never on a
+  threat. Detection is an architecture decision. (`gate()` *is* called —
+  `approvals.html`, 3 sites — and `updateBadge()` repaints every 2s.)
+- **`omega-threat.js` is the digital-thread traceability engine**
+  (`window.OmegaThread`), not threat detection; filename kept.
+- **Performance advisor: `unused_index` (125), `unindexed_foreign_keys` (61).**
+  Both INFO and expected: "unused" reflects 9 profiles and near-zero traffic —
+  nearly every one is the `user_id` pattern RLS filters on — and the 61 FKs are
+  all on the scaffold below.
+- **~83 tables live that this repo's SQL never created** — a generic
+  multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars). RLS on, no
+  policies — the *safe* state — and empty. Inventing policies for schema of
+  unknown purpose fabricates behaviour. Needs a human decision.
+- **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
+  claim one). `platform_events` is scoped to `auth.uid() = user_id`.
+  `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
+  nothing to spoof — junk rows, not impersonation — and `authenticated` lacks
+  INSERT on both anyway. Scope it before that grant is ever added.
+- **`feature_flags` and `governance_policies` are readable by every approved
+  member**, by pre-existing policy. Both look deliberate but became *reachable*
+  only when the missing grants were added, so they are recorded rather than
+  assumed fine. All 10 visible governance rows are `status='active'`.
+- **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
+  Left locked out — the safe state. **Measured, not inferred:** of 202 public
+  tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
+  in production), 74 have policies *and* a grant, 39 have policies and no
+  grant, 1 has a grant and no policy (still locked — RLS with no policy denies).
+  All 39 were cross-referenced against client `.from(...)` calls: **none is
+  reachable from any page**. Do not "fix" it by granting without deciding the
+  feature is wanted.
+- **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
+  detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
+  **A grep cannot find these — they are injected at runtime, not markup**; only
+  CSP violations in a real browser surfaced them. Resolve versions from
+  `registry.npmjs.org` (the CDNs are 403), never memory. `vercel.json`'s CSP is
+  **enforced**, verified at 0 violations; as written before it would have killed
+  the webfonts and four features. Stripe is fixed in code, not by pinning:
+  `periodEndSeconds()` reads both pre-basil and basil shapes, since two of three
+  read sites take the *inbound webhook* payload, whose version is a dashboard
+  property no repo change can pin. **Still open: the
+  single physical CI runner** — never "fix" it with a hosted lane;
+  `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
+- **The Vercel integration merges estate-wide PRs that leave `main` red** —
+  twice in one hour (#250, #252), each adding `omega-*.js` modules and a script
+  tag to ~193 pages without regenerating the census. Remedy: `python3
+  scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the only
+  check here that notices a third party editing the estate. Both were sound
+  otherwise; the CSP and build-step checks are in `FIXES_LOG.md`.
+- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`),
+  so jobs drain one at a time and `queued` is normal. A red check is real output
+  now, not the old `runner_id: 0` no-op. Two Windows traps: paths and console
+  codec differ, and a crashed child yields empty stdout, so assertions on it
+  misreport (`FIXES_LOG.md`). `./scripts/ci-local.sh` runs every blocking step
+  locally; `.githooks/pre-push` runs it on push (`git config core.hooksPath
+  .githooks`, bypass `--no-verify`).
+- **The `authenticated` SECURITY DEFINER count (93) is mostly noise, and was
+  checked.** Owner-sensitive ones guard via `public.omega_is_owner()`, which a
+  classifier looking for `is_platform_owner` misses; three unguarded-and-uncalled
+  ones were revoked (`migrations/0097`), the rest have callers. Impersonation
+  across 17 tables found every populated table scoped. **When adding any
+  function, `REVOKE EXECUTE … FROM PUBLIC` in the same file** — Postgres grants
+  it to PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its
+  own; that is how 70 revoked functions became 23.
+- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
+  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
+  Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
+  k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
+  bypasses it — not resolved.** Fails open reporting `checked:false`; never
+  render "not breached" on that (`scripts/tests/test_password_guard.py`).
+- **`scripts/audit.py`'s 7 warnings** are each labelled by the tool as real
+  risk vs. known noise. They cannot reach 0 without live-schema verification,
+  and forcing them down trades a known-unknown for an unverified "fixed". The
+  count drifts between 7 and 8 — re-run and diff the list, never assume.
+- **90 `omega-*.js` modules load on every page.** 41 expose a global nothing
+  calls — a trap of a metric: `omega-a11y.js` is one and does real work on every
+  page. Self-activation with no caller is the norm. Which are genuinely
+  page-specific is a real audit.
+
+**Why these live here now.** `CLAUDE.md` is loaded into every session and is capped at
+16,000 tokens by `scripts/context-budget.py` (blocking in CI). §8.2 reached that cap: two
+consecutive sessions could only add a standing fact by compressing older bullets, and the
+compression had started costing information rather than words. The list above is reference
+material — a session consults it when it touches one of these areas, not before it starts —
+so it belongs in an on-demand document. `CLAUDE.md` §8.2 now keeps only the few items that
+change what a session does in its first minutes, and points here for the rest.
+
+Keep this list evidence-cited exactly as `CLAUDE.md` §9 requires: a file:line, a command's
+real output, or a query result. Never mark an item fixed, applied, or verified unless it
+actually was, in that session.
 
 ## 0. P0 — CRITICAL: full owner-approval bypass in `supabase/trial_access.sql` (fixed this session, validated against a live PostgreSQL 16 instance)
 

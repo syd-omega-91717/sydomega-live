@@ -9609,3 +9609,150 @@ the owner, not a trim to be improvised.
 
 Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK, `scripts/audit.py` 0
 critical / 7 warnings, `verify-runtime.js` PASS, `context-budget.py` PASS.
+
+---
+
+## Supabase was reachable the whole time, and seven declared tables were never applied (2026-09-05)
+
+### The mistake first
+
+Several times this session I told the owner the Supabase connector was
+unauthenticated and that live-schema work was therefore blocked. A harness banner
+said so on every reconnect. **I never tried the call.** The owner said it was
+authorized; one `execute_sql` settled it:
+
+```
+select current_database(), current_user, now();
+-> postgres | postgres | 2026-09-05 01:23:56+00
+```
+
+`GAP_ANALYSIS.md`'s header carried the same wrong belief in stronger form — *"no
+session in this project's history has held live Supabase credentials"* — so this
+was not one session's slip but a documented assumption nobody had retested. Both
+are corrected. **The standing rule is now in `CLAUDE.md` §8.2: try the call
+before reporting a capability blocked.** A banner is a claim, not a measurement.
+
+### What live access settled immediately
+
+The live-schema cross-check shipped hours earlier reported 8 relations declared
+in `supabase/` and absent from the 2026-08-29 snapshot. Against the real
+database:
+
+```
+relname            kind   rls   policies  authenticated SELECT
+creator_proposals  table  true  4         false
+(the other seven: not present)
+```
+
+So the 8 were **7 genuinely absent + 1 false positive from snapshot staleness**.
+`creator_proposals` had existed all along. That is exactly the failure §8.1 class
+2 warns about — *"a stale snapshot re-opens the false positives"* — caught within
+a day of the gate that produced it. It also turns out to be a §8.1 class 6 case:
+4 policies, no `GRANT`, so `authenticated` cannot read it at all. Left locked
+(the safe state) since no client queries it, consistent with the standing
+decision on the other 39 such tables.
+
+### The seven were a backend written and abandoned
+
+`supabase/chunk_10_productivity.sql` (5 tables) and
+`supabase/chunk_09_new_features.sql` (2 of its 4) declare complete, correct
+schema — `CREATE TABLE IF NOT EXISTS`, per-user RLS policies, **and** the
+matching `GRANT ... TO authenticated`, i.e. both halves of class 6 done right —
+and production never received any of it. That explains part of why 48 pages are
+`LOCAL_ONLY`: the server side for habits, focus sessions and OKRs exists in the
+repo and stops there.
+
+Applied verbatim, as two migrations, after reading both files end to end:
+
+| table | from |
+|---|---|
+| `focus_sessions`, `habit_logs`, `okr_objectives`, `okr_key_results`, `wealth_snapshots` | `chunk_10_productivity.sql` |
+| `codex_bookmarks`, `signal_saves` | `chunk_09_new_features.sql` |
+
+`oaths` and `user_dedication` from chunk 09 were already live and deliberately
+not touched — checked first rather than relying on `IF NOT EXISTS` to make a
+blind re-apply harmless.
+
+### Verified live, not assumed from `{"success":true}`
+
+Grants and policies read back together, because either alone tells you nothing:
+
+```
+relname           rls   pol  auth_sel  auth_ins  anon_sel  qual
+focus_sessions    true  1    true      true      false     (auth.uid() = user_id)
+habit_logs        true  1    true      true      false     (auth.uid() = user_id)
+okr_objectives    true  1    true      true      false     (auth.uid() = user_id)
+okr_key_results   true  1    true      true      false     (auth.uid() = user_id)
+wealth_snapshots  true  1    true      true      false     (auth.uid() = user_id)
+codex_bookmarks   true  1    true      -         false
+signal_saves      true  1    true      -         false
+```
+
+Then the §8.4 impersonation test, in one rolled-back transaction — a privileged
+query proves nothing about what a member sees:
+
+```
+member A inserts own row                    -> OK
+member A inserts WITH member B's user_id    -> 42501 (WITH CHECK held)
+A_sees = 1        B_sees = 0                -> scoped
+role anon                                   -> 42501 permission denied
+```
+
+The anon case aborted the first attempt mid-transaction, which is why it is run
+separately — the error *was* the passing result.
+
+Security advisors before and after the seven tables: **one lint, unchanged** —
+`auth_leaked_password_protection`, already documented as expected on the free
+plan and mitigated client-side.
+
+`supabase/live-schema.json` regenerated to 2026-09-05 / 216 relations. The
+cross-check now reports **0 declared relations absent live**, closed by applying
+the schema rather than by weakening the gate.
+
+### A note on how the schema was refreshed
+
+Reading 200+ relations through the transcript to rebuild the snapshot would cost
+more context than the whole auto-loaded budget. Several routes were tried —
+per-table md5 digests, a server-side `full outer join` against the committed
+list — and the honest answer is that the diff-by-checksum query is ~12 KB of
+input to save a larger output, which is worth it only when the delta is small.
+Here the delta was known and tiny (7 applied + 1 stale), so it was patched
+directly. **A generator script cannot do this: `scripts/` has no database
+connection, only the MCP session does.** Anyone regenerating it wholesale should
+expect to spend real context, or narrow to the relations client code actually
+queries.
+
+Gates: `./scripts/ci-local.sh` 22/22, `scripts/schema-dictionary.py` OK against
+the refreshed snapshot, `scripts/audit.py` 0 critical / 7 warnings.
+
+---
+
+## `CLAUDE.md` §8.2 moved to `GAP_ANALYSIS.md` §S, and the budget stopped being a wall (2026-09-05)
+
+The previous entry recorded that `CLAUDE.md` sat at exactly **16,000 / 16,000**
+and that §8.2 could not take another entry without a real deletion. That came due
+immediately: live Supabase access is a standing fact a session needs in its first
+minutes, and there was no room for it.
+
+Compressing further was the wrong move — two consecutive sessions had already
+bought space that way, and the last round had started removing information rather
+than words. §8.2 measured **8,281 chars / ~2,070 tokens across 19 bullets**, and
+almost all of it is *reference*: a session consults "39 tables have policies and
+no grant" when it touches grants, not before it starts work.
+
+So the list moved to `GAP_ANALYSIS.md` §S — the document whose own header already
+defines its scope as confirmed-open gaps and deliberate product decisions — and
+§8.2 now holds a pointer plus only the four items that change what a session does
+in its first minutes: live Supabase access works, a dated snapshot lies in both
+directions, the Vercel bot leaves `main` red, and CI is one Windows runner.
+
+```
+CLAUDE.md  ~16,000 / 16,000  OVER (§8.2 could not take another entry)
+CLAUDE.md  ~14,576 / 16,000  ok  (1,424 tokens of headroom recovered)
+```
+
+Nothing was deleted — every bullet is in `GAP_ANALYSIS.md` §S with its evidence
+intact, plus a note explaining why it lives there and the reminder that §9's
+evidence-citation rule applies there unchanged.
+
+Gates: `./scripts/ci-local.sh` 22/22, `scripts/context-budget.py` PASS.

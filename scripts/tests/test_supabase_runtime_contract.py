@@ -75,6 +75,36 @@ class ShippedCredentialTests(unittest.TestCase):
         self.assertNotIn('print(f"{anon', source)
 
 
+class AuthorizationHeaderTests(unittest.TestCase):
+    """The 401 this gate reported was its own doing, not production's.
+
+    Supabase's docs: "A common mistake is sending a publishable or secret key as
+    a bearer token ... The new API keys are not JWTs ... Instead, put API keys in
+    the `apikey` header." The contract did exactly that on every probe.
+    """
+
+    def test_a_publishable_key_carries_no_bearer(self):
+        self.assertEqual(contract.bearer_for("sb_publishable_abc123"), {})
+
+    def test_a_secret_key_carries_no_bearer_either(self):
+        self.assertEqual(contract.bearer_for("sb_secret_abc123"), {})
+
+    def test_a_legacy_jwt_key_still_carries_its_bearer(self):
+        """VIOLATOR of the naive fix. Dropping Authorization unconditionally
+        would break the legacy anon key, which IS a JWT and is copied into that
+        header by the platform. The CI-secret override may still supply one."""
+        self.assertEqual(
+            contract.bearer_for("eyJhbGciOiJIUzI1NiJ9.payload.sig"),
+            {"Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.payload.sig"},
+        )
+
+    def test_the_key_bg_js_ships_is_routed_as_opaque(self):
+        """The end-to-end shape: whatever bg.js ships must resolve to the header
+        set the platform accepts for that key type."""
+        _, anon = contract.shipped_credentials()
+        self.assertEqual(contract.bearer_for(anon), {})
+
+
 class HelpContractTests(unittest.TestCase):
     def test_help_exits_zero_without_running(self):
         import subprocess

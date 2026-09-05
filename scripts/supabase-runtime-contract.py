@@ -78,6 +78,32 @@ def shipped_credentials() -> tuple[str, str]:
     return (match.group(1), match.group(2)) if match else ("", "")
 
 
+# The new opaque API keys are NOT JWTs, and sending one as a bearer token is
+# the documented way to get a 401. Supabase's own docs, verbatim: "A common
+# mistake is sending a publishable or secret key as a bearer token:
+# `Authorization: Bearer sb_publishable_...`. The new API keys are not JWTs.
+# The platform check can't validate them ... Instead, put API keys in the
+# `apikey` header."
+#
+# This contract sent `Authorization: Bearer <key>` on every probe. Auth health
+# survived it (that route verifies no JWT); PostgREST rejected it with 401, and
+# the gate read that as "Supabase rejected the configured public key" -- a
+# production-sounding failure that was entirely the check's own doing. It went
+# unnoticed because the job had never run at all (FIXES_LOG.md 106).
+#
+# A LEGACY anon key IS a JWT (`eyJ...`), and for those the platform copies the
+# apikey value into Authorization, so the header stays correct there. Hence:
+# branch on the key format, never assume one.
+OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
+
+
+def bearer_for(key: str) -> dict[str, str]:
+    """The Authorization header this key type should carry, if any."""
+    if key.startswith(OPAQUE_KEY_PREFIXES):
+        return {}
+    return {"Authorization": f"Bearer {key}"}
+
+
 def main() -> int:
     url = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
     anon = os.environ.get("SUPABASE_ANON_KEY", "").strip()
@@ -103,11 +129,7 @@ def main() -> int:
     if parsed.username or parsed.password:
         return fail("SUPABASE_URL must not contain embedded credentials")
 
-    common = {
-        "apikey": anon,
-        "Authorization": f"Bearer {anon}",
-        "Accept": "application/json",
-    }
+    common = {"apikey": anon, "Accept": "application/json", **bearer_for(anon)}
 
     checks = (
         ("Auth health", url + "/auth/v1/health", common),

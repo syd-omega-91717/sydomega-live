@@ -12417,10 +12417,39 @@ that with violators — a `createClient` missing its key does not match, an
 `sb_secret_…` value does not match, a missing `bg.js` returns empty instead of
 raising, and the live key appears nowhere in the script's own source.
 
+### And behind that, a bug the gate had been carrying since it was written
+
+With credentials resolving, the next run got further and failed differently:
+
+```
+credential_source=shipped_client
+::error::Supabase PostgREST rejected the configured public key (HTTP 401)
+```
+
+That reads like a production defect. It was not. The contract sent
+`Authorization: Bearer <key>` on every probe, and Supabase's own documentation
+names that exact call:
+
+> A common mistake is sending a publishable or secret key as a bearer token:
+> `Authorization: Bearer sb_publishable_...`. The new API keys are not JWTs.
+> The platform check can't validate them ... Instead, put API keys in the
+> `apikey` header.
+
+Auth health survived it — that route verifies no JWT — so only PostgREST
+returned 401, and the gate reported it as Supabase rejecting the key.
+
+The naive fix (drop `Authorization` outright) would be wrong: the project also
+has a **legacy anon key**, which *is* a JWT (`eyJ…`, confirmed via
+`get_publishable_keys`), and the platform copies the apikey value into that
+header for legacy keys. The CI-secret override could still supply one. So
+`bearer_for()` branches on the key format — opaque `sb_publishable_`/`sb_secret_`
+prefixes get `apikey` alone, anything else keeps its bearer — and a test pins
+the legacy case specifically as the violator of that naive fix.
+
 ### Verification
 
-`scripts/tests` 252 → **258**, all passing; `./scripts/ci-local.sh` **ALL 23
-BLOCKING CHECKS PASSED**. Locally the contract now resolves
+`scripts/tests` 252 → **262**, all passing; `./scripts/ci-local.sh` **ALL 23
+BLOCKING CHECKS PASSED**. Locally the contract resolves
 `credential_source=shipped_client` and then fails at the network hop — this
 session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
-does not.
+does not, so the header shape is what CI decides.

@@ -11346,3 +11346,52 @@ Four of the five audits that block in `ci.yml` are now green
 `upsert-conflict-check`); **`migration-consistency` remains at 1** and is the
 last one, deliberately untouched here — CLAUDE.md §5 says its 7 divergences need
 a per-table live-schema check rather than a bulk sweep.
+
+## 95. `main`'s CI is red because production is 404ing, not because of a code defect
+
+**Not a fix — a diagnosis**, recorded because the next session will otherwise
+chase this failure through the code.
+
+`Production Surface Smoke / Live production smoke test` fails on every push to
+`main`:
+
+```
+Run set -euo pipefail
+curl: (22) The requested URL returned error: 404
+404
+Error: Process completed with exit code 22.
+```
+
+`.github/workflows/production-surface-smoke.yml` runs
+`curl --fail --location https://www.sydomega.com/`. Fetched 2026-09-05 11:54Z,
+that URL returns **HTTP 404** serving this repo's own `404.html`
+(`content-disposition: inline; filename="404"`, `last-modified` 06:50:36Z —
+the pinned deployment's cached copy). `curl --fail` exits 22 on a 4xx, so the
+step fails. The workflow is behaving correctly.
+
+**Root cause is the Vercel alias pin, not the repository.** `sydomega.com` and
+`www.sydomega.com` resolve to `dpl_5oRaj9jRWjd52kYqtgbuaci1w1gx`, built from
+`31f9180d` — the commit *before* `index.html` existed — with
+`meta.action: "redeploy"` and `isRollbackCandidate: true`. Four newer
+production deployments are READY and unaliased. The dashboard shows an active
+**Instant Rollback**.
+
+**The code is correct and that is proven.** PR #267's preview deployment of the
+same branch returned **HTTP 200** at `/` with `<title>Ω SYD OMEGA 91717</title>`
+and all six door links, `x-vercel-cache: MISS`, `age: 0` — a fresh origin
+render, not a cached artefact. Only the alias is wrong.
+
+**No code change can clear this check.** It goes green when the rollback is
+cancelled or the newest deployment is promoted — an owner action in the Vercel
+dashboard, with no tool available from this session.
+
+### The method note this earns
+
+CLAUDE.md §8.4 already records the inverse: *"A gate that asserts a rewrite
+exists cannot observe whether it fires"* — `user-journey-contract.py` passed
+throughout while production served 404, because it checked a config line.
+`production-surface-smoke.yml` is that lesson applied: it **fetches production**
+and has been telling the truth ever since. The pairing is the point — a red
+check that actually observes the live system may be reporting a real outage,
+and reading it as a code defect wastes a session. Check what a gate observes
+before deciding whose problem its failure is.

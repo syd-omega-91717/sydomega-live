@@ -533,6 +533,11 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
+- **`Production Surface Smoke` is red because production is 404ing, not because of code.** It
+  runs `curl --fail https://www.sydomega.com/`, which returns 404 while the Vercel alias stays
+  pinned to `31f9180d` (pre-`index.html`) by an Instant Rollback. No commit clears it; only
+  cancelling the rollback does (`FIXES_LOG.md` 95). It is the one gate here that fetches the
+  live system, so read its failure as an outage report before hunting a code defect.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`), so jobs drain
   one at a time and `queued` is normal. A red check is real output now, not the old
   `runner_id: 0` no-op. Two Windows traps: paths and console codec differ, and a crashed child

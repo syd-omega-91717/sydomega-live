@@ -19,7 +19,7 @@ CREATE INDEX IF NOT EXISTS codex_bookmarks_user_idx ON public.codex_bookmarks(us
 ALTER TABLE public.codex_bookmarks ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='codex_bookmarks' AND policyname='codex_bm_own') THEN
-    CREATE POLICY codex_bm_own ON public.codex_bookmarks FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY codex_bm_own ON public.codex_bookmarks FOR ALL USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -37,7 +37,7 @@ CREATE INDEX IF NOT EXISTS signal_saves_user_idx ON public.signal_saves(user_id)
 ALTER TABLE public.signal_saves ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='signal_saves' AND policyname='signal_saves_own') THEN
-    CREATE POLICY signal_saves_own ON public.signal_saves FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY signal_saves_own ON public.signal_saves FOR ALL USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 

@@ -49,6 +49,14 @@ open, recorded in `FIXES_LOG.md`:
   laddered means changing how those modules position themselves, which is a
   larger change than this one and has no defect driving it.
 
+- **61 unindexed foreign keys, left unindexed on purpose** (measured 2026-09-05,
+  `FIXES_LOG.md` entry 91). Of the 45 `public` tables carrying one, **43 hold zero rows**;
+  only `ai_agents` (12) and `architecture_tasks` (16) have any data. Adding the indexes
+  would convert one INFO advisory into 61 entries under `unused_index`, cost every write,
+  and buy nothing measurable at that size. Revisit when a table crosses a few thousand
+  rows. The genuinely actionable half of the same advisor output — 7 RLS policies
+  re-evaluating `auth.uid()` per row, and 29 structurally redundant indexes — was fixed.
+
 - **`public.signal_saves` is a live table for a feature that was never built**
   (2026-09-05, `FIXES_LOG.md` entry 90). Applied live with RLS scoped to
   `auth.uid() = user_id`, a `GRANT` to `authenticated`, a `UNIQUE (user_id,

@@ -10871,3 +10871,116 @@ survive the cache.
 
 Gates: `./scripts/ci-local.sh` 23/23 blocking, `check-inline-js.py` clean,
 `upsert-conflict-check.py` 0 findings.
+
+---
+
+## 91. Seven RLS policies re-evaluated `auth.uid()` per row, and 29 indexes could never be chosen
+
+**Date:** 2026-09-05
+**Reported by:** the owner, pasting the full Supabase advisor output.
+
+### What was actionable, and what was not
+
+Four advisory classes were reported. Two are real defects and are fixed; two
+are not defects at this scale and are recorded with the measurement rather than
+"fixed" by making the database worse.
+
+### 1. `auth_rls_initplan` — 7 policies, FIXED
+
+`codex_bookmarks`, `focus_sessions`, `habit_logs`, `okr_key_results`,
+`okr_objectives`, `signal_saves`, `wealth_snapshots` each carried one `ALL`
+policy reading
+
+```sql
+USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id)
+```
+
+Postgres re-evaluates `auth.uid()` **once per row** in that position. Wrapping
+it in a scalar subquery lets the planner hoist it into an InitPlan, evaluated
+once per statement.
+
+**`ALTER POLICY`, not `DROP` + `CREATE`.** The drop/create pair leaves a window
+where the table has RLS enabled and *no* policy — which denies every row to
+every member until the create lands. `ALTER` is atomic and never opens that gap.
+
+**Verified by a test that could fail.** All seven tables are empty, so
+comparing member row counts proves nothing — both members see 0 whether the
+policy works or not. Instead, inside a transaction that was **rolled back**,
+one row was inserted per member under real impersonation
+(`set local role authenticated` + `request.jwt.claims`), then read back as
+member B:
+
+```
+B_sees_only_own | visible_rows 1 | which: rls-probe-b
+```
+
+Two rows existed; B saw one, their own. The other member's row was present and
+filtered, so the test had something to fail on. Production data untouched.
+
+Live advisor count for `auth_rls_initplan` after applying: **0**.
+
+### 2. `unused_index` — 191 reported, 29 genuinely REDUNDANT, dropped
+
+"Unused" at this scale mostly reflects near-zero traffic (9 profiles); an index
+on a table nobody has queried yet is not thereby wrong, and dropping on that
+basis would be guessing.
+
+**Redundant is a different and stronger claim, and it is structural rather than
+statistical**: an index whose column list is a leading prefix of another index
+on the same table can never be chosen over the wider one, at any traffic level.
+It costs every write and buys nothing. 29 such indexes existed — e.g.
+`codex_bookmarks_user_idx` on `(user_id)` sitting under
+`codex_bookmarks_user_url` on `(user_id, url)`.
+
+Never dropped: unique indexes, primary keys, anything backing a constraint,
+partial indexes, expression indexes. The migration **re-derives** the set at
+execution time instead of hardcoding names, so it cannot drop something that is
+not redundant when it runs, and re-running it is a no-op.
+
+**The first version of this query reported zero.** `indkey::smallint[]` is
+**zero-based**, so slicing it with 1-based bounds compared the wrong elements —
+CLAUDE.md §8.4's "verify a 0 findings result is real". It was caught by hand-
+checking `codex_bookmarks`, where the prefix relationship was plainly visible.
+After the fix the same rule reports **0 remaining**, and that zero is real
+because the identical rule found 29 minutes earlier.
+
+### 3. `unindexed_foreign_keys` — 61, NOT fixed, and that is the correct call
+
+Measured rather than assumed: of the 45 `public` tables carrying an unindexed
+foreign key, **43 hold zero rows**. Only two have any data at all —
+`ai_agents` (12 rows) and `architecture_tasks` (16).
+
+Adding 61 indexes would convert one INFO advisory into 61 new entries under the
+other one (`unused_index`), cost every write on those tables, and buy nothing
+measurable on 12 rows. The advisory is right in general and wrong for this
+database's size. Revisit when a table crosses a few thousand rows.
+
+### 4. `auth_leaked_password_protection` — cannot be cleared on this plan
+
+Confirmed live: `get_organization` reports `plan: free`. The feature is
+Pro-and-above and is an Auth **dashboard** toggle — no SQL reaches it. The
+threat is already mitigated client-side by `omega-password-guard.js`
+(HaveIBeenPwned k-anonymity) on `account.html` and `reset.html`, with the
+standing caveat that a direct Auth API call bypasses it.
+
+### The declarations were fixed too, not just the live database
+
+`supabase/chunk_09_new_features.sql` and `chunk_10_productivity.sql` still
+*declared* `auth.uid() = user_id`, so a fresh scratch database would have been
+born reproducing the advisory. All nine declarations across those two files and
+their two `migrations/` copies now use the wrapped form; zero un-wrapped
+`auth.uid()` remain in either.
+
+### "Remote migration versions not found in local migrations directory"
+
+Not reproducible: `migration-drift.py` reports **168 local = 168 remote** after
+this change, with the committed snapshot regenerated. That CLI message predates
+PR #260, which fixed a real 9-version gap and added the gate.
+
+`supabase/live-schema.json` was deliberately **not** regenerated: it records
+table → column lists only, and neither a policy predicate nor a dropped index
+changes that. Churning 4,500 lines to encode nothing would bury the real diff.
+
+Gates: `./scripts/ci-local.sh` 23/23 blocking, `migration-drift.py` PASS
+(168/168), `audit.py` 0 critical / 7 warnings, `rls-auditor.py` 1 pre-existing
+informational finding unrelated to these tables.

@@ -29,6 +29,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Runner diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "runner_os=${RUNNER_OS}"
+          echo "runner_arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Vercel static deployment contract
         run: python scripts/vercel_static_contract.py
       - name: Production contract

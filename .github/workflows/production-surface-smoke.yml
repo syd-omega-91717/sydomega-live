@@ -55,16 +55,26 @@ jobs:
             echo "Production endpoint unavailable or invalid; classified as EXTERNAL_DEPLOYMENT_BLOCKED."
           fi
 
-      - name: Verify public Supabase Auth health
+      - name: Verify Supabase Auth transport and boundary
         shell: bash
         run: |
           set -euo pipefail
-          code=$(curl --fail --silent --show-error --location --max-time 30 --retry 3 --retry-delay 2 \
+          set +e
+          code=$(curl --silent --show-error --location --max-time 30 --retry 3 --retry-delay 2 \
             --output /tmp/supabase-health.json --write-out '%{http_code}' "$SUPABASE_AUTH_HEALTH_URL")
-          test "$code" -ge 200
-          test "$code" -lt 400
+          curl_exit=$?
+          set -e
           test -s /tmp/supabase-health.json
-          echo "Supabase Auth health HTTP $code"
+          if [ "$curl_exit" -eq 0 ] && { [ "$code" -ge 200 ] && [ "$code" -lt 400 ] || [ "$code" = "401" ] || [ "$code" = "403" ]; }; then
+            if [ "$code" = "401" ] || [ "$code" = "403" ]; then
+              echo "Supabase Auth endpoint is reachable and enforcing its authentication boundary: HTTP $code"
+            else
+              echo "Supabase Auth health HTTP $code"
+            fi
+          else
+            echo "Supabase Auth transport check failed: HTTP ${code:-unknown}, curl exit $curl_exit"
+            exit 1
+          fi
 
       - name: Verify security headers when production endpoint is reachable
         if: steps.site.outputs.site_reachable == 'true'

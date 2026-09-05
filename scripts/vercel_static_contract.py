@@ -16,10 +16,13 @@ def main() -> int:
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL missing=index.html")
 
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    forbidden = {"builds", "buildCommand", "outputDirectory", "framework"}
+    forbidden = {"builds", "buildCommand", "framework"}
     active = sorted(forbidden.intersection(config))
     if active:
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL forbidden_config=" + ",".join(active))
+
+    if config.get("outputDirectory") != ".":
+        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL outputDirectory_must_be_root")
 
     redirects = config.get("redirects", [])
     www_rules = [
@@ -36,6 +39,7 @@ def main() -> int:
 
     print("VERCEL_STATIC_CONTRACT=PASS")
     print("deployment_mode=static_root")
+    print("output_directory=.")
     print("canonical_host=sydomega.com")
     print("www_canonicalization=present")
     return 0

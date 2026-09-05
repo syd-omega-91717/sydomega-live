@@ -315,32 +315,25 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   (`scripts/audit.py`, check 4) and if a `service_role` key ever appears
   in client-shipped code (`ci.yml`, step 5) — treat both as invariants,
   not suggestions.
-- **Schema management:** currently a flat `supabase/*.sql` directory,
-  mostly idempotent (`CREATE TABLE IF NOT EXISTS`, `ON CONFLICT DO
-  NOTHING`) so re-running files is safe. `supabase/migrations/` now holds
-  an ordered, Supabase-CLI-convention copy of this same content
-  (`NNNN_<name>.sql`, applied via `supabase db push`) — see
-  `supabase/migrations/README.md` for how the order and content were
-  derived, what was deliberately excluded (a conditional `DROP TABLE`
-  file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
-  only scripts). The 94-file numbered sequence (`0001`–`0094`) applies
-  cleanly end-to-end against a fresh scratch PostgreSQL 16 instance
-  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — the only
-  such run on record. The directory has grown well past it since, so re-derive
-  the count from `scripts/omega-registry.py`; everything after `0094` is
-  unvalidated, and even the validated part only proves the sequence is
-  internally consistent on a **blank** database, not that it matches the owner's
-  live schema. `task_completions` is a proven counterexample (live `id bigint` +
-  `axis`/`increment` match none of the 3 competing `CREATE TABLE IF NOT EXISTS`
-  definitions in the SQL bag). Do not run the full `migrations/` sequence against the live
-  production database expecting it to safely "catch up" existing state —
-  use it for a scratch/staging project, and use the individually
-  live-verified fix files (`trial_access.sql`, `migrations/0013`,
-  `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
-  root is unchanged and still the source of truth for new schema changes
-  — see `REPOSITORY_AUDIT.md` §4 for the duplicate-table-definitions list;
-  derive the count from `evidence-audit.py`, never quote it (47 had drifted to 48). Not deduplicated by migrations/, only reordered —
-  consolidating needs a per-table live-schema check, not a bulk sweep.
+- **Schema management: `supabase/migrations/` is authoritative; the flat
+  `supabase/*.sql` bag is reference material.** This file said the opposite until
+  2026-09-05, and the contradiction with `migrations/README.md:69` made
+  `migration-consistency` fail every PR. Production settled it: the live
+  `supabase_migrations.schema_migrations` ledger held **169 rows** (`0001` ..
+  `20260905080109`) against **169** files in `migrations/` — exact. The flat bag
+  has no ledger and is applied by hand, so **schema declared only there never
+  deploys** — the one asymmetry the gate now checks (`FIXES_LOG.md` 99). New
+  schema goes in a **new** timestamped migration; never renumber or rewrite an
+  applied one (`README.md:60`), and `apply_migration` writes a remote row with no
+  local file, so add both plus `remote-migrations.json` in the same change.
+  **The sequence is not fresh-appliable**: `20260819071913` does an unguarded
+  `ALTER POLICY … ON public.council_deliberations`, a table nothing in the
+  sequence creates (`advertisements` and `private.is_platform_owner()` are
+  missing too) — so use it for scratch/staging with that caveat, and for
+  production use the individually live-verified files. A migration is also not
+  proof of live state: `task_completions` (live `id bigint` + `axis`/`increment`)
+  matches none of its 3 competing definitions in the bag. Duplicate-definition
+  list: `REPOSITORY_AUDIT.md` §4; derive counts from `evidence-audit.py`.
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching

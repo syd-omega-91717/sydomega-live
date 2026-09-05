@@ -2,6 +2,20 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "www.sydomega.com"}],
+      "destination": "https://sydomega.com/:path*",
+      "permanent": true
+    },
+    {"source":"/entreprise","destination":"/enterprise","permanent":true},
+    {"source":"/entreprise.html","destination":"/enterprise.html","permanent":true},
+    {"source":"/sovereign","destination":"/sovereign-ai","permanent":true},
+    {"source":"/sovereign.html","destination":"/sovereign-ai.html","permanent":true},
+    {"source":"/omega-visual-home","destination":"/","permanent":true},
+    {"source":"/omega-visual-home.html","destination":"/","permanent":true}
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -22,13 +36,5 @@
       "source":"/(admin|owner|private|api)(.*)",
       "headers":[{"key":"X-Robots-Tag","value":"noindex, nofollow, noarchive"}]
     }
-  ],
-  "redirects":[
-    {"source":"/entreprise","destination":"/enterprise","permanent":true},
-    {"source":"/entreprise.html","destination":"/enterprise.html","permanent":true},
-    {"source":"/sovereign","destination":"/sovereign-ai","permanent":true},
-    {"source":"/sovereign.html","destination":"/sovereign-ai.html","permanent":true},
-    {"source":"/omega-visual-home","destination":"/","permanent":true},
-    {"source":"/omega-visual-home.html","destination":"/","permanent":true}
   ]
 }

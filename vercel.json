@@ -7,12 +7,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{"type": "host", "value": "www.sydomega.com"}],
-      "destination": "https://sydomega.com/:path*",
-      "permanent": true
-    },
     {"source":"/entreprise","destination":"/enterprise","permanent":true},
     {"source":"/entreprise.html","destination":"/enterprise.html","permanent":true},
     {"source":"/sovereign","destination":"/sovereign-ai","permanent":true},

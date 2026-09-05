@@ -7,7 +7,11 @@ const UID = '00000000-0000-0000-0000-000000000001';
 module.exports.UID = UID;
 module.exports.STUB = `
 const UID='${UID}';
-const SESSION={user:{id:UID,email:'member@example.com'},access_token:'stub'};
+/* created_at is on the real Supabase session user object, and code that
+   reasons about when an account began (habits.html's seeded-history purge)
+   silently no-ops without it -- the stub was less faithful than production,
+   so the branch could not be exercised. Matches PROFILE.created_at below. */
+const SESSION={user:{id:UID,email:'member@example.com',created_at:'2026-01-01T00:00:00Z'},access_token:'stub'};
 const PROFILE={id:UID,email:'member@example.com',display_name:'Test Member',
   access_approved:true,is_trial:false,is_rejected:false,is_owner:false,
   sign:'Aries',element:'fire',god:'Ares',agent:'Sentinel',token:'ARENITE',

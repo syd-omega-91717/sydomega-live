@@ -434,12 +434,83 @@ function saveObjective(){
   const okrs=getOKRs();
   const qkey=getQuarterKey(currentQuarterOffset);
   if(!okrs[qkey]) okrs[qkey]=[];
-  okrs[qkey].push({title,desc:document.getElementById('obj-desc').value.trim(),cat:document.getElementById('obj-cat').value,krs,created:Date.now()});
+  const cat=document.getElementById('obj-cat').value;
+  const desc=document.getElementById('obj-desc').value.trim();
+  okrs[qkey].push({title,desc,cat,krs,created:Date.now()});
   localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
   closeObjModal();
   renderOKRs();
+  mirrorObjective(getQuarterLabel(currentQuarterOffset), title, desc, cat, krs);
 }
 window.saveObjective=saveObjective;
+
+/* ── SERVER MIRROR ──────────────────────────────────────────────────────
+   public.okr_objectives + public.okr_key_results, declared in
+   supabase/chunk_10_productivity.sql and applied live 2026-09-05.
+
+   A MIRROR, not a sync -- same reason as habits.html and focus.html: this
+   page renders synchronously from localStorage, which stays what the UI
+   reads.
+
+   Two tables with a foreign key between them, so ORDER MATTERS: the
+   objective must land first and its generated id is what the key results
+   reference. If the objective insert fails there is nothing to attach the
+   KRs to, so this returns rather than sending writes that would fail on the
+   FK anyway.
+
+   Three live CHECK constraints this page could otherwise violate, each a
+   23514 that writes nothing and does not throw:
+
+     quarter ~ '^Q[1-4] \d{4}$'
+       getQuarterKey() returns "Q1_2026" with an UNDERSCORE -- it is a
+       localStorage map key, not a label. The constraint wants a SPACE, so
+       getQuarterLabel() is passed here. Sending the storage key would have
+       failed every single write.
+     title char_length BETWEEN 5 AND 200      (objectives)
+     title char_length BETWEEN 3 AND 200      (key results)
+       saveObjective only checks the title is non-empty, so a 1-4 character
+       objective saves locally and would be rejected server-side. Checked
+       before sending rather than discovering it per-write.
+
+   category is not guarded: the page's six <option> values match the CHECK
+   exactly -- verified, not assumed.
+
+   .error is checked on both inserts because Supabase resolves to
+   {data:null,error} rather than throwing (CLAUDE.md 8.1 class 1). */
+async function mirrorObjective(quarterLabel, title, desc, cat, krs){
+  try{
+    if(title.length < 5 || title.length > 200) return;
+    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
+    const sb = await window.OmegaSB.get();
+    if(!sb) return;
+    const s = await sb.auth.getSession();
+    if(s.error || !s.data || !s.data.session) return;
+    const uid = s.data.session.user.id;
+
+    const ins = await sb.from('okr_objectives')
+      .insert({ user_id: uid, quarter: quarterLabel, title: title,
+                description: desc || null, category: cat })
+      .select('id').single();
+    if(ins.error || !ins.data){
+      console.warn('[targets] objective mirror failed:', ins.error && ins.error.message);
+      return;                       /* no id -> nothing for the KRs to reference */
+    }
+
+    const rows = (krs||[])
+      .filter(function(k){ return k.title && k.title.length >= 3 && k.title.length <= 200; })
+      .map(function(k){
+        return { objective_id: ins.data.id, user_id: uid, title: k.title,
+                 start_value: Number(k.start) || 0,
+                 target_value: Number(k.target) || 0,
+                 current_value: Number(k.current) || 0,
+                 unit: k.unit || '' };
+      });
+    if(!rows.length) return;
+
+    const kr = await sb.from('okr_key_results').insert(rows);
+    if(kr.error) console.warn('[targets] key-result mirror failed:', kr.error.message);
+  }catch(e){ console.warn('[targets] mirror unavailable:', e && e.message); }
+}
 
 function saveReview(){
   const reviews=getReviews();
@@ -487,31 +558,68 @@ function switchTab(id,btn){
 window.switchTab=switchTab;
 
 // Seed with example OKRs
-function seedDemo(){
-  const okrs=getOKRs();
-  const qkey=getQuarterKey(0);
-  if(!okrs[qkey]||okrs[qkey].length===0){
-    okrs[qkey]=[
-      {title:'Achieve sovereign financial independence through scalable income streams',desc:'Build systems that generate revenue without trading time for money.',cat:'wealth',created:Date.now()-60*86400000,krs:[
-        {title:'Grow monthly recurring revenue',start:0,target:5000,current:2100,unit:'$'},
-        {title:'Reduce active work hours for income',start:50,target:20,current:35,unit:'hrs/wk'},
-        {title:'Build emergency fund',start:0,target:30000,current:18000,unit:'$'},
-      ]},
-      {title:'Master a high-leverage technical skill to command sovereign rates',desc:'Become genuinely excellent at one skill that creates outsized leverage.',cat:'mastery',created:Date.now()-55*86400000,krs:[
-        {title:'Complete deep-work focus hours on craft',start:0,target:200,current:140,unit:'hrs'},
-        {title:'Build and ship public projects',start:0,target:3,current:2,unit:''},
-        {title:'Achieve elite performance benchmark',start:0,target:100,current:68,unit:'%'},
-      ]},
-      {title:'Optimize body and mind for peak sovereign performance',desc:'Physical sovereignty is the foundation of everything else.',cat:'health',created:Date.now()-50*86400000,krs:[
-        {title:'Maintain consistent training schedule',start:0,target:78,current:54,unit:'sessions'},
-        {title:'VO2 max improvement',start:42,target:50,current:46,unit:'ml/kg/min'},
-        {title:'Average sleep quality score',start:65,target:85,current:79,unit:''},
-      ]},
-    ];
-    localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
-  }
+/* seedDemo() used to live here. It wrote three complete objectives into
+   omega_okr_data on a member's first visit -- the same key real objectives go
+   to, with no marker -- carrying hardcoded mid-quarter progress: $2,100 of a
+   $5,000 revenue target, 140 of 200 craft hours, a VO2 max of 46 ml/kg/min,
+   a sleep-quality score of 79, and a created date backdated 60 days.
+
+   The KPI row above computes OKR SCORE and KEY RESULTS from whatever is in
+   that store, so a member who had never set an objective was shown a quarter
+   of progress they had not made, including physiological readings. That is
+   CLAUDE.md 8.1 class 9, the same shape as habits.html's 90 days of
+   Math.random() completions, differing only in being fixed rather than random
+   -- which makes it more convincing, not less invented.
+
+   The seed was also unnecessary: renderOKRs() already has an empty state
+   ("NO OBJECTIVES FOR <quarter> -- CREATE YOUR FIRST OBJECTIVE"), which is
+   what a member with no objectives should see.
+
+   Removing the seed only helps new installs. purgeDemoObjectives() below
+   handles the ones already written. */
+
+/* Remove the seeded objectives from installs that already have them.
+
+   Safe because the demo was FIXED, not random: an entry is removed only if
+   its title and every one of its key results match the seed exactly, values
+   included. Any edit a member made -- a changed current value, a renamed KR,
+   a deleted one -- makes it stop matching and it is kept. The rule can only
+   delete something the member has never touched. */
+const DEMO_SIGNATURE = {
+  'Achieve sovereign financial independence through scalable income streams':
+    'Grow monthly recurring revenue|0|5000|2100|$;Reduce active work hours for income|50|20|35|hrs/wk;Build emergency fund|0|30000|18000|$',
+  'Master a high-leverage technical skill to command sovereign rates':
+    'Complete deep-work focus hours on craft|0|200|140|hrs;Build and ship public projects|0|3|2|;Achieve elite performance benchmark|0|100|68|%',
+  'Optimize body and mind for peak sovereign performance':
+    'Maintain consistent training schedule|0|78|54|sessions;VO2 max improvement|42|50|46|ml/kg/min;Average sleep quality score|65|85|79|'
+};
+const DEMO_PURGE_KEY = 'omega_okr_demo_purged_v1';
+
+function krSignature(krs){
+  return (krs||[]).map(function(k){
+    return [k.title, k.start, k.target, k.current, k.unit||''].join('|');
+  }).join(';');
 }
-seedDemo();
+
+function purgeDemoObjectives(){
+  try{
+    if(localStorage.getItem(DEMO_PURGE_KEY)) return;
+    const okrs = getOKRs();
+    let removed = 0;
+    Object.keys(okrs).forEach(function(q){
+      okrs[q] = (okrs[q]||[]).filter(function(o){
+        const sig = DEMO_SIGNATURE[o.title];
+        if(sig && krSignature(o.krs) === sig){ removed++; return false; }
+        return true;
+      });
+      if(!okrs[q].length) delete okrs[q];
+    });
+    if(removed) localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+    localStorage.setItem(DEMO_PURGE_KEY, String(Date.now()));
+  }catch(e){ /* leave the marker unset; a later visit retries */ }
+}
+
+purgeDemoObjectives();
 renderOKRs();
 renderReviewHistory();
 </script>

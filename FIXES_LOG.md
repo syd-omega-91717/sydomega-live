@@ -10013,3 +10013,97 @@ Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
 `scripts/schema-dictionary.py` OK against the refreshed live snapshot,
 `scripts/upsert-conflict-check.py` 0 findings, `node scripts/verify-runtime.js`
 PASS on 13 pages.
+
+---
+
+## targets.html mirrors to both OKR tables, and its demo seed is gone (2026-09-05)
+
+Last of the three pages whose tables were applied this morning. Two findings:
+the wiring, and a second instance of §8.1 class 9 discovered while verifying it.
+
+### The mirror: two tables, a foreign key, and three constraints
+
+`okr_key_results.objective_id` references `okr_objectives(id)`, so **order
+matters**: the objective is inserted with `.select('id').single()`, its
+generated id is what the key results carry, and if that insert fails the
+function returns rather than sending writes that would fail the FK anyway.
+
+Three live CHECK constraints this page could otherwise have violated, each a
+`23514` that writes nothing and does not throw:
+
+| constraint | the trap |
+|---|---|
+| `quarter ~ '^Q[1-4] \d{4}$'` | `getQuarterKey()` returns **`Q1_2026`, with an underscore** — it is a localStorage map key, not a label. Passing it would have failed *every* write. `getQuarterLabel()` (space) is sent instead |
+| `title` 5–200 (objectives) | `saveObjective` only checks the title is non-empty, so a 1–4 character objective saves locally and would be rejected server-side |
+| `title` 3–200 (key results) | same shape, per KR |
+
+`category` is deliberately not guarded: the page's six `<option>` values match
+the CHECK exactly — verified, not assumed.
+
+Proven live as a real member, rolled back:
+
+```
+insert all six categories + their KRs   -> objectives 6, key_results 6
+CONTROL quarter 'Q1_2026'               -> check_violation        (rejected)
+CONTROL title 'Grow' (4 chars)          -> check_violation        (rejected)
+CONTROL key result with no objective    -> foreign_key_violation  (rejected)
+rows belonging to another user          -> 0
+```
+
+The first control is the important one: it proves the underscore trap was real
+rather than theoretical, and the live page confirms it — its storage key
+rendered as `Q3_2026`.
+
+### The second finding: `seedDemo()` invented a quarter of progress
+
+While driving the real `saveObjective` path, the page turned out to already hold
+three objectives with progress the member had never made. `targets.html:561`
+wrote them on first visit into `omega_okr_data` — the same key real objectives
+use, with no marker — carrying hardcoded mid-quarter values:
+
+```
+$2,100 of a $5,000 revenue target
+140 of 200 craft hours
+VO2 max 46 ml/kg/min
+sleep quality score 79
+created: Date.now() - 60 * 86400000      (backdated two months)
+```
+
+The KPI row computes OKR SCORE and KEY RESULTS from that store, so a member who
+had never set an objective was shown a quarter of progress including
+physiological readings. Same class as `habits.html`'s 90 days of
+`Math.random()` completions, differing only in being **fixed rather than
+random** — which makes it more convincing, not less invented.
+
+The seed was also unnecessary: `renderOKRs()` already has an empty state,
+`NO OBJECTIVES FOR <quarter> — CREATE YOUR FIRST OBJECTIVE`, which is what a
+member with no objectives should see.
+
+### Purging it is safe *because* the demo was fixed
+
+Unlike `habits.html`, where the fabrication was random and needed the
+account-creation date to identify, this seed is byte-identical every time. An
+entry is removed only if its title **and every key result** — titles, start,
+target, current, unit — match the seed exactly. Any edit the member made stops
+it matching and it is kept. The rule can only delete something never touched.
+
+Measured:
+
+```
+FRESH   objectives 0 | KR stat 0 | empty state shown: true
+
+planted: [exact seed entry] [seed entry with one KR edited 140 -> 175] [member's own]
+AFTER   kept = ['Master a high-leverage technical skill t', 'My own objective']
+        purged = true
+```
+
+The edited entry survived, which is the whole point of matching on values rather
+than titles.
+
+`mirrorObjective` is called only from `saveObjective`, never from the seed, so
+no fabricated row was ever eligible to reach the server.
+
+Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
+`scripts/schema-dictionary.py` OK against the refreshed live snapshot,
+`scripts/upsert-conflict-check.py` 0 findings, `node scripts/verify-runtime.js`
+PASS on 13 pages, 0 page errors and 0 mirror warnings in both renders.

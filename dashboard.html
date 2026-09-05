@@ -169,13 +169,13 @@
 
         <!-- ACTION CENTER (merged alerts + recommendations) -->
         <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.2s">⚠</span><span data-i18n="action_centre">ACTION CENTRE</span></span> &middot; <span data-i18n="priority_items">PRIORITY ITEMS</span> <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
-        <div class="alert-list" id="alert-list" style="margin-bottom:16px">
-          <div class="alert-item" style="--ac:var(--crim)"><div class="alert-icon">&#9650;</div><div><div class="alert-text">Run the SQL migrations in supabase/migrations/ (see its README.md) or the flat supabase/*.sql files against the live database.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP</div></div></div>
-          <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Set ANTHROPIC_API_KEY in Supabase secrets to activate AI concierge edge functions.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; AI MODULE</div></div></div>
-          <div class="alert-item" style="--ac:var(--cyan)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Enable pgvector extension in Supabase dashboard to activate semantic AI memory.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; VECTOR SEARCH</div></div></div>
-          <div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9654;</div><div><div class="alert-text">Launch founding member recruitment. First 100 members validate gate thresholds and generate real progression data.</div><div class="alert-meta">STRATEGIC &middot; DOMAIN: GROWTH &middot; HIGH LEVERAGE</div></div></div>
-          <div class="alert-item" style="--ac:var(--gold)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Activate enterprise tier. Starter accounts ($199/mo) = immediate $2K MRR with no additional infrastructure.</div><div class="alert-meta">STRATEGIC &middot; DOMAIN: REVENUE &middot; IMMEDIATE IMPACT</div></div></div>
-        </div>
+        <!-- Rendered by renderActionCentre() from real state. It used to be five
+             hardcoded items shown to every member: three owner ops tasks ("Run the
+             SQL migrations", "Set ANTHROPIC_API_KEY in Supabase secrets", "Enable
+             pgvector") and two business-strategy items quoting revenue targets.
+             None came from any state, so a member's "PRIORITY ITEMS" asserted work
+             that was not theirs and that nothing checked -- CLAUDE.md 8.1 class 9. -->
+        <div class="alert-list" id="alert-list" style="margin-bottom:16px"></div>
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
         <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.4s">♇</span><span data-i18n="command_index">COMMAND INDEX</span></span> &middot; 18 <span data-i18n="module_portals">SOVEREIGN MODULE PORTALS</span></div>
@@ -579,7 +579,7 @@ async function askAI(){
   if(window.OmegaIntelligence){
     try{reply=await window.OmegaIntelligence.ask(q,[]);}catch(e){}
   }
-  if(!reply) reply='Intelligence engine requires the concierge edge function to be deployed with ANTHROPIC_API_KEY set in Supabase secrets.';
+  if(!reply) reply='The intelligence engine is not available right now. Please try again shortly.';
   area.style.opacity='1';area.textContent=reply;
   if(window.OmegaTelemetry)window.OmegaTelemetry.track('dashboard_ai_query',{query:q.slice(0,80)});
 }
@@ -835,6 +835,41 @@ function sid(id,v){
 }
 
 (async function(){
+  /* ACTION CENTRE. Every item must come from this member's real state; when
+     nothing applies the panel says so rather than inventing a priority. The
+     owner's operational backlog is real work, but it is the owner's -- it is
+     rendered only when pr.is_owner, matching the is_owner gating this page
+     already uses for its analytics and risk sections. */
+  function renderActionCentre(pr){
+    var host=document.getElementById('alert-list');
+    if(!host) return;
+    var items=[];
+    if(pr.is_owner){
+      items.push({c:'var(--crim)',i:'&#9650;',t:'Apply pending schema to the live database — see supabase/migrations/README.md for which files are safe against production.',m:'OWNER &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP'});
+      items.push({c:'var(--solar)',i:'&#9888;',t:'Set ANTHROPIC_API_KEY in Supabase secrets, then deploy the concierge Edge Function. Until both are done the copilot answers that it is not switched on.',m:'OWNER &middot; PRIORITY: HIGH &middot; AI MODULE'});
+      items.push({c:'var(--cyan)',i:'&#9670;',t:'Enable the pgvector extension to activate semantic AI memory.',m:'OWNER &middot; PRIORITY: HIGH &middot; VECTOR SEARCH'});
+    }else{
+      /* No "complete your onboarding" item on purpose: onboarding is not a page,
+         it is an overlay bg.js loads via omega-onboard.js, whose needsOnboarding()
+         is (!pr.sign && !pr.element && !pr.is_owner) -- so it already presents
+         itself to exactly this member. An alert pointing at it would be a second
+         copy of a prompt already on screen, and the /onboarding.html it would
+         have linked to does not exist. */
+      if(pr.is_trial&&pr.trial_expires_at){
+        var daysLeft=Math.ceil((new Date(pr.trial_expires_at)-new Date())/864e5);
+        if(daysLeft>=0) items.push({c:daysLeft<=3?'var(--crim)':'var(--cyan)',i:'&#9670;',t:'Your trial ends in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.',m:'YOURS &middot; DOMAIN: ACCESS'});
+      }
+    }
+    if(!items.length){
+      host.innerHTML='<div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Nothing needs your attention right now.</div><div class="alert-meta">NO PRIORITY ITEMS</div></div></div>';
+      return;
+    }
+    host.innerHTML=items.map(function(x){
+      var open=x.href?' onclick="location.href=\''+x.href+'\'" style="--ac:'+x.c+';cursor:pointer"':' style="--ac:'+x.c+'"';
+      return '<div class="alert-item"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+x.t+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
+    }).join('');
+  }
+
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
@@ -845,6 +880,8 @@ function sid(id,v){
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
     window._dashProfile=pr;
+
+    renderActionCentre(pr);
 
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;

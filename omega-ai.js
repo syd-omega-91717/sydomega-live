@@ -68,9 +68,13 @@
           }
         });
         if(r.data&&r.data.reply) return r.data.reply;
+        /* HTTP 200 {enabled:false} is concierge's documented answer when
+           ANTHROPIC_API_KEY is unset (its index.ts:45) -- dormant, not broken. */
+        if(r.data&&r.data.enabled===false)
+          return 'The intelligence engine is not switched on for this platform yet.';
       }catch(e){}
     }
-    return 'Intelligence engine unavailable. Ensure the concierge edge function is deployed.';
+    return 'The intelligence engine is unreachable right now — please try again shortly.';
   }
 
   window.OmegaAI={

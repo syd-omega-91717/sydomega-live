@@ -10107,3 +10107,91 @@ Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
 `scripts/schema-dictionary.py` OK against the refreshed live snapshot,
 `scripts/upsert-conflict-check.py` 0 findings, `node scripts/verify-runtime.js`
 PASS on 13 pages, 0 page errors and 0 mirror warnings in both renders.
+
+---
+
+## Every page-count claim a member could read was wrong, and one of them I broke myself (2026-09-05)
+
+### How this was found
+
+The `Math.random()` scan that caught `habits.html` structurally could not find
+`targets.html`'s `seedDemo()`, because that fabrication was **hardcoded**. So a
+second scan looked for the shape the first one could not see: a backdated
+timestamp written into stored data, or a `seed*`/`demo*` function that writes to
+`localStorage`.
+
+Its control is a real one — the pre-fix `targets.html`, pinned with
+`git show`, not reasoned about:
+
+```
+CONTROL against pre-fix targets.html: ['backdated@500', 'backdated@505', 'seedDemo@490']
+```
+
+Three hits on the current tree, and the false-positive pass left one:
+
+| hit | verdict |
+|---|---|
+| `focus.html:415` `Date.now()-7*86400000` | a read-side window for weekly stats. Not fabrication |
+| `habits.html:242` backdated `created` on habit *definitions* | never rendered — the only `.created` reads are the purge added earlier today. Inert |
+| `notifications.html:143` `seedSystemNotifs` | **real** |
+
+### The finding, and what it opened
+
+`notifications.html` seeded a notification a member reads as system status:
+
+> All SYD OMEGA 91717 systems operational. **169 pages active across 15 sections.**
+
+"15 sections" is correct (`nav.js` has 15 unique section keys — checked, not
+assumed). The page count was not, and "all systems operational" is a status
+nothing measures. Grepping for the rest found four more, and the gate written
+afterwards found **two more again** that the grep missed because it matched
+lowercase `pages` and the dashboard says `170 PAGES`:
+
+```
+dashboard.html:245     ALL 170 PAGES · 15 SECTIONS        (also a data-i18n string)
+dashboard.html:356     170 PAGES · 85 ENGINES
+notifications.html:146 169 pages active
+ecosystem.html:67      62-PAGE PLATFORM ... comprises 62 pages
+roadmap.html:104       170 pages. 85 engines. 110 SQL files.
+world-shell.html:1     all 150+ pages
+settings.html:111      48 pages keep what you enter in this browser only
+```
+
+Ground truth that day: **189** pages, **149** `omega-*.js`, **126** SQL files.
+
+### The one I broke myself
+
+`settings.html`'s figure was *correct when written* — it is the `LOCAL_ONLY`
+count from `evidence-audit.py`. It went stale because **wiring `habits`,
+`focus` and `targets` to Postgres earlier today moved them out of that class**:
+48 → 45, with `PARTIAL` 24 → 27. `EVIDENCE_MATRIX.md` was regenerated in the
+same change and now reports all three as `PARTIAL` ("reads/writes 1 table",
+"reads/writes 2 tables").
+
+A number can rot because the estate grew *or* because you fixed something. The
+second kind is easier to miss, because nothing about the change looks like it
+touched documentation.
+
+### A `data-i18n` string is seven places, not one
+
+`dashboard.html:245` carries `data-i18n="dash_platform_index"`. Fixing the HTML
+alone would have left `i18n.js`'s `T_EN` and all six packs asserting 170 — five
+translations quietly lying, and `i18n-contract.py` failing on the `T_EN`
+mismatch. All seven updated together; the contract reports 0 violations.
+
+### The gate
+
+Correcting seven numbers that drifted once will not stop them drifting again, so
+`scripts/page-count-claims.py` requires every `<N> pages` in member-visible HTML
+to equal either the estate size or an `evidence-audit.py` class count — the
+latter because a page may legitimately describe a subset, as `settings.html`
+does. Diagnostic harnesses (`verify-*.html`) are skipped.
+
+Registered in `contract-suite.py` (15 gates → 16) and covered by five tests
+whose first case is a planted violator, because a gate that cannot fail is worse
+than none. It caught the two uppercase claims a careful hand-grep had missed.
+
+Gates: `./scripts/ci-local.sh` 22/22 (16 contract gates, 0 failing), **196**
+tests OK (was 191), `scripts/i18n-contract.py` 0 violations,
+`scripts/omega-registry.py --check` matches, `scripts/context-budget.py` PASS
+(CLAUDE.md 14,771 / 16,000).

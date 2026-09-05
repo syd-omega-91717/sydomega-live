@@ -37,8 +37,8 @@ This scanner reads the repository. It has no database connection, so:
 | class | pages |
 |---|---:|
 | `BUILT` | 95 |
-| `PARTIAL` | 24 |
-| `LOCAL_ONLY` | 48 |
+| `PARTIAL` | 27 |
+| `LOCAL_ONLY` | 45 |
 | `STATIC` | 18 |
 | `BROKEN` | 2 |
 | `UNREACHABLE` | 2 |
@@ -144,7 +144,7 @@ This scanner reads the repository. It has no database connection, so:
 | `tribe.html` | reads/writes 1 table; 1 auth call |
 | `universe.html` | reads/writes 1 table; 1 auth call |
 
-## PARTIAL (24)
+## PARTIAL (27)
 
 | page | evidence |
 |---|---|
@@ -152,9 +152,11 @@ This scanner reads the repository. It has no database connection, so:
 | `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `codex.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `gates.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `habits.html` | reads/writes 1 table; 2 auth calls; also 9 localStorage writes |
 | `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
 | `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `intelligence.html` | reads/writes 3 tables, 1 edge fn; also 2 localStorage writes |
@@ -169,11 +171,12 @@ This scanner reads the repository. It has no database connection, so:
 | `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `settings.html` | reads/writes 1 table, 3 rpc; 5 auth calls; also 3 localStorage writes |
+| `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
 | `treasury.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (48)
+## LOCAL_ONLY (45)
 
 | page | evidence |
 |---|---|
@@ -192,9 +195,7 @@ This scanner reads the repository. It has no database connection, so:
 | `expenses.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
 | `fasting.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `flashcard.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `focus.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `gratitude.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `habits.html` | 8 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `journal.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `lab.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `library.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
@@ -217,7 +218,6 @@ This scanner reads the repository. It has no database connection, so:
 | `skills.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `sleep.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `stoic.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `targets.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `time.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `vision.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
 | `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
@@ -355,32 +355,16 @@ it?** A relation the SQL bag declares but the database never received
 answers every query with `{data:null,error}` — an empty page, no
 exception, no console error (CLAUDE.md §8.1 class 2).
 
-Source: `supabase/live-schema.json`, captured **2026-08-29**. A dated
+Source: `supabase/live-schema.json`, captured **2026-09-05**. A dated
 snapshot, not a connection. Regenerate it whenever schema is applied
 live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 119 | 8 | 0 |
+| 119 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.
-
-### Absent live, read by nothing — declared and never applied
-
-Not a failure, and deliberately not gated: this repo ships dormant
-backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
-to one of these is a decision rather than a surprise — the page
-would classify `BUILT` while returning nothing.
-
-- `codex_bookmarks`
-- `creator_proposals`
-- `focus_sessions`
-- `habit_logs`
-- `okr_key_results`
-- `okr_objectives`
-- `signal_saves`
-- `wealth_snapshots`
 
 
 ## UNVERIFIED — what no repository scan can settle

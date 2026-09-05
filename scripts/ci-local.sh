@@ -138,19 +138,24 @@ if [ "$RUN_ALL" -eq 1 ]; then
   # five days because the CI workflow almost never concluded on the self-hosted
   # Windows runner; moving it to a hosted runner is what surfaced it.
   #
-  # Measured 2026-09-05, all six now at 0: schema-dictionary, rls-auditor,
+  # Measured 2026-09-05, all seven now at 0: schema-dictionary, rls-auditor,
   # silent-failure-detector, migration-consistency, migration-history-contract,
-  # upsert-conflict-check.
+  # upsert-conflict-check, supabase-migration-security-audit.
   #
-  # migration-history-contract was ABSENT from this list until 2026-09-05 while
-  # ci.yml has run it all along, and it was failing -- unsatisfiably, on an
-  # already-applied 8-digit version it demanded be renumbered. Nothing here
-  # could see it, because ci.yml's `verify` job stops at its first failing step
-  # and migration-consistency ran before it. Mirror every step of that job
-  # here: a gate this script does not run is a gate it cannot vouch for.
+  # Two of these were ABSENT from this list until 2026-09-05, and both were
+  # failing unsatisfiably -- each demanding an edit to an already-applied
+  # migration, which is never rewritten (migrations/README.md:60):
+  #   migration-history-contract, a step of ci.yml's `verify` job. That job
+  #     stops at its first failing step and migration-consistency ran before
+  #     it, so nothing here or there ever reached it.
+  #   supabase-migration-security-audit, its own workflow, queued behind every
+  #     other job on the single self-hosted runner.
+  # Mirror every blocking gate here, from every workflow: a gate this script
+  # does not run is a gate it cannot vouch for.
   printf '\n\033[1m── blocking on GitHub, reported only here ──────────────────\033[0m\n'
   for s in schema-dictionary rls-auditor silent-failure-detector \
-           migration-consistency migration-history-contract upsert-conflict-check; do
+           migration-consistency migration-history-contract upsert-conflict-check \
+           supabase-migration-security-audit; do
     printf '\n\033[1m── %s (blocking in ci.yml)\033[0m\n' "$s"
     # --local is the mode ci.yml runs; without it the history contract still
     # checks the local tree but signs off with a misleading trailer.

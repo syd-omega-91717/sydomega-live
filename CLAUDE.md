@@ -555,7 +555,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **244** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **252** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -573,7 +573,7 @@ entries (which were accurate when written):
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
-| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **six** audits block in `ci.yml` and are all green. It mirrored only five until `migration-history-contract` was added — a gate it does not run is one it cannot vouch for (`FIXES_LOG.md` 93, 94, 102, 103) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. It mirrored only five until `migration-history-contract` and `supabase-migration-security-audit` were added, and both were failing unsatisfiably: mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

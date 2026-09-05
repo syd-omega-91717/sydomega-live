@@ -12180,3 +12180,78 @@ spans, and always assert the match count before replacing.
 versions: 171`, range `0001 -> 20260905211725`, exit **0** (was exit 1).
 `scripts/tests` 238 → **244**, all passing. `./scripts/ci-local.sh --all`
 **ALL 23 BLOCKING CHECKS PASSED**, with all six mirrored audits at 0.
+
+---
+
+## 104. A security gate that failed on 67 findings production had already fixed
+
+`Fail-closed migration security audit` was the last red check, and its 67
+findings were all one rule:
+
+```
+SUPABASE_MIGRATION_SECURITY_AUDIT=FAILED
+::error::supabase/migrations/0075_targeted_fix.sql:83: SECURITY DEFINER function without explicit search_path
+   ... 66 more, across 24 files
+```
+
+### Two things were wrong at once
+
+**It could not be satisfied.** All 24 files are already applied, and applied
+migrations are never rewritten (`supabase/migrations/README.md:60`) — the same
+unsatisfiable shape as entry 103's version-width rule, in a second gate. Its
+own docstring says it blocks "newly introduced patterns"; it scanned every file
+in the directory, new or not.
+
+**And it asserted something about production that is false.** Checked live two
+independent ways on 2026-09-05:
+
+| source | result |
+|---|---|
+| `pg_proc` / `proconfig`, schemas `public` + `private` | **107** `SECURITY DEFINER` functions, **0** without an explicit `search_path` |
+| Supabase security advisors | **no** `function_search_path_mutable` finding; the only lint on the project is the owner-only `auth_leaked_password_protection` WARN |
+
+`20260903021430_secure_private_rpc_boundary_v2.sql` and its siblings set
+`search_path` on every one of them. The 67 hits are historical text describing
+a state production left behind — a real §8.4 case of a scanner reporting the
+repo's past as its present.
+
+### The fix is a fingerprint, not an off switch
+
+`scripts/supabase-migration-security-baseline.json` records each applied
+finding as `file::rule → count`, and the audit fails on anything outside it.
+Because those files are immutable, the match must be **exact in both
+directions**: a higher count means an applied migration gained an unsafe
+pattern, a lower one means a file was edited, and either is the defect. The
+audit now also prints the live check alongside its PASS, so the baseline can
+never be mistaken for indifference.
+
+### Controls
+
+`test_supabase_migration_security_audit.py`, 8 tests, every passing case paired
+with a violator:
+
+| control | result |
+|---|---|
+| a `SECURITY DEFINER` **with** `search_path` | pass |
+| the 67 baselined applied findings | pass (was the false failure) |
+| a **new** unsafe function in an unbaselined file | **caught** |
+| a second unsafe function added to a *baselined* file | **caught** — `baseline 1, found 2` |
+| a baselined finding that disappears | **caught** as drift |
+| `GRANT ALL … TO anon` in a file baselined for the *other* rule | **caught** — the key carries the rule |
+| the committed baseline against the real tree | PASSES, so it is not stale |
+| `--help` | exit 0, scan does not run |
+
+### The divergence, again
+
+This audit is its own workflow (`supabase-migration-security-audit.yml`),
+queued behind every other job on the single self-hosted runner, and
+`ci-local.sh` did not run it — the second gate in two entries that no local
+run could see. Both are now in that list, and its comment says the rule
+plainly: mirror every blocking gate, from every workflow.
+
+### Verification
+
+`python3 scripts/supabase-migration-security-audit.py` → `PASSED`, exit **0**
+(was `FAILED`, 67 errors, exit 1). `scripts/tests` 244 → **252**, all passing;
+`tests` 23 passing; `./scripts/ci-local.sh --all` **ALL 23 BLOCKING CHECKS
+PASSED** with all seven mirrored audits at 0.

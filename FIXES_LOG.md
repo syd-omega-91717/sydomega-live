@@ -11613,3 +11613,112 @@ alias remains pinned to `31f9180d` by an Instant Rollback (§8.2, entry 95).
 Cancelling that rollback is an owner action in the Vercel dashboard. Until it
 is cancelled `Production Surface Smoke` stays red, and the corrected build
 above cannot reach the domain regardless of how green CI is.
+
+## 98. The member dashboard's ACTION CENTRE was the owner's ops backlog, and four AI surfaces told members to deploy an Edge Function
+
+Live check first: `mcp__Supabase__list_edge_functions` against `ydqhzvvoyufiiqvzcjns`
+returns `{"functions":[]}` — **zero Edge Functions are deployed**, confirming the
+standing finding, and confirming again that the Supabase MCP works from this
+session type despite the "requires authentication" banner (§8.2).
+
+The prior session's client-side half of that finding is **stale and was
+re-derived rather than trusted**. Only two functions are invoked from client
+code now:
+
+```
+14 concierge
+ 2 rankings
+```
+
+Both have directories. The previously-recorded `oracle` (which had no directory
+at all), `graphify-ai-query`, `market-price` and `intel-feed` invocations are
+gone from `main`. So there is no missing-function bug left to fix — only an
+undeployed one, and `supabase/functions/concierge/index.ts:45` returns HTTP 200
+`{enabled:false, message:"Concierge AI is not configured yet."}` when
+`ANTHROPIC_API_KEY` is unset, exactly as its own header (line 10) documents.
+Setting that secret is the owner's; nothing here touches it.
+
+### a. Four surfaces answered a member with an operations instruction
+
+`weekly.html:455` was the only call site honouring the documented contract
+(`else if(r.data&&r.data.enabled===false) done('AI reflection is not enabled on
+this platform yet.')`), and its comment at line 404 says why. The others checked
+only `r.data.reply`, so a deployed-but-unconfigured function fell through to
+strings written for a developer and shown to a member:
+
+- `agents.html:232` — "The secure channel requires the concierge edge function to be deployed. Ensure ANTHROPIC_API_KEY is set in Supabase secrets."
+- `sovereign-ai.html:200` — "Please ensure the concierge edge function is deployed."
+- `omega-ai.js:73`, `omega-intelligence.js:208` — "Intelligence engine unavailable. Ensure the concierge edge function is deployed."
+- `dashboard.html:582` — "Intelligence engine requires the concierge edge function to be deployed with ANTHROPIC_API_KEY set in Supabase secrets."
+
+A member cannot deploy anything, and §9's dormancy rule wants copy in future
+tense while a feature is off. All five now distinguish the two cases the
+function actually produces — dormant (`enabled:false`) versus unreachable — and
+say so in member language. `chatbot.html`'s existing "temporarily unavailable"
+was already member-appropriate and is unchanged.
+
+### b. The ACTION CENTRE asserted five priorities that came from nothing
+
+`dashboard.html` — the page a member lands on after sign-in — rendered
+`<div class="alert-list" id="alert-list">` as **five hardcoded `.alert-item`
+elements**. `grep -n "alert-list\|alertList" dashboard.html` returns only the
+CSS rule and that one tag: nothing ever populated it from data. Every member saw,
+under "ACTION CENTRE · PRIORITY ITEMS":
+
+1. "Run the SQL migrations in supabase/migrations/ … " — `ACTION REQUIRED · PRIORITY: CRITICAL`
+2. "Set ANTHROPIC_API_KEY in Supabase secrets … " — `ACTION REQUIRED · PRIORITY: HIGH`
+3. "Enable pgvector extension in Supabase dashboard … " — `ACTION REQUIRED · PRIORITY: HIGH`
+4. "Launch founding member recruitment. First 100 members validate gate thresholds…"
+5. "Activate enterprise tier. Starter accounts ($199/mo) = immediate $2K MRR…" — `STRATEGIC · DOMAIN: REVENUE`
+
+Three are the owner's infrastructure backlog; two are business strategy quoting
+a revenue target. None is the member's, and none is checked against anything —
+§8.1 class 9, the same shape as `hercules.html`'s `Math.random()*100` progress
+and `ad-network.html`'s accumulated revenue: an authoritative badge over content
+no state supports.
+
+`renderActionCentre(pr)` now builds the list from the profile the page already
+loads, reusing the `if(pr.is_owner)` gate this page already uses for its
+analytics (`:895`) and risk (`:964`) sections. Owner: the three infrastructure
+items, labelled `OWNER` rather than `ACTION REQUIRED`. Member: real items only —
+currently trial expiry, from `pr.is_trial` + `pr.trial_expires_at`. When nothing
+applies it says "Nothing needs your attention right now." rather than inventing
+a priority. The two strategy items are gone entirely; a revenue target is not a
+dashboard alert.
+
+**A "complete your onboarding" item was written and then removed**, because it
+was wrong twice: it linked to `/onboarding.html`, which does not exist (onboarding
+is an overlay `bg.js` loads via `omega-onboard.js`), and that module's
+`needsOnboarding(pr)` is `(!pr.sign && !pr.element && !pr.is_owner)` — it already
+presents itself to exactly that member, so the alert would have been a second
+copy of a prompt already on screen. `audit.py`'s broken-asset check would have
+caught the dead path; the redundancy it would not have.
+
+### Verification
+
+Three branches driven through a real render (harness `launch()`, with the
+Supabase stub re-routed per case so the profile is real rather than simulated
+by calling the function directly — it is correctly function-scoped, not on
+`window`):
+
+```
+=== OWNER === items=3
+  * Apply pending schema to the live database …        [OWNER · PRIORITY: CRITICAL · ONE-TIME SETUP]
+  * Set ANTHROPIC_API_KEY in Supabase secrets …        [OWNER · PRIORITY: HIGH · AI MODULE]
+  * Enable the pgvector extension …                    [OWNER · PRIORITY: HIGH · VECTOR SEARCH]
+=== MEMBER on trial, 2 days left === items=1
+  * Your trial ends in 2 days.                         [YOURS · DOMAIN: ACCESS]
+=== MEMBER, nothing pending === items=1
+  * Nothing needs your attention right now.            [NO PRIORITY ITEMS]
+```
+
+No page errors in any run. `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**; `scripts/tests` 230 passing; `node scripts/verify-runtime.js` **PASS
+(13 pages)**; `check-inline-js.py` clean; `page-count-claims.py` PASS;
+`i18n-contract.py` 0 violations.
+
+### Left open
+
+The copilot stays dormant until `ANTHROPIC_API_KEY` is set in Supabase secrets
+and `concierge` is deployed — both owner actions. The surfaces now say that in
+member language instead of leaking the runbook.

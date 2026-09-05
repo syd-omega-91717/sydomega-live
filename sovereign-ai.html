@@ -193,11 +193,17 @@ window.sendToAgent=async function(){
   addMsg('user',q);
   var auth=_profile?(_profile.is_owner?27.8367:Math.sqrt(Math.pow(Number(_profile.axis_a||0.001),3)+Math.pow(Number(_profile.axis_b||0.001),3)+Math.pow(Number(_profile.axis_c||0.001),3))*PHI/EU):0;
   var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.sign||'?')+'. Be concise (under 100 words). Stay in character.';
+  /* concierge answers HTTP 200 {enabled:false} when ANTHROPIC_API_KEY is unset
+     (supabase/functions/concierge/index.ts:45) -- a dormant feature, not a fault. */
+  var dormant=false;
   try{
     var r=await sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',auth:auth.toFixed(4),tier:_profile&&_profile.subscription_tier||'free'}}});
     if(r.data&&r.data.reply){addMsg('ai',r.data.reply,EL_COLORS[(_activeAgent.element||'').toLowerCase()]);return;}
+    if(r.data&&r.data.enabled===false)dormant=true;
   }catch(e){}
-  addMsg('ai','I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. The AI bridge is temporarily unavailable. Please ensure the concierge edge function is deployed.');
+  addMsg('ai','I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. '+(dormant
+    ? 'Agent conversation is not switched on for this platform yet.'
+    : 'The channel is unreachable right now — please try again shortly.'));
 };
 
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('chat-inp'))window.sendToAgent();});

@@ -205,7 +205,7 @@
       if(window.OmegaMemory&&resp) window.OmegaMemory.store('conversation:'+Date.now(),query.slice(0,200)+'→'+resp.slice(0,200));
       /* Telemetry */
       if(window.OmegaTelemetry)window.OmegaTelemetry.track('ai_query',{agent:agentName,query_len:query.length});
-      return resp||'Intelligence engine unavailable. Ensure the concierge edge function is deployed.';
+      return resp||'The intelligence engine is unreachable right now — please try again shortly.';
     }
   };
 

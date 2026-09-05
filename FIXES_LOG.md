@@ -9924,3 +9924,92 @@ first-time write path.
 Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
 `scripts/upsert-conflict-check.py` 0 findings, `scripts/schema-dictionary.py` OK,
 `node scripts/verify-runtime.js` PASS on 13 pages.
+
+---
+
+## focus.html mirrors to focus_sessions, and the CHECK constraints were verified against the page (2026-09-05)
+
+The third table applied this morning gets its page. `public.focus_sessions`
+(`supabase/chunk_10_productivity.sql`, applied live 2026-09-05) now receives a
+row whenever a session completes.
+
+### Append-only, so an insert — not an upsert
+
+`habit_logs` needed an explicit `onConflict` because it carries
+`UNIQUE (user_id, habit_id, log_date)`. `focus_sessions` has **no unique
+constraint beyond its primary key**, so there is no conflict target to name and
+§8.1 class 7 does not apply. Using `upsert` here would have been cargo-culting
+the previous page's fix. `scripts/upsert-conflict-check.py`: 0 findings.
+
+Still a mirror, not a sync, for the same reason as `habits.html` and
+`omega-member-state.js`: the page renders synchronously from `localStorage`.
+
+### The CHECK constraints are real, and were checked against the page's vocabulary
+
+```sql
+mode text NOT NULL CHECK (mode IN ('DEEP WORK','ULTRADIAN','FLOW STATE','BREAK','CUSTOM'))
+duration_secs integer NOT NULL CHECK (duration_secs >= 0)
+target_secs   integer NOT NULL CHECK (target_secs  >  0)
+```
+
+A `23514` writes nothing and, like every Supabase error, does not throw. So the
+page's own vocabulary was compared to the constraint rather than assumed:
+
+```
+page modes  : BREAK CUSTOM 'DEEP WORK' 'FLOW STATE' ULTRADIAN   (its data-name chips)
+CHECK allows: BREAK CUSTOM 'DEEP WORK' 'FLOW STATE' ULTRADIAN
+not allowed : (none)
+```
+
+They match exactly — the SQL was written for this page. `target_secs` is
+nonetheless clamped to `>= 1` in the mirror, because a custom-minutes field left
+empty yields `0` or `NaN`, which the constraint would reject.
+
+### Proven live, with controls
+
+Impersonating a real member, rolled back:
+
+```
+insert all five page modes                     -> rows_written = 5
+CONTROL mode = 'POMODORO'                      -> check_violation (rejected)
+CONTROL target_secs = 0                        -> check_violation (rejected)
+rows visible belonging to another user         -> 0
+```
+
+The controls are the point: without them, "5 rows written" says nothing about
+whether the constraint would have caught a wrong value.
+
+### Driving the real path needed a virtual clock
+
+`mirrorFocusSession` is declared inside `<script type="module">`, so
+`page.evaluate` cannot see it — the first verification attempt reported
+`ReferenceError: mirrorFocusSession is not defined`. That is **not** §8.1 class
+4(a): its only call site is `saveSession()` at `focus.html:247` and `:263`,
+inside the same module, and nothing references it from inline HTML. Exporting it
+to `window` to make a test pass would have been the wrong fix.
+
+The real path ends a 25-minute timer, so it was driven with Playwright's clock:
+
+```
+sessions before : 0
+sessions after  : 1
+  {"task":"Untitled","mode":"DEEP WORK","duration":1500,"target":1500,"distractions":0}
+page errors     : 0
+warnings from the mirror : 0
+```
+
+Those values satisfy every live CHECK.
+
+### A harness note
+
+That run also produced 13 console warnings — all artifacts of the test, not the
+page: bypassing the harness's `open()` for a raw `goto` skips the route stubs,
+so `dayjs` and `marked` failed with `ERR_TUNNEL_CONNECTION_FAILED`. §8.4's "stub
+before you scan" rule applies to a hand-rolled navigation just as much as to a
+repo-wide scan. Filtering for `[focus]` is what separated the page's silence from
+the harness's noise.
+
+Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
+`scripts/schema-dictionary.py` OK against the refreshed live snapshot,
+`scripts/upsert-conflict-check.py` 0 findings, `node scripts/verify-runtime.js`
+PASS on 13 pages.

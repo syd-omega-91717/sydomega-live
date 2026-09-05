@@ -10,7 +10,9 @@ REQUIRED = [
     "core/intelligence_fabric/policy_firewall.py",
     "core/intelligence_fabric/proof_engine.py",
     "core/intelligence_fabric/skill_registry.py",
+    "core/intelligence_fabric/evidence_matrix.py",
     "tests/test_intelligence_fabric.py",
+    "tests/test_evidence_matrix.py",
 ]
 
 for rel in REQUIRED:

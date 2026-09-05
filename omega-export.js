@@ -116,13 +116,19 @@
         download(fname,pkg);
         toast('Export ready · Download started · '+Object.keys(data).length+' datasets packaged.','success');
         /* Record as sovereign event */
+        /* This try/catch cannot see a Supabase write fail — it resolves
+           {data:null,error} rather than throwing — so the export's audit
+           record could go missing with nothing said (CLAUDE.md 8.1 class 1).
+           The export itself has already succeeded here, so a failure to record
+           it is logged rather than surfaced to the member. */
         try{
-          await sb.rpc('record_sovereign_event',{
+          var ev=await sb.rpc('record_sovereign_event',{
             p_event_type:'data.exported',
             p_event_data:{datasets:Object.keys(data),rows:Object.values(data).reduce(function(s,d){return s+(Array.isArray(d)?d.length:1);},0)},
             p_axis_delta:{a:0,b:0,c:0}
           });
-        }catch(e){}
+          if(ev&&ev.error)console.warn('[OmegaExport] export not recorded:',ev.error.message);
+        }catch(e){console.warn('[OmegaExport] export not recorded:',e&&e.message);}
       }catch(e){
         toast('Export failed: '+e.message,'error');
       }

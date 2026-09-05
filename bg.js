@@ -1517,7 +1517,13 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
           var expiresAt=new Date(d.trial_expires_at).getTime();
           var remaining=expiresAt-Date.now();
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(){location.replace('/pending.html?t=expired');});return;}
+          /* The no-argument .then() below used to fire on {data:null,error}
+             exactly as on success, so a member was sent to "trial expired"
+             whether or not the server had expired it (CLAUDE.md 8.1 class 1).
+             The redirect is still correct — their time is up by the clock —
+             but the failure is no longer invisible, and bg.js retries the call
+             on the next load. */
+          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(er){if(er&&er.error)console.warn('[OmegaTrial] expire_trial failed:',er.error.message);location.replace('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
@@ -1526,7 +1532,10 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }).catch(function(){});
   function startTimeSovereignPing(sb){
     if(window.__omegaTSping)return; window.__omegaTSping=1;
-    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session'); }catch(e){} } }
+    /* try/catch cannot catch this: Supabase resolves {data:null,error} rather
+       than throwing, so the guard below was decorative (CLAUDE.md 8.1 class 1).
+       A lost heartbeat is not user-visible, but it should still be diagnosable. */
+    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session').then(function(pr){ if(pr&&pr.error)console.warn('[OmegaTS] ping_session failed:',pr.error.message); },function(){}); }catch(e){} } }
     ping();
     setInterval(ping,60000);
   }
@@ -1560,7 +1569,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       }
     });
     var expired=false;
-    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(){setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
+    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(er){if(er&&er.error)console.warn('[OmegaTrial] expire_trial failed:',er.error.message);setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
   }
 })();
@@ -1637,7 +1646,12 @@ setTimeout(function(){
       document.body.classList.add('omega-owner');
       /* Enforce lifetime access */
       if(!pr.access_approved||pr.is_trial||pr.trial_expires_at||parseFloat(pr.axis_a)<9){
-        await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        /* The most privileged write in this file, and its result was discarded.
+           Supabase resolves {data:null,error} rather than throwing, so a policy,
+           grant or constraint rejecting this left the owner un-elevated while
+           execution carried on as though it had worked (CLAUDE.md 8.1 class 1). */
+        var elev=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        if(elev&&elev.error)console.error('[OmegaOwner] lifetime-access enforcement failed:',elev.error.message);
       }
       /* Check pending members and notify */
       var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);

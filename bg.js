@@ -948,16 +948,28 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
        #ofb-btn      36..74  x 12..111   vs #omega-voice-btn 90..134 x 24..68  -> 16px clear
        #omega-controls-dock 36..70 x 432..848 vs cp-btn x 1204..1256           -> no x overlap
      !important for the same reason as above: these are set via inline cssText. */
+  /* Every rung adds var(--omega-transient-bottom), published by
+     omega-bottom-stack.js as the reach of whatever consent or install banner
+     is currently up (0 when none, so the resting ladder is byte-for-byte the
+     measured one above). The ladder was computed against the ticker strip and
+     the controls dock; the consent banner did not exist in that measurement
+     and lands straight through it -- rendered at 1280x800, #osh-btn occupies
+     664..702 inside a consent bar at 646..726, and at 420x760 it occupies
+     498..536 inside 480..614. Shifting the whole ladder by one value keeps
+     its internal spacing exactly as measured and restores it the moment the
+     banner is dismissed. Not one member of this ladder is measured as chrome,
+     so this cannot feed back into the value. */
+  var _tb = ' + var(--omega-transient-bottom,0px))';
   var css='@media(min-width:761px){'
-    +'#cp-btn{right:24px!important;bottom:36px!important}'
-    +'#osh-btn{right:24px!important;bottom:98px!important}'
-    +'#omega-ded-widget{right:24px!important;bottom:146px!important}'
+    +'#cp-btn{right:24px!important;bottom:calc(36px'+_tb+'!important}'
+    +'#osh-btn{right:24px!important;bottom:calc(98px'+_tb+'!important}'
+    +'#omega-ded-widget{right:24px!important;bottom:calc(146px'+_tb+'!important}'
     /* 228, not the 215 this ladder originally computed. That figure came
        from `146 + 61 + 8`, and 61px was the wrong height for
        #omega-ded-widget: measured at 1440x900 it occupies 146..220, i.e.
        74px. The badge therefore started 5px inside the widget above it,
        on 6 of 6 sampled pages. 220 + 8 = 228; 228..266 verified clear. */
-    +'#omega-cap-badge{right:24px!important;bottom:228px!important}'
+    +'#omega-cap-badge{right:24px!important;bottom:calc(228px'+_tb+'!important}'
     +'#omega-controls-dock{bottom:36px!important}'
     +'#ofb-btn{bottom:36px!important}'
     +'}';
@@ -2064,6 +2076,13 @@ setTimeout(function(){
   /* Platform keyboard navigation — g-sequences, ?, Ctrl+K, n, c shortcuts */
   if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;__omegaAppend(_okb);}
   /* Legal compliance — copyright badge, GDPR consent, terms footer links */
+  /* Publishes --omega-chrome-bottom, the measured height of the persistent
+     bottom chrome, so the consent and install banners stack above it instead
+     of on top of it. Injected BEFORE omega-legal.js so the property is set by
+     the time that banner can appear; the var() fallback covers the race
+     anyway. Its own guard attribute -- a guard is the module's identity, not
+     the feature area's (CLAUDE.md 8.1 class 5b). */
+  if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
   if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}

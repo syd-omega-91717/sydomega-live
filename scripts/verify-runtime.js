@@ -216,7 +216,19 @@ const CHECK_JS = `(() => {
      the particle canvas, the noise overlay -- from reporting against every
      control on the page, which is the mistake an earlier collision scan made
      on 177 of 178 pages. Advisory: a deliberately-open modal is a legitimate
-     occluder, and this must not gate on one. */
+     occluder, and this must not gate on one.
+
+     The occluded control must ALSO be inside fixed chrome. That second half
+     is the scanner's own false-positive pass (CLAUDE.md 8.4), and it was
+     added after measuring: the first version reported 20 controls across the
+     13 entrypoints, but most were ordinary page content that merely happened
+     to sit under a bar at the current scroll offset. A fixed bar over
+     scrollable content is normal and unavoidable -- tested directly by
+     reserving padding-bottom equal to the whole stack on body, main.main and
+     .main at once, which changed the count by nothing, because the document
+     scrolls and the bar covers whatever is at that viewport position
+     regardless. What is never normal is one piece of fixed chrome eating
+     another's controls, which is the defect this was written for. */
   const fixedRoot = el => {
     for (let n = el; n && n !== document.documentElement; n = n.parentElement)
       if (getComputedStyle(n).position === 'fixed') return n;
@@ -233,7 +245,13 @@ const CHECK_JS = `(() => {
     const top = document.elementFromPoint(cx, cy);
     if (!top || top === el || el.contains(top) || top.contains(el)) return;
     const mine = fixedRoot(el), theirs = fixedRoot(top);
-    if (!theirs || theirs === mine) return;
+    if (!mine || !theirs || theirs === mine) return;
+    /* A full-viewport overlay is a modal or an access gate, not colliding
+       chrome -- approvals.html's #gate (position:fixed; inset:0) covers the
+       page for any non-owner, which is exactly what it is for, and it was the
+       only thing left in this report once page content was excluded. */
+    const tr = theirs.getBoundingClientRect();
+    if (tr.width >= window.innerWidth * 0.9 && tr.height >= window.innerHeight * 0.9) return;
     occ.push((el.id || el.textContent.trim().slice(0, 18) || el.tagName) + ' <- #' + (theirs.id || theirs.tagName));
   });
   out.occluded = occ.slice(0, 8);

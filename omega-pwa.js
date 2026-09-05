@@ -39,7 +39,7 @@
     s.id = 'omega-pwa-css';
     s.textContent = [
       '#omega-install-banner{',
-        'position:fixed;bottom:0;left:0;right:0;z-index:9990;',
+        'position:fixed;bottom:var(--omega-chrome-bottom,0px);left:0;right:0;z-index:9990;',
         'background:rgba(10,10,15,.98);border-top:1px solid rgba(201,168,76,.3);',
         'padding:14px clamp(14px,3vw,36px);',
         'display:flex;align-items:center;justify-content:space-between;gap:12px;',

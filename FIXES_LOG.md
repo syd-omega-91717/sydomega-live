@@ -10554,3 +10554,123 @@ unmeasured one.
 Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
 PASS on 13 pages (occlusions reported as advisory), `node --check` clean on
 `omega-pwa.js` and `scripts/verify-runtime.js`.
+
+---
+
+## 88. The bottom chrome had five hand-tuned constants and no measurement; one shared inset replaced them
+
+**Date:** 2026-09-05
+**Found by:** entry 87's own occlusion advisory, on its first run.
+
+### The measurement that started it
+
+Entry 87 fixed one collision (consent × install) and its new detector reported
+twenty more. Rendering `dashboard.html` at three viewports and listing every
+full-width fixed bar anchored near the bottom:
+
+```
+1280x800  #omega-consent        720-800  h 80   bottom:0    z 9990
+ 900x700  #omega-consent        598-700  h 102  bottom:0    z 9990
+          #omega-controls-dock  612-664  h 52   bottom:36   z 2000   -> 52px covered
+ 420x760  #omega-consent        626-760  h 134  bottom:0    z 9990
+          #omega-mob            687-760  h 73   bottom:0    z 9990   -> covered entirely
+          #omega-controls-dock  614-658  h 44   bottom:102  z 2000   -> 32px covered
+```
+
+`#omega-mob` is the mobile navigation. It and the consent bar were both at
+`bottom:0` with the same `z-index:9990`, so on a phone the member's way out of
+the page and the banner they had to dismiss were fighting for the same pixels.
+
+Five separate hardcoded constants coordinate this: `omega-controls.js:59`
+(`bottom:102px!important`), `omega-realtime.js:119` (`bottom:66px!important`),
+`omega-share.js:30` (`bottom:224px`), and the four-rung desktop ladder in
+`bg.js:953` (`36 / 98 / 146 / 228`, documented as `98 = 36 + 52 + 10` and so
+on). Each was right at the viewport it was measured at. **None had ever been
+measured against `#omega-consent`,** whose height is 80, 102 or 134 depending
+on how its copy wraps — which is exactly the thing a constant cannot express.
+
+### The fix
+
+`omega-bottom-stack.js` measures and publishes two values on `<html>`:
+
+- `--omega-chrome-bottom` — how far the *persistent* furniture (`#omega-mob`,
+  `#omega-controls-dock`, `#omega-ticker-strip`) reaches up from the viewport
+  floor. The consent and install banners set `bottom` from it, so they stack
+  above the furniture instead of on it.
+- `--omega-transient-bottom` — that, plus whatever banner is currently up. The
+  `bg.js` ladder and `#osh-btn`'s mobile rung add it, so the whole floating
+  right column steps over the banner and returns to its measured resting
+  positions the moment the banner is dismissed.
+
+The furniture never moves. Moving it instead would have stacked a 134px banner,
+a 73px nav and a 44px dock into 760px of viewport and changed the resting
+layout of every page for a bar that clears on one tap. No cycle is possible:
+not one member of the ladder is in the measured chrome set, so shifting it
+cannot change either value.
+
+`ResizeObserver` on every measured bar, not just `resize` — the controls dock
+wraps to a second row at widths no media query announces. `MutationObserver` on
+`body` because the docks are injected by other modules at unpredictable times
+and the approval guard reveals the shell with no resize event of its own (§8.1
+class 3). Body-existence guarded (§8.1 class 5a), own guard attribute (§8.1
+class 5b).
+
+### One bug in the measurement, caught by the render
+
+The first `extentOf()` required a bar to *touch* the viewport floor. That is
+wrong: `#omega-controls-dock` already sits at `bottom:102px` to clear the mobile
+nav, so it never touches the floor, scored zero, and the consent bar still
+overlapped it by 44px at 420x760 and 52px at 900x700. The test that actually
+means "bottom-anchored" is a resolved `bottom` length rather than `auto`.
+
+### Verified across four viewports, not one
+
+```
+            inset  consent rect  on-screen  ACCEPT ALL  ESSENTIAL ONLY
+1280x800     74     646-726        yes       reachable   reachable
+1024x600     74     446-526        yes       reachable   reachable
+ 900x700     88     510-612        yes       reachable   reachable
+ 420x760    146     480-614        yes       reachable   reachable
+```
+
+Zero overlap between any two bars at any of them. `#osh-btn`, which had been
+sitting at 664-702 inside a consent bar at 646-726, now clears it at both
+1280x800 (510-548) and 420x760 (218-256).
+
+### The detector's own false-positive pass
+
+Entry 87's rule reported 20 controls; most were **ordinary page content** that
+merely happened to lie under a bar at the current scroll offset. That is normal
+and unavoidable, and it was tested rather than assumed: reserving
+`padding-bottom` equal to the whole stack on `body`, `main.main` and `.main` at
+once changed the count by **nothing**, because the document scrolls and a fixed
+bar covers whatever is at that viewport position regardless.
+
+So the rule was narrowed twice. The occluded control must itself be inside
+fixed chrome — one piece of chrome eating another's controls is the defect;
+content under a banner is not. And a full-viewport occluder is excluded, because
+`approvals.html`'s `#gate` (`position:fixed; inset:0`) covers the page for any
+non-owner, which is precisely what it is for, and it was the only thing left in
+the report once page content was excluded.
+
+20 → 8 → **0** across the 13 capability entrypoints.
+
+### Proven by control, because a zero proves nothing on its own
+
+Both controls run the gate's **own** detector text, extracted from
+`scripts/verify-runtime.js` rather than paraphrased:
+
+```
+A_clean            []                                          <- dashboard, as shipped
+A_planted          omega-consent-accept    <- #planted-bottom-bar
+                   omega-consent-essential <- #planted-bottom-bar
+B_pinned_to_zero   EN AR FR ES NL ZH HI, omega-sound-btn,
+                   omega-search-btn        <- #omega-consent
+```
+
+A is entry 87's bug reproduced; B is this entry's, reproduced by setting
+`--omega-chrome-bottom` back to 0. The narrowed rule still catches both.
+
+Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
+PASS on 13 pages with 0 occlusions, `scripts/audit.py` 0 critical / 7 warnings,
+`omega-registry.py --check` regenerated for the new module.

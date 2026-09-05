@@ -11395,3 +11395,96 @@ and has been telling the truth ever since. The pairing is the point — a red
 check that actually observes the live system may be reporting a real outage,
 and reading it as a code defect wastes a session. Check what a gate observes
 before deciding whose problem its failure is.
+
+## 96. `graphify-ai-ingest` took the member's identity *and* the table name from the request body
+
+**Found** while working the open-findings list, not from a failing gate — no
+gate covers this. The function is **not deployed** (`list_edge_functions`
+returns `{"functions":[]}`), so this is preventive: it is closed before anyone
+deploys it, and before `service_role` is granted the DML that would arm it.
+
+### The hole
+
+```ts
+const body: RequestBody = await req.json();
+const { user_id, data_sources = ["task_completions"] } = body;
+…
+let query = supabase.from(source).select("*").eq("user_id", user_id);
+```
+
+`supabase` is built with `SUPABASE_SERVICE_ROLE_KEY`. There was **no
+authentication of any kind** — no JWT check, no bearer token read. Both the
+table name *and* the member being read were chosen by the caller, and every
+entity/relationship written was attributed to that same body-supplied
+`user_id`. Two distinct primitives: read any table filtered to any member, and
+write graph rows as any member.
+
+Unreachable today only because the function is undeployed **and**
+`service_role` currently holds no DML on any public table (`FIXES_LOG.md`'s
+service-role finding). Neither is a security control anyone chose.
+
+### The fix, both halves
+
+- **Identity from the verified JWT.** `requireCallerId()` builds an anon-key
+  client carrying the caller's own `Authorization` header and calls
+  `auth.getUser()` — the same idiom `rankings/` and `snapshot-leaderboard/`
+  already use. No token, no user, or an error → **401**. `user_id` is removed
+  from `RequestBody` entirely, so it cannot be reintroduced by accident.
+- **Table name from a whitelist.** `INGESTABLE_SOURCES`, checked at the
+  entrypoint (400 with the rejected names) *and* again inside
+  `fetchDataSource`, which interpolates `source` into a service-key query and
+  must not depend on its only caller staying correct.
+
+### The whitelist was verified live, after a first draft that was not
+
+The first draft was written from memory and held two wrong entries. Checked
+against `pg_attribute` (2026-09-05):
+
+| candidate | verdict |
+|---|---|
+| `task_completions`, `habit_logs`, `focus_sessions`, `health_logs`, `member_posts` | `user_id` + `created_at` — **included** |
+| `journal_entries` | **does not exist at all** |
+| `media_items` | exists, but **no `user_id`** |
+| `user_journeys` | has `user_id`, **no `created_at`** — excluded |
+
+`fetchDataSource` filters `.eq("user_id", …)` and, unless `force_full_rescan`,
+`.gte("created_at", …)`. PostgREST rejects the entire query when one column is
+unknown (§8.1 class 2), so each of the three rejects would have emptied the
+ingest silently. `user_journeys` matters because `graphify.html`'s "journal"
+checkbox sends it — it is now a visible 400 rather than a silent empty result.
+
+### Both callers were broken, in different ways
+
+- **`intelligence.html:488`** sent **no `Authorization` header at all** and
+  passed `{user_id:u}`. Now sends the session's access token and an empty body.
+- **`graphify.html:249`** sent `Authorization: Bearer ${SUPABASE_KEY}` — the
+  **anon key**. `auth.getUser()` resolves no user for it, so the call
+  identified nobody. Now sends `session.access_token`.
+- **`graphify.html`'s response handling** fell straight through a non-2xx into
+  `alert("Ingestion complete: " + result.entities_processed)`, printing
+  "complete: undefined entities" — the fetch form of §8.1 class 1, and
+  reachable today via the `user_journeys` 400. It now reports the failure and
+  names the rejected sources.
+
+### Verified
+
+`npx -p typescript@5 tsc --noEmit` on the function: the first attempt found
+**real syntax errors** — an edited comment block had left a stray `*/` — which
+is exactly why §7.6 says to parse Edge Functions by hand, since CI does not.
+After the fix, 7 errors remain, all `Cannot find module 'https://…'` /
+`Cannot find name 'Deno'`; the unmodified file on `origin/main` produces **6 of
+the same kinds**, the difference being one added `Deno.env.get` call. No new
+error kind is introduced.
+
+`check-inline-js.py` clean; `node scripts/verify-runtime.js` **PASS on 13
+pages**; `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+### Left open, deliberately
+
+`graphify.html:166` hardcodes `SUPABASE_KEY` as a **placeholder** anon key
+(`…PLACEHOLDER`, and its embedded project ref `ydqhzvvoyfuiiqvzcns` is a typo
+of the real `ydqhzvvoyufiiqvzcjns`), then publishes `window.OmegaSupabase =
+{ sb }` — the shared accessor §8.1 class 4b records as being read by 11 files.
+So that page cannot authenticate at all, and if its script runs after `bg.js`
+it overwrites the good client with one built on a fake key. Not fixed here:
+changing which client that page publishes is a larger change than this one.

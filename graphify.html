@@ -246,13 +246,29 @@
       if (document.getElementById('ingest-social').checked) sources.push('member_posts');
 
       try {
+        /* SUPABASE_KEY is the ANON key — `auth.getUser()` resolves no user for
+           it, so this call identified nobody. The function now derives the
+           member from this header, so it must carry the member's own session
+           token; anything else is a 401 by design. */
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) { alert('Session expired — sign in again.'); return; }
         const response = await fetch('/functions/v1/graphify-ai-ingest', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
           body: JSON.stringify({ data_sources: sources })
         });
 
-        const result = await response.json();
+        /* A non-2xx used to fall straight through to the success alert, which
+           then read "complete: undefined entities" — the fetch form of
+           CLAUDE.md 8.1 class 1. `user_journeys` (the "journal" checkbox) is
+           rejected by the function with 400 because it has no created_at
+           column, so this path is reachable today. */
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.error) {
+          const detail = Array.isArray(result.rejected) ? ` (${result.rejected.join(', ')})` : '';
+          alert(`Ingestion failed: ${result.error || response.status}${detail}`);
+          return;
+        }
         alert(`Ingestion complete: ${result.entities_processed} entities, ${result.relationships_processed} relationships`);
         loadGraphStats();
       } catch (err) {

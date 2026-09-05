@@ -485,10 +485,16 @@ async function startGraphIngestion(){
     var statusEl=document.getElementById('graph-status');
     statusEl.textContent='INGESTING...';
 
+    /* The function now derives the member from this bearer token and ignores
+       any user_id in the body — it used to trust the body outright, with no
+       auth check at all. Sending the session's access token is what makes the
+       call work; without it the function answers 401 by design. */
+    var sess=(await sb.auth.getSession()).data.session;
+    if(!sess){statusEl.textContent='ERROR: session expired — sign in again';return;}
     var res=await fetch('/functions/v1/graphify-ai-ingest',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:u})
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sess.access_token},
+      body:JSON.stringify({})
     });
     var data=await res.json();
     if(data.error){

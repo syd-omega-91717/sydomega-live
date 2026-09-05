@@ -247,25 +247,60 @@ function getLogs(){ try{return JSON.parse(localStorage.getItem(LOGS_KEY)||'{}');
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function weekKey(d){ const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()-t.getDay());return 'week-'+t.toISOString().slice(0,10); }
 
+const PURGE_KEY = 'omega_habits_seed_purged_v1';
+
 function initHabits(){
-  if(!getHabits()){
-    // Seed with defaults + simulated completion history
-    localStorage.setItem(HABITS_KEY, JSON.stringify(DEFAULTS));
-    const logs={};
-    DEFAULTS.forEach(h=>{
-      for(let i=0;i<90;i++){
-        if(Math.random()<0.72){
-          const d=new Date();d.setDate(d.getDate()-i);
-          const key=h.freq==='weekly'?weekKey(d):d.toISOString().slice(0,10);
-          if(!logs[key]) logs[key]={};
-          logs[key][h.id]=true;
-        }
-      }
-    });
-    localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
-  }
+  /* This used to seed 90 days of `Math.random() < 0.72` completions on a
+     member's first visit, under the comment "simulated completion history".
+     Every streak, rate and chart on the page was then computed from coin
+     flips, and because it was written to localStorage it became
+     indistinguishable from real data forever after -- worse than the
+     hercules.html case (CLAUDE.md 8.1 class 9), which at least recomputed
+     its fiction on each render.
+
+     A new member now starts with an empty history, which is the truth. */
+  if(!getHabits()) localStorage.setItem(HABITS_KEY, JSON.stringify(DEFAULTS));
 }
 initHabits();
+
+/* Remove the fabricated history from installs that already have it.
+
+   The seed left no marker, so "which entries are fake" cannot be answered
+   from storage alone. One rule is provable: a completion dated before the
+   member's account existed cannot be real. The seed wrote the 90 days
+   PRECEDING first visit, so for anyone who installed less than 90 days
+   after signing up, that rule catches it -- and it can never delete a real
+   entry, whatever the install date.
+
+   Deliberately conservative. It runs once, does nothing at all if the
+   session or its created_at cannot be read (never delete on a failed
+   read), and leaves the marker unset in that case so a later visit retries. */
+async function purgeSeededHistory(){
+  try{
+    if(localStorage.getItem(PURGE_KEY)) return;
+    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
+    const sb = await window.OmegaSB.get();
+    if(!sb) return;
+    const { data, error } = await sb.auth.getSession();
+    if(error || !data || !data.session || !data.session.user) return;
+    const created = data.session.user.created_at;
+    if(!created) return;
+    const cutoff = created.slice(0,10);              // YYYY-MM-DD
+
+    const logs = getLogs();
+    let removed = 0;
+    Object.keys(logs).forEach(function(key){
+      const day = key.indexOf('week-') === 0 ? key.slice(5) : key;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+      if(day < cutoff){ delete logs[key]; removed++; }
+    });
+    if(removed){
+      localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
+      if(typeof renderAll === 'function') renderAll();
+    }
+    localStorage.setItem(PURGE_KEY, String(Date.now()));
+  }catch(e){ /* leave the marker unset; a later visit retries */ }
+}
 
 function shouldDoToday(habit){
   const dow=new Date().getDay();
@@ -341,6 +376,8 @@ async function importHabitsBackup(file){
     renderAll();
   }catch(err){ msg.textContent='IMPORT FAILED · '+err.message; }
 }
+purgeSeededHistory();
+
 document.getElementById('habits-import-file').addEventListener('change',function(){
   if(this.files[0]) importHabitsBackup(this.files[0]);
   this.value='';

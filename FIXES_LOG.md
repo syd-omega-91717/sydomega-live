@@ -9756,3 +9756,103 @@ intact, plus a note explaining why it lives there and the reminder that §9's
 evidence-citation rule applies there unchanged.
 
 Gates: `./scripts/ci-local.sh` 22/22, `scripts/context-budget.py` PASS.
+
+---
+
+## habits.html wrote 90 days of invented history into localStorage (2026-09-05)
+
+### The bug
+
+`habits.html:250` seeded a member's first visit under its own comment,
+*"Seed with defaults + simulated completion history"*:
+
+```js
+DEFAULTS.forEach(h=>{
+  for(let i=0;i<90;i++){
+    if(Math.random()<0.72){
+      const d=new Date();d.setDate(d.getDate()-i);
+      ...
+      logs[key][h.id]=true;
+```
+
+Every streak, completion rate and chart on the page was then computed from coin
+flips. This is `CLAUDE.md` §8.1 class 9, third recurrence after `hercules.html`'s
+`Math.random() * 100` and `ad-network.html`'s revenue counter — and **worse than
+either**, because the fiction was written to `localStorage`. `hercules.html`
+re-invented its number on each render; this one persisted, and from the second
+visit onward was indistinguishable from data the member had actually earned.
+
+### Only one page does this — five candidates, four false positives
+
+A scan for `Math.random()` within 700 chars of a `localStorage.setItem` or a
+`.insert`/`.upsert` returned five pages. Reading them left one:
+
+| page | what it actually was |
+|---|---|
+| `family.html:649`, `profile.html:1927` | decorative starfield drawn to a canvas |
+| `meditate.html:391` | picks a random affirmation from a list |
+| `water.html:241` | rotates a hydration tip |
+| **`habits.html:257`** | **the real finding** |
+
+The heuristic is a proximity window, so it over-reports by construction; the
+false-positive pass is what made the number mean anything (§8.4).
+
+### The fix, and the part that needed a provable rule
+
+Seeding is gone: a new member now starts with the six default habits and an
+**empty** history, which is the truth.
+
+Existing installs are the harder half. The seed left no marker, so "which entries
+are fabricated" cannot be answered from storage alone. One rule *is* provable:
+**a completion dated before the member's account existed cannot be real.** The
+seed wrote the 90 days preceding first visit, so for anyone who installed less
+than 90 days after signing up it catches the fabrication, and it can never delete
+a genuine entry whatever the install date.
+
+`purgeSeededHistory()` reads `created_at` off the session (no table read), runs
+once behind `omega_habits_seed_purged_v1`, and is deliberately conservative:
+
+- no session, no `created_at`, or any throw → **does nothing and leaves the
+  marker unset**, so a later visit retries. Never delete on a failed read.
+- `day < cutoff` is strict, so the account-creation day itself is kept.
+- `week-YYYY-MM-DD` keys are parsed and compared like day keys.
+
+### The harness stub was less faithful than production, and hid the branch
+
+The first verification run reported `purged:false` — correct behaviour, but it
+meant the delete path had never executed. The cause was the harness:
+`sbstub.js:10` built `SESSION.user` as `{id, email}`, while a real Supabase
+session user carries `created_at`. Code that reasons about when an account began
+therefore no-ops against the stub and looks fine.
+
+Fixed in the stub (matching the `PROFILE.created_at` already there), which makes
+this and any future session-date logic testable.
+
+### Measured, both cases
+
+```
+FRESH   {"habits":6,"logDays":0,"completions":0}                  errors: 0
+
+planted 12 keys straddling the account created_at (2026-01-01):
+  before: 2024-06-06 2025-11-01 2025-12-01 2025-12-25 2025-12-31 week-2025-12-07
+  after : 2026-01-01 2026-02-02 2026-03-03 2026-08-08 2026-09-01 week-2026-02-01
+
+AFTER   kept = 2026-01-01 2026-02-02 2026-03-03 2026-08-08 2026-09-01 week-2026-02-01
+        purged = true                                             errors: 0
+```
+
+Six provably-fabricated entries removed, six possibly-real ones kept, the
+boundary day kept, weekly keys handled in both directions.
+
+### A method note
+
+The first run of this verification failed to navigate at all: the harness expects
+a static server on :8765 and does **not** start one, and the server from an
+earlier test in the same session had died. That is §8.4's stopped-server case
+arriving in a new form — not a serene zero, but a crash that could easily have
+been read as "the page is broken". Start the server and prove it with a control
+request before trusting any harness result.
+
+Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK, `scripts/audit.py` 0 critical
+/ 7 warnings, `scripts/check-inline-js.py` clean, `node scripts/verify-runtime.js`
+PASS on 13 pages.

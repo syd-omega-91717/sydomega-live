@@ -9856,3 +9856,71 @@ request before trusting any harness result.
 Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK, `scripts/audit.py` 0 critical
 / 7 warnings, `scripts/check-inline-js.py` clean, `node scripts/verify-runtime.js`
 PASS on 13 pages.
+
+---
+
+## habits.html now mirrors to the table that was applied for it (2026-09-05)
+
+The previous entry stopped `habits.html` inventing history. This wires it to the
+real thing: `public.habit_logs`, declared in
+`supabase/chunk_10_productivity.sql` and applied live earlier the same day.
+
+### A mirror, not a sync
+
+The same decision as `omega-member-state.js`, for the same reason: this page
+renders synchronously from `localStorage`, so a hydrating two-way sync would race
+the render and let an empty-cache paint overwrite good server rows. Writes go up;
+`localStorage` stays what the UI reads. Restore stays explicit.
+
+### Two traps the code exists to avoid, both proven rather than assumed
+
+**Class 7 — the conflict target.** `habit_logs` carries
+`UNIQUE (user_id, habit_id, log_date)`, a non-PK unique constraint. Omitting
+`onConflict` makes PostgREST default to the PRIMARY KEY; the payload has no
+`id`, so the write succeeds once and then raises `23505` forever, freezing the
+feature at its first value. Demonstrated against the live database, impersonating
+a real member:
+
+```
+2x  insert ... on conflict (user_id,habit_id,log_date) do update
+    -> rows_after_two_upserts = 1          (idempotent, as intended)
+
+1x  insert ... on conflict (id) do nothing   -- what omitting onConflict gives
+    -> rejected by the unique index; row count still 1, nothing written
+```
+
+The page names `onConflict: 'user_id,habit_id,log_date'` explicitly.
+`scripts/upsert-conflict-check.py` agrees: 0 findings.
+
+**Class 1 — the silent write.** Supabase resolves to `{data:null,error}` and does
+not throw, so a `try/catch` around it catches nothing. `.error` is checked on
+both the upsert and the delete before anything is treated as written.
+
+Mirror failure is deliberately silent *to the member*: the local write already
+succeeded and is what the UI shows, so nothing they can see is lost. It goes to
+`console.warn` for diagnosis rather than surfacing an error they cannot act on.
+This is not the §9 violation it might resemble — no success state is rendered on
+the strength of the server write, because the UI never reads the server.
+
+### Measured in a render, through the real handler
+
+```
+log days before toggle : 0
+after toggle ON        : {"2026-09-05":{"h0":true}}
+after toggle OFF       : {"2026-09-05":{}}
+page errors            : 0
+console warn/error     : 0
+```
+
+Zero console output means the mirror path ran to completion against the harness
+stub without throwing or complaining — the failure branches are reachable but
+quiet, which is what they are for.
+
+`scripts/schema-dictionary.py` validates the column names against the refreshed
+live snapshot rather than the SQL bag, so `habit_name`/`log_date`/`completed`
+are confirmed to exist in production — the class 2 gate doing its job on a
+first-time write path.
+
+Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK,
+`scripts/upsert-conflict-check.py` 0 findings, `scripts/schema-dictionary.py` OK,
+`node scripts/verify-runtime.js` PASS on 13 pages.

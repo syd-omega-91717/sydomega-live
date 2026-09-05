@@ -323,12 +323,66 @@ function toggleHabit(id){
   const logs=getLogs();
   const key=habit.freq==='weekly'?weekKey(new Date()):todayKey();
   if(!logs[key]) logs[key]={};
-  if(logs[key][id]) delete logs[key][id];
-  else logs[key][id]=true;
+  const nowOn = !logs[key][id];
+  if(nowOn) logs[key][id]=true; else delete logs[key][id];
   localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
   renderAll();
+  mirrorLog(habit, key, nowOn);
 }
 window.toggleHabit=toggleHabit;
+
+/* ── SERVER MIRROR ──────────────────────────────────────────────────────
+   public.habit_logs was declared in supabase/chunk_10_productivity.sql and
+   applied live on 2026-09-05 (RLS on, own-row policy, GRANT to
+   authenticated, verified by two-member impersonation).
+
+   A MIRROR, not a sync -- the same decision as omega-member-state.js and for
+   the same reason: this page renders synchronously from localStorage, so a
+   hydrating two-way sync would race the render and let an empty-cache paint
+   overwrite good server rows. Writes go up; localStorage stays the source
+   the UI reads.
+
+   Two traps this code exists to avoid:
+
+   1. habit_logs carries UNIQUE (user_id, habit_id, log_date) -- a non-PK
+      unique constraint. Omitting onConflict makes PostgREST default to the
+      PRIMARY KEY, and since the payload has no id the write succeeds once
+      and raises 23505 forever after, freezing the feature at its first
+      value (CLAUDE.md 8.1 class 7). onConflict is named explicitly.
+   2. Supabase resolves to {data:null,error} and does NOT throw, so a
+      try/catch around it catches nothing (8.1 class 1). .error is checked
+      before anything is treated as written.
+
+   Failure is deliberately silent to the member: the local write already
+   succeeded and is what the UI shows, so a mirror failure loses nothing
+   they can see. It is reported to the console for diagnosis rather than
+   surfaced as an error the member cannot act on. */
+async function mirrorLog(habit, key, on){
+  try{
+    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
+    const sb = await window.OmegaSB.get();
+    if(!sb) return;
+    const s = await sb.auth.getSession();
+    if(s.error || !s.data || !s.data.session) return;
+    const uid = s.data.session.user.id;
+
+    /* Weekly habits are keyed week-YYYY-MM-DD; store the week's start date. */
+    const logDate = key.indexOf('week-') === 0 ? key.slice(5) : key;
+
+    if(on){
+      const { error } = await sb.from('habit_logs')
+        .upsert({ user_id: uid, habit_id: habit.id, habit_name: habit.name,
+                  log_date: logDate, completed: true },
+                { onConflict: 'user_id,habit_id,log_date' });
+      if(error){ console.warn('[habits] mirror upsert failed:', error.message); return; }
+    } else {
+      const { error } = await sb.from('habit_logs')
+        .delete()
+        .eq('user_id', uid).eq('habit_id', habit.id).eq('log_date', logDate);
+      if(error){ console.warn('[habits] mirror delete failed:', error.message); return; }
+    }
+  }catch(e){ console.warn('[habits] mirror unavailable:', e && e.message); }
+}
 
 function getStreak(habit){
   const logs=getLogs();

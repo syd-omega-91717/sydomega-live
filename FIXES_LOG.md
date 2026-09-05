@@ -9286,3 +9286,126 @@ Gates: `./scripts/ci-local.sh` 22/22, `python3 -m unittest discover -s
 scripts/tests` **186** tests OK (was 179), `scripts/audit.py` 0 critical /
 7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,987 / 16,000 —
 the §8.2 `audit.py` bullet was compressed to pay for the new §8.4 note).
+
+---
+
+## `--help` ran the job on 21 of 47 scripts, and one never returned (2026-09-05)
+
+### The claim that was not true
+
+`CLAUDE.md` §8.4 said, in the context every session loads before doing any work:
+
+> **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
+> answers `--help` with its docstring and exits 0; a test keeps it true.
+
+Measured, with controls, before any change:
+
+```
+CONTROLS
+  audit.py                 honors --help : True
+  commerce-contract.py     honors --help : True
+  user-journey-contract.py honors --help : False
+
+HONORS --help        : 26
+IGNORES / FAILS      : 19     (ran the whole job; 2 of them exited 1)
+HANGS (>20s)         : 1      page-overlap-audit.py
+NO MODULE DOCSTRING  : 1      user-journey-contract.py
+```
+
+21 of 47. The predicate is "output contains the first line of the module's own
+docstring, exit 0" — a first pass that only checked the exit code passed
+everything, because a script that runs its job successfully also exits 0.
+
+`page-overlap-audit.py` is the sharp end: it runs an O(n²) `SequenceMatcher`
+comparison across 189 pages, so `--help` never returned. The first measurement
+run was killed at 120 s by that single script.
+
+**No test kept it true.** The invariant was enforced per-script, in whichever
+test file someone happened to write one, so a script that shipped without a test
+was never checked — `user-journey-contract.py` had no test and no docstring.
+
+The cost is not cosmetic. §8.4's whole point is that `--help` is how a session
+learns what a script does *without* spending context reading it. A `--help` that
+launches a 189-page scan makes the cheap path the expensive one.
+
+### Fixed
+
+The same guard, ahead of any work, in all 20 (the 21st is the rewrite below):
+
+```python
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+```
+
+Inserted after the last top-level import by AST position, not by line number, so
+it lands ahead of module-level work in the scripts that have no `main()`
+(`workflow-contract.py` and friends do their work at import time).
+
+`scripts/tests/test_script_help_contract.py` is a **sweep, not a list** — a new
+script is covered the moment it lands, which is the only shape that keeps the
+CLAUDE.md sentence true. It carries a planted violator that must be rejected by
+the same predicate the sweep uses.
+
+The whole sweep now runs in **1.0 s**, against >120 s before.
+
+### Also fixed: `schema-dictionary.py` had `\{` in a docstring
+
+`ast.parse` warned `invalid escape sequence '\{'` at line 247 — inside a
+docstring explaining a regex. Harmless today, a `SyntaxWarning` on newer Python,
+and it sits in text `--help` now prints. Made the docstring raw. Repo-wide
+escape/syntax warnings: **0**.
+
+### The second finding: a journey contract that never resolved a destination
+
+`scripts/user-journey-contract.py` validated the *shape* of
+`config/user-journey-contract.json` — `version` is a string, `rules` non-empty,
+each rule carries `id`/`from`/`to`/`goal`, ids unique — and printed
+`USER JOURNEY CONTRACT: PASS (6 journeys)`. It never asked whether any named
+path resolves to something the deployment serves.
+
+It did not:
+
+```
+USER JOURNEY CONTRACT: FAIL
+- journey 'discover':    to   = '/discover'  does not resolve (no discover.html, no rewrite, no redirect)
+- journey 'learn':       from = '/discover'  does not resolve
+- journey 'create':      from = '/discover'  does not resolve
+- journey 'participate': from = '/discover'  does not resolve
+- journey 'participate': to   = '/community' does not resolve
+- journey 'commerce':    from = '/discover'  does not resolve
+```
+
+**Five of the six declared journeys routed through `/discover`**, which is not a
+file, not a rewrite and not a redirect. A gate proving a document is well-formed
+while the thing it describes does not exist is §8.4's "green check standing in
+for a real one".
+
+Resolution is now checked against the real surface: a file in the repo root
+(`vercel.json` sets `cleanUrls: true`, so `/gateway` serves `gateway.html`) or a
+`rewrites`/`redirects` source. `cleanUrls` is read from `vercel.json` rather than
+assumed — it is a deploy setting, and turning it off breaks every extensionless
+path in the contract at once.
+
+The two missing destinations were remapped to the surfaces that do the job,
+established from source rather than inferred:
+
+| was | now | evidence |
+|---|---|---|
+| `/discover` | `/gateway` | `gateway.html:91` loads `omega-gateway.js`, which builds the whole destination grid grouped by axis — "find the right destination quickly" is that page |
+| `/community` | `/social` | `social.html`, titled `SOCIAL HUB`; `nav.js` labels it `SOCIAL HUB` / `SOCIAL` |
+
+```
+USER JOURNEY CONTRACT: PASS (6 journeys, 12 endpoints resolved)
+```
+
+Corroboration found on the way: `vercel.json`'s `redirects` include
+`/sovereign → /sovereign-ai`, which explains the inert `sovereign:[12,'a','Ω']`
+entry in `omega-page-emblem.js` that has no `sovereign.html` — it is a redirect
+target, and `omega-gateway.js` already excludes it. Not a bug.
+
+Gates: `./scripts/ci-local.sh` 22/22, `python3 -m unittest discover -s
+scripts/tests` **189** tests OK (was 186), `scripts/audit.py` 0 critical /
+7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,991 / 16,000 — the
+§8.2 self-hosted-runner bullet was compressed to pay for the corrected §8.4
+note).

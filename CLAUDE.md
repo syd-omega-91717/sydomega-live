@@ -207,11 +207,10 @@ through this one file with no per-page markup changes:
   intended, retroactively for pre-existing `.card` usage too. `.kpi` is
   excluded outright: it already carries a per-instance `--kc` accent color,
   so it gets a matching hover glow in that color instead.
-  A page-local `::before` that sets `background` collides with `.card::before`
-  per *property* (pseudo-elements cascade like any element). **That collision
-  is solvable, and this file twice said it was not**: `.card::before` is the
-  same 2px top bar those classes draw and it reads `--card-accent`, which takes
-  a colour *or* a gradient (both proven in a render). So set
+  A page-local `::before` setting `background` collides with `.card::before`
+  per *property*. **That collision is solvable, and this file twice said it was
+  not**: `.card::before` is the same 2px top bar, and it reads `--card-accent`,
+  which takes a colour *or* a gradient (proven in a render). Set
   `--card-accent` on the page-local class and delete its own pseudo —
   `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
   translated losslessly. Check *which properties* collide, never the mere
@@ -527,13 +526,16 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **`Production Surface Smoke` is red because production is 404ing, not because of code** —
-  read it as an outage report. The alias stays pinned to `31f9180d` by an Instant Rollback;
-  only promoting/cancelling clears it, no commit (`FIXES_LOG.md` 95, 100). Confirm by fetching
-  the **project's own** `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means the
-  pointer is pinned; a detached custom domain would serve the new build. `get_project`'s
-  `domains` omits the custom hosts and its `live:false` is a trimmed projection — neither
-  means detached or paused.
+- **Production is still 404ing and `Production Surface Verification` is GREEN anyway** — it
+  classifies an unreachable endpoint as `EXTERNAL_DEPLOYMENT_BLOCKED` without failing. Correct
+  (an owner-only outage is not a code defect), but **a green board here does not mean the site
+  is up**, and this bullet claimed the opposite until 2026-09-05. Read the run:
+  `site_reachable=false`, security-header step **skipped**, plus the `::warning::` annotations
+  (`FIXES_LOG.md` 105). The alias is pinned to `31f9180d` by an Instant Rollback; only
+  promoting/cancelling clears it, no commit (95, 100). Confirm by fetching the **project's
+  own** `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means pinned; a detached
+  domain would serve the new build. `get_project`'s `domains` omits custom hosts and its
+  `live:false` is a trimmed projection — neither means detached or paused.
 - **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
   the web surface into `public/` from a fixed directory allow-list, so a top-level directory
   not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages
@@ -670,11 +672,11 @@ entries (which were accurate when written):
   `outline:none`) were false — the runtime showed 172/173 fine, because `bg.js`
   injects them.
 - **A scanner needs its own false-positive pass before its number means
-  anything.** A fixed-widget collision scan first reported 177/178 pages by
-  counting full-viewport backdrops (`omega-fx`, the particle canvas, the noise
-  overlay) as colliding with everything. Excluding `pointer-events:none` and
-  full-bleed elements gave the real answer — the same number, for entirely
-  different and genuine reasons. Right by luck is not measured.
+  anything.** A fixed-widget collision scan reported 177/178 pages by counting
+  full-viewport backdrops (`omega-fx`, the particle canvas, the noise overlay)
+  as colliding with everything. Excluding `pointer-events:none` and full-bleed
+  elements gave the same number for entirely different, genuine reasons. Right
+  by luck is not measured.
 - **A programmatic edit inside `bg.js`'s injected stylesheet can silently
   no-op.** That CSS is one single-quoted JS string, and its section headers use
   real box-drawing characters (`──`), not escapes — so a `replace()` written
@@ -694,15 +696,13 @@ entries (which were accurate when written):
   Columns, `GRANT`s and policies still are not checked by the matrix, and each
   has been a real shipped bug (§8.1 classes 2 and 6).
 - **A number in member-visible *copy* drifts too — and your own fix can stale
-  it.** Five pages asserted a page count to the member (`notifications.html`
-  as a system notification, `dashboard.html` twice, `ecosystem.html`,
-  `roadmap.html`, `world-shell.html`); every one was wrong against the real 189,
-  and `settings.html`'s "48 pages keep what you enter in this browser only" went
-  stale *because* wiring three pages to Postgres moved them out of LOCAL_ONLY.
-  `scripts/page-count-claims.py` gates it (a claim must match the estate or an
-  evidence class) and found two more than a hand-grep did — the grep missed
-  `170 PAGES` in caps. A `data-i18n` string also lives in `i18n.js`'s `T_EN`
-  **and** all six packs; fixing only the HTML leaves five translations lying.
+  it.** Six pages asserted a page count to the member; every one was wrong
+  against the real 189, and `settings.html`'s "48 pages keep what you enter in
+  this browser only" went stale *because* wiring three pages to Postgres moved
+  them out of LOCAL_ONLY. `scripts/page-count-claims.py` gates it and found two
+  more than a hand-grep did — the grep missed `170 PAGES` in caps. A
+  `data-i18n` string also lives in `i18n.js`'s `T_EN` **and** all six packs;
+  fixing only the HTML leaves five translations lying.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
   describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
   module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)

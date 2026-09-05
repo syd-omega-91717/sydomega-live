@@ -53,6 +53,13 @@ jobs:
               echo "This check is intentionally non-failing so a Vercel/provider/account outage or deployment-rate limit does not masquerade as a repository code failure. The live surface remains explicitly unverified until the endpoint serves the expected page."
             } >> "$GITHUB_STEP_SUMMARY"
             echo "Production endpoint unavailable or invalid; classified as EXTERNAL_DEPLOYMENT_BLOCKED."
+            # Non-failing is the right call -- an owner-only provider outage is not
+            # a repository code defect -- but a bare green check made the outage
+            # invisible everywhere except this job's step summary, and CLAUDE.md
+            # 8.2 recorded the opposite ("red because production is 404ing"). A
+            # warning annotation surfaces it on the run and the commit without
+            # turning an outage into a build failure.
+            echo "::warning title=Production is not serving::${PRODUCTION_URL} returned HTTP ${code:-unknown} (curl exit ${curl_exit}). EXTERNAL_DEPLOYMENT_BLOCKED -- the live surface is UNVERIFIED. This is an outage, not a code defect; clearing it is an owner action in the Vercel dashboard."
           fi
 
       - name: Verify Supabase Auth transport and boundary
@@ -94,4 +101,5 @@ jobs:
             echo "Production surface verification: PASS"
           else
             echo "Production surface verification: repository checks PASS; live deployment remains EXTERNAL_DEPLOYMENT_BLOCKED."
+            echo "::warning title=Live surface unverified::This green check verified the repository contract and Supabase Auth only. The production endpoint was not reachable, so the security-header step was skipped and nothing here observed the live site."
           fi

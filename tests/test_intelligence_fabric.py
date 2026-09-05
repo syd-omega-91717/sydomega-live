@@ -1,8 +1,8 @@
 import unittest
 from core.intelligence_fabric import (
-    EvidenceStatus, FabricRequest, IntelligenceFabric, ModelCandidate,
-    ModelRouter, PolicyFirewall, Proof, ProofState, Risk, Skill, SkillRegistry,
-    TaskClass, evaluate,
+    AgentRegistry, EvidenceStatus, FabricRequest, IntelligenceFabric,
+    ModelCandidate, ModelRouter, PolicyFirewall, Proof, ProofState, Risk,
+    Skill, SkillRegistry, TaskClass, evaluate,
 )
 
 
@@ -42,6 +42,15 @@ class FabricTests(unittest.TestCase):
         self.assertEqual(registry.get("audit").tool, "audit.read")
         with self.assertRaises(ValueError):
             registry.register(Skill("", "bad", "audit.read"))
+
+    def test_canonical_agent_registry(self):
+        registry = AgentRegistry()
+        health = registry.health()
+        self.assertTrue(health["healthy"])
+        self.assertEqual(health["agent_count"], 12)
+        self.assertTrue(registry.authorize_tool("Sentinel", "audit.read"))
+        self.assertFalse(registry.authorize_tool("Sentinel", "money.write"))
+        self.assertEqual(registry.get("Sovereign").risk, "critical")
 
 
 if __name__ == "__main__":

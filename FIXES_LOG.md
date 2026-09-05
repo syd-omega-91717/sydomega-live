@@ -10625,13 +10625,36 @@ means "bottom-anchored" is a resolved `bottom` length rather than `auto`.
 
 ### Verified across four viewports, not one
 
+**Correction to the page this was measured on.** The run below was first
+attributed to `dashboard.html`. It was not: those probes used a raw
+`page.goto()` instead of the harness, so no signed-in Supabase stub was
+installed and `bg.js`'s guard redirected the page before it rendered — §8.4's
+own warning, walked into. Re-measured through
+`.claude/skills/verify-in-browser/harness/session.js` with
+`launch({signedIn:false})` on `index.html`, which is where a first-time visitor
+actually meets the consent bar, **every figure below reproduced exactly**:
+
 ```
             inset  consent rect  on-screen  ACCEPT ALL  ESSENTIAL ONLY
-1280x800     74     646-726        yes       reachable   reachable
-1024x600     74     446-526        yes       reachable   reachable
- 900x700     88     510-612        yes       reachable   reachable
- 420x760    146     480-614        yes       reachable   reachable
+1280x800     74     646-726 h80    yes       reachable   reachable
+1024x600     74     446-526 h80    yes       reachable   reachable
+ 900x700     88     510-612 h102   yes       reachable   reachable
+ 420x760    146     480-614 h134   yes       reachable   reachable
 ```
+
+The same run on a correctly stubbed **signed-in `dashboard.html`** shows the
+consent bar absent (that member has already chosen) and the inset still
+tracking real furniture — `omega-ticker-strip` at 1280/1024, plus
+`omega-controls-dock` at 900, plus `omega-mob` at 420 — with **zero overlap at
+all four** and `#osh-btn` reachable at every one.
+
+Two further notes for whoever measures this next. `H.open()` calls
+`dismissOverlays()`, which removes `#omega-consent` outright, so a probe that
+needs to see the banner must open the page on the harness context directly.
+And `#omega-genesis`, the intro veil, is `z-index:100000` over the consent
+buttons — `elementFromPoint` names it, but a real `page.click()` reaches the
+button and stores `omega_consent_v1`, so it is a transient overlay and not a
+defect. The occlusion detector's full-viewport exclusion already ignores it.
 
 Zero overlap between any two bars at any of them. `#osh-btn`, which had been
 sitting at 664-702 inside a consent bar at 646-726, now clears it at both
@@ -10674,3 +10697,96 @@ A is entry 87's bug reproduced; B is this entry's, reproduced by setting
 Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
 PASS on 13 pages with 0 occlusions, `scripts/audit.py` 0 critical / 7 warnings,
 `omega-registry.py --check` regenerated for the new module.
+
+---
+
+## 89. Three indicators on the platform's main page asserted health and progress that nothing measured
+
+**Date:** 2026-09-05
+**Found by:** looking for the third fabrication shape — a hardcoded number
+rendered as a member metric, with no `Math.random()` and no backdated
+timestamp, which neither `commerce-contract.py` nor the seed-function scan can
+see.
+
+### The candidate pass, and its false positives
+
+A scan for literal percentages painted into `.kpi-n`, `.bar-fill` widths and
+`style.width` produced 36 candidates. Most were not findings, and saying so is
+the point (§8.4 — a scanner needs its own false-positive pass):
+
+- `width:0%` on 27 bars is an **empty initial state** later filled by JS.
+- `style.width='100%'` on 5 sites is **canvas sizing**, not a metric.
+- `compliance.html:45` and `vault.html:119` both show `51%` labelled
+  **"MASTER STAKE (PLANNED, DORMANT)"** — honestly marked as not yet real.
+- `dashboard.html:154`'s `99.9%` carries a tooltip saying the 30-day uptime
+  **target** is 99.9%. A published objective, not a claimed measurement.
+
+Three survived.
+
+### 1. `#omega-health-bar` — a hardcoded 87 painted green
+
+`omega-realtime.js` drew a green bar titled `Platform health: 87/100` on
+`dashboard.html`, above this comment:
+
+```js
+/* Simple heuristic: green if no open incidents, yellow if score < 90, red if < 70 */
+var score=87; /* default */
+```
+
+**The heuristic was never written.** Nothing counted incidents and nothing
+computed a score; the comment described an intention and the code shipped a
+constant.
+
+### 2. `#health-dot` + `#health-label` — the same claim, worse
+
+`dashboard.html:115` ships a green dot and the literal word `OPERATIONAL`.
+Grepping every `.js` **and** every `.html` for a writer of either id returns
+nothing. It asserted the platform was healthy whether or not it was, including
+while every request the member made was failing.
+
+### 3. `#mb-pmi` — two divergent copies of one canonical table
+
+`dashboard.html:116` shows `PMI 87` and line 153 a `.kpi-n` of `87` labelled
+`PLATFORM PMI`. Neither has a writer. Meanwhile `omega-pml.js` **owns** the
+Platform Meaning Index and scores this page at **91**, with
+`PLATFORM_PMI = 87` as the average. So the page's own PMI was displayed as 87
+when its owner says 91 — §8.1 class 8, and the page's copy was the wrong one.
+
+The table itself is a hand-authored self-assessment, not a computation, and it
+is internally consistent: the eleven scored pages average
+`960 / 11 = 87.27 → 87`, exactly the `PLATFORM_PMI` it declares. A documented
+editorial rubric is legitimate; two disagreeing copies of it are not.
+
+### The fix: derive, or say nothing
+
+There is a real signal already recorded. `bg.js` wraps `fetch` during parse and
+keeps `window.__omegaData = {inflight, ok, failed}`, counting only this
+platform's own backend (`supabase.co`, `/rest/v1/`, `/auth/v1/`,
+`/functions/v1/`) and treating a 4xx as an answer rather than a failure. Both
+health indicators now report what the session actually observed, and
+**assert nothing below one settled request** — the rule `omega-sparkline.js`
+already follows in drawing no badge below two real readings. PMI now comes from
+`window.OmegaPMI`, via `#mb-pmi` and a new `data-omega-pmi="page|platform"`
+attribute, so the table has exactly one source.
+
+### Verified by driving the real counters, not by reading the diff
+
+Rendered through the harness on `dashboard.html`, then the recorder driven to
+each state:
+
+```
+as rendered      mb-pmi 91 ("...91/100 for this page")
+                 PLATFORM PMI 87 ("...average across 11 scored pages")
+                 health AWAITING SIGNAL, dot --muted, bar "no backend request has settled yet"
+12 ok / 0 failed OPERATIONAL  green   100%  "12 of 12 platform requests succeeded this session"
+ 7 ok / 3 failed DEGRADED     solar    70%  "7 of 10 ... (3 failed)"
+ 2 ok / 8 failed FAILING      crimson  20%  "2 of 10 ... (8 failed)"
+ nothing settled AWAITING SIGNAL, muted, and no number claimed
+```
+
+`#health-label` carried `data-i18n="operational"`, so the binding is removed
+when a measurement replaces the static string — otherwise `i18n.apply()` would
+overwrite a live reading with the English literal on the next language change.
+
+Gates: `./scripts/ci-local.sh` 23/23 blocking, `node scripts/verify-runtime.js`
+PASS on 13 pages, 0 page errors on the rendered dashboard.

@@ -93,13 +93,46 @@
     document.addEventListener('DOMContentLoaded',function(){injectPMIBadge();injectMissionBanner();});
   } else { injectPMIBadge();injectMissionBanner(); }
 
-  document.addEventListener('omega:populated',function(){injectPMIBadge();injectMissionBanner();});
+  /* ── FILL THE PAGES THAT DISPLAY PMI ───────────────────────────────
+     dashboard.html hardcoded 87 in two places -- #mb-pmi in the mission bar
+     and a .kpi-n labelled PLATFORM PMI -- with no writer anywhere, while this
+     module (which owns the table) scores dashboard at 91. Two divergent copies
+     of one canonical table, CLAUDE.md 8.1 class 8, and the page's copy was
+     wrong. Both now read from here, so the table has exactly one source.
+
+     `data-omega-pmi="page"` takes this page's score, `"platform"` the
+     weighted average across PAGE_SCORES. #mb-pmi is filled by id because it
+     predates the attribute and reads as this page's score. */
+  function hydratePMI(){
+    var el=document.getElementById('mb-pmi');
+    if(el){
+      el.textContent=PAGE_DATA.pmi||'--';
+      el.title='Platform Meaning Index: '+(PAGE_DATA.pmi||'unscored')+'/100 for this page';
+    }
+    document.querySelectorAll('[data-omega-pmi]').forEach(function(n){
+      var want=n.getAttribute('data-omega-pmi');
+      var v=want==='platform'?PLATFORM_PMI:PAGE_DATA.pmi;
+      n.textContent=v||'--';
+      n.title=want==='platform'
+        ? 'Platform Meaning Index: '+PLATFORM_PMI+'/100, the average across '+
+          Object.keys(PAGE_SCORES).length+' scored pages'
+        : 'Platform Meaning Index: '+(v||'unscored')+'/100 for this page';
+    });
+  }
+
+  document.addEventListener('omega:populated',function(){injectPMIBadge();injectMissionBanner();hydratePMI();});
+  /* The mission bar exists in page markup, so it can be filled before any
+     profile arrives; omega:populated may never fire on a page that does not
+     load a profile. */
+  if(document.readyState!=='loading') hydratePMI();
+  else document.addEventListener('DOMContentLoaded',hydratePMI);
 
   window.OmegaPMI={
     score:function(){return PAGE_DATA.pmi;},
     platform:function(){return PLATFORM_PMI;},
     page:function(){return PAGE_DATA;},
     all:function(){return PAGE_SCORES;},
-    mission:function(){return MISSIONS[PAGE_SLUG]||'No mission defined.';}
+    mission:function(){return MISSIONS[PAGE_SLUG]||'No mission defined.';},
+    hydrate:hydratePMI
   };
 })();

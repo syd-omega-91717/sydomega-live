@@ -334,6 +334,53 @@ function saveSession(){
     date: new Date().toISOString()
   });
   localStorage.setItem(STORE_KEY, JSON.stringify(sessions.slice(-500)));
+  mirrorFocusSession(currentTask||'Untitled', currentMode, elapsed, totalSecs, distractCount);
+}
+
+/* ── SERVER MIRROR ──────────────────────────────────────────────────────
+   public.focus_sessions, declared in supabase/chunk_10_productivity.sql and
+   applied live 2026-09-05 (RLS on, own-row policy, GRANT to authenticated).
+
+   A MIRROR, not a sync, for the same reason as habits.html and
+   omega-member-state.js: this page renders synchronously from localStorage,
+   and localStorage stays what the UI reads.
+
+   Append-only, so a plain insert -- NOT an upsert. focus_sessions has no
+   unique constraint beyond its primary key, so there is no conflict target
+   to name and CLAUDE.md 8.1 class 7 does not apply here. It does apply to
+   habit_logs, which is why that page names one.
+
+   The table's CHECK constraints are real and a violation is a 23514 that
+   silently writes nothing:
+     mode IN ('DEEP WORK','ULTRADIAN','FLOW STATE','BREAK','CUSTOM')
+       -- matches this page's five data-name chips exactly, verified
+     duration_secs >= 0   -- saveSession returns early below 30s
+     target_secs  >  0    -- clamped here, since a custom-minutes field left
+                             empty would otherwise send 0 or NaN
+   .error is checked because Supabase resolves to {data:null,error} rather
+   than throwing (8.1 class 1). */
+async function mirrorFocusSession(task, mode, durationSecs, targetSecs, distractions){
+  try{
+    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
+    const sb = await window.OmegaSB.get();
+    if(!sb) return;
+    const s = await sb.auth.getSession();
+    if(s.error || !s.data || !s.data.session) return;
+
+    const target = Math.max(1, Math.round(Number(targetSecs) || 0));
+    const dur    = Math.max(0, Math.round(Number(durationSecs) || 0));
+    const dist   = Math.max(0, Math.round(Number(distractions) || 0));
+
+    const { error } = await sb.from('focus_sessions').insert({
+      user_id: s.data.session.user.id,
+      task_name: String(task).slice(0, 200),
+      mode: mode,
+      duration_secs: dur,
+      target_secs: target,
+      distractions: dist
+    });
+    if(error) console.warn('[focus] mirror insert failed:', error.message);
+  }catch(e){ console.warn('[focus] mirror unavailable:', e && e.message); }
 }
 
 function getSessions(){ try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch{return[];} }

@@ -65,7 +65,7 @@
     var s = document.createElement('style');
     s.id = CONSENT_CSS_ID;
     s.textContent = [
-      '#omega-consent{position:fixed;bottom:0;left:0;right:0;z-index:9990;',
+      '#omega-consent{position:fixed;bottom:var(--omega-chrome-bottom,0px);left:0;right:0;z-index:9990;',
       'background:rgba(2,2,6,.97);border-top:1px solid rgba(201,168,76,.25);',
       'padding:clamp(12px,2vw,18px) clamp(14px,3vw,36px);',
       'display:flex;align-items:center;flex-wrap:wrap;gap:12px;',

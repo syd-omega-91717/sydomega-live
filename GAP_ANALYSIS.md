@@ -18,27 +18,36 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
-- **The bottom chrome stack is coordinated by hand-tuned pixel offsets, and
-  collides** (measured 2026-09-05, `FIXES_LOG.md` entry 87). At least four
-  modules anchor fixed bars to the bottom of the viewport — `omega-legal.js`'s
-  `#omega-consent`, `omega-pwa.js`'s `#omega-install-banner`, `omega-controls.js`'s
-  `#omega-controls-dock`, `omega-realtime.js`'s `#omega-ticker-strip` — and the
-  only coordination between them is two hardcoded numbers inside
-  `@media(max-width:760px)`: `bottom:102px!important` and `bottom:66px!important`.
-  Neither tracks a bar's real height, so both are wrong at every other viewport.
-  One pair of them (consent × install, both at `bottom:0; z-index:9990`) made the
-  cookie-consent buttons genuinely unclickable and is **fixed** by sequencing.
-  The rest are not: `scripts/verify-runtime.js`'s new occlusion advisory reports
-  20 interactive controls occluded across the 13 capability entrypoints —
-  `TERMS`/`PRIVACY`/`COMPLIANCE`/`ARENA`/`GOVERN` and two CONNECT buttons behind
-  `#omega-ticker-strip`, the whole language switcher plus `omega-sound-btn` behind
-  `#gate`, two links behind `#omega-voice-btn`, two behind `#omega-controls-dock`.
-  **The fix is a single shared bottom inset each dock reads** (a CSS custom
-  property set from measured heights) rather than more tuned constants. It is
-  open because it spans four modules and needs verification across viewports and
-  pages of its own; shipping half of it would trade a measured problem for an
-  unmeasured one. The advisory keeps the whole class visible on every run in the
-  meantime.
+- **The bottom chrome stack was coordinated by hand-tuned pixel offsets — now
+  measured** (opened and closed 2026-09-05; `FIXES_LOG.md` entries 87-88). Five
+  modules anchor fixed bars and buttons to the bottom of the viewport, and the
+  only coordination between them was hardcoded constants: `bottom:102px` for
+  `#omega-controls-dock`, `bottom:66px` for `#omega-ticker-strip`,
+  `bottom:224px` for `#osh-btn`, plus the four-rung desktop ladder in `bg.js`
+  (`36 / 98 / 146 / 228`, each `!important`). Every one of them was correct at
+  the viewport it was measured at and wrong elsewhere, and none had been
+  measured against `#omega-consent`, whose height is 80, 102 or 134 depending
+  on how its copy wraps.
+
+  `omega-bottom-stack.js` now publishes two measured values —
+  `--omega-chrome-bottom` (the persistent furniture) and
+  `--omega-transient-bottom` (furniture plus whatever banner is up). The
+  consent and install banners clear the furniture with the first; the `bg.js`
+  ladder and the share button's mobile rung step over the banners with the
+  second, keeping their measured internal spacing exactly and returning to it
+  when the banner is dismissed. Verified at 1280x800, 1024x600, 900x700 and
+  420x760: zero overlap, consent fully on screen with both buttons reachable
+  at every one, and `verify-runtime.js` reports zero fixed-chrome occlusions
+  across all 13 capability entrypoints. Proven by control, not by the count
+  falling: re-pinning the consent bar to `bottom:0` reproduces nine occluded
+  language-dock controls.
+
+  **What remains open is deliberate**, and it is the reason the ladder was not
+  replaced outright: those `!important` rungs exist because three of the four
+  floating controls set their position through inline `style.cssText`, which
+  beats any stylesheet rule. Rewriting them to be measured rather than
+  laddered means changing how those modules position themselves, which is a
+  larger change than this one and has no defect driving it.
 
 - **`transactions` / `wallet_balances` tables do not exist** (queried by
   `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token

@@ -152,6 +152,17 @@ hidden state. It defers to the two pre-existing reveal systems —
 `omega-content.js` (`.oc-hidden`) and `omega-animated.js` (`.oa-reveal`) —
 which already own `opacity` on what they manage.
 
+**Bottom chrome has a single measured owner.** Five modules anchor fixed bars
+and buttons to the viewport floor and used to coordinate through hardcoded
+constants (`bottom:102px`, `66px`, `224px`, and `bg.js`'s `36/98/146/228`
+ladder) — each right at one viewport, wrong elsewhere, and none measured
+against `#omega-consent`, whose height varies 80–134 with its copy.
+`omega-bottom-stack.js` publishes `--omega-chrome-bottom` (persistent
+furniture) and `--omega-transient-bottom` (that plus any banner). Transient
+banners clear the furniture with the first; the floating ladder steps over the
+banners with the second. Never add a bottom-anchored constant — read a
+property, and mark new furniture `data-omega-bottom-chrome`.
+
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),
   `--green`, `--purple`, `--muted`, `--ink` (text).

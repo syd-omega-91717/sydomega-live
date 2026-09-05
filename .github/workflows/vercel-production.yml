@@ -50,11 +50,6 @@ on:
 permissions:
   contents: read
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
 concurrency:
   group: vercel-production
   cancel-in-progress: false
@@ -84,31 +79,64 @@ jobs:
           test "$(find public -type f -name '*.html' | wc -l)" -gt 0
           echo 'VERCEL_PRODUCTION_ARTIFACT=PASS'
 
+  credentials:
+    name: Resolve deployment credentials
+    needs: validate
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          ORG: ${{ secrets.VERCEL_ORG_ID }}
+          PROJECT: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            echo 'VERCEL_CREDENTIALS=READY'
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'VERCEL_CREDENTIALS=NOT_CONFIGURED'
+          fi
+
   deploy:
     name: Deploy production
-    needs: validate
+    needs: credentials
     if: >-
-      (github.event_name == 'push' || inputs.deploy == true) &&
-      env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
+      needs.credentials.outputs.ready == 'true' &&
+      (github.event_name == 'push' || inputs.deploy == true)
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Pin deployment to the intended Vercel project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .vercel
+          cat > .vercel/project.json <<EOF
+          {"orgId":"${VERCEL_ORG_ID}","projectId":"${VERCEL_PROJECT_ID}"}
+          EOF
       - name: Deploy to Vercel Production
-        run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
+        run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
 
-  configuration:
-    name: Deployment configuration
-    needs: validate
-    if: >-
-      env.VERCEL_TOKEN == '' || env.VERCEL_ORG_ID == '' || env.VERCEL_PROJECT_ID == ''
+  controlled:
+    name: Controlled deployment state
+    needs: credentials
+    if: needs.credentials.outputs.ready != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Record controlled state
+      - name: Keep provider promotion controlled
         run: |
           echo 'VERCEL_PRODUCTION_DEPLOYMENT=CONTROLLED'
-          echo 'The repository is intentionally protected from automatic provider churn.'
-          echo 'Set VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID to enable production promotion.'
+          echo 'Artifact validation passed; automatic provider churn remains disabled.'
+          echo 'Configure VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID to enable promotion.'

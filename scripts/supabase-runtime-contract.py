@@ -96,6 +96,22 @@ def shipped_credentials() -> tuple[str, str]:
 # branch on the key format, never assume one.
 OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
 
+# The probe must be a path an ANONYMOUS visitor really uses. This contract used
+# `GET /rest/v1/` -- the OpenAPI root -- and got 401, which it reported as
+# "Supabase rejected the configured public key". Supabase's own API reference
+# settles it: the Management API's openapi endpoint "is the replacement for
+# querying /rest/v1/ directly with the anon key." That root is simply no longer
+# served to public keys, so the 401 was the platform behaving as designed and
+# said nothing about the key or about production.
+#
+# public.platform_settings is the right target instead: it is the feature-flag
+# store the client reads (CLAUDE.md 5), `anon` holds SELECT on it, and its
+# `platform_settings_select` policy is `qual = true`. Verified in-database by
+# impersonating the anon role (CLAUDE.md 8.4's method), which sees 13 rows -- so
+# a 200 here proves the real public data path end to end, not an introspection
+# endpoint that no longer exists.
+POSTGREST_PROBE = "/rest/v1/platform_settings?select=key&limit=1"
+
 
 def bearer_for(key: str) -> dict[str, str]:
     """The Authorization header this key type should carry, if any."""
@@ -133,19 +149,25 @@ def main() -> int:
 
     checks = (
         ("Auth health", url + "/auth/v1/health", common),
-        ("PostgREST", url + "/rest/v1/", {
-            **common,
-            "Accept": "application/openapi+json, application/json",
-        }),
+        ("PostgREST", url + POSTGREST_PROBE, common),
     )
 
     for name, endpoint, headers in checks:
         try:
             status, _ = get(endpoint, headers)
         except urllib.error.HTTPError as exc:
+            # Report the body. A bare status is not diagnosable: this gate spent
+            # two CI cycles on "rejected the configured public key (HTTP 401)"
+            # that was neither a rejection nor a key problem.
+            detail = ""
+            try:
+                detail = exc.read(300).decode("utf-8", "replace").strip().replace("\n", " ")
+            except Exception:
+                pass
+            detail = f" -- {detail}" if detail else ""
             if exc.code in (401, 403):
-                return fail(f"Supabase {name} rejected the configured public key (HTTP {exc.code})")
-            return fail(f"Supabase {name} returned HTTP {exc.code}")
+                return fail(f"Supabase {name} rejected the configured public key (HTTP {exc.code}){detail}")
+            return fail(f"Supabase {name} returned HTTP {exc.code}{detail}")
         except urllib.error.URLError as exc:
             return fail(f"Supabase {name} is unreachable: {exc.reason}")
         except (TimeoutError, socket.timeout):

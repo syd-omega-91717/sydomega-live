@@ -12446,10 +12446,39 @@ header for legacy keys. The CI-secret override could still supply one. So
 prefixes get `apikey` alone, anything else keeps its bearer — and a test pins
 the legacy case specifically as the violator of that naive fix.
 
+The header fix was right on its own terms and **did not fix the 401**. The next
+run, on `28aad197`, failed identically — which is why the commit is only half
+the story.
+
+### The probe endpoint no longer exists for public keys
+
+`GET /rest/v1/` is the PostgREST **OpenAPI root**. Supabase's own API reference
+settles what it does now, describing the Management API's openapi endpoint:
+
+> Returns the PostgREST OpenAPI specification for the project. **This is the
+> replacement for querying `/rest/v1/` directly with the anon key.**
+
+So that root is simply not served to public keys any more. The 401 was the
+platform behaving exactly as designed, and said nothing about the key, the
+project, or production. Two CI cycles went into a message that was wrong in
+both of its nouns — it was neither a rejection nor about the configured key.
+
+The probe now reads `public.platform_settings`, which an anonymous visitor
+genuinely reads (§5's flag store): `anon` holds `SELECT`, and
+`platform_settings_select` is `qual = true`. Verified in-database by
+impersonating the `anon` role per §8.4 — **13 rows visible** — so a 200 proves
+the real public data path end to end rather than an introspection endpoint that
+no longer answers.
+
+And the failure message now carries the **response body** (300 bytes, no key).
+A bare status is not diagnosable; that is what cost the two cycles.
+
 ### Verification
 
-`scripts/tests` 252 → **262**, all passing; `./scripts/ci-local.sh` **ALL 23
-BLOCKING CHECKS PASSED**. Locally the contract resolves
-`credential_source=shipped_client` and then fails at the network hop — this
+`scripts/tests` 252 → **265**, all passing; `./scripts/ci-local.sh` **ALL 23
+BLOCKING CHECKS PASSED**. Three new controls pin the probe: it is not the
+OpenAPI root, it targets the anon-readable table, and it stays bounded
+(`select=`, `limit=1`) and read-only. Locally the contract resolves
+`credential_source=shipped_client` and then stops at the network hop — this
 session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
-does not, so the header shape is what CI decides.
+does not, so CI is what decides.

@@ -105,6 +105,31 @@ class AuthorizationHeaderTests(unittest.TestCase):
         self.assertEqual(contract.bearer_for(anon), {})
 
 
+class PostgrestProbeTests(unittest.TestCase):
+    """The probe must exercise a real anonymous read, not schema introspection.
+
+    `GET /rest/v1/` returned 401 and the gate called it a rejected key. Supabase's
+    API reference: the Management API openapi endpoint "is the replacement for
+    querying /rest/v1/ directly with the anon key" -- that root is no longer
+    served to public keys at all.
+    """
+
+    def test_the_probe_is_not_the_openapi_root(self):
+        """VIOLATOR of the original design."""
+        self.assertNotEqual(contract.POSTGREST_PROBE.split("?")[0], "/rest/v1/")
+
+    def test_the_probe_targets_a_table_anon_can_read(self):
+        """platform_settings: anon holds SELECT and platform_settings_select is
+        `qual = true`, verified in-database by impersonating the anon role."""
+        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/platform_settings"))
+
+    def test_the_probe_is_bounded_and_read_only(self):
+        """A contract must not pull a table down to prove reachability, and must
+        never be able to write."""
+        self.assertIn("limit=1", contract.POSTGREST_PROBE)
+        self.assertIn("select=", contract.POSTGREST_PROBE)
+
+
 class HelpContractTests(unittest.TestCase):
     def test_help_exits_zero_without_running(self):
         import subprocess

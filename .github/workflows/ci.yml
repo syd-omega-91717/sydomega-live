@@ -20,7 +20,7 @@ defaults:
 
 jobs:
   verify:
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -51,8 +51,10 @@ jobs:
         shell: python
         run: |
           import pathlib, subprocess, sys
-          bad = [p.name for p in sorted(pathlib.Path(".").glob("*.js"))
-                 if subprocess.run(["node", "--check", p.name]).returncode != 0]
+          bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
+                 if ".git" not in p.parts and "node_modules" not in p.parts
+                 and "dist" not in p.parts and "build" not in p.parts
+                 and subprocess.run(["node", "--check", str(p)]).returncode != 0]
           if bad:
               print("::error::syntax error in: " + ", ".join(bad))
               sys.exit(1)
@@ -72,12 +74,6 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
-      # The Intelligence Fabric's tests live in tests/, not scripts/tests/.
-      # They ran only in omega-intelligence-fabric.yml, behind a paths: filter
-      # on core/ and scripts/omega_fabric_audit.py -- so editing
-      # omega-agents.json or docs/capabilities/registry.json could break them
-      # with no check noticing. Same divergence class as the one
-      # scripts/contract-suite.py's header was written about.
       - name: Intelligence fabric tests
         shell: python
         run: |

@@ -138,23 +138,27 @@ if [ "$RUN_ALL" -eq 1 ]; then
   # five days because the CI workflow almost never concluded on the self-hosted
   # Windows runner; moving it to a hosted runner is what surfaced it.
   #
-  # Measured 2026-09-05, in this order: schema-dictionary 0, rls-auditor 0,
-  # silent-failure-detector 1, migration-consistency 1, upsert-conflict-check 0.
-  # The two failing ones are real work, each its own change:
-  #   silent-failure-detector -- 8 sites, CLAUDE.md 8.1 class 1. One
-  #     (vendor/supabase-js.js:43) is the vendored client's own .rpc() and is a
-  #     false positive the scanner should exclude; the rest are ours, including
-  #     bg.js:1640's owner-elevation update.
-  #   migration-consistency -- 7 flat-bag/migrations divergences. CLAUDE.md 5
-  #     says consolidating these needs a per-table live-schema check, never a
-  #     bulk sweep, so it is deliberately not a quick fix.
-  # Promote these back into the blocking list above once both reach 0; leaving
-  # them mislabelled is what hid the divergence in the first place.
+  # Measured 2026-09-05, all six now at 0: schema-dictionary, rls-auditor,
+  # silent-failure-detector, migration-consistency, migration-history-contract,
+  # upsert-conflict-check.
+  #
+  # migration-history-contract was ABSENT from this list until 2026-09-05 while
+  # ci.yml has run it all along, and it was failing -- unsatisfiably, on an
+  # already-applied 8-digit version it demanded be renumbered. Nothing here
+  # could see it, because ci.yml's `verify` job stops at its first failing step
+  # and migration-consistency ran before it. Mirror every step of that job
+  # here: a gate this script does not run is a gate it cannot vouch for.
   printf '\n\033[1m── blocking on GitHub, reported only here ──────────────────\033[0m\n'
   for s in schema-dictionary rls-auditor silent-failure-detector \
-           migration-consistency upsert-conflict-check; do
+           migration-consistency migration-history-contract upsert-conflict-check; do
     printf '\n\033[1m── %s (blocking in ci.yml)\033[0m\n' "$s"
-    python3 "scripts/$s.py" || true
+    # --local is the mode ci.yml runs; without it the history contract still
+    # checks the local tree but signs off with a misleading trailer.
+    if [ "$s" = "migration-history-contract" ]; then
+      python3 "scripts/$s.py" --local || true
+    else
+      python3 "scripts/$s.py" || true
+    fi
   done
   printf '\n\033[1m── runtime verification (advisory; needs playwright-core + Chrome)\033[0m\n'
   node scripts/verify-runtime.js || true

@@ -12082,3 +12082,101 @@ caveat is unchanged.
 reachable through migrations/`, exit **0** (was exit 1, 2 findings).
 `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. Live ledger 171 =
 local `migrations/*.sql` 171 = `remote-migrations.json` `_count` 171.
+
+---
+
+## 103. An unsatisfiable migration gate, hidden behind another failing step
+
+Fixing entry 102 turned `verify` red one step further along, on a failure that
+had been there the whole time:
+
+```
+::error::invalid migration version width
+  20260902: 20260902_reset_migration_state.sql
+Use 4-digit historical versions or new 14-digit YYYYMMDDhhmmss versions;
+never create 8-digit YYYYMMDD versions.
+```
+
+### The gate could never have passed
+
+`20260902` is **already applied**. It is in the live
+`supabase_migrations.schema_migrations` ledger and in
+`supabase/remote-migrations.json:184`, so the file cannot be renumbered:
+renaming it leaves a remote version with no local file, which is exactly the
+drift `scripts/migration-drift.py` exists to catch, and applied migrations are
+never rewritten (`supabase/migrations/README.md:60`).
+
+So `migration-history-contract.py --local` demanded a rename that no change
+could safely make. It was not a new regression — it was unsatisfiable from the
+moment the rule was written.
+
+### Why nobody saw it
+
+`ci.yml`'s `verify` job runs its steps in order and stops at the first failure.
+`migration-consistency` sat one step earlier and had been failing since it was
+written, so `Canonical migration history` never ran. Entry 102 removed the
+earlier failure and the later one surfaced immediately.
+
+`./scripts/ci-local.sh` could not have caught it either: the script mirrors
+five of `verify`'s six audits and **`migration-history-contract` was not among
+them**. A gate this script does not run is a gate it cannot vouch for.
+
+### The rule was standing in for a hazard it never tested
+
+The script's own docstring names the real failure: the Supabase CLI mis-orders
+an 8-digit `YYYYMMDD` version **against a 14-digit version sharing that
+`YYYYMMDD` prefix**. That is a collision, not a width. Measured on this tree:
+
+| versions | count |
+|---|---|
+| 4-digit | 106 |
+| 14-digit | 64 |
+| 8-digit | **1** (`20260902`) |
+| 14-digit beginning `20260902` | **0** |
+
+So the hazard cannot occur here, and the blanket width test was rejecting a
+file that causes none of it.
+
+Fixed by testing the hazard directly — `date_prefix_collisions()`, applied to
+every 8-digit version whether grandfathered or not — and grandfathering the one
+applied version in `APPLIED_EIGHT_DIGIT_VERSIONS`, a `frozenset` documented as
+closed. A **new** 8-digit version still fails on width. The same predicate now
+governs the `--remote-output` path, which had the identical blanket rule and
+would have rejected production's own history for the same version.
+
+### Controls
+
+`test_migration_history_contract.py`, 6 tests, each passing case paired with a
+violator:
+
+| control | result |
+|---|---|
+| 4- and 14-digit versions | pass |
+| the applied `20260902` | pass (was the false failure) |
+| a **new** `20260906` 8-digit version | **caught**, `invalid migration version width` |
+| `20260902` + `20260902083000` together | **caught**, `shares a date prefix` — grandfathering does not exempt the pair |
+| two files at version `0001` | **caught**, `duplicate` |
+| `--help` | exit 0, audit does not run |
+
+### The divergence itself is closed
+
+`migration-history-contract` was added to `ci-local.sh`'s audit list, in
+`--local` mode so it runs exactly as `ci.yml` runs it, and the block's comment
+— which still described `silent-failure-detector` and `migration-consistency`
+as failing, both since fixed — was rewritten to say why mirroring every step of
+that job matters.
+
+### A method note earned the hard way
+
+The first attempt to patch `ci-local.sh` asserted its anchor and **failed**:
+the block header is written with literal box-drawing bytes, not `─`
+escapes. That is §8.4's `bg.js` stylesheet trap in a second file. The assertion
+is what turned a silent no-op into a visible error — anchor on plain-ASCII
+spans, and always assert the match count before replacing.
+
+### Verification
+
+`python3 scripts/migration-history-contract.py --local` → `local migration
+versions: 171`, range `0001 -> 20260905211725`, exit **0** (was exit 1).
+`scripts/tests` 238 → **244**, all passing. `./scripts/ci-local.sh --all`
+**ALL 23 BLOCKING CHECKS PASSED**, with all six mirrored audits at 0.

@@ -11488,3 +11488,128 @@ of the real `ydqhzvvoyufiiqvzcjns`), then publishes `window.OmegaSupabase =
 So that page cannot authenticate at all, and if its script runs after `bg.js`
 it overwrites the good client with one built on a fake key. Not fixed here:
 changing which client that page publishes is a larger change than this one.
+
+## 97. The new `public/` build emitted a deployment missing the Supabase client on 127 pages, and its own gate had gone red
+
+Twelve commits landed on `main` between `a8b60169` (the #271 merge) and
+`4e216de3`, replacing the repo's build-free static deploy with a real build:
+`vercel.json` now sets `framework: null`, `installCommand: ""`,
+`buildCommand: "bash scripts/vercel-build.sh"`, `outputDirectory: "public"`,
+and `scripts/vercel-build.sh` copies the web surface into `public/`. That is
+what the owner's Vercel dashboard reports as a **Framework Settings Override**
+— an informational notice that config-as-code beats the dashboard, not an
+error. All four keys are load-bearing (`framework: null` stops preset
+auto-detection, `installCommand: ""` skips npm install against the repo's
+`package.json`), so the notice is expected and none of them was removed.
+
+Three real defects were found underneath it.
+
+### a. The build dropped `vendor/`, so 127 pages lost the Supabase client
+
+`vercel-build.sh` copies root-level files plus a fixed directory allow-list:
+
+```
+for dir in assets static images img icons media fonts audio video css js '.well-known'; do
+```
+
+`vendor/` is not on it. Running the script on `origin/main` and sweeping the
+emitted tree for local references that do not resolve inside `public/`:
+
+```
+scanned 373 emitted files
+distinct broken local references in public/: 1
+   127 pages -> /vendor/supabase-js.js   e.g. academy.html
+```
+
+`ls public/vendor/supabase-js.js` → `No such file or directory`, while the
+script printed `VERCEL_BUILD=PASS`. §4 records why this is total rather than
+partial: that file is imported at the top of a module script on every gated
+page, and a top-level import that never resolves runs *none* of that module's
+code. `i18n/` was dropped by the same allow-list; `i18n.js:1263` builds its
+path by concatenation (`fetch('/i18n/'+lang+'.json')`), so all six language
+packs would have 404'd and every member silently fallen back to English.
+
+A build that reports success on an artifact the site cannot run is the same
+defect class as §8.4's routing note — a gate asserting a config key instead of
+observing a real fetch. So the fix is not only the two directory names: the
+emitted tree now checks itself. Every absolute local asset path appearing in a
+shipped file must resolve inside `public/`, `/vendor/supabase-js.js` and each
+`i18n/*.json` are asserted by name (concatenated paths the scan cannot see),
+and `/_vercel/*` is exempt because the platform injects it at the edge. The
+check is grep/sed rather than Python on purpose: `.vercelignore` excludes
+`*.py`, so a Python helper is not part of the deployment input.
+
+The false-positive pass mattered. The first run reported 5, of which 2 were
+`/_vercel/` (exempted), 2 were documentation comments (`sw.js:22` naming a path
+v3 wrongly precached; `omega-constellation.js:13`'s usage example) — both
+rewritten so a doc comment does not read as a live reference, the same shape as
+§8.4's `evidence-audit.py` relation read out of a string literal — and **1 was
+a genuine bug**: `time.html:386` set the desktop-notification icon to
+`/icons/icon-192.png`, and there is no `icons/` directory; `manifest.json`
+ships `/icon-192.png` at the root. The existing CI asset check missed it
+because the path sits in a JS object literal, not a `src=`/`href=` attribute.
+
+### b. `vercel_static_contract.py` was failing on `main`
+
+The gate required a redirect whose `has` host is `www.sydomega.com`:
+
+```
+VERCEL_STATIC_CONTRACT=FAIL missing_www_canonicalization
+exit=1
+```
+
+`4e216de3` ("serve canonical www host directly without forced apex redirect")
+had removed exactly that rule six commits earlier. The gate was asserting one
+particular answer rather than the property that matters — both hosts alias the
+same deployment, so serving each directly is valid and so is canonicalizing
+onto either one. It now classifies the configuration (`host_policy=` one of
+`serve_both_hosts_directly` / `redirect_www_to_apex` / `redirect_apex_to_www`)
+and fails only on `host_redirect_loop`, the one host configuration that is
+always broken and that nothing downstream would catch. Control: planting both
+directions into `vercel.json` produces `VERCEL_STATIC_CONTRACT=FAIL
+host_redirect_loop`, exit 1. The gate had also lost its `--help` guard and ran
+its whole job on `--help` (§8.4); restored.
+
+### c. `public/` broke `content-uniqueness` for anyone who ran the build
+
+`public/` was untracked and ungitignored, and it is a copy of all 189 pages.
+`audit.py` and `omega-registry.py --check` were unaffected — checked first, and
+the assumption that "the gates are corrupted" was wrong for both — but
+`content-uniqueness-contract.py` was not:
+
+```
+WITH public/ present:    - duplicate page description: contracts.html, public/contracts.html   (+81 more)
+WITHOUT public/:         CONTENT UNIQUENESS CONTRACT: PASS (189 HTML pages checked)
+```
+
+`.gitignore` does not help a scanner that walks the filesystem. The three gates
+that walk pages already shared an exclusion set anticipating build output —
+`{"node_modules", ".git", ".next", "dist", "build"}` — it simply did not know
+this repo's name for it. `public` added to
+`content-uniqueness-contract.py`, `page-estate-quality.py` and
+`page-overlap-audit.py`, and to `.gitignore` so the artifact is never committed.
+
+### Verification
+
+`scripts/tests/test_vercel_static_contract.py` is new — 14 tests, every passing
+case paired with a violator. It caught a weakness in the new gate immediately:
+the build-marker `"unreachable_asset"` is a substring of the summary line
+`unreachable_assets=`, so gutting the check still satisfied the marker; the
+marker is now `"unreachable_asset=${ref}"`. Two tests pin the regression
+directly — dropping `vendor` from the copy list must fail both the contract and
+the build.
+
+`scripts/tests` **216 → 230 tests**, all passing; `tests` 23 passing;
+`./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED** with `public/`
+present (it was 1 failing before); `node scripts/verify-runtime.js` **PASS (13
+pages)**; `bash scripts/vercel-build.sh` → `VERCEL_BUILD=PASS`, html=189,
+js=160, css=13, with `public/vendor/supabase-js.js` at 214,858 bytes and all
+six language packs present.
+
+### Left open
+
+Production still 404s, and no commit in this change alters that: the Vercel
+alias remains pinned to `31f9180d` by an Instant Rollback (§8.2, entry 95).
+Cancelling that rollback is an owner action in the Vercel dashboard. Until it
+is cancelled `Production Surface Smoke` stays red, and the corrected build
+above cannot reach the domain regardless of how green CI is.

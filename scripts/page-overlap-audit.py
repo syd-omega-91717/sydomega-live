@@ -21,7 +21,10 @@ if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
     raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP = {"node_modules", ".git", ".next", "dist", "build"}
+SKIP = {"node_modules", ".git", ".next", "dist", "build", "public"}  # public/ is this repo's build output
+# (scripts/vercel-build.sh copies the whole web surface into it), so leaving it
+# in scope makes every page a duplicate of itself. The set already excluded
+# dist/ and build/ for exactly this reason; it just did not know our name for it.
 LIMIT = 1200
 
 class Extractor(HTMLParser):

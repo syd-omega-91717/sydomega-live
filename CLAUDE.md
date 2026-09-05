@@ -570,16 +570,13 @@ open, recorded in `FIXES_LOG.md`:
   property no repo change can pin. **Still open: the
   single physical CI runner** — never "fix" it with a hosted lane;
   `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
-- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
-  in the job log). Cloud minutes look unavailable — private repo, personal
-  account — so jobs drain one at a time and a check can sit `queued` a long
-  while. But a red check is real output from a real run, to be read, not
-  dismissed as the old `runner_id: 0` no-op. Two Windows traps: paths and the
-  console codec differ, and a crashed child yields empty stdout, so any
-  assertion on that stdout misreports (see `FIXES_LOG.md`).
-  `./scripts/ci-local.sh` still runs every blocking step locally, and
-  `.githooks/pre-push` runs it on every push — enable per clone with
-  `git config core.hooksPath .githooks`, bypass with `--no-verify`.
+- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`),
+  so jobs drain one at a time and `queued` is normal. A red check is real output
+  now, not the old `runner_id: 0` no-op. Two Windows traps: paths and console
+  codec differ, and a crashed child yields empty stdout, so assertions on it
+  misreport (`FIXES_LOG.md`). `./scripts/ci-local.sh` runs every blocking step
+  locally; `.githooks/pre-push` runs it on push (`git config core.hooksPath
+  .githooks`, bypass `--no-verify`).
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
   The advisor reports 93; the owner-sensitive ones guard via
   `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
@@ -596,12 +593,10 @@ open, recorded in `FIXES_LOG.md`:
   k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
   bypasses it — not resolved.** Fails open reporting `checked:false`; never
   render "not breached" on that (`scripts/tests/test_password_guard.py`).
-- **`scripts/audit.py` reports 0 critical / 7 warnings**, each labelled by the
-  tool as real risk vs. known noise. They cannot be driven to 0 from source
-  alone without live-schema verification, and forcing them down would trade a
-  known-unknown for an unverified "fixed". The count has drifted between 7 and
-  8 across sessions — re-run and diff the list rather than assuming a warning
-  is old news.
+- **`scripts/audit.py`'s 7 warnings** are each labelled by the tool as real
+  risk vs. known noise. They cannot reach 0 without live-schema verification,
+  and forcing them down trades a known-unknown for an unverified "fixed". The
+  count drifts between 7 and 8 — re-run and diff the list, never assume.
 - **90 `omega-*.js` modules load on every page.** 41 expose a global nothing
   calls — a trap of a metric: `omega-a11y.js` is one and does real work on every
   page. Self-activation with no caller is the norm. Which are genuinely
@@ -615,7 +610,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **179** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **191** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -628,7 +623,7 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages; the old row summed to 178) |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **8 declared relations absent live, 0 read by a page** |
 | `./scripts/ci-local.sh` | **22** blocking checks, all passing |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
@@ -721,21 +716,26 @@ entries (which were accurate when written):
   0 background layers at runtime while looking correct in the diff.
 - **"Built" is three different claims, so measure which one you mean.**
   `scripts/evidence-audit.py` classifies every page by what the repo can prove
-  — reaches Postgres, keeps data in the browser, names a relation nothing
-  declares, or is unreachable from `nav.js` — and writes `EVIDENCE_MATRIX.md`.
-  It is deliberately report-only (`--strict` to gate). What it cannot do is the
-  important half: it has no database connection, so a `BUILT` row means the
-  *client* is wired and nothing more. The live table, its columns, its `GRANT`
-  and its policy are all still unverified, and each has been a real shipped bug
-  (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
+  and writes `EVIDENCE_MATRIX.md` (report-only; `--strict` gates). It now also
+  runs a **live-schema cross-check**: relations `supabase/` declares that
+  `supabase/live-schema.json` lacks. Absent *and read by a page* is a silent
+  empty state and fails `--strict`; absent and unread is a dormant backend and
+  never gates. That snapshot is **dated, not a connection** — regenerate it
+  whenever schema is applied live. Columns, `GRANT`s and policies stay
+  unverified, and each has been a real shipped bug (§8.1 classes 2 and 6), so a
+  green matrix still is not a live check.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
   describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
   module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)
   had silently broken skill discovery. Re-derive before quoting:
   `python3 scripts/omega-registry.py --check` regenerates the census and fails on
   drift. A fact that is a *number* belongs in the generator, not a paragraph.
-- **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
-  answers `--help` with its docstring and exits 0; a test keeps it true.
+- **Ask a script what it does before reading it.** Every `scripts/*.py`
+  answers `--help` with its docstring and exits 0 — claimed here while **21 of
+  47 ignored it**, running the whole job instead (one never returned). It was
+  enforced per-script, so a script with no test went unchecked;
+  `test_script_help_contract.py` now sweeps all of them, with a planted
+  violator.
 - **External repo research is partly blocked at the egress proxy.**
   `raw.githubusercontent.com` returns 200, so named files (`README.md`,
   `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,

@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "generated": "2026-08-30T13:21:50.938135",
-    "total_unique_tables": 120,
+    "generated_by": "scripts/schema-consolidation-phase1.py",
+    "total_unique_tables": 121,
     "total_duplicates": 110,
     "tier_1_parser_artifacts": 6,
     "tier_2_legitimate_duplicates": 104
@@ -346,7 +346,7 @@
       "requires_manual_verification": false
     },
     "digest_preferences": {
-      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "canonical_definition": "supabase/migrations/20260822024048_final_feature_completeness_and_consolidation.sql",
       "duplicate_files": [
         "supabase/migrations/0099_omega_live_schema_reconciliation.sql",
         "supabase/omega_live_schema_reconciliation.sql"
@@ -706,7 +706,7 @@
       "requires_manual_verification": false
     },
     "notifications": {
-      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "canonical_definition": "supabase/migrations/20260822024048_final_feature_completeness_and_consolidation.sql",
       "duplicate_files": [
         "supabase/migrations/0091_omega_notifications_fix.sql",
         "supabase/omega_notifications_fix.sql"
@@ -715,11 +715,12 @@
       "requires_manual_verification": false
     },
     "oaths": {
-      "canonical_definition": "supabase/omega_live_fixes_2026_08_29.sql",
+      "canonical_definition": "supabase/migrations/20260829065055_create_oaths_table_from_chunk_09.sql",
       "duplicate_files": [
-        "supabase/chunk_09_new_features.sql"
+        "supabase/chunk_09_new_features.sql",
+        "supabase/omega_live_fixes_2026_08_29.sql"
       ],
-      "duplicate_count": 2,
+      "duplicate_count": 3,
       "requires_manual_verification": false
     },
     "platform_events": {
@@ -1051,7 +1052,7 @@
       "requires_manual_verification": false
     },
     "weekly_digest_queue": {
-      "canonical_definition": "supabase/migrations/20260822_final_feature_completeness_and_consolidation.sql",
+      "canonical_definition": "supabase/migrations/20260822024048_final_feature_completeness_and_consolidation.sql",
       "duplicate_files": [
         "supabase/migrations/0099_omega_live_schema_reconciliation.sql",
         "supabase/omega_live_schema_reconciliation.sql"

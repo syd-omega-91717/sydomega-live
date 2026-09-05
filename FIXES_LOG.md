@@ -9192,3 +9192,283 @@ against the wrong surface** — rendered claims need `innerText`.
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests OK, `scripts/audit.py`
 0 critical / 7 warnings, `scripts/check-inline-js.py` clean,
 `node scripts/verify-runtime.js` PASS on the 13 capability entrypoints.
+
+---
+
+## The evidence matrix now asks whether production has the table, not only whether the repo declares it (2026-09-05)
+
+### The gap, named in this repo's own documentation
+
+`CLAUDE.md` §8.4 has said it outright for some time:
+
+> a `BUILT` row means the *client* is wired and nothing more. The live table,
+> its columns, its `GRANT` and its policy are all still unverified, and each
+> has been a real shipped bug (§8.1 classes 2 and 6).
+
+`evidence-audit.py`'s `BROKEN` class is decided against the **SQL bag**:
+`missing_t = sorted(t for t in info['tables'] if t.lower() not in rels)`, where
+`rels` comes from `sql_surface()`. So a page querying a relation the bag
+declares but production never received classified as `BUILT`, and every query
+against it returns `{data:null,error}` — an empty page, no exception, no
+console error.
+
+`supabase/live-schema.json` — a dated snapshot of the real schema — was already
+in the repo and already trusted by five other gates (`audit.py`,
+`schema-dictionary.py`, `upsert-conflict-check.py`, `resilience-audit.py`,
+`release-gate.py`). `evidence-audit.py` was not one of them; it mentioned the
+file only in prose, at line 443.
+
+### What the cross-check found
+
+```
+SQL bag relations : 119
+live relations    : 208   (captured 2026-08-29)
+declared in bag, ABSENT live : 8
+live but not in bag          : 97
+```
+
+The 97 corroborate `CLAUDE.md` §8.2's "~83 tables live that this repo's SQL
+never created" (the extra is views — the snapshot's `_relkinds` is
+`r,v,m,p`). The 8 are new:
+
+```
+codex_bookmarks   creator_proposals   focus_sessions    habit_logs
+okr_key_results   okr_objectives      signal_saves      wealth_snapshots
+```
+
+**None is read by any client page.** So nothing is silently empty today, and
+that is the honest finding rather than a manufactured one. What it does show is
+why part of the LOCAL_ONLY population exists: the server-side SQL for habits,
+focus sessions and OKRs was written into the bag and then neither applied nor
+wired. Wiring `habits.html` to `habit_logs` today would produce a page that
+classifies `BUILT` and returns nothing.
+
+### Severity is decided by one thing
+
+| case | meaning | gates? |
+|---|---|---|
+| absent live **and read by a page** | a silent empty state shipping now | fails `--strict` |
+| absent live, read by nothing | dormant backend, which this repo does on purpose (§9) | never |
+
+A missing or malformed snapshot reports **NOT CHECKED**, never 0 — a missing
+snapshot and a clean one must not look identical in a count, which is the exact
+shape of §8.4's stopped-static-server bug.
+
+### The zero was not trusted until it could fail
+
+Seven tests, and the clean case is asserted only alongside two planted
+positives. Then the detector was deliberately sabotaged
+(`missing = []  # SABOTAGE`) and the suite re-run:
+
+```
+--- detector sabotaged ---
+FAIL: test_control_gates_under_strict
+AssertionError: 0 != 1
+Ran 17 tests   FAILED (failures=3)
+
+--- restored ---
+Ran 17 tests   OK
+```
+
+Three failures under sabotage, none restored. Written down because this repo
+has shipped scanners that reported a serene zero while being structurally
+incapable of finding anything — three of them in a single session. A control
+that is never checked against a broken detector is decoration.
+
+### Not claimed
+
+The snapshot proves table *presence* on 2026-08-29 and nothing else. Columns,
+`GRANT`s and RLS policies remain unverified, and the Supabase MCP connection is
+unauthenticated in this session, so no live query was made. The report says so
+in place rather than in a footnote.
+
+Gates: `./scripts/ci-local.sh` 22/22, `python3 -m unittest discover -s
+scripts/tests` **186** tests OK (was 179), `scripts/audit.py` 0 critical /
+7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,987 / 16,000 —
+the §8.2 `audit.py` bullet was compressed to pay for the new §8.4 note).
+
+---
+
+## `--help` ran the job on 21 of 47 scripts, and one never returned (2026-09-05)
+
+### The claim that was not true
+
+`CLAUDE.md` §8.4 said, in the context every session loads before doing any work:
+
+> **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
+> answers `--help` with its docstring and exits 0; a test keeps it true.
+
+Measured, with controls, before any change:
+
+```
+CONTROLS
+  audit.py                 honors --help : True
+  commerce-contract.py     honors --help : True
+  user-journey-contract.py honors --help : False
+
+HONORS --help        : 26
+IGNORES / FAILS      : 19     (ran the whole job; 2 of them exited 1)
+HANGS (>20s)         : 1      page-overlap-audit.py
+NO MODULE DOCSTRING  : 1      user-journey-contract.py
+```
+
+21 of 47. The predicate is "output contains the first line of the module's own
+docstring, exit 0" — a first pass that only checked the exit code passed
+everything, because a script that runs its job successfully also exits 0.
+
+`page-overlap-audit.py` is the sharp end: it runs an O(n²) `SequenceMatcher`
+comparison across 189 pages, so `--help` never returned. The first measurement
+run was killed at 120 s by that single script.
+
+**No test kept it true.** The invariant was enforced per-script, in whichever
+test file someone happened to write one, so a script that shipped without a test
+was never checked — `user-journey-contract.py` had no test and no docstring.
+
+The cost is not cosmetic. §8.4's whole point is that `--help` is how a session
+learns what a script does *without* spending context reading it. A `--help` that
+launches a 189-page scan makes the cheap path the expensive one.
+
+### Fixed
+
+The same guard, ahead of any work, in all 20 (the 21st is the rewrite below):
+
+```python
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+```
+
+Inserted after the last top-level import by AST position, not by line number, so
+it lands ahead of module-level work in the scripts that have no `main()`
+(`workflow-contract.py` and friends do their work at import time).
+
+`scripts/tests/test_script_help_contract.py` is a **sweep, not a list** — a new
+script is covered the moment it lands, which is the only shape that keeps the
+CLAUDE.md sentence true. It carries a planted violator that must be rejected by
+the same predicate the sweep uses.
+
+The whole sweep now runs in **1.0 s**, against >120 s before.
+
+### Also fixed: `schema-dictionary.py` had `\{` in a docstring
+
+`ast.parse` warned `invalid escape sequence '\{'` at line 247 — inside a
+docstring explaining a regex. Harmless today, a `SyntaxWarning` on newer Python,
+and it sits in text `--help` now prints. Made the docstring raw. Repo-wide
+escape/syntax warnings: **0**.
+
+### The second finding: a journey contract that never resolved a destination
+
+`scripts/user-journey-contract.py` validated the *shape* of
+`config/user-journey-contract.json` — `version` is a string, `rules` non-empty,
+each rule carries `id`/`from`/`to`/`goal`, ids unique — and printed
+`USER JOURNEY CONTRACT: PASS (6 journeys)`. It never asked whether any named
+path resolves to something the deployment serves.
+
+It did not:
+
+```
+USER JOURNEY CONTRACT: FAIL
+- journey 'discover':    to   = '/discover'  does not resolve (no discover.html, no rewrite, no redirect)
+- journey 'learn':       from = '/discover'  does not resolve
+- journey 'create':      from = '/discover'  does not resolve
+- journey 'participate': from = '/discover'  does not resolve
+- journey 'participate': to   = '/community' does not resolve
+- journey 'commerce':    from = '/discover'  does not resolve
+```
+
+**Five of the six declared journeys routed through `/discover`**, which is not a
+file, not a rewrite and not a redirect. A gate proving a document is well-formed
+while the thing it describes does not exist is §8.4's "green check standing in
+for a real one".
+
+Resolution is now checked against the real surface: a file in the repo root
+(`vercel.json` sets `cleanUrls: true`, so `/gateway` serves `gateway.html`) or a
+`rewrites`/`redirects` source. `cleanUrls` is read from `vercel.json` rather than
+assumed — it is a deploy setting, and turning it off breaks every extensionless
+path in the contract at once.
+
+The two missing destinations were remapped to the surfaces that do the job,
+established from source rather than inferred:
+
+| was | now | evidence |
+|---|---|---|
+| `/discover` | `/gateway` | `gateway.html:91` loads `omega-gateway.js`, which builds the whole destination grid grouped by axis — "find the right destination quickly" is that page |
+| `/community` | `/social` | `social.html`, titled `SOCIAL HUB`; `nav.js` labels it `SOCIAL HUB` / `SOCIAL` |
+
+```
+USER JOURNEY CONTRACT: PASS (6 journeys, 12 endpoints resolved)
+```
+
+Corroboration found on the way: `vercel.json`'s `redirects` include
+`/sovereign → /sovereign-ai`, which explains the inert `sovereign:[12,'a','Ω']`
+entry in `omega-page-emblem.js` that has no `sovereign.html` — it is a redirect
+target, and `omega-gateway.js` already excludes it. Not a bug.
+
+Gates: `./scripts/ci-local.sh` 22/22, `python3 -m unittest discover -s
+scripts/tests` **189** tests OK (was 186), `scripts/audit.py` 0 critical /
+7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,991 / 16,000 — the
+§8.2 self-hosted-runner bullet was compressed to pay for the corrected §8.4
+note).
+
+---
+
+## A committed generated artifact stamped the clock, so it was dirty after every run (2026-09-05)
+
+Found by the stop-hook git check, not by a gate: after running the verification
+sweep, the working tree carried
+
+```
+ M schema_consolidation_mapping.json
+```
+
+and the whole diff was:
+
+```diff
+-    "generated": "2026-09-05T00:46:14.285716",
++    "generated": "2026-09-05T00:52:24.050662",
+```
+
+`scripts/schema-consolidation-phase1.py:127` wrote `datetime.now().isoformat()`
+into a file that is committed to the repo. So merely *running* the generator —
+which the `--help` audit above did, across every script — dirtied the tree with
+a diff carrying no information.
+
+Both ways out of that are bad. Committing it adds a meaningless timestamp bump
+to history; `git checkout --` on it is one slip away from discarding real work.
+And it trains a session to treat a dirty tree as noise, which is exactly when a
+real change gets thrown away.
+
+**Nothing read the field** — only the generator writes it, and the three
+markdown files mentioning the artifact reference the filename, not the
+timestamp. Provenance is the generator's name, which is the stable half;
+`build-content-registry.py` already takes that approach with a plain
+`'generated': True`. So `generated` became `generated_by`, and the now-unused
+`datetime` import was removed after checking no other reference survived.
+
+Proven reproducible rather than assumed — two consecutive runs, unchanged
+inputs, byte-identical output.
+
+`scripts/tests/test_generated_artifact_stability.py` encodes the rule: running a
+generator twice with unchanged inputs must produce identical bytes, which is
+what makes a generated file reviewable in a diff at all. It carries a planted
+volatile generator as a control, and the fix was checked against the bug it
+fixes — the old `datetime.now()` line was restored and the test re-run:
+
+```
+--- clock restored ---
+AssertionError: ...:03.946958" != ...:03.993536" :
+  schema_consolidation_mapping.json differs between two consecutive runs with
+  unchanged inputs — it is embedding something volatile
+FAILED (failures=1)
+
+--- restored ---
+OK
+```
+
+The test is a small list of (generator, artifact) pairs rather than a sweep,
+because there is no registry of which committed files are generated;
+`schema-consolidation-phase1.py` is currently the only script in `scripts/`
+calling `datetime.now().isoformat()`, verified by grep. Add a pair when a
+generator is added.
+
+Gates: `./scripts/ci-local.sh` 22/22, **191** tests OK (was 189).

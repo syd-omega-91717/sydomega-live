@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated": "2026-09-05T00:46:14.285716",
+    "generated_by": "scripts/schema-consolidation-phase1.py",
     "total_unique_tables": 121,
     "total_duplicates": 110,
     "tier_1_parser_artifacts": 6,

@@ -9409,3 +9409,66 @@ scripts/tests` **189** tests OK (was 186), `scripts/audit.py` 0 critical /
 7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,991 / 16,000 — the
 §8.2 self-hosted-runner bullet was compressed to pay for the corrected §8.4
 note).
+
+---
+
+## A committed generated artifact stamped the clock, so it was dirty after every run (2026-09-05)
+
+Found by the stop-hook git check, not by a gate: after running the verification
+sweep, the working tree carried
+
+```
+ M schema_consolidation_mapping.json
+```
+
+and the whole diff was:
+
+```diff
+-    "generated": "2026-09-05T00:46:14.285716",
++    "generated": "2026-09-05T00:52:24.050662",
+```
+
+`scripts/schema-consolidation-phase1.py:127` wrote `datetime.now().isoformat()`
+into a file that is committed to the repo. So merely *running* the generator —
+which the `--help` audit above did, across every script — dirtied the tree with
+a diff carrying no information.
+
+Both ways out of that are bad. Committing it adds a meaningless timestamp bump
+to history; `git checkout --` on it is one slip away from discarding real work.
+And it trains a session to treat a dirty tree as noise, which is exactly when a
+real change gets thrown away.
+
+**Nothing read the field** — only the generator writes it, and the three
+markdown files mentioning the artifact reference the filename, not the
+timestamp. Provenance is the generator's name, which is the stable half;
+`build-content-registry.py` already takes that approach with a plain
+`'generated': True`. So `generated` became `generated_by`, and the now-unused
+`datetime` import was removed after checking no other reference survived.
+
+Proven reproducible rather than assumed — two consecutive runs, unchanged
+inputs, byte-identical output.
+
+`scripts/tests/test_generated_artifact_stability.py` encodes the rule: running a
+generator twice with unchanged inputs must produce identical bytes, which is
+what makes a generated file reviewable in a diff at all. It carries a planted
+volatile generator as a control, and the fix was checked against the bug it
+fixes — the old `datetime.now()` line was restored and the test re-run:
+
+```
+--- clock restored ---
+AssertionError: ...:03.946958" != ...:03.993536" :
+  schema_consolidation_mapping.json differs between two consecutive runs with
+  unchanged inputs — it is embedding something volatile
+FAILED (failures=1)
+
+--- restored ---
+OK
+```
+
+The test is a small list of (generator, artifact) pairs rather than a sweep,
+because there is no registry of which committed files are generated;
+`schema-consolidation-phase1.py` is currently the only script in `scripts/`
+calling `datetime.now().isoformat()`, verified by grep. Add a pair when a
+generator is added.
+
+Gates: `./scripts/ci-local.sh` 22/22, **191** tests OK (was 189).

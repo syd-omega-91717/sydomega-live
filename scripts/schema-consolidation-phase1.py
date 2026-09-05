@@ -15,7 +15,6 @@ import os
 import re
 import sys
 from collections import defaultdict
-from datetime import datetime
 
 # CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
 # if asking is cheap and safe. This gate used to run its whole job on --help --
@@ -124,7 +123,16 @@ def main():
     # Analyze and classify
     mapping = {
         'metadata': {
-            'generated': datetime.now().isoformat(),
+            # A committed generated artifact must be reproducible: running the
+            # generator twice with unchanged inputs has to produce no diff.
+            # A wall-clock stamp made this file dirty after every run, so every
+            # session that ran the verification sweep got a spurious diff and
+            # either committed a meaningless timestamp bump or discarded it with
+            # `git checkout --`, which is one slip away from discarding real
+            # work. Nothing reads this field; provenance is the script name,
+            # which is the stable half. build-content-registry.py already does
+            # this, with a plain `'generated': True`.
+            'generated_by': 'scripts/schema-consolidation-phase1.py',
             'total_unique_tables': len(table_files),
             'total_duplicates': sum(1 for t, f in table_files.items() if len(f) > 1),
             'tier_1_parser_artifacts': 0,

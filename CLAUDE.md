@@ -610,7 +610,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **189** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **191** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |

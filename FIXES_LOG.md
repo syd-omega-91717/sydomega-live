@@ -9472,3 +9472,61 @@ calling `datetime.now().isoformat()`, verified by grep. Add a pair when a
 generator is added.
 
 Gates: `./scripts/ci-local.sh` 22/22, **191** tests OK (was 189).
+
+---
+
+## An outside PR turned `main` red, and the gate that caught it was a generated census (2026-09-05)
+
+PR #250, authored by the Vercel GitHub integration ("Install Vercel Web
+Analytics"), merged to `main` a few minutes after #249. It added
+`omega-analytics.js` and `omega-analytics-init.js`, plus a
+`<script type="module" src="/omega-analytics-init.js"></script>` before `</body>`
+on 193 pages.
+
+`main` — the deployed branch — was left failing a blocking check:
+
+```
+FAIL  OMEGA_SKILL_REGISTRY.md is out of date.
+  -| `omega-*.js` modules | 145 (1157 KB) |
+  -| root `.js` files | 154 |
+  +| `omega-*.js` modules | 147 (1164 KB) |
+  +| root `.js` files | 156 |
+  1 BLOCKING CHECK(S) FAILED (21 passed)
+```
+
+Regenerated with `python3 scripts/omega-registry.py`. Nothing else was wrong —
+which was checked rather than assumed:
+
+| check | result |
+|---|---|
+| `./scripts/ci-local.sh` | 22/22 after the regeneration |
+| `python3 -m unittest discover -s scripts/tests` | 191, OK (unaffected) |
+| `python3 scripts/audit.py` | 0 critical / **7** warnings — unchanged, so the new module orphaned nothing |
+| `node scripts/verify-runtime.js` | PASS on 13 pages, with the new `<script type="module">` on all of them |
+| `python3 scripts/resilience-audit.py` | 0 findings |
+
+Two things were specifically checked because this repo's rules make them
+load-bearing, and both are fine:
+
+- **CSP.** `omega-analytics.js:109` names `https://va.vercel-scripts.com`, which
+  is **not** in `vercel.json`'s `script-src 'self' …` allowlist. It is reached
+  only under `isDevelopment()`; the production path is
+  `omega-analytics.js:114`, `/_vercel/insights/script.js` — same origin, so
+  `'self'` covers it. No CSP violation on the production domain.
+- **No build step.** `package.json` predates this PR (`9bc18081`); #250 only
+  added a `@vercel/analytics` dependency to it. `installCommand: echo
+  skip-install` and `buildCommand: echo static-no-build` are untouched, and the
+  vendored `omega-analytics.js` is what actually ships — the same self-host
+  pattern as `vendor/supabase-js.js`. The `^2.0.1` caret is a floating range in
+  a repo that pins exactly, but it is inert: nothing installs it. Recorded, not
+  changed, because the file is managed by the integration.
+
+**Why this is written down.** The registry gate exists because "a number stored
+in prose drifts; derive it instead" (CLAUDE.md §8.4). Here it did something the
+prose version never could: it noticed a change *this session did not make*, from
+an author that is not a person, and failed on the deployed branch. A committed
+census is not bookkeeping — it is the only check in this repo that notices a
+third party editing the estate.
+
+Gates after the fix: `./scripts/ci-local.sh` 22/22, 191 tests OK,
+`scripts/audit.py` 0 critical / 7 warnings, `verify-runtime.js` PASS.

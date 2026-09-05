@@ -10195,3 +10195,108 @@ Gates: `./scripts/ci-local.sh` 22/22 (16 contract gates, 0 failing), **196**
 tests OK (was 191), `scripts/i18n-contract.py` 0 violations,
 `scripts/omega-registry.py --check` matches, `scripts/context-budget.py` PASS
 (CLAUDE.md 14,771 / 16,000).
+
+---
+
+## "Remote migration versions not found in local migrations directory" — cause, fix, and gate (2026-09-05)
+
+### What the error actually is
+
+`supabase db push` refuses to run when the remote migration history contains a
+version `supabase/migrations/` does not. It is not a Supabase bug: applying a
+migration through the dashboard or the MCP `apply_migration` tool writes a remote
+history row and **no local file**. Two of the nine offending versions were
+written by this session's own table work earlier today.
+
+### Measured, both directions
+
+A full outer join between `supabase_migrations.schema_migrations` and the local
+directory found drift **both ways**, and no existing gate saw either:
+
+```
+remote-only (no local file)  9
+  20260901143526 creator_proposals
+  20260903015502 harden_rls_and_public_api_warnings_20260903
+  20260903015535 harden_future_defaults_and_rls_20260903
+  20260904194956 omega_platform_observability_baseline
+  20260904200659 omega_performance_rls_fk_hardening_20260904
+  20260904200717 omega_remove_redundant_fk_indexes_20260904
+  20260904200951 omega_fk_index_cleanup_20260904
+  20260905012717 chunk_10_productivity_tables          (this session)
+  20260905012909 chunk_09_codex_bookmarks_and_signal_saves (this session)
+
+local-only (never applied)   4
+  0104 runtime_schema_alignment
+  0105 creator_proposals          -- same table as 20260901143526
+  0106 commerce_flags
+  20260902 reset_migration_state
+```
+
+`20260901143526_creator_proposals` also explains an earlier puzzle: that table
+existed live but was absent from `live-schema.json` and the SQL bag, which the
+evidence cross-check had flagged as a stale-snapshot false positive.
+
+`20260902_reset_migration_state.sql` is worth reading — it is a previous attempt
+to solve this exact problem by declaring a "no-op reconciliation checkpoint".
+It cannot work: the CLI compares version **lists**, so adding a local file
+removes no remote-only entry. The problem recurred and was papered over.
+
+### The fix, one direction at a time
+
+**Remote-only → materialise the real SQL.** `schema_migrations.statements` is a
+`text[]` holding what was actually executed, so all nine local files were
+reconstructed verbatim rather than stubbed. A version-only stub would satisfy the
+CLI while lying about what the migration does, and would produce a different
+schema on a fresh database.
+
+**Local-only → establish what is true, then record it.**
+
+| version | verified | action |
+|---|---|---|
+| `0104` | `ai_memory.content` and `.expires_at` both present live | recorded as applied |
+| `0105` | `creator_proposals` present live via the timestamped version | recorded as applied |
+| `0106` | **`ad_network_enabled` and `creator_earnings_enabled` did NOT exist** | applied for real, then recorded |
+| `20260902` | executes nothing | recorded as applied |
+
+`0106` was the only one with a missing effect. Before applying it, the failure
+mode was checked rather than assumed: `omega-ad-network.js:159` resolves the flag
+lookup to `false` on error, and `omega-flags.js:50` hides `[data-omega-flag]`
+unless explicitly turned on — so a **missing row fails closed**. The §9 dormancy
+held; it just held by accident rather than by record. Both flags now exist and
+are explicitly `false`.
+
+### Result
+
+```
+remote versions : 166
+local files     : 166
+full outer join : []        (zero drift in either direction)
+```
+
+**A count correction worth recording:** an earlier step in this work reported
+"173 remote migrations". That was eyeballed from a long result rather than
+counted; the real figure was 162 before the four repairs. The arithmetic did not
+reconcile (173 remote − 9 remote-only would leave more common versions than
+local files existed), which is what prompted counting it properly. A number read
+off a list is not a measurement.
+
+### The gate, because this WILL recur
+
+Nothing stops the next dashboard or MCP apply from re-opening the gap, so
+`scripts/migration-drift.py` compares `supabase/migrations/` against
+`supabase/remote-migrations.json` — a committed snapshot in the same pattern as
+`live-schema.json`, because `scripts/` has no database connection and only an MCP
+session does. It fails on **either** direction, since `db push` would try to
+*apply* a local-only file, which the CLI's own error message never mentions.
+
+Registered in `contract-suite.py` (16 gates → 17), with five tests whose first
+two cases are planted violators, one per direction.
+
+**Regenerate `remote-migrations.json` in the same change that applies a migration
+live** — a stale snapshot makes this gate lie in both directions, exactly as a
+stale `live-schema.json` did earlier today.
+
+Gates: `./scripts/ci-local.sh` 22/22 (17 contract gates), **201** tests OK (was
+196), `scripts/audit.py` 0 critical / 7 warnings,
+`scripts/omega-registry.py --check` regenerated (the census caught the 9 new
+migration files, 157 → 166).

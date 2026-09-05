@@ -319,17 +319,19 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   `supabase/*.sql` bag is reference material.** This file said the opposite until
   2026-09-05, and the contradiction with `migrations/README.md:69` made
   `migration-consistency` fail every PR. Production settled it: the live
-  `supabase_migrations.schema_migrations` ledger held **169 rows** (`0001` ..
-  `20260905080109`) against **169** files in `migrations/` — exact. The flat bag
+  `supabase_migrations.schema_migrations` ledger matches `migrations/` file for
+  file (**171** on 2026-09-05, `0001` .. `20260905211725`). The flat bag
   has no ledger and is applied by hand, so **schema declared only there never
   deploys** — the one asymmetry the gate now checks (`FIXES_LOG.md` 99). New
   schema goes in a **new** timestamped migration; never renumber or rewrite an
   applied one (`README.md:60`), and `apply_migration` writes a remote row with no
   local file, so add both plus `remote-migrations.json` in the same change.
-  **The sequence is not fresh-appliable**: `20260819071913` does an unguarded
-  `ALTER POLICY … ON public.council_deliberations`, a table nothing in the
-  sequence creates (`advertisements` and `private.is_platform_owner()` are
-  missing too) — so use it for scratch/staging with that caveat, and for
+  **The sequence is still not fresh-appliable, but only by ordering now**:
+  `20260819071913` does an unguarded `ALTER POLICY … ON
+  public.council_deliberations` and sorts *before* `20260905211725`, which is
+  what finally creates that table and `advertisements` — both transcribed from
+  live, so a fresh apply reproduces production (`FIXES_LOG.md` 102) — so use it
+  for scratch/staging with that caveat, and for
   production use the individually live-verified files. A migration is also not
   proof of live state: `task_completions` (live `id bigint` + `axis`/`increment`)
   matches none of its 3 competing definitions in the bag. Duplicate-definition
@@ -525,14 +527,13 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **`Production Surface Smoke` is red because production is 404ing, not because of code.** Its
-  `curl --fail https://www.sydomega.com/` 404s while the Vercel alias stays pinned to
-  `31f9180d` by an Instant Rollback; only promoting/cancelling clears it, no commit
-  (`FIXES_LOG.md` 95, 100). Confirm which it is by fetching the **project's own**
-  `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means the production pointer is
-  pinned; a detached custom domain would leave it serving the new build. `get_project`'s
-  `domains` omits the custom hosts and `live:false` — both are trimmed projections, neither
-  means detached or paused. Read this gate's failure as an outage report, not a code defect.
+- **`Production Surface Smoke` is red because production is 404ing, not because of code** —
+  read it as an outage report. The alias stays pinned to `31f9180d` by an Instant Rollback;
+  only promoting/cancelling clears it, no commit (`FIXES_LOG.md` 95, 100). Confirm by fetching
+  the **project's own** `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means the
+  pointer is pinned; a detached custom domain would serve the new build. `get_project`'s
+  `domains` omits the custom hosts and its `live:false` is a trimmed projection — neither
+  means detached or paused.
 - **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
   the web surface into `public/` from a fixed directory allow-list, so a top-level directory
   not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages
@@ -554,7 +555,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **230** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **244** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -572,7 +573,7 @@ entries (which were accurate when written):
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
-| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — all five audits there block in `ci.yml`; four are now green and only `migration-consistency` still exits 1 (`FIXES_LOG.md` 93, 94) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **six** audits block in `ci.yml` and are all green. It mirrored only five until `migration-history-contract` was added — a gate it does not run is one it cannot vouch for (`FIXES_LOG.md` 93, 94, 102, 103) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

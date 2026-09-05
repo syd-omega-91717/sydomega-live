@@ -11903,3 +11903,280 @@ in seconds.
 at
 `https://vercel.com/syd-omega-91717s-projects/sydomega-live/usqjdUYNHTtLR7AXWpgN48maRGut`.
 Everything else is already correct and verified.
+
+## 101. The new Repository Integrity gate reported 368 failures; all 368 were false, and its reference check was dead
+
+`.github/workflows/repository-integrity.yml` and
+`scripts/repository_integrity_audit.py` arrived in `1beddd34`/`c544f109` and
+have failed on **every** run since — runs #1 (`c544f109`) and #2 (`4095511f`),
+the only two that exist. Main was red on this one gate alone; every other
+workflow at `4095511f` is green or queued.
+
+```
+REPOSITORY_INTEGRITY=FAIL failures=368
+LOCAL_REFERENCES_CHECKED=0
+```
+
+### Every one of the 368 was false
+
+**`merge_conflict_marker` — the substring test matched banner dividers.**
+
+```python
+if b"<<<<<<<" in data or b"=======\n" in data or b">>>>>>>" in data:
+```
+
+Not line-anchored, so `b"=======\n"` matches any line of exactly seven `=`
+followed by a newline — an ASCII divider this repo writes constantly. Measured
+across the tree: **319 files contain it**. Meanwhile the only `<<<<<<<` and
+`>>>>>>>` bytes in the entire repository are the literals on that line, in the
+audit's own source. `git grep -lE '^(<<<<<<< |>>>>>>> )'` returns nothing:
+**zero real conflict markers**.
+
+Now line-anchored, and a bare `=======` never counts on its own — only the
+unambiguous angle-bracket forms do (`^<{7} ` / `^>{7} `).
+
+**`nul_byte` — the check ran before the text filter.** The 6 findings were
+`SYDOMEGA91717_DEMOD-1-.mp4`, `og-image.png`, `favicon.ico`, `icon-192.png`,
+`icon-512.png`, `apple-touch-icon.png` — binaries whose NUL bytes are simply
+their format. Moved below the `TEXT_EXTS` filter, so it now means what it says.
+
+### And the check that reported nothing at all
+
+```python
+LOCAL_RE = re.compile(r'''(?:src|href|action)\\s*=\\s*["']([^"'#?]+)''', re.I)
+```
+
+Doubled backslashes inside a raw string, so the compiled pattern is
+`\\s` — a literal backslash followed by `s`. Proven by importing the module and
+running it against a real tag:
+
+```
+LOCAL_RE finds in '<script src="/bg.js">...': []
+```
+
+Nothing. `LOCAL_REFERENCES_CHECKED=0` while the gate advertised repository-wide
+link validation — CLAUDE.md §8.4's "serene zero", the same class as the regex
+that "matched no digits and reported a serene zero". `ABS_LOCAL` was damaged the
+same way; its `/` branch happened to still work, masking it.
+
+Fixed, the same run reports **`LOCAL_REFERENCES_CHECKED=922`** across 189 HTML
+files. The check went from validating nothing to validating 922 references.
+
+### Also: the `--help` contract
+
+`repository_integrity_audit.py --help` ran the whole audit and exited 1.
+`test_script_help_contract.py` caught it — the sweep added for exactly this
+(§8.4). Guard added above the heavy imports.
+
+### Controls
+
+A gate that stops reporting is not the same as a gate that is correct, so each
+class was re-proven against a planted violator:
+
+| control | result |
+|---|---|
+| real `<<<<<<< HEAD` / `>>>>>>> other` conflict | **caught** |
+| a bare `=======` banner divider | **ignored**, overall exit 0 |
+| `<img src="/__ctl_missing.png">` | **caught** — `missing_local_ref` |
+| NUL byte inside a real `.js` | **caught** |
+| clean repo | `REPOSITORY_INTEGRITY=PASS`, 1015 files, 922 refs |
+
+### The Vercel contract tests
+
+`vercel_static_contract.py` was rewritten in the same batch and gained two
+requirements — `scripts/vercel-build-enhance.mjs`, and `git.deploymentEnabled`
+`{"*": false}` so the new promotion workflow is the only path to production.
+`test_vercel_static_contract.py`'s fixture predated both, so 8 of its tests
+failed on the missing prerequisite rather than on what they test. Fixture
+updated; three tests added for the new invariants (auto-deploy left on, the
+`git` key absent entirely, and the enhancer removed).
+
+**The protections from entry 97 survived the rewrite intact** — `for dir in
+vendor i18n`, the `public/vendor/supabase-js.js` assertion and
+`unreachable_asset=${ref}` are all still asserted by the contract's marker list.
+
+### Verification
+
+`scripts/tests` 235 → **238**, all passing; `tests` 23 passing;
+`./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
+`node scripts/verify-runtime.js` **PASS (13 pages)**;
+`bash scripts/vercel-build.sh` → `VERCEL_BUILD=PASS` html=189 js=160 css=13.
+
+---
+
+## 102. The last two undeployable tables, adopted into the sequence from live
+
+`scripts/migration-consistency.py` was the only gate still failing `verify` on
+`main`, and — after entry 99 rebuilt it around the real invariant — its two
+findings were genuine:
+
+```
+FOUND 2 UNDEPLOYABLE DECLARATION(S):
+  advertisements: declared in the flat bag but absent from migrations/
+    Flat bag: chunk_06_migrations.sql
+  council_deliberations: declared in the flat bag but absent from migrations/
+    Flat bag: omega_council_schema.sql
+```
+
+Both tables are **live** — created by hand from the flat bag, which is exactly
+the asymmetry §5 describes: `supabase db push` against a fresh database would
+create neither.
+
+### The migration was transcribed from production, not from the flat bag
+
+The flat-bag definitions are reference material and may be stale (§5), so the
+new file was written from what the live database actually holds, read through
+the Supabase MCP: `information_schema.columns` for the column list and
+defaults, `pg_constraint` for keys and CHECKs, `pg_indexes` for the three
+non-PK indexes, `pg_policy` for the seven policies' full `qual`/`WITH CHECK`
+expressions, and `information_schema.role_table_grants` for the grants.
+
+Every statement is guarded (`CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT
+EXISTS`, `DROP POLICY IF EXISTS` + `CREATE POLICY`), so it reproduces
+production on a fresh database and is a no-op against production.
+
+### Proven a no-op, not assumed one
+
+Policies and grants were captured before applying and re-read after. Both
+tables came back **byte-identical** on all seven policies' `qual` and `check`
+expressions and on every `anon`/`authenticated` grant:
+
+| table | grants, before and after |
+|---|---|
+| `advertisements` | `anon:SELECT`, `authenticated:SELECT`, `authenticated:INSERT` |
+| `council_deliberations` | `authenticated:SELECT`, `authenticated:INSERT`, `authenticated:UPDATE` |
+
+### A grant gap found and deliberately left open
+
+`advertisements` carries `advertisements_owner_update` and
+`advertisements_owner_delete` — both `private.is_platform_owner()` — with **no
+table-level `GRANT UPDATE` or `GRANT DELETE` to `authenticated`**. That is
+§8.1 class 6: the grant is checked before row security, so neither policy can
+ever run.
+
+It was **not** closed here. `advertising.html` only selects (`:172`, `:222`)
+and inserts (`:206`); nothing in the estate updates or deletes an
+advertisement, so widening authorization would buy nothing and would take this
+migration out of no-op territory. Recorded in `GAP_ANALYSIS.md` §S instead.
+
+### The version-renaming step
+
+`apply_migration` names the remote row itself: the ledger recorded
+**`20260905211725`**, not the `20260905214500` the local file was written as.
+Left alone that is precisely the drift `migration-drift` exists to catch, and
+it did — `has never been applied — db push would run it`. The local file was
+renamed to the ledger's version and `supabase/remote-migrations.json` updated
+in the same change (`_count` 170 → **171**).
+
+### What this does *not* fix
+
+The sequence is still not fresh-appliable. `20260819071913` does an unguarded
+`ALTER POLICY … ON public.council_deliberations` and sorts **before**
+`20260905211725`, so a fresh apply still fails there. Applied migrations are
+never rewritten (`migrations/README.md:60`), so that ordering stands; §5's
+caveat is unchanged.
+
+### Verification
+
+`scripts/migration-consistency.py` → `OK — everything the flat bag declares is
+reachable through migrations/`, exit **0** (was exit 1, 2 findings).
+`./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. Live ledger 171 =
+local `migrations/*.sql` 171 = `remote-migrations.json` `_count` 171.
+
+---
+
+## 103. An unsatisfiable migration gate, hidden behind another failing step
+
+Fixing entry 102 turned `verify` red one step further along, on a failure that
+had been there the whole time:
+
+```
+::error::invalid migration version width
+  20260902: 20260902_reset_migration_state.sql
+Use 4-digit historical versions or new 14-digit YYYYMMDDhhmmss versions;
+never create 8-digit YYYYMMDD versions.
+```
+
+### The gate could never have passed
+
+`20260902` is **already applied**. It is in the live
+`supabase_migrations.schema_migrations` ledger and in
+`supabase/remote-migrations.json:184`, so the file cannot be renumbered:
+renaming it leaves a remote version with no local file, which is exactly the
+drift `scripts/migration-drift.py` exists to catch, and applied migrations are
+never rewritten (`supabase/migrations/README.md:60`).
+
+So `migration-history-contract.py --local` demanded a rename that no change
+could safely make. It was not a new regression — it was unsatisfiable from the
+moment the rule was written.
+
+### Why nobody saw it
+
+`ci.yml`'s `verify` job runs its steps in order and stops at the first failure.
+`migration-consistency` sat one step earlier and had been failing since it was
+written, so `Canonical migration history` never ran. Entry 102 removed the
+earlier failure and the later one surfaced immediately.
+
+`./scripts/ci-local.sh` could not have caught it either: the script mirrors
+five of `verify`'s six audits and **`migration-history-contract` was not among
+them**. A gate this script does not run is a gate it cannot vouch for.
+
+### The rule was standing in for a hazard it never tested
+
+The script's own docstring names the real failure: the Supabase CLI mis-orders
+an 8-digit `YYYYMMDD` version **against a 14-digit version sharing that
+`YYYYMMDD` prefix**. That is a collision, not a width. Measured on this tree:
+
+| versions | count |
+|---|---|
+| 4-digit | 106 |
+| 14-digit | 64 |
+| 8-digit | **1** (`20260902`) |
+| 14-digit beginning `20260902` | **0** |
+
+So the hazard cannot occur here, and the blanket width test was rejecting a
+file that causes none of it.
+
+Fixed by testing the hazard directly — `date_prefix_collisions()`, applied to
+every 8-digit version whether grandfathered or not — and grandfathering the one
+applied version in `APPLIED_EIGHT_DIGIT_VERSIONS`, a `frozenset` documented as
+closed. A **new** 8-digit version still fails on width. The same predicate now
+governs the `--remote-output` path, which had the identical blanket rule and
+would have rejected production's own history for the same version.
+
+### Controls
+
+`test_migration_history_contract.py`, 6 tests, each passing case paired with a
+violator:
+
+| control | result |
+|---|---|
+| 4- and 14-digit versions | pass |
+| the applied `20260902` | pass (was the false failure) |
+| a **new** `20260906` 8-digit version | **caught**, `invalid migration version width` |
+| `20260902` + `20260902083000` together | **caught**, `shares a date prefix` — grandfathering does not exempt the pair |
+| two files at version `0001` | **caught**, `duplicate` |
+| `--help` | exit 0, audit does not run |
+
+### The divergence itself is closed
+
+`migration-history-contract` was added to `ci-local.sh`'s audit list, in
+`--local` mode so it runs exactly as `ci.yml` runs it, and the block's comment
+— which still described `silent-failure-detector` and `migration-consistency`
+as failing, both since fixed — was rewritten to say why mirroring every step of
+that job matters.
+
+### A method note earned the hard way
+
+The first attempt to patch `ci-local.sh` asserted its anchor and **failed**:
+the block header is written with literal box-drawing bytes, not `─`
+escapes. That is §8.4's `bg.js` stylesheet trap in a second file. The assertion
+is what turned a silent no-op into a visible error — anchor on plain-ASCII
+spans, and always assert the match count before replacing.
+
+### Verification
+
+`python3 scripts/migration-history-contract.py --local` → `local migration
+versions: 171`, range `0001 -> 20260905211725`, exit **0** (was exit 1).
+`scripts/tests` 238 → **244**, all passing. `./scripts/ci-local.sh --all`
+**ALL 23 BLOCKING CHECKS PASSED**, with all six mirrored audits at 0.

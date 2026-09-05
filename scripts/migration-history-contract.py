@@ -19,6 +19,39 @@ MIGRATIONS = ROOT / "supabase" / "migrations"
 VERSION_RE = re.compile(r"^(\d+)_")
 ROW_RE = re.compile(r"^\s*(\d+)\s*[│|]\s*(\d+)?\s*[│|]")
 
+# The one 8-digit version that is already APPLIED and therefore immutable.
+# supabase_migrations.schema_migrations holds `20260902`, and
+# supabase/remote-migrations.json records it, so the file cannot be renumbered:
+# renaming it would leave a remote version with no local file -- exactly the
+# drift scripts/migration-drift.py exists to catch. Applied migrations are
+# never rewritten (supabase/migrations/README.md:60).
+#
+# Grandfathering it costs nothing, because the failure this width rule names is
+# a COLLISION, not a width: the Supabase CLI mis-orders an 8-digit YYYYMMDD
+# version against a 14-digit version sharing that YYYYMMDD prefix. That is now
+# checked directly, so the hazard is caught whether or not the 8-digit version
+# is on this list -- while a NEW 8-digit version still fails on width.
+#
+# Do not add to this set. A new migration uses a 14-digit YYYYMMDDhhmmss
+# version; the only way onto this list is to have been applied before the rule
+# existed.
+APPLIED_EIGHT_DIGIT_VERSIONS = frozenset({"20260902"})
+
+
+def unsupported_width(version: str) -> bool:
+    """True if `version` is a width this repo must never gain."""
+    return len(version) not in (4, 14) and version not in APPLIED_EIGHT_DIGIT_VERSIONS
+
+
+def date_prefix_collisions(versions) -> list[str]:
+    """8-digit versions that a 14-digit version shadows -- the real CLI bug."""
+    long_versions = [v for v in versions if len(v) == 14]
+    return sorted(
+        f"{short}: shadowed by " + ", ".join(sorted(v for v in long_versions if v.startswith(short)))
+        for short in sorted(v for v in versions if len(v) == 8)
+        if any(v.startswith(short) for v in long_versions)
+    )
+
 
 def local_versions() -> tuple[dict[str, list[str]], list[str], list[str]]:
     versions: dict[str, list[str]] = {}
@@ -32,7 +65,7 @@ def local_versions() -> tuple[dict[str, list[str]], list[str], list[str]]:
         versions.setdefault(version, []).append(path.name)
         # Legacy numeric baseline migrations are 4 digits. New timestamp
         # migrations must use the full 14-digit Supabase timestamp format.
-        if len(version) not in (4, 14):
+        if unsupported_width(version):
             invalid_timestamp_versions.append(f"{version}: {path.name}")
     for version, files in versions.items():
         if len(files) > 1:
@@ -70,6 +103,13 @@ def check_local() -> tuple[set[str], int]:
             print(f"  {item}")
         print("Use 4-digit historical versions or new 14-digit YYYYMMDDhhmmss versions; never create 8-digit YYYYMMDD versions.")
         return set(versions), 1
+    collisions = date_prefix_collisions(versions)
+    if collisions:
+        print("::error::8-digit migration version shares a date prefix with a 14-digit one")
+        for item in collisions:
+            print(f"  {item}")
+        print("The Supabase CLI mis-orders this pair. Renumber the 14-digit version to a different date.")
+        return set(versions), 1
     print(f"local migration versions: {len(versions)}")
     if versions:
         print(f"local migration range: {min(versions)} -> {max(versions)}")
@@ -81,7 +121,7 @@ def check_remote_text(text: str, local: set[str]) -> int:
     if not remote:
         print("::error::could not parse any remote migration versions")
         return 1
-    invalid_remote = sorted(v for v in remote if len(v) not in (4, 14))
+    invalid_remote = sorted(v for v in remote if unsupported_width(v))
     if invalid_remote:
         print("::error::remote migration history contains unsupported version widths")
         for version in invalid_remote:

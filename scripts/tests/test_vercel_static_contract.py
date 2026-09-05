@@ -25,12 +25,19 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONTRACT_SRC = os.path.join(ROOT, "scripts", "vercel_static_contract.py")
 BUILD_SRC = os.path.join(ROOT, "scripts", "vercel-build.sh")
+ENHANCER_SRC = os.path.join(ROOT, "scripts", "vercel-build-enhance.mjs")
 
+# The contract gained two requirements after these tests were written: a
+# page-shell enhancer, and git auto-deploy switched off in vercel.json so the
+# promotion workflow is the only path to production. The fixture carries both,
+# so the assertions below still exercise the checks they are named for rather
+# than all failing on a missing prerequisite.
 BASE_CONFIG = {
     "framework": None,
     "buildCommand": "bash scripts/vercel-build.sh",
     "installCommand": "",
     "outputDirectory": "public",
+    "git": {"deploymentEnabled": {"*": False}},
     "redirects": [],
 }
 
@@ -56,6 +63,7 @@ class Fixture:
         os.makedirs(os.path.join(self.dir, "scripts"))
         shutil.copy(CONTRACT_SRC, os.path.join(self.dir, "scripts", "vercel_static_contract.py"))
         shutil.copy(BUILD_SRC, os.path.join(self.dir, "scripts", "vercel-build.sh"))
+        shutil.copy(ENHANCER_SRC, os.path.join(self.dir, "scripts", "vercel-build-enhance.mjs"))
         self.write("index.html", "<!doctype html><html><head><title>t</title></head><body></body></html>")
         self.set_config(BASE_CONFIG)
 
@@ -158,6 +166,30 @@ class ConfigShapeTests(unittest.TestCase):
         code, out = self.fx.run_contract()
         self.assertEqual(code, 1, out)
         self.assertIn("outputDirectory_must_be_public", out)
+
+    def test_git_auto_deploy_left_on_is_rejected(self):
+        """VIOLATOR. Production is promoted by .github/workflows/vercel-production.yml;
+        if Vercel also deploys on every push, two things race for the alias."""
+        self.fx.config_with(git={"deploymentEnabled": {"*": True}})
+        code, out = self.fx.run_contract()
+        self.assertEqual(code, 1, out)
+        self.assertIn("automatic_git_deploy_must_be_disabled", out)
+
+    def test_git_key_absent_entirely_is_rejected(self):
+        """Omitting the key is not the same as setting it false, and the default
+        is on -- so an absent key must fail exactly like an enabled one."""
+        config = dict(BASE_CONFIG)
+        config.pop("git")
+        self.fx.set_config(config)
+        code, out = self.fx.run_contract()
+        self.assertEqual(code, 1, out)
+        self.assertIn("automatic_git_deploy_must_be_disabled", out)
+
+    def test_dropping_the_enhancer_fails_the_contract(self):
+        os.remove(os.path.join(self.fx.dir, "scripts", "vercel-build-enhance.mjs"))
+        code, out = self.fx.run_contract()
+        self.assertEqual(code, 1, out)
+        self.assertIn("vercel-build-enhance.mjs", out)
 
     def test_dropping_vendor_from_the_build_fails_the_contract(self):
         # THE REGRESSION. vendor/ absent from the copy list is what took

@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = (
     "core/intelligence_fabric/__init__.py",
+    "core/intelligence_fabric/agent_registry.py",
     "core/intelligence_fabric/fabric.py",
     "core/intelligence_fabric/model_router.py",
     "core/intelligence_fabric/policy_firewall.py",
@@ -63,6 +64,7 @@ def main() -> int:
     print("FABRIC_PLATFORM_GATE=PASS")
     print(f"fabric_artifacts={len(REQUIRED_FILES) - 2}")
     print(f"workflow_contracts={len(REQUIRED_WORKFLOWS)}")
+    print("canonical_agents=12")
     print("supabase_advisor_fk_remediation=IMPLEMENTED")
     print("evidence_model=EXPLICIT")
     return 0

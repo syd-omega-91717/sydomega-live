@@ -11903,3 +11903,101 @@ in seconds.
 at
 `https://vercel.com/syd-omega-91717s-projects/sydomega-live/usqjdUYNHTtLR7AXWpgN48maRGut`.
 Everything else is already correct and verified.
+
+## 101. The new Repository Integrity gate reported 368 failures; all 368 were false, and its reference check was dead
+
+`.github/workflows/repository-integrity.yml` and
+`scripts/repository_integrity_audit.py` arrived in `1beddd34`/`c544f109` and
+have failed on **every** run since — runs #1 (`c544f109`) and #2 (`4095511f`),
+the only two that exist. Main was red on this one gate alone; every other
+workflow at `4095511f` is green or queued.
+
+```
+REPOSITORY_INTEGRITY=FAIL failures=368
+LOCAL_REFERENCES_CHECKED=0
+```
+
+### Every one of the 368 was false
+
+**`merge_conflict_marker` — the substring test matched banner dividers.**
+
+```python
+if b"<<<<<<<" in data or b"=======\n" in data or b">>>>>>>" in data:
+```
+
+Not line-anchored, so `b"=======\n"` matches any line of exactly seven `=`
+followed by a newline — an ASCII divider this repo writes constantly. Measured
+across the tree: **319 files contain it**. Meanwhile the only `<<<<<<<` and
+`>>>>>>>` bytes in the entire repository are the literals on that line, in the
+audit's own source. `git grep -lE '^(<<<<<<< |>>>>>>> )'` returns nothing:
+**zero real conflict markers**.
+
+Now line-anchored, and a bare `=======` never counts on its own — only the
+unambiguous angle-bracket forms do (`^<{7} ` / `^>{7} `).
+
+**`nul_byte` — the check ran before the text filter.** The 6 findings were
+`SYDOMEGA91717_DEMOD-1-.mp4`, `og-image.png`, `favicon.ico`, `icon-192.png`,
+`icon-512.png`, `apple-touch-icon.png` — binaries whose NUL bytes are simply
+their format. Moved below the `TEXT_EXTS` filter, so it now means what it says.
+
+### And the check that reported nothing at all
+
+```python
+LOCAL_RE = re.compile(r'''(?:src|href|action)\\s*=\\s*["']([^"'#?]+)''', re.I)
+```
+
+Doubled backslashes inside a raw string, so the compiled pattern is
+`\\s` — a literal backslash followed by `s`. Proven by importing the module and
+running it against a real tag:
+
+```
+LOCAL_RE finds in '<script src="/bg.js">...': []
+```
+
+Nothing. `LOCAL_REFERENCES_CHECKED=0` while the gate advertised repository-wide
+link validation — CLAUDE.md §8.4's "serene zero", the same class as the regex
+that "matched no digits and reported a serene zero". `ABS_LOCAL` was damaged the
+same way; its `/` branch happened to still work, masking it.
+
+Fixed, the same run reports **`LOCAL_REFERENCES_CHECKED=922`** across 189 HTML
+files. The check went from validating nothing to validating 922 references.
+
+### Also: the `--help` contract
+
+`repository_integrity_audit.py --help` ran the whole audit and exited 1.
+`test_script_help_contract.py` caught it — the sweep added for exactly this
+(§8.4). Guard added above the heavy imports.
+
+### Controls
+
+A gate that stops reporting is not the same as a gate that is correct, so each
+class was re-proven against a planted violator:
+
+| control | result |
+|---|---|
+| real `<<<<<<< HEAD` / `>>>>>>> other` conflict | **caught** |
+| a bare `=======` banner divider | **ignored**, overall exit 0 |
+| `<img src="/__ctl_missing.png">` | **caught** — `missing_local_ref` |
+| NUL byte inside a real `.js` | **caught** |
+| clean repo | `REPOSITORY_INTEGRITY=PASS`, 1015 files, 922 refs |
+
+### The Vercel contract tests
+
+`vercel_static_contract.py` was rewritten in the same batch and gained two
+requirements — `scripts/vercel-build-enhance.mjs`, and `git.deploymentEnabled`
+`{"*": false}` so the new promotion workflow is the only path to production.
+`test_vercel_static_contract.py`'s fixture predated both, so 8 of its tests
+failed on the missing prerequisite rather than on what they test. Fixture
+updated; three tests added for the new invariants (auto-deploy left on, the
+`git` key absent entirely, and the enhancer removed).
+
+**The protections from entry 97 survived the rewrite intact** — `for dir in
+vendor i18n`, the `public/vendor/supabase-js.js` assertion and
+`unreachable_asset=${ref}` are all still asserted by the contract's marker list.
+
+### Verification
+
+`scripts/tests` 235 → **238**, all passing; `tests` 23 passing;
+`./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
+`node scripts/verify-runtime.js` **PASS (13 pages)**;
+`bash scripts/vercel-build.sh` → `VERCEL_BUILD=PASS` html=189 js=160 css=13.

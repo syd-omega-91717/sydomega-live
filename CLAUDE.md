@@ -512,13 +512,13 @@ Only what changes what you do in the **first minutes** stays here:
   deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
   responsible for regenerating `supabase/live-schema.json` in the same change.
-- **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 reported 8
-  relations "declared but absent live". Live, one (`creator_proposals`) had existed all along —
-  a false positive purely from staleness. Regenerate before trusting any finding built on it.
+- **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 called 8
+  relations "declared but absent live"; one (`creator_proposals`) had existed all along — a
+  false positive purely from staleness. Regenerate before trusting a finding built on it.
 - **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
   (#250, #252), each adding `omega-*.js` modules and a script tag to ~193 pages without
   regenerating the census. Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in
-  CI — that gate is the only check here that notices a third party editing the estate.
+  CI — that gate is the only one here that notices a third party editing the estate.
 - **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges
   the head it had when it computed the merge, so a force-push loses exactly what an extra
   trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged
@@ -542,12 +542,14 @@ Only what changes what you do in the **first minutes** stays here:
   while printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). It self-verifies now, but **add any
   new web directory to that list**; never commit `public/`. The dashboard's *Framework Settings
   Override* notice is expected: those keys are load-bearing.
-- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`), so jobs drain
-  one at a time and `queued` is normal. A red check is real output now, not the old
-  `runner_id: 0` no-op. Two Windows traps: paths and console codec differ, and a crashed child
-  yields empty stdout, so assertions on it misreport (`FIXES_LOG.md`). `./scripts/ci-local.sh`
-  runs every blocking step locally; `.githooks/pre-push` runs it on push (`git config
-  core.hooksPath .githooks`, bypass `--no-verify`).
+- **The self-hosted Windows runner is DEAD; `queued` on it means never.** This bullet called
+  `queued` normal draining. Measured 2026-09-05: `runner-probe.yml`, whose only job is to prove
+  that runner works, had sat `queued` since 08:12 with no run starting, and the two blocking
+  gates pinned to it had **never once reached a conclusion** (`FIXES_LOG.md` 106). Both now use
+  `ubuntu-latest`; `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and still
+  never run. **A pending check is not a passing one** — read `status`, not just `conclusion`.
+  `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
+  (`git config core.hooksPath .githooks`, bypass `--no-verify`).
 
 ### 8.3 Current verification baseline
 
@@ -557,7 +559,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **252** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **265** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -574,7 +576,7 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live**, and **120** declared (see §8.4 on the phantom 121st) |
 | `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. It mirrored only five until `migration-history-contract` and `supabase-migration-security-audit` were added, and both were failing unsatisfiably: mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
@@ -588,12 +590,12 @@ entries (which were accurate when written):
   code — so every `window.`-exposed function reports missing. A scan once
   reported 44 broken pages this way; the real number was 6.
   `.claude/skills/verify-in-browser/` handles it.
-- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects
-  to `terms.html` and the page never renders.
-- **Verify a "0 findings" result is real.** A stopped static server reports 0;
-  so does a regex damaged in transit (a rule moved out of a template literal
-  kept doubled backslashes, matched no digits, reported a serene zero).
-  Cross-check with a run that must find something.
+- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
+  `terms.html` and the page never renders.
+- **Verify a "0 findings" result is real.** A stopped static server reports 0; so
+  does a regex damaged in transit (a rule moved out of a template literal kept
+  doubled backslashes, matched no digits, reported a serene zero). Cross-check
+  with a run that must find something.
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
@@ -614,13 +616,12 @@ entries (which were accurate when written):
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
 - **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** Any per-file date derived that way is a guess once the real commit
-  sits beyond the boundary — at `--depth 1` every file dates to the clone itself.
-  `actions/checkout@v4` is shallow by default, which made `omega-registry.py
-  --check` a guaranteed CI failure and had already put three wrong dates in the
-  committed registry. The generator now compares the SHA against `.git/shallow`
-  and refuses rather than writing a date it cannot know; `ci.yml` sets
-  `fetch-depth: 0`. Detect the boundary, not the shallowness.
+  not fail.** At `--depth 1` every file dates to the clone itself, so any per-file
+  date derived that way is a guess. `actions/checkout@v4` is shallow by default,
+  which made `omega-registry.py --check` a guaranteed CI failure and had already
+  put three wrong dates in the committed registry. The generator now checks the
+  SHA against `.git/shallow` and refuses rather than writing a date it cannot
+  know; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches
@@ -633,21 +634,19 @@ entries (which were accurate when written):
   `launch({signedIn:false})` for `account`/`reset`/`terms`/`enter`.
 - **A visual change needs a noise floor before it means anything.** A
   before/after screenshot diff here reads ~1.6% of pixels as "changed" with *no
-  change at all* — the particle canvas and drift keyframes never settle
-  (`prefers-reduced-motion` narrows it, never to zero). A design layer measured
-  at 0.66–2.21% was inside its own noise and invisible at rest, which no
-  computed-style check would reveal: every rule *applied*, all of it behind
-  `:hover`, `:focus-visible` or scroll. Diff same-build pairs first. Decoding
-  PNGs needs no PIL — draw them to a canvas in the running Chromium and read
-  `getImageData`.
+  change at all* — the particle canvas and drift keyframes never settle. A
+  design layer measured at 0.66–2.21% was inside that noise and invisible at
+  rest, which no computed-style check would reveal: every rule *applied*, all of
+  it behind `:hover`, `:focus-visible` or scroll. Diff same-build pairs first.
+  Decoding PNGs needs no PIL — draw them to a canvas in the running Chromium and
+  read `getImageData`.
 - **A pseudo whose box paints but whose text never does is
   `-webkit-text-fill-color`, not `content`.** `bg.js:1290` adds `.ofx-sheen` to
-  every childless `.sechead` under 48 chars; it fills heading text via
+  every childless `.sechead` under 48 chars, filling heading text via
   `background-clip:text` + `-webkit-text-fill-color:transparent`, which
   **inherits into pseudo-elements**. Borders are not text fill, so a `::before`
-  ring drew perfectly with nothing inside it. Forcing `content:"X" !important`
-  settles it in one step. Generated text on a sheened element needs its own
-  `-webkit-text-fill-color`.
+  ring drew perfectly with nothing inside it. Generated text on a sheened
+  element needs its own `-webkit-text-fill-color`.
 - **A gate that asserts a rewrite exists cannot observe whether it fires.**
   The site's front door was a lone `vercel.json` rewrite `{"source":"/"}` with no
   `index.html` behind it, and it served **404 in production** while the same
@@ -669,7 +668,7 @@ entries (which were accurate when written):
   *view*) before the smaller number was believed.
 - **A repo-wide grep is a candidate generator, not a verdict.** Confident
   source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
-  `outline:none`) were false — the runtime showed 172/173 fine, because `bg.js`
+  `outline:none`) were false — the runtime showed 172/173 fine, since `bg.js`
   injects them.
 - **A scanner needs its own false-positive pass before its number means
   anything.** A fixed-widget collision scan reported 177/178 pages by counting

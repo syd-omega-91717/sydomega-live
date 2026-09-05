@@ -12317,3 +12317,168 @@ Vercel dashboard action.
 `python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
 YAML parses; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
 `python3 scripts/context-budget.py` PASS (CLAUDE.md ~15,996 / 16,000).
+
+---
+
+## 106. Two blocking gates that had never run once
+
+`Fail-closed migration security audit` stayed `queued` on `main` for thirteen
+minutes after PR #277 merged, and the reason turned out to be much worse than a
+slow runner.
+
+### Every run, on both gates, going back hours
+
+`Supabase Migration Security Audit`, runs 16–20 (21:22 → 21:51): **all
+`queued`**, none ever started.
+`Supabase Runtime Contract`, runs 330–335 (21:33 → 21:57): `queued`, `pending`,
+or **`cancelled`** — cancelled by a later push superseding them. **Not one run
+of either workflow has ever reached a conclusion.**
+
+### The proof is the probe
+
+`runner-probe.yml` exists for one purpose: to prove the self-hosted runner
+works. Its last five runs (209 back to 205) have been `queued` since
+**2026-09-05 08:12** — thirteen hours — with none started. The runner is not
+picking up jobs at all.
+
+Meanwhile every `ubuntu-latest` workflow in the repo finishes in 10–20 seconds,
+and the commit titles in that same probe history (`fix: move runtime contract
+to reliable hosted runner`, `fix: move production smoke checks to hosted
+runner`) show an earlier session was already migrating off this runner. These
+two blocking gates were left behind.
+
+### Why nobody noticed
+
+A job that never starts is **pending**, not failed. It shows on the board as a
+grey dot, never blocks a merge, and never produces output to read. So a gate
+providing *zero* coverage looks exactly like a gate that is merely slow — and
+`CLAUDE.md` §8.2 actively taught that reading, saying jobs "drain one at a time
+and `queued` is normal."
+
+That is what made my own report wrong earlier in this session: I called the
+migration security audit "the last gate that was **red** on main". It was never
+red. It was never anything. What I had actually measured was the *script*
+exiting 1 locally (`FIXES_LOG.md` 104) — a real defect, and worth fixing — but
+the check itself had never executed to report it.
+
+### The fix
+
+Both gates moved to `ubuntu-latest`, where the other 15 workflows already run.
+Neither needs Windows or the self-hosted host: each is `actions/checkout` plus
+one stdlib-only Python script (`json`/`pathlib`/`re`/`sys`, and
+`os`/`socket`/`urllib`), with the runtime contract's Supabase credentials
+coming from repository secrets that any runner can read. `shell: pwsh` became
+`shell: bash`, and `python` became `python3`, which is guaranteed present on
+the hosted image without an `actions/setup-python` step.
+
+`page-overlap-audit.yml` and `runner-probe.yml` remain pinned to the dead
+runner and still never run — the probe legitimately so, since that is what it
+probes.
+
+### Verification
+
+`python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
+both files parse as YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**; `context-budget` PASS (CLAUDE.md ~15,989 / 16,000).
+
+### What running it revealed, 40 seconds later
+
+`Supabase runtime health` executed for the first time in its life and **failed**
+— which is the whole point of moving it. The reason was immediate and real:
+
+```
+env:
+  SUPABASE_URL:
+  SUPABASE_ANON_KEY:
+::error::SUPABASE_URL is not configured in the CI secret store
+```
+
+Both repository secrets are empty. Nobody had ever set them, and nothing could
+notice, because the job that reads them had never started.
+
+**They were never secrets.** `bg.js:1506` hands both to every visitor —
+`createClient("https://<project>.supabase.co", "sb_publishable_…")` — because
+RLS, not key custody, is the authorization boundary here (§§1, 5). The project
+URL is committed unsecreted in `production-surface-smoke.yml`'s `env` block too.
+So the gate was permanently red waiting on a secret that does not exist and
+should not.
+
+The contract now reads the pair the platform actually ships, with the CI
+secrets kept as an override, and prints `credential_source=` so which one was
+used is never a guess. That is **stronger** than a stored copy, not weaker: a
+secret can drift from what production serves, and a value read out of the
+shipped bootstrap cannot. It is §8.4's own rule — derive the fact rather than
+keep a second copy of it.
+
+A service-role key could never arrive this way: the pattern is anchored on the
+`sb_publishable_` prefix, such a key is never in client code, and `ci.yml`'s
+scan blocks it regardless. `test_supabase_runtime_contract.py` proves all of
+that with violators — a `createClient` missing its key does not match, an
+`sb_secret_…` value does not match, a missing `bg.js` returns empty instead of
+raising, and the live key appears nowhere in the script's own source.
+
+### And behind that, a bug the gate had been carrying since it was written
+
+With credentials resolving, the next run got further and failed differently:
+
+```
+credential_source=shipped_client
+::error::Supabase PostgREST rejected the configured public key (HTTP 401)
+```
+
+That reads like a production defect. It was not. The contract sent
+`Authorization: Bearer <key>` on every probe, and Supabase's own documentation
+names that exact call:
+
+> A common mistake is sending a publishable or secret key as a bearer token:
+> `Authorization: Bearer sb_publishable_...`. The new API keys are not JWTs.
+> The platform check can't validate them ... Instead, put API keys in the
+> `apikey` header.
+
+Auth health survived it — that route verifies no JWT — so only PostgREST
+returned 401, and the gate reported it as Supabase rejecting the key.
+
+The naive fix (drop `Authorization` outright) would be wrong: the project also
+has a **legacy anon key**, which *is* a JWT (`eyJ…`, confirmed via
+`get_publishable_keys`), and the platform copies the apikey value into that
+header for legacy keys. The CI-secret override could still supply one. So
+`bearer_for()` branches on the key format — opaque `sb_publishable_`/`sb_secret_`
+prefixes get `apikey` alone, anything else keeps its bearer — and a test pins
+the legacy case specifically as the violator of that naive fix.
+
+The header fix was right on its own terms and **did not fix the 401**. The next
+run, on `28aad197`, failed identically — which is why the commit is only half
+the story.
+
+### The probe endpoint no longer exists for public keys
+
+`GET /rest/v1/` is the PostgREST **OpenAPI root**. Supabase's own API reference
+settles what it does now, describing the Management API's openapi endpoint:
+
+> Returns the PostgREST OpenAPI specification for the project. **This is the
+> replacement for querying `/rest/v1/` directly with the anon key.**
+
+So that root is simply not served to public keys any more. The 401 was the
+platform behaving exactly as designed, and said nothing about the key, the
+project, or production. Two CI cycles went into a message that was wrong in
+both of its nouns — it was neither a rejection nor about the configured key.
+
+The probe now reads `public.platform_settings`, which an anonymous visitor
+genuinely reads (§5's flag store): `anon` holds `SELECT`, and
+`platform_settings_select` is `qual = true`. Verified in-database by
+impersonating the `anon` role per §8.4 — **13 rows visible** — so a 200 proves
+the real public data path end to end rather than an introspection endpoint that
+no longer answers.
+
+And the failure message now carries the **response body** (300 bytes, no key).
+A bare status is not diagnosable; that is what cost the two cycles.
+
+### Verification
+
+`scripts/tests` 252 → **265**, all passing; `./scripts/ci-local.sh` **ALL 23
+BLOCKING CHECKS PASSED**. Three new controls pin the probe: it is not the
+OpenAPI root, it targets the anon-readable table, and it stays bounded
+(`select=`, `limit=1`) and read-only. Locally the contract resolves
+`credential_source=shipped_client` and then stops at the network hop — this
+session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
+does not, so CI is what decides.

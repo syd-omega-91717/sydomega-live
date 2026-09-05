@@ -7,6 +7,7 @@ on:
       - "core/intelligence_fabric/**"
       - "scripts/omega_fabric_audit.py"
       - "tests/test_intelligence_fabric.py"
+      - "tests/test_evidence_matrix.py"
       - ".github/workflows/omega-intelligence-fabric.yml"
   pull_request:
     branches: [main]
@@ -14,6 +15,7 @@ on:
       - "core/intelligence_fabric/**"
       - "scripts/omega_fabric_audit.py"
       - "tests/test_intelligence_fabric.py"
+      - "tests/test_evidence_matrix.py"
       - ".github/workflows/omega-intelligence-fabric.yml"
   workflow_dispatch:
 
@@ -34,4 +36,6 @@ jobs:
       - name: Structural audit
         run: python scripts/omega_fabric_audit.py
       - name: Fabric tests
-        run: python -m unittest discover -s tests -p 'test_intelligence_fabric.py' -v
+        run: python -m unittest discover -s tests -p 'test_intelligence_fabric*.py' -v
+      - name: Evidence matrix tests
+        run: python -m unittest discover -s tests -p 'test_evidence_matrix.py' -v

@@ -79,7 +79,20 @@ def resolves(path, explicit, clean):
         return ((ROOT / slug).is_file(),
                 'file' if (ROOT / slug).is_file() else 'no such file')
     if not slug:
-        return False, 'root is not rewritten in vercel.json'
+        # The front door is checked against the FILESYSTEM, never against a
+        # vercel.json rewrite. This gate used to accept the rewrite
+        # {"source":"/","destination":"/omega-visual-home.html"} as proof the
+        # root resolved. It was not proof: on 2026-09-05 the live deployment
+        # answered GET / with HTTP 404 and served 404.html, while the same
+        # response carried this vercel.json's CSP and HSTS headers -- so the
+        # file was being read and the rewrite still did not fire. A gate that
+        # asserts a rewrite exists cannot observe whether it applies; an
+        # index.html either is on disk and served, or is not.
+        return ((ROOT / 'index.html').is_file(),
+                'index.html' if (ROOT / 'index.html').is_file()
+                else 'no index.html at the repository root, so GET / has no '
+                     'file to serve (a vercel.json rewrite is not accepted '
+                     'here -- one was present and returned 404 live)')
     target = ROOT / (slug + '.html')
     if target.is_file():
         if clean:

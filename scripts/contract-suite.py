@@ -104,6 +104,10 @@ GATES = [
     ('type-scale',
      'no page or module declares interface type below the 12px floor',
      ['scripts/type-scale.py', '--check']),
+    ('intelligence-fabric',
+     'the Ω Intelligence Fabric evidence matrix carries no failed or '
+     'unresolved-critical point',
+     ['scripts/omega_fabric_audit.py']),
     ('brand-glyph',
      'no symbol renders as a colour emoji against the monochrome palette',
      ['scripts/brand-glyph-check.py']),

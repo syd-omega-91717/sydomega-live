@@ -242,8 +242,8 @@ This scanner reads the repository. It has no database connection, so:
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
+| `index.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
-| `omega-visual-home.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
@@ -283,8 +283,8 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 119 |
-| functions declared in `supabase/` | 130 |
+| tables + views declared in `supabase/` | 121 |
+| functions declared in `supabase/` | 131 |
 | tables defined in more than one root SQL file | 48 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
@@ -361,10 +361,20 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 119 | 0 | 0 |
+| 121 | 2 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.
+
+### Absent live, read by nothing — declared and never applied
+
+Not a failure, and deliberately not gated: this repo ships dormant
+backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
+to one of these is a decision rather than a surprise — the page
+would classify `BUILT` while returning nothing.
+
+- `as`
+- `omega_platform_events`
 
 
 ## UNVERIFIED — what no repository scan can settle

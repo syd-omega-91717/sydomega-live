@@ -12317,3 +12317,68 @@ Vercel dashboard action.
 `python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
 YAML parses; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
 `python3 scripts/context-budget.py` PASS (CLAUDE.md ~15,996 / 16,000).
+
+---
+
+## 106. Two blocking gates that had never run once
+
+`Fail-closed migration security audit` stayed `queued` on `main` for thirteen
+minutes after PR #277 merged, and the reason turned out to be much worse than a
+slow runner.
+
+### Every run, on both gates, going back hours
+
+`Supabase Migration Security Audit`, runs 16–20 (21:22 → 21:51): **all
+`queued`**, none ever started.
+`Supabase Runtime Contract`, runs 330–335 (21:33 → 21:57): `queued`, `pending`,
+or **`cancelled`** — cancelled by a later push superseding them. **Not one run
+of either workflow has ever reached a conclusion.**
+
+### The proof is the probe
+
+`runner-probe.yml` exists for one purpose: to prove the self-hosted runner
+works. Its last five runs (209 back to 205) have been `queued` since
+**2026-09-05 08:12** — thirteen hours — with none started. The runner is not
+picking up jobs at all.
+
+Meanwhile every `ubuntu-latest` workflow in the repo finishes in 10–20 seconds,
+and the commit titles in that same probe history (`fix: move runtime contract
+to reliable hosted runner`, `fix: move production smoke checks to hosted
+runner`) show an earlier session was already migrating off this runner. These
+two blocking gates were left behind.
+
+### Why nobody noticed
+
+A job that never starts is **pending**, not failed. It shows on the board as a
+grey dot, never blocks a merge, and never produces output to read. So a gate
+providing *zero* coverage looks exactly like a gate that is merely slow — and
+`CLAUDE.md` §8.2 actively taught that reading, saying jobs "drain one at a time
+and `queued` is normal."
+
+That is what made my own report wrong earlier in this session: I called the
+migration security audit "the last gate that was **red** on main". It was never
+red. It was never anything. What I had actually measured was the *script*
+exiting 1 locally (`FIXES_LOG.md` 104) — a real defect, and worth fixing — but
+the check itself had never executed to report it.
+
+### The fix
+
+Both gates moved to `ubuntu-latest`, where the other 15 workflows already run.
+Neither needs Windows or the self-hosted host: each is `actions/checkout` plus
+one stdlib-only Python script (`json`/`pathlib`/`re`/`sys`, and
+`os`/`socket`/`urllib`), with the runtime contract's Supabase credentials
+coming from repository secrets that any runner can read. `shell: pwsh` became
+`shell: bash`, and `python` became `python3`, which is guaranteed present on
+the hosted image without an `actions/setup-python` step.
+
+`page-overlap-audit.yml` and `runner-probe.yml` remain pinned to the dead
+runner and still never run — the probe legitimately so, since that is what it
+probes.
+
+### Verification
+
+`python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
+both files parse as YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**; `scripts/tests` **252** passing; `context-budget` PASS (CLAUDE.md
+~15,989 / 16,000). The real proof is the next run of each workflow reaching a
+conclusion at all — the first time either ever has.

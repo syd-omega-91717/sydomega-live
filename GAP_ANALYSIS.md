@@ -49,6 +49,17 @@ open, recorded in `FIXES_LOG.md`:
   laddered means changing how those modules position themselves, which is a
   larger change than this one and has no defect driving it.
 
+- **`public.signal_saves` is a live table for a feature that was never built**
+  (2026-09-05, `FIXES_LOG.md` entry 90). Applied live with RLS scoped to
+  `auth.uid() = user_id`, a `GRANT` to `authenticated`, a `UNIQUE (user_id,
+  url)` index and a `CHECK` on `source IN ('hn','github','devto')` — a complete,
+  correct backend. But `signal.html` has **no save control, no `localStorage`,
+  nothing to persist**: the sibling table `codex_bookmarks` had three real write
+  sites in `codex.html` and was wired; this one has zero. Wiring it would mean
+  designing and building the save feature, which is a product decision, not a
+  gap-closing fix — so it stays unwired rather than having a feature invented
+  around it.
+
 - **`transactions` / `wallet_balances` tables do not exist** (queried by
   `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
   infrastructure is dormant pending legal review, per §9's gating rule.

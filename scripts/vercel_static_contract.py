@@ -1,14 +1,13 @@
 """Validate the repository's native Vercel static deployment contract."""
 from __future__ import annotations
 
+import json
 import sys
+from pathlib import Path
 
 if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
     print(__doc__)
     raise SystemExit(0)
-
-import json
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -17,12 +16,15 @@ def main() -> int:
     config_path = ROOT / "vercel.json"
     index_path = ROOT / "index.html"
     build_path = ROOT / "scripts" / "vercel-build.sh"
+    enhancer_path = ROOT / "scripts" / "vercel-build-enhance.mjs"
     if not config_path.is_file():
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL missing=vercel.json")
     if not index_path.is_file():
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL missing=index.html")
     if not build_path.is_file():
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL missing=scripts/vercel-build.sh")
+    if not enhancer_path.is_file():
+        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL missing=scripts/vercel-build-enhance.mjs")
 
     try:
         config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -40,14 +42,12 @@ def main() -> int:
     if "builds" in config:
         raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL forbidden_config=builds")
 
-    # Host policy. This gate used to require a www -> apex redirect outright,
-    # which made it fail the moment the owner removed that rule in 4e216de3
-    # ("serve canonical www host directly without forced apex redirect") -- the
-    # gate was asserting one particular answer rather than the property that
-    # actually matters. Both hosts are aliased to the same deployment, so
-    # serving each directly is a valid configuration and so is canonicalizing
-    # onto either one. What is never valid is declaring both directions, which
-    # is an infinite redirect loop that no static check downstream would catch.
+    # Git-triggered provider deployment is intentionally disabled while
+    # production promotion is owned by .github/workflows/vercel-production.yml.
+    deployment_enabled = config.get("git", {}).get("deploymentEnabled", {})
+    if deployment_enabled.get("*", True) is not False:
+        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL automatic_git_deploy_must_be_disabled")
+
     redirects = config.get("redirects", [])
 
     def host_rules(host: str) -> list:
@@ -81,14 +81,11 @@ def main() -> int:
         "mkdir -p public",
         "public/index.html",
         "VERCEL_BUILD=PASS",
-        # vendor/ carries the self-hosted Supabase client that 127 pages import
-        # before they render anything; it was absent from the copy list and
-        # 404'd in production while the build printed PASS.
         "for dir in vendor i18n",
         "public/vendor/supabase-js.js",
-        # ...and the emitted tree must check its own references, so the next
-        # dropped directory fails the build instead of reaching the alias.
         "unreachable_asset=${ref}",
+        "vercel-build-enhance.mjs",
+        "VERCEL_ARTIFACT_ENHANCE=PASS",
     ):
         if marker not in build:
             raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL build_marker=" + marker)
@@ -100,7 +97,10 @@ def main() -> int:
     print("install_command=empty")
     print("output_directory=public")
     print("host_policy=" + host_policy)
+    print("git_auto_deploy=disabled")
+    print("promotion_workflow=.github/workflows/vercel-production.yml")
     print("build_output_verified=references_resolve_in_public")
+    print("artifact_shell=normalized")
     return 0
 
 

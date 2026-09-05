@@ -22,7 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_tel_page    ON public.telemetry_events(page, crea
 ALTER TABLE public.telemetry_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "member inserts own telemetry" ON public.telemetry_events;
 CREATE POLICY "member inserts own telemetry" ON public.telemetry_events
-  FOR INSERT TO authenticated WITH CHECK(true);
+  FOR INSERT TO authenticated WITH CHECK((select auth.uid()) = user_id);
 DROP POLICY IF EXISTS "owner reads all telemetry" ON public.telemetry_events;
 CREATE POLICY "owner reads all telemetry" ON public.telemetry_events
   FOR SELECT USING(public.is_platform_owner());
@@ -70,7 +70,12 @@ CREATE TABLE IF NOT EXISTS public.platform_metrics(
 ALTER TABLE public.platform_metrics ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "member inserts metrics" ON public.platform_metrics;
 CREATE POLICY "member inserts metrics" ON public.platform_metrics
-  FOR INSERT TO authenticated WITH CHECK(true);
+  FOR INSERT TO authenticated WITH CHECK(
+    metric_name IS NOT NULL
+    AND length(btrim(metric_name)) BETWEEN 1 AND 128
+    AND metric_date IS NOT NULL
+    AND metric_date BETWEEN CURRENT_DATE - 1 AND CURRENT_DATE + 1
+    AND metric_value IS NOT NULL);
 DROP POLICY IF EXISTS "owner reads metrics" ON public.platform_metrics;
 CREATE POLICY "owner reads metrics" ON public.platform_metrics
   FOR ALL USING(public.is_platform_owner());

@@ -129,10 +129,31 @@ step "10b. Capability registry JSON"            python3 -m json.tool docs/capabi
 step "11.  Production JavaScript syntax"       js_syntax
 
 if [ "$RUN_ALL" -eq 1 ]; then
-  printf '\n\033[1m── advisory (never blocks a merge) ─────────────────────────\033[0m\n'
+  # NOT advisory on GitHub. All five of these are BLOCKING in
+  # .github/workflows/ci.yml (lines 121-146) since 71a464db, "ci: make security
+  # and database audits blocking gates", which removed their continue-on-error.
+  # This header used to read "advisory (never blocks a merge)", and the `|| true`
+  # below still swallows their exit codes -- so this script reported
+  # "ALL BLOCKING CHECKS PASSED" on a tree GitHub rejects. Nobody noticed for
+  # five days because the CI workflow almost never concluded on the self-hosted
+  # Windows runner; moving it to a hosted runner is what surfaced it.
+  #
+  # Measured 2026-09-05, in this order: schema-dictionary 0, rls-auditor 0,
+  # silent-failure-detector 1, migration-consistency 1, upsert-conflict-check 0.
+  # The two failing ones are real work, each its own change:
+  #   silent-failure-detector -- 8 sites, CLAUDE.md 8.1 class 1. One
+  #     (vendor/supabase-js.js:43) is the vendored client's own .rpc() and is a
+  #     false positive the scanner should exclude; the rest are ours, including
+  #     bg.js:1640's owner-elevation update.
+  #   migration-consistency -- 7 flat-bag/migrations divergences. CLAUDE.md 5
+  #     says consolidating these needs a per-table live-schema check, never a
+  #     bulk sweep, so it is deliberately not a quick fix.
+  # Promote these back into the blocking list above once both reach 0; leaving
+  # them mislabelled is what hid the divergence in the first place.
+  printf '\n\033[1m── blocking on GitHub, reported only here ──────────────────\033[0m\n'
   for s in schema-dictionary rls-auditor silent-failure-detector \
            migration-consistency upsert-conflict-check; do
-    printf '\n\033[1m── %s (advisory)\033[0m\n' "$s"
+    printf '\n\033[1m── %s (blocking in ci.yml)\033[0m\n' "$s"
     python3 "scripts/$s.py" || true
   done
   printf '\n\033[1m── runtime verification (advisory; needs playwright-core + Chrome)\033[0m\n'

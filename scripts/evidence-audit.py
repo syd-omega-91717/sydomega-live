@@ -122,6 +122,16 @@ def _strip_sql_comments(sql):
     """
     sql = re.sub(r'/\*.*?\*/', ' ', sql, flags=re.S)
     sql = re.sub(r'--[^\n]*', ' ', sql)
+    # Single-quoted literals go too, for the same reason and a measured one.
+    # migrations/20260903015535 guards an event trigger with
+    #   command_tag in ('CREATE TABLE','CREATE TABLE AS','SELECT INTO')
+    # and `create\s+table\s+([a-z0-9_]+)` happily matched inside that literal,
+    # capturing `AS` as a relation name. It then showed up in the live-schema
+    # cross-check as a relation "declared but absent live" -- a phantom finding
+    # a future session would have spent real time chasing. DDL that matters is
+    # never inside a string literal; dynamic SQL built in EXECUTE format(...) is
+    # conditional and is not a declaration either.
+    sql = re.sub(r"'(?:[^']|'')*'", ' ', sql)
     return sql
 
 
@@ -144,10 +154,18 @@ def sql_surface():
     fn_re = re.compile(
         r'create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?([a-z0-9_]+)', re.I)
 
+    # Belt and braces on top of the comment/literal strip above: a bare SQL
+    # keyword is never a relation. Without this the guard is "no pattern
+    # reaches a keyword", which is a claim about every regex here forever.
+    RESERVED = {'as', 'if', 'not', 'exists', 'public', 'table', 'view',
+                'select', 'into', 'or', 'replace', 'materialized', 'function'}
+
     for path in sorted(Path('supabase').rglob('*.sql')):
         text = _strip_sql_comments(path.read_text(encoding='utf-8', errors='replace'))
         for m in tbl_re.finditer(text):
             name = m.group(1).lower()
+            if name in RESERVED:
+                continue
             rels.add(name)
             # Only the flat bag at supabase/ counts toward duplicate-definition
             # reporting; supabase/migrations/ is a deliberate ordered copy of
@@ -156,9 +174,13 @@ def sql_surface():
             if path.parent.name == 'supabase':
                 defs[name].add(path.name)
         for m in view_re.finditer(text):
-            rels.add(m.group(1).lower())
+            name = m.group(1).lower()
+            if name not in RESERVED:
+                rels.add(name)
         for m in fn_re.finditer(text):
-            fns.add(m.group(1).lower())
+            name = m.group(1).lower()
+            if name not in RESERVED:
+                fns.add(name)
     return rels, fns, defs
 
 

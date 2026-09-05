@@ -10984,3 +10984,114 @@ changes that. Churning 4,500 lines to encode nothing would bury the real diff.
 Gates: `./scripts/ci-local.sh` 23/23 blocking, `migration-drift.py` PASS
 (168/168), `audit.py` 0 critical / 7 warnings, `rls-auditor.py` 1 pre-existing
 informational finding unrelated to these tables.
+
+## 92. Main went red on a third-party merge, and one of the three failures was a scanner reading a keyword out of a string literal
+
+**Found by** running `./scripts/ci-local.sh` on a freshly fetched `origin/main`
+before starting any new work. Between `fe6f0743` and `a887870f` the Vercel
+integration merged 23 commits (workflows moved to hosted runners, an agent
+registry, `vercel.json` gaining `"outputDirectory": "."`, two new gate scripts,
+one new migration). The result was `3 BLOCKING CHECK(S) FAILED (20 passed)` —
+the §8.2 pattern exactly: *"The Vercel integration merges estate-wide PRs that
+leave `main` red."* Nobody had run the local suite against the merged result.
+
+### 92a. Two new gate scripts ran their whole job on `--help`
+
+`scripts/omega_fabric_platform_gate.py` and `scripts/vercel_static_contract.py`
+both shipped with a one-line docstring and no `--help` guard, so
+`test_script_help_contract` failed with both named:
+
+```
+AssertionError: Lists differ: ['omega_fabric_platform_gate.py: --help printed
+something other than its docstring (ran the job?)', ...] != []
+```
+
+This is the third recurrence of the same defect (`omega_fabric_audit.py` was
+the second, earlier the same day). Both now carry the standard guard —
+`if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv)`
+placed *above* every other import so no work can precede it — and a real
+docstring. Both docstrings now also state what the gate cannot prove, because
+each was one sentence away from over-claiming: `omega_fabric_platform_gate.py`
+prints `supabase_advisor_fk_remediation=IMPLEMENTED` purely from the migration
+*file* being present and still containing four marker strings, which is a claim
+about the repository and not about the database; `vercel_static_contract.py`
+reads `vercel.json` and `index.html` on disk, which says nothing about what the
+live alias serves. That distinction is the whole lesson of §8.4's front-door
+entry, and both scripts now say so in the text a reader gets from `--help`.
+
+Verified: `python3 scripts/omega_fabric_platform_gate.py --help` prints the
+docstring and exits 0; the run still prints `FABRIC_PLATFORM_GATE=PASS`.
+Same for `VERCEL_STATIC_CONTRACT=PASS`.
+
+### 92b. `migration-drift` failed against a snapshot, not against the database
+
+```
+- 20260905080109 (…_omega_advisor_foreign_key_indexes_20260905.sql) has never
+  been applied — `db push` would run it
+```
+
+The migration's own header claims *"Applied live 2026-09-05 via Supabase
+migration version 20260905080109."* Rather than trust or dismiss that, it was
+checked: `mcp__Supabase__list_migrations` returns `20260905080109` as the last
+entry of the live history. **The header was accurate and the gate was reading a
+stale committed snapshot** — `supabase/remote-migrations.json` still held 168
+versions. Regenerated to 169; `migration-drift.py` now prints
+`PASS (169 versions, local and remote agree; snapshot 2026-09-05)`.
+
+Worth stating plainly because the instinct ran the other way: a file that
+asserts it was applied is *usually* the unverified claim §9 warns about. Here
+the claim was true and the checker was wrong. Verify the direction of a
+disagreement before attributing it.
+
+### 92c. `OMEGA_SKILL_REGISTRY.md` was one migration behind
+
+`omega-registry.py --check` reported `168 → 169 (…62 → 63 timestamped)` and the
+derived prose *"The 74 files added since"* → 75. Regenerated. This gate is the
+only check in the repo that notices a third party editing the estate, which is
+why §8.2 says never to auto-commit it in CI.
+
+### 92d. The evidence audit had been reporting a relation named `as`
+
+Not one of the three failures — found while regenerating
+`supabase/live-schema.json`, and the more interesting bug of the four.
+`evidence-audit.py`'s live-schema cross-check reported **2** relations
+"declared in `supabase/`, absent from the live snapshot":
+`omega_platform_events` and **`as`**.
+
+`as` is not a table. `sql_surface()`'s table pattern is
+`create\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?([a-z0-9_]+)`, and
+`migrations/20260903015535_harden_future_defaults_and_rls_20260903.sql:21`
+guards an event trigger with
+
+```sql
+where command_tag in ('CREATE TABLE','CREATE TABLE AS','SELECT INTO')
+```
+
+The pattern matched *inside that string literal* and captured `AS`. The file
+already had `_strip_sql_comments()` — added after an earlier run reported
+`above`, `alone`, `bodies`, `for` and `is` as duplicate-defined tables — so the
+comment half of this class was known; the string-literal half was not. Both
+halves are now closed, plus a `RESERVED` keyword set applied to all three
+capture sites, so a keyword can never become a relation name even if a future
+pattern reaches one. Belt and braces on purpose: without the set, the guarantee
+is "no regex here ever matches a keyword", which is a promise about every
+pattern this file will ever hold.
+
+**Control, because a scanner that finds less is not automatically more
+correct** (§8.4): declared relations went 121 → 120 — exactly the phantom —
+and `codex_bookmarks`, `profiles`, `omega_platform_events`, `signal_saves` and
+the `top_pages` *view* all still resolve. Absent-live went 2 → 0.
+
+### 92e. The live-schema snapshot was one relation stale, dated today
+
+`supabase/live-schema.json` carried `_captured: 2026-09-05` and 216 relations;
+live has 217. The set difference was exactly one table, `omega_platform_events`
+(created by `20260904194956`, after the snapshot was taken at 01:36). A date
+alone is not freshness — this snapshot was stale *on the day it was dated*.
+Folded in from `pg_attribute` (6 columns: `id`, `event_type`, `route`,
+`actor_user_id`, `metadata`, `created_at`); `schema-dictionary.py` still
+reports `OK — all client calls reference existing columns`.
+
+**Result:** `./scripts/ci-local.sh` → `ALL 23 BLOCKING CHECKS PASSED`,
+`audit.py` 0 critical / 7 warnings, `scripts/tests` 201 passing, `tests` 23
+passing, `context-budget.py` PASS.

@@ -514,42 +514,37 @@ open, recorded in `FIXES_LOG.md`:
   was rejected: no stable client secret exists, and it changes no trust boundary
   — `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` already hold
   comparable data under the same tested RLS.
-- **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
-  to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
-  offers a delete — a gap, and a product decision.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined.
-  `.vercelignore` keeps both out of the deploy; a fix needs a history rewrite,
-  never without explicit permission.
-- **Member location is not collected.** Live 2026-08-29: `profiles.country`
-  exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
-  in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
-- **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
-  so the score moves only on 30-min idle (`-10`) and a failed gated action
-  (`-5`), never on a threat. Detection is an architecture decision. (`gate()`
-  *is* called — `approvals.html`, 3 sites — and `updateBadge()` repaints every
-  2s; an earlier claim here that neither ran was wrong.)
+- **No DELETE policy on `storage.objects`** (live 2026-08-31): writes scoped to
+  own `<uid>/`, but deleting one's own upload is 42501. No client offers a
+  delete — a gap, and a product decision.
+- **`.mp4` (3.7 MB) and `.docx` committed, no LFS.** Asked and declined;
+  `.vercelignore` keeps both out of the deploy. A fix needs a history rewrite.
+- **Member location is not collected** (live 2026-08-29): `profiles.country`
+  exists; `lat`/`lon`/`gate` do not (`map.html`'s reads removed in `3f8a17d7`).
+  Adding it is a privacy decision, not a bug fix.
+- **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
+  the score moves only on 30-min idle and a failed gated action, never on a
+  threat. Detection is an architecture decision. (`gate()` *is* called —
+  `approvals.html`, 3 sites — and `updateBadge()` repaints every 2s.)
 - **`omega-threat.js` is the digital-thread traceability engine**
-  (`window.OmegaThread`), not threat detection; filename left as-is.
-- **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
-  remaining).** Both INFO-level and expected: "unused" reflects 9 profiles and
-  near-zero traffic, not bad indexes — nearly every one is the `user_id`
-  pattern RLS filters on — and the 61 FKs are all on the scaffold below.
-- **~83 tables live on production that this repo's SQL never created** — a
-  generic multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars).
-  RLS on, no policies — the *safe* state (total lockout) — and empty. Inventing
-  policies for schema of unknown purpose fabricates behaviour. Needs a human
-  decision: drop, adopt, or leave.
+  (`window.OmegaThread`), not threat detection; filename kept.
+- **Performance advisor: `unused_index` (125), `unindexed_foreign_keys` (61).**
+  Both INFO and expected: "unused" reflects 9 profiles and near-zero traffic —
+  nearly every one is the `user_id` pattern RLS filters on — and the 61 FKs are
+  all on the scaffold below.
+- **~83 tables live that this repo's SQL never created** — a generic
+  multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars). RLS on, no
+  policies — the *safe* state — and empty. Inventing policies for schema of
+  unknown purpose fabricates behaviour. Needs a human decision.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
   nothing to spoof — junk rows, not impersonation — and `authenticated` lacks
   INSERT on both anyway. Scope it before that grant is ever added.
 - **`feature_flags` and `governance_policies` are readable by every approved
-  member**, by pre-existing policy (`USING(true)`, and
-  `is_platform_owner() OR status='active'`). Both look deliberate, but became
-  *reachable* only when the missing grants were added, so they are recorded
-  rather than assumed fine. All 10 visible governance rows are
-  `status='active'`; no drafts leak.
+  member**, by pre-existing policy. Both look deliberate but became *reachable*
+  only when the missing grants were added, so they are recorded rather than
+  assumed fine. All 10 visible governance rows are `status='active'`.
 - **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
   Left locked out — the safe state. **Measured, not inferred:** of 202 public
   tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
@@ -570,6 +565,12 @@ open, recorded in `FIXES_LOG.md`:
   property no repo change can pin. **Still open: the
   single physical CI runner** — never "fix" it with a hosted lane;
   `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
+- **The Vercel integration merges estate-wide PRs that leave `main` red** —
+  twice in one hour (#250, #252), each adding `omega-*.js` modules and a script
+  tag to ~193 pages without regenerating the census. Remedy: `python3
+  scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the only
+  check here that notices a third party editing the estate. Both were sound
+  otherwise; the CSP and build-step checks are in `FIXES_LOG.md`.
 - **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`),
   so jobs drain one at a time and `queued` is normal. A red check is real output
   now, not the old `runner_id: 0` no-op. Two Windows traps: paths and console
@@ -577,16 +578,14 @@ open, recorded in `FIXES_LOG.md`:
   misreport (`FIXES_LOG.md`). `./scripts/ci-local.sh` runs every blocking step
   locally; `.githooks/pre-push` runs it on push (`git config core.hooksPath
   .githooks`, bypass `--no-verify`).
-- **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
-  The advisor reports 93; the owner-sensitive ones guard via
-  `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
-  misses. Three unguarded-and-uncalled ones were revoked (`migrations/0097`); the
-  rest have callers. Cross-member leakage was tested by impersonation across 17
-  tables — every populated table scoped, `profiles` included. **When adding any
-  function,
-  `REVOKE EXECUTE ... FROM PUBLIC` in the same file**: Postgres grants it to
-  PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its own —
-  that is how 70 revoked functions became 23.
+- **The `authenticated` SECURITY DEFINER count (93) is mostly noise, and was
+  checked.** Owner-sensitive ones guard via `public.omega_is_owner()`, which a
+  classifier looking for `is_platform_owner` misses; three unguarded-and-uncalled
+  ones were revoked (`migrations/0097`), the rest have callers. Impersonation
+  across 17 tables found every populated table scoped. **When adding any
+  function, `REVOKE EXECUTE … FROM PUBLIC` in the same file** — Postgres grants
+  it to PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its
+  own; that is how 70 revoked functions became 23.
 - **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
   `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
   Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned

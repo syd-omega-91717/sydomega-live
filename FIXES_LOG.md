@@ -9530,3 +9530,82 @@ third party editing the estate.
 
 Gates after the fix: `./scripts/ci-local.sh` 22/22, 191 tests OK,
 `scripts/audit.py` 0 critical / 7 warnings, `verify-runtime.js` PASS.
+
+---
+
+## The same bot broke `main` again, one PR later (2026-09-05)
+
+PR #252 ("Install Vercel Speed Insights"), same author as #250, merged ~40
+minutes after it and left `main` red the same way:
+
+```
+-| `omega-*.js` modules | 147 (1164 KB) |   +| 149 (1168 KB) |
+-| root `.js` files | 156 |                 +| 158 |
+1 BLOCKING CHECK(S) FAILED (21 passed)
+```
+
+Two more modules (`omega-speed-insights.js`, `omega-speed-insights-init.js`) and
+another `<script type="module">` across the estate, with no census regeneration.
+
+### A CSP violation I was about to report, and did not
+
+`omega-speed-insights.js:73` returns
+`https://va.vercel-scripts.com/v1/speed-insights/script.js`, and that host is
+**not** in `vercel.json`'s `script-src 'self' 'unsafe-inline' https://esm.sh
+https://cdn.jsdelivr.net https://unpkg.com`. Unlike the Analytics module, where
+the CDN appears only under `isDevelopment()`, here it sits on a second,
+non-debug branch — which looked like a shipped feature silently blocked by the
+enforced CSP.
+
+Reading the whole function rather than the matching line settled it:
+
+```js
+function getScriptSrc(props) {
+  if (props.scriptSrc)    return makeAbsolute(props.scriptSrc);
+  if (isDevelopment())    return "…/script.debug.js";
+  if (props.dsn)          return "https://va.vercel-scripts.com/v1/speed-insights/script.js";
+  if (props.basePath)     return makeAbsolute(`${props.basePath}/speed-insights/script.js`);
+  return "/_vercel/speed-insights/script.js";
+}
+```
+
+`omega-speed-insights-init.js` calls `injectSpeedInsights()` with **no
+arguments**, so `dsn` and `basePath` are undefined and the fall-through is
+same-origin. No violation. This is CLAUDE.md §8.4's "classifying by substring is
+not reading it", in a new place: a grep for the CDN host found a real line on a
+real code path that this call site cannot reach.
+
+### Everything else, checked not assumed
+
+| check | result |
+|---|---|
+| `./scripts/ci-local.sh` | 22/22 after regeneration |
+| `python3 scripts/audit.py` | 0 critical / 7 warnings — unchanged |
+| `python3 -m unittest discover -s scripts/tests` | 191, OK |
+| `node scripts/verify-runtime.js` | PASS on 13 pages, both new module scripts present |
+
+### The standing decision
+
+Two occurrences in one hour make this a condition, not an incident, so it is now
+in CLAUDE.md §8.2 with its one-line remedy. **The census gate is deliberately
+not auto-healed in CI.** It would be easy to have a workflow run
+`omega-registry.py` and commit — and that would destroy the only property that
+made this visible at all. Twice now the committed census is the sole check in
+this repo that noticed a third party adding modules to ~193 pages. A gate that
+silently repairs the evidence of an undisclosed estate-wide edit is worse than
+no gate: it would have let both PRs land with no signal whatsoever.
+
+The cost of keeping it blocking is a few red minutes on `main` between the bot's
+merge and the fix. That is the correct trade.
+
+### A budget note that will matter next session
+
+`CLAUDE.md` is now at **16,000 / 16,000** exactly. Fitting the new §8.2 entry
+took compressing seven existing bullets, and it is the second consecutive
+session that has had to buy space this way. §8.2 has run out of room: the next
+standing fact cannot be added without either a real deletion or moving the
+"genuinely open" list into its own on-demand document. That is a decision for
+the owner, not a trim to be improvised.
+
+Gates: `./scripts/ci-local.sh` 22/22, 191 tests OK, `scripts/audit.py` 0
+critical / 7 warnings, `verify-runtime.js` PASS, `context-budget.py` PASS.

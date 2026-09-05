@@ -283,9 +283,9 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 121 |
-| functions declared in `supabase/` | 131 |
-| tables defined in more than one root SQL file | 48 |
+| tables + views declared in `supabase/` | 120 |
+| functions declared in `supabase/` | 130 |
+| tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
 live defect: `scripts/audit.py` separates the byte-identical copies from
@@ -304,16 +304,15 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 | `certificates` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `character_records` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `client_errors` | `chunk_05_migrations.sql`, `migration_runner.sql`, `omega_error_monitor.sql` |
-| `commission_contracts` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
+| `commission_contracts` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_contracts.sql`, … (5 total) |
 | `consult_requests` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
 | `contribution_log` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `conversations` | `chunk_06_migrations.sql`, `conversations.sql`, `migration_runner.sql` |
-| `dispatches` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, … (7 total) |
+| `dispatches` | `chunk_02a_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
 | `event_rsvps` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `evolution_events` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `exam_results` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_exams.sql` |
 | `family_nodes` | `chunk_02a_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (5 total) |
-| `feedback` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_feedback.sql` |
 | `health_logs` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `heritage_records` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `interest_signals` | `entreprise_schema_v2.sql`, `omega_interest_graph.sql` |
@@ -333,7 +332,6 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 | `publications` | `chunk_02a_migrations.sql`, `chunk_08_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (5 total) |
 | `research_hypotheses` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `search_index` | `chunk_04_migrations.sql`, `migration_runner.sql`, `search_index.sql` |
-| `session_heartbeats` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_time_sovereign.sql` |
 | `sim_trades` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_sovereign_points.sql` |
 | `social_broadcasts` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `social_connections` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
@@ -361,20 +359,10 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 121 | 2 | 0 |
+| 120 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.
-
-### Absent live, read by nothing — declared and never applied
-
-Not a failure, and deliberately not gated: this repo ships dormant
-backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
-to one of these is a decision rather than a surprise — the page
-would classify `BUILT` while returning nothing.
-
-- `as`
-- `omega_platform_events`
 
 
 ## UNVERIFIED — what no repository scan can settle

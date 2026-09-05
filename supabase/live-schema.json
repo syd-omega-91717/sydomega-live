@@ -17,7 +17,7 @@
  "_captured": "2026-09-05",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
- "_table_count": 216,
+ "_table_count": 217,
  "tables": {
   "academy_access": [
    "user_id",
@@ -1462,6 +1462,14 @@
    "provenance",
    "quality_score",
    "status",
+   "created_at"
+  ],
+  "omega_platform_events": [
+   "id",
+   "event_type",
+   "route",
+   "actor_user_id",
+   "metadata",
    "created_at"
   ],
   "omega_platform_evidence": [

@@ -542,7 +542,7 @@ entries (which were accurate when written):
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
 | `python3 -m unittest discover -s scripts/tests` | **201** tests, all passing |
-| `python3 -m unittest discover -s tests` | **22** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
+| `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
@@ -556,7 +556,7 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** (was 8; 7 applied and 1 was snapshot staleness, 2026-09-05) |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live** — and 120, not 121, declared: the 121st was `as`, read out of a `'CREATE TABLE AS'` string literal (`FIXES_LOG.md` 92d) |
 | `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
@@ -638,6 +638,17 @@ entries (which were accurate when written):
   checking the rewrite's presence. Routing evidence is a **filesystem** entry or
   a real fetch, never a config line; `omega_fabric_audit.py`'s SRC-01 now holds
   both halves (index present, and no `/` rewrite left to shadow it).
+- **A snapshot's date is not its freshness, and a scanner that finds less is not
+  more correct.** `supabase/live-schema.json` was stamped with the current day and
+  was already one relation behind live (216 vs 217) — it was taken at 01:36 and
+  the table landed after. In the same pass `evidence-audit.py` was reporting a
+  relation named **`as`**, captured by `create\s+table\s+([a-z0-9_]+)` from
+  inside the literal `command_tag in ('CREATE TABLE','CREATE TABLE AS',…)`. Its
+  comment-stripper already existed for exactly this class; string literals were
+  the half nobody had closed. Both are fixed, but the transferable rule is the
+  check that followed: declared relations fell 121 → 120, so the run named the
+  one relation that disappeared and re-asserted five real ones (including a
+  *view*) before the smaller number was believed.
 - **A repo-wide grep is a candidate generator, not a verdict.** Confident
   source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
   `outline:none`) were false — the runtime showed 172/173 fine, because `bg.js`

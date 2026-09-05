@@ -1,5 +1,26 @@
-"""Validate the repository's native Vercel static deployment contract."""
+"""Validate the repository's native Vercel static deployment contract.
+
+Asserts vercel.json declares no build (`builds`/`buildCommand`/`framework`),
+publishes the repository root as its output, and that index.html is really on
+disk -- the front door rested on a `/` rewrite with no file behind it and
+served 404 in production (CLAUDE.md 8.4).
+
+  python3 scripts/vercel_static_contract.py
+
+It reads the repository only. A passing run says the configuration is right in
+this commit; whether the live alias serves that commit is a separate question
+no file on disk can answer.
+"""
 from __future__ import annotations
+
+import sys
+
+# CLAUDE.md 8.4: every scripts/*.py answers --help with its docstring and exits
+# 0, before doing any work. This file shipped without the guard and ran its
+# whole job instead, which is what turned test_script_help_contract red on main.
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 
 import json
 from pathlib import Path

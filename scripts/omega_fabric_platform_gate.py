@@ -1,5 +1,27 @@
-"""Deterministic platform gate for the Omega Intelligence Fabric."""
+"""Deterministic platform gate for the Omega Intelligence Fabric.
+
+Asserts the fabric's files parse, its workflows carry a real job, and the
+advisor foreign-key migration still contains the markers it is named for.
+
+  python3 scripts/omega_fabric_platform_gate.py
+
+Note what this proves and what it does not: every check here reads the
+repository. `supabase_advisor_fk_remediation=IMPLEMENTED` means the migration
+file exists and still says what it said -- never that it was applied to the
+live database. `scripts/migration-drift.py` is what answers that question
+(CLAUDE.md 8.4: a gate that asserts a config line cannot observe whether it
+fires).
+"""
 from __future__ import annotations
+
+import sys
+
+# CLAUDE.md 8.4: every scripts/*.py answers --help with its docstring and exits
+# 0, before doing any work. This file shipped without the guard and ran its
+# whole job instead, which is what turned test_script_help_contract red on main.
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 
 import ast
 from pathlib import Path

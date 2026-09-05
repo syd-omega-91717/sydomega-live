@@ -12255,3 +12255,65 @@ plainly: mirror every blocking gate, from every workflow.
 (was `FAILED`, 67 errors, exit 1). `scripts/tests` 244 → **252**, all passing;
 `tests` 23 passing; `./scripts/ci-local.sh --all` **ALL 23 BLOCKING CHECKS
 PASSED** with all seven mirrored audits at 0.
+
+---
+
+## 105. The production outage stopped showing anywhere, because its gate went green
+
+With every other gate fixed, `Production Surface Verification` reported
+**success** on `main` at `fa9cf0e2` — and production is still down.
+
+Its own job log says so:
+
+```
+Production endpoint unavailable or invalid; classified as EXTERNAL_DEPLOYMENT_BLOCKED.
+Production surface verification: repository checks PASS; live deployment remains EXTERNAL_DEPLOYMENT_BLOCKED.
+```
+
+and the step `Verify security headers when production endpoint is reachable`
+was **skipped**, since it is gated on `steps.site.outputs.site_reachable ==
+'true'`.
+
+### The classification is right; its invisibility was not
+
+Not failing is the correct call — a provider-side outage only the owner can
+clear is not a repository code defect, and failing every push on it would
+train everyone to ignore a red board. But the outcome was a plain green check
+with the outage recorded **only** in that job's step summary, which nobody
+reads on a passing run. `CLAUDE.md` §8.2 meanwhile still asserted the gate was
+*red* "because production is 404ing" — so the one document a session loads
+first described the opposite of what the board showed, in a way that would let
+a future session conclude the site had recovered.
+
+This is §8.4's standing class in a new place: a gate that cannot observe the
+thing it is named for, reporting PASS.
+
+### What changed
+
+Two `::warning::` annotations, which surface on the run and the commit without
+failing the job:
+
+- on the classify step — the URL, the HTTP code, the curl exit, and that
+  clearing it is an owner action in the Vercel dashboard;
+- on the final step — that the green check verified the repository contract and
+  Supabase Auth **only**, that the endpoint was unreachable, and that the
+  security-header step was therefore skipped.
+
+`CLAUDE.md` §8.2's bullet was rewritten to lead with the fact that matters
+first: a green board here does not mean the site is up, and how to read the run
+to tell.
+
+### What was NOT changed
+
+The pin itself. Verified again this session that it cannot be cleared from
+here: `curl` to `www.sydomega.com`, `sydomega.com` and the project's own
+`…-syd-omega-91717s-projects.vercel.app` alias all return **000** from this
+session (egress-blocked, per §8.2), and promoting
+`dpl_usqjdUYNHTtLR7AXWpgN48maRGut` or cancelling the Instant Rollback is a
+Vercel dashboard action.
+
+### Verification
+
+`python3 scripts/workflow-contract-lint.py` → `WORKFLOW CONTRACT LINT: PASS`;
+YAML parses; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**;
+`python3 scripts/context-budget.py` PASS (CLAUDE.md ~15,996 / 16,000).

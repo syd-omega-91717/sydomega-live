@@ -2,10 +2,40 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import { Anthropic } from "https://esm.sh/@anthropic-ai/sdk@0.9.0";
 
 interface RequestBody {
-  user_id: string;
   data_sources?: string[];
   force_full_rescan?: boolean;
 }
+
+/* The tables this function may ingest from.
+   `data_sources` arrives in the request body and used to be passed straight
+   into `supabase.from(source)` with the SERVICE key — an arbitrary-table read
+   chosen by the caller, filtered only by a `user_id` that also came from the
+   body. Both halves are closed now: identity comes from the verified JWT
+   (see requireCallerId), and the table name must be one of these.
+   Anything not listed is rejected rather than silently skipped, so a typo in a
+   caller is a visible 400 rather than an empty ingest.
+
+   Verified against the live database (pg_attribute, 2026-09-05): every table
+   here exists and carries BOTH `user_id` and `created_at`, which
+   fetchDataSource filters on. A first draft of this list also held
+   `journal_entries`, which does not exist at all, and `media_items`, which
+   exists but has no `user_id` — PostgREST rejects the whole query when one
+   column is unknown (CLAUDE.md 8.1 class 2), so either would have emptied the
+   ingest silently rather than erroring usefully.
+
+   `user_journeys` is deliberately NOT here even though graphify.html's
+   "journal" checkbox sends it: it has `user_id` but no `created_at`, so
+   fetchDataSource's incremental `.gte("created_at", …)` would reject the whole
+   query on every run that is not a full rescan. It becomes a visible 400 here
+   instead of a silent empty ingest; giving it a real timestamp column, or an
+   exemption from the incremental filter, is a separate change. */
+const INGESTABLE_SOURCES = new Set([
+  "task_completions",
+  "habit_logs",
+  "focus_sessions",
+  "health_logs",
+  "member_posts",
+]);
 
 interface Entity {
   type: string;
@@ -35,13 +65,52 @@ const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const anthropic = new Anthropic({ apiKey: anthropicKey });
 
+/* Resolve the caller from their bearer token, never from the request body.
+   `user_id` used to be read straight out of the JSON payload and then used both
+   as the read filter and as the owner of every row written, with no auth check
+   of any kind — so any caller could ingest against, and attribute rows to, any
+   member. The anon key plus the caller's own Authorization header is the same
+   idiom rankings/ and snapshot-leaderboard/ already use to identify a caller. */
+async function requireCallerId(req: Request): Promise<string | null> {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) return null;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey) return null;
+  try {
+    const callerClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data, error } = await callerClient.auth.getUser();
+    if (error || !data?.user) return null;
+    return data.user.id;
+  } catch {
+    return null;
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const body: RequestBody = await req.json();
-  const { user_id, data_sources = ["task_completions"], force_full_rescan = false } = body;
+  const user_id = await requireCallerId(req);
+  if (!user_id) {
+    return new Response(JSON.stringify({ error: "not_authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const body: RequestBody = await req.json().catch(() => ({}));
+  const { data_sources = ["task_completions"], force_full_rescan = false } = body;
+
+  const rejected = data_sources.filter((s) => !INGESTABLE_SOURCES.has(s));
+  if (rejected.length > 0) {
+    return new Response(
+      JSON.stringify({ error: "unsupported_data_source", rejected }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
   console.log(`Starting Graphify ingestion for user ${user_id}`);
 
@@ -91,6 +160,13 @@ async function fetchDataSource(
   source: string,
   force_full_rescan: boolean
 ): Promise<Record<string, unknown>[]> {
+  // Defence in depth: Deno.serve already rejects an unlisted source with 400,
+  // but this helper interpolates `source` straight into a service-key query, so
+  // it must not depend on its only caller staying correct.
+  if (!INGESTABLE_SOURCES.has(source)) {
+    throw new Error(`refusing to ingest from unlisted source: ${source}`);
+  }
+
   let query = supabase.from(source).select("*").eq("user_id", user_id);
 
   if (!force_full_rescan) {

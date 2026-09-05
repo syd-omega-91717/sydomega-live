@@ -525,7 +525,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **191** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **196** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
 | `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
@@ -640,6 +640,16 @@ entries (which were accurate when written):
   access, so regenerate it in the same change rather than reasoning around it.
   Columns, `GRANT`s and policies still are not checked by the matrix, and each
   has been a real shipped bug (§8.1 classes 2 and 6).
+- **A number in member-visible *copy* drifts too — and your own fix can stale
+  it.** Five pages asserted a page count to the member (`notifications.html`
+  as a system notification, `dashboard.html` twice, `ecosystem.html`,
+  `roadmap.html`, `world-shell.html`); every one was wrong against the real 189,
+  and `settings.html`'s "48 pages keep what you enter in this browser only" went
+  stale *because* wiring three pages to Postgres moved them out of LOCAL_ONLY.
+  `scripts/page-count-claims.py` gates it (a claim must match the estate or an
+  evidence class) and found two more than a hand-grep did — the grep missed
+  `170 PAGES` in caps. A `data-i18n` string also lives in `i18n.js`'s `T_EN`
+  **and** all six packs; fixing only the HTML leaves five translations lying.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
   describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
   module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)

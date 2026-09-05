@@ -1,0 +1,43 @@
+name: Omega Intelligence Fabric Platform Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "core/intelligence_fabric/**"
+      - "scripts/omega_fabric_audit.py"
+      - "scripts/omega_fabric_platform_gate.py"
+      - "tests/test_intelligence_fabric.py"
+      - "supabase/migrations/**"
+      - ".github/workflows/omega-intelligence-fabric-platform-gate.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/intelligence_fabric/**"
+      - "scripts/omega_fabric_audit.py"
+      - "scripts/omega_fabric_platform_gate.py"
+      - "tests/test_intelligence_fabric.py"
+      - "supabase/migrations/**"
+      - ".github/workflows/omega-intelligence-fabric-platform-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  platform-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile control plane
+        run: python -m compileall -q core/intelligence_fabric scripts
+      - name: Intelligence Fabric structural audit
+        run: python scripts/omega_fabric_audit.py
+      - name: Platform gate
+        run: python scripts/omega_fabric_platform_gate.py
+      - name: Fabric unit tests
+        run: python -m unittest discover -s tests -p 'test_intelligence_fabric.py' -v

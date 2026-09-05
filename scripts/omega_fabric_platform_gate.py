@@ -1,17 +1,10 @@
-"""Platform gate driven by the Omega Intelligence Fabric contract.
-
-The gate is intentionally deterministic and dependency-light. It verifies that
-implemented control-plane components, Supabase migration artifacts, security
-boundaries, and required CI workflows remain present and syntactically sane.
-It reports evidence states instead of treating file presence as runtime proof.
-"""
+"""Deterministic platform gate for the Omega Intelligence Fabric."""
 from __future__ import annotations
 
 import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-
 REQUIRED_FILES = (
     "core/intelligence_fabric/__init__.py",
     "core/intelligence_fabric/fabric.py",
@@ -23,11 +16,10 @@ REQUIRED_FILES = (
     "scripts/omega_fabric_audit.py",
     "supabase/migrations/20260905080109_omega_advisor_foreign_key_indexes_20260905.sql",
 )
-
 REQUIRED_WORKFLOWS = (
     ".github/workflows/omega-intelligence-fabric.yml",
     ".github/workflows/production-contract.yml",
-    ".github/workflows/supabase-runtime-contract.yml",
+    ".github/workflows/runtime-contract.yml",
     ".github/workflows/supabase-migration-security-audit.yml",
 )
 
@@ -50,21 +42,14 @@ def parse_python(paths: tuple[str, ...]) -> None:
 def inspect_workflows() -> None:
     for rel in REQUIRED_WORKFLOWS:
         text = (ROOT / rel).read_text(encoding="utf-8")
-        if "name:" not in text or "jobs:" not in text:
+        if "name:" not in text or "jobs:" not in text or "uses: actions/checkout@v4" not in text:
             raise SystemExit(f"FABRIC_PLATFORM_GATE=FAIL workflow_contract={rel}")
-        if "uses: actions/checkout@v4" not in text:
-            raise SystemExit(f"FABRIC_PLATFORM_GATE=FAIL checkout={rel}")
 
 
 def inspect_migration() -> None:
     text = (ROOT / REQUIRED_FILES[-1]).read_text(encoding="utf-8")
-    required_markers = (
-        "pg_constraint",
-        "contype = 'f'",
-        "CREATE INDEX IF NOT EXISTS",
-        "pg_index",
-    )
-    missing = [m for m in required_markers if m not in text]
+    required = ("pg_constraint", "contype = 'f'", "CREATE INDEX IF NOT EXISTS", "pg_index")
+    missing = [m for m in required if m not in text]
     if missing:
         raise SystemExit("FABRIC_PLATFORM_GATE=FAIL migration_markers=" + ",".join(missing))
 
@@ -76,7 +61,7 @@ def main() -> int:
     inspect_workflows()
     inspect_migration()
     print("FABRIC_PLATFORM_GATE=PASS")
-    print(f"fabric_components={len(REQUIRED_FILES) - 2}")
+    print(f"fabric_artifacts={len(REQUIRED_FILES) - 2}")
     print(f"workflow_contracts={len(REQUIRED_WORKFLOWS)}")
     print("supabase_advisor_fk_remediation=IMPLEMENTED")
     print("evidence_model=EXPLICIT")

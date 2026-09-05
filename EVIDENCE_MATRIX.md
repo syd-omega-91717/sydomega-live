@@ -347,6 +347,42 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 
 </details>
 
+## LIVE SCHEMA CROSS-CHECK
+
+Every class above answers *what does this repository declare*. This
+section answers a different question: **does production actually have
+it?** A relation the SQL bag declares but the database never received
+answers every query with `{data:null,error}` — an empty page, no
+exception, no console error (CLAUDE.md §8.1 class 2).
+
+Source: `supabase/live-schema.json`, captured **2026-08-29**. A dated
+snapshot, not a connection. Regenerate it whenever schema is applied
+live; a stale snapshot produces false findings in both directions.
+
+| relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
+|---|---|---|
+| 119 | 8 | 0 |
+
+**No absent relation is read by any page.** Nothing is silently
+empty on this axis today.
+
+### Absent live, read by nothing — declared and never applied
+
+Not a failure, and deliberately not gated: this repo ships dormant
+backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
+to one of these is a decision rather than a surprise — the page
+would classify `BUILT` while returning nothing.
+
+- `codex_bookmarks`
+- `creator_proposals`
+- `focus_sessions`
+- `habit_logs`
+- `okr_key_results`
+- `okr_objectives`
+- `signal_saves`
+- `wealth_snapshots`
+
+
 ## UNVERIFIED — what no repository scan can settle
 
 These are not open questions because nobody looked. They are open
@@ -355,7 +391,7 @@ has no connection to it. Each one has been a real shipped bug here:
 
 | question | why the repo cannot answer it |
 |---|---|
-| Does the live database have every table `supabase/` declares? | The SQL bag is applied by hand. `supabase/migrations/` is validated against a *blank* database only, and `task_completions` is a proven case where live and declared disagree (CLAUDE.md §5). |
+| Does the live database have every table `supabase/` declares? | **Partly answered above** — the LIVE SCHEMA CROSS-CHECK compares the bag against `live-schema.json`. That snapshot is dated, and proves nothing about columns, grants or policies. |
 | Do the columns match? | PostgREST rejects the whole query when one column name is unknown, emptying a page with no visible error (CLAUDE.md §8.1 class 2). |
 | Can a member actually reach each table? | A `GRANT` is checked *before* row security, so a correct RLS policy on a table with no grant fails every query with `42501`. 60 tables were once in this state (CLAUDE.md §8.1 class 6). |
 | Do the policies scope rows correctly? | Only reproducible by impersonating a real member in-database; a privileged `execute_sql` proves nothing (CLAUDE.md §8.4). |

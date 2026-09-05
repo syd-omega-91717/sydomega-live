@@ -9192,3 +9192,97 @@ against the wrong surface** — rendered claims need `innerText`.
 Gates: `./scripts/ci-local.sh` 22/22, 179 tests OK, `scripts/audit.py`
 0 critical / 7 warnings, `scripts/check-inline-js.py` clean,
 `node scripts/verify-runtime.js` PASS on the 13 capability entrypoints.
+
+---
+
+## The evidence matrix now asks whether production has the table, not only whether the repo declares it (2026-09-05)
+
+### The gap, named in this repo's own documentation
+
+`CLAUDE.md` §8.4 has said it outright for some time:
+
+> a `BUILT` row means the *client* is wired and nothing more. The live table,
+> its columns, its `GRANT` and its policy are all still unverified, and each
+> has been a real shipped bug (§8.1 classes 2 and 6).
+
+`evidence-audit.py`'s `BROKEN` class is decided against the **SQL bag**:
+`missing_t = sorted(t for t in info['tables'] if t.lower() not in rels)`, where
+`rels` comes from `sql_surface()`. So a page querying a relation the bag
+declares but production never received classified as `BUILT`, and every query
+against it returns `{data:null,error}` — an empty page, no exception, no
+console error.
+
+`supabase/live-schema.json` — a dated snapshot of the real schema — was already
+in the repo and already trusted by five other gates (`audit.py`,
+`schema-dictionary.py`, `upsert-conflict-check.py`, `resilience-audit.py`,
+`release-gate.py`). `evidence-audit.py` was not one of them; it mentioned the
+file only in prose, at line 443.
+
+### What the cross-check found
+
+```
+SQL bag relations : 119
+live relations    : 208   (captured 2026-08-29)
+declared in bag, ABSENT live : 8
+live but not in bag          : 97
+```
+
+The 97 corroborate `CLAUDE.md` §8.2's "~83 tables live that this repo's SQL
+never created" (the extra is views — the snapshot's `_relkinds` is
+`r,v,m,p`). The 8 are new:
+
+```
+codex_bookmarks   creator_proposals   focus_sessions    habit_logs
+okr_key_results   okr_objectives      signal_saves      wealth_snapshots
+```
+
+**None is read by any client page.** So nothing is silently empty today, and
+that is the honest finding rather than a manufactured one. What it does show is
+why part of the LOCAL_ONLY population exists: the server-side SQL for habits,
+focus sessions and OKRs was written into the bag and then neither applied nor
+wired. Wiring `habits.html` to `habit_logs` today would produce a page that
+classifies `BUILT` and returns nothing.
+
+### Severity is decided by one thing
+
+| case | meaning | gates? |
+|---|---|---|
+| absent live **and read by a page** | a silent empty state shipping now | fails `--strict` |
+| absent live, read by nothing | dormant backend, which this repo does on purpose (§9) | never |
+
+A missing or malformed snapshot reports **NOT CHECKED**, never 0 — a missing
+snapshot and a clean one must not look identical in a count, which is the exact
+shape of §8.4's stopped-static-server bug.
+
+### The zero was not trusted until it could fail
+
+Seven tests, and the clean case is asserted only alongside two planted
+positives. Then the detector was deliberately sabotaged
+(`missing = []  # SABOTAGE`) and the suite re-run:
+
+```
+--- detector sabotaged ---
+FAIL: test_control_gates_under_strict
+AssertionError: 0 != 1
+Ran 17 tests   FAILED (failures=3)
+
+--- restored ---
+Ran 17 tests   OK
+```
+
+Three failures under sabotage, none restored. Written down because this repo
+has shipped scanners that reported a serene zero while being structurally
+incapable of finding anything — three of them in a single session. A control
+that is never checked against a broken detector is decoration.
+
+### Not claimed
+
+The snapshot proves table *presence* on 2026-08-29 and nothing else. Columns,
+`GRANT`s and RLS policies remain unverified, and the Supabase MCP connection is
+unauthenticated in this session, so no live query was made. The report says so
+in place rather than in a footnote.
+
+Gates: `./scripts/ci-local.sh` 22/22, `python3 -m unittest discover -s
+scripts/tests` **186** tests OK (was 179), `scripts/audit.py` 0 critical /
+7 warnings, `scripts/context-budget.py` PASS (CLAUDE.md 15,987 / 16,000 —
+the §8.2 `audit.py` bullet was compressed to pay for the new §8.4 note).

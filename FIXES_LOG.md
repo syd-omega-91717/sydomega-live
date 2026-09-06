@@ -13335,3 +13335,84 @@ without using it would have been gaming it**; the argument is used at every site
   stashing `bg.js` back to `main` and re-running: identical failure, so this
   change leaves the render exactly as it found it. That 2.33:1 `btn-gold`
   signature is the one §4.1 already documents.
+
+---
+
+## 117 — CI billed Actions minutes for work it had already done, and for runs nobody would read
+
+Context: on 2026-09-06 every GitHub Actions job began failing **2 seconds after
+dispatch, with no `steps` array, empty check output, and 404 on log download**,
+across all workflows and both branches, while `./scripts/ci-local.sh` passed
+**23/23** on the same commit (`c30f8c7e`). A job with no steps never executed the
+workflow; the repo is private, so Actions minutes are billed. That points at an
+account-level dispatch rejection (spending limit / payment), which is not fixable
+in this repository — but the **consumption rate** is, and 7,883 workflow runs
+across 19 workflows is why it was reachable.
+
+This entry is the repository-side half. It removes work CI was doing twice and
+work it was doing for results nobody would read. **It removes no coverage** — the
+invariant was that no check which blocks today stops blocking.
+
+### 1. A workflow that was strictly dominated by another
+
+`omega-intelligence-fabric-platform-gate.yml` ran four steps. Compared with
+`omega-intelligence-fabric.yml`, read in full rather than grepped:
+
+| step | platform-gate | fabric | verdict |
+|---|---|---|---|
+| compile | `compileall -q core/intelligence_fabric scripts` | `compileall -q core scripts tests` | fabric is a **superset** |
+| structural audit | `omega_fabric_audit.py` | same | identical |
+| platform gate | `omega_fabric_platform_gate.py` | same | identical |
+| unit tests | `discover -s tests -p test_intelligence_fabric.py` | same | identical |
+
+Triggers decide the rest: platform-gate fired on `push[main]`/`pull_request[main]`
+**restricted to a path filter**; fabric fires on `push[main]` and `pull_request`
+with **no** filter. Fabric therefore runs strictly more often and does strictly
+more. Deleted.
+
+Checked first that nothing requires it to exist: the only gate naming a fabric
+workflow is `scripts/omega_fabric_platform_gate.py:43`, and it requires
+`.github/workflows/omega-intelligence-fabric.yml` — the one that stays.
+
+### 2. Three duplicated steps in `omega-enterprise-gate.yml` — and two that only *looked* duplicated
+
+Removed: `compileall -q core scripts tests`, `omega_fabric_audit.py`,
+`omega_fabric_platform_gate.py`. All three are byte-identical to steps in
+`omega-intelligence-fabric.yml`, whose trigger set (`push[main]` +
+unfiltered `pull_request`) is **identical** to this workflow's.
+
+**Deliberately kept**, though `repository-integrity.yml` and
+`omega-release-readiness.yml` also run them: `repository_integrity_audit.py`,
+`vercel-build.sh` and the artifact `test -s`. Both of those siblings filter
+`pull_request: branches: [main]`, which is **narrower** than this workflow's
+unfiltered `pull_request:` — removing them would silently drop coverage on a PR
+targeting any other base branch. **Dedupe only against a sibling whose trigger is
+identical or wider**; a matching command is not enough.
+
+### 3. Four workflows left superseded runs billing to completion
+
+`lighthouse-audit.yml`, `omega-intelligence-fabric.yml`, `omega-update.yml` and
+`supabase-migration-security-audit.yml` had **no `concurrency:` block**, so every
+push left its predecessor running for a result nobody would read — Lighthouse
+being the slowest job in the estate. This is also what produced the 13
+simultaneous "failures" at `006e4a73` that had no logs: superseded runs, not
+thirteen defects.
+
+`cancel-in-progress: true` is deliberate and is the safe direction: a **ref-keyed**
+group with `false` starves instead (§8.2, measured at 53m06s → 3s). `vercel-production.yml`
+is untouched — its group is **fixed** (`vercel-production`), not ref-keyed, and
+`false` is correct for a deploy. `runner-probe.yml` is untouched: it is pinned to
+the dead self-hosted runner and never starts, so a guard there is meaningless.
+
+Measured after: **15 workflows fire on a push to `main`, and all 15 are guarded**
+(previously 4 were not).
+
+### Verification
+
+- `python3 scripts/workflow-contract.py` → PASS
+- `python3 scripts/workflow-contract-lint.py` → PASS
+- `python3 scripts/omega_fabric_platform_gate.py` → `failures=0`
+- `python3 scripts/omega_enterprise_architecture_gate.py` → `OMEGA_ENTERPRISE_ARCHITECTURE=PASS`
+- `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single self-hosted runner, pre-existing)
+- 18 workflow files, **0 malformed**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

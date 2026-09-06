@@ -15,6 +15,14 @@ on:
       - '.github/workflows/supabase-migration-security-audit.yml'
   workflow_dispatch:
 
+# Supersede in-flight runs for the same ref. Without this every push
+# leaves its predecessor running to completion, billing Actions minutes
+# for a result nobody will read. cancel-in-progress is TRUE deliberately:
+# a ref-keyed group with FALSE starves instead (CLAUDE.md 8.2).
+concurrency:
+  group: supabase-migration-security-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

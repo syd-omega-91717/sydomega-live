@@ -843,6 +843,13 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
    Two modules must never share a guard attribute; the guard is the module's
    identity, not the feature area's. */
 (function(){if(!document.querySelector('script[data-omega-emblem-living]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblem-living','1');__omegaAppend(s);}})();
+
+/* Keyboard-operable click targets. Its guard attribute is its OWN identity,
+   not the feature area's -- section 8.1 class 5b: two modules behind one
+   data-omega-* attribute means the first to run permanently satisfies the
+   second's guard and the second never loads on any page. This is distinct
+   from data-omega-keyboard (omega-keyboard.js), which is the shortcut engine. */
+(function(){if(!document.querySelector('script[data-omega-kbd-operable]')){var s=document.createElement('script');s.src='/omega-a11y-controls.js';s.setAttribute('data-omega-kbd-operable','1');s.defer=true;__omegaAppend(s);}})();
 /* ===== SOVEREIGN CONSTELLATION -- the ring-of-emblems diagram ===== */
 (function(){if(!document.querySelector('script[data-omega-constellation-js]')){var s=document.createElement('script');s.src='/omega-constellation.js';s.setAttribute('data-omega-constellation-js','1');__omegaAppend(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */

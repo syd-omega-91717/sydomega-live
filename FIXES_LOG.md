@@ -13502,3 +13502,91 @@ an estate-wide sweep needs its own plan.
 - Lighthouse, `terms.html`: `label-content-name-mismatch` 0 → 1
 - `node --check bg.js`, `node --check omega-ui.js` → OK
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 119 — every click target on the platform is now reachable from a keyboard
+
+`<div onclick="location.href='/x.html'">` is not focusable and does not fire a
+click on Enter. Every one of them is invisible to anyone not using a mouse: a
+keyboard user, a switch user, most voice control, and anyone whose pointer is
+temporarily unavailable.
+
+### Measured first, and the grep estimate was the wrong shape
+
+A source grep said "145 clickable divs across 165 files", which implied an
+estate-wide markup sweep. **Rendering eight pages told a different story:**
+
+| page | `[onclick]` | keyboard-inaccessible |
+|---|---|---|
+| dashboard.html | 82 | **44** |
+| profile / settings / vault / social / feed / analytics / ops | 2–11 each | **1 each** |
+
+**51 total** — but 7 of those 8 were the *same element*: `div.on-brand`, the
+sidebar brand mark injected by `nav.js:231` on every page. One shared element
+plus one concentrated page, not 165 files of scattered markup.
+
+### Fix 1 — the brand mark is now a real link, not a div
+
+`nav.js` emitted `<div class="on-brand" onclick="location.href='/dashboard.html'">`.
+It is now `<a class="on-brand" href="/dashboard.html">`. A native link is
+focusable, Enter-activatable, and supports middle-click and open-in-new-tab for
+free — none of which `role="link"` on a div can give back. Its only child is a
+`<canvas>`, so it has no text to name it; `aria-label` now carries what `title`
+was doing alone. `.on-brand` gained `text-decoration:none`.
+
+That single change took **7 of the 8 sampled pages to zero**, and applies to
+every page in the estate that renders the sidebar.
+
+### Fix 2 — `omega-a11y-controls.js`, for the rest
+
+A new module (guard `data-omega-kbd-operable`, injected from `bg.js`) upgrades
+any element that **already declares** an `onclick` and is not natively
+operable: `tabindex="0"`, an inferred role, and Enter/Space activation.
+
+- Role is inferred, not guessed uniformly: an `onclick` matching
+  `location.href|assign|replace|window.open` becomes `role="link"`, anything
+  else `role="button"`. Measured on dashboard: **42 links, 1 button** — the
+  inference matches what those handlers actually do.
+- Key handling honours the role. Space activates a button but *scrolls* on a
+  link, so only Enter is bound for links (ARIA).
+- It never invents interactivity. Native controls and elements an author
+  already made operable (tabindex **and** a key handler) are skipped entirely.
+- A debounced `MutationObserver` catches markup injected after
+  `DOMContentLoaded` — nav, copilot and the emblem panel all inject late, so a
+  single pass would miss them.
+- **Focus visibility is not duplicated here**: `bg.js` already styles
+  `[tabindex]:focus-visible` with a cyan outline, so anything made focusable
+  gets a visible ring for free. Adding another owner would have been the §4.1
+  mistake.
+
+Runtime, not markup, deliberately: the alternative was editing ~145 elements
+across ~165 files, and §8.1 is a catalogue of what estate-wide sweeps cost
+here. One module is one diff to review and one commit to revert, and it also
+covers dynamically injected controls that a source sweep never could.
+
+### A false pass, caught
+
+The first "after" run reported **0 remaining on every page including
+dashboard** — because the static server had died and every `goto` returned
+`ERR_CONNECTION_REFUSED`. §8.4 exactly: *a stopped static server reports 0*.
+The re-run with the server asserted `HTTP 200` first showed 43 still flagged.
+
+Those 43 were then a **scanner** defect, not a fix defect: the scan tested for
+an `onkeydown` **attribute**, while the module attaches via
+`addEventListener`. Rewritten to measure the real outcome (`el.tabIndex >= 0`
+plus the `data-omega-kb` marker) it reads 0 — and the behavioural test below is
+what actually settles it.
+
+### Verification
+
+- rendered scan, 8 pages: **51 → 0** keyboard-inaccessible click targets
+- **behavioural proof**, not an attribute check: focused an upgraded KPI card on
+  `dashboard.html` (`focusable: true`), pressed **Enter**, and the browser
+  navigated to `/approvals.html`
+- role inference on dashboard: 42 `link`, 1 `button`
+- `node --check` on `bg.js`, `nav.js`, `omega-a11y-controls.js` → OK
+- `python3 scripts/audit.py` → 0 critical / 8 warnings (unchanged; the new
+  module is referenced from `bg.js`, so it is not an orphan)
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

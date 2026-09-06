@@ -537,6 +537,39 @@ function __omegaAppend(el){
      - fails silently if the RPC or network is unavailable
      - sends no form data, tokens, or page text -- message/source/line only
    ========================================================================= */
+
+/* =========================================================================
+   SILENT-WRITE GUARD  --  window.__omegaWriteFail(op, result) -> boolean
+   Supabase RESOLVES to {data:null,error}; it does not throw. So a failed
+   write takes the success path unless the result is inspected, and a
+   try/catch around one catches nothing. That is the single most repeated
+   root cause of real bugs in this repo (CLAUDE.md section 8.1, class 1).
+   Every non-read call in this file routes its result through here, so a
+   failure is recorded instead of lost. Returns true when the write failed,
+   so a caller can branch on it.
+   Deliberately never throws: observability must not break its caller, and
+   window.omegaRuntime is absent until assets/js/omega-runtime-observability.js
+   loads (the built artifact injects it; a raw source page may not have it).
+   ========================================================================= */
+(function () {
+  'use strict';
+  if (window.__omegaWriteFail) return;
+  window.__omegaWriteFail = function (op, res) {
+    var err = res && res.error;
+    if (!err) return false;
+    try {
+      if (window.omegaRuntime && typeof window.omegaRuntime.record === 'function') {
+        window.omegaRuntime.record('write_failed', {
+          op: String(op).slice(0, 64),
+          code: err.code || '',
+          message: String(err.message || '').slice(0, 200)
+        });
+      }
+    } catch (e) { /* never let recording a failure become a second failure */ }
+    return true;
+  };
+})();
+
 (function () {
   'use strict';
   if (window.__omegaErrHooked) return;
@@ -1507,7 +1540,12 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
           var expiresAt=new Date(d.trial_expires_at).getTime();
           var remaining=expiresAt-Date.now();
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(){location.replace('/pending.html?t=expired');});return;}
+          /* The callback MUST take the result: a no-arg .then() cannot tell
+             success from {data:null,error}, and the member is sent to the
+             expired page either way. The wall clock says the trial is over, so
+             ending the session is right regardless -- but a failed write is now
+             recorded, and the next load retries expire_trial. */
+          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);location.replace('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
@@ -1516,7 +1554,11 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }).catch(function(){});
   function startTimeSovereignPing(sb){
     if(window.__omegaTSping)return; window.__omegaTSping=1;
-    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session'); }catch(e){} } }
+    /* The try/catch here caught nothing: an rpc that fails resolves, it does
+       not throw. Keep it for a synchronous throw, and inspect the result and
+       the rejection too. A dropped ping is not fatal, but it should not be
+       invisible. */
+    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session').then(function(r){window.__omegaWriteFail('ping_session',r);},function(){}); }catch(e){} } }
     ping();
     setInterval(ping,60000);
   }
@@ -1550,7 +1592,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       }
     });
     var expired=false;
-    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(){setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
+    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
   }
 })();
@@ -1627,7 +1669,14 @@ setTimeout(function(){
       document.body.classList.add('omega-owner');
       /* Enforce lifetime access */
       if(!pr.access_approved||pr.is_trial||pr.trial_expires_at||parseFloat(pr.axis_a)<9){
-        await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        /* This is the write that grants lifetime access. Unchecked, it could
+           fail while the owner UI above had already been applied -- the screen
+           agreeing with a database that never changed. The repair is idempotent
+           and re-runs on the next load, so recording the failure is the fix;
+           the owner class itself is correct either way, since it came from the
+           is_owner column this update does not touch. */
+        var ownerAccess=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        if(ownerAccess.error) window.__omegaWriteFail('owner_lifetime_access',ownerAccess);
       }
       /* Check pending members and notify */
       var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);

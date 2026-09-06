@@ -13275,3 +13275,63 @@ class whose paint was being discarded.
 - `python3 -m unittest discover -s scripts/tests` → **284** passing
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
   caught the 1 KB the new comment added, and was regenerated)
+
+---
+
+## 116 — the four unchecked Supabase writes left in `bg.js`, including the one that grants lifetime access
+
+`scripts/silent-failure-detector.py` is **blocking** in `ci.yml`'s `verify` job.
+It had been reporting **4 findings, exit 1, on `main`** — so that gate was red on
+every PR, from every author, and had been for as long as the four sites existed.
+CLAUDE.md §8.3 recorded this check at "0 findings, exit 0"; that was accurate
+when written and had since drifted.
+
+All four are §8.1 bug class 1 — Supabase **resolves** to `{data:null,error}`, it
+does not throw, so a `try/catch` around a write catches nothing and a no-argument
+`.then()` cannot tell success from failure.
+
+### The four sites, and what each one silently did
+
+| site | call | what failed silently |
+|---|---|---|
+| `bg.js:1510` | `.rpc('expire_trial',{p_uid:s.user.id})` | `.then(function(){location.replace('/pending.html?t=expired')})` — member sent to the expired page whether or not the trial was actually expired server-side |
+| `bg.js:1519` | `.rpc('ping_session')` | wrapped in `try{...}catch(e){}`, which catches nothing — presence telemetry could stop reporting and nothing would say so |
+| `bg.js:1553` | `.rpc('expire_trial',{p_uid:uid})` | same no-arg `.then()` shape as 1510, in the trial-banner tick |
+| `bg.js:1630` | `.update({access_approved:true,…,membership_tier:9})` | **the write that grants lifetime access.** `document.body.classList.add('omega-owner')` had already run above it, so a failure left the screen agreeing with a database that never changed |
+
+The detector's own source names the 1510/1553 shape as the canonical form of this
+class (`scripts/silent-failure-detector.py`, the `then_match` block): *"the
+callback takes no argument, so it cannot distinguish success from
+`{data:null,error}` — the member is told the trial expired whether or not it
+did."*
+
+### The fix
+
+One guarded helper, `window.__omegaWriteFail(op, result) -> boolean`, added as a
+top-level IIFE next to the existing error reporter. It records a failure through
+`window.omegaRuntime.record('write_failed', …)` — the platform's own idiom,
+already used by `scripts/vercel-build-enhance.mjs:66` — and never throws, since
+`omegaRuntime` is absent until `assets/js/omega-runtime-observability.js` loads.
+
+Behaviour is deliberately preserved at all four sites. The two `expire_trial`
+paths still end the session, because the **wall clock** says the trial is over
+regardless of what the write did, and both repairs are idempotent and retry on the
+next load. What changed is that the failure is now recorded instead of lost.
+
+`bg.js:1630` uses the canonical destructured form rather than wrapping the call,
+because the scanner's forward-context check is satisfied by reading
+`ownerAccess.error` — the first attempt wrapped the call in the helper, which
+handles the error correctly but leaves the word `.error` absent, and the detector
+(rightly) still flagged it. **Satisfying the scanner by taking a `.then` argument
+without using it would have been gaming it**; the argument is used at every site.
+
+### Verification
+
+- `python3 scripts/silent-failure-detector.py` → **4 findings, exit 1** → **`OK — every write operation checks .error`, exit 0**
+- `node --check bg.js` OK
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `node scripts/verify-runtime.js` → 12 of 13 pages ok. `settings.html` fails on
+  7 `BUTTON.btn-gold` at 2.33:1 contrast — **pre-existing**, established by
+  stashing `bg.js` back to `main` and re-running: identical failure, so this
+  change leaves the render exactly as it found it. That 2.33:1 `btn-gold`
+  signature is the one §4.1 already documents.

@@ -13888,8 +13888,18 @@ per the §8.4 help contract.
 **Secret hygiene, checked rather than assumed.** A first grep for
 `LLM_API_KEY.*echo` reported a leak; it had matched the *variable name inside
 the string* `"ERROR: LLM_API_KEY is unset"` — a §8.4 "grep is a candidate
-generator, not a verdict" false positive. Proven properly by running with
-`LLM_API_KEY=sk-SENTINEL-DO-NOT-LEAK` and grepping all output: **0 occurrences**.
+generator, not a verdict" false positive. Proven properly by running the script
+with `LLM_API_KEY` set to a unique sentinel value and grepping all output for
+that value: **0 occurrences**.
+
+The sentinel itself is deliberately *not* quoted here. The first version of this
+entry wrote it out, and it began `sk-` followed by twenty characters — which is
+exactly `production-surface-contract.py`'s secret pattern
+(`sk-[A-Za-z0-9_-]{20,}`, line 64). That gate is right and was not touched: it
+caught fake secret material entering a tracked file, which is the shape a real
+leak has too. **Never paste a realistic-looking credential into documentation to
+prove a credential is not leaked** — describe the test instead. Cost: one red
+`main`, caught by `./scripts/ci-local.sh` (1 of 23 blocking checks failing).
 
 **Blast radius.** `grep -rniE strix .github/workflows/ scripts/ci-local.sh`
 returns zero hits — the script is manual-invocation only and no gate runs it.

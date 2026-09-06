@@ -13758,3 +13758,62 @@ was written to enforce and could not.
 - `python3 scripts/vercel_static_contract.py` → `build_output_verified=references_resolve_in_public`
 - `python3 scripts/production-contract.py` → PASSED
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 122 — the page-overlap audit had never executed once, because it was pinned to the dead runner
+
+`CLAUDE.md` §8.2 records that the self-hosted Windows runner is dead and that
+`page-overlap-audit.yml` and `runner-probe.yml` "are still pinned and still
+never run". That is accurate, and for `page-overlap-audit.yml` it means a
+**working check has produced zero results in its entire history**.
+
+The workflow-run history makes the failure mode concrete. Runs on that runner
+show durations of **10m 13s**, **11m 44s** and **11m 52s** — that is queueing
+against a runner that never answers, then timing out. A check that never runs
+is not a lenient check; it is an absent one.
+
+### The script was never the problem
+
+Verified on Linux before changing anything:
+
+```
+$ python3 scripts/page-overlap-audit.py
+...
+PAGE OVERLAP AUDIT: PASS (advisory; no files modified)
+exit 0
+```
+
+It is platform-independent and completes normally. Only the runner pin kept it
+from ever executing.
+
+### The change
+
+`runs-on: [self-hosted, Windows, X64]` → `runs-on: ubuntu-latest`, plus an
+`actions/setup-python@v5` step (the self-hosted box had Python preinstalled;
+a hosted runner needs it declared) and `shell: pwsh` dropped, since that went
+with the Windows runner and bash is the hosted default.
+
+Cost is bounded and was already reasoned about in the workflow's own header: it
+is advisory, O(n²) over the page estate, and runs **nightly on cron plus on
+demand** — not per push. It does not add per-push Actions load, which matters
+given entries 117 and 121.
+
+### `runner-probe.yml` is deliberately NOT changed
+
+It is the only workflow still targeting `[self-hosted, Windows, X64]`, and that
+is correct: its entire purpose is to prove whether that runner works. Pointing
+it at `ubuntu-latest` would make it pass while proving nothing. It is
+`workflow_dispatch`-only, so it costs nothing until someone runs it.
+
+**Measured after: 21 of 22 workflows on `ubuntu-latest`, 1 on the self-hosted
+label — and that one is the probe.**
+
+### Verification
+
+- `python3 scripts/page-overlap-audit.py` → PASS, exit 0 (on Linux)
+- `python3 scripts/workflow-contract.py` → PASS
+- `python3 scripts/workflow-contract-lint.py` → PASS
+- `python3 scripts/architecture-contract.py` → PASSED, 16 blocks / 16 evidence contracts
+- `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single runner, pre-existing)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

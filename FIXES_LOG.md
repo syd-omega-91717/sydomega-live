@@ -12899,3 +12899,88 @@ that currently work.
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
 - `python3 scripts/omega-registry.py` regenerated: the census caught the 1 KB
   the new comment block added, which is the gate doing its job
+
+---
+
+## 112 — The repository's primary CI workflow had not concluded on `main` in 30 runs
+
+**Symptom.** None. That is the finding. The board showed `pending`, never red,
+and CLAUDE.md §8.2's rule — *a pending check is not a passing one; read
+`status`, not just `conclusion`* — is the only reason it was looked at.
+
+### What was measured
+
+`ci.yml` on `main`, the workflow `CLAUDE.md` §7 documents as the repository's
+primary gate (`node --check` on every root `.js`, `scripts/audit.py`, the
+broken-asset check, the `service_role` scan):
+
+```
+run 1031  cancelled     run 1039  cancelled     run 1052  cancelled
+run 1032  cancelled     run 1043  cancelled     run 1060  cancelled
+run 1033  cancelled     run 1045  cancelled     run 1061  pending
+run 1034  cancelled     run 1047  cancelled
+run 1035..1038 cancelled
+```
+
+`supabase-runtime-contract.yml` on `main`, identical: runs **322–348**, every
+one `cancelled`.
+
+Run 1052 was created 2026-09-05T22:18:21Z and still sat `pending` at
+02:49 the next morning — **4h31m** — with `list_workflow_jobs` returning
+`total_count: 0`. No runner was ever assigned. On the same commits, the other
+ten workflows completed in **10–25 seconds**.
+
+### The cause
+
+Both carried a **ref-keyed** concurrency group with `cancel-in-progress: false`:
+
+```yaml
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+```
+
+A run enters the group, waits for a slot, and the next push to `main` arrives
+before a runner is assigned — so the queued run is cancelled rather than the
+newcomer waiting. With pushes arriving faster than these jobs get scheduled,
+every run is cancelled by its successor and none ever starts. The thirteen
+workflows in this repo that set `cancel-in-progress: true` conclude in seconds
+on the very same commits, which is what makes the correlation measurable rather
+than theoretical.
+
+Both are now `true`. On `main` only the newest commit's result matters, so
+superseding an unstarted run is exactly what those thirteen already do — this
+is the repo's own working convention, not a new idea.
+
+**`vercel-production.yml` deliberately keeps `false`.** Its group is the fixed
+string `vercel-production`, not a ref, and a production deploy in flight must
+not be cancelled by a newer push. It also does reach conclusions — so it is a
+counter-example to "false is always wrong", and the gate below is scoped
+accordingly.
+
+### The gate, and the bug the gate shipped with
+
+`scripts/workflow-contract-lint.py` now rejects a concurrency group that
+interpolates `github.ref`/`github.head_ref` **and** sets
+`cancel-in-progress: false`. A fixed group with `false` is untouched.
+
+The first version of that rule **passed on the very file it was written for**.
+The block regex was `^concurrency:\s*\n((?:[ \t]+.*\n)+)` — it stops at the
+first unindented line, and the explanatory comment had been placed at column 0
+*between* `group:` and `cancel-in-progress:`. So `block` held only the `group:`
+line and the rule never saw the violation.
+
+It was caught because the control was run before the rule was believed:
+reintroduce the bug, and the gate must fail. It printed `PASS`, exit 0. §8.4's
+rule — *verify a "0 findings" result is real* — earned its place again. The
+regex now accepts comment and blank lines inside the block, and
+`test_comment_inside_the_block_does_not_hide_the_violation` pins it.
+
+### Verification
+
+- `python3 scripts/workflow-contract-lint.py` → PASS; reintroducing
+  `cancel-in-progress: false` on `ci.yml` → **FAIL**, exit 1; restored → PASS
+- both workflows still parse as YAML (`yaml.safe_load` → `cancel-in-progress: True`)
+- `python3 -m unittest discover -s scripts/tests` → **279** passing (was 271),
+  including the false-positive control for the fixed-group case
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

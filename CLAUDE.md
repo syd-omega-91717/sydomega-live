@@ -510,13 +510,10 @@ Only what changes what you do in the **first minutes** stays here:
   deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
   responsible for regenerating `supabase/live-schema.json` in the same change.
-- **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 called 8
-  relations "declared but absent live"; one had existed all along — a false positive purely
-  from staleness. Regenerate before trusting a finding built on it.
 - **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
-  (#250, #252), each adding `omega-*.js` modules and a script tag to ~193 pages without
-  regenerating the census. Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in
-  CI — that gate is the only one here that notices a third party editing the estate.
+  (#250, #252), adding modules and a script tag to ~193 pages without regenerating the census.
+  Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the
+  only one that notices a third party editing the estate.
 - **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges
   the head it had when it computed the merge, so a force-push loses exactly what an extra
   trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged
@@ -548,7 +545,11 @@ Only what changes what you do in the **first minutes** stays here:
   `ubuntu-latest`; `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and still
   never run. **A pending check is not a passing one** — read `status`, not just `conclusion`.
   `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
-  (`git config core.hooksPath .githooks`, bypass `--no-verify`).
+  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** concurrency
+  group with `cancel-in-progress: false` never concludes — `ci.yml` (§7's primary gate) and
+  `supabase-runtime-contract.yml` were `cancelled` on *every* run on `main`, 30 in all, while
+  the 13 setting `true` finished in seconds (`FIXES_LOG.md` 112). Gated; a **fixed** group with
+  `false` (`vercel-production.yml`) is correct and exempt.
 
 ### 8.3 Current verification baseline
 
@@ -557,8 +558,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b, a **transitive** closure since `FIXES_LOG.md` 111 — one hop misreported both, in opposite directions) |
-| `python3 -m unittest discover -s scripts/tests` | **271** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b; a **transitive** closure since `FIXES_LOG.md` 111) |
+| `python3 -m unittest discover -s scripts/tests` | **279** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

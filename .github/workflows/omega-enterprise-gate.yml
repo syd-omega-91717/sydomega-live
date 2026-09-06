@@ -1,0 +1,49 @@
+name: Omega Enterprise Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: omega-enterprise-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  architecture:
+    name: Enterprise architecture gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Architecture evolution gate
+        run: python scripts/omega_enterprise_architecture_gate.py
+
+      - name: Python compile gate
+        run: python -m compileall -q core scripts tests
+
+      - name: Intelligence Fabric gate
+        run: python scripts/omega_fabric_audit.py
+
+      - name: Intelligence Fabric platform gate
+        run: python scripts/omega_fabric_platform_gate.py
+
+      - name: Repository integrity gate
+        run: python scripts/repository_integrity_audit.py
+
+      - name: Static production artifact gate
+        run: bash scripts/vercel-build.sh
+
+      - name: Artifact contract
+        run: test -s public/index.html && test -s public/vendor/supabase-js.js

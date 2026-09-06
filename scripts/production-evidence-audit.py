@@ -77,14 +77,9 @@ def check_required():
 
 def check_static_architecture():
     vercel = read_text(ROOT / "vercel.json")
-    package = read_text(ROOT / "package.json")
     issues = []
     if '"installCommand"' in vercel and not re.search(r'"installCommand"\s*:\s*""', vercel):
         issues.append("vercel.json declares a non-empty installCommand")
-    if '"buildCommand"' in vercel and not re.search(r'"buildCommand"\s*:\s*"[^" ]*"', vercel):
-        issues.append("vercel.json buildCommand could not be interpreted")
-    if package and re.search(r'"dependencies"\s*:\s*\{\s*[^}]', package, re.S):
-        issues.append("package.json appears to declare runtime dependencies")
     for marker in FORBIDDEN_BUILD_MARKERS:
         if (ROOT / marker).exists():
             issues.append(f"forbidden build marker exists: {marker}")

@@ -13162,3 +13162,93 @@ in this change for that reason.
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
 - `python3 scripts/context-budget.py` → PASS (CLAUDE.md ~15,985 / 16,000; the
   fixed shallow-clone note compressed to make room)
+
+---
+
+## 115 — The front page loaded one stylesheet twice, and the duplicate silently overrode the cinematic cards
+
+**Symptom.** None reported. Found while scoping entry 114's markup-adoption work
+by asking a narrower question first: on `index.html`, the one page that *does*
+adopt `.omega-depth-card`, does that class actually win the paint?
+
+It does not.
+
+### Measured
+
+Six front-page door cards are authored `class="omega-card omega-depth-card"`.
+Their computed background:
+
+```
+linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016))
+```
+
+`omega-cinematic-system.css` declares something else entirely —
+`linear-gradient(145deg,rgba(255,255,255,.06),var(--omega-panel))`, with
+`--omega-panel: rgba(9,12,20,.74)`. Three rules set that property:
+
+| sheet order | sheet | selector |
+|---|---|---|
+| 1 | `omega-visual-universe.css` | `.omega-card` |
+| 2 | `omega-cinematic-system.css` | `.omega-depth-card` |
+| **16** | `omega-visual-universe.css` | `.omega-card` ← **computed value matches this** |
+
+`omega-visual-universe.css` was in the cascade **twice**, and both selectors are
+(0,1,0), so the later copy won. Confirmed independently: two matching
+`<link rel=stylesheet>` tags, and `styleSheets` reporting the href twice.
+`dashboard.html` and `profile.html` have neither — this was index-only.
+
+### Cause
+
+`index.html` links the sheet in its own `<head>`. It also loads
+`omega-visual-runtime.js`, which injects the same sheet under this guard:
+
+```js
+if(!document.getElementById('omega-visual-runtime-css')){ …inject… }
+```
+
+That guard is keyed to **this module's own id**. It correctly stops the module
+injecting twice, and cannot see that the page already links the identical
+resource. So the sheet loaded twice on the only page that links it in markup.
+
+This is §8.1 class 5 in a new shape. The recorded lesson was *a guard attribute
+is the module's identity, not the feature area's*; this is the mirror image —
+**when the thing that must not be duplicated is a resource, the guard belongs on
+the resource**, not on the module. The guard now also checks
+`link[rel="stylesheet"][href$="omega-visual-universe.css"]`.
+
+### Effect, measured before and after
+
+|  | before | after |
+|---|---|---|
+| duplicated sheets | `omega-visual-universe.css` ×2 | **none** |
+| `<link>` tags for it | 2 | 1 |
+| `.omega-depth-card` background | `rgba(255,255,255,.055)` → `rgba(255,255,255,.016)` | `rgba(255,255,255,.06)` → **`rgba(9,12,20,.74)`** |
+
+The six front-page cards now paint the cinematic panel their author asked for,
+and the front page makes one fewer stylesheet request.
+
+**Blast radius is exactly one page**, established rather than assumed:
+`index.html` is the only page that loads `omega-visual-runtime.js` *and* the
+only page that links `omega-visual-universe.css` in markup. `dashboard.html`
+re-rendered unchanged (no depth cards, no such links).
+
+### Why this, and not the markup sweep entry 114 scoped
+
+Entry 114 established that the remaining cinematic work is markup adoption, and
+that `.omega-cinematic` would stack a **fifth** fixed full-viewport backdrop.
+Worth noting: `index.html`, the reference adopter, uses `.omega-depth-card` and
+`.omega-emblem` but **never `.omega-cinematic`** — the risky class is unadopted
+even by the page that introduced the system. Fixing the cascade so the existing
+adoption actually paints is strictly better value than widening adoption of a
+class whose paint was being discarded.
+
+### Verification
+
+- rendered before and after via `.claude/skills/verify-in-browser/harness`,
+  values above
+- `node --check omega-visual-runtime.js` OK
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- `python3 scripts/audit.py` → 0 critical / 8 warnings
+- `python3 -m unittest discover -s scripts/tests` → **284** passing
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
+  caught the 1 KB the new comment added, and was regenerated)

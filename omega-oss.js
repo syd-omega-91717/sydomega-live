@@ -134,6 +134,12 @@
       try{
         if(window.dayjs && window.dayjs._omegaRtReady) return window.dayjs(dateStr).fromNow();
       }catch(e){}
+      /* Not loaded yet -- start it now, for the NEXT call. This used to run
+         eagerly at module scope, so every page fetched dayjs plus its
+         relativeTime plugin (two third-party requests) whether or not it ever
+         rendered a relative timestamp. The fallback below is synchronous and
+         complete, so nothing is lost by waiting. */
+      warmDayjs();
       /* Inline fallback (synchronous, always works) */
       var d=new Date(dateStr),now=new Date();
       var diff=Math.round((now-d)/1000);
@@ -222,9 +228,14 @@
     });
   };
 
-  /* ── DAYJS + RELATIVETIME INIT ───────────────────────────────── */
-  /* Pre-boot dayjs with relativeTime so OSS.fromNow() uses the fast path */
-  OSS.require('dayjs', function(){
+  /* ── DAYJS + RELATIVETIME ────────────────────────────────────── */
+  /* Loaded on FIRST USE by OSS.fromNow(), not at module scope. Hoisted so
+     fromNow() can call it above. Guarded so concurrent calls load once. */
+  var _dayjsWarming = false;
+  function warmDayjs(){
+    if(_dayjsWarming) return;
+    _dayjsWarming = true;
+    OSS.require('dayjs', function(){
     /* CDN plugin file sets window.dayjs_plugin_relativeTime */
     var s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js';
@@ -238,7 +249,8 @@
       }catch(e){}
     };
     document.head.appendChild(s);
-  });
+    });
+  }
 
   /* ── AUTO-INIT LUCIDE ICONS ───────────────────────────────────── */
   window.addEventListener('load',function(){

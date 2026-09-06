@@ -84,7 +84,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 189 |
 | pages loading `bg.js` | 189 of 189 |
-| `omega-*.js` modules | 119 (1108 KB) |
+| `omega-*.js` modules | 119 (1109 KB) |
 | root `.js` files | 128 |
 | `supabase/*.sql` (flat bag) | 126 |
 | `supabase/migrations/*.sql` | 171 (106 numbered `NNNN_`, 65 timestamped) |

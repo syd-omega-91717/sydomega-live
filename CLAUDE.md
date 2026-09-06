@@ -539,18 +539,18 @@ Only what changes what you do in the **first minutes** stays here:
   it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
   printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). **Add any new web directory to that list**;
   never commit `public/`. The *Framework Settings Override* notice is expected.
-- **The self-hosted Windows runner is DEAD; `queued` on it means never.** This bullet called
-  `queued` normal draining. Measured 2026-09-05: `runner-probe.yml`, whose only job is to prove
-  that runner works, had sat `queued` since 08:12 with no run starting, and the two blocking
-  gates pinned to it had **never once reached a conclusion** (`FIXES_LOG.md` 106). Both now use
-  `ubuntu-latest`; `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and still
-  never run. **A pending check is not a passing one** — read `status`, not just `conclusion`.
+- **The self-hosted Windows runner is DEAD; `queued` on it means never.** `runner-probe.yml`,
+  whose only job is to prove that runner works, has never started a run; the two blocking gates
+  once pinned to it had **never reached a conclusion** and now use `ubuntu-latest`
+  (`FIXES_LOG.md` 106). `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and
+  still never run. **A pending check is not a passing one** — read `status`, not `conclusion`.
   `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
   (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** group with
   `cancel-in-progress: false` **starves** — `ci.yml` (§7's gate) was `cancelled` 30 runs
-  running on `main`: a job waits ~53min for a runner and any push in that window cancels it
-  (run 1063 queued 53m06s, then passed in 45s — **starvation, not deadlock**;
-  `FIXES_LOG.md` 112). Gated; a **fixed** group with `false` is correct and exempt.
+  running on `main` — a job waited ~53min for a runner and any push in that window cancelled
+  it: **starvation, not deadlock**. **Fixed, verified on `main`**: runner assignment
+  53m06s → **3s**, all 11 workflows green in 49s (`FIXES_LOG.md` 112). Measure
+  `created_at` vs `started_at` on the **job**; the run's timestamps hide the wait. Gated; a **fixed** group with `false` is correct and exempt.
 
 ### 8.3 Current verification baseline
 

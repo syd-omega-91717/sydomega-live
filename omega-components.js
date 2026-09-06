@@ -33,14 +33,4 @@
     load: function (el) { if (el) el.setAttribute('data-loading', '1'); },
     done: function (el) { if (el) el.removeAttribute('data-loading'); }
   };
-
-  /* Page Character runtime: loaded through this already-global component
-     layer so every page that receives bg.js gets one canonical identity hook. */
-  if(!document.querySelector('script[data-omega-page-character]')){
-    var pc=document.createElement('script');
-    pc.src='/omega-page-character.js';
-    pc.setAttribute('data-omega-page-character','1');
-    pc.defer=true;
-    (document.body||document.documentElement).appendChild(pc);
-  }
 })();

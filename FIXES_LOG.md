@@ -12899,3 +12899,356 @@ that currently work.
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
 - `python3 scripts/omega-registry.py` regenerated: the census caught the 1 KB
   the new comment block added, which is the gate doing its job
+
+---
+
+## 112 — The repository's primary CI workflow had not concluded on `main` in 30 runs
+
+**Symptom.** None. That is the finding. The board showed `pending`, never red,
+and CLAUDE.md §8.2's rule — *a pending check is not a passing one; read
+`status`, not just `conclusion`* — is the only reason it was looked at.
+
+### What was measured
+
+`ci.yml` on `main`, the workflow `CLAUDE.md` §7 documents as the repository's
+primary gate (`node --check` on every root `.js`, `scripts/audit.py`, the
+broken-asset check, the `service_role` scan):
+
+```
+run 1031  cancelled     run 1039  cancelled     run 1052  cancelled
+run 1032  cancelled     run 1043  cancelled     run 1060  cancelled
+run 1033  cancelled     run 1045  cancelled     run 1061  pending
+run 1034  cancelled     run 1047  cancelled
+run 1035..1038 cancelled
+```
+
+`supabase-runtime-contract.yml` on `main`, identical: runs **322–348**, every
+one `cancelled`.
+
+Run 1052 was created 2026-09-05T22:18:21Z and still sat `pending` at
+02:49 the next morning — **4h31m** — with `list_workflow_jobs` returning
+`total_count: 0`. No runner was ever assigned. On the same commits, the other
+ten workflows completed in **10–25 seconds**.
+
+### The cause
+
+Both carried a **ref-keyed** concurrency group with `cancel-in-progress: false`:
+
+```yaml
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+```
+
+A run enters the group, waits for a slot, and the next push to `main` arrives
+before a runner is assigned — so the queued run is cancelled rather than the
+newcomer waiting. The thirteen workflows in this repo that set
+`cancel-in-progress: true` conclude in seconds on the very same commits, which
+is what makes the correlation measurable rather than theoretical.
+
+**CORRECTION, same day.** This entry first said "none ever starts". That was
+too strong, and `main` disproved it within the hour: run **1063**
+(`d0b92c09`) completed **`success`** with the fix still unmerged. Its timings
+are the real mechanism:
+
+```
+run created    2026-09-06T02:53:36Z
+job assigned   2026-09-06T03:46:42Z   <- 53m 06s later
+job started    2026-09-06T03:46:44Z
+job completed  2026-09-06T03:47:29Z   <- 45s of actual work
+```
+
+So this is **starvation, not deadlock**: the run waits ~53 minutes for a
+runner, and with `cancel-in-progress: false` any push inside that window
+cancels it. Thirty consecutive cancellations happened because pushes kept
+arriving faster than the queue drained; when they stopped, the last queued run
+got a runner and passed in 45 seconds.
+
+The fix is unchanged and is if anything better justified — 45 seconds of work
+should not be reachable only after a 53-minute wait that any push resets. But
+the overstatement is corrected here rather than left standing, because the
+counter-example was one API call away and a reviewer would have found it. The
+transferable rule: **a run that has not concluded has not been shown never to
+conclude.** Read the job's `created_at` vs `started_at` before calling a queue
+a deadlock.
+
+Both are now `true`. On `main` only the newest commit's result matters, so
+superseding an unstarted run is exactly what those thirteen already do — this
+is the repo's own working convention, not a new idea.
+
+**`vercel-production.yml` deliberately keeps `false`.** Its group is the fixed
+string `vercel-production`, not a ref, and a production deploy in flight must
+not be cancelled by a newer push. It also does reach conclusions — so it is a
+counter-example to "false is always wrong", and the gate below is scoped
+accordingly.
+
+### The gate, and the bug the gate shipped with
+
+`scripts/workflow-contract-lint.py` now rejects a concurrency group that
+interpolates `github.ref`/`github.head_ref` **and** sets
+`cancel-in-progress: false`. A fixed group with `false` is untouched.
+
+The first version of that rule **passed on the very file it was written for**.
+The block regex was `^concurrency:\s*\n((?:[ \t]+.*\n)+)` — it stops at the
+first unindented line, and the explanatory comment had been placed at column 0
+*between* `group:` and `cancel-in-progress:`. So `block` held only the `group:`
+line and the rule never saw the violation.
+
+It was caught because the control was run before the rule was believed:
+reintroduce the bug, and the gate must fail. It printed `PASS`, exit 0. §8.4's
+rule — *verify a "0 findings" result is real* — earned its place again. The
+regex now accepts comment and blank lines inside the block, and
+`test_comment_inside_the_block_does_not_hide_the_violation` pins it.
+
+### Verification
+
+- `python3 scripts/workflow-contract-lint.py` → PASS; reintroducing
+  `cancel-in-progress: false` on `ci.yml` → **FAIL**, exit 1; restored → PASS
+- both workflows still parse as YAML (`yaml.safe_load` → `cancel-in-progress: True`)
+- `python3 -m unittest discover -s scripts/tests` → **279** passing (was 271),
+  including the false-positive control for the fixed-group case
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 113 — "LOCAL_ONLY" was read as "this data is lost", and it nearly caused a rebuild of a table that already exists
+
+**Symptom.** `EVIDENCE_MATRIX.md` described 45 pages as device-local, with
+**40** of them carrying `**no export path**`, and its own legend said member
+data there is *"not synced, not visible to the owner, gone with the cache."*
+
+Acting on that, this session began designing a member key-value store: a table,
+RLS, a table-level GRANT, a sync module. All of it already exists.
+
+### What is actually live
+
+```
+public.member_state(user_id uuid, key text, value jsonb, updated_at timestamptz)
+  PRIMARY KEY (user_id, key)                    -- a real unique index
+  FOREIGN KEY user_id -> auth.users ON DELETE CASCADE
+  4 policies, all roles=authenticated:
+    select/update/delete USING  (select auth.uid()) = user_id
+    insert/update    WITH CHECK (select auth.uid()) = user_id
+  GRANT to authenticated: SELECT, INSERT, UPDATE, DELETE
+```
+
+Policies **and** grants both present, so §8.1 class 6 is satisfied; the PK is a
+real unique index, so `onConflict:'user_id,key'` is valid and class 7 is
+satisfied. `omega-member-state.js` (injected by `bg.js:2192` on every page)
+mirrors localStorage up to it, checks `.error` explicitly at lines 220–225 and
+311 (class 1), and exposes restore only as an explicit member action.
+
+And it is **running in production**, not merely deployed:
+
+```
+key                     value_bytes  updated_at
+omega_dedication_today           17  2026-09-06 02:48:58   <- minutes before this run
+omega_quotes                   2753  2026-09-05 23:10:49
+omega_affirmations             1412  2026-09-05 23:10:49
+omega_skills                    692  2026-09-05 23:10:49
+omega_habits_v2                1537  2026-09-04 18:25:59
+omega_rituals                  1910  2026-09-04 18:25:59
+omega_atlas_v2                 1776  2026-09-04 18:25:59
+   … 14 rows, 1 distinct user
+```
+
+### Why the label was wrong rather than merely terse
+
+`evidence-audit.py` classifies a page by what **that page** calls. The mirror is
+a platform-wide `bg.js` module, so it is invisible to a per-page scan — and the
+matrix then stated the consequence ("gone with the cache") as fact rather than
+reporting the limit of its own method.
+
+The mirror covers any key beginning `omega`, so coverage is a real per-page
+question. Measured across all 45 LOCAL_ONLY pages: **80 keys covered, 0 not
+covered, 4 built at runtime.**
+
+**A literal-only scan of those pages reports ZERO `setItem` keys** — a serene
+zero (§8.4). `journal.html` writes `ENC_KEY`, not a string, and the first pass
+here returned `0 covered / 0 uncovered` on all 45 pages while the matrix said
+they had 1–5 writes each. Resolving same-file `const` assignments gives the real
+numbers; the four residual cases funnel through `save(k,v)` in `body.html`,
+`command.html`, `sleep.html` and `stoic.html`, whose call sites resolve by hand
+to `omega_body_log`, `omega_command_briefs`, `omega_sleep_log`,
+`omega_stoic_journal` and six more — all prefixed, so covered in fact, but the
+scanner reports them **unresolved** rather than claiming coverage it cannot see.
+
+`evidence-audit.py` now measures and prints this per page, and the legend says
+what LOCAL_ONLY does and does not mean. Five tests, two of them controls: a key
+outside the prefix must still be flagged `NOT mirrored`, and the const path must
+not become a blanket pass.
+
+### A real over-grant, correctly scoped
+
+`authenticated` holds **TRUNCATE on 214 tables** — `GRANT ALL ... TO
+authenticated` at some point in the schema's history. TRUNCATE bypasses RLS, so
+this would be severe if reachable.
+
+It is not reachable: PostgREST exposes no TRUNCATE verb, and
+
+```sql
+select proname from pg_proc where prosrc ilike '%truncate%'   -- 0 rows
+```
+
+no function issues one either. So it is a least-privilege violation and a
+latent hazard for any future `SECURITY INVOKER` function, **not** a live
+exploit — recorded in `GAP_ANALYSIS.md` §S at that weight, and deliberately not
+"fixed" in this change: revoking across 214 tables is a schema-wide migration
+that deserves its own verified pass.
+
+### Verification
+
+- live queries above via `mcp__Supabase__execute_sql` (§8.2: the MCP works
+  despite the authorization banner — try the call before reporting it blocked)
+- `python3 -m unittest discover -s scripts/tests` → **284** passing (was 279)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 114 — The cinematic sheet reaches 189 pages; the cinematic *system* still reaches one
+
+**Symptom.** None visible, which is the point. Entry 108 and commit `0934c00c`
+("the cinematic layer reached 1 page of 189 — now it reaches all of them") are
+true about the **stylesheet** and misleading about the **outcome**.
+
+### Measured in a render, not inferred
+
+`dashboard.html`, `profile.html`, `index.html`, after full load:
+
+```
+page             sheetLoaded  rulesInCascade  .omega-cinematic / -emblem / -depth-card / -node
+dashboard.html   true         4               0 / 0 / 0 / 0
+profile.html     true         4               0 / 0 / 0 / 0
+index.html       true         4               1 / 1 / 6 / 0
+```
+
+The injection works exactly as entry 108 describes: the sheet is present and its
+four rules are in every page's cascade. But **nothing carries the classes**. On
+188 of 189 pages the sheet styles zero elements, so making it reach them changed
+no page's paint.
+
+This is a cousin of §4's standing warning — *a rule written in bg.js for a
+surface it does not own is dead code that looks correct in the diff*. Here the
+rule reaches the cascade and still paints nothing, because the selector has no
+adopters. **Delivery is three claims, not one: the file loads, the rules parse,
+and something matches them.** Only the third is a visual change, and only a
+render can report it.
+
+### What task #7 actually is, and the trap waiting in it
+
+The remaining work is markup adoption, not stylesheet delivery. Before any
+sweep, note what `.omega-cinematic` does:
+
+```css
+.omega-cinematic:before{content:"";position:fixed;inset:0;z-index:-1;
+  pointer-events:none;background:radial-gradient(...),radial-gradient(...)}
+```
+
+A **fixed, full-viewport** backdrop. The estate already composites four of
+those: `omega-backdrop.js`'s `body{background}` (with `!important`),
+`omega-particles.js`'s per-element canvas, the `#omega-noise-overlay` div, and
+`omega-visual-evolution.css`'s `body::before` field. Adding `.omega-cinematic`
+to 188 pages stacks a **fifth**. That is the §4 "a sweep is not additive" rule in
+its most literal form.
+
+So the adoption has to be measured per batch against a real noise floor — §8.4
+records that a before/after screenshot diff here reads ~1.6% of pixels changed
+with **no change at all**, because the particle canvas never settles. Not swept
+in this change for that reason.
+
+### Verification
+
+- rendered via `.claude/skills/verify-in-browser/harness`, three pages, counts above
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `python3 scripts/context-budget.py` → PASS (CLAUDE.md ~15,985 / 16,000; the
+  fixed shallow-clone note compressed to make room)
+
+---
+
+## 115 — The front page loaded one stylesheet twice, and the duplicate silently overrode the cinematic cards
+
+**Symptom.** None reported. Found while scoping entry 114's markup-adoption work
+by asking a narrower question first: on `index.html`, the one page that *does*
+adopt `.omega-depth-card`, does that class actually win the paint?
+
+It does not.
+
+### Measured
+
+Six front-page door cards are authored `class="omega-card omega-depth-card"`.
+Their computed background:
+
+```
+linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016))
+```
+
+`omega-cinematic-system.css` declares something else entirely —
+`linear-gradient(145deg,rgba(255,255,255,.06),var(--omega-panel))`, with
+`--omega-panel: rgba(9,12,20,.74)`. Three rules set that property:
+
+| sheet order | sheet | selector |
+|---|---|---|
+| 1 | `omega-visual-universe.css` | `.omega-card` |
+| 2 | `omega-cinematic-system.css` | `.omega-depth-card` |
+| **16** | `omega-visual-universe.css` | `.omega-card` ← **computed value matches this** |
+
+`omega-visual-universe.css` was in the cascade **twice**, and both selectors are
+(0,1,0), so the later copy won. Confirmed independently: two matching
+`<link rel=stylesheet>` tags, and `styleSheets` reporting the href twice.
+`dashboard.html` and `profile.html` have neither — this was index-only.
+
+### Cause
+
+`index.html` links the sheet in its own `<head>`. It also loads
+`omega-visual-runtime.js`, which injects the same sheet under this guard:
+
+```js
+if(!document.getElementById('omega-visual-runtime-css')){ …inject… }
+```
+
+That guard is keyed to **this module's own id**. It correctly stops the module
+injecting twice, and cannot see that the page already links the identical
+resource. So the sheet loaded twice on the only page that links it in markup.
+
+This is §8.1 class 5 in a new shape. The recorded lesson was *a guard attribute
+is the module's identity, not the feature area's*; this is the mirror image —
+**when the thing that must not be duplicated is a resource, the guard belongs on
+the resource**, not on the module. The guard now also checks
+`link[rel="stylesheet"][href$="omega-visual-universe.css"]`.
+
+### Effect, measured before and after
+
+|  | before | after |
+|---|---|---|
+| duplicated sheets | `omega-visual-universe.css` ×2 | **none** |
+| `<link>` tags for it | 2 | 1 |
+| `.omega-depth-card` background | `rgba(255,255,255,.055)` → `rgba(255,255,255,.016)` | `rgba(255,255,255,.06)` → **`rgba(9,12,20,.74)`** |
+
+The six front-page cards now paint the cinematic panel their author asked for,
+and the front page makes one fewer stylesheet request.
+
+**Blast radius is exactly one page**, established rather than assumed:
+`index.html` is the only page that loads `omega-visual-runtime.js` *and* the
+only page that links `omega-visual-universe.css` in markup. `dashboard.html`
+re-rendered unchanged (no depth cards, no such links).
+
+### Why this, and not the markup sweep entry 114 scoped
+
+Entry 114 established that the remaining cinematic work is markup adoption, and
+that `.omega-cinematic` would stack a **fifth** fixed full-viewport backdrop.
+Worth noting: `index.html`, the reference adopter, uses `.omega-depth-card` and
+`.omega-emblem` but **never `.omega-cinematic`** — the risky class is unadopted
+even by the page that introduced the system. Fixing the cascade so the existing
+adoption actually paints is strictly better value than widening adoption of a
+class whose paint was being discarded.
+
+### Verification
+
+- rendered before and after via `.claude/skills/verify-in-browser/harness`,
+  values above
+- `node --check omega-visual-runtime.js` OK
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- `python3 scripts/audit.py` → 0 critical / 8 warnings
+- `python3 -m unittest discover -s scripts/tests` → **284** passing
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
+  caught the 1 KB the new comment added, and was regenerated)

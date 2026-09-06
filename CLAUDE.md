@@ -284,12 +284,13 @@ through this one file with no per-page markup changes:
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
   linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
   emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
-- **`omega-cinematic-system.css` reaches every page** (bg.js, guarded by
-  `#omega-cinematic-css`): `.omega-cinematic`, `.omega-emblem`,
-  `.omega-depth-card`, `.omega-node` — it was on **1 of 189** pages. Additive; its
-  `:root` declares only names it invents, having redeclared `--omega-void`/
-  `--omega-line` against three sheets that disagree (`FIXES_LOG.md` 108).
-  `--omega-line` is undefined outside `index.html` — read it with a fallback.
+- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED on one page**
+  (bg.js, `#omega-cinematic-css`). Rendered: its 4 rules are in every cascade, yet
+  `.omega-cinematic`/`.omega-emblem`/`.omega-depth-card`/`.omega-node` match
+  **0/0/0/0** on `dashboard`/`profile` and **1/1/6/0** on `index` — the sheet changed
+  no page's paint; what remains is markup adoption (`FIXES_LOG.md` 114). Additive;
+  `:root` declares only names it invents (108); `--omega-line` is undefined outside
+  `index.html` — read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated
@@ -510,13 +511,10 @@ Only what changes what you do in the **first minutes** stays here:
   deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
   responsible for regenerating `supabase/live-schema.json` in the same change.
-- **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 called 8
-  relations "declared but absent live"; one had existed all along — a false positive purely
-  from staleness. Regenerate before trusting a finding built on it.
 - **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
-  (#250, #252), each adding `omega-*.js` modules and a script tag to ~193 pages without
-  regenerating the census. Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in
-  CI — that gate is the only one here that notices a third party editing the estate.
+  (#250, #252), adding modules and a script tag to ~193 pages without regenerating the census.
+  Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the
+  only one that notices a third party editing the estate.
 - **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges
   the head it had when it computed the merge, so a force-push loses exactly what an extra
   trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged
@@ -548,7 +546,11 @@ Only what changes what you do in the **first minutes** stays here:
   `ubuntu-latest`; `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and still
   never run. **A pending check is not a passing one** — read `status`, not just `conclusion`.
   `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
-  (`git config core.hooksPath .githooks`, bypass `--no-verify`).
+  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** group with
+  `cancel-in-progress: false` **starves** — `ci.yml` (§7's gate) was `cancelled` 30 runs
+  running on `main`: a job waits ~53min for a runner and any push in that window cancels it
+  (run 1063 queued 53m06s, then passed in 45s — **starvation, not deadlock**;
+  `FIXES_LOG.md` 112). Gated; a **fixed** group with `false` is correct and exempt.
 
 ### 8.3 Current verification baseline
 
@@ -557,8 +559,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b, a **transitive** closure since `FIXES_LOG.md` 111 — one hop misreported both, in opposite directions) |
-| `python3 -m unittest discover -s scripts/tests` | **271** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b; a **transitive** closure since `FIXES_LOG.md` 111) |
+| `python3 -m unittest discover -s scripts/tests` | **284** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -615,12 +617,11 @@ entries (which were accurate when written):
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
 - **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** At `--depth 1` every file dates to the clone itself, so any per-file
-  date derived that way is a guess. `actions/checkout@v4` is shallow by default,
-  which made `omega-registry.py --check` a guaranteed CI failure and had already
-  put three wrong dates in the committed registry. The generator now checks the
-  SHA against `.git/shallow` and refuses rather than writing a date it cannot
-  know; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the shallowness.
+  not fail.** At `--depth 1` every file dates to the clone, so any per-file date from
+  it is a guess — three wrong dates reached the committed registry that way.
+  `omega-registry.py` now checks the SHA against `.git/shallow` and refuses rather
+  than guessing; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the
+  shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches

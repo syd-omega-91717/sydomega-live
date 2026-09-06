@@ -341,6 +341,33 @@ verifying the *current* guard says nothing about what may have happened before i
   field, absent markup, a cross-page check that cannot work in a browser). The
   per-file evidence is in `FIXES_LOG.md` 111.
 
+- **`authenticated` holds TRUNCATE on 214 tables** (opened 2026-09-06;
+  `FIXES_LOG.md` 113). A `GRANT ALL ... TO authenticated` somewhere in the schema's
+  history left every public table truncatable by any signed-in member, and TRUNCATE
+  **bypasses RLS** — it would wipe every member's rows, not just the caller's.
+
+  It is **not currently reachable**, and the item is scoped at that weight rather than
+  as a live vulnerability: PostgREST exposes no TRUNCATE verb, and
+  `select proname from pg_proc where prosrc ilike '%truncate%'` returns **0 rows**, so
+  no RPC issues one either. The hazard is latent — any future `SECURITY INVOKER`
+  function that truncates would inherit the privilege — and it violates least
+  privilege today.
+
+  Open rather than fixed because revoking across 214 tables is a schema-wide
+  migration: it needs a live-verified pass per grantee, a new timestamped migration,
+  `remote-migrations.json` and a regenerated `live-schema.json` in the same change
+  (§5), not a bulk statement appended to an unrelated PR.
+
+- **The `LOCAL_ONLY` label meant less than it said** (closed 2026-09-06;
+  `FIXES_LOG.md` 113). This document and `EVIDENCE_MATRIX.md` described 45 pages as
+  device-local with 40 having "no export path", and the matrix legend asserted member
+  data there was "gone with the cache". `public.member_state` has existed live all
+  along — correct RLS, correct GRANTs, `PRIMARY KEY (user_id, key)` — and
+  `omega-member-state.js` (`bg.js:2192`, every page) mirrors every `omega`-prefixed
+  key into it, with `.error` checked. It is actively running: 14 rows, most recent
+  `2026-09-06 02:48:58`. Measured coverage across the 45 pages: **80 keys covered, 0
+  uncovered, 4 built at runtime**. The matrix now measures and states this per page.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |

@@ -27,7 +27,7 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |
 | `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |
-| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call. Member data is device-local — not synced, not visible to the owner, gone with the cache. Some pages sign the member in first; that gives them a session, not persistence. |
+| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
 | `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |
 | `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |
 | `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |
@@ -89,7 +89,7 @@ This scanner reads the repository. It has no database connection, so:
 | `graph-explorer.html` | reads/writes 2 tables; 1 auth call |
 | `graph-timeline.html` | reads/writes 1 table; 1 auth call |
 | `graph.html` | reads/writes 1 table; 1 auth call |
-| `graphify.html` | reads/writes 3 tables, 2 edge fn |
+| `graphify.html` | reads/writes 3 tables, 2 edge fn; 1 auth call |
 | `grid.html` | reads/writes 1 table; 1 auth call |
 | `hall.html` | reads/writes 1 table, 2 rpc; 1 auth call |
 | `health.html` | reads/writes 2 tables; 1 auth call |
@@ -159,7 +159,7 @@ This scanner reads the repository. It has no database connection, so:
 | `habits.html` | reads/writes 1 table; 2 auth calls; also 9 localStorage writes |
 | `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
 | `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `intelligence.html` | reads/writes 3 tables, 1 edge fn; also 2 localStorage writes |
+| `intelligence.html` | reads/writes 3 tables, 1 edge fn; 1 auth call; also 2 localStorage writes |
 | `investment.html` | reads/writes 1 edge fn; also 1 localStorage write |
 | `kings.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `mirror.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
@@ -180,51 +180,51 @@ This scanner reads the repository. It has no database connection, so:
 
 | page | evidence |
 |---|---|
-| `achievements.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `atlas.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `body.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `breath.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `budget.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `charter.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `clarity.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `command.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `contacts.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `decisions.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `exam.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `expenses.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `fasting.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `gratitude.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `journal.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `lab.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `library.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `meditate.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mentors.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mindmap.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mood.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `network.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `notes.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `nutrition.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `offline.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `passport.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `physiology.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `principles.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `projects.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `quotes.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `reading.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `revenue.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `rituals.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `skills.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `sleep.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `stoic.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `time.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `vision.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `wallet.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `water.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `wealth.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `workout.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
+| `achievements.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `breath.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `budget.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `command.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `contacts.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `exam.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `expenses.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `meditate.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `network.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `notes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `nutrition.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `physiology.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `projects.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `revenue.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `rituals.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `skills.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `sleep.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `stoic.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `time.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `vision.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wallet.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `water.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
 ## STATIC (18)
 

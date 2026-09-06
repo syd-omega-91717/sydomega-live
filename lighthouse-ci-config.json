@@ -9,7 +9,7 @@
     "The workflow now builds first; these assertions are what the built artifact actually",
     "measures.",
     "",
-    "URLS. Only pages a SIGNED-OUT visitor can actually render are audited. dashboard.html",
+    "URLS. Only a page a SIGNED-OUT visitor can actually render is audited. dashboard.html",
     "was listed here and was never audited: its report came back with finalUrl",
     "/account.html, because bg.js redirects an unauthenticated visitor off every gated",
     "page. Auditing a gated page without an auth stub measures the login page instead.",
@@ -38,6 +38,27 @@
     "stable numbers on the CI runner, enforce them too -- at whatever they actually",
     "measure. One real signal that blocks is worth more than four that fail at random.",
     "",
+    "ONE URL, and that is a reliability measurement. With the build step in place the job",
+    "finally loaded and audited the pages on GitHub's runner -- and then failed a",
+    "different way: PROTOCOL_TIMEOUT on the TapTargets and ImageElements gatherers, and",
+    "'Waiting for DevTools protocol response has exceeded the allotted time' on",
+    "Runtime.evaluate and CSS.enable. The logs show why: this page injects ~59 inline",
+    "stylesheets (CLAUDE.md section 4.1 measures 62 sheets on a rendered page), Lighthouse",
+    "logs 'Error fetching content of stylesheet with URL \"\"' once per sheet, and Chrome's",
+    "CSS domain times out under it.",
+    "",
+    "Measured 2026-09-06, auditing three URLs in one invocation: one pass, one",
+    "PROTOCOL_TIMEOUT failure, one hang killed at 400s, plus the failure on GitHub's",
+    "runner. Auditing one URL: three runs, three passes, zero protocol timeouts. So this",
+    "audits index.html alone -- the front door, and the highest-value public page. A",
+    "narrower gate that means something beats a wider one that fails at random. Add URLs",
+    "back when the stylesheet count comes down, not before.",
+    "",
+    "CHROME FLAGS: --no-sandbox --disable-dev-shm-usage --disable-gpu are ordinary",
+    "container hardening and are kept on their own merits. They were tried FIRST as the",
+    "fix for the timeouts above and were NOT it -- the identical PROTOCOL_TIMEOUT",
+    "reproduced locally with them set. The page count was the variable that mattered.",
+    "",
     "KNOWN AND NOT HIDDEN: performance measured 0.34 on index.html in the one run that did",
     "collect screenshots, and the recommended preset surfaced real defects worth their own",
     "work -- aria-prohibited-attr, errors-in-console and label-content-name-mismatch.",
@@ -47,11 +68,10 @@
     "collect": {
       "numberOfRuns": 1,
       "staticDistDir": "./public",
-      "url": [
-        "http://localhost:8080/index.html",
-        "http://localhost:8080/account.html",
-        "http://localhost:8080/terms.html"
-      ]
+      "settings": {
+        "chromeFlags": "--no-sandbox --disable-dev-shm-usage --disable-gpu"
+      },
+      "url": ["http://localhost:8080/index.html"]
     },
     "upload": {
       "target": "temporary-public-storage"

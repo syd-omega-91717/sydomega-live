@@ -1,12 +1,27 @@
 /* Ω SYD OMEGA 91717 — CINEMATIC ENGINE v1.2
    Lightweight, dependency-free 2.5D visual layer.
+
+   NOT LOADED BY ANY PAGE, and deliberately so -- see FIXES_LOG.md 111.
+   Its depth() writes box-shadow straight onto .card/.kpi, which
+   omega-visual-evolution.css owns, and its canvas() paints a second
+   particle field over the one omega-particles.js already draws per
+   member element. Wiring it in would regress both surfaces.
+
+   Its stylesheet guard is #omega-cine-engine-css, NOT the
+   #omega-cinematic-css that bg.js uses for omega-cinematic-system.css.
+   Both once claimed that one id, so whichever ran first would have
+   satisfied the other's guard: this module would have appended its HUD,
+   scanlines and corner marks with NO stylesheet, leaving an unpositioned
+   block and the literal text 'Ω // SOVEREIGN VISUAL SYSTEM' in the page
+   flow. That is CLAUDE.md 8.1 class 5b -- a guard attribute is the
+   module's identity, not the feature area's.
 */
 (function(){
 'use strict';
 if(window.__omegaCinematicEngine)return;window.__omegaCinematicEngine=true;
 var reduced=false;try{reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
 var mobile=innerWidth<760;
-function inject(){if(document.getElementById('omega-cinematic-css'))return;var s=document.createElement('style');s.id='omega-cinematic-css';s.textContent=''
+function inject(){if(document.getElementById('omega-cine-engine-css'))return;var s=document.createElement('style');s.id='omega-cine-engine-css';s.textContent=''
 +'.omega-cine-hud{position:fixed;inset:0;pointer-events:none;z-index:9985;overflow:hidden;contain:strict}'
 +'.omega-cine-vignette{position:absolute;inset:-4%;background:radial-gradient(ellipse at center,transparent 46%,rgba(0,0,0,.20) 78%,rgba(0,0,0,.62) 100%);mix-blend-mode:multiply}'
 +'.omega-cine-scan{position:absolute;inset:0;opacity:.10;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,255,255,.025) 4px);mix-blend-mode:screen}'

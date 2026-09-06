@@ -270,6 +270,77 @@ verifying the *current* guard says nothing about what may have happened before i
   not before, so the grant and the code path that needs it are verified
   together.
 
+- **Two authored stylesheets reach nothing** (opened 2026-09-06; `FIXES_LOG.md` 109).
+  `omega-platform-visual.css` is never loaded by any page, `bg.js` or module, **and**
+  every rule in it is scoped to `.omega-visual-platform`, a class that appears nowhere
+  in the repository — confirmed in a render, where `dashboard.html` loads only three
+  named sheets and that class is absent from the DOM. It styles `.card`, `.panel`,
+  `.glass`, `.realm-card` and `.feature-card`, so it looks load-bearing and is inert.
+  `react-foundation.css` has the same shape (0 pages, 0 `bg.js`, 0 modules).
+
+  It is open rather than fixed because switching it on is not safe yet: it sets
+  `border-color:var(--omega-line)` on five card families while `--omega-line`
+  resolves to the empty string, and an invalid `var()` makes the property `unset`,
+  which would **remove** borders those pages currently draw. Give the token a single
+  owner first (§4's rule), then adopt or delete the sheet. `scripts/audit.py` flags an
+  orphaned `omega-*.js` but not an orphaned `.css` — a gate for that would have caught
+  both.
+
+  **Superseded in part, 2026-09-06 (`FIXES_LOG.md` 111).** The gate now exists and is
+  transitive, and the honest count is **10** dead stylesheets, not 2 — see the item
+  below, which subsumes eight of them. `omega-platform-visual.css` and
+  `react-foundation.css` remain open for the `--omega-line` reason above.
+
+- **An entire authored subsystem sits behind one entry point nothing loads**
+  (opened 2026-09-06; `FIXES_LOG.md` 111). `omega-interface-v2.js` injects **20** of
+  the 34 orphaned modules and **8** of the 10 dead stylesheets, and every file it asks
+  for exists on disk — the command palette (catalog, router, history, adapter, UI),
+  the content group (agent, library, studio, workspace), the nexus trio (intelligence,
+  visualizer, export), mission control, project hub, agent factory/evaluation,
+  autonomous ops, evidence engine, provenance ledger. Adding one `<script>` line to
+  `bg.js` would light all twenty at once.
+
+  It is open rather than done because four blockers are **measured**, not suspected.
+  The first is disqualifying on its own and was found in a render, not a read:
+
+  0. **Its own HUD has no stylesheet.** `omega-interface-v2.js` mounts
+     `<div class="omega-v2-hud">` on `document.body`, and six of the seven classes
+     that HUD uses are defined in no stylesheet in the repository. Rendered on
+     `dashboard.html` and `profile.html` after all nine sheets it injects had
+     loaded: `position:"static"` (in the document flow, not chrome),
+     `sheetsDefiningHud:0`, a 1280×43 box at the document bottom carrying the
+     literal visible text `Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /`. One
+     `<script>` line in `bg.js` puts that strip on all 189 pages. The subsystem is
+     not one line from shipping — its entry point was never finished.
+
+  1. **The Ctrl/Cmd+K chord is already taken.** `omega-keyboard.js:155` (loaded on
+     every page) binds it to `window.OmegaSearch.open()`.
+     `omega-command-palette.js` binds the same chord and calls `preventDefault()`.
+     Both handlers would fire and two overlays would open on one keystroke. One of
+     the two has to yield, and that is a product decision about which surface owns
+     the platform's primary chord — not something to settle silently in a sweep.
+  2. **Its guard attributes are array indices.** It injects with
+     `inject('/'+x,'data-omega-'+i)` — the guard is the module's *position* in a
+     literal, so `data-omega-0`, `data-omega-1`, … carry no module identity at all.
+     That is §8.1 class 5b by construction: reorder the array and every guard now
+     protects a different module. The attributes need real names before this file
+     loads anywhere.
+  3. **A bare single-key global binding.** `e.key.toLowerCase()==='m'` opens
+     mission control and calls `preventDefault()`, guarded only by
+     `/input|textarea|select/i.test(document.activeElement.tagName)`, which does
+     not exclude `contenteditable`. Pressing `m` while reading any page fires it.
+
+  The same pass fixed a third, still-free instance of that class:
+  `omega-cinematic-engine.js` claimed `#omega-cinematic-css`, the id `bg.js:166,169`
+  uses for the cinematic `<link>`. Harmless only while the engine stays dead; it is
+  now `#omega-cine-engine-css`.
+
+  Four of the orphans are **not** candidates for wiring at all —
+  `omega-apex-visual.js`, `omega-cinematic-engine.js`, `omega-layered-ui.js` and
+  `omega-uniqueness.js` each duplicate or contradict a live owner (tilt, particle
+  field, absent markup, a cross-page check that cannot work in a browser). The
+  per-file evidence is in `FIXES_LOG.md` 111.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |

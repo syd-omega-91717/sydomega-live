@@ -12482,3 +12482,420 @@ OpenAPI root, it targets the anon-readable table, and it stays bounded
 `credential_source=shipped_client` and then stops at the network hop — this
 session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
 does not, so CI is what decides.
+
+---
+
+## 107. Production was never promoted, and the promotion workflow reported success
+
+The Vercel MCP became available this session, which finally allowed measuring
+production directly instead of inferring it. What it shows is sharper than the
+"Instant Rollback" story §8.2 has carried since entry 95.
+
+### The artifact is perfect; only the alias is stale
+
+| URL | result |
+|---|---|
+| `sydomega-live-syd-omega-91717s-projects.vercel.app/` (production alias) | **404**, the platform's own 404 page, `x-vercel-cache: HIT`, `age: 68498`, `last-modified: 2026-09-05 06:50:36` |
+| `sydomega-live-4upkjau9q-…vercel.app/` (newest `target:production` deployment) | **200**, the full `index.html` — title, all six door links, `omega-visual-universe.css`, `bg.js` |
+
+Same project, same headers, same CSP. The build is good and has been good; the
+alias points at a deployment from ~19 hours earlier that predates `index.html`
+reaching the output.
+
+### Why nothing moves it
+
+`.github/workflows/vercel-production.yml` is the promotion path, and its
+`deploy` job **is skipped on every run**. Run 3 (`fa9cf0e2`), job list:
+
+```
+Validate production artifact   success
+Resolve deployment credentials success   -> ready=false
+Controlled deployment state    success   (runs only when ready != true)
+Deploy production              SKIPPED
+```
+
+`ready=false` because `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`
+are unset. And `vercel.json` sets `git.deploymentEnabled {"*": false}`, so
+Vercel's own git integration promotes nothing either. **No promotion path is
+active at all**, which is why the alias has not moved regardless of any
+rollback.
+
+The workflow then reported plain **success** — a third instance this session of
+a green check that verified nothing (entries 105, 106).
+
+### Two of the three "secrets" are not secrets
+
+`VERCEL_ORG_ID` is `team_w0v6eD1jUUzfPjiDq3ztOfvp` and `VERCEL_PROJECT_ID` is
+`prj_H3aTU3D4mR7TD19etdPTeYmhvANY` — the Vercel bot prints both in **every** PR
+comment on this repo, and `.vercel/project.json` carries them by convention.
+Requiring all three as secrets meant a partial setup produced a bare
+`NOT_CONFIGURED` naming none of them.
+
+Both now default in the workflow, with `secrets.*` and `vars.*` kept as
+overrides, so **only `VERCEL_TOKEN` remains to be set**. The credentials job
+names it explicitly (`missing=VERCEL_TOKEN`), and the controlled job emits a
+`::warning::` saying the run changed nothing in production and where to create
+the token.
+
+### Deployment protection, measured
+
+`ssoProtection: enabled, deploymentType: all_except_custom_domains` —
+Vercel Authentication is on for every `*.vercel.app` URL and off for custom
+domains. That is why an anonymous `curl` of a deployment URL returns 401 while
+`www.sydomega.com` returns a plain 404: **two different failures that look like
+one**. Use `web_fetch_vercel_url` (authenticated) to read a deployment URL;
+`curl` from CI can only speak to the custom domain.
+
+### Verification
+
+`python3 scripts/workflow-contract-lint.py` → PASS; the workflow parses as
+YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. The alias move
+itself still needs `VERCEL_TOKEN` or a dashboard promotion — the Vercel MCP
+exposes no alias/promote/rollback call.
+
+---
+
+## 108. The cinematic layer existed and reached one page out of 189
+
+`index.html` and the interior look like two different products, and the reason
+is measurable rather than aesthetic.
+
+`omega-cinematic-system.css` defines the platform's cinematic primitives —
+`.omega-cinematic` (ambient depth field), `.omega-emblem` (ringed sigil mark),
+`.omega-depth-card` (glass panel with a scanning sweep), `.omega-node`.
+Measured 2026-09-06: **1 page references it** (`index.html`), and `bg.js` never
+injected it. So 188 pages could not use a single one of those classes.
+
+### Injecting it was not safe until this change
+
+The sheet declared `--omega-gold`, `--omega-void` and `--omega-line` at `:root`
+with values that **disagree** with the three sheets that read them:
+
+| sheet | `--omega-void` | `--omega-line` |
+|---|---|---|
+| `omega-platform-visual.css` (reads + defines) | `#0a0a0f` | `.24` |
+| `omega-visual-universe.css` | `#0a0a0f` | `.22` |
+| `omega-command-palette.css` | `#080a10` | — |
+| `omega-cinematic-system.css` (was) | **`#05060a`** | **`.28`** |
+
+`omega-visual-evolution.css` reads `--omega-glass` as well. Whichever sheet
+loads last wins, so putting this one on every page would have retinted surfaces
+it does not own — §4's rule that the palette has a real owner per token.
+
+Its `:root` now declares only the three names it **invents**
+(`--omega-gold-hi`, `--omega-blue`, `--omega-panel`) and reads every contested
+name with a fallback. The sheet became purely additive: nothing changes until a
+page opts in by using one of the four classes.
+
+### Verified in a render, with a control
+
+`bg.js` injects it once, guarded by `#omega-cinematic-css` **and** by an
+existing `link[href*=omega-cinematic-system.css]` so `index.html` does not load
+it twice. Three interior pages, headless Chromium:
+
+| page | link | `.omega-depth-card` resolves | `.omega-emblem` | control class |
+|---|---|---|---|---|
+| `dashboard.html` | present | `backdrop-filter` applied | `border-radius:50%` | **`none`** |
+| `vault.html` | present | applied | `50%` | **`none`** |
+| `academy.html` | present | applied | `50%` | **`none`** |
+
+The control is the point: a class nothing styles resolves to nothing, so the
+check is capable of failing (§8.4's rule against a serene zero). The first run
+also failed outright because the static server was not up — the same trap,
+caught by the harness rather than by luck.
+
+### A finding this surfaced
+
+`--omega-line` resolves to the **empty string** on interior pages: nothing
+defines it outside `index.html`'s two sheets. So
+`omega-platform-visual.css`'s `border-color:var(--omega-line)` has been
+resolving to nothing there as well. Recorded, not fixed here — it belongs with
+the palette-ownership work, not with this injection.
+
+### Verification
+
+`node --check bg.js` OK; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**; `node scripts/verify-runtime.js` **PASS (13 pages)** with the advisory
+counts **unchanged** (21 contrast, same tap targets, same unlabelled input) —
+which is the evidence that the injection is additive and altered nothing that
+already rendered.
+
+---
+
+## 109. An authored visual layer that never loads, scoped to a class that never exists
+
+Chasing the `--omega-line=""` anomaly from entry 108 turned up a second dead
+layer — and the method matters, because a grep said the opposite.
+
+`grep -c omega-platform-visual bg.js` returns **1**, which reads like an
+injection. It is my own comment from entry 108. Nothing loads the file.
+
+### The render settles it
+
+`dashboard.html` in headless Chromium:
+
+```
+stylesheets: 62  (59 inline)
+named sheets: <google fonts>, omega-cinematic-system.css, omega-visual-evolution.css
+.omega-visual-platform present in DOM: false
+--omega-line resolves to: ""
+```
+
+So `omega-platform-visual.css` is dead **twice over**: it is never loaded, and
+every rule in it is scoped to `.omega-visual-platform`, a class that appears
+nowhere in the repository. It styles `.card`, `.panel`, `.glass`,
+`.realm-card`, `.feature-card` — surfaces that very much exist — and reaches
+none of them.
+
+That is §8.1 class 4b and 5b in a stylesheet: a file that exists, looks
+authored, passes every gate, and reaches nothing. `audit.py` flags an orphaned
+`omega-*.js`; it does not flag an orphaned `.css`.
+
+### It was NOT simply switched on
+
+Loading it would set `border-color: var(--omega-line)` on five card families
+while `--omega-line` is undefined. An invalid `var()` makes the property
+`unset`, so the borders those pages currently draw would be **removed**. The
+safe order is to give the token an owner first, then adopt the sheet — the
+same "one owner per surface" rule as §4. Recorded in `GAP_ANALYSIS.md` §S.
+
+### Also measured
+
+**62 stylesheets**, not the 53 §4 records — 59 of them inline `<style>`
+blocks. The count has grown; §4's instruction to check the render rather than
+the list is the part that held.
+
+`react-foundation.css` matches the same shape (0 pages, 0 bg.js, 0 modules) and
+is listed alongside it.
+
+---
+
+## 110. A gate for dead stylesheets, and what it found on its first run
+
+`audit.py` check 2 has always caught a `.js` nothing loads. Nothing caught a
+`.css` nothing loads, which is how the two dead sheets in entry 109 survived
+every gate this repo runs. Check **2b** closes that.
+
+### Two false-positive traps, both hit while writing it
+
+1. **Most sheets are loaded by an `omega-*.js` module, not by `bg.js`/`nav.js`.**
+   Mirroring check 2's `LOADERS`-only scan would have reported ~10 live sheets
+   as orphans.
+2. **A bare filename in prose is not a reference.** `bg.js`'s own comment names
+   `omega-platform-visual.css`, so a substring scan would have called the dead
+   sheet reachable — the exact file the check exists to catch. A reference must
+   be a **quoted string** or a real `href=`/`src=` attribute.
+
+### Controls
+
+Three planted files, then removed:
+
+| control | expected | result |
+|---|---|---|
+| `__ctl_orphan.css`, referenced by nothing | caught | **caught** |
+| `__ctl_referenced.css`, referenced by a `<link href>` | not caught | **not caught** |
+| `__ctl_prose_only.css`, named only inside a JS comment | caught | **caught** |
+
+The third is the one that matters: it proves prose mentions do not count, which
+is the trap that would have made this check exonerate its own target. Removing
+the controls returns the run to exactly the two real findings.
+
+### What the module graph says alongside it
+
+The same run reports **35 `.js` modules on disk that nothing loads**, including
+`omega-cinematic-engine.js`, `omega-mission-control.js`,
+`omega-content-studio.js`, `omega-intelligence-nexus.js`,
+`omega-page-character.js` and `omega-platform-visual-integration.js` — the
+module that would have loaded the dead stylesheet. That warning is pre-existing,
+not new, but it is the honest answer to "is it built": a great deal exists as
+authored files and reaches no page.
+
+### Verification
+
+`python3 scripts/audit.py` → 0 critical / **8** warnings (was 7; the new one is
+the stylesheet orphan check). `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**.
+
+---
+
+## 111 — The orphan list was wrong in both directions: the module graph never followed a second hop
+
+**Symptom.** `scripts/audit.py` check 2 reported **35** `.js` files "on disk but
+never loaded" and check 2b reported **2** dead stylesheets. Both numbers were
+wrong, and each was wrong in the opposite direction — one over-reported, the
+other under-reported.
+
+### The false positive: a live module called dead
+
+`omega-page-character.js` was on the orphan list. It is loaded on every page:
+
+```
+bg.js:849                 injects /omega-components.js
+omega-components.js:41    injects /omega-page-character.js
+```
+
+Check 2 built its edge set from `LOADERS = ["bg.js", "nav.js"]` only:
+
+```python
+loader_src = "".join(read(f) for f in LOADERS if os.path.exists(f))
+injected = {m.split("/")[-1] for m in re.findall(r"\.src\s*=\s*['\"](/[^'\"]+\.js)['\"]", loader_src)}
+```
+
+One hop. A module injected by an already-reachable module was invisible.
+
+The irony is on the record: check 2b, added one commit earlier (entry 109),
+documents this exact trap in its own header — *"Most sheets are loaded by an
+`omega-*.js` module, NOT by bg.js/nav.js. Scanning only LOADERS would report
+~10 live sheets as orphans."* Check 2 had the same bug, unfixed, the whole time.
+
+### The false negative: 8 dead stylesheets counted as live
+
+Check 2b scanned **every** `.js` on disk for `.css` references. But a sheet
+whose only referrer is itself an orphan is not reachable either.
+`omega-interface-v2.js` is an orphan and names 8 stylesheets, so all 8 were
+counted live:
+
+```
+omega-agent-factory.css      referenced by: ./omega-interface-v2.js
+omega-autonomous-ops.css     referenced by: ./omega-interface-v2.js
+omega-command-palette.css    referenced by: ./omega-interface-v2.js
+omega-content-studio.css     referenced by: ./omega-interface-v2.js
+omega-content-workspace.css  referenced by: ./omega-interface-v2.js
+omega-mission-control.css    referenced by: ./omega-interface-v2.js
+omega-nexus-visualizer.css   referenced by: ./omega-interface-v2.js
+omega-project-hub.css        referenced by: ./omega-interface-v2.js
+```
+
+`bg.js:155` and `omega-cinematic-system.css:6` also name
+`omega-command-palette.css` — both in **prose inside a comment**, which is
+trap #2 the check already guards against, so it correctly ignores them and the
+sheet really is dead. Checked, not assumed.
+
+### The fix
+
+A transitive closure seeded from the **real roots** — the loaders, plus every
+module a page includes with its own `<script>` tag — expanding only through
+modules already proven reachable. Check 2b then walks only files that closure
+reached.
+
+Seeding from every `.js` on disk instead would let two dead modules that inject
+each other vouch for one another, and the orphan set would silently shrink to
+nothing. `test_a_dead_module_cannot_vouch_for_what_it_injects` is the control
+that pins this: it must keep finding both.
+
+**A widened regex cost one lap.** Relaxing the leading `/` to `/?` made the
+pattern match any string ending in `.js`, including
+`https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js` in
+`omega-oss.js:230` — audit.py then reported a **CRITICAL** "requested but
+MISSING on disk" for a file never meant to exist here. A module-graph edge is a
+**same-origin** reference; anything carrying a scheme or a protocol-relative
+`//` host is a CDN load. `test_a_third_party_cdn_src_is_not_a_local_module_edge`
+pins it.
+
+### What the corrected numbers show
+
+Orphaned `.js` **35 → 34**, dead `.css` **2 → 10**. And the remaining set is not
+34 unrelated files — it is **one subsystem behind one entry point**.
+`omega-interface-v2.js` injects 20 of the 34 orphans plus 8 of the 10 dead
+sheets, and **every file it asks for exists on disk**:
+
+```
+EXISTS omega-agent-evaluation.js  omega-agent-factory.js    omega-autonomous-ops.js
+EXISTS omega-command-catalog.js   omega-command-history.js  omega-command-palette.js
+EXISTS omega-command-router.js    omega-content-agent.js    omega-content-library.js
+EXISTS omega-content-studio.js    omega-content-workspace.js omega-evidence-engine.js
+EXISTS omega-intelligence-nexus.js omega-mission-control.js omega-nexus-export.js
+EXISTS omega-nexus-visualizer.js  omega-project-hub.js      omega-provenance-ledger.js
+       … and the 8 stylesheets above
+```
+
+Wiring that one file into `bg.js` would light all 20 at once. It is **not** done
+in this change. The reason is not caution — it was **rendered**, per §8.4's rule
+that presentation is measured and never reasoned from source.
+
+`omega-interface-v2.js` mounts a global HUD (`root.className='omega-v2-hud'`)
+onto `document.body`. Six of the seven classes that HUD uses —
+`.omega-v2-hud`, `-signal`, `-label`, `-actions`, `-command`, `-mission` — are
+defined in **no stylesheet in the repository**; only `.omega-ops-badge` exists,
+in `omega-autonomous-ops.css`. Injecting the file into a real page, after all
+nine stylesheets it asks for have loaded:
+
+```
+dashboard.html  hudPresentBeforeInject=false   <- control
+  position          "static"        <- in the document FLOW, not fixed chrome
+  rect              x0 y2729 1280x43
+  sheetsDefiningHud 0
+  visibleText       "Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /"
+profile.html    hudPresentBeforeInject=false
+  position          "static"
+  rect              x0 y1821 1280x43
+  sheetsDefiningHud 0
+  visibleText       "Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /"
+```
+
+So one `<script>` line in `bg.js` would append an unstyled 1280×43 strip of
+literal text to the bottom of all **189** pages. `MISSION MCOMMAND` running
+together — the `<kbd>M</kbd>` with no space after it — is the tell that no
+stylesheet ever spaced these controls.
+
+This is the same failure the cinematic-engine guard collision *would* have
+caused, except here it is not hypothetical: it is the file's present state. The
+subsystem is not one line from shipping; its entry point's own stylesheet was
+never written.
+
+Three further blockers, all measured:
+
+1. **The Ctrl/Cmd+K chord is already bound.** `omega-keyboard.js:155`, loaded on
+   every page, maps it to `window.OmegaSearch.open()`. Both
+   `omega-command-palette.js` and `omega-interface-v2.js` bind the same chord
+   and call `preventDefault()`. Two overlays would open on one keystroke.
+2. **Guard attributes are array indices.** `inject('/'+x,'data-omega-'+i)` makes
+   a module's guard its *position in a literal* — `data-omega-0`,
+   `data-omega-1`, … Reorder the array and every guard protects a different
+   module. §8.1 class 5b by construction.
+3. **A bare single-key global binding.** `e.key.toLowerCase()==='m'` opens
+   mission control and calls `preventDefault()`, guarded only by
+   `/input|textarea|select/i.test(document.activeElement.tagName)` — which does
+   not exclude `contenteditable`. Pressing `m` while reading any of 189 pages
+   would fire it.
+
+Full item, with what each would take to resolve: `GAP_ANALYSIS.md` §S.
+
+### A latent guard collision, fixed while it was still free
+
+`omega-cinematic-engine.js:9` injected its stylesheet as
+`id='omega-cinematic-css'` — the **same id** `bg.js:166,169` uses for the
+`omega-cinematic-system.css` `<link>` (entry 108). Nothing broke only because
+the engine never loads. The moment it did, bg.js's link would satisfy the
+engine's guard and `inject()` would return: the HUD, scanlines, corner marks and
+crosshair would be appended with **no stylesheet at all**, leaving an
+unpositioned block and the literal text `Ω // SOVEREIGN VISUAL SYSTEM` in the
+page flow.
+
+That is §8.1 class 5b — the same shape that kept `omega-emblems.js` from ever
+loading. The engine's guard is now `#omega-cine-engine-css`. **A guard attribute
+is the module's identity, not the feature area's**, and the cheapest time to fix
+one is while the second module is still dead.
+
+### Why the visual orphans are not simply "missing features"
+
+Each was checked against the live owner of the surface it touches, per §4:
+
+| orphan | what already owns that surface |
+|---|---|
+| `omega-apex-visual.js` | tilt → `omega-motion.js:203` (`style.rotate`/`perspective`); cursor light → Ω-GVP `--mx`/`--my`; reveals → `omega-content.js` `.oc-hidden` + `omega-animated.js` `.oa-reveal`. Loading it adds a **third** reveal system and a **second** tilt fighting over `style.transform` |
+| `omega-cinematic-engine.js` | `depth()` writes `box-shadow` onto `.card`/`.kpi`, owned by `omega-visual-evolution.css`; `canvas()` paints a second particle field over `omega-particles.js`, which already draws a per-element signature for all nine elements |
+| `omega-layered-ui.js` | needs `data-layered-ui` + `data-layer-1/2/3` markup. Adopters in the estate: **0** and **0** |
+| `omega-uniqueness.js` | claims to prevent duplicate titles across pages, but `SEEN` is three in-memory `Set`s rebuilt on every page load, so the cross-page comparison can never fire. Cross-page duplication is a **CI** question, not a browser one |
+
+These are superseded duplicates, not gaps. Loading them would regress surfaces
+that currently work.
+
+### Verification
+
+- `python3 scripts/audit.py` → **0 critical / 8 warnings**
+- `python3 -m unittest discover -s scripts/tests` → **271** passing (was 265;
+  +6, four of them controls that must keep finding something)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `python3 scripts/omega-registry.py` regenerated: the census caught the 1 KB
+  the new comment block added, which is the gate doing its job

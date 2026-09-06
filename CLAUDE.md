@@ -114,8 +114,8 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 
 Tokens and layout primitives are defined once, in `bg.js`'s injected
 `<style>` block. **Paint is not.** This section used to say bg.js *is* the
-design system; a live render of `dashboard.html` enumerates **53
-stylesheets** and bg.js is sheet 1 of 53, so every later sheet wins an
+design system; a live render of `dashboard.html` enumerates **62
+stylesheets** (59 inline) and bg.js is sheet 1, so every later sheet wins an
 equal-specificity tie. Five global layers redefine the same surfaces, and
 the effective owner differs per selector — check the render, not this list,
 before styling a shared class:
@@ -189,24 +189,19 @@ replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
 `.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all 178 pages
 through this one file with no per-page markup changes:
 
-- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
-  panels get a hover shimmer sweep and a soft radial highlight that
-  follows the pointer (`--mx`/`--my` custom properties, set by a single
-  passive, `requestAnimationFrame`-throttled `pointermove` listener in
-  bg.js — one `getBoundingClientRect()` per frame, only while hovering a
-  matched element; GPU-cheap, no layout thrash).
-- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + box-shadow glow, both **hover-only**, never static). Hover-only is a
-  correction, not the original design, and the reason is the standing
-  rule: `border-image` wins the border paint regardless of selector
-  specificity, so a *static* version silently discarded any page's own
-  per-instance border the moment `.card` was added to its markup
-  (`matrix.html`'s inline `border-color`, `family.html`'s `.mc.heir`,
-  `cosmos.html`'s JS-set `.el-card` left border — all three). Confining it
-  to `:hover` keeps every page's resting-state border exactly as that page
-  intended, retroactively for pre-existing `.card` usage too. `.kpi` is
-  excluded outright: it already carries a per-instance `--kc` accent color,
-  so it gets a matching hover glow in that color instead.
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass` panels get
+  a hover shimmer sweep and a pointer-following radial highlight (`--mx`/`--my`,
+  set by one passive rAF-throttled `pointermove` listener in bg.js — a single
+  `getBoundingClientRect()` per frame, only while hovering a match).
+- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image` +
+  box-shadow glow, both **hover-only**, never static). Hover-only is a
+  correction: `border-image` wins the border paint regardless of specificity, so
+  a *static* version silently discarded any page's own per-instance border the
+  moment `.card` was added (`matrix.html`'s inline `border-color`,
+  `family.html`'s `.mc.heir`, `cosmos.html`'s JS-set `.el-card` left border).
+  `:hover` keeps every page's resting border as intended, retroactively too.
+  `.kpi` is excluded outright: it carries a per-instance `--kc` accent, so it
+  gets a matching hover glow in that colour.
   A page-local `::before` setting `background` collides with `.card::before`
   per *property*. **That collision is solvable, and this file twice said it was
   not**: `.card::before` is the same 2px top bar, and it reads `--card-accent`,
@@ -243,19 +238,18 @@ through this one file with no per-page markup changes:
   3px). Check the element's own `::before` first — `chronicle.html`'s
   `.event-card` draws its timeline connector there, so it stays excluded.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
-  growing from the tab centre in the page axis colour, quarter-width on hover.
-  40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
-  fact established by parsing `<style>` blocks, since a whole-file grep counts
-  every `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges (`▲`/`▼`/`▬`),
-  `.tbl-row.up`/`.down` row coloring, zebra striping, `.sparkline` (stroke/glow
-  for an SVG polyline). `.trend` sets `justify-self:start` deliberately —
-  `.tbl-row` is `display:grid`, and without it a `.trend` child stretches to
-  fill the implicit track. **Draw them through `omega-sparkline.js`**
-  (`data-omega-spark` + `data-spark-values`; loaded per page, not by `bg.js`),
-  never by hand: a badge asserts a direction, so it draws nothing below two
-  real readings, `.flat` on equality, an absolute delta from a prior 0, and its
-  6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
+  growing from the tab centre in the page axis colour. 40 pages own `.tab-btn`
+  rules and win the cascade; none owns a pseudo — established by parsing
+  `<style>` blocks, since a whole-file grep counts every
+  `querySelectorAll('.tab-btn')` as a CSS rule.
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges, `.tbl-row.up`/
+  `.down` colouring, zebra striping, `.sparkline`. `.trend` sets
+  `justify-self:start` deliberately — `.tbl-row` is `display:grid`, and without
+  it a `.trend` child fills the implicit track. **Draw them through
+  `omega-sparkline.js`** (`data-omega-spark` + `data-spark-values`; per page, not
+  bg.js), never by hand: a badge asserts a direction, so it draws nothing below
+  two real readings and its 6 adopters exclude the open day/month — §8.1 class 9
+  in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
@@ -269,29 +263,33 @@ through this one file with no per-page markup changes:
   `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
   (2.33:1, 8 pages).
 - **Fallback skin for genuinely bare elements**: `input`/`textarea`/`select`/
-  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment. Scoped to
-  elements with *no* class attribute, so anything with a page-local class or
-  inline `style=` is untouched. Chosen after an audit found ~380 raw `<input>`s
-  and dozens of raw `<button>`s with no shared class — one file reaches them
-  all. Page-local table classes are correctly skipped and remain open work.
+  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment — so
+  anything with a page-local class or inline `style=` is untouched. Chosen after
+  an audit found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared
+  class. Page-local table classes are skipped and remain open work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
   Decorative / Rajdhani / Courier Prime but nothing ever loaded them — zero
   `@font-face`, zero font files, zero Google Fonts links anywhere — so every
   page rendered in the browser defaults. `bg.js` injects the Google Fonts
   `<link>` (plus `preconnect`) once per page, guarded by `#omega-fonts`.
-- **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
-  `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
-  `body::before`, because 5 pages already define their own and a bare-selector
-  rule would collide.
-- **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
-  diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
-  real link. It draws no artwork: it emits `data-omega-emblem` for
-  `omega-emblems.js` to fill. Node size is a geometric constraint, not a taste;
-  read its header first. `cosmos.html` has its own agent wheel already.
+- **Ambient noise overlay**: a fixed `pointer-events:none` `<div
+  id="omega-noise-overlay">` injected by bg.js — a real element, not a
+  `body::before`, because 5 pages define their own and a bare-selector rule
+  would collide.
+- **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
+  `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
+  It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
+  size is a geometric constraint, not a taste — read its header. `cosmos.html`
+  has its own agent wheel.
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
-  linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
-  `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
-  currently only `#ph-sigil` on `profile.html` (`FEATURE_IDEAS.md` #19 phase 1).
+  linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
+  emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
+- **`omega-cinematic-system.css` reaches every page** (bg.js, guarded by
+  `#omega-cinematic-css`): `.omega-cinematic`, `.omega-emblem`,
+  `.omega-depth-card`, `.omega-node` — it was on **1 of 189** pages. Additive; its
+  `:root` declares only names it invents, having redeclared `--omega-void`/
+  `--omega-line` against three sheets that disagree (`FIXES_LOG.md` 108).
+  `--omega-line` is undefined outside `index.html` — read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated
@@ -513,8 +511,8 @@ Only what changes what you do in the **first minutes** stays here:
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
   responsible for regenerating `supabase/live-schema.json` in the same change.
 - **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 called 8
-  relations "declared but absent live"; one (`creator_proposals`) had existed all along — a
-  false positive purely from staleness. Regenerate before trusting a finding built on it.
+  relations "declared but absent live"; one had existed all along — a false positive purely
+  from staleness. Regenerate before trusting a finding built on it.
 - **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
   (#250, #252), each adding `omega-*.js` modules and a script tag to ~193 pages without
   regenerating the census. Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in
@@ -526,22 +524,23 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production is still 404ing and `Production Surface Verification` is GREEN anyway** — it
-  classifies an unreachable endpoint as `EXTERNAL_DEPLOYMENT_BLOCKED` without failing. Correct
-  (an owner-only outage is not a code defect), but **a green board here does not mean the site
-  is up**, and this bullet claimed the opposite until 2026-09-05. Read the run:
-  `site_reachable=false`, security-header step **skipped**, plus the `::warning::` annotations
-  (`FIXES_LOG.md` 105). The alias is pinned to `31f9180d` by an Instant Rollback; only
-  promoting/cancelling clears it, no commit (95, 100). Confirm by fetching the **project's
-  own** `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means pinned; a detached
-  domain would serve the new build. `get_project`'s `domains` omits custom hosts and its
-  `live:false` is a trimmed projection — neither means detached or paused.
-- **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
-  the web surface into `public/` from a fixed directory allow-list, so a top-level directory
-  not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages
-  while printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). It self-verifies now, but **add any
-  new web directory to that list**; never commit `public/`. The dashboard's *Framework Settings
-  Override* notice is expected: those keys are load-bearing.
+- **Production 404s because NOTHING PROMOTES IT, and two gates go green anyway.** Measured via
+  the Vercel MCP 2026-09-06 (`FIXES_LOG.md` 107): the newest `target:production` deployment
+  serves **200 with the full index.html** at its own URL, while the production alias serves a
+  **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
+  `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
+  `vercel.json` sets `git.deploymentEnabled {"*": false}` — so no promotion path is active.
+  Only `VERCEL_TOKEN` is still needed; org/project ids now default in the workflow. Also
+  `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
+  while the custom domain returns **404** — two failures that look like one. Read a deployment
+  URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
+  design and marks the outage with `::warning::` (105) — **a green board does not mean the site
+  is up**.
+- **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies the
+  web surface into `public/` from a fixed directory allow-list, so a top-level directory not on
+  it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
+  printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). **Add any new web directory to that list**;
+  never commit `public/`. The *Framework Settings Override* notice is expected.
 - **The self-hosted Windows runner is DEAD; `queued` on it means never.** This bullet called
   `queued` normal draining. Measured 2026-09-05: `runner-probe.yml`, whose only job is to prove
   that runner works, had sat `queued` since 08:12 with no run starting, and the two blocking
@@ -558,8 +557,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **265** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b, a **transitive** closure since `FIXES_LOG.md` 111 — one hop misreported both, in opposite directions) |
+| `python3 -m unittest discover -s scripts/tests` | **271** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

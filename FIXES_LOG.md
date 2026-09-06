@@ -13416,3 +13416,89 @@ Measured after: **15 workflows fire on a push to `main`, and all 15 are guarded*
 - `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single self-hosted runner, pre-existing)
 - 18 workflow files, **0 malformed**
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 118 — three real accessibility defects, and the 2.33:1 button face on 28 pages
+
+All four were found by the Lighthouse gate once it could finally load a page
+(entry 117 / PR #291-#297), and all four are fixed and measured here.
+
+### 1. `.btn-gold` / `.btn-cyan` / `.btn-crim` had no resting background — 65 buttons on 28 pages
+
+`bg.js:117`'s `sharedCSS` declared the ghost variants as
+`.btn-gold{color:var(--gold);border-color:…}` and set `background` **only on
+`:hover`**. A `<button class="btn-gold">` that does *not* also carry `.btn`
+therefore kept the browser's default grey face, giving gold text on grey at
+**2.33:1** — under the 3:1 floor `scripts/verify-runtime.js` enforces.
+
+**CLAUDE.md §4.1 already claimed this was fixed** — "The ghost variants now set
+`background:none` themselves" — and it was not; the rule never carried the
+declaration. A documented fix is not a shipped fix.
+
+Scale was measured, not grepped. A first grep said 0 buttons, because
+`\bbtn\b` matches *inside* `btn-gold` (`-` is a word boundary) and excluded
+everything. Parsing the class list properly: **65 buttons across 28 files**,
+led by `settings.html` (15), `cipher.html` (5), `command.html`/`graphify.html`/
+`privacy.html`/`rune.html`/`stoic.html` (4 each). `verify-runtime.js` only saw
+`settings.html`'s 7 because it renders the 13 capability entrypoints, not the
+estate — the other 27 pages were failing unobserved.
+
+Fix: `background:none` added to the three resting rules, asserted 1-of-1 per
+rule before replacement (§8.4: an edit inside that single-quoted CSS string can
+silently no-op).
+
+### 2. `aria-prohibited-attr` — `aria-label` on a bare `div`, twice
+
+ARIA forbids `aria-label` on a `div` with no role, so the label is **discarded**
+by assistive tech rather than merely ignored. Two instances estate-wide:
+
+- `index.html` — `<div class="omega-emblem" aria-label="Omega emblem">Ω</div>`
+  → `role="img"`, which makes the name legal and gives the glyph a real name.
+- `dashboard.html` — `<div class="kpi" id="kpi-auth" onclick="location.href=…"
+  aria-label="My authority score">`. This one is worse than a dead label: a
+  `div` that navigates on click is **unreachable by keyboard**. Given `role="link"`
+  it also gets `tabindex="0"` and Enter/Space activation — a role that claims
+  interactivity without operability is a bigger barrier than the original bug.
+
+**Measured on `index.html`: `aria-prohibited-attr` 0 → 1, accessibility
+category 94 → 100.**
+
+### 3. `label-content-name-mismatch` — WCAG 2.5.3, on every page with the CMD link
+
+`omega-ui.js:233` built the back-to-dashboard link with visible text `Ω CMD` and
+`aria-label="Command Bridge"`. The accessible name must *contain* the visible
+text; it did not, so a voice-control user saying "click CMD" could not activate
+it. Now `Ω CMD · Back to Command Bridge` — visible string first, description
+after. **Measured on `terms.html`: 0 → 1.**
+
+### 4. `errors-in-console` — NOT a production defect, deliberately not "fixed"
+
+Its five items are all artifacts of auditing a static build behind this
+sandbox's egress proxy: `fonts.googleapis.com`, `cdn.jsdelivr.net/dayjs` and
+`unpkg.com/tippy.js` are blocked here, and `/_vercel/insights/script.js` +
+`/_vercel/speed-insights/script.js` 404 locally because Vercel injects them at
+runtime. Deleting any of them to silence the audit would have removed working
+production code.
+
+**A real finding surfaced underneath it, and is left open**: `index.html` loads
+`dayjs` from jsdelivr and `tippy.js` from unpkg — third-party CDNs on the
+critical path of the front page. That is the same class this repo already
+rejected when it vendored the Supabase client to `/vendor/supabase-js.js` and
+removed 146 `esm.sh` imports (§4). Vendoring them is its own change.
+
+### Also found, left open with evidence
+
+**145 clickable `<div onclick=…>` across 165 files**, 39 on `dashboard.html`
+alone. Only `kpi-auth` is fixed here, because it was the one carrying a
+prohibited `aria-label`. The rest are a genuine keyboard-accessibility gap and
+an estate-wide sweep needs its own plan.
+
+### Verification
+
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**, up from 12 of 13;
+  `settings.html`'s 7 sub-3:1 buttons are gone
+- Lighthouse, `index.html`: `aria-prohibited-attr` 0 → 1, a11y **94 → 100**
+- Lighthouse, `terms.html`: `label-content-name-mismatch` 0 → 1
+- `node --check bg.js`, `node --check omega-ui.js` → OK
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

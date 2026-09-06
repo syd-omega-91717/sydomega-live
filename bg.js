@@ -111,16 +111,15 @@ function __omegaAppend(el){
    they must render to signed-out visitors. */
 (function(){
 
-/* Inject global design system via external stylesheet */
+/* Inject shared class definitions + load external stylesheet */
 (function(){
   if(document.getElementById('omega-global-css')) return;
+  var sharedCSS='.tab-bar,.tab-nav{overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none}.tab-row{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,25vw,280px),1fr));gap:12px;margin-bottom:16px}.card-title{position:relative;padding-left:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}.card-body{font-size:13px;color:var(--muted);line-height:1.6}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px;align-items:start}.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.btn-gold{color:var(--gold);border-color:rgba(201,168,76,.3)}.btn-gold:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}.btn-cyan{color:var(--cyan);border-color:rgba(0,229,255,.2)}.btn-cyan:hover{background:rgba(0,229,255,.06);border-color:var(--cyan)}.btn-crim{color:var(--crim);border-color:rgba(139,0,0,.3)}.btn-crim:hover{background:rgba(139,0,0,.08);border-color:var(--crim)}.tbl-head{display:grid;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.08)}.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}.tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}.tbl-row:hover{background:rgba(201,168,76,.02)}.tbl-row:last-child{border-bottom:none}.bar-track{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}.chip{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:3px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:inline-block}.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card-edge{width:3px;background:var(--card-accent,var(--gold))}';
+  var st=document.createElement('style');st.id='omega-global-css';st.textContent=sharedCSS;
+  (document.head||document.documentElement).appendChild(st);
   var link=document.createElement('link');
-  link.id='omega-global-css';
-  link.rel='stylesheet';
-  link.href='/css/omega-system.css';
-  link.type='text/css';
-  var head=document.head || document.documentElement;
-  if(head) head.appendChild(link);
+  link.rel='stylesheet';link.href='/css/omega-system.css';link.type='text/css';
+  (document.head||document.documentElement).appendChild(link);
 })();
 
 /* Omega-GVP: brand webfonts (Cinzel Decorative / Rajdhani / Courier Prime) --

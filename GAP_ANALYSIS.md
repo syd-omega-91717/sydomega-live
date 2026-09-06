@@ -270,6 +270,22 @@ verifying the *current* guard says nothing about what may have happened before i
   not before, so the grant and the code path that needs it are verified
   together.
 
+- **Two authored stylesheets reach nothing** (opened 2026-09-06; `FIXES_LOG.md` 109).
+  `omega-platform-visual.css` is never loaded by any page, `bg.js` or module, **and**
+  every rule in it is scoped to `.omega-visual-platform`, a class that appears nowhere
+  in the repository — confirmed in a render, where `dashboard.html` loads only three
+  named sheets and that class is absent from the DOM. It styles `.card`, `.panel`,
+  `.glass`, `.realm-card` and `.feature-card`, so it looks load-bearing and is inert.
+  `react-foundation.css` has the same shape (0 pages, 0 `bg.js`, 0 modules).
+
+  It is open rather than fixed because switching it on is not safe yet: it sets
+  `border-color:var(--omega-line)` on five card families while `--omega-line`
+  resolves to the empty string, and an invalid `var()` makes the property `unset`,
+  which would **remove** borders those pages currently draw. Give the token a single
+  owner first (§4's rule), then adopt or delete the sheet. `scripts/audit.py` flags an
+  orphaned `omega-*.js` but not an orphaned `.css` — a gate for that would have caught
+  both.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |

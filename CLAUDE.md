@@ -114,8 +114,8 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 
 Tokens and layout primitives are defined once, in `bg.js`'s injected
 `<style>` block. **Paint is not.** This section used to say bg.js *is* the
-design system; a live render of `dashboard.html` enumerates **53
-stylesheets** and bg.js is sheet 1 of 53, so every later sheet wins an
+design system; a live render of `dashboard.html` enumerates **62
+stylesheets** (59 inline) and bg.js is sheet 1, so every later sheet wins an
 equal-specificity tie. Five global layers redefine the same surfaces, and
 the effective owner differs per selector — check the render, not this list,
 before styling a shared class:

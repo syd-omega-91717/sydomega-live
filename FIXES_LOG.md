@@ -12619,3 +12619,51 @@ PASSED**; `node scripts/verify-runtime.js` **PASS (13 pages)** with the advisory
 counts **unchanged** (21 contrast, same tap targets, same unlabelled input) —
 which is the evidence that the injection is additive and altered nothing that
 already rendered.
+
+---
+
+## 109. An authored visual layer that never loads, scoped to a class that never exists
+
+Chasing the `--omega-line=""` anomaly from entry 108 turned up a second dead
+layer — and the method matters, because a grep said the opposite.
+
+`grep -c omega-platform-visual bg.js` returns **1**, which reads like an
+injection. It is my own comment from entry 108. Nothing loads the file.
+
+### The render settles it
+
+`dashboard.html` in headless Chromium:
+
+```
+stylesheets: 62  (59 inline)
+named sheets: <google fonts>, omega-cinematic-system.css, omega-visual-evolution.css
+.omega-visual-platform present in DOM: false
+--omega-line resolves to: ""
+```
+
+So `omega-platform-visual.css` is dead **twice over**: it is never loaded, and
+every rule in it is scoped to `.omega-visual-platform`, a class that appears
+nowhere in the repository. It styles `.card`, `.panel`, `.glass`,
+`.realm-card`, `.feature-card` — surfaces that very much exist — and reaches
+none of them.
+
+That is §8.1 class 4b and 5b in a stylesheet: a file that exists, looks
+authored, passes every gate, and reaches nothing. `audit.py` flags an orphaned
+`omega-*.js`; it does not flag an orphaned `.css`.
+
+### It was NOT simply switched on
+
+Loading it would set `border-color: var(--omega-line)` on five card families
+while `--omega-line` is undefined. An invalid `var()` makes the property
+`unset`, so the borders those pages currently draw would be **removed**. The
+safe order is to give the token an owner first, then adopt the sheet — the
+same "one owner per surface" rule as §4. Recorded in `GAP_ANALYSIS.md` §S.
+
+### Also measured
+
+**62 stylesheets**, not the 53 §4 records — 59 of them inline `<style>`
+blocks. The count has grown; §4's instruction to check the render rather than
+the list is the part that held.
+
+`react-foundation.css` matches the same shape (0 pages, 0 bg.js, 0 modules) and
+is listed alongside it.

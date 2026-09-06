@@ -189,12 +189,10 @@ replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
 `.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all 178 pages
 through this one file with no per-page markup changes:
 
-- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
-  panels get a hover shimmer sweep and a soft radial highlight that
-  follows the pointer (`--mx`/`--my` custom properties, set by a single
-  passive, `requestAnimationFrame`-throttled `pointermove` listener in
-  bg.js — one `getBoundingClientRect()` per frame, only while hovering a
-  matched element; GPU-cheap, no layout thrash).
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass` panels get
+  a hover shimmer sweep and a pointer-following radial highlight (`--mx`/`--my`,
+  set by one passive rAF-throttled `pointermove` listener in bg.js — a single
+  `getBoundingClientRect()` per frame, only while hovering a match).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
   + box-shadow glow, both **hover-only**, never static). Hover-only is a
   correction, not the original design, and the reason is the standing
@@ -243,19 +241,18 @@ through this one file with no per-page markup changes:
   3px). Check the element's own `::before` first — `chronicle.html`'s
   `.event-card` draws its timeline connector there, so it stays excluded.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
-  growing from the tab centre in the page axis colour, quarter-width on hover.
-  40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
-  fact established by parsing `<style>` blocks, since a whole-file grep counts
-  every `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges (`▲`/`▼`/`▬`),
-  `.tbl-row.up`/`.down` row coloring, zebra striping, `.sparkline` (stroke/glow
-  for an SVG polyline). `.trend` sets `justify-self:start` deliberately —
-  `.tbl-row` is `display:grid`, and without it a `.trend` child stretches to
-  fill the implicit track. **Draw them through `omega-sparkline.js`**
-  (`data-omega-spark` + `data-spark-values`; loaded per page, not by `bg.js`),
-  never by hand: a badge asserts a direction, so it draws nothing below two
-  real readings, `.flat` on equality, an absolute delta from a prior 0, and its
-  6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
+  growing from the tab centre in the page axis colour. 40 pages own `.tab-btn`
+  rules and win the cascade; none owns a pseudo — established by parsing
+  `<style>` blocks, since a whole-file grep counts every
+  `querySelectorAll('.tab-btn')` as a CSS rule.
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges, `.tbl-row.up`/
+  `.down` colouring, zebra striping, `.sparkline`. `.trend` sets
+  `justify-self:start` deliberately — `.tbl-row` is `display:grid`, and without
+  it a `.trend` child fills the implicit track. **Draw them through
+  `omega-sparkline.js`** (`data-omega-spark` + `data-spark-values`; per page, not
+  bg.js), never by hand: a badge asserts a direction, so it draws nothing below
+  two real readings and its 6 adopters exclude the open day/month — §8.1 class 9
+  in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
@@ -269,29 +266,33 @@ through this one file with no per-page markup changes:
   `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
   (2.33:1, 8 pages).
 - **Fallback skin for genuinely bare elements**: `input`/`textarea`/`select`/
-  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment. Scoped to
-  elements with *no* class attribute, so anything with a page-local class or
-  inline `style=` is untouched. Chosen after an audit found ~380 raw `<input>`s
-  and dozens of raw `<button>`s with no shared class — one file reaches them
-  all. Page-local table classes are correctly skipped and remain open work.
+  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment — so
+  anything with a page-local class or inline `style=` is untouched. Chosen after
+  an audit found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared
+  class. Page-local table classes are skipped and remain open work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
   Decorative / Rajdhani / Courier Prime but nothing ever loaded them — zero
   `@font-face`, zero font files, zero Google Fonts links anywhere — so every
   page rendered in the browser defaults. `bg.js` injects the Google Fonts
   `<link>` (plus `preconnect`) once per page, guarded by `#omega-fonts`.
-- **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
-  `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
-  `body::before`, because 5 pages already define their own and a bare-selector
-  rule would collide.
-- **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
-  diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
-  real link. It draws no artwork: it emits `data-omega-emblem` for
-  `omega-emblems.js` to fill. Node size is a geometric constraint, not a taste;
-  read its header first. `cosmos.html` has its own agent wheel already.
+- **Ambient noise overlay**: a fixed `pointer-events:none` `<div
+  id="omega-noise-overlay">` injected by bg.js — a real element, not a
+  `body::before`, because 5 pages define their own and a bare-selector rule
+  would collide.
+- **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
+  `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
+  It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
+  size is a geometric constraint, not a taste — read its header. `cosmos.html`
+  has its own agent wheel.
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
-  linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
-  `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
-  currently only `#ph-sigil` on `profile.html` (`FEATURE_IDEAS.md` #19 phase 1).
+  linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
+  emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
+- **`omega-cinematic-system.css` reaches every page** (bg.js, guarded by
+  `#omega-cinematic-css`): `.omega-cinematic`, `.omega-emblem`,
+  `.omega-depth-card`, `.omega-node` — it was on **1 of 189** pages. Additive; its
+  `:root` declares only names it invents, having redeclared `--omega-void`/
+  `--omega-line` against three sheets that disagree (`FIXES_LOG.md` 108).
+  `--omega-line` is undefined outside `index.html` — read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated

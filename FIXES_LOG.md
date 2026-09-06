@@ -12552,3 +12552,70 @@ one**. Use `web_fetch_vercel_url` (authenticated) to read a deployment URL;
 YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. The alias move
 itself still needs `VERCEL_TOKEN` or a dashboard promotion — the Vercel MCP
 exposes no alias/promote/rollback call.
+
+---
+
+## 108. The cinematic layer existed and reached one page out of 189
+
+`index.html` and the interior look like two different products, and the reason
+is measurable rather than aesthetic.
+
+`omega-cinematic-system.css` defines the platform's cinematic primitives —
+`.omega-cinematic` (ambient depth field), `.omega-emblem` (ringed sigil mark),
+`.omega-depth-card` (glass panel with a scanning sweep), `.omega-node`.
+Measured 2026-09-06: **1 page references it** (`index.html`), and `bg.js` never
+injected it. So 188 pages could not use a single one of those classes.
+
+### Injecting it was not safe until this change
+
+The sheet declared `--omega-gold`, `--omega-void` and `--omega-line` at `:root`
+with values that **disagree** with the three sheets that read them:
+
+| sheet | `--omega-void` | `--omega-line` |
+|---|---|---|
+| `omega-platform-visual.css` (reads + defines) | `#0a0a0f` | `.24` |
+| `omega-visual-universe.css` | `#0a0a0f` | `.22` |
+| `omega-command-palette.css` | `#080a10` | — |
+| `omega-cinematic-system.css` (was) | **`#05060a`** | **`.28`** |
+
+`omega-visual-evolution.css` reads `--omega-glass` as well. Whichever sheet
+loads last wins, so putting this one on every page would have retinted surfaces
+it does not own — §4's rule that the palette has a real owner per token.
+
+Its `:root` now declares only the three names it **invents**
+(`--omega-gold-hi`, `--omega-blue`, `--omega-panel`) and reads every contested
+name with a fallback. The sheet became purely additive: nothing changes until a
+page opts in by using one of the four classes.
+
+### Verified in a render, with a control
+
+`bg.js` injects it once, guarded by `#omega-cinematic-css` **and** by an
+existing `link[href*=omega-cinematic-system.css]` so `index.html` does not load
+it twice. Three interior pages, headless Chromium:
+
+| page | link | `.omega-depth-card` resolves | `.omega-emblem` | control class |
+|---|---|---|---|---|
+| `dashboard.html` | present | `backdrop-filter` applied | `border-radius:50%` | **`none`** |
+| `vault.html` | present | applied | `50%` | **`none`** |
+| `academy.html` | present | applied | `50%` | **`none`** |
+
+The control is the point: a class nothing styles resolves to nothing, so the
+check is capable of failing (§8.4's rule against a serene zero). The first run
+also failed outright because the static server was not up — the same trap,
+caught by the harness rather than by luck.
+
+### A finding this surfaced
+
+`--omega-line` resolves to the **empty string** on interior pages: nothing
+defines it outside `index.html`'s two sheets. So
+`omega-platform-visual.css`'s `border-color:var(--omega-line)` has been
+resolving to nothing there as well. Recorded, not fixed here — it belongs with
+the palette-ownership work, not with this injection.
+
+### Verification
+
+`node --check bg.js` OK; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**; `node scripts/verify-runtime.js` **PASS (13 pages)** with the advisory
+counts **unchanged** (21 contrast, same tap targets, same unlabelled input) —
+which is the evidence that the injection is additive and altered nothing that
+already rendered.

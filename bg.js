@@ -139,6 +139,37 @@ function __omegaAppend(el){
   head.appendChild(pre1); head.appendChild(pre2); head.appendChild(link);
 })();
 
+/* Ω-REACH: the cinematic layer, on every page instead of one.
+
+   omega-cinematic-system.css defines the platform's cinematic primitives --
+   .omega-cinematic (ambient depth field), .omega-emblem (the ringed sigil
+   mark), .omega-depth-card (glass panel with a scanning sweep) and
+   .omega-node. Measured 2026-09-06: it was referenced by exactly ONE page
+   (index.html) and bg.js never injected it, so 188 pages could not use a
+   single one of those classes. That is the whole reason the front door and
+   the interior look like two different products.
+
+   Injecting it was NOT safe until this change. The sheet used to redeclare
+   --omega-gold / --omega-void / --omega-line at :root with values that
+   disagree with the three sheets that READ them (omega-platform-visual.css,
+   omega-visual-evolution.css, omega-command-palette.css), so putting it on
+   every page would have retinted surfaces it does not own. Its :root now
+   carries only names it invents and reads the contested ones with fallbacks,
+   which makes it purely additive -- nothing changes until a page opts in by
+   using one of the four classes.
+
+   Loaded as a real <link> rather than folded into the injected <style>
+   because it is an authored file with its own history; keeping it separate
+   means one owner per surface, the rule section 4 of CLAUDE.md exists to
+   protect. */
+(function(){
+  if(document.getElementById('omega-cinematic-css')) return;
+  if(document.querySelector('link[href*="omega-cinematic-system.css"]')) return;
+  var c=document.createElement('link');
+  c.id='omega-cinematic-css'; c.rel='stylesheet'; c.href='/omega-cinematic-system.css';
+  (document.head||document.documentElement).appendChild(c);
+})();
+
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
    Pure progressive enhancement -- no functional dependency, safe no-op
    if it runs twice. Cursor tracking is passive + rAF-throttled (one

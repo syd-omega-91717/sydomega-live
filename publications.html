@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">PUBLICATIONS<small>INTEL &middot; READING LIST &middot; CATALOG &middot; SOVEREIGN LIBRARY</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -53,29 +53,29 @@
       <div class="sechead">ADD PUBLICATION</div>
       <div style="max-width:560px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TITLE</div><input id="p-title" class="inp" style="width:100%" placeholder="Publication title..."></div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">AUTHOR(S)</div><input id="p-author" class="inp" style="width:100%" placeholder="Author name(s)..."></div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TITLE</div><input id="p-title" class="inp" style="width:100%" placeholder="Publication title..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">AUTHOR(S)</div><input id="p-author" class="inp" style="width:100%" placeholder="Author name(s)..."></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TYPE</div>
             <select id="p-type" class="inp" style="width:100%">
               <option value="book">Book</option><option value="paper">Academic Paper</option>
               <option value="article">Article / Essay</option><option value="own">My Publication</option>
             </select>
           </div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">STATUS</div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">STATUS</div>
             <select id="p-status" class="inp" style="width:100%">
               <option value="queue">Queue</option><option value="reading">Reading</option><option value="read">Read</option>
             </select>
           </div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DOMAIN</div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">DOMAIN</div>
             <select id="p-domain" class="inp" style="width:100%">
               <option>Philosophy</option><option>Science</option><option>Finance</option><option>Leadership</option>
               <option>Psychology</option><option>History</option><option>Strategy</option><option>Technology</option><option>Other</option>
             </select>
           </div>
-          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">YEAR</div><input id="p-year" class="inp" type="number" style="width:100%" placeholder="Year published"></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">YEAR</div><input id="p-year" class="inp" type="number" style="width:100%" placeholder="Year published"></div>
         </div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">KEY TAKEAWAY</div><textarea id="p-takeaway" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="Core insight or key lesson..."></textarea></div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">RATING (1-5)</div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">KEY TAKEAWAY</div><textarea id="p-takeaway" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="Core insight or key lesson..."></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">RATING (1-5)</div>
           <div style="display:flex;gap:8px">
             <button class="btn star-btn" data-v="1" onclick="setRating(1)">&#9733;</button>
             <button class="btn star-btn" data-v="2" onclick="setRating(2)">&#9733;&#9733;</button>
@@ -120,15 +120,15 @@
 <div class="lf"><span>&#937; PUBLICATIONS &middot; SYD OMEGA 91717</span><span>READING LIST &middot; CATALOG &middot; SOVEREIGN LIBRARY</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 .rec-card{border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px}
-.rc-domain{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
-.rc-books{font-size:11px;line-height:1.8;opacity:.8}
-.star-btn{padding:4px 8px;font-size:11px}
+.rc-domain{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.rc-books{font-size:12px;line-height:1.8;opacity:.8}
+.star-btn{padding:4px 8px;font-size:12px}
 </style>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
@@ -158,20 +158,20 @@ function renderCatalog(){
     if(q&&!(p.title.toLowerCase().includes(q)||((p.author||'').toLowerCase().includes(q))))return false;
     return true;
   });
-  if(!list.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO PUBLICATIONS MATCH</div>';return;}
+  if(!list.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO PUBLICATIONS MATCH</div>';return;}
   var STARS=['','&#9733;','&#9733;&#9733;','&#9733;&#9733;&#9733;','&#9733;&#9733;&#9733;&#9733;','&#9733;&#9733;&#9733;&#9733;&#9733;'];
   el.innerHTML=[].concat(list).reverse().map(function(p){
     var tc=TYPE_COL[p.type]||'#888';var sc=STATUS_COL[p.status]||'var(--muted)';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+tc+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+tc+';border:1px solid '+tc+';padding:1px 5px">'+((p.type||'').toUpperCase())+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+sc+';padding:1px 5px">'+((p.status||'').toUpperCase())+'</div>'
-      +(p.domain?'<div style="font-family:var(--M);font-size:7px;color:var(--muted)">'+p.domain+'</div>':'')
-      +(p.rating?'<div style="font-size:9px;color:#FFD700;margin-left:auto">'+STARS[parseInt(p.rating)]+'</div>':'')
+      +'<div style="font-family:var(--M);font-size:12px;color:'+tc+';border:1px solid '+tc+';padding:1px 5px">'+((p.type||'').toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+sc+';padding:1px 5px">'+((p.status||'').toUpperCase())+'</div>'
+      +(p.domain?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+p.domain+'</div>':'')
+      +(p.rating?'<div style="font-size:12px;color:#FFD700;margin-left:auto">'+STARS[parseInt(p.rating)]+'</div>':'')
       +'</div>'
       +'<div style="font-size:13px;font-weight:600">'+p.title+'</div>'
-      +(p.author?'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px">'+p.author+(p.year?' &middot; '+p.year:'')+'</div>':'')
-      +(p.takeaway?'<div style="font-size:11px;opacity:.75;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">&#128161; '+p.takeaway+'</div>':'')
+      +(p.author?'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+p.author+(p.year?' &middot; '+p.year:'')+'</div>':'')
+      +(p.takeaway?'<div style="font-size:12px;opacity:.75;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">&#9737; '+p.takeaway+'</div>':'')
       +'</div>';
   }).join('');
 }
@@ -205,5 +205,5 @@ window.addPub=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

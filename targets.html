@@ -6,65 +6,65 @@
 <title>TARGETS — Sovereign OKR System · SYD OMEGA 91717</title>
 
 <style>
-.quarter-badge{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,var(--gold));padding:8px 18px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.05)}
+.quarter-badge{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold,var(--gold));padding:8px 18px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.05)}
 .okr-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:640px){.okr-hero{grid-template-columns:1fr 1fr}}
 .okr-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
 .okr-stat .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,var(--gold))}
-.okr-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.okr-stat .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .objective-card{border:1px solid rgba(201,168,76,.12);border-radius:2px;margin-bottom:16px;overflow:hidden}
 .obj-header{padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;align-items:flex-start;gap:12px}
 .obj-num{font-family:var(--M);font-size:20px;letter-spacing:2px;color:rgba(201,168,76,.2);flex-shrink:0;min-width:32px}
 .obj-body{flex:1;min-width:0}
-.obj-title{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;color:var(--gold,var(--gold));margin-bottom:4px}
-.obj-desc{font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.6}
+.obj-title{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold,var(--gold));margin-bottom:4px}
+.obj-desc{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.6}
 .obj-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
-.obj-tag{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(138,134,118,.5)}
+.obj-tag{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:var(--muted)}
 .obj-progress{height:4px;background:rgba(201,168,76,.08)}
 .obj-progress-fill{height:4px;transition:width .4s}
-.obj-score{font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:rgba(201,168,76,.6);padding:8px 18px;border-top:1px solid rgba(201,168,76,.06);display:flex;justify-content:space-between}
+.obj-score{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.6);padding:8px 18px;border-top:1px solid rgba(201,168,76,.06);display:flex;justify-content:space-between}
 .kr-list{padding:12px 18px}
 .kr-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.05)}
 .kr-item:last-child{border-bottom:none}
 .kr-info{flex:1;min-width:0}
-.kr-name{font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(201,168,76,.7)}
+.kr-name{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(201,168,76,.7)}
 .kr-progress{margin-top:5px}
 .kr-bar-track{height:5px;background:rgba(201,168,76,.06);border-radius:3px}
 .kr-bar-fill{height:5px;border-radius:3px;transition:width .3s}
-.kr-val{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:3px}
-.kr-pct{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.6);width:40px;text-align:right;flex-shrink:0}
-.kr-input{width:60px;background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);font-family:var(--M);font-size:8.5px;padding:4px 6px;border-radius:2px;outline:none;text-align:right}
+.kr-val{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
+.kr-pct{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.6);width:40px;text-align:right;flex-shrink:0}
+.kr-input{width:60px;background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);font-family:var(--M);font-size:12px;padding:4px 6px;border-radius:2px;outline:none;text-align:right}
 .kr-input:focus{border-color:rgba(201,168,76,.5)}
-.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(520px,90vw);max-height:85vh;overflow-y:auto}
-.modal-box h3{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,var(--gold));margin:0 0 20px}
+.modal-box h3{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold,var(--gold));margin:0 0 20px}
 .fg{margin-bottom:14px}
-.fg label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
-.fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
+.fg label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:12px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4)}
 .fg select option{background:#0a0a08}
 .ma{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
-.btn-s{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
-.btn-c{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,74,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
-.add-btn{font-family:var(--M);font-size:8.5px;letter-spacing:2px;padding:9px 18px;border:1px solid rgba(201,168,76,.22);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.btn-s{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
+.btn-c{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,74,.15);color:var(--muted);background:none;border-radius:2px;cursor:pointer}
+.add-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 18px;border:1px solid rgba(201,168,76,.22);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .add-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.4)}
-.del-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(200,60,60,.2);color:rgba(200,60,60,.4);background:none;border-radius:2px;cursor:pointer}
+.del-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(200,60,60,.2);color:rgba(200,60,60,.4);background:none;border-radius:2px;cursor:pointer}
 .del-btn:hover{border-color:rgba(200,60,60,.5);color:rgba(200,60,60,.8)}
 .q-nav{display:flex;align-items:center;gap:14px}
-.q-nav button{font-family:var(--M);font-size:10px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer}
+.q-nav button{font-family:var(--M);font-size:12px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;border-radius:2px;cursor:pointer}
 .q-nav button:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .review-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:10px}
-.review-card h4{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,var(--gold));margin:0 0 10px}
-.review-card textarea{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.7);font-family:var(--M);font-size:8.5px;padding:10px;border-radius:2px;outline:none;min-height:80px;box-sizing:border-box;resize:vertical;line-height:1.6}
+.review-card h4{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,var(--gold));margin:0 0 10px}
+.review-card textarea{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.7);font-family:var(--M);font-size:12px;padding:10px;border-radius:2px;outline:none;min-height:80px;box-sizing:border-box;resize:vertical;line-height:1.6}
 .review-card textarea:focus{border-color:rgba(201,168,76,.35)}
-.score-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-family:var(--M);font-size:7.5px;letter-spacing:1px}
-.score-legend span{color:rgba(138,134,118,.5)}.score-legend strong{color:rgba(201,168,76,.7)}
+.score-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-family:var(--M);font-size:12px;letter-spacing:1px}
+.score-legend span{color:var(--muted)}.score-legend strong{color:rgba(201,168,76,.7)}
 </style>
   <script src="/bg.js"></script>
 </head>
@@ -86,10 +86,10 @@
 
   <div style="padding:20px var(--pad,20px)">
     <div class="okr-hero">
-      <div class="okr-stat"><div class="sv" id="stat-objs">0</div><div class="sk">OBJECTIVES</div></div>
-      <div class="okr-stat"><div class="sv" id="stat-krs">0</div><div class="sk">KEY RESULTS</div></div>
-      <div class="okr-stat"><div class="sv" id="stat-avg">0%</div><div class="sk">AVG PROGRESS</div></div>
-      <div class="okr-stat"><div class="sv" id="stat-score">0.0</div><div class="sk">OKR SCORE</div></div>
+      <div class="okr-stat kpi"><div class="sv" id="stat-objs">0</div><div class="sk">OBJECTIVES</div></div>
+      <div class="okr-stat kpi"><div class="sv" id="stat-krs">0</div><div class="sk">KEY RESULTS</div></div>
+      <div class="okr-stat kpi"><div class="sv" id="stat-avg">0%</div><div class="sk">AVG PROGRESS</div></div>
+      <div class="okr-stat kpi"><div class="sv" id="stat-score">0.0</div><div class="sk">OKR SCORE</div></div>
     </div>
 
     <div class="tab-row">
@@ -106,8 +106,8 @@
 
     <!-- WEEKLY REVIEW -->
     <div class="tab-panel" id="tab-review">
-      <div class="section-hd">WEEKLY CHECK-IN</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:16px">
+      <div class="section-hd sechead">WEEKLY CHECK-IN</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);margin-bottom:16px">
         The weekly review is the engine of OKR success. 15 minutes of reflection prevents months of drift.
       </div>
       <div class="review-card card">
@@ -134,7 +134,7 @@
 
     <!-- OKR GUIDE -->
     <div class="tab-panel" id="tab-guide">
-      <div class="section-hd">THE SOVEREIGN OKR FRAMEWORK</div>
+      <div class="section-hd sechead">THE SOVEREIGN OKR FRAMEWORK</div>
       <div class="score-legend">
         <span>SCORE GUIDE:</span>
         <strong>0.0–0.3</strong><span>= Failed</span>
@@ -144,8 +144,8 @@
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS AN OBJECTIVE?</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS AN OBJECTIVE?</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             A qualitative, inspiring statement of what you want to <em>become</em> or <em>achieve</em>.<br><br>
             ✓ Ambitious but achievable<br>
             ✓ Aligns with your sovereign vision<br>
@@ -156,8 +156,8 @@
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS A KEY RESULT?</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS A KEY RESULT?</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             A measurable outcome that proves whether the Objective was achieved.<br><br>
             ✓ Specific and numeric<br>
             ✓ Outcome-focused (not activity)<br>
@@ -167,16 +167,16 @@
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">THE INTEL THEORY OF OKRs</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">THE INTEL THEORY OF OKRs</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Andy Grove created OKRs at Intel. John Doerr brought them to Google.<br><br>
             The key insight: <strong style="color:rgba(201,168,76,.7)">Ideas are easy. Execution is everything.</strong><br><br>
             OKRs close the gap between ambition and action by forcing you to define what "done" looks like — before you begin.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">SOVEREIGN OKR RHYTHM</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">SOVEREIGN OKR RHYTHM</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             <strong style="color:rgba(201,168,76,.7)">Quarterly:</strong> Set 3–5 objectives with 3 KRs each<br>
             <strong style="color:rgba(201,168,76,.7)">Weekly:</strong> Check-in, update progress, remove blockers<br>
             <strong style="color:rgba(201,168,76,.7)">Monthly:</strong> Mid-quarter review — pivot if needed<br>
@@ -190,42 +190,42 @@
     <!-- SCIENCE TAB -->
     <div class="tab-panel" id="tab-science">
       <div class="okr-hero">
-        <div class="okr-stat"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-        <div class="okr-stat"><div class="sv">0.7</div><div class="sk">TARGET SCORE</div></div>
-        <div class="okr-stat"><div class="sv">3–5</div><div class="sk">OBJECTIVES/QTR</div></div>
-        <div class="okr-stat"><div class="sv">φ/e</div><div class="sk">EXECUTION RATIO</div></div>
+        <div class="okr-stat kpi"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="okr-stat kpi"><div class="sv">0.7</div><div class="sk">TARGET SCORE</div></div>
+        <div class="okr-stat kpi"><div class="sv">3–5</div><div class="sk">OBJECTIVES/QTR</div></div>
+        <div class="okr-stat kpi"><div class="sv">φ/e</div><div class="sk">EXECUTION RATIO</div></div>
       </div>
       <div class="okr-hero" style="margin-top:-8px">
-        <div class="okr-stat"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
-        <div class="okr-stat"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
-        <div class="okr-stat"><div class="sv">60–70%</div><div class="sk">CONFIDENCE LEVEL</div></div>
-        <div class="okr-stat"><div class="sv">90</div><div class="sk">DAY CYCLE</div></div>
+        <div class="okr-stat kpi"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
+        <div class="okr-stat kpi"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
+        <div class="okr-stat kpi"><div class="sv">60–70%</div><div class="sk">CONFIDENCE LEVEL</div></div>
+        <div class="okr-stat kpi"><div class="sv">90</div><div class="sk">DAY CYCLE</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WHY 0.7 IS THE TARGET</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WHY 0.7 IS THE TARGET</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Google's OKR research found that 1.0 success means objectives were too easy. The sovereign OKR score of 0.7 means you pushed beyond what was comfortable — genuine ambition, genuine stretch.<br><br>
             <strong style="color:rgba(201,168,76,.7)">1.0 = Aimed too low.</strong> The ideal is 0.7 — meaningful progress without the dishonesty of sand-bagging.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">GOAL-SETTING THEORY</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">GOAL-SETTING THEORY</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Locke &amp; Latham's 35-year research program: specific, challenging goals lead to higher performance than vague or easy goals in 90% of studies.<br><br>
             OKRs operationalize this: <strong style="color:rgba(201,168,76,.7)">Objectives</strong> (challenging) + <strong style="color:rgba(201,168,76,.7)">Key Results</strong> (specific/measurable) = maximum execution probability.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">THE QUARTERLY CYCLE</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">THE QUARTERLY CYCLE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             90 days is the optimal human planning horizon: long enough to matter, short enough to maintain urgency. Annual goals fail because the deadline is too distant to compel daily action.<br><br>
             The sovereign compounds quarterly. 4 cycles × compounding = <strong style="color:rgba(201,168,76,.7)">exponential transformation in 1 year</strong>.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WRITTEN GOALS = 42% MORE LIKELY</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WRITTEN GOALS = 42% MORE LIKELY</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Dr. Gail Matthews (Dominican University) found people who write goals and share progress are 42% more likely to achieve them than those who only think about their goals.<br><br>
             The act of encoding creates neural encoding. Writing is commitment. Tracking is sovereignty.
           </div>
@@ -258,7 +258,7 @@
         <option value="impact">IMPACT & LEGACY</option>
       </select>
     </div>
-    <div class="section-hd" style="margin-top:4px">KEY RESULTS (3 RECOMMENDED)</div>
+    <div class="section-hd sechead" style="margin-top:4px">KEY RESULTS (3 RECOMMENDED)</div>
     <div id="kr-inputs">
       <div class="kr-input-row" style="margin-bottom:10px">
         <div class="fg" style="margin-bottom:6px"><label>KR 1 — TITLE</label><input type="text" placeholder="Measurable outcome..." maxlength="100"></div>
@@ -285,7 +285,7 @@ const CAT_COLORS = {
   sovereignty:'rgba(201,168,76,.7)',wealth:'rgba(80,200,120,.7)',mastery:'rgba(100,160,220,.7)',
   health:'rgba(220,120,80,.7)',relationships:'rgba(180,100,220,.7)',impact:'rgba(240,200,60,.7)'
 };
-const CAT_ICONS = {sovereignty:'⚡',wealth:'💎',mastery:'🎯',health:'💪',relationships:'🌐',impact:'🏛'};
+const CAT_ICONS = {sovereignty:'⚡︎',wealth:'◇',mastery:'◎',health:'▲',relationships:'⊛',impact:'⏣'};
 
 let currentQuarterOffset=0;
 
@@ -332,7 +332,7 @@ function renderOKRs(){
 
   const list=document.getElementById('objectives-list');
   if(!objectives.length){
-    list.innerHTML=`<div style="text-align:center;padding:48px 0;font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">
+    list.innerHTML=`<div style="text-align:center;padding:48px 0;font-family:var(--M);font-size:12px;color:var(--muted)">
       NO OBJECTIVES FOR ${getQuarterLabel(currentQuarterOffset)} — CREATE YOUR FIRST OBJECTIVE
     </div>`;return;
   }
@@ -362,7 +362,7 @@ function renderOKRs(){
         ${obj.krs.map((kr,ki)=>{
           const pct=Math.min(100,Math.max(0,Math.round((kr.current-kr.start)/(kr.target-kr.start||1)*100)));
           return `<div class="kr-item">
-            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.4);width:28px;flex-shrink:0">KR${ki+1}</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);width:28px;flex-shrink:0">KR${ki+1}</div>
             <div class="kr-info">
               <div class="kr-name">${kr.title}</div>
               <div class="kr-progress">
@@ -375,7 +375,7 @@ function renderOKRs(){
         }).join('')}
       </div>
       <div class="obj-score">
-        <span style="color:rgba(138,134,118,.5)">QUARTERLY TARGET: ${obj.title.slice(0,40)}${obj.title.length>40?'...':''}</span>
+        <span style="color:var(--muted)">QUARTERLY TARGET: ${obj.title.slice(0,40)}${obj.title.length>40?'...':''}</span>
         <span style="color:${getKRColor(avgKR)}">OKR SCORE: ${(avgKR/100).toFixed(2)}</span>
       </div>
     </div>`;
@@ -434,12 +434,83 @@ function saveObjective(){
   const okrs=getOKRs();
   const qkey=getQuarterKey(currentQuarterOffset);
   if(!okrs[qkey]) okrs[qkey]=[];
-  okrs[qkey].push({title,desc:document.getElementById('obj-desc').value.trim(),cat:document.getElementById('obj-cat').value,krs,created:Date.now()});
+  const cat=document.getElementById('obj-cat').value;
+  const desc=document.getElementById('obj-desc').value.trim();
+  okrs[qkey].push({title,desc,cat,krs,created:Date.now()});
   localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
   closeObjModal();
   renderOKRs();
+  mirrorObjective(getQuarterLabel(currentQuarterOffset), title, desc, cat, krs);
 }
 window.saveObjective=saveObjective;
+
+/* ── SERVER MIRROR ──────────────────────────────────────────────────────
+   public.okr_objectives + public.okr_key_results, declared in
+   supabase/chunk_10_productivity.sql and applied live 2026-09-05.
+
+   A MIRROR, not a sync -- same reason as habits.html and focus.html: this
+   page renders synchronously from localStorage, which stays what the UI
+   reads.
+
+   Two tables with a foreign key between them, so ORDER MATTERS: the
+   objective must land first and its generated id is what the key results
+   reference. If the objective insert fails there is nothing to attach the
+   KRs to, so this returns rather than sending writes that would fail on the
+   FK anyway.
+
+   Three live CHECK constraints this page could otherwise violate, each a
+   23514 that writes nothing and does not throw:
+
+     quarter ~ '^Q[1-4] \d{4}$'
+       getQuarterKey() returns "Q1_2026" with an UNDERSCORE -- it is a
+       localStorage map key, not a label. The constraint wants a SPACE, so
+       getQuarterLabel() is passed here. Sending the storage key would have
+       failed every single write.
+     title char_length BETWEEN 5 AND 200      (objectives)
+     title char_length BETWEEN 3 AND 200      (key results)
+       saveObjective only checks the title is non-empty, so a 1-4 character
+       objective saves locally and would be rejected server-side. Checked
+       before sending rather than discovering it per-write.
+
+   category is not guarded: the page's six <option> values match the CHECK
+   exactly -- verified, not assumed.
+
+   .error is checked on both inserts because Supabase resolves to
+   {data:null,error} rather than throwing (CLAUDE.md 8.1 class 1). */
+async function mirrorObjective(quarterLabel, title, desc, cat, krs){
+  try{
+    if(title.length < 5 || title.length > 200) return;
+    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
+    const sb = await window.OmegaSB.get();
+    if(!sb) return;
+    const s = await sb.auth.getSession();
+    if(s.error || !s.data || !s.data.session) return;
+    const uid = s.data.session.user.id;
+
+    const ins = await sb.from('okr_objectives')
+      .insert({ user_id: uid, quarter: quarterLabel, title: title,
+                description: desc || null, category: cat })
+      .select('id').single();
+    if(ins.error || !ins.data){
+      console.warn('[targets] objective mirror failed:', ins.error && ins.error.message);
+      return;                       /* no id -> nothing for the KRs to reference */
+    }
+
+    const rows = (krs||[])
+      .filter(function(k){ return k.title && k.title.length >= 3 && k.title.length <= 200; })
+      .map(function(k){
+        return { objective_id: ins.data.id, user_id: uid, title: k.title,
+                 start_value: Number(k.start) || 0,
+                 target_value: Number(k.target) || 0,
+                 current_value: Number(k.current) || 0,
+                 unit: k.unit || '' };
+      });
+    if(!rows.length) return;
+
+    const kr = await sb.from('okr_key_results').insert(rows);
+    if(kr.error) console.warn('[targets] key-result mirror failed:', kr.error.message);
+  }catch(e){ console.warn('[targets] mirror unavailable:', e && e.message); }
+}
 
 function saveReview(){
   const reviews=getReviews();
@@ -467,13 +538,13 @@ function renderReviewHistory(){
   const reviews=getReviews().slice().reverse().slice(0,8);
   const container=document.getElementById('review-history');
   if(!reviews.length){container.innerHTML='';return;}
-  container.innerHTML='<div class="section-hd">RECENT REVIEWS</div>'+
+  container.innerHTML='<div class="section-hd sechead">RECENT REVIEWS</div>'+
     reviews.map(r=>{
       const dt=new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
       return `<div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:14px;margin-bottom:8px">
-        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.4);margin-bottom:8px">WEEK ${r.week} · ${dt}</div>
-        ${r.wins?`<div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(201,168,76,.6);margin-bottom:4px"><strong>WINS:</strong> ${r.wins}</div>`:''}
-        ${r.insight?`<div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.5)"><strong>INSIGHT:</strong> ${r.insight}</div>`:''}
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">WEEK ${r.week} · ${dt}</div>
+        ${r.wins?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(201,168,76,.6);margin-bottom:4px"><strong>WINS:</strong> ${r.wins}</div>`:''}
+        ${r.insight?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted)"><strong>INSIGHT:</strong> ${r.insight}</div>`:''}
       </div>`;
     }).join('');
 }
@@ -487,33 +558,70 @@ function switchTab(id,btn){
 window.switchTab=switchTab;
 
 // Seed with example OKRs
-function seedDemo(){
-  const okrs=getOKRs();
-  const qkey=getQuarterKey(0);
-  if(!okrs[qkey]||okrs[qkey].length===0){
-    okrs[qkey]=[
-      {title:'Achieve sovereign financial independence through scalable income streams',desc:'Build systems that generate revenue without trading time for money.',cat:'wealth',created:Date.now()-60*86400000,krs:[
-        {title:'Grow monthly recurring revenue',start:0,target:5000,current:2100,unit:'$'},
-        {title:'Reduce active work hours for income',start:50,target:20,current:35,unit:'hrs/wk'},
-        {title:'Build emergency fund',start:0,target:30000,current:18000,unit:'$'},
-      ]},
-      {title:'Master a high-leverage technical skill to command sovereign rates',desc:'Become genuinely excellent at one skill that creates outsized leverage.',cat:'mastery',created:Date.now()-55*86400000,krs:[
-        {title:'Complete deep-work focus hours on craft',start:0,target:200,current:140,unit:'hrs'},
-        {title:'Build and ship public projects',start:0,target:3,current:2,unit:''},
-        {title:'Achieve elite performance benchmark',start:0,target:100,current:68,unit:'%'},
-      ]},
-      {title:'Optimize body and mind for peak sovereign performance',desc:'Physical sovereignty is the foundation of everything else.',cat:'health',created:Date.now()-50*86400000,krs:[
-        {title:'Maintain consistent training schedule',start:0,target:78,current:54,unit:'sessions'},
-        {title:'VO2 max improvement',start:42,target:50,current:46,unit:'ml/kg/min'},
-        {title:'Average sleep quality score',start:65,target:85,current:79,unit:''},
-      ]},
-    ];
-    localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
-  }
+/* seedDemo() used to live here. It wrote three complete objectives into
+   omega_okr_data on a member's first visit -- the same key real objectives go
+   to, with no marker -- carrying hardcoded mid-quarter progress: $2,100 of a
+   $5,000 revenue target, 140 of 200 craft hours, a VO2 max of 46 ml/kg/min,
+   a sleep-quality score of 79, and a created date backdated 60 days.
+
+   The KPI row above computes OKR SCORE and KEY RESULTS from whatever is in
+   that store, so a member who had never set an objective was shown a quarter
+   of progress they had not made, including physiological readings. That is
+   CLAUDE.md 8.1 class 9, the same shape as habits.html's 90 days of
+   Math.random() completions, differing only in being fixed rather than random
+   -- which makes it more convincing, not less invented.
+
+   The seed was also unnecessary: renderOKRs() already has an empty state
+   ("NO OBJECTIVES FOR <quarter> -- CREATE YOUR FIRST OBJECTIVE"), which is
+   what a member with no objectives should see.
+
+   Removing the seed only helps new installs. purgeDemoObjectives() below
+   handles the ones already written. */
+
+/* Remove the seeded objectives from installs that already have them.
+
+   Safe because the demo was FIXED, not random: an entry is removed only if
+   its title and every one of its key results match the seed exactly, values
+   included. Any edit a member made -- a changed current value, a renamed KR,
+   a deleted one -- makes it stop matching and it is kept. The rule can only
+   delete something the member has never touched. */
+const DEMO_SIGNATURE = {
+  'Achieve sovereign financial independence through scalable income streams':
+    'Grow monthly recurring revenue|0|5000|2100|$;Reduce active work hours for income|50|20|35|hrs/wk;Build emergency fund|0|30000|18000|$',
+  'Master a high-leverage technical skill to command sovereign rates':
+    'Complete deep-work focus hours on craft|0|200|140|hrs;Build and ship public projects|0|3|2|;Achieve elite performance benchmark|0|100|68|%',
+  'Optimize body and mind for peak sovereign performance':
+    'Maintain consistent training schedule|0|78|54|sessions;VO2 max improvement|42|50|46|ml/kg/min;Average sleep quality score|65|85|79|'
+};
+const DEMO_PURGE_KEY = 'omega_okr_demo_purged_v1';
+
+function krSignature(krs){
+  return (krs||[]).map(function(k){
+    return [k.title, k.start, k.target, k.current, k.unit||''].join('|');
+  }).join(';');
 }
-seedDemo();
+
+function purgeDemoObjectives(){
+  try{
+    if(localStorage.getItem(DEMO_PURGE_KEY)) return;
+    const okrs = getOKRs();
+    let removed = 0;
+    Object.keys(okrs).forEach(function(q){
+      okrs[q] = (okrs[q]||[]).filter(function(o){
+        const sig = DEMO_SIGNATURE[o.title];
+        if(sig && krSignature(o.krs) === sig){ removed++; return false; }
+        return true;
+      });
+      if(!okrs[q].length) delete okrs[q];
+    });
+    if(removed) localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+    localStorage.setItem(DEMO_PURGE_KEY, String(Date.now()));
+  }catch(e){ /* leave the marker unset; a later visit retries */ }
+}
+
+purgeDemoObjectives();
 renderOKRs();
 renderReviewHistory();
 </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

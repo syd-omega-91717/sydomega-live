@@ -114,9 +114,9 @@ function showLattice3D(nodesEarned, systemLabel){
   var modal=document.createElement('div');
   modal.id='omega-lattice3d-modal';
   modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(2,2,6,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer';
-  modal.innerHTML='<div style="font-family:\'Cinzel Decorative\',serif;font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.5);margin-bottom:14px">'+(systemLabel||'\u03A9 SOVEREIGN LATTICE \u00b7 INNER CUBE 9\u00d79\u00d79 = 729 NODES')+'</div>'
+  modal.innerHTML='<div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5);margin-bottom:14px">'+(systemLabel||'\u03A9 SOVEREIGN LATTICE \u00b7 INNER CUBE 9\u00d79\u00d79 = 729 NODES')+'</div>'
     +'<canvas id="lattice3d-cv" style="max-width:90vw;max-height:70vh;display:block;border:1px solid rgba(201,168,76,.15);border-radius:2px"></canvas>'
-    +'<div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:14px">NODES EARNED: <span style="color:var(--gold,#C9A84C)">'+nodesEarned+'</span> \u00b7 CLICK ANYWHERE TO CLOSE</div>';
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:14px">NODES EARNED: <span style="color:var(--gold,#C9A84C)">'+nodesEarned+'</span> \u00b7 CLICK ANYWHERE TO CLOSE</div>';
   document.body.appendChild(modal);
   var cv=document.getElementById('lattice3d-cv');
   var S=Math.min(window.innerWidth*0.85,window.innerHeight*0.65,600);

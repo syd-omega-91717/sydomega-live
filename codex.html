@@ -7,51 +7,51 @@
 <style>
 .codex-hero{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(0,0,0,0));border:1px solid rgba(201,168,76,.2);padding:20px 24px;text-align:center;margin-bottom:20px}
 .codex-hero h1{font-family:var(--D);font-size:clamp(14px,2.2vw,20px);color:var(--gold);letter-spacing:3px;margin-bottom:8px}
-.codex-hero p{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(201,168,76,.4);line-height:1.8}
+.codex-hero p{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.4);line-height:1.8}
 
 /* search */
 .search-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .codex-search{flex:1;min-width:200px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:12px;padding:10px 14px;outline:none;transition:.15s}
 .codex-search:focus{border-color:rgba(201,168,76,.45)}
-.codex-search::placeholder{color:rgba(201,168,76,.2);font-size:11px}
+.codex-search::placeholder{color:rgba(201,168,76,.2);font-size:12px}
 .search-src{display:flex;gap:4px}
-.src-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:5px 12px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer;transition:.12s}
+.src-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 12px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer;transition:.12s}
 .src-btn.active,.src-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
 
 /* arxiv chips */
 .arxiv-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.arxiv-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 12px;border:1px solid rgba(0,229,255,.15);color:rgba(0,229,255,.5);cursor:pointer;transition:.12s}
+.arxiv-cat{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 12px;border:1px solid rgba(0,229,255,.15);color:rgba(0,229,255,.5);cursor:pointer;transition:.12s}
 .arxiv-cat.active,.arxiv-cat:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.05)}
 
 /* category chips */
 .cat-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.cat-chip{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:4px 12px;border:1px solid rgba(201,168,76,.12);color:var(--muted);border-radius:12px;cursor:pointer;transition:.12s}
+.cat-chip{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:4px 12px;border:1px solid rgba(201,168,76,.12);color:var(--muted);border-radius:12px;cursor:pointer;transition:.12s}
 .cat-chip.active,.cat-chip:hover{border-color:rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.05)}
 
 /* results */
 .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .art-card{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);padding:16px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:.15s}
 .art-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-1px)}
-.ac-source{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border:1px solid;display:inline-block;align-self:flex-start}
+.ac-source{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid;display:inline-block;align-self:flex-start}
 .ac-source.wiki{color:rgba(255,220,100,.7);border-color:rgba(255,220,100,.2);background:rgba(255,220,100,.04)}
 .ac-source.arxiv{color:rgba(0,229,255,.7);border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.04)}
 .ac-source.ol{color:rgba(0,255,136,.7);border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
 .ac-title{font-size:13px;color:rgba(255,255,255,.9);line-height:1.5}
-.ac-excerpt{font-family:var(--M);font-size:8px;color:rgba(255,255,255,.5);line-height:1.6}
-.ac-meta{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
-.ac-bookmark{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.5);background:none;cursor:pointer;transition:.12s;align-self:flex-start}
+.ac-excerpt{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
+.ac-meta{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
+.ac-bookmark{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.5);background:none;cursor:pointer;transition:.12s;align-self:flex-start}
 .ac-bookmark:hover,.ac-bookmark.saved{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
 
 /* bookmarks */
 .bm-item{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);padding:12px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
 .bm-icon{font-size:18px;flex-shrink:0;margin-top:2px}
 .bm-title{font-size:12px;color:rgba(255,255,255,.85);margin-bottom:4px}
-.bm-src{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
-.bm-rm{font-family:var(--M);font-size:7px;color:rgba(139,0,0,.6);background:none;border:none;cursor:pointer;margin-left:auto}
+.bm-src{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
+.bm-rm{font-family:var(--M);font-size:12px;color:rgba(139,0,0,.6);background:none;border:none;cursor:pointer;margin-left:auto}
 .bm-rm:hover{color:rgba(200,0,0,.8)}
 
 /* empty/loading */
-.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.3)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -60,14 +60,14 @@
 .modal-overlay.open{display:flex}
 .modal{background:rgba(4,4,12,.97);border:1px solid rgba(201,168,76,.25);max-width:640px;width:100%;padding:28px;display:flex;flex-direction:column;gap:14px;max-height:85vh;overflow-y:auto;position:relative}
 .modal-title{font-size:16px;color:rgba(255,255,255,.95);line-height:1.4}
-.modal-meta{font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);letter-spacing:1px}
-.modal-body{font-family:var(--M);font-size:9px;color:rgba(255,255,255,.7);line-height:1.8}
+.modal-meta{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);letter-spacing:1px}
+.modal-body{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
 .modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(138,134,118,.5);font-size:18px;cursor:pointer}
-.modal-link{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:8px 16px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;text-decoration:none;display:inline-block;margin-top:6px}
+.modal-link{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:8px 16px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;text-decoration:none;display:inline-block;margin-top:6px}
 .modal-link:hover{background:rgba(201,168,76,.1)}
 
 /* toast */
-#cdx-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(201,168,76,.3);padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#cdx-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(201,168,76,.3);padding:8px 20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 
 /* science */
 
@@ -175,10 +175,10 @@
 
   <div class="sechead">SOVEREIGN LEARNING DOMAINS</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">PHILOSOPHY &amp; STRATEGY</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:1.8;color:var(--muted)">Stoicism · Machiavelli · Sun Tzu · Nietzsche · Sovereignty theory · Political philosophy</div></div>
-    <div class="card"><div class="card-title">MATHEMATICS &amp; PHYSICS</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:1.8;color:var(--muted)">Game theory · Thermodynamics · Information theory · Quantum mechanics · Number theory</div></div>
-    <div class="card"><div class="card-title">ECONOMICS &amp; FINANCE</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:1.8;color:var(--muted)">Behavioral economics · Austrian school · Quantitative finance · Market microstructure</div></div>
-    <div class="card"><div class="card-title">PSYCHOLOGY &amp; ARCHETYPES</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:1.8;color:var(--muted)">Jungian archetypes · Personality frameworks · Cognitive psychology · Leadership science</div></div>
+    <div class="card"><div class="card-title">PHILOSOPHY &amp; STRATEGY</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Stoicism · Machiavelli · Sun Tzu · Nietzsche · Sovereignty theory · Political philosophy</div></div>
+    <div class="card"><div class="card-title">MATHEMATICS &amp; PHYSICS</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Game theory · Thermodynamics · Information theory · Quantum mechanics · Number theory</div></div>
+    <div class="card"><div class="card-title">ECONOMICS &amp; FINANCE</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Behavioral economics · Austrian school · Quantitative finance · Market microstructure</div></div>
+    <div class="card"><div class="card-title">PSYCHOLOGY &amp; ARCHETYPES</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Jungian archetypes · Personality frameworks · Cognitive psychology · Leadership science</div></div>
   </div>
 </div>
 
@@ -188,7 +188,7 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <button class="modal-close" id="modalClose">&#x2715;</button>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.4)" id="modalSrc"></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.4)" id="modalSrc"></div>
     <div class="modal-title" id="modalTitle"></div>
     <div class="modal-meta" id="modalMeta"></div>
     <div class="modal-body" id="modalBody"></div>
@@ -405,17 +405,73 @@ document.getElementById('modalBm').addEventListener('click',function(){
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('modalOverlay').classList.remove('open');});
 
 /* ── BOOKMARKS ── */
+
+/* SERVER MIRROR -- public.codex_bookmarks, live with RLS (auth.uid() = user_id)
+   and a GRANT to authenticated.
+
+   The table carries UNIQUE (user_id, url): a NON-primary-key unique index. The
+   upsert therefore MUST name onConflict explicitly. Omitting it makes PostgREST
+   fall back to the primary key (id), and with no id in the payload the write
+   succeeds exactly once and raises 23505 on every later save of the same URL --
+   so the feature would freeze at its first bookmark with nothing visible going
+   wrong (CLAUDE.md 8.1 class 7).
+
+   Write-up only, matching omega-member-state.js: a hydrating two-way read would
+   race this page's synchronous render, and a render from an empty cache could
+   overwrite good server rows. localStorage stays the source this page reads. */
+async function codexUserId(){
+  try{
+    const { data, error } = await sb.auth.getSession();
+    /* Supabase resolves to {data:null,error} -- it does not throw, so a bare
+       try/catch would catch nothing (8.1 class 1). */
+    if(error||!data||!data.session||!data.session.user) return null;
+    return data.session.user.id;
+  }catch(e){ return null; }
+}
+
+async function mirrorBookmark(item){
+  const uid=await codexUserId();
+  if(!uid) return true;                    /* signed out: local save is the whole story */
+  const { error } = await sb.from('codex_bookmarks').upsert({
+    user_id:uid,
+    source:item.source,                    /* CHECK: wikipedia | arxiv | openlibrary */
+    title:item.title||'',
+    url:item.url,
+    excerpt:item.excerpt||null,
+    authors:item.authors||null,
+    published:item.published!=null&&item.published!==''?String(item.published):null
+  },{ onConflict:'user_id,url' });
+  if(error){ console.warn('[codex] bookmark not mirrored:',error.message); return false; }
+  return true;
+}
+
+async function unmirrorBookmark(url){
+  const uid=await codexUserId();
+  if(!uid) return true;
+  const { error } = await sb.from('codex_bookmarks').delete().eq('user_id',uid).eq('url',url);
+  if(error){ console.warn('[codex] bookmark removal not mirrored:',error.message); return false; }
+  return true;
+}
+
 function toggleBookmark(item){
   var idx=bookmarks.findIndex(function(b){return b.url===item.url;});
-  if(idx>=0){bookmarks.splice(idx,1);toast('REMOVED FROM CODEX','rgba(138,134,118,.7)');}
+  var removing=idx>=0;
+  if(removing){bookmarks.splice(idx,1);toast('REMOVED FROM CODEX','rgba(138,134,118,.7)');}
   else{bookmarks.unshift(Object.assign({},item,{savedAt:new Date().toISOString()}));toast('★ SAVED TO CODEX','var(--gold)');}
   localStorage.setItem('omega_codex_bookmarks',JSON.stringify(bookmarks));
+  /* The toast above reports the LOCAL write, which has already happened and is
+     true. The mirror is a separate claim, so its failure gets its own notice
+     rather than being swallowed -- section 9 forbids reporting a success the
+     write did not actually achieve. */
+  (removing?unmirrorBookmark(item.url):mirrorBookmark(item)).then(function(ok){
+    if(!ok) toast('SAVED ON THIS DEVICE ONLY \u2014 NOT SYNCED','var(--crim)');
+  });
 }
 
 window.renderBookmarks=function(){
   var list=document.getElementById('bookmarksList');
   if(!bookmarks.length){list.innerHTML='<div class="empty">NO BOOKMARKS YET<br><br>DISCOVER KNOWLEDGE AND SAVE TO BUILD YOUR SOVEREIGN CODEX</div>';return;}
-  var icons={wikipedia:'📖',arxiv:'🔬',openlibrary:'📚'};
+  var icons={wikipedia:'▤',arxiv:'⚗',openlibrary:'▥'};
   list.innerHTML='';
   bookmarks.forEach(function(b,i){
     var item=document.createElement('div');item.className='bm-item';
@@ -425,9 +481,12 @@ window.renderBookmarks=function(){
     var s=document.createElement('div');s.className='bm-src';s.textContent=(b.source||'').toUpperCase()+(b.savedAt?' · SAVED '+new Date(b.savedAt).toLocaleDateString():'');
     var rm=document.createElement('button');rm.className='bm-rm';rm.textContent='✕ REMOVE';rm.dataset.idx=i;
     rm.addEventListener('click',function(){
-      bookmarks.splice(parseInt(this.dataset.idx),1);
+      var gone=bookmarks.splice(parseInt(this.dataset.idx),1)[0];
       localStorage.setItem('omega_codex_bookmarks',JSON.stringify(bookmarks));
       window.renderBookmarks();
+      if(gone) unmirrorBookmark(gone.url).then(function(ok){
+        if(!ok) toast('REMOVED ON THIS DEVICE ONLY \u2014 NOT SYNCED','var(--crim)');
+      });
     });
     bd.appendChild(t);bd.appendChild(s);
     item.appendChild(ic);item.appendChild(bd);item.appendChild(rm);
@@ -456,4 +515,4 @@ searchWikipedia('sovereignty political philosophy',document.getElementById('disc
 loadArxivCat('cs.AI');
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

@@ -1,0 +1,42 @@
+name: Repository Integrity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Repository-wide integrity audit
+        run: python scripts/repository_integrity_audit.py
+      - name: Build production artifact
+        run: bash scripts/vercel-build.sh
+      - name: Validate emitted artifact
+        run: python scripts/repository_integrity_audit.py
+      - name: Production artifact marker
+        run: |
+          test -s public/index.html
+          test -f public/vendor/supabase-js.js
+          echo 'REPOSITORY_PRODUCTION_ARTIFACT=PASS'

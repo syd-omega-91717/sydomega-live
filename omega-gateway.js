@@ -28,7 +28,11 @@
 
    SYSTEM PAGES ARE NOT DESTINATIONS. 404, enter, offline, reset, terms and
    pending are states the platform puts you in, not places you choose to go,
-   so they are excluded here and deliberately carry no registry entry.
+   so EXCLUDE keeps them out of the tiles. Four of them (enter, reset, 404,
+   offline) DO now carry a registry entry, because a member sees those pages
+   and each should draw its own mark rather than the generic omega -- EXCLUDE
+   is what keeps them out of here, not the absence of an entry, so do not
+   assume a missing tile means a missing registry row.
 
    DEGRADES RATHER THAN DIES. bg.js defer-loads its modules, so this one can
    run before omega-page-emblem.js has published its global. It waits a bounded

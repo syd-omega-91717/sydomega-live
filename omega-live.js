@@ -134,7 +134,7 @@
             ticker.style.animation='none';
             requestAnimationFrame(function(){
               ticker.style.animation='oa-fade-in .4s ease';
-              ticker.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:1.5px;color:rgba(201,168,76,.6)">'
+              ticker.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.6)">'
                 +'&#9670; '+esc(String(item.title||'').slice(0,60))+'</span>';
             });
           }

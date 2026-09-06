@@ -88,6 +88,44 @@
       '.omega-shimmer{background:linear-gradient(90deg,transparent 0%,rgba(201,168,76,.15) 50%,transparent 100%);',
       'background-size:200% 100%;animation:omega-shimmer-move 2s infinite}',
       '@keyframes omega-shimmer-move{0%{background-position:200% 0}100%{background-position:-200% 0}}',
+
+      /* Parallax elements */
+      '[data-parallax]{will-change:transform;transition:transform .1s ease-out}',
+
+      /* Floating elements */
+      '[data-float]{will-change:transform;transition:transform .1s ease-out}',
+
+      /* Additional reveal variants */
+      '[data-reveal="rotate-in"]{opacity:0;transform:rotateZ(-8deg) scale(.9)}',
+      '[data-reveal="rotate-in"].omega-revealed{transform:rotateZ(0) scale(1)}',
+      '[data-reveal="slide-down"]{opacity:0;transform:translateY(-20px)}',
+      '[data-reveal="slide-down"].omega-revealed{transform:translateY(0)}',
+      '[data-reveal="depth-in"]{opacity:0;transform:translateZ(-20px) scale(.95)}',
+      '[data-reveal="depth-in"].omega-revealed{transform:translateZ(0) scale(1)}',
+
+      /* Depth glow effect */
+      '.omega-depth-glow{box-shadow:0 0 30px rgba(201,168,76,.15),inset 0 0 20px rgba(201,168,76,.05);',
+      'transition:box-shadow .3s ease}',
+      '.omega-depth-glow:hover{box-shadow:0 0 50px rgba(201,168,76,.3),inset 0 0 30px rgba(201,168,76,.12)}',
+
+      /* Constellation lines effect */
+      '.omega-constellation{position:relative;display:grid}',
+      '.omega-constellation::before{content:"";position:absolute;inset:0;pointer-events:none;',
+      'background:linear-gradient(135deg,transparent 48%,rgba(201,168,76,.08) 49%,rgba(201,168,76,.08) 51%,transparent 52%);',
+      'opacity:0;transition:opacity .4s ease}',
+      '.omega-constellation.omega-revealed::before{opacity:1}',
+
+      /* Enhanced reduced motion */
+      '@media(prefers-reduced-motion:reduce){',
+      '[data-reveal],',
+      '[data-reveal="rotate-in"],',
+      '[data-reveal="slide-down"],',
+      '[data-reveal="depth-in"]{',
+      'opacity:1!important;transform:none!important;transition:none!important}',
+      '[data-parallax]{transform:none!important}',
+      '[data-float]{transform:none!important}',
+      '[data-glow-pulse]{animation:none!important}',
+      '}',
     ].join('');
     (document.head || document.documentElement).appendChild(s);
   })();
@@ -234,11 +272,78 @@
     });
   }
 
+  /* ── E. PARALLAX SCROLL DEPTH ────────────────────────────────────────── */
+  function initParallax(){
+    if(REDUCE || !window.requestAnimationFrame){ return; }
+    var parallaxEls = document.querySelectorAll('[data-parallax]');
+    if(parallaxEls.length === 0) return;
+    var scrollY = 0;
+    window.addEventListener('scroll', function(){ scrollY = window.scrollY; }, { passive: true });
+    function updateParallax(){
+      parallaxEls.forEach(function(el){
+        var speed = parseFloat(el.getAttribute('data-parallax')||'0.3');
+        var offset = scrollY * speed;
+        el.style.transform = 'translateY(' + offset + 'px)';
+      });
+      requestAnimationFrame(updateParallax);
+    }
+    updateParallax();
+  }
+
+  /* ── F. FLOATING ELEMENTS ────────────────────────────────────────────── */
+  function initFloatingElements(){
+    if(REDUCE){ return; }
+    var floatingEls = document.querySelectorAll('[data-float]');
+    if(floatingEls.length === 0) return;
+    var now = 0;
+    function animateFloat(){
+      floatingEls.forEach(function(el){
+        var speed = parseFloat(el.getAttribute('data-float')||'0.5');
+        var amplitude = parseFloat(el.getAttribute('data-float-amplitude')||'6');
+        var offset = Math.sin(now * speed * 0.01) * amplitude;
+        el.style.transform = 'translateY(' + offset + 'px)';
+      });
+      now++;
+      requestAnimationFrame(animateFloat);
+    }
+    animateFloat();
+  }
+
+  /* ── G. GLOW PULSE EFFECT ────────────────────────────────────────────── */
+  function initGlowPulse(){
+    if(REDUCE){ return; }
+    if(document.getElementById('omega-glow-pulse-css')) return;
+    var s = document.createElement('style');
+    s.id = 'omega-glow-pulse-css';
+    s.textContent = [
+      '[data-glow-pulse]{animation:omega-glow-pulse 3s ease-in-out infinite}',
+      '@keyframes omega-glow-pulse{',
+      '0%{box-shadow:0 0 15px rgba(201,168,76,.2),inset 0 0 15px rgba(201,168,76,.05)}',
+      '50%{box-shadow:0 0 35px rgba(201,168,76,.4),inset 0 0 25px rgba(201,168,76,.1)}',
+      '100%{box-shadow:0 0 15px rgba(201,168,76,.2),inset 0 0 15px rgba(201,168,76,.05)}',
+      '}',
+      '[data-glow-pulse].glow-cyan{box-shadow:0 0 15px rgba(0,229,255,.2),inset 0 0 15px rgba(0,229,255,.05)!important;',
+      'animation:omega-glow-pulse-cyan 3s ease-in-out infinite!important}',
+      '@keyframes omega-glow-pulse-cyan{',
+      '0%{box-shadow:0 0 15px rgba(0,229,255,.2),inset 0 0 15px rgba(0,229,255,.05)}',
+      '50%{box-shadow:0 0 35px rgba(0,229,255,.4),inset 0 0 25px rgba(0,229,255,.1)}',
+      '100%{box-shadow:0 0 15px rgba(0,229,255,.2),inset 0 0 15px rgba(0,229,255,.05)}',
+      '}',
+      '@media(prefers-reduced-motion:reduce){',
+      '[data-glow-pulse]{animation:none!important}',
+      '}',
+    ].join('');
+    (document.head || document.documentElement).appendChild(s);
+  }
+
   /* ── INIT ────────────────────────────────────────────────────────────── */
   function boot(){
     initReveals();
     initCountUps();
     initStagger();
+    initParallax();
+    initFloatingElements();
+    initGlowPulse();
   }
 
   if(document.readyState === 'loading'){
@@ -263,11 +368,14 @@
 
   /* ── PUBLIC API ──────────────────────────────────────────────────────── */
   window.OmegaCinematic = {
-    curtainIn:  curtainIn,
-    curtainOut: curtainOut,
-    reveal:     initReveals,
-    countUp:    initCountUps,
-    stagger:    initStagger,
-    isReduced:  REDUCE,
+    curtainIn:       curtainIn,
+    curtainOut:      curtainOut,
+    reveal:          initReveals,
+    countUp:         initCountUps,
+    stagger:         initStagger,
+    parallax:        initParallax,
+    floating:        initFloatingElements,
+    glowPulse:       initGlowPulse,
+    isReduced:       REDUCE,
   };
 })();

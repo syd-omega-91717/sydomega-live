@@ -7,13 +7,13 @@
 <meta name="description" content="Commit sovereign works to the Order's archive — manuscripts, treatises, reports, and codex entries."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.form-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
-.form-input{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none;color-scheme:dark}
+.form-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.form-input{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none;color-scheme:dark}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
 .work-item{border:1px solid var(--line);background:var(--surface);margin-bottom:8px;overflow:hidden}
 .work-header{width:100%;text-align:left;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;color:var(--ink)}
 .work-title{font-family:var(--D);font-size:14px;color:var(--solar)}
-.work-meta{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
+.work-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
 .work-arrow{font-family:var(--M);color:var(--cyan);font-size:16px;transition:transform .25s;flex-shrink:0}
 .work-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
 .work-item.open .work-body{max-height:2000px}
@@ -68,14 +68,14 @@
       <input type="file" id="p-file" class="form-input" style="padding:6px"/>
     </div>
     <button id="p-go" class="btn-gold">COMMIT TO ARCHIVE</button>
-    <div id="p-msg" style="font-family:var(--M);font-size:10px;margin-top:10px;display:none"></div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8">Public showcase, licensing, and the creator marketplace are <span style="color:var(--crim)">PHASE II — gated on legal review</span>. Your work remains private until those activate.</div>
+    <div id="p-msg" style="font-family:var(--M);font-size:12px;margin-top:10px;display:none"></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8">Public showcase, licensing, and the creator marketplace are <span style="color:var(--crim)">PHASE II — gated on legal review</span>. Your work remains private until those activate.</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-archive">
   <div class="sechead">YOUR ARCHIVE</div>
-  <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:1.8;margin-bottom:14px;padding:10px 14px;border:1px solid var(--line)">Every work is <span style="color:var(--gold)">private to your archive</span> — visible only to you. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.8;margin-bottom:14px;padding:10px 14px;border:1px solid var(--line)">Every work is <span style="color:var(--gold)">private to your archive</span> — visible only to you. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
   <div id="p-list" data-loading></div>
 </div>
 
@@ -122,7 +122,7 @@ async function loadArchive(){
   try{
     var r=await sb.from('publications').select('kind,title,body,created_at,status').eq('user_id',userId).order('created_at',{ascending:false}).limit(40);
     box.innerHTML='';
-    if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Your archive is empty — commit your first work above.</div>';return;}
+    if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Your archive is empty — commit your first work above.</div>';return;}
     r.data.forEach(function(w){
       var dt=w.created_at?new Date(w.created_at).toLocaleDateString():'';
       var st=(w.status||'private').toLowerCase();
@@ -135,7 +135,7 @@ async function loadArchive(){
       d.querySelector('.work-header').addEventListener('click',function(){d.classList.toggle('open');});
       box.appendChild(d);
     });
-  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Archive unavailable right now.</div>';}
+  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Archive unavailable right now.</div>';}
 }
 
 document.getElementById('p-go').addEventListener('click',async function(){
@@ -178,5 +178,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

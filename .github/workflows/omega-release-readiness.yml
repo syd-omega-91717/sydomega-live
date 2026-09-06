@@ -1,0 +1,44 @@
+name: Omega Release Readiness
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-release-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Release readiness
+        run: python scripts/omega_release_readiness.py
+
+      - name: Python syntax
+        run: python -m compileall -q scripts core tests
+
+      - name: Artifact build
+        run: bash scripts/vercel-build.sh
+
+      - name: Artifact invariants
+        run: |
+          test -s public/index.html
+          test -s public/vendor/supabase-js.js
+          test -s public/assets/js/omega-visual-engine.js
+          test -s public/assets/js/omega-runtime-observability.js

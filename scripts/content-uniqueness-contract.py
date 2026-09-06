@@ -9,8 +9,20 @@ from pathlib import Path
 import re
 import sys
 
+# CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
+# if asking is cheap and safe. This gate used to run its whole job on --help --
+# a repo-wide scan, or in one case an O(n^2) page comparison that never
+# returned -- so the cheapest way to learn what it did was to read it. The
+# guard runs before any work, and must stay ahead of it.
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
-IGNORE = {"node_modules", ".git", ".next", "dist", "build"}
+IGNORE = {"node_modules", ".git", ".next", "dist", "build", "public"}  # public/ is this repo's build output
+# (scripts/vercel-build.sh copies the whole web surface into it), so leaving it
+# in scope makes every page a duplicate of itself. The set already excluded
+# dist/ and build/ for exactly this reason; it just did not know our name for it.
 errors = []
 
 def norm(value: str) -> str:

@@ -17,34 +17,42 @@ concurrency:
 jobs:
   runtime:
     name: Runtime syntax and configuration contract
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Verify runtimes
-        shell: pwsh
         run: |
           python --version
           node --version
       - name: Check JavaScript syntax
-        shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-          $files = Get-ChildItem -Path . -Filter '*.js' -File -Recurse | Where-Object { $_.FullName -notmatch '\\node_modules\\|\\dist\\|\\build\\|\\.git\\' }
-          foreach ($f in $files) { node --check $f.FullName }
-          Write-Host "Checked $($files.Count) JavaScript files."
+          set -euo pipefail
+          count=0
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+            count=$((count + 1))
+          done < <(find . -type f -name '*.js' -not -path './.git/*' -not -path './node_modules/*' -not -path './dist/*' -not -path './build/*' -print0)
+          echo "Checked $count JavaScript files."
       - name: Validate JSON configuration
-        shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-          $files = Get-ChildItem -Path config -Filter '*.json' -File -Recurse
-          foreach ($f in $files) { Get-Content $f.FullName -Raw | ConvertFrom-Json | Out-Null }
-          Write-Host "Checked $($files.Count) JSON configuration files."
-      - name: Validate Python contracts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          python scripts/content-registry-contract.py
-          python scripts/page-estate-quality.py
-          python scripts/page-experience-contract.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('config')
+          files = list(root.rglob('*.json')) if root.exists() else []
+          for path in files:
+              json.loads(path.read_text(encoding='utf-8'))
+          print(f'Checked {len(files)} JSON configuration files.')
+          PY
+      - name: Workflow syntax contract
+        run: python scripts/workflow-contract.py

@@ -57,12 +57,12 @@
       'z-index:10000;display:flex;align-items:center;gap:10px;padding:12px 18px;',
       'border:1px solid rgba(201,168,76,.35);background:rgba(10,10,15,.94);',
       'backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:3px;',
-      'font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1.2px;color:#e9e6dc;',
+      'font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.2px;color:#e9e6dc;',
       'box-shadow:0 12px 32px rgba(0,0,0,.5);opacity:0;transition:opacity .28s,transform .28s;max-width:92vw}',
       '.omp-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}',
       '.omp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}',
       '.omp-axis{font-weight:700}',
-      '@media(max-width:760px){.omp-toast{bottom:78px;font-size:10px;padding:10px 14px}}'
+      '@media(max-width:760px){.omp-toast{bottom:78px;font-size:12px;padding:10px 14px}}'
     ].join('');
     (document.head || document.documentElement).appendChild(s);
   }

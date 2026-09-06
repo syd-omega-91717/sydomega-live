@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Control Deck</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="The Architect's control deck: live system state, lattice, and economy under sovereign oversight."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/interface_omni.html"/>
+<meta property="og:url" content="https://www.sydomega.com/interface-omni.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Control Deck"/>
 <meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
@@ -33,10 +33,10 @@
   .main{flex:1;min-width:0}
   .topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
   .topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(16px,2.5vw,24px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:3px;margin-top:3px}
-  .sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .topbar .t small{display:block;font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:3px;margin-top:3px}
+  .sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
   .pad{padding:0 clamp(14px,3vw,36px) 60px}
-  .state{display:flex;align-items:center;gap:14px;margin:4px clamp(14px,3vw,36px) 0;font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)}
+  .state{display:flex;align-items:center;gap:14px;margin:4px clamp(14px,3vw,36px) 0;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
   .state .dot{width:8px;height:8px;background:var(--green);border-radius:0;box-shadow:0 0 10px var(--green);animation:pulse 2.4s ease-in-out infinite}
   .state b{color:var(--solar);letter-spacing:3px}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -47,11 +47,11 @@
   .card h3{font-family:var(--D);font-size:15px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;font-weight:700}
   .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.1)}
   .row:last-child{border-bottom:none}
-  .row .k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+  .row .k{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
   .row .v{font-family:var(--D);font-size:16px;color:var(--cyan)}
   .row .v.gold{color:var(--solar)}
   .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-  .tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+  .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
   .tab-panel{display:none}.tab-panel.active{display:block}
 </style>
 </head>
@@ -62,7 +62,7 @@
 </div>
 <div id="main" style="display:none">
 <div class="shell">
-  <aside class="side" id="omega-side" data-page="interface_omni"></aside>
+  <aside class="side" id="omega-side" data-page="interface-omni"></aside>
   <main class="main">
     <div class="topbar"><div class="t">CONTROL DECK<small>SYSTEM STATE . SOVEREIGN OVERSIGHT &middot; 18×18×9×9×9 = 236,196 <span data-canon-lattice="18"></span></small> <span data-canon-lattice="twelve"></span></div></div>
     <div data-page-emblem="interface-omni" style="margin:14px auto 18px"></div>
@@ -139,8 +139,8 @@
             <div class="row"><span class="k">Subscriptions</span><span class="v" id="flag-payments">Loading...</span></div>
             <div class="row"><span class="k">Token Economy</span><span class="v" id="flag-tokens">Loading...</span></div>
             <div style="display:flex;gap:8px;margin-top:10px">
-              <button class="btn" id="btn-toggle-payments" style="cursor:pointer;font-size:9px">TOGGLE SUBSCRIPTIONS</button>
-              <button class="btn" id="btn-toggle-tokens" style="cursor:pointer;font-size:9px">TOGGLE TOKENS</button>
+              <button class="btn" id="btn-toggle-payments" style="cursor:pointer;font-size:12px">TOGGLE SUBSCRIPTIONS</button>
+              <button class="btn" id="btn-toggle-tokens" style="cursor:pointer;font-size:12px">TOGGLE TOKENS</button>
             </div>
           </div>
         </div>
@@ -150,16 +150,16 @@
       <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
       <div class="pad">
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px">
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTH</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.6180</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">PHI &phi;</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.7183</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">EULER e</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:13px;color:var(--gold);line-height:1">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AUTH FORMULA</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">27.8367</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTH</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.6180</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">PHI &phi;</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.7183</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">EULER e</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:13px;color:var(--gold);line-height:1">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">AUTH FORMULA</div></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px">
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">0.001</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">INITIATE GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.618</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.718</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">PRIME GATE</div></div>
-          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">9.000</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">0.001</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">INITIATE GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">1.618</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">2.718</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">PRIME GATE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">9.000</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX GATE</div></div>
         </div>
       </div>
     </div>
@@ -198,8 +198,8 @@ async function boot(){
     document.getElementById('gate').innerHTML=`
       <div style="font-size:56px;color:var(--crim)">&#937;</div>
       <div style="font-family:serif;font-size:16px;color:var(--crim);font-weight:700">ACCESS DENIED</div>
-      <div style="font-family:monospace;font-size:11px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
-      <a href="/dashboard.html" style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
+      <div style="font-family:monospace;font-size:12px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
+      <a href="/dashboard.html" style="font-family:monospace;font-size:12px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
     return;
   }
   document.getElementById('gate').style.display='none';
@@ -231,5 +231,5 @@ async function toggleFlag(key,elId){
 boot();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

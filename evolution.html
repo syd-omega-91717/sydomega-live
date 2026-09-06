@@ -8,11 +8,11 @@
 <meta name="theme-color" content="#C9A84C"/>
 <style>
 .axis-card{border:1px solid var(--line);border-top:3px solid var(--ac,var(--gold));background:var(--surface);padding:16px;flex:1;min-width:140px}
-.axis-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.axis-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
 .axis-val{font-family:var(--D);font-size:28px;margin-bottom:6px}
 .axis-bar-track{height:6px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:4px}
 .axis-bar-fill{height:100%;transition:width .6s ease}
-.axis-note{font-size:10px;color:var(--muted);line-height:1.5}
+.axis-note{font-size:12px;color:var(--muted);line-height:1.5}
 .axis-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .gate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .gate-card{border:1px solid var(--line);background:var(--surface);padding:12px;text-align:center;position:relative}
@@ -21,18 +21,18 @@
 .gate-card.locked{opacity:.5}
 .gate-num{font-family:var(--D);font-size:20px;color:var(--gold);margin-bottom:3px}
 .gate-card.current .gate-num{color:var(--cyan)}
-.gate-name{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.gate-thresh{font-family:var(--M);font-size:8px;color:var(--gold)}
+.gate-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.gate-thresh{font-family:var(--M);font-size:12px;color:var(--gold)}
 .gate-card.current .gate-thresh{color:var(--cyan)}
-.gate-badge{position:absolute;top:6px;right:6px;font-size:8px}
+.gate-badge{position:absolute;top:6px;right:6px;font-size:12px}
 .ev-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.07)}
-.ev-axis{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:9px;font-weight:700;flex-shrink:0}
+.ev-axis{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;font-weight:700;flex-shrink:0}
 .ev-axis.A{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
 .ev-axis.B{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.25)}
 .ev-axis.C{background:rgba(63,178,127,.1);color:var(--green);border:1px solid rgba(63,178,127,.25)}
 .ev-axis.X{background:rgba(138,134,118,.1);color:var(--muted);border:1px solid rgba(138,134,118,.2)}
-.ev-note{font-size:11px;color:var(--ink);line-height:1.5}
-.ev-date{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-top:3px}
+.ev-note{font-size:12px;color:var(--ink);line-height:1.5}
+.ev-date{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
 </style>
 </head>
 <body>
@@ -84,16 +84,16 @@
     </div>
   </div>
   <div class="glass">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">AUTHORITY FORMULA</div>
-    <div style="font-family:var(--M);font-size:11px;color:var(--ink);margin-bottom:6px">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
-    <div style="font-size:10px;color:var(--muted);line-height:1.7">&phi; = 1.6180339887 &nbsp;&middot;&nbsp; e = 2.7182818285 &nbsp;&middot;&nbsp; APEX = 27.8367 &nbsp;&middot;&nbsp; MAX AXIS = 9</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">AUTHORITY FORMULA</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:6px">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">&phi; = 1.6180339887 &nbsp;&middot;&nbsp; e = 2.7182818285 &nbsp;&middot;&nbsp; APEX = 27.8367 &nbsp;&middot;&nbsp; MAX AXIS = 9</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-events">
   <div class="sechead">EVOLUTION EVENTS &mdash; <span id="ev-count">—</span></div>
   <div id="ev-list">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading events&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading events&hellip;</div>
   </div>
 </div>
 
@@ -144,7 +144,7 @@ function renderAxes(a,b,c){
 function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
 function renderEvents(evs){
   var list=document.getElementById('ev-list');
-  if(!evs||!evs.length){list.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">No events recorded yet.</div>';return;}
+  if(!evs||!evs.length){list.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">No events recorded yet.</div>';return;}
   list.innerHTML=evs.map(function(ev){
     var axis=(ev.axis||'X').toUpperCase();
     var d=new Date(ev.created_at);
@@ -191,5 +191,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

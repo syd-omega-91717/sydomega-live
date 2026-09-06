@@ -65,7 +65,7 @@
         var c=console.clear;
         if(c) c.call(console);
         console.log('%c\u03A9 SYD OMEGA 91717 \u2014 SOVEREIGN PROTECTED SYSTEM','color:#C9A84C;font-size:16px;font-weight:bold;font-family:serif');
-        console.log('%cAll source code is the exclusive intellectual property of Major Sleiman Youssef Dagher.\nUnauthorized inspection, copying, or reproduction is strictly prohibited.','color:#8a8676;font-size:11px');
+        console.log('%cAll source code is the exclusive intellectual property of Major Sleiman Youssef Dagher.\nUnauthorized inspection, copying, or reproduction is strictly prohibited.','color:#8a8676;font-size:12px');
       }
     }
     if(!open) _devOpen=false;
@@ -88,7 +88,7 @@
   if(typeof console!=='undefined'&&console.log){
     console.log('%c\u03A9','color:#C9A84C;font-size:48px;font-weight:bold');
     console.log('%c SYD OMEGA 91717 \u2014 SOVEREIGN SYSTEM\n All source code copyright Major Sleiman Youssef Dagher.\n Lebanese Order of Engineers No. 30875','color:#C9A84C;font-size:13px;font-family:serif');
-    console.log('%c Unauthorized access, copying, or reproduction is a violation of sovereignty.','color:#8B0000;font-size:11px');
+    console.log('%c Unauthorized access, copying, or reproduction is a violation of sovereignty.','color:#8B0000;font-size:12px');
   }
 
 })();

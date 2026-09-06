@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717  --  Password Recovery</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="Recover access to your account: request a secure link by email, then set a new password."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -34,25 +34,27 @@
   .panel{width:100%;max-width:440px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:38px 30px;text-align:center}
   .g{font-family:var(--display);font-size:54px;color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.35)}
   h1{font-family:var(--display);font-weight:700;color:var(--gold);font-size:24px;letter-spacing:1px;margin:10px 0 4px}
-  .sub{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:22px}
+  .sub{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--cyan);margin-bottom:22px}
   p.lead{font-weight:300;color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:20px}
-  label{display:block;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin:14px 0 7px}
+  label{display:block;text-align:left;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin:14px 0 7px}
   input{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:13px 15px;color-scheme:dark}
   input:focus{outline:none;border-color:var(--cyan)}
-  .btn{width:100%;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px;border:1px solid var(--gold);cursor:pointer;margin-top:20px}
+  /* colour and background come from .btn-fill in bg.js: a bare .btn rule here
+     is the same specificity as bg.js's ghost .btn and loses to it. */
+  .btn{width:100%;font-family:var(--mono);letter-spacing:2px;font-size:12px;padding:14px;cursor:pointer;margin-top:20px}
   .btn:hover{background:transparent;color:var(--gold)}
   .btn:disabled{opacity:.5;cursor:default}
-  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;min-height:16px;margin-top:14px}
+  .msg{font-family:var(--mono);font-size:12px;letter-spacing:1px;min-height:16px;margin-top:14px}
   .msg.bad{color:var(--crimson)} .msg.ok{color:var(--green)} .msg.info{color:var(--cyan)}
-  .back{display:inline-block;margin-top:22px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);text-decoration:none}
+  .back{display:inline-block;margin-top:22px;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cyan);text-decoration:none}
   .back:hover{color:var(--gold)}
   .hidden{display:none}
   .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.6);overflow-x:auto;scrollbar-width:none;margin:14px -30px 0;width:calc(100% + 60px)}.tab-bar::-webkit-scrollbar{display:none}
-  .tab-btn{font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+  .tab-btn{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
   .tab-panel{display:none;padding-top:18px}.tab-panel.act{display:block}
   .kpi-r{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
   .kpi-c{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-top:2px solid var(--gold);text-align:left}
-  .kpi-c .n{font-family:var(--display);font-size:15px;color:var(--gold);line-height:1}.kpi-c .l{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+  .kpi-c .n{font-family:var(--display);font-size:15px;color:var(--gold);line-height:1}.kpi-c .l{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
 </style>
 </head>
 <body>
@@ -75,17 +77,17 @@
         <p class="lead">Enter the email bound to your account. The Order will send a secure link to restore your access.</p>
         <label for="r-email">EMAIL</label>
         <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email" />
-        <button class="btn" id="r-send">SEND RECOVERY LINK</button>
+        <button class="btn btn-fill" id="r-send">SEND RECOVERY LINK</button>
         <div class="msg" id="r-msg"></div>
         <a class="back" href="/account.html">&larr; BACK TO MEMBER ACCESS</a>
       </div>
       <div id="view-reset" class="hidden">
         <p class="lead">Set a new password for your sovereign account.</p>
         <label for="r-pw">NEW PASSWORD</label>
-        <input type="password" id="r-pw" placeholder="at least 6 characters" autocomplete="new-password" />
+        <input type="password" id="r-pw" placeholder="at least 12 characters" autocomplete="new-password" />
         <label for="r-pw2">CONFIRM PASSWORD</label>
         <input type="password" id="r-pw2" placeholder="repeat it" autocomplete="new-password" />
-        <button class="btn" id="r-update">UPDATE PASSWORD</button>
+        <button class="btn btn-fill" id="r-update">UPDATE PASSWORD</button>
         <div class="msg" id="r-msg2"></div>
         <a class="back" href="/account.html">&larr; BACK TO MEMBER ACCESS</a>
       </div>
@@ -124,6 +126,10 @@
       </div>
     </div>
   </div>
+  <!-- Inside the wrapper, not a sibling of it: <body> here resolves to
+       display:flex/row, so a top-level mount became a stretched second
+       column (241x652 for 175px of content). -->
+  <div data-page-emblem="reset" style="margin:20px auto 28px"></div>
 </div>
 
 <script>
@@ -134,6 +140,7 @@ function switchTab(id,btn){
   document.getElementById('tab-'+id).classList.add('act');
 }
 </script>
+<script src="/omega-password-guard.js"></script>
 <script type="module">
   import { createClient } from '/vendor/supabase-js.js';
   var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
@@ -165,9 +172,20 @@ function switchTab(id,btn){
   async function updatePw(){
     var pw=document.getElementById('r-pw').value, pw2=document.getElementById('r-pw2').value;
     var msg=document.getElementById('r-msg2'), btn=document.getElementById('r-update');
-    if(pw.length<6){ msg.className='msg bad'; msg.textContent='Password must be at least 6 characters.'; return; }
     if(pw!==pw2){ msg.className='msg bad'; msg.textContent='Passwords do not match.'; return; }
-    btn.disabled=true; msg.className='msg info'; msg.textContent='Updating...';
+
+    /* Same gate as sign-up: a recovery flow that let a breached password
+       through would leave the account exactly as exposed as before. */
+    btn.disabled=true; msg.className='msg info'; msg.textContent='Checking password...';
+    var guard = window.OmegaPasswordGuard;
+    if(guard){
+      var verdict = await guard.evaluate(pw, (document.getElementById('r-email')||{}).value || '');
+      if(!verdict.allow){
+        btn.disabled=false; msg.className='msg bad'; msg.textContent=verdict.reasons.join(' ');
+        return;
+      }
+    }
+    msg.className='msg info'; msg.textContent='Updating...';
     var r = await supabase.auth.updateUser({ password: pw });
     btn.disabled=false;
     if(r.error){ msg.className='msg bad'; msg.textContent=r.error.message||'Could not update. Request a fresh link.'; return; }
@@ -181,5 +199,5 @@ function switchTab(id,btn){
   document.getElementById('r-pw2').addEventListener('keydown',function(e){ if(e.key==='Enter') updatePw(); });
 </script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

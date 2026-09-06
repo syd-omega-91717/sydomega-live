@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717 -- Member Access</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="Sign in, or create the account that holds your cosmology and your position in the matrix."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -42,7 +42,7 @@
   a{color:inherit;text-decoration:none}
   /* Tab system */
   .layer-tabs{display:flex;gap:2px;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-  .lt{font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+  .lt{font-family:var(--mono);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
   .lt.active{color:var(--gold);border-bottom-color:var(--gold)}
   .tab-pane{display:none}.tab-pane.active{display:block}
   /* Auth panel sections */
@@ -52,10 +52,12 @@
   .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:15px}
   /* Form */
   .form{margin:30px auto 0;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left}
-  label{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--muted)}
+  label{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--muted)}
   input,select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
   input:focus,select:focus{outline:none;border-color:var(--cyan)}
-  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;color:var(--void);background:var(--gold);padding:15px 26px;border:1px solid var(--gold);cursor:pointer;transition:all .25s ease;width:100%}
+  /* colour and background come from .btn-fill in bg.js: a bare .btn rule here
+     is the same specificity as bg.js's ghost .btn and loses to it. */
+  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;padding:15px 26px;cursor:pointer;transition:all .25s ease;width:100%}
   .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
   .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
   .btn:disabled{opacity:.5;cursor:default}
@@ -77,49 +79,49 @@
   .chain .arrow{border:none;color:var(--cyan);align-self:center;padding:9px 2px}
   /* Matrix */
   .matrix{border:1px solid var(--line);margin-top:12px;padding:20px;background:linear-gradient(180deg,var(--void-2),transparent);text-align:left}
-  .matrix .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
+  .matrix .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
   .coords{display:flex;flex-wrap:wrap;gap:20px;align-items:baseline}
   .coord{font-family:var(--mono)}
-  .coord .lbl{font-size:10px;letter-spacing:2px;color:var(--muted);display:block}
+  .coord .lbl{font-size:12px;letter-spacing:2px;color:var(--muted);display:block}
   .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:24px}
   .radar-wrap{display:flex;justify-content:center;margin:20px 0 4px}
   #d-radar{width:200px;height:200px;max-width:80%}
   .rdr-guide{fill:none;stroke:var(--line);stroke-width:1}
   .rdr-spoke{stroke:var(--line);stroke-width:1}
-  .rdr-label{fill:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:1px}
+  .rdr-label{fill:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:1px}
   .rdr-now{fill:var(--acc);fill-opacity:.16;stroke:var(--acc);stroke-width:1.5}
   .rdr-dot{fill:var(--acc)}
   .mrow{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:14px;line-height:2}
   .mrow b{color:var(--gold);font-weight:400}
-  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:1px}
+  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:1px}
   .rung{border:1px solid var(--line);padding:6px 9px;color:var(--muted)}
   .rung.on{border-color:var(--gold);color:var(--gold)}
   /* Events */
   .evt{border:1px solid var(--line);margin-top:18px;padding:18px;text-align:left}
-  .evt .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .evt .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .erow{display:flex;flex-direction:column;gap:12px}
   .ledger{margin-top:18px;text-align:left}
-  .ledger .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .ledger .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px}
   .ev:last-child{border-bottom:none}
   .ev .ax{color:var(--gold);min-width:104px}
   .ev .nt{color:var(--ink);flex:1}
   /* Certs */
   .certs{margin-top:18px;text-align:left}
-  .certs .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .certs .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .seals{display:flex;flex-wrap:wrap;gap:12px}
   .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent);padding:14px 16px;min-width:180px;flex:1}
   .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:18px;letter-spacing:1px}
   .seal .s-title{font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:1px;margin-top:6px;line-height:1.5}
-  .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:6px}
+  .seal .s-date{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:6px}
   .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
   /* Agent */
   .agent{border:1px solid var(--line);border-left:2px solid var(--acc);margin-top:18px;padding:18px;text-align:left}
   .ag-head{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-  .sigil{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:10px;letter-spacing:1px;border-radius:50%;margin-right:10px}
-  .ag-head .lead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--acc)}
-  .ag-head .dom{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-left:10px}
-  .agent .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .sigil{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:12px;letter-spacing:1px;border-radius:50%;margin-right:10px}
+  .ag-head .lead{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--acc)}
+  .ag-head .dom{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-left:10px}
+  .agent .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .chatlog{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;margin-bottom:12px}
   .cmsg{font-size:14px;line-height:1.55;padding:10px 14px;border:1px solid var(--line);max-width:92%}
   .cmsg.me{align-self:flex-end;color:var(--ink);border-color:var(--cyan)}
@@ -127,21 +129,21 @@
   .chatrow{display:flex;gap:10px}
   .chatrow input{flex:1}
   .chatrow .btn{width:auto;white-space:nowrap}
-  .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:20px;text-align:center}
+  .whoami{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:20px;text-align:center}
   .whoami b{color:var(--cyan);font-weight:400}
-  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:14px;text-align:center;line-height:1.8}
+  .note{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:14px;text-align:center;line-height:1.8}
   .actions{display:flex;justify-content:center;margin-top:20px}
   /* Cosmology / science tabs */
   .sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:16px}
   .sign-card{border:1px solid var(--line);padding:14px;background:rgba(0,0,0,.2)}
   .sign-card .sg-glyph{font-size:22px;color:var(--gold);margin-bottom:6px}
-  .sign-card .sg-name{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold)}
-  .sign-card .sg-range{font-family:var(--mono);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-top:2px}
-  .sign-card .sg-elem{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--cyan);margin-top:6px}
-  .sign-card .sg-agent{font-family:var(--mono);font-size:7.5px;letter-spacing:1px;color:rgba(200,190,160,.6);margin-top:2px}
+  .sign-card .sg-name{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--gold)}
+  .sign-card .sg-range{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
+  .sign-card .sg-elem{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--cyan);margin-top:6px}
+  .sign-card .sg-agent{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:rgba(200,190,160,.6);margin-top:2px}
   .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
   .stat-val{font-family:var(--mono);font-size:18px;color:var(--gold);letter-spacing:1px}
-  .stat-lbl{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+  .stat-lbl{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -171,13 +173,13 @@
           <label for="au-email">EMAIL</label>
           <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />
           <label for="au-pw">PASSWORD</label>
-          <input type="password" id="au-pw" placeholder="at least 6 characters" autocomplete="current-password" />
+          <input type="password" id="au-pw" placeholder="at least 12 characters" autocomplete="current-password" />
           <div class="row2">
-            <button class="btn" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
-            <button class="btn" id="btn-login" data-i18n="account_login">LOG IN</button>
+            <button class="btn btn-fill" id="btn-signup" data-i18n="account_create">CREATE ACCOUNT</button>
+            <button class="btn btn-fill" id="btn-login" data-i18n="account_login">LOG IN</button>
           </div>
           <div class="msg" id="au-msg"></div>
-          <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:11px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
+          <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:12px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
         </div>
       </section>
 
@@ -189,7 +191,7 @@
         <div class="form">
           <label for="dob" data-i18n="account_dob">YOUR DATE OF BIRTH</label>
           <input type="date" id="dob" min="1900-01-01" />
-          <button class="btn" id="gate-go" data-i18n="account_reveal_save">REVEAL &amp; SAVE</button>
+          <button class="btn btn-fill" id="gate-go" data-i18n="account_reveal_save">REVEAL &amp; SAVE</button>
           <div class="msg bad" id="gate-err"></div>
         </div>
       </section>
@@ -284,6 +286,7 @@
 </main>
 </div>
 
+<script src="/omega-password-guard.js"></script>
 <script type="module">
   /* Tab switching */
   document.querySelectorAll('.lt').forEach(function(b){
@@ -367,8 +370,32 @@
     const email=document.getElementById('au-email').value.trim();
     const pw=document.getElementById('au-pw').value;
     const msg=document.getElementById('au-msg');
-    if(!email || pw.length<6){ msg.className='msg bad'; msg.textContent='Enter an email and a password of at least 6 characters.'; return; }
-    msg.className='msg'; msg.textContent='Creating your account...';
+    if(!email){ msg.className='msg bad'; msg.textContent='Enter your email address.'; return; }
+
+    /* Strength, then the known-breach corpus, BEFORE the password reaches
+       Supabase Auth. Supabase's own leaked-password protection is a Pro-plan
+       Auth setting and this organisation is on `free`, so this is where that
+       threat gets closed. See omega-password-guard.js for what this does and
+       does not cover. */
+    msg.className='msg'; msg.textContent='Checking password...';
+    const guard = window.OmegaPasswordGuard;
+    if(guard){
+      const verdict = await guard.evaluate(pw, email);
+      if(!verdict.allow){
+        msg.className='msg bad'; msg.textContent=verdict.reasons.join(' ');
+        return;
+      }
+      /* Never claim a check that did not run: `checked` is false when the
+         breach corpus was unreachable, and saying nothing is the honest
+         option there. */
+      if(verdict.checked && verdict.breached === false){
+        msg.className='msg'; msg.textContent='Password accepted. Creating your account...';
+      } else {
+        msg.className='msg'; msg.textContent='Creating your account...';
+      }
+    } else {
+      msg.className='msg'; msg.textContent='Creating your account...';
+    }
     const { data, error } = await supabase.auth.signUp({
       email, password:pw,
       options:{ emailRedirectTo: window.location.origin + '/account.html' }
@@ -470,5 +497,5 @@ window.addEventListener('resize',function(){W=window.innerWidth;H=window.innerHe
 })();
 </script>
 <span data-canon-lattice="twelve" style="display:none"></span>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

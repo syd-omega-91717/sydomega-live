@@ -8,27 +8,27 @@
 <meta name="theme-color" content="#C9A84C"/>
 <style>
 #ledger-table .tbl-row:hover{background:rgba(201,168,76,.04)}
-.asset-id{font-family:var(--D);font-size:11px;color:var(--solar);letter-spacing:.05em}
-.asset-cat{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block}
+.asset-id{font-family:var(--D);font-size:12px;color:var(--solar);letter-spacing:.05em}
+.asset-cat{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block}
 .asset-cat.physical{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
 .asset-cat.digital{color:var(--cyan);border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.05)}
 .asset-cat.sovereign{color:var(--crim);border-color:rgba(139,0,0,.4);background:rgba(139,0,0,.06)}
-.status-pill{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border:1px solid;display:inline-block;float:right}
+.status-pill{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:3px 10px;border:1px solid;display:inline-block;float:right}
 .status-pill.verified{color:var(--green);border-color:rgba(63,178,127,.4)}
 .status-pill.locked{color:var(--solar);border-color:rgba(226,200,109,.35)}
 .status-pill.active{color:var(--cyan);border-color:rgba(0,229,255,.3)}
 .status-pill.pending{color:var(--muted);border-color:rgba(138,134,118,.3)}
 .search-wrap{margin-bottom:12px}
-.ledger-search{width:100%;max-width:360px;background:rgba(201,168,76,.07);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;padding:8px 14px;outline:none}
+.ledger-search{width:100%;max-width:360px;background:rgba(201,168,76,.07);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;letter-spacing:1px;padding:8px 14px;outline:none}
 .ledger-search:focus{border-color:rgba(201,168,76,.4)}
 .ledger-search::placeholder{color:var(--muted)}
 .matrix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
 .mx-cell{border:1px solid var(--line);background:var(--surface);padding:14px;text-align:center}
 .mx-val{font-family:var(--D);font-size:22px;color:var(--gold);margin-bottom:4px}
-.mx-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.mx-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .lf-bar{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);background:var(--surface);margin-bottom:8px}
-.lf-key{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);width:140px;flex-shrink:0}
-.lf-val{font-family:var(--M);font-size:10px;color:var(--gold)}
+.lf-key{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);width:140px;flex-shrink:0}
+.lf-val{font-family:var(--M);font-size:12px;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -82,8 +82,8 @@
     <div class="mx-cell"><div class="mx-val">104,976</div><div class="mx-lbl">TOTAL NODES</div></div>
   </div>
   <div class="glass">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">NODE CALCULATION</div>
-    <div style="font-size:11px;color:var(--muted);line-height:1.8">NODE = ((TRACK−1) × 12 + (PHASE−1)) × 729 + (ceil(A)−1) × 81 + (ceil(B)−1) × 9 + ceil(C)<br/>where A, B, C ∈ [1,9] and TRACK, PHASE ∈ [1,12]</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">NODE CALCULATION</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8">NODE = ((TRACK−1) × 12 + (PHASE−1)) × 729 + (ceil(A)−1) × 81 + (ceil(B)−1) × 9 + ceil(C)<br/>where A, B, C ∈ [1,9] and TRACK, PHASE ∈ [1,12]</div>
   </div>
 </div>
 
@@ -120,14 +120,14 @@ function renderAssets(list){
   var ec=document.getElementById('entry-count');if(ec)ec.textContent=list.length+' ENTRIES';
   var cols='grid-template-columns:1fr 1.4fr 1.2fr 150px';
   if(!list.length){
-    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:9px">No assets match your search.</div>';
+    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:12px">No assets match your search.</div>';
     return;
   }
   tb.innerHTML=list.map(function(a){
     return'<div class="tbl-row" style="'+cols+'">'
       +'<span><div class="asset-id">'+a.id+'</div><div style="margin-top:4px"><span class="asset-cat '+a.cat+'">'+a.cat.toUpperCase()+'</span></div></span>'
-      +'<span style="font-size:11px;color:var(--ink)">'+a.node+'</span>'
-      +'<span style="font-family:var(--M);font-size:9px;color:var(--muted)">'+a.weight+'</span>'
+      +'<span style="font-size:12px;color:var(--ink)">'+a.node+'</span>'
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+a.weight+'</span>'
       +'<span style="text-align:right"><span class="status-pill '+a.status+'">'+STATUS_LABELS[a.status]+'</span></span>'
       +'</div>';
   }).join('');
@@ -170,5 +170,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

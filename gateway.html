@@ -10,24 +10,24 @@
 
 /* ── HEAD ─────────────────────────────────────────────────────────────── */
 .gw-head{text-align:center;margin-bottom:26px}
-.gw-kicker{font-family:var(--M);font-size:7px;letter-spacing:5px;color:var(--dim);margin-bottom:10px}
+.gw-kicker{font-family:var(--M);font-size:12px;letter-spacing:5px;color:var(--dim);margin-bottom:10px}
 .gw-title{font-family:"Cinzel Decorative",serif;font-size:26px;letter-spacing:4px;color:var(--gold)}
 
 /* ── FILTER ───────────────────────────────────────────────────────────── */
 .gw-bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:30px}
-.gw-bar label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--dim)}
-#gw-filter{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--gold);
+.gw-bar label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--dim)}
+#gw-filter{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);
   background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.18);padding:10px 14px;
   min-width:220px;min-height:40px;transition:border-color .15s,box-shadow .15s}
 #gw-filter:focus{outline:none;border-color:rgba(201,168,76,.5);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
-#gw-status{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);min-height:10px}
+#gw-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);min-height:10px}
 
 /* ── AXIS ─────────────────────────────────────────────────────────────── */
 .gw-axis{margin-bottom:34px}
-.gw-axis-hd{font-family:var(--M);font-size:8px;font-weight:400;letter-spacing:5px;
+.gw-axis-hd{font-family:var(--M);font-size:12px;font-weight:400;letter-spacing:5px;
   padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid rgba(201,168,76,.1);
   display:flex;align-items:baseline;gap:10px}
-.gw-count{font-size:7px;letter-spacing:2px;color:var(--dim)}
+.gw-count{font-size:12px;letter-spacing:2px;color:var(--dim)}
 
 /* ── TILES ────────────────────────────────────────────────────────────── */
 .gw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:8px}
@@ -47,7 +47,7 @@
 .gw-mark canvas{transition:transform .8s cubic-bezier(.22,.61,.36,1)}
 .gw-tile:hover .gw-mark canvas,
 .gw-tile:focus-visible .gw-mark canvas{transform:rotate(180deg)}
-.gw-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.6px;color:var(--dim);
+.gw-name{font-family:var(--M);font-size:12px;letter-spacing:1.6px;color:var(--dim);
   text-align:center;line-height:1.5;word-break:break-word;transition:color .18s}
 .gw-tile:hover .gw-name,.gw-tile:focus-visible .gw-name{color:var(--gold)}
 /* omega-page-emblem appends its own "12-FOLD" caption under each mark. On a
@@ -85,8 +85,9 @@
 
   <div id="gw-root"></div>
 
+<div data-page-emblem="gateway" style="margin:20px auto 0"></div>
 </main>
 </div>
 <script src="/omega-gateway.js" defer></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

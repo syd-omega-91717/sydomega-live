@@ -84,19 +84,19 @@
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--gold)">
           <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">SOVEREIGN CONSTITUTION</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">The Platform Constitution is an immutable legal and operational document. Five Articles define absolute ownership, governance structure, frequency lock, and the non-deletion clause. No consensus can override the Architect's veto.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">The Platform Constitution is an immutable legal and operational document. Five Articles define absolute ownership, governance structure, frequency lock, and the non-deletion clause. No consensus can override the Architect's veto.</div>
         </div>
         <div class="card" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">HASH-CHAIN AUDIT</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Every database write is hash-chained: each record's hash includes the previous record's hash, creating a cryptographic audit trail. Tampering with any historical record invalidates all subsequent hashes — mathematically detectable.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Every database write is hash-chained: each record's hash includes the previous record's hash, creating a cryptographic audit trail. Tampering with any historical record invalidates all subsequent hashes — mathematically detectable.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
           <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">MULTI-JURISDICTIONAL</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Six jurisdictional frameworks apply simultaneously: GDPR (EU), CCPA (California), MiCA (crypto), UK GDPR, Lebanon Cybercrime Law, and a contractual global default. Each framework has specific data rights, consent requirements, and financial rules.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Six jurisdictional frameworks apply simultaneously: GDPR (EU), CCPA (California), MiCA (crypto), UK GDPR, Lebanon Cybercrime Law, and a contractual global default. Each framework has specific data rights, consent requirements, and financial rules.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
           <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">3-OF-5 MULTI-SIG</div>
-          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Treasury actions above threshold require cryptographic signatures from 3 of 5 designated keyholders. The Architect holds 1 key permanently. This prevents single points of failure, insider threats, and unauthorized fund movement.</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Treasury actions above threshold require cryptographic signatures from 3 of 5 designated keyholders. The Architect holds 1 key permanently. This prevents single points of failure, insider threats, and unauthorized fund movement.</div>
         </div>
       </div>
     </div>
@@ -105,10 +105,10 @@
     <div class="lf"><span>&#937; COMPLIANCE &middot; SOVEREIGN CONSTITUTION &middot; HASH-CHAIN AUDIT</span><span>GDPR &middot; CCPA &middot; MiCA &middot; AML/KYC &middot; 3-of-5 MULTI-SIG</span></div>
   </main>
 </div>
-<style>.cw-notice{margin:12px var(--pad,20px) 0;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:9.5px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
+<style>.cw-notice{margin:12px var(--pad,20px) 0;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
 .cw-notice b{color:#E2967A}
 .pad{padding:var(--pad)}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
 .tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
 .audit-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
@@ -155,26 +155,26 @@ function build(){
   if(sg){sg.innerHTML=SHIELDS.map(function(s){
     var col=STATUS_COL[s.status]||'var(--muted)';
     return '<div class="card" style="--card-accent:'+col+'">'
-      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">'+s.label+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">'+s.label+'</div>'
       +'<div style="font-family:var(--D);font-size:12px;color:'+col+';margin-bottom:6px">'+s.name+'</div>'
-      +'<div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px">'+s.desc+'</div>'
-      +'<span style="font-family:var(--M);font-size:7.5px;color:'+col+';border:1px solid '+col.replace(')',',0.3)').replace('var(','rgba(').replace(')','')+');border-color:'+col.replace(')',',0.4)')+';padding:2px 8px">'+STATUS_LBL[s.status]+'</span>'
+      +'<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px">'+s.desc+'</div>'
+      +'<span style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col.replace(')',',0.3)').replace('var(','rgba(').replace(')','')+');border-color:'+col.replace(')',',0.4)')+';padding:2px 8px">'+STATUS_LBL[s.status]+'</span>'
       +'</div>';
   }).join('');}
   var jb=document.getElementById('jur-body');
   if(jb){jb.innerHTML=JURISDICTIONS.map(function(j){
     var col=STATUS_COL[j.st]||'var(--muted)';
     return '<div class="tbl-row" style="grid-template-columns:2fr 2fr 2fr 1fr">'
-      +'<div style="color:var(--solar);font-family:var(--M);font-size:9px">'+j.j+'</div>'
-      +'<div style="font-family:var(--M);font-size:9px">'+j.fw+'</div>'
-      +'<div style="font-size:10px;color:var(--muted)">'+j.sc+'</div>'
-      +'<div style="color:'+col+';font-family:var(--M);font-size:8px">'+STATUS_LBL[j.st]+'</div>'
+      +'<div style="color:var(--solar);font-family:var(--M);font-size:12px">'+j.j+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px">'+j.fw+'</div>'
+      +'<div style="font-size:12px;color:var(--muted)">'+j.sc+'</div>'
+      +'<div style="color:'+col+';font-family:var(--M);font-size:12px">'+STATUS_LBL[j.st]+'</div>'
       +'</div>';
   }).join('');}
   var cl=document.getElementById('constitution-list');
   if(cl){cl.innerHTML=ARTICLES.map(function(a){
     return '<div class="glass">'
-      +'<div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:6px">ARTICLE '+a.n+' &mdash; '+a.t+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);margin-bottom:6px">ARTICLE '+a.n+' &mdash; '+a.t+'</div>'
       +'<div style="font-size:12px;line-height:1.7;color:var(--muted)">'+a.b+'</div>'
       +'</div>';
   }).join('');}
@@ -182,7 +182,7 @@ function build(){
   if(af){af.innerHTML=AUDIT.map(function(e){
     return '<div style="border-bottom:1px dashed rgba(201,168,76,.08);padding:11px 0;display:flex;gap:12px;align-items:flex-start">'
       +'<div class="audit-dot" style="background:'+e.col+'"></div>'
-      +'<div style="font-family:var(--M);font-size:10px;color:var(--muted);line-height:1.6">'+e.msg+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.6">'+e.msg+'</div>'
       +'</div>';
   }).join('');}
 }
@@ -209,5 +209,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 })();
 </script>
 <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

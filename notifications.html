@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">NOTIFICATIONS<small>PLATFORM &middot; ALERTS &middot; REMINDERS &middot; SYSTEM</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -37,8 +37,8 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
         <div class="sechead" style="border:none;padding:0;margin:0;flex:1">NOTIFICATION INBOX</div>
-        <button class="btn" onclick="markAllRead()" style="font-size:8px">MARK ALL READ</button>
-        <button class="btn" onclick="clearAll()" style="font-size:8px;opacity:.6">CLEAR ALL</button>
+        <button class="btn" onclick="markAllRead()" style="font-size:12px">MARK ALL READ</button>
+        <button class="btn" onclick="clearAll()" style="font-size:12px;opacity:.6">CLEAR ALL</button>
       </div>
       <div id="notif-list" style="display:grid;gap:6px"></div>
     </div>
@@ -52,21 +52,21 @@
       <div id="add-reminder-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">REMINDER TEXT</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">REMINDER TEXT</div>
             <input id="r-text" class="inp" style="width:100%" placeholder="What to remind you of?">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DUE DATE</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">DUE DATE</div>
             <input id="r-date" class="inp" type="date" style="width:100%">
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">PRIORITY</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">PRIORITY</div>
             <select id="r-priority" class="inp" style="width:100%">
               <option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option>
             </select>
           </div>
           <div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">CATEGORY</div>
+            <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">CATEGORY</div>
             <select id="r-cat" class="inp" style="width:100%">
               <option>Health</option><option>Finance</option><option>Strategy</option>
               <option>Relationships</option><option>Learning</option><option>Other</option>
@@ -84,17 +84,17 @@
       <div class="sechead">NOTIFICATION SETTINGS</div>
       <div style="max-width:500px">
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:16px;border-radius:2px;margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">BROWSER NOTIFICATIONS</div>
-          <div id="notif-status" style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:10px">Status: checking...</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">BROWSER NOTIFICATIONS</div>
+          <div id="notif-status" style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:10px">Status: checking...</div>
           <button class="btn" id="notif-btn" onclick="requestNotifPermission()">REQUEST PERMISSION</button>
         </div>
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:16px;border-radius:2px;margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">NOTIFICATION CATEGORIES</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">NOTIFICATION CATEGORIES</div>
           <div style="display:grid;gap:8px" id="cat-settings">
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-daily" checked> <span style="font-family:var(--M);font-size:9px">Daily briefing notifications</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-reminders" checked> <span style="font-family:var(--M);font-size:9px">Reminder due alerts</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-system"> <span style="font-family:var(--M);font-size:9px">System notifications</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-achieve"> <span style="font-family:var(--M);font-size:9px">Achievement unlocks</span></label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-daily" checked> <span style="font-family:var(--M);font-size:12px">Daily briefing notifications</span></label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-reminders" checked> <span style="font-family:var(--M);font-size:12px">Reminder due alerts</span></label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-system"> <span style="font-family:var(--M);font-size:12px">System notifications</span></label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-achieve"> <span style="font-family:var(--M);font-size:12px">Achievement unlocks</span></label>
           </div>
           <button class="btn" style="margin-top:12px" onclick="saveNotifSettings()">SAVE SETTINGS</button>
         </div>
@@ -118,10 +118,10 @@
 <div class="lf"><span>&#937; NOTIFICATIONS &middot; SYD OMEGA 91717</span><span>ALERTS &middot; REMINDERS &middot; SYSTEM</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -143,7 +143,7 @@ var today=new Date().toISOString().slice(0,10);
 function seedSystemNotifs(){
   var seeds=[
     {id:'sys-1',type:'system',title:'Welcome to OMEGA',body:'Your sovereign notification center is active. Manage reminders, alerts, and system messages here.',read:false,date:today},
-    {id:'sys-2',type:'system',title:'Platform Status',body:'All SYD OMEGA 91717 systems operational. 169 pages active across 15 sections.',read:false,date:today},
+    {id:'sys-2',type:'system',title:'Platform Status',body:'189 pages across 15 navigation sections. This centre collects reminders, alerts and system messages.',read:false,date:today},
   ];
   seeds.forEach(function(s){if(!notifs.find(function(n){return n.id===s.id;}))notifs.push(s);});
   localStorage.setItem(NK,JSON.stringify(notifs));
@@ -161,25 +161,25 @@ function calcKPIs(){
 
 function renderNotifs(){
   var el=document.getElementById('notif-list');
-  if(!notifs.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:30px">INBOX CLEAR — SOVEREIGN MIND UNCLUTTERED</div>';return;}
+  if(!notifs.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:30px">INBOX CLEAR — SOVEREIGN MIND UNCLUTTERED</div>';return;}
   var TYPE_COL={system:'#00E5FF',reminder:'#C9A84C',achievement:'#9B6BF0',alert:'#FF4444'};
   el.innerHTML=[].concat(notifs).reverse().map(function(n,i){
     var col=TYPE_COL[n.type]||'var(--gold)';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+(n.read?';opacity:.5':'')+';background:rgba(10,10,15,'+(n.read?'.3':'.55')+');padding:11px 12px;border-radius:2px;cursor:pointer" onclick="markRead('+notifs.indexOf(n)+')">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
       +(n.read?'':'<div style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0"></div>')
-      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+((n.type||'system').toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+((n.type||'system').toUpperCase())+'</div>'
       +'<div style="font-size:12px;font-weight:600;flex:1">'+n.title+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted)">'+n.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+n.date+'</div>'
       +'</div>'
-      +(n.body?'<div style="font-size:11px;opacity:.75;margin-left:14px">'+n.body+'</div>':'')
+      +(n.body?'<div style="font-size:12px;opacity:.75;margin-left:14px">'+n.body+'</div>':'')
       +'</div>';
   }).join('');
 }
 
 function renderReminders(){
   var el=document.getElementById('reminder-list');
-  if(!reminders.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO REMINDERS SET</div>';return;}
+  if(!reminders.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO REMINDERS SET</div>';return;}
   el.innerHTML=[].concat(reminders).sort(function(a,b){return a.date<b.date?-1:1;}).map(function(r,i){
     var overdue=!r.done&&r.date<today;
     var due=!r.done&&r.date===today;
@@ -187,15 +187,15 @@ function renderReminders(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(r.done?'var(--muted)':overdue?'#FF4444':due?'var(--gold)':col)+';background:rgba(10,10,15,'+(r.done?'.3':'.5')+');padding:12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="flex:1">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+r.priority.toUpperCase()+'</div>'
-      +(overdue?'<div style="font-family:var(--M);font-size:7px;color:#FF4444">OVERDUE</div>':(due?'<div style="font-family:var(--M);font-size:7px;color:var(--gold)">DUE TODAY</div>':''))
-      +(r.done?'<div style="font-family:var(--M);font-size:7px;color:var(--green)">&#10003; DONE</div>':'')
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-left:auto">'+r.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+r.priority.toUpperCase()+'</div>'
+      +(overdue?'<div style="font-family:var(--M);font-size:12px;color:#FF4444">OVERDUE</div>':(due?'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">DUE TODAY</div>':''))
+      +(r.done?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">&#10003; DONE</div>':'')
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+r.date+'</div>'
       +'</div>'
       +'<div style="font-size:12px">'+r.text+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px">'+r.cat+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+r.cat+'</div>'
       +'</div>'
-      +(!r.done?'<button onclick="doneReminder('+i+')" style="background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:8px;padding:4px 8px;cursor:pointer;letter-spacing:1px;flex-shrink:0">DONE</button>':'')
+      +(!r.done?'<button onclick="doneReminder('+i+')" style="background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px;flex-shrink:0">DONE</button>':'')
       +'</div>';
   }).join('');
 }
@@ -261,5 +261,5 @@ window.saveNotifSettings=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

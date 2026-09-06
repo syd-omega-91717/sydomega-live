@@ -9,7 +9,7 @@
   /* Map every page to a section */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
-    command:'command',
+    command:'command',gateway:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',academy:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
@@ -27,6 +27,16 @@
     /* Below: each key's final/effective value — earlier duplicate keys with a
        different value that this silently overrode have been removed (JS object
        literals keep only the last assignment); see REPOSITORY_AUDIT.md §5. */
+    /* Fifteen deployed pages had no PS entry, so nav rendered with NO section
+       highlighted on any of them -- including gateway, the page whose whole
+       purpose is to be the way in. Reachability (a link in SECTIONS) and active
+       state (a key here) are separate concerns and had drifted apart. */
+    gateway:'command',points:'achieve',houses:'cosmos',evolution:'ascend',
+    ledger:'vault',subscriptions:'vault',advertising:'vault','ad-network':'vault',
+    'sovereign-covenant':'vault',
+    creator:'services','project-studio':'services',
+    architecture:'govern','control-plane':'govern','world-shell':'govern',
+    'interface-omni':'order',
     analytics:'intel',achievements:'achieve',leaderboard:'achieve',
     bloodline:'archive',character:'archive',charter:'archive',
     cinema:'media',credentials:'archive',design_system:'govern',
@@ -41,7 +51,7 @@
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
     universe:'media',wallet:'invest',council:'govern',hercules:'achieve',
-    'sovereign-ai':'arena','design-system':'govern',
+    'sovereign-ai':'arena','design-system':'govern','agent-network':'arena','design-showcase':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
@@ -63,13 +73,13 @@
           ['achievements','MY RECORD','/honors.html#record'],
           ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
-          ['exam','EXAM HALL','/gaming.html#exam'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
+          ['exam','EXAM HALL','/gaming.html#exam'],['exam-hall','EXAM','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
           ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/elements.html#gates'],['houses','HOUSES LATTICE','/houses.html'],
           ['triads','12 TRIADS','/matrix.html#triads'],['kings','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],['graph','CONSTELLATION GRAPH','/graph.html'],['map','STAR MAP','/map.html'],['mirror','SOVEREIGN MIRROR','/mirror.html'],['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html'],['rune','RUNES','/rune.html'],['tribe','TRIBE','/tribe.html']]},
-    {key:'universe',icon:'\u25BA', label:'UNIVERSE', href:'/media.html',   col:'#8B0000',
+    {key:'universe',icon:'\u25BA', label:'UNIVERSE', href:'/media.html',   col:'#C4453C',
      sub:[['cinema','CINEMA & SAGA','/media.html'],['universe','CREATIVE UNIVERSE','/media.html'],
           ['media','MEDIA HUB','/media.html'],['hall','SOVEREIGN HALL','/hall.html'],['city','THE CITY','/city.html'],['elements','THE ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html']]},
     {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
@@ -78,7 +88,7 @@
           ['payments','PAYMENTS','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/profile.html#portfolio'],
           ['income','INCOME','/income.html'],['payments','PAYMENTS','/payments.html'],['evolution','EVOLUTION','/evolution.html'],
-          ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
+          ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/family.html',   col:'#D9B86A',
      sub:[['family','FAMILY','/family.html'],['bloodline','BLOODLINE','/family.html#bloodline'],
           ['heritage','HERITAGE','/family.html#heritage'],['hall','HALL','/hall.html'],
@@ -86,7 +96,7 @@
           ['city','OMEGA CITY','/city.html'],['beacon','BEACON','/beacon.html'],['chatbot','CONCIERGE AI','/chatbot.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','OMNI INTERFACE','/interface-omni.html']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
      sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
-          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['marketing','MARKETING','/marketing.html'],
+          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['creator','IDEA FORGE','/creator.html'],['project-studio','PROJECT STUDIO','/project-studio.html'],['marketing','MARKETING','/marketing.html'],
           ['news','NEWS WIRE','/news.html'],['social','SOCIAL HUB','/social.html'],
           ['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
           ['health','HEALTH & WELLNESS','/health.html'],['marketplace','MARKETPLACE','/marketplace.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
@@ -96,7 +106,7 @@
           ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
     /* ── NEW SECTIONS — Full 102-page coverage ─────────────── */
     {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#9B6BF0',
-     sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
+     sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
           ['agents','12 AGENTS','/agents.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
           ['research','RESEARCH','/research.html'],['queue','SOVEREIGN QUEUE','/queue.html']]},
@@ -104,8 +114,8 @@
      sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
-          ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
-          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html']]},
+          ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],
+          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','CONTROL PLANE','/control-plane.html'],['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
      sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],
           ['revenue','REVENUE','/revenue.html'],['wallet','WALLET','/wallet.html'],
@@ -144,7 +154,7 @@
       /* Icon dock */
       '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',
       '.on-hb{display:flex;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
-      '.on-btn{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
+      '.on-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
       '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0}',
       '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
@@ -155,18 +165,21 @@
       '.on-icon.on-active{box-shadow:0 0 10px rgba(201,168,76,0.15)}',
       '.on-glyph{font-size:16px;line-height:1;transition:transform .2s}',
       '.on-icon:hover .on-glyph,.on-icon.on-active .on-glyph{transform:scale(1.15)}',
-      '.on-lbl{font-family:"Courier Prime",monospace;font-size:6px;letter-spacing:1.5px;color:#55534e;text-align:center;line-height:1;transition:color .15s}',
+      /* was #55534e -- 2.57:1 on --void, measured across 179 pages as the
+         widest-reaching contrast failure in the repo. var(--muted) is 5.41:1
+         and follows theme.js, so the dock stays dim without being unreadable. */
+      '.on-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);text-align:center;line-height:1;transition:color .15s}',
       '.on-icon:hover .on-lbl,.on-icon.on-active .on-lbl{color:var(--col,#C9A84C)}',
       /* Fly-out tooltip */
       '.on-tip{position:absolute;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
       '.on-icon:hover .on-tip{opacity:1;pointer-events:all}',
-      '.tip-head{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.12)}',
-      '.tip-a{display:flex;align-items:center;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:10px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
+      '.tip-head{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.12)}',
+      '.tip-a{display:flex;align-items:center;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
       '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
       '.tip-a.tip-on{color:#C9A84C}',
       '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
       /* Logout */
-      '.on-logout{font-family:"Courier Prime",monospace;font-size:7px;letter-spacing:2px;color:#55534e;padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
+      '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted);padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
       '.on-logout:hover{color:#C9A84C}',
       /* Mobile bottom nav */
       /* top/height/padding/border-bottom are declared DEFENSIVELY, not because
@@ -195,7 +208,7 @@
       '#omega-mob ul li{flex:1}',
       '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
       '#omega-mob ul li a .mi{font-size:18px;line-height:1;transition:all .15s;color:#353330}',
-      '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:6px;letter-spacing:1.5px;color:#55534e}',
+      '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
       '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
       '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}aside.omega-side,aside.side{display:none!important}}',
@@ -220,7 +233,7 @@
   SECTIONS.forEach(function(sec){
     var isAct=sec.key===activeSection;
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
-    h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'#55534e')+'">'+sec.icon+'</span>';
+    h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
     h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
     /* Tooltip */
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
@@ -287,7 +300,7 @@
       '#omega-mob-bar{display:flex;list-style:none;margin:0;padding:0}',
       '.mob-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 12px;cursor:pointer;text-decoration:none;gap:3px;border:none;background:transparent}',
       '.mob-item .mi{font-size:20px;line-height:1;color:#353330;transition:all .15s}',
-      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:6px;letter-spacing:1.5px;color:#55534e;transition:all .15s}',
+      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);transition:all .15s}',
       '.mob-item.m-on .mi,.mob-item:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,.6);transform:translateY(-2px)}',
       '.mob-item.m-on .ml,.mob-item:hover .ml{color:#C9A84C}',
       '.mob-item.mob-menu-btn .mi{color:#85837b}',
@@ -297,7 +310,7 @@
       '#omega-drawer.drawer-open{bottom:66px}',
       '.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.1)}',
       '.dh-title{font-family:"Cinzel Decorative",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}',
-      '.dh-close{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:#85837b;cursor:pointer;padding:6px 12px;border:1px solid rgba(201,168,76,.2)}',
+      '.dh-close{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b;cursor:pointer;padding:6px 12px;border:1px solid rgba(201,168,76,.2)}',
       '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
       '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
       '.ds-section:nth-child(2n){border-right:none}',
@@ -308,12 +321,12 @@
          and far under 44px. The text size is left alone; only the hit area
          grows. */
       '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
-      '.dss-icon{font-size:18px;color:#55534e}',
-      '.dss-label{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:#85837b}',
+      '.dss-icon{font-size:18px;color:var(--muted)}',
+      '.dss-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b}',
       '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
       '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
       '.ds-links{display:flex;flex-direction:column;gap:3px;padding-left:4px}',
-      '.ds-link{font-family:"Courier Prime",monospace;font-size:10px;color:#55534e;text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
+      '.ds-link{font-family:"Courier Prime",monospace;font-size:12px;color:var(--muted);text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
       '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
       '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',
@@ -325,7 +338,7 @@
         'img,video,iframe{max-width:100%;height:auto}',
         'canvas,svg{max-width:100%}',
         'pre,code{max-width:100%;overflow-x:auto}',
-        '.topbar .t small{display:block;font-size:8px;line-height:1.5;margin-top:3px;white-space:normal}',
+        '.topbar .t small{display:block;font-size:12px;line-height:1.5;margin-top:3px;white-space:normal}',
       '}',
     ].join('');
     (document.head||document.documentElement).appendChild(mcs);
@@ -364,7 +377,7 @@
        links:[['ASCENSION','/honors.html#ascension'],['MATRIX 104,976','/matrix.html'],['MY RECORD','/honors.html#record'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
       {icon:'\u2609',label:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',key:'cosmos',
        links:[['COSMOS HUB','/cosmos.html'],['HOROSCOPE','/cosmos.html#horoscope'],['AI AGENTS','/agents.html'],['ELEMENTS','/elements.html'],['PANTHEONS','/pantheons.html']]},
-      {icon:'\u25BA',label:'UNIVERSE',col:'#8B0000',href:'/media.html',key:'universe',
+      {icon:'\u25BA',label:'UNIVERSE',col:'#C4453C',href:'/media.html',key:'universe',
        links:[['CINEMA','/media.html'],['UNIVERSE','/media.html'],['MEDIA HUB','/media.html']]},
       {icon:'\u03A9',label:'VAULT',col:'#C9A84C',href:'/vault.html',key:'vault',
        links:[['SOVEREIGN VAULT','/vault.html'],['WALLET','/vault.html#wallet'],['SUBSCRIPTIONS','/subscriptions.html'],['BLOCKCHAIN','/blockchain.html'],['MARKETPLACE','/marketplace.html'],['PORTFOLIO','/profile.html#portfolio']]},
@@ -396,7 +409,8 @@
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
       var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
-      head.innerHTML='<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
+      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){

@@ -11,25 +11,25 @@
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s ease-in-out infinite;margin-right:8px;flex-shrink:0}
 .slo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .slo-card{border:1px solid var(--line);background:var(--surface);padding:14px}
-.slo-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.slo-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
 .slo-val{font-family:var(--D);font-size:26px;line-height:1;margin-bottom:4px}
-.slo-target{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.slo-target{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
 .slo-bar{height:4px;background:rgba(255,255,255,.04);overflow:hidden}
 .slo-fill{height:100%;transition:width 1s ease}
 .cwv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .cwv{border:1px solid var(--line);background:var(--surface);padding:14px;text-align:center}
 .cwv-val{font-family:var(--D);font-size:22px;margin-bottom:4px}
-.cwv-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
-.cwv-threshold{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px}
+.cwv-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.cwv-threshold{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:3px}
 .budget-bar{height:20px;background:rgba(255,255,255,.04);overflow:hidden;margin:10px 0;position:relative}
 .budget-fill{height:100%;transition:width 1.2s ease}
 .inc-table.tbl-wrap{border:1px solid var(--line)!important;overflow:hidden!important}
 .inc-head.tbl-head,.inc-row.tbl-row{display:grid;grid-template-columns:80px 1fr 100px 70px;padding:9px 12px;gap:8px;align-items:center}
 .inc-head.tbl-head{background:rgba(201,168,76,.04)!important;border-bottom:1px solid rgba(201,168,76,.1)!important}
-.inc-hcell.tbl-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)!important}
-.inc-row.tbl-row{border-bottom:1px solid rgba(201,168,76,.04)!important;font-size:11px}
+.inc-hcell.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)!important}
+.inc-row.tbl-row{border-bottom:1px solid rgba(201,168,76,.04)!important;font-size:12px}
 .inc-row.tbl-row:last-child{border-bottom:none!important}
-.sev{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;text-align:center}
+.sev{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;text-align:center}
 @media(max-width:600px){.cwv-row{grid-template-columns:1fr}.inc-head.tbl-head,.inc-row.tbl-row{grid-template-columns:60px 1fr 80px!important}}
 </style>
 </head>
@@ -39,7 +39,7 @@
 <header class="topbar">
   <div class="topbar-title">PLATFORM OBSERVATORY<span class="topbar-sub">SRE DASHBOARD &middot; ERROR BUDGET POLICY &middot; CORE WEB VITALS &middot; INCIDENT LOG</span></div>
   <span class="status-dot" id="status-dot"></span>
-  <span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green)" id="status-text">ALL SYSTEMS OPERATIONAL</span>
+  <span style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green)" id="status-text">ALL SYSTEMS OPERATIONAL</span>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring" style="margin-left:auto"></canvas>
 </header>
 <div class="tab-bar">
@@ -68,14 +68,14 @@
   <div class="sechead" style="margin-top:8px">ERROR BUDGET &middot; GOOGLE SRE &middot; 4-WEEK ROLLING WINDOW</div>
   <div class="glass" style="padding:14px 16px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)">PLATFORM ERROR BUDGET CONSUMED</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)">PLATFORM ERROR BUDGET CONSUMED</div>
       <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="budget-pct">2.3%</div>
     </div>
     <div class="budget-bar"><div class="budget-fill" id="budget-fill" style="width:2.3%;background:var(--green)"></div></div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
-      <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--green)">&lt; 20% &rarr; GREEN &middot; Releases permitted</div>
-      <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--solar)">&lt; 50% &rarr; YELLOW &middot; Caution</div>
-      <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--crim)">&ge; 50% &rarr; RED &middot; Releases halted</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--green)">&lt; 20% &rarr; GREEN &middot; Releases permitted</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--solar)">&lt; 50% &rarr; YELLOW &middot; Caution</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--crim)">&ge; 50% &rarr; RED &middot; Releases halted</div>
     </div>
   </div>
 </div>
@@ -126,7 +126,7 @@
       <div class="tbl-hcell inc-hcell">TTR</div>
     </div>
     <div id="inc-rows">
-      <div style="padding:20px;text-align:center;font-family:var(--M);font-size:9px;color:var(--muted)">NO INCIDENTS ON RECORD &middot; PLATFORM CLEAN</div>
+      <div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">NO INCIDENTS ON RECORD &middot; PLATFORM CLEAN</div>
     </div>
   </div>
 </div>
@@ -233,7 +233,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var SEV={P0:'#8B0000',P1:'#8B0000',P2:'#C9A84C',P3:'#3fb27f',P4:'#8a8676'};
         document.getElementById('inc-rows').innerHTML=inc.data.map(function(i){
           var col=SEV[i.severity]||'#8a8676';
-          return '<div class="tbl-row inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+String(i.severity||'').replace(/</g,'&lt;')+'</div><div>'+String(i.title||'').slice(0,50).replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
+          return '<div class="tbl-row inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+String(i.severity||'').replace(/</g,'&lt;')+'</div><div>'+String(i.title||'').slice(0,50).replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
         }).join('');
       }
     }catch(e){}
@@ -241,5 +241,5 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
 })();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

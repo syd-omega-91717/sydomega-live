@@ -38,7 +38,7 @@
     .filter-controls select,
     .filter-controls input {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       padding: 8px;
       background: rgba(0, 229, 255, 0.05);
       border: 1px solid rgba(0, 229, 255, 0.3);
@@ -48,7 +48,7 @@
 
     .filter-controls button {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       padding: 8px 16px;
       background: rgba(201, 168, 76, 0.1);
       border: 1px solid rgba(201, 168, 76, 0.3);
@@ -87,7 +87,7 @@
 
     .stat-label {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 1px;
       color: rgba(224, 213, 183, 0.7);
       text-transform: uppercase;
@@ -112,7 +112,7 @@
 
     .anomaly-table .tbl-row:first-child > div {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 2px;
       color: var(--solar);
       padding: 12px;
@@ -131,7 +131,7 @@
 
     .anomaly-type {
       font-family: var(--M);
-      font-size: 8px;
+      font-size: 12px;
       letter-spacing: 1px;
       padding: 4px 8px;
       border-radius: 3px;
@@ -166,7 +166,7 @@
 
     .severity-badge {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       padding: 4px 8px;
       border-radius: 3px;
       text-transform: uppercase;
@@ -191,7 +191,7 @@
 
     .action-btn {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       padding: 6px 12px;
       background: rgba(0, 229, 255, 0.1);
       border: 1px solid rgba(0, 229, 255, 0.3);
@@ -231,7 +231,7 @@
 
     @media (max-width: 900px) {
       .anomaly-table {
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .anomaly-table th,
@@ -296,7 +296,8 @@
           <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">LOADING ANOMALIES...</div>
         </div>
       </div>
-    </main>
+    <div data-page-emblem="graph-anomalies" style="margin:20px auto 0"></div>
+</main>
   </div>
 
   <script>
@@ -446,7 +447,7 @@
                 <span>${(anomaly.confidence * 100).toFixed(0)}%</span>
               </div>
             </div>
-            <div style="font-size: 11px;">${anomaly.details}</div>
+            <div style="font-size: 12px;">${anomaly.details}</div>
             <div>
               <button class="action-btn" onclick="reviewAnomaly(${idx})">REVIEW</button>
             </div>
@@ -486,5 +487,5 @@
 
     document.addEventListener('DOMContentLoaded', initAnomalies);
   </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

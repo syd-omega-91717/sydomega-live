@@ -3,30 +3,30 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; CIPHER</title>
 <style>
-.cipher-area{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(155,107,240,.2);border-radius:6px;padding:12px;font-family:var(--M);font-size:10px;color:var(--ink);resize:vertical;line-height:1.8;outline:none;transition:border-color .2s}
+.cipher-area{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(155,107,240,.2);border-radius:6px;padding:12px;font-family:var(--M);font-size:12px;color:var(--ink);resize:vertical;line-height:1.8;outline:none;transition:border-color .2s}
 .cipher-area:focus{border-color:var(--purple)}
-.cipher-out{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:12px;font-family:var(--M);font-size:10px;color:var(--cyan);line-height:1.8;white-space:pre-wrap;word-break:break-all;overflow-y:auto;user-select:all}
+.cipher-out{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:12px;font-family:var(--M);font-size:12px;color:var(--cyan);line-height:1.8;white-space:pre-wrap;word-break:break-all;overflow-y:auto;user-select:all}
 .btn-purple{border-color:var(--purple);background:rgba(155,107,240,.1);color:var(--purple)}
 .btn-purple:hover{background:rgba(155,107,240,.25)}
 .mode-toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:1rem}
-.mode-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;background:none;border:none;color:var(--muted);cursor:pointer;transition:.15s}
+.mode-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 18px;background:none;border:none;color:var(--muted);cursor:pointer;transition:.15s}
 .mode-btn.active{background:rgba(155,107,240,.15);color:var(--purple)}
 .elem-sel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
-.elem-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.8);color:var(--muted);cursor:pointer;border-radius:4px;transition:.15s}
+.elem-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.8);color:var(--muted);cursor:pointer;border-radius:4px;transition:.15s}
 .elem-btn:hover,.elem-btn.active{border-color:var(--purple);color:var(--purple);background:rgba(155,107,240,.08)}
-.key-chip{font-family:var(--M);font-size:8px;padding:3px 8px;background:rgba(155,107,240,.1);border:1px solid rgba(155,107,240,.2);border-radius:3px;color:var(--muted);display:inline-block}
+.key-chip{font-family:var(--M);font-size:12px;padding:3px 8px;background:rgba(155,107,240,.1);border:1px solid rgba(155,107,240,.2);border-radius:3px;color:var(--muted);display:inline-block}
 #cipher-wave{display:block;width:100%;height:48px;border:1px solid rgba(155,107,240,.12);border-radius:4px;background:rgba(0,0,0,.3);margin-top:8px}
 .stat-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}
-.stat-item{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.stat-item{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .stat-item span{color:var(--solar);font-family:var(--M);font-size:14px;display:block}
 .alpha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:4px}
-.alpha-cell{font-family:var(--M);font-size:7.5px;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;background:rgba(0,0,0,.3);border:1px solid rgba(155,107,240,.1);border-radius:3px}
+.alpha-cell{font-family:var(--M);font-size:12px;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;background:rgba(0,0,0,.3);border:1px solid rgba(155,107,240,.1);border-radius:3px}
 .alpha-plain{color:var(--gold)}
-.alpha-cipher{color:var(--cyan);font-size:9px}
+.alpha-cipher{color:var(--cyan);font-size:12px}
 .hist-item{padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05)}
-.hist-mode{font-family:var(--M);font-size:8px;color:var(--muted)}
-.hist-coded{font-family:var(--M);font-size:8px;color:var(--cyan);word-break:break-all;margin-top:2px}
-.hist-meta{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4);margin-top:2px}
+.hist-mode{font-family:var(--M);font-size:12px;color:var(--muted)}
+.hist-coded{font-family:var(--M);font-size:12px;color:var(--cyan);word-break:break-all;margin-top:2px}
+.hist-meta{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);margin-top:2px}
 .io-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 @media(max-width:700px){.io-grid{grid-template-columns:1fr}}
 </style>
@@ -55,7 +55,7 @@
     <div class="glass" style="margin-bottom:1rem">
       <div class="sechead" style="margin-bottom:.75rem">SELECT CIPHER KEY (ELEMENT)</div>
       <div class="elem-sel" id="elem-sel"></div>
-      <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:.5rem">Each element maps to a unique musical scale — semitone offsets form the cipher substitution alphabet.</div>
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:.5rem">Each element maps to a unique musical scale — semitone offsets form the cipher substitution alphabet.</div>
       <div id="key-display" style="display:flex;flex-wrap:wrap;gap:4px"></div>
     </div>
     <div class="io-grid">
@@ -63,9 +63,9 @@
         <div class="sechead" id="input-head" style="margin-bottom:.75rem">PLAINTEXT INPUT</div>
         <textarea class="cipher-area" id="cipher-input" placeholder="Enter your sovereign message…" oninput="cipher()"></textarea>
         <div style="display:flex;gap:6px;margin-top:.75rem;flex-wrap:wrap">
-          <button class="btn-gold" onclick="cipher()" style="font-size:8px;padding:7px 14px">&#9654; CIPHER</button>
-          <button class="btn-gold" onclick="copyOutput()" style="font-size:8px;padding:7px 14px">&#9632; COPY</button>
-          <button class="btn-gold" onclick="document.getElementById('cipher-input').value='';cipher()" style="font-size:8px;padding:7px 14px">&#215; CLEAR</button>
+          <button class="btn-gold" onclick="cipher()" style="font-size:12px;padding:7px 14px">&#9654; CIPHER</button>
+          <button class="btn-gold" onclick="copyOutput()" style="font-size:12px;padding:7px 14px">&#9632; COPY</button>
+          <button class="btn-gold" onclick="document.getElementById('cipher-input').value='';cipher()" style="font-size:12px;padding:7px 14px">&#215; CLEAR</button>
         </div>
         <div class="stat-row">
           <div class="stat-item"><span id="stat-len">0</span>CHARS</div>
@@ -78,8 +78,8 @@
         <div class="cipher-out" id="cipher-output">—</div>
         <canvas id="cipher-wave"></canvas>
         <div style="display:flex;gap:6px;margin-top:.75rem;flex-wrap:wrap">
-          <button class="btn-gold" onclick="swapIO()" style="font-size:8px;padding:7px 14px">&#8645; SWAP</button>
-          <button class="btn-gold" onclick="saveHistory()" style="font-size:8px;padding:7px 14px">&#43; ARCHIVE</button>
+          <button class="btn-gold" onclick="swapIO()" style="font-size:12px;padding:7px 14px">&#8645; SWAP</button>
+          <button class="btn-gold" onclick="saveHistory()" style="font-size:12px;padding:7px 14px">&#43; ARCHIVE</button>
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@
   <div style="padding:1.25rem">
     <p class="sechead">CURRENT CIPHER ALPHABET</p>
     <div class="glass" style="margin-bottom:1rem">
-      <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:.75rem">Plain → Cipher substitution for the selected element key. Change elements on the ENCODE tab to update this view.</div>
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:.75rem">Plain → Cipher substitution for the selected element key. Change elements on the ENCODE tab to update this view.</div>
       <div class="alpha-grid" id="alpha-tbl"></div>
     </div>
   </div>
@@ -102,7 +102,7 @@
   <div style="padding:1.25rem">
     <p class="sechead">CIPHER ARCHIVE</p>
     <div class="glass">
-      <div id="hist-list" style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.4)">No entries yet. Use the ARCHIVE button on the ENCODE tab to save a cipher.</div>
+      <div id="hist-list" style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)">No entries yet. Use the ARCHIVE button on the ENCODE tab to save a cipher.</div>
     </div>
   </div>
 </div>
@@ -331,4 +331,4 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 })();
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

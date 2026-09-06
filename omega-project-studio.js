@@ -111,7 +111,7 @@ var typeOptions = Object.keys(GENERATORS).map(function(t) {
 var g = GENERATORS[t];
 return '<option value=' + t + '>' + g.name + '</option>';
 }).join('');
-el.innerHTML = '<div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:12px>OMEGA PROJECT STUDIO · AI-NATIVE CREATION</div>' + '<div style=display:grid;grid-template-columns:300px 1fr;gap:20px>' + '<div>' + '<div style=margin-bottom:12px><label style=display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px>PROJECT TYPE</label><select class=ops-type style=width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:11px;outline:none>' + typeOptions + '</select></div>' + '<div id=ops-fields></div>' + '<button class=ops-generate style=font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;margin-top:12px>GENERATE PROJECT</button>' + '</div>' + '<div id=ops-preview></div>' + '</div>';
+el.innerHTML = '<div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px>OMEGA PROJECT STUDIO · AI-NATIVE CREATION</div>' + '<div style="display:grid;grid-template-columns:300px 1fr;gap:20px">' + '<div>' + '<div style=margin-bottom:12px><label style=display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px>PROJECT TYPE</label><select class=ops-type style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none">' + typeOptions + '</select></div>' + '<div id=ops-fields></div>' + '<button class=ops-generate style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;margin-top:12px">GENERATE PROJECT</button>' + '</div>' + '<div id=ops-preview></div>' + '</div>';
 var typeSelect = el.querySelector('.ops-type');
 var fieldsEl = el.querySelector('#ops-fields');
 var previewEl = el.querySelector('#ops-preview');
@@ -119,7 +119,7 @@ function renderFields(type) {
 var gen = GENERATORS[type];
 if (!gen) return;
 fieldsEl.innerHTML = gen.fields.map(function(f) {
-return '<div style=margin-bottom:10px><label style=display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;text-transform:uppercase>' + f + '</label><input type=text class=ops-field data-field=' + f + ' placeholder=Enter ' + f + '… style=width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:11px;outline:none></div>';
+return '<div style=margin-bottom:10px><label style=display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;text-transform:uppercase>' + f + '</label><input type=text class=ops-field data-field=' + f + ' placeholder="Enter ' + f + '…" style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none"></div>';
 }).join('');
 }
 renderFields(typeSelect.value);
@@ -144,10 +144,10 @@ detail: proj
 }, renderPreview: function(el, proj) {
 if (!el || !proj) return;
 var stepsHtml = Object.entries(proj.steps).map(function([key, val]) {
-var content = typeof val === 'object' ? '<pre style=font-family:var(--M);font-size:9px;color:var(--muted);overflow-x:auto>' + JSON.stringify(val, null, 2) + '</pre>' : '<div style=font-family:var(--M);font-size:9px;color:var(--ink)>' + val + '</div>';
-return '<div style=margin-bottom:12px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);border-radius:3px><div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;text-transform:uppercase>' + key + '</div>' + content + '</div>';
+var content = typeof val === 'object' ? '<pre style=font-family:var(--M);font-size:12px;color:var(--muted);overflow-x:auto>' + JSON.stringify(val, null, 2) + '</pre>' : '<div style=font-family:var(--M);font-size:12px;color:var(--ink)>' + val + '</div>';
+return '<div style="margin-bottom:12px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);border-radius:3px"><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;text-transform:uppercase>' + key + '</div>' + content + '</div>';
 }).join('');
-el.innerHTML = '<div class=glass style=padding:16px><div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>GENERATED SPECIFICATION</div><div style=font-family:var(--D);font-size:clamp(16px,2vw,22px);color:var(--gold);margin-bottom:12px>' + (proj.input.subject || proj.input.feature || proj.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:16px>TYPE: ' + proj.name + ' · ID: ' + proj.id + '</div>' + stepsHtml + '<div style=margin-top:12px;display:flex;gap:8px><button class=ops-save style=font-family:var(--M);font-size:7px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(63,178,127,.3);color:var(--green);border-radius:2px;cursor:pointer>SAVE TO PROJECTS</button><button class=ops-export style=font-family:var(--M);font-size:7px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer>EXPORT JSON</button></div></div>';
+el.innerHTML = '<div class=glass style=padding:16px><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>GENERATED SPECIFICATION</div><div style=font-family:var(--D);font-size:clamp(16px,2vw,22px);color:var(--gold);margin-bottom:12px>' + (proj.input.subject || proj.input.feature || proj.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:16px>TYPE: ' + proj.name + ' · ID: ' + proj.id + '</div>' + stepsHtml + '<div style=margin-top:12px;display:flex;gap:8px><button class=ops-save style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(63,178,127,.3);color:var(--green);border-radius:2px;cursor:pointer">SAVE TO PROJECTS</button><button class=ops-export style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer">EXPORT JSON</button></div></div>';
 el.querySelector('.ops-save').addEventListener('click', function() {
 saveProject(proj);
 alert('Project saved to local storage');
@@ -167,11 +167,11 @@ URL.revokeObjectURL(url);
 if (!el) return;
 var projects = loadProjects();
 if (projects.length === 0) {
-el.innerHTML = '<div class=glass style=padding:20px;text-align:center><div style=font-family:var(--M);font-size:9px;color:var(--muted)>No projects yet. Use the studio to generate one.</div></div>';
+el.innerHTML = '<div class=glass style=padding:20px;text-align:center><div style=font-family:var(--M);font-size:12px;color:var(--muted)>No projects yet. Use the studio to generate one.</div></div>';
 return;
 }
 el.innerHTML = '<div style=display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px>' + projects.map(function(p) {
-return '<div class=glass style=padding:14px;cursor:pointer data-proj-id=' + p.id + '><div style=font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:6px>' + p.name.toUpperCase() + '</div><div style=font-family:var(--M);font-size:11px;color:var(--ink);margin-bottom:4px>' + (p.input.subject || p.input.feature || p.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:7px;color:var(--muted)>' + new Date(p.created).toLocaleDateString() + ' · ' + Object.keys(p.steps).length + ' steps</div></div>';
+return '<div class=glass style=padding:14px;cursor:pointer data-proj-id=' + p.id + '><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px>' + p.name.toUpperCase() + '</div><div style=font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px>' + (p.input.subject || p.input.feature || p.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:12px;color:var(--muted)>' + new Date(p.created).toLocaleDateString() + ' · ' + Object.keys(p.steps).length + ' steps</div></div>';
 }).join('') + '</div>';
 el.querySelectorAll('[data-proj-id]').forEach(function(card) {
 card.addEventListener('click', function() {

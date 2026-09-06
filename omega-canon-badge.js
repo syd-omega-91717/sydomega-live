@@ -32,7 +32,7 @@
 
   var CSS = [
     '.ocb{display:inline-flex;align-items:center;gap:5px;font-family:"Courier Prime",monospace;',
-    'font-size:8px;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;border:1px solid;',
+    'font-size:12px;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;border:1px solid;',
     'cursor:default;white-space:nowrap;vertical-align:middle}',
     '.ocb .ocb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}'
   ].join('');

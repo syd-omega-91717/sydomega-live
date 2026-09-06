@@ -10,14 +10,43 @@ on:
 permissions:
   contents: read
 
+# MEASURED 2026-09-06: this was `cancel-in-progress: false`, and under that
+# setting NOT ONE RUN OF THIS WORKFLOW EVER REACHED A CONCLUSION ON main.
+# ci.yml runs 1031-1060 and supabase-runtime-contract runs 322-348 are every
+# one `cancelled` -- a run is created, sits `pending` with ZERO jobs allocated
+# (run 1052 sat that way for 4h31m), and the next push to main cancels it
+# before a runner is ever assigned. Meanwhile the 13 workflows on this repo
+# that set `true` finish in 10-25 seconds on the same commits.
+#
+# So the board showed these as pending, never red -- CLAUDE.md 8.2's rule in
+# its purest form: A PENDING CHECK IS NOT A PASSING ONE. Read `status`, not
+# just `conclusion`. ci.yml is the workflow CLAUDE.md 7 documents as the
+# repository's primary gate (node --check, audit.py, asset refs, the
+# service-role scan); it had been verifying nothing on main for 30 runs.
+#
+# `true` is the repo's own working convention, not a new idea: on main only
+# the newest commit's result matters, and superseding an unstarted run is
+# exactly what the 13 healthy workflows already do.
+# vercel-production.yml deliberately keeps `false` -- its group is the global
+# `vercel-production`, not a ref, and a production deploy in flight must not
+# be cancelled by a newer push. It also does reach conclusions.
 concurrency:
   group: supabase-runtime-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   runtime:
     name: Supabase runtime health
-    runs-on: [self-hosted, Windows, X64]
+    # WAS [self-hosted, Windows, X64], where this job NEVER RAN. Every run of
+    # this workflow sat `queued` and was eventually cancelled by a newer push;
+    # not one ever reached a conclusion. The proof is runner-probe.yml, whose
+    # only purpose is to prove that runner works: its last runs have been
+    # `queued` since 2026-09-05 08:12 and none has started. A gate that never
+    # executes is worse than no gate, because the board shows it as pending
+    # rather than missing. Everything here is stdlib Python over a checkout,
+    # with nothing Windows-specific, so it runs where the other 15 workflows
+    # already run and finish in seconds.
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -27,6 +56,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      # `shell: python` feeds the run: block to the interpreter AS PYTHON
+      # SOURCE. With `python scripts/...` as the body that is a SyntaxError on
+      # line 1, so this job failed on every run it ever reached -- 28 seconds
+      # of checkout and then a parse error, never the contract. runner-probe.yml
+      # uses `shell: python` correctly, with real Python in the body; this one
+      # wants a shell, so it gets bash -- the native shell on the hosted runner.
       - name: Runtime contract
-        shell: python
-        run: python scripts/supabase-runtime-contract.py
+        shell: bash
+        run: python3 scripts/supabase-runtime-contract.py

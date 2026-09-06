@@ -13,25 +13,25 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0}
 .status-dot.red{background:var(--red);box-shadow:0 0 6px var(--red)}
 .status-dot.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
-#sys-status{font-size:7.5px;letter-spacing:1.5px;color:var(--green)}
-#uptime-label{font-size:7.5px;letter-spacing:1.5px;color:var(--dim)}
+#sys-status{font-size:12px;letter-spacing:1.5px;color:var(--green)}
+#uptime-label{font-size:12px;letter-spacing:1.5px;color:var(--dim)}
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
-.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
-.page-title{font-size:11px;letter-spacing:3px;color:var(--gold)}
-.page-sub{font-size:8px;letter-spacing:1.5px;color:var(--dim);margin-top:3px}
+.page-title{font-size:12px;letter-spacing:3px;color:var(--gold)}
+.page-sub{font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-top:3px}
 .tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid rgba(201,168,76,.1)}
-.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .panel{display:none}.panel.active{display:block}
 /* KPI Row */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
 .kpi{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:12px 14px}
-.kpi-label{font-size:7px;letter-spacing:1.5px;color:var(--dim);margin-bottom:5px}
+.kpi-label{font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-bottom:5px}
 .kpi-value{font-size:20px;letter-spacing:.5px;color:var(--gold);font-weight:300}
-.kpi-unit{font-size:7px;color:var(--dim);margin-left:4px}
-.kpi-trend{font-size:7px;margin-top:3px}
+.kpi-unit{font-size:12px;color:var(--dim);margin-left:4px}
+.kpi-trend{font-size:12px;margin-top:3px}
 .kpi-trend.up{color:var(--green)}.kpi-trend.down{color:var(--red)}
 /* Grid 2-col */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
@@ -41,26 +41,26 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 @media(max-width:600px){.grid3{grid-template-columns:1fr}}
 /* Cards */
 .card{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:14px}
-.card-title{font-size:11px;letter-spacing:1.5px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title{font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 /* Worker rows */
 .worker-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05)}
 .worker-row:last-child{border-bottom:none}
-.wr-name{font-size:8px;letter-spacing:1.5px;flex:1;color:rgba(200,190,160,.8)}
-.wr-stat{font-size:8px;letter-spacing:.5px;min-width:40px;text-align:right;color:var(--dim)}
-.cb-badge{font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;flex-shrink:0}
+.wr-name{font-size:12px;letter-spacing:1.5px;flex:1;color:rgba(200,190,160,.8)}
+.wr-stat{font-size:12px;letter-spacing:.5px;min-width:40px;text-align:right;color:var(--dim)}
+.cb-badge{font-size:12px;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;flex-shrink:0}
 .cb-CLOSED{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:var(--green)}
 .cb-OPEN{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--red)}
 .cb-HALF_OPEN{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--amber)}
 /* Progress bars */
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.bar-label{font-size:7.5px;letter-spacing:.5px;color:var(--dim);min-width:120px}
+.bar-label{font-size:12px;letter-spacing:.5px;color:var(--dim);min-width:120px}
 .bar-bg{flex:1;height:4px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden}
 .bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
-.bar-val{font-size:7.5px;letter-spacing:.5px;color:var(--gold);min-width:36px;text-align:right}
+.bar-val{font-size:12px;letter-spacing:.5px;color:var(--gold);min-width:36px;text-align:right}
 /* Heatmap */
 .heatmap-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin-bottom:6px}
 .hm-cell{height:14px;border-radius:1px;background:rgba(201,168,76,.06);transition:background .3s}
-.hm-label{display:flex;justify-content:space-between;font-size:6.5px;letter-spacing:1px;color:var(--dim)}
+.hm-label{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--dim)}
 /* Sparkline */
 canvas.sparkline{display:block;width:100%;margin:6px 0}
 /* Signal strength */
@@ -68,25 +68,25 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
 .sig-bar{width:6px;border-radius:1px 1px 0 0;background:rgba(201,168,76,.15)}
 .sig-bar.on{background:var(--gold)}
 /* Incident log */
-.incident-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(201,168,76,.05);font-size:7.5px}
+.incident-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(201,168,76,.05);font-size:12px}
 .inc-ts{color:var(--dim);min-width:80px;flex-shrink:0}
 .inc-type{min-width:60px;flex-shrink:0}
 .inc-type.ok{color:var(--green)}.inc-type.warn{color:var(--amber)}.inc-type.err{color:var(--red)}
 .inc-msg{color:rgba(200,190,160,.75);flex:1}
 /* Event bus metrics table */
-.evt-tbl{width:100%;border-collapse:collapse;font-size:7.5px}
-.evt-tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(201,168,76,.12);font-size:7px;letter-spacing:1.5px;color:var(--dim)}
+.evt-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.evt-tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(201,168,76,.12);font-size:12px;letter-spacing:1.5px;color:var(--dim)}
 .evt-tbl td{padding:5px 8px;border-bottom:1px solid rgba(201,168,76,.04);color:rgba(200,190,160,.7);vertical-align:middle}
-.evt-tbl td:first-child{color:var(--gold);font-size:7px}
+.evt-tbl td:first-child{color:var(--gold);font-size:12px}
 /* Latency percentile chart */
 #lat-canvas{display:block;width:100%}
 /* Probe timeline */
-.probe-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.04);font-size:7.5px}
+.probe-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.04);font-size:12px}
 .probe-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .probe-service{min-width:80px;color:rgba(200,190,160,.8)}
 .probe-status{min-width:30px}
 .probe-lat{color:var(--dim);min-width:50px;text-align:right}
-.probe-ts{color:var(--dim);flex:1;text-align:right;font-size:7px}
+.probe-ts{color:var(--dim);flex:1;text-align:right;font-size:12px}
 /* Refresh indicator */
 .refresh-spinner{display:inline-block;width:6px;height:6px;border:1px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-left:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -96,7 +96,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
 <div class="shell">
 <aside class="side" id="omega-side" data-page="ops"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">OPS<small>SOVEREIGN SRE COMMAND &middot; SYD OMEGA 91717</small></div><div class="status-dot" id="sys-dot" style="margin-left:auto"></div><span id="sys-status" style="font-size:7.5px;letter-spacing:1.5px;color:var(--green);margin-left:4px">NOMINAL</span><span id="uptime-label" style="font-size:7.5px;letter-spacing:1.5px;color:var(--dim);margin-left:8px">UPTIME: <span id="uptime-val">—</span></span></div>
+  <div class="topbar"><div class="t">OPS<small>SOVEREIGN SRE COMMAND &middot; SYD OMEGA 91717</small></div><div class="status-dot" id="sys-dot" style="margin-left:auto"></div><span id="sys-status" style="font-size:12px;letter-spacing:1.5px;color:var(--green);margin-left:4px">NOMINAL</span><span id="uptime-label" style="font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-left:8px">UPTIME: <span id="uptime-val">—</span></span></div>
   <div style="padding:20px var(--pad,20px)">
 
   <!-- Top KPIs -->
@@ -121,7 +121,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
     <div class="grid2">
       <div class="card">
         <div class="card-title">&#9679; HEALTH PROBES</div>
-        <div id="probe-list"><div style="font-size:8px;color:var(--dim)">Waiting for probes...</div></div>
+        <div id="probe-list"><div style="font-size:12px;color:var(--dim)">Waiting for probes...</div></div>
       </div>
       <div class="card">
         <div class="card-title">&#9679; EVENT THROUGHPUT (24H)</div>
@@ -139,9 +139,9 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
         <div class="heatmap-grid" id="heatmap-grid"></div>
         <div class="hm-label"><span>PAST 24 SLOTS</span><span>NOW</span></div>
         <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-          <div style="font-size:7px;letter-spacing:1px;color:var(--dim)">LOW</div>
+          <div style="font-size:12px;letter-spacing:1px;color:var(--dim)">LOW</div>
           <div style="flex:1;height:4px;background:linear-gradient(90deg,rgba(74,222,128,.3),rgba(251,146,60,.5),rgba(248,113,113,.6));border-radius:2px"></div>
-          <div style="font-size:7px;letter-spacing:1px;color:var(--dim)">HIGH</div>
+          <div style="font-size:12px;letter-spacing:1px;color:var(--dim)">HIGH</div>
         </div>
       </div>
     </div>
@@ -152,7 +152,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
     <div class="grid2">
       <div class="card">
         <div class="card-title">&#9679; CONSUMER FLEET</div>
-        <div id="worker-list"><div style="font-size:8px;color:var(--dim)">Loading worker metrics...</div></div>
+        <div id="worker-list"><div style="font-size:12px;color:var(--dim)">Loading worker metrics...</div></div>
       </div>
       <div class="card">
         <div class="card-title">&#9679; CIRCUIT BREAKER STATES</div>
@@ -166,7 +166,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
     <div class="card">
       <div class="card-title">&#9679; THROUGHPUT SPARKLINE (LIVE)</div>
       <canvas id="live-spark" height="50" style="display:block;width:100%"></canvas>
-      <div style="margin-top:6px;display:flex;justify-content:space-between;font-size:7px;letter-spacing:1px;color:var(--dim)">
+      <div style="margin-top:6px;display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--dim)">
         <span>-60s</span><span>-45s</span><span>-30s</span><span>-15s</span><span>NOW</span>
       </div>
     </div>
@@ -182,12 +182,28 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
       </div>
       <div class="card">
         <div class="card-title">&#9679; LIVE EVENT STREAM</div>
-        <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:7.5px;letter-spacing:.5px;line-height:1.7"></div>
+        <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:12px;letter-spacing:.5px;line-height:1.7"></div>
+      </div>
+    </div>
+    <!-- The renderer for this table has always existed (the `evt-metrics-body`
+         lookup below), and so has its .evt-tbl styling, but the markup was
+         missing, so the lookup returned null and the whole block was skipped.
+         Columns match exactly what OmegaBus.metrics() returns per event. -->
+    <div class="card">
+      <div class="card-title">&#9679; EVENT BUS METRICS</div>
+      <div style="overflow-x:auto">
+        <table class="evt-tbl">
+          <thead><tr>
+            <th>EVENT</th><th>EMITTED</th><th>CONSUMED</th><th>ERRORS</th>
+            <th>DLQ</th><th>AVG LATENCY</th><th>LAST SEEN</th>
+          </tr></thead>
+          <tbody id="evt-metrics-body"></tbody>
+        </table>
       </div>
     </div>
     <div class="card">
       <div class="card-title">&#9679; DEAD LETTER QUEUE</div>
-      <div id="dlq-list"><div style="font-size:8px;color:var(--green)">&#10003; DLQ empty</div></div>
+      <div id="dlq-list"><div style="font-size:12px;color:var(--green)">&#10003; DLQ empty</div></div>
     </div>
   </div>
 
@@ -305,9 +321,9 @@ function makeSignalEl(label,strength,unit){
     bars+='<div class="sig-bar'+(b<n?' on':'')+'" style="height:'+(8+b*3)+'px"></div>';
   }
   return '<div style="display:flex;align-items:center;gap:10px;">'
-    +'<div style="font-size:7.5px;letter-spacing:1.5px;color:rgba(200,190,160,.7);min-width:100px">'+label+'</div>'
+    +'<div style="font-size:12px;letter-spacing:1.5px;color:rgba(200,190,160,.7);min-width:100px">'+label+'</div>'
     +'<div class="signal-bars">'+bars+'</div>'
-    +'<div style="font-size:7.5px;letter-spacing:.5px;color:var(--gold);">'+Math.round(strength)+'<span style="font-size:6.5px;color:var(--dim)"> '+unit+'</span></div>'
+    +'<div style="font-size:12px;letter-spacing:.5px;color:var(--gold);">'+Math.round(strength)+'<span style="font-size:12px;color:var(--dim)"> '+unit+'</span></div>'
     +'</div>';
 }
 
@@ -532,7 +548,7 @@ function refresh(){
     });
     dlqList.innerHTML=allDlq.length
       ?allDlq.map(function(d){return '<div class="incident-row"><div class="inc-type err">DLQ</div><div class="inc-msg">'+d.worker+' — '+d.depth+' messages undeliverable</div></div>';}).join('')
-      :'<div style="font-size:8px;color:var(--green)">&#10003; DLQ empty — all messages delivered</div>';
+      :'<div style="font-size:12px;color:var(--green)">&#10003; DLQ empty — all messages delivered</div>';
   }
 
   /* Health probes from bus */
@@ -646,5 +662,5 @@ setInterval(refresh,3000);
 window.addEventListener('resize',function(){drawSparkline('spark-canvas',throughputHistory,'rgba(96,165,250,.6)');drawLatencyChart();});
 </script>
 <script src="/bg.js" defer></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

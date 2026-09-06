@@ -1,0 +1,42 @@
+name: Supabase Migration Security Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/supabase-migration-security-audit.py'
+      - '.github/workflows/supabase-migration-security-audit.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/supabase-migration-security-audit.py'
+      - '.github/workflows/supabase-migration-security-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Fail-closed migration security audit
+    # WAS [self-hosted, Windows, X64], where this job NEVER RAN. Every run of
+    # this workflow sat `queued` and was eventually cancelled by a newer push;
+    # not one ever reached a conclusion. The proof is runner-probe.yml, whose
+    # only purpose is to prove that runner works: its last runs have been
+    # `queued` since 2026-09-05 08:12 and none has started. A gate that never
+    # executes is worse than no gate, because the board shows it as pending
+    # rather than missing. Everything here is stdlib Python over a checkout,
+    # with nothing Windows-specific, so it runs where the other 15 workflows
+    # already run and finish in seconds.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Audit migrations
+        shell: bash
+        run: python3 scripts/supabase-migration-security-audit.py

@@ -13,14 +13,14 @@
 .h-rank{font-family:var(--D);font-size:18px;color:var(--gold);text-align:center}
 .hall-row.owner .h-rank{color:var(--cyan)}
 .h-name{font-family:var(--M);font-size:12px;color:var(--ink);font-weight:600}
-.h-tag{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);border:1px solid var(--cyan);padding:1px 5px;margin-left:6px;vertical-align:middle}
-.h-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:3px}
+.h-tag{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);border:1px solid var(--cyan);padding:1px 5px;margin-left:6px;vertical-align:middle}
+.h-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
 .h-auth{text-align:right}
 .h-auth-val{font-family:var(--D);font-size:16px;color:var(--gold)}
 .hall-row.owner .h-auth-val{color:var(--cyan)}
 .auth-bar-wrap{width:100px;height:4px;background:rgba(255,255,255,.06);margin:5px 0 0 auto;overflow:hidden}
 .auth-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan))}
-.elem-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-family:var(--M);font-size:9px}
+.elem-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-family:var(--M);font-size:12px}
 .elem-bar-lbl{width:60px;color:var(--gold);letter-spacing:1px}
 .elem-bar-track{flex:1;height:10px;background:rgba(255,255,255,.05);overflow:hidden}
 .elem-bar-fill{height:100%;background:linear-gradient(90deg,rgba(201,168,76,.6),rgba(0,229,255,.4));transition:width .5s ease}
@@ -48,20 +48,20 @@
     <div class="kpi-card"><div class="kpi-val" id="h-certs">—</div><div class="kpi-label">CERTIFICATES</div></div>
     <div class="kpi-card"><div class="kpi-val" id="h-events">—</div><div class="kpi-label">EVOLUTION EVENTS</div></div>
   </div>
-  <div id="h-status" style="font-family:var(--M);font-size:9px;color:var(--muted);padding:8px">Reading the record&hellip;</div>
+  <div id="h-status" style="font-family:var(--M);font-size:12px;color:var(--muted);padding:8px">Reading the record&hellip;</div>
 </div>
 
 <div class="tab-panel" id="tab-roster">
   <div class="sechead">ASCENDANTS OF THE ORDER &mdash; RANKED BY AUTHORITY</div>
   <div id="h-board">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading roster&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading roster&hellip;</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-elements">
   <div class="sechead">MEMBERS BY ELEMENT</div>
   <div id="h-elements">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading element distribution&hellip;</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading element distribution&hellip;</div>
   </div>
 </div>
 
@@ -124,7 +124,7 @@ async function boot(){
       var{data:board,error:berr}=await sb.rpc('public_leaderboard',{p_limit:25});
       var box=document.getElementById('h-board');
       if(berr||!board||!board.length){
-        box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">'+
+        box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">'+
           (berr?'Leaderboard unavailable.':'No ascendants yet. Be the first.')+'</div>';
       }else{
         box.innerHTML=board.map(function(m){
@@ -151,5 +151,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

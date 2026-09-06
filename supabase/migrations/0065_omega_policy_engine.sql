@@ -65,7 +65,7 @@ CREATE POLICY "owner reads all evals" ON public.policy_eval_log
   FOR SELECT USING(public.is_platform_owner());
 DROP POLICY IF EXISTS "member inserts eval" ON public.policy_eval_log;
 CREATE POLICY "member inserts eval" ON public.policy_eval_log
-  FOR INSERT TO authenticated WITH CHECK(true);
+  FOR INSERT TO authenticated WITH CHECK(public.is_platform_owner());
 
 -- ── EVALUATE POLICY RPC ───────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.evaluate_policy(

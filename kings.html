@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">KINGS<small>HERITAGE &middot; HALL OF SOVEREIGN RULERS &middot; POWER STUDY</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -60,10 +60,10 @@
       <div class="sechead">MY MODEL SOVEREIGN</div>
       <div style="max-width:500px">
         <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:16px">Choose your model sovereign — the ruler whose character, methods, and achievements most align with the sovereign you are becoming. Study them deeply. Embody their virtues.</div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">MODEL SOVEREIGN</div><input id="mk-name" class="inp" style="width:100%" placeholder="Who is your model king / ruler?"></div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">WHY THIS RULER</div><textarea id="mk-why" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What draws you to this figure?"></textarea></div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">VIRTUES TO EMULATE</div><textarea id="mk-virtues" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What virtues do you draw from their example?"></textarea></div>
-        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAILURES TO AVOID</div><textarea id="mk-failures" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What mistakes of theirs will you consciously not repeat?"></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">MODEL SOVEREIGN</div><input id="mk-name" class="inp" style="width:100%" placeholder="Who is your model king / ruler?"></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">WHY THIS RULER</div><textarea id="mk-why" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What draws you to this figure?"></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">VIRTUES TO EMULATE</div><textarea id="mk-virtues" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What virtues do you draw from their example?"></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">FAILURES TO AVOID</div><textarea id="mk-failures" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What mistakes of theirs will you consciously not repeat?"></textarea></div>
         <button class="btn" onclick="saveModel()">SAVE MODEL</button>
         <div id="model-display" style="display:none;margin-top:16px;border:1px solid var(--line);border-top:3px solid var(--gold);background:rgba(10,10,15,.55);padding:18px;border-radius:2px"></div>
       </div>
@@ -86,10 +86,10 @@
 <div class="lf"><span>&#937; KINGS &middot; SYD OMEGA 91717</span><span>HALL OF SOVEREIGN RULERS &middot; POWER STUDY</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -114,20 +114,29 @@ var modelKing=JSON.parse(localStorage.getItem(MK)||'{}');
 
 function renderKings(){
   document.getElementById('kings-grid').innerHTML=KINGS_DATA.map(function(k,i){
-    return '<div style="border:1px solid var(--line);border-top:2px solid '+k.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+    /* The shared .card surface, not a hand-rolled one. The per-king
+       `border-top:2px solid <colour>` this used to set on the element is the
+       collision CLAUDE.md §4.1 describes, and its documented lossless
+       translation: .card::before already draws a 2px top bar and reads
+       --card-accent, so the colour moves there and the card gains the
+       platform's glass, rim shadow, hover elevation and glow edge -- none of
+       which this page had (measured: box-shadow "none" before). The realm
+       badge becomes a .chip, whose `border:1px solid` takes currentColor, so
+       one `color` carries both. */
+    return '<div class="card" style="--card-accent:'+k.color+'">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+k.era+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+k.color+';border:1px solid '+k.color+';padding:1px 5px">'+k.realm.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+k.era+'</div>'
+      +'<span class="chip" style="color:'+k.color+'">'+k.realm.toUpperCase()+'</span>'
       +'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+k.color+';margin-bottom:4px">'+k.name+'</div>'
-      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:8px">VIRTUE: '+k.virtue.toUpperCase()+'</div>'
-      +'<div style="font-size:11px;line-height:1.6;opacity:.8;margin-bottom:8px">'+k.desc+'</div>'
+      +'<div class="card-title" style="font-family:var(--D);font-size:13px;color:'+k.color+';margin-bottom:4px;letter-spacing:0">'+k.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px">VIRTUE: '+k.virtue.toUpperCase()+'</div>'
+      +'<div style="font-size:12px;line-height:1.6;opacity:.8;margin-bottom:8px">'+k.desc+'</div>'
       +'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px">'
-      +'<div style="font-family:var(--M);font-size:8px;color:var(--gold);margin-bottom:3px">KEY LESSON</div>'
-      +'<div style="font-size:11px;font-style:italic;opacity:.75">'+k.lesson+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:3px">KEY LESSON</div>'
+      +'<div style="font-size:12px;font-style:italic;opacity:.75">'+k.lesson+'</div>'
       +'</div>'
       +'<div id="king-bio-'+i+'" style="margin-top:10px">'
-      +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted);background:none;cursor:pointer">READ REAL BIOGRAPHY (WIKIPEDIA)</button>'
+      +'<button class="btn" onclick="loadKingBio('+i+')" style="color:var(--muted);border-color:rgba(201,168,76,.25)">READ REAL BIOGRAPHY (WIKIPEDIA)</button>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -136,35 +145,35 @@ function renderKings(){
 window.loadKingBio=function(i){
   var k=KINGS_DATA[i];
   var el=document.getElementById('king-bio-'+i);
-  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING&hellip;</span>';
   fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(k.name.replace(/ /g,'_')))
     .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
     .then(function(data){
       var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(k.name.replace(/ /g,'_')));
-      el.innerHTML='<div style="font-size:11px;line-height:1.7;opacity:.8;margin-top:4px">'+extract+'</div>'
-        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+      el.innerHTML='<div style="font-size:12px;line-height:1.7;opacity:.8;margin-top:4px">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
     })
     .catch(function(){
-      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia.</span> '
-        +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:7px;color:var(--muted);background:none;border:1px solid rgba(201,168,76,.2);cursor:pointer;padding:2px 6px">RETRY</button>';
+      el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--crim)">Could not reach Wikipedia.</span> '
+        +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:12px;color:var(--muted);background:none;border:1px solid rgba(201,168,76,.2);cursor:pointer;padding:2px 6px">RETRY</button>';
     });
 };
 
 function renderStudyNotes(){
   var el=document.getElementById('study-list');
-  if(!studyNotes.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO STUDY NOTES YET</div>';return;}
+  if(!studyNotes.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO STUDY NOTES YET</div>';return;}
   var CAT_COL={'Power & Strategy':'#FF9800',Governance:'#00E5FF','War & Conflict':'#FF4444',Wealth:'#C9A84C',Legacy:'#4CAF50','Failure & Fall':'#8B0000'};
   el.innerHTML=[].concat(studyNotes).reverse().map(function(n){
     var col=CAT_COL[n.cat]||'var(--gold)';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--D);font-size:11px;color:var(--gold)">'+n.king+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+n.cat.toUpperCase()+'</div>'
-      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">'+n.date+'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+n.king+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+n.cat.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+n.date+'</div>'
       +'</div>'
       +'<div style="font-size:13px;font-weight:600;margin-bottom:4px">'+n.lesson+'</div>'
-      +(n.notes?'<div style="font-size:11px;opacity:.75">'+n.notes+'</div>':'')
+      +(n.notes?'<div style="font-size:12px;opacity:.75">'+n.notes+'</div>':'')
       +'</div>';
   }).join('');
 }
@@ -179,7 +188,7 @@ function renderModelDisplay(){
   document.getElementById('mk-failures').value=modelKing.failures||'';
   el.innerHTML='<div style="font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:8px">'+modelKing.name+'</div>'
     +[['WHY',modelKing.why],['VIRTUES TO EMULATE',modelKing.virtues],['FAILURES TO AVOID',modelKing.failures]].filter(function(r){return r[1];}).map(function(r){
-      return '<div style="margin-bottom:8px"><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:12px;line-height:1.6;opacity:.85">'+r[1]+'</div></div>';
+      return '<div style="margin-bottom:8px"><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:12px;line-height:1.6;opacity:.85">'+r[1]+'</div></div>';
     }).join('');
 }
 
@@ -214,5 +223,5 @@ window.saveModel=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

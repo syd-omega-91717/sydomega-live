@@ -19,8 +19,6 @@
     "operations": ["ci", "deployment", "observability", "rollback"]
   },
   "commandSystem": {
-    "catalog": "/omega-command-catalog.js",
-    "palette": "/omega-command-palette.js",
     "event": "omega:command",
     "privilegedExecution": "server-authorized-only"
   },

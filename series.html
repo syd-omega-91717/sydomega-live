@@ -11,42 +11,42 @@
 .ser-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:18px 16px;transition:.18s;position:relative;overflow:hidden}
 .ser-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
 .ser-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc,var(--purple))}
-.ser-tag{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--sc,var(--purple));border:1px solid;border-color:rgba(155,107,240,.2);display:inline-block;padding:2px 7px;border-radius:1px;margin-bottom:7px}
+.ser-tag{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--sc,var(--purple));border:1px solid;border-color:rgba(155,107,240,.2);display:inline-block;padding:2px 7px;border-radius:1px;margin-bottom:7px}
 .ser-title{font-family:var(--D);font-size:clamp(9px,1.3vw,11px);color:var(--ink);margin-bottom:6px;line-height:1.3}
-.ser-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);line-height:1.7}
+.ser-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);line-height:1.7}
 .ser-ep{font-family:var(--D);font-size:20px;color:var(--sc,var(--purple));float:right;line-height:1;margin-top:-2px;margin-left:8px}
 .by-row{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}
 .by-item{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);transition:.12s}
 .by-item:hover{background:rgba(201,168,76,.02)}
 .by-item:last-child{border-bottom:none}
 .by-sign{font-size:18px;flex-shrink:0;width:28px;text-align:center}
-.by-name{font-family:var(--D);font-size:10px;color:var(--ink);flex:1}
-.by-meta{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+.by-name{font-family:var(--D);font-size:12px;color:var(--ink);flex:1}
+.by-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.series-grid{grid-template-columns:1fr 1fr}}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--purple);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--purple);flex:1}.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
 .pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--purple)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--purple);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--purple)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--purple);line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--purple);color:var(--purple);background:rgba(201,168,76,.05)}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--purple);color:var(--purple);background:rgba(201,168,76,.05)}
 .tab-panel{display:none}.tab-panel.active{display:block}
 .hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--purple);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
 .hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--purple);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
+.hero-sub{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--purple);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--purple);color:#000;padding:8px 14px;font-family:var(--M);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="series" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN SERIES<small>M6 Media Universe &middot; 144 SERIES ACROSS 12 TRACKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="ser-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN SERIES<small>M6 Media Universe &middot; 144 SERIES ACROSS 12 TRACKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="ser-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
     <div class="pad" data-reveal="fade-up">
       <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
       <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-all-series')">&#9670; ALL SERIES</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-track')">&#9670; BY TRACK</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-element')">&#9670; BY ELEMENT</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-science')">&#9670; SCIENCE</button></div><!-- ALL SERIES -->
@@ -96,18 +96,18 @@
 <div id="tp-by-track" class="tab-panel" style="padding:var(--pad)">
   <div class="sechead" data-reveal="fade-up">BY SOVEREIGN TRACK &middot; 12 SIGN-LINKED SERIES</div>
   <div class="by-row" data-reveal="fade-up">
-    <div class="by-item"><div class="by-sign">&#9800;</div><div class="by-name">ARIES CHRONICLES</div><div class="by-meta">FIRE &middot; ARES &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9801;</div><div class="by-name">TAURUS CHRONICLES</div><div class="by-meta">METAL &middot; APHRODITE &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9802;</div><div class="by-name">GEMINI CHRONICLES</div><div class="by-meta">WIND &middot; HERMES &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9803;</div><div class="by-name">CANCER CHRONICLES</div><div class="by-meta">WATER &middot; ARTEMIS &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9804;</div><div class="by-name">LEO CHRONICLES</div><div class="by-meta">FIRE &middot; APOLLO &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9805;</div><div class="by-name">VIRGO CHRONICLES</div><div class="by-meta">SAND &middot; ATHENA &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9806;</div><div class="by-name">LIBRA CHRONICLES</div><div class="by-meta">WIND &middot; HERA &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9807;</div><div class="by-name">SCORPIO CHRONICLES</div><div class="by-meta">WATER &middot; DEMETER &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9808;</div><div class="by-name">SAGITTARIUS CHRONICLES</div><div class="by-meta">FIRE &middot; ZEUS &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9809;</div><div class="by-name">CAPRICORN CHRONICLES</div><div class="by-meta">METAL &middot; HESTIA &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9810;</div><div class="by-name">AQUARIUS CHRONICLES</div><div class="by-meta">SOUL &middot; HEPHAESTUS &middot; GATE IV</div></div>
-    <div class="by-item"><div class="by-sign">&#9811;</div><div class="by-name">PISCES CHRONICLES</div><div class="by-meta">WATER &middot; POSEIDON &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9800;&#65038;</div><div class="by-name">ARIES CHRONICLES</div><div class="by-meta">FIRE &middot; ARES &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9801;&#65038;</div><div class="by-name">TAURUS CHRONICLES</div><div class="by-meta">METAL &middot; APHRODITE &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9802;&#65038;</div><div class="by-name">GEMINI CHRONICLES</div><div class="by-meta">WIND &middot; HERMES &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9803;&#65038;</div><div class="by-name">CANCER CHRONICLES</div><div class="by-meta">WATER &middot; ARTEMIS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9804;&#65038;</div><div class="by-name">LEO CHRONICLES</div><div class="by-meta">FIRE &middot; APOLLO &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9805;&#65038;</div><div class="by-name">VIRGO CHRONICLES</div><div class="by-meta">SAND &middot; ATHENA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9806;&#65038;</div><div class="by-name">LIBRA CHRONICLES</div><div class="by-meta">WIND &middot; HERA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9807;&#65038;</div><div class="by-name">SCORPIO CHRONICLES</div><div class="by-meta">WATER &middot; DEMETER &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9808;&#65038;</div><div class="by-name">SAGITTARIUS CHRONICLES</div><div class="by-meta">FIRE &middot; ZEUS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9809;&#65038;</div><div class="by-name">CAPRICORN CHRONICLES</div><div class="by-meta">METAL &middot; HESTIA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9810;&#65038;</div><div class="by-name">AQUARIUS CHRONICLES</div><div class="by-meta">SOUL &middot; HEPHAESTUS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9811;&#65038;</div><div class="by-name">PISCES CHRONICLES</div><div class="by-meta">WATER &middot; POSEIDON &middot; GATE IV</div></div>
   </div>
 </div>
 
@@ -138,18 +138,18 @@
   </div>
   <div class="sechead" data-reveal="fade-up">THE 12 OLYMPIAN GODS &middot; SOVEREIGN SERIES LORE</div>
   <div class="by-row" data-reveal="fade-up">
-    <div class="by-item"><div class="by-sign">&#9800;</div><div class="by-name">ARES: THE WAR SOVEREIGN</div><div class="by-meta">ARIES &middot; FIRE &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9801;</div><div class="by-name">APHRODITE: THE SOVEREIGN BIND</div><div class="by-meta">TAURUS &middot; METAL &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9802;</div><div class="by-name">HERMES: THE MESSENGER LATTICE</div><div class="by-meta">GEMINI &middot; WIND &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9803;</div><div class="by-name">ARTEMIS: THE NIGHT SOVEREIGN</div><div class="by-meta">CANCER &middot; WATER &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9804;</div><div class="by-name">APOLLO: THE GOLDEN LATTICE</div><div class="by-meta">LEO &middot; FIRE &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9805;</div><div class="by-name">ATHENA: THE WISDOM CIPHER</div><div class="by-meta">VIRGO &middot; SAND &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9806;</div><div class="by-name">HERA: THE SOVEREIGN COURT</div><div class="by-meta">LIBRA &middot; WIND &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9807;</div><div class="by-name">DEMETER: THE EARTH COVENANT</div><div class="by-meta">SCORPIO &middot; WATER &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9808;</div><div class="by-name">ZEUS: THUNDER SOVEREIGN</div><div class="by-meta">SAGITTARIUS &middot; FIRE &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9809;</div><div class="by-name">HESTIA: THE ETERNAL FLAME</div><div class="by-meta">CAPRICORN &middot; METAL &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9810;</div><div class="by-name">HEPHAESTUS: THE FORGE</div><div class="by-meta">AQUARIUS &middot; SOUL &middot; GATE IV UNLOCK</div></div>
-    <div class="by-item"><div class="by-sign">&#9811;</div><div class="by-name">POSEIDON: THE DEEP SOVEREIGN</div><div class="by-meta">PISCES &middot; WATER &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9800;&#65038;</div><div class="by-name">ARES: THE WAR SOVEREIGN</div><div class="by-meta">ARIES &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9801;&#65038;</div><div class="by-name">APHRODITE: THE SOVEREIGN BIND</div><div class="by-meta">TAURUS &middot; METAL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9802;&#65038;</div><div class="by-name">HERMES: THE MESSENGER LATTICE</div><div class="by-meta">GEMINI &middot; WIND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9803;&#65038;</div><div class="by-name">ARTEMIS: THE NIGHT SOVEREIGN</div><div class="by-meta">CANCER &middot; WATER &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9804;&#65038;</div><div class="by-name">APOLLO: THE GOLDEN LATTICE</div><div class="by-meta">LEO &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9805;&#65038;</div><div class="by-name">ATHENA: THE WISDOM CIPHER</div><div class="by-meta">VIRGO &middot; SAND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9806;&#65038;</div><div class="by-name">HERA: THE SOVEREIGN COURT</div><div class="by-meta">LIBRA &middot; WIND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9807;&#65038;</div><div class="by-name">DEMETER: THE EARTH COVENANT</div><div class="by-meta">SCORPIO &middot; WATER &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9808;&#65038;</div><div class="by-name">ZEUS: THUNDER SOVEREIGN</div><div class="by-meta">SAGITTARIUS &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9809;&#65038;</div><div class="by-name">HESTIA: THE ETERNAL FLAME</div><div class="by-meta">CAPRICORN &middot; METAL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9810;&#65038;</div><div class="by-name">HEPHAESTUS: THE FORGE</div><div class="by-meta">AQUARIUS &middot; SOUL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9811;&#65038;</div><div class="by-name">POSEIDON: THE DEEP SOVEREIGN</div><div class="by-meta">PISCES &middot; WATER &middot; GATE IV UNLOCK</div></div>
   </div>
 </div>
     </div>
@@ -182,5 +182,5 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
 })();
 </script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

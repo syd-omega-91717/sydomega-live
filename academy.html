@@ -9,26 +9,26 @@
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);overflow-x:auto}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:.6rem 1.1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:.6rem 1.1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
 .tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}.tab-panel.on{display:block}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:16px}
 .exam-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:18px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
 .exam-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--ec)}
 .exam-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-2px)}
-.ec-level{font-family:var(--M);font-size:7px;letter-spacing:2.5px;color:var(--ec);margin-bottom:5px}
+.ec-level{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--ec);margin-bottom:5px}
 .ec-name{font-family:var(--D);font-size:12px;margin-bottom:6px}
-.ec-desc{font-size:11px;opacity:.65;line-height:1.6;margin-bottom:8px}
+.ec-desc{font-size:12px;opacity:.65;line-height:1.6;margin-bottom:8px}
 .ec-meta{display:flex;gap:8px;flex-wrap:wrap}
-.ec-tag{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
+.ec-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.exam-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -55,7 +55,7 @@
   <div class="sechead" data-reveal="fade-up">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
   <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D view"></div>
 </div><div class="tab-panel" id="tab-stem">
-  <div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#00E5FF" data-task="Mathematics Olympiad" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">MATHEMATICS OLYMPIAD</div>
@@ -155,7 +155,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-professional">
-  <div class="sechead" data-reveal="fade-up">PROFESSIONAL &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">PROFESSIONAL &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="CFA Level I–III" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CFA LEVEL I–III</div>
@@ -255,7 +255,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-language">
-  <div class="sechead" data-reveal="fade-up">LANGUAGE & ARTS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">LANGUAGE & ARTS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Arabic — Sovereign Language" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">ARABIC — SOVEREIGN LANGUAGE</div>
@@ -355,7 +355,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-sovereign_cert">
-  <div class="sechead" data-reveal="fade-up">SOVEREIGN CERTIFICATIONS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SOVEREIGN CERTIFICATIONS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="Omega Initiate Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 1 &middot; AXIS A+B+C</div>
   <div class="ec-name">OMEGA INITIATE CERTIFICATE</div>
@@ -455,7 +455,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-security">
-  <div class="sechead" data-reveal="fade-up">SECURITY & LAW &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SECURITY & LAW &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#8B0000" data-task="CISSP — Full Domain" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CISSP — FULL DOMAIN</div>
@@ -555,7 +555,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-technology">
-  <div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#9B6BF0" data-task="Python Advanced Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
   <div class="ec-name">PYTHON ADVANCED EXAM</div>
@@ -655,7 +655,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-healthcare">
-  <div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Anatomy & Physiology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
   <div class="ec-name">ANATOMY & PHYSIOLOGY</div>
@@ -755,7 +755,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-business">
-  <div class="sechead" data-reveal="fade-up">BUSINESS & FINANCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">BUSINESS & FINANCE &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#E2C86D" data-task="Financial Modeling" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
   <div class="ec-name">FINANCIAL MODELING</div>
@@ -913,10 +913,54 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('ex-auth',auth.toFixed(4)); sid('ex-certs',Number(pr.certificates_earned||0));
     try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id).eq('task_type','knowledge');sid('ex-passed',tc.count||0);}catch(e){sid('ex-passed','0');}
     /* wire exam cards */
-    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){card.style.borderTopColor='var(--green)';var lbl=card.querySelector('.ec-meta');if(lbl)lbl.innerHTML+='<span style="font-family:var(--M);font-size:8px;color:var(--green);margin-top:4px">&#10003; RECORDED</span>';}}};});
+    /* A completed exam looked untouched on every load: only the click handler
+       ever marked one, while the exam log below already read the same table.
+       Same column the log reads (task_name), so no new name is introduced. */
+    function markDone(card){
+      if(card.getAttribute('data-done')) return;
+      card.setAttribute('data-done','1');
+      /* .exam-card::before draws its accent from --ec, so this is the page's
+         own mechanism rather than a second rule fighting it. */
+      card.style.setProperty('--ec','var(--green)');
+      var lbl=card.querySelector('.ec-meta');
+      if(lbl && !lbl.querySelector('.ec-done')){
+        var sp=document.createElement('span');
+        sp.className='ec-done';
+        sp.style.cssText='font-family:var(--M);font-size:12px;color:var(--green);margin-top:4px';
+        sp.textContent='\u2713 RECORDED';
+        lbl.appendChild(sp);
+      }
+    }
+    try{
+      var doneQ = await sb.from('task_completions').select('task_name').eq('user_id', s.user.id).eq('task_type','knowledge');
+      /* Supabase resolves to {data:null,error}; it does not throw. Mark nothing
+         on an error rather than assert a completion we cannot support. */
+      if(!doneQ.error){
+        var done = new Set((doneQ.data||[]).map(function(t){return String(t.task_name||'').trim();}));
+        document.querySelectorAll('[data-task]').forEach(function(card){
+          if(done.has(String(card.getAttribute('data-task')||'').trim())) markDone(card);
+        });
+        document.querySelectorAll('.tab-panel').forEach(function(panel){
+          var head=panel.querySelector('.sechead');
+          var cards=panel.querySelectorAll('[data-task]');
+          if(!head||!cards.length||head.querySelector('.sec-prog')) return;
+          var c=0; cards.forEach(function(x){ if(x.getAttribute('data-done')) c++; });
+          var sp=document.createElement('span');
+          sp.className='sec-prog';
+          sp.textContent=' \u00b7 '+c+' / '+cards.length+' COMPLETE';
+          sp.style.color = c===cards.length ? 'var(--green)' : 'inherit';
+          /* These headers are childless and under 48 chars, so bg.js sheens
+             them and -webkit-text-fill-color:transparent inherits into this
+             span. currentColor restores the paint. */
+          sp.style.setProperty('-webkit-text-fill-color','currentColor');
+          head.appendChild(sp);
+        });
+      }
+    }catch(e){}
+    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){markDone(card);}}};});
     /* exam log */
-    try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:11px"><span style="font-family:var(--M);font-size:8px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:8px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){}
+    try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px"><span style="font-family:var(--M);font-size:12px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

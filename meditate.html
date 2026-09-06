@@ -7,11 +7,11 @@
 
 <style>
 .med-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:24px}
-.med-hero h2{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--gold,var(--gold));margin:0 0 6px}
-.med-hero p{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin:0}
+.med-hero h2{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--gold,var(--gold));margin:0 0 6px}
+.med-hero p{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin:0}
 .breath-stage{font-family:var(--M);font-size:13px;letter-spacing:6px;color:var(--gold,var(--gold));min-height:28px;margin-bottom:8px;text-align:center}
 .breath-count{font-family:var(--M);font-size:48px;letter-spacing:2px;color:var(--gold,var(--gold));min-width:60px;text-align:center}
-.session-progress{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
+.session-progress{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:8px}
 .ring-wrap{position:relative;width:260px;height:260px;margin:0 auto 24px}
 #breath-ring{position:absolute;inset:0}
 .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
@@ -19,29 +19,29 @@
 .tech-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;cursor:pointer;transition:.15s}
 .tech-card:hover{background:rgba(201,168,76,.04);border-color:rgba(201,168,76,.25)}
 .tech-card.active{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.07)}
-.tc-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold,var(--gold));margin-bottom:4px}
-.tc-pattern{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-bottom:6px}
-.tc-desc{font-family:var(--M);font-size:7px;letter-spacing:.8px;color:rgba(138,134,118,.4);line-height:1.6}
+.tc-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,var(--gold));margin-bottom:4px}
+.tc-pattern{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.tc-desc{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.6}
 .med-controls{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;justify-content:center}
-.med-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:11px 24px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
+.med-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:11px 24px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
 .med-btn:hover,.med-btn.primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold,var(--gold))}
 .session-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .session-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
 .session-stat .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,var(--gold))}
-.session-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
-.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.session-stat .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.section-hd{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
-.log-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:6px;font-family:var(--M);font-size:8.5px}
+.log-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:6px;font-family:var(--M);font-size:12px}
 .log-item .li-name{color:rgba(201,168,76,.7)}
-.log-item .li-dur{color:rgba(138,134,118,.5)}
-.log-item .li-date{color:rgba(138,134,118,.4);font-size:7.5px}
+.log-item .li-dur{color:var(--muted)}
+.log-item .li-date{color:var(--muted);font-size:12px}
 .duration-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
-.dur-chip{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:6px 14px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.dur-chip{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:6px 14px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .dur-chip.sel,.dur-chip:hover{border-color:rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.06)}
-.affirmation{font-family:var(--M);font-size:9.5px;letter-spacing:1.5px;color:rgba(201,168,76,.5);text-align:center;font-style:italic;padding:12px 0;border-top:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);margin:12px 0}
+.affirmation{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.5);text-align:center;font-style:italic;padding:12px 0;border-top:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);margin:12px 0}
 </style>
   <script src="/bg.js"></script>
 </head>
@@ -99,46 +99,46 @@
 
     <!-- TECHNIQUES TAB -->
     <div class="tab-panel" id="tab-techniques">
-      <div class="section-hd">SOVEREIGN BREATHING TECHNIQUES</div>
+      <div class="section-hd sechead">SOVEREIGN BREATHING TECHNIQUES</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">BOX BREATHING (4-4-4-4)</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">BOX BREATHING (4-4-4-4)</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Used by Navy SEALs, surgeons, and elite performers. Equal inhale-hold-exhale-hold phases.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Calms the nervous system, increases focus, reduces stress hormones within minutes. Activates the prefrontal cortex.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">4-7-8 RELAXATION</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">4-7-8 RELAXATION</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Dr. Andrew Weil's technique. The extended exhale activates the parasympathetic nervous system.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Sleep onset within 60 seconds. Cortisol reduction. Anxiety elimination. Used for pre-performance calm.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WIM HOF METHOD</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">WIM HOF METHOD</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Hyper-oxygenation followed by breath retention. 30 rapid breaths, retain, recover. Repeat 3-4 rounds.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Alkalizes the blood, increases adrenaline, strengthens immune function. Not for use while driving or in water.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">RESONANCE BREATHING</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">RESONANCE BREATHING</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             5.5-second inhale, 5.5-second exhale. ~5.5 breaths per minute — the resonance frequency of the heart-lung system.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Maximizes HRV (Heart Rate Variability). Synchronizes the nervous system. Optimal cognitive state.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">CYCLIC SIGHING</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">CYCLIC SIGHING</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Inhale through nose until lungs are full, then take a second sharp inhale to fill completely. Long slow exhale through mouth.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Stanford research shows this is the fastest way to reduce physiological stress. Deflates collapsed alveoli.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">UJJAYI (OCEAN BREATH)</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px">UJJAYI (OCEAN BREATH)</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Pranayama technique: constrict the back of the throat during both inhale and exhale. Creates an ocean-like sound.<br><br>
             <strong style="color:rgba(201,168,76,.6)">Benefits:</strong> Builds internal heat, oxygenates the bloodstream, increases focus and meditative depth. Used in yoga.
           </div>
@@ -149,55 +149,55 @@
     <!-- STATS TAB -->
     <div class="tab-panel" id="tab-stats">
       <div class="session-grid">
-        <div class="session-stat"><div class="sv" id="stat-total">0</div><div class="sk">SESSIONS</div></div>
-        <div class="session-stat"><div class="sv" id="stat-mins">0</div><div class="sk">TOTAL MIN</div></div>
-        <div class="session-stat"><div class="sv" id="stat-streak">0</div><div class="sk">DAY STREAK</div></div>
-        <div class="session-stat"><div class="sv" id="stat-fav">—</div><div class="sk">FAVOURITE</div></div>
+        <div class="session-stat kpi"><div class="sv" id="stat-total">0</div><div class="sk">SESSIONS</div></div>
+        <div class="session-stat kpi"><div class="sv" id="stat-mins">0</div><div class="sk">TOTAL MIN</div></div>
+        <div class="session-stat kpi"><div class="sv" id="stat-streak">0</div><div class="sk">DAY STREAK</div></div>
+        <div class="session-stat kpi"><div class="sv" id="stat-fav">—</div><div class="sk">FAVOURITE</div></div>
       </div>
-      <div class="section-hd">SESSION LOG</div>
+      <div class="section-hd sechead">SESSION LOG</div>
       <div id="session-log"></div>
     </div>
 
     <!-- SCIENCE TAB -->
     <div class="tab-panel" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="session-stat"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-        <div class="session-stat"><div class="sv">5.5</div><div class="sk">RESONANCE BPM</div></div>
-        <div class="session-stat"><div class="sv">4-4-4</div><div class="sk">BOX PROTOCOL</div></div>
-        <div class="session-stat"><div class="sv">φ/e</div><div class="sk">BREATH RATIO</div></div>
+        <div class="session-stat kpi"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="session-stat kpi"><div class="sv">5.5</div><div class="sk">RESONANCE BPM</div></div>
+        <div class="session-stat kpi"><div class="sv">4-4-4</div><div class="sk">BOX PROTOCOL</div></div>
+        <div class="session-stat kpi"><div class="sv">φ/e</div><div class="sk">BREATH RATIO</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="session-stat"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
-        <div class="session-stat"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
-        <div class="session-stat"><div class="sv">HRV</div><div class="sk">SOVEREIGN METRIC</div></div>
-        <div class="session-stat"><div class="sv">CO₂</div><div class="sk">TOLERANCE KEY</div></div>
+        <div class="session-stat kpi"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
+        <div class="session-stat kpi"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
+        <div class="session-stat kpi"><div class="sv">HRV</div><div class="sk">SOVEREIGN METRIC</div></div>
+        <div class="session-stat kpi"><div class="sv">CO₂</div><div class="sk">TOLERANCE KEY</div></div>
       </div>
-      <div class="section-hd">THE BREATH-BRAIN CONNECTION</div>
+      <div class="section-hd sechead">THE BREATH-BRAIN CONNECTION</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">WHY BREATH CONTROLS STATE</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">WHY BREATH CONTROLS STATE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             The vagus nerve connects the brain to the body. Breathing is the only autonomic function you can consciously control.<br><br>
             By controlling your breath, you are directly modulating your autonomic nervous system — shifting between sympathetic (fight-or-flight) and parasympathetic (rest-and-digest) states.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">HRV: THE SOVEREIGN METRIC</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">HRV: THE SOVEREIGN METRIC</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Heart Rate Variability (HRV) is the variation between heartbeats. High HRV = resilient, adaptable nervous system.<br><br>
             Regular breathwork increases HRV, which correlates with better cognitive performance, emotional regulation, and longevity.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">CO₂ TOLERANCE</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">CO₂ TOLERANCE</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Most people breathe too fast. The urge to breathe is triggered by CO₂ — not by lack of oxygen.<br><br>
             Building CO₂ tolerance through breath training extends calm performance under pressure. The sovereign breathes slowly and deeply — always.
           </div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
-          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">THE MORNING PROTOCOL</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px">THE MORNING PROTOCOL</div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             Optimal sovereign breathing sequence:<br><br>
             1. 5 min Wim Hof (energize, alkalize)<br>
             2. 5 min Box Breathing (focus)<br>
@@ -423,7 +423,7 @@ function renderStats(){
       <span class="li-dur">${dur} · ${l.cycles} cycles</span>
       <span class="li-date">${dt}</span>
     </div>`;
-  }).join('')||'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:16px 0">NO SESSIONS YET</div>';
+  }).join('')||'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px 0">NO SESSIONS YET</div>';
 }
 
 function switchTab(id,btn){
@@ -439,5 +439,5 @@ renderTechniques();
 renderStats();
 setInterval(()=>{if(sessionRunning) drawRing();},100);
 </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

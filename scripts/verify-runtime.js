@@ -30,6 +30,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const ARGV = process.argv.slice(2);
 const JSON_OUT = ARGV.includes('--json');
+const SELF_TEST = ARGV.includes('--self-test');
 const pagesFlag = ARGV.indexOf('--pages');
 const PAGES_ARG = pagesFlag >= 0 && ARGV[pagesFlag + 1] ? ARGV[pagesFlag + 1]
   : (ARGV.find(a => a.startsWith('--pages=')) || '').split('=')[1] || '';
@@ -126,10 +127,43 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon',
   '.webmanifest': 'application/manifest+json', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.txt': 'text/plain' };
 
+/* Known-ratio fixture for --self-test. Every value here is computed from the
+   WCAG formula against this platform's own surfaces, so the classifier is
+   checked against arithmetic rather than against itself. It deliberately
+   includes the three surface shapes that each broke an earlier version of the
+   rule: translucent glass, an opaque near-uniform gradient, and an element
+   whose background is clipped to its text. */
+const FIXTURE = `<!doctype html><html><head><meta charset="utf-8"><style>
+  html{background:#0A0A0F}
+  body{margin:0;padding:20px;font:16px/1.6 monospace;background:transparent}
+  div{padding:10px;width:600px}
+  /* the platform's glass: translucent over the ground, must be composited */
+  .glass{background:rgba(10,10,15,.68)}
+  /* the sidebar's shape: a low-alpha tint over an opaque near-uniform gradient */
+  .side{background-image:linear-gradient(rgba(201,168,76,.09) 0%,rgba(0,0,0,0) 100%),
+        linear-gradient(rgb(8,8,15),rgb(5,5,12))}
+  /* .ofx-sheen's shape: the gradient paints INSIDE the glyphs, not behind them */
+  .sheen{background-image:linear-gradient(100deg,rgb(255,247,214) 38%,rgb(255,247,214) 62%);
+         -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sheen span{-webkit-text-fill-color:currentColor}
+</style></head><body>
+  <div id="t-block-1" style="color:#08080F">void on void, 1.01 to 1, must BLOCK</div>
+  <div id="t-block-2" style="color:#55534e">the old dock grey, 2.57 to 1, must BLOCK</div>
+  <div id="t-mid-1"   style="color:#C4453C">re-stepped crimson, 4.01 to 1, must be ADVISORY</div>
+  <div id="t-pass-1"  style="color:#C9A84C">brand gold, 8.74 to 1, must PASS</div>
+  <div id="t-pass-2"  class="glass" style="color:#C9A84C">gold on composited glass, must PASS</div>
+  <div id="t-pass-3"  class="side"  style="color:#C9A84C">gold on the opaque gradient, must PASS</div>
+  <div class="sheen"><span id="t-pass-4" style="color:#C9A84C">gold in a clip-to-text parent, must PASS</span></div>
+</body></html>`;
+
 function startServer() {
   return new Promise((resolve) => {
     const srv = http.createServer((req, res) => {
       let u = decodeURIComponent(req.url.split('?')[0]);
+      if (u === '/__contrast-fixture.html') {
+        res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
+        return res.end(FIXTURE);
+      }
       if (u === '/') u = '/enter.html';
       const f = path.join(ROOT, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
       if (!f.startsWith(ROOT)) { res.writeHead(403); return res.end(); }
@@ -167,8 +201,179 @@ const CHECK_JS = `(() => {
     if (!ok) unl.push(el.name || el.id || el.type || 'input');
   });
   out.unlabelledInputs = unl.slice(0, 8);
+  /* --- FIXED-CHROME OCCLUSION ------------------------------------------
+     Two modules independently claimed position:fixed;bottom:0;left:0;right:0
+     at z-index 9990 -- omega-legal.js's consent bar and omega-pwa.js's install
+     bar -- neither aware of the other, so the later paint intercepted every
+     click on the earlier one. Measured on the front door at 1280x800: 61px of
+     overlap, ACCEPT ALL blocked by #pwa-dismiss-btn and ESSENTIAL ONLY by
+     #pwa-install-btn. A member could not record a cookie choice, so the
+     consent bar could never clear. No static check can see this: both rules
+     are correct in isolation and only collide once painted.
+
+     Only an occluder under a DIFFERENT position:fixed ancestor counts. That
+     is what stops a full-viewport pointer-events:none backdrop -- omega-fx,
+     the particle canvas, the noise overlay -- from reporting against every
+     control on the page, which is the mistake an earlier collision scan made
+     on 177 of 178 pages. Advisory: a deliberately-open modal is a legitimate
+     occluder, and this must not gate on one.
+
+     The occluded control must ALSO be inside fixed chrome. That second half
+     is the scanner's own false-positive pass (CLAUDE.md 8.4), and it was
+     added after measuring: the first version reported 20 controls across the
+     13 entrypoints, but most were ordinary page content that merely happened
+     to sit under a bar at the current scroll offset. A fixed bar over
+     scrollable content is normal and unavoidable -- tested directly by
+     reserving padding-bottom equal to the whole stack on body, main.main and
+     .main at once, which changed the count by nothing, because the document
+     scrolls and the bar covers whatever is at that viewport position
+     regardless. What is never normal is one piece of fixed chrome eating
+     another's controls, which is the defect this was written for. */
+  const fixedRoot = el => {
+    for (let n = el; n && n !== document.documentElement; n = n.parentElement)
+      if (getComputedStyle(n).position === 'fixed') return n;
+    return null;
+  };
+  const occ = [];
+  document.querySelectorAll('a[href], button, [role=button], input:not([type=hidden]), select').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none' || cs.pointerEvents === 'none') return;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) return;
+    const top = document.elementFromPoint(cx, cy);
+    if (!top || top === el || el.contains(top) || top.contains(el)) return;
+    const mine = fixedRoot(el), theirs = fixedRoot(top);
+    if (!mine || !theirs || theirs === mine) return;
+    /* A full-viewport overlay is a modal or an access gate, not colliding
+       chrome -- approvals.html's #gate (position:fixed; inset:0) covers the
+       page for any non-owner, which is exactly what it is for, and it was the
+       only thing left in this report once page content was excluded. */
+    const tr = theirs.getBoundingClientRect();
+    if (tr.width >= window.innerWidth * 0.9 && tr.height >= window.innerHeight * 0.9) return;
+    occ.push((el.id || el.textContent.trim().slice(0, 18) || el.tagName) + ' <- #' + (theirs.id || theirs.tagName));
+  });
+  out.occluded = occ.slice(0, 8);
+  /* --- TEXT CONTRAST ---------------------------------------------------
+     Blocking below 3:1, the floor for any content. Six buttons shipped at
+     1.01:1 and 1:1 on the public sign-up and password-recovery path, and
+     15 nav-dock labels at 2.60:1 on 179 pages, with every static gate
+     green -- only a render can see this. Verified against those pinned
+     pre-fix trees: 3, 15 and 20 findings respectively. 3-4.5:1 is
+     advisory, not blocking: --crim was deliberately re-stepped to the
+     deepest crimson that still clears 3:1. */
+
+  const lin = v => { v/=255; return v<=.03928 ? v/12.92 : Math.pow((v+.055)/1.055,2.4); };
+  const L = c => .2126*lin(c[0]) + .7152*lin(c[1]) + .0722*lin(c[2]);
+  const px = t => { const m = String(t).match(/[\\d.]+/g); return m ? m.map(Number) : null; };
+  const alpha = c => (c && c.length > 3) ? c[3] : 1;
+  const cLow = [], cMidIds = [], cOkIds = []; let cMid = 0, cOk = 0, cSeen = 0;
+  document.querySelectorAll('body *').forEach(el => {
+    const txt = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
+    if (txt.length < 2) return;
+    const cs = getComputedStyle(el), r = el.getBoundingClientRect();
+    if (r.width < 6 || r.height < 6) return;
+    if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < .35) return;
+    if (String(cs.webkitTextFillColor).indexOf('rgba(0, 0, 0, 0)') >= 0) return;
+    const fg = px(cs.color);
+    if (!fg || alpha(fg) < .35) return;
+    /* Resolve the surface the way a browser composites it. This platform's
+       glass is rgba(10,10,15,.68) and its sidebar is an OPAQUE near-uniform
+       gradient under a low-alpha tint, so "opaque colour or give up" measures
+       almost nothing. Translucent layers are collected and alpha-blended over
+       the first opaque surface; a gradient with opaque stops IS that surface,
+       and every one of its stops is a candidate -- text is judged against the
+       WORST of them, which is the only honest standard for a gradient. */
+    let n = el, bases = null; const layers = [];
+    while (n && n !== document.documentElement) {
+      const s = getComputedStyle(n);
+      /* background-clip:text means the background paints INSIDE the
+         glyphs, not behind them -- .ofx-sheen is exactly this. Treating
+         its gradient as a surface reported six .sec-prog spans at 1:1
+         against their own text fill. */
+      const clipsToText = (s.backgroundClip || s.webkitBackgroundClip) === 'text';
+      const c = clipsToText ? null : px(s.backgroundColor);
+      if (c) {
+        const a = alpha(c);
+        if (a > .995) { bases = [c.slice(0,3)]; break; }
+        if (a > .02) layers.push([c.slice(0,3), a]);
+      }
+      const bi = clipsToText ? 'none' : s.backgroundImage;
+      if (bi && bi !== 'none') {
+        const stops = (bi.match(/rgba?\\([^)]*\\)/g) || []).map(px).filter(Boolean);
+        const solid = stops.filter(t => alpha(t) > .85).map(t => t.slice(0,3));
+        if (solid.length) { bases = solid; break; }
+      }
+      n = n.parentElement;
+    }
+    if (!bases) {
+      const h = px(getComputedStyle(document.documentElement).backgroundColor);
+      bases = [(h && alpha(h) > .99) ? h.slice(0,3) : [10,10,15]];
+    }
+    const l1 = L(fg.slice(0,3));
+    let worst = Infinity, worstBg = null;
+    bases.forEach(b => {
+      let bg = b;
+      for (let k = layers.length - 1; k >= 0; k--) {
+        const c = layers[k][0], a = layers[k][1];
+        bg = [0,1,2].map(q => a*c[q] + (1-a)*bg[q]);
+      }
+      const l2 = L(bg);
+      const ratio = (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);
+      if (ratio < worst) { worst = ratio; worstBg = bg.map(Math.round); }
+    });
+    cSeen++;
+    const size = parseFloat(cs.fontSize) || 12;
+    const large = size >= 24 || (size >= 18.66 && (parseInt(cs.fontWeight,10)||400) >= 700);
+    if (worst + 0.005 < 3) {
+      cLow.push({ id: el.id, sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
+                 ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
+                 px: Math.round(size), text: txt.slice(0,26) });
+    } else if (worst + 0.005 < (large ? 3 : 4.5)) { cMid++; if (el.id) cMidIds.push(el.id); }
+    else { cOk++; if (el.id) cOkIds.push(el.id); }
+  });
+  out.lowContrastIds = cLow.map(x => x.id).filter(Boolean);
+  out.lowContrast = cLow.slice(0, 6);
+  out.lowContrastCount = cLow.length;
+  out.midContrast = cMid;
+  out.midContrastIds = cMidIds;
+  out.okContrastIds = cOkIds;
   return out;
 })()`;
+
+/* --self-test: prove the contrast classifier against arithmetic, not against
+   itself. Without this the gate's correctness was only ever demonstrated once,
+   by pinning pre-fix files out of git history -- which the next person changing
+   the rule has no way to repeat. */
+async function selfTest(pw, channel) {
+  const EXPECT = {
+    block: ['t-block-1', 't-block-2'],
+    mid:   ['t-mid-1'],
+    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4']
+  };
+  const { srv, port } = await startServer();
+  const browser = await (channel ? pw.chromium.launch({ channel }) : pw.chromium.launch());
+  let info;
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://127.0.0.1:' + port + '/__contrast-fixture.html', { waitUntil: 'load' });
+    info = await page.evaluate(CHECK_JS);
+  } finally { await browser.close(); srv.close(); }
+
+  const got = { block: (info.lowContrastIds||[]).sort(), mid: (info.midContrastIds||[]).sort(),
+                ok: (info.okContrastIds||[]).sort() };
+  let bad = 0;
+  for (const k of ['block', 'mid', 'ok']) {
+    const want = EXPECT[k].slice().sort();
+    const same = want.length === got[k].length && want.every((v, i) => v === got[k][i]);
+    if (!same) bad++;
+    console.log((same ? '  ok   ' : '  FAIL ') + k.padEnd(6) +
+      ' expected [' + want.join(', ') + ']  got [' + got[k].join(', ') + ']');
+  }
+  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (7 known ratios binned correctly)');
+  return bad ? 1 : 0;
+}
 
 async function main() {
   const pw = loadPlaywright();
@@ -177,6 +382,14 @@ async function main() {
     console.log('SKIPPED: playwright-core not resolvable' + (channel ? '' : ' and no system Chrome/Edge') +
       '. Install with `npm i -g playwright-core`. Runtime verification not run.');
     return 0;
+  }
+  if (SELF_TEST) return selfTest(pw, channel);
+  /* Run it as a PRECONDITION of every sweep, not as a separate step someone
+     has to remember: if the classifier is wrong, the sweep's verdict about 189
+     pages is meaningless. Costs one extra page load. */
+  if (await selfTest(pw, channel) !== 0) {
+    console.log('RUNTIME VERIFICATION: aborted -- the contrast classifier failed its own fixture');
+    return 2;
   }
   const { chromium } = pw;
   const pages = PAGES_ARG ? PAGES_ARG.split(',').map(s => s.trim()).filter(Boolean)
@@ -237,6 +450,10 @@ async function main() {
       if (info.hasMain === false && !landedPublic) advisories.push('no <main> landmark');
       if (info.smallTapTargets && info.smallTapTargets.length) advisories.push('tap targets < 24px: ' + info.smallTapTargets.join('; '));
       if (info.unlabelledInputs && info.unlabelledInputs.length) advisories.push('unlabelled inputs: ' + info.unlabelledInputs.join(', '));
+      if (info.occluded && info.occluded.length) advisories.push('occluded by fixed chrome: ' + info.occluded.join(', '));
+      if (info.lowContrastCount) problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
+        info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' ' + JSON.stringify(c.text)).join(' | '));
+      if (info.midContrast) advisories.push('contrast 3-4.5:1: ' + info.midContrast);
       results.push({ page: pg, landedOn: landed, problems, advisories, benignSuppressed: errs.length - realErrs.length });
     }
   } catch (e) {
@@ -257,18 +474,22 @@ async function main() {
       for (const p of r.problems) console.log('        x ' + p);
     }
     // Advisories aggregated - they are platform-wide (bg.js chrome), not per-page.
-    const tapSel = new Set(), unlabelled = new Set(), noMain = [], owner = [];
+    const tapSel = new Set(), unlabelled = new Set(), occluded = new Set(), noMain = [], owner = []; let midC = 0;
     for (const r of results) for (const a of r.advisories) {
       if (a.startsWith('tap targets')) a.replace(/tap targets < 24px: /, '').split('; ').forEach(s => tapSel.add(s.replace(/ \d+x\d+$/, '')));
       else if (a.startsWith('unlabelled')) a.replace(/unlabelled inputs: /, '').split(', ').forEach(s => unlabelled.add(s));
       else if (a.startsWith('no <main>')) noMain.push(r.page);
       else if (a.startsWith('owner-gated')) owner.push(r.page);
+      else if (a.startsWith('occluded by fixed chrome')) a.replace(/occluded by fixed chrome: /, '').split(', ').forEach(s => occluded.add(s));
+      else if (a.startsWith('contrast 3-4.5')) midC += parseInt(a.split(': ')[1], 10) || 0;
     }
     console.log('\nadvisory (tracked as the `accessibility` capability, not gating):');
     if (tapSel.size) console.log('  tap targets < 24px, distinct selectors: ' + [...tapSel].join(', '));
     if (unlabelled.size) console.log('  unlabelled inputs: ' + [...unlabelled].join(', '));
+    if (occluded.size) console.log('  interactive controls occluded by other fixed chrome: ' + [...occluded].join(', '));
     if (noMain.length) console.log('  no <main> landmark: ' + noMain.join(', '));
     if (owner.length) console.log('  owner-gated (expected): ' + owner.join(', '));
+    if (midC) console.log('  text contrast 3-4.5:1 (clears the 3:1 floor, misses AA at small sizes): ' + midC);
   }
   const failed = results.filter(r => r.problems.length);
   if (code === 0 && failed.length) code = 1;

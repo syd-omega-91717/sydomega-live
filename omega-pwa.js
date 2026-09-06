@@ -30,6 +30,7 @@
   var SHOW_DELAY   = 12000;            /* 12s after load before showing banner */
   var _prompt      = null;             /* captured beforeinstallprompt event */
   var _bannerEl    = null;
+  var _awaitingConsent = false;      /* one MutationObserver at a time */
 
   /* ── A. INSTALL BANNER ─────────────────────────────────────────────── */
   function injectBannerCSS(){
@@ -38,7 +39,7 @@
     s.id = 'omega-pwa-css';
     s.textContent = [
       '#omega-install-banner{',
-        'position:fixed;bottom:0;left:0;right:0;z-index:9990;',
+        'position:fixed;bottom:var(--omega-chrome-bottom,0px);left:0;right:0;z-index:9990;',
         'background:rgba(10,10,15,.98);border-top:1px solid rgba(201,168,76,.3);',
         'padding:14px clamp(14px,3vw,36px);',
         'display:flex;align-items:center;justify-content:space-between;gap:12px;',
@@ -48,9 +49,9 @@
       '#omega-install-banner.show{transform:translateY(0)}',
       '#omega-install-banner .pwa-text{flex:1;min-width:0}',
       '#omega-install-banner .pwa-title{font-family:"Cinzel Decorative",serif;font-size:12px;color:#C9A84C;letter-spacing:2px;margin-bottom:3px}',
-      '#omega-install-banner .pwa-sub{font-family:"Courier Prime",monospace;font-size:9px;color:rgba(138,134,118,.7);letter-spacing:1px}',
+      '#omega-install-banner .pwa-sub{font-family:"Courier Prime",monospace;font-size:12px;color:rgba(138,134,118,.7);letter-spacing:1px}',
       '#omega-install-banner .pwa-actions{display:flex;gap:8px;flex-shrink:0}',
-      '#omega-install-banner .pwa-btn{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:8px 14px;border:1px solid;cursor:pointer;transition:.15s;border-radius:1px;white-space:nowrap}',
+      '#omega-install-banner .pwa-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;padding:8px 14px;border:1px solid;cursor:pointer;transition:.15s;border-radius:1px;white-space:nowrap}',
       '#omega-install-banner .pwa-install{background:#C9A84C;color:#0A0A0F;border-color:#C9A84C}',
       '#omega-install-banner .pwa-install:hover{background:transparent;color:#C9A84C}',
       '#omega-install-banner .pwa-dismiss{background:transparent;color:rgba(138,134,118,.6);border-color:rgba(138,134,118,.2)}',
@@ -59,7 +60,7 @@
       '#omega-offline-banner{',
         'position:fixed;top:0;left:0;right:0;z-index:9991;',
         'background:#8B0000;color:rgba(233,230,220,.9);',
-        'font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;',
+        'font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;',
         'text-align:center;padding:6px;',
         'transform:translateY(-100%);transition:transform .3s ease',
       '}',
@@ -107,6 +108,28 @@
     if(_bannerEl){ _bannerEl.classList.remove('show'); }
   }
 
+  /* Consent outranks the install invitation, and this is not a preference.
+     Both this banner and omega-legal.js's #omega-consent are
+     position:fixed; bottom:0; left:0; right:0; z-index:9990 -- identical
+     anchoring in the same stacking context, neither aware of the other. So the
+     later paint wins outright. Measured in a 1280x800 render of the front door:
+     they overlapped by 61px, and elementFromPoint at the centre of each consent
+     control returned this banner's buttons -- ACCEPT ALL intercepted by
+     #pwa-dismiss-btn, ESSENTIAL ONLY by #pwa-install-btn. A member could not
+     record a cookie choice at all, which also meant the consent banner could
+     never be dismissed. Raising a z-index would only have hidden the other bar's
+     text instead; the two must not be on screen together.
+
+     So the install offer waits for consent to be resolved. omega-legal.js
+     removes #omega-consent from the DOM on either choice, so its disappearance
+     is the signal. If the member never chooses, the invitation simply does not
+     appear this visit and is offered again on the next one -- the correct
+     trade for a legal gate. */
+  function consentPending(){
+    var el = document.getElementById('omega-consent');
+    return !!(el && el.getBoundingClientRect().height > 0);
+  }
+
   function showBannerIfEligible(){
     if(!_prompt) return;
     try{
@@ -115,7 +138,30 @@
     }catch(e){}
     /* Don't show if already in standalone / fullscreen (PWA installed) */
     if(isInstalled()) return;
+    if(consentPending()){ waitForConsent(); return; }
     createBanner();
+  }
+
+  function waitForConsent(){
+    if(_awaitingConsent) return;
+    _awaitingConsent = true;
+    /* MutationObserver rather than a poll: the banner is removed by a click
+       handler, so there is exactly one edge to observe and no interval to leak.
+       Guarded on document.body because bg.js can load this module before the
+       body exists (CLAUDE.md 8.1 class 5a). */
+    if(!document.body){
+      document.addEventListener('DOMContentLoaded', function(){
+        _awaitingConsent = false; waitForConsent();
+      }, { once: true });
+      return;
+    }
+    var obs = new MutationObserver(function(){
+      if(consentPending()) return;
+      obs.disconnect();
+      _awaitingConsent = false;
+      showBannerIfEligible();
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
   }
 
   function install(){

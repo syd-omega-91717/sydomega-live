@@ -29,6 +29,19 @@ requested `/nav.js`, so the sidebar was empty on the ~160 pages without their ow
 this claim. `package.json` declares zero dependencies — it exists only to document Node/npm
 version constraints for tooling scripts, not for a build.
 
+**One non-page, non-deployed top-level directory now exists: `core/`** (added 2026-09-05).
+`core/intelligence_fabric/` is the Ω Intelligence Fabric — six provider-neutral Python
+primitives (execution boundary, policy firewall, model router, proof engine, skill registry,
+evidence matrix) with no third-party imports and no network calls. It is **not** part of the
+deployed site: `*.py` is excluded by `.vercelignore`, and the no-build property of §1 is
+untouched. Its primitives are driven against the real platform by
+`scripts/omega_fabric_audit.py`, which is registered in `scripts/contract-suite.py` as the
+`intelligence-fabric` gate and joins three evidence planes the repository previously proved
+things in separately — source (static gates), render (`verify-runtime.js`), live (the dated
+`supabase/live-schema.json` and `supabase/remote-migrations.json` snapshots). Its tests live in
+`tests/`, discovered by both `ci.yml` and `scripts/ci-local.sh`. Full account: `FIXES_LOG.md`
+entry 86.
+
 A second repository, `syd-omega-91717/-_V18_SYDOMEGA91717`, exists on GitHub under the same
 account. It was found this session to be a stale, incomplete snapshot (16 "Add files via
 upload" commits vs. this repo's 140+ incremental commits, missing 187 tracked files including

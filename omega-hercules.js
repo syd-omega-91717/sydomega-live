@@ -139,17 +139,17 @@
    */
   const THEMES = {
     courage: { color: '#EF4444', icon: '⚔' },
-    persistence: { color: '#F59E0B', icon: '🔥' },
-    wisdom: { color: '#3B82F6', icon: '🧠' },
+    persistence: { color: '#F59E0B', icon: '△' },
+    wisdom: { color: '#3B82F6', icon: '⌬' },
     mastery: { color: '#8B5CF6', icon: '✦' },
-    clarity: { color: '#06B6D4', icon: '💎' },
-    discernment: { color: '#EC4899', icon: '👁' },
+    clarity: { color: '#06B6D4', icon: '◇' },
+    discernment: { color: '#EC4899', icon: '◉' },
     restraint: { color: '#6B7280', icon: '⚖' },
-    control: { color: '#10B981', icon: '🌪' },
+    control: { color: '#10B981', icon: '⌇' },
     strategy: { color: '#D97706', icon: '♟' },
-    vision: { color: '#F97316', icon: '🔭' },
-    humility: { color: '#06B6D4', icon: '🙏' },
-    transcendence: { color: '#A855F7', icon: '✨' }
+    vision: { color: '#F97316', icon: '⍟' },
+    humility: { color: '#06B6D4', icon: '❖' },
+    transcendence: { color: '#A855F7', icon: '✨︎' }
   };
 
   /**

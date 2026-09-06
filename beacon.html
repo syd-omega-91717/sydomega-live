@@ -11,28 +11,28 @@
 .ring-outer{position:relative;width:72px;height:72px;flex-shrink:0}
 .ring-outer canvas{width:72px;height:72px}
 .ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-weight:700;color:var(--cyan);font-size:17px}
-.prog-text{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7}
+.prog-text{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.7}
 .prog-text b{color:var(--solar)}
 .step-list{display:flex;flex-direction:column;gap:8px}
 .step{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:var(--surface);padding:14px 16px;transition:transform .12s,border-color .12s;text-decoration:none;color:inherit}
 .step:hover{transform:translateX(3px);border-color:var(--gold)}
-.step-mk{width:28px;height:28px;flex-shrink:0;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:11px;color:var(--muted)}
+.step-mk{width:28px;height:28px;flex-shrink:0;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;color:var(--muted)}
 .step.done .step-mk{border-color:var(--green);color:var(--green);background:rgba(63,178,127,.08)}
 .step-body{flex:1;min-width:0}
 .step-title{font-family:var(--D);font-weight:700;color:var(--gold);font-size:14px}
 .step-desc{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.4}
-.step-go{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:7px 11px;flex-shrink:0}
+.step-go{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:7px 11px;flex-shrink:0}
 .step.done .step-go{color:var(--green);border-color:rgba(63,178,127,.35)}
 .map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .mc{border:1px solid var(--line);border-top:2px solid var(--mc,var(--gold));background:var(--surface);padding:16px}
 .mc-head{font-family:var(--D);font-weight:700;color:var(--gold);font-size:14px;margin-bottom:5px}
-.mc-desc{color:var(--muted);font-size:11px;margin-bottom:10px;line-height:1.5}
+.mc-desc{color:var(--muted);font-size:12px;margin-bottom:10px;line-height:1.5}
 .mc-links{display:flex;flex-wrap:wrap;gap:5px}
-.mc-links a{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:4px 7px;text-decoration:none}
+.mc-links a{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:4px 7px;text-decoration:none}
 .mc-links a:hover{border-color:var(--cyan)}
 .cosmos-panel{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
 .cosmos-item{border:1px solid var(--line);background:var(--surface);padding:14px;border-top:2px solid var(--ci,var(--gold))}
-.ci-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.ci-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .ci-val{font-family:var(--D);font-size:18px;color:var(--gold)}
 </style>
 </head>
@@ -98,7 +98,7 @@
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-var GLY={Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'};
+var GLY={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
 var SIGN_GOD={Aries:'ARES',Taurus:'APHRODITE',Gemini:'HERMES',Cancer:'ARTEMIS',Leo:'APOLLO',Virgo:'ATHENA',Libra:'HERA',Scorpio:'DEMETER',Sagittarius:'ZEUS',Capricorn:'HESTIA',Aquarius:'HEPHAESTUS',Pisces:'POSEIDON'};
 
 var MAP=[
@@ -196,10 +196,10 @@ async function boot(){
   }).join('');
 
   var olymp=SIGN_GOD[sign];
-  document.getElementById('olympian-panel').innerHTML='<div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:8px">YOUR OLYMPIAN</div><div style="font-family:var(--D);font-size:28px;color:var(--solar);margin-bottom:8px">'+(olymp||'--')+'</div><div style="font-size:12px;color:var(--muted);line-height:1.7">As a '+(GLY[sign]||'')+' '+sign+', you are governed by '+( olymp||'the Olympians')+'. Visit the Pantheons module to explore your full cross-tradition mapping: Greek, Roman, Egyptian, and Hindu.</div>';
+  document.getElementById('olympian-panel').innerHTML='<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:8px">YOUR OLYMPIAN</div><div style="font-family:var(--D);font-size:28px;color:var(--solar);margin-bottom:8px">'+(olymp||'--')+'</div><div style="font-size:12px;color:var(--muted);line-height:1.7">As a '+(GLY[sign]||'')+' '+sign+', you are governed by '+( olymp||'the Olympians')+'. Visit the Pantheons module to explore your full cross-tradition mapping: Greek, Roman, Egyptian, and Hindu.</div>';
 }
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

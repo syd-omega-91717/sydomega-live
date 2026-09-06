@@ -9,15 +9,15 @@
 .nexus-stats{position:absolute;top:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:6px}
 .nsc{background:rgba(10,10,15,.88);border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:8px 12px;backdrop-filter:blur(12px)}
 .nsc-n{font-family:var(--M);font-size:18px;color:var(--cyan);line-height:1}
-.nsc-l{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+.nsc-l{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 .nexus-feed-strip{position:absolute;bottom:10px;left:10px;right:10px;z-index:10;background:rgba(10,10,15,.9);border:1px solid rgba(0,229,255,.12);border-radius:6px;padding:8px 10px;max-height:90px;overflow:hidden;backdrop-filter:blur(12px)}
-.feed-log{font-family:var(--M);font-size:8px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
-#node-tip{position:absolute;background:rgba(10,10,15,.95);border:1px solid rgba(0,229,255,.3);border-radius:6px;padding:8px 12px;font-family:var(--M);font-size:8px;color:var(--cyan);pointer-events:none;z-index:20;display:none;backdrop-filter:blur(8px)}
-.nexus-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000005;z-index:30;font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted)}
-#member-table .tbl-row{color:var(--ink);font-family:var(--M);font-size:11px}
+.feed-log{font-family:var(--M);font-size:12px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
+#node-tip{position:absolute;background:rgba(10,10,15,.95);border:1px solid rgba(0,229,255,.3);border-radius:6px;padding:8px 12px;font-family:var(--M);font-size:12px;color:var(--cyan);pointer-events:none;z-index:20;display:none;backdrop-filter:blur(8px)}
+.nexus-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000005;z-index:30;font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted)}
+#member-table .tbl-row{color:var(--ink);font-family:var(--M);font-size:12px}
 #member-table .tbl-row span:nth-child(2){color:var(--gold)}
 #member-table .tbl-row.is-me{background:rgba(226,200,109,.04)}
-.elem-legend-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05);font-family:var(--M);font-size:9px;color:var(--muted)}
+.elem-legend-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05);font-family:var(--M);font-size:12px;color:var(--muted)}
 .elem-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 </style>
 </head>
@@ -70,7 +70,7 @@
     <div id="elem-legend"></div>
     <p class="sechead" style="margin-top:1.5rem">CONTROLS</p>
     <div class="glass">
-      <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2.2">
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2.2">
         ⟲ DRAG TO PAN · SCROLL TO ZOOM · HOVER NODE INFO · CLICK TO HIGHLIGHT<br>
         NODE SIZE = AUTHORITY SCORE · COLOUR = ELEMENT ALIGNMENT<br>
         EDGE = ELEMENT MATCH (35% CHANCE) OR GATE PROXIMITY (8% CHANCE)
@@ -327,4 +327,4 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 })();
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

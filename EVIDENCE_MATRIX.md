@@ -27,7 +27,7 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |
 | `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |
-| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call. Member data is device-local — not synced, not visible to the owner, gone with the cache. Some pages sign the member in first; that gives them a session, not persistence. |
+| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
 | `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |
 | `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |
 | `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |
@@ -37,12 +37,12 @@ This scanner reads the repository. It has no database connection, so:
 | class | pages |
 |---|---:|
 | `BUILT` | 95 |
-| `PARTIAL` | 24 |
-| `LOCAL_ONLY` | 48 |
-| `STATIC` | 9 |
+| `PARTIAL` | 27 |
+| `LOCAL_ONLY` | 45 |
+| `STATIC` | 18 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 6 |
-| **total** | **184** |
+| `UNREACHABLE` | 2 |
+| **total** | **189** |
 
 ## BUILT (95)
 
@@ -89,7 +89,7 @@ This scanner reads the repository. It has no database connection, so:
 | `graph-explorer.html` | reads/writes 2 tables; 1 auth call |
 | `graph-timeline.html` | reads/writes 1 table; 1 auth call |
 | `graph.html` | reads/writes 1 table; 1 auth call |
-| `graphify.html` | reads/writes 3 tables, 2 edge fn |
+| `graphify.html` | reads/writes 3 tables, 2 edge fn; 1 auth call |
 | `grid.html` | reads/writes 1 table; 1 auth call |
 | `hall.html` | reads/writes 1 table, 2 rpc; 1 auth call |
 | `health.html` | reads/writes 2 tables; 1 auth call |
@@ -144,20 +144,22 @@ This scanner reads the repository. It has no database connection, so:
 | `tribe.html` | reads/writes 1 table; 1 auth call |
 | `universe.html` | reads/writes 1 table; 1 auth call |
 
-## PARTIAL (24)
+## PARTIAL (27)
 
 | page | evidence |
 |---|---|
 | `ascension.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `codex.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
+| `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes |
 | `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `gates.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `habits.html` | reads/writes 1 table; 2 auth calls; also 9 localStorage writes |
 | `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
 | `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `intelligence.html` | reads/writes 3 tables, 1 edge fn; also 2 localStorage writes |
+| `intelligence.html` | reads/writes 3 tables, 1 edge fn; 1 auth call; also 2 localStorage writes |
 | `investment.html` | reads/writes 1 edge fn; also 1 localStorage write |
 | `kings.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `mirror.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
@@ -169,76 +171,83 @@ This scanner reads the repository. It has no database connection, so:
 | `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `settings.html` | reads/writes 1 table, 3 rpc; 5 auth calls; also 3 localStorage writes |
+| `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
 | `treasury.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (48)
+## LOCAL_ONLY (45)
 
 | page | evidence |
 |---|---|
-| `achievements.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `atlas.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `body.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `breath.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `budget.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `charter.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `clarity.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `command.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `contacts.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `decisions.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `exam.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `expenses.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `fasting.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `focus.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `gratitude.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `habits.html` | 8 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `journal.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `lab.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `library.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `meditate.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mentors.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mindmap.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `mood.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `network.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `notes.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `nutrition.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `offline.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `passport.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `physiology.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `principles.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `projects.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `quotes.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `reading.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `revenue.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `rituals.html` | 3 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `skills.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `sleep.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `stoic.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `targets.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `time.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `vision.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `wallet.html` | 2 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `water.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; **no export path** |
-| `wealth.html` | 5 localStorage writes, no table/rpc/edge call -- member data is device-local; has an OmegaLocalBackup export path |
-| `workout.html` | 1 localStorage write, no table/rpc/edge call -- member data is device-local; **no export path** |
+| `achievements.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `breath.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `budget.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `command.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `contacts.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `exam.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `expenses.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `meditate.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `network.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `notes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `nutrition.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `physiology.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `projects.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `revenue.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `rituals.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `skills.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `sleep.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `stoic.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `time.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `vision.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wallet.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `water.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (9)
+## STATIC (18)
 
 | page | evidence |
 |---|---|
 | `404.html` | no backend call, no stored state |
+| `ad-network.html` | no backend call, no stored state |
+| `agent-network.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
+| `architecture.html` | no backend call, no stored state |
+| `control-plane.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
+| `creator.html` | no backend call, no stored state |
+| `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
+| `index.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
 | `ops.html` | no backend call, no stored state |
+| `project-studio.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
+| `world-shell.html` | no backend call, no stored state |
 
 ## BROKEN (2)
 
@@ -247,16 +256,12 @@ This scanner reads the repository. It has no database connection, so:
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
 
-## UNREACHABLE (6)
+## UNREACHABLE (2)
 
 | page | evidence |
 |---|---|
-| `ad-network.html` | not referenced by nav.js and not a public page |
-| `architecture.html` | not referenced by nav.js and not a public page |
-| `control-plane.html` | not referenced by nav.js and not a public page |
-| `creator.html` | not referenced by nav.js and not a public page |
-| `project-studio.html` | not referenced by nav.js and not a public page |
-| `world-shell.html` | not referenced by nav.js and not a public page |
+| `verify-deployment.html` | not referenced by nav.js and not a public page |
+| `verify-modules.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
 
@@ -278,9 +283,9 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 119 |
-| functions declared in `supabase/` | 129 |
-| tables defined in more than one root SQL file | 48 |
+| tables + views declared in `supabase/` | 120 |
+| functions declared in `supabase/` | 130 |
+| tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
 live defect: `scripts/audit.py` separates the byte-identical copies from
@@ -299,16 +304,15 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 | `certificates` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `character_records` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `client_errors` | `chunk_05_migrations.sql`, `migration_runner.sql`, `omega_error_monitor.sql` |
-| `commission_contracts` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
+| `commission_contracts` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_contracts.sql`, … (5 total) |
 | `consult_requests` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
 | `contribution_log` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `conversations` | `chunk_06_migrations.sql`, `conversations.sql`, `migration_runner.sql` |
-| `dispatches` | `chunk_02a_migrations.sql`, `chunk_04_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, … (7 total) |
+| `dispatches` | `chunk_02a_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (6 total) |
 | `event_rsvps` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `evolution_events` | `chunk_02a_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, `omega_master_deploy.sql` |
 | `exam_results` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_exams.sql` |
 | `family_nodes` | `chunk_02a_migrations.sql`, `chunk_06_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (5 total) |
-| `feedback` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_feedback.sql` |
 | `health_logs` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `heritage_records` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `interest_signals` | `entreprise_schema_v2.sql`, `omega_interest_graph.sql` |
@@ -328,7 +332,6 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 | `publications` | `chunk_02a_migrations.sql`, `chunk_08_migrations.sql`, `migration_runner.sql`, `omega_backend_sync.sql`, … (5 total) |
 | `research_hypotheses` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `search_index` | `chunk_04_migrations.sql`, `migration_runner.sql`, `search_index.sql` |
-| `session_heartbeats` | `chunk_04_migrations.sql`, `migration_runner.sql`, `omega_time_sovereign.sql` |
 | `sim_trades` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_sovereign_points.sql` |
 | `social_broadcasts` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
 | `social_connections` | `chunk_03_migrations.sql`, `migration_runner.sql`, `omega_personal_logs.sql` |
@@ -342,6 +345,26 @@ live-schema check, not a bulk sweep (CLAUDE.md §5).
 
 </details>
 
+## LIVE SCHEMA CROSS-CHECK
+
+Every class above answers *what does this repository declare*. This
+section answers a different question: **does production actually have
+it?** A relation the SQL bag declares but the database never received
+answers every query with `{data:null,error}` — an empty page, no
+exception, no console error (CLAUDE.md §8.1 class 2).
+
+Source: `supabase/live-schema.json`, captured **2026-09-05**. A dated
+snapshot, not a connection. Regenerate it whenever schema is applied
+live; a stale snapshot produces false findings in both directions.
+
+| relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
+|---|---|---|
+| 120 | 0 | 0 |
+
+**No absent relation is read by any page.** Nothing is silently
+empty on this axis today.
+
+
 ## UNVERIFIED — what no repository scan can settle
 
 These are not open questions because nobody looked. They are open
@@ -350,7 +373,7 @@ has no connection to it. Each one has been a real shipped bug here:
 
 | question | why the repo cannot answer it |
 |---|---|
-| Does the live database have every table `supabase/` declares? | The SQL bag is applied by hand. `supabase/migrations/` is validated against a *blank* database only, and `task_completions` is a proven case where live and declared disagree (CLAUDE.md §5). |
+| Does the live database have every table `supabase/` declares? | **Partly answered above** — the LIVE SCHEMA CROSS-CHECK compares the bag against `live-schema.json`. That snapshot is dated, and proves nothing about columns, grants or policies. |
 | Do the columns match? | PostgREST rejects the whole query when one column name is unknown, emptying a page with no visible error (CLAUDE.md §8.1 class 2). |
 | Can a member actually reach each table? | A `GRANT` is checked *before* row security, so a correct RLS policy on a table with no grant fails every query with `42501`. 60 tables were once in this state (CLAUDE.md §8.1 class 6). |
 | Do the policies scope rows correctly? | Only reproducible by impersonating a real member in-database; a privileged `execute_sql` proves nothing (CLAUDE.md §8.4). |

@@ -37,7 +37,7 @@
     if(!topbar) return;
     var badge=document.createElement('div');
     badge.id='omega-pmi-badge';
-    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;flex-shrink:0;text-align:right';
+    badge.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.35);cursor:pointer;flex-shrink:0;text-align:right';
     var pmi=PAGE_DATA.pmi;
     badge.innerHTML='PMI <span style="color:'+(pmi>=85?'rgba(63,178,127,.4)':pmi>=70?'rgba(226,200,109,.4)':'rgba(139,0,0,.4)')+'">'+(pmi||'--')+'</span>';
     badge.title='Platform Meaning Index: '+pmi+'/100 for this page';
@@ -82,7 +82,7 @@
     if(!topbar) return;
     var banner=document.createElement('div');
     banner.id='omega-mission-banner';
-    banner.style.cssText='background:rgba(2,2,6,.6);border-bottom:1px solid rgba(201,168,76,.06);padding:5px var(--pad,20px);font-family:var(--M,"Courier Prime",monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.4);line-height:1.6;display:flex;align-items:center;gap:8px';
+    banner.style.cssText='background:rgba(2,2,6,.6);border-bottom:1px solid rgba(201,168,76,.06);padding:5px var(--pad,20px);font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.4);line-height:1.6;display:flex;align-items:center;gap:8px';
     banner.innerHTML='<span style="color:rgba(201,168,76,.25)">\u03A9</span><span>'+mission+'</span>';
     banner.setAttribute('aria-label','Page mission: '+mission);
     topbar.insertAdjacentElement('afterend',banner);
@@ -93,13 +93,46 @@
     document.addEventListener('DOMContentLoaded',function(){injectPMIBadge();injectMissionBanner();});
   } else { injectPMIBadge();injectMissionBanner(); }
 
-  document.addEventListener('omega:populated',function(){injectPMIBadge();injectMissionBanner();});
+  /* ── FILL THE PAGES THAT DISPLAY PMI ───────────────────────────────
+     dashboard.html hardcoded 87 in two places -- #mb-pmi in the mission bar
+     and a .kpi-n labelled PLATFORM PMI -- with no writer anywhere, while this
+     module (which owns the table) scores dashboard at 91. Two divergent copies
+     of one canonical table, CLAUDE.md 8.1 class 8, and the page's copy was
+     wrong. Both now read from here, so the table has exactly one source.
+
+     `data-omega-pmi="page"` takes this page's score, `"platform"` the
+     weighted average across PAGE_SCORES. #mb-pmi is filled by id because it
+     predates the attribute and reads as this page's score. */
+  function hydratePMI(){
+    var el=document.getElementById('mb-pmi');
+    if(el){
+      el.textContent=PAGE_DATA.pmi||'--';
+      el.title='Platform Meaning Index: '+(PAGE_DATA.pmi||'unscored')+'/100 for this page';
+    }
+    document.querySelectorAll('[data-omega-pmi]').forEach(function(n){
+      var want=n.getAttribute('data-omega-pmi');
+      var v=want==='platform'?PLATFORM_PMI:PAGE_DATA.pmi;
+      n.textContent=v||'--';
+      n.title=want==='platform'
+        ? 'Platform Meaning Index: '+PLATFORM_PMI+'/100, the average across '+
+          Object.keys(PAGE_SCORES).length+' scored pages'
+        : 'Platform Meaning Index: '+(v||'unscored')+'/100 for this page';
+    });
+  }
+
+  document.addEventListener('omega:populated',function(){injectPMIBadge();injectMissionBanner();hydratePMI();});
+  /* The mission bar exists in page markup, so it can be filled before any
+     profile arrives; omega:populated may never fire on a page that does not
+     load a profile. */
+  if(document.readyState!=='loading') hydratePMI();
+  else document.addEventListener('DOMContentLoaded',hydratePMI);
 
   window.OmegaPMI={
     score:function(){return PAGE_DATA.pmi;},
     platform:function(){return PLATFORM_PMI;},
     page:function(){return PAGE_DATA;},
     all:function(){return PAGE_SCORES;},
-    mission:function(){return MISSIONS[PAGE_SLUG]||'No mission defined.';}
+    mission:function(){return MISSIONS[PAGE_SLUG]||'No mission defined.';},
+    hydrate:hydratePMI
   };
 })();

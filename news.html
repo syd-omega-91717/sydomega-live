@@ -9,26 +9,26 @@
 <style>
 .dispatch{border:1px solid var(--line);border-left:2px solid var(--gold);background:var(--surface);padding:16px 18px;margin-bottom:10px}
 .dispatch-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px}
-.dispatch-tag{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:2px 8px}
-.dispatch-date{font-family:var(--M);font-size:9px;color:var(--muted)}
+.dispatch-tag{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:2px 8px}
+.dispatch-date{font-family:var(--M);font-size:12px;color:var(--muted)}
 .dispatch-title{font-family:var(--D);font-size:14px;color:var(--solar);margin-bottom:6px}
 .dispatch-body{font-size:12px;line-height:1.75;color:var(--ink)}
 .wire-post{border-bottom:1px dashed rgba(201,168,76,.1);padding:12px 0}
 .wire-post:last-child{border-bottom:none}
 .wire-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px}
-.wire-sign{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--gold)}
-.wire-date{font-family:var(--M);font-size:9px;color:var(--muted)}
+.wire-sign{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--gold)}
+.wire-date{font-family:var(--M);font-size:12px;color:var(--muted)}
 .wire-body{font-size:12px;color:var(--ink);line-height:1.6;white-space:pre-wrap}
 .compose-area{margin-bottom:16px}
-.compose-textarea{width:100%;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:.5px;padding:12px;min-height:80px;resize:vertical;outline:none}
+.compose-textarea{width:100%;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;letter-spacing:.5px;padding:12px;min-height:80px;resize:vertical;outline:none}
 .compose-textarea:focus{border-color:rgba(201,168,76,.4)}
 .compose-footer{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
-.compose-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--cyan)}
+.compose-msg{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan)}
 .intel-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(0,229,255,.1)}
 .intel-item:last-child{border-bottom:none}
 .intel-link{font-size:14px;color:var(--ink);flex:1;line-height:1.4;transition:.15s}
 .intel-link:hover{color:var(--cyan)}
-.intel-meta{font-family:var(--M);font-size:8px;color:var(--muted);white-space:nowrap;text-align:right;line-height:1.7}
+.intel-meta{font-family:var(--M);font-size:12px;color:var(--muted);white-space:nowrap;text-align:right;line-height:1.7}
 .intel-meta b{color:var(--solar)}
 </style>
 </head>
@@ -54,13 +54,13 @@
 <div class="tab-panel" id="tab-wire">
   <div class="sechead">THE WIRE &mdash; MEMBER INTEL</div>
   <div class="compose-area glass">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">SEND A DISPATCH</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">SEND A DISPATCH</div>
     <textarea class="compose-textarea" id="w-body" maxlength="600" placeholder="Send a dispatch to the Order&hellip;"></textarea>
     <div class="compose-footer">
       <button class="btn-gold" id="w-go" style="padding:8px 20px">SEND</button>
       <span class="compose-msg" id="w-msg"></span>
     </div>
-    <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px">Visible to the Order. Send no secrets.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:8px">Visible to the Order. Send no secrets.</div>
   </div>
   <div id="wire-box" data-loading></div>
 </div>
@@ -108,7 +108,7 @@ function renderDispatches(items){
 }
 function renderWire(posts){
   var box=document.getElementById('wire-box');if(!box)return;
-  if(!posts||!posts.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">The Wire is quiet. Send the first dispatch.</div>';return;}
+  if(!posts||!posts.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">The Wire is quiet. Send the first dispatch.</div>';return;}
   box.innerHTML='<div class="glass">'+posts.map(function(p){
     var dt=p.created_at?new Date(p.created_at).toLocaleString():'';
     return'<div class="wire-post">'
@@ -145,16 +145,16 @@ async function loadIntel(){
     var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/intel-feed',{
       headers:{'apikey':'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'}
     });
-    if(!r.ok){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
+    if(!r.ok){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
     var d=await r.json();
-    if(!d.items||!d.items.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
+    if(!d.items||!d.items.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
     box.innerHTML='<div class="glass">'+d.items.map(function(it){
       var age=it.age_h>0?(it.age_h+'h ago'):'FRESH';
       function e(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
       return'<div class="intel-item"><a class="intel-link" href="'+e(it.url)+'" target="_blank" rel="noopener noreferrer">'+e(it.title)+'</a>'
         +'<div class="intel-meta"><b>'+it.points+'&#9650;</b><br>'+it.comments+' cmt<br>'+age+'</div></div>';
     }).join('')+'</div>';
-  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';}
+  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';}
 }
 
 async function send(){
@@ -185,5 +185,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -10,18 +10,18 @@
 .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
 .media-card{border:1px solid var(--line);border-top:2px solid var(--mc,var(--cyan));background:var(--surface);padding:14px;transition:.14s;position:relative}
 .media-card:hover{transform:translateY(-2px)}
-.media-tag{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--mc,var(--cyan));margin-bottom:6px;display:inline-block}
+.media-tag{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--mc,var(--cyan));margin-bottom:6px;display:inline-block}
 .media-glyph{float:right;font-size:20px;opacity:.45;margin-left:6px}
-.media-title{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:5px;line-height:1.3}
-.media-meta{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);line-height:1.7}
+.media-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:5px;line-height:1.3}
+.media-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.7}
 .domain-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:16px}
 .domain-tile{border:1px solid var(--line);border-top:2px solid var(--dt,var(--cyan));background:var(--surface);padding:14px 12px;text-align:center}
 .domain-icon{font-size:20px;margin-bottom:6px}
-.domain-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)}
+.domain-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .world-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
 .world-cell{border:1px solid var(--line);background:var(--surface);padding:14px}
-.world-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;margin-bottom:8px}
-.world-body{font-size:11px;line-height:1.7;color:var(--muted)}
+.world-label{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:8px}
+.world-body{font-size:12px;line-height:1.7;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -41,12 +41,12 @@
 <div class="tab-panel active" id="tab-overview">
   <div class="sechead">CONTENT DOMAINS &mdash; SIX SOVEREIGN PILLARS</div>
   <div class="domain-band">
-    <div class="domain-tile" style="--dt:var(--crim)"><div class="domain-icon">&#127909;</div><div class="domain-label">CINEMA</div></div>
-    <div class="domain-tile" style="--dt:var(--cyan)"><div class="domain-icon">&#127916;</div><div class="domain-label">SERIES</div></div>
-    <div class="domain-tile" style="--dt:var(--gold)"><div class="domain-icon">&#127918;</div><div class="domain-label">GAMING</div></div>
+    <div class="domain-tile" style="--dt:var(--crim)"><div class="domain-icon">&#9654;</div><div class="domain-label">CINEMA</div></div>
+    <div class="domain-tile" style="--dt:var(--cyan)"><div class="domain-icon">&#9655;</div><div class="domain-label">SERIES</div></div>
+    <div class="domain-tile" style="--dt:var(--gold)"><div class="domain-icon">&#9645;</div><div class="domain-label">GAMING</div></div>
     <div class="domain-tile" style="--dt:var(--green)"><div class="domain-icon">&#9965;</div><div class="domain-label">CHARACTERS</div></div>
-    <div class="domain-tile" style="--dt:#9B6BF0"><div class="domain-icon">&#127775;</div><div class="domain-label">COSMOS</div></div>
-    <div class="domain-tile" style="--dt:var(--solar)"><div class="domain-icon">&#128218;</div><div class="domain-label">LORE</div></div>
+    <div class="domain-tile" style="--dt:#9B6BF0"><div class="domain-icon">&#10038;</div><div class="domain-label">COSMOS</div></div>
+    <div class="domain-tile" style="--dt:var(--solar)"><div class="domain-icon">&#9636;</div><div class="domain-label">LORE</div></div>
   </div>
   <div class="sechead" style="margin-top:8px">WORLD-BUILDING &mdash; THE SOVEREIGN COSMOS</div>
   <div class="world-grid">
@@ -61,13 +61,13 @@
   <div class="sechead">CINEMATIC UNIVERSE &mdash; FILMS &amp; SERIES</div>
   <div class="media-grid">
     <div class="media-card card" style="--mc:var(--crim)">
-      <span class="media-glyph">&#127909;</span>
+      <span class="media-glyph">&#9654;</span>
       <div class="media-tag">FILM &middot; ORIGIN</div>
       <div class="media-title">THE SOVEREIGN GENESIS</div>
       <div class="media-meta">SIGN: ALL 12 &middot; ELEMENT: THE ALL<br>GATE UNLOCK: VIII &middot; STATUS: IN DEVELOPMENT</div>
     </div>
     <div class="media-card card" style="--mc:var(--gold)">
-      <span class="media-glyph">&#127916;</span>
+      <span class="media-glyph">&#9655;</span>
       <div class="media-tag">SERIES &middot; 12 EPISODES</div>
       <div class="media-title">THE TWELVE HOUSES</div>
       <div class="media-meta">SIGN: ARIES &rarr; PISCES<br>GATE UNLOCK: IV &middot; STATUS: IN DEVELOPMENT</div>
@@ -156,5 +156,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

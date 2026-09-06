@@ -10,9 +10,29 @@ on:
 permissions:
   contents: read
 
+# MEASURED 2026-09-06: this was `cancel-in-progress: false`, and under that
+# setting NOT ONE RUN OF THIS WORKFLOW EVER REACHED A CONCLUSION ON main.
+# ci.yml runs 1031-1060 and supabase-runtime-contract runs 322-348 are every
+# one `cancelled` -- a run is created, sits `pending` with ZERO jobs allocated
+# (run 1052 sat that way for 4h31m), and the next push to main cancels it
+# before a runner is ever assigned. Meanwhile the 13 workflows on this repo
+# that set `true` finish in 10-25 seconds on the same commits.
+#
+# So the board showed these as pending, never red -- CLAUDE.md 8.2's rule in
+# its purest form: A PENDING CHECK IS NOT A PASSING ONE. Read `status`, not
+# just `conclusion`. ci.yml is the workflow CLAUDE.md 7 documents as the
+# repository's primary gate (node --check, audit.py, asset refs, the
+# service-role scan); it had been verifying nothing on main for 30 runs.
+#
+# `true` is the repo's own working convention, not a new idea: on main only
+# the newest commit's result matters, and superseding an unstarted run is
+# exactly what the 13 healthy workflows already do.
+# vercel-production.yml deliberately keeps `false` -- its group is the global
+# `vercel-production`, not a ref, and a production deploy in flight must not
+# be cancelled by a newer push. It also does reach conclusions.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 defaults:
   run:
@@ -20,7 +40,7 @@ defaults:
 
 jobs:
   verify:
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -51,8 +71,10 @@ jobs:
         shell: python
         run: |
           import pathlib, subprocess, sys
-          bad = [p.name for p in sorted(pathlib.Path(".").glob("*.js"))
-                 if subprocess.run(["node", "--check", p.name]).returncode != 0]
+          bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
+                 if ".git" not in p.parts and "node_modules" not in p.parts
+                 and "dist" not in p.parts and "build" not in p.parts
+                 and subprocess.run(["node", "--check", str(p)]).returncode != 0]
           if bad:
               print("::error::syntax error in: " + ", ".join(bad))
               sys.exit(1)
@@ -72,6 +94,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
+      - name: Intelligence fabric tests
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'tests', '-v']).returncode)
       - name: Production contract
         shell: python
         run: |
@@ -152,6 +179,16 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/resilience-audit.py']).returncode)
+      - name: Commerce contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/commerce-contract.py']).returncode)
+      - name: Reachability contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/reachability-contract.py']).returncode)
       - name: Context budget
         shell: python
         run: |

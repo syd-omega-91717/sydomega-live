@@ -21,7 +21,7 @@
     {
       role: 'architect',
       title: 'Architect',
-      icon: '🏗',
+      icon: '⏢',
       responsibility: 'System design and architectural coherence',
       specialty: 'Does the architecture make sense? Is it sound?'
     },
@@ -35,7 +35,7 @@
     {
       role: 'security',
       title: 'Security',
-      icon: '🔒',
+      icon: '⚿',
       responsibility: 'Vulnerability assessment and threat modeling',
       specialty: 'What vulnerabilities remain? What could be exploited?'
     },
@@ -49,21 +49,21 @@
     {
       role: 'auditor',
       title: 'Evidence Auditor',
-      icon: '📋',
+      icon: '▨',
       responsibility: 'Verification of evidence and claims',
       specialty: 'What claims lack proof? What\'s unverified?'
     },
     {
       role: 'researcher',
       title: 'Researcher',
-      icon: '🔬',
+      icon: '⚗',
       responsibility: 'Technical assumptions and best practices',
       specialty: 'Are assumptions valid? Does this follow best practices?'
     },
     {
       role: 'pragmatist',
       title: 'Pragmatist',
-      icon: '⚡',
+      icon: '⚡︎',
       responsibility: 'Practical deployment and operational readiness',
       specialty: 'What must be fixed before deployment? Timeline?'
     }

@@ -17,7 +17,7 @@
     <div class="topbar">
       <div class="t">BLOODLINE<small>HERITAGE &middot; LINEAGE &middot; GENETIC LEGACY &middot; DYNASTY</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
     <div class="tab-bar" role="tablist">
@@ -31,7 +31,7 @@
     <div class="tab-panel active pad" id="tab-tree">
       <div class="sechead">SOVEREIGN LINEAGE TREE</div>
       <div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:14px;border-radius:2px;margin-bottom:14px">
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:8px">ADD LINEAGE MEMBER</div>
+        <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">ADD LINEAGE MEMBER</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
           <input id="lt-name" class="inp" style="width:100%" placeholder="Full name">
           <select id="lt-gen" class="inp" style="width:100%">
@@ -58,20 +58,20 @@
       <div class="sechead">INHERITED TRAITS REGISTER</div>
       <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:14px">Traits inherited from your lineage — physical, cognitive, emotional, and behavioral patterns. Identifying them is the first step to consciously cultivating or transforming them.</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px">
-        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">STRENGTHS INHERITED</div>
+        <div class="card" style="--card-accent:var(--green)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--green);margin-bottom:8px">STRENGTHS INHERITED</div>
           <textarea id="tr-strengths" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Mental resilience, physical constitution, intelligence, social grace..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid #FF4444;background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:#FF4444;margin-bottom:8px">PATTERNS TO TRANSCEND</div>
+        <div class="card" style="--card-accent:#FF4444">
+          <div style="font-family:var(--M);font-size:12px;color:#FF4444;margin-bottom:8px">PATTERNS TO TRANSCEND</div>
           <textarea id="tr-patterns" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Intergenerational trauma, addictive tendencies, limiting beliefs..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">GIFTS TO AMPLIFY</div>
+        <div class="card" style="--card-accent:var(--gold)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px">GIFTS TO AMPLIFY</div>
           <textarea id="tr-gifts" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Talents, artistic ability, entrepreneurial spirit, leadership..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">HEALTH PREDISPOSITIONS</div>
+        <div class="card" style="--card-accent:var(--cyan)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--cyan);margin-bottom:8px">HEALTH PREDISPOSITIONS</div>
           <textarea id="tr-health" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Family health history, genetic predispositions to address..."></textarea>
         </div>
       </div>
@@ -83,24 +83,24 @@
       <div class="sechead">SOVEREIGN DYNASTY PLAN</div>
       <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:16px">A dynasty is intentional — built through deliberate value transmission, wealth structures, and cultural artifacts designed to outlast one generation.</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px">
-        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">FAMILY MISSION</div>
+        <div class="card" style="--card-accent:var(--gold)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px">FAMILY MISSION</div>
           <textarea id="dyn-mission" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="The purpose your bloodline exists to fulfill across generations..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">VALUES TO TRANSMIT</div>
+        <div class="card" style="--card-accent:var(--cyan)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--cyan);margin-bottom:8px">VALUES TO TRANSMIT</div>
           <textarea id="dyn-values" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="The 3-5 core values you will actively teach and model..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">WEALTH STRUCTURES</div>
+        <div class="card" style="--card-accent:var(--green)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--green);margin-bottom:8px">WEALTH STRUCTURES</div>
           <textarea id="dyn-wealth" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Trusts, entities, endowments, real estate designed for generational transfer..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:var(--purple);margin-bottom:8px">CULTURAL ARTIFACTS</div>
+        <div class="card" style="--card-accent:var(--purple)">
+          <div style="font-family:var(--M);font-size:12px;color:var(--purple);margin-bottom:8px">CULTURAL ARTIFACTS</div>
           <textarea id="dyn-artifacts" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Books, recordings, ceremonies, traditions you will create and preserve..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid #FF9800;background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:9px;color:#FF9800;margin-bottom:8px">100-YEAR VISION</div>
+        <div class="card" style="--card-accent:#FF9800">
+          <div style="font-family:var(--M);font-size:12px;color:#FF9800;margin-bottom:8px">100-YEAR VISION</div>
           <textarea id="dyn-vision" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Where will your bloodline be in 100 years if you execute this plan?"></textarea>
         </div>
       </div>
@@ -124,10 +124,10 @@
 <div class="lf"><span>&#937; BLOODLINE &middot; SYD OMEGA 91717</span><span>LINEAGE &middot; GENETIC LEGACY &middot; DYNASTY</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
 <script type="module">
@@ -142,20 +142,20 @@ var GEN_COLORS=['#C9A84C','#E2C86D','#00E5FF','#9B6BF0','#4CAF50'];
 
 function renderTree(){
   var el=document.getElementById('tree-display');
-  if(!lineage.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:10px">No lineage members added yet.</div>';return;}
+  if(!lineage.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:10px">No lineage members added yet.</div>';return;}
   var gens=[0,1,2,3,4];
   el.innerHTML=gens.map(function(g){
     var members=lineage.filter(function(m){return parseInt(m.gen)===g;});
     if(!members.length)return '';
     var col=GEN_COLORS[g]||'#888';
     return '<div>'
-      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:'+col+';margin-bottom:6px">'+GEN_LABELS[g].toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+col+';margin-bottom:6px">'+GEN_LABELS[g].toUpperCase()+'</div>'
       +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">'
       +members.map(function(m){
         return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:10px 12px;border-radius:2px">'
           +'<div style="font-family:var(--D);font-size:12px;color:'+col+';margin-bottom:3px">'+m.name+'</div>'
-          +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+(m.side==='paternal'?'Paternal':m.side==='maternal'?'Maternal':'—')+(m.born?' &middot; b. '+m.born:'')+' '+(m.origin?'&middot; '+m.origin:'')+'</div>'
-          +(m.note?'<div style="font-size:11px;opacity:.75;margin-top:4px">'+m.note+'</div>':'')
+          +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+(m.side==='paternal'?'Paternal':m.side==='maternal'?'Maternal':'—')+(m.born?' &middot; b. '+m.born:'')+' '+(m.origin?'&middot; '+m.origin:'')+'</div>'
+          +(m.note?'<div style="font-size:12px;opacity:.75;margin-top:4px">'+m.note+'</div>':'')
           +'</div>';
       }).join('')
       +'</div></div>';
@@ -203,5 +203,5 @@ window.saveDynasty=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

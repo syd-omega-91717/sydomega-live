@@ -12,15 +12,15 @@ permissions:
 
 concurrency:
   group: workflow-contract-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 defaults:
   run:
-    shell: python
+    shell: bash
 
 jobs:
   workflow-contract:
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -31,47 +31,31 @@ jobs:
           python-version: '3.12'
       - name: Runner diagnostics
         run: |
-          import os, sys
-          for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
-              if not os.environ.get(var):
-                  print(f"::error::{var} is empty - no real runner")
-                  sys.exit(1)
-          print("runner=" + os.environ["RUNNER_NAME"])
-          print("runner_os=" + os.environ["RUNNER_OS"])
-          print("runner_arch=" + os.environ["RUNNER_ARCH"])
-          print("run=" + os.environ.get("GITHUB_RUN_ID", ""))
-          print("attempt=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "runner_os=${RUNNER_OS}"
+          echo "runner_arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Validate workflow contracts
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/workflow-contract.py']).returncode)
+        run: python scripts/workflow-contract.py
       - name: Validate architecture contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/architecture-contract.py']).returncode)
+        run: python scripts/architecture-contract.py
       - name: Validate implementation readiness
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/architecture-readiness.py']).returncode)
+        run: python scripts/architecture-readiness.py
       - name: Validate local production gate help path
-        shell: python
         run: |
-          import pathlib, sys
-          p = pathlib.Path("scripts/ci-local.sh")
-          if not p.is_file():
-              sys.exit(1)
-          if "--help" not in p.read_text(encoding="utf-8", errors="ignore"):
-              sys.exit(1)
-          print("ci-local.sh help contract verified")
+          set -euo pipefail
+          test -f scripts/ci-local.sh
+          grep -q -- '--help' scripts/ci-local.sh
+          echo 'ci-local.sh help contract verified'
       - name: Execution marker
-        shell: python
         run: |
-          import os, sys
-          if not os.environ.get("RUNNER_NAME"):
-              sys.exit(1)
-          print("WORKFLOW_CONTRACT_EXECUTED=true")
-          print("WORKFLOW_CONTRACT_RUN_ID=" + os.environ.get("GITHUB_RUN_ID", ""))
-          print("WORKFLOW_CONTRACT_RUN_ATTEMPT=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "WORKFLOW_CONTRACT_EXECUTED=true"
+          echo "WORKFLOW_CONTRACT_RUN_ID=${GITHUB_RUN_ID}"
+          echo "WORKFLOW_CONTRACT_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"

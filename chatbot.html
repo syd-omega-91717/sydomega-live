@@ -12,18 +12,18 @@
 .bub{max-width:80%;padding:11px 14px;font-size:14px;line-height:1.6}
 .bub.ai{align-self:flex-start;border:1px solid var(--line);border-left:2px solid var(--gold);background:rgba(201,168,76,.04);color:var(--ink)}
 .bub.user{align-self:flex-end;border:1px solid rgba(0,229,255,.3);background:rgba(0,229,255,.05);color:var(--ink)}
-.bub .nm{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.bub .nm{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .chips{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px;border-top:1px solid var(--line)}
-.chip{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:5px 10px;cursor:pointer;transition:.15s}
+.chip{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:5px 10px;cursor:pointer;transition:.15s}
 .chip:hover{border-color:var(--gold);color:var(--gold)}
 .chat-input-row{display:flex;gap:8px;border-top:1px solid var(--line);padding:12px 14px}
-.chat-input-row input{flex:1;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;padding:10px 12px;outline:none}
+.chat-input-row input{flex:1;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;padding:10px 12px;outline:none}
 .chat-input-row input:focus{border-color:rgba(201,168,76,.4)}
 .agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .agent-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--ac,var(--gold));padding:14px}
-.agent-sign{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.agent-sign{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .agent-name{font-family:var(--D);font-size:14px;color:var(--ac,var(--gold));margin-bottom:4px}
-.agent-domain{font-size:11px;color:var(--muted);line-height:1.5}
+.agent-domain{font-size:12px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body>
@@ -60,7 +60,7 @@
 <div class="tab-panel" id="tab-logs">
   <div class="sechead">SESSION LOG &middot; CURRENT CONVERSATION</div>
   <div class="glass" style="padding:14px" id="session-log">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted)">No messages yet in this session.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted)">No messages yet in this session.</div>
   </div>
 </div>
 
@@ -79,7 +79,7 @@
 <script>
 var AGENTS=[
   {sign:'Aries',name:'SENTINEL',domain:'Security & Defense — the guardian of the lattice perimeter. Monitors threats, governs access, and enforces the sovereign order.',col:'#E86A3A'},
-  {sign:'Taurus',name:'ARBITER',domain:'Marketplace & Commerce — the fair witness of every transaction. Ensures the 9.17% commission flows and settlements are just.',col:'#C9A84C'},
+  {sign:'Taurus',name:'ARBITER',domain:'Marketplace & Commerce — the fair witness of every transaction. Intended to ensure the 9.17% commission flows and settlements are just, once platform_settings.tokens_enabled is on.',col:'#C9A84C'},
   {sign:'Gemini',name:'HERALD',domain:'Communications & Intelligence — the messenger of the Order. Routes dispatches, aggregates intel, and carries the sovereign word.',col:'#00E5FF'},
   {sign:'Cancer',name:'KEEPER',domain:'Family & Heritage — the guardian of bloodlines and legacy. Binds the Family Nest Protocol and preserves sovereign inheritance.',col:'#3fb27f'},
   {sign:'Leo',name:'LUMINARY',domain:'Membership & Authority — the crown of sovereign standing. Governs subscription tiers, access gates, and the ascension ladder.',col:'#E2C86D'},
@@ -122,17 +122,17 @@ function addMsg(role,text){
 function addTyping(){
   var log=document.getElementById('chat-log');if(!log)return null;
   var d=document.createElement('div');d.className='bub ai';
-  d.style.cssText='color:rgba(201,168,76,.5);font-family:var(--M);font-size:10px;letter-spacing:3px';d.textContent='...';
+  d.style.cssText='color:rgba(201,168,76,.5);font-family:var(--M);font-size:12px;letter-spacing:3px';d.textContent='...';
   log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
 }
 
 function renderSessionLog(){
   var box=document.getElementById('session-log');if(!box)return;
-  if(!_history.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted)">No messages yet in this session.</div>';return;}
+  if(!_history.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No messages yet in this session.</div>';return;}
   box.innerHTML='';
   _history.forEach(function(h){
     var d=document.createElement('div');
-    d.style.cssText='font-family:var(--M);font-size:9px;letter-spacing:.5px;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.08);color:'+(h.role==='user'?'var(--cyan)':'var(--ink)');
+    d.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:.5px;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.08);color:'+(h.role==='user'?'var(--cyan)':'var(--ink)');
     d.textContent=(h.role==='user'?'YOU: ':'Ω ')+h.content;
     box.appendChild(d);
   });
@@ -186,5 +186,5 @@ window.sendChatMessage=async function(){
 })();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

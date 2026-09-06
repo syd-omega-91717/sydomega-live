@@ -11,15 +11,15 @@
 .award-card{border:1px solid var(--line);border-top:2px solid var(--ac,var(--solar));background:var(--surface);padding:18px;position:relative;overflow:hidden;transition:transform .15s}
 .award-card:hover{transform:translateY(-2px)}
 .award-glyph{font-size:24px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 6px var(--ac,var(--solar)))}
-.award-name{font-family:var(--D);font-size:11px;color:var(--ac,var(--solar));margin-bottom:5px}
-.award-cat{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;border:1px solid rgba(226,200,109,.2);display:inline-block;padding:2px 7px}
-.award-desc{font-size:11px;line-height:1.65;color:var(--ink);opacity:.75}
-.award-gate{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--solar);margin-top:9px;padding-top:7px;border-top:1px solid rgba(226,200,109,.1)}
+.award-name{font-family:var(--D);font-size:12px;color:var(--ac,var(--solar));margin-bottom:5px}
+.award-cat{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;border:1px solid rgba(226,200,109,.2);display:inline-block;padding:2px 7px}
+.award-desc{font-size:12px;line-height:1.65;color:var(--ink);opacity:.75}
+.award-gate{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--solar);margin-top:9px;padding-top:7px;border-top:1px solid rgba(226,200,109,.1)}
 .cer-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.06)}
 .cer-row:last-child{border-bottom:none}
-.cer-date{font-family:var(--D);font-size:11px;color:var(--solar);min-width:60px;flex-shrink:0;padding-top:2px}
-.cer-title{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:3px}
-.cer-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+.cer-date{font-family:var(--D);font-size:12px;color:var(--solar);min-width:60px;flex-shrink:0;padding-top:2px}
+.cer-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
+.cer-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -47,7 +47,7 @@
       <div class="award-gate">GATE XII &middot; AUTH 27.8367 REQUIRED</div>
     </div>
     <div class="award-card card" style="--ac:var(--cyan)">
-      <span class="award-glyph">&#128218;</span>
+      <span class="award-glyph">&#9636;</span>
       <div class="award-cat">KNOWLEDGE</div>
       <div class="award-name">THE LOREKEEPER</div>
       <div class="award-desc">Awarded to members who complete all twelve sovereign academy modules. Knowledge axis reaches 9.0, the maximum depth of sovereign mastery.</div>
@@ -113,7 +113,7 @@
   <div class="glass" style="padding:16px">
     <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">EXTERNAL AWARD REGISTRY</div>
     <div style="font-size:12px;line-height:1.8;color:var(--muted)">Members may submit external awards — industry certifications, academic honours, creative recognition, professional achievements — for registration on their sovereign profile. External awards do not alter axis scores directly but are recorded as verified credentials in the member codex.</div>
-    <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">CATEGORIES: ACADEMIC &middot; INDUSTRY &middot; CREATIVE &middot; ATHLETIC &middot; CIVIC</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">CATEGORIES: ACADEMIC &middot; INDUSTRY &middot; CREATIVE &middot; ATHLETIC &middot; CIVIC</div>
   </div>
 </div>
 
@@ -168,5 +168,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

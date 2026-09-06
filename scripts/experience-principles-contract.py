@@ -2,6 +2,15 @@
 """Fail-closed validation for platform experience principles."""
 from pathlib import Path
 import json,sys
+
+# CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
+# if asking is cheap and safe. This gate used to run its whole job on --help --
+# a repo-wide scan, or in one case an O(n^2) page comparison that never
+# returned -- so the cheapest way to learn what it did was to read it. The
+# guard runs before any work, and must stay ahead of it.
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 p=Path(__file__).resolve().parents[1]/'config'/'experience-principles.json'
 try: d=json.loads(p.read_text(encoding='utf-8'))
 except Exception as e: print('EXPERIENCE PRINCIPLES: FAIL\n- '+str(e)); sys.exit(1)

@@ -44,18 +44,18 @@
     bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:8000;background:rgba(2,2,6,.97);border-bottom:1px solid rgba(201,168,76,.3);display:flex;align-items:center;gap:clamp(8px,2vw,20px);padding:7px clamp(12px,3vw,28px);box-shadow:0 2px 20px rgba(201,168,76,.1);flex-wrap:wrap';
     
     bar.innerHTML=
-      '<div style="font-family:\'Cinzel Decorative\',serif;font-size:8px;color:rgba(201,168,76,.6);letter-spacing:2px;flex-shrink:0">\u03A9 TRIAL ACCESS</div>'
+      '<div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:rgba(201,168,76,.6);letter-spacing:2px;flex-shrink:0">\u03A9 TRIAL ACCESS</div>'
       +'<div style="flex-shrink:0;text-align:center">'
         +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(18px,3vw,24px);color:#C9A84C;line-height:1" id="trial-time-display">09:17</div>'
-        +'<div style="font-family:\'Courier Prime\',monospace;font-size:6px;letter-spacing:2px;color:rgba(138,134,118,.5)">9 MIN 17 SEC TRIAL</div>'
+        +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5)">9 MIN 17 SEC TRIAL</div>'
       +'</div>'
       +'<div style="flex:1;min-width:80px">'
         +'<div id="trial-bar-track" style="height:3px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden">'
           +'<div id="trial-bar-fill" style="height:100%;background:#C9A84C;border-radius:2px;transition:width .9s linear;width:100%"></div>'
         +'</div>'
-        +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-top:3px;text-align:center">GRANTED: '+new Date(startsAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}).toUpperCase()+'</div>'
+        +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-top:3px;text-align:center">GRANTED: '+new Date(startsAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}).toUpperCase()+'</div>'
       +'</div>'
-      +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);flex-shrink:0">OWNER RENEWS</div>';
+      +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5);flex-shrink:0">OWNER RENEWS</div>';
 
     document.body.insertBefore(bar,document.body.firstChild);
     /* push page content down */
@@ -74,12 +74,12 @@
       if(td) td.textContent=fmtMS(remSec);
       if(tf)  tf.style.width=pct.toFixed(2)+'%';
       if(td){
-        if(remSec<120)  td.style.color='#8B0000';
+        if(remSec<120)  td.style.color='#C4453C';
         else if(remSec<300) td.style.color='#ff9900';
         else td.style.color='#C9A84C';
       }
       if(rem<=0){
-        if(td){td.textContent='EXPIRED';td.style.color='#8B0000';}
+        if(td){td.textContent='EXPIRED';td.style.color='#C4453C';}
         if(window.__omegaSb){window.__omegaSb.auth.signOut().catch(function(){});}
         setTimeout(function(){
           if(window.location.pathname!=='/pending.html')
@@ -212,12 +212,12 @@
       (document.head||document.documentElement).appendChild(ds);
     }
     w.innerHTML=
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:2px;color:rgba(0,229,255,.5);margin-bottom:5px">\u03A9 DEDICATION TODAY</div>'
-      +'<div id="omega-ded-time" style="font-family:\'Cinzel Decorative\',serif;font-size:11px;color:#00E5FF;line-height:1;margin-bottom:5px">00:00:00 / 09:17:17</div>'
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(0,229,255,.5);margin-bottom:5px">\u03A9 DEDICATION TODAY</div>'
+      +'<div id="omega-ded-time" style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#00E5FF;line-height:1;margin-bottom:5px">00:00:00 / 09:17:17</div>'
       +'<div style="height:3px;background:rgba(0,229,255,.08);border-radius:2px;overflow:hidden">'
         +'<div id="omega-ded-bar-fill" style="height:100%;background:var(--cyan,#00E5FF);border-radius:2px;width:0%;transition:width 1s linear"></div>'
       +'</div>'
-      +'<div id="omega-ded-pct" style="font-family:\'Courier Prime\',monospace;font-size:7px;color:rgba(0,229,255,.4);margin-top:3px;text-align:right">0.0%</div>';
+      +'<div id="omega-ded-pct" style="font-family:\'Courier Prime\',monospace;font-size:12px;color:rgba(0,229,255,.4);margin-top:3px;text-align:right">0.0%</div>';
     document.body.appendChild(w);
     updateDedUI();
   }

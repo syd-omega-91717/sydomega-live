@@ -22,6 +22,18 @@
   if (window.OmegaPageEmblem) return;
 
   var PAGES = {
+    /* gateway: the door into the platform -- a gate mark, not a generic
+       Omega. index: the front door, a frame mark. */
+    gateway:[12,'a','\u26E9'], index:[12,'c','\u2394'],
+    'agent-network':[12,'a','\u2739'], 'design-showcase':[12,'c','\u25F1'],
+    /* The four system pages that a member actually sees. They are STATES, not
+       destinations -- omega-gateway.js keeps its own EXCLUDE map so a registry
+       entry here never turns one into a gateway tile. They carry entries only
+       so each draws its own mark instead of the generic 12-fold omega. The two
+       internal harnesses (verify-deployment, verify-modules) stay out: nobody
+       browses to them. */
+    enter:[12,'b','\u25C7'], reset:[12,'a','\u21BB'],
+    '404':[9,'a','\u2298'], offline:[9,'a','\u25CC'],
     academy:[12,'a','\u2727'], research:[9,'a','\u2732'], intelligence:[9,'a','\u25C9'],
     prediction:[12,'a','\u2609'], travel:[9,'a','\u2708'], news:[12,'a','\u25C8'],
     search:[12,'a','\u2315'], houses:[12,'a','\u2302'], chatbot:[12,'a','\u2756'],
@@ -33,6 +45,14 @@
     evolution:[12,'b','\u25B2'], ledger:[12,'b','\u2261'], approvals:[12,'b','\u2713'],
     events:[12,'c','\u2691'], social:[12,'c','\u25CE'], publishing:[12,'c','\u270E'],
     contributions:[12,'c','\u2724'], consultancy:[9,'c','\u269C'], family:[9,'c','\u2635'],
+    /* The five pages merged on 2026-09-02 carried no registry entry, so each drew
+       the generic 12-fold omega fallback and none of them appeared in the gateway
+       (which derives its whole destination list from this object). Axis follows
+       the domain: creation is CONTRIBUTION, the ad network is MASTERY (economy),
+       the two operator surfaces are KNOWLEDGE. */
+    creator:[12,'c','\u2692'], 'project-studio':[9,'c','\u25F0'],
+    'ad-network':[12,'b','\u25EC'],
+    'control-plane':[9,'a','\u2318'], 'world-shell':[12,'a','\u25D4'],
     factions:[12,'c','\u2694'], sovereigns:[12,'c','\u265B'], hall:[12,'c','\u2620'],
     city:[9,'c','\u25A6'], marketing:[12,'c','\u2600'], services:[12,'c','\u2723'],
     beacon:[12,'c','\u2691'], notifications:[12,'c','\u2609'],
@@ -253,7 +273,78 @@
     frame();
   }
 
+  /* Publish this page's canon mark as CSS custom properties on <html>, so any
+     stylesheet can draw the page's own glyph without a second copy of PAGES
+     (CLAUDE.md section 8.1 class 8 -- two divergent copies of one canonical
+     table is this repo's most expensive recurring bug).
+
+     Deliberately independent of whether the page mounts [data-page-emblem]:
+     13 pages legitimately have no mount (7 host theirs on a non-default tab,
+     6 are public/utility), and every one of them still has section headings
+     that want the mark. Keyed off the pathname, which is what boot() falls
+     back to anyway. */
+  function publishVars() {
+    var key = (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
+    var cfg = PAGES[key] || [12, 'b', '\u03A9'];
+    var root = document.documentElement;
+    /* content: needs a QUOTED string, so the quotes are part of the value. */
+    root.style.setProperty('--pg-glyph', '"' + cfg[2] + '"');
+    root.style.setProperty('--pg-col', AXIS_COL[cfg[1]] || '#C9A84C');
+    root.setAttribute('data-pg-fold', String(cfg[0]));
+  }
+
+  /* A mount written between </main> and the .shell close is a direct flex
+     child of .shell, so flex stretches it into a third full-height column
+     beside the sidebar and the content -- and that column also takes its own
+     width out of the page. Measured across all 181 mounting pages: 23 were in
+     this state, every one of them parented to <div class="shell">, boxes up to
+     334x2801 holding 161px of content.
+
+     Relocating is the fix rather than a CSS rule, because nothing in CSS
+     un-columns a flex item -- align-self stops the stretch but leaves the
+     column, and the page stays narrowed. Runs before draw() so the canvas is
+     measured in its final container. If the flex parent has no content column
+     to move into, the host is left exactly where it is. */
+  function reseat(host) {
+    var p = host.parentElement, cs;
+    if (!p) return;
+    try { cs = getComputedStyle(p); } catch (e) { return; }
+    if (cs.display !== 'flex' && cs.display !== 'inline-flex') return;
+    /* The damage is a VERTICAL stretch, which only a row-direction container
+       produces -- in a column container the cross axis is horizontal and a
+       full-width block is exactly what the page wanted. Measured: the 23
+       stretched pages are all `.shell` at flex-direction:row, while
+       graph.html's `#app.page-shell` is flex-direction:column and its mount
+       was already correct at 161px. Without this check graph.html's emblem was
+       relocated into `#tab-graph.tab-panel`, where it would vanish whenever
+       another tab is selected. */
+    if (cs.flexDirection !== 'row' && cs.flexDirection !== 'row-reverse') return;
+    /* Narrow to the app shell specifically. Being a flex parent is not enough:
+       a page may deliberately mount the emblem inside a flex header or card
+       row, and relocating that would move a correct mount. The shell row is the
+       one that holds the sidebar, so require that sibling before touching
+       anything. */
+    if (!p.querySelector('aside, .side, #omega-side')) return;
+    var named = null, grower = null, growth = 0;
+    for (var i = 0; i < p.children.length; i++) {
+      var c = p.children[i];
+      if (c === host) continue;
+      if (!named && (c.tagName === 'MAIN' ||
+          /(^|\s)main(\s|$)/.test(String(c.className || '')))) { named = c; continue; }
+      /* Not every page names its content column. matrix.html wraps the whole
+         page in an anonymous <div style="flex:1;min-width:0">, so the general
+         rule is the flex sibling that GROWS -- the sidebar is flex-shrink:0 at
+         a fixed width and never does. */
+      var g = 0;
+      try { g = parseFloat(getComputedStyle(c).flexGrow) || 0; } catch (e) { g = 0; }
+      if (g > growth) { growth = g; grower = c; }
+    }
+    var col = named || grower;
+    if (col) col.appendChild(host);
+  }
+
   function boot() {
+    publishVars();
     var hosts = document.querySelectorAll('[data-page-emblem]');
     for (var i = 0; i < hosts.length; i++) {
       var host = hosts[i];
@@ -262,15 +353,16 @@
                 (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
       var cfg = PAGES[key] || [12, 'b', '\u03A9'];
       host.setAttribute('data-emblem-done', '1');
+      reseat(host);
       draw(host, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
       var cap = document.createElement('div');
-      cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
+      cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
       cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span>';
       host.appendChild(cap);
     }
   }
 
-  window.OmegaPageEmblem = { boot: boot, pages: PAGES,
+  window.OmegaPageEmblem = { boot: boot, pages: PAGES, publishVars: publishVars,
                             draw: draw, axisColour: AXIS_COL };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

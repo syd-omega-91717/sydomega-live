@@ -13,55 +13,53 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .main{flex:1;min-width:0}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
 .t{font-family:var(--D);font-size:.82rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 /* DUAL SPLIT HEADER */
 .split-hero{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
 .hero-half{padding:20px clamp(14px,2.5vw,32px);display:flex;flex-direction:column;gap:6px}
 .hero-half.games{background:linear-gradient(135deg,rgba(155,107,240,.07),rgba(10,10,15,.9));border-right:1px solid var(--line)}
 .hero-half.exams{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(10,10,15,.9))}
-.hh-label{font-family:var(--M);font-size:7.5px;letter-spacing:3px;color:var(--muted)}
+.hh-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted)}
 .hh-title{font-family:var(--D);font-size:clamp(14px,2.5vw,20px);line-height:1}
-.hh-sub{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.hh-sub{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 .hh-stat{display:flex;gap:16px;margin-top:8px}
 .hs-n{font-family:var(--D);font-size:18px;line-height:1}
-.hs-l{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+.hs-l{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 /* TABS */
 .tab-wrap{display:flex;border-bottom:1px solid var(--line)}
 .section-tabs{display:flex;flex:1;overflow-x:auto}
-.tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:.6rem 1rem;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:.6rem 1rem;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
 .tab-btn.on.game-tab{border-bottom-color:var(--purple);color:var(--purple)}
 .tab-btn.on.exam-tab{border-bottom-color:var(--gold);color:var(--gold)}
 .tab-divider{width:1px;background:var(--line);margin:8px 0;flex-shrink:0}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}.tab-panel.on{display:block}
 /* CARDS */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px;margin-bottom:16px}
-.g-card{border:1px solid rgba(155,107,240,.2);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
-.g-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)}
+.g-card{--card-accent:var(--purple);border:1px solid rgba(155,107,240,.2);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
 .g-card:hover{border-color:rgba(155,107,240,.45);transform:translateY(-2px)}
-.e-card{border:1px solid rgba(201,168,76,.18);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
-.e-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.e-card{--card-accent:var(--gold);border:1px solid rgba(201,168,76,.18);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
 .e-card:hover{border-color:rgba(201,168,76,.42);transform:translateY(-2px)}
-.c-cat{font-family:var(--M);font-size:7px;letter-spacing:2.5px;color:var(--muted);margin-bottom:5px}
+.c-cat{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-bottom:5px}
 .c-name{font-family:var(--D);font-size:12px;margin-bottom:6px}
-.c-desc{font-size:11px;opacity:.65;line-height:1.6;margin-bottom:8px}
+.c-desc{font-size:12px;opacity:.65;line-height:1.6;margin-bottom:8px}
 .c-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.c-tag{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
-.c-pts{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.c-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
+.c-pts{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 /* PROGRESS */
 .progress-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 .prog-block{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:16px;border-radius:2px}
-.prog-head{font-family:var(--M);font-size:8px;letter-spacing:2px;margin-bottom:12px}
+.prog-head{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:12px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.bar-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);width:110px;flex-shrink:0}
+.bar-lbl{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);width:110px;flex-shrink:0}
 .bar-track{flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
 .bar-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.bar-val{font-family:var(--D);font-size:11px;width:50px;text-align:right;flex-shrink:0}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.bar-val{font-family:var(--D);font-size:12px;width:50px;text-align:right;flex-shrink:0}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc)}
-.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.split-hero{grid-template-columns:1fr}.progress-split{grid-template-columns:1fr}.card-grid{grid-template-columns:1fr}.tab-divider{display:none}}
 </style>
 </head>
@@ -99,18 +97,18 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div style="padding:clamp(14px,3vw,36px)">
       <div class="sechead" data-reveal="fade-up">AUTHORITY COMPUTATION &middot; sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e = APEX 27.8367</div>
       <div class="progress-split" data-reveal="fade-up">
-        <div class="prog-block">
+        <div class="prog-block card">
           <div class="prog-head" style="color:var(--gold)">KNOWLEDGE AXIS A &middot; EXAM PROGRESS</div>
           <div class="bar-row"><div class="bar-lbl">A&#179; = <span id="disp-a3">--</span></div><div class="bar-track"><div class="bar-fill" id="bar-a3" style="background:var(--gold);width:0%"></div></div><div class="bar-val" id="disp-a" style="color:var(--gold)">--</div></div>
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:6px">APEX: A=9.000 &rarr; A&#179;=729.000 &middot; CURRENT: A&#179;=<span id="cur-a3">--</span></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:6px">APEX: A=9.000 &rarr; A&#179;=729.000 &middot; CURRENT: A&#179;=<span id="cur-a3">--</span></div>
         </div>
-        <div class="prog-block">
+        <div class="prog-block card">
           <div class="prog-head" style="color:var(--purple)">MASTERY AXIS B &middot; GAME PROGRESS</div>
           <div class="bar-row"><div class="bar-lbl">B&#179; = <span id="disp-b3">--</span></div><div class="bar-track"><div class="bar-fill" id="bar-b3" style="background:var(--purple);width:0%"></div></div><div class="bar-val" id="disp-b" style="color:var(--purple)">--</div></div>
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:6px">APEX: B=9.000 &rarr; B&#179;=729.000 &middot; CURRENT: B&#179;=<span id="cur-b3">--</span></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:6px">APEX: B=9.000 &rarr; B&#179;=729.000 &middot; CURRENT: B&#179;=<span id="cur-b3">--</span></div>
         </div>
       </div>
-      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted);line-height:2">
+      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);line-height:2">
         AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &nbsp;|&nbsp; A&#179;=<span id="auth-a3" style="color:var(--gold)">--</span> &nbsp;+&nbsp; B&#179;=<span id="auth-b3" style="color:var(--purple)">--</span> &nbsp;+&nbsp; C&#179;=<span id="auth-c3" style="color:var(--green)">--</span> &nbsp;=&nbsp; <span id="auth-sum" style="color:var(--cyan)">--</span> &nbsp;&rarr;&nbsp; AUTH=<span id="auth-val" style="color:var(--solar)">--</span> &nbsp;|&nbsp; APEX: 729+729+729=2187 &rarr; sqrt(2187)&times;&phi;/e=27.8367
       </div>
     </div>
@@ -123,7 +121,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <button class="tab-btn" data-tab="progress">&#9670; PROGRESS</button>
         <button class="tab-btn" data-tab="science">&#9670; SCIENCE</button>
       </div>
-    </div><div class="tab-panel" id="tab-strategy"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">STRATEGY & BOARD &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="Chess Master" data-task-type="mastery">
+    </div><div class="tab-panel" id="tab-strategy"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">STRATEGY & BOARD &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Chess Master" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">CHESS MASTER</div>
   <div class="c-desc">9 difficulty tiers. Classical engine. Axis B raises as rank improves.</div>
@@ -131,7 +129,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Go / Weiqi" data-task-type="mastery">
+</div><div class="g-card card" data-task="Go / Weiqi" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">GO / WEIQI</div>
   <div class="c-desc">19×19. The ancient game — mirrors the lattice in philosophical depth.</div>
@@ -139,7 +137,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Shogi" data-task-type="mastery">
+</div><div class="g-card card" data-task="Shogi" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">SHOGI</div>
   <div class="c-desc">Japanese chess. Piece promotion mirrors matrix node ascension.</div>
@@ -147,7 +145,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Backgammon" data-task-type="mastery">
+</div><div class="g-card card" data-task="Backgammon" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">BACKGAMMON</div>
   <div class="c-desc">Dice + positional strategy. Probability mastery required.</div>
@@ -155,7 +153,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Bridge" data-task-type="mastery">
+</div><div class="g-card card" data-task="Bridge" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">BRIDGE</div>
   <div class="c-desc">Partnership card game. Highest cognitive demand of all card games.</div>
@@ -163,7 +161,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Risk: Sovereign Edition" data-task-type="mastery">
+</div><div class="g-card card" data-task="Risk: Sovereign Edition" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">RISK: SOVEREIGN EDITION</div>
   <div class="c-desc">Global domination. 6 continents, 42 territories, sovereign rules.</div>
@@ -171,7 +169,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Checkers / Draughts" data-task-type="mastery">
+</div><div class="g-card card" data-task="Checkers / Draughts" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">CHECKERS / DRAUGHTS</div>
   <div class="c-desc">All international rule variants — British, Turkish, Brazilian.</div>
@@ -179,7 +177,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Nine Men's Morris" data-task-type="mastery">
+</div><div class="g-card card" data-task="Nine Men's Morris" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">NINE MEN'S MORRIS</div>
   <div class="c-desc">Ancient mill game. Found in archaeological sites worldwide.</div>
@@ -187,7 +185,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Hex" data-task-type="mastery">
+</div><div class="g-card card" data-task="Hex" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">HEX</div>
   <div class="c-desc">Connection game on an n×n rhombus. No draws possible.</div>
@@ -195,7 +193,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Reversi / Othello" data-task-type="mastery">
+</div><div class="g-card card" data-task="Reversi / Othello" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">REVERSI / OTHELLO</div>
   <div class="c-desc">Flip the board. Pure positional dominance.</div>
@@ -203,7 +201,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Settlers of Catan" data-task-type="mastery">
+</div><div class="g-card card" data-task="Settlers of Catan" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">SETTLERS OF CATAN</div>
   <div class="c-desc">Resource trading + city building. Economic mastery loop.</div>
@@ -211,7 +209,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Chess960 (Fischer Random)" data-task-type="mastery">
+</div><div class="g-card card" data-task="Chess960 (Fischer Random)" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">CHESS960 (FISCHER RANDOM)</div>
   <div class="c-desc">960 positions — eliminates memorization, tests pure logic.</div>
@@ -220,7 +218,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-action"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">ACTION & ADVENTURE &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="Omega Runner" data-task-type="mastery">
+<div class="tab-panel" id="tab-action"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">ACTION & ADVENTURE &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Omega Runner" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">OMEGA RUNNER</div>
   <div class="c-desc">9 worlds, 9 levels each = 81 stages. Axis B per stage cleared.</div>
@@ -228,7 +226,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Sovereign Strike" data-task-type="mastery">
+</div><div class="g-card card" data-task="Sovereign Strike" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">SOVEREIGN STRIKE</div>
   <div class="c-desc">Combat arena. Authority determines unlocked weapon classes.</div>
@@ -236,7 +234,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Matrix Maze" data-task-type="mastery">
+</div><div class="g-card card" data-task="Matrix Maze" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">MATRIX MAZE</div>
   <div class="c-desc">3D platformer through the 9×9×9 lattice. Navigate all 729 nodes.</div>
@@ -244,7 +242,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Element Wars" data-task-type="mastery">
+</div><div class="g-card card" data-task="Element Wars" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">ELEMENT WARS</div>
   <div class="c-desc">Fire, Water, Wind, Metal, Sand combat. 9 elemental abilities.</div>
@@ -252,7 +250,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Astral Ascent" data-task-type="mastery">
+</div><div class="g-card card" data-task="Astral Ascent" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">ASTRAL ASCENT</div>
   <div class="c-desc">12 star systems, one per Olympian. Exploration + combat.</div>
@@ -260,7 +258,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Heritage Hunter" data-task-type="mastery">
+</div><div class="g-card card" data-task="Heritage Hunter" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">HERITAGE HUNTER</div>
   <div class="c-desc">Archaeological adventure. Uncover civilizations, earn points.</div>
@@ -268,7 +266,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="The Vault Breach" data-task-type="mastery">
+</div><div class="g-card card" data-task="The Vault Breach" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">THE VAULT BREACH</div>
   <div class="c-desc">Heist simulation. Knowledge + mastery determine the outcome.</div>
@@ -276,7 +274,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Chrono Walker" data-task-type="mastery">
+</div><div class="g-card card" data-task="Chrono Walker" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">CHRONO WALKER</div>
   <div class="c-desc">Time puzzle. Sequence events across 12 historical civilizations.</div>
@@ -284,7 +282,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Signal Intercept" data-task-type="mastery">
+</div><div class="g-card card" data-task="Signal Intercept" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">SIGNAL INTERCEPT</div>
   <div class="c-desc">Cryptography game. Decrypt sovereign transmissions in 9 levels.</div>
@@ -292,7 +290,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Depth Dive" data-task-type="mastery">
+</div><div class="g-card card" data-task="Depth Dive" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">DEPTH DIVE</div>
   <div class="c-desc">Submarine exploration. Deep ocean mapping — 9 depth layers.</div>
@@ -300,7 +298,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Orbital Command" data-task-type="mastery">
+</div><div class="g-card card" data-task="Orbital Command" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">ORBITAL COMMAND</div>
   <div class="c-desc">Space station management. 9 resource types, 9 challenge tiers.</div>
@@ -308,7 +306,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Titan Fall" data-task-type="mastery">
+</div><div class="g-card card" data-task="Titan Fall" data-task-type="mastery">
   <div class="c-cat">&#9670; ACTION & ADVENTURE</div>
   <div class="c-name" style="color:var(--purple)">TITAN FALL</div>
   <div class="c-desc">Physics-based engineering destruction. Build then break.</div>
@@ -317,7 +315,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-puzzle"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">PUZZLE & LOGIC &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="Sudoku Grand Master" data-task-type="mastery">
+<div class="tab-panel" id="tab-puzzle"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">PUZZLE & LOGIC &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Sudoku Grand Master" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">SUDOKU GRAND MASTER</div>
   <div class="c-desc">9×9 classic + 12×12 sovereign variant. 9 difficulty tiers.</div>
@@ -325,7 +323,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Nonogram Architect" data-task-type="mastery">
+</div><div class="g-card card" data-task="Nonogram Architect" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">NONOGRAM ARCHITECT</div>
   <div class="c-desc">Picross/paint-by-number. Spatial intelligence builder.</div>
@@ -333,7 +331,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Cryptic Cipher" data-task-type="mastery">
+</div><div class="g-card card" data-task="Cryptic Cipher" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">CRYPTIC CIPHER</div>
   <div class="c-desc">Caesar to RSA. 9 cipher systems, 9 difficulty tiers each.</div>
@@ -341,7 +339,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Logic Matrix" data-task-type="mastery">
+</div><div class="g-card card" data-task="Logic Matrix" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">LOGIC MATRIX</div>
   <div class="c-desc">Truth tables, syllogisms, formal logic. Pure Axis A+B crossover.</div>
@@ -349,7 +347,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Rubik's Cube Solver" data-task-type="mastery">
+</div><div class="g-card card" data-task="Rubik's Cube Solver" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">RUBIK'S CUBE SOLVER</div>
   <div class="c-desc">3×3 to 9×9 variants. Algorithmic group theory in action.</div>
@@ -357,7 +355,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Tower of Hanoi" data-task-type="mastery">
+</div><div class="g-card card" data-task="Tower of Hanoi" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">TOWER OF HANOI</div>
   <div class="c-desc">Recursive algorithm game. 9 disk version = 511 moves minimum.</div>
@@ -365,7 +363,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Einstein's Riddle" data-task-type="mastery">
+</div><div class="g-card card" data-task="Einstein's Riddle" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">EINSTEIN'S RIDDLE</div>
   <div class="c-desc">Constraint satisfaction. 15-element sovereign variant.</div>
@@ -373,7 +371,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Calcudoku" data-task-type="mastery">
+</div><div class="g-card card" data-task="Calcudoku" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">CALCUDOKU</div>
   <div class="c-desc">Math-based Sudoku. Arithmetic cages, 9 levels of difficulty.</div>
@@ -381,7 +379,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Slitherlink" data-task-type="mastery">
+</div><div class="g-card card" data-task="Slitherlink" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">SLITHERLINK</div>
   <div class="c-desc">Loop-drawing on grid. Graph theory principles applied.</div>
@@ -389,7 +387,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="KenKen" data-task-type="mastery">
+</div><div class="g-card card" data-task="KenKen" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">KENKEN</div>
   <div class="c-desc">Arithmetic cage puzzle. Used in schools worldwide, up to 9×9.</div>
@@ -397,7 +395,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Hitori" data-task-type="mastery">
+</div><div class="g-card card" data-task="Hitori" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">HITORI</div>
   <div class="c-desc">Number elimination. Contradiction detection — pure logic.</div>
@@ -405,7 +403,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Nurikabe" data-task-type="mastery">
+</div><div class="g-card card" data-task="Nurikabe" data-task-type="mastery">
   <div class="c-cat">&#9670; PUZZLE & LOGIC</div>
   <div class="c-name" style="color:var(--purple)">NURIKABE</div>
   <div class="c-desc">Island-painting. Japanese logic tradition, 9 grid sizes.</div>
@@ -414,7 +412,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-sport"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SPORTS & RACING &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="Formula 1 Manager" data-task-type="mastery">
+<div class="tab-panel" id="tab-sport"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SPORTS & RACING &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Formula 1 Manager" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">FORMULA 1 MANAGER</div>
   <div class="c-desc">Tire, fuel, pit strategy. 12 circuits, 9 race tiers.</div>
@@ -422,7 +420,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Football Tactics" data-task-type="mastery">
+</div><div class="g-card card" data-task="Football Tactics" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">FOOTBALL TACTICS</div>
   <div class="c-desc">Soccer formation + match simulation. All world formations.</div>
@@ -430,7 +428,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Basketball GM" data-task-type="mastery">
+</div><div class="g-card card" data-task="Basketball GM" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">BASKETBALL GM</div>
   <div class="c-desc">Draft, trade, stats. 9 seasons. Championship simulation.</div>
@@ -438,7 +436,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Tennis Grand Slam" data-task-type="mastery">
+</div><div class="g-card card" data-task="Tennis Grand Slam" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">TENNIS GRAND SLAM</div>
   <div class="c-desc">4 Grand Slams. Physics-based. All court surfaces simulated.</div>
@@ -446,7 +444,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Cricket Test Match" data-task-type="mastery">
+</div><div class="g-card card" data-task="Cricket Test Match" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">CRICKET TEST MATCH</div>
   <div class="c-desc">5-day test cricket. The most complex sports scoring system.</div>
@@ -454,7 +452,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Rugby World Cup" data-task-type="mastery">
+</div><div class="g-card card" data-task="Rugby World Cup" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">RUGBY WORLD CUP</div>
   <div class="c-desc">20 nations. Full contact simulation. Tournament bracket.</div>
@@ -462,7 +460,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Track & Field" data-task-type="mastery">
+</div><div class="g-card card" data-task="Track & Field" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">TRACK & FIELD</div>
   <div class="c-desc">12 Olympic events. Reaction time + stamina + technique.</div>
@@ -470,7 +468,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Esports Manager" data-task-type="mastery">
+</div><div class="g-card card" data-task="Esports Manager" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">ESPORTS MANAGER</div>
   <div class="c-desc">Build a competitive team. Meta analysis + roster management.</div>
@@ -478,7 +476,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Combat Sports" data-task-type="mastery">
+</div><div class="g-card card" data-task="Combat Sports" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">COMBAT SPORTS</div>
   <div class="c-desc">Boxing, MMA, wrestling. Technique + conditioning mechanics.</div>
@@ -486,7 +484,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Archery Master" data-task-type="mastery">
+</div><div class="g-card card" data-task="Archery Master" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">ARCHERY MASTER</div>
   <div class="c-desc">Wind, distance, form. 9 target distances, 9 bow types.</div>
@@ -494,7 +492,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Swimming Championship" data-task-type="mastery">
+</div><div class="g-card card" data-task="Swimming Championship" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">SWIMMING CHAMPIONSHIP</div>
   <div class="c-desc">Stroke efficiency simulator. Olympic-standard timing.</div>
@@ -502,7 +500,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Motorsport Rally" data-task-type="mastery">
+</div><div class="g-card card" data-task="Motorsport Rally" data-task-type="mastery">
   <div class="c-cat">&#9670; SPORTS & RACING</div>
   <div class="c-name" style="color:var(--purple)">MOTORSPORT RALLY</div>
   <div class="c-desc">Off-road navigation + car tuning. 12 terrain types.</div>
@@ -511,7 +509,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-simulation"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SIMULATION & RPG &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="Civilization Builder" data-task-type="mastery">
+<div class="tab-panel" id="tab-simulation"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SIMULATION & RPG &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Civilization Builder" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">CIVILIZATION BUILDER</div>
   <div class="c-desc">12 civilizations. City-state to empire. Full tech trees.</div>
@@ -519,7 +517,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Economy Engine" data-task-type="mastery">
+</div><div class="g-card card" data-task="Economy Engine" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">ECONOMY ENGINE</div>
   <div class="c-desc">Supply and demand. Micro + macroeconomics simulation.</div>
@@ -527,7 +525,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Sovereign Parliament" data-task-type="mastery">
+</div><div class="g-card card" data-task="Sovereign Parliament" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">SOVEREIGN PARLIAMENT</div>
   <div class="c-desc">Governance simulation. Policy, diplomacy, economics.</div>
@@ -535,7 +533,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Financial Markets" data-task-type="mastery">
+</div><div class="g-card card" data-task="Financial Markets" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">FINANCIAL MARKETS</div>
   <div class="c-desc">Stocks, bonds, crypto, commodities. Trading simulation.</div>
@@ -543,7 +541,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Space Colony" data-task-type="mastery">
+</div><div class="g-card card" data-task="Space Colony" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">SPACE COLONY</div>
   <div class="c-desc">Planetary colonization. Life support, resources, governance.</div>
@@ -551,7 +549,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Research Lab" data-task-type="mastery">
+</div><div class="g-card card" data-task="Research Lab" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">RESEARCH LAB</div>
   <div class="c-desc">Scientific discovery. Experiment design + hypothesis testing.</div>
@@ -559,7 +557,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Medical Simulation" data-task-type="mastery">
+</div><div class="g-card card" data-task="Medical Simulation" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">MEDICAL SIMULATION</div>
   <div class="c-desc">Diagnosis and treatment. Decision-tree medicine game.</div>
@@ -567,7 +565,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Legal Chambers" data-task-type="mastery">
+</div><div class="g-card card" data-task="Legal Chambers" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">LEGAL CHAMBERS</div>
   <div class="c-desc">Courtroom simulation. Argumentation + evidence game.</div>
@@ -575,7 +573,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Engineer's Workshop" data-task-type="mastery">
+</div><div class="g-card card" data-task="Engineer's Workshop" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">ENGINEER'S WORKSHOP</div>
   <div class="c-desc">Structural + electrical design challenges. 9 disciplines.</div>
@@ -583,7 +581,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Ecosystem Manager" data-task-type="mastery">
+</div><div class="g-card card" data-task="Ecosystem Manager" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">ECOSYSTEM MANAGER</div>
   <div class="c-desc">Species interaction + climate. Biodiversity simulation.</div>
@@ -591,7 +589,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Architect Studio" data-task-type="mastery">
+</div><div class="g-card card" data-task="Architect Studio" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">ARCHITECT STUDIO</div>
   <div class="c-desc">Building design. Structures, materials, aesthetics — 9 tiers.</div>
@@ -599,7 +597,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Diplomacy" data-task-type="mastery">
+</div><div class="g-card card" data-task="Diplomacy" data-task-type="mastery">
   <div class="c-cat">&#9670; SIMULATION & RPG</div>
   <div class="c-name" style="color:var(--purple)">DIPLOMACY</div>
   <div class="c-desc">7-player negotiation. The gold standard of alliance-building games.</div>
@@ -608,7 +606,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-sovereign_g"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SOVEREIGN GAMES &middot; 12 GAMES &middot; AXIS B MASTERY &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="g-card" data-task="The 9×9×9 Challenge" data-task-type="mastery">
+<div class="tab-panel" id="tab-sovereign_g"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">SOVEREIGN GAMES &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="The 9×9×9 Challenge" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">THE 9×9×9 CHALLENGE</div>
   <div class="c-desc">Navigate all 729 inner cube nodes. The grand trial.</div>
@@ -616,7 +614,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Authority Climb" data-task-type="mastery">
+</div><div class="g-card card" data-task="Authority Climb" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">AUTHORITY CLIMB</div>
   <div class="c-desc">Real-time sqrt(A³+B³+C³)×φ/e visualization. Climb to 27.8367.</div>
@@ -624,7 +622,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Olympian Path" data-task-type="mastery">
+</div><div class="g-card card" data-task="Olympian Path" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">OLYMPIAN PATH</div>
   <div class="c-desc">12 stages. Each themed to one of the 12 Olympians.</div>
@@ -632,7 +630,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Element Mastery" data-task-type="mastery">
+</div><div class="g-card card" data-task="Element Mastery" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">ELEMENT MASTERY</div>
   <div class="c-desc">All 9 elements. Fire/Water/Wind/Metal/Sand/Soul/Space/Void/THE NINTH.</div>
@@ -640,7 +638,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Covenant Guardian" data-task-type="mastery">
+</div><div class="g-card card" data-task="Covenant Guardian" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">COVENANT GUARDIAN</div>
   <div class="c-desc">Defend the 11 Sovereign Articles against challenger logic.</div>
@@ -648,7 +646,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Matrix Architect" data-task-type="mastery">
+</div><div class="g-card card" data-task="Matrix Architect" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">MATRIX ARCHITECT</div>
   <div class="c-desc">Build + optimize a 12×12×9³ lattice from genesis to apex.</div>
@@ -656,7 +654,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Genealogy Quest" data-task-type="mastery">
+</div><div class="g-card card" data-task="Genealogy Quest" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">GENEALOGY QUEST</div>
   <div class="c-desc">Map the family bloodline through 9 sovereign generations.</div>
@@ -664,7 +662,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Token Economics" data-task-type="mastery">
+</div><div class="g-card card" data-task="Token Economics" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">TOKEN ECONOMICS</div>
   <div class="c-desc">12-token system simulation. Utility, distribution, governance.</div>
@@ -672,7 +670,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="The Infinite Game" data-task-type="mastery">
+</div><div class="g-card card" data-task="The Infinite Game" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">THE INFINITE GAME</div>
   <div class="c-desc">Carse finite/infinite theory. Make the right sovereign moves.</div>
@@ -680,7 +678,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Sovereignty Protocol" data-task-type="mastery">
+</div><div class="g-card card" data-task="Sovereignty Protocol" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">SOVEREIGNTY PROTOCOL</div>
   <div class="c-desc">Complete all 9 stages of sovereign certification.</div>
@@ -688,7 +686,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="The Apex Trial" data-task-type="mastery">
+</div><div class="g-card card" data-task="The Apex Trial" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">THE APEX TRIAL</div>
   <div class="c-desc">Reach AUTH=27.8367. The ultimate sovereign achievement.</div>
@@ -696,7 +694,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(155,107,240,.4);color:var(--purple)">AXIS B &middot; MASTERY</span>
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="g-card" data-task="Heritage Oracle" data-task-type="mastery">
+</div><div class="g-card card" data-task="Heritage Oracle" data-task-type="mastery">
   <div class="c-cat">&#9670; SOVEREIGN GAMES</div>
   <div class="c-name" style="color:var(--purple)">HERITAGE ORACLE</div>
   <div class="c-desc">All civilizations, all eras. 9 difficulty tiers.</div>
@@ -705,7 +703,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.001 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-stem"><div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A KNOWLEDGE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="e-card" data-task="Mathematics Olympiad" data-task-type="knowledge">
+<div class="tab-panel" id="tab-stem"><div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; AXIS A KNOWLEDGE</div><div class="card-grid"><div class="e-card card" data-task="Mathematics Olympiad" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">MATHEMATICS OLYMPIAD</div>
   <div class="c-desc">IMO-standard. Algebra, geometry, combinatorics, number theory. Level 9.</div>
@@ -713,7 +711,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Physics Grand Exam" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Physics Grand Exam" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">PHYSICS GRAND EXAM</div>
   <div class="c-desc">AP/IB/A-Level + university. Mechanics, electrodynamics, quantum.</div>
@@ -721,7 +719,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Chemistry Mastery" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Chemistry Mastery" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">CHEMISTRY MASTERY</div>
   <div class="c-desc">Periodic table to organic synthesis. International standard.</div>
@@ -729,7 +727,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Biology & Life Sciences" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Biology & Life Sciences" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">BIOLOGY & LIFE SCIENCES</div>
   <div class="c-desc">Cell biology through ecology. MCAT and IB HL standard.</div>
@@ -737,7 +735,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Statistics & Probability" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Statistics & Probability" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">STATISTICS & PROBABILITY</div>
   <div class="c-desc">Descriptive, inferential, Bayesian. Data science foundation.</div>
@@ -745,7 +743,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Computer Science Theory" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Computer Science Theory" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">COMPUTER SCIENCE THEORY</div>
   <div class="c-desc">Algorithms, complexity, automata, computability.</div>
@@ -753,7 +751,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Data Science & ML" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Data Science & ML" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">DATA SCIENCE & ML</div>
   <div class="c-desc">Python, statistics, machine learning, model evaluation.</div>
@@ -761,7 +759,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Astronomy & Astrophysics" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Astronomy & Astrophysics" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">ASTRONOMY & ASTROPHYSICS</div>
   <div class="c-desc">Solar system to cosmology. Hubble, dark matter, black holes.</div>
@@ -769,7 +767,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Environmental Science" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Environmental Science" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 5</div>
   <div class="c-name" style="color:var(--gold)">ENVIRONMENTAL SCIENCE</div>
   <div class="c-desc">Climate, ecosystems, energy. IPCC scientific consensus.</div>
@@ -777,7 +775,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Neuroscience Basics" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Neuroscience Basics" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">NEUROSCIENCE BASICS</div>
   <div class="c-desc">Brain structure, neural networks, cognitive science.</div>
@@ -785,7 +783,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Engineering Fundamentals" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Engineering Fundamentals" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">ENGINEERING FUNDAMENTALS</div>
   <div class="c-desc">Statics, dynamics, thermodynamics, materials science.</div>
@@ -793,7 +791,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Research Methods" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Research Methods" data-task-type="knowledge">
   <div class="c-cat">&#9671; STEM & SCIENCE &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">RESEARCH METHODS</div>
   <div class="c-desc">Hypothesis, experiment design, peer review, publication.</div>
@@ -802,7 +800,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-professional"><div class="sechead" data-reveal="fade-up">PROFESSIONAL CERTS &middot; 12 EXAMS &middot; AXIS A KNOWLEDGE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="e-card" data-task="CFA Level I–III" data-task-type="knowledge">
+<div class="tab-panel" id="tab-professional"><div class="sechead" data-reveal="fade-up">PROFESSIONAL CERTS &middot; AXIS A KNOWLEDGE</div><div class="card-grid"><div class="e-card card" data-task="CFA Level I–III" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">CFA LEVEL I–III</div>
   <div class="c-desc">Chartered Financial Analyst. Global gold standard in investment.</div>
@@ -810,7 +808,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="PMP Certification" data-task-type="knowledge">
+</div><div class="e-card card" data-task="PMP Certification" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">PMP CERTIFICATION</div>
   <div class="c-desc">Project Management Professional. PMI standard worldwide.</div>
@@ -818,7 +816,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="CISSP" data-task-type="knowledge">
+</div><div class="e-card card" data-task="CISSP" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">CISSP</div>
   <div class="c-desc">Certified Information Systems Security Professional.</div>
@@ -826,7 +824,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="MBA Core Curriculum" data-task-type="knowledge">
+</div><div class="e-card card" data-task="MBA Core Curriculum" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">MBA CORE CURRICULUM</div>
   <div class="c-desc">Strategy, finance, operations, marketing, leadership.</div>
@@ -834,7 +832,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Lean Six Sigma" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Lean Six Sigma" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">LEAN SIX SIGMA</div>
   <div class="c-desc">Process improvement. Yellow through Black Belt.</div>
@@ -842,7 +840,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Chartered Accountant" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Chartered Accountant" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">CHARTERED ACCOUNTANT</div>
   <div class="c-desc">ACCA/CPA. International accounting standards.</div>
@@ -850,7 +848,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Architectural License" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Architectural License" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">ARCHITECTURAL LICENSE</div>
   <div class="c-desc">ARE exam. Architectural registration worldwide.</div>
@@ -858,7 +856,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Engineering PE Exam" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Engineering PE Exam" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">ENGINEERING PE EXAM</div>
   <div class="c-desc">Professional Engineer. All engineering disciplines.</div>
@@ -866,7 +864,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Legal Bar Equivalence" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Legal Bar Equivalence" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">LEGAL BAR EQUIVALENCE</div>
   <div class="c-desc">Contract, tort, constitutional, international law.</div>
@@ -874,7 +872,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Medical Licensing" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Medical Licensing" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">MEDICAL LICENSING</div>
   <div class="c-desc">USMLE/PLAB equivalent. Clinical knowledge and reasoning.</div>
@@ -882,7 +880,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Supply Chain Management" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Supply Chain Management" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">SUPPLY CHAIN MANAGEMENT</div>
   <div class="c-desc">CSCMP/APICS. Logistics, procurement, global supply chains.</div>
@@ -890,7 +888,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Human Resources" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Human Resources" data-task-type="knowledge">
   <div class="c-cat">&#9671; PROFESSIONAL CERTS &middot; LEVEL 5</div>
   <div class="c-name" style="color:var(--gold)">HUMAN RESOURCES</div>
   <div class="c-desc">SHRM/CIPD. Talent management, labor law, organizational behavior.</div>
@@ -899,7 +897,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-technology"><div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A KNOWLEDGE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="e-card" data-task="Python Advanced" data-task-type="knowledge">
+<div class="tab-panel" id="tab-technology"><div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; AXIS A KNOWLEDGE</div><div class="card-grid"><div class="e-card card" data-task="Python Advanced" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">PYTHON ADVANCED</div>
   <div class="c-desc">OOP, async, metaclasses, CPython internals. Expert level.</div>
@@ -907,7 +905,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Algorithm Design" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Algorithm Design" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">ALGORITHM DESIGN</div>
   <div class="c-desc">Dijkstra, dynamic programming, graph theory. FAANG standard.</div>
@@ -915,7 +913,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Machine Learning" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Machine Learning" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">MACHINE LEARNING</div>
   <div class="c-desc">Supervised, unsupervised, RL. Theory and implementation.</div>
@@ -923,7 +921,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Deep Learning" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Deep Learning" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">DEEP LEARNING</div>
   <div class="c-desc">Neural networks, transformers, diffusion. State of the art.</div>
@@ -931,7 +929,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Database Architecture" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Database Architecture" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">DATABASE ARCHITECTURE</div>
   <div class="c-desc">PostgreSQL, indexing, query optimization, sharding.</div>
@@ -939,7 +937,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="System Design" data-task-type="knowledge">
+</div><div class="e-card card" data-task="System Design" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">SYSTEM DESIGN</div>
   <div class="c-desc">Distributed systems, CAP theorem, microservices, CDN.</div>
@@ -947,7 +945,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Cloud Architecture" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Cloud Architecture" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">CLOUD ARCHITECTURE</div>
   <div class="c-desc">AWS/GCP/Azure. Solutions architect professional level.</div>
@@ -955,7 +953,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Blockchain & Web3" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Blockchain & Web3" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">BLOCKCHAIN & WEB3</div>
   <div class="c-desc">Consensus mechanisms, smart contracts, tokenomics.</div>
@@ -963,7 +961,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="DevOps & SRE" data-task-type="knowledge">
+</div><div class="e-card card" data-task="DevOps & SRE" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">DEVOPS & SRE</div>
   <div class="c-desc">CI/CD, Kubernetes, monitoring, SLO/SLA/SLI.</div>
@@ -971,7 +969,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="AI Ethics & Governance" data-task-type="knowledge">
+</div><div class="e-card card" data-task="AI Ethics & Governance" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">AI ETHICS & GOVERNANCE</div>
   <div class="c-desc">Bias, fairness, explainability, regulation.</div>
@@ -979,7 +977,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Quantum Computing" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Quantum Computing" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">QUANTUM COMPUTING</div>
   <div class="c-desc">Qubits, gates, Shor, Grover algorithms. Theoretical foundation.</div>
@@ -987,7 +985,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Cryptography Advanced" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Cryptography Advanced" data-task-type="knowledge">
   <div class="c-cat">&#9671; TECHNOLOGY & AI &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">CRYPTOGRAPHY ADVANCED</div>
   <div class="c-desc">RSA, ECC, ZKP, homomorphic encryption. Mathematical depth.</div>
@@ -996,7 +994,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-healthcare"><div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A KNOWLEDGE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="e-card" data-task="Anatomy & Physiology" data-task-type="knowledge">
+<div class="tab-panel" id="tab-healthcare"><div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; AXIS A KNOWLEDGE</div><div class="card-grid"><div class="e-card card" data-task="Anatomy & Physiology" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">ANATOMY & PHYSIOLOGY</div>
   <div class="c-desc">All body systems. Medical school first-year standard.</div>
@@ -1004,7 +1002,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Pharmacology" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Pharmacology" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">PHARMACOLOGY</div>
   <div class="c-desc">Drug mechanisms, interactions, dosing. Clinical standard.</div>
@@ -1012,7 +1010,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Clinical Reasoning" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Clinical Reasoning" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">CLINICAL REASONING</div>
   <div class="c-desc">Case-based diagnosis. USMLE Step 2 equivalent.</div>
@@ -1020,7 +1018,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Public Health & Epidemiology" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Public Health & Epidemiology" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">PUBLIC HEALTH & EPIDEMIOLOGY</div>
   <div class="c-desc">Disease surveillance, outbreak response, health policy.</div>
@@ -1028,7 +1026,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Mental Health Foundations" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Mental Health Foundations" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">MENTAL HEALTH FOUNDATIONS</div>
   <div class="c-desc">DSM-5, psychopathology, therapeutic approaches.</div>
@@ -1036,7 +1034,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Nutrition Science" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Nutrition Science" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 5</div>
   <div class="c-name" style="color:var(--gold)">NUTRITION SCIENCE</div>
   <div class="c-desc">Macro/micronutrients, metabolism, therapeutic diets.</div>
@@ -1044,7 +1042,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Emergency Medicine" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Emergency Medicine" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">EMERGENCY MEDICINE</div>
   <div class="c-desc">ATLS/ACLS principles. Triage and emergency management.</div>
@@ -1052,7 +1050,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Medical Research Methods" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Medical Research Methods" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">MEDICAL RESEARCH METHODS</div>
   <div class="c-desc">RCT design, meta-analysis, evidence-based medicine.</div>
@@ -1060,7 +1058,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Biomedical Ethics" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Biomedical Ethics" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">BIOMEDICAL ETHICS</div>
   <div class="c-desc">Autonomy, beneficence, justice. Clinical and research ethics.</div>
@@ -1068,7 +1066,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Genetics & Genomics" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Genetics & Genomics" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 8</div>
   <div class="c-name" style="color:var(--gold)">GENETICS & GENOMICS</div>
   <div class="c-desc">Mendelian through CRISPR. Clinical genomics application.</div>
@@ -1076,7 +1074,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Global Health" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Global Health" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">GLOBAL HEALTH</div>
   <div class="c-desc">WHO frameworks, tropical diseases, health systems worldwide.</div>
@@ -1084,7 +1082,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Health Informatics" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Health Informatics" data-task-type="knowledge">
   <div class="c-cat">&#9671; HEALTHCARE & MEDICINE &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">HEALTH INFORMATICS</div>
   <div class="c-desc">EHR, medical data standards, HL7/FHIR systems.</div>
@@ -1093,7 +1091,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
 </div></div></div>
-<div class="tab-panel" id="tab-sovereign_e"><div class="sechead" data-reveal="fade-up">SOVEREIGN CERTS &middot; 12 EXAMS &middot; AXIS A KNOWLEDGE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div><div class="card-grid"><div class="e-card" data-task="Omega Initiate Certificate" data-task-type="knowledge">
+<div class="tab-panel" id="tab-sovereign_e"><div class="sechead" data-reveal="fade-up">SOVEREIGN CERTS &middot; AXIS A KNOWLEDGE</div><div class="card-grid"><div class="e-card card" data-task="Omega Initiate Certificate" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 1</div>
   <div class="c-name" style="color:var(--gold)">OMEGA INITIATE CERTIFICATE</div>
   <div class="c-desc">Entry level. Matrix navigation + authority formula mastery.</div>
@@ -1101,7 +1099,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Sovereign Architect Badge" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Sovereign Architect Badge" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 3</div>
   <div class="c-name" style="color:var(--gold)">SOVEREIGN ARCHITECT BADGE</div>
   <div class="c-desc">System design. 12-fold architecture understanding.</div>
@@ -1109,7 +1107,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Matrix Master Certificate" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Matrix Master Certificate" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 5</div>
   <div class="c-name" style="color:var(--gold)">MATRIX MASTER CERTIFICATE</div>
   <div class="c-desc">Full 9-stage theory + practice. All three axes demonstrated.</div>
@@ -1117,7 +1115,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Authority Apex Achievement" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Authority Apex Achievement" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">AUTHORITY APEX ACHIEVEMENT</div>
   <div class="c-desc">AUTH=27.8367 understanding. A³+B³+C³=2187. Proved.</div>
@@ -1125,7 +1123,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Heritage Guardian Certificate" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Heritage Guardian Certificate" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 4</div>
   <div class="c-name" style="color:var(--gold)">HERITAGE GUARDIAN CERTIFICATE</div>
   <div class="c-desc">All civilizations in the Heritage Archive. 9 eras.</div>
@@ -1133,7 +1131,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Elemental Mastery Badge" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Elemental Mastery Badge" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 4</div>
   <div class="c-name" style="color:var(--gold)">ELEMENTAL MASTERY BADGE</div>
   <div class="c-desc">All 9 elements. Properties, interactions, sovereign mapping.</div>
@@ -1141,7 +1139,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Covenant Scholar" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Covenant Scholar" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 5</div>
   <div class="c-name" style="color:var(--gold)">COVENANT SCHOLAR</div>
   <div class="c-desc">All 11 Sovereign Articles. Memorized and applied.</div>
@@ -1149,7 +1147,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Lattice Engineer" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Lattice Engineer" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 7</div>
   <div class="c-name" style="color:var(--gold)">LATTICE ENGINEER</div>
   <div class="c-desc">All matrix systems. 28×28 to 9×9×9. Architecture mastery.</div>
@@ -1157,7 +1155,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Token Economics Certificate" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Token Economics Certificate" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 6</div>
   <div class="c-name" style="color:var(--gold)">TOKEN ECONOMICS CERTIFICATE</div>
   <div class="c-desc">12-token theory. Utility, distribution, governance.</div>
@@ -1165,7 +1163,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Olympian Path Complete" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Olympian Path Complete" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 4</div>
   <div class="c-name" style="color:var(--gold)">OLYMPIAN PATH COMPLETE</div>
   <div class="c-desc">All 12 Olympians. Mythology, attributes, sovereign mapping.</div>
@@ -1173,7 +1171,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Digital Sovereign Identity" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Digital Sovereign Identity" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 3</div>
   <div class="c-name" style="color:var(--gold)">DIGITAL SOVEREIGN IDENTITY</div>
   <div class="c-desc">KYC, credentials, identity verification mastery.</div>
@@ -1181,7 +1179,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <span class="c-tag" style="border-color:rgba(201,168,76,.35);color:var(--gold)">AXIS A &middot; KNOWLEDGE</span>
     <span class="c-pts">+0.003 &middot; CLICK TO RECORD</span>
   </div>
-</div><div class="e-card" data-task="Sovereign Apex Laureate" data-task-type="knowledge">
+</div><div class="e-card card" data-task="Sovereign Apex Laureate" data-task-type="knowledge">
   <div class="c-cat">&#9671; SOVEREIGN CERTS &middot; LEVEL 9</div>
   <div class="c-name" style="color:var(--gold)">SOVEREIGN APEX LAUREATE</div>
   <div class="c-desc">All 12 sovereign certifications complete. Terminal honor.</div>
@@ -1296,14 +1294,59 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
         var isg=t.task_type==='mastery';
         var col=isg?'var(--purple)':'var(--gold)';
         var ts=new Date(t.completed_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
-        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:11px">'
-          +'<span style="font-family:var(--M);font-size:8px;color:var(--muted);width:90px;flex-shrink:0">'+ts+'</span>'
-          +'<span style="font-family:var(--M);font-size:8px;color:'+col+';width:50px;flex-shrink:0">'+(isg?'GAME':'EXAM')+'</span>'
+        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px">'
+          +'<span style="font-family:var(--M);font-size:12px;color:var(--muted);width:90px;flex-shrink:0">'+ts+'</span>'
+          +'<span style="font-family:var(--M);font-size:12px;color:'+col+';width:50px;flex-shrink:0">'+(isg?'GAME':'EXAM')+'</span>'
           +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
-          +'<span style="font-family:var(--D);font-size:11px;color:'+col+';margin-left:auto">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>'
+          +'<span style="font-family:var(--D);font-size:12px;color:'+col+';margin-left:auto">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>'
           +'</div>';
-      }).join(''):'<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">NO ACTIVITY YET. CLICK ANY GAME OR EXAM CARD TO BEGIN.</div>';
+      }).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO ACTIVITY YET. CLICK ANY GAME OR EXAM CARD TO BEGIN.</div>';
     }catch(e){}
+    /* Completed cards looked unstarted on every load: the click handler below
+       was the only thing that ever marked one, so a member who finished Chess
+       Master yesterday saw it as untouched today. The data was already here --
+       the activity log above reads the same table. Same column the log reads
+       (task_name), so no new name is introduced. */
+    try{
+      var doneQ = await sb.from('task_completions').select('task_name').eq('user_id', s.user.id);
+      /* Supabase resolves to {data:null,error}; it does not throw. On an error
+         leave every card unmarked rather than assert a state we cannot support. */
+      if(!doneQ.error){
+        var done = new Set((doneQ.data||[]).map(function(t){return String(t.task_name||'').trim();}));
+        document.querySelectorAll('[data-task]').forEach(function(card){
+          if(!done.has(String(card.getAttribute('data-task')||'').trim())) return;
+          card.setAttribute('data-done','1');
+          /* --card-accent is what .card::before reads, so the top bar turns
+             green without a second pseudo fighting it. */
+          card.style.setProperty('--card-accent','var(--green)');
+          var pts=card.querySelector('.c-pts');
+          if(pts)pts.textContent='\u2713 RECORDED';
+        });
+        /* The headers ship clean (the formula is stated once in the topbar);
+           this only appends each section's real progress. The count goes in a
+           child <span> deliberately: bg.js adds .ofx-sheen to a CHILDLESS
+           .sechead under 48 chars, and generated text on a sheened element
+           needs its own -webkit-text-fill-color. */
+        document.querySelectorAll('.tab-panel').forEach(function(panel){
+          var head=panel.querySelector('.sechead');
+          var cards=panel.querySelectorAll('[data-task]');
+          if(!head||!cards.length||head.querySelector('.sec-prog')) return;
+          var n=0; cards.forEach(function(c){ if(c.getAttribute('data-done')) n++; });
+          var sp=document.createElement('span');
+          sp.className='sec-prog';
+          sp.textContent=' \u00b7 '+n+' / '+cards.length+' COMPLETE';
+          sp.style.color = n===cards.length ? 'var(--green)' : 'inherit';
+          /* Cleaning the headers made them childless and under 48 chars at the
+             moment bg.js applies .ofx-sheen, which fills heading text via
+             background-clip:text + -webkit-text-fill-color:transparent -- and
+             that INHERITS into children. Measured: this span was 174px wide and
+             painted nothing. currentColor restores it for both states. */
+          sp.style.setProperty('-webkit-text-fill-color','currentColor');
+          head.appendChild(sp);
+        });
+      }
+    }catch(e){}
+
     /* Wire all cards */
     document.querySelectorAll('[data-task]').forEach(function(card){
       card.onclick=async function(){
@@ -1312,7 +1355,8 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
         var ty=card.getAttribute('data-task-type')||'mastery';
         var r=await window.omegaCompleteTask(n,ty);
         if(r.ok){
-          card.style.borderTopColor='var(--green)';
+          card.setAttribute('data-done','1');
+          card.style.setProperty('--card-accent','var(--green)');
           var pts=card.querySelector('.c-pts');
           if(pts)pts.textContent='✓ RECORDED';
         }
@@ -1321,4 +1365,4 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

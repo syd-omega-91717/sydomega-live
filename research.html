@@ -9,36 +9,36 @@
 <style>
 .labs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
 .lab-card{border:1px solid var(--line);border-top:2px solid var(--lc,var(--gold));background:var(--surface);padding:18px;position:relative}
-.lc-num{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.lc-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .lc-title{font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:4px}
-.lc-domain{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px}
-.lc-desc{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.lc-domain{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px}
+.lc-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px}
 .lc-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.lab-badge{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
+.lab-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
 .lb-active{color:var(--green);border-color:rgba(63,178,127,.5)}
 .lb-dev{color:var(--solar);border-color:rgba(226,200,109,.4)}
 .lb-concept{color:var(--muted);border-color:rgba(138,134,118,.3)}
 .lb-quantum{color:var(--purple);border-color:rgba(155,107,240,.4)}
 .lc-bar{flex:1;height:3px;background:rgba(201,168,76,.1);overflow:hidden;min-width:60px}
 .lc-bar-fill{height:100%;transition:width 1.2s ease}
-.lc-pct{font-family:var(--M);font-size:8px;color:var(--muted)}
+.lc-pct{font-family:var(--M);font-size:12px;color:var(--muted)}
 .hyp-form{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
 .hyp-row{display:flex;gap:12px;flex-wrap:wrap}
 .hyp-field{flex:1;min-width:200px}
-.hf-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);display:block;margin-bottom:5px}
-.hf-input,.hf-select,.hf-textarea{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:9px 11px;outline:none}
+.hf-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);display:block;margin-bottom:5px}
+.hf-input,.hf-select,.hf-textarea{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:9px 11px;outline:none}
 .hf-textarea{min-height:80px;resize:vertical}
 .hf-input:focus,.hf-select:focus,.hf-textarea:focus{border-color:rgba(201,168,76,.4)}
-.hyp-result{font-family:var(--M);font-size:10px;line-height:1.7;border:1px solid rgba(63,178,127,.3);padding:12px;background:rgba(63,178,127,.05);color:var(--green);display:none}
+.hyp-result{font-family:var(--M);font-size:12px;line-height:1.7;border:1px solid rgba(63,178,127,.3);padding:12px;background:rgba(63,178,127,.05);color:var(--green);display:none}
 .disc-entry{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed rgba(201,168,76,.08)}
 .disc-entry:last-child{border-bottom:none}
 .disc-icon{font-size:18px;flex-shrink:0;margin-top:2px}
-.disc-title{font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--solar);margin-bottom:4px}
-.disc-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:4px}
-.disc-meta{font-family:var(--M);font-size:8px;color:var(--muted)}
+.disc-title{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--solar);margin-bottom:4px}
+.disc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:4px}
+.disc-meta{font-family:var(--M);font-size:12px;color:var(--muted)}
 .twin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:14px}
 .twin-cell{border:1px solid rgba(155,107,240,.2);background:rgba(155,107,240,.03);padding:12px;text-align:center}
-.tc-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--purple);margin-bottom:4px}
+.tc-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:4px}
 .tc-val{font-family:var(--D);font-size:16px;color:var(--solar)}
 </style>
 </head>
@@ -58,7 +58,7 @@
 
 <div class="tab-panel active" id="tab-labs">
   <div class="sechead">SOVEREIGN RESEARCH LABORATORIES</div>
-  <div style="font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div>
+  <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div>
   <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-val">9</div><div class="kpi-label">ACTIVE LABS</div></div>
     <div class="kpi-card"><div class="kpi-val" id="kpi-hyp">—</div><div class="kpi-label">HYPOTHESES</div></div>
@@ -71,7 +71,7 @@
 <div class="tab-panel" id="tab-hypothesis">
   <div class="sechead">HYPOTHESIS ENGINE &mdash; SUBMIT A DISCOVERY</div>
   <div class="glass" style="margin-bottom:16px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">STATE A HYPOTHESIS. THE ORACLE AGENT VALIDATES. CONFIRMED DISCOVERIES ADVANCE YOUR KNOWLEDGE AXIS.</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">STATE A HYPOTHESIS. THE ORACLE AGENT VALIDATES. CONFIRMED DISCOVERIES ADVANCE YOUR KNOWLEDGE AXIS.</div>
     <div class="hyp-form" id="hyp-form">
       <div class="hyp-row">
         <div class="hyp-field"><label class="hf-label">RESEARCH DOMAIN</label>
@@ -102,8 +102,8 @@
   <div class="sechead">DIGITAL TWIN INTELLIGENCE &mdash; RC3.0</div>
   <div style="border:1px solid rgba(155,107,240,.3);background:rgba(155,107,240,.04);padding:18px">
     <div style="font-family:var(--D);font-size:16px;color:#9B6BF0;margin-bottom:4px">PLANET-SCALE DIGITAL TWIN</div>
-    <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:#9B6BF0;margin-bottom:10px">RC3.0 &middot; FEDERATED INTELLIGENCE HUB</div>
-    <div style="font-size:11px;color:var(--muted);line-height:1.8;margin-bottom:12px">The Digital Twin Intelligence System (RC3.0) creates a real-time simulation layer over civilizational data. Every platform event, every matrix evolution, every knowledge discovery feeds a sovereign simulation that models impact at nation scale.</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:#9B6BF0;margin-bottom:10px">RC3.0 &middot; FEDERATED INTELLIGENCE HUB</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px">The Digital Twin Intelligence System (RC3.0) creates a real-time simulation layer over civilizational data. Every platform event, every matrix evolution, every knowledge discovery feeds a sovereign simulation that models impact at nation scale.</div>
     <div class="twin-grid" id="twin-grid"></div>
   </div>
 </div>
@@ -144,7 +144,7 @@ function labProgress(l){
   return Math.min(100,Math.round((MEMBER_PROGRESS[l.axisKey]||0.001)/9*100));
 }
 var DISCOVERIES=[
-  {icon:'&#9889;',title:'AUTHORITY FORMULA VALIDATED',desc:'The sqrt(A^3+B^3+C^3) formula produces a naturally distributed bell curve across the member base — confirming the mathematical fairness of the progression engine.',meta:'LAB 06 &middot; GOVERNANCE THEORY &middot; +91 XP'},
+  {icon:'&#9889;&#65038;',title:'AUTHORITY FORMULA VALIDATED',desc:'The sqrt(A^3+B^3+C^3) formula produces a naturally distributed bell curve across the member base — confirming the mathematical fairness of the progression engine.',meta:'LAB 06 &middot; GOVERNANCE THEORY &middot; +91 XP'},
   {icon:'&#9737;',title:'LUNAR MANSION 14 &mdash; ALNAIR ALIGNMENT',desc:'King 14 of the 28 Lunar Mansions confirmed to align with a visible star cluster at azimuth 167 degrees during the winter solstice. Heritage connection verified.',meta:'LAB 07 &middot; HERITAGE ARCHAEOLOGY &middot; +172 XP'},
   {icon:'&#9673;',title:'AGENT MEMORY OPTIMISATION',desc:'Sovereign agent memory compression reduced latency by 91.7% when using hash-chain verified semantic recall over raw vector search.',meta:'LAB 01 &middot; AI COGNITION &middot; +91 XP'},
   {icon:'&#38773;',title:'NINTH ELEMENT CORRELATION',desc:'The 10 domains of the Ninth Element show statistically significant positive correlation with matrix progression rates in members who log all 10 weekly.',meta:'LAB 03 &middot; BIO-SENTINEL &middot; +50 XP'}
@@ -233,5 +233,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

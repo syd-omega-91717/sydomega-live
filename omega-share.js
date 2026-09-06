@@ -12,7 +12,7 @@
   var APEX = 27.8367, SITE = 'https://sydomega.com';
 
   var css = [
-    '#osh-btn{position:fixed;right:12px;bottom:16px;z-index:9000;height:38px;padding:0 14px;display:flex;align-items:center;gap:7px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;border-radius:19px;cursor:pointer;transition:all .2s}',
+    '#osh-btn{position:fixed;right:12px;bottom:16px;z-index:9000;height:38px;padding:0 14px;display:flex;align-items:center;gap:7px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;border-radius:19px;cursor:pointer;transition:all .2s}',
     '#osh-btn:hover{border-color:rgba(201,168,76,.6);color:#E2C86D}',
     '#osh-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6}',
     '#osh-ov{position:fixed;inset:0;z-index:9600;background:rgba(2,2,6,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}',
@@ -21,13 +21,16 @@
     '#osh-card h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:17px;margin:0 0 4px}',
     '#osh-quote{font-size:12px;color:#8a8676;margin:0 0 16px;line-height:1.5}',
     '.osh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}',
-    '.osh-b{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#d8d5cb;text-decoration:none;font-size:9px;letter-spacing:1px;cursor:pointer;background:none;transition:all .2s}',
+    '.osh-b{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#d8d5cb;text-decoration:none;font-size:12px;letter-spacing:1px;cursor:pointer;background:none;transition:all .2s}',
     '.osh-b:hover{border-color:rgba(201,168,76,.6);color:#E2C86D;transform:translateY(-2px)}',
     '.osh-b svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}',
     '#osh-row{display:flex;gap:10px;margin-top:16px}',
-    '#osh-copy{flex:1;height:38px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:#E2C86D;border-radius:19px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer}',
-    '#osh-close{height:38px;padding:0 18px;border:1px solid rgba(201,168,76,.2);background:none;color:#c8c5ba;border-radius:19px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer}',
-    '@media(max-width:760px){#osh-btn{bottom:224px}}'
+    '#osh-copy{flex:1;height:38px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:#E2C86D;border-radius:19px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer}',
+    '#osh-close{height:38px;padding:0 18px;border:1px solid rgba(201,168,76,.2);background:none;color:#c8c5ba;border-radius:19px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer}',
+    /* 224 was measured against the mobile nav and controls dock; the consent
+       banner reaches 280px at 420x760 and swallowed this button. Same shared
+       inset the desktop ladder in bg.js uses. */
+    '@media(max-width:760px){#osh-btn{bottom:calc(224px + var(--omega-transient-bottom,0px))}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'osh-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);

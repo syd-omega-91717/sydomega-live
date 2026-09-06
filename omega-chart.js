@@ -37,7 +37,7 @@
     cyan:   { line:'#00E5FF', bg:'rgba(0,229,255,.06)',   point:'#00E5FF' },
     green:  { line:'#3fb27f', bg:'rgba(63,178,127,.06)',  point:'#3fb27f' },
     purple: { line:'#9B6BF0', bg:'rgba(155,107,240,.07)', point:'#9B6BF0' },
-    crim:   { line:'#8B0000', bg:'rgba(139,0,0,.07)',     point:'#8B0000' },
+    crim:   { line:'#C4453C', bg:'rgba(139,0,0,.07)',     point:'#C4453C' },
   };
 
   function resolveColor(name){ return COLOR[name] || COLOR.gold; }
@@ -162,7 +162,7 @@
 
   API.doughnut = function(canvas, labels, data, opts){
     opts = opts || {};
-    var cols = ['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#8B0000'];
+    var cols = ['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#C4453C'];
     require(function(Chart){
       if(canvas._omegaChart) canvas._omegaChart.destroy();
       canvas._omegaChart = new Chart(canvas, {

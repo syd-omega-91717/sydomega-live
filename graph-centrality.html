@@ -38,7 +38,7 @@
     .filter-controls select,
     .filter-controls input {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       padding: 8px;
       background: rgba(0, 229, 255, 0.05);
       border: 1px solid rgba(0, 229, 255, 0.3);
@@ -48,7 +48,7 @@
 
     .filter-controls button {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       padding: 8px 16px;
       background: rgba(201, 168, 76, 0.1);
       border: 1px solid rgba(201, 168, 76, 0.3);
@@ -87,7 +87,7 @@
 
     .stat-label {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 1px;
       color: rgba(224, 213, 183, 0.7);
       text-transform: uppercase;
@@ -112,7 +112,7 @@
 
     .centrality-table .tbl-row:first-child > div {
       font-family: var(--M);
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 2px;
       color: var(--solar);
       padding: 12px;
@@ -142,7 +142,7 @@
 
     .entity-type {
       font-family: var(--M);
-      font-size: 8px;
+      font-size: 12px;
       letter-spacing: 1px;
       padding: 2px 6px;
       background: rgba(0, 229, 255, 0.15);
@@ -176,14 +176,14 @@
 
     .centrality-label {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       color: var(--muted);
       padding-top: 4px;
     }
 
     .hub-badge {
       font-family: var(--M);
-      font-size: 8px;
+      font-size: 12px;
       letter-spacing: 1px;
       padding: 2px 8px;
       background: rgba(63, 178, 127, 0.2);
@@ -202,7 +202,7 @@
 
     .explore-btn {
       font-family: var(--M);
-      font-size: 9px;
+      font-size: 12px;
       padding: 6px 12px;
       background: rgba(0, 229, 255, 0.1);
       border: 1px solid rgba(0, 229, 255, 0.3);
@@ -219,7 +219,7 @@
 
     @media (max-width: 900px) {
       .centrality-table {
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .centrality-table th,
@@ -275,7 +275,8 @@
           <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">LOADING CENTRALITY DATA...</div>
         </div>
       </div>
-    </main>
+    <div data-page-emblem="graph-centrality" style="margin:20px auto 0"></div>
+</main>
   </div>
 
   <script>
@@ -470,5 +471,5 @@
 
     document.addEventListener('DOMContentLoaded', initCentrality);
   </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

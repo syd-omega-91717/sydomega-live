@@ -12,23 +12,23 @@
 .agent-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .agent-card.my-agent{box-shadow:0 0 20px rgba(0,229,255,.12)}
 .agent-glyph{font-size:28px;margin-bottom:8px;line-height:1}
-.agent-name{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:4px}
-.agent-role{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--ac,var(--cyan));margin-bottom:6px}
-.agent-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-.agent-voice{font-size:11px;line-height:1.65;color:var(--ink);opacity:.7;margin-bottom:10px}
-.agent-greeting{font-family:var(--M);font-size:8.5px;letter-spacing:.5px;color:var(--ink);opacity:.6;line-height:1.6;border-left:2px solid var(--ac,var(--gold));padding-left:10px}
-.tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.2);color:var(--muted)}
+.agent-name{font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:4px}
+.agent-role{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ac,var(--cyan));margin-bottom:6px}
+.agent-sign{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.agent-voice{font-size:12px;line-height:1.65;color:var(--ink);opacity:.7;margin-bottom:10px}
+.agent-greeting{font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--ink);opacity:.6;line-height:1.6;border-left:2px solid var(--ac,var(--gold));padding-left:10px}
+.tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.2);color:var(--muted)}
 .agent-panel{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.03);padding:16px;margin-bottom:16px;display:none}
 .agent-panel.visible{display:block}
 .chat-wrap{border:1px solid var(--line);overflow:hidden}
 .chat-head{padding:10px 14px;background:rgba(201,168,76,.04);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .chat-msgs{max-height:40vh;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:rgba(2,2,6,.6)}
-.msg{padding:10px 13px;font-size:11px;line-height:1.7;max-width:85%}
+.msg{padding:10px 13px;font-size:12px;line-height:1.7;max-width:85%}
 .msg-user{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);align-self:flex-end;color:var(--ink)}
 .msg-ai{background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.06);color:var(--ink);align-self:flex-start}
 .chat-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:rgba(10,10,15,.5)}
-.chat-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px 10px;outline:none}
-.chat-send{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);cursor:pointer;transition:.15s}
+.chat-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:12px;padding:8px 10px;outline:none}
+.chat-send{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);cursor:pointer;transition:.15s}
 .chat-send:hover{background:rgba(201,168,76,.2)}
 </style>
 </head>
@@ -59,7 +59,7 @@
 
 <div class="tab-panel" id="tab-myagent">
   <div class="sechead">YOUR ASSIGNED AGENT</div>
-  <div id="my-agent-panel" style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Set your sign in Profile to see your assigned agent.</div>
+  <div id="my-agent-panel" style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Set your sign in Profile to see your assigned agent.</div>
 </div>
 
 <div class="tab-panel" id="tab-chat">
@@ -69,15 +69,15 @@
       <div style="font-size:40px" id="ap-glyph">&#937;</div>
       <div>
         <div style="font-family:var(--D);font-size:14px;color:var(--gold)" id="ap-name">NO AGENT SELECTED</div>
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin:4px 0" id="ap-role">ACTIVATE AN AGENT FROM THE AGENTS TAB</div>
-        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)" id="ap-sign">--</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin:4px 0" id="ap-role">ACTIVATE AN AGENT FROM THE AGENTS TAB</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)" id="ap-sign">--</div>
       </div>
     </div>
-    <div style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:var(--ink);opacity:.7;line-height:1.7;border-left:2px solid var(--gold);padding-left:12px;margin-bottom:12px" id="ap-greeting">Select an agent from the AGENTS tab to open a channel.</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--ink);opacity:.7;line-height:1.7;border-left:2px solid var(--gold);padding-left:12px;margin-bottom:12px" id="ap-greeting">Select an agent from the AGENTS tab to open a channel.</div>
     <div class="chat-wrap">
       <div class="chat-head">
-        <span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)">&#9670; AGENT CHANNEL</span>
-        <span style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)" id="ap-domains">--</span>
+        <span style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)">&#9670; AGENT CHANNEL</span>
+        <span style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)" id="ap-domains">--</span>
       </div>
       <div class="chat-msgs" id="chat-msgs"></div>
       <div class="chat-input-row">
@@ -102,7 +102,7 @@
 
 <script>
 var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D',soul:'#9B6BF0',space:'#00E5FF',void:'#3fb27f',ninth:'#C9A84C'};
-var SIGN_GLYPHS={Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'};
+var SIGN_GLYPHS={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
 var _activeAgent=null;var _profile=null;
 var PHI=1.6180339887,EU=2.7182818285;
 </script>
@@ -129,7 +129,7 @@ function renderAgents(agents,profile){
     card.className='agent-card'+(isMyAgent?' my-agent':'');
     card.style.setProperty('--ac',col);
     card.style.borderTopColor=col;
-    card.innerHTML=(isMyAgent?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">YOUR ASSIGNED AGENT</div>':'')
+    card.innerHTML=(isMyAgent?'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">YOUR ASSIGNED AGENT</div>':'')
       +'<div class="agent-glyph">'+glyph+'</div>'
       +'<div class="agent-name">'+ag.name.toUpperCase()+'</div>'
       +'<div class="agent-role">'+ag.role.toUpperCase()+'</div>'
@@ -144,18 +144,18 @@ function renderAgents(agents,profile){
 
 function renderMyAgent(agents,profile){
   var panel=document.getElementById('my-agent-panel');
-  if(!profile||!profile.sign){panel.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Set your sign in Profile to see your assigned agent.</div>';return;}
+  if(!profile||!profile.sign){panel.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Set your sign in Profile to see your assigned agent.</div>';return;}
   var ag=agents.find(function(a){return a.sign===profile.sign;});
-  if(!ag){panel.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Agent not found for sign '+profile.sign+'.</div>';return;}
+  if(!ag){panel.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Agent not found for sign '+profile.sign+'.</div>';return;}
   var col=EL_COLORS[(ag.element||'').toLowerCase()]||'#C9A84C';
   var glyph=SIGN_GLYPHS[ag.sign]||'☆';
   panel.innerHTML='<div style="border:1px solid '+col+'44;border-top:3px solid '+col+';background:var(--surface);padding:20px;margin-bottom:14px">'
     +'<div style="font-size:40px;margin-bottom:10px">'+glyph+'</div>'
     +'<div style="font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:4px">'+ag.name.toUpperCase()+'</div>'
-    +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:'+col+';margin-bottom:8px">'+ag.role.toUpperCase()+'</div>'
-    +'<div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-bottom:10px">'+ag.sign.toUpperCase()+' &middot; '+(ag.element||'').toUpperCase()+' &middot; '+(ag.god||'').toUpperCase()+'</div>'
-    +'<div style="font-family:var(--M);font-size:9px;border-left:2px solid '+col+';padding-left:10px;color:var(--muted);line-height:1.7;margin-bottom:12px">&ldquo;'+ag.greeting+'&rdquo;</div>'
-    +'<button class="btn-gold" onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;')+',\''+col+'\',\''+glyph+'\');setTab(\'chat\')">OPEN CHANNEL &rarr;</button>'
+    +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+col+';margin-bottom:8px">'+ag.role.toUpperCase()+'</div>'
+    +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:10px">'+ag.sign.toUpperCase()+' &middot; '+(ag.element||'').toUpperCase()+' &middot; '+(ag.god||'').toUpperCase()+'</div>'
+    +'<div style="font-family:var(--M);font-size:12px;border-left:2px solid '+col+';padding-left:10px;color:var(--muted);line-height:1.7;margin-bottom:12px">&ldquo;'+ag.greeting+'&rdquo;</div>'
+    +'<button class="btn-gold" onclick="activateAgent('+JSON.stringify(ag).replace(/</g,'&lt;').replace(/"/g,'&quot;')+',\''+col+'\',\''+glyph+'\');setTab(\'chat\')">OPEN CHANNEL &rarr;</button>'
     +'</div>';
 }
 
@@ -193,11 +193,17 @@ window.sendToAgent=async function(){
   addMsg('user',q);
   var auth=_profile?(_profile.is_owner?27.8367:Math.sqrt(Math.pow(Number(_profile.axis_a||0.001),3)+Math.pow(Number(_profile.axis_b||0.001),3)+Math.pow(Number(_profile.axis_c||0.001),3))*PHI/EU):0;
   var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.sign||'?')+'. Be concise (under 100 words). Stay in character.';
+  /* concierge answers HTTP 200 {enabled:false} when ANTHROPIC_API_KEY is unset
+     (supabase/functions/concierge/index.ts:45) -- a dormant feature, not a fault. */
+  var dormant=false;
   try{
     var r=await sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',auth:auth.toFixed(4),tier:_profile&&_profile.subscription_tier||'free'}}});
     if(r.data&&r.data.reply){addMsg('ai',r.data.reply,EL_COLORS[(_activeAgent.element||'').toLowerCase()]);return;}
+    if(r.data&&r.data.enabled===false)dormant=true;
   }catch(e){}
-  addMsg('ai','I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. The AI bridge is temporarily unavailable. Please ensure the concierge edge function is deployed.');
+  addMsg('ai','I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. '+(dormant
+    ? 'Agent conversation is not switched on for this platform yet.'
+    : 'The channel is unreachable right now — please try again shortly.'));
 };
 
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('chat-inp'))window.sendToAgent();});
@@ -219,10 +225,10 @@ async function boot(){
     var agents=data.agents||[];
     renderAgents(agents,_profile);
     renderMyAgent(agents,_profile);
-  }catch(e){document.getElementById('agent-grid').innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">Could not load agent definitions.</div>';}
+  }catch(e){document.getElementById('agent-grid').innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Could not load agent definitions.</div>';}
 }
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

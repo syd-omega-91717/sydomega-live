@@ -10,10 +10,10 @@
 
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
-.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
-.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
 .lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
 .tab-pane{display:none}.tab-pane.active{display:block}
 
@@ -21,60 +21,60 @@
 .month-nav{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .mn-btn{font-family:var(--M);font-size:12px;color:var(--dim);background:none;border:1px solid rgba(201,168,76,.1);padding:4px 10px;cursor:pointer;transition:.1s}
 .mn-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
-.mn-label{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold);min-width:120px;text-align:center}
+.mn-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);min-width:120px;text-align:center}
 
 /* KPI ROW */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:20px}
 .kpi{border:1px solid rgba(201,168,76,.1);padding:14px 12px;text-align:center;position:relative;overflow:hidden}
 .kpi-v{font-family:var(--M);font-size:20px;color:var(--gold);letter-spacing:1px}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
-.kpi-sub{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);margin-top:3px}
+.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.kpi-sub{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:3px}
 
 /* CATEGORY BARS */
 .cat-section{margin-bottom:20px}
-.sect-title{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.08)}
+.sect-title{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.08)}
 .cat-bar-row{display:grid;grid-template-columns:90px 1fr 60px 60px;gap:8px;align-items:center;margin-bottom:6px}
-.cat-label{font-family:var(--M);font-size:8px;letter-spacing:1px}
+.cat-label{font-family:var(--M);font-size:12px;letter-spacing:1px}
 .cat-track{height:8px;background:rgba(201,168,76,.1);position:relative}
 .cat-fill{height:100%;transition:.4s;position:absolute;left:0;top:0}
 .cat-fill-bg{height:100%;background:rgba(201,168,76,.06);position:absolute;left:0;top:0;width:100%}
-.cat-actual{font-family:var(--M);font-size:8px;color:var(--dim);text-align:right}
-.cat-budget{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.35);text-align:right}
+.cat-actual{font-family:var(--M);font-size:12px;color:var(--dim);text-align:right}
+.cat-budget{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.35);text-align:right}
 .cat-over{color:#c0392b!important}
 
 /* FORM */
 .b-form{border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px;background:rgba(201,168,76,.02)}
-.b-form-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
+.b-form-title{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
 .b-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.b-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:4px}
-.b-in{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.5px}
+.b-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:4px}
+.b-in{width:100%;font-family:var(--M);font-size:12px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.5px}
 .b-in:focus{border-color:rgba(201,168,76,.35)}
 .b-in::placeholder{color:rgba(138,134,118,.25)}
-.b-select{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:#0D0D0B;border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none}
+.b-select{width:100%;font-family:var(--M);font-size:12px;padding:7px 10px;background:#0D0D0B;border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none}
 .b-full{grid-column:1/-1}
-.b-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.1s;margin-right:6px}
+.b-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.1s;margin-right:6px}
 .b-btn:hover{background:rgba(201,168,76,.08)}
 
 /* TRANSACTION LIST */
 .tx-list{margin-top:12px}
 .tx-row{display:grid;grid-template-columns:72px 1fr 90px 50px;gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(201,168,76,.06)}
-.tx-date{font-family:var(--M);font-size:8px;color:var(--dim)}
-.tx-desc{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.75)}
-.tx-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.12)}
-.tx-amt{font-family:var(--M);font-size:10px;text-align:right}
-.tx-del{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.3);background:none;border:none;cursor:pointer}
+.tx-date{font-family:var(--M);font-size:12px;color:var(--dim)}
+.tx-desc{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.75)}
+.tx-cat{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.12)}
+.tx-amt{font-family:var(--M);font-size:12px;text-align:right}
+.tx-del{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.3);background:none;border:none;cursor:pointer}
 .tx-del:hover{color:#c0392b}
 
 /* BUDGET TARGETS */
 .bt-row{display:grid;grid-template-columns:90px 1fr 80px;gap:8px;align-items:center;margin-bottom:6px}
-.bt-label{font-family:var(--M);font-size:8px;letter-spacing:1px}
-.bt-in{font-family:var(--M);font-size:10px;padding:5px 8px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;text-align:right;width:100%}
+.bt-label{font-family:var(--M);font-size:12px;letter-spacing:1px}
+.bt-in{font-family:var(--M);font-size:12px;padding:5px 8px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;text-align:right;width:100%}
 .bt-in:focus{border-color:rgba(201,168,76,.35)}
-.bt-currency{font-family:var(--M);font-size:8px;color:var(--dim)}
+.bt-currency{font-family:var(--M);font-size:12px;color:var(--dim)}
 
 /* TRENDS */
 .trends-month-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.trend-yr-btn{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer}
+.trend-yr-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer}
 .trend-yr-btn.on{color:var(--gold);border-color:rgba(201,168,76,.3)}
 </style>
   <script src="/bg.js"></script>
@@ -84,7 +84,7 @@
 <div class="shell">
 <aside class="side" id="omega-side" data-page="budget"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">BUDGET<small>SOVEREIGN FINANCE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="b-tb-meta">LOADING…</span></div>
+  <div class="topbar"><div class="t">BUDGET<small>SOVEREIGN FINANCE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="b-tb-meta">LOADING…</span></div>
   <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
@@ -95,9 +95,9 @@
   </div>
 
   <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-    <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
-    <button onclick="OmegaLocalBackup.exportKeys(['omega_budget_months','omega_budget_targets'],'omega-budget-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
-    <button onclick="OmegaLocalBackup.importKeys(['omega_budget_months','omega_budget_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    <div style="flex:1;min-width:220px;font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+    <button onclick="OmegaLocalBackup.exportKeys(['omega_budget_months','omega_budget_targets'],'omega-budget-backup.json')" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+    <button onclick="OmegaLocalBackup.importKeys(['omega_budget_months','omega_budget_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
   </div>
 
   <!-- OVERVIEW -->
@@ -193,14 +193,14 @@
       <div id="b-target-rows"></div>
       <div style="margin-top:12px">
         <button class="b-btn" id="b-save-targets">SAVE TARGETS</button>
-        <span style="font-family:var(--M);font-size:9px;color:var(--gold);margin-left:12px;opacity:0;transition:opacity .3s" id="b-target-flash">✓ SAVED</span>
+        <span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:12px;opacity:0;transition:opacity .3s" id="b-target-flash">✓ SAVED</span>
       </div>
     </div>
     <div style="margin-top:24px">
       <div class="trends-month-row" id="b-yr-select"></div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">INCOME vs EXPENSES — MONTHLY</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">INCOME vs EXPENSES — MONTHLY</div>
       <canvas id="b-trend-chart" style="width:100%;height:140px;display:block;margin-bottom:20px"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SAVINGS RATE % — MONTHLY</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SAVINGS RATE % — MONTHLY</div>
       <canvas id="b-savings-chart" style="width:100%;height:100px;display:block"></canvas>
     </div>
   </div>
@@ -222,13 +222,13 @@ const MONTHS_KEY  = 'omega_budget_months';
 const TARGETS_KEY = 'omega_budget_targets';
 
 const CATS = [
-  {id:'HOUSING',    label:'HOUSING',    color:'#E57373', icon:'🏠'},
-  {id:'TRANSPORT',  label:'TRANSPORT',  color:'#FF9800', icon:'🚗'},
-  {id:'FOOD',       label:'FOOD',       color:'#FFCA28', icon:'🍽'},
-  {id:'HEALTH',     label:'HEALTH',     color:'#66BB6A', icon:'💊'},
-  {id:'GROWTH',     label:'GROWTH',     color:'#5C8FD6', icon:'📚'},
-  {id:'LIFESTYLE',  label:'LIFESTYLE',  color:'#9C6FD6', icon:'✨'},
-  {id:'GIVING',     label:'GIVING',     color:'#26C6DA', icon:'🤝'},
+  {id:'HOUSING',    label:'HOUSING',    color:'#E57373', icon:'⌂'},
+  {id:'TRANSPORT',  label:'TRANSPORT',  color:'#FF9800', icon:'⌭'},
+  {id:'FOOD',       label:'FOOD',       color:'#FFCA28', icon:'⏥'},
+  {id:'HEALTH',     label:'HEALTH',     color:'#66BB6A', icon:'⊙'},
+  {id:'GROWTH',     label:'GROWTH',     color:'#5C8FD6', icon:'▥'},
+  {id:'LIFESTYLE',  label:'LIFESTYLE',  color:'#9C6FD6', icon:'✨︎'},
+  {id:'GIVING',     label:'GIVING',     color:'#26C6DA', icon:'⋈'},
   {id:'OTHER',      label:'OTHER',      color:'#90A4AE', icon:'•'},
 ];
 
@@ -344,10 +344,10 @@ function renderExpenseList() {
   const exps = [...(monthData(_curMonth).expenses||[])].sort((a,b)=>b.date.localeCompare(a.date));
   const el = document.getElementById('b-expense-list');
   if (!exps.length) {
-    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:16px 0;text-align:center">NO EXPENSES THIS MONTH</p>';
+    el.innerHTML = '<p style="font-family:var(--M);font-size:12px;color:var(--dim);padding:16px 0;text-align:center">NO EXPENSES THIS MONTH</p>';
     return;
   }
-  el.innerHTML = '<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);display:grid;grid-template-columns:72px 1fr 90px 50px;gap:6px;padding:4px 6px;border-bottom:1px solid rgba(201,168,76,.1);margin-bottom:4px"><span>DATE</span><span>DESCRIPTION</span><span>CATEGORY</span><span style="text-align:right">AMOUNT</span></div>' +
+  el.innerHTML = '<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);display:grid;grid-template-columns:72px 1fr 90px 50px;gap:6px;padding:4px 6px;border-bottom:1px solid rgba(201,168,76,.1);margin-bottom:4px"><span>DATE</span><span>DESCRIPTION</span><span>CATEGORY</span><span style="text-align:right">AMOUNT</span></div>' +
     exps.map(e => {
       const cat = CATS.find(c=>c.id===e.cat)||CATS[CATS.length-1];
       return `<div class="tx-row">
@@ -386,7 +386,7 @@ function renderIncomeList() {
   const incs = [...(monthData(_curMonth).income||[])].sort((a,b)=>b.date.localeCompare(a.date));
   const el = document.getElementById('b-income-list');
   if (!incs.length) {
-    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:16px 0;text-align:center">NO INCOME LOGGED THIS MONTH</p>';
+    el.innerHTML = '<p style="font-family:var(--M);font-size:12px;color:var(--dim);padding:16px 0;text-align:center">NO INCOME LOGGED THIS MONTH</p>';
     return;
   }
   el.innerHTML = incs.map(i =>
@@ -585,5 +585,5 @@ renderOverview();
 
 </script>
 <script src="omega-local-backup.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -64,8 +64,8 @@
       +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(10px,2vw,13px);letter-spacing:4px;color:'+gateColor+';animation:rise .5s .1s both">GATE UNLOCKED</div>'
       +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(32px,8vw,72px);color:'+gateColor+';margin:12px 0;line-height:1;animation:rise .5s .2s both">'+(gi+1)+'</div>'
       +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(16px,4vw,28px);color:'+gateColor+';animation:rise .5s .3s both">'+GATE_NAMES[gi]+'</div>'
-      +'<div style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:3px;color:rgba(138,134,118,.6);margin-top:14px;animation:rise .5s .4s both">AUTH THRESHOLD '+GATES[gi].toFixed(4)+'</div>'
-      +'<div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.4);margin-top:8px;animation:rise .5s .5s both">\u03A9 SYD OMEGA 91717 &middot; SOVEREIGN PROGRESSION</div>';
+      +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.6);margin-top:14px;animation:rise .5s .4s both">AUTH THRESHOLD '+GATES[gi].toFixed(4)+'</div>'
+      +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4);margin-top:8px;animation:rise .5s .5s both">\u03A9 SYD OMEGA 91717 &middot; SOVEREIGN PROGRESSION</div>';
     document.body.appendChild(overlay);
     overlay.addEventListener('click',function(){document.body.removeChild(overlay);});
     setTimeout(function(){if(overlay.parentNode)document.body.removeChild(overlay);},4500);
@@ -88,7 +88,7 @@
       ts.textContent='@media(max-width:760px){.omega-sdt-toast{bottom:215px!important}}';
       (document.head||document.documentElement).appendChild(ts);
     }
-    toast.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:5000;font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:2px;padding:8px 16px;background:rgba(2,2,6,.95);border:1px solid rgba(201,168,76,.3);border-radius:2px;color:var(--gold,#C9A84C);white-space:nowrap;animation:fadeIn .25s ease';
+    toast.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:5000;font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;padding:8px 16px;background:rgba(2,2,6,.95);border:1px solid rgba(201,168,76,.3);border-radius:2px;color:var(--gold,#C9A84C);white-space:nowrap;animation:fadeIn .25s ease';
     var axLabel={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'}[axis]||'AXIS';
     toast.textContent='+'+Number(delta||0.001).toFixed(3)+' \u2192 AXIS '+axLabel+' \u00b7 AUTH='+Number(newAuth||0).toFixed(4);
     toast.setAttribute('role','status');

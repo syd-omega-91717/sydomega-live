@@ -10,33 +10,33 @@
 #rate-table .tbl-row span.zone-name{text-align:left;color:var(--gold);letter-spacing:1px}
 .compose-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .fld{margin-bottom:14px}
-.fld label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px}
-.fld input,.fld select,.fld textarea{width:100%;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;padding:10px 12px;outline:none}
+.fld label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;padding:10px 12px;outline:none}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:rgba(201,168,76,.4)}
 .fld textarea{min-height:80px;resize:vertical}
 .fld select{letter-spacing:.5px}
 .quote-bar{display:flex;justify-content:space-between;align-items:baseline;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.05);padding:14px 16px;margin-bottom:14px}
-.quote-label{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
+.quote-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .quote-val{font-family:var(--D);font-size:22px;color:var(--solar)}
 .quote-val span{font-size:14px;color:var(--gold)}
-.submit-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:10px}
-.camp{font-family:var(--M);font-size:11px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.1)}
+.submit-msg{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:10px}
+.camp{font-family:var(--M);font-size:12px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.1)}
 .camp:last-child{border-bottom:none}
 .camp .top{display:flex;justify-content:space-between;gap:10px;color:var(--gold);margin-bottom:5px}
 .camp .bd{color:var(--ink);font-size:12px;margin-bottom:4px}
-.camp .dt{color:var(--muted);font-size:9px}
-.badge{font-size:8px;letter-spacing:1px;padding:2px 8px;border:1px solid;flex-shrink:0}
+.camp .dt{color:var(--muted);font-size:12px}
+.badge{font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid;flex-shrink:0}
 .badge.submitted{color:var(--cyan);border-color:rgba(0,229,255,.5)}
 .badge.approved{color:var(--solar);border-color:rgba(226,200,109,.5)}
 .badge.rejected{color:var(--crim);border-color:rgba(139,0,0,.6)}
 .badge.live{color:var(--green);border-color:rgba(63,178,127,.5)}
 .qitem{border-bottom:1px dashed rgba(201,168,76,.1);padding:13px 0}
 .qitem:last-child{border-bottom:none}
-.qitem .qt{font-family:var(--M);font-size:11px;color:var(--gold);display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}
+.qitem .qt{font-family:var(--M);font-size:12px;color:var(--gold);display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}
 .qitem .qm{font-size:13px;color:var(--ink);line-height:1.5;margin-bottom:5px}
-.qitem .qmeta{font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:8px}
+.qitem .qmeta{font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px}
 .qitem .qa{display:flex;gap:8px}
-.qitem .qa button{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:6px 14px;cursor:pointer;border:1px solid}
+.qitem .qa button{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 14px;cursor:pointer;border:1px solid}
 .qitem .qa .ap{color:var(--void);background:var(--green);border-color:var(--green)}
 .qitem .qa .rj{color:var(--crim);background:transparent;border-color:rgba(139,0,0,.6)}
 @media(max-width:600px){.compose-row{grid-template-columns:1fr}}
@@ -64,7 +64,7 @@
       <div id="rate-body"></div>
     </div>
   </div>
-  <div class="glass" style="padding:12px 14px;margin-top:12px;font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted)">All rates are quoted in &#937;. Payment and live rendering activate under the legal-cleared phase. No charge is made until Phase II is unlocked.</div>
+  <div class="glass" style="padding:12px 14px;margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)">All rates are quoted in &#937;. Payment and live rendering activate under the legal-cleared phase. No charge is made until Phase II is unlocked.</div>
 </div>
 
 <div class="tab-panel" id="tab-submit">
@@ -80,7 +80,7 @@
     <div class="quote-bar"><span class="quote-label">QUOTED RATE</span><span class="quote-val" id="m-price">0 <span>&#937;</span></span></div>
     <button class="btn-gold" id="m-go">SUBMIT FOR APPROVAL</button>
     <div class="submit-msg" id="m-msg-out"></div>
-    <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:10px;letter-spacing:.5px">Submissions enter review. Publish only on approval. Payment is <b style="color:var(--crim)">PHASE II</b> — gated on legal review.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:10px;letter-spacing:.5px">Submissions enter review. Publish only on approval. Payment is <b style="color:var(--crim)">PHASE II</b> — gated on legal review.</div>
   </div>
 </div>
 
@@ -147,7 +147,7 @@ async function loadList(){
   var box=document.getElementById('m-list');
   try{
     var r=await sb.from('media_reservations').select('zone,duration,title,message,price_omega,status,created_at').eq('user_id',_user.id).order('created_at',{ascending:false}).limit(30);
-    if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted)">No campaigns yet &mdash; submit your first above.</div>';return;}
+    if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No campaigns yet &mdash; submit your first above.</div>';return;}
     box.innerHTML='';
     r.data.forEach(function(q){
       var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
@@ -157,14 +157,14 @@ async function loadList(){
       d.querySelector('.bd').textContent=q.message||'';
       box.appendChild(d);
     });
-  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted)">Campaigns unavailable right now.</div>';}
+  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">Campaigns unavailable right now.</div>';}
 }
 
 async function loadQueue(){
   if(!_isOwner)return;
   var box=document.getElementById('queue-box');
   var r=await sb.from('media_reservations').select('id,user_id,zone,duration,title,message,price_omega,status,created_at').eq('status','submitted').order('created_at',{ascending:true}).limit(60);
-  if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted)">No submissions awaiting approval.</div>';return;}
+  if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No submissions awaiting approval.</div>';return;}
   box.innerHTML='';
   r.data.forEach(function(q){
     var dt=q.created_at?new Date(q.created_at).toLocaleString():'';
@@ -224,5 +224,5 @@ boot();
 </script>
 <script src="/upload.js"></script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

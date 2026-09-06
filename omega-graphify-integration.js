@@ -306,8 +306,11 @@
       if (window.OmegaNotify?.send) {
         window.OmegaNotify.send(message, 'info');
       } else {
-        // Fallback: insert into notifications table if available
-        await sb
+        // Fallback: insert into notifications table if available.
+        // The enclosing try/catch cannot see this failing — Supabase resolves
+        // {data:null,error} instead of throwing — so the error is read here
+        // (CLAUDE.md 8.1 class 1).
+        const { error: notifyError } = await sb
           .from('notifications')
           .insert([
             {
@@ -322,6 +325,9 @@
               read_at: null,
             },
           ]);
+        if (notifyError) {
+          console.error('[Graphify Integration] Notification insert failed:', notifyError.message);
+        }
       }
     } catch (err) {
       console.error('[Graphify Integration] Notification error:', err);

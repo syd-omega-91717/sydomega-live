@@ -103,30 +103,30 @@
     if(_el) return;
     var styles=document.createElement('style');
     styles.textContent='@keyframes copilot-in{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:none}}'
-      +'.cp-msg{padding:10px 14px;border-radius:2px;margin-bottom:8px;font-size:11px;line-height:1.7;max-width:88%}'
+      +'.cp-msg{padding:10px 14px;border-radius:2px;margin-bottom:8px;font-size:12px;line-height:1.7;max-width:88%}'
       +'.cp-msg-user{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);align-self:flex-end;color:#e9e6dc}'
       +'.cp-msg-ai{background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.08);color:#e9e6dc;align-self:flex-start}'
       +'.cp-msg-ai p{margin:0 0 6px}.cp-msg-ai p:last-child{margin:0}'
       +'.cp-msg-ai strong{color:#C9A84C}'
-      +'.cp-msg-ai code{font-family:"Courier Prime",monospace;font-size:10px;background:rgba(201,168,76,.08);padding:1px 5px;border-radius:2px;color:#E2C86D}'
+      +'.cp-msg-ai code{font-family:"Courier Prime",monospace;font-size:12px;background:rgba(201,168,76,.08);padding:1px 5px;border-radius:2px;color:#E2C86D}'
       +'.cp-msg-ai ul,.cp-msg-ai ol{margin:4px 0 4px 16px;padding:0}'
       +'.cp-msg-ai li{margin-bottom:2px}'
-      +'.cp-msg-ai h1,.cp-msg-ai h2,.cp-msg-ai h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:11px;margin:6px 0 4px}';
+      +'.cp-msg-ai h1,.cp-msg-ai h2,.cp-msg-ai h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:12px;margin:6px 0 4px}';
     document.head.appendChild(styles);
     _el=document.createElement('div');
     _el.id='omega-copilot';
     _el.innerHTML='<button id="cp-btn" aria-label="Open Sovereign Copilot" style="position:fixed;bottom:24px;right:24px;z-index:4500;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#8B6914);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.35);display:flex;align-items:center;justify-content:center;font-family:\'Cinzel Decorative\',serif;font-size:20px;color:#0A0A0F;transition:.2s" title="Sovereign Copilot">\u03A9</button>'
       +'<div id="cp-drawer" role="dialog" aria-label="Sovereign Copilot" aria-modal="true" style="position:fixed;bottom:90px;right:24px;z-index:4500;width:min(360px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.3);border-radius:4px;display:none;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.7);overflow:hidden;animation:copilot-in .25s ease">'
         +'<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,.04)">'
-          +'<div><div style="font-family:\'Cinzel Decorative\',serif;font-size:11px;color:#C9A84C">\u03A9 SOVEREIGN COPILOT</div><div style="font-family:\'Courier Prime\',monospace;font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.6);margin-top:3px">AUTH=sqrt(A\u00B3+B\u00B3+C\u00B3)\u00d7\u03c6/e &middot; APEX=27.8367</div></div>'
+          +'<div><div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C">\u03A9 SOVEREIGN COPILOT</div><div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);margin-top:3px">AUTH=sqrt(A\u00B3+B\u00B3+C\u00B3)\u00d7\u03c6/e &middot; APEX=27.8367</div></div>'
           +'<button onclick="window.OmegaCopilot.close()" style="font-size:18px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
         +'</div>'
         +'<div id="cp-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:200px;max-height:40vh;scrollbar-width:thin"></div>'
         +'<div style="padding:10px 12px;border-top:1px solid rgba(201,168,76,.1);display:flex;gap:8px">'
-          +'<input id="cp-input" type="text" placeholder="Ask the Copilot\u2026" aria-label="Copilot question" autocomplete="off" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:#e9e6dc;font-family:\'Courier Prime\',monospace;font-size:10px;padding:8px 10px;border-radius:2px;outline:none">'
+          +'<input id="cp-input" type="text" placeholder="Ask the Copilot\u2026" aria-label="Copilot question" autocomplete="off" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:#e9e6dc;font-family:\'Courier Prime\',monospace;font-size:12px;padding:8px 10px;border-radius:2px;outline:none">'
           +'<button id="cp-send" onclick="window.OmegaCopilot.send()" aria-label="Send" style="font-family:\'Cinzel Decorative\',serif;font-size:12px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:#C9A84C;border-radius:2px;cursor:pointer;transition:.15s">\u2192</button>'
         +'</div>'
-        +'<div id="cp-typing" style="display:none;padding:8px 16px;font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.4)">COPILOT THINKING\u2026</div>'
+        +'<div id="cp-typing" style="display:none;padding:8px 16px;font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">COPILOT THINKING\u2026</div>'
       +'</div>';
     document.body.appendChild(_el);
     document.getElementById('cp-btn').addEventListener('click',function(){

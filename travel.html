@@ -10,24 +10,24 @@
 .dest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:4px}
 .dest-card{border:1px solid var(--line);border-top:2px solid var(--dc,var(--gold));background:var(--surface);padding:18px;position:relative;cursor:pointer;transition:border-color .2s}
 .dest-card:hover{border-color:rgba(201,168,76,.5)}
-.region{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.region{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .dest-name{font-family:var(--D);font-size:15px;font-weight:700;color:var(--solar);margin-bottom:6px}
-.dest-desc{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.dest-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px}
 .tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
-.tag{font-family:var(--M);font-size:7px;letter-spacing:2px;padding:2px 6px;border:1px solid var(--line);color:var(--muted)}
-.matrix-link{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan)}
-.hrt-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold);padding:2px 6px}
+.tag{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 6px;border:1px solid var(--line);color:var(--muted)}
+.matrix-link{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan)}
+.hrt-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold);padding:2px 6px}
 .exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .exp-card{border:1px solid var(--line);background:var(--surface);padding:16px}
 .e-icon{font-size:22px;margin-bottom:8px}
-.e-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--solar);margin-bottom:5px}
-.e-desc{font-size:11px;color:var(--muted);line-height:1.65;margin-bottom:8px}
-.e-xp{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--green)}
-.form-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
-.form-input{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
+.e-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:5px}
+.e-desc{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:8px}
+.e-xp{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--green)}
+.form-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.form-input{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
 .journey-entry{border-bottom:1px dashed rgba(201,168,76,.09);padding:11px 0;display:flex;gap:12px}
-.journey-date{font-family:var(--M);font-size:8px;color:var(--muted);min-width:80px;flex-shrink:0}
+.journey-date{font-family:var(--M);font-size:12px;color:var(--muted);min-width:80px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -68,11 +68,11 @@
     </div>
     <textarea id="tr-notes" class="form-input" placeholder="What did you discover? What did this journey unlock in your matrix?" style="resize:vertical;min-height:70px;margin-bottom:12px"></textarea>
     <button id="btn-travel" class="btn-gold">LOG THIS JOURNEY</button>
-    <div id="tr-saved" style="font-family:var(--M);font-size:11px;color:var(--green);margin-top:10px;display:none">&#x2713; JOURNEY LOGGED &mdash; Added to your Heritage Archive and Space element layer.</div>
+    <div id="tr-saved" style="font-family:var(--M);font-size:12px;color:var(--green);margin-top:10px;display:none">&#x2713; JOURNEY LOGGED &mdash; Added to your Heritage Archive and Space element layer.</div>
   </div>
   <div class="sechead">YOUR SOVEREIGN JOURNEY LOG</div>
   <div class="glass" id="journey-feed" style="padding:14px 16px">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">No journeys logged yet. Every destination you record becomes part of your sovereign heritage.</div>
+    <div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:16px">No journeys logged yet. Every destination you record becomes part of your sovereign heritage.</div>
   </div>
 </div>
 
@@ -131,18 +131,18 @@ function setTab(name){
 window.loadDestInfo=function(i){
   var d=DESTS[i];
   var el=document.getElementById('dest-info-'+i);
-  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING&hellip;</span>';
   fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(d.wiki))
     .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
     .then(function(data){
       var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(d.wiki));
-      el.innerHTML='<div style="font-size:11px;line-height:1.7;color:var(--muted)">'+extract+'</div>'
-        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+      el.innerHTML='<div style="font-size:12px;line-height:1.7;color:var(--muted)">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
     })
     .catch(function(){
-      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia.</span> '
-        +'<button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:7px;color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;padding:2px 6px">RETRY</button>';
+      el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--crim)">Could not reach Wikipedia.</span> '
+        +'<button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:12px;color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;padding:2px 6px">RETRY</button>';
     });
 };
 
@@ -160,7 +160,7 @@ function renderDests(){
       '<div class="dest-desc">'+d.desc+'</div>'+
       '<div class="tag-row">'+d.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</div>'+
       '<div class="matrix-link">&#x25B6; '+d.link+'</div>'+
-      (d.wiki?'<div id="dest-info-'+i+'" style="margin-top:8px" onclick="event.stopPropagation()"><button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer">REAL PLACE INFO (WIKIPEDIA)</button></div>':'');
+      (d.wiki?'<div id="dest-info-'+i+'" style="margin-top:8px" onclick="event.stopPropagation()"><button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer">REAL PLACE INFO (WIKIPEDIA)</button></div>':'');
     grid.appendChild(card);
   });
 }
@@ -186,7 +186,7 @@ async function loadJourneys(){
     var entry=document.createElement('div');
     entry.className='journey-entry';
     entry.innerHTML='<div class="journey-date">'+new Date(j.created_at).toLocaleDateString()+'</div>'+
-      '<div><b style="color:var(--solar)">'+String(j.destination||'').replace(/</g,'&lt;')+'</b> &middot; '+String(j.purpose||'')+'<br><span style="font-size:11px;color:var(--muted)">'+String(j.notes||'').replace(/</g,'&lt;')+'</span></div>';
+      '<div><b style="color:var(--solar)">'+String(j.destination||'').replace(/</g,'&lt;')+'</b> &middot; '+String(j.purpose||'')+'<br><span style="font-size:12px;color:var(--muted)">'+String(j.notes||'').replace(/</g,'&lt;')+'</span></div>';
     feed.appendChild(entry);
   });
 }
@@ -217,5 +217,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

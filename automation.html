@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Automation</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
+<meta name="description" content="Compose IF-THEN rules that run on your own platform events, and read the log of what each one fired."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
@@ -23,35 +23,35 @@
 .rule-card .r-body{flex:1;min-width:0}
 .rule-card .r-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:4px}
 .rule-card .r-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
-.rule-card .r-trigger{font-family:var(--M);font-size:10px;color:var(--cyan);margin-top:8px}
-.rule-card .r-action{font-family:var(--M);font-size:10px;color:var(--green);margin-top:3px}
+.rule-card .r-trigger{font-family:var(--M);font-size:12px;color:var(--cyan);margin-top:8px}
+.rule-card .r-action{font-family:var(--M);font-size:12px;color:var(--green);margin-top:3px}
 .rule-card .r-meta{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
-.rule-badge{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
+.rule-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
 .badge-active{color:var(--green);border-color:rgba(63,178,127,.5)}
 .badge-paused{color:var(--crim);border-color:rgba(139,0,0,.5)}
 .badge-sys{color:var(--cyan);border-color:rgba(0,229,255,.3)}
 .badge-user{color:var(--solar);border-color:rgba(226,200,109,.3)}
-.r-toggle{margin-left:auto;flex-shrink:0;cursor:pointer;font-family:var(--M);font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid;background:transparent}
+.r-toggle{margin-left:auto;flex-shrink:0;cursor:pointer;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:6px 12px;border:1px solid;background:transparent}
 .r-toggle.on{color:var(--green);border-color:rgba(63,178,127,.5)}
 .r-toggle.off{color:var(--crim);border-color:rgba(139,0,0,.5)}
 .r-toggle:hover{opacity:.7}
 
 /* log */
 .log-entry{border-bottom:1px dashed rgba(201,168,76,.09);padding:12px 16px;display:flex;gap:14px;align-items:flex-start}
-.log-entry .l-ts{font-family:var(--M);font-size:9px;color:var(--muted);white-space:nowrap;margin-top:2px;min-width:70px}
+.log-entry .l-ts{font-family:var(--M);font-size:12px;color:var(--muted);white-space:nowrap;margin-top:2px;min-width:70px}
 .log-entry .l-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
 .l-dot.ok{background:var(--green)}.l-dot.info{background:var(--cyan)}.l-dot.warn{background:var(--gold)}
-.log-entry .l-msg{font-family:var(--M);font-size:11px;color:var(--ink);line-height:1.6}
+.log-entry .l-msg{font-family:var(--M);font-size:12px;color:var(--ink);line-height:1.6}
 .l-rule{color:var(--solar)}
 
 /* builder */
 .builder-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:18px}
 .if-block,.then-block{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:14px}
-.if-block .lbl,.then-block .lbl{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px}
+.if-block .lbl,.then-block .lbl{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px}
 .builder-arrow{font-family:var(--D);color:var(--gold);font-size:20px;text-align:center}
-select,input[type=text]{width:100%;font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;margin-top:6px;outline:none}
+select,input[type=text]{width:100%;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;margin-top:6px;outline:none}
 select:focus,input:focus{border-color:rgba(201,168,76,.4)}
-.success-msg{font-family:var(--M);font-size:11px;color:var(--green);margin-top:10px;display:none}
+.success-msg{font-family:var(--M);font-size:12px;color:var(--green);margin-top:10px;display:none}
 
 /* ohb */
 .ohb{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;border:1px solid var(--line);background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(10,10,15,.8),rgba(0,229,255,.03));margin-bottom:24px}
@@ -60,7 +60,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 .ohb-r{border-left:1px solid var(--line);text-align:right}
 .ohb-c{display:flex;align-items:center;justify-content:center;padding:0 16px}
 .ohb-val{font-family:var(--D);font-size:clamp(14px,2.2vw,20px);color:var(--gold);line-height:1}
-.ohb-sub{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);margin-top:5px}
+.ohb-sub{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-top:5px}
 
 /* science tab */
 
@@ -171,7 +171,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
       <div class="card-title">HOW THE ENGINE WORKS</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
         <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
-        <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:11px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+        <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
       </div>
     </div>
   </div>
@@ -318,7 +318,7 @@ var SYSTEM_RULES=[
    default_on:true},
   {name:'INCOME ALLOCATION TRIGGER',icon:'&#x03A9;',kind:'sys',
    trigger:'IF platform revenue event fires (subscription / consultancy / marketplace)',
-   action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool',
+   action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool (planned split; dormant behind platform_settings.tokens_enabled)',
    desc:'Every income event routes automatically through the sovereign allocation engine, distributing to the Master Vault, operational reserves, and the commission pool in real time.',
    default_on:true},
   {name:'VOID ASCENSION GUARD',icon:'&#x25A1;',kind:'sys',
@@ -494,4 +494,4 @@ function renderLog(events){
 })();
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

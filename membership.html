@@ -11,23 +11,23 @@
 .tier-card{border:1px solid var(--line);border-top:3px solid var(--tc,var(--gold));background:var(--surface);padding:20px;position:relative;transition:transform .15s}
 .tier-card:hover{transform:translateY(-2px)}
 .tier-card.active-tier{border-color:var(--tc,var(--gold));box-shadow:0 0 24px rgba(201,168,76,.12)}
-.tier-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--tc,var(--gold));border:1px solid var(--tc,var(--gold));padding:2px 7px}
+.tier-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--tc,var(--gold));border:1px solid var(--tc,var(--gold));padding:2px 7px}
 .tier-name{font-family:var(--D);font-size:16px;color:var(--tc,var(--solar));margin-bottom:4px}
-.tier-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.tier-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
 .tier-feats{list-style:none;padding:0;margin:0}
-.tier-feats li{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--ink);margin-bottom:6px;display:flex;gap:8px;align-items:flex-start}
+.tier-feats li{font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--ink);margin-bottom:6px;display:flex;gap:8px;align-items:flex-start}
 .tier-feats li::before{content:"✓";color:var(--tc,var(--gold));flex-shrink:0}
 .status-card{border:1px solid var(--line);border-top:3px solid var(--solar);background:var(--surface);padding:24px;margin-bottom:16px}
 .status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
-.status-item-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.status-item-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .status-item-val{font-family:var(--D);font-size:18px;color:var(--solar)}
 .benefit-tbl{border:1px solid var(--line);overflow:hidden;overflow-x:auto}
 .bt-head{display:grid;grid-template-columns:1fr 80px 100px 80px 80px;padding:9px 14px;background:rgba(201,168,76,.06);border-bottom:1px solid var(--line)}
-.bt-row{display:grid;grid-template-columns:1fr 80px 100px 80px 80px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px}
+.bt-row{display:grid;grid-template-columns:1fr 80px 100px 80px 80px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.05);font-size:12px}
 .bt-row:last-child{border-bottom:none}
 .bt-row:hover{background:rgba(201,168,76,.02)}
-.bth{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar);text-align:center}
-.bt-feat{font-family:var(--M);font-size:8px;color:var(--ink)}
+.bth{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);text-align:center}
+.bt-feat{font-family:var(--M);font-size:12px;color:var(--ink)}
 .bt-yes{text-align:center;color:var(--green)}
 .bt-no{text-align:center;color:rgba(255,255,255,.2)}
 .gate-bar{height:6px;background:rgba(255,255,255,.05);margin-top:10px;position:relative}
@@ -57,11 +57,11 @@
       <div><div class="status-item-label">STATUS</div><div class="status-item-val" id="mb-status">--</div></div>
       <div><div class="status-item-label">AUTHORITY</div><div class="status-item-val" id="mb-auth">--</div></div>
       <div><div class="status-item-label">GATE</div><div class="status-item-val" style="color:var(--gold)" id="mb-gate">--</div></div>
-      <div><div class="status-item-label">TRIAL</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink);margin-top:4px" id="mb-trial">--</div></div>
-      <div><div class="status-item-label">APPROVED</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink);margin-top:4px" id="mb-approved">--</div></div>
+      <div><div class="status-item-label">TRIAL</div><div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);margin-top:4px" id="mb-trial">--</div></div>
+      <div><div class="status-item-label">APPROVED</div><div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);margin-top:4px" id="mb-approved">--</div></div>
     </div>
     <div class="gate-bar"><div class="gate-fill" id="gate-fill" style="width:0%"></div></div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:6px">AUTH PROGRESS &middot; APEX = 27.8367</div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:6px">AUTH PROGRESS &middot; APEX = 27.8367</div>
   </div>
   <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-val" id="stat-auth">--</div><div class="kpi-label">AUTHORITY</div></div>
@@ -173,5 +173,5 @@ async function boot(){
 boot();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

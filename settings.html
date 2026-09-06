@@ -12,21 +12,21 @@
 .sw:hover{border-color:var(--gold)}
 .sw.sel{border-color:var(--gold);box-shadow:0 0 14px rgba(201,168,76,.25)}
 .sw .chip{height:46px;border:1px solid rgba(201,168,76,.2)}
-.sw .nm{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--muted);margin-top:8px}
+.sw .nm{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:8px}
 .sw.sel .nm{color:var(--gold)}
 .custom-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap}
-.custom-row label{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)}
+.custom-row label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .custom-row input[type=color]{width:54px;height:40px;background:var(--surface);border:1px solid var(--line);cursor:pointer}
 .langrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.settings-msg{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--green);min-height:14px;margin-top:10px}
-.settings-hint{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-top:10px}
+.settings-msg{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--green);min-height:14px;margin-top:10px}
+.settings-hint{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-top:10px}
 .settings-hint b{color:var(--gold)}
 .acct-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.btn-danger{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px 18px;border:1px solid rgba(139,0,0,.6);color:#e0736b;background:rgba(139,0,0,.08);cursor:pointer;transition:.2s}
+.btn-danger{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 18px;border:1px solid rgba(139,0,0,.6);color:#e0736b;background:rgba(139,0,0,.08);cursor:pointer;transition:.2s}
 .btn-danger:hover{background:rgba(139,0,0,.18);color:#ff8a80}
 .settings-section{border:1px solid var(--line);background:var(--surface);padding:20px;margin-bottom:16px}
-.settings-section-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--solar);margin-bottom:12px}
-select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);background:rgba(10,10,15,.6);border:1px solid var(--line);padding:8px 12px;outline:none;cursor:pointer;width:200px}
+.settings-section-title{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--solar);margin-bottom:12px}
+select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);background:rgba(10,10,15,.6);border:1px solid var(--line);padding:8px 12px;outline:none;cursor:pointer;width:200px}
 </style>
 </head>
 <body>
@@ -52,17 +52,17 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="custom-row">
       <label for="cpick">CUSTOM</label>
       <input type="color" id="cpick" value="#0A0A0F"/>
-      <button class="btn-gold" id="apply-custom" style="font-size:9px;letter-spacing:2px;padding:10px 16px">APPLY CUSTOM</button>
-      <button class="btn-gold" id="btn-reset" style="font-size:9px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO VOID</button>
+      <button class="btn-gold" id="apply-custom" style="font-size:12px;letter-spacing:2px;padding:10px 16px">APPLY CUSTOM</button>
+      <button class="btn-gold" id="btn-reset" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO VOID</button>
     </div>
     <div class="settings-msg" id="s-msg"></div>
   </div>
   <div class="settings-section">
     <div class="settings-section-title">APPEARANCE OVERRIDES</div>
     <div class="langrow">
-      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:10px;color:var(--muted)">Background <input type="color" id="ap-bg" value="#0A0A0F"/></label>
-      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:10px;color:var(--muted)">Text <input type="color" id="ap-text" value="#C9A84C"/></label>
-      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:10px;color:var(--muted)">Font
+      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:12px;color:var(--muted)">Background <input type="color" id="ap-bg" value="#0A0A0F"/></label>
+      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:12px;color:var(--muted)">Text <input type="color" id="ap-text" value="#C9A84C"/></label>
+      <label style="display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:12px;color:var(--muted)">Font
         <select class="omega-select" id="ap-font">
           <option value="">Default</option>
           <option value="modern">Modern</option>
@@ -72,8 +72,8 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
       </label>
     </div>
     <div class="langrow" style="margin-top:10px">
-      <button class="btn-gold" id="ap-apply" style="font-size:9px;letter-spacing:2px;padding:10px 16px">APPLY</button>
-      <button class="btn-gold" id="ap-reset-app" style="font-size:9px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO DEFAULT</button>
+      <button class="btn-gold" id="ap-apply" style="font-size:12px;letter-spacing:2px;padding:10px 16px">APPLY</button>
+      <button class="btn-gold" id="ap-reset-app" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO DEFAULT</button>
     </div>
   </div>
   <div class="sechead">LANGUAGE</div>
@@ -81,10 +81,10 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="settings-section-title">PLATFORM LANGUAGE</div>
     <p class="settings-hint">Choose your language. Applies across the whole platform, including right-to-left for Arabic.</p>
     <div class="langrow">
-      <button class="btn-gold" data-lang="en" style="font-size:9px;letter-spacing:2px;padding:10px 16px">English</button>
-      <button class="btn-gold" data-lang="ar" style="font-size:9px;letter-spacing:2px;padding:10px 16px">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</button>
-      <button class="btn-gold" data-lang="fr" style="font-size:9px;letter-spacing:2px;padding:10px 16px">Fran&ccedil;ais</button>
-      <button class="btn-gold" data-lang="es" style="font-size:9px;letter-spacing:2px;padding:10px 16px">Espa&ntilde;ol</button>
+      <button class="btn-gold" data-lang="en" style="font-size:12px;letter-spacing:2px;padding:10px 16px">English</button>
+      <button class="btn-gold" data-lang="ar" style="font-size:12px;letter-spacing:2px;padding:10px 16px">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</button>
+      <button class="btn-gold" data-lang="fr" style="font-size:12px;letter-spacing:2px;padding:10px 16px">Fran&ccedil;ais</button>
+      <button class="btn-gold" data-lang="es" style="font-size:12px;letter-spacing:2px;padding:10px 16px">Espa&ntilde;ol</button>
     </div>
   </div>
   <div class="sechead">PLATFORM TOUR</div>
@@ -92,7 +92,7 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="settings-section-title">DEMO VIDEO</div>
     <p class="settings-hint">Watch the welcome demo again anytime &mdash; the same video shown when you first entered as a verified member.</p>
     <div class="langrow">
-      <button class="btn-gold" id="btn-watch-demo" style="font-size:9px;letter-spacing:2px;padding:10px 16px">WATCH DEMO AGAIN</button>
+      <button class="btn-gold" id="btn-watch-demo" style="font-size:12px;letter-spacing:2px;padding:10px 16px">WATCH DEMO AGAIN</button>
     </div>
   </div>
 </div>
@@ -103,17 +103,17 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="settings-section-title">SESSION</div>
     <p class="settings-hint">Log out of your sovereign session on this device.</p>
     <div class="acct-row">
-      <button class="btn-gold" id="btn-logout" style="font-size:9px;letter-spacing:2px;padding:10px 16px">LOG OUT</button>
+      <button class="btn-gold" id="btn-logout" style="font-size:12px;letter-spacing:2px;padding:10px 16px">LOG OUT</button>
     </div>
   </div>
   <div class="settings-section">
     <div class="settings-section-title">YOUR DATA</div>
-    <p class="settings-hint">48 pages keep what you enter in this browser only. Clearing your browser
+    <p class="settings-hint">45 pages keep what you enter in this browser only. Clearing your browser
       data, or moving to a new device, loses it. Export writes a single file you keep; import reads it
       back. Nothing here is uploaded &mdash; the file goes straight to your device.</p>
     <div class="acct-row" style="gap:8px;flex-wrap:wrap">
-      <button class="btn-gold" id="btn-data-export" style="font-size:9px;letter-spacing:2px;padding:10px 16px">EXPORT MY DATA</button>
-      <button class="btn-gold" id="btn-data-import" style="font-size:9px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">IMPORT FROM FILE</button>
+      <button class="btn-gold" id="btn-data-export" style="font-size:12px;letter-spacing:2px;padding:10px 16px">EXPORT MY DATA</button>
+      <button class="btn-gold" id="btn-data-import" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">IMPORT FROM FILE</button>
     </div>
     <div class="settings-msg" id="data-msg" role="status" aria-live="polite"></div>
   </div>
@@ -121,7 +121,7 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="settings-section-title">DEACTIVATE ACCOUNT</div>
     <p class="settings-hint">Deactivate is reversible &mdash; sign back in to restore. Your profile and data are preserved.</p>
     <div class="acct-row">
-      <button class="btn-gold" id="btn-deactivate" style="font-size:9px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">DEACTIVATE ACCOUNT</button>
+      <button class="btn-gold" id="btn-deactivate" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">DEACTIVATE ACCOUNT</button>
     </div>
   </div>
   <div class="settings-section">
@@ -140,8 +140,8 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="settings-section-title">PROFILE VISIBILITY</div>
     <p class="settings-hint">Your profile is <b>private</b> by default &mdash; only you and the Order can see it. You may make it public so other members can view your sovereign profile.</p>
     <div class="langrow">
-      <button class="btn-gold" id="pv-private" style="font-size:9px;letter-spacing:2px;padding:10px 16px">MAKE PRIVATE</button>
-      <button class="btn-gold" id="pv-public" style="font-size:9px;letter-spacing:2px;padding:10px 16px">MAKE PUBLIC</button>
+      <button class="btn-gold" id="pv-private" style="font-size:12px;letter-spacing:2px;padding:10px 16px">MAKE PRIVATE</button>
+      <button class="btn-gold" id="pv-public" style="font-size:12px;letter-spacing:2px;padding:10px 16px">MAKE PUBLIC</button>
     </div>
     <div class="settings-msg" id="pv-status">Checking your current visibility...</div>
   </div>
@@ -266,7 +266,17 @@ async function refreshPrivacy(){
     if(stat)stat.textContent='Your profile is currently '+(pub?'PUBLIC — visible to other members.':'PRIVATE — visible only to you and the Order.');
   }catch(e){if(stat)stat.textContent='';}
 }
-async function setVis(v){try{await sb.rpc('set_profile_visibility',{p_public:v});refreshPrivacy();}catch(e){}}
+/* The try/catch here caught nothing: Supabase resolves {data:null,error}
+   rather than throwing, so a rejected visibility change was silent and
+   refreshPrivacy() simply repainted the old value (CLAUDE.md 8.1 class 1). */
+async function setVis(v){
+  var stat=document.getElementById('pv-status');
+  try{
+    var r=await sb.rpc('set_profile_visibility',{p_public:v});
+    if(r&&r.error){if(stat)stat.textContent='Could not change visibility — '+r.error.message;return;}
+    refreshPrivacy();
+  }catch(e){if(stat)stat.textContent='Could not change visibility.';}
+}
 document.getElementById('pv-private').addEventListener('click',function(){setVis(false);});
 document.getElementById('pv-public').addEventListener('click',function(){setVis(true);});
 refreshPrivacy();
@@ -291,5 +301,5 @@ refreshPrivacy();
 })();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

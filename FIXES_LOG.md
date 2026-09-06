@@ -13009,6 +13009,29 @@ regex now accepts comment and blank lines inside the block, and
   including the false-positive control for the fixed-group case
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
 
+### VERIFIED ON `main`, 2026-09-06 10:15Z
+
+The fix could only be proven where the failure lived, so it was measured there
+after PR #281 merged as `9dd4bd78`:
+
+```
+                        before (run 1063)      after (run 1070)
+job created             02:53:36Z              10:15:40Z
+runner assigned         03:46:42Z  53m 06s     10:15:43Z   3s
+job completed           03:47:29Z              10:16:29Z
+conclusion              success                success (all 31 steps)
+```
+
+**53m 06s → 3s** to get a runner. And the whole board concluded: all **11**
+workflows on `9dd4bd78` are `completed / success`, created 10:15:40 and finished
+between 10:15:48 and 10:16:29 — including `Supabase Runtime Contract` run 358,
+the other workflow that had never once reached a conclusion.
+
+The claim in this entry is therefore no longer a prediction. Note what made it
+checkable: `created_at` vs `started_at` on the **job**, not the run's own
+timestamps, which report the same value whether a runner was assigned instantly
+or an hour later.
+
 ---
 
 ## 113 — "LOCAL_ONLY" was read as "this data is lost", and it nearly caused a rebuild of a table that already exists

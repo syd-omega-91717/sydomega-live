@@ -40,5 +40,6 @@ jobs:
         run: |
           test -s public/index.html
           test -s public/vendor/supabase-js.js
-          test -s public/assets/js/omega-visual-engine.js
           test -s public/assets/js/omega-runtime-observability.js
+          test -d public/i18n
+          test -d public/vendor

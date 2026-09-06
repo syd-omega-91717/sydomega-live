@@ -206,6 +206,41 @@ AUTH_RE = re.compile(
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
 
+# MIRROR COVERAGE. omega-member-state.js (injected by bg.js on every page)
+# copies every localStorage key beginning "omega" up to public.member_state,
+# so a LOCAL_ONLY page's data is NOT necessarily device-only. This matrix used
+# to state the opposite as fact -- "not synced, not visible to the owner, gone
+# with the cache", and "**no export path**" on 40 pages -- and that wording
+# very nearly caused a session to rebuild member_state from scratch, a table
+# that already exists live with correct RLS, GRANTs and a (user_id, key)
+# primary key (FIXES_LOG.md 113).
+#
+# A key reaches the mirror only if it starts with "omega", so coverage is a
+# per-page fact worth measuring rather than assuming in either direction.
+# Keys are often held in a const (journal.html writes ENC_KEY, not a literal),
+# so a literal-only scan reports zero writes on pages that plainly have them --
+# resolve single-quoted/double-quoted const assignments in the same file first.
+LS_SET_KEY_RE = re.compile(r'\blocalStorage\s*\.\s*setItem\s*\(\s*([^,]+?)\s*,')
+LS_CONST_RE = re.compile(r'''(?:const|let|var)\s+(\w+)\s*=\s*['"]([^'"]+)['"]''')
+MIRROR_PREFIX = 'omega'
+
+
+def mirror_coverage(text):
+    """(covered, uncovered, unresolved) counts of localStorage.setItem keys."""
+    consts = dict(LS_CONST_RE.findall(text))
+    covered = uncovered = unresolved = 0
+    for expr in LS_SET_KEY_RE.findall(text):
+        e = expr.strip()
+        lit = re.fullmatch(r'''['"]([^'"]+)['"]''', e)
+        key = lit.group(1) if lit else consts.get(e)
+        if key is None:
+            unresolved += 1
+        elif key.startswith(MIRROR_PREFIX):
+            covered += 1
+        else:
+            uncovered += 1
+    return covered, uncovered, unresolved
+
 
 def live_surface():
     """Relations the LIVE database actually had, from supabase/live-schema.json.
@@ -277,6 +312,7 @@ def scan_client(path):
         'rpcs': rpcs,
         'edges': edges,
         'ls_writes': len(LS_WRITE_RE.findall(text)),
+        'mirror': mirror_coverage(text),
         'auth': len(AUTH_RE.findall(text)),
         'backup': bool(BACKUP_RE.search(text)),
         'lines': text.count('\n') + 1,
@@ -351,13 +387,24 @@ def classify(page, info, rels, fns, nav, module_tables):
         return 'BUILT', detail
 
     if info['ls_writes']:
-        detail = ('%d localStorage write%s, no table/rpc/edge call -- member '
-                  'data is device-local' % (info['ls_writes'],
-                                            '' if info['ls_writes'] == 1 else 's'))
+        detail = ('%d localStorage write%s, no table/rpc/edge call of its own'
+                  % (info['ls_writes'],
+                     '' if info['ls_writes'] == 1 else 's'))
         if auth_ev:
             detail += ' (signs the member in: %s)' % auth_ev
         detail += ('; has an OmegaLocalBackup export path'
-                   if info['backup'] else '; **no export path**')
+                   if info['backup'] else '; no page-level export path')
+        cov, unc, unres = info['mirror']
+        if unc == 0 and unres == 0 and cov:
+            detail += ('; all %d key%s `omega`-prefixed, so mirrored to '
+                       '`member_state` by omega-member-state.js'
+                       % (cov, '' if cov == 1 else 's'))
+        elif unc:
+            detail += ('; **%d key%s NOT `omega`-prefixed, so NOT mirrored**'
+                       % (unc, '' if unc == 1 else 's'))
+        elif unres:
+            detail += ('; %d key%s built at runtime — mirror coverage '
+                       'unresolved by static scan' % (unres, '' if unres == 1 else 's'))
         return 'LOCAL_ONLY', detail
 
     return 'STATIC', ('no persisted state; ' + auth_ev + ' only') if auth_ev \
@@ -498,7 +545,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('|---|---|')
     w('| `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |')
     w('| `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
-    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call. Member data is device-local — not synced, not visible to the owner, gone with the cache. Some pages sign the member in first; that gives them a session, not persistence. |')
+    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
     w('| `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |')

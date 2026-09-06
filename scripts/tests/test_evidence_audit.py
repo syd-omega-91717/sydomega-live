@@ -314,6 +314,63 @@ class TestLiveSchemaCrossCheck(EvidenceAuditFixture):
         self.assertIn('captured **2024-01-15**', self.report())
 
 
+class TestMirrorCoverage(EvidenceAuditFixture):
+    """LOCAL_ONLY must not be read as "this data is lost with the cache".
+
+    omega-member-state.js (bg.js, every page) mirrors every `omega`-prefixed
+    localStorage key to public.member_state. The matrix used to assert the
+    opposite as fact, and that wording nearly caused a session to rebuild
+    member_state -- a table already live with correct RLS, GRANTs and a
+    (user_id, key) primary key (FIXES_LOG.md 113).
+    """
+
+    def test_omega_prefixed_keys_are_reported_as_mirrored(self):
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('notes.html', "<script>localStorage.setItem('omega_notes', x)</script>")
+        self.audit_stdout()
+        row = self.report()
+        self.assertIn('mirrored to `member_state`', row)
+        self.assertNotIn('NOT `omega`-prefixed', row)
+
+    def test_a_key_outside_the_prefix_is_flagged_not_mirrored(self):
+        """THE CONTROL. Without this, a scanner that called everything mirrored
+        would pass the test above and be exactly as wrong as the old wording."""
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('notes.html', "<script>localStorage.setItem('my_notes', x)</script>")
+        self.audit_stdout()
+        self.assertIn('NOT mirrored', self.report())
+
+    def test_a_key_held_in_a_const_is_resolved(self):
+        """journal.html writes ENC_KEY, not a literal. A literal-only scan
+        reported ZERO setItem keys on such pages -- a serene zero that made
+        every one of them look trivially covered."""
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('notes.html',
+                   "<script>const ENC_KEY = 'omega_journal_enc';"
+                   "localStorage.setItem(ENC_KEY, v)</script>")
+        self.audit_stdout()
+        self.assertIn('mirrored to `member_state`', self.report())
+
+    def test_a_const_outside_the_prefix_is_still_caught(self):
+        """The const path must not become a blanket pass."""
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('notes.html',
+                   "<script>const K = 'journal_enc';"
+                   "localStorage.setItem(K, v)</script>")
+        self.audit_stdout()
+        self.assertIn('NOT mirrored', self.report())
+
+    def test_a_runtime_built_key_is_reported_unresolved_not_covered(self):
+        """body.html/sleep.html/stoic.html funnel writes through save(k,v).
+        Static analysis cannot see the key, and claiming coverage would be the
+        same false confidence this whole class exists to remove."""
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('notes.html',
+                   "<script>function save(k,v){localStorage.setItem(k,v)}</script>")
+        self.audit_stdout()
+        self.assertIn('unresolved by static scan', self.report())
+
+
 class TestHelpDoesNotRun(EvidenceAuditFixture):
     def test_help_prints_and_writes_nothing(self):
         """Asking what a writer does must not make it do it (CLAUDE.md §8.4)."""

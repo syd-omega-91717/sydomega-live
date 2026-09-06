@@ -12984,3 +12984,97 @@ regex now accepts comment and blank lines inside the block, and
 - `python3 -m unittest discover -s scripts/tests` → **279** passing (was 271),
   including the false-positive control for the fixed-group case
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 113 — "LOCAL_ONLY" was read as "this data is lost", and it nearly caused a rebuild of a table that already exists
+
+**Symptom.** `EVIDENCE_MATRIX.md` described 45 pages as device-local, with
+**40** of them carrying `**no export path**`, and its own legend said member
+data there is *"not synced, not visible to the owner, gone with the cache."*
+
+Acting on that, this session began designing a member key-value store: a table,
+RLS, a table-level GRANT, a sync module. All of it already exists.
+
+### What is actually live
+
+```
+public.member_state(user_id uuid, key text, value jsonb, updated_at timestamptz)
+  PRIMARY KEY (user_id, key)                    -- a real unique index
+  FOREIGN KEY user_id -> auth.users ON DELETE CASCADE
+  4 policies, all roles=authenticated:
+    select/update/delete USING  (select auth.uid()) = user_id
+    insert/update    WITH CHECK (select auth.uid()) = user_id
+  GRANT to authenticated: SELECT, INSERT, UPDATE, DELETE
+```
+
+Policies **and** grants both present, so §8.1 class 6 is satisfied; the PK is a
+real unique index, so `onConflict:'user_id,key'` is valid and class 7 is
+satisfied. `omega-member-state.js` (injected by `bg.js:2192` on every page)
+mirrors localStorage up to it, checks `.error` explicitly at lines 220–225 and
+311 (class 1), and exposes restore only as an explicit member action.
+
+And it is **running in production**, not merely deployed:
+
+```
+key                     value_bytes  updated_at
+omega_dedication_today           17  2026-09-06 02:48:58   <- minutes before this run
+omega_quotes                   2753  2026-09-05 23:10:49
+omega_affirmations             1412  2026-09-05 23:10:49
+omega_skills                    692  2026-09-05 23:10:49
+omega_habits_v2                1537  2026-09-04 18:25:59
+omega_rituals                  1910  2026-09-04 18:25:59
+omega_atlas_v2                 1776  2026-09-04 18:25:59
+   … 14 rows, 1 distinct user
+```
+
+### Why the label was wrong rather than merely terse
+
+`evidence-audit.py` classifies a page by what **that page** calls. The mirror is
+a platform-wide `bg.js` module, so it is invisible to a per-page scan — and the
+matrix then stated the consequence ("gone with the cache") as fact rather than
+reporting the limit of its own method.
+
+The mirror covers any key beginning `omega`, so coverage is a real per-page
+question. Measured across all 45 LOCAL_ONLY pages: **80 keys covered, 0 not
+covered, 4 built at runtime.**
+
+**A literal-only scan of those pages reports ZERO `setItem` keys** — a serene
+zero (§8.4). `journal.html` writes `ENC_KEY`, not a string, and the first pass
+here returned `0 covered / 0 uncovered` on all 45 pages while the matrix said
+they had 1–5 writes each. Resolving same-file `const` assignments gives the real
+numbers; the four residual cases funnel through `save(k,v)` in `body.html`,
+`command.html`, `sleep.html` and `stoic.html`, whose call sites resolve by hand
+to `omega_body_log`, `omega_command_briefs`, `omega_sleep_log`,
+`omega_stoic_journal` and six more — all prefixed, so covered in fact, but the
+scanner reports them **unresolved** rather than claiming coverage it cannot see.
+
+`evidence-audit.py` now measures and prints this per page, and the legend says
+what LOCAL_ONLY does and does not mean. Five tests, two of them controls: a key
+outside the prefix must still be flagged `NOT mirrored`, and the const path must
+not become a blanket pass.
+
+### A real over-grant, correctly scoped
+
+`authenticated` holds **TRUNCATE on 214 tables** — `GRANT ALL ... TO
+authenticated` at some point in the schema's history. TRUNCATE bypasses RLS, so
+this would be severe if reachable.
+
+It is not reachable: PostgREST exposes no TRUNCATE verb, and
+
+```sql
+select proname from pg_proc where prosrc ilike '%truncate%'   -- 0 rows
+```
+
+no function issues one either. So it is a least-privilege violation and a
+latent hazard for any future `SECURITY INVOKER` function, **not** a live
+exploit — recorded in `GAP_ANALYSIS.md` §S at that weight, and deliberately not
+"fixed" in this change: revoking across 214 tables is a schema-wide migration
+that deserves its own verified pass.
+
+### Verification
+
+- live queries above via `mcp__Supabase__execute_sql` (§8.2: the MCP works
+  despite the authorization banner — try the call before reporting it blocked)
+- `python3 -m unittest discover -s scripts/tests` → **284** passing (was 279)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

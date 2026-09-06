@@ -545,11 +545,11 @@ Only what changes what you do in the **first minutes** stays here:
   `ubuntu-latest`; `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and still
   never run. **A pending check is not a passing one** — read `status`, not just `conclusion`.
   `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
-  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** concurrency
-  group with `cancel-in-progress: false` never concludes — `ci.yml` (§7's primary gate) and
-  `supabase-runtime-contract.yml` were `cancelled` on *every* run on `main`, 30 in all, while
-  the 13 setting `true` finished in seconds (`FIXES_LOG.md` 112). Gated; a **fixed** group with
-  `false` (`vercel-production.yml`) is correct and exempt.
+  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** group with
+  `cancel-in-progress: false` **starves** — `ci.yml` (§7's gate) was `cancelled` 30 runs
+  running on `main`: a job waits ~53min for a runner and any push in that window cancels it
+  (run 1063 queued 53m06s, then passed in 45s — **starvation, not deadlock**;
+  `FIXES_LOG.md` 112). Gated; a **fixed** group with `false` is correct and exempt.
 
 ### 8.3 Current verification baseline
 

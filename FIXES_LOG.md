@@ -12942,11 +12942,35 @@ concurrency:
 
 A run enters the group, waits for a slot, and the next push to `main` arrives
 before a runner is assigned — so the queued run is cancelled rather than the
-newcomer waiting. With pushes arriving faster than these jobs get scheduled,
-every run is cancelled by its successor and none ever starts. The thirteen
-workflows in this repo that set `cancel-in-progress: true` conclude in seconds
-on the very same commits, which is what makes the correlation measurable rather
-than theoretical.
+newcomer waiting. The thirteen workflows in this repo that set
+`cancel-in-progress: true` conclude in seconds on the very same commits, which
+is what makes the correlation measurable rather than theoretical.
+
+**CORRECTION, same day.** This entry first said "none ever starts". That was
+too strong, and `main` disproved it within the hour: run **1063**
+(`d0b92c09`) completed **`success`** with the fix still unmerged. Its timings
+are the real mechanism:
+
+```
+run created    2026-09-06T02:53:36Z
+job assigned   2026-09-06T03:46:42Z   <- 53m 06s later
+job started    2026-09-06T03:46:44Z
+job completed  2026-09-06T03:47:29Z   <- 45s of actual work
+```
+
+So this is **starvation, not deadlock**: the run waits ~53 minutes for a
+runner, and with `cancel-in-progress: false` any push inside that window
+cancels it. Thirty consecutive cancellations happened because pushes kept
+arriving faster than the queue drained; when they stopped, the last queued run
+got a runner and passed in 45 seconds.
+
+The fix is unchanged and is if anything better justified — 45 seconds of work
+should not be reachable only after a 53-minute wait that any push resets. But
+the overstatement is corrected here rather than left standing, because the
+counter-example was one API call away and a reviewer would have found it. The
+transferable rule: **a run that has not concluded has not been shown never to
+conclude.** Read the job's `created_at` vs `started_at` before calling a queue
+a deadlock.
 
 Both are now `true`. On `main` only the newest commit's result matters, so
 superseding an unstarted run is exactly what those thirteen already do — this

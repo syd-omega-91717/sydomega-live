@@ -284,12 +284,13 @@ through this one file with no per-page markup changes:
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
   linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
   emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
-- **`omega-cinematic-system.css` reaches every page** (bg.js, guarded by
-  `#omega-cinematic-css`): `.omega-cinematic`, `.omega-emblem`,
-  `.omega-depth-card`, `.omega-node` — it was on **1 of 189** pages. Additive; its
-  `:root` declares only names it invents, having redeclared `--omega-void`/
-  `--omega-line` against three sheets that disagree (`FIXES_LOG.md` 108).
-  `--omega-line` is undefined outside `index.html` — read it with a fallback.
+- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED on one page**
+  (bg.js, `#omega-cinematic-css`). Rendered: its 4 rules are in every cascade, yet
+  `.omega-cinematic`/`.omega-emblem`/`.omega-depth-card`/`.omega-node` match
+  **0/0/0/0** on `dashboard`/`profile` and **1/1/6/0** on `index` — the sheet changed
+  no page's paint; what remains is markup adoption (`FIXES_LOG.md` 114). Additive;
+  `:root` declares only names it invents (108); `--omega-line` is undefined outside
+  `index.html` — read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated
@@ -616,12 +617,11 @@ entries (which were accurate when written):
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
 - **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** At `--depth 1` every file dates to the clone itself, so any per-file
-  date derived that way is a guess. `actions/checkout@v4` is shallow by default,
-  which made `omega-registry.py --check` a guaranteed CI failure and had already
-  put three wrong dates in the committed registry. The generator now checks the
-  SHA against `.git/shallow` and refuses rather than writing a date it cannot
-  know; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the shallowness.
+  not fail.** At `--depth 1` every file dates to the clone, so any per-file date from
+  it is a guess — three wrong dates reached the committed registry that way.
+  `omega-registry.py` now checks the SHA against `.git/shallow` and refuses rather
+  than guessing; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the
+  shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches

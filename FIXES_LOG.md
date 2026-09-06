@@ -13102,3 +13102,63 @@ that deserves its own verified pass.
   despite the authorization banner — try the call before reporting it blocked)
 - `python3 -m unittest discover -s scripts/tests` → **284** passing (was 279)
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 114 — The cinematic sheet reaches 189 pages; the cinematic *system* still reaches one
+
+**Symptom.** None visible, which is the point. Entry 108 and commit `0934c00c`
+("the cinematic layer reached 1 page of 189 — now it reaches all of them") are
+true about the **stylesheet** and misleading about the **outcome**.
+
+### Measured in a render, not inferred
+
+`dashboard.html`, `profile.html`, `index.html`, after full load:
+
+```
+page             sheetLoaded  rulesInCascade  .omega-cinematic / -emblem / -depth-card / -node
+dashboard.html   true         4               0 / 0 / 0 / 0
+profile.html     true         4               0 / 0 / 0 / 0
+index.html       true         4               1 / 1 / 6 / 0
+```
+
+The injection works exactly as entry 108 describes: the sheet is present and its
+four rules are in every page's cascade. But **nothing carries the classes**. On
+188 of 189 pages the sheet styles zero elements, so making it reach them changed
+no page's paint.
+
+This is a cousin of §4's standing warning — *a rule written in bg.js for a
+surface it does not own is dead code that looks correct in the diff*. Here the
+rule reaches the cascade and still paints nothing, because the selector has no
+adopters. **Delivery is three claims, not one: the file loads, the rules parse,
+and something matches them.** Only the third is a visual change, and only a
+render can report it.
+
+### What task #7 actually is, and the trap waiting in it
+
+The remaining work is markup adoption, not stylesheet delivery. Before any
+sweep, note what `.omega-cinematic` does:
+
+```css
+.omega-cinematic:before{content:"";position:fixed;inset:0;z-index:-1;
+  pointer-events:none;background:radial-gradient(...),radial-gradient(...)}
+```
+
+A **fixed, full-viewport** backdrop. The estate already composites four of
+those: `omega-backdrop.js`'s `body{background}` (with `!important`),
+`omega-particles.js`'s per-element canvas, the `#omega-noise-overlay` div, and
+`omega-visual-evolution.css`'s `body::before` field. Adding `.omega-cinematic`
+to 188 pages stacks a **fifth**. That is the §4 "a sweep is not additive" rule in
+its most literal form.
+
+So the adoption has to be measured per batch against a real noise floor — §8.4
+records that a before/after screenshot diff here reads ~1.6% of pixels changed
+with **no change at all**, because the particle canvas never settles. Not swept
+in this change for that reason.
+
+### Verification
+
+- rendered via `.claude/skills/verify-in-browser/harness`, three pages, counts above
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `python3 scripts/context-budget.py` → PASS (CLAUDE.md ~15,985 / 16,000; the
+  fixed shallow-clone note compressed to make room)

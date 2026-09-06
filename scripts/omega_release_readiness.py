@@ -6,6 +6,10 @@ from pathlib import Path
 import json
 import sys
 
+if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
+    print(__doc__)
+    sys.exit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "vercel.json",

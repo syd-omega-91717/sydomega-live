@@ -156,7 +156,7 @@
       '.on-hb{display:flex;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
       '.on-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
-      '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0}',
+      '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0;text-decoration:none}',
       '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
       '.on-sections::-webkit-scrollbar{display:none}',
       /* Each icon cell: icon + permanent label */
@@ -228,7 +228,14 @@
   h+='<a class="on-btn" href="/dashboard.html" title="Home">&#x2302;</a>';
   h+='<div class="on-btn" id="on-back" title="Back">&#x2190;</div>';
   h+='</div>';
-  h+='<div class="on-brand" onclick="location.href=\'/dashboard.html\'" title="SYD OMEGA 91717"><canvas id="on-bcv" width="88" height="88" style="width:44px;height:44px"></canvas></div>';
+  /* A real <a>, not a div with onclick. This mark sits on EVERY page, so as a
+     div it was the one keyboard-inaccessible control on all of them (measured:
+     1 per page across the estate, 44 on dashboard where more are page-local).
+     A native link is focusable, Enter-activatable, and supports middle-click
+     and open-in-new-tab for free -- none of which a div+role can give back.
+     Its only child is a <canvas>, so it has no text to name it: aria-label
+     carries what the title attribute used to. */
+  h+='<a class="on-brand" href="/dashboard.html" title="SYD OMEGA 91717" aria-label="SYD OMEGA 91717 — Command Bridge"><canvas id="on-bcv" width="88" height="88" style="width:44px;height:44px"></canvas></a>';
   h+='<div class="on-sections">';
   SECTIONS.forEach(function(sec){
     var isAct=sec.key===activeSection;

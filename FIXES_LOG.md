@@ -13590,3 +13590,78 @@ what actually settles it.
   module is referenced from `bg.js`, so it is not an orphan)
 - `node scripts/verify-runtime.js` → **PASS (13 pages)**
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 121 — Vercel's ignore-build step deployed for changes that cannot reach the artifact
+
+On 2026-09-06 Vercel began refusing deployments outright:
+
+```
+Resource is limited - try again in 24 hours
+(more than 100, code: "api-deployments-free-per-day")
+```
+
+That is the **second** free-tier ceiling this repository hit the same day; the
+first was GitHub Actions rejecting every job at dispatch (entry 117). Both have
+the same shape: a very high rate of pushes, each one spending a unit of a
+finite daily allowance.
+
+### The defect
+
+`scripts/vercel-ignore-build.sh` exists precisely to prevent this — its own
+comment says *"Backend, database, CI, documentation and agent changes do not
+require a new Vercel deployment."* Its extension list is headed **"Root web
+surface"**, but a bash `case` glob matches the whole string, and nothing
+anchored it to the root:
+
+| changed path | old verdict | in `public/`? |
+|---|---|---|
+| `scripts/verify-runtime.js` | **DEPLOY** | no |
+| `docs/capabilities/registry.json` | **DEPLOY** | no |
+| `supabase/live-schema.json` | **DEPLOY** | no |
+| `package.json` | **DEPLOY** | no |
+
+`*.js` matches `scripts/verify-runtime.js`; `*.json` matches every JSON at any
+depth. None of those reach the deployed site: `scripts/vercel-build.sh` copies
+root files at `-maxdepth 1` plus a fixed directory allow-list, and `supabase/`
+and `*.py` are excluded by `.vercelignore` outright. Every one of those
+deployments rebuilt a **byte-identical** artifact and spent a deployment doing
+it.
+
+This session alone changed `scripts/*.js`, `docs/capabilities/registry.json`
+and `supabase/live-schema.json` repeatedly.
+
+### The fix
+
+Test for a path separator before applying the root extension list, and keep the
+directory allow-list matching at any depth:
+
+```sh
+case "$path" in */*) continue ;; esac      # not a root file -- skip
+```
+
+`package.json` is now skipped explicitly: `vercel-build.sh` copies every root
+file **except** `package.json` and `vercel.json`, and `installCommand` is `""`
+so dependencies are never installed either. `vercel.json` still deploys — it
+changes headers, redirects and the build contract even though it is not copied.
+
+### Verified against what the build actually emits
+
+Each verdict was cross-checked against a real `public/` tree rather than
+reasoned about:
+
+| path | verdict | present in `public/` |
+|---|---|---|
+| `index.html`, `bg.js`, `manifest.json` | DEPLOY | YES |
+| `vendor/supabase-js.js`, `assets/js/*.js`, `i18n/fr.json` | DEPLOY | YES |
+| `scripts/verify-runtime.js`, `docs/capabilities/registry.json`, `package.json` | skip | no |
+| `FIXES_LOG.md`, `.github/workflows/ci.yml`, `core/*.py` | skip | no |
+
+Every DEPLOY is in the artifact; no skip is. That is the contract this script
+was written to enforce and could not.
+
+- `bash -n scripts/vercel-ignore-build.sh` → OK
+- `python3 scripts/vercel_static_contract.py` → `build_output_verified=references_resolve_in_public`
+- `python3 scripts/production-contract.py` → PASSED
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**

@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,7 +74,9 @@ def client_files() -> list[Path]:
     files: list[Path] = []
     for pattern in ("*.html", "*.js", "*.json"):
         files.extend(ROOT.glob(pattern))
-        files.extend((ROOT / "assets").rglob(pattern) if (ROOT / "assets").exists() else [])
+        assets = ROOT / "assets"
+        if assets.exists():
+            files.extend(assets.rglob(pattern))
     return [p for p in files if p.is_file()]
 
 
@@ -130,7 +133,8 @@ def check_pwa_contract() -> None:
 
 
 def check_dormant_monetization_markers() -> None:
-    sql_files = list((ROOT / "supabase").rglob("*.sql")) if (ROOT / "supabase").exists() else []
+    sql_root = ROOT / "supabase"
+    sql_files = list(sql_root.rglob("*.sql")) if sql_root.exists() else []
     js_files = [ROOT / "omega-flags.js"] if (ROOT / "omega-flags.js").exists() else []
     combined = "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in sql_files + js_files)
     if "platform_settings" not in combined:
@@ -140,6 +144,9 @@ def check_dormant_monetization_markers() -> None:
 
 
 def main() -> int:
+    if "--help" in sys.argv[1:]:
+        print(__doc__.strip())
+        return 0
     print("OMEGA SECURITY BASELINE")
     check_vercel_security()
     check_secret_patterns()

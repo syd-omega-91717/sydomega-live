@@ -3,6 +3,16 @@
 **Audience: any AI assistant other than the Claude Code session that owns this
 repo's `CLAUDE.md` — primarily ChatGPT / Codex, but the rules are tool-agnostic.**
 
+Three agents now work this repository, one contract each. They must agree; where
+they differ on a *fact about the codebase*, `CLAUDE.md` is authoritative and the
+others are stale.
+
+| agent | contract | loaded how |
+|---|---|---|
+| Claude Code | `CLAUDE.md` | automatically |
+| ChatGPT / Codex | **this file**, or `CHATGPT_CONTEXT_RULES.md` pasted into a browser chat | `AGENTS.md` automatically for Codex; pasted otherwise |
+| GitHub Copilot | `.github/copilot-instructions.md` | automatically (Chat, code review, coding agent) |
+
 `AGENTS.md` is the filename OpenAI Codex reads automatically. If you are using
 ChatGPT in a browser without repo access, paste
 [`CHATGPT_CONTEXT_RULES.md`](CHATGPT_CONTEXT_RULES.md) into the conversation

@@ -89,11 +89,23 @@ head("1/2 · MODULE GRAPH")
 
 on_disk = {f for f in os.listdir(".") if f.endswith(".js")}
 
-loader_src = "".join(read(f) for f in LOADERS if os.path.exists(f))
-injected = {
-    m.split("/")[-1]
-    for m in re.findall(r"""\.src\s*=\s*['"](/[^'"]+\.js)['"]""", loader_src)
-}
+SRC_ASSIGN_RE = re.compile(r"""\.src\s*=\s*['"]([^'"]+\.js)['"]""")
+# A module-graph edge is a SAME-ORIGIN reference. Anything carrying a scheme or
+# a protocol-relative "//" host is a third-party CDN load and resolves to no
+# file in this repo -- omega-oss.js pulls dayjs's relativeTime.min.js from
+# jsdelivr, and counting its basename as a local edge reported a CRITICAL
+# "requested but MISSING on disk" for a file that was never meant to exist.
+REMOTE_SRC_RE = re.compile(r"""^(?:[a-z][a-z0-9+.-]*:)?//""", re.I)
+
+
+def js_injected_by(path):
+    """Same-origin .js filenames a module injects via `x.src = '/y.js'`."""
+    return {
+        m.split("/")[-1].split("?")[0]
+        for m in SRC_ASSIGN_RE.findall(read(path))
+        if not REMOTE_SRC_RE.match(m)
+    }
+
 
 static_included = set()
 for page in (f for f in os.listdir(".") if f.endswith(".html")):
@@ -105,7 +117,29 @@ for page in (f for f in os.listdir(".") if f.endswith(".html")):
         m = a or b
         static_included.add(m.split("/")[-1].split("?")[0])
 
-reachable = injected | static_included
+# TRANSITIVE CLOSURE, not one hop. This scan used to read `.src =` out of
+# LOADERS only, so a module injected by an already-reachable module was
+# invisible and reported as an orphan. Measured: bg.js:849 injects
+# omega-components.js, which injects /omega-page-character.js -- a live module
+# this check called dead (FIXES_LOG.md 111). Check 2b below already documents
+# exactly this trap for stylesheets; check 2 had it unfixed.
+#
+# The closure must start from the REAL ROOTS (the loaders, plus every module a
+# page includes with a <script> tag) and expand only through modules already
+# proven reachable. Scanning every .js on disk instead would let two dead
+# modules that inject each other vouch for one another -- the orphan set would
+# silently shrink to nothing and the check would stop finding anything.
+roots = {f for f in LOADERS if os.path.exists(f)} | static_included
+reachable = set(roots)
+queue = [m for m in roots if os.path.exists(m) and m.endswith(".js")]
+injected = set()
+while queue:
+    edges = js_injected_by(queue.pop())
+    injected |= edges
+    for dep in edges - reachable:
+        reachable.add(dep)
+        if os.path.exists(dep):
+            queue.append(dep)
 missing = sorted(reachable - on_disk)
 # Exclude service workers: they are loaded via navigator.serviceWorker.register(),
 # not via <script> tags or dynamic src injection.
@@ -133,9 +167,16 @@ if SERVICE_WORKER_FILES & on_disk:
 #      omega-platform-visual.css, so a substring scan would call the dead sheet
 #      reachable -- the exact file this check exists to catch. So a reference
 #      must be a QUOTED string or a real href attribute, never a mention.
+#   3. A sheet referenced ONLY by a module nothing loads is not reachable
+#      either. Scanning every .js on disk missed that: omega-interface-v2.js
+#      is itself an orphan and injects 8 stylesheets, and counting its
+#      references made all 8 look live (FIXES_LOG.md 111). The scan therefore
+#      walks only files the module graph above proved reachable.
 css_on_disk = {f for f in os.listdir(".") if f.endswith(".css")}
 css_referenced = set()
-for src_file in (f for f in os.listdir(".") if f.endswith((".html", ".js"))):
+css_sources = [f for f in os.listdir(".") if f.endswith(".html")]
+css_sources += [f for f in sorted(reachable) if f.endswith(".js") and os.path.exists(f)]
+for src_file in css_sources:
     body = read(src_file)
     # Quoted string ('/x.css', "x.css") or an href=/src= attribute value.
     for m in re.findall(r"""['"]([^'"\s>]+\.css)['"]""", body):

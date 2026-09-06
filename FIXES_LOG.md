@@ -12715,3 +12715,139 @@ authored files and reaches no page.
 `python3 scripts/audit.py` → 0 critical / **8** warnings (was 7; the new one is
 the stylesheet orphan check). `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
 PASSED**.
+
+---
+
+## 111 — The orphan list was wrong in both directions: the module graph never followed a second hop
+
+**Symptom.** `scripts/audit.py` check 2 reported **35** `.js` files "on disk but
+never loaded" and check 2b reported **2** dead stylesheets. Both numbers were
+wrong, and each was wrong in the opposite direction — one over-reported, the
+other under-reported.
+
+### The false positive: a live module called dead
+
+`omega-page-character.js` was on the orphan list. It is loaded on every page:
+
+```
+bg.js:849                 injects /omega-components.js
+omega-components.js:41    injects /omega-page-character.js
+```
+
+Check 2 built its edge set from `LOADERS = ["bg.js", "nav.js"]` only:
+
+```python
+loader_src = "".join(read(f) for f in LOADERS if os.path.exists(f))
+injected = {m.split("/")[-1] for m in re.findall(r"\.src\s*=\s*['\"](/[^'\"]+\.js)['\"]", loader_src)}
+```
+
+One hop. A module injected by an already-reachable module was invisible.
+
+The irony is on the record: check 2b, added one commit earlier (entry 109),
+documents this exact trap in its own header — *"Most sheets are loaded by an
+`omega-*.js` module, NOT by bg.js/nav.js. Scanning only LOADERS would report
+~10 live sheets as orphans."* Check 2 had the same bug, unfixed, the whole time.
+
+### The false negative: 8 dead stylesheets counted as live
+
+Check 2b scanned **every** `.js` on disk for `.css` references. But a sheet
+whose only referrer is itself an orphan is not reachable either.
+`omega-interface-v2.js` is an orphan and names 8 stylesheets, so all 8 were
+counted live:
+
+```
+omega-agent-factory.css      referenced by: ./omega-interface-v2.js
+omega-autonomous-ops.css     referenced by: ./omega-interface-v2.js
+omega-command-palette.css    referenced by: ./omega-interface-v2.js
+omega-content-studio.css     referenced by: ./omega-interface-v2.js
+omega-content-workspace.css  referenced by: ./omega-interface-v2.js
+omega-mission-control.css    referenced by: ./omega-interface-v2.js
+omega-nexus-visualizer.css   referenced by: ./omega-interface-v2.js
+omega-project-hub.css        referenced by: ./omega-interface-v2.js
+```
+
+`bg.js:155` and `omega-cinematic-system.css:6` also name
+`omega-command-palette.css` — both in **prose inside a comment**, which is
+trap #2 the check already guards against, so it correctly ignores them and the
+sheet really is dead. Checked, not assumed.
+
+### The fix
+
+A transitive closure seeded from the **real roots** — the loaders, plus every
+module a page includes with its own `<script>` tag — expanding only through
+modules already proven reachable. Check 2b then walks only files that closure
+reached.
+
+Seeding from every `.js` on disk instead would let two dead modules that inject
+each other vouch for one another, and the orphan set would silently shrink to
+nothing. `test_a_dead_module_cannot_vouch_for_what_it_injects` is the control
+that pins this: it must keep finding both.
+
+**A widened regex cost one lap.** Relaxing the leading `/` to `/?` made the
+pattern match any string ending in `.js`, including
+`https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js` in
+`omega-oss.js:230` — audit.py then reported a **CRITICAL** "requested but
+MISSING on disk" for a file never meant to exist here. A module-graph edge is a
+**same-origin** reference; anything carrying a scheme or a protocol-relative
+`//` host is a CDN load. `test_a_third_party_cdn_src_is_not_a_local_module_edge`
+pins it.
+
+### What the corrected numbers show
+
+Orphaned `.js` **35 → 34**, dead `.css` **2 → 10**. And the remaining set is not
+34 unrelated files — it is **one subsystem behind one entry point**.
+`omega-interface-v2.js` injects 20 of the 34 orphans plus 8 of the 10 dead
+sheets, and **every file it asks for exists on disk**:
+
+```
+EXISTS omega-agent-evaluation.js  omega-agent-factory.js    omega-autonomous-ops.js
+EXISTS omega-command-catalog.js   omega-command-history.js  omega-command-palette.js
+EXISTS omega-command-router.js    omega-content-agent.js    omega-content-library.js
+EXISTS omega-content-studio.js    omega-content-workspace.js omega-evidence-engine.js
+EXISTS omega-intelligence-nexus.js omega-mission-control.js omega-nexus-export.js
+EXISTS omega-nexus-visualizer.js  omega-project-hub.js      omega-provenance-ledger.js
+       … and the 8 stylesheets above
+```
+
+Wiring that one file into `bg.js` would light all 20 at once. It is **not** done
+in this change, because two blockers are measured and unresolved — see
+`GAP_ANALYSIS.md` §S.
+
+### A latent guard collision, fixed while it was still free
+
+`omega-cinematic-engine.js:9` injected its stylesheet as
+`id='omega-cinematic-css'` — the **same id** `bg.js:166,169` uses for the
+`omega-cinematic-system.css` `<link>` (entry 108). Nothing broke only because
+the engine never loads. The moment it did, bg.js's link would satisfy the
+engine's guard and `inject()` would return: the HUD, scanlines, corner marks and
+crosshair would be appended with **no stylesheet at all**, leaving an
+unpositioned block and the literal text `Ω // SOVEREIGN VISUAL SYSTEM` in the
+page flow.
+
+That is §8.1 class 5b — the same shape that kept `omega-emblems.js` from ever
+loading. The engine's guard is now `#omega-cine-engine-css`. **A guard attribute
+is the module's identity, not the feature area's**, and the cheapest time to fix
+one is while the second module is still dead.
+
+### Why the visual orphans are not simply "missing features"
+
+Each was checked against the live owner of the surface it touches, per §4:
+
+| orphan | what already owns that surface |
+|---|---|
+| `omega-apex-visual.js` | tilt → `omega-motion.js:203` (`style.rotate`/`perspective`); cursor light → Ω-GVP `--mx`/`--my`; reveals → `omega-content.js` `.oc-hidden` + `omega-animated.js` `.oa-reveal`. Loading it adds a **third** reveal system and a **second** tilt fighting over `style.transform` |
+| `omega-cinematic-engine.js` | `depth()` writes `box-shadow` onto `.card`/`.kpi`, owned by `omega-visual-evolution.css`; `canvas()` paints a second particle field over `omega-particles.js`, which already draws a per-element signature for all nine elements |
+| `omega-layered-ui.js` | needs `data-layered-ui` + `data-layer-1/2/3` markup. Adopters in the estate: **0** and **0** |
+| `omega-uniqueness.js` | claims to prevent duplicate titles across pages, but `SEEN` is three in-memory `Set`s rebuilt on every page load, so the cross-page comparison can never fire. Cross-page duplication is a **CI** question, not a browser one |
+
+These are superseded duplicates, not gaps. Loading them would regress surfaces
+that currently work.
+
+### Verification
+
+- `python3 scripts/audit.py` → **0 critical / 8 warnings**
+- `python3 -m unittest discover -s scripts/tests` → **271** passing (was 265;
+  +6, four of them controls that must keep finding something)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `python3 scripts/omega-registry.py` regenerated: the census caught the 1 KB
+  the new comment block added, which is the gate doing its job

@@ -286,6 +286,46 @@ verifying the *current* guard says nothing about what may have happened before i
   orphaned `omega-*.js` but not an orphaned `.css` — a gate for that would have caught
   both.
 
+  **Superseded in part, 2026-09-06 (`FIXES_LOG.md` 111).** The gate now exists and is
+  transitive, and the honest count is **10** dead stylesheets, not 2 — see the item
+  below, which subsumes eight of them. `omega-platform-visual.css` and
+  `react-foundation.css` remain open for the `--omega-line` reason above.
+
+- **An entire authored subsystem sits behind one entry point nothing loads**
+  (opened 2026-09-06; `FIXES_LOG.md` 111). `omega-interface-v2.js` injects **20** of
+  the 34 orphaned modules and **8** of the 10 dead stylesheets, and every file it asks
+  for exists on disk — the command palette (catalog, router, history, adapter, UI),
+  the content group (agent, library, studio, workspace), the nexus trio (intelligence,
+  visualizer, export), mission control, project hub, agent factory/evaluation,
+  autonomous ops, evidence engine, provenance ledger. Adding one `<script>` line to
+  `bg.js` would light all twenty at once.
+
+  It is open rather than done because two blockers are **measured**, not suspected:
+
+  1. **The Ctrl/Cmd+K chord is already taken.** `omega-keyboard.js:155` (loaded on
+     every page) binds it to `window.OmegaSearch.open()`.
+     `omega-command-palette.js` binds the same chord and calls `preventDefault()`.
+     Both handlers would fire and two overlays would open on one keystroke. One of
+     the two has to yield, and that is a product decision about which surface owns
+     the platform's primary chord — not something to settle silently in a sweep.
+  2. **Its guard attributes are array indices.** It injects with
+     `inject('/'+x,'data-omega-'+i)` — the guard is the module's *position* in a
+     literal, so `data-omega-0`, `data-omega-1`, … carry no module identity at all.
+     That is §8.1 class 5b by construction: reorder the array and every guard now
+     protects a different module. The attributes need real names before this file
+     loads anywhere.
+
+  The same pass fixed a third, still-free instance of that class:
+  `omega-cinematic-engine.js` claimed `#omega-cinematic-css`, the id `bg.js:166,169`
+  uses for the cinematic `<link>`. Harmless only while the engine stays dead; it is
+  now `#omega-cine-engine-css`.
+
+  Four of the orphans are **not** candidates for wiring at all —
+  `omega-apex-visual.js`, `omega-cinematic-engine.js`, `omega-layered-ui.js` and
+  `omega-uniqueness.js` each duplicate or contradict a live owner (tilt, particle
+  field, absent markup, a cross-page check that cannot work in a browser). The
+  per-file evidence is in `FIXES_LOG.md` 111.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |

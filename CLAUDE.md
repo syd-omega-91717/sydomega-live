@@ -557,8 +557,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **35 `.js` + 2 `.css` that nothing loads** (checks 2/2b; 2b added 2026-09-06) |
-| `python3 -m unittest discover -s scripts/tests` | **265** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b, a **transitive** closure since `FIXES_LOG.md` 111 — one hop misreported both, in opposite directions) |
+| `python3 -m unittest discover -s scripts/tests` | **271** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

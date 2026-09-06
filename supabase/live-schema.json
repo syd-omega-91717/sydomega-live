@@ -14,10 +14,10 @@
   "are applied live: it is dated evidence, not a target. The query that",
   "produced it is in supabase/live-schema.README.md."
  ],
- "_captured": "2026-08-29",
+ "_captured": "2026-09-05",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
- "_table_count": 208,
+ "_table_count": 217,
  "tables": {
   "academy_access": [
    "user_id",
@@ -525,6 +525,17 @@
    "user_agent",
    "created_at"
   ],
+  "codex_bookmarks": [
+   "id",
+   "user_id",
+   "source",
+   "title",
+   "url",
+   "excerpt",
+   "authors",
+   "published",
+   "saved_at"
+  ],
   "commission_contracts": [
    "id",
    "user_id",
@@ -633,6 +644,19 @@
    "final_verdict",
    "created_at",
    "completed_at"
+  ],
+  "creator_proposals": [
+   "id",
+   "owner_id",
+   "title",
+   "summary",
+   "category",
+   "status",
+   "review_note",
+   "submitted_at",
+   "reviewed_at",
+   "created_at",
+   "updated_at"
   ],
   "daily_engagement": [
    "user_id",
@@ -844,6 +868,17 @@
    "status",
    "created_at"
   ],
+  "focus_sessions": [
+   "id",
+   "user_id",
+   "task_name",
+   "mode",
+   "duration_secs",
+   "target_secs",
+   "distractions",
+   "completed_at",
+   "created_at"
+  ],
   "founder_dashboard_events": [
    "id",
    "profile_id",
@@ -956,6 +991,15 @@
    "confidence_score",
    "source_system",
    "verified"
+  ],
+  "habit_logs": [
+   "id",
+   "user_id",
+   "habit_id",
+   "habit_name",
+   "log_date",
+   "completed",
+   "created_at"
   ],
   "health_logs": [
    "id",
@@ -1305,6 +1349,27 @@
    "sworn_at",
    "created_at"
   ],
+  "okr_key_results": [
+   "id",
+   "objective_id",
+   "user_id",
+   "title",
+   "start_value",
+   "target_value",
+   "current_value",
+   "unit",
+   "updated_at",
+   "created_at"
+  ],
+  "okr_objectives": [
+   "id",
+   "user_id",
+   "quarter",
+   "title",
+   "description",
+   "category",
+   "created_at"
+  ],
   "omega_ai_requests": [
    "id",
    "request_id",
@@ -1397,6 +1462,14 @@
    "provenance",
    "quality_score",
    "status",
+   "created_at"
+  ],
+  "omega_platform_events": [
+   "id",
+   "event_type",
+   "route",
+   "actor_user_id",
+   "metadata",
    "created_at"
   ],
   "omega_platform_evidence": [
@@ -1756,6 +1829,15 @@
    "profile_id",
    "setting_key",
    "setting_value"
+  ],
+  "signal_saves": [
+   "id",
+   "user_id",
+   "source",
+   "title",
+   "url",
+   "points",
+   "saved_at"
   ],
   "signups": [
    "id",
@@ -2128,6 +2210,14 @@
    "status",
    "metadata",
    "created_at"
+  ],
+  "wealth_snapshots": [
+   "id",
+   "user_id",
+   "net_worth",
+   "assets_json",
+   "snapshot_at",
+   "note"
   ],
   "webhook_logs": [
    "id",

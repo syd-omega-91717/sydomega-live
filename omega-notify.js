@@ -100,7 +100,14 @@
       if(notifs.some(function(n){return!n.read_at;})){
         window.__omegaSb.auth.getSession().then(function(r2){
           var s=r2.data&&r2.data.session;if(!s)return;
-          window.__omegaSb.from('notifications').update({read_at:new Date().toISOString()}).eq('user_id',s.user.id).is('read_at',null).then(function(){updateBadge(0);_count=0;});
+          /* Clear the badge only if the write actually landed. Supabase
+             resolves {data:null,error} rather than rejecting, so the old
+             no-argument .then() zeroed the count on failure too and the unread
+             badge reappeared on the next page load (CLAUDE.md 8.1 class 1). */
+          window.__omegaSb.from('notifications').update({read_at:new Date().toISOString()}).eq('user_id',s.user.id).is('read_at',null).then(function(res){
+            if(res&&res.error){console.warn('[OmegaNotify] mark-read failed:',res.error.message);return;}
+            updateBadge(0);_count=0;
+          });
         });
       }
     }).catch(function(){});

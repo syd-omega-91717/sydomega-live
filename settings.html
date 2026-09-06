@@ -108,7 +108,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   </div>
   <div class="settings-section">
     <div class="settings-section-title">YOUR DATA</div>
-    <p class="settings-hint">48 pages keep what you enter in this browser only. Clearing your browser
+    <p class="settings-hint">45 pages keep what you enter in this browser only. Clearing your browser
       data, or moving to a new device, loses it. Export writes a single file you keep; import reads it
       back. Nothing here is uploaded &mdash; the file goes straight to your device.</p>
     <div class="acct-row" style="gap:8px;flex-wrap:wrap">
@@ -266,7 +266,17 @@ async function refreshPrivacy(){
     if(stat)stat.textContent='Your profile is currently '+(pub?'PUBLIC — visible to other members.':'PRIVATE — visible only to you and the Order.');
   }catch(e){if(stat)stat.textContent='';}
 }
-async function setVis(v){try{await sb.rpc('set_profile_visibility',{p_public:v});refreshPrivacy();}catch(e){}}
+/* The try/catch here caught nothing: Supabase resolves {data:null,error}
+   rather than throwing, so a rejected visibility change was silent and
+   refreshPrivacy() simply repainted the old value (CLAUDE.md 8.1 class 1). */
+async function setVis(v){
+  var stat=document.getElementById('pv-status');
+  try{
+    var r=await sb.rpc('set_profile_visibility',{p_public:v});
+    if(r&&r.error){if(stat)stat.textContent='Could not change visibility — '+r.error.message;return;}
+    refreshPrivacy();
+  }catch(e){if(stat)stat.textContent='Could not change visibility.';}
+}
 document.getElementById('pv-private').addEventListener('click',function(){setVis(false);});
 document.getElementById('pv-public').addEventListener('click',function(){setVis(true);});
 refreshPrivacy();
@@ -291,5 +301,5 @@ refreshPrivacy();
 })();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

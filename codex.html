@@ -405,11 +405,67 @@ document.getElementById('modalBm').addEventListener('click',function(){
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('modalOverlay').classList.remove('open');});
 
 /* ── BOOKMARKS ── */
+
+/* SERVER MIRROR -- public.codex_bookmarks, live with RLS (auth.uid() = user_id)
+   and a GRANT to authenticated.
+
+   The table carries UNIQUE (user_id, url): a NON-primary-key unique index. The
+   upsert therefore MUST name onConflict explicitly. Omitting it makes PostgREST
+   fall back to the primary key (id), and with no id in the payload the write
+   succeeds exactly once and raises 23505 on every later save of the same URL --
+   so the feature would freeze at its first bookmark with nothing visible going
+   wrong (CLAUDE.md 8.1 class 7).
+
+   Write-up only, matching omega-member-state.js: a hydrating two-way read would
+   race this page's synchronous render, and a render from an empty cache could
+   overwrite good server rows. localStorage stays the source this page reads. */
+async function codexUserId(){
+  try{
+    const { data, error } = await sb.auth.getSession();
+    /* Supabase resolves to {data:null,error} -- it does not throw, so a bare
+       try/catch would catch nothing (8.1 class 1). */
+    if(error||!data||!data.session||!data.session.user) return null;
+    return data.session.user.id;
+  }catch(e){ return null; }
+}
+
+async function mirrorBookmark(item){
+  const uid=await codexUserId();
+  if(!uid) return true;                    /* signed out: local save is the whole story */
+  const { error } = await sb.from('codex_bookmarks').upsert({
+    user_id:uid,
+    source:item.source,                    /* CHECK: wikipedia | arxiv | openlibrary */
+    title:item.title||'',
+    url:item.url,
+    excerpt:item.excerpt||null,
+    authors:item.authors||null,
+    published:item.published!=null&&item.published!==''?String(item.published):null
+  },{ onConflict:'user_id,url' });
+  if(error){ console.warn('[codex] bookmark not mirrored:',error.message); return false; }
+  return true;
+}
+
+async function unmirrorBookmark(url){
+  const uid=await codexUserId();
+  if(!uid) return true;
+  const { error } = await sb.from('codex_bookmarks').delete().eq('user_id',uid).eq('url',url);
+  if(error){ console.warn('[codex] bookmark removal not mirrored:',error.message); return false; }
+  return true;
+}
+
 function toggleBookmark(item){
   var idx=bookmarks.findIndex(function(b){return b.url===item.url;});
-  if(idx>=0){bookmarks.splice(idx,1);toast('REMOVED FROM CODEX','rgba(138,134,118,.7)');}
+  var removing=idx>=0;
+  if(removing){bookmarks.splice(idx,1);toast('REMOVED FROM CODEX','rgba(138,134,118,.7)');}
   else{bookmarks.unshift(Object.assign({},item,{savedAt:new Date().toISOString()}));toast('★ SAVED TO CODEX','var(--gold)');}
   localStorage.setItem('omega_codex_bookmarks',JSON.stringify(bookmarks));
+  /* The toast above reports the LOCAL write, which has already happened and is
+     true. The mirror is a separate claim, so its failure gets its own notice
+     rather than being swallowed -- section 9 forbids reporting a success the
+     write did not actually achieve. */
+  (removing?unmirrorBookmark(item.url):mirrorBookmark(item)).then(function(ok){
+    if(!ok) toast('SAVED ON THIS DEVICE ONLY \u2014 NOT SYNCED','var(--crim)');
+  });
 }
 
 window.renderBookmarks=function(){
@@ -425,9 +481,12 @@ window.renderBookmarks=function(){
     var s=document.createElement('div');s.className='bm-src';s.textContent=(b.source||'').toUpperCase()+(b.savedAt?' · SAVED '+new Date(b.savedAt).toLocaleDateString():'');
     var rm=document.createElement('button');rm.className='bm-rm';rm.textContent='✕ REMOVE';rm.dataset.idx=i;
     rm.addEventListener('click',function(){
-      bookmarks.splice(parseInt(this.dataset.idx),1);
+      var gone=bookmarks.splice(parseInt(this.dataset.idx),1)[0];
       localStorage.setItem('omega_codex_bookmarks',JSON.stringify(bookmarks));
       window.renderBookmarks();
+      if(gone) unmirrorBookmark(gone.url).then(function(ok){
+        if(!ok) toast('REMOVED ON THIS DEVICE ONLY \u2014 NOT SYNCED','var(--crim)');
+      });
     });
     bd.appendChild(t);bd.appendChild(s);
     item.appendChild(ic);item.appendChild(bd);item.appendChild(rm);
@@ -456,4 +515,4 @@ searchWikipedia('sovereignty political philosophy',document.getElementById('disc
 loadArxivCat('cs.AI');
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

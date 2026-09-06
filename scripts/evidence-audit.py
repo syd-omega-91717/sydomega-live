@@ -70,6 +70,7 @@ if '--help' in sys.argv[1:] or '-h' in sys.argv[1:]:
     print(__doc__.strip())
     raise SystemExit(0)
 
+import json
 import os
 import re
 from collections import defaultdict
@@ -83,6 +84,11 @@ os.chdir(ROOT)
 # (see CLAUDE.md §3) plus the error/offline shells the service worker serves.
 PUBLIC_PAGES = {
     'index', 'enter', 'account', 'reset', 'terms', 'pending', '404', 'offline',
+    # bg.js:442's list also carries these two, and this set had drifted from the
+    # list it claims to mirror. omega-visual-home is the site ROOT --
+    # vercel.json:20 rewrites "/" to it -- so reporting it UNREACHABLE was
+    # reporting the homepage as orphaned.
+    'charter', 'omega-visual-home',
 }
 
 # Edge Functions that are invoked by Stripe, pg_cron, or the Supabase
@@ -116,6 +122,16 @@ def _strip_sql_comments(sql):
     """
     sql = re.sub(r'/\*.*?\*/', ' ', sql, flags=re.S)
     sql = re.sub(r'--[^\n]*', ' ', sql)
+    # Single-quoted literals go too, for the same reason and a measured one.
+    # migrations/20260903015535 guards an event trigger with
+    #   command_tag in ('CREATE TABLE','CREATE TABLE AS','SELECT INTO')
+    # and `create\s+table\s+([a-z0-9_]+)` happily matched inside that literal,
+    # capturing `AS` as a relation name. It then showed up in the live-schema
+    # cross-check as a relation "declared but absent live" -- a phantom finding
+    # a future session would have spent real time chasing. DDL that matters is
+    # never inside a string literal; dynamic SQL built in EXECUTE format(...) is
+    # conditional and is not a declaration either.
+    sql = re.sub(r"'(?:[^']|'')*'", ' ', sql)
     return sql
 
 
@@ -138,10 +154,18 @@ def sql_surface():
     fn_re = re.compile(
         r'create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?([a-z0-9_]+)', re.I)
 
+    # Belt and braces on top of the comment/literal strip above: a bare SQL
+    # keyword is never a relation. Without this the guard is "no pattern
+    # reaches a keyword", which is a claim about every regex here forever.
+    RESERVED = {'as', 'if', 'not', 'exists', 'public', 'table', 'view',
+                'select', 'into', 'or', 'replace', 'materialized', 'function'}
+
     for path in sorted(Path('supabase').rglob('*.sql')):
         text = _strip_sql_comments(path.read_text(encoding='utf-8', errors='replace'))
         for m in tbl_re.finditer(text):
             name = m.group(1).lower()
+            if name in RESERVED:
+                continue
             rels.add(name)
             # Only the flat bag at supabase/ counts toward duplicate-definition
             # reporting; supabase/migrations/ is a deliberate ordered copy of
@@ -150,9 +174,13 @@ def sql_surface():
             if path.parent.name == 'supabase':
                 defs[name].add(path.name)
         for m in view_re.finditer(text):
-            rels.add(m.group(1).lower())
+            name = m.group(1).lower()
+            if name not in RESERVED:
+                rels.add(name)
         for m in fn_re.finditer(text):
-            fns.add(m.group(1).lower())
+            name = m.group(1).lower()
+            if name not in RESERVED:
+                fns.add(name)
     return rels, fns, defs
 
 
@@ -178,6 +206,101 @@ AUTH_RE = re.compile(
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
 
+# MIRROR COVERAGE. omega-member-state.js (injected by bg.js on every page)
+# copies every localStorage key beginning "omega" up to public.member_state,
+# so a LOCAL_ONLY page's data is NOT necessarily device-only. This matrix used
+# to state the opposite as fact -- "not synced, not visible to the owner, gone
+# with the cache", and "**no export path**" on 40 pages -- and that wording
+# very nearly caused a session to rebuild member_state from scratch, a table
+# that already exists live with correct RLS, GRANTs and a (user_id, key)
+# primary key (FIXES_LOG.md 113).
+#
+# A key reaches the mirror only if it starts with "omega", so coverage is a
+# per-page fact worth measuring rather than assuming in either direction.
+# Keys are often held in a const (journal.html writes ENC_KEY, not a literal),
+# so a literal-only scan reports zero writes on pages that plainly have them --
+# resolve single-quoted/double-quoted const assignments in the same file first.
+LS_SET_KEY_RE = re.compile(r'\blocalStorage\s*\.\s*setItem\s*\(\s*([^,]+?)\s*,')
+LS_CONST_RE = re.compile(r'''(?:const|let|var)\s+(\w+)\s*=\s*['"]([^'"]+)['"]''')
+MIRROR_PREFIX = 'omega'
+
+
+def mirror_coverage(text):
+    """(covered, uncovered, unresolved) counts of localStorage.setItem keys."""
+    consts = dict(LS_CONST_RE.findall(text))
+    covered = uncovered = unresolved = 0
+    for expr in LS_SET_KEY_RE.findall(text):
+        e = expr.strip()
+        lit = re.fullmatch(r'''['"]([^'"]+)['"]''', e)
+        key = lit.group(1) if lit else consts.get(e)
+        if key is None:
+            unresolved += 1
+        elif key.startswith(MIRROR_PREFIX):
+            covered += 1
+        else:
+            uncovered += 1
+    return covered, uncovered, unresolved
+
+
+def live_surface():
+    """Relations the LIVE database actually had, from supabase/live-schema.json.
+
+    Why this exists, and why it is a separate axis from sql_surface().
+
+    Every class above answers "what does this repository declare". None of them
+    answers "does it exist in production". CLAUDE.md 8.4 states the gap
+    outright: a BUILT row means the *client* is wired and nothing more -- the
+    live table, its columns, its GRANT and its policy are all still unverified,
+    and each has been a real shipped bug (8.1 classes 2 and 6). A relation the
+    SQL bag declares but production never received answers every query with
+    {data:null,error}: an empty page, no exception, no console error.
+
+    live-schema.json is a DATED SNAPSHOT, not a connection. It is the same file
+    audit.py, schema-dictionary.py, upsert-conflict-check.py and
+    resilience-audit.py already trust, and CLAUDE.md 8.1 class 2 warns that a
+    stale snapshot re-opens false positives. So the capture date is reported
+    with every finding, and this axis never overrides a class -- it is reported
+    alongside, and only the subset a client actually reads can gate.
+
+    Returns (relations, captured) with relations lowercased, or (None, None)
+    when the snapshot is absent or unreadable -- in which case the whole axis
+    reports "not checked" rather than a misleading zero.
+    """
+    path = ROOT / 'supabase' / 'live-schema.json'
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        return None, None
+    tables = data.get('tables')
+    if not isinstance(tables, dict) or not tables:
+        return None, None
+    return {str(k).lower() for k in tables}, str(data.get('_captured', 'unknown'))
+
+
+def live_gap(rows, rels, live):
+    """Relations the bag declares that the live snapshot lacks, and who reads them.
+
+    Severity is decided by one thing only: whether client code queries it.
+
+      read by a page  -> a silent empty state shipping to members right now
+      read by nothing -> schema written and never applied; latent, not live
+
+    The second is the larger set here and is deliberately NOT a failure: this
+    repo ships dormant backends on purpose (CLAUDE.md 9). It is reported so
+    that wiring a page to one of them is a decision, not a surprise.
+    """
+    if live is None:
+        return None
+    missing = sorted(t for t in rels if t not in live)
+    consumers = {t: [] for t in missing}
+    for name, _cls, _why, info in rows:
+        for tbl in info['tables']:
+            if tbl.lower() in consumers:
+                consumers[tbl.lower()].append(name)
+    for t in consumers:
+        consumers[t] = sorted(set(consumers[t]))
+    return consumers
+
 
 def scan_client(path):
     text = path.read_text(encoding='utf-8', errors='replace')
@@ -189,6 +312,7 @@ def scan_client(path):
         'rpcs': rpcs,
         'edges': edges,
         'ls_writes': len(LS_WRITE_RE.findall(text)),
+        'mirror': mirror_coverage(text),
         'auth': len(AUTH_RE.findall(text)),
         'backup': bool(BACKUP_RE.search(text)),
         'lines': text.count('\n') + 1,
@@ -263,13 +387,24 @@ def classify(page, info, rels, fns, nav, module_tables):
         return 'BUILT', detail
 
     if info['ls_writes']:
-        detail = ('%d localStorage write%s, no table/rpc/edge call -- member '
-                  'data is device-local' % (info['ls_writes'],
-                                            '' if info['ls_writes'] == 1 else 's'))
+        detail = ('%d localStorage write%s, no table/rpc/edge call of its own'
+                  % (info['ls_writes'],
+                     '' if info['ls_writes'] == 1 else 's'))
         if auth_ev:
             detail += ' (signs the member in: %s)' % auth_ev
         detail += ('; has an OmegaLocalBackup export path'
-                   if info['backup'] else '; **no export path**')
+                   if info['backup'] else '; no page-level export path')
+        cov, unc, unres = info['mirror']
+        if unc == 0 and unres == 0 and cov:
+            detail += ('; all %d key%s `omega`-prefixed, so mirrored to '
+                       '`member_state` by omega-member-state.js'
+                       % (cov, '' if cov == 1 else 's'))
+        elif unc:
+            detail += ('; **%d key%s NOT `omega`-prefixed, so NOT mirrored**'
+                       % (unc, '' if unc == 1 else 's'))
+        elif unres:
+            detail += ('; %d key%s built at runtime — mirror coverage '
+                       'unresolved by static scan' % (unres, '' if unres == 1 else 's'))
         return 'LOCAL_ONLY', detail
 
     return 'STATIC', ('no persisted state; ' + auth_ev + ' only') if auth_ev \
@@ -340,24 +475,44 @@ def main():
         with_backup = sum(1 for _n, _w, i in lo if i['backup'])
         print('  device-local pages: %d with an export path, %d with none'
               % (with_backup, len(lo) - with_backup))
+    live, captured = live_surface()
+    gap = live_gap(rows, rels, live)
+    if gap is None:
+        print('  live-schema cross-check:            NOT CHECKED '
+              '(supabase/live-schema.json absent or unreadable)')
+    else:
+        read = {k: v for k, v in gap.items() if v}
+        print('  declared in supabase/, absent from the live snapshot (%s): %d'
+              % (captured, len(gap)))
+        print('    of those, read by client code:    %d%s'
+              % (len(read), '' if read else '   (none -- latent, not live)'))
     print()
     print('  UNVERIFIED: every row above is repository evidence only. No live')
     print('  database was reached, so no table, column, GRANT or RLS policy is')
-    print('  confirmed to exist in production by this run.')
+    print('  confirmed to exist in production by this run. The live-schema line')
+    print('  is a dated snapshot, not a connection -- regenerate it whenever')
+    print('  schema is applied live, or its findings go stale in both')
+    print('  directions (CLAUDE.md 8.1 class 2).')
 
     if summary_only:
         return 0
 
-    write_report(rows, by_class, edge_rows, dupes, rels, fns)
+    write_report(rows, by_class, edge_rows, dupes, rels, fns, gap, captured)
     print()
     print('wrote EVIDENCE_MATRIX.md')
 
     if strict and by_class.get('BROKEN'):
         return 1
+    # A relation absent from production AND read by a page is a silent empty
+    # state already shipping. Absent-and-unread is dormant backend, which this
+    # repo does on purpose, so it never gates.
+    if strict and gap and any(v for v in gap.values()):
+        return 1
     return 0
 
 
-def write_report(rows, by_class, edge_rows, dupes, rels, fns):
+def write_report(rows, by_class, edge_rows, dupes, rels, fns,
+                 gap=None, captured=None):
     out = []
     w = out.append
 
@@ -390,7 +545,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
     w('|---|---|')
     w('| `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |')
     w('| `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
-    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call. Member data is device-local — not synced, not visible to the owner, gone with the cache. Some pages sign the member in first; that gives them a session, not persistence. |')
+    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
     w('| `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |')
@@ -451,6 +606,58 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
         w('</details>')
         w('')
 
+    # ---- live-schema cross-check -----------------------------------------
+    w('## LIVE SCHEMA CROSS-CHECK')
+    w('')
+    if gap is None:
+        w('`supabase/live-schema.json` is absent or unreadable, so this axis was')
+        w('**not checked**. That is reported rather than scored as zero: a')
+        w('missing snapshot and a clean snapshot look identical in a count.')
+    else:
+        read = {k: v for k, v in gap.items() if v}
+        w('Every class above answers *what does this repository declare*. This')
+        w('section answers a different question: **does production actually have')
+        w('it?** A relation the SQL bag declares but the database never received')
+        w('answers every query with `{data:null,error}` — an empty page, no')
+        w('exception, no console error (CLAUDE.md §8.1 class 2).')
+        w('')
+        w('Source: `supabase/live-schema.json`, captured **%s**. A dated' % captured)
+        w('snapshot, not a connection. Regenerate it whenever schema is applied')
+        w('live; a stale snapshot produces false findings in both directions.')
+        w('')
+        w('| relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |')
+        w('|---|---|---|')
+        w('| %d | %d | %d |' % (len(rels), len(gap), len(read)))
+        w('')
+        if read:
+            w('### Absent live AND read by client code — silent empty state')
+            w('')
+            w('These ship to members today. Every query against them returns no')
+            w('rows and no error.')
+            w('')
+            w('| relation | read by |')
+            w('|---|---|')
+            for rel in sorted(read):
+                w('| `%s` | %s |' % (rel, ', '.join('`%s`' % c for c in read[rel])))
+            w('')
+        else:
+            w('**No absent relation is read by any page.** Nothing is silently')
+            w('empty on this axis today.')
+            w('')
+        latent = sorted(k for k in gap if not gap[k])
+        if latent:
+            w('### Absent live, read by nothing — declared and never applied')
+            w('')
+            w('Not a failure, and deliberately not gated: this repo ships dormant')
+            w('backends on purpose (CLAUDE.md §9). Recorded so that wiring a page')
+            w('to one of these is a decision rather than a surprise — the page')
+            w('would classify `BUILT` while returning nothing.')
+            w('')
+            for rel in latent:
+                w('- `%s`' % rel)
+            w('')
+    w('')
+
     w('## UNVERIFIED — what no repository scan can settle')
     w('')
     w('These are not open questions because nobody looked. They are open')
@@ -459,7 +666,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns):
     w('')
     w('| question | why the repo cannot answer it |')
     w('|---|---|')
-    w('| Does the live database have every table `supabase/` declares? | The SQL bag is applied by hand. `supabase/migrations/` is validated against a *blank* database only, and `task_completions` is a proven case where live and declared disagree (CLAUDE.md §5). |')
+    w('| Does the live database have every table `supabase/` declares? | **Partly answered above** — the LIVE SCHEMA CROSS-CHECK compares the bag against `live-schema.json`. That snapshot is dated, and proves nothing about columns, grants or policies. |')
     w('| Do the columns match? | PostgREST rejects the whole query when one column name is unknown, emptying a page with no visible error (CLAUDE.md §8.1 class 2). |')
     w('| Can a member actually reach each table? | A `GRANT` is checked *before* row security, so a correct RLS policy on a table with no grant fails every query with `42501`. 60 tables were once in this state (CLAUDE.md §8.1 class 6). |')
     w('| Do the policies scope rows correctly? | Only reproducible by impersonating a real member in-database; a privileged `execute_sql` proves nothing (CLAUDE.md §8.4). |')

@@ -407,7 +407,7 @@ var T_EN={
 "prof_all_members":"All Members",
 "dash_activity_heatmap":"SOVEREIGN ACTIVITY · 90-DAY CONTRIBUTION HEATMAP",
 "dash_personal_tools":"PERSONAL SOVEREIGN TOOLS · ALL 8 MODULES",
-"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 170 PAGES · 15 SECTIONS",
+"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 189 PAGES · 15 SECTIONS",
 "dash_ecosystem_map":"ECOSYSTEM MAP",
 "dash_intelligence_engine":"INTELLIGENCE ENGINE · ANALYTICS · RADAR · AI QUERY",
 "dash_axis_radar":"AXIS PROGRESSION RADAR",

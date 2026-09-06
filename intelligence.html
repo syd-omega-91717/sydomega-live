@@ -15,15 +15,15 @@
 .intel-card:hover{border-color:var(--purple)}
 .intel-card-icon{font-size:22px;margin-bottom:8px}
 .intel-card-title{font-family:'Courier New',monospace;font-size:12px;color:var(--purple);letter-spacing:2px;margin-bottom:6px}
-.intel-card-desc{font-size:12px;color:#666;line-height:1.55}
-.intel-card-link{display:block;margin-top:10px;font-family:'Courier New',monospace;font-size:12px;color:#444;letter-spacing:1px}
+.intel-card-desc{font-size:12px;color:var(--muted);line-height:1.55}
+.intel-card-link{display:block;margin-top:10px;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
 .stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--purple);font-weight:700}
-.stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:1px;margin-top:4px}
-.section-label{font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
+.stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
+.section-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
 .form-group{margin-bottom:14px}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:6px}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
 .form-group textarea{min-height:100px;resize:vertical}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--purple)}
@@ -39,12 +39,12 @@
 .log-card.type-competitor{border-left-color:#FF9800}
 .log-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px}
 .log-body{font-size:12px;color:#888;line-height:1.55}
-.log-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:12px;color:#444}
+.log-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:12px;color:var(--muted)}
 .type-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:12px;border:1px solid;letter-spacing:1px}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:12px}
+.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px}
 .del-btn:hover{color:#FF4444}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:var(--muted);font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
 .filter-tag.active{background:#1a1a2e;border-color:var(--purple);color:var(--purple)}
 .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .swot-box{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px}
@@ -55,12 +55,12 @@
 .swot-add input{flex:1;background:#111;border:1px solid #222;color:#ccc;padding:6px;font-family:'Courier New',monospace;font-size:12px}
 .swot-add input:focus{outline:none;border-color:var(--purple)}
 .swot-add button{padding:6px 10px;background:#1a1a2e;border:1px solid var(--purple);color:var(--purple);cursor:pointer;font-family:'Courier New',monospace;font-size:12px}
-.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-family:'Courier New',monospace;font-size:12px}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}
 .sci-title{font-family:'Courier New',monospace;font-size:12px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
 .sci-body{font-size:12px;color:#888;line-height:1.65}
-.sci-ref{font-size:12px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
+.sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
 </style>
 </head>
 <body>
@@ -230,7 +230,7 @@
 <div id="tab-swot" class="tab-panel">
   <div class="section-label">SOVEREIGN SWOT ANALYSIS</div>
   <div class="swot-grid">
-    <div class="swot-box" style="border-left:3px solid #4CAF50">
+    <div class="swot-box card card-edge" style="--card-accent:#4CAF50">
       <div class="swot-label" style="color:#4CAF50">S — STRENGTHS</div>
       <ul class="swot-list" id="swot-S"></ul>
       <div class="swot-add">
@@ -238,7 +238,7 @@
         <button onclick="addSwot('S')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FF4444">
+    <div class="swot-box card card-edge" style="--card-accent:#FF4444">
       <div class="swot-label" style="color:#FF4444">W — WEAKNESSES</div>
       <ul class="swot-list" id="swot-W"></ul>
       <div class="swot-add">
@@ -246,7 +246,7 @@
         <button onclick="addSwot('W')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FFD700">
+    <div class="swot-box card card-edge" style="--card-accent:#FFD700">
       <div class="swot-label" style="color:#FFD700">O — OPPORTUNITIES</div>
       <ul class="swot-list" id="swot-O"></ul>
       <div class="swot-add">
@@ -254,7 +254,7 @@
         <button onclick="addSwot('O')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FF9800">
+    <div class="swot-box card card-edge" style="--card-accent:#FF9800">
       <div class="swot-label" style="color:#FF9800">T — THREATS</div>
       <ul class="swot-list" id="swot-T"></ul>
       <div class="swot-add">
@@ -416,7 +416,7 @@ function renderSwot(){
     var ul=document.getElementById('swot-'+k);
     if(!swot[k])swot[k]=[];
     ul.innerHTML=swot[k].map(function(item,i){
-      return '<li>'+esc(item)+' <span onclick="removeSwot(\''+k+'\','+i+')" style="cursor:pointer;color:#444;margin-left:6px;">\xd7</span></li>';
+      return '<li>'+esc(item)+' <span onclick="removeSwot(\''+k+'\','+i+')" style="cursor:pointer;color:var(--muted);margin-left:6px;">\xd7</span></li>';
     }).join('');
   });
 }
@@ -485,10 +485,16 @@ async function startGraphIngestion(){
     var statusEl=document.getElementById('graph-status');
     statusEl.textContent='INGESTING...';
 
+    /* The function now derives the member from this bearer token and ignores
+       any user_id in the body — it used to trust the body outright, with no
+       auth check at all. Sending the session's access token is what makes the
+       call work; without it the function answers 401 by design. */
+    var sess=(await sb.auth.getSession()).data.session;
+    if(!sess){statusEl.textContent='ERROR: session expired — sign in again';return;}
     var res=await fetch('/functions/v1/graphify-ai-ingest',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:u})
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sess.access_token},
+      body:JSON.stringify({})
     });
     var data=await res.json();
     if(data.error){
@@ -507,5 +513,5 @@ load();
 renderStats();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

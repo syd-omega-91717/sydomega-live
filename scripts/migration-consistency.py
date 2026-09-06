@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """
-Migration consistency validator.
+Migration deployability validator.
 
-Compares flat supabase/*.sql files against ordered supabase/migrations/*.sql.
-Detects:
-- Duplicate table definitions with incompatible schemas
-- Mismatches between file versions
-- Missing ALTER TABLE sequences
-- Schema drift
+supabase/migrations/ is the deployment sequence: `supabase db push` applies it,
+and the live project records what it applied in
+supabase_migrations.schema_migrations. On 2026-09-05 that ledger held 169 rows
+(0001 .. 20260905080109) against 169 local files -- an exact match. The flat
+supabase/*.sql bag has no ledger and is applied, when at all, by hand.
 
-Exit code 0 if clean, 1 if critical findings.
+So schema declared ONLY in the flat bag never reaches production. That is the
+one asymmetry worth gating, and it is what this script checks.
+
+It used to demand the two directories hold identical CREATE-definition hash
+SETS. That encoded the opposite architecture and made every PR red: the flat
+bag legitimately carries stale and duplicate variants of tables migrations/
+already defines, and migrations/ legitimately carries definitions with no
+flat-bag twin. Neither direction of that difference can stop a deployment, so
+neither is a defect. See FIXES_LOG and CLAUDE.md section 5.
+
+Exit code 0 if clean, 1 if anything in the flat bag would never deploy.
 """
 
 import sys as _sys
@@ -83,42 +92,44 @@ def load_schema_from_files(directory_pattern):
 
 
 def compare_schemas(flat_schema, migrations_schema):
-    """Compare flat and migrations schemas, report differences."""
+    """Report flat-bag schema that the deployment sequence would never apply."""
     findings = []
 
-    # Check for conflicting CREATE TABLE definitions
-    all_tables = set(flat_schema.keys()) | set(migrations_schema.keys())
-
-    for table in all_tables:
+    for table in sorted(flat_schema.keys()):
         flat_creates = flat_schema.get(table, {}).get("creates", [])
         mig_creates = migrations_schema.get(table, {}).get("creates", [])
 
-        if flat_creates and mig_creates:
-            # Both have definitions - check if they match
-            flat_hashes = {c["hash"] for c in flat_creates}
-            mig_hashes = {c["hash"] for c in mig_creates}
-
-            if flat_hashes != mig_hashes:
-                findings.append({
-                    "severity": "WARNING",
-                    "table": table,
-                    "message": f"Definition mismatch: {len(flat_hashes)} variant(s) in flat bag, {len(mig_hashes)} in migrations/",
-                    "flat_files": flat_schema[table]["files"],
-                    "mig_files": migrations_schema[table]["files"] if table in migrations_schema else [],
-                })
-
-        # Check for missing ALTER columns
-        flat_alters = flat_schema.get(table, {}).get("alters", [])
-        mig_alters = migrations_schema.get(table, {}).get("alters", [])
-
-        flat_cols = {a["column"] for a in flat_alters}
-        mig_cols = {a["column"] for a in mig_alters}
-
-        if flat_cols and not mig_cols:
+        # A table the flat bag declares and migrations/ never defines is
+        # unreachable: `supabase db push` will not create it.
+        if flat_creates and not mig_creates:
             findings.append({
-                "severity": "WARNING",
+                "severity": "CRITICAL",
                 "table": table,
-                "message": f"ALTER TABLE columns defined in flat bag but missing in migrations/: {', '.join(sorted(flat_cols))}",
+                "message": "declared in the flat bag but absent from migrations/ -- it would never deploy",
+                "flat_files": flat_schema[table]["files"],
+            })
+            continue
+
+        # Per column, not merely "migrations/ has no ALTERs at all". The old
+        # form was `if flat_cols and not mig_cols`, which cleared a table the
+        # moment migrations/ carried any unrelated ADD COLUMN -- so a genuinely
+        # missing column hid behind an unrelated present one.
+        flat_cols = {a["column"] for a in flat_schema.get(table, {}).get("alters", [])}
+        mig_cols = {a["column"] for a in migrations_schema.get(table, {}).get("alters", [])}
+
+        # A column migrations/ declares inline in its CREATE TABLE body is
+        # deployed just as surely as one added by a later ALTER.
+        mig_inline = set()
+        for c in mig_creates:
+            mig_inline |= {m.group(1) for m in re.finditer(r"^\s*(\w+)\s", c["body"], re.MULTILINE)}
+
+        missing = flat_cols - mig_cols - mig_inline
+        if missing:
+            findings.append({
+                "severity": "CRITICAL",
+                "table": table,
+                "message": "column(s) added in the flat bag but absent from migrations/, so never deployed: "
+                           + ", ".join(sorted(missing)),
                 "flat_files": flat_schema[table]["files"],
             })
 
@@ -149,10 +160,10 @@ def main():
     findings = compare_schemas(flat_schema, mig_schema)
 
     if not findings:
-        print("OK — flat and migrations schemas are consistent.")
+        print("OK — everything the flat bag declares is reachable through migrations/.")
         return 0
 
-    print(f"\nFOUND {len(findings)} CONSISTENCY ISSUE(S):")
+    print(f"\nFOUND {len(findings)} UNDEPLOYABLE DECLARATION(S):")
     for f in findings:
         print(f"  {f['table']}: {f['message']}")
         if f.get("flat_files"):

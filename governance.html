@@ -38,19 +38,19 @@
       </div>
       <div class="sechead">GOVERNANCE FRAMEWORK</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--gold);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--gold)">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">RISK MANAGEMENT</div>
           <div style="font-size:12px;line-height:1.7;opacity:.8">Identify, assess, and mitigate risks across all life domains. Build sovereign resilience through systematic risk awareness.</div>
         </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--cyan);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">POLICY FRAMEWORK</div>
           <div style="font-size:12px;line-height:1.7;opacity:.8">Personal policies are pre-committed decisions that remove cognitive load at the point of choice. They encode your values into automatic behavior.</div>
         </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--green);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--green)">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:6px">DECISION AUDIT</div>
           <div style="font-size:12px;line-height:1.7;opacity:.8">Track major decisions with rationale, expected outcomes, and actual results. Learn from every fork in the path.</div>
         </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--purple);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--purple)">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:6px">ETHICS ENGINE</div>
           <div style="font-size:12px;line-height:1.7;opacity:.8">Sovereign ethics are self-governing moral standards. Not compliance-driven but integrity-driven — chosen principles that survive scrutiny.</div>
         </div>
@@ -303,5 +303,5 @@ window.addDecision=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

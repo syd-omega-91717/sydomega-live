@@ -60,6 +60,11 @@ supabase/functions/  Edge Functions (Deno/TypeScript) — 11: checkout,
                      access, weekly-digest, and the pg_cron jobs (rankings,
                      snapshot-leaderboard, …). Full map: the `edge-functions`
                      skill. Deployed by hand via the Supabase CLI, not CI.
+core/                The Ω Intelligence Fabric — provider-neutral Python
+                     primitives (execution boundary, policy firewall, model
+                     router, proof engine, skill registry, evidence matrix).
+                     Never deployed (`*.py` is in `.vercelignore`); driven
+                     against the real platform by `scripts/omega_fabric_audit.py`.
 scripts/             Repo tooling: audit.py (CI-gating integrity check),
                      verify-runtime.js (headless render check),
                      capability-audit.py / release-gate.py (the §10 registry
@@ -109,8 +114,8 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 
 Tokens and layout primitives are defined once, in `bg.js`'s injected
 `<style>` block. **Paint is not.** This section used to say bg.js *is* the
-design system; a live render of `dashboard.html` enumerates **53
-stylesheets** and bg.js is sheet 1 of 53, so every later sheet wins an
+design system; a live render of `dashboard.html` enumerates **62
+stylesheets** (59 inline) and bg.js is sheet 1, so every later sheet wins an
 equal-specificity tie. Five global layers redefine the same surfaces, and
 the effective owner differs per selector — check the render, not this list,
 before styling a shared class:
@@ -147,6 +152,17 @@ hidden state. It defers to the two pre-existing reveal systems —
 `omega-content.js` (`.oc-hidden`) and `omega-animated.js` (`.oa-reveal`) —
 which already own `opacity` on what they manage.
 
+**Bottom chrome has a single measured owner.** Five modules anchor fixed bars
+and buttons to the viewport floor and used to coordinate through hardcoded
+constants (`bottom:102px`, `66px`, `224px`, and `bg.js`'s `36/98/146/228`
+ladder) — each right at one viewport, wrong elsewhere, and none measured
+against `#omega-consent`, whose height varies 80–134 with its copy.
+`omega-bottom-stack.js` publishes `--omega-chrome-bottom` (persistent
+furniture) and `--omega-transient-bottom` (that plus any banner). Transient
+banners clear the furniture with the first; the floating ladder steps over the
+banners with the second. Never add a bottom-anchored constant — read a
+property, and mark new furniture `data-omega-bottom-chrome`.
+
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),
   `--green`, `--purple`, `--muted`, `--ink` (text).
@@ -173,29 +189,23 @@ replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
 `.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all 178 pages
 through this one file with no per-page markup changes:
 
-- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
-  panels get a hover shimmer sweep and a soft radial highlight that
-  follows the pointer (`--mx`/`--my` custom properties, set by a single
-  passive, `requestAnimationFrame`-throttled `pointermove` listener in
-  bg.js — one `getBoundingClientRect()` per frame, only while hovering a
-  matched element; GPU-cheap, no layout thrash).
-- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + box-shadow glow, both **hover-only**, never static). Hover-only is a
-  correction, not the original design, and the reason is the standing
-  rule: `border-image` wins the border paint regardless of selector
-  specificity, so a *static* version silently discarded any page's own
-  per-instance border the moment `.card` was added to its markup
-  (`matrix.html`'s inline `border-color`, `family.html`'s `.mc.heir`,
-  `cosmos.html`'s JS-set `.el-card` left border — all three). Confining it
-  to `:hover` keeps every page's resting-state border exactly as that page
-  intended, retroactively for pre-existing `.card` usage too. `.kpi` is
-  excluded outright: it already carries a per-instance `--kc` accent color,
-  so it gets a matching hover glow in that color instead.
-  A page-local `::before` that sets `background` collides with `.card::before`
-  per *property* (pseudo-elements cascade like any element). **That collision
-  is solvable, and this file twice said it was not**: `.card::before` is the
-  same 2px top bar those classes draw and it reads `--card-accent`, which takes
-  a colour *or* a gradient (both proven in a render). So set
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass` panels get
+  a hover shimmer sweep and a pointer-following radial highlight (`--mx`/`--my`,
+  set by one passive rAF-throttled `pointermove` listener in bg.js — a single
+  `getBoundingClientRect()` per frame, only while hovering a match).
+- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image` +
+  box-shadow glow, both **hover-only**, never static). Hover-only is a
+  correction: `border-image` wins the border paint regardless of specificity, so
+  a *static* version silently discarded any page's own per-instance border the
+  moment `.card` was added (`matrix.html`'s inline `border-color`,
+  `family.html`'s `.mc.heir`, `cosmos.html`'s JS-set `.el-card` left border).
+  `:hover` keeps every page's resting border as intended, retroactively too.
+  `.kpi` is excluded outright: it carries a per-instance `--kc` accent, so it
+  gets a matching hover glow in that colour.
+  A page-local `::before` setting `background` collides with `.card::before`
+  per *property*. **That collision is solvable, and this file twice said it was
+  not**: `.card::before` is the same 2px top bar, and it reads `--card-accent`,
+  which takes a colour *or* a gradient (proven in a render). Set
   `--card-accent` on the page-local class and delete its own pseudo —
   `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
   translated losslessly. Check *which properties* collide, never the mere
@@ -221,55 +231,66 @@ through this one file with no per-page markup changes:
   `oa-fade-up` reveal**, whose last keyframe pins `opacity:1` — that silently
   un-dimmed 16 `.honor-card.locked` badges; an animation beats a plain
   declaration, and only `!important` outranks it.
+- **`.card-edge`, the left-edge accent.** `.card::before` is a *top* bar, which
+  is why 124 hand-rolled `border-left:Npx solid <colour>` sites across 68 files
+  were all excluded from the sweep. `.card.card-edge` runs the same
+  `--card-accent` bar down the left instead (width `--card-edge-w`, default
+  3px). Check the element's own `::before` first — `chronicle.html`'s
+  `.event-card` draws its timeline connector there, so it stays excluded.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
-  growing from the tab centre in the page axis colour, quarter-width on hover.
-  40 pages own `.tab-btn` rules and win the cascade; none owns a pseudo — a
-  fact established by parsing `<style>` blocks, since a whole-file grep counts
-  every `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges (`▲`/`▼`/`▬`),
-  `.tbl-row.up`/`.down` row coloring, zebra striping, `.sparkline` (stroke/glow
-  for an SVG polyline). `.trend` sets `justify-self:start` deliberately —
-  `.tbl-row` is `display:grid`, and without it a `.trend` child stretches to
-  fill the implicit track. **Draw them through `omega-sparkline.js`**
-  (`data-omega-spark` + `data-spark-values`; loaded per page, not by `bg.js`),
-  never by hand: a badge asserts a direction, so it draws nothing below two
-  real readings, `.flat` on equality, an absolute delta from a prior 0, and its
-  6 adopters exclude the open day/month — §8.1 class 9 in code, not memory.
+  growing from the tab centre in the page axis colour. 40 pages own `.tab-btn`
+  rules and win the cascade; none owns a pseudo — established by parsing
+  `<style>` blocks, since a whole-file grep counts every
+  `querySelectorAll('.tab-btn')` as a CSS rule.
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges, `.tbl-row.up`/
+  `.down` colouring, zebra striping, `.sparkline`. `.trend` sets
+  `justify-self:start` deliberately — `.tbl-row` is `display:grid`, and without
+  it a `.trend` child fills the implicit track. **Draw them through
+  `omega-sparkline.js`** (`data-omega-spark` + `data-spark-values`; per page, not
+  bg.js), never by hand: a badge asserts a direction, so it draws nothing below
+  two real readings and its 6 adopters exclude the open day/month — §8.1 class 9
+  in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
-- **Fallback skin for genuinely bare elements**: `input:not([class])`,
-  `textarea:not([class])`, `select:not([class])`, and
-  `button:not([class])` get the same glass treatment as `.inp`/`.btn`,
-  scoped strictly to elements with *no* `class` attribute at all, so any
-  element with its own page-local class or inline `style=` (inline
-  always wins the cascade regardless) is left untouched. This was
-  chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
-  raw `<button>`s with no shared class — this reaches them all from one file
-  instead of hand-editing every occurrence. Pages with page-local table classes
-  are *not* addressed by it (`:not([class])` correctly skips them) and remain
-  open, page-by-page structural work.
-- **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
-  Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
-  or asset in this repo ever loaded them — zero `@font-face` rules, zero
-  font files, zero Google Fonts links existed anywhere (confirmed by a
-  repo-wide grep before writing the fix), so every page has silently
-  rendered in the browser's default serif/sans-serif/monospace the
-  entire time. `bg.js` now injects a Google Fonts `<link>` (plus
-  `preconnect`) once per page, guarded by `#omega-fonts` so it never
-  double-injects.
-- **Ambient noise overlay**: a fixed, `pointer-events:none`, `opacity:.035`
-  `<div id="omega-noise-overlay">` injected by bg.js — a real element, not a
-  `body::before`, because 5 pages already define their own and a bare-selector
-  rule would collide.
-- **`omega-constellation.js`** (`.ocn-` namespace): the ring-of-emblems
-  diagram — `<div data-omega-constellation="agents|signs|custom">`, each node a
-  real link. It draws no artwork: it emits `data-omega-emblem` for
-  `omega-emblems.js` to fill. Node size is a geometric constraint, not a taste;
-  read its header first. `cosmos.html` has its own agent wheel already.
+- **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
+  pages hand-rolled `.btn{background:var(--gold);color:var(--void)}` at the same
+  (0,1,0) specificity — and lost, since this sheet loads after the page block.
+  Measured: `account.html`'s CREATE ACCOUNT/LOG IN and `reset.html`'s SEND
+  RECOVERY LINK at **1.01:1**, invisible to signed-out visitors;
+  `mindmap.html`'s CREATE MAP at exactly **1:1**, gold on gold. Use
+  `.btn.btn-fill` (retint with `--btn-fill`), never a page-local override. The
+  ghost variants now set `background:none` themselves — without it a
+  `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
+  (2.33:1, 8 pages).
+- **Fallback skin for genuinely bare elements**: `input`/`textarea`/`select`/
+  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment — so
+  anything with a page-local class or inline `style=` is untouched. Chosen after
+  an audit found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared
+  class. Page-local table classes are skipped and remain open work.
+- **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
+  Decorative / Rajdhani / Courier Prime but nothing ever loaded them — zero
+  `@font-face`, zero font files, zero Google Fonts links anywhere — so every
+  page rendered in the browser defaults. `bg.js` injects the Google Fonts
+  `<link>` (plus `preconnect`) once per page, guarded by `#omega-fonts`.
+- **Ambient noise overlay**: a fixed `pointer-events:none` `<div
+  id="omega-noise-overlay">` injected by bg.js — a real element, not a
+  `body::before`, because 5 pages define their own and a bare-selector rule
+  would collide.
+- **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
+  `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
+  It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
+  size is a geometric constraint, not a taste — read its header. `cosmos.html`
+  has its own agent wheel.
 - **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
-  linear infinite` (reusing the long-dead `@keyframes spin-slow`), static under
-  `prefers-reduced-motion`. Used deliberately on emblem marks, not scattered;
-  currently only `#ph-sigil` on `profile.html` (`FEATURE_IDEAS.md` #19 phase 1).
+  linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
+  emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
+- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED on one page**
+  (bg.js, `#omega-cinematic-css`). Rendered: its 4 rules are in every cascade, yet
+  `.omega-cinematic`/`.omega-emblem`/`.omega-depth-card`/`.omega-node` match
+  **0/0/0/0** on `dashboard`/`profile` and **1/1/6/0** on `index` — the sheet changed
+  no page's paint; what remains is markup adoption (`FIXES_LOG.md` 114). Additive;
+  `:root` declares only names it invents (108); `--omega-line` is undefined outside
+  `index.html` — read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated
@@ -292,36 +313,27 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   (`scripts/audit.py`, check 4) and if a `service_role` key ever appears
   in client-shipped code (`ci.yml`, step 5) — treat both as invariants,
   not suggestions.
-- **Schema management:** currently a flat `supabase/*.sql` directory,
-  mostly idempotent (`CREATE TABLE IF NOT EXISTS`, `ON CONFLICT DO
-  NOTHING`) so re-running files is safe. `supabase/migrations/` now holds
-  an ordered, Supabase-CLI-convention copy of this same content
-  (`NNNN_<name>.sql`, applied via `supabase db push`) — see
-  `supabase/migrations/README.md` for how the order and content were
-  derived, what was deliberately excluded (a conditional `DROP TABLE`
-  file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
-  only scripts). The 94-file numbered sequence (`0001`–`0094`) applies
-  cleanly end-to-end against a fresh scratch PostgreSQL 16 instance
-  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — that is
-  the only such run on record, and the directory has grown well past it since,
-  so re-derive both numbers from `scripts/omega-registry.py` rather than
-  trusting a count quoted here. Everything added after `0094` — later numbered
-  files as well as timestamped ones — was never part of that validation, and no
-  run has covered the directory in full — and even the validated part only proves the sequence is
-  internally consistent on a **blank** database, not that it matches the
-  owner's actual live schema; `task_completions` is a proven
-  counterexample (live `id bigint` + `axis`/`increment` columns match none
-  of the 3 competing `CREATE TABLE IF NOT EXISTS` definitions in the SQL
-  bag). Do not run the full `migrations/` sequence against the live
-  production database expecting it to safely "catch up" existing state —
-  use it for a scratch/staging project, and use the individually
-  live-verified fix files (`trial_access.sql`, `migrations/0013`,
-  `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
-  root is unchanged and still the source of truth for new schema changes
-  — see `REPOSITORY_AUDIT.md` §4 for the still-open duplicate-table-
-  definitions list (47 tables defined in more than one file; not
-  deduplicated by the migrations/ work, only reordered — consolidating
-  needs a per-table live-schema check, not a bulk sweep).
+- **Schema management: `supabase/migrations/` is authoritative; the flat
+  `supabase/*.sql` bag is reference material.** This file said the opposite until
+  2026-09-05, and the contradiction with `migrations/README.md:69` made
+  `migration-consistency` fail every PR. Production settled it: the live
+  `supabase_migrations.schema_migrations` ledger matches `migrations/` file for
+  file (**171** on 2026-09-05, `0001` .. `20260905211725`). The flat bag
+  has no ledger and is applied by hand, so **schema declared only there never
+  deploys** — the one asymmetry the gate now checks (`FIXES_LOG.md` 99). New
+  schema goes in a **new** timestamped migration; never renumber or rewrite an
+  applied one (`README.md:60`), and `apply_migration` writes a remote row with no
+  local file, so add both plus `remote-migrations.json` in the same change.
+  **The sequence is still not fresh-appliable, but only by ordering now**:
+  `20260819071913` does an unguarded `ALTER POLICY … ON
+  public.council_deliberations` and sorts *before* `20260905211725`, which is
+  what finally creates that table and `advertisements` — both transcribed from
+  live, so a fresh apply reproduces production (`FIXES_LOG.md` 102) — so use it
+  for scratch/staging with that caveat, and for
+  production use the individually live-verified files. A migration is also not
+  proof of live state: `task_completions` (live `id bigint` + `axis`/`increment`)
+  matches none of its 3 competing definitions in the bag. Duplicate-definition
+  list: `REPOSITORY_AUDIT.md` §4; derive counts from `evidence-audit.py`.
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching
@@ -418,16 +430,15 @@ are listed in rough order of how often they have recurred.
    canvas sized that way gets a zero drawing buffer and can never paint. Use a
    `ResizeObserver`, or check for an already-set value before overriding.
 4. **A global that only one page ever assigns.** Two shapes. (a) A function
-   declared inside `<script type="module">` but called from an inline
-   `onclick=` — module top-level declarations are not global, so the click
-   throws `ReferenceError` silently; fix with `window.fn = fn`. Swept to 0.
-   (b) **A shared accessor that nothing publishes.** `window.OmegaSupabase` was
-   read by 11 files and assigned by exactly one (`graphify.html:168`), so the
-   entire knowledge-graph and council feature set never initialised anywhere
-   else — `graph-admin.html:83` re-polled every 100ms forever. `bg.js` now
-   publishes it from `OmegaSB.get()`. The same shape broke `omega-hercules.js`,
-   which guarded on `window.sb`, a global nothing assigns. **Before using a
-   `window.*` accessor, grep for its assignment, not just its readers.**
+   declared inside `<script type="module">` but called from an inline `onclick=`
+   is not global, so the click throws `ReferenceError` silently; `window.fn = fn`.
+   Swept to 0. (b) **A shared accessor that nothing publishes.**
+   `window.OmegaSupabase` was read by 11 files and assigned by one
+   (`graphify.html:168`), so the knowledge-graph and council features never
+   initialised — `graph-admin.html:83` re-polled every 100ms forever. `bg.js`
+   now publishes it from `OmegaSB.get()`; the same shape broke
+   `omega-hercules.js`, which guarded on `window.sb`. **Grep a `window.*`
+   accessor's assignment, not just its readers.**
 5. **An injection guard that discards, or that two modules share.** Two
    shapes. (a) `if (document.body) document.body.appendChild(x)` drops the work
    entirely when body does not exist yet; `bg.js` now routes every injection
@@ -472,134 +483,74 @@ are listed in rough order of how often they have recurred.
    revenue share". `scripts/commerce-contract.py` gates both shapes (blocking).
    §9's dormancy rule had no shared implementation until `omega-flags.js` /
    `data-omega-flag` — so it depended on memory, and memory failed.
+10. **An attribute value the parser never received.** An unquoted value ends at
+   the first space, and a curly quote is not a delimiter at all — so
+   `class=tab-pane active` gives class `"tab-pane"` plus a stray `active`, and
+   three pages rendered **blank** because `.tab-pane.active` never matched. 294
+   such sites on 8 pages, plus 171 unstyled badges from `class=”page-badge`.
+   Detect it in a render, never a grep: an attribute whose value is `""` and
+   which is not a real valueless attribute. **DOM presence is not visibility** —
+   `querySelectorAll` happily counts 171 rows inside a `display:none` panel.
 
-### 8.2 What is genuinely open — each on purpose, with a reason
+### 8.2 What is genuinely open
 
-Nothing below is a bug masquerading as done. Each has an explicit reason it is
-open, recorded in `FIXES_LOG.md`:
+**The full list lives in `GAP_ANALYSIS.md` §S** — ~19 standing items, each with the reason it
+is open and the evidence behind it (dormant payment/token tables, the ~83-table SaaS scaffold,
+39 tables with policies and no grant, `storage.objects` DELETE, member location, LFS debt,
+`OmegaGuardian`'s unemitted signals, the advisor counts, and the rest). It moved there on
+2026-09-05 because this file is capped at 16,000 tokens and §8.2 had reached the cap: the only
+way to add a fact was to compress an older one, and that had begun costing information. Consult
+it when you touch one of those areas.
 
-- **`transactions` / `wallet_balances` tables do not exist** (queried by
-  `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
-  infrastructure is dormant pending legal review, per §9's gating rule.
-  `subscriptions.html`'s own copy already says so. The user was asked directly
-  and chose to keep it dormant.
-- **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
-  were a decision, not a default: sensitive data, hard to walk back once it
-  lives server-side, mitigated with `omega-local-backup.js` export/import.
-  `scripts/evidence-audit.py` shows the shape reaches 48 pages and only 5 carry
-  that export path — 43 store member data with no way to get it out
-  (`achievements`, `notes`, `projects`, `passport`, `mood`, `workout` …). That
-  is a scope finding, not a decision: nobody chose it for the other 41. A
-  further 24 pages are `PARTIAL` (Postgres *and* a parallel local copy). Run
-  the scanner rather than quoting these numbers.
-  **Fixed and applied 2026-08-24**: `public.member_state`
-  (`supabase/omega_member_state.sql`, `migrations/0095`) plus
-  `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
-  sync**: writes go up only, restore is explicit (`OmegaMemberState.restore()`),
-  because a hydrating two-way sync races each page's synchronous render and
-  would let an empty-cache render overwrite good server data. RLS verified live
-  by two-member impersonation (own-row write OK, write-as-other 42501, other
-  member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
-  trigger. Client-side encryption was considered and rejected: no stable client
-  secret exists, and it changes no trust boundary anyway — `health_logs`,
-  `ai_memory`, `family_nodes` and `heritage_records` already hold comparable
-  data server-side under the same, tested RLS.
-- **No DELETE policy on `storage.objects`.** Live 2026-08-31: writes correctly scoped
-  to own `<uid>/` prefix, but deleting one's *own* upload is 42501 too. No client
-  offers a delete — a gap, and a product decision.
-- **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** Asked and declined.
-  `.vercelignore` keeps both out of the deploy; a fix needs a history rewrite,
-  never without explicit permission.
-- **Member location is not collected.** Live 2026-08-29: `profiles.country`
-  exists (`text`); `lat`, `lon`, `gate` do not (`map.html`'s reads were removed
-  in `3f8a17d7`). Adding it is a privacy decision, not a bug fix.
-- **`ops.html`'s event-bus metrics table never renders** — it looks up
-  `#evt-metrics-body`, an id that exists nowhere. The container would be new UI,
-  not a fix.
-- **`OmegaGuardian`'s six risk signals are dead wiring** — none is ever emitted,
-  so the score moves only on 30-min idle (`-10`) and a failed gated action
-  (`-5`), never on a threat. Detection is an architecture decision. (`gate()`
-  *is* called — `approvals.html`, 3 sites — and `updateBadge()` repaints every
-  2s; an earlier claim here that neither ran was wrong.)
-- **`omega-threat.js` is the digital-thread traceability engine**
-  (`window.OmegaThread`), not threat detection; filename left as-is.
-- **Performance advisor: `unused_index` (125) and `unindexed_foreign_keys` (61
-  remaining).** Both INFO-level and expected: "unused" reflects 9 profiles and
-  near-zero traffic, not bad indexes — nearly every one is the `user_id`
-  pattern RLS filters on — and the 61 FKs are all on the scaffold below.
-- **~83 tables live on production that this repo's SQL never created** — a
-  generic multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars).
-  RLS on, no policies — the *safe* state (total lockout) — and empty. Inventing
-  policies for schema of unknown purpose fabricates behaviour. Needs a human
-  decision: drop, adopt, or leave.
-- **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
-  claim one). `platform_events` is scoped to `auth.uid() = user_id`.
-  `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
-  nothing to spoof — junk rows, not impersonation — and `authenticated` lacks
-  INSERT on both anyway. Scope it before that grant is ever added.
-- **`feature_flags` and `governance_policies` are readable by every approved
-  member**, by pre-existing policy (`USING(true)`, and
-  `is_platform_owner() OR status='active'`). Both look deliberate, but became
-  *reachable* only when the missing grants were added, so they are recorded
-  rather than assumed fine. All 10 visible governance rows are
-  `status='active'`; no drafts leak.
-- **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
-  Left locked out — the safe state. **Measured, not inferred:** of 202 public
-  tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
-  in production), 74 have policies *and* a grant, 39 have policies and no
-  grant, 1 has a grant and no policy (still locked — RLS with no policy denies).
-  All 39 were cross-referenced against client `.from(...)` calls: **none is
-  reachable from any page**. Do not "fix" it by granting without deciding the
-  feature is wanted.
-- **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
-  detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
-  **A grep cannot find these — they are injected at runtime, not markup**; only
-  CSP violations in a real browser surfaced them. Resolve versions from
-  `registry.npmjs.org` (the CDNs are 403), never memory. `vercel.json`'s CSP is
-  **enforced**, verified at 0 violations; as written before it would have killed
-  the webfonts and four features. Stripe is fixed in code, not by pinning:
-  `periodEndSeconds()` reads both pre-basil and basil shapes, since two of three
-  read sites take the *inbound webhook* payload, whose version is a dashboard
-  property no repo change can pin. **Still open: the
-  single physical CI runner** — never "fix" it with a hosted lane;
-  `docs/CI_RUNNER_RECOVERY.md` records that returning `runner_id: 0`/`steps: []`.
-- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
-  in the job log). Cloud minutes still look unavailable — this repo is private
-  on a personal account — so queued jobs drain slowly, one at a time, and a
-  check can sit `queued` for a long while. But a red check is now real output
-  from a real run, to be read rather than dismissed as the old
-  `runner_id: 0` infra no-op. Two Windows-specific traps: paths and the console
-  codec differ, and a crashed child process yields empty stdout, which makes
-  any assertion on that stdout misreport (see `FIXES_LOG.md`).
-  `./scripts/ci-local.sh` still runs every blocking step locally, and
-  `.githooks/pre-push` runs it on every push — enable per clone with
-  `git config core.hooksPath .githooks`, bypass with `--no-verify`.
-- **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
-  The advisor reports 93; the owner-sensitive ones guard themselves via
-  `public.omega_is_owner()`, which a classifier looking for `is_platform_owner`
-  misses. Three unguarded-and-uncalled functions were revoked
-  (`migrations/0097`); the rest have real callers. Cross-member leakage was
-  tested by member impersonation across 17 tables — every populated table
-  scoped, `profiles` included. **When adding any function,
-  `REVOKE EXECUTE ... FROM PUBLIC` in the same file**: Postgres grants it to
-  PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its own —
-  that is how 70 revoked functions became 23.
-- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
-  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
-  Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
-  k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
-  bypasses it — not resolved.** Fails open reporting `checked:false`; never
-  render "not breached" on that (`scripts/tests/test_password_guard.py`).
-- **`scripts/audit.py` reports 0 critical / 7 warnings**, each labelled by the
-  tool as real risk vs. known noise. They cannot be driven to 0 from source
-  alone without live-schema verification, and forcing them down would trade a
-  known-unknown for an unverified "fixed". The count has drifted between 7 and
-  8 across sessions — re-run and diff the list rather than assuming a warning
-  is old news.
-- **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
-  nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
-  and does real work on every page. Self-activation with no caller is the norm
-  here. Establishing which are genuinely page-specific is a real audit.
+Only what changes what you do in the **first minutes** stays here:
+
+- **Live Supabase access works from this session type.** `mcp__Supabase__*` against project
+  `ydqhzvvoyufiiqvzcjns` executes SQL, applies migrations and reads advisors — verified
+  2026-09-05, despite a harness banner that says authorization is required. **Try the call
+  before reporting it blocked.** Several sessions wrongly recorded this as unavailable and
+  deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
+  With it you can settle live what no scan can (§8.4's impersonation test), and you are then
+  responsible for regenerating `supabase/live-schema.json` in the same change.
+- **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
+  (#250, #252), adding modules and a script tag to ~193 pages without regenerating the census.
+  Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the
+  only one that notices a third party editing the estate.
+- **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges
+  the head it had when it computed the merge, so a force-push loses exactly what an extra
+  trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged
+  as `df6fa6c2` while an amend to `0ae2f7a2` was in flight and the fix did not land
+  (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
+  merged `main`, in a **new** PR. Always confirm with
+  `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
+- **Production 404s because NOTHING PROMOTES IT, and two gates go green anyway.** Measured via
+  the Vercel MCP 2026-09-06 (`FIXES_LOG.md` 107): the newest `target:production` deployment
+  serves **200 with the full index.html** at its own URL, while the production alias serves a
+  **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
+  `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
+  `vercel.json` sets `git.deploymentEnabled {"*": false}` — so no promotion path is active.
+  Only `VERCEL_TOKEN` is still needed; org/project ids now default in the workflow. Also
+  `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
+  while the custom domain returns **404** — two failures that look like one. Read a deployment
+  URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
+  design and marks the outage with `::warning::` (105) — **a green board does not mean the site
+  is up**.
+- **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies the
+  web surface into `public/` from a fixed directory allow-list, so a top-level directory not on
+  it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
+  printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). **Add any new web directory to that list**;
+  never commit `public/`. The *Framework Settings Override* notice is expected.
+- **The self-hosted Windows runner is DEAD; `queued` on it means never.** `runner-probe.yml`,
+  whose only job is to prove that runner works, has never started a run; the two blocking gates
+  once pinned to it had **never reached a conclusion** and now use `ubuntu-latest`
+  (`FIXES_LOG.md` 106). `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and
+  still never run. **A pending check is not a passing one** — read `status`, not `conclusion`.
+  `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
+  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** group with
+  `cancel-in-progress: false` **starves** — `ci.yml` (§7's gate) was `cancelled` 30 runs
+  running on `main` — a job waited ~53min for a runner and any push in that window cancelled
+  it: **starvation, not deadlock**. **Fixed, verified on `main`**: runner assignment
+  53m06s → **3s**, all 11 workflows green in 49s (`FIXES_LOG.md` 112). Measure
+  `created_at` vs `started_at` on the **job**; the run's timestamps hide the wait. Gated; a **fixed** group with `false` is correct and exempt.
 
 ### 8.3 Current verification baseline
 
@@ -608,22 +559,26 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **179** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **34 `.js` + 10 `.css` that nothing loads** (checks 2/2b; a **transitive** closure since `FIXES_LOG.md` 111) |
+| `python3 -m unittest discover -s scripts/tests` | **284** tests, all passing |
+| `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
+| `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
-| `python3 scripts/context-budget.py` | PASS — CLAUDE.md under its 16,000-token budget, and close to it, so a new paragraph means trimming an old one. `.gitattributes` pins it to LF (`core.autocrlf` used to inflate it ~250 tokens on Windows and fail the gate) |
+| `python3 scripts/context-budget.py` | PASS — CLAUDE.md is at its 16,000-token budget, so a new paragraph means trimming an old one. `.gitattributes` pins LF (`core.autocrlf` inflated it ~250 tokens on Windows) |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
+| `python3 scripts/rls-auditor.py` | 0 findings, exit 0 (was 39 CRITICAL, blocking every PR; the live database had none of them — `FIXES_LOG.md` 93) |
+| `python3 scripts/silent-failure-detector.py` | 0 findings, exit 0 (was **51**; 42 were scanner noise and 9 were real §8.1 class 1 bugs, all fixed — `FIXES_LOG.md` 94) |
 | `python3 scripts/i18n-contract.py` | 0 violations; all 6 packs at 100% of `T_EN` |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless render; `SKIPPED` where no browser) — see the `runtime-verify` skill |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | **22** blocking checks, all passing |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live**, and **120** declared (see §8.4 on the phantom 121st) |
+| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. It mirrored only five until `migration-history-contract` and `supabase-migration-security-audit` were added, and both were failing unsatisfiably: mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -631,15 +586,17 @@ entries (which were accurate when written):
 ### 8.4 Method notes that save a session real time
 
 - **Stub `esm.sh` before any browser scan, or the results are worthless.**
-  Every gated page does `import{createClient}from'https://esm.sh/...'` at the
-  top of a module script, the sandbox blocks that host, and a failed top-level
-  import means *none* of that module's code runs — so every `window.`-exposed
-  function reports as missing. A scan once reported 44 broken pages this way;
-  the real number was 6. `.claude/skills/verify-in-browser/` handles this.
-- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects
-  to `terms.html` and the page under test never renders.
-- **Verify a "0 findings" result is real.** A scan against a stopped static
-  server also reports 0. Cross-check with a scan that should find something.
+  Gated pages import the client at the top of a module script; the sandbox
+  blocks that host, and a failed top-level import runs *none* of that module's
+  code — so every `window.`-exposed function reports missing. A scan once
+  reported 44 broken pages this way; the real number was 6.
+  `.claude/skills/verify-in-browser/` handles it.
+- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
+  `terms.html` and the page never renders.
+- **Verify a "0 findings" result is real.** A stopped static server reports 0; so
+  does a regex damaged in transit (a rule moved out of a template literal kept
+  doubled backslashes, matched no digits, reported a serene zero). Cross-check
+  with a run that must find something.
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
@@ -660,56 +617,65 @@ entries (which were accurate when written):
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
 - **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** So any per-file date derived that way is a guess the moment the real
-  commit sits beyond the boundary — at `--depth 1` every file dates to the clone
-  itself. `actions/checkout@v4` is shallow by default, so this made
-  `omega-registry.py --check` a guaranteed CI failure and had already put three
-  wrong dates in the committed registry (`90c310d7` turned out to *be* a boundary
-  commit; the real date was 2026-08-11, not the 2026-08-15 recorded). The generator
-  now compares the reported SHA against `.git/shallow` and refuses rather than
-  writing a date it cannot know, and `ci.yml` sets `fetch-depth: 0`. Being shallow
-  is not itself the problem — this session's clone was shallow at 480 commits and
-  still correct for most files — so detect the boundary, not the shallowness.
+  not fail.** At `--depth 1` every file dates to the clone, so any per-file date from
+  it is a guess — three wrong dates reached the committed registry that way.
+  `omega-registry.py` now checks the SHA against `.git/shallow` and refuses rather
+  than guessing; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the
+  shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
-  auto-applies `localStorage['omega_lang']` on load, and `localStorage` survives
+  auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches
-  language, then moves to the next page is comparing against whatever the previous
-  iteration selected, not English. A first run of exactly that reported plausible
-  numbers that happened to be right; the re-run with a fresh context per (page,
-  language) is what actually measured them. Any per-page state the code under test
-  persists — theme, language, a dismissed banner — needs a fresh context, not a
-  fresh `goto`.
+  language, then moves on compares against the *previous* iteration's choice. The
+  first such run happened to be right; the re-run with a fresh context per (page,
+  language) is what measured it. Any state the code under test persists — theme,
+  language, a dismissed banner — needs a fresh context, not a fresh `goto`. The
+  harness also defaults to a **signed-in** stub, and a public auth page redirects
+  a signed-in visitor away, so its buttons report absent: use
+  `launch({signedIn:false})` for `account`/`reset`/`terms`/`enter`.
 - **A visual change needs a noise floor before it means anything.** A
-  before/after screenshot diff on this platform reads ~1.6% of pixels as
-  "changed" with *no change at all* — the particle canvas and drift
-  keyframes never settle, so two shots of the same build 1.2s apart differ
-  that much (`prefers-reduced-motion` narrows it, it does not reach zero).
-  A design layer measured at 0.66–2.21% was therefore inside its own noise
-  and invisible at rest, which no amount of computed-style checking would
-  have revealed: every rule *applied*, all of it just sat behind `:hover`,
-  `:focus-visible` or scroll. Diff same-build pairs first, then compare.
-  Decoding PNGs needs no PIL (absent here) — draw them to a canvas in the
-  already-running Chromium and read `getImageData`.
+  before/after screenshot diff here reads ~1.6% of pixels as "changed" with *no
+  change at all* — the particle canvas and drift keyframes never settle. A
+  design layer measured at 0.66–2.21% was inside that noise and invisible at
+  rest, which no computed-style check would reveal: every rule *applied*, all of
+  it behind `:hover`, `:focus-visible` or scroll. Diff same-build pairs first.
+  Decoding PNGs needs no PIL — draw them to a canvas in the running Chromium and
+  read `getImageData`.
 - **A pseudo whose box paints but whose text never does is
   `-webkit-text-fill-color`, not `content`.** `bg.js:1290` adds `.ofx-sheen` to
-  every childless `.sechead` under 48 chars; that class fills heading text via
+  every childless `.sechead` under 48 chars, filling heading text via
   `background-clip:text` + `-webkit-text-fill-color:transparent`, which
   **inherits into pseudo-elements**. Borders are not text fill, so a `::before`
-  ring drew perfectly with nothing inside it, through four wrong theories.
-  Forcing `content:"X" !important` settles it in one step: a pseudo that cannot
-  paint a plain letter has no glyph, font or `var()` problem. Generated text on
-  a sheened element needs its own `-webkit-text-fill-color`.
-- **A repo-wide grep is a candidate generator, not a verdict.** Several
-  confident source-grep findings (missing `theme-color` on 121 pages,
-  131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine
-  for both, because `bg.js` injects them.
+  ring drew perfectly with nothing inside it. Generated text on a sheened
+  element needs its own `-webkit-text-fill-color`.
+- **A gate that asserts a rewrite exists cannot observe whether it fires.**
+  The site's front door was a lone `vercel.json` rewrite `{"source":"/"}` with no
+  `index.html` behind it, and it served **404 in production** while the same
+  response carried this repo's CSP and HSTS headers — the file was read, the
+  rewrite was not applied. `user-journey-contract.py` had passed throughout by
+  checking the rewrite's presence. Routing evidence is a **filesystem** entry or
+  a real fetch, never a config line; `omega_fabric_audit.py`'s SRC-01 now holds
+  both halves (index present, and no `/` rewrite left to shadow it).
+- **A snapshot's date is not its freshness, and a scanner that finds less is not
+  more correct.** `supabase/live-schema.json` was stamped with the current day and
+  was already one relation behind live (216 vs 217) — it was taken at 01:36 and
+  the table landed after. In the same pass `evidence-audit.py` was reporting a
+  relation named **`as`**, captured by `create\s+table\s+([a-z0-9_]+)` from
+  inside the literal `command_tag in ('CREATE TABLE','CREATE TABLE AS',…)`. Its
+  comment-stripper already existed for exactly this class; string literals were
+  the half nobody had closed. Both are fixed, but the transferable rule is the
+  check that followed: declared relations fell 121 → 120, so the run named the
+  one relation that disappeared and re-asserted five real ones (including a
+  *view*) before the smaller number was believed.
+- **A repo-wide grep is a candidate generator, not a verdict.** Confident
+  source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
+  `outline:none`) were false — the runtime showed 172/173 fine, since `bg.js`
+  injects them.
 - **A scanner needs its own false-positive pass before its number means
-  anything.** A fixed-widget collision scan first reported 177/178 pages by
-  counting full-viewport backdrops (`omega-fx`, the particle canvas, the noise
-  overlay) as colliding with everything on screen. Excluding
-  `pointer-events:none` and full-bleed elements gave the real answer — which
-  happened to be the same number, for entirely different and genuine reasons.
-  Getting the right number by luck is not the same as measuring.
+  anything.** A fixed-widget collision scan reported 177/178 pages by counting
+  full-viewport backdrops (`omega-fx`, the particle canvas, the noise overlay)
+  as colliding with everything. Excluding `pointer-events:none` and full-bleed
+  elements gave the same number for entirely different, genuine reasons. Right
+  by luck is not measured.
 - **A programmatic edit inside `bg.js`'s injected stylesheet can silently
   no-op.** That CSS is one single-quoted JS string, and its section headers use
   real box-drawing characters (`──`), not escapes — so a `replace()` written
@@ -719,24 +685,35 @@ entries (which were accurate when written):
   0 background layers at runtime while looking correct in the diff.
 - **"Built" is three different claims, so measure which one you mean.**
   `scripts/evidence-audit.py` classifies every page by what the repo can prove
-  — reaches Postgres, keeps data in the browser, names a relation nothing
-  declares, or is unreachable from `nav.js` — and writes `EVIDENCE_MATRIX.md`.
-  It is deliberately report-only (`--strict` to gate). What it cannot do is the
-  important half: it has no database connection, so a `BUILT` row means the
-  *client* is wired and nothing more. The live table, its columns, its `GRANT`
-  and its policy are all still unverified, and each has been a real shipped bug
-  (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
+  and writes `EVIDENCE_MATRIX.md` (report-only; `--strict` gates). It now also
+  runs a **live-schema cross-check**: relations `supabase/` declares that
+  `supabase/live-schema.json` lacks. Absent *and read by a page* is a silent
+  empty state and fails `--strict`; absent and unread is a dormant backend and
+  never gates. That snapshot is **dated, not a connection**, and a stale one
+  produces false findings in *both* directions (§8.2) — but sessions have live
+  access, so regenerate it in the same change rather than reasoning around it.
+  Columns, `GRANT`s and policies still are not checked by the matrix, and each
+  has been a real shipped bug (§8.1 classes 2 and 6).
+- **A number in member-visible *copy* drifts too — and your own fix can stale
+  it.** Six pages asserted a page count to the member; every one was wrong
+  against the real 189, and `settings.html`'s "48 pages keep what you enter in
+  this browser only" went stale *because* wiring three pages to Postgres moved
+  them out of LOCAL_ONLY. `scripts/page-count-claims.py` gates it and found two
+  more than a hand-grep did — the grep missed `170 PAGES` in caps. A
+  `data-i18n` string also lives in `i18n.js`'s `T_EN` **and** all six packs;
+  fixing only the HTML leaves five translations lying.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
-  describing this repo — skills (3 documented values, all wrong), `.html` pages
-  (~250 vs 178), bg.js coverage (104+ vs all 178), module size (747 vs 807 KB) —
-  had gone stale, and one (`grill-me-codex`'s missing frontmatter) had silently
-  broken skill discovery. Before quoting a count from any doc, re-derive it:
-  `python3 scripts/omega-registry.py --check` regenerates the whole census and
-  fails on drift. When adding a fact that is a *number*, put it in the generator,
-  not the paragraph.
-- **Ask a script what it does before reading it.** Every `scripts/*.py|sh`
-  answers `--help` with its docstring and exits 0 — far cheaper than reading the
-  file, and a test keeps it true.
+  describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
+  module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)
+  had silently broken skill discovery. Re-derive before quoting:
+  `python3 scripts/omega-registry.py --check` regenerates the census and fails on
+  drift. A fact that is a *number* belongs in the generator, not a paragraph.
+- **Ask a script what it does before reading it.** Every `scripts/*.py`
+  answers `--help` with its docstring and exits 0 — claimed here while **21 of
+  47 ignored it**, running the whole job instead (one never returned). It was
+  enforced per-script, so a script with no test went unchecked;
+  `test_script_help_contract.py` now sweeps all of them, with a planted
+  violator.
 - **External repo research is partly blocked at the egress proxy.**
   `raw.githubusercontent.com` returns 200, so named files (`README.md`,
   `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
@@ -746,11 +723,11 @@ entries (which were accurate when written):
   cannot be cloned or its tree listed. Do not present those dimensions as
   assessed; `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` marks them NOT VERIFIED. Also:
   the file tree cannot be enumerated, so a path guess that 404s means nothing.
-- **Per-session context cost is now gated.** `scripts/context-budget.py` runs
-  blocking in CI. See `.claude/skills/context-budget/` for where new
-  documentation belongs and how to read this repo's very large files cheaply
-  (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
-  the entire auto-loaded context).
+- **Per-session context cost is gated.** `scripts/context-budget.py` is blocking
+  in CI; `.claude/skills/context-budget/` says where new documentation belongs
+  and how to read this repo's very large files cheaply (`FIXES_LOG.md`,
+  `profile.html`, `bg.js` each cost more in one read than the whole auto-loaded
+  context).
 - **Presentation is measured in a render, never reasoned from the codepoint.**
   A grep over-reports (✓ ★ ☰ ✦ ⚔ are pure typography) and under-reports — the
   twelve zodiac signs are ordinary BMP symbols that default to *emoji*
@@ -920,7 +897,7 @@ the same repositories:
 | `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex` and invite-gated, with no ad surface. Evaluated twice — do not re-evaluate unless what the platform is changes. |
 | `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and that a description must say *when* to use the skill — what `grill-me-codex` was missing. |
 | `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
-| `affaan-m/everything-claude-code` (+ 4 forks of it) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
+| `affaan-m/everything-claude-code` (+ 4 forks) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
 | `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |
 
 Full evidence, per-repo blockers, and what could not be verified this session:

@@ -187,7 +187,7 @@
   set('object-blob-storage', window.__omegaSb && window.__omegaSb.storage ? 'CONNECTED' : 'BUILT', ['Supabase Storage adapter']);
   set('message-queues', 'BUILT', ['IndexedDB outbox', 'bounded drain']);
   set('fault-tolerance', 'BUILT', ['bounded exponential retry']);
-  set('cdn', 'CONNECTED', ['same-origin static deployment probe']);
+  set('cdn', 'BUILT', ['same-origin static deployment']);
   set('high-availability', 'BUILT', ['explicit health probe framework']);
   set('observability', window.__omegaOS ? 'CONNECTED' : 'BUILT', ['sovereign OS telemetry adapter']);
   set('security-identity', window.__omegaSb && window.__omegaSb.auth ? 'CONNECTED' : 'BUILT', ['fail-closed session gate']);
@@ -197,4 +197,116 @@
   window.__omegaArchitecture = Architecture;
   Architecture.observe('architecture_runtime_start', Date.now() - started, 'ms');
   emit('ready', { version: VERSION, blocks: 16 });
+
+  /* -- LIVE PROBES ---------------------------------------------------------
+     The sixteen set() calls above run at parse time, and this module is a
+     plain <script> in the body of architecture.html, so it executes BEFORE
+     bg.js -- which is `defer` -- has published window.__omegaSb or
+     window.__omegaOS. Measured in a headless render of architecture.html:
+     at +4s both globals were live, yet all four blocks that depend on them
+     still reported BUILT, while `cdn` reported CONNECTED even though
+     cdnProbe() was called from nowhere in the repo. The page's headline count
+     ("1 probed as connected in this session") was therefore wrong in both
+     directions: the single CONNECTED block was the one block nothing had
+     probed, and the four that could have been probed never were.
+
+     Every probe below performs a real operation in this browser and records
+     what it returned, or leaves its block at BUILT with the reason. None
+     throws, none writes member data, and none runs anywhere else --
+     architecture.html is the only file in the repo that loads this module. */
+
+  function waitFor(test, ms) {
+    ms = ms || 9000;
+    return new Promise(function (resolve, reject) {
+      var deadline = Date.now() + ms;
+      (function poll() {
+        var v = null;
+        try { v = test(); } catch (_) { v = null; }
+        if (v) return resolve(v);
+        if (Date.now() > deadline) return reject(new Error('not published within ' + ms + 'ms'));
+        setTimeout(poll, 150);
+      })();
+    });
+  }
+
+  /* bg.js owns the Supabase client and publishes it asynchronously, so read it
+     through the accessor rather than assuming a global is already assigned --
+     the shape that broke window.OmegaSupabase across eleven files. */
+  function client() {
+    return waitFor(function () { return window.__omegaSb || window.OmegaSB; })
+      .then(function (found) { return found === window.__omegaSb ? found : found.get(); });
+  }
+
+  function probe(id, claim, run) {
+    return Promise.resolve().then(run).then(function (detail) {
+      set(id, 'CONNECTED', detail ? [claim, detail] : [claim]);
+    }, function (e) {
+      var prior = state[id] || { status: 'BUILT', evidence: [] };
+      set(id, prior.status, (prior.evidence || []).concat(['not probed: ' + String((e && e.message) || e).slice(0, 80)]));
+    });
+  }
+
+  function runProbes() {
+    probe('cdn', 'same-origin static asset fetched in this session', function () {
+      return Architecture.cdnProbe().then(function (r) {
+        if (!r.ok) throw new Error('GET /robots.txt ' + r.status);
+        return 'GET /robots.txt ' + r.status;
+      });
+    });
+
+    probe('caching', 'Cache API answered in this session', function () {
+      if (typeof caches === 'undefined') throw new Error('Cache API unavailable');
+      return Architecture.cache.get('/robots.txt').then(function () { return 'omega-runtime-v1 opened'; });
+    });
+
+    probe('message-queues', 'IndexedDB outbox opened in this session', function () {
+      return new Promise(function (resolve, reject) {
+        if (!('indexedDB' in window)) return reject(new Error('IndexedDB unavailable'));
+        var open = indexedDB.open('omega-runtime', 1);
+        open.onupgradeneeded = function () { open.result.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true }); };
+        open.onerror = function () { reject(open.error || new Error('open failed')); };
+        open.onsuccess = function () {
+          var stores = open.result.objectStoreNames.length;
+          try { open.result.close(); } catch (_) {}
+          resolve('outbox store present (' + stores + ')');
+        };
+      });
+    });
+
+    var sb = client();
+
+    probe('database', 'Supabase client resolved in this session', function () {
+      return sb.then(function (c) {
+        if (!c || typeof c.from !== 'function') throw new Error('client exposes no .from()');
+        return 'PostgREST client live';
+      });
+    });
+
+    probe('object-blob-storage', 'Supabase Storage client resolved in this session', function () {
+      return sb.then(function (c) {
+        if (!c || !c.storage || typeof c.storage.from !== 'function') throw new Error('storage client unavailable');
+        return 'storage client live';
+      });
+    });
+
+    /* A real call, not a presence check: getSession() is answered by the auth
+       client itself, so a resolved promise proves the identity path works in
+       this browser. Whether a session EXISTS is a separate fact and is
+       reported separately -- requireSession() stays fail-closed either way. */
+    probe('security-identity', 'auth.getSession() answered in this session', function () {
+      return sb.then(function (c) {
+        if (!c || !c.auth) throw new Error('auth client unavailable');
+        return c.auth.getSession();
+      }).then(function (r) {
+        return (r && r.data && r.data.session) ? 'session present' : 'no session -- gate closed';
+      });
+    });
+
+    probe('observability', 'sovereign OS telemetry live in this session', function () {
+      return waitFor(function () { return window.__omegaOS; }).then(function () { return 'window.__omegaOS published'; });
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runProbes);
+  else runProbes();
 })();

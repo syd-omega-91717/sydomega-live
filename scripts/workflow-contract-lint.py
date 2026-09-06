@@ -4,6 +4,15 @@ from pathlib import Path
 import re
 import sys
 
+# CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
+# if asking is cheap and safe. This gate used to run its whole job on --help --
+# a repo-wide scan, or in one case an O(n^2) page comparison that never
+# returned -- so the cheapest way to learn what it did was to read it. The
+# guard runs before any work, and must stay ahead of it.
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
 errors = []
@@ -35,6 +44,35 @@ else:
         if re.search(r"runs-on:\s*\[?self-hosted", text, re.I):
             if not re.search(r"timeout-minutes:\s*\d+", text):
                 errors.append(f"{name}: self-hosted workflow has no timeout-minutes")
+
+        # A REF-KEYED concurrency group with cancel-in-progress: false starves.
+        # Measured 2026-09-06 (FIXES_LOG.md 112): ci.yml runs 1031-1060 and
+        # supabase-runtime-contract runs 322-348 on main are EVERY ONE
+        # `cancelled` -- created, left `pending` with zero jobs allocated (one
+        # sat 4h31m), then cancelled by the next push before a runner was ever
+        # assigned. Not one reached a conclusion, and the board showed pending
+        # rather than red the whole time.
+        #
+        # The rule is scoped to ref-keyed groups on purpose.
+        # vercel-production.yml uses the FIXED group `vercel-production` with
+        # `false` deliberately -- a production deploy in flight must not be
+        # cancelled by a newer push -- and it does reach conclusions. Flagging
+        # it would be a false positive, so the group must interpolate
+        # github.ref (or github.head_ref) for this to fire.
+        # Match indented keys, and also full-line comments and blank lines, so
+        # a comment placed inside the block cannot truncate the match and make
+        # this rule silently pass -- which is exactly what happened the first
+        # time it was written (CLAUDE.md 8.4: verify a "0 findings" is real).
+        cig = re.search(r"^concurrency:[ \t]*\n((?:(?:[ \t]+\S.*|[ \t]*#.*|[ \t]*)\n)+)",
+                        text, re.M)
+        if cig:
+            block = cig.group(1)
+            ref_keyed = re.search(r"group:.*github\.(ref|head_ref)", block)
+            if ref_keyed and re.search(r"cancel-in-progress:\s*false\b", block, re.I):
+                errors.append(
+                    f"{name}: ref-keyed concurrency group with cancel-in-progress: false "
+                    f"-- runs queue behind each other and are cancelled before a runner "
+                    f"is assigned, so the workflow never concludes (FIXES_LOG.md 112)")
 
 if errors:
     print("WORKFLOW CONTRACT LINT: FAIL")

@@ -95,6 +95,83 @@ class ModuleGraphTests(unittest.TestCase):
         self.assertIn("WARNING — on disk but never loaded", out)
         self.assertIn("omega-orphan.js", out)
 
+    # ---- transitive closure (FIXES_LOG.md 111) --------------------------
+    # The module graph used to read `.src =` out of bg.js/nav.js only, so a
+    # module injected by an already-reachable module was reported as an
+    # orphan. Live example: bg.js injects omega-components.js, which injects
+    # /omega-page-character.js. These four tests pin the closure in BOTH
+    # directions -- a scan that only ever finds fewer orphans would pass the
+    # first two and fail the last two.
+
+    def test_module_injected_by_an_injected_module_is_reachable(self):
+        self.fx.write("bg.js", "var a=document.createElement('script');a.src='/omega-mid.js';")
+        self.fx.write("omega-mid.js", "var b=document.createElement('script');b.src='/omega-leaf.js';")
+        self.fx.write("omega-leaf.js", "// reached through omega-mid.js\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("omega-leaf.js", out)
+        self.assertNotIn("omega-mid.js", out)
+
+    def test_closure_follows_a_module_a_page_script_tag_includes(self):
+        self.fx.write("page.html", "<script src=/omega-mid.js></script>")
+        self.fx.write("omega-mid.js", "var b=document.createElement('script');b.src='/omega-leaf.js';")
+        self.fx.write("omega-leaf.js", "// reached through the page's own tag\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("omega-leaf.js", out)
+
+    def test_a_dead_module_cannot_vouch_for_what_it_injects(self):
+        # THE CONTROL. Nothing loads omega-dead.js, so the module it injects
+        # is not reachable either. A closure seeded from every .js on disk
+        # rather than from the real roots would call both of these live and
+        # quietly stop reporting any orphan at all.
+        self.fx.write("bg.js", "// loads nothing\n")
+        self.fx.write("omega-dead.js", "var b=document.createElement('script');b.src='/omega-alsodead.js';")
+        self.fx.write("omega-alsodead.js", "// only a dead module asks for this\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("WARNING — on disk but never loaded", out)
+        self.assertIn("omega-dead.js", out)
+        self.assertIn("omega-alsodead.js", out)
+
+    def test_a_third_party_cdn_src_is_not_a_local_module_edge(self):
+        # omega-oss.js pulls dayjs's relativeTime.min.js from jsdelivr. Taking
+        # its basename as a same-origin edge reported a CRITICAL for a file
+        # that was never meant to exist in this repo.
+        self.fx.write(
+            "bg.js",
+            "var s=document.createElement('script');"
+            "s.src='https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js';")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("OK — every requested module exists.", out)
+        self.assertNotIn("relativeTime.min.js", out)
+
+    # ---- stylesheet graph, same closure (FIXES_LOG.md 111) ---------------
+
+    def test_stylesheet_reached_only_by_a_dead_module_is_reported_dead(self):
+        # omega-interface-v2.js is itself an orphan and names 8 stylesheets.
+        # Scanning every .js on disk counted those references and called all
+        # 8 live.
+        self.fx.write("bg.js", "// loads nothing\n")
+        self.fx.write("omega-dead.js", "var l=document.createElement('link');l.href='/skin.css';")
+        self.fx.write("skin.css", "body{color:red}")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("stylesheets on disk but never loaded", out)
+        self.assertIn("skin.css", out)
+
+    def test_stylesheet_reached_through_a_live_module_stays_live(self):
+        # THE CONTROL for the test above: the same shape, one edge different.
+        # Without this, a scan that simply called every stylesheet dead would
+        # pass.
+        self.fx.write("bg.js", "var a=document.createElement('script');a.src='/omega-live.js';")
+        self.fx.write("omega-live.js", "var l=document.createElement('link');l.href='/skin.css';")
+        self.fx.write("skin.css", "body{color:red}")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("skin.css", out)
+
 
 class RLSCoverageTests(unittest.TestCase):
     def setUp(self):

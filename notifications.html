@@ -143,7 +143,7 @@ var today=new Date().toISOString().slice(0,10);
 function seedSystemNotifs(){
   var seeds=[
     {id:'sys-1',type:'system',title:'Welcome to OMEGA',body:'Your sovereign notification center is active. Manage reminders, alerts, and system messages here.',read:false,date:today},
-    {id:'sys-2',type:'system',title:'Platform Status',body:'All SYD OMEGA 91717 systems operational. 169 pages active across 15 sections.',read:false,date:today},
+    {id:'sys-2',type:'system',title:'Platform Status',body:'189 pages across 15 navigation sections. This centre collects reminders, alerts and system messages.',read:false,date:today},
   ];
   seeds.forEach(function(s){if(!notifs.find(function(n){return n.id===s.id;}))notifs.push(s);});
   localStorage.setItem(NK,JSON.stringify(notifs));
@@ -261,5 +261,5 @@ window.saveNotifSettings=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

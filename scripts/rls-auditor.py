@@ -44,6 +44,49 @@ def extract_paren_content(s, start_pos):
     return None
 
 
+def statement_end(s, start_pos):
+    """Index just past the `;` that terminates the statement at start_pos.
+
+    THE BUG THIS EXISTS TO KILL. The clause search below used to run over
+    `content[start_pos:]` -- the whole rest of the file -- so a policy with no
+    WITH CHECK clause picked up the NEXT policy's. Measured on
+    supabase/refinements.sql: line 8 is
+
+        create policy "owner reads publications" on public.publications
+          for select to authenticated using (public.is_platform_owner());
+
+    which has no WITH CHECK and cannot have one (Postgres rejects WITH CHECK on
+    FOR SELECT). The parser reported with_check='true', scavenged from line 10.
+    That single defect produced the bulk of a 39-finding CRITICAL report, none
+    of which corresponded to anything in the live database: measured
+    2026-09-05, 304 live policies, 197 carrying a WITH CHECK clause, and
+    **zero** whose WITH CHECK is `true`.
+
+    Semicolons inside parentheses or string literals do not end a statement.
+    """
+    depth = 0
+    in_str = False
+    i = start_pos
+    while i < len(s):
+        ch = s[i]
+        if in_str:
+            if ch == "'":
+                if i + 1 < len(s) and s[i + 1] == "'":   # '' is an escaped quote
+                    i += 1
+                else:
+                    in_str = False
+        elif ch == "'":
+            in_str = True
+        elif ch == '(':
+            depth += 1
+        elif ch == ')':
+            depth -= 1
+        elif ch == ';' and depth <= 0:
+            return i
+        i += 1
+    return len(s)
+
+
 def parse_rls_policies():
     """Parse all CREATE POLICY statements from supabase/*.sql files."""
     policies = []
@@ -67,9 +110,12 @@ def parse_rls_policies():
             action = (match.group(3) or "ALL").upper()
             role = match.group(4)
 
-            # Extract clauses after TO role
+            # Extract clauses after TO role -- ONLY within this statement.
+            # `rest` used to be content[start_pos:], the whole rest of the file
+            # (see statement_end's docstring for the measured consequence).
             start_pos = match.end()
-            rest = content[start_pos:]
+            stmt_end = statement_end(content, start_pos)
+            rest = content[start_pos:stmt_end]
 
             using_clause = ""
             with_check_clause = ""
@@ -87,6 +133,11 @@ def parse_rls_policies():
                 paren_start = start_pos + with_check_match.end() - 1
                 with_check_clause = extract_paren_content(content, paren_start) or ""
                 with_check_clause = with_check_clause.strip()
+
+            # Postgres forbids WITH CHECK on FOR SELECT and FOR DELETE. If one
+            # was matched for such a policy the parse is wrong, not the SQL.
+            if action in ("SELECT", "DELETE"):
+                with_check_clause = ""
 
             # Skip if neither clause found
             if not using_clause and not with_check_clause:
@@ -153,28 +204,41 @@ def audit_policies(policies, identity_cols):
         using = policy["using"]
         with_check = policy["with_check"]
 
-        # CRITICAL: WITH CHECK(true) unscoped to user identity
-        if with_check.lower() == "true":
+        # CRITICAL: an unconditional write.
+        #
+        # WITH CHECK(true) alone is NOT that finding, and reporting it as one
+        # was wrong twice over. For UPDATE, DELETE and ALL, the USING clause
+        # decides which rows the statement may touch at all -- so
+        #   for update ... using (public.is_platform_owner()) with check (true)
+        # lets the OWNER write any value into rows only the owner can reach.
+        # That is what "owner" means, not a member spoofing gap, and it was
+        # reported as "grants unconditional UPDATE to authenticated" on real,
+        # correct policies (supabase/chunk_05_migrations.sql:39 among them).
+        #
+        # INSERT is the genuine case: there is no USING clause on an INSERT
+        # policy, so WITH CHECK is the only gate and `true` really does admit
+        # any row -- CLAUDE.md 8.1 class 6(b).
+        gated_by_using = using.strip().lower() not in ("", "true")
+        unconditional_write = (
+            with_check.lower() == "true"
+            and (policy["action"] == "INSERT" or not gated_by_using)
+        )
+
+        if unconditional_write:
+            # One finding, not two. The old code emitted this AND a separate
+            # "Permissive X without auth.uid()" line for the same condition,
+            # double-counting every hit on a table with a user_id column.
+            scope = (" on a table with user_id, so a member can write rows "
+                     "attributed to anyone") if table in identity_cols else ""
             findings.append({
                 "severity": "CRITICAL",
                 "policy": policy["name"],
                 "table": table,
                 "file": policy["file"],
                 "line": policy["line"],
-                "message": f"WITH CHECK(true) — grants unconditional {policy['action']} to {role}",
+                "message": (f"WITH CHECK(true) with no USING gate — grants "
+                            f"unconditional {policy['action']} to {role}{scope}"),
             })
-
-        # CRITICAL: WITH CHECK(true) on a table with user_id but no auth.uid() scoping
-        if with_check and "true" in with_check.lower() and table in identity_cols:
-            if "auth.uid()" not in with_check and "auth.role()" not in with_check:
-                findings.append({
-                    "severity": "CRITICAL",
-                    "policy": policy["name"],
-                    "table": table,
-                    "file": policy["file"],
-                    "line": policy["line"],
-                    "message": f"Permissive {policy['action']} without auth.uid() on table with user_id",
-                })
 
         # WARNING: TO public on sensitive tables (profiles, members, etc.)
         if role == "public" and table in ("profiles", "members", "users", "accounts"):

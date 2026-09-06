@@ -36,7 +36,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .step-name{font-size:.8rem;color:var(--t);letter-spacing:.05em;margin-bottom:4px;font-family:'Courier New',monospace}
 .step.done .step-name{color:var(--green)}
 .step-duration{font-size:.6rem;color:var(--d);margin-bottom:4px;font-family:'Courier New',monospace}
-.step-desc{font-size:.65rem;color:#666;line-height:1.5;font-family:'Courier New',monospace}
+.step-desc{font-size:.65rem;color:var(--muted);line-height:1.5;font-family:'Courier New',monospace}
 .step-timer{font-size:.75rem;color:var(--gold);margin-left:auto;flex-shrink:0;font-weight:bold;font-family:'Courier New',monospace}
 .progress-ring-wrap{text-align:center;margin-bottom:20px;padding:20px 0}
 canvas{display:block;margin:0 auto}
@@ -373,5 +373,5 @@ updateStats();
 renderSteps();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

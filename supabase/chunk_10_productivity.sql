@@ -29,7 +29,7 @@ ALTER TABLE public.focus_sessions ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='focus_sessions' AND policyname='focus_own') THEN
     CREATE POLICY focus_own ON public.focus_sessions FOR ALL
-      USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+      USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -53,7 +53,7 @@ ALTER TABLE public.habit_logs ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='habit_logs' AND policyname='habit_logs_own') THEN
     CREATE POLICY habit_logs_own ON public.habit_logs FOR ALL
-      USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+      USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -77,7 +77,7 @@ ALTER TABLE public.okr_objectives ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='okr_objectives' AND policyname='okr_obj_own') THEN
     CREATE POLICY okr_obj_own ON public.okr_objectives FOR ALL
-      USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+      USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -104,7 +104,7 @@ ALTER TABLE public.okr_key_results ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='okr_key_results' AND policyname='okr_kr_own') THEN
     CREATE POLICY okr_kr_own ON public.okr_key_results FOR ALL
-      USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+      USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -126,7 +126,7 @@ ALTER TABLE public.wealth_snapshots ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='wealth_snapshots' AND policyname='wealth_own') THEN
     CREATE POLICY wealth_own ON public.wealth_snapshots FOR ALL
-      USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+      USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 

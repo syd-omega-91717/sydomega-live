@@ -78,7 +78,7 @@ return;
 }
 var ad = candidates[Math.floor(Math.random() * candidates.length)];
 recordImpression(ad.id);
-var html = '<div class=oad-unit style=border:1px solid ' + ad.color + '33;background:' + ad.color + '08;border-radius:3px;padding:12px 14px;position:relative>' + '<div style=display:flex;justify-content:space-between;align-items:flex-start;gap:12px>' + '<div style=min-width:0>' + '<div style=font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:' + ad.color + ';margin-bottom:4px>AD · ' + ad.advertiser.toUpperCase() + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px>' + ad.headline + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px>' + ad.body + '</div>' + '<button style=font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid ' + ad.color + '55;color:' + ad.color + ';border-radius:2px;cursor:pointer>' + ad.cta + '</button>' + '</div>' + '</div>' + '<div style=position:absolute;top:4px;right:6px;font-family:var(--M);font-size:12px;color:var(--muted);opacity:.5>Ω AD</div>' + '</div>';
+var html = '<div class=oad-unit style="border:1px solid "' + ad.color + '33;background:' + ad.color + '08;border-radius:3px;padding:12px 14px;position:relative>' + '<div style=display:flex;justify-content:space-between;align-items:flex-start;gap:12px>' + '<div style=min-width:0>' + '<div style=font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:' + ad.color + ';margin-bottom:4px>AD · ' + ad.advertiser.toUpperCase() + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px>' + ad.headline + '</div>' + '<div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px>' + ad.body + '</div>' + '<button style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid "' + ad.color + '55;color:' + ad.color + ';border-radius:2px;cursor:pointer>' + ad.cta + '</button>' + '</div>' + '</div>' + '<div style=position:absolute;top:4px;right:6px;font-family:var(--M);font-size:12px;color:var(--muted);opacity:.5>Ω AD</div>' + '</div>';
 container.innerHTML = html;
 container.style.display = 'block';
 }
@@ -95,7 +95,7 @@ return a + b;
 }, 0);
 var adRows = SAMPLE_ADS.map(function(ad) {
 var count = log[ad.id] || 0;
-return '<div style=display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)><span style=font-family:var(--M);font-size:12px;color:var(--ink)>' + ad.advertiser + '</span><span style=font-family:var(--M);font-size:12px;color:var(--gold)>' + count + ' impressions</span></div>';
+return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)"><span style=font-family:var(--M);font-size:12px;color:var(--ink)>' + ad.advertiser + '</span><span style=font-family:var(--M);font-size:12px;color:var(--gold)>' + count + ' impressions</span></div>';
 }).join('');
 /* Three of the four cards here reported dollars that did not exist. What the
    module can honestly count is impressions and campaigns, so that is what it

@@ -99,14 +99,21 @@
     },
     record_event: async function(ctx){
       if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      /* The try/catch below cannot observe this failing: Supabase resolves
+         {data:null,error} rather than throwing, so the old code returned
+         {ok:true} whether or not the event was recorded (CLAUDE.md 8.1
+         class 1). `recorded` now reports what actually happened. */
+      var recErr=null;
       try{
-        await window.__omegaSb.rpc('record_sovereign_event',{
+        var rr=await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:ctx._workflow||'workflow_complete',
           p_event_data:ctx,
           p_axis_delta:{a:0,b:0,c:0}
         });
-      }catch(e){}
-      return {ok:true};
+        recErr=rr&&rr.error||null;
+      }catch(e){recErr=e;}
+      if(recErr)console.warn('[OmegaWorkflow] record_sovereign_event failed:',recErr.message||recErr);
+      return {ok:true,recorded:!recErr};
     },
     /* task_complete workflow steps — these were referenced but not implemented */
     validate_task: async function(ctx){
@@ -163,14 +170,20 @@
     /* ── gate_unlock workflow ───────────────────────────────────── */
     record_achievement: async function(ctx){
       if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      /* `recorded:true` was returned unconditionally, from inside a try/catch
+         that cannot catch a Supabase write failure — the workflow asserted the
+         gate unlock had been recorded when it may not have been. */
+      var gateErr=null;
       try{
-        await window.__omegaSb.rpc('record_sovereign_event',{
+        var gr=await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:'gate.unlocked',
           p_event_data:{gate_name:ctx.gate_name,gate_idx:ctx.gate_idx,auth:ctx.auth},
           p_axis_delta:{a:0,b:0,c:0}
         });
-      }catch(e){}
-      return {ok:true,recorded:true};
+        gateErr=gr&&gr.error||null;
+      }catch(e){gateErr=e;}
+      if(gateErr)console.warn('[OmegaWorkflow] gate.unlocked not recorded:',gateErr.message||gateErr);
+      return {ok:true,recorded:!gateErr};
     },
     notify_owner: async function(ctx){
       if(window.OmegaOS){

@@ -8,13 +8,13 @@
 <style>
 .ritual-hero{padding:32px 0 20px;text-align:center;border-bottom:1px solid rgba(201,168,76,.1);margin-bottom:24px}
 .ritual-hero h2{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--gold,var(--gold));margin:0 0 8px}
-.ritual-hero p{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.6)}
+.ritual-hero p{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 .protocol-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
 @media(max-width:640px){.protocol-grid{grid-template-columns:1fr}}
 .protocol-card{border:1px solid rgba(201,168,76,.12);border-radius:2px;overflow:hidden}
 .protocol-header{padding:14px 16px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;justify-content:space-between;align-items:center}
 .protocol-header .ph-title{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold,var(--gold))}
-.protocol-header .ph-prog{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5)}
+.protocol-header .ph-prog{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .protocol-prog-bar{height:2px;background:rgba(201,168,76,.08)}
 .protocol-prog-fill{height:2px;background:rgba(201,168,76,.5);transition:width .3s}
 .ritual-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(201,168,76,.06);cursor:pointer;transition:.12s}
@@ -26,23 +26,23 @@
 .ritual-item.done .ri-check{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.4)}
 .ri-info{flex:1;min-width:0}
 .ri-name{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.8)}
-.ri-desc{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:2px}
-.ri-time{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.4);flex-shrink:0}
+.ri-desc{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
+.ri-time{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);flex-shrink:0}
 .streak-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .streak-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
 .streak-box .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,var(--gold))}
-.streak-box .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.streak-box .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:24px}
 .week-cell{text-align:center}
-.week-cell .wc-day{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-bottom:4px}
-.week-cell .wc-dot{width:28px;height:28px;border-radius:50%;margin:0 auto;border:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
+.week-cell .wc-day{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.week-cell .wc-dot{width:28px;height:28px;border-radius:50%;margin:0 auto;border:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;color:var(--muted)}
 .week-cell .wc-dot.full{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.4);color:var(--gold,var(--gold))}
 .week-cell .wc-dot.partial{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.2);color:rgba(201,168,76,.6)}
-.add-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.2);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.add-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.2);color:var(--muted);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .add-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
 .section-hd{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
-.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:10px 18px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center}
@@ -50,22 +50,22 @@
 .modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(420px,90vw);max-height:80vh;overflow-y:auto}
 .modal-box h3{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold,var(--gold));margin:0 0 20px}
 .form-group{margin-bottom:14px}
-.form-group label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
+.form-group label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:5px}
 .form-group input,.form-group select,.form-group textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:12px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(201,168,76,.4)}
 .form-group select option{background:#0a0a08}
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .btn-save{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
-.btn-cancel{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
+.btn-cancel{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;border-radius:2px;cursor:pointer}
 .consistency-bar{margin-bottom:8px}
 .cb-label{display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;margin-bottom:3px}
 .cb-label span:first-child{color:rgba(201,168,76,.7)}
-.cb-label span:last-child{color:rgba(138,134,118,.5)}
+.cb-label span:last-child{color:var(--muted)}
 .cb-track{height:4px;background:rgba(201,168,76,.08);border-radius:2px}
 .cb-fill{height:4px;background:rgba(201,168,76,.5);border-radius:2px;transition:width .3s}
 .insight-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
 .insight-icon{font-size:18px;flex-shrink:0}
-.insight-text{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.7);line-height:1.6}
+.insight-text{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.6}
 </style>
   <script src="/bg.js"></script>
   <script src="/omega-sparkline.js" defer></script>
@@ -86,13 +86,13 @@
     </div>
 
     <div class="streak-row" id="streak-row">
-      <div class="streak-box"><div class="sv" id="str-total">0</div><div class="sk">TOTAL DAYS</div></div>
-      <div class="streak-box"><div class="sv" id="str-streak">0</div><div class="sk">CURRENT STREAK</div></div>
-      <div class="streak-box"><div class="sv" id="str-best">0</div><div class="sk">BEST STREAK</div></div>
-      <div class="streak-box"><div class="sv" id="str-rate">0%</div><div class="sk">30-DAY RATE</div><div data-omega-spark id="spark-rituals" data-spark-label="RITUALS KEPT PER DAY, LAST FOURTEEN COMPLETE DAYS" hidden style="margin-top:8px;justify-content:center;display:flex"></div></div>
+      <div class="streak-box kpi"><div class="sv" id="str-total">0</div><div class="sk">TOTAL DAYS</div></div>
+      <div class="streak-box kpi"><div class="sv" id="str-streak">0</div><div class="sk">CURRENT STREAK</div></div>
+      <div class="streak-box kpi"><div class="sv" id="str-best">0</div><div class="sk">BEST STREAK</div></div>
+      <div class="streak-box kpi"><div class="sv" id="str-rate">0%</div><div class="sk">30-DAY RATE</div><div data-omega-spark id="spark-rituals" data-spark-label="RITUALS KEPT PER DAY, LAST FOURTEEN COMPLETE DAYS" hidden style="margin-top:8px;justify-content:center;display:flex"></div></div>
     </div>
 
-    <div class="section-hd">THIS WEEK</div>
+    <div class="section-hd sechead">THIS WEEK</div>
     <div class="week-grid" id="week-grid"></div>
 
     <div class="tab-row">
@@ -114,7 +114,7 @@
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold,#C9A84C);margin-bottom:12px">MORNING SCIENCE</div>
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             · <strong style="color:rgba(201,168,76,.7)">Cortisol Peak</strong> — 30–45 min after waking. Optimal for high-cognitive tasks.<br>
             · <strong style="color:rgba(201,168,76,.7)">Cold Exposure</strong> — 60–90s cold shower increases norepinephrine 300%.<br>
             · <strong style="color:rgba(201,168,76,.7)">Light Anchoring</strong> — Outdoor light within 30 min sets circadian timer.<br>
@@ -137,7 +137,7 @@
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold,#C9A84C);margin-bottom:12px">EVENING SCIENCE</div>
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             · <strong style="color:rgba(201,168,76,.7)">Blue Light Cutoff</strong> — 90 min before bed to restore melatonin onset.<br>
             · <strong style="color:rgba(201,168,76,.7)">Temperature Drop</strong> — Body needs to cool 1–2°C to initiate sleep.<br>
             · <strong style="color:rgba(201,168,76,.7)">Shutdown Ritual</strong> — Written task completion signals brain to disengage.<br>
@@ -160,7 +160,7 @@
         </div>
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold,#C9A84C);margin-bottom:12px">WEEKLY REVIEW PROTOCOL</div>
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.8">
             · <strong style="color:rgba(201,168,76,.7)">Sunday Architecture</strong> — Plan the week on Sunday, not Monday.<br>
             · <strong style="color:rgba(201,168,76,.7)">Energy Audit</strong> — What drained you? What energized you?<br>
             · <strong style="color:rgba(201,168,76,.7)">Wins Inventory</strong> — Document progress, no matter how small.<br>
@@ -173,20 +173,20 @@
 
     <div class="tab-panel" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="streak-box"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-        <div class="streak-box"><div class="sv">21</div><div class="sk">DAYS TO HABIT</div></div>
-        <div class="streak-box"><div class="sv">66</div><div class="sk">AUTO-PILOT DAYS</div></div>
-        <div class="streak-box"><div class="sv">φ/e</div><div class="sk">RITUAL RATIO</div></div>
+        <div class="streak-box kpi"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="streak-box kpi"><div class="sv">21</div><div class="sk">DAYS TO HABIT</div></div>
+        <div class="streak-box kpi"><div class="sv">66</div><div class="sk">AUTO-PILOT DAYS</div></div>
+        <div class="streak-box kpi"><div class="sv">φ/e</div><div class="sk">RITUAL RATIO</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="streak-box"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
-        <div class="streak-box"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
-        <div class="streak-box"><div class="sv">3×</div><div class="sk">CORTISOL BOOST</div></div>
-        <div class="streak-box"><div class="sv">200%</div><div class="sk">BDNF INCREASE</div></div>
+        <div class="streak-box kpi"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
+        <div class="streak-box kpi"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
+        <div class="streak-box kpi"><div class="sv">3×</div><div class="sk">CORTISOL BOOST</div></div>
+        <div class="streak-box kpi"><div class="sv">200%</div><div class="sk">BDNF INCREASE</div></div>
       </div>
-      <div class="section-hd">PROTOCOL CONSISTENCY (30-DAY)</div>
+      <div class="section-hd sechead">PROTOCOL CONSISTENCY (30-DAY)</div>
       <div id="consistency-bars"></div>
-      <div class="section-hd" style="margin-top:20px">SOVEREIGN INSIGHTS</div>
+      <div class="section-hd sechead" style="margin-top:20px">SOVEREIGN INSIGHTS</div>
       <div id="insight-list"></div>
     </div>
   </div>
@@ -295,7 +295,7 @@ function renderProtocol(protocol, listId, progId, barId){
         <div class="ri-desc">${r.desc}</div>
       </div>
       <div class="ri-time">${r.time}m</div>
-    </div>`).join('')||'<div style="padding:16px;font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)">NO RITUALS — ADD SOME ABOVE</div>';
+    </div>`).join('')||'<div style="padding:16px;font-family:var(--M);font-size:12px;color:var(--muted)">NO RITUALS — ADD SOME ABOVE</div>';
 }
 
 function renderWeekGrid(){
@@ -471,5 +471,5 @@ window.saveRitual=saveRitual;
 
 renderAll();
 </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

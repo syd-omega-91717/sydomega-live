@@ -215,6 +215,10 @@ window.sendMsg=async function(){
   _history.push({role:'user',content:q});
   document.getElementById('chat-typing').style.display='flex';
   var reply='';
+  /* concierge answers HTTP 200 {enabled:false} when ANTHROPIC_API_KEY is unset
+     (supabase/functions/concierge/index.ts:45). That is a dormant feature, not a
+     fault, and it reads differently to a member than a dropped connection. */
+  var dormant=false;
   if(!reply&&_sb){
     try{
       var a=Number(_profile&&(_profile.is_owner?9:_profile.axis_a)||0.001);
@@ -227,9 +231,12 @@ window.sendMsg=async function(){
       var system='You are '+agName+', Sovereign Agent of SYD OMEGA 91717. Role: '+agRole+'. Voice: '+agVoice+'. CANONICAL: AUTH=sqrt(A³+B³+C³)×φ/e, apex=27.8367. Member auth='+auth.toFixed(4)+' sign='+(_profile&&_profile.sign||'?')+'. Be concise under 100 words. Stay in character.';
       var r=await _sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4)}}});
       if(r.data&&r.data.reply)reply=r.data.reply;
+      else if(r.data&&r.data.enabled===false)dormant=true;
     }catch(e){}
   }
-  if(!reply)reply='I am '+(_myAgent&&_myAgent.name||'your agent')+'. The secure channel requires the concierge edge function to be deployed. Ensure ANTHROPIC_API_KEY is set in Supabase secrets.';
+  if(!reply)reply='I am '+(_myAgent&&_myAgent.name||'your agent')+'. '+(dormant
+    ? 'Agent conversation is not switched on for this platform yet.'
+    : 'I cannot reach the secure channel right now — please try again shortly.');
   document.getElementById('chat-typing').style.display='none';
   _history.push({role:'assistant',content:reply});
   addMsg('ai',reply);
@@ -284,4 +291,4 @@ _sb=sb;
 })();
 </script>
 <script src="/bg.js"></script>
-</body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

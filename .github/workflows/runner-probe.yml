@@ -1,32 +1,9 @@
-# Runner canary for issue #157.
-#
-# Proves the registered runner actually executes work: a non-zero runner id,
-# real steps, and a retrievable log -- #157's acceptance criterion.
-#
-# SHELL HISTORY, so nobody re-litigates it. Runs 1-29 of this workflow all
-# failed, and not one was a code failure. On the registered Windows runner
-# `bash` resolves to the WSL shim at C:\Windows\System32\bash.exe with no
-# distro installed, so it died before reading any script:
-#
-#   WSL (10 - Relay) ERROR: CreateProcessCommon:800:
-#   execvpe(/bin/bash) failed: No such file or directory
-#
-# Three spellings failed: `shell: cmd` + `bash ...`; `shell: bash`, which
-# Actions also resolved to the shim (run 27's log reads
-# "shell: C:\Windows\system32\bash.EXE --noprofile --norc -e -o pipefail {0}");
-# and an absolute Git-bash path, which the runner refused to parse
-# ("Second path fragment must not be a drive or UNC name").
-#
-# A capability probe (run 33342384308) then MEASURED what this runner has,
-# rather than guessing again. All four worked: pwsh, powershell, python, and
-# the default shell. So `pwsh` is used here and across the gate workflows --
-# it exists on this Windows runner AND is preinstalled on GitHub's Linux
-# runners, which is what makes those workflows runner-agnostic.
+# Manual canary for the optional registered Windows runner.
+# It is intentionally not a push gate: a disconnected self-hosted runner must
+# never block production CI or deployment verification.
 name: Runner Probe
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -47,44 +24,26 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Prove the runner is real
-        # Deliberately AFTER setup-python, not first. `shell: python`
-        # needs an interpreter on PATH, and a capability probe measured
-        # pwsh working at step 6 but NOT at step 1 on this runner
-        # ("pwsh: command not found"), which is exactly the mistake of
-        # measuring in one position and assuming another. setup-python
-        # guarantees it from here on, on both Windows and Linux.
+      - name: Prove runner execution
         run: |
           import os, sys
-          for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
-              if not os.environ.get(var):
-                  print(f"::error::{var} is empty - no real runner")
-                  sys.exit(1)
+          required = ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH")
+          missing = [name for name in required if not os.environ.get(name)]
+          if missing:
+              print("::error::missing runner identity: " + ", ".join(missing))
+              sys.exit(1)
           print("runner=" + os.environ["RUNNER_NAME"])
           print("runner_os=" + os.environ["RUNNER_OS"])
           print("runner_arch=" + os.environ["RUNNER_ARCH"])
-          print("run=" + os.environ.get("GITHUB_RUN_ID", ""))
-          print("attempt=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
       - name: Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      # A real repo check, run the way the gates run theirs. Deliberately not
-      # ci-local.sh: that needs bash, which does not work here, and ci.yml
-      # already runs all 18 blocking checks on this same runner.
-      - name: Toolchain and a real repo check execute on this runner
-        run: |
-          import subprocess, sys
-          for cmd in (["python", "--version"], ["node", "--version"],
-                      ["python", "scripts/workflow-contract.py"]):
-              r = subprocess.run(cmd)
-              if r.returncode != 0:
-                  sys.exit(r.returncode)
+      - name: Real repository check
+        run: python scripts/workflow-contract.py
       - name: Execution marker
         run: |
-          import os, sys
-          if not os.environ.get("RUNNER_NAME"):
-              sys.exit(1)
+          import os
           print("RUNNER_PROBE_EXECUTED=true")
           print("RUNNER_PROBE_RUN_ID=" + os.environ.get("GITHUB_RUN_ID", ""))
           print("RUNNER_PROBE_RUN_ATTEMPT=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))

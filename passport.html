@@ -20,36 +20,36 @@
 .pp-photo{width:120px;height:140px;background:#0d0d0d;border:1px solid rgba(0,229,255,.2);display:flex;align-items:center;justify-content:center;font-size:56px;flex-shrink:0;}
 .pp-fields{display:grid;gap:10px;}
 .pp-field{border-bottom:1px solid rgba(0,229,255,.1);padding-bottom:8px;}
-.pp-field-label{font-family:'Courier New',monospace;font-size:12px;color:#555;letter-spacing:2px;margin-bottom:3px;}
+.pp-field-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:3px;}
 .pp-field-value{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;}
 .pp-field-value.large{font-size:16px;color:var(--cyan);font-weight:700;}
-.pp-mrz{background:#0d0d0d;border-top:1px solid rgba(0,229,255,.1);padding:12px 24px;font-family:'Courier New',monospace;font-size:12px;color:#333;letter-spacing:2px;word-break:break-all;}
+.pp-mrz{background:#0d0d0d;border-top:1px solid rgba(0,229,255,.1);padding:12px 24px;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;word-break:break-all;}
 .pp-stamp-area{padding:0 24px 20px;display:flex;gap:12px;flex-wrap:wrap;}
 .pp-stamp{width:60px;height:60px;border:1px solid;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;text-align:center;opacity:.7;}
 /* EDIT FORM */
 .form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:6px;}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--cyan);}
 .form-group textarea{min-height:80px;resize:vertical;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .btn-primary{padding:10px 24px;background:var(--cyan);border:none;color:#000;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
 .btn-primary:hover{background:#00b8cc;}
-.section-label{font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+.section-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
 /* STAMPS */
 .stamps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
 .stamp-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;display:flex;align-items:center;gap:12px;}
 .stamp-icon{width:50px;height:50px;border:2px solid;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
 .stamp-info{flex:1;}
 .stamp-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;font-weight:700;}
-.stamp-date{font-family:'Courier New',monospace;font-size:12px;color:#555;margin-top:2px;}
-.stamp-del{background:none;border:none;color:#333;cursor:pointer;font-size:12px;}
+.stamp-date{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);margin-top:2px;}
+.stamp-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;}
 .stamp-del:hover{color:#FF4444;}
 .add-stamp-form{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:16px;}
 .sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--cyan);padding:16px;margin-bottom:12px;}
 .sci-title{font-family:'Courier New',monospace;font-size:12px;color:var(--cyan);letter-spacing:1px;margin-bottom:8px;}
 .sci-body{font-size:12px;color:#888;line-height:1.65;}
-.sci-ref{font-size:12px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace;}
 </style>
 </head>
 <body>
@@ -71,7 +71,7 @@
         <div class="pp-header">
           <div>
             <div class="pp-country">SOVEREIGN DOMAIN &middot; OMEGA JURISDICTION</div>
-            <div style="font-family:'Courier New',monospace;font-size:12px;color:#555;letter-spacing:2px;margin-top:3px;">PERSONAL SOVEREIGNTY RECORD</div>
+            <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:3px;">PERSONAL SOVEREIGNTY RECORD</div>
           </div>
           <div class="pp-omega">&#10303;</div>
         </div>
@@ -311,7 +311,7 @@ function addStamp(){
 
 function renderStamps(){
   var grid=document.getElementById('stamps-grid');
-  if(!stamps.length){grid.innerHTML='<div style="color:#333;font-family:\'Courier New\',monospace;font-size:12px;padding:20px;">NO STAMPS YET</div>';return;}
+  if(!stamps.length){grid.innerHTML='<div style="color:var(--muted);font-family:\'Courier New\',monospace;font-size:12px;padding:20px;">NO STAMPS YET</div>';return;}
   grid.innerHTML=stamps.map(function(s){return '<div class="stamp-card card">'
     +'<div class="stamp-icon" style="border-color:'+s.color+';color:'+s.color+'">'+s.icon+'</div>'
     +'<div class="stamp-info"><div class="stamp-name">'+esc(s.name)+'</div><div class="stamp-date">'+s.date+'</div></div>'
@@ -323,5 +323,5 @@ function delStamp(id){stamps=stamps.filter(function(x){return x.id!==id;});save(
 load();renderPassport();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

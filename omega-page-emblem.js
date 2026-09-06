@@ -23,8 +23,8 @@
 
   var PAGES = {
     /* gateway: the door into the platform -- a gate mark, not a generic
-       Omega. omega-visual-home: the visual showcase, a frame mark. */
-    gateway:[12,'a','\u26E9'], 'omega-visual-home':[12,'c','\u2394'],
+       Omega. index: the front door, a frame mark. */
+    gateway:[12,'a','\u26E9'], index:[12,'c','\u2394'],
     'agent-network':[12,'a','\u2739'], 'design-showcase':[12,'c','\u25F1'],
     /* The four system pages that a member actually sees. They are STATES, not
        destinations -- omega-gateway.js keeps its own EXCLUDE map so a registry

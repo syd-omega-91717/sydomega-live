@@ -14,21 +14,21 @@
 .entity-item,.rel-item{padding:12px;border-bottom:1px solid #0a0a0a;cursor:pointer;transition:background .2s;display:flex;justify-content:space-between;align-items:center}
 .entity-item:hover,.rel-item:hover{background:#1a1a1a}
 .entity-name,.rel-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0}
-.entity-meta,.rel-meta{font-size:12px;color:#666;margin-top:3px}
+.entity-meta,.rel-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .conf-badge{padding:2px 6px;font-size:12px;font-family:'Courier New',monospace;border:1px solid;display:inline-block}
 .conf-high{color:#4CAF50;border-color:#4CAF50}
 .conf-med{color:#FFD700;border-color:#FFD700}
 .conf-low{color:#FF4444;border-color:#FF4444}
-.btn-icon{background:none;border:none;cursor:pointer;font-size:12px;padding:4px 8px;color:#666}
+.btn-icon{background:none;border:none;cursor:pointer;font-size:12px;padding:4px 8px;color:var(--muted)}
 .btn-icon:hover{color:#e0e0e0}
 .detail-panel{background:#0d0d0d;border:1px solid #1a1a1a;padding:20px;min-height:400px}
 .detail-title{font-family:'Courier New',monospace;font-size:14px;color:var(--gold);margin-bottom:12px}
 .detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
 .meta-item{background:#000;padding:10px;border:1px solid #1a1a1a}
-.meta-label{font-size:12px;color:#666;font-family:'Courier New',monospace;letter-spacing:1px}
+.meta-label{font-size:12px;color:var(--muted);font-family:'Courier New',monospace;letter-spacing:1px}
 .meta-value{font-size:12px;color:#e0e0e0;margin-top:3px;font-family:'Courier New',monospace}
 .evidence-section{margin-bottom:20px}
-.section-label{font-family:'Courier New',monospace;font-size:12px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:12px}
+.section-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:12px}
 .evidence-card{background:#000;border:1px solid #1a1a1a;padding:10px;margin-bottom:8px;font-size:12px;color:#888;line-height:1.5}
 .action-row{display:flex;gap:8px;margin-top:20px}
 .btn-primary{padding:10px 16px;background:var(--gold);border:none;color:#000;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;font-weight:700}
@@ -36,9 +36,9 @@
 .btn-danger{padding:10px 16px;background:#FF4444;border:none;color:#fff;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;font-weight:700}
 .btn-danger:hover{background:#FF6666}
 .btn-secondary{padding:10px 16px;background:#1a1a1a;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer}
-.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-family:'Courier New',monospace;font-size:12px}
 .tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid #1a1a1a;padding-bottom:12px}
-.tab{padding:8px 16px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer;color:#666;border:none;background:none;letter-spacing:1px}
+.tab{padding:8px 16px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer;color:var(--muted);border:none;background:none;letter-spacing:1px}
 .tab.act{color:var(--gold);border-bottom:2px solid var(--gold)}
 </style>
 </head>
@@ -304,5 +304,5 @@ document.getElementById('search-box').addEventListener('input',renderList);
 init();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

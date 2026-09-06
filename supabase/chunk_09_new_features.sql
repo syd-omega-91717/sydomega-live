@@ -34,7 +34,7 @@ DO $$ BEGIN
   END IF;
   -- Members can only insert their own oaths
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='oaths' AND policyname='oaths_insert') THEN
-    CREATE POLICY oaths_insert ON public.oaths FOR INSERT WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY oaths_insert ON public.oaths FOR INSERT WITH CHECK ((select auth.uid()) = user_id);
   END IF;
   -- No updates or deletes — oaths are immutable
 END $$;
@@ -60,7 +60,7 @@ ALTER TABLE public.codex_bookmarks ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='codex_bookmarks' AND policyname='codex_bm_own') THEN
-    CREATE POLICY codex_bm_own ON public.codex_bookmarks FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY codex_bm_own ON public.codex_bookmarks FOR ALL USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -83,7 +83,7 @@ ALTER TABLE public.signal_saves ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='signal_saves' AND policyname='signal_saves_own') THEN
-    CREATE POLICY signal_saves_own ON public.signal_saves FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY signal_saves_own ON public.signal_saves FOR ALL USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
 END $$;
 
@@ -105,7 +105,7 @@ ALTER TABLE public.user_dedication ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='user_dedication' AND policyname='dedication_own') THEN
-    CREATE POLICY dedication_own ON public.user_dedication FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY dedication_own ON public.user_dedication FOR ALL USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
   END IF;
   -- Owner can view all members' dedication
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='user_dedication' AND policyname='dedication_owner_read') THEN

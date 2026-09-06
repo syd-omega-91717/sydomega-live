@@ -62,10 +62,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
   <div style="padding:20px var(--pad,20px)">
 
     <div class="stat-grid">
-      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">MENTORS</div></div>
-      <div class="stat"><div class="stat-val" id="st-primary">0</div><div class="stat-lbl">PRIMARY</div></div>
-      <div class="stat"><div class="stat-val" id="st-virtual">0</div><div class="stat-lbl">VIRTUAL</div></div>
-      <div class="stat"><div class="stat-val" id="st-lessons">0</div><div class="stat-lbl">LESSONS LOGGED</div></div>
+      <div class="stat kpi"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">MENTORS</div></div>
+      <div class="stat kpi"><div class="stat-val" id="st-primary">0</div><div class="stat-lbl">PRIMARY</div></div>
+      <div class="stat kpi"><div class="stat-val" id="st-virtual">0</div><div class="stat-lbl">VIRTUAL</div></div>
+      <div class="stat kpi"><div class="stat-val" id="st-lessons">0</div><div class="stat-lbl">LESSONS LOGGED</div></div>
     </div>
 
     <div class="tab-row">
@@ -367,5 +367,5 @@ updateStats();
 renderBoard();
 </script>
 <script src="/bg.js"></script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

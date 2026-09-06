@@ -163,15 +163,73 @@
     requestAnimationFrame(step);
   }
 
-  /* ── PLATFORM HEALTH BAR ────────────────────────────────────────── */
+  /* ── PLATFORM HEALTH BAR ────────────────────────────────────────────
+     This drew a hardcoded 87 as a green bar on dashboard.html, titled
+     "Platform health: 87/100", to every approved member. The comment above it
+     described a heuristic -- "green if no open incidents" -- that was never
+     written: nothing counted incidents and nothing computed a score. It is
+     CLAUDE.md 8.1 class 9, fabricated data rendered as fact, and neither
+     existing fabrication gate could see it: no Math.random(), no backdated
+     timestamp, no money.
+
+     There is a real signal already being recorded. bg.js wraps fetch during
+     parse and keeps window.__omegaData = {inflight, ok, failed}, counting only
+     this platform's own backend (supabase.co, /rest/v1/, /auth/v1/,
+     /functions/v1/) and counting a 4xx as an answer rather than a failure. So
+     the bar now reports what this session actually observed.
+
+     Below one settled request it asserts NOTHING -- an indeterminate track and
+     a title that says so, the same rule omega-sparkline.js follows in drawing
+     nothing below two real readings. A number no measurement supports is worse
+     than no number. */
   function updateHealthBar(){
     var bar=document.getElementById('omega-health-bar');
     if(!bar) return;
-    /* Simple heuristic: green if no open incidents, yellow if score < 90, red if < 70 */
-    var score=87; /* default */
+    var d=window.__omegaData;
+    var seen=d?(d.ok||0)+(d.failed||0):0;
+    if(!seen){
+      bar.style.width='100%';
+      bar.style.background='var(--line,rgba(201,168,76,.15))';
+      bar.title='Platform health: no backend request has settled yet this session';
+      bar.setAttribute('aria-label',bar.title);
+      return;
+    }
+    var score=Math.round((d.ok||0)/seen*100);
     bar.style.width=score+'%';
     bar.style.background=score>=85?'var(--green,#3fb27f)':score>=70?'var(--solar,#E2C86D)':'var(--crim,#C4453C)';
-    bar.title='Platform health: '+score+'/100';
+    bar.title=(d.ok||0)+' of '+seen+' platform requests succeeded this session'+
+      (d.failed?' ('+d.failed+' failed)':'');
+    bar.setAttribute('aria-label',bar.title);
+  }
+
+  /* The mission bar's status light had the same defect as the bar above and a
+     worse consequence: #health-dot shipped a hardcoded green background and
+     #health-label the literal word OPERATIONAL, with no writer anywhere in the
+     repository. It asserted the platform was healthy whether or not it was --
+     including while every request the member made was failing. Same measured
+     signal, and it says nothing until something has settled. */
+  function updateHealthLight(){
+    var dot=document.getElementById('health-dot'),lab=document.getElementById('health-label');
+    if(!dot&&!lab) return;
+    var d=window.__omegaData;
+    var seen=d?(d.ok||0)+(d.failed||0):0;
+    var colour,text;
+    if(!seen){ colour='var(--muted,#8a8676)'; text='AWAITING SIGNAL'; }
+    else {
+      var pct=(d.ok||0)/seen*100;
+      colour=pct>=85?'var(--green,#3fb27f)':pct>=70?'var(--solar,#E2C86D)':'var(--crim,#C4453C)';
+      text=pct>=85?'OPERATIONAL':pct>=70?'DEGRADED':'FAILING';
+    }
+    if(dot){ dot.style.background=colour; }
+    if(lab){
+      /* i18n owns this node's text through data-i18n; drop the binding once a
+         measurement replaces the static string, or apply() would overwrite it
+         with the English literal on the next language change. */
+      lab.removeAttribute('data-i18n');
+      lab.textContent=text;
+      lab.title=seen?((d.ok||0)+' of '+seen+' platform requests succeeded this session')
+                    :'No backend request has settled yet this session';
+    }
   }
 
   /* ── INIT ──────────────────────────────────────────────────────── */
@@ -182,6 +240,13 @@
     pollActivityFeed().then(startTicker);
     subscribeRealtimeChannel();
     updateHealthBar();
+    updateHealthLight();
+    /* Re-read as requests settle: bg.js's recorder emits this on every
+       observed response, so the bar tracks the session instead of freezing at
+       whatever had settled when the profile arrived. */
+    document.addEventListener('omega:fetch-settled',function(){
+      updateHealthBar(); updateHealthLight();
+    });
     /* Refresh activity every 2 minutes */
     setInterval(pollActivityFeed,120000);
   });

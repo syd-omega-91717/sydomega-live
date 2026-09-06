@@ -14,8 +14,17 @@
        from the platform's). */
     .pad{padding:20px clamp(14px,3vw,36px)}
     .arc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-    .arc-b{padding:14px 16px;border-radius:4px;border:1px solid rgba(201,168,76,.15);
-           background:rgba(201,168,76,.04);position:relative;overflow:hidden}
+    /* The blocks carry the shared .card surface rather than a private one, so
+       they inherit the platform's glass, hover elevation and glow edge from
+       bg.js. The page kept its own 2px LEFT accent bar before this; .card
+       already draws a 2px TOP bar from --card-accent, and two rules on one
+       pseudo-element cascade per property with bg.js (sheet 1) beating this
+       block (sheet 0) -- so the private ::before is deleted and the meaning it
+       carried (gold = built, green = probed) moves to --card-accent, which
+       .card::before reads. Padding, radius, border and background are now the
+       shared card's; re-declaring them here would be dead code. */
+    .arc-b{--card-accent:var(--gold)}
+    .arc-b.conn{--card-accent:var(--green)}
     .arc-b .n{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;
               color:var(--muted,rgba(138,134,118,.55))}
     .arc-b .t{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;
@@ -26,9 +35,6 @@
            border-radius:2px;display:inline-block}
     .arc-s.built{color:var(--gold,#C9A84C);border:1px solid rgba(201,168,76,.35)}
     .arc-s.conn{color:var(--green,#3fb27f);border:1px solid rgba(63,178,127,.4)}
-    .arc-b::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-                   background:rgba(201,168,76,.3)}
-    .arc-b.conn::before{background:var(--green,#3fb27f)}
     .skip-link{position:absolute;left:-9999px}
     .skip-link:focus{left:8px;top:8px;background:var(--gold,#C9A84C);color:#000;padding:4px 8px;
                      font-family:var(--M,monospace);font-size:12px;z-index:1000}
@@ -48,9 +54,11 @@
         <p style="font-family:var(--M,monospace);font-size:12px;line-height:1.8;color:var(--muted,rgba(138,134,118,.6));max-width:70ch;margin-bottom:18px">
           The sixteen runtime blocks this platform actually runs, read live from
           <code>__omegaArchitecture.status()</code> rather than written down here.
-          <strong style="color:var(--ink,rgba(220,210,180,.85))">BUILT</strong> means the adapter exists in this page's
-          JavaScript. <strong style="color:var(--green,#3fb27f)">CONNECTED</strong> means it was additionally probed
-          against something real in this browser session. Neither claims infrastructure that is not there.
+          <strong style="color:var(--ink,rgba(220,210,180,.85))">BUILT</strong> means the adapter exists in
+          <code>omega-architecture-runtime.js</code>. <strong style="color:var(--green,#3fb27f)">CONNECTED</strong>
+          means a probe additionally performed a real operation in this browser and the block records what it
+          returned. A block that could not be probed says so instead of upgrading. Neither state claims
+          infrastructure that is not there.
         </p>
         <div id="arc-status" style="font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:12px">reading runtime&hellip;</div>
         <div class="arc-grid" id="architecture-diagram"></div>
@@ -74,7 +82,11 @@
 
     function esc(s){var d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
 
-    function render(){
+    /* Built once, then patched in place. The probes in the runtime resolve
+       over several seconds and each one emits, so rebuilding innerHTML per
+       event would tear down and re-create sixteen elements repeatedly --
+       which also drops them out of the reveal pass that already ran. */
+    function build(){
       var host=document.getElementById('architecture-diagram');
       var note=document.getElementById('arc-status');
       if(!host) return;
@@ -82,31 +94,49 @@
       if(!A||typeof A.status!=='function'){
         /* Honest failure: say the runtime did not load rather than leaving the
            grid empty, which reads as "sixteen blocks, none of them working". */
-        note.textContent='runtime module did not load — nothing to report';
+        note.textContent='runtime module did not load \u2014 nothing to report';
         return;
       }
-      var st=A.status(), keys=Object.keys(st), n=0, html='';
-      keys.sort();
+      var st=A.status(), keys=Object.keys(st).sort(), html='';
       for(var i=0;i<keys.length;i++){
-        var b=st[keys[i]], conn=b.status==='CONNECTED';
-        if(conn) n++;
-        html+='<div class="arc-b'+(conn?' conn':'')+'">'+
-          '<div class="n">'+String(i+1<10?'0':'')+(i+1)+'</div>'+
-          '<div class="t">'+(T[b.id]||esc(b.id).toUpperCase())+'</div>'+
-          '<span class="arc-s '+(conn?'conn':'built')+'">'+esc(b.status)+'</span>'+
-          '<div class="e">'+esc((b.evidence||[]).join(' · '))+'</div>'+
+        var b=st[keys[i]];
+        html+='<div class="arc-b card" data-block="'+esc(b.id)+'">'+
+          '<div class="n">'+(i+1<10?'0':'')+(i+1)+'</div>'+
+          '<div class="t card-title">'+(T[b.id]||esc(b.id).toUpperCase())+'</div>'+
+          '<span class="arc-s built"></span>'+
+          '<div class="e"></div>'+
         '</div>';
       }
       host.innerHTML=html;
-      note.textContent=keys.length+' blocks · '+n+' probed as connected in this session · v'+esc(A.version);
+      paint();
     }
 
-    /* The runtime sets its blocks synchronously at parse time and this script is
-       after it, so status() is already populated. subscribe() keeps the grid true
-       if a later probe upgrades a block from BUILT to CONNECTED. */
-    render();
-    try{ if(window.__omegaArchitecture) window.__omegaArchitecture.subscribe(render); }catch(e){}
+    function paint(){
+      var A=window.__omegaArchitecture;
+      if(!A||typeof A.status!=='function') return;
+      var st=A.status(), keys=Object.keys(st), connected=0;
+      for(var i=0;i<keys.length;i++){
+        var b=st[keys[i]], conn=b.status==='CONNECTED';
+        if(conn) connected++;
+        var el=document.querySelector('#architecture-diagram [data-block="'+b.id+'"]');
+        if(!el) continue;
+        el.classList.toggle('conn',conn);
+        var badge=el.querySelector('.arc-s');
+        if(badge){ badge.className='arc-s '+(conn?'conn':'built'); badge.textContent=b.status; }
+        var ev=el.querySelector('.e');
+        if(ev) ev.textContent=(b.evidence||[]).join(' \u00b7 ');
+      }
+      var note=document.getElementById('arc-status');
+      if(note) note.textContent=keys.length+' blocks \u00b7 '+connected+' probed as connected in this session \u00b7 v'+A.version;
+    }
+
+    /* The runtime sets its blocks synchronously at parse time and this script
+       is after it, so status() is already populated. subscribe() is what makes
+       the async probes visible: each one upgrades a block from BUILT to
+       CONNECTED, or appends the reason it could not. */
+    build();
+    try{ if(window.__omegaArchitecture) window.__omegaArchitecture.subscribe(paint); }catch(e){}
   })();
   </script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

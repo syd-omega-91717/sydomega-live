@@ -10,7 +10,7 @@
      <div data-omega-constellation="agents"></div>
      <div data-omega-constellation="signs" data-cn-title="THE TWELVE"></div>
      <div data-omega-constellation="custom"
-          data-cn-nodes='[{"name":"...","sub":"...","sign":"Aries","href":"/x.html"}]'></div>
+          data-cn-nodes='[{"name":"...","sub":"...","sign":"Aries","href":"/cosmos"}]'></div>
 
    ATTRIBUTES
      data-omega-constellation  agents | signs | custom   (required)

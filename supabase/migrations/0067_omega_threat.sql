@@ -33,7 +33,7 @@ CREATE INDEX IF NOT EXISTS idx_threat_level   ON public.threat_events(threat_lev
 CREATE INDEX IF NOT EXISTS idx_threat_unres   ON public.threat_events(resolved, created_at DESC) WHERE NOT resolved;
 ALTER TABLE public.threat_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "insert threat events" ON public.threat_events;
-CREATE POLICY "insert threat events" ON public.threat_events FOR INSERT TO authenticated WITH CHECK(true);
+CREATE POLICY "insert threat events" ON public.threat_events FOR INSERT TO authenticated WITH CHECK(public.is_platform_owner() OR user_id = (select auth.uid()));
 DROP POLICY IF EXISTS "owner reads threats" ON public.threat_events;
 CREATE POLICY "owner reads threats" ON public.threat_events FOR SELECT USING(public.is_platform_owner());
 DROP POLICY IF EXISTS "owner manages threats" ON public.threat_events;
@@ -55,7 +55,7 @@ CREATE INDEX IF NOT EXISTS idx_pevt_user ON public.platform_events(user_id, crea
 CREATE INDEX IF NOT EXISTS idx_pevt_type ON public.platform_events(event_type, created_at DESC);
 ALTER TABLE public.platform_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "member inserts own events" ON public.platform_events;
-CREATE POLICY "member inserts own events" ON public.platform_events FOR INSERT TO authenticated WITH CHECK(true);
+CREATE POLICY "member inserts own events" ON public.platform_events FOR INSERT TO authenticated WITH CHECK((select auth.uid()) = user_id);
 DROP POLICY IF EXISTS "owner reads all events" ON public.platform_events;
 CREATE POLICY "owner reads all events" ON public.platform_events FOR SELECT USING(public.is_platform_owner());
 

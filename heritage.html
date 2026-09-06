@@ -79,19 +79,19 @@
     <div class="tab-panel pad" id="tab-culture" style="display:none">
       <div class="sechead">CULTURAL INVENTORY</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:14px">
-        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--gold)">
           <div style="font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px">TRADITIONS</div>
           <textarea id="cult-traditions" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Annual traditions, rituals, ceremonies your family keeps..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--M);font-size:12px;color:var(--cyan);margin-bottom:8px">FOODS &amp; RECIPES</div>
           <textarea id="cult-foods" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Heritage foods, traditional dishes, family recipes..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--green)">
           <div style="font-family:var(--M);font-size:12px;color:var(--green);margin-bottom:8px">VALUES INHERITED</div>
           <textarea id="cult-values" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Core values passed down through your lineage..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+        <div class="card" style="--card-accent:var(--purple)">
           <div style="font-family:var(--M);font-size:12px;color:var(--purple);margin-bottom:8px">ARTS &amp; MUSIC</div>
           <textarea id="cult-arts" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Traditional arts, music, dance, crafts from your heritage..."></textarea>
         </div>
@@ -167,7 +167,7 @@ function renderStories(){
   var el=document.getElementById('story-list');
   if(!stories.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO STORIES RECORDED YET</div>';return;}
   el.innerHTML=[].concat(stories).reverse().map(function(s){
-    return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+    return '<div class="card">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">'
       +'<div style="font-family:var(--D);font-size:12px;color:var(--gold);flex:1">'+s.title+'</div>'
       +(s.who?'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+s.who+'</div>':'')
@@ -227,5 +227,5 @@ window.saveCulture=function(){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-</body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -1,6 +1,8 @@
 name: Omega Security Baseline
 
 on:
+  push:
+    branches: [claude/sydomega91717-audit-1tyoja]
   pull_request:
     branches: [main]
   workflow_dispatch:

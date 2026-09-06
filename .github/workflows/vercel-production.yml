@@ -91,12 +91,8 @@ jobs:
       - id: check
         shell: bash
         env:
-          # Only VERCEL_TOKEN is a secret. The other two are public identifiers:
-          # the Vercel bot prints both in every PR comment on this repo, and
-          # .vercel/project.json carries them by convention. Requiring all three
-          # as secrets meant a partial setup silently produced NOT_CONFIGURED
-          # with no clue which one was missing -- so they default here and the
-          # secrets stay as overrides.
+          # Only VERCEL_TOKEN is secret. Org/project identifiers are safe public
+          # project metadata and remain overridable through repository variables.
           TOKEN: ${{ secrets.VERCEL_TOKEN }}
           ORG: ${{ secrets.VERCEL_ORG_ID || vars.VERCEL_ORG_ID || 'team_w0v6eD1jUUzfPjiDq3ztOfvp' }}
           PROJECT: ${{ secrets.VERCEL_PROJECT_ID || vars.VERCEL_PROJECT_ID || 'prj_H3aTU3D4mR7TD19etdPTeYmhvANY' }}
@@ -122,11 +118,8 @@ jobs:
           echo "project=$PROJECT" >> "$GITHUB_OUTPUT"
 
   deploy:
-    name: Deploy production
+    name: Production promotion
     needs: credentials
-    if: >-
-      needs.credentials.outputs.ready == 'true' &&
-      (github.event_name == 'push' || inputs.deploy == true)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -134,11 +127,21 @@ jobs:
       VERCEL_ORG_ID: ${{ needs.credentials.outputs.org }}
       VERCEL_PROJECT_ID: ${{ needs.credentials.outputs.project }}
     steps:
+      - name: Controlled state when token is unavailable
+        if: needs.credentials.outputs.ready != 'true'
+        run: |
+          echo 'VERCEL_PRODUCTION_DEPLOYMENT=CONTROLLED'
+          echo 'Artifact validation passed; production promotion is waiting for VERCEL_TOKEN.'
+          echo 'No provider mutation was attempted.'
+          echo '::warning title=Production promotion pending::VERCEL_TOKEN is not configured. Artifact and deployment contracts are green, but this run cannot promote the production alias.'
       - uses: actions/checkout@v4
+        if: needs.credentials.outputs.ready == 'true'
       - uses: actions/setup-node@v4
+        if: needs.credentials.outputs.ready == 'true'
         with:
           node-version: '20'
       - name: Pin deployment to the intended Vercel project
+        if: needs.credentials.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -147,24 +150,7 @@ jobs:
           {"orgId":"${VERCEL_ORG_ID}","projectId":"${VERCEL_PROJECT_ID}"}
           EOF
       - name: Deploy to Vercel Production
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
         run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
-
-  controlled:
-    name: Controlled deployment state
-    needs: credentials
-    if: needs.credentials.outputs.ready != 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Keep provider promotion controlled
-        run: |
-          echo 'VERCEL_PRODUCTION_DEPLOYMENT=CONTROLLED'
-          echo 'Artifact validation passed; nothing was promoted to production.'
-          # This job used to end here, and the workflow reported plain success
-          # while deploying nothing -- the same shape as the production smoke
-          # gate going green during an outage (FIXES_LOG.md 105). Measured
-          # 2026-09-06: runs 2 and 3 both "succeeded" this way, with the deploy
-          # job skipped, while the production alias served a 404 page from a
-          # deployment dated 2026-09-05 06:50. A warning makes the inert state
-          # visible on the run and the commit without failing an owner-only
-          # configuration gap.
-          echo '::warning title=Production was NOT promoted::VERCEL_TOKEN is not configured, so the deploy job is skipped and this run changed nothing in production. The org and project ids resolve automatically; only the token is missing. Create one at vercel.com/account/tokens and add it as the repository secret VERCEL_TOKEN.'

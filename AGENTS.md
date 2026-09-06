@@ -4,8 +4,11 @@
 repo's `CLAUDE.md` — primarily ChatGPT / Codex, but the rules are tool-agnostic.**
 
 `AGENTS.md` is the filename OpenAI Codex reads automatically. If you are using
-ChatGPT in a browser without repo access, paste this file into the conversation
-before asking for any change to this project.
+ChatGPT in a browser without repo access, paste
+[`CHATGPT_CONTEXT_RULES.md`](CHATGPT_CONTEXT_RULES.md) into the conversation
+instead — it is the same contract, condensed into one self-contained block that
+restates the facts it needs rather than pointing at files ChatGPT cannot open.
+If the two ever disagree, **this file wins** and the paste block is stale.
 
 ---
 

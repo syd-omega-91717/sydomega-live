@@ -13502,3 +13502,96 @@ an estate-wide sweep needs its own plan.
 - Lighthouse, `terms.html`: `label-content-name-mismatch` 0 → 1
 - `node --check bg.js`, `node --check omega-ui.js` → OK
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 120 — Three.js was downloaded on every page view for a feature no page uses
+
+### What the render showed
+
+Ten pages, instrumented for third-party requests (2026-09-06):
+
+| requested on | library | host |
+|---|---|---|
+| **10/10** | `dayjs` (+ its `relativeTime` plugin, a second request) | jsdelivr |
+| **10/10** | `three@0.160.1` | **esm.sh** |
+| **10/10** | `tsparticles-slim` | **esm.sh** |
+| **10/10** | `marked`, `fuse.js` | jsdelivr |
+| **10/10** | `tippy.js` | unpkg |
+| 3/10 | `popper` | jsdelivr |
+
+`esm.sh` is the host CLAUDE.md §4 says was eliminated — *"146 imports putting a
+third-party CDN on the critical path of every page view"*. It is back, for
+`three` and `tsparticles-slim`.
+
+### Fix 1 — the guard was on the wrong side of the download
+
+`omega-realm.js`'s `autoMount()` read:
+
+```js
+loadThree().then(function(){
+  var canvases=document.querySelectorAll('canvas[data-realm]');   // checked AFTER
+  canvases.forEach(...);
+});
+```
+
+So every page where a profile loaded fetched Three.js, *then* discovered there
+was nothing to mount. **`grep -l 'data-realm' *.html` returns nothing: not one
+page in the estate has a realm canvas.** Three.js was downloaded on every page
+view, from a third-party CDN, for a feature no page uses.
+
+The check now runs before the import (and re-queries inside the `.then()`, since
+the canvas set can grow while the module is in flight).
+
+**Measured: `esm.sh/three@0.160.1` went from 10/10 pages to absent.**
+
+### Fix 2 — dayjs was pre-warmed on every page for a cosmetic fast path
+
+`omega-oss.js:227` called `OSS.require('dayjs', …)` at module scope purely so
+`OSS.fromNow()` could take a "fast path", pulling dayjs **and** its
+`relativeTime` plugin — two more third-party requests per page view. The inline
+fallback directly beneath it is synchronous and complete ("always works"); the
+only difference is wording ("2 minutes ago" vs "2m ago").
+
+Now loaded on first use from inside `fromNow()`, guarded against concurrent
+calls. A page that never renders a relative timestamp never fetches it.
+
+**Measured: `dayjs` went from 10/10 pages to absent.**
+
+### What is NOT claimed
+
+**No performance-score delta is claimed, because it could not be measured.**
+Lighthouse returns `performance: null` on these pages in this harness — Chrome
+collects no screenshots on a near-black page — which is the same limitation
+recorded in `lighthouse-ci-config.json`. What is measured is unambiguous and
+sufficient on its own: three fewer third-party requests per page view, one of
+them Three.js.
+
+### Open findings, traced not guessed
+
+Callers were identified by instrumenting `Node.prototype.appendChild` before
+page scripts ran and capturing a stack per CDN script tag:
+
+| library | eager caller | judgement needed |
+|---|---|---|
+| `tippy` | `omega-tooltip.js:120` → `init` → `loadTippy` | could defer to first hover |
+| `marked` | `omega-copilot.js:164` `addMsg` | only if the copilot greets on load |
+| `fuse` | `omega-search.js:223` `initFuse` | index built eagerly; search is Ctrl+K |
+| `tsparticles` | `omega-particles.js:75` `launch` | a designed ambient effect — product decision |
+| `popper` | `OSS.initTooltips`, guarded by `[data-tooltip]` | correct as-is |
+
+Each has a real caller and a real feature behind it, so each is a product
+judgement rather than a bug, and none is changed here.
+
+**Separately: `tippy.js` is requested FOUR times on one load of `index.html`**
+(Lighthouse `network-requests`). `omega-oss.js`'s loader de-duplicates via
+`_loaded`/`_loading`, so this is arriving another way — worth its own look.
+
+### Verification
+
+- rendered CDN scan, 10 pages: `three` **10/10 → absent**, `dayjs` **10/10 → absent**
+- `node --check omega-realm.js`, `omega-oss.js` → OK
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- Lighthouse `index.html` accessibility still **100**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
+  caught the drift and was regenerated)

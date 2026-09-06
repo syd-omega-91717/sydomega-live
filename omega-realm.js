@@ -198,7 +198,15 @@ function setElement(elem){
 
 /* ── Auto-mount on [data-realm] canvases ── */
 function autoMount(elem){
+  /* Check for a realm canvas BEFORE downloading Three.js, not after. This
+     guard used to sit inside the .then(), so every page where a profile
+     loaded fetched three@0.160.1 from esm.sh -- hundreds of KB, on a page
+     that then found no canvas[data-realm] and did nothing with it. Measured
+     2026-09-06: three.js was requested on 10 of 10 sampled pages, and only
+     the realm page has a canvas to mount. */
+  if(!document.querySelector('canvas[data-realm]')) return;
   loadThree().then(function(){
+    /* Re-query after the load: the canvas set can grow while it is in flight. */
     var canvases=document.querySelectorAll('canvas[data-realm]');
     canvases.forEach(function(cv){mount(cv,elem);});
   }).catch(function(e){console.warn('[OmegaRealm] Three.js load failed',e);});

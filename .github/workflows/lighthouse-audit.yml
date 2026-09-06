@@ -8,6 +8,14 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly on Sunday
 
+# Supersede in-flight runs for the same ref. Without this every push
+# leaves its predecessor running to completion, billing Actions minutes
+# for a result nobody will read. cancel-in-progress is TRUE deliberately:
+# a ref-keyed group with FALSE starves instead (CLAUDE.md 8.2).
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lighthouse:
     runs-on: ubuntu-latest

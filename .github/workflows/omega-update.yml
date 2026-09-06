@@ -5,6 +5,14 @@ on:
       file_name:
         description: 'File to update'
         required: true
+# Supersede in-flight runs for the same ref. Without this every push
+# leaves its predecessor running to completion, billing Actions minutes
+# for a result nobody will read. cancel-in-progress is TRUE deliberately:
+# a ref-keyed group with FALSE starves instead (CLAUDE.md 8.2).
+concurrency:
+  group: omega-update-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   update:
     runs-on: ubuntu-latest

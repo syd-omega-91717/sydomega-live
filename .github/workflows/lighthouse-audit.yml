@@ -13,7 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
+      # lighthouse-ci-config.json audits staticDistDir ./public, which is
+      # gitignored (.gitignore:47) and untracked -- so without this step the
+      # directory does not exist in the runner, every URL 404s, and LHCI fails
+      # at `collect` with "unable to reliably load the page you requested".
+      # That is how this job failed on every run it ever had, main included.
+      - name: Build static artifact
+        run: bash scripts/vercel-build.sh
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
         with:

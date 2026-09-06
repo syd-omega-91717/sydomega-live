@@ -36,9 +36,18 @@ jobs:
       - name: Artifact build
         run: bash scripts/vercel-build.sh
 
+      # Assert only what the build actually guarantees. omega-visual-engine.js
+      # was asserted here from this gate's first commit (b2196692) and has never
+      # existed in this repository -- `git log --all --diff-filter=A --
+      # '*omega-visual-engine.js'` returns nothing on any branch -- so the step
+      # failed on every run it ever had, main included. scripts/vercel-build-
+      # enhance.mjs:63 treats that engine as OPTIONAL (`if (engine && ...)`),
+      # reports `engine=not-found`, and still exits VERCEL_ARTIFACT_ENHANCE=PASS:
+      # this gate asserted as mandatory what the build itself treats as optional.
+      # If a visual engine is ever added, add the assertion back alongside it --
+      # do not re-add it before the module exists.
       - name: Artifact invariants
         run: |
           test -s public/index.html
           test -s public/vendor/supabase-js.js
-          test -s public/assets/js/omega-visual-engine.js
           test -s public/assets/js/omega-runtime-observability.js

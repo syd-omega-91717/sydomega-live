@@ -12667,3 +12667,51 @@ the list is the part that held.
 
 `react-foundation.css` matches the same shape (0 pages, 0 bg.js, 0 modules) and
 is listed alongside it.
+
+---
+
+## 110. A gate for dead stylesheets, and what it found on its first run
+
+`audit.py` check 2 has always caught a `.js` nothing loads. Nothing caught a
+`.css` nothing loads, which is how the two dead sheets in entry 109 survived
+every gate this repo runs. Check **2b** closes that.
+
+### Two false-positive traps, both hit while writing it
+
+1. **Most sheets are loaded by an `omega-*.js` module, not by `bg.js`/`nav.js`.**
+   Mirroring check 2's `LOADERS`-only scan would have reported ~10 live sheets
+   as orphans.
+2. **A bare filename in prose is not a reference.** `bg.js`'s own comment names
+   `omega-platform-visual.css`, so a substring scan would have called the dead
+   sheet reachable — the exact file the check exists to catch. A reference must
+   be a **quoted string** or a real `href=`/`src=` attribute.
+
+### Controls
+
+Three planted files, then removed:
+
+| control | expected | result |
+|---|---|---|
+| `__ctl_orphan.css`, referenced by nothing | caught | **caught** |
+| `__ctl_referenced.css`, referenced by a `<link href>` | not caught | **not caught** |
+| `__ctl_prose_only.css`, named only inside a JS comment | caught | **caught** |
+
+The third is the one that matters: it proves prose mentions do not count, which
+is the trap that would have made this check exonerate its own target. Removing
+the controls returns the run to exactly the two real findings.
+
+### What the module graph says alongside it
+
+The same run reports **35 `.js` modules on disk that nothing loads**, including
+`omega-cinematic-engine.js`, `omega-mission-control.js`,
+`omega-content-studio.js`, `omega-intelligence-nexus.js`,
+`omega-page-character.js` and `omega-platform-visual-integration.js` — the
+module that would have loaded the dead stylesheet. That warning is pre-existing,
+not new, but it is the honest answer to "is it built": a great deal exists as
+authored files and reaches no page.
+
+### Verification
+
+`python3 scripts/audit.py` → 0 critical / **8** warnings (was 7; the new one is
+the stylesheet orphan check). `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS
+PASSED**.

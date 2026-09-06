@@ -117,6 +117,43 @@ if SERVICE_WORKER_FILES & on_disk:
     print(f"  service workers (exempt from load check): "
           f"{', '.join(sorted(SERVICE_WORKER_FILES & on_disk))}")
 
+# ---------------------------------------------------------------- 2b
+# STYLESHEET GRAPH. Check 2 catches a .js nothing loads; nothing caught a .css
+# nothing loads, and two authored sheets had been dead for as long as they have
+# existed (FIXES_LOG.md 109): omega-platform-visual.css is referenced by no
+# page, no loader and no module -- and every rule in it is scoped to
+# .omega-visual-platform, a class that appears nowhere in the repo, confirmed in
+# a render.
+#
+# TWO FALSE-POSITIVE TRAPS, both hit while writing this (CLAUDE.md 8.4):
+#
+#   1. Most sheets are loaded by an omega-*.js module, NOT by bg.js/nav.js.
+#      Scanning only LOADERS would report ~10 live sheets as orphans.
+#   2. A bare filename in PROSE is not a reference. bg.js's own comment names
+#      omega-platform-visual.css, so a substring scan would call the dead sheet
+#      reachable -- the exact file this check exists to catch. So a reference
+#      must be a QUOTED string or a real href attribute, never a mention.
+css_on_disk = {f for f in os.listdir(".") if f.endswith(".css")}
+css_referenced = set()
+for src_file in (f for f in os.listdir(".") if f.endswith((".html", ".js"))):
+    body = read(src_file)
+    # Quoted string ('/x.css', "x.css") or an href=/src= attribute value.
+    for m in re.findall(r"""['"]([^'"\s>]+\.css)['"]""", body):
+        css_referenced.add(m.split("/")[-1].split("?")[0])
+    for a, b in re.findall(
+            r"""(?:href|src)\s*=\s*(?:["']([^"']+\.css)["']|([^\s>"'=]+\.css))""", body):
+        m = a or b
+        css_referenced.add(m.split("/")[-1].split("?")[0])
+
+css_unloaded = sorted(css_on_disk - css_referenced)
+print(f"  stylesheets on disk: {len(css_on_disk)}   referenced: "
+      f"{len(css_on_disk & css_referenced)}")
+if css_unloaded:
+    warnings += 1
+    print(f"\n  WARNING — stylesheets on disk but never loaded "
+          f"({len(css_unloaded)}):")
+    print("    " + ", ".join(css_unloaded))
+
 if missing:
     critical += 1
     print(f"\n  CRITICAL — requested but MISSING on disk ({len(missing)}):")

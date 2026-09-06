@@ -193,18 +193,15 @@ through this one file with no per-page markup changes:
   a hover shimmer sweep and a pointer-following radial highlight (`--mx`/`--my`,
   set by one passive rAF-throttled `pointermove` listener in bg.js — a single
   `getBoundingClientRect()` per frame, only while hovering a match).
-- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + box-shadow glow, both **hover-only**, never static). Hover-only is a
-  correction, not the original design, and the reason is the standing
-  rule: `border-image` wins the border paint regardless of selector
-  specificity, so a *static* version silently discarded any page's own
-  per-instance border the moment `.card` was added to its markup
-  (`matrix.html`'s inline `border-color`, `family.html`'s `.mc.heir`,
-  `cosmos.html`'s JS-set `.el-card` left border — all three). Confining it
-  to `:hover` keeps every page's resting-state border exactly as that page
-  intended, retroactively for pre-existing `.card` usage too. `.kpi` is
-  excluded outright: it already carries a per-instance `--kc` accent color,
-  so it gets a matching hover glow in that color instead.
+- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image` +
+  box-shadow glow, both **hover-only**, never static). Hover-only is a
+  correction: `border-image` wins the border paint regardless of specificity, so
+  a *static* version silently discarded any page's own per-instance border the
+  moment `.card` was added (`matrix.html`'s inline `border-color`,
+  `family.html`'s `.mc.heir`, `cosmos.html`'s JS-set `.el-card` left border).
+  `:hover` keeps every page's resting border as intended, retroactively too.
+  `.kpi` is excluded outright: it carries a per-instance `--kc` accent, so it
+  gets a matching hover glow in that colour.
   A page-local `::before` setting `background` collides with `.card::before`
   per *property*. **That collision is solvable, and this file twice said it was
   not**: `.card::before` is the same 2px top bar, and it reads `--card-accent`,
@@ -560,7 +557,7 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **7** warnings |
+| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **35 `.js` + 2 `.css` that nothing loads** (checks 2/2b; 2b added 2026-09-06) |
 | `python3 -m unittest discover -s scripts/tests` | **265** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |

@@ -62,8 +62,11 @@ def main() -> int:
             FAIL.append("ci_contract:malformed_workflow_filename:" + ",".join(malformed))
         for path in workflow_files:
             text = path.read_text(encoding="utf-8", errors="replace")
-            if "runs-on: self-hosted" in text or "runs-on: [self-hosted" in text:
-                FAIL.append(f"ci_contract:self_hosted_runner:{path.relative_to(ROOT)}")
+            # Only flag self-hosted runners in blocking workflows (push/pull_request triggers)
+            # Optional workflows (schedule/workflow_dispatch) may use self-hosted runners intentionally
+            if re.search(r"on:\s*(?:push|pull_request)", text):
+                if "runs-on: self-hosted" in text or "runs-on: [self-hosted" in text:
+                    FAIL.append(f"ci_contract:self_hosted_runner_in_blocking_gate:{path.relative_to(ROOT)}")
             if re.search(r"runs-on:\s*windows-latest", text):
                 WARN.append(f"ci_portability:windows_runner:{path.relative_to(ROOT)}")
 

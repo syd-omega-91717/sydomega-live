@@ -13817,3 +13817,83 @@ label — and that one is the probe.**
 - `python3 scripts/architecture-contract.py` → PASSED, 16 blocks / 16 evidence contracts
 - `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single runner, pre-existing)
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+## 123
+
+**`strix-staging-run.sh`'s production guard accepted four targets it exists to reject — including a third party.**
+
+`scripts/strix-staging-run.sh` (merged in #296) wraps an agentic pentest tool.
+Its whole safety surface is the two-condition target guard in its header, and
+both conditions were matched with unanchored globs. Both failed.
+
+**Defect 1 — the zone check was a literal, not a glob.**
+
+```bash
+if [[ "$host" == "www.sydomega.com" || "$host" == "sydomega.com" || "$host" == "*.sydomega.com" ]]
+```
+
+Inside `[[ ]]`, the right-hand side of `==` is a pattern **only when unquoted**.
+`"*.sydomega.com"` is quoted, so it matched a host named, verbatim,
+`*.sydomega.com` — which cannot exist. Every real subdomain walked past it.
+
+**Defect 2 — the marker check was a substring, not a DNS label.**
+
+```bash
+[[ "$host" != *test* && ... ]]
+```
+
+`test` occurs inside `latest`. There was also no ownership condition at all: any
+host anywhere containing a marker substring was accepted.
+
+**Measured, BEFORE pinned with `git show origin/main:scripts/strix-staging-run.sh`**
+(not `git stash` — the change was already committed), 14 targets, verdict taken
+from whether the guard fell through to the `command -v docker` check:
+
+| target | expected | before | after |
+|---|---|---|---|
+| `latest.sydomega.com` | REJECT | **ACCEPT** | REJECT |
+| `contest.sydomega.com` | REJECT | **ACCEPT** | REJECT |
+| `evil-test.attacker.example` | REJECT | **ACCEPT** | REJECT |
+| `test.attacker.example` | REJECT | **ACCEPT** | REJECT |
+| `sydomega.com`, `www.sydomega.com`, `api.stripe.com`, the Supabase host, `sydomega-live.vercel.app` | REJECT | REJECT | REJECT |
+| `staging.` / `test.` / `preview.sydomega.com`, `localhost`, `127.0.0.1` | ACCEPT | ACCEPT | ACCEPT |
+
+**BEFORE: 4 wrong of 14. AFTER: 0 wrong of 14**, every previously-correct
+verdict preserved. The BEFORE run finding four failures is what establishes the
+harness measures anything at all (§8.4).
+
+The last two rows are the ones that matter: `latest.sydomega.com` is a plausible
+production alias, and `evil-test.attacker.example` is infrastructure the project
+has no authorization to touch. Scanning either is not a configuration mistake.
+
+**Fix.** Two independent required conditions, both anchored:
+
+- **Zone** — `localhost`/`127.0.0.1`/`::1`, or `*.sydomega.com` as a real
+  (unquoted) glob, with the apex and `www` explicitly excluded as production.
+  Any other host — a third party, a `vercel.app` preview — requires
+  `OMEGA_STRIX_ALLOW_HOST` set to that exact host. Verified that the opt-in
+  authorizes only the named host: `other-test.attacker.example` is still
+  rejected while `OMEGA_STRIX_ALLOW_HOST=test.attacker.example` is set.
+- **Marker** — whole leftmost-label match against
+  `staging stage nonprod non-prod test testing preview dev qa uat sandbox`,
+  iterating parsed DNS labels. `latest` is no longer `test`.
+
+**Defect 3 — a usage error returned the script's own "vulnerabilities found" code.**
+`bash scripts/strix-staging-run.sh a b c d` exited **2**, which the script's own
+header defines as `VALIDATED_VULNERABILITIES_FOUND`. A wrapper reading the exit
+code would report a security finding that did not exist. Usage and
+target-authorization errors now exit **64** (`EX_USAGE`); `--help` still exits 0,
+per the §8.4 help contract.
+
+**Secret hygiene, checked rather than assumed.** A first grep for
+`LLM_API_KEY.*echo` reported a leak; it had matched the *variable name inside
+the string* `"ERROR: LLM_API_KEY is unset"` — a §8.4 "grep is a candidate
+generator, not a verdict" false positive. Proven properly by running with
+`LLM_API_KEY=sk-SENTINEL-DO-NOT-LEAK` and grepping all output: **0 occurrences**.
+
+**Blast radius.** `grep -rniE strix .github/workflows/ scripts/ci-local.sh`
+returns zero hits — the script is manual-invocation only and no gate runs it.
+
+**Verification:** `bash -n` clean; `python3 scripts/audit.py` → 0 critical /
+8 warnings (baseline unchanged); `./scripts/ci-local.sh` → **ALL 23 BLOCKING
+CHECKS PASSED**.

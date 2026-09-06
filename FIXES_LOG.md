@@ -12482,3 +12482,73 @@ OpenAPI root, it targets the anon-readable table, and it stays bounded
 `credential_source=shipped_client` and then stops at the network hop — this
 session's egress proxy 403s `*.supabase.co` (§8.2), which the hosted runner
 does not, so CI is what decides.
+
+---
+
+## 107. Production was never promoted, and the promotion workflow reported success
+
+The Vercel MCP became available this session, which finally allowed measuring
+production directly instead of inferring it. What it shows is sharper than the
+"Instant Rollback" story §8.2 has carried since entry 95.
+
+### The artifact is perfect; only the alias is stale
+
+| URL | result |
+|---|---|
+| `sydomega-live-syd-omega-91717s-projects.vercel.app/` (production alias) | **404**, the platform's own 404 page, `x-vercel-cache: HIT`, `age: 68498`, `last-modified: 2026-09-05 06:50:36` |
+| `sydomega-live-4upkjau9q-…vercel.app/` (newest `target:production` deployment) | **200**, the full `index.html` — title, all six door links, `omega-visual-universe.css`, `bg.js` |
+
+Same project, same headers, same CSP. The build is good and has been good; the
+alias points at a deployment from ~19 hours earlier that predates `index.html`
+reaching the output.
+
+### Why nothing moves it
+
+`.github/workflows/vercel-production.yml` is the promotion path, and its
+`deploy` job **is skipped on every run**. Run 3 (`fa9cf0e2`), job list:
+
+```
+Validate production artifact   success
+Resolve deployment credentials success   -> ready=false
+Controlled deployment state    success   (runs only when ready != true)
+Deploy production              SKIPPED
+```
+
+`ready=false` because `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`
+are unset. And `vercel.json` sets `git.deploymentEnabled {"*": false}`, so
+Vercel's own git integration promotes nothing either. **No promotion path is
+active at all**, which is why the alias has not moved regardless of any
+rollback.
+
+The workflow then reported plain **success** — a third instance this session of
+a green check that verified nothing (entries 105, 106).
+
+### Two of the three "secrets" are not secrets
+
+`VERCEL_ORG_ID` is `team_w0v6eD1jUUzfPjiDq3ztOfvp` and `VERCEL_PROJECT_ID` is
+`prj_H3aTU3D4mR7TD19etdPTeYmhvANY` — the Vercel bot prints both in **every** PR
+comment on this repo, and `.vercel/project.json` carries them by convention.
+Requiring all three as secrets meant a partial setup produced a bare
+`NOT_CONFIGURED` naming none of them.
+
+Both now default in the workflow, with `secrets.*` and `vars.*` kept as
+overrides, so **only `VERCEL_TOKEN` remains to be set**. The credentials job
+names it explicitly (`missing=VERCEL_TOKEN`), and the controlled job emits a
+`::warning::` saying the run changed nothing in production and where to create
+the token.
+
+### Deployment protection, measured
+
+`ssoProtection: enabled, deploymentType: all_except_custom_domains` —
+Vercel Authentication is on for every `*.vercel.app` URL and off for custom
+domains. That is why an anonymous `curl` of a deployment URL returns 401 while
+`www.sydomega.com` returns a plain 404: **two different failures that look like
+one**. Use `web_fetch_vercel_url` (authenticated) to read a deployment URL;
+`curl` from CI can only speak to the custom domain.
+
+### Verification
+
+`python3 scripts/workflow-contract-lint.py` → PASS; the workflow parses as
+YAML; `./scripts/ci-local.sh` **ALL 23 BLOCKING CHECKS PASSED**. The alias move
+itself still needs `VERCEL_TOKEN` or a dashboard promotion — the Vercel MCP
+exposes no alias/promote/rollback call.

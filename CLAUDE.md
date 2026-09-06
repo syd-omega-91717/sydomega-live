@@ -513,8 +513,8 @@ Only what changes what you do in the **first minutes** stays here:
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
   responsible for regenerating `supabase/live-schema.json` in the same change.
 - **A dated snapshot lies in both directions.** `live-schema.json` at 2026-08-29 called 8
-  relations "declared but absent live"; one (`creator_proposals`) had existed all along — a
-  false positive purely from staleness. Regenerate before trusting a finding built on it.
+  relations "declared but absent live"; one had existed all along — a false positive purely
+  from staleness. Regenerate before trusting a finding built on it.
 - **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
   (#250, #252), each adding `omega-*.js` modules and a script tag to ~193 pages without
   regenerating the census. Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in
@@ -526,22 +526,23 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production is still 404ing and `Production Surface Verification` is GREEN anyway** — it
-  classifies an unreachable endpoint as `EXTERNAL_DEPLOYMENT_BLOCKED` without failing. Correct
-  (an owner-only outage is not a code defect), but **a green board here does not mean the site
-  is up**, and this bullet claimed the opposite until 2026-09-05. Read the run:
-  `site_reachable=false`, security-header step **skipped**, plus the `::warning::` annotations
-  (`FIXES_LOG.md` 105). The alias is pinned to `31f9180d` by an Instant Rollback; only
-  promoting/cancelling clears it, no commit (95, 100). Confirm by fetching the **project's
-  own** `…-syd-omega-91717s-projects.vercel.app` alias: 404 there means pinned; a detached
-  domain would serve the new build. `get_project`'s `domains` omits custom hosts and its
-  `live:false` is a trimmed projection — neither means detached or paused.
-- **Vercel now BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies
-  the web surface into `public/` from a fixed directory allow-list, so a top-level directory
-  not on it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages
-  while printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). It self-verifies now, but **add any
-  new web directory to that list**; never commit `public/`. The dashboard's *Framework Settings
-  Override* notice is expected: those keys are load-bearing.
+- **Production 404s because NOTHING PROMOTES IT, and two gates go green anyway.** Measured via
+  the Vercel MCP 2026-09-06 (`FIXES_LOG.md` 107): the newest `target:production` deployment
+  serves **200 with the full index.html** at its own URL, while the production alias serves a
+  **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
+  `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
+  `vercel.json` sets `git.deploymentEnabled {"*": false}` — so no promotion path is active.
+  Only `VERCEL_TOKEN` is still needed; org/project ids now default in the workflow. Also
+  `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
+  while the custom domain returns **404** — two failures that look like one. Read a deployment
+  URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
+  design and marks the outage with `::warning::` (105) — **a green board does not mean the site
+  is up**.
+- **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies the
+  web surface into `public/` from a fixed directory allow-list, so a top-level directory not on
+  it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
+  printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). **Add any new web directory to that list**;
+  never commit `public/`. The *Framework Settings Override* notice is expected.
 - **The self-hosted Windows runner is DEAD; `queued` on it means never.** This bullet called
   `queued` normal draining. Measured 2026-09-05: `runner-probe.yml`, whose only job is to prove
   that runner works, had sat `queued` since 08:12 with no run starting, and the two blocking

@@ -85,21 +85,41 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       ready: ${{ steps.check.outputs.ready }}
+      org: ${{ steps.export.outputs.org }}
+      project: ${{ steps.export.outputs.project }}
     steps:
       - id: check
         shell: bash
         env:
+          # Only VERCEL_TOKEN is a secret. The other two are public identifiers:
+          # the Vercel bot prints both in every PR comment on this repo, and
+          # .vercel/project.json carries them by convention. Requiring all three
+          # as secrets meant a partial setup silently produced NOT_CONFIGURED
+          # with no clue which one was missing -- so they default here and the
+          # secrets stay as overrides.
           TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          ORG: ${{ secrets.VERCEL_ORG_ID }}
-          PROJECT: ${{ secrets.VERCEL_PROJECT_ID }}
+          ORG: ${{ secrets.VERCEL_ORG_ID || vars.VERCEL_ORG_ID || 'team_w0v6eD1jUUzfPjiDq3ztOfvp' }}
+          PROJECT: ${{ secrets.VERCEL_PROJECT_ID || vars.VERCEL_PROJECT_ID || 'prj_H3aTU3D4mR7TD19etdPTeYmhvANY' }}
         run: |
+          set -euo pipefail
+          echo "org_resolved=${ORG:+yes}"
+          echo "project_resolved=${PROJECT:+yes}"
           if [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
             echo 'VERCEL_CREDENTIALS=READY'
           else
             echo 'ready=false' >> "$GITHUB_OUTPUT"
-            echo 'VERCEL_CREDENTIALS=NOT_CONFIGURED'
+            echo 'VERCEL_CREDENTIALS=NOT_CONFIGURED missing=VERCEL_TOKEN'
           fi
+      - id: export
+        shell: bash
+        env:
+          ORG: ${{ secrets.VERCEL_ORG_ID || vars.VERCEL_ORG_ID || 'team_w0v6eD1jUUzfPjiDq3ztOfvp' }}
+          PROJECT: ${{ secrets.VERCEL_PROJECT_ID || vars.VERCEL_PROJECT_ID || 'prj_H3aTU3D4mR7TD19etdPTeYmhvANY' }}
+        run: |
+          set -euo pipefail
+          echo "org=$ORG" >> "$GITHUB_OUTPUT"
+          echo "project=$PROJECT" >> "$GITHUB_OUTPUT"
 
   deploy:
     name: Deploy production
@@ -111,8 +131,8 @@ jobs:
     timeout-minutes: 20
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ needs.credentials.outputs.org }}
+      VERCEL_PROJECT_ID: ${{ needs.credentials.outputs.project }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -138,5 +158,13 @@ jobs:
       - name: Keep provider promotion controlled
         run: |
           echo 'VERCEL_PRODUCTION_DEPLOYMENT=CONTROLLED'
-          echo 'Artifact validation passed; automatic provider churn remains disabled.'
-          echo 'Configure VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID to enable promotion.'
+          echo 'Artifact validation passed; nothing was promoted to production.'
+          # This job used to end here, and the workflow reported plain success
+          # while deploying nothing -- the same shape as the production smoke
+          # gate going green during an outage (FIXES_LOG.md 105). Measured
+          # 2026-09-06: runs 2 and 3 both "succeeded" this way, with the deploy
+          # job skipped, while the production alias served a 404 page from a
+          # deployment dated 2026-09-05 06:50. A warning makes the inert state
+          # visible on the run and the commit without failing an owner-only
+          # configuration gap.
+          echo '::warning title=Production was NOT promoted::VERCEL_TOKEN is not configured, so the deploy job is skipped and this run changed nothing in production. The org and project ids resolve automatically; only the token is missing. Create one at vercel.com/account/tokens and add it as the repository secret VERCEL_TOKEN.'

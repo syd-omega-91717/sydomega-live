@@ -920,3 +920,59 @@ Anything involving the Ω token economy, `wallet_balances`, or `transactions` �
 correctly identified as dormant-by-design pending a legal/business decision, and adding "ideas"
 for token features here would work against that decision being made deliberately rather than by
 engineering momentum.
+
+---
+
+## Ω-PALETTE — a complete command palette the platform already owns
+
+**Status: proposal. Do not switch on as-is — see the blocker.**
+
+Found 2026-09-06 by `audit.py` check 2's orphan list (`FIXES_LOG.md` 110). Seven
+files, one of them a test, that **nothing loads**:
+
+| file | bytes | role |
+|---|---|---|
+| `omega-command-catalog.js` | 5,294 | 99 commands in 9 groups (EMAIL/WRITE/THINK/LEARN/PLAN/BRAINSTORM/MEETINGS/CAREER/CONTENT) |
+| `omega-command-palette.js` | 2,179 | Cmd/Ctrl+K overlay, `role="dialog"`, `aria-modal`, Escape to close |
+| `omega-command-router.js` | 1,691 | intent dispatch with a privilege deny-list |
+| `omega-command-adapter.js` | 1,113 | |
+| `omega-command-history.js` | 825 | exports `OmegaCommandHistory` |
+| `omega-command-palette.test.js` | 741 | someone tested this |
+| `omega-command-palette.css` | — | flagged by the new check 2b |
+
+### Why it is safe
+
+- The catalog is **static repo-authored data** — hardcoded group and description
+  maps, no user input — so the palette's `innerHTML` render carries no
+  stored-XSS vector (§8.1's first failure class, the one `grill-me-codex`
+  exists for).
+- The router refuses privilege by default:
+  `restricted=/^(DEPLOY|DELETE|ADMIN|TRANSFER|PAY|WITHDRAW|ROTATE|MIGRATE)/i`
+  returns `authorization_required` unless a handler was registered with
+  `meta.authorized`. Its own header: *"routes intents; never grants authority."*
+- Unknown commands emit `omega:command_unhandled` — a no-op, not a throw.
+
+### The blocker, and why this is a proposal rather than a commit
+
+**No handlers are registered anywhere.** Every one of the 99 commands would
+open, search, click, and do nothing. The commands are AI intents (`ELI10`,
+`STEELMAN`, `PREMORTEM`, `TLDR`) whose natural executor is
+`supabase/functions/concierge`, which is deployed but **dormant** pending
+`ANTHROPIC_API_KEY`.
+
+Shipping it now would surface 99 capabilities that do not exist — §8.1 class 9,
+the pattern that produced `hercules.html`'s `Math.random()` progress and
+`ad-network.html`'s fabricated revenue. §9's rule applies: gate it behind
+`public.platform_settings` and keep member-facing copy in future tense.
+
+### Recommended order
+
+1. Set `ANTHROPIC_API_KEY` (owner) so the concierge can execute.
+2. Register handlers — start with navigation-only commands, which need no AI
+   and work today.
+3. Make the unhandled path visibly honest ("not yet connected"), never silent.
+4. Add a `platform_settings` flag, wire through `omega-flags.js` /
+   `data-omega-flag`, and expose via `bg.js` only once the flag is on.
+
+Wiring it is roughly a day's work and would give the platform a genuine
+power-user surface it has already paid for.

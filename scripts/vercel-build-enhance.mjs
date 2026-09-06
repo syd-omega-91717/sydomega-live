@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 /**
  * Finalizes the static artifact after it has been copied into public/.
- *
- * This is deliberately build-time only: source pages remain independently
- * editable, while every production artifact receives the same baseline shell
- * contract (viewport, title fallback, and canonical visual runtime).
+ * Every shipped page receives the same baseline shell: viewport, title,
+ * canonical visual runtime, and privacy-safe runtime observability.
  */
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -15,6 +13,11 @@ const ENGINE_CANDIDATES = [
   'assets/js/omega-visual-engine.js',
   'js/omega-visual-engine.js',
   'assets/omega-visual-engine.js',
+];
+const OBSERVABILITY_CANDIDATES = [
+  'omega-runtime-observability.js',
+  'assets/js/omega-runtime-observability.js',
+  'js/omega-runtime-observability.js',
 ];
 
 async function walk(dir) {
@@ -28,8 +31,8 @@ async function walk(dir) {
   return files;
 }
 
-async function findEngine() {
-  for (const relative of ENGINE_CANDIDATES) {
+async function findAsset(candidates) {
+  for (const relative of candidates) {
     try {
       await readFile(join(ROOT, relative));
       return `/${relative}`;
@@ -45,7 +48,8 @@ function fallbackTitle(file) {
 }
 
 const files = await walk(ROOT);
-const engine = await findEngine();
+const engine = await findAsset(ENGINE_CANDIDATES);
+const observability = await findAsset(OBSERVABILITY_CANDIDATES);
 let changed = 0;
 
 for (const file of files) {
@@ -61,8 +65,11 @@ for (const file of files) {
     html = html.replace(/<head(\s[^>]*)?>/i, match => `${match}\n<title>${title}</title>`);
   }
 
-  if (engine && !/omega-visual-engine\.js/i.test(html) && /<\/body>/i.test(html)) {
-    html = html.replace(/<\/body>/i, `\n<script src="${engine}" defer></script>\n</body>`);
+  const scripts = [];
+  if (engine && !/omega-visual-engine\.js/i.test(html)) scripts.push(`<script src="${engine}" defer></script>`);
+  if (observability && !/omega-runtime-observability\.js/i.test(html)) scripts.push(`<script src="${observability}" defer></script>`);
+  if (scripts.length && /<\/body>/i.test(html)) {
+    html = html.replace(/<\/body>/i, `\n${scripts.join('\n')}\n</body>`);
   }
 
   if (html !== original) {
@@ -71,5 +78,6 @@ for (const file of files) {
   }
 }
 
-console.log(`VERCEL_ARTIFACT_ENHANCE=PASS html=${files.length} changed=${changed} engine=${engine ?? 'not-found'}`);
+console.log(`VERCEL_ARTIFACT_ENHANCE=PASS html=${files.length} changed=${changed} engine=${engine ?? 'not-found'} observability=${observability ?? 'not-found'}`);
 if (engine === null) console.log('visual_engine=source-page-runtime-only');
+if (observability === null) console.log('observability=not-installed');

@@ -300,7 +300,18 @@ verifying the *current* guard says nothing about what may have happened before i
   autonomous ops, evidence engine, provenance ledger. Adding one `<script>` line to
   `bg.js` would light all twenty at once.
 
-  It is open rather than done because two blockers are **measured**, not suspected:
+  It is open rather than done because four blockers are **measured**, not suspected.
+  The first is disqualifying on its own and was found in a render, not a read:
+
+  0. **Its own HUD has no stylesheet.** `omega-interface-v2.js` mounts
+     `<div class="omega-v2-hud">` on `document.body`, and six of the seven classes
+     that HUD uses are defined in no stylesheet in the repository. Rendered on
+     `dashboard.html` and `profile.html` after all nine sheets it injects had
+     loaded: `position:"static"` (in the document flow, not chrome),
+     `sheetsDefiningHud:0`, a 1280×43 box at the document bottom carrying the
+     literal visible text `Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /`. One
+     `<script>` line in `bg.js` puts that strip on all 189 pages. The subsystem is
+     not one line from shipping — its entry point was never finished.
 
   1. **The Ctrl/Cmd+K chord is already taken.** `omega-keyboard.js:155` (loaded on
      every page) binds it to `window.OmegaSearch.open()`.
@@ -314,6 +325,10 @@ verifying the *current* guard says nothing about what may have happened before i
      That is §8.1 class 5b by construction: reorder the array and every guard now
      protects a different module. The attributes need real names before this file
      loads anywhere.
+  3. **A bare single-key global binding.** `e.key.toLowerCase()==='m'` opens
+     mission control and calls `preventDefault()`, guarded only by
+     `/input|textarea|select/i.test(document.activeElement.tagName)`, which does
+     not exclude `contenteditable`. Pressing `m` while reading any page fires it.
 
   The same pass fixed a third, still-free instance of that class:
   `omega-cinematic-engine.js` claimed `#omega-cinematic-css`, the id `bg.js:166,169`

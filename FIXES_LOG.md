@@ -12810,8 +12810,56 @@ EXISTS omega-nexus-visualizer.js  omega-project-hub.js      omega-provenance-led
 ```
 
 Wiring that one file into `bg.js` would light all 20 at once. It is **not** done
-in this change, because two blockers are measured and unresolved — see
-`GAP_ANALYSIS.md` §S.
+in this change. The reason is not caution — it was **rendered**, per §8.4's rule
+that presentation is measured and never reasoned from source.
+
+`omega-interface-v2.js` mounts a global HUD (`root.className='omega-v2-hud'`)
+onto `document.body`. Six of the seven classes that HUD uses —
+`.omega-v2-hud`, `-signal`, `-label`, `-actions`, `-command`, `-mission` — are
+defined in **no stylesheet in the repository**; only `.omega-ops-badge` exists,
+in `omega-autonomous-ops.css`. Injecting the file into a real page, after all
+nine stylesheets it asks for have loaded:
+
+```
+dashboard.html  hudPresentBeforeInject=false   <- control
+  position          "static"        <- in the document FLOW, not fixed chrome
+  rect              x0 y2729 1280x43
+  sheetsDefiningHud 0
+  visibleText       "Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /"
+profile.html    hudPresentBeforeInject=false
+  position          "static"
+  rect              x0 y1821 1280x43
+  sheetsDefiningHud 0
+  visibleText       "Ω SYSTEM ONLINE GOVERNED MISSION MCOMMAND /"
+```
+
+So one `<script>` line in `bg.js` would append an unstyled 1280×43 strip of
+literal text to the bottom of all **189** pages. `MISSION MCOMMAND` running
+together — the `<kbd>M</kbd>` with no space after it — is the tell that no
+stylesheet ever spaced these controls.
+
+This is the same failure the cinematic-engine guard collision *would* have
+caused, except here it is not hypothetical: it is the file's present state. The
+subsystem is not one line from shipping; its entry point's own stylesheet was
+never written.
+
+Three further blockers, all measured:
+
+1. **The Ctrl/Cmd+K chord is already bound.** `omega-keyboard.js:155`, loaded on
+   every page, maps it to `window.OmegaSearch.open()`. Both
+   `omega-command-palette.js` and `omega-interface-v2.js` bind the same chord
+   and call `preventDefault()`. Two overlays would open on one keystroke.
+2. **Guard attributes are array indices.** `inject('/'+x,'data-omega-'+i)` makes
+   a module's guard its *position in a literal* — `data-omega-0`,
+   `data-omega-1`, … Reorder the array and every guard protects a different
+   module. §8.1 class 5b by construction.
+3. **A bare single-key global binding.** `e.key.toLowerCase()==='m'` opens
+   mission control and calls `preventDefault()`, guarded only by
+   `/input|textarea|select/i.test(document.activeElement.tagName)` — which does
+   not exclude `contenteditable`. Pressing `m` while reading any of 189 pages
+   would fire it.
+
+Full item, with what each would take to resolve: `GAP_ANALYSIS.md` §S.
 
 ### A latent guard collision, fixed while it was still free
 

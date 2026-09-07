@@ -13907,3 +13907,147 @@ returns zero hits — the script is manual-invocation only and no gate runs it.
 **Verification:** `bash -n` clean; `python3 scripts/audit.py` → 0 critical /
 8 warnings (baseline unchanged); `./scripts/ci-local.sh` → **ALL 23 BLOCKING
 CHECKS PASSED**.
+
+## 124
+
+**Two merge conflicts and one wholly redundant PR, none of them between agents — a branch racing its own sibling.**
+
+`AGENTS.md` §3.1 told an agent to treat in-flight work as locked, but named
+only the *other* agent's prefix:
+
+> List open PRs and open branches. Anything on a `claude/*` branch is in
+> flight — treat every file it touches as locked until it merges or closes.
+
+Read by ChatGPT, that sentence licenses ignoring every `chatgpt/*` branch,
+including its own. On 2026-09-07 that is exactly what happened.
+
+**#312 and #313** were both cut from the same `main` and both wrote
+`scripts/tests/test_production_evidence_audit.py`. Whichever merged first was
+guaranteed to conflict with the other, and #312 did. **#315** (`...-pr2`) was a
+third copy of the same work.
+
+**Measured, not eyeballed.** Both #313 and #315 define the same five tests as
+`main`. Normalising method names and whitespace leaves exactly one difference
+across the whole test class — the line wrapping of a single `write_text()`
+call:
+
+```
+-"vercel.json").write_text(
+-json.dumps({"installCommand":
++"vercel.json").write_text(json.dumps({"installCommand":
+```
+
+Only the names differed, and `main`'s were the more specific
+(`test_current_vercel_contract_is_static` states what is asserted;
+`test_current_static_architecture` does not).
+
+**Resolution — union would have been wrong.** The standing conflict rule is
+"keep both intents", but duplicated intent is not two intents. Unioning would
+have produced **ten tests asserting five things** — §8.1 class 8, two divergent
+copies of one canonical thing, manufactured fresh, which then drift apart under
+separate maintenance. Both branches were resolved by merge commit (no history
+rewrite on a branch this session did not own) taking `main`'s files wholesale.
+
+| PR | net delta to `main` after resolution |
+|---|---|
+| #313 | one new one-line README (`scripts/tests/README.production-evidence.md`) |
+| #315 | **empty** — every file byte-identical to `main` |
+
+#315's README was also a *shorter* form of the one already on `main` (12 words
+against 17, omitting the filename the sentence is about), so `main`'s was kept
+as the superset.
+
+`def test_` count on `main`: **5** before, **5** after. Verified 289 tests in
+`scripts/tests` OK, 23 in `tests` OK, no conflict markers, `audit.py` 0
+critical / 8 warnings, `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**Fix, in all three agent contracts.** §3.1's rule now says *every* open
+branch is in flight, **including your own**, and adds the two rules the
+episode actually needed:
+
+- **`git fetch origin main` immediately before cutting each branch** — not once
+  per work session. A base current ten minutes ago is not current now.
+- **Do not race yourself.** With a PR open that touches a file, do not start a
+  second branch touching that file until the first merges. Several PRs in quick
+  succession are fine only when they touch disjoint files.
+
+Applied to `AGENTS.md` §3.1 / new §3.1.1, `CHATGPT_CONTEXT_RULES.md` §6, and
+`.github/copilot-instructions.md` §6. `CLAUDE.md` is untouched: it is at its
+16,000-token cap, and §9's rule sends evidence-cited entries here.
+
+**Transferable rule.** A collision-avoidance rule written in terms of *who*
+owns a branch fails the moment one agent opens two. Write it in terms of
+*which files are in flight*. And git gives no warning for this class — the
+add/add conflict surfaces later, when the context that would explain it is
+gone.
+
+## 125
+
+**PRODUCTION HAS NOT DEPLOYED SINCE #299 — a placeholder path inside a code comment failed the build, and it was read as the Vercel daily quota for six hours.**
+
+Every Vercel deployment after `dpl_H3iWGzrZnsrz7RjHwLj1TAtrrWQR` (the merge of
+#299) is `state: ERROR`, **including four `target: production` deployments**.
+The site's live artifact is stuck at #299.
+
+**It was never the quota.** The quota was real and concurrent — `vercel[bot]`
+posted `api-deployments-free-per-day` on several PRs — and that is exactly why
+this went unexamined: a second, unrelated failure with a plausible banner
+absorbed it. Build logs for the production deployment of `88f0e4d1` say
+something else entirely:
+
+```
+03:00:25  Ω VERCEL STATIC BUILD
+03:00:25  VERCEL_BUILD=FAIL unreachable_asset=/x.html
+03:00:25  VERCEL_BUILD=FAIL unreachable_assets=1
+03:00:25  Error: Command "bash scripts/vercel-build.sh" exited with 1
+```
+
+**Source: one documentation comment**, `omega-a11y-controls.js:8`, added in #300
+— the module's own header, illustrating the inaccessible markup it exists to fix:
+
+> This estate drives a lot of navigation from `<div onclick="location.href=
+> '/x.html'">`.
+
+`scripts/vercel-build.sh:34` collects asset references with
+
+```
+grep -rhoE "[\"'(]/[A-Za-z0-9_][A-Za-z0-9._/-]*\.(js|css|json|html|svg|...)"
+```
+
+over `public/`, and **does not strip comments**. The quote before `/x.html`
+matches, no such file exists, `missing_refs` becomes 1, the script exits 1.
+The first ERROR deployment is `dpl_F186E1NstP5W5zJYe9FHLR79aQPv` — #300 itself,
+the commit that introduced the comment.
+
+**Fix.** The paragraph now describes that markup in prose instead of quoting it,
+and carries a note saying why. No change to `scripts/vercel-build.sh`: the gate
+did its job — an unresolvable absolute reference in a shipped file is exactly
+what it exists to catch, and a scanner that exempted comments because they
+"look like documentation" would be the weaker tool.
+
+**Measured, BEFORE pinned with `git show origin/main:omega-a11y-controls.js`:**
+
+| `omega-a11y-controls.js` | `bash scripts/vercel-build.sh` |
+|---|---|
+| `main`'s version | **exit 1**, `unreachable_asset=/x.html` |
+| fixed version | **exit 0**, `html=189 js=130 css=14` |
+
+`public/` must be removed between runs or the scan reads the previous build's
+tree — the first "fix" appeared not to work for exactly that reason.
+
+**The same mistake, twice in one session.** The first attempt at the explanatory
+note quoted the offending path *inside the note warning against quoting it*, so
+the build still failed. That is entry 123's shape exactly: a realistic-looking
+credential written into documentation proving a credential was not leaked.
+**Describing a hazard by reproducing it is not documentation, it is the hazard.**
+
+**Transferable rules.**
+1. **Never write a quoted absolute asset path inside a comment in any shipped
+   file.** Describe it.
+2. **A second, unrelated outage with a plausible banner will absorb the first.**
+   Vercel's rate-limit comment made every red deployment look explained. Read
+   the build log, not the bot comment — `mcp__Vercel__get_deployment_build_logs`
+   with `errorsOnly` named the real cause in one line.
+3. **A green `ci-local.sh` does not mean the site deploys.** All 23 blocking
+   checks passed on every one of those ten broken commits; `vercel-build.sh` is
+   not among them.

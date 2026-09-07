@@ -114,13 +114,36 @@ These are areas where a clean merge is also a correct merge:
 Two agents editing the same file is avoidable if each looks first. Before
 proposing any edit to an existing file:
 
-1. List open PRs and open branches. Anything on a `claude/*` branch is in
-   flight — treat every file it touches as locked until it merges or closes.
-2. If your task needs a locked file, either wait, or scope your change to a
+1. **`git fetch origin main` immediately before cutting each branch** — not
+   once per work session. A base that was current ten minutes ago is not
+   current now.
+2. List open PRs and open branches. **Every** open branch is in flight,
+   including your own — treat every file it touches as locked until it merges
+   or closes.
+3. If your task needs a locked file, either wait, or scope your change to a
    different file, or hand the patch over (§9).
 
 There is no lock file and no ticket system in this repo. **The open PR list is
 the lock.** Respect it.
+
+### 3.1.1 Your own branches lock files against you
+
+This rule used to read "anything on a `claude/*` branch is in flight", which
+named only the *other* agent's prefix. That omission produced two conflicts and
+one wholly redundant PR on 2026-09-07, and neither involved a second agent:
+
+- #312 and #313 were both cut from the same `main` and both wrote
+  `scripts/tests/test_production_evidence_audit.py`. Whichever merged first was
+  always going to conflict with the other.
+- #315 (`...-pr2`) was a third copy of the same five tests. After resolution its
+  net delta to `main` was **empty**.
+
+So the lock is not about prefixes. **If you have a PR open that touches a file,
+do not start a second branch that touches that file until the first merges.**
+Opening several PRs in quick succession is fine only when they touch disjoint
+files; when they do not, you are racing yourself, and git will not warn you —
+it will hand you an add/add conflict later, when the context that would have
+explained it is gone.
 
 ### 3.2 Branch naming
 

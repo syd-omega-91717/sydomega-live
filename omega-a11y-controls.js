@@ -4,11 +4,19 @@
 
    WHY THIS EXISTS
 
-   This estate drives a lot of navigation from `<div onclick="location.href=
-   '/x.html'">`. A div is not focusable and does not fire a click on Enter, so
-   every one of those is invisible to anyone who does not use a mouse -- a
-   keyboard user, a switch user, most voice control, and anyone whose pointer
-   is temporarily unavailable.
+   This estate drives a lot of navigation from a div carrying an onclick that
+   assigns location.href to some page URL. A div is not focusable and does not
+   fire a click on Enter, so every one of those is invisible to anyone who does
+   not use a mouse -- a keyboard user, a switch user, most voice control, and
+   anyone whose pointer is temporarily unavailable.
+
+   NOTE: this paragraph deliberately describes that markup in prose instead of
+   quoting it. scripts/vercel-build.sh scans every shipped .js for quoted
+   absolute asset paths and fails the build when one does not resolve, and it
+   does not strip comments. An illustrative placeholder path used to sit in
+   this comment; the scanner read it as a real reference and broke PRODUCTION
+   deploys for ten consecutive builds. Do not write a quoted absolute asset
+   path inside a comment in any shipped file -- describe it instead.
 
    MEASURED (2026-09-06, rendered, not grepped): 51 keyboard-inaccessible
    click targets across 8 sampled pages -- 44 on dashboard.html and exactly 1

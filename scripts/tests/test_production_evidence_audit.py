@@ -5,8 +5,10 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "production-evidence-audit.py"
+
 spec = importlib.util.spec_from_file_location("production_evidence_audit", SCRIPT)
 if spec is None or spec.loader is None:
     raise RuntimeError(f"cannot load {SCRIPT}")
@@ -15,24 +17,26 @@ spec.loader.exec_module(module)
 
 
 class ProductionEvidenceAuditTests(unittest.TestCase):
-    def test_current_required_files(self):
+    def test_current_repository_required_files(self):
         result = module.check_required()
         self.assertEqual(result["status"], "PASS", result)
 
-    def test_current_runtime_surface(self):
+    def test_current_repository_runtime_surface(self):
         result = module.check_runtime_surface()
         self.assertGreater(result["html_pages"], 0, result)
         self.assertGreater(result["omega_modules"], 0, result)
         self.assertGreater(result["pages_with_bg_reference"], 0, result)
 
-    def test_current_static_architecture(self):
+    def test_current_vercel_contract_is_static(self):
         result = module.check_static_architecture()
         self.assertEqual(result["status"], "PASS", result)
 
-    def test_nonempty_install_command_is_rejected(self):
+    def test_static_architecture_rejects_nonempty_install_command(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            (root / "vercel.json").write_text(json.dumps({"installCommand": "npm install"}), encoding="utf-8")
+            (root / "vercel.json").write_text(
+                json.dumps({"installCommand": "npm install"}), encoding="utf-8"
+            )
             with patch.object(module, "ROOT", root):
                 result = module.check_static_architecture()
         self.assertEqual(result["status"], "FAIL")

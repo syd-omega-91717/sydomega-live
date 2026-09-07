@@ -14051,3 +14051,62 @@ credential written into documentation proving a credential was not leaked.
 3. **A green `ci-local.sh` does not mean the site deploys.** All 23 blocking
    checks passed on every one of those ten broken commits; `vercel-build.sh` is
    not among them.
+
+## 126
+
+**`vercel-ignore-build.sh` has never skipped a single deployment: Vercel clones shallow, so its `HEAD^` guard fired every time.**
+
+The script exists to stop deployments for changes that cannot reach the
+artifact. It opens with
+
+```bash
+if ! git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+  exit 1                       # exit 1 = deploy
+fi
+```
+
+Vercel checks out at `--depth 1`, so `HEAD^` does not exist in the build
+container and this guard returned **deploy** on every push. The entire skip
+decision below it — the anchoring fix from #302 included — has never once
+executed in production.
+
+**Measured on commit `0a9fca70` (two `.md` files, nothing web-facing):**
+
+| clone | decision |
+|---|---|
+| full | `exit 0` — SKIP (correct) |
+| `--depth 1` (what Vercel does) | `exit 1` — DEPLOY |
+
+Same commit, same script. The build log confirms the sequence:
+`Cloning completed: 1.433s` → `Running "bash scripts/vercel-ignore-build.sh"` →
+build proceeds.
+
+**This is why the project reached `api-deployments-free-per-day` (>100/day) on
+2026-09-06.** Every push deployed regardless of content.
+
+**Fix:** `git fetch --deepen=1 --quiet || true` before the guard. Verified
+against a real shallow clone of a synthetic two-commit fixture:
+
+| tip commit | before | after |
+|---|---|---|
+| root `.js` change | DEPLOY | **DEPLOY** (no coverage lost) |
+| `.md` only | DEPLOY | **SKIP** |
+
+The unresolvable-parent branch still deploys. That asymmetry is deliberate: an
+unnecessary deployment costs one unit of quota; a wrongly skipped one ships
+nothing and looks like a successful no-op.
+
+**Do not substitute `git log -1 --name-only`.** On a shallow clone git treats
+the grafted commit as parentless and lists the whole tree — **measured at 971
+files** — which matches a web extension every time and defeats the skip just as
+completely, but silently. Same trap as `omega-registry.py` (§8.4).
+
+**Impact, over the last 37 commits on `main` with a diff:** 5 would deploy,
+**32 would skip — 86% of deployments avoided**, including every
+documentation-only merge and every `Merge main into <branch>` commit.
+
+**Transferable rule.** A guard whose *false* branch is the expensive default
+will never announce that it is always taking it. This one had a fix shipped to
+its unreachable half (#302) while the reachable half returned "deploy" on every
+run. **Test a build-environment script under the build environment's clone
+depth, not the developer's.**

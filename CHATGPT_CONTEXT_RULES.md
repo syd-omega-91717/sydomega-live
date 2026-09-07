@@ -264,23 +264,35 @@ Three merges have silently lost a commit here. These rules are why.
 1. **Branch fresh, every time:**
    `git fetch origin main && git checkout -b chatgpt/<topic> origin/main`.
    Never branch from a stale local `main`, and never from another feature branch.
-2. **One concern per branch.** A branch that fixes a bug *and* adds a page *and*
+   **Run the fetch immediately before cutting each branch — not once per work
+   session.** A base that was current ten minutes ago is not current now.
+2. **Do not race yourself.** If you have a PR open that touches a file, do not
+   start a second branch that touches that file until the first merges. Several
+   PRs in quick succession are fine only when they touch disjoint files.
+   Measured 2026-09-07: #312/#313 were both cut from the same `main` and both
+   wrote `scripts/tests/test_production_evidence_audit.py`, so whichever merged
+   first was guaranteed to conflict with the other; #315 was a third copy of the
+   same five tests, and once resolved its net delta to `main` was **empty**.
+   Neither conflict involved a second agent. Git does not warn you about this —
+   it hands you an add/add conflict later, when the context that would explain
+   it is gone.
+3. **One concern per branch.** A branch that fixes a bug *and* adds a page *and*
    reformats a module cannot be partially accepted.
-3. **Once a pull request is open, its head is frozen.** **Never amend, rebase,
+4. **Once a pull request is open, its head is frozen.** **Never amend, rebase,
    or force-push an open PR.** GitHub merges the head it had when it computed
    the merge, so a force-push — and equally a normal push racing the merge —
    loses exactly the commit you just added. Measured four times. If you need a
    change after opening a PR, let the current one merge, then start a **new**
    branch from the new `origin/main` and open a **new** PR.
-4. **Let the checks settle before merging.** A pending check is not a passing
+5. **Let the checks settle before merging.** A pending check is not a passing
    one — read `status`, not `conclusion`.
-5. **Verify what actually landed:**
+6. **Verify what actually landed:**
    `git merge-base --is-ancestor <your-sha> origin/main`.
    A merge notification is not proof; that is how a lost commit stayed
    undetected. Also note: `git merge-tree` in its older form does **not** print
    `<<<<<<<` markers, so grepping its output for them will tell you "no
    conflicts" when there are conflicts.
-6. **On a textual conflict**, resolve by §5's table (generated → regenerate;
+7. **On a textual conflict**, resolve by §5's table (generated → regenerate;
    `FIXES_LOG.md` → union) and otherwise **keep both intents**. If you cannot
    tell what the other agent meant, stop and hand off (§8) rather than deleting
    their lines.

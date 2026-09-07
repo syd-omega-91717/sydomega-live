@@ -247,25 +247,33 @@ inside a promise callback still pays for the fetch.
 Every rule below exists because it was violated and cost something.
 
 1. **Branch fresh:** `git fetch origin main && git checkout -b copilot/<topic> origin/main`.
-   Never from a stale local `main`, never from another feature branch.
-2. **One concern per branch — but batch related fixes.** While the Vercel quota
+   Never from a stale local `main`, never from another feature branch. **Run the
+   fetch immediately before cutting each branch, not once per session** — a base
+   that was current ten minutes ago is not current now.
+2. **Do not race yourself.** If you have a PR open that touches a file, do not
+   start a second branch that touches that file until the first merges. Measured
+   2026-09-07: two PRs cut from the same `main`, both writing one test file,
+   conflicted on merge; a third was an exact duplicate whose net delta was empty
+   once resolved. No second agent was involved. Git gives no warning — only an
+   add/add conflict later.
+3. **One concern per branch — but batch related fixes.** While the Vercel quota
    binds (§0), three related one-line fixes belong in one PR, not three.
-3. **Once a PR is open, its head is frozen. Never amend, rebase, or
+4. **Once a PR is open, its head is frozen. Never amend, rebase, or
    force-push it.** GitHub merges the head it had when it computed the merge, so
    a force-push — and equally a normal push racing the merge — loses exactly the
    commit you just added. Measured four times here. Follow-up work is a **new**
    branch from the new `origin/main` and a **new** PR.
-4. **Never create a branch you cannot delete.** This environment's git proxy
+5. **Never create a branch you cannot delete.** This environment's git proxy
    refuses ref deletion. An abandoned branch was merged separately by mistake and
    landed the same fix twice as twin commits. Name the branch correctly the
    first time.
-5. **Verify what landed:** `git merge-base --is-ancestor <sha> origin/main`.
+6. **Verify what landed:** `git merge-base --is-ancestor <sha> origin/main`.
    A merge notification is not proof. Note that `git merge-tree` in its older
    form does **not** print `<<<<<<<` markers, so grepping its output for them
    reports "no conflicts" when there are conflicts.
-6. **After any merge, pull `main` and run `./scripts/ci-local.sh`.** Do not
+7. **After any merge, pull `main` and run `./scripts/ci-local.sh`.** Do not
    assume git reconciled two agents' work correctly just because it merged.
-7. **On a textual conflict:** resolve by §4 (generated → regenerate;
+8. **On a textual conflict:** resolve by §4 (generated → regenerate;
    `FIXES_LOG.md` → union), otherwise **keep both intents**. If you cannot tell
    what another agent meant, stop and hand off rather than deleting their lines.
 

@@ -7,6 +7,25 @@ set -euo pipefail
 # asset/runtime directories. Backend, database, CI, documentation and agent
 # changes do not require a new Vercel deployment.
 
+# Vercel clones at --depth 1, so HEAD^ does not exist in the build checkout and
+# this guard fired on EVERY deployment -- the whole skip decision below has
+# never once run in production. Measured 2026-09-07 on commit 0a9fca70 (two .md
+# files, nothing web-facing): full clone -> exit 0 (skip), depth-1 clone ->
+# exit 1 (deploy). That is why this project reached Vercel's
+# "api-deployments-free-per-day" ceiling: every push deployed regardless of
+# content, including documentation-only ones whose artifact is byte-identical
+# because .vercelignore excludes *.md.
+#
+# Deepen by one commit so the parent is reachable. Do NOT substitute
+# `git log -1 --name-only`: on a shallow clone git treats the grafted commit as
+# parentless and lists the entire tree -- measured at 971 files here, which
+# would match a web extension every time and defeat the skip just as
+# thoroughly, but silently (CLAUDE.md 8.4, the same trap omega-registry.py hit).
+git fetch --deepen=1 --quiet >/dev/null 2>&1 || true
+
+# If the parent is still unreachable the change set is unknown. Deploy: an
+# unnecessary deployment costs one unit of quota, a wrongly skipped one ships
+# nothing and looks like a successful no-op.
 if ! git rev-parse --verify HEAD^ >/dev/null 2>&1; then
   exit 1
 fi

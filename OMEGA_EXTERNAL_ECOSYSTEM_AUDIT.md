@@ -219,3 +219,75 @@ Both contributed *review criteria* that, applied to this repo's real files,
 found real defects: a safety-gate skill that could not be discovered, and 18
 agent-facing scripts that answered `--help` by running. That is the shape
 adoption takes on this stack, and the reason the bar's extra rule exists.
+
+---
+
+## Round 2 — 2026-09-07, owner-supplied sources
+
+Six sources named by the owner. Every verdict below is from a **fetched
+artifact**, not from reputation, and where a source could not be reached that is
+stated rather than worked around.
+
+### Reachability first
+
+| source | result |
+|---|---|
+| `raw.githubusercontent.com/openai/codex-plugin-cc/main/README.md` | **200** — read |
+| `raw.githubusercontent.com/diegosouzapw/OmniRoute/main/README.md` | **200** — read |
+| `raw.githubusercontent.com/elder-plinius/G0DM0D3/main/README.md` | **200** — read |
+| `support.claude.com/en/articles/15424964-claude-fable5` | **EGRESS_BLOCKED** — not assessed |
+| `start.me/p/L1rEYQ/osint4all` | **EGRESS_BLOCKED** — not assessed |
+| `/nishant/AppData/Local/Temp/…GODMOD3-main.zip.GOD` | **not reachable** — a local path on a different machine, under a different user account, not present in this container |
+
+The two blocked domains and the local zip are **NOT VERIFIED**. The upstream
+`G0DM0D3` repository is the same project the zip's filename names, so the
+assessment below covers it from source.
+
+### Verdicts
+
+| source | what it is | fits this stack? |
+|---|---|---|
+| **`elder-plinius/G0DM0D3`** | *"a single `index.html` file with no build step or package install"*, vanilla HTML/CSS/JS, `localStorage` state | **Architecturally identical — and licence-blocked.** AGPL-3.0. Copying its code obliges this repo to publish under AGPL-3.0, which is incompatible with a private, Stripe-billed, membership-gated platform. **Ideas transfer; code must not be copied.** |
+| **`openai/codex-plugin-cc`** | Claude Code plugin delegating to a local Codex CLI. Node ≥18.18 + a ChatGPT subscription | **Not a repository change.** It runs in the owner's agent session, ships nothing here. Its `adversarial-review` idea is the interesting part, and this session already demonstrated the need for it. |
+| **`diegosouzapw/OmniRoute`** | AI gateway, 352 providers. Node 22/24, TypeScript 6, **Webpack**, npm, a running server | **0 applicable.** Fails hard stops 9 and 10 outright — build step, bundler, package manager, and a server this deployment does not have. |
+
+### What actually transfers, and what does not
+
+The owner's feature list (50+ models, GODMODE CLASSIC, 4 themes, easter eggs)
+describes a *different product*: a multi-model research console for one operator
+experimenting on models. This platform is a `noindex`, invite-gated member
+service with one owner and a working Anthropic-backed copilot
+(`supabase/functions/concierge` + `omega-copilot.js`). Most of that list has no
+member-facing surface here.
+
+**Worth proposing (each grounded in a file that exists):**
+
+1. **Parseltongue-style input perturbation as a *defensive* test of our own
+   copilot.** G0DM0D3's perturbation engine exists to probe input-side
+   classifiers. Turned around, the same technique tests whether `concierge`
+   handles hostile input safely. This is the direct analogue of the Strix work
+   already in-tree, and the only item here with a real security payoff.
+2. **Provider fallback for `concierge`.** OmniRoute's genuine insight is
+   resilience, not breadth: today one vendor outage silently kills the copilot.
+   A single fallback is a small Edge Function change. **Not** 352 providers, and
+   **not** OpenRouter — that is a new vendor, key, bill and egress path for no
+   member benefit.
+3. **AutoTune-style per-context sampling parameters** for `concierge`. Small,
+   contained, measurable.
+
+**Explicitly rejected:**
+
+- **50+ models / OpenRouter.** One owner, one copilot, key already held
+  server-side in Supabase secrets. Breadth buys nothing and adds a vendor.
+- **GODMODE CLASSIC jailbreak combos.** Shipping jailbreak prompt packs into a
+  member-facing product is a liability, not a feature.
+- **Themes, easter eggs, Konami code.** `theme.js` and the design system already
+  own this surface; §4's cascade rules make a second owner a bug.
+- **Client-side API keys.** G0DM0D3 stores provider keys in the browser. This
+  repo already does better — keys live in Supabase secrets and never reach the
+  client (§9). **Here the platform is ahead of the source; do not regress it.**
+
+Nothing in this round is installed or implemented. Per §10, items 1–3 belong in
+`FEATURE_IDEAS.md` → `feature-architect` → `autonomous-coder`, and items 1 and 2
+touch AI/security surfaces, so they are HIGH-RISK and go through
+`grill-me-codex` first.

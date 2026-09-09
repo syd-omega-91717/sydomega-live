@@ -2,29 +2,39 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-printf '\nΩ VERCEL STATIC BUILD\n'
+printf '\nΩ VERCEL STATIC BUILD — COMPLETE SURFACE\n'
 printf '%s\n' '────────────────────────────────────────────────────────'
 
-# Framework-free static build: emit the complete public artifact, validate all
-# local runtime references, then apply the universal production page shell.
+# Framework-free static build: publish the complete web artifact, preserving
+# nested application pages instead of silently dropping them from public/.
 rm -rf public
 mkdir -p public
 
-find . -maxdepth 1 -type f \
+# Copy every web-deliverable asset recursively while excluding source-control,
+# dependency, test, build-output and server-only material. This is deliberately
+# extension-based so application pages under frontend/, web/, root/, etc. are
+# shipped exactly where their absolute /... links expect them.
+find . -type f \
   \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.json' \
      -o -name '*.svg' -o -name '*.ico' -o -name '*.png' -o -name '*.jpg' \
      -o -name '*.jpeg' -o -name '*.webp' -o -name '*.gif' -o -name '*.avif' \
      -o -name '*.webmanifest' -o -name '*.xml' -o -name '*.woff' -o -name '*.woff2' \
      -o -name '*.ttf' -o -name '*.otf' -o -name '*.mp3' -o -name '*.wav' \
      -o -name '*.mp4' -o -name '*.webm' \) \
+  ! -path './public/*' \
+  ! -path './.git/*' \
+  ! -path './node_modules/*' \
+  ! -path './tests/*' \
+  ! -path './scripts/*' \
+  ! -path './supabase/*' \
+  ! -path './core/*' \
+  ! -path './docs/*' \
   ! -name 'vercel.json' ! -name 'package.json' \
-  -exec cp -f '{}' public/ \;
-
-for dir in vendor i18n assets static images img icons media fonts audio video css js '.well-known'; do
-  if [ -d "$dir" ]; then
-    cp -R "$dir" public/
-  fi
-done
+  -print0 | while IFS= read -r -d '' file; do
+    target="public/${file#./}"
+    mkdir -p "$(dirname "$target")"
+    cp -f "$file" "$target"
+  done
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
 
@@ -46,8 +56,6 @@ done <<EOF
 ${ref_list}
 EOF
 
-# Runtime-critical paths are sometimes assembled dynamically and cannot be
-# discovered by the static reference scan above.
 [ -f public/vendor/supabase-js.js ] || { echo 'VERCEL_BUILD=FAIL missing public/vendor/supabase-js.js'; exit 1; }
 for lang_pack in i18n/*.json; do
   [ -e "${lang_pack}" ] || break
@@ -56,9 +64,6 @@ done
 
 [ "${missing_refs}" -eq 0 ] || { echo "VERCEL_BUILD=FAIL unreachable_assets=${missing_refs}"; exit 1; }
 
-# Normalize the shipped HTML without forcing a framework migration. This gives
-# every page a mobile viewport, an honest fallback title, and the canonical
-# visual runtime when that runtime exists in the repository.
 if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; then
   node scripts/vercel-build-enhance.mjs
 fi

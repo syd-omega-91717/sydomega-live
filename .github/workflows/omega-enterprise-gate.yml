@@ -1,9 +1,12 @@
 name: Omega Enterprise Gate
 
+# This gate remains available for explicit verification, but is intentionally
+# excluded from automatic push execution while the repository's GitHub Actions
+# runner entitlement is unavailable. This prevents repeated infrastructure
+# failures and Actions-minute/deployment noise without changing the application
+# or production build surface. The same static/architecture checks remain in
+# the repository and can be run explicitly once Actions capacity is restored.
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -29,20 +32,6 @@ jobs:
 
       - name: Architecture evolution gate
         run: python scripts/omega_enterprise_architecture_gate.py
-
-      # Three steps were removed here, not weakened. `compileall -q core scripts
-      # tests`, `omega_fabric_audit.py` and `omega_fabric_platform_gate.py` are
-      # byte-identical to steps in omega-intelligence-fabric.yml, which fires on
-      # exactly the same events as this workflow (push[main] + pull_request with
-      # no branch filter), so every commit that reached them here still reaches
-      # them there. Re-adding them costs Actions minutes and buys no coverage.
-      #
-      # The two steps below are deliberately NOT deduplicated even though
-      # repository-integrity.yml and omega-release-readiness.yml also run them:
-      # both of those filter `pull_request: branches: [main]`, which is NARROWER
-      # than this workflow's unfiltered `pull_request:`. Removing them would
-      # silently drop coverage on a PR targeting any other base branch. Dedupe
-      # only against a sibling whose trigger is identical or wider.
 
       - name: Repository integrity gate
         run: python scripts/repository_integrity_audit.py

@@ -3,41 +3,77 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#03050a">
-<meta name="description" content="SYD OMEGA 91717 — Sovereign Genesis Platform">
-<title>Ω SYD OMEGA 91717</title>
+<meta name="theme-color" content="#05060a">
+<meta name="description" content="SYD OMEGA 91717 — complete sovereign genesis platform">
+<title>Ω SYD OMEGA 91717 — Sovereign Genesis Platform</title>
 <link rel="stylesheet" href="/omega-visual-universe.css">
 <link rel="stylesheet" href="/omega-cinematic-system.css">
 <style>
-:root{--bg:#03050a;--gold:#c9a84c;--gold-hi:#fff0b8;--cyan:#00e5ff;--text:#f4f0e6;--muted:#8790a2}
-*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 48%,rgba(201,168,76,.075),transparent 25%),radial-gradient(circle at 50% 50%,rgba(0,229,255,.035),transparent 43%)}
-.world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 52%,rgba(13,20,29,.4),transparent 55%)}
-.grid{position:absolute;inset:-15%;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:42px 42px;transform:perspective(800px) rotateX(68deg) scale(1.35);transform-origin:center bottom;opacity:.38}
-.stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.55) 0 1px,transparent 1.5px),radial-gradient(circle,rgba(201,168,76,.38) 0 1px,transparent 1.4px);background-size:173px 151px,271px 219px;background-position:31px 19px,92px 77px;opacity:.42}
-.orbit{position:absolute;left:50%;top:42%;width:min(1450px,120vw);height:min(420px,38vw);transform:translate(-50%,-50%) rotate(-5deg);border:1px solid rgba(201,168,76,.075);border-radius:50%;box-shadow:0 0 80px rgba(0,229,255,.018)}.orbit:after{content:"";position:absolute;inset:24% 17%;border:1px solid rgba(0,229,255,.045);border-radius:50%}
-.shell{position:relative;z-index:2;width:100%;height:100%;display:grid;place-items:center;padding:28px}.card{width:min(540px,calc(100vw - 48px));min-height:596px;padding:54px 42px 42px;border:1px solid rgba(201,168,76,.25);border-radius:26px;background:linear-gradient(145deg,rgba(20,22,23,.92),rgba(5,8,13,.9));box-shadow:0 30px 110px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;text-align:center}
-.emblem{position:relative;width:178px;height:178px;display:grid;place-items:center;margin:0 auto 20px;border:1px solid rgba(201,168,76,.55);border-radius:50%;font-family:Georgia,"Times New Roman",serif;font-size:78px;color:var(--gold-hi);text-shadow:0 0 28px rgba(255,225,130,.55);box-shadow:0 0 35px rgba(201,168,76,.1),inset 0 0 35px rgba(201,168,76,.04)}.emblem:before,.emblem:after{content:"";position:absolute;border-radius:50%;pointer-events:none}.emblem:before{inset:-16px;border:1px solid rgba(201,168,76,.3)}.emblem:after{inset:31px;border:1px solid rgba(0,229,255,.23)}
-.kicker{margin-top:1px;color:var(--cyan);font-family:Georgia,"Times New Roman",serif;font-size:8px;font-weight:700;letter-spacing:.43em;text-transform:uppercase}h1{margin:15px 0 9px;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(39px,5vw,53px);line-height:.98;letter-spacing:.16em;color:#f7e8b4;text-shadow:0 0 24px rgba(201,168,76,.12)}.rule{width:270px;height:1px;margin:19px auto 14px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.65),transparent)}.sub{color:#7c8493;font-family:Georgia,"Times New Roman",serif;font-size:7px;letter-spacing:.38em;text-transform:uppercase}
-.enter{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:28px;min-width:160px;padding:11px 20px;border:1px solid rgba(201,168,76,.72);border-radius:999px;color:#f0dfab;background:rgba(201,168,76,.025);text-decoration:none;font-family:Georgia,"Times New Roman",serif;font-size:12px;font-weight:700;letter-spacing:.12em;box-shadow:0 0 20px rgba(201,168,76,.08);transition:all .25s ease}.enter:hover,.enter:focus-visible{background:rgba(201,168,76,.1);box-shadow:0 0 34px rgba(201,168,76,.16);transform:translateY(-2px);outline:none}.enter span{font-size:15px}.stats{display:flex;justify-content:center;gap:36px;margin-top:28px}.stat strong{display:block;color:#eee3c4;font-family:Georgia,"Times New Roman",serif;font-size:10px;font-weight:400;letter-spacing:.12em}.stat small{display:block;margin-top:4px;color:#687080;font-size:5px;letter-spacing:.3em;text-transform:uppercase}.discover{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:4;color:#697183;text-decoration:none;font-size:9px;letter-spacing:.22em;text-transform:uppercase;transition:color .2s;white-space:nowrap}.discover:hover,.discover:focus-visible{color:var(--gold);outline:none}
-@media(max-width:560px){body{overflow:auto}.shell{min-height:100%;padding:20px}.card{min-height:560px;padding:42px 25px 34px}.emblem{width:145px;height:145px;font-size:66px}h1{font-size:34px;letter-spacing:.12em}.stats{gap:20px}.discover{position:fixed;bottom:10px;font-size:8px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+:root{--gold:#c9a84c;--cyan:#00e5ff;--bg:#03050a;--text:#f4f0e6;--muted:#8e98aa}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.omega-world{min-height:100vh;position:relative;overflow:hidden}.omega-orbit{position:fixed;inset:8% 12%;border:1px solid rgba(201,168,76,.12);border-radius:50%;pointer-events:none;transform:rotate(-12deg);box-shadow:0 0 90px rgba(0,229,255,.035)}
+.omega-nav{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,5vw,72px);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px)}
+.omega-brand{color:var(--text);text-decoration:none;font-weight:800;letter-spacing:.14em}.omega-brand:first-letter{color:var(--gold)}.omega-back{color:var(--gold);text-decoration:none;font-size:.75rem;letter-spacing:.14em}
+.omega-main{position:relative;z-index:2;width:min(1240px,92vw);margin:0 auto;padding:72px 0 90px}.omega-hero{text-align:center;max-width:950px;margin:auto}.omega-emblem{font-size:clamp(48px,8vw,88px);color:var(--gold);text-shadow:0 0 42px rgba(201,168,76,.35);line-height:1}.omega-kicker{margin-top:22px;color:var(--cyan);font-size:.72rem;letter-spacing:.28em;font-weight:700}.omega-title{font-size:clamp(42px,7vw,92px);line-height:.94;letter-spacing:-.045em;margin:18px 0;background:linear-gradient(120deg,#fff,var(--gold),#fff);-webkit-background-clip:text;background-clip:text;color:transparent}.omega-lede{color:var(--muted);font-size:clamp(16px,2vw,21px);line-height:1.65;max-width:780px;margin:0 auto}.omega-status{display:inline-flex;margin:24px auto 0;padding:8px 14px;border:1px solid rgba(0,229,255,.25);border-radius:999px;color:#9defff;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.section{margin-top:68px}.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.section h2{font-size:1.1rem;letter-spacing:.18em;margin:0;text-transform:uppercase}.section-head p{margin:0;color:var(--muted);font-size:.9rem}.omega-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.omega-card{display:block;min-height:160px;padding:24px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));color:var(--text);text-decoration:none;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.omega-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.55);box-shadow:0 18px 55px rgba(0,0,0,.28)}.omega-card h3{margin:0 0 10px;font-size:1.02rem;letter-spacing:.1em}.omega-card p{margin:0;color:var(--muted);line-height:1.55;font-size:.9rem}.tag{display:inline-block;margin-bottom:20px;color:var(--gold);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase}
+.world{grid-template-columns:repeat(4,1fr)}.world .omega-card{min-height:130px}.actionbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:38px}.omega-action{display:inline-block;padding:14px 22px;border:1px solid rgba(201,168,76,.55);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;letter-spacing:.1em;font-size:.76rem}.omega-action:hover{background:rgba(201,168,76,.08)}
+.omega-footer{position:relative;z-index:2;padding:28px;text-align:center;border-top:1px solid rgba(255,255,255,.08);color:#687184;font-size:.7rem;letter-spacing:.12em}
+@media(max-width:900px){.omega-grid,.world{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.omega-nav{padding:18px}.omega-main{padding-top:48px}.omega-grid,.world{grid-template-columns:1fr}.omega-back{display:none}.omega-card{min-height:135px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="world"><div class="stars"></div><div class="grid"></div><div class="orbit"></div></div>
-<main class="shell">
-<section class="card" aria-label="SYD OMEGA 91717 sovereign gateway">
-<div class="emblem" role="img" aria-label="Omega emblem">Ω</div>
-<div class="kicker">SOVEREIGN DIGITAL CORE</div>
-<h1>SYD OMEGA<br>91717</h1>
-<div class="rule"></div>
-<div class="sub">INTELLIGENCE · IDENTITY · COMMAND</div>
-<a class="enter" href="/dashboard.html"><span>Ω</span> ENTER CORE</a>
-<div class="stats"><div class="stat"><strong>9×9×9</strong><small>MATRIX</small></div><div class="stat"><strong>12</strong><small>AGENTS</small></div><div class="stat"><strong>∞</strong><small>NETWORK</small></div></div>
+<div class="omega-world">
+<div class="omega-orbit"></div>
+<nav class="omega-nav"><a class="omega-brand" href="/">Ω <span>SYD OMEGA 91717</span></a><a class="omega-back" href="/enter.html">VAULT GATEWAY</a></nav>
+<main class="omega-main">
+<section class="omega-hero">
+<div class="omega-emblem" role="img" aria-label="Omega emblem">Ω</div>
+<div class="omega-kicker">SOVEREIGN GENESIS PLATFORM · UNIFIED FRONT DOOR</div>
+<h1 class="omega-title">ENTER THE<br>OMEGA WORLD.</h1>
+<p class="omega-lede">The complete SYD OMEGA 91717 experience. Command, intelligence, research, creation, media, commerce, community, governance and system surfaces — preserved as one living platform.</p>
+<div class="omega-status">Production experience layer · complete surface navigation</div>
 </section>
-<a class="discover" href="/frontend/platform/platform.html" aria-label="Discover the complete SYD OMEGA platform">DISCOVER COMPLETE PLATFORM</a>
+<section class="section"><div class="section-head"><div><span class="tag">01 · Core</span><h2>Command & Intelligence</h2></div><p>Primary operational surfaces</p></div><div class="omega-grid">
+<a class="omega-card" href="/dashboard.html"><h3>COMMAND</h3><p>Operational centre for navigation, activity and platform intelligence.</p></a>
+<a class="omega-card" href="/intelligence.html"><h3>INTELLIGENCE</h3><p>AI, prediction, analysis, graphs, automation and sovereign intelligence.</p></a>
+<a class="omega-card" href="/agent.html"><h3>AGENTS</h3><p>Governed agent entrypoint and the Intelligence Fabric execution model.</p></a>
+<a class="omega-card" href="/research.html"><h3>RESEARCH</h3><p>Research, evidence, knowledge discovery and analytical workflows.</p></a>
+<a class="omega-card" href="/omega-visual-command.html"><h3>VISUAL COMMAND</h3><p>Cinematic command environment and visual system controls.</p></a>
+<a class="omega-card" href="/frontend/platform/platform.html"><h3>PLATFORM</h3><p>Full platform surface and deeper application navigation.</p></a>
+</div></section>
+<section class="section"><div class="section-head"><div><span class="tag">02 · Universe</span><h2>Explore & Create</h2></div><p>World, media and creation surfaces</p></div><div class="omega-grid world">
+<a class="omega-card" href="/cosmos.html"><h3>COSMOS</h3><p>Symbolic, analytical and relational exploration.</p></a>
+<a class="omega-card" href="/media.html"><h3>UNIVERSE</h3><p>Cinema, media, stories and creative experiences.</p></a>
+<a class="omega-card" href="/creator.html"><h3>CREATE</h3><p>Bring ideas into governed creation workflows.</p></a>
+<a class="omega-card" href="/world-shell.html"><h3>WORLD SHELL</h3><p>Enter the wider Omega visual world.</p></a>
+</div></section>
+<section class="section"><div class="section-head"><div><span class="tag">03 · Economy</span><h2>Vault & Capital</h2></div><p>Commerce, portfolio and investor surfaces</p></div><div class="omega-grid">
+<a class="omega-card" href="/marketplace.html"><h3>VAULT</h3><p>Marketplace, subscriptions, assets and platform commerce.</p></a>
+<a class="omega-card" href="/portfolio.html"><h3>PORTFOLIO</h3><p>Portfolio and asset intelligence surface.</p></a>
+<a class="omega-card" href="/investor-gate.html"><h3>INVESTOR GATE</h3><p>Controlled investor entry and verification surface.</p></a>
+<a class="omega-card" href="/investor-dashboard.html"><h3>INVESTOR DASHBOARD</h3><p>Investor intelligence and operating view.</p></a>
+<a class="omega-card" href="/venture-pipeline.html"><h3>VENTURE PIPELINE</h3><p>Opportunity, venture and pipeline intelligence.</p></a>
+</div></section>
+<section class="section"><div class="section-head"><div><span class="tag">04 · Identity</span><h2>People & Account</h2></div><p>Personal and community surfaces</p></div><div class="omega-grid world">
+<a class="omega-card" href="/profile.html"><h3>PROFILE</h3><p>Identity, account and personal platform surface.</p></a>
+<a class="omega-card" href="/web/templates/leaderboard.html"><h3>LEADERBOARD</h3><p>Achievement and competitive community surface.</p></a>
+<a class="omega-card" href="/root/portal.html"><h3>PORTAL</h3><p>Legacy and extended portal entrypoint.</p></a>
+<a class="omega-card" href="/root/dashboard/dashboard.html"><h3>LEGACY COMMAND</h3><p>Preserved deeper dashboard surface.</p></a>
+</div></section>
+<section class="section"><div class="section-head"><div><span class="tag">05 · Governance</span><h2>Trust, Audit & Health</h2></div><p>Operational evidence surfaces</p></div><div class="omega-grid">
+<a class="omega-card" href="/health.html"><h3>HEALTH</h3><p>Public service health and platform status.</p></a>
+<a class="omega-card" href="/healthz.html"><h3>HEALTHZ</h3><p>Machine-readable health surface.</p></a>
+<a class="omega-card" href="/root/audit-report.html"><h3>AUDIT</h3><p>Audit and production evidence surface.</p></a>
+<a class="omega-card" href="/web/templates/admin_console.html"><h3>ADMIN CONSOLE</h3><p>Administrative operational surface.</p></a>
+<a class="omega-card" href="/web/templates/system_health.html"><h3>SYSTEM HEALTH</h3><p>Extended system diagnostics.</p></a>
+<a class="omega-card" href="/web/templates/sovereign_health.html"><h3>SOVEREIGN HEALTH</h3><p>Sovereign platform health and evidence.</p></a>
+</div></section>
+<div class="actionbar"><a class="omega-action" href="/enter.html">ENTER GATEWAY →</a><a class="omega-action" href="/world-shell.html">EXPLORE WORLD SHELL →</a><a class="omega-action" href="/dashboard.html">OPEN COMMAND →</a></div>
+<div data-page-emblem="index" style="margin:28px auto 0"></div>
 </main>
+<footer class="omega-footer">Ω SYD OMEGA 91717 · GENESIS · SOVEREIGN INTELLIGENCE · LIVING PLATFORM</footer>
+</div>
 <script src="/bg.js" defer></script>
 <script src="/omega-visual-runtime.js" defer></script>
 <script src="/omega-cinematic-system.js" defer></script>

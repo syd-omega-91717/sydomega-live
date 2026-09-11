@@ -1,0 +1,211 @@
+import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+interface GrowthRequest {
+  member_id: string;
+  propensity_type: "upgrade" | "adoption" | "expansion";
+  context: {
+    propensity_score: number;
+    ltv_estimate: number;
+    lifecycle_stage: string;
+    persona: string;
+    recent_purchases: Array<{ item: string; date: string }>;
+    engagement_metrics: Record<string, number>;
+  };
+}
+
+interface GrowthResponse {
+  campaign_id: string;
+  campaign_type: string;
+  personalized_offer: string;
+  channel_recommendation: string;
+  send_timing: string;
+  confidence: number;
+  estimated_revenue_impact: number;
+}
+
+async function callClaudeForGrowth(
+  prompt: string,
+  context: string
+): Promise<string> {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": anthropicKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "claude-opus-4-100k",
+      max_tokens: 1500,
+      temperature: 0.5,
+      system: `You are the Ω Growth Agent, orchestrating personalized revenue expansion campaigns.
+
+Your role:
+- Compose multi-touch campaigns personalized to member context
+- Recommend timing, channels, and offers
+- Maximize revenue while respecting frequency caps
+- Return JSON with: campaign_type, offer, channel, timing, confidence, estimated_impact
+
+Rules:
+- Max 1 campaign per member per week
+- Respect engagement patterns
+- Consider lifecycle stage transitions
+- Recommend email, in-app, or multi-channel`,
+      messages: [
+        {
+          role: "user",
+          content: `Context:\n${context}\n\nGrowth Opportunity:\n${prompt}`,
+        },
+      ],
+    }),
+  });
+
+  const data = await response.json();
+  return data.content[0].text;
+}
+
+async function saveGrowthDecision(
+  memberId: string,
+  campaign: Record<string, unknown>,
+  propensityType: string
+): Promise<string> {
+  const { data, error } = await supabase
+    .from("autonomous_decisions")
+    .insert({
+      agent_id: "growth",
+      member_id: memberId,
+      decision_type: `campaign_${propensityType}`,
+      context_snapshot: campaign,
+      reasoning: `Autonomous campaign composition for ${propensityType} growth`,
+      decision_payload: campaign,
+      confidence_score: campaign.confidence || 0.75,
+      model_used: "claude-opus-4-100k",
+      temperature: 0.5,
+      outcome_recorded: false,
+      revenue_impact_usd: campaign.estimated_impact || 0,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("Error saving growth decision:", error);
+    throw error;
+  }
+
+  return data.id;
+}
+
+async function processGrowthRequest(req: GrowthRequest): Promise<GrowthResponse> {
+  // Skip if propensity too low
+  if (req.context.propensity_score < 0.55) {
+    return {
+      campaign_id: "",
+      campaign_type: "none",
+      personalized_offer: "No campaign at this time",
+      channel_recommendation: "none",
+      send_timing: "none",
+      confidence: 0,
+      estimated_revenue_impact: 0,
+    };
+  }
+
+  // Build growth context
+  const contextString = `
+Member Propensity Type: ${req.propensity_type}
+Propensity Score: ${req.context.propensity_score}
+LTV Estimate: $${req.context.ltv_estimate}
+Lifecycle Stage: ${req.context.lifecycle_stage}
+Persona: ${req.context.persona}
+
+Recent Purchases:
+${req.context.recent_purchases.map((p) => `- ${p.item} (${p.date})`).join("\n")}
+
+Engagement Metrics:
+${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`).join("\n")}
+  `.trim();
+
+  const prompt = `Generate a personalized ${req.propensity_type} campaign for this high-propensity member.`;
+
+  // Call Claude
+  let claudeResponse: string;
+  try {
+    claudeResponse = await callClaudeForGrowth(prompt, contextString);
+  } catch (error) {
+    console.error("Claude API error:", error);
+    throw error;
+  }
+
+  // Parse response
+  let campaign = {
+    campaign_type: req.propensity_type,
+    offer: "Personalized recommendation",
+    channel: "email",
+    timing: "immediate",
+    confidence: 0.75,
+    estimated_impact: req.context.propensity_score * req.context.ltv_estimate * 0.15,
+  };
+
+  try {
+    const jsonMatch = claudeResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      campaign = JSON.parse(jsonMatch[0]);
+    }
+  } catch (e) {
+    console.error("Failed to parse campaign response:", e);
+  }
+
+  // Save decision
+  const campaignId = await saveGrowthDecision(
+    req.member_id,
+    campaign,
+    req.propensity_type
+  );
+
+  return {
+    campaign_id: campaignId,
+    campaign_type: campaign.campaign_type || req.propensity_type,
+    personalized_offer: campaign.offer || "Exclusive offer based on your profile",
+    channel_recommendation: campaign.channel || "email",
+    send_timing: campaign.timing || "optimal_window",
+    confidence: campaign.confidence || 0.75,
+    estimated_revenue_impact: campaign.estimated_impact || 0,
+  };
+}
+
+serve(async (req: Request) => {
+  try {
+    if (req.method !== "POST") {
+      return new Response("Method not allowed", { status: 405 });
+    }
+
+    const growthRequest: GrowthRequest = await req.json();
+
+    // Validate input
+    if (!growthRequest.member_id || !growthRequest.propensity_type) {
+      return new Response("Missing required fields", { status: 400 });
+    }
+
+    const response = await processGrowthRequest(growthRequest);
+
+    return new Response(JSON.stringify(response), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error in growth orchestrator:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal server error", details: error }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+});

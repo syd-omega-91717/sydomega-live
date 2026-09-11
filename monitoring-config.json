@@ -1,0 +1,164 @@
+{
+  "monitoring": {
+    "version": "1.0",
+    "enabled": true,
+    "updateInterval": 5000,
+    "alertThresholds": {
+      "lcp": {
+        "good": 2500,
+        "warning": 4000,
+        "critical": 5000,
+        "unit": "ms"
+      },
+      "fid": {
+        "good": 100,
+        "warning": 300,
+        "critical": 500,
+        "unit": "ms"
+      },
+      "cls": {
+        "good": 0.1,
+        "warning": 0.25,
+        "critical": 0.5,
+        "unit": "score"
+      },
+      "ttfb": {
+        "good": 600,
+        "warning": 1000,
+        "critical": 1500,
+        "unit": "ms"
+      },
+      "pageLoadTime": {
+        "good": 3000,
+        "warning": 5000,
+        "critical": 7000,
+        "unit": "ms"
+      },
+      "apiLatency": {
+        "good": 200,
+        "warning": 500,
+        "critical": 1000,
+        "unit": "ms"
+      },
+      "errorRate": {
+        "good": 0.01,
+        "warning": 0.05,
+        "critical": 0.1,
+        "unit": "fraction"
+      },
+      "cacheHitRate": {
+        "good": 0.7,
+        "warning": 0.5,
+        "critical": 0.3,
+        "unit": "fraction"
+      }
+    },
+    "alerts": {
+      "enabled": true,
+      "channels": [
+        {
+          "type": "console",
+          "level": "warning"
+        },
+        {
+          "type": "localStorage",
+          "key": "omega_alerts",
+          "maxSize": 100
+        },
+        {
+          "type": "webhook",
+          "url": "/.supabase/functions/v1/notify-performance",
+          "method": "POST",
+          "retries": 3,
+          "backoff": "exponential"
+        }
+      ]
+    },
+    "sampling": {
+      "enabled": true,
+      "rates": {
+        "slow_page_load": 1.0,
+        "error": 1.0,
+        "normal_page_load": 0.1,
+        "api_call": 0.05
+      }
+    },
+    "retention": {
+      "localStorage": {
+        "maxRecords": 1000,
+        "ttlDays": 7
+      },
+      "server": {
+        "maxRecords": 100000,
+        "ttlDays": 30
+      }
+    },
+    "dashboards": {
+      "enabled": true,
+      "paths": [
+        "/monitoring-dashboard.html"
+      ],
+      "refreshInterval": 5000
+    },
+    "reports": {
+      "enabled": true,
+      "schedule": {
+        "daily": "02:00Z",
+        "weekly": "Monday 02:00Z"
+      },
+      "recipients": [
+        "s.y.dagher@gmail.com"
+      ]
+    }
+  },
+  "rateLimit": {
+    "enabled": true,
+    "policies": [
+      {
+        "name": "ip_based",
+        "type": "sliding_window",
+        "key": "ip",
+        "limit": 1000,
+        "window": 60,
+        "unit": "seconds",
+        "action": "reject"
+      },
+      {
+        "name": "member_based",
+        "type": "sliding_window",
+        "key": "member_id",
+        "limit": 100,
+        "window": 60,
+        "unit": "seconds",
+        "action": "reject"
+      },
+      {
+        "name": "burst_protection",
+        "type": "concurrent",
+        "key": "member_id",
+        "limit": 20,
+        "window": 5,
+        "unit": "seconds",
+        "action": "queue"
+      }
+    ]
+  },
+  "security": {
+    "rls_audit": {
+      "enabled": true,
+      "schedule": "every_commit"
+    },
+    "schema_validation": {
+      "enabled": true,
+      "schedule": "every_commit"
+    },
+    "xss_prevention": {
+      "enabled": true,
+      "sanitization": "textContent_roundtrip"
+    },
+    "rate_limit_validation": {
+      "enabled": true,
+      "schedule": "hourly"
+    }
+  }
+}

@@ -41,7 +41,6 @@ find . -type f \
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
 
 # Copy directories that cannot be copied by the extension-based find above.
-# This must happen before the reachability check so vendor/ and i18n/ are present.
 for dir in vendor i18n; do
   [ -d "${dir}" ] || continue
   cp -r "${dir}" "public/${dir}"

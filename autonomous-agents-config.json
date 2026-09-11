@@ -1,0 +1,166 @@
+{
+  "autonomousAgents": {
+    "version": "1.0",
+    "enabled": true,
+    "orchestrator": "claude-opus-4-100k",
+    "agents": [
+      {
+        "id": "concierge",
+        "name": "Concierge Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Member support, onboarding, success coaching",
+        "temperature": 0.3,
+        "contextWindow": 100000,
+        "capabilities": ["support_response", "onboarding_next_step", "escalation_decision"],
+        "escalationCriteria": ["billing_dispute", "account_security", "churn_risk > 0.85"],
+        "sla_response_minutes": 5,
+        "trainingData": "support_tickets, onboarding_completions, member_feedback",
+        "maxContextItems": 50,
+        "enabled": true
+      },
+      {
+        "id": "growth",
+        "name": "Growth Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Campaign orchestration, upsell sequencing, retention",
+        "temperature": 0.5,
+        "capabilities": ["campaign_composition", "cohort_targeting", "timing_optimization"],
+        "autonomousExperiments": true,
+        "confidenceThreshold": 0.95,
+        "revenueLiftTarget": 180000,
+        "trainingData": "campaign_performance, propensity_scores, member_ltv",
+        "maxContextItems": 100,
+        "enabled": true
+      },
+      {
+        "id": "product",
+        "name": "Product Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Feature rollout, UX adaptation, product optimization",
+        "temperature": 0.4,
+        "capabilities": ["feature_rollout_scheduling", "ux_personalization", "behavioral_optimization"],
+        "rolloutStrategy": ["5%", "25%", "50%", "100%"],
+        "adoptionLiftTarget": 0.12,
+        "trainingData": "feature_adoption, engagement_signals, ux_feedback",
+        "maxContextItems": 80,
+        "enabled": true
+      },
+      {
+        "id": "insights",
+        "name": "Insights Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Anomaly detection, business discovery, recommendations",
+        "temperature": 0.7,
+        "capabilities": ["anomaly_detection", "trend_analysis", "opportunity_discovery"],
+        "anomalyThreshold": 0.92,
+        "trainingData": "real_time_streams, phase4_predictions, historical_trends",
+        "maxContextItems": 120,
+        "enabled": true
+      },
+      {
+        "id": "archive",
+        "name": "Archive Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Compliance, member journey synthesis, data portability",
+        "temperature": 0.2,
+        "capabilities": ["journey_synthesis", "gdpr_automation", "data_export"],
+        "complianceFrameworks": ["GDPR", "CCPA", "LGPD", "PDPA"],
+        "maxContextItems": 60,
+        "enabled": true
+      },
+      {
+        "id": "guardian",
+        "name": "Guardian Agent",
+        "model": "claude-opus-4-100k",
+        "purpose": "Policy enforcement, RLS audit, data security",
+        "temperature": 0.1,
+        "capabilities": ["rls_monitoring", "decision_audit", "escalation"],
+        "reviewThreshold": "high_risk_decisions",
+        "maxContextItems": 40,
+        "enabled": true
+      }
+    ]
+  },
+  "agentOrchestration": {
+    "decisionRouter": "member_event_type",
+    "routingRules": [
+      {
+        "event": "support_query",
+        "agent": "concierge",
+        "priority": "urgent",
+        "timeout_seconds": 30
+      },
+      {
+        "event": "propensity_spike",
+        "agent": "growth",
+        "priority": "high",
+        "timeout_seconds": 20
+      },
+      {
+        "event": "feature_ready",
+        "agent": "product",
+        "priority": "medium",
+        "timeout_seconds": 15
+      },
+      {
+        "event": "anomaly_detected",
+        "agent": "insights",
+        "priority": "high",
+        "timeout_seconds": 25
+      },
+      {
+        "event": "compliance_request",
+        "agent": "archive",
+        "priority": "critical",
+        "timeout_seconds": 60
+      },
+      {
+        "event": "policy_violation",
+        "agent": "guardian",
+        "priority": "critical",
+        "timeout_seconds": 10
+      }
+    ],
+    "failoverChain": ["primary_agent", "backup_agent", "human_escalation"],
+    "decisionAuditEnabled": true,
+    "decisionLoggingLevel": "comprehensive",
+    "orchestratorLatencySLA_ms": 500
+  },
+  "autonomousExperimentation": {
+    "enabled": true,
+    "populationPercentage": 10,
+    "analysisMethod": "bayesian_sequential",
+    "confidenceThreshold": 0.95,
+    "minimumSampleSize": 100,
+    "earlyStoppingEnabled": true,
+    "earlyStoppingThreshold": 0.98,
+    "rolloutHoldDays": 5,
+    "maxConcurrentExperiments": 5
+  },
+  "continuousLearning": {
+    "enabled": true,
+    "feedbackCycle": "monthly",
+    "agentPromptOptimization": true,
+    "performanceMetricsTracking": true,
+    "improvementTarget": 0.15,
+    "retrainFrequency": "weekly",
+    "qualityThreshold": 0.85
+  },
+  "safetyControls": {
+    "maxDecisionsPerMemberPerDay": 10,
+    "maxCampaignsPerMemberPerWeek": 2,
+    "frequencyCappingEnabled": true,
+    "unsubscribeDetectionEnabled": true,
+    "unsubscribeThreshold": 5,
+    "escalationOnNegativeFeedback": true,
+    "humanReviewSampling": 0.1
+  },
+  "agentCostControl": {
+    "contextSummarization": true,
+    "promptCaching": true,
+    "batchProcessingEnabled": true,
+    "maxTokensPerRequest": 15000,
+    "monthlyBudgetUsd": 5000,
+    "costAlertThreshold": 0.8
+  }
+}

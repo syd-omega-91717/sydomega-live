@@ -1,0 +1,90 @@
+name: Schema Change Tracking
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/functions/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  track_schema_changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect schema changes
+        id: schema
+        run: |
+          echo "::group::Changed migration files"
+          git diff HEAD~1 HEAD --name-only -- 'supabase/migrations/**' || true
+          echo "::endgroup::"
+
+          # List new migrations
+          MIGRATIONS=$(git diff HEAD~1 HEAD --name-only -- 'supabase/migrations/**' || echo "")
+          if [ -n "$MIGRATIONS" ]; then
+            echo "migrations_found=true" >> $GITHUB_OUTPUT
+            echo "migration_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$MIGRATIONS" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "migrations_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract migration details
+        if: steps.schema.outputs.migrations_found == 'true'
+        id: migration_details
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          COMMIT_SHA=$(git log -1 --pretty=%h)
+
+          echo "commit_msg<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+
+      - name: Create Linear issue for schema change
+        if: steps.schema.outputs.migrations_found == 'true'
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          TEAM_ID: ${{ secrets.LINEAR_TEAM_ID }}
+        run: |
+          if [ -z "$LINEAR_API_KEY" ]; then
+            echo "⚠️  LINEAR_API_KEY not configured. Schema changes detected but issue not created."
+            echo "Configure LINEAR_API_KEY and LINEAR_TEAM_ID secrets to enable tracking."
+            exit 0
+          fi
+
+          TITLE="Schema Change: ${{ steps.migration_details.outputs.commit_sha }}"
+          DESCRIPTION="Migration detected in commit by ${{ steps.migration_details.outputs.commit_author }}
+
+Files changed:
+\`\`\`
+${{ steps.schema.outputs.migration_files }}
+\`\`\`
+
+Commit message:
+${{ steps.migration_details.outputs.commit_msg }}
+
+GitHub: https://github.com/${{ github.repository }}/commit/${{ steps.migration_details.outputs.commit_sha }}"
+
+          PAYLOAD=$(cat <<EOF
+          {
+            "query": "mutation { issueCreate(input: {teamId: \"$TEAM_ID\", title: \"$TITLE\", description: \"$DESCRIPTION\", labelIds: [\"schema\"]}) { issue { id identifier } } }"
+          }
+          EOF
+          )
+
+          curl -X POST https://api.linear.app/graphql \
+            -H "Authorization: Bearer $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" || echo "Linear API request failed; continuing"

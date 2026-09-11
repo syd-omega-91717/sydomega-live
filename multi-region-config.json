@@ -1,0 +1,250 @@
+{
+  "multiRegion": {
+    "version": "1.0",
+    "enabled": true,
+    "strategy": "active_active_with_fallback",
+    "primaryRegion": "sfo1",
+    "regions": [
+      {
+        "name": "us-west",
+        "provider": "vercel",
+        "location": "sfo1",
+        "tier": "primary",
+        "weight": 0.45,
+        "healthCheck": {
+          "path": "/health",
+          "interval": 10000,
+          "timeout": 5000
+        }
+      },
+      {
+        "name": "us-east",
+        "provider": "vercel",
+        "location": "iad1",
+        "tier": "primary",
+        "weight": 0.45,
+        "healthCheck": {
+          "path": "/health",
+          "interval": 10000,
+          "timeout": 5000
+        }
+      },
+      {
+        "name": "eu-central",
+        "provider": "vercel",
+        "location": "fra1",
+        "tier": "secondary",
+        "weight": 0.1,
+        "healthCheck": {
+          "path": "/health",
+          "interval": 10000,
+          "timeout": 5000
+        }
+      }
+    ],
+    "edgeCaching": {
+      "enabled": true,
+      "ttl": {
+        "static": 86400,
+        "api": 3600,
+        "dynamic": 60,
+        "analytics": 300
+      },
+      "rules": [
+        {
+          "pattern": "/index.html",
+          "ttl": 60,
+          "audience": "public"
+        },
+        {
+          "pattern": "/dashboard.html",
+          "ttl": 3600,
+          "audience": "authenticated"
+        },
+        {
+          "pattern": "/analytics-dashboard.html",
+          "ttl": 300,
+          "audience": "owner"
+        },
+        {
+          "pattern": "/**/*.js",
+          "ttl": 86400,
+          "audience": "public"
+        },
+        {
+          "pattern": "/**/*.css",
+          "ttl": 86400,
+          "audience": "public"
+        }
+      ]
+    },
+    "failover": {
+      "enabled": true,
+      "strategy": "automatic",
+      "thresholds": {
+        "errorRate": 0.05,
+        "latency": 3000,
+        "consecutiveFailures": 3,
+        "healthCheckWindow": 60000
+      },
+      "actions": [
+        {
+          "trigger": "primary_down",
+          "action": "route_to_secondary",
+          "duration": 300,
+          "notification": "slack"
+        },
+        {
+          "trigger": "all_regions_down",
+          "action": "serve_cached_fallback",
+          "duration": 0,
+          "notification": "email_owner"
+        }
+      ]
+    },
+    "dataReplication": {
+      "enabled": true,
+      "strategy": "master_replica",
+      "primaryDatabase": "ydqhzvvoyufiiqvzcjns",
+      "replicas": [
+        {
+          "region": "eu-central",
+          "purpose": "read_only",
+          "syncInterval": 5000,
+          "failoverPriority": 1
+        }
+      ],
+      "conflictResolution": "last_write_wins"
+    },
+    "cdnConfiguration": {
+      "provider": "cloudflare",
+      "zones": [
+        {
+          "domain": "sydomega.com",
+          "mode": "full"
+        },
+        {
+          "domain": "*.sydomega.com",
+          "mode": "full"
+        }
+      ],
+      "rules": [
+        {
+          "path": "/api/*",
+          "cache": false,
+          "minTtl": 0
+        },
+        {
+          "path": "/**/*.{js,css,woff2,png,svg}",
+          "cache": true,
+          "minTtl": 86400,
+          "maxTtl": 31536000
+        },
+        {
+          "path": "/health",
+          "cache": false,
+          "minTtl": 0
+        }
+      ],
+      "purgeBehavior": {
+        "onDeploy": "purge_all",
+        "onContentChange": "purge_matching_paths",
+        "schedule": "daily_02:00Z"
+      }
+    },
+    "geoRouting": {
+      "enabled": true,
+      "strategy": "latency_based",
+      "rules": [
+        {
+          "region": "north_america",
+          "preferred": "us-west",
+          "fallback": "us-east"
+        },
+        {
+          "region": "europe",
+          "preferred": "eu-central",
+          "fallback": "us-east"
+        },
+        {
+          "region": "asia_pacific",
+          "preferred": "us-west",
+          "fallback": "us-east"
+        }
+      ]
+    },
+    "monitoring": {
+      "metrics": [
+        {
+          "name": "region_latency_p95",
+          "threshold": 1000,
+          "alert": "warning"
+        },
+        {
+          "name": "region_error_rate",
+          "threshold": 0.02,
+          "alert": "critical"
+        },
+        {
+          "name": "replication_lag",
+          "threshold": 10000,
+          "alert": "warning"
+        },
+        {
+          "name": "cache_hit_rate",
+          "threshold": 0.8,
+          "alert": "advisory"
+        }
+      ],
+      "dashboards": [
+        {
+          "name": "regional_health",
+          "url": "/monitoring-dashboard.html#regional",
+          "refreshInterval": 30000
+        },
+        {
+          "name": "replication_status",
+          "url": "/monitoring-dashboard.html#replication",
+          "refreshInterval": 10000
+        },
+        {
+          "name": "cdn_performance",
+          "url": "/monitoring-dashboard.html#cdn",
+          "refreshInterval": 60000
+        }
+      ]
+    },
+    "deployment": {
+      "strategy": "rolling_multi_region",
+      "sequence": [
+        {
+          "region": "us-west",
+          "order": 1,
+          "window": "00:00-06:00 UTC"
+        },
+        {
+          "region": "eu-central",
+          "order": 2,
+          "window": "06:00-12:00 UTC"
+        },
+        {
+          "region": "us-east",
+          "order": 3,
+          "window": "12:00-18:00 UTC"
+        }
+      ],
+      "validation": {
+        "preDeployment": true,
+        "smokeTests": true,
+        "healthCheckWait": 120000
+      }
+    },
+    "disasterRecovery": {
+      "rpo": 300000,
+      "rto": 60000,
+      "backupSchedule": "daily_03:00Z",
+      "backupRetention": 30,
+      "testFrequency": "weekly_sunday_22:00Z"
+    }
+  }
+}

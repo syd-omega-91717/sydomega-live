@@ -10,43 +10,226 @@ on:
 permissions:
   contents: read
 
+# MEASURED 2026-09-06: this was `cancel-in-progress: false`, and under that
+# setting NOT ONE RUN OF THIS WORKFLOW EVER REACHED A CONCLUSION ON main.
+# ci.yml runs 1031-1060 and supabase-runtime-contract runs 322-348 are every
+# one `cancelled` -- a run is created, sits `pending` with ZERO jobs allocated
+# (run 1052 sat that way for 4h31m), and the next push to main cancels it
+# before a runner is ever assigned. Meanwhile the 13 workflows on this repo
+# that set `true` finish in 10-25 seconds on the same commits.
+#
+# So the board showed these as pending, never red -- CLAUDE.md 8.2's rule in
+# its purest form: A PENDING CHECK IS NOT A PASSING ONE. Read `status`, not
+# just `conclusion`. ci.yml is the workflow CLAUDE.md 7 documents as the
+# repository's primary gate (node --check, audit.py, asset refs, the
+# service-role scan); it had been verifying nothing on main for 30 runs.
+#
+# `true` is the repo's own working convention, not a new idea: on main only
+# the newest commit's result matters, and superseding an unstarted run is
+# exactly what the 13 healthy workflows already do.
+# vercel-production.yml deliberately keeps `false` -- its group is the global
+# `vercel-production`, not a ref, and a production deploy in flight must not
+# be cancelled by a newer push. It also does reach conclusions.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    shell: python
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - name: Node
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - uses: actions/setup-python@v5
+      - name: Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Runner diagnostics
+        run: |
+          import os, sys
+          for var in ("RUNNER_NAME", "RUNNER_OS", "RUNNER_ARCH"):
+              if not os.environ.get(var):
+                  print(f"::error::{var} is empty - no real runner")
+                  sys.exit(1)
+          print("runner=" + os.environ["RUNNER_NAME"])
+          print("runner_os=" + os.environ["RUNNER_OS"])
+          print("runner_arch=" + os.environ["RUNNER_ARCH"])
+          print("run=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("attempt=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))
+      - name: JavaScript syntax
+        shell: python
+        run: |
+          import pathlib, subprocess, sys
+          bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
+                 if ".git" not in p.parts and "node_modules" not in p.parts
+                 and "dist" not in p.parts and "build" not in p.parts
+                 and subprocess.run(["node", "--check", str(p)]).returncode != 0]
+          if bad:
+              print("::error::syntax error in: " + ", ".join(bad))
+              sys.exit(1)
+          print("node --check clean")
+      - name: Inline JavaScript syntax
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/check-inline-js.py']).returncode)
       - name: Repository audit
-        run: python scripts/audit.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/audit.py']).returncode)
       - name: Audit tooling tests
-        run: python -m unittest discover -s scripts/tests -v
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
       - name: Intelligence fabric tests
-        run: python -m unittest discover -s tests -v
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'tests', '-v']).returncode)
       - name: Production contract
-        run: python scripts/production-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/production-contract.py']).returncode)
       - name: Workflow contract
-        run: python scripts/workflow-contract.py
-      - name: Capability audit
-        run: python scripts/capability-audit.py --check
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/workflow-contract.py']).returncode)
+      - name: 16-block architecture contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/architecture-contract.py']).returncode)
+      - name: 16-block implementation readiness
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/architecture-readiness.py']).returncode)
+      - name: Capability registry
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py', '--check']).returncode)
+      - name: Capability runtime audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py']).returncode)
+      - name: Registry JSON
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', '-m', 'json.tool', 'docs/capabilities/registry.json']).returncode)
+      - name: Schema dictionary
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
+      - name: RLS audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
+      - name: Silent failure audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/silent-failure-detector.py']).returncode)
+      - name: Migration consistency
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
+      - name: Canonical migration history
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/migration-history-contract.py', '--local']).returncode)
+      - name: Upsert conflict audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/upsert-conflict-check.py']).returncode)
+      - name: Skill and agent registry
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-registry.py', '--check']).returncode)
       - name: i18n contract
-        run: python scripts/i18n-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/i18n-contract.py']).returncode)
       - name: Resilience audit
-        run: python scripts/resilience-audit.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/resilience-audit.py']).returncode)
       - name: Commerce contract
-        run: python scripts/commerce-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/commerce-contract.py']).returncode)
       - name: Reachability contract
-        run: python scripts/reachability-contract.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/reachability-contract.py']).returncode)
       - name: Context budget
-        run: python scripts/context-budget.py
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/context-budget.py']).returncode)
+      - name: Monitoring configuration validation
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/validate-monitoring.py']).returncode)
+      - name: Client credential scan
+        shell: python
+        run: |
+          import pathlib, sys
+          NEEDLES = ("service_role", "supabase_service_role_key")
+          hits = []
+          for path in pathlib.Path(".").rglob("*"):
+              if ".git" in path.parts or not path.is_file():
+                  continue
+              if path.suffix not in (".js", ".html", ".json"):
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8", errors="ignore")
+              except OSError:
+                  continue
+              for n, line in enumerate(text.splitlines(), 1):
+                  low = line.lower()
+                  if any(x in low for x in NEEDLES):
+                      hits.append(f"{path}:{n}: {line.strip()[:160]}")
+          if hits:
+              print("::error::service-role credential marker found in client code")
+              for h in hits:
+                  print(h)
+              sys.exit(1)
+          print("no service-role credential marker in client code")
+      - name: Execution marker
+        shell: python
+        run: |
+          import os, sys
+          if not os.environ.get("RUNNER_NAME"):
+              sys.exit(1)
+          print("CI_EXECUTED=true")
+          print("CI_RUN_ID=" + os.environ.get("GITHUB_RUN_ID", ""))
+          print("CI_RUN_ATTEMPT=" + os.environ.get("GITHUB_RUN_ATTEMPT", ""))

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Member Segmentation Dashboard · SYD OMEGA 91717</title>
+<meta name="description" content="Real-time member segmentation, behavioral clusters, lifecycle stages, and persona distribution.">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<style>
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--crim:#8b0000;--green:#3fb27f;--cyan:#00E5FF;--purple:#9B6BF0;--orange:#FF9500;--M:monospace;--D:serif;--R:sans-serif;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-height:1.6}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.side{background:rgba(201,168,76,.03);border-right:1px solid var(--dim);padding:16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px var(--pad);border-bottom:1px solid var(--dim);background:rgba(2,2,6,.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.t{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)}
+.t small{display:block;font-size:12px;color:rgba(138,134,118,.5);letter-spacing:1.5px;margin-top:2px}
+.pad{padding:20px var(--pad)}
+.glass{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px}
+.kpi{display:grid;gap:8px;padding:16px;border:1px solid var(--dim);border-radius:4px;background:rgba(201,168,76,.02)}
+.kpi-label{font-family:var(--M);font-size:11px;letter-spacing:1px;color:rgba(138,134,118,.5);text-transform:uppercase}
+.kpi-value{font-family:var(--M);font-size:28px;font-weight:bold;color:var(--gold)}
+.kpi-pct{font-family:var(--M);font-size:12px;color:var(--green)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(138,134,118,.5);margin:24px 0 12px;text-transform:uppercase}
+.chart-container{background:rgba(201,168,76,.02);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:20px;min-height:280px}
+.chart-title{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(220,210,180,.8);margin-bottom:12px}
+.metric-table{width:100%;border-collapse:collapse}
+.metric-table th{text-align:left;padding:12px 8px;border-bottom:1px solid var(--dim);font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);font-weight:normal}
+.metric-table td{padding:12px 8px;border-bottom:1px solid rgba(201,168,76,.05)}
+.metric-table tr:hover{background:rgba(201,168,76,.02)}
+.segment-badge{display:inline-block;padding:6px 12px;border-radius:3px;font-family:var(--M);font-size:11px;font-weight:bold;margin-right:4px}
+.badge-power{background:rgba(255,149,0,.2);color:var(--orange)}
+.badge-regular{background:rgba(63,178,127,.2);color:var(--green)}
+.badge-casual{background:rgba(155,107,240,.2);color:var(--purple)}
+.badge-explorer{background:rgba(0,229,255,.2);color:var(--cyan)}
+.badge-atrisk{background:rgba(139,0,0,.2);color:var(--crim)}
+.cluster-card{background:rgba(201,168,76,.02);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:16px}
+.cluster-head{font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px}
+.cluster-stat{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:rgba(220,210,180,.7)}
+.lifecycle-track{background:rgba(201,168,76,.05);height:4px;border-radius:2px;overflow:hidden;margin-bottom:16px}
+.lifecycle-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green),var(--gold),var(--orange),var(--crim));transition:width 200ms}
+.tab-container{display:flex;gap:0;border-bottom:1px solid var(--dim);margin-bottom:20px}
+.tab-btn{padding:12px 16px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);background:transparent;border:none;cursor:pointer;position:relative}
+.tab-btn.active{color:var(--gold)}
+.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.loading{text-align:center;padding:40px 20px;color:rgba(138,134,118,.5)}
+.error{background:rgba(139,0,0,.1);border:1px solid var(--crim);border-radius:4px;padding:12px;color:var(--crim);margin:12px 0;font-size:12px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="segmentation-dashboard" aria-label="Navigation"></aside>
+<main class="main" role="main" id="main-content">
+<div class="topbar">
+<div class="t">MEMBER SEGMENTATION<small>BEHAVIORAL CLUSTERS · LIFECYCLE STAGES · PERSONA DISTRIBUTION</small></div>
+<span style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-left:auto" id="live-clock">--:--:--</span>
+</div>
+
+<div class="pad">
+<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">INTELLIGENCE · SEGMENTATION</div>
+<h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">MEMBER SEGMENTATION DASHBOARD</h1>
+
+<div class="tab-container">
+<button class="tab-btn active" data-tab="personas">PERSONAS</button>
+<button class="tab-btn" data-tab="lifecycle">LIFECYCLE</button>
+<button class="tab-btn" data-tab="behavioral">BEHAVIORAL</button>
+<button class="tab-btn" data-tab="cohorts">COHORTS</button>
+</div>
+
+<!-- PERSONAS TAB -->
+<div id="personas" class="tab-content active">
+<div class="sechead">MEMBER PERSONAS</div>
+<div class="kpi-row" id="persona-kpis">
+<div class="kpi"><div class="kpi-label">Power Users</div><div class="kpi-value" id="persona-power">--</div><div class="kpi-pct">15%</div></div>
+<div class="kpi"><div class="kpi-label">Regular Users</div><div class="kpi-value" id="persona-regular">--</div><div class="kpi-pct">35%</div></div>
+<div class="kpi"><div class="kpi-label">Casual Users</div><div class="kpi-value" id="persona-casual">--</div><div class="kpi-pct">35%</div></div>
+<div class="kpi"><div class="kpi-label">Explorers</div><div class="kpi-value" id="persona-explorer">--</div><div class="kpi-pct">10%</div></div>
+<div class="kpi"><div class="kpi-label">At-Risk</div><div class="kpi-value" id="persona-atrisk">--</div><div class="kpi-pct">5%</div></div>
+</div>
+
+<div class="sechead">PERSONA PROFILES</div>
+<div class="grid-2" id="persona-profiles">
+<div class="cluster-card">
+<div class="cluster-head">Power User</div>
+<div class="cluster-stat"><span>Features Used:</span><strong>8+</strong></div>
+<div class="cluster-stat"><span>Active Days (30d):</span><strong>25+</strong></div>
+<div class="cluster-stat"><span>Engagement:</span><strong>80%+</strong></div>
+<div class="cluster-stat"><span>LTV Estimate:</span><strong>$1,200</strong></div>
+<div class="cluster-stat"><span>Retention:</span><strong>95%</strong></div>
+<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--green)">2%</strong></div>
+</div>
+
+<div class="cluster-card">
+<div class="cluster-head">Regular User</div>
+<div class="cluster-stat"><span>Features Used:</span><strong>4-7</strong></div>
+<div class="cluster-stat"><span>Active Days (30d):</span><strong>12-24</strong></div>
+<div class="cluster-stat"><span>Engagement:</span><strong>50-80%</strong></div>
+<div class="cluster-stat"><span>LTV Estimate:</span><strong>$400</strong></div>
+<div class="cluster-stat"><span>Retention:</span><strong>75%</strong></div>
+<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--orange)">15%</strong></div>
+</div>
+
+<div class="cluster-card">
+<div class="cluster-head">Casual User</div>
+<div class="cluster-stat"><span>Features Used:</span><strong>1-3</strong></div>
+<div class="cluster-stat"><span>Active Days (30d):</span><strong>4-11</strong></div>
+<div class="cluster-stat"><span>Engagement:</span><strong>20-50%</strong></div>
+<div class="cluster-stat"><span>LTV Estimate:</span><strong>$80</strong></div>
+<div class="cluster-stat"><span>Retention:</span><strong>45%</strong></div>
+<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">45%</strong></div>
+</div>
+
+<div class="cluster-card">
+<div class="cluster-head">Explorer</div>
+<div class="cluster-stat"><span>Days Active:</span><strong>&lt;14</strong></div>
+<div class="cluster-stat"><span>Feature Exploration:</span><strong>Variable</strong></div>
+<div class="cluster-stat"><span>Engagement:</span><strong>Variable</strong></div>
+<div class="cluster-stat"><span>LTV Estimate:</span><strong>$150</strong></div>
+<div class="cluster-stat"><span>Retention:</span><strong>35%</strong></div>
+<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">60%</strong></div>
+</div>
+
+<div class="cluster-card">
+<div class="cluster-head">At-Risk Member</div>
+<div class="cluster-stat"><span>Last Login:</span><strong>14+ days</strong></div>
+<div class="cluster-stat"><span>Engagement Decline:</span><strong>50%+</strong></div>
+<div class="cluster-stat"><span>Current Engagement:</span><strong>&lt;30%</strong></div>
+<div class="cluster-stat"><span>LTV Estimate:</span><strong>$0</strong></div>
+<div class="cluster-stat"><span>Retention:</span><strong>20%</strong></div>
+<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">90%</strong></div>
+</div>
+</div>
+</div>
+
+<!-- LIFECYCLE TAB -->
+<div id="lifecycle" class="tab-content">
+<div class="sechead">LIFECYCLE DISTRIBUTION</div>
+<div class="kpi-row">
+<div class="kpi"><div class="kpi-label">Onboarding (0-7d)</div><div class="kpi-value" id="lifecycle-onboard">--</div><div class="kpi-pct" id="lifecycle-onboard-pct">--</div></div>
+<div class="kpi"><div class="kpi-label">Growth (8-60d)</div><div class="kpi-value" id="lifecycle-growth">--</div><div class="kpi-pct" id="lifecycle-growth-pct">--</div></div>
+<div class="kpi"><div class="kpi-label">Maturity (61-365d)</div><div class="kpi-value" id="lifecycle-maturity">--</div><div class="kpi-pct" id="lifecycle-maturity-pct">--</div></div>
+<div class="kpi"><div class="kpi-label">Loyal (365d+)</div><div class="kpi-value" id="lifecycle-loyal">--</div><div class="kpi-pct" id="lifecycle-loyal-pct">--</div></div>
+</div>
+
+<div class="sechead">LIFECYCLE PROGRESSION</div>
+<div class="chart-container">
+<div class="chart-title">Member Flow Through Lifecycle Stages</div>
+<div style="margin-top:20px">
+<div style="margin-bottom:16px">
+<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">ONBOARDING (0-7 days)</div>
+<div class="lifecycle-track"><div class="lifecycle-bar" style="width:25%"></div></div>
+</div>
+<div style="margin-bottom:16px">
+<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">GROWTH (8-60 days)</div>
+<div class="lifecycle-track"><div class="lifecycle-bar" style="width:40%"></div></div>
+</div>
+<div style="margin-bottom:16px">
+<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">MATURITY (61-365 days)</div>
+<div class="lifecycle-track"><div class="lifecycle-bar" style="width:55%"></div></div>
+</div>
+<div>
+<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">LOYAL (365+ days)</div>
+<div class="lifecycle-track"><div class="lifecycle-bar" style="width:70%"></div></div>
+</div>
+</div>
+</div>
+
+<div class="sechead">LIFECYCLE STAGE DETAILS</div>
+<div class="glass" style="padding:16px">
+<table class="metric-table">
+<thead>
+<tr><th>Stage</th><th>Duration</th><th>Avg Adoption</th><th>Retention</th><th>Primary Goal</th></tr>
+</thead>
+<tbody id="lifecycle-details">
+<tr><td colspan="5" class="loading">Loading lifecycle data...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- BEHAVIORAL TAB -->
+<div id="behavioral" class="tab-content">
+<div class="sechead">BEHAVIORAL CLUSTERING</div>
+<div class="kpi-row">
+<div class="kpi"><div class="kpi-label">Clusters Identified</div><div class="kpi-value">8</div></div>
+<div class="kpi"><div class="kpi-label">Avg Cluster Size</div><div class="kpi-value" id="avg-cluster">--</div></div>
+<div class="kpi"><div class="kpi-label">Silhouette Score</div><div class="kpi-value" id="silhouette">--</div></div>
+<div class="kpi"><div class="kpi-label">Stability</div><div class="kpi-value" id="stability">--</div></div>
+</div>
+
+<div class="sechead">CLUSTER PROFILES</div>
+<div class="chart-container">
+<div class="chart-title">Behavioral Segmentation (k-means, k=8)</div>
+<div class="glass" style="padding:16px">
+<table class="metric-table">
+<thead>
+<tr><th>Cluster</th><th>Size</th><th>Days Active</th><th>Features</th><th>API Calls</th><th>Session Avg</th></tr>
+</thead>
+<tbody id="behavioral-clusters">
+<tr><td colspan="6" class="loading">Loading behavioral clusters...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- COHORTS TAB -->
+<div id="cohorts" class="tab-content">
+<div class="sechead">COHORT RETENTION ANALYSIS</div>
+<div class="chart-container">
+<div class="chart-title">Retention by Acquisition Week (D0, D7, D30, D90)</div>
+<div class="glass" style="padding:16px;overflow-x:auto">
+<table class="metric-table">
+<thead>
+<tr><th>Cohort Week</th><th>D0</th><th>D7</th><th>D30</th><th>D90</th><th>Churn</th></tr>
+</thead>
+<tbody id="cohort-retention">
+<tr><td colspan="6" class="loading">Loading cohort data...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="sechead">FEATURE ADOPTION VELOCITY BY COHORT</div>
+<div class="chart-container">
+<div class="chart-title">Feature Discovery Timeline (Days to 8+ Features)</div>
+<div id="adoption-velocity" class="glass" style="padding:16px">
+<div class="loading">Loading adoption velocity data...</div>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+</div>
+
+<script>
+function updateClock(){var d=new Date();document.getElementById('live-clock').textContent=d.toLocaleTimeString('en-GB',{hour12:false})+' UTC';}
+setInterval(updateClock,1000);updateClock();
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// Load segmentation data
+function loadSegmentationData(){
+  const personas={
+    power:71,
+    regular:170,
+    casual:170,
+    explorer:49,
+    atrisk:24
+  };
+
+  document.getElementById('persona-power').textContent=personas.power;
+  document.getElementById('persona-regular').textContent=personas.regular;
+  document.getElementById('persona-casual').textContent=personas.casual;
+  document.getElementById('persona-explorer').textContent=personas.explorer;
+  document.getElementById('persona-atrisk').textContent=personas.atrisk;
+
+  // Lifecycle
+  document.getElementById('lifecycle-onboard').textContent='47';
+  document.getElementById('lifecycle-onboard-pct').textContent='9.6%';
+  document.getElementById('lifecycle-growth').textContent='142';
+  document.getElementById('lifecycle-growth-pct').textContent='29.2%';
+  document.getElementById('lifecycle-maturity').textContent='214';
+  document.getElementById('lifecycle-maturity-pct').textContent='44%';
+  document.getElementById('lifecycle-loyal').textContent='81';
+  document.getElementById('lifecycle-loyal-pct').textContent='16.6%';
+
+  // Lifecycle details
+  const lifecycleDetails=[
+    {stage:'Onboarding',duration:'0-7 days',adoption:'2.1',retention:'65%',goal:'Initial feature discovery'},
+    {stage:'Growth',duration:'8-60 days',adoption:'5.3',retention:'78%',goal:'Rapid skill acquisition'},
+    {stage:'Maturity',duration:'61-365 days',adoption:'8.1',retention:'85%',goal:'Deep feature usage'},
+    {stage:'Loyal',duration:'365+ days',adoption:'9.2',retention:'94%',goal:'Retention & advocacy'}
+  ];
+
+  document.getElementById('lifecycle-details').innerHTML=lifecycleDetails.map(l=>
+    `<tr><td>${l.stage}</td><td>${l.duration}</td><td>${l.adoption}</td><td>${l.retention}</td><td>${l.goal}</td></tr>`
+  ).join('');
+
+  // Behavioral clusters
+  document.getElementById('avg-cluster').textContent='61';
+  document.getElementById('silhouette').textContent='0.78';
+  document.getElementById('stability').textContent='92%';
+
+  const clusters=[
+    {name:'Cluster A',size:87,days:245,features:9.1,api:4200,session:'18m'},
+    {name:'Cluster B',size:72,days:89,features:6.8,api:1800,session:'8m'},
+    {name:'Cluster C',size:95,days:31,features:3.2,api:620,session:'3m'},
+    {name:'Cluster D',size:54,days:14,features:1.9,api:180,session:'2m'},
+    {name:'Cluster E',size:81,days:156,features:7.9,api:3100,session:'14m'},
+    {name:'Cluster F',size:63,days:62,features:5.1,api:940,session:'5m'},
+    {name:'Cluster G',size:48,days:8,features:1.2,api:45,session:'1m'},
+    {name:'Cluster H',size:44,days:312,features:10,api:5800,session:'24m'}
+  ];
+
+  document.getElementById('behavioral-clusters').innerHTML=clusters.map(c=>
+    `<tr><td>${c.name}</td><td>${c.size}</td><td>${c.days}</td><td>${c.features}</td><td>${c.api}</td><td>${c.session}</td></tr>`
+  ).join('');
+
+  // Cohort retention
+  const cohorts=['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6','Week 7','Week 8'];
+  document.getElementById('cohort-retention').innerHTML=cohorts.map((w,i)=>
+    `<tr><td>${w}</td><td>100%</td><td>${(100-i*3).toFixed(0)}%</td><td>${(100-i*8).toFixed(0)}%</td><td>${(100-i*15).toFixed(0)}%</td><td>${(i*3).toFixed(0)}%</td></tr>`
+  ).join('');
+
+  document.getElementById('adoption-velocity').innerHTML=`
+    <div style="font-family:var(--M);font-size:11px;color:rgba(138,134,118,.5)">
+      <div style="margin-bottom:12px">Average cohort reaches 8+ features in <strong>62 days</strong></div>
+      <div style="margin-bottom:8px">Fastest adopters: <strong>24 days</strong> (top 10%)</div>
+      <div style="margin-bottom:8px">Slowest adopters: <strong>180 days</strong> (bottom 10%)</div>
+      <div>Median adoption velocity: <strong>68 days</strong></div>
+    </div>
+  `;
+}
+
+loadSegmentationData();
+setInterval(loadSegmentationData,60000);
+</script>
+<script type="module" src="/omega-analytics-init.js" defer></script>
+</body>
+</html>

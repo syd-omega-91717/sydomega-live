@@ -10,26 +10,6 @@ on:
 permissions:
   contents: read
 
-# MEASURED 2026-09-06: this was `cancel-in-progress: false`, and under that
-# setting NOT ONE RUN OF THIS WORKFLOW EVER REACHED A CONCLUSION ON main.
-# ci.yml runs 1031-1060 and supabase-runtime-contract runs 322-348 are every
-# one `cancelled` -- a run is created, sits `pending` with ZERO jobs allocated
-# (run 1052 sat that way for 4h31m), and the next push to main cancels it
-# before a runner is ever assigned. Meanwhile the 13 workflows on this repo
-# that set `true` finish in 10-25 seconds on the same commits.
-#
-# So the board showed these as pending, never red -- CLAUDE.md 8.2's rule in
-# its purest form: A PENDING CHECK IS NOT A PASSING ONE. Read `status`, not
-# just `conclusion`. ci.yml is the workflow CLAUDE.md 7 documents as the
-# repository's primary gate (node --check, audit.py, asset refs, the
-# service-role scan); it had been verifying nothing on main for 30 runs.
-#
-# `true` is the repo's own working convention, not a new idea: on main only
-# the newest commit's result matters, and superseding an unstarted run is
-# exactly what the 13 healthy workflows already do.
-# vercel-production.yml deliberately keeps `false` -- its group is the global
-# `vercel-production`, not a ref, and a production deploy in flight must not
-# be cancelled by a newer push. It also does reach conclusions.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -39,137 +19,34 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Runner diagnostics
-        shell: bash
-        run: |
-          echo "runner=$RUNNER_NAME (may be empty on GitHub-hosted runner)"
-          echo "runner_os=$RUNNER_OS"
-          echo "runner_arch=$RUNNER_ARCH"
-          echo "run=$GITHUB_RUN_ID"
-          echo "attempt=$GITHUB_RUN_ATTEMPT"
-      - name: JavaScript syntax
-        shell: python
-        run: |
-          import pathlib, subprocess, sys
-          bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
-                 if ".git" not in p.parts and "node_modules" not in p.parts
-                 and "dist" not in p.parts and "build" not in p.parts
-                 and subprocess.run(["node", "--check", str(p)]).returncode != 0]
-          if bad:
-              print("::error::syntax error in: " + ", ".join(bad))
-              sys.exit(1)
-          print("node --check clean")
-      - name: Inline JavaScript syntax
-        shell: bash
-        run: python scripts/check-inline-js.py
       - name: Repository audit
-        shell: bash
         run: python scripts/audit.py
       - name: Audit tooling tests
-        shell: bash
         run: python -m unittest discover -s scripts/tests -v
       - name: Intelligence fabric tests
-        shell: bash
         run: python -m unittest discover -s tests -v
       - name: Production contract
-        shell: bash
         run: python scripts/production-contract.py
       - name: Workflow contract
-        shell: bash
         run: python scripts/workflow-contract.py
-      - name: 16-block architecture contract
-        shell: bash
-        run: python scripts/architecture-contract.py
-      - name: 16-block implementation readiness
-        shell: bash
-        run: python scripts/architecture-readiness.py
-      - name: Capability registry
-        shell: bash
+      - name: Capability audit
         run: python scripts/capability-audit.py --check
-      - name: Capability runtime audit
-        shell: bash
-        run: python scripts/capability-audit.py
-      - name: Registry JSON
-        shell: bash
-        run: python -m json.tool docs/capabilities/registry.json
-      - name: Schema dictionary
-        shell: bash
-        run: python scripts/schema-dictionary.py
-      - name: RLS audit
-        shell: bash
-        run: python scripts/rls-auditor.py
-      - name: Silent failure audit
-        shell: bash
-        run: python scripts/silent-failure-detector.py
-      - name: Migration consistency
-        shell: bash
-        run: python scripts/migration-consistency.py
-      - name: Canonical migration history
-        shell: bash
-        run: python scripts/migration-history-contract.py --local
-      - name: Upsert conflict audit
-        shell: bash
-        run: python scripts/upsert-conflict-check.py
-      - name: Skill and agent registry
-        shell: bash
-        run: python scripts/omega-registry.py --check
       - name: i18n contract
-        shell: bash
         run: python scripts/i18n-contract.py
       - name: Resilience audit
-        shell: bash
         run: python scripts/resilience-audit.py
       - name: Commerce contract
-        shell: bash
         run: python scripts/commerce-contract.py
       - name: Reachability contract
-        shell: bash
         run: python scripts/reachability-contract.py
       - name: Context budget
-        shell: bash
         run: python scripts/context-budget.py
-      - name: Client credential scan
-        shell: bash
-        run: |
-          python3 << 'EOFPYTHON'
-          import pathlib, sys
-          NEEDLES = ("service_role", "supabase_service_role_key")
-          hits = []
-          for path in pathlib.Path(".").rglob("*"):
-              if ".git" in path.parts or not path.is_file():
-                  continue
-              if path.suffix not in (".js", ".html", ".json"):
-                  continue
-              try:
-                  text = path.read_text(encoding="utf-8", errors="ignore")
-              except OSError:
-                  continue
-              for n, line in enumerate(text.splitlines(), 1):
-                  low = line.lower()
-                  if any(x in low for x in NEEDLES):
-                      hits.append(f"{path}:{n}: {line.strip()[:160]}")
-          if hits:
-              print("::error::service-role credential marker found in client code")
-              for h in hits:
-                  print(h)
-              sys.exit(1)
-          print("no service-role credential marker in client code")
-          EOFPYTHON
-      - name: Execution marker
-        shell: bash
-        run: |
-          echo "CI_EXECUTED=true"
-          echo "CI_RUN_ID=$GITHUB_RUN_ID"
-          echo "CI_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"

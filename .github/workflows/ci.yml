@@ -34,10 +34,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   verify:
     runs-on: ubuntu-latest

@@ -2192,3 +2192,21 @@ setTimeout(function(){
      synchronously further up, because a dynamic script like this one is async and cannot be
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
+
+  /* Ω Cache Optimizer — aggressive static asset caching, IndexedDB support, prefetch */
+  if(!document.querySelector('script[data-omega-cache]')){var _occh=document.createElement('script');_occh.src='/omega-cache-optimizer.js';_occh.setAttribute('data-omega-cache','1');_occh.defer=true;__omegaAppend(_occh);}
+
+  /* Ω Resilience Engine — automatic retry logic, circuit breaker, graceful degradation */
+  if(!document.querySelector('script[data-omega-resilience]')){var _oresil=document.createElement('script');_oresil.src='/omega-resilience.js';_oresil.setAttribute('data-omega-resilience','1');_oresil.defer=true;__omegaAppend(_oresil);}
+
+  /* Ω WCAG AAA Enhancement — beyond AA compliance, enhanced focus, skip links, a11y */
+  if(!document.querySelector('script[data-omega-wcag-aaa]')){var _owcag=document.createElement('script');_owcag.src='/omega-wcag-aaa.js';_owcag.setAttribute('data-omega-wcag-aaa','1');_owcag.defer=true;__omegaAppend(_owcag);}
+
+  /* Ω Performance Monitor — Core Web Vitals tracking, API timing, error metrics */
+  if(!document.querySelector('script[data-omega-monitoring]')){var _omon=document.createElement('script');_omon.src='/omega-monitoring.js';_omon.setAttribute('data-omega-monitoring','1');_omon.defer=true;__omegaAppend(_omon);}
+
+  /* Ω Security Hardening — input sanitization, XSS prevention, secure storage */
+  if(!document.querySelector('script[data-omega-security]')){var _osec=document.createElement('script');_osec.src='/omega-security.js';_osec.setAttribute('data-omega-security','1');_osec.defer=true;__omegaAppend(_osec);}
+
+  /* Ω Enhanced Search — indexed search, relevance ranking, smart highlighting */
+  if(!document.querySelector('script[data-omega-search-enhanced]')){var _osea=document.createElement('script');_osea.src='/omega-search-enhanced.js';_osea.setAttribute('data-omega-search-enhanced','1');_osea.defer=true;__omegaAppend(_osea);}

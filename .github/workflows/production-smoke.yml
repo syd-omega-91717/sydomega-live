@@ -2,23 +2,69 @@ name: Production Smoke
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   schedule:
     - cron: "17 9 * * *"
 
 permissions:
   contents: read
 
+concurrency:
+  group: production-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
+      - name: Wait for Vercel production propagation
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys
+          import time
+          import urllib.error
+          import urllib.request
+
+          urls = [
+              "https://sydomega.com/healthz.html",
+              "https://www.sydomega.com/healthz.html",
+          ]
+          deadline = time.time() + 600
+          last_error = None
+          while time.time() < deadline:
+              ok = True
+              for url in urls:
+                  try:
+                      req = urllib.request.Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.1"})
+                      with urllib.request.urlopen(req, timeout=15) as response:
+                          body = response.read(4096)
+                          status = response.status
+                      print(f"PROPAGATION url={url} status={status} bytes={len(body)}")
+                      if status < 200 or status >= 400 or not body:
+                          ok = False
+                  except Exception as exc:
+                      ok = False
+                      last_error = f"{url}: {exc}"
+              if ok:
+                  print("VERCEL_PROPAGATION=READY")
+                  sys.exit(0)
+              time.sleep(20)
+          print(f"::error::Vercel production propagation did not become reachable: {last_error or 'unexpected response'}")
+          sys.exit(1)
+          PY
+
       - name: Verify production HTTP surfaces
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, sys, urllib.request
+          import sys
+          import urllib.request
 
           urls = [
               "https://sydomega.com/",
@@ -29,12 +75,12 @@ jobs:
           failures = []
           for url in urls:
               try:
-                  req = urllib.request.Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0"})
-                  with urllib.request.urlopen(req, timeout=20) as r:
-                      body = r.read(4096)
-                      status = r.status
-                      ctype = r.headers.get("content-type", "")
-                  print(f"SMOKE url={url} status={status} content_type={ctype}")
+                  req = urllib.request.Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.1"})
+                  with urllib.request.urlopen(req, timeout=20) as response:
+                      body = response.read(4096)
+                      status = response.status
+                      ctype = response.headers.get("content-type", "")
+                  print(f"SMOKE url={url} status={status} content_type={ctype} bytes={len(body)}")
                   if status < 200 or status >= 400:
                       failures.append(f"{url}: HTTP {status}")
                   if not body:
@@ -50,23 +96,25 @@ jobs:
           print("PRODUCTION_SMOKE=PASS")
           PY
 
-      - name: Verify production Supabase endpoint
+      - name: Verify canonical Supabase health
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
+          import urllib.error
           import urllib.request
-          url = "https://ydqhzvvoyufiiqvzcjns.supabase.co/rest/v1/"
-          req = urllib.request.Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0"})
-          try:
-              with urllib.request.urlopen(req, timeout=20) as r:
-                  print(f"SUPABASE_HTTP status={r.status}")
-                  if r.status >= 500:
-                      raise SystemExit("Supabase returned server error")
-          except urllib.error.HTTPError as e:
-              # 401/403 is expected without a client key; 5xx is not.
-              print(f"SUPABASE_HTTP status={e.code}")
-              if e.code >= 500:
-                  raise
+
+          base = "https://ydqhzvvoyufiiqvzcjns.supabase.co"
+          checks = [f"{base}/auth/v1/health", f"{base}/rest/v1/"]
+          for url in checks:
+              req = urllib.request.Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.1"})
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as response:
+                      status = response.status
+              except urllib.error.HTTPError as exc:
+                  status = exc.code
+              print(f"SUPABASE_HTTP url={url} status={status}")
+              if status >= 500:
+                  raise SystemExit(f"Supabase returned server error: {status}")
           print("SUPABASE_ENDPOINT=REACHABLE")
           PY

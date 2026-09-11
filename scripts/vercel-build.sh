@@ -29,6 +29,8 @@ find . -type f \
   ! -path './supabase/*' \
   ! -path './core/*' \
   ! -path './docs/*' \
+  ! -path './vendor/*' \
+  ! -path './i18n/*' \
   ! -name 'vercel.json' ! -name 'package.json' \
   -print0 | while IFS= read -r -d '' file; do
     target="public/${file#./}"
@@ -60,6 +62,7 @@ EOF
 # discovered by the static reference scan above.
 for dir in vendor i18n; do
   [ -d "${dir}" ] || continue
+  cp -r "${dir}" "public/${dir}"
 done
 [ -f public/vendor/supabase-js.js ] || { echo 'VERCEL_BUILD=FAIL missing public/vendor/supabase-js.js'; exit 1; }
 for lang_pack in i18n/*.json; do

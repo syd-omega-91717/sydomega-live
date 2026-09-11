@@ -36,7 +36,7 @@ concurrency:
 
 defaults:
   run:
-    shell: python
+    shell: bash
 
 jobs:
   verify:
@@ -58,12 +58,11 @@ jobs:
       - name: Runner diagnostics
         shell: bash
         run: |
-          echo "runner=$RUNNER_NAME"
+          echo "runner=$RUNNER_NAME (may be empty on GitHub-hosted runner)"
           echo "runner_os=$RUNNER_OS"
           echo "runner_arch=$RUNNER_ARCH"
           echo "run=$GITHUB_RUN_ID"
           echo "attempt=$GITHUB_RUN_ATTEMPT"
-          [ -n "$RUNNER_NAME" ] || echo "warning: RUNNER_NAME not set"
       - name: JavaScript syntax
         shell: python
         run: |
@@ -77,123 +76,78 @@ jobs:
               sys.exit(1)
           print("node --check clean")
       - name: Inline JavaScript syntax
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/check-inline-js.py']).returncode)
+        shell: bash
+        run: python scripts/check-inline-js.py
       - name: Repository audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/audit.py']).returncode)
+        shell: bash
+        run: python scripts/audit.py
       - name: Audit tooling tests
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-v']).returncode)
+        shell: bash
+        run: python -m unittest discover -s scripts/tests -v
       - name: Intelligence fabric tests
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'tests', '-v']).returncode)
+        shell: bash
+        run: python -m unittest discover -s tests -v
       - name: Production contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/production-contract.py']).returncode)
+        shell: bash
+        run: python scripts/production-contract.py
       - name: Workflow contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/workflow-contract.py']).returncode)
+        shell: bash
+        run: python scripts/workflow-contract.py
       - name: 16-block architecture contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/architecture-contract.py']).returncode)
+        shell: bash
+        run: python scripts/architecture-contract.py
       - name: 16-block implementation readiness
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/architecture-readiness.py']).returncode)
+        shell: bash
+        run: python scripts/architecture-readiness.py
       - name: Capability registry
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py', '--check']).returncode)
+        shell: bash
+        run: python scripts/capability-audit.py --check
       - name: Capability runtime audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/capability-audit.py']).returncode)
+        shell: bash
+        run: python scripts/capability-audit.py
       - name: Registry JSON
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', '-m', 'json.tool', 'docs/capabilities/registry.json']).returncode)
+        shell: bash
+        run: python -m json.tool docs/capabilities/registry.json
       - name: Schema dictionary
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
+        shell: bash
+        run: python scripts/schema-dictionary.py
       - name: RLS audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
+        shell: bash
+        run: python scripts/rls-auditor.py
       - name: Silent failure audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/silent-failure-detector.py']).returncode)
+        shell: bash
+        run: python scripts/silent-failure-detector.py
       - name: Migration consistency
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/migration-consistency.py']).returncode)
+        shell: bash
+        run: python scripts/migration-consistency.py
       - name: Canonical migration history
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/migration-history-contract.py', '--local']).returncode)
+        shell: bash
+        run: python scripts/migration-history-contract.py --local
       - name: Upsert conflict audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/upsert-conflict-check.py']).returncode)
+        shell: bash
+        run: python scripts/upsert-conflict-check.py
       - name: Skill and agent registry
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/omega-registry.py', '--check']).returncode)
+        shell: bash
+        run: python scripts/omega-registry.py --check
       - name: i18n contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/i18n-contract.py']).returncode)
+        shell: bash
+        run: python scripts/i18n-contract.py
       - name: Resilience audit
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/resilience-audit.py']).returncode)
+        shell: bash
+        run: python scripts/resilience-audit.py
       - name: Commerce contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/commerce-contract.py']).returncode)
+        shell: bash
+        run: python scripts/commerce-contract.py
       - name: Reachability contract
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/reachability-contract.py']).returncode)
+        shell: bash
+        run: python scripts/reachability-contract.py
       - name: Context budget
-        shell: python
-        run: |
-          import subprocess, sys
-          sys.exit(subprocess.run(['python', 'scripts/context-budget.py']).returncode)
+        shell: bash
+        run: python scripts/context-budget.py
       - name: Client credential scan
-        shell: python
+        shell: bash
         run: |
+          python3 << 'EOFPYTHON'
           import pathlib, sys
           NEEDLES = ("service_role", "supabase_service_role_key")
           hits = []
@@ -216,6 +170,7 @@ jobs:
                   print(h)
               sys.exit(1)
           print("no service-role credential marker in client code")
+          EOFPYTHON
       - name: Execution marker
         shell: bash
         run: |

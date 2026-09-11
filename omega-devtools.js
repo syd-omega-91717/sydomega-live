@@ -17,7 +17,7 @@
         context
       };
       
-      console.error('🔴 Ω Error Report:', report);
+      console.error('[ERROR] Ω Error Report:', report);
       
       // Could send to backend error tracking service
       return report;
@@ -29,14 +29,14 @@
       const result = fn();
       const duration = performance.now() - start;
       
-      console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
+      console.log(`⏱︎ ${name}: ${duration.toFixed(2)}ms`);
       return result;
     },
 
     // DOM inspector
     inspect: (selector) => {
       const elements = document.querySelectorAll(selector);
-      console.log(`🔍 Found ${elements.length} elements matching "${selector}"`);
+      console.log(`[INSPECT] Found ${elements.length} elements matching "${selector}"`);
       elements.forEach((el, i) => {
         console.log(`  ${i + 1}. ${el.tagName}`, el);
       });
@@ -55,14 +55,14 @@
         return type;
       };
       
-      console.log('📊 State:', inspect(obj, depth));
+      console.log('[STATE] State:', inspect(obj, depth));
       return obj;
     },
 
     // API call logger
     logApiCall: (method, url, response) => {
       const status = response.status;
-      const emoji = status >= 200 && status < 300 ? '✅' : '❌';
+      const emoji = status >= 200 && status < 300 ? '✅︎' : '❌︎';
       console.log(`${emoji} ${method} ${url} - ${status}`);
     },
 
@@ -72,14 +72,14 @@
       mark: (name) => {
         const time = performance.now();
         this.marks.push({name, time});
-        console.log(`⏳ Mark: ${name} @ ${time.toFixed(2)}ms`);
+        console.log(`⏳︎ Mark: ${name} @ ${time.toFixed(2)}ms`);
       },
       measure: (startMark, endMark) => {
         const start = this.marks.find(m => m.name === startMark);
         const end = this.marks.find(m => m.name === endMark);
         if(start && end) {
           const duration = end.time - start.time;
-          console.log(`📈 ${startMark} → ${endMark}: ${duration.toFixed(2)}ms`);
+          console.log(`[TIMELINE] ${startMark} → ${endMark}: ${duration.toFixed(2)}ms`);
           return duration;
         }
       }

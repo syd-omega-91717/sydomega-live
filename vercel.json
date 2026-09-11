@@ -36,10 +36,6 @@
     {
       "source":"/manifest.json",
       "headers":[{"key":"Cache-Control","value":"public, max-age=3600"}]
-    },
-    {
-      "source":"/(admin|owner|private|api)(.*)",
-      "headers":[{"key":"X-Robots-Tag","value":"noindex, nofollow, noarchive"}]
     }
   ]
 }

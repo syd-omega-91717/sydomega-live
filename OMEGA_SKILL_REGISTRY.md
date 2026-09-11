@@ -7,7 +7,7 @@ Regenerate with `python3 scripts/omega-registry.py`;
 Every number here is read off the filesystem at generation time. It exists
 because the hand-written equivalents all drifted: `.claude/skills/README.md`
 said "Four skills", `CLAUDE.md` §10 said "Five", §11 said "4-skill pipeline",
-and 19 exist.
+and 22 exist.
 
 ## 1 · Skills
 
@@ -28,7 +28,10 @@ effectively invisible unless invoked by exact name.
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
+| `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | 2026-09-10 |
+| `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
+| `omega-production-verification` | yes | — | 909 | **nothing** | 2026-09-10 |
 | `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
@@ -38,8 +41,11 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**19 skills, ~34,585 tokens** if every SKILL.md were read in one
+**22 skills, ~37,840 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
+
+> **2 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`. Reachable by description-matching, but a reader of `CLAUDE.md` or
+> `.claude/skills/README.md` will not learn they exist.
 
 ### Purpose of each
 
@@ -54,7 +60,10 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`i18n`** — Work on sydomega-live's translation layer — i18n.js (the inlined English key set T_EN) and i18n/{ar,es,fr,hi,nl,zh}.json.
 - **`image-pipeline`** — Produce, add, or change imagery for sydomega-live — procedural SVG, canvas-rendered PNG (share cards, QR, exports), PWA/favicon raster, and…
 - **`interface-guidelines`** — Audit sydomega-live against the Web Interface Guidelines, using only the rules that apply to a no-build vanilla-HTML stack.
+- **`omega-cinematic-system`** — Production visual design and motion system for Ω SYD OMEGA 91717.
+- **`omega-orchestrator`** — Autonomous production workflow for Ω SYD OMEGA 91717.
 - **`omega-platform`** — "Cross-discipline production engineering skill for SYD OMEGA 91717.
+- **`omega-production-verification`** — Evidence-first verification workflow for Ω SYD OMEGA 91717 covering static checks, browser behavior, Supabase contracts, Vercel deployment state, links,…
 - **`runtime-verify`** — Verify a change to sydomega-live at runtime — render the real capability entrypoints in a headless browser with scripts/verify-runtime.js — and keep…
 - **`subscriber-portal`** — Surfaces an already-built, human-approved feature inside the real subscriber-facing UI (dashboard/hub pages, existing tier and notification systems) —…
 - **`supabase`** — "Use when doing ANY task involving Supabase.
@@ -75,6 +84,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
 | `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,524 | 2026-08-18 |
+| `omega-architect` | --- | 585 | 2026-09-10 |
 
 ## 3 · Platform census
 
@@ -82,15 +92,15 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 189 |
-| pages loading `bg.js` | 189 of 189 |
+| `.html` pages | 195 |
+| pages loading `bg.js` | 194 of 195 |
 | `omega-*.js` modules | 119 (1109 KB) |
 | root `.js` files | 128 |
 | `supabase/*.sql` (flat bag) | 126 |
 | `supabase/migrations/*.sql` | 171 (106 numbered `NNNN_`, 65 timestamped) |
 | Edge Functions | 11 |
-| skills | 19 |
-| agent definitions | 1 |
+| skills | 22 |
+| agent definitions | 2 |
 
 ### Translation coverage
 
@@ -115,7 +125,6 @@ end-to-end for the first time"*. The 77 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 171. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 189 pages.** It is a hard single point of
-failure for the entire platform, not a partial one — if it fails to parse, every
-page is down. This is why `node --check` on it gates CI.
+**1 page(s) do not load `bg.js`** and therefore get no design system, no
+approval guard, and no platform modules.
 

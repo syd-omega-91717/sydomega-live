@@ -29,6 +29,8 @@ find . -type f \
   ! -path './supabase/*' \
   ! -path './core/*' \
   ! -path './docs/*' \
+  ! -path './vendor/*' \
+  ! -path './i18n/*' \
   ! -name 'vercel.json' ! -name 'package.json' \
   -print0 | while IFS= read -r -d '' file; do
     target="public/${file#./}"
@@ -37,6 +39,12 @@ find . -type f \
   done
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
+
+# Copy directories that cannot be copied by the extension-based find above.
+for dir in vendor i18n; do
+  [ -d "${dir}" ] || continue
+  cp -r "${dir}" "public/${dir}"
+done
 
 # The emitted tree must be self-contained. This catches dropped directories,
 # renamed assets, and broken absolute local references before Vercel publishes.

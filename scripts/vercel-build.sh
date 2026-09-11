@@ -48,6 +48,9 @@ EOF
 
 # Runtime-critical paths are sometimes assembled dynamically and cannot be
 # discovered by the static reference scan above.
+for dir in vendor i18n; do
+  [ -d "${dir}" ] || continue
+done
 [ -f public/vendor/supabase-js.js ] || { echo 'VERCEL_BUILD=FAIL missing public/vendor/supabase-js.js'; exit 1; }
 for lang_pack in i18n/*.json; do
   [ -e "${lang_pack}" ] || break

@@ -10,10 +10,9 @@ on:
 permissions:
   contents: read
 
-# Concurrency disabled - testing if this is the cause of early failures
-# concurrency:
-#   group: ci-${{ github.ref }}
-#   cancel-in-progress: true
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:

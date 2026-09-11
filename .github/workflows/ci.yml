@@ -194,6 +194,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/context-budget.py']).returncode)
+      - name: Monitoring configuration validation
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/validate-monitoring.py']).returncode)
       - name: Client credential scan
         shell: python
         run: |

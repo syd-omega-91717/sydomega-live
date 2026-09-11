@@ -40,6 +40,13 @@ find . -type f \
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
 
+# Copy directories that cannot be copied by the extension-based find above.
+# This must happen before the reachability check so vendor/ and i18n/ are present.
+for dir in vendor i18n; do
+  [ -d "${dir}" ] || continue
+  cp -r "${dir}" "public/${dir}"
+done
+
 # The emitted tree must be self-contained. This catches dropped directories,
 # renamed assets, and broken absolute local references before Vercel publishes.
 missing_refs=0
@@ -60,10 +67,6 @@ EOF
 
 # Runtime-critical paths are sometimes assembled dynamically and cannot be
 # discovered by the static reference scan above.
-for dir in vendor i18n; do
-  [ -d "${dir}" ] || continue
-  cp -r "${dir}" "public/${dir}"
-done
 [ -f public/vendor/supabase-js.js ] || { echo 'VERCEL_BUILD=FAIL missing public/vendor/supabase-js.js'; exit 1; }
 for lang_pack in i18n/*.json; do
   [ -e "${lang_pack}" ] || break

@@ -2210,3 +2210,15 @@ setTimeout(function(){
 
   /* Ω Enhanced Search — indexed search, relevance ranking, smart highlighting */
   if(!document.querySelector('script[data-omega-search-enhanced]')){var _osea=document.createElement('script');_osea.src='/omega-search-enhanced.js';_osea.setAttribute('data-omega-search-enhanced','1');_osea.defer=true;__omegaAppend(_osea);}
+
+  /* Ω Query Optimizer — batch queries, connection pooling, lazy loading */
+  if(!document.querySelector('script[data-omega-query-opt]')){var _oqo=document.createElement('script');_oqo.src='/omega-query-optimizer.js';_oqo.setAttribute('data-omega-query-opt','1');_oqo.defer=true;__omegaAppend(_oqo);}
+
+  /* Ω Animation Optimizer — GPU acceleration, frame rate control, motion-safe */
+  if(!document.querySelector('script[data-omega-anim-opt]')){var _oao=document.createElement('script');_oao.src='/omega-animation-optimizer.js';_oao.setAttribute('data-omega-anim-opt','1');_oao.defer=true;__omegaAppend(_oao);}
+
+  /* Ω Sync Engine — offline-first sync, conflict resolution, cross-tab broadcast */
+  if(!document.querySelector('script[data-omega-sync]')){var _osyn=document.createElement('script');_osyn.src='/omega-sync-engine.js';_osyn.setAttribute('data-omega-sync','1');_osyn.defer=true;__omegaAppend(_osyn);}
+
+  /* Ω DevTools — performance profiling, error reporting, debugging utilities */
+  if(!document.querySelector('script[data-omega-devtools]')){var _odev=document.createElement('script');_odev.src='/omega-devtools.js';_odev.setAttribute('data-omega-devtools','1');_odev.defer=true;__omegaAppend(_odev);}

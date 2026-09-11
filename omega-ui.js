@@ -230,7 +230,12 @@
     btn.id='omega-dash-link';
     btn.href='/dashboard.html';
     btn.title='Back to Command Bridge';
-    btn.setAttribute('aria-label','Command Bridge');
+    /* WCAG 2.5.3 Label in Name: the accessible name must CONTAIN the visible
+       text. This read 'Command Bridge' while the button shows 'Ω CMD', so a
+       voice-control user saying "click CMD" could not activate it, and
+       Lighthouse flagged label-content-name-mismatch on every page that gets
+       this link. Keep the visible string first, then the description. */
+    btn.setAttribute('aria-label','Ω CMD · Back to Command Bridge');
     btn.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap;flex-shrink:0';
     btn.textContent='\u03A9 CMD';
     btn.addEventListener('mouseenter',function(){btn.style.color='var(--gold,#C9A84C)';btn.style.borderColor='rgba(201,168,76,.3)';});

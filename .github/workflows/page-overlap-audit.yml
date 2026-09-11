@@ -19,11 +19,24 @@ concurrency:
 jobs:
   overlap:
     name: Detect overlapping pages
-    runs-on: [self-hosted, Windows, X64]
+    # Was [self-hosted, Windows, X64]. That runner is dead -- runner-probe.yml,
+    # whose only job is to prove it works, has never completed a run, and this
+    # audit therefore never executed ONCE: measured in its own history as
+    # 10m13s / 11m44s / 11m52s of queueing before timing out. A check that
+    # never runs is not a lenient check, it is an absent one.
+    #
+    # The script is platform-independent and was verified on Linux before this
+    # change: `python3 scripts/page-overlap-audit.py` -> "PAGE OVERLAP AUDIT:
+    # PASS (advisory; no files modified)", exit 0. `shell: pwsh` went with the
+    # Windows runner and is dropped; bash is the default here.
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Run overlap audit
-        shell: pwsh
         run: python scripts/page-overlap-audit.py

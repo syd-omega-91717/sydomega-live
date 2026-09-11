@@ -114,7 +114,7 @@ function __omegaAppend(el){
 /* Inject shared class definitions + load external stylesheet */
 (function(){
   if(document.getElementById('omega-global-css')) return;
-  var sharedCSS='.tab-bar,.tab-nav{overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none}.tab-row{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,25vw,280px),1fr));gap:12px;margin-bottom:16px}.card-title{position:relative;padding-left:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}.card-body{font-size:13px;color:var(--muted);line-height:1.6}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px;align-items:start}.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.btn-gold{color:var(--gold);border-color:rgba(201,168,76,.3)}.btn-gold:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}.btn-cyan{color:var(--cyan);border-color:rgba(0,229,255,.2)}.btn-cyan:hover{background:rgba(0,229,255,.06);border-color:var(--cyan)}.btn-crim{color:var(--crim);border-color:rgba(139,0,0,.3)}.btn-crim:hover{background:rgba(139,0,0,.08);border-color:var(--crim)}.tbl-head{display:grid;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.08)}.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}.tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}.tbl-row:hover{background:rgba(201,168,76,.02)}.tbl-row:last-child{border-bottom:none}.bar-track{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}.chip{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:3px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:inline-block}.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card-edge{width:3px;background:var(--card-accent,var(--gold))}';
+  var sharedCSS='.tab-bar,.tab-nav{overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none}.tab-row{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,25vw,280px),1fr));gap:12px;margin-bottom:16px}.card-title{position:relative;padding-left:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}.card-body{font-size:13px;color:var(--muted);line-height:1.6}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px;align-items:start}.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.btn-gold{background:none;color:var(--gold);border-color:rgba(201,168,76,.3)}.btn-gold:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}.btn-cyan{background:none;color:var(--cyan);border-color:rgba(0,229,255,.2)}.btn-cyan:hover{background:rgba(0,229,255,.06);border-color:var(--cyan)}.btn-crim{background:none;color:var(--crim);border-color:rgba(139,0,0,.3)}.btn-crim:hover{background:rgba(139,0,0,.08);border-color:var(--crim)}.tbl-head{display:grid;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.08)}.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}.tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}.tbl-row:hover{background:rgba(201,168,76,.02)}.tbl-row:last-child{border-bottom:none}.bar-track{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}.chip{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:3px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:inline-block}.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card-edge{width:3px;background:var(--card-accent,var(--gold))}';
   var st=document.createElement('style');st.id='omega-global-css';st.textContent=sharedCSS;
   (document.head||document.documentElement).appendChild(st);
   var link=document.createElement('link');
@@ -537,6 +537,39 @@ function __omegaAppend(el){
      - fails silently if the RPC or network is unavailable
      - sends no form data, tokens, or page text -- message/source/line only
    ========================================================================= */
+
+/* =========================================================================
+   SILENT-WRITE GUARD  --  window.__omegaWriteFail(op, result) -> boolean
+   Supabase RESOLVES to {data:null,error}; it does not throw. So a failed
+   write takes the success path unless the result is inspected, and a
+   try/catch around one catches nothing. That is the single most repeated
+   root cause of real bugs in this repo (CLAUDE.md section 8.1, class 1).
+   Every non-read call in this file routes its result through here, so a
+   failure is recorded instead of lost. Returns true when the write failed,
+   so a caller can branch on it.
+   Deliberately never throws: observability must not break its caller, and
+   window.omegaRuntime is absent until assets/js/omega-runtime-observability.js
+   loads (the built artifact injects it; a raw source page may not have it).
+   ========================================================================= */
+(function () {
+  'use strict';
+  if (window.__omegaWriteFail) return;
+  window.__omegaWriteFail = function (op, res) {
+    var err = res && res.error;
+    if (!err) return false;
+    try {
+      if (window.omegaRuntime && typeof window.omegaRuntime.record === 'function') {
+        window.omegaRuntime.record('write_failed', {
+          op: String(op).slice(0, 64),
+          code: err.code || '',
+          message: String(err.message || '').slice(0, 200)
+        });
+      }
+    } catch (e) { /* never let recording a failure become a second failure */ }
+    return true;
+  };
+})();
+
 (function () {
   'use strict';
   if (window.__omegaErrHooked) return;
@@ -810,6 +843,13 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
    Two modules must never share a guard attribute; the guard is the module's
    identity, not the feature area's. */
 (function(){if(!document.querySelector('script[data-omega-emblem-living]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblem-living','1');__omegaAppend(s);}})();
+
+/* Keyboard-operable click targets. Its guard attribute is its OWN identity,
+   not the feature area's -- section 8.1 class 5b: two modules behind one
+   data-omega-* attribute means the first to run permanently satisfies the
+   second's guard and the second never loads on any page. This is distinct
+   from data-omega-keyboard (omega-keyboard.js), which is the shortcut engine. */
+(function(){if(!document.querySelector('script[data-omega-kbd-operable]')){var s=document.createElement('script');s.src='/omega-a11y-controls.js';s.setAttribute('data-omega-kbd-operable','1');s.defer=true;__omegaAppend(s);}})();
 /* ===== SOVEREIGN CONSTELLATION -- the ring-of-emblems diagram ===== */
 (function(){if(!document.querySelector('script[data-omega-constellation-js]')){var s=document.createElement('script');s.src='/omega-constellation.js';s.setAttribute('data-omega-constellation-js','1');__omegaAppend(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */
@@ -1507,7 +1547,12 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
           var expiresAt=new Date(d.trial_expires_at).getTime();
           var remaining=expiresAt-Date.now();
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(){location.replace('/pending.html?t=expired');});return;}
+          /* The callback MUST take the result: a no-arg .then() cannot tell
+             success from {data:null,error}, and the member is sent to the
+             expired page either way. The wall clock says the trial is over, so
+             ending the session is right regardless -- but a failed write is now
+             recorded, and the next load retries expire_trial. */
+          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);location.replace('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
@@ -1516,7 +1561,11 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }).catch(function(){});
   function startTimeSovereignPing(sb){
     if(window.__omegaTSping)return; window.__omegaTSping=1;
-    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session'); }catch(e){} } }
+    /* The try/catch here caught nothing: an rpc that fails resolves, it does
+       not throw. Keep it for a synchronous throw, and inspect the result and
+       the rejection too. A dropped ping is not fatal, but it should not be
+       invisible. */
+    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session').then(function(r){window.__omegaWriteFail('ping_session',r);},function(){}); }catch(e){} } }
     ping();
     setInterval(ping,60000);
   }
@@ -1550,7 +1599,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       }
     });
     var expired=false;
-    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(){setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
+    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
   }
 })();
@@ -1627,7 +1676,14 @@ setTimeout(function(){
       document.body.classList.add('omega-owner');
       /* Enforce lifetime access */
       if(!pr.access_approved||pr.is_trial||pr.trial_expires_at||parseFloat(pr.axis_a)<9){
-        await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        /* This is the write that grants lifetime access. Unchecked, it could
+           fail while the owner UI above had already been applied -- the screen
+           agreeing with a database that never changed. The repair is idempotent
+           and re-runs on the next load, so recording the failure is the fix;
+           the owner class itself is correct either way, since it came from the
+           is_owner column this update does not touch. */
+        var ownerAccess=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+        if(ownerAccess.error) window.__omegaWriteFail('owner_lifetime_access',ownerAccess);
       }
       /* Check pending members and notify */
       var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);

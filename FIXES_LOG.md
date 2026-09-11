@@ -13275,3 +13275,838 @@ class whose paint was being discarded.
 - `python3 -m unittest discover -s scripts/tests` → **284** passing
 - `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
   caught the 1 KB the new comment added, and was regenerated)
+
+---
+
+## 116 — the four unchecked Supabase writes left in `bg.js`, including the one that grants lifetime access
+
+`scripts/silent-failure-detector.py` is **blocking** in `ci.yml`'s `verify` job.
+It had been reporting **4 findings, exit 1, on `main`** — so that gate was red on
+every PR, from every author, and had been for as long as the four sites existed.
+CLAUDE.md §8.3 recorded this check at "0 findings, exit 0"; that was accurate
+when written and had since drifted.
+
+All four are §8.1 bug class 1 — Supabase **resolves** to `{data:null,error}`, it
+does not throw, so a `try/catch` around a write catches nothing and a no-argument
+`.then()` cannot tell success from failure.
+
+### The four sites, and what each one silently did
+
+| site | call | what failed silently |
+|---|---|---|
+| `bg.js:1510` | `.rpc('expire_trial',{p_uid:s.user.id})` | `.then(function(){location.replace('/pending.html?t=expired')})` — member sent to the expired page whether or not the trial was actually expired server-side |
+| `bg.js:1519` | `.rpc('ping_session')` | wrapped in `try{...}catch(e){}`, which catches nothing — presence telemetry could stop reporting and nothing would say so |
+| `bg.js:1553` | `.rpc('expire_trial',{p_uid:uid})` | same no-arg `.then()` shape as 1510, in the trial-banner tick |
+| `bg.js:1630` | `.update({access_approved:true,…,membership_tier:9})` | **the write that grants lifetime access.** `document.body.classList.add('omega-owner')` had already run above it, so a failure left the screen agreeing with a database that never changed |
+
+The detector's own source names the 1510/1553 shape as the canonical form of this
+class (`scripts/silent-failure-detector.py`, the `then_match` block): *"the
+callback takes no argument, so it cannot distinguish success from
+`{data:null,error}` — the member is told the trial expired whether or not it
+did."*
+
+### The fix
+
+One guarded helper, `window.__omegaWriteFail(op, result) -> boolean`, added as a
+top-level IIFE next to the existing error reporter. It records a failure through
+`window.omegaRuntime.record('write_failed', …)` — the platform's own idiom,
+already used by `scripts/vercel-build-enhance.mjs:66` — and never throws, since
+`omegaRuntime` is absent until `assets/js/omega-runtime-observability.js` loads.
+
+Behaviour is deliberately preserved at all four sites. The two `expire_trial`
+paths still end the session, because the **wall clock** says the trial is over
+regardless of what the write did, and both repairs are idempotent and retry on the
+next load. What changed is that the failure is now recorded instead of lost.
+
+`bg.js:1630` uses the canonical destructured form rather than wrapping the call,
+because the scanner's forward-context check is satisfied by reading
+`ownerAccess.error` — the first attempt wrapped the call in the helper, which
+handles the error correctly but leaves the word `.error` absent, and the detector
+(rightly) still flagged it. **Satisfying the scanner by taking a `.then` argument
+without using it would have been gaming it**; the argument is used at every site.
+
+### Verification
+
+- `python3 scripts/silent-failure-detector.py` → **4 findings, exit 1** → **`OK — every write operation checks .error`, exit 0**
+- `node --check bg.js` OK
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+- `node scripts/verify-runtime.js` → 12 of 13 pages ok. `settings.html` fails on
+  7 `BUTTON.btn-gold` at 2.33:1 contrast — **pre-existing**, established by
+  stashing `bg.js` back to `main` and re-running: identical failure, so this
+  change leaves the render exactly as it found it. That 2.33:1 `btn-gold`
+  signature is the one §4.1 already documents.
+
+---
+
+## 117 — CI billed Actions minutes for work it had already done, and for runs nobody would read
+
+Context: on 2026-09-06 every GitHub Actions job began failing **2 seconds after
+dispatch, with no `steps` array, empty check output, and 404 on log download**,
+across all workflows and both branches, while `./scripts/ci-local.sh` passed
+**23/23** on the same commit (`c30f8c7e`). A job with no steps never executed the
+workflow; the repo is private, so Actions minutes are billed. That points at an
+account-level dispatch rejection (spending limit / payment), which is not fixable
+in this repository — but the **consumption rate** is, and 7,883 workflow runs
+across 19 workflows is why it was reachable.
+
+This entry is the repository-side half. It removes work CI was doing twice and
+work it was doing for results nobody would read. **It removes no coverage** — the
+invariant was that no check which blocks today stops blocking.
+
+### 1. A workflow that was strictly dominated by another
+
+`omega-intelligence-fabric-platform-gate.yml` ran four steps. Compared with
+`omega-intelligence-fabric.yml`, read in full rather than grepped:
+
+| step | platform-gate | fabric | verdict |
+|---|---|---|---|
+| compile | `compileall -q core/intelligence_fabric scripts` | `compileall -q core scripts tests` | fabric is a **superset** |
+| structural audit | `omega_fabric_audit.py` | same | identical |
+| platform gate | `omega_fabric_platform_gate.py` | same | identical |
+| unit tests | `discover -s tests -p test_intelligence_fabric.py` | same | identical |
+
+Triggers decide the rest: platform-gate fired on `push[main]`/`pull_request[main]`
+**restricted to a path filter**; fabric fires on `push[main]` and `pull_request`
+with **no** filter. Fabric therefore runs strictly more often and does strictly
+more. Deleted.
+
+Checked first that nothing requires it to exist: the only gate naming a fabric
+workflow is `scripts/omega_fabric_platform_gate.py:43`, and it requires
+`.github/workflows/omega-intelligence-fabric.yml` — the one that stays.
+
+### 2. Three duplicated steps in `omega-enterprise-gate.yml` — and two that only *looked* duplicated
+
+Removed: `compileall -q core scripts tests`, `omega_fabric_audit.py`,
+`omega_fabric_platform_gate.py`. All three are byte-identical to steps in
+`omega-intelligence-fabric.yml`, whose trigger set (`push[main]` +
+unfiltered `pull_request`) is **identical** to this workflow's.
+
+**Deliberately kept**, though `repository-integrity.yml` and
+`omega-release-readiness.yml` also run them: `repository_integrity_audit.py`,
+`vercel-build.sh` and the artifact `test -s`. Both of those siblings filter
+`pull_request: branches: [main]`, which is **narrower** than this workflow's
+unfiltered `pull_request:` — removing them would silently drop coverage on a PR
+targeting any other base branch. **Dedupe only against a sibling whose trigger is
+identical or wider**; a matching command is not enough.
+
+### 3. Four workflows left superseded runs billing to completion
+
+`lighthouse-audit.yml`, `omega-intelligence-fabric.yml`, `omega-update.yml` and
+`supabase-migration-security-audit.yml` had **no `concurrency:` block**, so every
+push left its predecessor running for a result nobody would read — Lighthouse
+being the slowest job in the estate. This is also what produced the 13
+simultaneous "failures" at `006e4a73` that had no logs: superseded runs, not
+thirteen defects.
+
+`cancel-in-progress: true` is deliberate and is the safe direction: a **ref-keyed**
+group with `false` starves instead (§8.2, measured at 53m06s → 3s). `vercel-production.yml`
+is untouched — its group is **fixed** (`vercel-production`), not ref-keyed, and
+`false` is correct for a deploy. `runner-probe.yml` is untouched: it is pinned to
+the dead self-hosted runner and never starts, so a guard there is meaningless.
+
+Measured after: **15 workflows fire on a push to `main`, and all 15 are guarded**
+(previously 4 were not).
+
+### Verification
+
+- `python3 scripts/workflow-contract.py` → PASS
+- `python3 scripts/workflow-contract-lint.py` → PASS
+- `python3 scripts/omega_fabric_platform_gate.py` → `failures=0`
+- `python3 scripts/omega_enterprise_architecture_gate.py` → `OMEGA_ENTERPRISE_ARCHITECTURE=PASS`
+- `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single self-hosted runner, pre-existing)
+- 18 workflow files, **0 malformed**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 118 — three real accessibility defects, and the 2.33:1 button face on 28 pages
+
+All four were found by the Lighthouse gate once it could finally load a page
+(entry 117 / PR #291-#297), and all four are fixed and measured here.
+
+### 1. `.btn-gold` / `.btn-cyan` / `.btn-crim` had no resting background — 65 buttons on 28 pages
+
+`bg.js:117`'s `sharedCSS` declared the ghost variants as
+`.btn-gold{color:var(--gold);border-color:…}` and set `background` **only on
+`:hover`**. A `<button class="btn-gold">` that does *not* also carry `.btn`
+therefore kept the browser's default grey face, giving gold text on grey at
+**2.33:1** — under the 3:1 floor `scripts/verify-runtime.js` enforces.
+
+**CLAUDE.md §4.1 already claimed this was fixed** — "The ghost variants now set
+`background:none` themselves" — and it was not; the rule never carried the
+declaration. A documented fix is not a shipped fix.
+
+Scale was measured, not grepped. A first grep said 0 buttons, because
+`\bbtn\b` matches *inside* `btn-gold` (`-` is a word boundary) and excluded
+everything. Parsing the class list properly: **65 buttons across 28 files**,
+led by `settings.html` (15), `cipher.html` (5), `command.html`/`graphify.html`/
+`privacy.html`/`rune.html`/`stoic.html` (4 each). `verify-runtime.js` only saw
+`settings.html`'s 7 because it renders the 13 capability entrypoints, not the
+estate — the other 27 pages were failing unobserved.
+
+Fix: `background:none` added to the three resting rules, asserted 1-of-1 per
+rule before replacement (§8.4: an edit inside that single-quoted CSS string can
+silently no-op).
+
+### 2. `aria-prohibited-attr` — `aria-label` on a bare `div`, twice
+
+ARIA forbids `aria-label` on a `div` with no role, so the label is **discarded**
+by assistive tech rather than merely ignored. Two instances estate-wide:
+
+- `index.html` — `<div class="omega-emblem" aria-label="Omega emblem">Ω</div>`
+  → `role="img"`, which makes the name legal and gives the glyph a real name.
+- `dashboard.html` — `<div class="kpi" id="kpi-auth" onclick="location.href=…"
+  aria-label="My authority score">`. This one is worse than a dead label: a
+  `div` that navigates on click is **unreachable by keyboard**. Given `role="link"`
+  it also gets `tabindex="0"` and Enter/Space activation — a role that claims
+  interactivity without operability is a bigger barrier than the original bug.
+
+**Measured on `index.html`: `aria-prohibited-attr` 0 → 1, accessibility
+category 94 → 100.**
+
+### 3. `label-content-name-mismatch` — WCAG 2.5.3, on every page with the CMD link
+
+`omega-ui.js:233` built the back-to-dashboard link with visible text `Ω CMD` and
+`aria-label="Command Bridge"`. The accessible name must *contain* the visible
+text; it did not, so a voice-control user saying "click CMD" could not activate
+it. Now `Ω CMD · Back to Command Bridge` — visible string first, description
+after. **Measured on `terms.html`: 0 → 1.**
+
+### 4. `errors-in-console` — NOT a production defect, deliberately not "fixed"
+
+Its five items are all artifacts of auditing a static build behind this
+sandbox's egress proxy: `fonts.googleapis.com`, `cdn.jsdelivr.net/dayjs` and
+`unpkg.com/tippy.js` are blocked here, and `/_vercel/insights/script.js` +
+`/_vercel/speed-insights/script.js` 404 locally because Vercel injects them at
+runtime. Deleting any of them to silence the audit would have removed working
+production code.
+
+**A real finding surfaced underneath it, and is left open**: `index.html` loads
+`dayjs` from jsdelivr and `tippy.js` from unpkg — third-party CDNs on the
+critical path of the front page. That is the same class this repo already
+rejected when it vendored the Supabase client to `/vendor/supabase-js.js` and
+removed 146 `esm.sh` imports (§4). Vendoring them is its own change.
+
+### Also found, left open with evidence
+
+**145 clickable `<div onclick=…>` across 165 files**, 39 on `dashboard.html`
+alone. Only `kpi-auth` is fixed here, because it was the one carrying a
+prohibited `aria-label`. The rest are a genuine keyboard-accessibility gap and
+an estate-wide sweep needs its own plan.
+
+### Verification
+
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**, up from 12 of 13;
+  `settings.html`'s 7 sub-3:1 buttons are gone
+- Lighthouse, `index.html`: `aria-prohibited-attr` 0 → 1, a11y **94 → 100**
+- Lighthouse, `terms.html`: `label-content-name-mismatch` 0 → 1
+- `node --check bg.js`, `node --check omega-ui.js` → OK
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 119 — every click target on the platform is now reachable from a keyboard
+
+`<div onclick="location.href='/x.html'">` is not focusable and does not fire a
+click on Enter. Every one of them is invisible to anyone not using a mouse: a
+keyboard user, a switch user, most voice control, and anyone whose pointer is
+temporarily unavailable.
+
+### Measured first, and the grep estimate was the wrong shape
+
+A source grep said "145 clickable divs across 165 files", which implied an
+estate-wide markup sweep. **Rendering eight pages told a different story:**
+
+| page | `[onclick]` | keyboard-inaccessible |
+|---|---|---|
+| dashboard.html | 82 | **44** |
+| profile / settings / vault / social / feed / analytics / ops | 2–11 each | **1 each** |
+
+**51 total** — but 7 of those 8 were the *same element*: `div.on-brand`, the
+sidebar brand mark injected by `nav.js:231` on every page. One shared element
+plus one concentrated page, not 165 files of scattered markup.
+
+### Fix 1 — the brand mark is now a real link, not a div
+
+`nav.js` emitted `<div class="on-brand" onclick="location.href='/dashboard.html'">`.
+It is now `<a class="on-brand" href="/dashboard.html">`. A native link is
+focusable, Enter-activatable, and supports middle-click and open-in-new-tab for
+free — none of which `role="link"` on a div can give back. Its only child is a
+`<canvas>`, so it has no text to name it; `aria-label` now carries what `title`
+was doing alone. `.on-brand` gained `text-decoration:none`.
+
+That single change took **7 of the 8 sampled pages to zero**, and applies to
+every page in the estate that renders the sidebar.
+
+### Fix 2 — `omega-a11y-controls.js`, for the rest
+
+A new module (guard `data-omega-kbd-operable`, injected from `bg.js`) upgrades
+any element that **already declares** an `onclick` and is not natively
+operable: `tabindex="0"`, an inferred role, and Enter/Space activation.
+
+- Role is inferred, not guessed uniformly: an `onclick` matching
+  `location.href|assign|replace|window.open` becomes `role="link"`, anything
+  else `role="button"`. Measured on dashboard: **42 links, 1 button** — the
+  inference matches what those handlers actually do.
+- Key handling honours the role. Space activates a button but *scrolls* on a
+  link, so only Enter is bound for links (ARIA).
+- It never invents interactivity. Native controls and elements an author
+  already made operable (tabindex **and** a key handler) are skipped entirely.
+- A debounced `MutationObserver` catches markup injected after
+  `DOMContentLoaded` — nav, copilot and the emblem panel all inject late, so a
+  single pass would miss them.
+- **Focus visibility is not duplicated here**: `bg.js` already styles
+  `[tabindex]:focus-visible` with a cyan outline, so anything made focusable
+  gets a visible ring for free. Adding another owner would have been the §4.1
+  mistake.
+
+Runtime, not markup, deliberately: the alternative was editing ~145 elements
+across ~165 files, and §8.1 is a catalogue of what estate-wide sweeps cost
+here. One module is one diff to review and one commit to revert, and it also
+covers dynamically injected controls that a source sweep never could.
+
+### A false pass, caught
+
+The first "after" run reported **0 remaining on every page including
+dashboard** — because the static server had died and every `goto` returned
+`ERR_CONNECTION_REFUSED`. §8.4 exactly: *a stopped static server reports 0*.
+The re-run with the server asserted `HTTP 200` first showed 43 still flagged.
+
+Those 43 were then a **scanner** defect, not a fix defect: the scan tested for
+an `onkeydown` **attribute**, while the module attaches via
+`addEventListener`. Rewritten to measure the real outcome (`el.tabIndex >= 0`
+plus the `data-omega-kb` marker) it reads 0 — and the behavioural test below is
+what actually settles it.
+
+### Verification
+
+- rendered scan, 8 pages: **51 → 0** keyboard-inaccessible click targets
+- **behavioural proof**, not an attribute check: focused an upgraded KPI card on
+  `dashboard.html` (`focusable: true`), pressed **Enter**, and the browser
+  navigated to `/approvals.html`
+- role inference on dashboard: 42 `link`, 1 `button`
+- `node --check` on `bg.js`, `nav.js`, `omega-a11y-controls.js` → OK
+- `python3 scripts/audit.py` → 0 critical / 8 warnings (unchanged; the new
+  module is referenced from `bg.js`, so it is not an orphan)
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 120 — Three.js was downloaded on every page view for a feature no page uses
+
+### What the render showed
+
+Ten pages, instrumented for third-party requests (2026-09-06):
+
+| requested on | library | host |
+|---|---|---|
+| **10/10** | `dayjs` (+ its `relativeTime` plugin, a second request) | jsdelivr |
+| **10/10** | `three@0.160.1` | **esm.sh** |
+| **10/10** | `tsparticles-slim` | **esm.sh** |
+| **10/10** | `marked`, `fuse.js` | jsdelivr |
+| **10/10** | `tippy.js` | unpkg |
+| 3/10 | `popper` | jsdelivr |
+
+`esm.sh` is the host CLAUDE.md §4 says was eliminated — *"146 imports putting a
+third-party CDN on the critical path of every page view"*. It is back, for
+`three` and `tsparticles-slim`.
+
+### Fix 1 — the guard was on the wrong side of the download
+
+`omega-realm.js`'s `autoMount()` read:
+
+```js
+loadThree().then(function(){
+  var canvases=document.querySelectorAll('canvas[data-realm]');   // checked AFTER
+  canvases.forEach(...);
+});
+```
+
+So every page where a profile loaded fetched Three.js, *then* discovered there
+was nothing to mount. **`grep -l 'data-realm' *.html` returns nothing: not one
+page in the estate has a realm canvas.** Three.js was downloaded on every page
+view, from a third-party CDN, for a feature no page uses.
+
+The check now runs before the import (and re-queries inside the `.then()`, since
+the canvas set can grow while the module is in flight).
+
+**Measured: `esm.sh/three@0.160.1` went from 10/10 pages to absent.**
+
+### Fix 2 — dayjs was pre-warmed on every page for a cosmetic fast path
+
+`omega-oss.js:227` called `OSS.require('dayjs', …)` at module scope purely so
+`OSS.fromNow()` could take a "fast path", pulling dayjs **and** its
+`relativeTime` plugin — two more third-party requests per page view. The inline
+fallback directly beneath it is synchronous and complete ("always works"); the
+only difference is wording ("2 minutes ago" vs "2m ago").
+
+Now loaded on first use from inside `fromNow()`, guarded against concurrent
+calls. A page that never renders a relative timestamp never fetches it.
+
+**Measured: `dayjs` went from 10/10 pages to absent.**
+
+### What is NOT claimed
+
+**No performance-score delta is claimed, because it could not be measured.**
+Lighthouse returns `performance: null` on these pages in this harness — Chrome
+collects no screenshots on a near-black page — which is the same limitation
+recorded in `lighthouse-ci-config.json`. What is measured is unambiguous and
+sufficient on its own: three fewer third-party requests per page view, one of
+them Three.js.
+
+### Open findings, traced not guessed
+
+Callers were identified by instrumenting `Node.prototype.appendChild` before
+page scripts ran and capturing a stack per CDN script tag:
+
+| library | eager caller | judgement needed |
+|---|---|---|
+| `tippy` | `omega-tooltip.js:120` → `init` → `loadTippy` | could defer to first hover |
+| `marked` | `omega-copilot.js:164` `addMsg` | only if the copilot greets on load |
+| `fuse` | `omega-search.js:223` `initFuse` | index built eagerly; search is Ctrl+K |
+| `tsparticles` | `omega-particles.js:75` `launch` | a designed ambient effect — product decision |
+| `popper` | `OSS.initTooltips`, guarded by `[data-tooltip]` | correct as-is |
+
+Each has a real caller and a real feature behind it, so each is a product
+judgement rather than a bug, and none is changed here.
+
+**Separately: `tippy.js` is requested FOUR times on one load of `index.html`**
+(Lighthouse `network-requests`). `omega-oss.js`'s loader de-duplicates via
+`_loaded`/`_loading`, so this is arriving another way — worth its own look.
+
+### Verification
+
+- rendered CDN scan, 10 pages: `three` **10/10 → absent**, `dayjs` **10/10 → absent**
+- `node --check omega-realm.js`, `omega-oss.js` → OK
+- `node scripts/verify-runtime.js` → **PASS (13 pages)**
+- Lighthouse `index.html` accessibility still **100**
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED** (the census gate
+  caught the drift and was regenerated)
+
+---
+
+## 121 — Vercel's ignore-build step deployed for changes that cannot reach the artifact
+
+On 2026-09-06 Vercel began refusing deployments outright:
+
+```
+Resource is limited - try again in 24 hours
+(more than 100, code: "api-deployments-free-per-day")
+```
+
+That is the **second** free-tier ceiling this repository hit the same day; the
+first was GitHub Actions rejecting every job at dispatch (entry 117). Both have
+the same shape: a very high rate of pushes, each one spending a unit of a
+finite daily allowance.
+
+### The defect
+
+`scripts/vercel-ignore-build.sh` exists precisely to prevent this — its own
+comment says *"Backend, database, CI, documentation and agent changes do not
+require a new Vercel deployment."* Its extension list is headed **"Root web
+surface"**, but a bash `case` glob matches the whole string, and nothing
+anchored it to the root:
+
+| changed path | old verdict | in `public/`? |
+|---|---|---|
+| `scripts/verify-runtime.js` | **DEPLOY** | no |
+| `docs/capabilities/registry.json` | **DEPLOY** | no |
+| `supabase/live-schema.json` | **DEPLOY** | no |
+| `package.json` | **DEPLOY** | no |
+
+`*.js` matches `scripts/verify-runtime.js`; `*.json` matches every JSON at any
+depth. None of those reach the deployed site: `scripts/vercel-build.sh` copies
+root files at `-maxdepth 1` plus a fixed directory allow-list, and `supabase/`
+and `*.py` are excluded by `.vercelignore` outright. Every one of those
+deployments rebuilt a **byte-identical** artifact and spent a deployment doing
+it.
+
+This session alone changed `scripts/*.js`, `docs/capabilities/registry.json`
+and `supabase/live-schema.json` repeatedly.
+
+### The fix
+
+Test for a path separator before applying the root extension list, and keep the
+directory allow-list matching at any depth:
+
+```sh
+case "$path" in */*) continue ;; esac      # not a root file -- skip
+```
+
+`package.json` is now skipped explicitly: `vercel-build.sh` copies every root
+file **except** `package.json` and `vercel.json`, and `installCommand` is `""`
+so dependencies are never installed either. `vercel.json` still deploys — it
+changes headers, redirects and the build contract even though it is not copied.
+
+### Verified against what the build actually emits
+
+Each verdict was cross-checked against a real `public/` tree rather than
+reasoned about:
+
+| path | verdict | present in `public/` |
+|---|---|---|
+| `index.html`, `bg.js`, `manifest.json` | DEPLOY | YES |
+| `vendor/supabase-js.js`, `assets/js/*.js`, `i18n/fr.json` | DEPLOY | YES |
+| `scripts/verify-runtime.js`, `docs/capabilities/registry.json`, `package.json` | skip | no |
+| `FIXES_LOG.md`, `.github/workflows/ci.yml`, `core/*.py` | skip | no |
+
+Every DEPLOY is in the artifact; no skip is. That is the contract this script
+was written to enforce and could not.
+
+- `bash -n scripts/vercel-ignore-build.sh` → OK
+- `python3 scripts/vercel_static_contract.py` → `build_output_verified=references_resolve_in_public`
+- `python3 scripts/production-contract.py` → PASSED
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+---
+
+## 122 — the page-overlap audit had never executed once, because it was pinned to the dead runner
+
+`CLAUDE.md` §8.2 records that the self-hosted Windows runner is dead and that
+`page-overlap-audit.yml` and `runner-probe.yml` "are still pinned and still
+never run". That is accurate, and for `page-overlap-audit.yml` it means a
+**working check has produced zero results in its entire history**.
+
+The workflow-run history makes the failure mode concrete. Runs on that runner
+show durations of **10m 13s**, **11m 44s** and **11m 52s** — that is queueing
+against a runner that never answers, then timing out. A check that never runs
+is not a lenient check; it is an absent one.
+
+### The script was never the problem
+
+Verified on Linux before changing anything:
+
+```
+$ python3 scripts/page-overlap-audit.py
+...
+PAGE OVERLAP AUDIT: PASS (advisory; no files modified)
+exit 0
+```
+
+It is platform-independent and completes normally. Only the runner pin kept it
+from ever executing.
+
+### The change
+
+`runs-on: [self-hosted, Windows, X64]` → `runs-on: ubuntu-latest`, plus an
+`actions/setup-python@v5` step (the self-hosted box had Python preinstalled;
+a hosted runner needs it declared) and `shell: pwsh` dropped, since that went
+with the Windows runner and bash is the hosted default.
+
+Cost is bounded and was already reasoned about in the workflow's own header: it
+is advisory, O(n²) over the page estate, and runs **nightly on cron plus on
+demand** — not per push. It does not add per-push Actions load, which matters
+given entries 117 and 121.
+
+### `runner-probe.yml` is deliberately NOT changed
+
+It is the only workflow still targeting `[self-hosted, Windows, X64]`, and that
+is correct: its entire purpose is to prove whether that runner works. Pointing
+it at `ubuntu-latest` would make it pass while proving nothing. It is
+`workflow_dispatch`-only, so it costs nothing until someone runs it.
+
+**Measured after: 21 of 22 workflows on `ubuntu-latest`, 1 on the self-hosted
+label — and that one is the probe.**
+
+### Verification
+
+- `python3 scripts/page-overlap-audit.py` → PASS, exit 0 (on Linux)
+- `python3 scripts/workflow-contract.py` → PASS
+- `python3 scripts/workflow-contract-lint.py` → PASS
+- `python3 scripts/architecture-contract.py` → PASSED, 16 blocks / 16 evidence contracts
+- `python3 scripts/resilience-audit.py` → 0 findings, 1 warning (the single runner, pre-existing)
+- `./scripts/ci-local.sh` → **ALL 23 BLOCKING CHECKS PASSED**
+
+## 123
+
+**`strix-staging-run.sh`'s production guard accepted four targets it exists to reject — including a third party.**
+
+`scripts/strix-staging-run.sh` (merged in #296) wraps an agentic pentest tool.
+Its whole safety surface is the two-condition target guard in its header, and
+both conditions were matched with unanchored globs. Both failed.
+
+**Defect 1 — the zone check was a literal, not a glob.**
+
+```bash
+if [[ "$host" == "www.sydomega.com" || "$host" == "sydomega.com" || "$host" == "*.sydomega.com" ]]
+```
+
+Inside `[[ ]]`, the right-hand side of `==` is a pattern **only when unquoted**.
+`"*.sydomega.com"` is quoted, so it matched a host named, verbatim,
+`*.sydomega.com` — which cannot exist. Every real subdomain walked past it.
+
+**Defect 2 — the marker check was a substring, not a DNS label.**
+
+```bash
+[[ "$host" != *test* && ... ]]
+```
+
+`test` occurs inside `latest`. There was also no ownership condition at all: any
+host anywhere containing a marker substring was accepted.
+
+**Measured, BEFORE pinned with `git show origin/main:scripts/strix-staging-run.sh`**
+(not `git stash` — the change was already committed), 14 targets, verdict taken
+from whether the guard fell through to the `command -v docker` check:
+
+| target | expected | before | after |
+|---|---|---|---|
+| `latest.sydomega.com` | REJECT | **ACCEPT** | REJECT |
+| `contest.sydomega.com` | REJECT | **ACCEPT** | REJECT |
+| `evil-test.attacker.example` | REJECT | **ACCEPT** | REJECT |
+| `test.attacker.example` | REJECT | **ACCEPT** | REJECT |
+| `sydomega.com`, `www.sydomega.com`, `api.stripe.com`, the Supabase host, `sydomega-live.vercel.app` | REJECT | REJECT | REJECT |
+| `staging.` / `test.` / `preview.sydomega.com`, `localhost`, `127.0.0.1` | ACCEPT | ACCEPT | ACCEPT |
+
+**BEFORE: 4 wrong of 14. AFTER: 0 wrong of 14**, every previously-correct
+verdict preserved. The BEFORE run finding four failures is what establishes the
+harness measures anything at all (§8.4).
+
+The last two rows are the ones that matter: `latest.sydomega.com` is a plausible
+production alias, and `evil-test.attacker.example` is infrastructure the project
+has no authorization to touch. Scanning either is not a configuration mistake.
+
+**Fix.** Two independent required conditions, both anchored:
+
+- **Zone** — `localhost`/`127.0.0.1`/`::1`, or `*.sydomega.com` as a real
+  (unquoted) glob, with the apex and `www` explicitly excluded as production.
+  Any other host — a third party, a `vercel.app` preview — requires
+  `OMEGA_STRIX_ALLOW_HOST` set to that exact host. Verified that the opt-in
+  authorizes only the named host: `other-test.attacker.example` is still
+  rejected while `OMEGA_STRIX_ALLOW_HOST=test.attacker.example` is set.
+- **Marker** — whole leftmost-label match against
+  `staging stage nonprod non-prod test testing preview dev qa uat sandbox`,
+  iterating parsed DNS labels. `latest` is no longer `test`.
+
+**Defect 3 — a usage error returned the script's own "vulnerabilities found" code.**
+`bash scripts/strix-staging-run.sh a b c d` exited **2**, which the script's own
+header defines as `VALIDATED_VULNERABILITIES_FOUND`. A wrapper reading the exit
+code would report a security finding that did not exist. Usage and
+target-authorization errors now exit **64** (`EX_USAGE`); `--help` still exits 0,
+per the §8.4 help contract.
+
+**Secret hygiene, checked rather than assumed.** A first grep for
+`LLM_API_KEY.*echo` reported a leak; it had matched the *variable name inside
+the string* `"ERROR: LLM_API_KEY is unset"` — a §8.4 "grep is a candidate
+generator, not a verdict" false positive. Proven properly by running the script
+with `LLM_API_KEY` set to a unique sentinel value and grepping all output for
+that value: **0 occurrences**.
+
+The sentinel itself is deliberately *not* quoted here. The first version of this
+entry wrote it out, and it began `sk-` followed by twenty characters — which is
+exactly `production-surface-contract.py`'s secret pattern
+(`sk-[A-Za-z0-9_-]{20,}`, line 64). That gate is right and was not touched: it
+caught fake secret material entering a tracked file, which is the shape a real
+leak has too. **Never paste a realistic-looking credential into documentation to
+prove a credential is not leaked** — describe the test instead. Cost: one red
+`main`, caught by `./scripts/ci-local.sh` (1 of 23 blocking checks failing).
+
+**Blast radius.** `grep -rniE strix .github/workflows/ scripts/ci-local.sh`
+returns zero hits — the script is manual-invocation only and no gate runs it.
+
+**Verification:** `bash -n` clean; `python3 scripts/audit.py` → 0 critical /
+8 warnings (baseline unchanged); `./scripts/ci-local.sh` → **ALL 23 BLOCKING
+CHECKS PASSED**.
+
+## 124
+
+**Two merge conflicts and one wholly redundant PR, none of them between agents — a branch racing its own sibling.**
+
+`AGENTS.md` §3.1 told an agent to treat in-flight work as locked, but named
+only the *other* agent's prefix:
+
+> List open PRs and open branches. Anything on a `claude/*` branch is in
+> flight — treat every file it touches as locked until it merges or closes.
+
+Read by ChatGPT, that sentence licenses ignoring every `chatgpt/*` branch,
+including its own. On 2026-09-07 that is exactly what happened.
+
+**#312 and #313** were both cut from the same `main` and both wrote
+`scripts/tests/test_production_evidence_audit.py`. Whichever merged first was
+guaranteed to conflict with the other, and #312 did. **#315** (`...-pr2`) was a
+third copy of the same work.
+
+**Measured, not eyeballed.** Both #313 and #315 define the same five tests as
+`main`. Normalising method names and whitespace leaves exactly one difference
+across the whole test class — the line wrapping of a single `write_text()`
+call:
+
+```
+-"vercel.json").write_text(
+-json.dumps({"installCommand":
++"vercel.json").write_text(json.dumps({"installCommand":
+```
+
+Only the names differed, and `main`'s were the more specific
+(`test_current_vercel_contract_is_static` states what is asserted;
+`test_current_static_architecture` does not).
+
+**Resolution — union would have been wrong.** The standing conflict rule is
+"keep both intents", but duplicated intent is not two intents. Unioning would
+have produced **ten tests asserting five things** — §8.1 class 8, two divergent
+copies of one canonical thing, manufactured fresh, which then drift apart under
+separate maintenance. Both branches were resolved by merge commit (no history
+rewrite on a branch this session did not own) taking `main`'s files wholesale.
+
+| PR | net delta to `main` after resolution |
+|---|---|
+| #313 | one new one-line README (`scripts/tests/README.production-evidence.md`) |
+| #315 | **empty** — every file byte-identical to `main` |
+
+#315's README was also a *shorter* form of the one already on `main` (12 words
+against 17, omitting the filename the sentence is about), so `main`'s was kept
+as the superset.
+
+`def test_` count on `main`: **5** before, **5** after. Verified 289 tests in
+`scripts/tests` OK, 23 in `tests` OK, no conflict markers, `audit.py` 0
+critical / 8 warnings, `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**Fix, in all three agent contracts.** §3.1's rule now says *every* open
+branch is in flight, **including your own**, and adds the two rules the
+episode actually needed:
+
+- **`git fetch origin main` immediately before cutting each branch** — not once
+  per work session. A base current ten minutes ago is not current now.
+- **Do not race yourself.** With a PR open that touches a file, do not start a
+  second branch touching that file until the first merges. Several PRs in quick
+  succession are fine only when they touch disjoint files.
+
+Applied to `AGENTS.md` §3.1 / new §3.1.1, `CHATGPT_CONTEXT_RULES.md` §6, and
+`.github/copilot-instructions.md` §6. `CLAUDE.md` is untouched: it is at its
+16,000-token cap, and §9's rule sends evidence-cited entries here.
+
+**Transferable rule.** A collision-avoidance rule written in terms of *who*
+owns a branch fails the moment one agent opens two. Write it in terms of
+*which files are in flight*. And git gives no warning for this class — the
+add/add conflict surfaces later, when the context that would explain it is
+gone.
+
+## 125
+
+**PRODUCTION HAS NOT DEPLOYED SINCE #299 — a placeholder path inside a code comment failed the build, and it was read as the Vercel daily quota for six hours.**
+
+Every Vercel deployment after `dpl_H3iWGzrZnsrz7RjHwLj1TAtrrWQR` (the merge of
+#299) is `state: ERROR`, **including four `target: production` deployments**.
+The site's live artifact is stuck at #299.
+
+**It was never the quota.** The quota was real and concurrent — `vercel[bot]`
+posted `api-deployments-free-per-day` on several PRs — and that is exactly why
+this went unexamined: a second, unrelated failure with a plausible banner
+absorbed it. Build logs for the production deployment of `88f0e4d1` say
+something else entirely:
+
+```
+03:00:25  Ω VERCEL STATIC BUILD
+03:00:25  VERCEL_BUILD=FAIL unreachable_asset=/x.html
+03:00:25  VERCEL_BUILD=FAIL unreachable_assets=1
+03:00:25  Error: Command "bash scripts/vercel-build.sh" exited with 1
+```
+
+**Source: one documentation comment**, `omega-a11y-controls.js:8`, added in #300
+— the module's own header, illustrating the inaccessible markup it exists to fix:
+
+> This estate drives a lot of navigation from `<div onclick="location.href=
+> '/x.html'">`.
+
+`scripts/vercel-build.sh:34` collects asset references with
+
+```
+grep -rhoE "[\"'(]/[A-Za-z0-9_][A-Za-z0-9._/-]*\.(js|css|json|html|svg|...)"
+```
+
+over `public/`, and **does not strip comments**. The quote before `/x.html`
+matches, no such file exists, `missing_refs` becomes 1, the script exits 1.
+The first ERROR deployment is `dpl_F186E1NstP5W5zJYe9FHLR79aQPv` — #300 itself,
+the commit that introduced the comment.
+
+**Fix.** The paragraph now describes that markup in prose instead of quoting it,
+and carries a note saying why. No change to `scripts/vercel-build.sh`: the gate
+did its job — an unresolvable absolute reference in a shipped file is exactly
+what it exists to catch, and a scanner that exempted comments because they
+"look like documentation" would be the weaker tool.
+
+**Measured, BEFORE pinned with `git show origin/main:omega-a11y-controls.js`:**
+
+| `omega-a11y-controls.js` | `bash scripts/vercel-build.sh` |
+|---|---|
+| `main`'s version | **exit 1**, `unreachable_asset=/x.html` |
+| fixed version | **exit 0**, `html=189 js=130 css=14` |
+
+`public/` must be removed between runs or the scan reads the previous build's
+tree — the first "fix" appeared not to work for exactly that reason.
+
+**The same mistake, twice in one session.** The first attempt at the explanatory
+note quoted the offending path *inside the note warning against quoting it*, so
+the build still failed. That is entry 123's shape exactly: a realistic-looking
+credential written into documentation proving a credential was not leaked.
+**Describing a hazard by reproducing it is not documentation, it is the hazard.**
+
+**Transferable rules.**
+1. **Never write a quoted absolute asset path inside a comment in any shipped
+   file.** Describe it.
+2. **A second, unrelated outage with a plausible banner will absorb the first.**
+   Vercel's rate-limit comment made every red deployment look explained. Read
+   the build log, not the bot comment — `mcp__Vercel__get_deployment_build_logs`
+   with `errorsOnly` named the real cause in one line.
+3. **A green `ci-local.sh` does not mean the site deploys.** All 23 blocking
+   checks passed on every one of those ten broken commits; `vercel-build.sh` is
+   not among them.
+
+## 126
+
+**`vercel-ignore-build.sh` has never skipped a single deployment: Vercel clones shallow, so its `HEAD^` guard fired every time.**
+
+The script exists to stop deployments for changes that cannot reach the
+artifact. It opens with
+
+```bash
+if ! git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+  exit 1                       # exit 1 = deploy
+fi
+```
+
+Vercel checks out at `--depth 1`, so `HEAD^` does not exist in the build
+container and this guard returned **deploy** on every push. The entire skip
+decision below it — the anchoring fix from #302 included — has never once
+executed in production.
+
+**Measured on commit `0a9fca70` (two `.md` files, nothing web-facing):**
+
+| clone | decision |
+|---|---|
+| full | `exit 0` — SKIP (correct) |
+| `--depth 1` (what Vercel does) | `exit 1` — DEPLOY |
+
+Same commit, same script. The build log confirms the sequence:
+`Cloning completed: 1.433s` → `Running "bash scripts/vercel-ignore-build.sh"` →
+build proceeds.
+
+**This is why the project reached `api-deployments-free-per-day` (>100/day) on
+2026-09-06.** Every push deployed regardless of content.
+
+**Fix:** `git fetch --deepen=1 --quiet || true` before the guard. Verified
+against a real shallow clone of a synthetic two-commit fixture:
+
+| tip commit | before | after |
+|---|---|---|
+| root `.js` change | DEPLOY | **DEPLOY** (no coverage lost) |
+| `.md` only | DEPLOY | **SKIP** |
+
+The unresolvable-parent branch still deploys. That asymmetry is deliberate: an
+unnecessary deployment costs one unit of quota; a wrongly skipped one ships
+nothing and looks like a successful no-op.
+
+**Do not substitute `git log -1 --name-only`.** On a shallow clone git treats
+the grafted commit as parentless and lists the whole tree — **measured at 971
+files** — which matches a web extension every time and defeats the skip just as
+completely, but silently. Same trap as `omega-registry.py` (§8.4).
+
+**Impact, over the last 37 commits on `main` with a diff:** 5 would deploy,
+**32 would skip — 86% of deployments avoided**, including every
+documentation-only merge and every `Merge main into <branch>` commit.
+
+**Transferable rule.** A guard whose *false* branch is the expensive default
+will never announce that it is always taking it. This one had a fix shipped to
+its unreachable half (#302) while the reachable half returned "deploy" on every
+run. **Test a build-environment script under the build environment's clone
+depth, not the developer's.**

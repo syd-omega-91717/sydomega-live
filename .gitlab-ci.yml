@@ -89,28 +89,30 @@ fabric-tests:
 contracts-suite:
   stage: contracts
   script:
-    - echo "=== CONTRACT SUITE: Starting ==="
-    - echo "1/20: production-contract" && python3 scripts/production-contract.py || exit 1
-    - echo "2/20: workflow-contract" && python3 scripts/workflow-contract.py || exit 1
-    - echo "3/20: architecture-contract" && python3 scripts/architecture-contract.py || exit 1
-    - echo "4/20: architecture-readiness" && python3 scripts/architecture-readiness.py || exit 1
-    - echo "5/20: capability-audit --check" && python3 scripts/capability-audit.py --check || exit 1
-    - echo "6/20: capability-audit" && python3 scripts/capability-audit.py || exit 1
-    - echo "7/20: validate registry.json" && python3 -m json.tool docs/capabilities/registry.json > /dev/null || exit 1
-    - echo "8/20: schema-dictionary" && python3 scripts/schema-dictionary.py || exit 1
-    - echo "9/20: rls-auditor" && python3 scripts/rls-auditor.py || exit 1
-    - echo "10/20: silent-failure-detector" && python3 scripts/silent-failure-detector.py || exit 1
-    - echo "11/20: migration-consistency" && python3 scripts/migration-consistency.py || exit 1
-    - echo "12/20: migration-history-contract" && python3 scripts/migration-history-contract.py --local || exit 1
-    - echo "13/20: upsert-conflict-check" && python3 scripts/upsert-conflict-check.py || exit 1
-    - echo "14/20: omega-registry --check" && python3 scripts/omega-registry.py --check || exit 1
-    - echo "15/20: i18n-contract" && python3 scripts/i18n-contract.py || exit 1
-    - echo "16/20: resilience-audit" && python3 scripts/resilience-audit.py || exit 1
-    - echo "17/20: commerce-contract" && python3 scripts/commerce-contract.py || exit 1
-    - echo "18/20: reachability-contract" && python3 scripts/reachability-contract.py || exit 1
-    - echo "19/20: context-budget" && python3 scripts/context-budget.py || exit 1
-    - echo "20/20: validate-monitoring" && python3 scripts/validate-monitoring.py || exit 1
-    - echo "=== CONTRACT SUITE: ALL PASSED ==="
+    - |
+      set -e
+      echo "=== CONTRACT SUITE: Starting ==="
+      echo "1/20: production-contract" && python3 scripts/production-contract.py
+      echo "2/20: workflow-contract" && python3 scripts/workflow-contract.py
+      echo "3/20: architecture-contract" && python3 scripts/architecture-contract.py
+      echo "4/20: architecture-readiness" && python3 scripts/architecture-readiness.py
+      echo "5/20: capability-audit --check" && python3 scripts/capability-audit.py --check
+      echo "6/20: capability-audit" && python3 scripts/capability-audit.py
+      echo "7/20: validate registry.json" && python3 -m json.tool docs/capabilities/registry.json > /dev/null
+      echo "8/20: schema-dictionary" && python3 scripts/schema-dictionary.py
+      echo "9/20: rls-auditor" && python3 scripts/rls-auditor.py
+      echo "10/20: silent-failure-detector" && python3 scripts/silent-failure-detector.py
+      echo "11/20: migration-consistency" && python3 scripts/migration-consistency.py
+      echo "12/20: migration-history-contract" && python3 scripts/migration-history-contract.py --local
+      echo "13/20: upsert-conflict-check" && python3 scripts/upsert-conflict-check.py
+      echo "14/20: omega-registry --check" && python3 scripts/omega-registry.py --check
+      echo "15/20: i18n-contract" && python3 scripts/i18n-contract.py
+      echo "16/20: resilience-audit" && python3 scripts/resilience-audit.py
+      echo "17/20: commerce-contract" && python3 scripts/commerce-contract.py
+      echo "18/20: reachability-contract" && python3 scripts/reachability-contract.py
+      echo "19/20: context-budget" && python3 scripts/context-budget.py
+      echo "20/20: validate-monitoring" && python3 scripts/validate-monitoring.py
+      echo "=== CONTRACT SUITE: ALL PASSED ==="
   allow_failure: false
   timeout: 30 minutes
 

@@ -94,7 +94,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 201 |
 | pages loading `bg.js` | 201 of 201 |
-| `omega-*.js` modules | 133 (1170 KB) |
+| `omega-*.js` modules | 133 (1172 KB) |
 | root `.js` files | 142 |
 | `supabase/*.sql` (flat bag) | 126 |
 | `supabase/migrations/*.sql` | 172 (106 numbered `NNNN_`, 66 timestamped) |
@@ -110,13 +110,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1171 |
-| `i18n/ar.json` | 1167 — 4 short of `T_EN` |
-| `i18n/es.json` | 1167 — 4 short of `T_EN` |
-| `i18n/fr.json` | 1167 — 4 short of `T_EN` |
-| `i18n/hi.json` | 1167 — 4 short of `T_EN` |
-| `i18n/nl.json` | 1167 — 4 short of `T_EN` |
-| `i18n/zh.json` | 1167 — 4 short of `T_EN` |
+| `T_EN` (English, inlined in `i18n.js`) | 1173 |
+| `i18n/ar.json` | 1167 — 6 short of `T_EN` |
+| `i18n/es.json` | 1167 — 6 short of `T_EN` |
+| `i18n/fr.json` | 1167 — 6 short of `T_EN` |
+| `i18n/hi.json` | 1167 — 6 short of `T_EN` |
+| `i18n/nl.json` | 1167 — 6 short of `T_EN` |
+| `i18n/zh.json` | 1167 — 6 short of `T_EN` |
 
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**

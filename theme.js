@@ -17,6 +17,13 @@
       --panel-warm:#120F1A;
       --gold:#C9A84C;
       --solar:#E2C86D;
+      /* Display tier, measured straight off the reference's headline
+         (#F7E0A0, hue 44 -- the same hue --gold already uses, but L80%
+         S84% against --gold's L54% S54%). The reference's premium look
+         is this brighter gold used sparingly on display type, not a
+         different accent hue. Additive: nothing reads --gold-bright
+         unless it opts in, so no existing surface changes. 15.33:1. */
+      --gold-bright:#F7E0A0;
       --cyan:#00E5FF;
       /* Was #8B0000. theme.js is injected after bg.js and wins the tie, so
          this line silently reinstated the value bg.js had deliberately
@@ -26,9 +33,18 @@
          4.05:1. Every other token in this palette clears 4.5:1. */
       --crim:#C4453C;
       --green:#3fb27f;
-      --ink:#F0EDE6;
-      --ink-dim:#D8D5CE;
-      --muted:#8A8880;
+      /* Text neutrals, cooled to the design reference. Sampled from the
+         reference by canvas getImageData in headless Chromium: its body,
+         subhead and nav text all sit at hue 203-205 (a cool blue-grey),
+         while these three tokens sat at hue 42-48 (a warm sepia). Hue is
+         the only thing changed -- lightness is held, so contrast against
+         --void is preserved: --ink 17.07:1 -> 16.72:1, --ink-dim 13.62:1
+         -> 13.39:1. --muted rises 5.62:1 -> 6.57:1, landing on the 6.58:1
+         the reference's own dimmest text measures. All clear AA.
+         To revert the temperature, restore #F0EDE6 / #D8D5CE / #8A8880. */
+      --ink:#E5ECF0;
+      --ink-dim:#CBD5DC;
+      --muted:#8796A1;
       --line:rgba(201,168,76,0.13);
       --line-bright:rgba(201,168,76,0.25);
       --glow-gold:rgba(201,168,76,0.18);

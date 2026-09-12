@@ -28,10 +28,10 @@ effectively invisible unless invoked by exact name.
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
-| `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | 2026-09-10 |
-| `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
+| `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | uncommitted |
+| `omega-orchestrator` | yes | — | 1,300 | **nothing** | uncommitted |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
-| `omega-production-verification` | yes | — | 909 | **nothing** | 2026-09-10 |
+| `omega-production-verification` | yes | — | 909 | **nothing** | uncommitted |
 | `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
@@ -84,7 +84,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
 | `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,524 | 2026-08-18 |
-| `omega-architect` | --- | 585 | 2026-09-10 |
+| `omega-architect` | --- | 585 | uncommitted |
 
 ## 3 · Platform census
 
@@ -94,7 +94,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 201 |
 | pages loading `bg.js` | 201 of 201 |
-| `omega-*.js` modules | 133 (1173 KB) |
+| `omega-*.js` modules | 133 (1176 KB) |
 | root `.js` files | 142 |
 | `supabase/*.sql` (flat bag) | 126 |
 | `supabase/migrations/*.sql` | 172 (106 numbered `NNNN_`, 66 timestamped) |

@@ -14171,3 +14171,146 @@ is a `this`-binding bug waiting for its first real call, not a style choice —
 and a module that also overrides `window.fetch` turns that bug into a
 platform-wide reliability risk invisible to every check except one that
 actually executes the code.
+
+---
+
+---
+
+## 128 — the particle engine loaded from esm.sh on all 189 pages, and that made it untestable as well as remote
+
+**Found:** a graphics-level audit rendered 12 representative pages and read
+every canvas back with `getImageData`. `#omega-particles-canvas` reported a
+**300×150 drawing buffer inside a 1440×900 box** on every page, with zero
+painted pixels — the browser's *default* canvas size, i.e. nothing had ever
+sized it. That is §8.1 class 3's signature, so it looked like a broken canvas
+on the whole estate.
+
+**It was not.** `omega-particles.js:75` reached the engine with
+`import('https://esm.sh/tsparticles-slim@2.12.0')`. The verification sandbox
+blocks that host, so the promise never resolved, `.then` never ran, and
+tsParticles never got to size the canvas. **The 300×150 was an artifact of the
+harness, not a production defect** — confirmed by loading the engine for real,
+after which the buffer resized itself to `1280×720`. Recorded because the
+inverse mistake (reporting it as a live platform-wide bug) was one step away.
+
+**The real defect is the import itself.** `bg.js:2164` injects this module, so
+the line put a third-party CDN on the critical path of the ambient background
+for **all 189 pages** — the exact pattern CLAUDE.md §4 records this repo paying
+for once with 146 esm.sh imports of the Supabase client, and fixed the same
+way.
+
+**Fix:** `npm pack tsparticles-slim@2.12.0`, copy
+`package/tsparticles.slim.bundle.min.js` (the *bundle* variant, which carries
+its own dependencies) to `vendor/tsparticles-slim.js` — UMD, MIT, 144KB — and
+replace the dynamic import with a cached script-tag loader that resolves the
+`tsParticles` global. `vendor` is already on `scripts/vercel-build.sh`'s
+directory allow-list, so it ships.
+
+**Verified end-to-end**, esm.sh routed to `abort()` so a regression cannot hide:
+
+| | before | after |
+|---|---|---|
+| esm.sh requests attempted | 1/page | **0** |
+| drawing buffer (1440×900 box) | 300×150 | **1440×900** |
+| painted pixels, dashboard / index | 0 / 0 | **2,595 / 2,825** |
+| engine global | absent | `function` |
+
+A separate probe confirmed the field *animates* rather than painting once: 0
+non-zero-alpha pixels at load, **11,297 at 1200ms**, counts differing between
+samples.
+
+**`scripts/audit.py` had a latent gap this exposed.** A same-origin reference
+is flattened to its basename before resolution, and `on_disk` listed only the
+repo root — so `.src='/vendor/tsparticles-slim.js'` resolved to
+`tsparticles-slim.js`, found nothing, and reported **CRITICAL "requested but
+MISSING on disk"** for a file that is present. `vendor/supabase-js.js` never
+tripped it only because it is reached by an ESM `import`, which
+`SRC_ASSIGN_RE` does not match — so the gap sat unexposed until the first
+vendored bundle was loaded by `src`. Fixed with a `vendored` set kept
+*separate* from `on_disk`: merging them would have made the other consumer,
+`unloaded = on_disk - reachable`, report `vendor/supabase-js.js` as a module
+nothing loads. Back to the §8.3 baseline, 0 critical / 8 warnings.
+
+**Transferable rule.** *A dependency you cannot load in the harness is a
+dependency you cannot test.* The CDN import did not just add a remote failure
+mode — it made the feature permanently unverifiable, and it produced a
+false positive that reads exactly like the estate-wide bug class this repo
+already has a name for.
+
+---
+
+## 129 — the front door forked the design system, and the reference palette differed by hue, not by contrast
+
+**Found:** `index.html` loaded `omega-visual-universe.css`, which declares its
+own `--omega-void` / `--omega-gold` / `--omega-ink` and sets
+`font-family:Inter`. The gateway therefore rendered in a different palette and
+a different typeface from the 188 pages behind it. Rendered, it carried **84
+SVG nodes against ~340 on every other page measured** — the thinnest graphic
+surface in the estate, on the one page a new member sees first.
+
+**Palette, measured rather than eyeballed.** The design reference was drawn to
+a canvas in headless Chromium and read back with `getImageData` (§8.4:
+presentation is measured in a render). It is far darker than it looks — mean
+luminance **37.8/255**, with **22.7% of pixels at pure `#000`**.
+
+The useful finding was that **contrast was never the gap**; hue temperature
+was:
+
+| role | repo (theme.js) | reference (measured) |
+|---|---|---|
+| `--ink` | `#F0EDE6` · H42 S25 L92 | `#B4C5D1` · **H205** |
+| `--muted` | `#8A8880` · H48 S4 L52 | `#B1C7D5` · **H203** |
+| gold | `#C9A84C` · H44 S54 **L54** | `#F7E0A0` · H44 S84 **L80** |
+
+The gold **hue is already correct** — H44 in both. The reference's premium
+look is a *brighter* gold used sparingly on display type over a **cool
+blue-grey** text stack, against this repo's warm sepia one.
+
+**Fix:** cool the three neutrals to H205 holding lightness, and add
+`--gold-bright:#F7E0A0` as an additive display tier nothing reads unless it
+opts in. Contrast against `--void` is preserved by construction:
+
+| token | before | after |
+|---|---|---|
+| `--ink` | 17.07:1 | 16.72:1 |
+| `--ink-dim` | 13.62:1 | 13.39:1 |
+| `--muted` | 5.62:1 | **6.57:1** |
+
+`--muted` *improves*, landing on the **6.58:1** the reference's own dimmest
+text measures — an independent confirmation the sampling was sound.
+`node scripts/verify-runtime.js` passes 13/13 with no blocking contrast
+finding.
+
+**Plus `omega-landing-system.css`**, the reference's composition language
+(hero split, realm strip, vision band, hex badges) built on the *platform*
+tokens and brand faces, and a procedural SVG Ω sculpture — this repo ships no
+raster hero art and has no image-generation path, so the same silhouette is
+drawn as vector geometry that scales and retints.
+
+**Two traps avoided, both documented here already.** Every class is prefixed
+`.ohz-` and **no class name contains "card" or "panel"**:
+`omega-visual-evolution.css:120` selects `[class*="card"],[class*="panel"]`
+and loads later, so a `.ohz-card` would have had its border, background,
+padding and radius silently rewritten. And `.ohz-display` sets
+`-webkit-text-fill-color` explicitly, because that property inherits into
+pseudo-elements (§8.4).
+
+**Four layout defects found only by rendering it**, none visible in the diff:
+
+| | before | after |
+|---|---|---|
+| stat row height @1440 | 157px (4th figure orphaned) | **72px, one row** |
+| realm strip @1440 | 6 + 3 (stranded remainder) | **9 across** |
+| brand vs `#om-open` | collides under ~700px | **clear at every width** |
+| `.ohz-sculpt` overflow | `visible`, painted past its box | `hidden` |
+
+`#om-open` is the load-bearing one: **bg.js injects a `position:fixed`
+`z-index:9000` button at x=12..54 on every page**, and a fluid left gutter
+walks under it. Any page-level chrome anchored to the top-left has to reserve
+that rail — `padding-left: max(var(--gutter), 62px)`.
+
+**Transferable rule.** *When a design reference looks richer than what you
+have, measure its hue before you reach for more contrast or more colour.* Four
+of the five differences here were temperature and tier of an accent the
+platform already owned — a token change reaching 189 pages through one file —
+and the fifth was raster art that this stack cannot produce at all.

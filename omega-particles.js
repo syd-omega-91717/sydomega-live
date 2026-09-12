@@ -3,6 +3,28 @@
    tsParticles (MIT) — element-specific live particle backgrounds.
    Each of the nine sovereign elements has a unique particle signature.
    Fires after the user profile loads and their element is known.
+
+   THE ENGINE IS SELF-HOSTED AT /vendor/tsparticles-slim.js.
+   This module used to reach the engine with
+   import('https://esm.sh/tsparticles-slim@2.12.0') on every page view.
+   bg.js injects this module, so that put a third-party CDN on the critical
+   path of the ambient background for all 189 pages -- the exact pattern
+   CLAUDE.md §4 records this repo paying for once already with 146 esm.sh
+   imports of the Supabase client, and fixed the same way: vendor the
+   official bundle and serve it from this origin.
+
+   It also made the feature untestable. A dynamic import of a host the
+   verification sandbox blocks never resolves, so `.then` never ran and the
+   canvas kept the browser's default 300x150 buffer stretched over the
+   viewport -- which reads in an audit exactly like a broken canvas. With
+   the bundle local, a render measures the real thing: the buffer resizes
+   to the viewport (1280x720 measured) and the field paints ~1.2% coverage
+   in animated pixels within 1.2s of load.
+
+   Upgrading: `npm pack tsparticles-slim@<version>` and copy
+   package/tsparticles.slim.bundle.min.js -- the bundle variant, which
+   carries its own dependencies -- to vendor/. It is UMD and assigns the
+   `tsParticles` global. MIT, 144KB minified.
    ========================================================================== */
 (function(){
 'use strict';
@@ -69,14 +91,46 @@ function injectCanvas(elem){
   return cv;
 }
 
+/* Load the vendored UMD bundle once, however many times launch() is called.
+   The in-flight promise is cached so two rapid calls share one <script>, and
+   a <script> another module already added is adopted rather than duplicated. */
+var _enginePromise=null;
+function loadEngine(){
+  if(window.tsParticles&&typeof window.tsParticles.load==='function'){
+    return Promise.resolve(window.tsParticles);
+  }
+  if(_enginePromise) return _enginePromise;
+  _enginePromise=new Promise(function(resolve,reject){
+    var prior=document.querySelector('script[data-omega-tsparticles]');
+    if(prior){
+      prior.addEventListener('load',function(){resolve(window.tsParticles);});
+      prior.addEventListener('error',reject);
+      return;
+    }
+    var s=document.createElement('script');
+    s.src='/vendor/tsparticles-slim.js';
+    s.setAttribute('data-omega-tsparticles','1');
+    s.defer=true;
+    s.onload=function(){resolve(window.tsParticles);};
+    /* Clear the cache on failure so a later call can retry rather than
+       inheriting a permanently rejected promise. */
+    s.onerror=function(){_enginePromise=null;reject(new Error('tsparticles bundle failed to load'));};
+    (document.head||document.documentElement).appendChild(s);
+  });
+  return _enginePromise;
+}
+
 function launch(elemName){
   var cv=injectCanvas(elemName);
   if(!cv) return;
-  import('https://esm.sh/tsparticles-slim@2.12.0').then(function(mod){
-    var tsP=mod.tsParticles||mod.default;
+  loadEngine().then(function(tsP){
     if(!tsP||typeof tsP.load!=='function') return;
     tsP.load({id:'omega-particles-canvas',element:cv,options:buildConfig(elemName)}).catch(function(){});
-  }).catch(function(){});
+  }).catch(function(){
+    /* No engine: drop the canvas rather than leaving an empty fixed layer
+       sitting over the page at opacity 1. */
+    if(cv&&cv.parentNode) cv.parentNode.removeChild(cv);
+  });
 }
 
 /* Listen for profile load event from bg.js auth chain */

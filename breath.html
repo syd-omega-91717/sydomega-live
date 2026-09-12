@@ -139,16 +139,16 @@
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-box card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-box card"><div class="stat-val">5.5</div><div class="stat-lbl">BREATHS/MIN</div></div>
-      <div class="stat-box card"><div class="stat-val">φ/e</div><div class="stat-lbl">BREATH RATIO</div></div>
-      <div class="stat-box card"><div class="stat-val">4-4-4</div><div class="stat-lbl">BOX PROTOCOL</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">5.5</div><div class="stat-lbl">BREATHS/MIN</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">BREATH RATIO</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">4-4-4</div><div class="stat-lbl">BOX PROTOCOL</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-box card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-box card"><div class="stat-val">HRV</div><div class="stat-lbl">KEY BIOMARKER</div></div>
-      <div class="stat-box card"><div class="stat-val">68%</div><div class="stat-lbl">STRESS REDUCTION</div></div>
-      <div class="stat-box card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">HRV</div><div class="stat-lbl">KEY BIOMARKER</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">68%</div><div class="stat-lbl">STRESS REDUCTION</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="sci-card card">
       <div class="sci-title">VAGAL TONE & HEART RATE VARIABILITY</div>
@@ -423,7 +423,7 @@ function renderHistory(){
     {v:totalCycles,l:'TOTAL CYCLES'},
     {v:days,l:'ACTIVE DAYS'},
     {v:fmtDur(Math.round(totalSecs/total)),l:'AVG SESSION'},
-  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   bl.innerHTML='';
   logs.slice(0,20).forEach(function(l){

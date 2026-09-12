@@ -220,13 +220,22 @@ pwa-check:
 build-production:
   stage: build
   script:
-    - echo "=== Production Build ===" && bash scripts/vercel-build.sh || { echo "FAILED: vercel-build.sh"; exit 1; }
-    - echo "Verifying build output..."
-    - test -s public/index.html || { echo "ERROR: public/index.html is empty or missing"; exit 1; }
-    - echo "✓ public/index.html exists"
-    - test -f public/vendor/supabase-js.js || { echo "ERROR: public/vendor/supabase-js.js missing"; exit 1; }
-    - echo "✓ public/vendor/supabase-js.js exists"
-    - echo "Build artifacts ready for deployment"
+    - |
+      set -e
+      echo "=== Production Build ==="
+      bash scripts/vercel-build.sh
+      echo "Verifying build output..."
+      if [ ! -s public/index.html ]; then
+        echo "ERROR: public/index.html is empty or missing"
+        exit 1
+      fi
+      echo "✓ public/index.html exists"
+      if [ ! -f public/vendor/supabase-js.js ]; then
+        echo "ERROR: public/vendor/supabase-js.js missing"
+        exit 1
+      fi
+      echo "✓ public/vendor/supabase-js.js exists"
+      echo "Build artifacts ready for deployment"
   artifacts:
     paths:
       - public/

@@ -1,0 +1,314 @@
+/* Ω SYD OMEGA 91717 — VISUAL EVOLUTION v3
+   MODERNIZED GLASSMORPHISM + GEOMETRIC TYPOGRAPHY + DEPTH LAYERING
+
+   This layer evolves the visual system toward:
+   - Prismatic glass surfaces (depth + iridescent edges)
+   - Geometric typography hierarchy (caps, tracking, monospace)
+   - Atmospheric depth (scroll-responsive layering, z-axis movement)
+   - Enhanced motion semantics (domain-specific entrance patterns)
+
+   Loaded AFTER omega-visual-evolution.css (v2), so it layers enhancements
+   without replacing existing rules. Both run; v3 adds specificity where
+   needed and uses new pseudo-elements where v2 left them open.
+
+   Accessibility: reduced-motion and forced-colors remain explicit.
+   No build step. Ships on all 178 pages. */
+
+:root {
+  /* v3 Prismatic light additions */
+  --omega-prism-hot: rgba(201,168,76,.16);
+  --omega-prism-cool: rgba(0,229,255,.12);
+  --omega-prism-mid: rgba(155,107,240,.08);
+
+  /* Depth layering */
+  --omega-depth-1: translateZ(0px);
+  --omega-depth-2: translateZ(8px);
+  --omega-depth-3: translateZ(16px);
+
+  /* Typography: geometric accents */
+  --omega-header-track: 3px;
+  --omega-label-track: 2.4px;
+  --omega-chip-track: 1.2px;
+}
+
+/* ── PRISMATIC GLASS: SURFACE EVOLUTION ────────────────────────────────
+   The cursor-reactive hotspot (--mx, --my) is already injected by bg.js.
+   v3 amplifies it with a visible prismatic glow layer. */
+
+.card, .kpi, .kpi-card, .panel, .module, .tile, .widget, .modal, .drawer,
+[class*="card"], [class*="panel"] {
+  position: relative;
+  /* Preserve v2 base, add depth layer */
+  --card-depth: radial-gradient(
+    circle 280px at var(--mx, 50%) var(--my, 50%),
+    rgba(201,168,76,.12) 0%,
+    rgba(0,229,255,.06) 35%,
+    rgba(155,107,240,.04) 65%,
+    transparent 100%
+  );
+  background-image:
+    var(--card-depth),
+    linear-gradient(115deg,transparent 40%,rgba(255,255,255,.055) 48%,transparent 56%),
+    linear-gradient(168deg,rgba(150,162,205,.06) 0%,rgba(120,132,175,.014) 44%,rgba(0,0,0,.12) 100%);
+  background-size: 100% 100%, 280% 100%, auto;
+  background-position: 0 0, 130% 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+.card:hover, .kpi:hover, .kpi-card:hover, .panel:hover, .module:hover,
+.tile:hover, .widget:hover {
+  box-shadow: var(--omega-rim),
+              0 28px 62px -18px rgba(0,0,0,.7),
+              0 0 32px var(--omega-glow-gold),
+              inset 0 0 40px var(--omega-prism-hot);
+  transform: translateZ(0) translateY(-6px);
+}
+
+/* Iridescent edge shimmer on hover (using v3's freed pseudo) */
+.card::after, .kpi::after, .kpi-card::after, .panel::after, .module::after,
+.tile::after, .widget::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(201,168,76,.35) 0%,
+    rgba(0,229,255,.35) 50%,
+    rgba(155,107,240,.25) 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .32s cubic-bezier(.22,.61,.36,1);
+  z-index: 1;
+}
+
+.card:hover::after, .kpi:hover::after, .kpi-card:hover::after,
+.panel:hover::after, .module:hover::after, .tile:hover::after,
+.widget:hover::after {
+  opacity: .14;
+}
+
+/* ── GEOMETRIC TYPOGRAPHY: HIERARCHY UPGRADE ──────────────────────────
+   Existing fonts stay; new CSS patterns establish visual hierarchy. */
+
+h1, h2, h3 {
+  letter-spacing: var(--omega-header-track, 0);
+  font-weight: 600;
+}
+
+.sechead {
+  position: relative;
+  padding-left: 16px;
+  letter-spacing: var(--omega-header-track, 0);
+  text-transform: uppercase;
+  font-size: clamp(13px, 2vw, 16px);
+  font-weight: 600;
+  color: var(--cyan);
+  text-shadow: 0 0 18px rgba(0,229,255,.35);
+}
+
+.sechead::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: clamp(14px, 1.4em, 20px);
+  background: linear-gradient(180deg, var(--gold), var(--cyan));
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
+
+/* Card titles: geometric treatment */
+.card-title, [class*="card-title"], .tile-title {
+  font-family: var(--M);
+  font-size: 11px;
+  letter-spacing: var(--omega-label-track);
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* KPI labels: monospace + tracking */
+.kpi-label, .kpi-l, .stat-label {
+  font-family: var(--M);
+  font-size: 11px;
+  letter-spacing: var(--omega-label-track);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* KPI values: tabular numbers for alignment */
+.kpi-n, .kpi-val, .stat-n, .astat-n, .metric-value {
+  font-family: 'Courier Prime', monospace;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  letter-spacing: .5px;
+}
+
+/* Chips: geometric micro-treatment */
+.chip {
+  font-family: var(--M);
+  font-size: 10px;
+  letter-spacing: var(--omega-chip-track);
+  text-transform: uppercase;
+  padding: 5px 11px;
+  background: rgba(201,168,76,.1);
+  border: 1px solid rgba(201,168,76,.18);
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all .2s ease;
+}
+
+.chip:hover {
+  background: rgba(201,168,76,.16);
+  border-color: rgba(201,168,76,.32);
+  box-shadow: 0 0 12px rgba(201,168,76,.15);
+}
+
+/* ── DEPTH & LAYERING: Z-AXIS MOVEMENT ────────────────────────────────
+   Scroll-responsive depth (--sy already injected by bg.js).
+   Creates the illusion of parallax and atmospheric depth. */
+
+.card, .kpi, .kpi-card {
+  will-change: transform;
+  --lift: calc(var(--sy, 0) * 0.3px);
+}
+
+.card:not(:hover), .kpi:not(:hover), .kpi-card:not(:hover) {
+  transform: translateY(var(--lift, 0));
+}
+
+/* Tables: depth-aware hover */
+.tbl-row {
+  position: relative;
+  transition: all .2s ease;
+}
+
+.tbl-row:hover {
+  background: rgba(201,168,76,.04);
+  transform: translateX(4px) translateZ(0);
+  box-shadow: -3px 0 12px rgba(201,168,76,.12);
+}
+
+/* ── DATA DENSITY: IMPROVED CONTRAST & SPACING ─────────────────────────
+   Make tables and dense layouts more readable. */
+
+.tbl-wrap {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--omega-rim), 0 14px 32px -18px rgba(0,0,0,.85);
+}
+
+.tbl-head {
+  background: linear-gradient(90deg,
+    rgba(201,168,76,.06) 0%,
+    rgba(201,168,76,.04) 100%);
+  backdrop-filter: blur(2px);
+}
+
+.tbl-hcell {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ── MOTION INTEGRATION: ENTRANCE VARIANTS ─────────────────────────────
+   These are CSS-only trigger points. omega-motion.js v3 (forthcoming)
+   reads data-omega-motion-type to apply domain-specific timing. */
+
+[data-omega-motion-type="card"] { --motion-offset: 14px; --motion-duration: 520ms; }
+[data-omega-motion-type="dashboard"] { --motion-offset: 16px; --motion-duration: 620ms; }
+[data-omega-motion-type="data"] { --motion-scale: 0.92; --motion-duration: 440ms; }
+[data-omega-motion-type="hero"] { --motion-rotate: -1deg; --motion-duration: 720ms; }
+
+/* ── FOCUS STATES: ENHANCED VISIBILITY ─────────────────────────────────
+   Make tab navigation and keyboard users feel premium. */
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(0,229,255,.15), 0 0 24px rgba(0,229,255,.22);
+}
+
+/* ── RESPONSIVE & MOBILE ───────────────────────────────────────────────
+   Maintain depth effects and typography on smaller screens. */
+
+@media (max-width: 900px) {
+  .sechead::before {
+    width: 3px;
+    height: 1.1em;
+  }
+
+  .card:hover, .kpi:hover, .kpi-card:hover {
+    transform: translateZ(0) translateY(-4px);
+  }
+
+  .tbl-row:hover {
+    transform: translateX(2px) translateZ(0);
+  }
+
+  [class*="card"], [class*="panel"] {
+    background-size: 100% 100%, 300% 100%, auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .sechead {
+    padding-left: 12px;
+    font-size: 12px;
+  }
+
+  .card:hover, .kpi:hover, .kpi-card:hover {
+    transform: none;
+    box-shadow: var(--omega-rim), 0 14px 32px -18px rgba(0,0,0,.7);
+  }
+
+  .tbl-row:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  [class*="card"], [class*="panel"] {
+    background-size: 100% 100%, 350% 100%, auto;
+  }
+}
+
+/* ── REDUCED MOTION & HIGH CONTRAST ────────────────────────────────────
+   Graceful degradation for accessibility. */
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .kpi, .kpi-card, .panel, .module, .tile, .widget {
+    transition: none !important;
+  }
+
+  .card::after, .kpi::after, .kpi-card::after,
+  .panel::after, .module::after, .tile::after, .widget::after {
+    display: none !important;
+  }
+
+  .card:hover, .kpi:hover, .kpi-card:hover {
+    transform: none !important;
+  }
+
+  .tbl-row:hover {
+    transform: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .card::after, .kpi::after, .kpi-card::after,
+  .panel::after, .module::after, .tile::after, .widget::after {
+    display: none;
+  }
+
+  .sechead::before {
+    background: CanvasText;
+  }
+
+  .card, .kpi, .kpi-card, .panel, .module, .tile, .widget {
+    border: 2px solid CanvasText;
+  }
+}

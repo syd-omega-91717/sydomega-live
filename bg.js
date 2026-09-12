@@ -74,6 +74,7 @@ function __omegaAppend(el){
 }
 /* Platform nervous system */
   if(!document.querySelector('script[data-omega-motion]')){var mo=document.createElement('script');mo.src='/omega-motion.js';mo.setAttribute('data-omega-motion','1');mo.defer=true;__omegaAppend(mo);}
+  if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* AI copilot on every page */
@@ -95,7 +96,9 @@ function __omegaAppend(el){
   /* Phase C.5: Archetype-specific motion and visual styling rules */
   if(!document.querySelector('script[data-omega-archetype-motion]')){var os_data_omega_archetype_motion=document.createElement('script');os_data_omega_archetype_motion.src='/omega-archetype-motion.js';os_data_omega_archetype_motion.setAttribute('data-omega-archetype-motion','1');os_data_omega_archetype_motion.defer=true;__omegaAppend(os_data_omega_archetype_motion);}
   /* Phase C.6: Archetype visual surface configuration */
-  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}
+  /* Phase A: Agent brand mythology, sigil identity, constellation visualization */
+  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -139,6 +142,39 @@ function __omegaAppend(el){
   link.href='https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap';
   var head=document.head||document.documentElement;
   head.appendChild(pre1); head.appendChild(pre2); head.appendChild(link);
+})();
+
+/* Ω v3 Evolution Layers: Visual System Modernization
+   Loaded after system.css and fonts. Each layer extends v2 without replacing.
+   - omega-visual-evolution-v3.css: Prismatic glass, geometric typography, depth layering
+   - omega-component-library.css: Information density patterns, dashboard components
+   - omega-accessibility-audit.css: WCAG 2.1 AA compliance, mobile optimization */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!document.getElementById('omega-visual-v3-css')){
+    var link=document.createElement('link');
+    link.id='omega-visual-v3-css'; link.rel='stylesheet';
+    link.href='/omega-visual-evolution-v3.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-component-library-css')){
+    var link=document.createElement('link');
+    link.id='omega-component-library-css'; link.rel='stylesheet';
+    link.href='/omega-component-library.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-accessibility-audit-css')){
+    var link=document.createElement('link');
+    link.id='omega-accessibility-audit-css'; link.rel='stylesheet';
+    link.href='/omega-accessibility-audit.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-agent-identity-css')){
+    var link=document.createElement('link');
+    link.id='omega-agent-identity-css'; link.rel='stylesheet';
+    link.href='/omega-agent-identity-v3.css'; link.type='text/css';
+    head.appendChild(link);
+  }
 })();
 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.

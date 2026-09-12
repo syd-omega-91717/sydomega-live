@@ -14,7 +14,7 @@
       padding: 20px;
       overflow-x: hidden;
     }
-    
+
     .dashboard {
       max-width: 1400px;
       margin: 0 auto;
@@ -549,9 +549,9 @@
 
     function updateMetrics() {
       if(!window.OmegaMetrics) return;
-      
+
       const metrics = window.OmegaMetrics.report();
-      
+
       // Update Core Web Vitals
       const lcp = Math.round(metrics.lcp) || 2400;
       const cls = (metrics.cls).toFixed(2) || 0.08;

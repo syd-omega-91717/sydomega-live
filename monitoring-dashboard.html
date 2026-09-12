@@ -234,10 +234,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* The gauge's own fill is solid gold for var(--gauge-percent) of the ring,
+       so gold text centered directly on the circle reads fine over the dark
+       remainder but goes gold-on-gold (measured: unreadable) over the filled
+       arc -- and every gauge here fills well past half. A small solid-dark
+       backing disc keeps the percentage on one predictable surface regardless
+       of fill level, instead of resting directly on the gradient. */
+    .gauge-val {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--void, #0A0A0F);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 700;
       font-size: 18px;
       color: var(--gold);
-      flex-shrink: 0;
     }
 
     .gauge-info {
@@ -461,7 +477,7 @@
           <div class="metric-card">
             <div class="metric-label">Cache Hit Rate</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 68%;">68%</div>
+              <div class="gauge-circle" style="--gauge-percent: 68%;"><span class="gauge-val">68%</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
                   <strong style="color: var(--gold);">68% improved</strong> over baseline
@@ -476,7 +492,7 @@
           <div class="metric-card">
             <div class="metric-label">Error Rate</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 1.5%;">1.5%</div>
+              <div class="gauge-circle" style="--gauge-percent: 1.5%;"><span class="gauge-val">1.5%</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
                   <strong style="color: var(--gold);">99.5% success</strong> with resilience
@@ -491,7 +507,7 @@
           <div class="metric-card">
             <div class="metric-label">Optimization Impact</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 92%;">92%</div>
+              <div class="gauge-circle" style="--gauge-percent: 92%;"><span class="gauge-val">92%</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
                   <strong style="color: var(--gold);">92% better</strong> performance

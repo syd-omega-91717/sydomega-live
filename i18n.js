@@ -410,6 +410,7 @@ var T_EN={
 "asc_your_element":"YOUR ELEMENT",
 "dash_hud_rank":"RANK ·",
 "dash_hud_gates":"GATES REACHED",
+"chr_your_element":"YOUR ELEMENT",
 "dash_activity_heatmap":"SOVEREIGN ACTIVITY · 90-DAY CONTRIBUTION HEATMAP",
 "dash_personal_tools":"PERSONAL SOVEREIGN TOOLS · ALL 8 MODULES",
 "dash_platform_index":"PLATFORM COMMAND INDEX · ALL 189 PAGES · 15 SECTIONS",

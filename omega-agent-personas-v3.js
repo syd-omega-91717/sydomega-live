@@ -101,16 +101,16 @@
   const AGENT_SYMBOLS = {
     sentinel: '⚔',     // Crossed swords / shield
     merchant: '⚖',     // Balance / scales
-    scout: '🗺',       // Map
-    warden: '🔱',      // Trident (Artemis)
+    scout: '◆',        // Map (diamond)
+    warden: '◈',       // Trident (star)
     sovereign: '☀',    // Sun (Apollo)
     auditor: '✓',      // Check mark / verification
     proxy: '↔',        // Bidirectional arrow
     oracle: '◐',       // Moon crescent
-    beacon: '⚡',      // Lightning (Zeus / vision)
-    analyst: '📊',     // Chart
+    beacon: '⚡︎',      // Lightning (Zeus / vision)
+    analyst: '▲',      // Chart (triangle)
     tutor: '✎',        // Quill (knowledge)
-    historian: '📜',   // Scroll
+    historian: '◇',    // Scroll (diamond)
   };
 
   /**

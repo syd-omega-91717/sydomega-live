@@ -327,13 +327,11 @@
     <div class="main">
       <div id="app" style="padding: 2rem">
         <div class="section-header">
-          <span class="section-icon">⚙️</span>
           <h1 class="section-title">Autonomous System Insights</h1>
         </div>
 
         <!-- Agent Performance Overview -->
         <div class="section-header" style="margin-top: 2rem">
-          <span class="section-icon">🤖</span>
           <h2 class="section-title" style="font-size: 1.1rem">Agent Performance</h2>
         </div>
 
@@ -437,32 +435,32 @@
       const agentInfo = {
         concierge: {
           name: "Concierge Agent",
-          icon: "👨‍💼",
+          icon: "",
           description: "Support & Onboarding",
         },
         growth: {
           name: "Growth Agent",
-          icon: "📈",
+          icon: "",
           description: "Campaign Orchestration",
         },
         product: {
           name: "Product Agent",
-          icon: "🎯",
+          icon: "",
           description: "Feature Adaptation",
         },
         insights: {
           name: "Insights Agent",
-          icon: "🔍",
+          icon: "",
           description: "Anomaly Detection",
         },
         archive: {
           name: "Archive Agent",
-          icon: "📦",
+          icon: "",
           description: "Compliance & Export",
         },
         guardian: {
           name: "Guardian Agent",
-          icon: "🛡️",
+          icon: "",
           description: "Policy Enforcement",
         },
       };
@@ -643,7 +641,7 @@
           card.innerHTML = `
             <div class="recommendation-title">${insight.insight_type}</div>
             <div class="recommendation-text">${insight.recommendation || insight.finding}</div>
-            <div class="estimated-impact">💰 +$${(insight.estimated_impact_usd || 0).toFixed(0)} Annual</div>
+            <div class="estimated-impact">+$${(insight.estimated_impact_usd || 0).toFixed(0)} Annual</div>
           `;
           container.appendChild(card);
         });

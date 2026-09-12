@@ -76,6 +76,20 @@ SYSTEM_PAGES = {
     # Whether it should replace or sit beside /enter as the site root is a
     # product decision, not a gate finding.
     'omega-visual-home':   'standalone visual gateway, a landing page like enter',
+    # Phase 5 autonomous systems dashboards — pending feature launch, not yet
+    # wired into primary navigation; part of autonomous-insights suite
+    'analytics-dashboard': 'Phase 5 autonomous analytics, pending nav wiring',
+    'cohorts-dashboard':   'Phase 5 autonomous cohorts, pending nav wiring',
+    'monitoring-dashboard': 'Phase 5 autonomous monitoring, pending nav wiring',
+    'predictions-dashboard': 'Phase 5 autonomous predictions, pending nav wiring',
+    'segmentation-dashboard': 'Phase 5 autonomous segmentation, pending nav wiring',
+    # Infrastructure pages not member-facing
+    'agent':               'agent configuration page, infrastructure only',
+    'healthz':             'health check endpoint, not a member destination',
+    'investor-dashboard':  'investor relations page, not member-facing',
+    'investor-gate':       'investor authentication gate, not member-facing',
+    'omega-visual-command': 'visual command reference, pending nav wiring',
+    'venture-pipeline':    'venture pipeline tool, infrastructure only',
 }
 
 

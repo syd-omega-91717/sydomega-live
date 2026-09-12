@@ -20,7 +20,7 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 .pad{padding:20px var(--pad)}
 .glass{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px}
 .kpi{display:grid;gap:8px;padding:16px;border:1px solid var(--dim);border-radius:4px;background:rgba(201,168,76,.02)}
-.kpi-label{font-family:var(--M);font-size:11px;letter-spacing:1px;color:rgba(138,134,118,.5);text-transform:uppercase}
+.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);text-transform:uppercase}
 .kpi-value{font-family:var(--M);font-size:28px;font-weight:bold;color:var(--gold)}
 .kpi-pct{font-family:var(--M);font-size:12px;color:var(--green)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
@@ -31,7 +31,7 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 .metric-table th{text-align:left;padding:12px 8px;border-bottom:1px solid var(--dim);font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);font-weight:normal}
 .metric-table td{padding:12px 8px;border-bottom:1px solid rgba(201,168,76,.05)}
 .metric-table tr:hover{background:rgba(201,168,76,.02)}
-.segment-badge{display:inline-block;padding:6px 12px;border-radius:3px;font-family:var(--M);font-size:11px;font-weight:bold;margin-right:4px}
+.segment-badge{display:inline-block;padding:6px 12px;border-radius:3px;font-family:var(--M);font-size:12px;font-weight:bold;margin-right:4px}
 .badge-power{background:rgba(255,149,0,.2);color:var(--orange)}
 .badge-regular{background:rgba(63,178,127,.2);color:var(--green)}
 .badge-casual{background:rgba(155,107,240,.2);color:var(--purple)}
@@ -154,19 +154,19 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 <div class="chart-title">Member Flow Through Lifecycle Stages</div>
 <div style="margin-top:20px">
 <div style="margin-bottom:16px">
-<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">ONBOARDING (0-7 days)</div>
+<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">ONBOARDING (0-7 days)</div>
 <div class="lifecycle-track"><div class="lifecycle-bar" style="width:25%"></div></div>
 </div>
 <div style="margin-bottom:16px">
-<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">GROWTH (8-60 days)</div>
+<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">GROWTH (8-60 days)</div>
 <div class="lifecycle-track"><div class="lifecycle-bar" style="width:40%"></div></div>
 </div>
 <div style="margin-bottom:16px">
-<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">MATURITY (61-365 days)</div>
+<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">MATURITY (61-365 days)</div>
 <div class="lifecycle-track"><div class="lifecycle-bar" style="width:55%"></div></div>
 </div>
 <div>
-<div style="font-size:11px;color:rgba(138,134,118,.5);margin-bottom:4px">LOYAL (365+ days)</div>
+<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">LOYAL (365+ days)</div>
 <div class="lifecycle-track"><div class="lifecycle-bar" style="width:70%"></div></div>
 </div>
 </div>
@@ -321,7 +321,7 @@ function loadSegmentationData(){
   ).join('');
 
   document.getElementById('adoption-velocity').innerHTML=`
-    <div style="font-family:var(--M);font-size:11px;color:rgba(138,134,118,.5)">
+    <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)">
       <div style="margin-bottom:12px">Average cohort reaches 8+ features in <strong>62 days</strong></div>
       <div style="margin-bottom:8px">Fastest adopters: <strong>24 days</strong> (top 10%)</div>
       <div style="margin-bottom:8px">Slowest adopters: <strong>180 days</strong> (bottom 10%)</div>

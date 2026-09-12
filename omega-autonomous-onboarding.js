@@ -277,7 +277,7 @@ window.OmegaAutonomousOnboarding = (() => {
         <div class="onboarding-card">
           <div class="step-header">
             <h2>${step.title}</h2>
-            <div class="step-duration">⏱️ ${step.estimated_duration_minutes} min</div>
+            <div class="step-duration">${step.estimated_duration_minutes} min</div>
           </div>
           <p class="step-description">${step.description}</p>
           <div class="step-components">

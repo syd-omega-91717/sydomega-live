@@ -89,6 +89,10 @@ def validate_alerts(config):
 
 def main():
     """Validate monitoring configuration."""
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(__doc__)
+        return 0
+
     config = load_monitoring_config()
     if not config:
         return 1

@@ -160,16 +160,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card card"><div class="stat-val">2.5L</div><div class="stat-lbl">DAILY TARGET</div></div>
-      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">HYDRATION RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">75%</div><div class="stat-lbl">BRAIN WATER</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.5L</div><div class="stat-lbl">DAILY TARGET</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">HYDRATION RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">75%</div><div class="stat-lbl">BRAIN WATER</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">1-2%</div><div class="stat-lbl">DEHYDRATION IMPAIRS</div></div>
-      <div class="stat-card card"><div class="stat-val">0.8L</div><div class="stat-lbl">KIDNEY MAX/HR</div></div>
-      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">1-2%</div><div class="stat-lbl">DEHYDRATION IMPAIRS</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">0.8L</div><div class="stat-lbl">KIDNEY MAX/HR</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="sci-card card">
       <div class="sci-title">HYDRATION & COGNITIVE PERFORMANCE</div>
@@ -357,8 +357,8 @@ function renderHistory(){
     {v:avgDay+'ml',l:'DAILY AVG'},
     {v:streak,l:'GOAL STREAK'},
     {v:days.size,l:'ACTIVE DAYS'},
-  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('')
-    +'<div class="stat-box card"><div class="stat-val" id="st-yesterday">&mdash;</div><div class="stat-lbl">YESTERDAY VS PRIOR DAY</div>'
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('')
+    +'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val" id="st-yesterday">&mdash;</div><div class="stat-lbl">YESTERDAY VS PRIOR DAY</div>'
     +'<div data-omega-spark id="spark-water" data-spark-line="off" hidden style="margin-top:8px;justify-content:center"></div></div>';
 
   /* Yesterday against the day before it: two finished days. The canvas below

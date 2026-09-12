@@ -74,6 +74,7 @@ function __omegaAppend(el){
 }
 /* Platform nervous system */
   if(!document.querySelector('script[data-omega-motion]')){var mo=document.createElement('script');mo.src='/omega-motion.js';mo.setAttribute('data-omega-motion','1');mo.defer=true;__omegaAppend(mo);}
+  if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* AI copilot on every page */
@@ -139,6 +140,33 @@ function __omegaAppend(el){
   link.href='https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap';
   var head=document.head||document.documentElement;
   head.appendChild(pre1); head.appendChild(pre2); head.appendChild(link);
+})();
+
+/* Ω v3 Evolution Layers: Visual System Modernization
+   Loaded after system.css and fonts. Each layer extends v2 without replacing.
+   - omega-visual-evolution-v3.css: Prismatic glass, geometric typography, depth layering
+   - omega-component-library.css: Information density patterns, dashboard components
+   - omega-accessibility-audit.css: WCAG 2.1 AA compliance, mobile optimization */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!document.getElementById('omega-visual-v3-css')){
+    var link=document.createElement('link');
+    link.id='omega-visual-v3-css'; link.rel='stylesheet';
+    link.href='/omega-visual-evolution-v3.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-component-library-css')){
+    var link=document.createElement('link');
+    link.id='omega-component-library-css'; link.rel='stylesheet';
+    link.href='/omega-component-library.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-accessibility-audit-css')){
+    var link=document.createElement('link');
+    link.id='omega-accessibility-audit-css'; link.rel='stylesheet';
+    link.href='/omega-accessibility-audit.css'; link.type='text/css';
+    head.appendChild(link);
+  }
 })();
 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.

@@ -100,13 +100,13 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
   <div style="padding:20px var(--pad,20px)">
 
   <!-- Top KPIs -->
-  <div class="kpi-row" id="kpi-row">
-    <div class="kpi"><div class="kpi-label">EVENTS / MIN</div><div class="kpi-value" id="kpi-epm">—</div></div>
-    <div class="kpi"><div class="kpi-label">WORKERS ACTIVE</div><div class="kpi-value" id="kpi-workers">—</div></div>
-    <div class="kpi"><div class="kpi-label">CIRCUIT BREAKERS</div><div class="kpi-value" id="kpi-cb">—<span class="kpi-unit">CLOSED</span></div></div>
-    <div class="kpi"><div class="kpi-label">DLQ DEPTH</div><div class="kpi-value" id="kpi-dlq">—</div></div>
-    <div class="kpi"><div class="kpi-label">EVENTS TOTAL</div><div class="kpi-value" id="kpi-total">—</div></div>
-    <div class="kpi"><div class="kpi-label">ERROR RATE</div><div class="kpi-value" id="kpi-err">—<span class="kpi-unit">%</span></div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">EVENTS / MIN</div><div class="kpi-value" id="kpi-epm">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">WORKERS ACTIVE</div><div class="kpi-value" id="kpi-workers">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">CIRCUIT BREAKERS</div><div class="kpi-value" id="kpi-cb">—<span class="kpi-unit">CLOSED</span></div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">DLQ DEPTH</div><div class="kpi-value" id="kpi-dlq">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">EVENTS TOTAL</div><div class="kpi-value" id="kpi-total">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">ERROR RATE</div><div class="kpi-value" id="kpi-err">—<span class="kpi-unit">%</span></div></div>
   </div>
 
   <div class="tabs">

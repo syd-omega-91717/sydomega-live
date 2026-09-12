@@ -91,13 +91,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
 
     <div class="pad">
-      <div class="kpi-row">
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="kq-workers">6</div><div class="kpi-l">ACTIVE WORKERS</div></div>
-        <div class="kpi" style="--kc:var(--orange)"><div class="kpi-n" id="kq-processed">0</div><div class="kpi-l">MSGS PROCESSED</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="kq-events">0</div><div class="kpi-l">EVENTS EMITTED</div></div>
-        <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="kq-dlq">0</div><div class="kpi-l">DLQ DEPTH</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="kq-cb-open">0</div><div class="kpi-l">OPEN CIRCUITS</div></div>
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kq-catalog">15</div><div class="kpi-l">EVENT TYPES</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-n" id="kq-workers">6</div><div class="kpi-l">ACTIVE WORKERS</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--orange)"><div class="kpi-n" id="kq-processed">0</div><div class="kpi-l">MSGS PROCESSED</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n" id="kq-events">0</div><div class="kpi-l">EVENTS EMITTED</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--crim)"><div class="kpi-n" id="kq-dlq">0</div><div class="kpi-l">DLQ DEPTH</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--purple)"><div class="kpi-n" id="kq-cb-open">0</div><div class="kpi-l">OPEN CIRCUITS</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n" id="kq-catalog">15</div><div class="kpi-l">EVENT TYPES</div></div>
       </div>
 
       <div class="tab-bar">

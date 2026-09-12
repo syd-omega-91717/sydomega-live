@@ -29,11 +29,11 @@
 
     <!-- CATALOG TAB -->
     <div class="tab-panel active pad" id="tab-catalog">
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-total">0</div><div class="kpi-l">PUBLICATIONS</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-read">0</div><div class="kpi-l">READ</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-reading">0</div><div class="kpi-l">IN PROGRESS</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-queue">0</div><div class="kpi-l">IN QUEUE</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">0</div><div class="kpi-l">PUBLICATIONS</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-read">0</div><div class="kpi-l">READ</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-reading">0</div><div class="kpi-l">IN PROGRESS</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-queue">0</div><div class="kpi-l">IN QUEUE</div></div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
         <select id="filter-type" class="inp" onchange="renderCatalog()" style="width:auto">

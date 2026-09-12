@@ -36,11 +36,11 @@
 
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-reserve">$0</div><div class="kpi-l">RESERVES</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-reserve">$0</div><div class="kpi-l">RESERVES</div></div>
       </div>
       <div class="sechead">TREASURY OVERVIEW</div>
       <canvas id="treasury-canvas" width="600" height="180" style="width:100%;max-width:600px;border:1px solid var(--line);display:block"></canvas>
@@ -163,10 +163,10 @@
         <button class="btn" onclick="addFlow()">LOG FLOW</button>
         <button class="btn" onclick="document.getElementById('add-flow-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
       </div>
-      <div class="kpi-row" style="margin-bottom:14px">
-        <div class="kpi"><div class="kpi-n" id="f-total-in" style="color:var(--green)">$0</div><div class="kpi-l">TOTAL IN</div></div>
-        <div class="kpi"><div class="kpi-n" id="f-total-out" style="color:#FF4444">$0</div><div class="kpi-l">TOTAL OUT</div></div>
-        <div class="kpi"><div class="kpi-n" id="f-net">$0</div><div class="kpi-l">NET FLOW</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70" style="margin-bottom:14px">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-in" style="color:var(--green)">$0</div><div class="kpi-l">TOTAL IN</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-out" style="color:#FF4444">$0</div><div class="kpi-l">TOTAL OUT</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-net">$0</div><div class="kpi-l">NET FLOW</div></div>
       </div>
       <div id="flow-list" style="display:grid;gap:8px"></div>
     </div>

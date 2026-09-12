@@ -198,27 +198,27 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="stat-card" data-reveal="fade-up"><div class="stat-val">1RM</div><div class="stat-lbl">STRENGTH METRIC</div></div>
       <div class="stat-card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">PROGRESSIVE OVERLOAD</div>
       <div class="sci-cite">Kraemer, W.J. & Ratamess, N.A. (2004) — Fundamentals of resistance training. Medicine & Science in Sports & Exercise, 36(4)</div>
       <div class="sci-body">Progressive overload — the systematic increase of training stress over time — is the foundational mechanism of all strength and hypertrophy adaptation. The body adapts to the demands placed upon it; without increasing those demands (more weight, reps, sets, or reduced rest), adaptation plateaus. Logging sets, reps, and loads creates the data needed to identify stagnation and apply progressive overload with precision rather than guesswork.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">VOLUME, FREQUENCY & MUSCLE PROTEIN SYNTHESIS</div>
       <div class="sci-cite">Schoenfeld, B.J. et al. (2017) — Dose-response relationship between weekly resistance training volume and increases in muscle mass. Journal of Sports Sciences, 35(11)</div>
       <div class="sci-body">Brad Schoenfeld's meta-analysis found a dose-response relationship between weekly training volume (sets per muscle group) and hypertrophy, with higher volumes (10+ sets/week per muscle) generally producing greater gains. Muscle protein synthesis (MPS) remains elevated for ~48 hours post-training, making twice-weekly frequency per muscle group more effective than once-weekly for growth. Tracking muscle frequency helps ensure each group receives adequate stimulus.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">REST INTERVALS & HORMONAL RESPONSE</div>
       <div class="sci-cite">Ahtiainen, J.P. et al. (2005) — Short vs. long rest period between sets. European Journal of Applied Physiology, 93(1-2)</div>
       <div class="sci-body">Rest interval length is not merely comfort preference — it directly affects the training stimulus. Short rests (60-90s) produce greater growth hormone spikes and metabolic stress, beneficial for hypertrophy. Longer rests (3-5 minutes) allow greater force production per subsequent set, optimal for maximal strength development. The 2-minute rest timer covers both modalities; the sovereign discipline is matching rest interval strategy to training goal.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">STRENGTH TRAINING & COGNITIVE PERFORMANCE</div>
       <div class="sci-cite">Liu-Ambrose, T. et al. (2010) — Resistance training and executive functions. JAMA Internal Medicine (formerly Archives of Internal Medicine), 170(2)</div>
       <div class="sci-body">A randomized controlled trial demonstrated that resistance training significantly improved executive cognitive functions — including selective attention, conflict resolution, and associative memory — compared to balance and tone training. The mechanism involves BDNF (brain-derived neurotrophic factor) upregulation: resistance training is a potent BDNF stimulus, promoting neuroplasticity and new synapse formation. Physical training is cognitive training.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">TRAINING CONSISTENCY OVER INTENSITY</div>
       <div class="sci-cite">Steele, J. et al. (2017) — Resistance training to momentary muscular failure improves cardiovascular fitness. Journal of Human Kinetics, 56</div>
       <div class="sci-body">Long-term training data consistently shows that consistency of training frequency predicts outcomes better than any single session's intensity. Missing sessions compounds: a 2-week detraining period can lose 10-15% of strength gains. The sovereign approach is to never miss a session by making sessions flexible — a 20-minute mobility session on a low-energy day is infinitely superior to zero. Logging every session, regardless of intensity, reinforces the identity of someone who trains.</div>
@@ -419,7 +419,7 @@ function renderProgress(){
     {v:thisWeek,l:'THIS WEEK'},
     {v:days,l:'ACTIVE DAYS'},
     {v:totalSets,l:'TOTAL SETS'},
-  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   /* muscle frequency */
   var mFreq={};

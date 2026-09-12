@@ -52,6 +52,15 @@
       <div style="text-align:center;padding:20px 0">
         <canvas id="identity-seal" width="160" height="160" style="width:80px;height:80px"></canvas>
       </div>
+
+      <!-- YOUR ELEMENT — rotating 3-D sphere (Three.js via omega-realm.js,
+           already injected sitewide by bg.js). This tab is visible on load
+           (not display:none), so the canvas has a real size the moment
+           OmegaRealm is ready -- no lazy-mount-on-tab-click needed here. -->
+      <div class="sechead" data-i18n="id_your_element">YOUR ELEMENT</div>
+      <div style="border:1px solid var(--line);background:#000005;height:clamp(220px,30vh,320px);margin-bottom:14px;position:relative;overflow:hidden;border-radius:2px">
+        <canvas id="id-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+      </div>
     </div>
 
     <!-- ACCESS TAB -->
@@ -182,6 +191,12 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('id-name',name);
     sid('id-email',s.user.email||'--');
     sid('id-sign',(pr.sign||'--').toUpperCase()+'  /  '+(pr.element||'--').toUpperCase());
+    (function mountIdRealm(){
+      var canvas=document.getElementById('id-realm-canvas');
+      if(!canvas)return;
+      if(!window.OmegaRealm){setTimeout(mountIdRealm,300);return;}
+      window.OmegaRealm.mount(canvas,pr.element||'Void');
+    })();
     sid('id-god',(pr.god||'--').toUpperCase()+'  /  '+(pr.agent||'--').toUpperCase());
     sid('id-tier',(pr.subscription_tier||'FREE').toUpperCase());
     sid('id-status',isSovereign?'∞ LIFETIME SOVEREIGN':isPermanent?'∞ PERMANENT':isTrial?'TRIAL ACTIVE':'PENDING');

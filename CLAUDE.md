@@ -137,12 +137,12 @@ looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
 
 **Third-party bundles are self-hosted in `/vendor/`** — `supabase-js.js`,
-`tsparticles-slim.js`; official UMD, no bundler, add with `npm pack`; `audit.py`
-tracks them apart from root modules. Never reintroduce a runtime CDN
-import: that was 146 esm.sh imports on every page view, an unresolved top-level
-import runs *none* of its module's code, and the harness blocks esm.sh — so
-`omega-particles.js` read as a dead 300×150 canvas estate-wide until vendored
-(`FIXES_LOG.md` 127).
+`tsparticles-slim.js`, `three.module.js` (670KB); official builds, no bundler,
+add with `npm pack`; `audit.py` tracks them apart from root modules. Never reintroduce a runtime CDN
+import: that was 146 esm.sh imports on every page view, an unresolved import runs
+*none* of its module's code, and the harness blocks esm.sh — so both
+`omega-particles.js` and the realm sphere read as dead 300×150 canvases
+until vendored (`FIXES_LOG.md` 128, 130-131).
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -593,10 +593,9 @@ entries (which were accurate when written):
   `.claude/skills/verify-in-browser/` handles it.
 - **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
   `terms.html` and the page never renders.
-- **Verify a "0 findings" result is real.** A stopped static server reports 0; so
-  does a regex damaged in transit (a rule moved out of a template literal kept
-  doubled backslashes, matched no digits, reported a serene zero). Cross-check
-  with a run that must find something.
+- **Verify a "0 findings" result is real.** A stopped static server reports 0;
+  so does a regex damaged in transit. Cross-check with a run that must find
+  something.
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
@@ -668,7 +667,7 @@ entries (which were accurate when written):
   *view*) before the smaller number was believed.
 - **A repo-wide grep is a candidate generator, not a verdict.** Confident
   source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
-  `outline:none`) were false — the runtime showed 172/173 fine, since `bg.js`
+  `outline:none`) were false — the runtime showed 172/173 fine, `bg.js`
   injects them.
 - **A scanner needs its own false-positive pass before its number means
   anything.** A fixed-widget collision scan reported 177/178 pages by counting

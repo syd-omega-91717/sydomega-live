@@ -24,17 +24,17 @@
         <button class="tab-btn" onclick="switchTab('settings')"><span class="kpi-l" style="letter-spacing: 1px;">SETTINGS</span></button>
       </div>
       <div id="tab-explorer" class="tab-content">
-        <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-          <div class="card"><div class="card-title">Total Entities</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="entity-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">distinct graph nodes</div></div>
-          <div class="card"><div class="card-title">Relationships</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="relationship-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">directed edges</div></div>
-          <div class="card"><div class="card-title">Avg Confidence</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="avg-confidence" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">extraction quality</div></div>
+        <div class="card-grid" data-stagger data-stagger-gap="60" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+          <div class="card" data-reveal="fade-up"><div class="card-title">Total Entities</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="entity-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">distinct graph nodes</div></div>
+          <div class="card" data-reveal="fade-up"><div class="card-title">Relationships</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="relationship-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">directed edges</div></div>
+          <div class="card" data-reveal="fade-up"><div class="card-title">Avg Confidence</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="avg-confidence" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">extraction quality</div></div>
         </div>
         <div class="card" style="margin-bottom: 2rem;">
           <div class="card-title">Search Entities</div>
           <div style="display: flex; gap: 0.5rem; margin: 1rem 0;"><input type="text" id="entity-search" class="inp" placeholder="search by name or type..." style="flex: 1;"><button class="btn-gold" onclick="searchEntities()">SEARCH</button></div>
           <div id="search-results" style="max-height: 400px; overflow-y: auto;"></div>
         </div>
-        <div class="card">
+        <div class="card" data-reveal="fade-up">
           <div class="card-title">Graph Visualization (Client-Side Force Layout)</div>
           <div id="graph-container" style="width: 100%; height: 600px; background: rgba(10, 10, 15, 0.5); border-radius: 4px; margin: 1rem 0; position: relative; overflow: hidden;"><canvas id="graph-canvas" width="800" height="600" style="width: 100%; height: 100%;"></canvas></div>
           <div class="kpi-l" style="opacity: 0.6; margin-top: 1rem;">Drag to pan • Scroll to zoom • Click node for details</div>
@@ -45,10 +45,10 @@
         <div id="query-results" class="card" style="display: none;"><div class="card-title">Query Results</div><div id="results-content" style="max-height: 600px; overflow-y: auto;"></div></div>
       </div>
       <div id="tab-anomalies" class="tab-content" style="display: none;"><div class="card" style="margin-bottom: 2rem;"><div class="card-title">Anomaly Detection</div><div style="margin: 1rem 0;"><button class="btn-gold" onclick="detectAnomalies()">SCAN FOR ANOMALIES</button></div></div><div id="anomaly-results" style="display: grid; grid-template-columns: 1fr; gap: 1rem;"></div></div>
-      <div id="tab-timeline" class="tab-content" style="display: none;"><div class="card"><div class="card-title">Graph Change Timeline</div><div id="timeline-events" style="max-height: 600px; overflow-y: auto;"></div></div></div>
+      <div id="tab-timeline" class="tab-content" style="display: none;"><div class="card" data-reveal="fade-up"><div class="card-title">Graph Change Timeline</div><div id="timeline-events" style="max-height: 600px; overflow-y: auto;"></div></div></div>
       <div id="tab-settings" class="tab-content" style="display: none;">
         <div class="card" style="margin-bottom: 2rem;"><div class="card-title">Ingestion Settings</div><div style="margin: 1rem 0;"><div style="margin-bottom: 1rem;"><label class="kpi-l"><input type="checkbox" id="ingest-tasks" checked> Task Completions</label></div><div style="margin-bottom: 1rem;"><label class="kpi-l"><input type="checkbox" id="ingest-journal"> Journal Entries</label></div><div style="margin-bottom: 1rem;"><label class="kpi-l"><input type="checkbox" id="ingest-social"> Social Posts &amp; Messages</label></div><button class="btn-gold" onclick="startIngestion()">START INGESTION</button></div></div>
-        <div class="card"><div class="card-title">Graph Export</div><div style="margin: 1rem 0;"><button class="btn" onclick="exportGraph()">Export as JSON</button><button class="btn" onclick="exportReport()">Export Evidence Report</button></div></div>
+        <div class="card" data-reveal="fade-up"><div class="card-title">Graph Export</div><div style="margin: 1rem 0;"><button class="btn" onclick="exportGraph()">Export as JSON</button><button class="btn" onclick="exportReport()">Export Evidence Report</button></div></div>
       </div>
       <div data-page-emblem="graphify" style="margin:20px auto 0"></div>
     </main>

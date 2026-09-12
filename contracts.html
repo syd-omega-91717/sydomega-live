@@ -113,11 +113,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">CONTRACT ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">SOVEREIGN REFERENCE</div><div class="card-body">Each contract carries a unique Ω-91717 reference generated from a base-36 timestamp. References are immutable once sealed and serve as permanent identifiers in the Sovereign Ledger.</div></div>
-    <div class="card"><div class="card-title">DEFAULT RATE</div><div class="card-body">The default commission rate of 9.17% is the sovereign standard (a planning default for your own contract arithmetic, not a charge levied by the platform; the &#937; economy is dormant behind <code>platform_settings.tokens_enabled</code>) — calibrated to the Ω matrix. All rates are adjustable per contract. The Ω commission value is calculated as: Deal Value × (Rate / 100).</div></div>
-    <div class="card"><div class="card-title">CONTRACT STATUS</div><div class="card-body">PENDING: agreement drafted, awaiting execution. ACTIVE: contract in force, work underway. CLOSED: contract concluded, commission settled. Status transitions are logged in the Sovereign Ledger.</div></div>
-    <div class="card"><div class="card-title">COUNTERPARTY RECORD</div><div class="card-body">Counterparty names and scope descriptions are stored in commission_contracts, linked to your sovereign profile. All records are private by default — accessible only to you and designated co-signatories.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">SOVEREIGN REFERENCE</div><div class="card-body">Each contract carries a unique Ω-91717 reference generated from a base-36 timestamp. References are immutable once sealed and serve as permanent identifiers in the Sovereign Ledger.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">DEFAULT RATE</div><div class="card-body">The default commission rate of 9.17% is the sovereign standard (a planning default for your own contract arithmetic, not a charge levied by the platform; the &#937; economy is dormant behind <code>platform_settings.tokens_enabled</code>) — calibrated to the Ω matrix. All rates are adjustable per contract. The Ω commission value is calculated as: Deal Value × (Rate / 100).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRACT STATUS</div><div class="card-body">PENDING: agreement drafted, awaiting execution. ACTIVE: contract in force, work underway. CLOSED: contract concluded, commission settled. Status transitions are logged in the Sovereign Ledger.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">COUNTERPARTY RECORD</div><div class="card-body">Counterparty names and scope descriptions are stored in commission_contracts, linked to your sovereign profile. All records are private by default — accessible only to you and designated co-signatories.</div></div>
   </div>
 </div>
 <div data-page-emblem="contracts" style="margin:20px auto 0"></div>

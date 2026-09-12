@@ -19,7 +19,17 @@ cache:
     - .cache/pip
 
 default:
-  image: ubuntu:latest
+  # Pinned to a specific Ubuntu release, not "latest" -- the tag Docker
+  # resolves "latest" to changes over time and drags apt's default
+  # python3/nodejs versions with it. This repo's own .nvmrc pins Node
+  # 20.20.2 and the workflow-parity contract assumes Python 3.12; the
+  # variables below declared that intent but the previous before_script
+  # never acted on it -- it just took whatever "python3"/"nodejs" apt
+  # resolved for the image tag of the day, which is why this environment
+  # has drifted out from under fixes that worked when last tested.
+  # ubuntu:24.04 ships Python 3.12 by default; Node 20 needs NodeSource
+  # since 24.04's apt-provided nodejs is 18.x.
+  image: ubuntu:24.04
   retry:
     max: 2
     when:
@@ -30,7 +40,9 @@ default:
     - echo "=== CI Environment Setup ==="
     - export DEBIAN_FRONTEND=noninteractive
     - apt-get update -qq
-    - apt-get install -y -qq python3 python3-pip python3-yaml nodejs npm curl git
+    - apt-get install -y -qq curl ca-certificates git python3 python3-pip
+    - curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+    - apt-get install -y -qq nodejs
     - git fetch --unshallow
     - node --version
     - python3 --version

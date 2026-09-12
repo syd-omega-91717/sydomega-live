@@ -207,7 +207,7 @@ window.OmegaAutonomousOnboarding = (() => {
           completed.push(stepId);
         }
 
-        await sb
+        const { error: updateError } = await sb
           .from("member_attributes")
           .update({
             onboarding_completed_steps: completed,
@@ -215,8 +215,12 @@ window.OmegaAutonomousOnboarding = (() => {
           })
           .eq("member_id", memberId);
 
+        if (updateError) {
+          throw new Error(`Failed to update member_attributes: ${updateError.message}`);
+        }
+
         // Record decision for analytics
-        await sb.from("member_agent_interactions").insert({
+        const { error: insertError } = await sb.from("member_agent_interactions").insert({
           member_id: memberId,
           agent_id: "concierge",
           interaction_type: "onboarding_step_completed",
@@ -224,6 +228,10 @@ window.OmegaAutonomousOnboarding = (() => {
           agent_response: `Completed onboarding step: ${stepId}`,
           resolved: true,
         });
+
+        if (insertError) {
+          throw new Error(`Failed to insert interaction record: ${insertError.message}`);
+        }
 
         return true;
       } catch (error) {

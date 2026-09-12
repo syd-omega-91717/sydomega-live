@@ -243,9 +243,26 @@
     requestAnimationFrame(step);
   }
 
+  /* Triggered once on first viewport entry, per the header above -- but
+     initCountUps() is itself re-invoked on every 'omega:populated' event
+     (below) to pick up newly-added [data-countup] elements, and each call
+     used to spin up a fresh IntersectionObserver with no memory of what an
+     earlier call already handled. An element still in view when
+     'omega:populated' fires (the common case: a page dispatches it right
+     after its own count-up targets finish filling with real data) got
+     observed and counted-up TWICE concurrently -- two independent step()
+     loops overwriting the same textContent every frame, each reading the
+     other's mid-animation frame as its own "raw" value. Confirmed live on
+     dashboard.html's MY AUTHORITY KPI: the two loops fought until settling
+     on an arbitrary wrong number, including negative (a leading "-" one
+     loop captured as a literal prefix from the other's transient frame).
+     __omgCounted makes "once" durable across repeat calls, matching the
+     guard shape omega-motion.js already uses for the same class of hazard. */
   function initCountUps(){
     if(!('IntersectionObserver' in window)){
-      document.querySelectorAll('[data-countup]').forEach(countUp);
+      document.querySelectorAll('[data-countup]').forEach(function(el){
+        if(el.__omgCounted)return; el.__omgCounted=1; countUp(el);
+      });
       return;
     }
     var io = new IntersectionObserver(function(entries){
@@ -256,6 +273,7 @@
       });
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-countup]').forEach(function(el){
+      if(el.__omgCounted)return; el.__omgCounted=1;
       io.observe(el);
     });
   }

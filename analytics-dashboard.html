@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content=width=device-width,initial-scale=1>
+<title>Analytics Dashboard · SYD OMEGA 91717</title>
+<meta name=description content="Real-time member analytics, engagement metrics, and predictive insights.">
+<link rel=manifest href=/manifest.json>
+<script src=/bg.js defer></script>
+<style>
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--crim:#8b0000;--green:#3fb27f;--cyan:#00E5FF;--purple:#9B6BF0;--solar:#E2C86D;--muted:rgba(138,134,118,.5);--ink:rgba(220,210,180,.8);--M:monospace;--D:serif;--R:sans-serif;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.side{background:rgba(201,168,76,.03);border-right:1px solid var(--dim);padding:16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px var(--pad);border-bottom:1px solid var(--dim);background:rgba(2,2,6,.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.t{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)}
+.t small{display:block;font-size:12px;color:var(--muted);letter-spacing:1.5px;margin-top:2px}
+.pad{padding:20px var(--pad)}
+.glass{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px}
+.kpi{display:grid;gap:8px;padding:16px;border:1px solid var(--dim);border-radius:4px;background:rgba(201,168,76,.02)}
+.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.kpi-value{font-family:var(--M);font-size:28px;font-weight:bold;color:var(--gold)}
+.kpi-change{font-family:var(--M);font-size:12px;color:var(--green)}
+.kpi-change.down{color:var(--crim)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.sechead{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin:24px 0 12px;text-transform:uppercase}
+.chart-container{background:rgba(201,168,76,.02);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:20px;min-height:300px}
+.chart-title{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);margin-bottom:12px}
+.metric-table{width:100%;border-collapse:collapse}
+.metric-table th{text-align:left;padding:12px 8px;border-bottom:1px solid var(--dim);font-family:var(--M);font-size:12px;color:var(--muted);font-weight:normal}
+.metric-table td{padding:12px 8px;border-bottom:1px solid rgba(201,168,76,.05)}
+.metric-table tr:hover{background:rgba(201,168,76,.02)}
+.status-badge{display:inline-block;padding:4px 8px;border-radius:3px;font-family:var(--M);font-size:12px;font-weight:bold}
+.status-good{background:rgba(63,178,127,.2);color:var(--green)}
+.status-warning{background:rgba(226,200,109,.2);color:var(--solar)}
+.status-critical{background:rgba(139,0,0,.2);color:var(--crim)}
+.tab-container{display:flex;gap:0;border-bottom:1px solid var(--dim);margin-bottom:20px}
+.tab-btn{padding:12px 16px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);background:transparent;border:none;cursor:pointer;position:relative}
+.tab-btn.active{color:var(--gold)}
+.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.loading{text-align:center;padding:40px 20px;color:var(--muted)}
+.error{background:rgba(139,0,0,.1);border:1px solid var(--crim);border-radius:4px;padding:12px;color:var(--crim);margin:12px 0;font-size:12px}
+.success{background:rgba(63,178,127,.1);border:1px solid var(--green);border-radius:4px;padding:12px;color:var(--green);margin:12px 0;font-size:12px}
+</style>
+</head>
+<body>
+<a href=#main-content class=skip-link>SKIP TO CONTENT</a>
+<div class=shell>
+<aside class=side id=omega-side data-page=analytics-dashboard aria-label=Navigation></aside>
+<main class=main role=main id=main-content>
+<div class=topbar>
+<div class=t>ANALYTICS DASHBOARD<small>MEMBER INSIGHTS · ENGAGEMENT METRICS · PREDICTIONS · SYD OMEGA 91717</small></div>
+<span style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-left:auto id=live-clock>--:--:--</span>
+</div>
+<div class=pad>
+<div style=font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px>INTELLIGENCE · INSIGHTS</div>
+<h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">ANALYTICS DASHBOARD</h1>
+
+<div class=tab-container>
+<button class="tab-btn active" data-tab=overview>OVERVIEW</button>
+<button class=tab-btn data-tab=engagement>ENGAGEMENT</button>
+<button class=tab-btn data-tab=predictions>PREDICTIONS</button>
+<button class=tab-btn data-tab=cohorts>COHORTS</button>
+<button class=tab-btn data-tab=reports>REPORTS</button>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div id=overview class="tab-content active">
+<div class=sechead>REAL-TIME METRICS</div>
+<div class=kpi-row id=kpi-overview>
+<div class=kpi><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
+<div class=kpi><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
+<div class=kpi><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
+<div class=kpi><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
+</div>
+
+<div class=sechead>ENGAGEMENT TRENDS (7-DAY)</div>
+<div class=chart-container>
+<div class=chart-title>Session Activity</div>
+<canvas id=chart-sessions style=width:100%;height:200px></canvas>
+<div class=loading id=chart-sessions-loading>Loading...</div>
+</div>
+
+<div class=sechead>MEMBER BREAKDOWN</div>
+<div class=glass style=padding:16px;margin-bottom:16px>
+<table class=metric-table>
+<thead>
+<tr><th>Segment</th><th>Count</th><th>Engagement</th><th>Status</th></tr>
+</thead>
+<tbody id=member-segments>
+<tr><td colspan=4 class=loading>Loading member segments...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ENGAGEMENT TAB -->
+<div id=engagement class=tab-content>
+<div class=sechead>ENGAGEMENT METRICS</div>
+<div class=kpi-row>
+<div class=kpi><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
+<div class=kpi><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
+<div class=kpi><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
+<div class=kpi><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
+</div>
+
+<div class=sechead>TOP PAGES</div>
+<div class=glass style=padding:16px;margin-bottom:16px>
+<table class=metric-table>
+<thead>
+<tr><th>Page</th><th>Views</th><th>Avg Time</th><th>Bounce</th></tr>
+</thead>
+<tbody id=top-pages>
+<tr><td colspan=4 class=loading>Loading page data...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- PREDICTIONS TAB -->
+<div id=predictions class=tab-content>
+<div class=sechead>CHURN RISK ANALYSIS</div>
+<div class=chart-container>
+<div class=chart-title>Members at High Risk (>70% probability)</div>
+<div id=churn-alerts style=max-height:400px;overflow-y:auto>
+<div class=loading>Loading churn predictions...</div>
+</div>
+</div>
+
+<div class=sechead>FEATURE ADOPTION OPPORTUNITIES</div>
+<div class=glass style=padding:16px;margin-bottom:16px>
+<table class=metric-table>
+<thead>
+<tr><th>Member</th><th>Recommended Feature</th><th>Adoption %</th><th>Confidence</th></tr>
+</thead>
+<tbody id=feature-recommendations>
+<tr><td colspan=4 class=loading>Loading recommendations...</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class=sechead>ENGAGEMENT SCORE DISTRIBUTION</div>
+<div class=chart-container>
+<canvas id=chart-engagement-dist style=width:100%;height:250px></canvas>
+<div class=loading id=chart-engagement-loading>Loading...</div>
+</div>
+</div>
+
+<!-- COHORTS TAB -->
+<div id=cohorts class=tab-content>
+<div class=sechead>RETENTION COHORTS (D0, D7, D30)</div>
+<div class=glass style=padding:16px;margin-bottom:16px;overflow-x:auto>
+<table class=metric-table>
+<thead>
+<tr><th>Cohort</th><th>Size</th><th>D0</th><th>D7</th><th>D30</th><th>D90</th></tr>
+</thead>
+<tbody id=cohort-retention>
+<tr><td colspan=6 class=loading>Loading cohort data...</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class=sechead>FEATURE ADOPTION COHORTS</div>
+<div class=chart-container>
+<canvas id=chart-adoption-cohort style=width:100%;height:250px></canvas>
+<div class=loading id=chart-adoption-loading>Loading...</div>
+</div>
+</div>
+
+<!-- REPORTS TAB -->
+<div id=reports class=tab-content>
+<div class=sechead>AUTOMATED REPORTS</div>
+<div class=glass style=padding:16px;margin-bottom:16px>
+<div style=margin-bottom:12px>
+<div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Weekly Performance Brief</div>
+<div style=font-size:12px;color:var(--muted)>Monday 06:00 UTC</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Engagement, churn, adoption, performance metrics delivered to email</div>
+</div>
+<div style=margin-bottom:12px;padding:12px 0;border-top:1px solid var(--dim)>
+<div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Member Insights Report</div>
+<div style=font-size:12px;color:var(--muted)>Thursday 08:00 UTC</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Top features, patterns, at-risk members, high engagement cohort analysis</div>
+</div>
+<div style=padding:12px 0;border-top:1px solid var(--dim)>
+<div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Product Analytics Deep Dive</div>
+<div style=font-size:12px;color:var(--muted)>Friday 09:00 UTC</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Feature penetration, funnels, retention cohorts, LTV analysis</div>
+</div>
+</div>
+
+<div class=sechead>LAST REPORT SUMMARY</div>
+<div id=last-report class=glass style=padding:16px>
+<div class=loading>Generating last report...</div>
+</div>
+</div>
+
+</div>
+
+</div>
+</main>
+</div>
+
+<script>
+function updateClock(){var d=new Date();document.getElementById('live-clock').textContent=d.toLocaleTimeString('en-GB',{hour12:false})+' UTC';}
+setInterval(updateClock,1000);updateClock();
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// Simulated analytics data (replace with real API calls)
+function loadAnalytics(){
+  const data={
+    active_members:487,
+    active_change:'+12 (2.5%)',
+    engagement_score:72.4,
+    engagement_change:'+3.2%',
+    churn_rate:'2.1%',
+    churn_change:'-0.5%',
+    adoption_rate:'68%',
+    adoption_change:'+5%'
+  };
+
+  document.getElementById('metric-active').textContent=data.active_members;
+  document.getElementById('metric-active-change').textContent=data.active_change;
+  document.getElementById('metric-engagement').textContent=(data.engagement_score).toFixed(1);
+  document.getElementById('metric-engagement-change').textContent=data.engagement_change;
+  document.getElementById('metric-churn').textContent=data.churn_rate;
+  document.getElementById('metric-churn-change').textContent=data.churn_change;
+  document.getElementById('metric-adoption').textContent=data.adoption_rate;
+  document.getElementById('metric-adoption-change').textContent=data.adoption_change;
+
+  // Member segments
+  const segments=[
+    {name:'High Engagement',count:142,engagement:91,status:'good'},
+    {name:'Active',count:189,engagement:68,status:'good'},
+    {name:'At Risk',count:89,engagement:34,status:'critical'},
+    {name:'Inactive',count:67,engagement:12,status:'warning'}
+  ];
+
+  document.getElementById('member-segments').innerHTML=segments.map(s=>
+    `<tr><td>${s.name}</td><td>${s.count}</td><td>${s.engagement}%</td><td><span class="status-badge status-${s.status}">${s.status.toUpperCase()}</span></td></tr>`
+  ).join('');
+}
+
+loadAnalytics();
+setInterval(loadAnalytics,300000);
+</script>
+<script type="module" src="/omega-analytics-init.js" defer></script>
+</body>
+</html>

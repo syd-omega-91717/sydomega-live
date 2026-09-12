@@ -80,11 +80,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">ACHIEVEMENT VAULT ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">TWELVE TROPHIES</div><div class="card-body">12 sovereign trophies span the complete element spectrum: Genesis Mark (Sand), Knowledge Crown (Wind), Mastery Seal (Fire), Contribution Sigil (Water), Elemental Badge (Sand), Celestial Mark (Wind), Sovereign Crest (Sand), Bloodline Trophy (Metal), Economic Seal (Fire), Oracle Crown (Water), Omega Guardian (Fire), and Absolute Apex (Sand).</div></div>
-    <div class="card"><div class="card-title">TWELVE MEDALS</div><div class="card-body">Order medals recognize domain mastery: First Light (Genesis), Knowledge Pioneer (Academy), Master of Craft (Mastery), Economic Builder (Economy), Celestial Navigator (Cosmos), Order Architect (Platform), Family Guardian (Lineage), Consultation Master (Services), Research Pioneer (Intel), Prediction Oracle (Forecast), Heritage Keeper (History), Omega Sovereign (Apex).</div></div>
-    <div class="card"><div class="card-title">TWELVE CERTIFICATES</div><div class="card-body">Certificates are issued upon completion of sovereign study paths. They range from Genesis Certificate (Platform Foundation) through Knowledge Foundation, Mastery Levels I and II, Economic Analyst, Celestial Navigator, Sovereign Architect, Heritage Scholar, Oracle Prophet, Order Consultant, Platform Master, to Omega Sovereign (Absolute Apex — All Domains).</div></div>
-    <div class="card"><div class="card-title">ACHIEVEMENT ENGINE</div><div class="card-body">Achievements are stored in three Supabase tables: trophies, medals, and certificates — each linked by user_id. Platform owners hold all 36 achievements by definition. Member achievements are earned through axis progression, task completion, and sovereign domain mastery. The Omega Sovereign achievement requires all axes at maximum.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">TWELVE TROPHIES</div><div class="card-body">12 sovereign trophies span the complete element spectrum: Genesis Mark (Sand), Knowledge Crown (Wind), Mastery Seal (Fire), Contribution Sigil (Water), Elemental Badge (Sand), Celestial Mark (Wind), Sovereign Crest (Sand), Bloodline Trophy (Metal), Economic Seal (Fire), Oracle Crown (Water), Omega Guardian (Fire), and Absolute Apex (Sand).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">TWELVE MEDALS</div><div class="card-body">Order medals recognize domain mastery: First Light (Genesis), Knowledge Pioneer (Academy), Master of Craft (Mastery), Economic Builder (Economy), Celestial Navigator (Cosmos), Order Architect (Platform), Family Guardian (Lineage), Consultation Master (Services), Research Pioneer (Intel), Prediction Oracle (Forecast), Heritage Keeper (History), Omega Sovereign (Apex).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">TWELVE CERTIFICATES</div><div class="card-body">Certificates are issued upon completion of sovereign study paths. They range from Genesis Certificate (Platform Foundation) through Knowledge Foundation, Mastery Levels I and II, Economic Analyst, Celestial Navigator, Sovereign Architect, Heritage Scholar, Oracle Prophet, Order Consultant, Platform Master, to Omega Sovereign (Absolute Apex — All Domains).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">ACHIEVEMENT ENGINE</div><div class="card-body">Achievements are stored in three Supabase tables: trophies, medals, and certificates — each linked by user_id. Platform owners hold all 36 achievements by definition. Member achievements are earned through axis progression, task completion, and sovereign domain mastery. The Omega Sovereign achievement requires all axes at maximum.</div></div>
   </div>
 </div>
 <div data-page-emblem="trophies" style="margin:20px auto 0"></div>
@@ -257,6 +257,6 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

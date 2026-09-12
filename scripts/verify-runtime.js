@@ -285,8 +285,28 @@ const CHECK_JS = `(() => {
        the first opaque surface; a gradient with opaque stops IS that surface,
        and every one of its stops is a candidate -- text is judged against the
        WORST of them, which is the only honest standard for a gradient. */
+    const elRect = r;
     let n = el, bases = null; const layers = [];
     while (n && n !== document.documentElement) {
+      /* An ancestor's own background/gradient only actually paints behind
+         the text element if its box sits inside the ancestor's own box. A
+         position:absolute child with a negative offset (top:-24px, e.g.)
+         renders OUTSIDE its parent's rendered box, over whatever is behind
+         the parent instead -- but a plain DOM-ancestor walk has no way to
+         know that and will still pick up the parent's own background as
+         if it were painted there. Measured false positive: a .bar-value
+         label positioned above a gold-gradient .bar reported 1:1 (judged
+         against the bar's own gold top stop) while a real screenshot of
+         the exact pixels shows perfectly legible gold-on-near-black --
+         the bar's gradient never reaches that negative-offset region.
+         Skip any ancestor other than el itself (whose own background
+         always applies) whose box does not contain el's. */
+      if (n !== el) {
+        const nRect = n.getBoundingClientRect();
+        const contains = nRect.left <= elRect.left + 0.5 && nRect.top <= elRect.top + 0.5 &&
+                          nRect.right >= elRect.right - 0.5 && nRect.bottom >= elRect.bottom - 0.5;
+        if (!contains) { n = n.parentElement; continue; }
+      }
       const s = getComputedStyle(n);
       /* background-clip:text means the background paints INSIDE the
          glyphs, not behind them -- .ofx-sheen is exactly this. Treating

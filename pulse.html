@@ -145,11 +145,11 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <div class="panel active" id="tab-crypto">
     <div class="grid4" id="crypto-grid" data-loading></div>
     <div class="grid2">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; BTC / ETH DOMINANCE</div>
         <canvas id="dom-canvas" height="100" style="display:block;width:100%"></canvas>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; MARKET CAP LEADERS</div>
         <div id="cap-list" data-loading></div>
       </div>
@@ -159,16 +159,16 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <!-- FOREX TAB -->
   <div class="panel" id="tab-forex">
     <div class="grid2">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; MAJOR PAIRS (vs USD)</div>
         <div id="fx-major"></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; MIDDLE EAST / LEVANT</div>
         <div id="fx-region"></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">&#9679; USD STRENGTH INDEX <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED &mdash; NO FREE LIVE SOURCE)</span></div>
       <canvas id="usd-canvas" height="80" style="display:block;width:100%"></canvas>
     </div>
@@ -177,11 +177,11 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <!-- COMMODITIES TAB -->
   <div class="panel" id="tab-commodities">
     <div class="grid2">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; PRECIOUS METALS <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED)</span></div>
         <div id="cmd-metals"></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; ENERGY <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED)</span></div>
         <div id="cmd-energy"></div>
       </div>
@@ -195,20 +195,20 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <!-- SCIENCE TAB -->
   <div class="panel" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">SIGNAL RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
-      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">SIGNAL RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card card"><div class="stat-val">8</div><div class="stat-lbl">ELEMENTS TRACKED</div></div>
-      <div class="stat-card card"><div class="stat-val">6</div><div class="stat-lbl">CITIES MONITORED</div></div>
-      <div class="stat-card card"><div class="stat-val">60s</div><div class="stat-lbl">REFRESH INTERVAL</div></div>
-      <div class="stat-card card"><div class="stat-val">&#8734;</div><div class="stat-lbl">SIGNAL SOURCES</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">8</div><div class="stat-lbl">ELEMENTS TRACKED</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">6</div><div class="stat-lbl">CITIES MONITORED</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">60s</div><div class="stat-lbl">REFRESH INTERVAL</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">&#8734;</div><div class="stat-lbl">SIGNAL SOURCES</div></div>
     </div>
     <div class="grid3" id="weather-grid" data-loading></div>
     <div class="grid2">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; CRYPTO FEAR &amp; GREED INDEX</div>
         <div class="fng-gauge">
           <div class="fng-val" id="fng-val">--</div>
@@ -219,12 +219,12 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
           <span>EXTREME FEAR</span><span>NEUTRAL</span><span>EXTREME GREED</span>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; ELEMENT SIGNAL ALIGNMENT</div>
         <div id="elem-signal-list" style="padding-top:4px"></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">&#9679; GLOBAL CRYPTO NEWS</div>
       <div id="news-list" data-loading></div>
     </div>
@@ -554,7 +554,7 @@ function renderWeather(results){
     var temp=typeof d.temperature_2m==='number'?d.temperature_2m.toFixed(1)+'°C':'--';
     var humidity=d.relative_humidity_2m||'--';
     var wind=d.wind_speed_10m||'--';
-    return '<div class="card">'
+    return '<div class="card" data-reveal="fade-up">'
       +'<div class="card-title">'+r.city+'</div>'
       +'<div class="weather-main">'
       +'<div class="wt-icon">'+icon+'</div>'

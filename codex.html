@@ -153,8 +153,8 @@
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div class="sechead">CODEX SOURCES &mdash; INSTITUTIONAL TRUST</div>
-  <div class="card-grid" style="--cols:1">
-    <div class="card">
+  <div class="card-grid" data-stagger data-stagger-gap="60" style="--cols:1">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">WHY OPEN SOURCES</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
         <p>The Sovereign Codex aggregates from three peer-reviewed, institutionally trusted open sources: Wikipedia (crowdsourced, citation-backed), arXiv (pre-print research from Cornell University), and Open Library (public domain books from the Internet Archive). All data is fetched live, unaltered, and presented for sovereign learning.</p>
@@ -174,11 +174,11 @@
   </div>
 
   <div class="sechead">SOVEREIGN LEARNING DOMAINS</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">PHILOSOPHY &amp; STRATEGY</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Stoicism · Machiavelli · Sun Tzu · Nietzsche · Sovereignty theory · Political philosophy</div></div>
-    <div class="card"><div class="card-title">MATHEMATICS &amp; PHYSICS</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Game theory · Thermodynamics · Information theory · Quantum mechanics · Number theory</div></div>
-    <div class="card"><div class="card-title">ECONOMICS &amp; FINANCE</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Behavioral economics · Austrian school · Quantitative finance · Market microstructure</div></div>
-    <div class="card"><div class="card-title">PSYCHOLOGY &amp; ARCHETYPES</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Jungian archetypes · Personality frameworks · Cognitive psychology · Leadership science</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">PHILOSOPHY &amp; STRATEGY</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Stoicism · Machiavelli · Sun Tzu · Nietzsche · Sovereignty theory · Political philosophy</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">MATHEMATICS &amp; PHYSICS</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Game theory · Thermodynamics · Information theory · Quantum mechanics · Number theory</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">ECONOMICS &amp; FINANCE</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Behavioral economics · Austrian school · Quantitative finance · Market microstructure</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">PSYCHOLOGY &amp; ARCHETYPES</div><div class="card-body" style="font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)">Jungian archetypes · Personality frameworks · Cognitive psychology · Leadership science</div></div>
   </div>
 </div>
 
@@ -514,5 +514,5 @@ document.getElementById('arxivCats').addEventListener('click',function(e){
 searchWikipedia('sovereignty political philosophy',document.getElementById('discoverGrid'));
 loadArxivCat('cs.AI');
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

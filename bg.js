@@ -74,6 +74,7 @@ function __omegaAppend(el){
 }
 /* Platform nervous system */
   if(!document.querySelector('script[data-omega-motion]')){var mo=document.createElement('script');mo.src='/omega-motion.js';mo.setAttribute('data-omega-motion','1');mo.defer=true;__omegaAppend(mo);}
+  if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* AI copilot on every page */
@@ -95,7 +96,9 @@ function __omegaAppend(el){
   /* Phase C.5: Archetype-specific motion and visual styling rules */
   if(!document.querySelector('script[data-omega-archetype-motion]')){var os_data_omega_archetype_motion=document.createElement('script');os_data_omega_archetype_motion.src='/omega-archetype-motion.js';os_data_omega_archetype_motion.setAttribute('data-omega-archetype-motion','1');os_data_omega_archetype_motion.defer=true;__omegaAppend(os_data_omega_archetype_motion);}
   /* Phase C.6: Archetype visual surface configuration */
-  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}
+  /* Phase A: Agent brand mythology, sigil identity, constellation visualization */
+  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -139,6 +142,52 @@ function __omegaAppend(el){
   link.href='https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap';
   var head=document.head||document.documentElement;
   head.appendChild(pre1); head.appendChild(pre2); head.appendChild(link);
+})();
+
+/* Ω v3 Evolution Layers: Visual System Modernization
+   Loaded after system.css and fonts. Each layer extends v2 without replacing.
+   - omega-visual-evolution-v3.css: Prismatic glass, geometric typography, depth layering
+   - omega-component-library.css: Information density patterns, dashboard components
+   - omega-accessibility-audit.css: WCAG 2.1 AA compliance, mobile optimization */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!document.getElementById('omega-visual-v3-css')){
+    var link=document.createElement('link');
+    link.id='omega-visual-v3-css'; link.rel='stylesheet';
+    link.href='/omega-visual-evolution-v3.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-component-library-css')){
+    var link=document.createElement('link');
+    link.id='omega-component-library-css'; link.rel='stylesheet';
+    link.href='/omega-component-library.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-accessibility-audit-css')){
+    var link=document.createElement('link');
+    link.id='omega-accessibility-audit-css'; link.rel='stylesheet';
+    link.href='/omega-accessibility-audit.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-agent-identity-css')){
+    var link=document.createElement('link');
+    link.id='omega-agent-identity-css'; link.rel='stylesheet';
+    link.href='/omega-agent-identity-v3.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  /* omega-cinematic-system.css: additive-only (see its own header) --
+     styles four namespaced classes (.omega-cinematic/.omega-emblem/
+     .omega-depth-card/.omega-node) and invents its own token names, so it
+     is safe platform-wide. Previously linked from index.html alone despite
+     both this file's and the sheet's own header comments already claiming
+     sitewide reach (CLAUDE.md 4.1 / FIXES_LOG.md 114) -- wiring it here
+     makes that claim true instead of fixing the claim to match reality. */
+  if(!document.getElementById('omega-cinematic-css')){
+    var link=document.createElement('link');
+    link.id='omega-cinematic-css'; link.rel='stylesheet';
+    link.href='/omega-cinematic-system.css'; link.type='text/css';
+    head.appendChild(link);
+  }
 })();
 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
@@ -1530,6 +1579,25 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
   var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
   if(EX[pg])return;
+  /* pending.html independently redirects back here whenever it reads
+     is_trial+trial_expires_at as still active, racing this file's own
+     expire_trial-then-redirect flow below. A guard keyed on the redirect
+     TARGET (not a page-local flag, which a fresh navigation resets)
+     survives across the actual page loads a ping-pong produces, so a
+     genuine loop is broken instead of bouncing the member forever. */
+  function safeRedirect(url){
+    try{
+      var k='omega_redirect_log',now=Date.now();
+      var log=JSON.parse(sessionStorage.getItem(k)||'[]').filter(function(e){return now-e.t<10000;});
+      var p=url.split('?')[0];
+      if(log.filter(function(e){return e.p===p;}).length>=2){
+        console.error('[Omega] redirect loop guard: stopped repeated redirect to',url);
+        return;
+      }
+      log.push({p:p,t:now});sessionStorage.setItem(k,JSON.stringify(log.slice(-6)));
+    }catch(e){}
+    location.replace(url);
+  }
   /* shared singleton -- each extra createClient registers another GoTrueClient
      competing for the same auth-token storage key */
   (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){
@@ -1540,8 +1608,8 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
         if(!pr.data)return;
         var d=pr.data;
-        if(d.access_approved===false && !d.is_owner && !d.is_trial){location.replace('/pending.html');return;}
-        if(d.sign&&!d.terms_accepted){location.replace('/terms.html');return;}
+        if(d.access_approved===false && !d.is_owner && !d.is_trial){safeRedirect('/pending.html');return;}
+        if(d.sign&&!d.terms_accepted){safeRedirect('/terms.html');return;}
         /* Approval confirmed -- release the guard so #app may render. */
         if(window.__omegaApprove) window.__omegaApprove(true);
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
@@ -1552,7 +1620,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
              expired page either way. The wall clock says the trial is over, so
              ending the session is right regardless -- but a failed write is now
              recorded, and the next load retries expire_trial. */
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);location.replace('/pending.html?t=expired');});return;}
+          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);safeRedirect('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
@@ -1599,7 +1667,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       }
     });
     var expired=false;
-    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
+    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){safeRedirect('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
   }
 })();
@@ -2129,6 +2197,11 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;__omegaAppend(_otour);}
   /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
   if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;__omegaAppend(_ocin);}
+  /* Cinematic emblem system — .omega-cinematic body class, ambient starfield
+     layer, pointer-parallax custom properties. A DIFFERENT guard attribute
+     than omega-cinematic.js above on purpose (CLAUDE.md bug class 5b: two
+     modules sharing one data-omega-* guard means only the first ever loads). */
+  if(!document.querySelector('script[data-omega-cinematic-system]')){var _ocsy=document.createElement('script');_ocsy.src='/omega-cinematic-system.js';_ocsy.setAttribute('data-omega-cinematic-system','1');_ocsy.defer=true;__omegaAppend(_ocsy);}
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
   if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;__omegaAppend(_oa11y);}
   /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */
@@ -2192,3 +2265,33 @@ setTimeout(function(){
      synchronously further up, because a dynamic script like this one is async and cannot be
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
+
+  /* Ω Cache Optimizer — aggressive static asset caching, IndexedDB support, prefetch */
+  if(!document.querySelector('script[data-omega-cache]')){var _occh=document.createElement('script');_occh.src='/omega-cache-optimizer.js';_occh.setAttribute('data-omega-cache','1');_occh.defer=true;__omegaAppend(_occh);}
+
+  /* Ω Resilience Engine — automatic retry logic, circuit breaker, graceful degradation */
+  if(!document.querySelector('script[data-omega-resilience]')){var _oresil=document.createElement('script');_oresil.src='/omega-resilience.js';_oresil.setAttribute('data-omega-resilience','1');_oresil.defer=true;__omegaAppend(_oresil);}
+
+  /* Ω WCAG AAA Enhancement — beyond AA compliance, enhanced focus, skip links, a11y */
+  if(!document.querySelector('script[data-omega-wcag-aaa]')){var _owcag=document.createElement('script');_owcag.src='/omega-wcag-aaa.js';_owcag.setAttribute('data-omega-wcag-aaa','1');_owcag.defer=true;__omegaAppend(_owcag);}
+
+  /* Ω Performance Monitor — Core Web Vitals tracking, API timing, error metrics */
+  if(!document.querySelector('script[data-omega-monitoring]')){var _omon=document.createElement('script');_omon.src='/omega-monitoring.js';_omon.setAttribute('data-omega-monitoring','1');_omon.defer=true;__omegaAppend(_omon);}
+
+  /* Ω Security Hardening — input sanitization, XSS prevention, secure storage */
+  if(!document.querySelector('script[data-omega-security]')){var _osec=document.createElement('script');_osec.src='/omega-security.js';_osec.setAttribute('data-omega-security','1');_osec.defer=true;__omegaAppend(_osec);}
+
+  /* Ω Enhanced Search — indexed search, relevance ranking, smart highlighting */
+  if(!document.querySelector('script[data-omega-search-enhanced]')){var _osea=document.createElement('script');_osea.src='/omega-search-enhanced.js';_osea.setAttribute('data-omega-search-enhanced','1');_osea.defer=true;__omegaAppend(_osea);}
+
+  /* Ω Query Optimizer — batch queries, connection pooling, lazy loading */
+  if(!document.querySelector('script[data-omega-query-opt]')){var _oqo=document.createElement('script');_oqo.src='/omega-query-optimizer.js';_oqo.setAttribute('data-omega-query-opt','1');_oqo.defer=true;__omegaAppend(_oqo);}
+
+  /* Ω Animation Optimizer — GPU acceleration, frame rate control, motion-safe */
+  if(!document.querySelector('script[data-omega-anim-opt]')){var _oao=document.createElement('script');_oao.src='/omega-animation-optimizer.js';_oao.setAttribute('data-omega-anim-opt','1');_oao.defer=true;__omegaAppend(_oao);}
+
+  /* Ω Sync Engine — offline-first sync, conflict resolution, cross-tab broadcast */
+  if(!document.querySelector('script[data-omega-sync]')){var _osyn=document.createElement('script');_osyn.src='/omega-sync-engine.js';_osyn.setAttribute('data-omega-sync','1');_osyn.defer=true;__omegaAppend(_osyn);}
+
+  /* Ω DevTools — performance profiling, error reporting, debugging utilities */
+  if(!document.querySelector('script[data-omega-devtools]')){var _odev=document.createElement('script');_odev.src='/omega-devtools.js';_odev.setAttribute('data-omega-devtools','1');_odev.defer=true;__omegaAppend(_odev);}

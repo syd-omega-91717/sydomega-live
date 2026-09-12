@@ -68,11 +68,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SOVEREIGN SEARCH ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">CLIENT-SIDE INDEX</div><div class="card-body">The search index is embedded in the page as a static JavaScript array. No server-side search query is made. This means search is instant (sub-millisecond), works offline, and requires no additional API calls. The index covers all 40+ platform modules.</div></div>
-    <div class="card"><div class="card-title">KEYWORD MATCHING</div><div class="card-body">Each page entry has a keywords string (k) that extends its findability beyond the title. Searching "agents" finds the AI Agents page. Searching "nodes" finds both the Matrix and Games pages. Searching "contract" finds Commissions. The matching is case-insensitive substring search across label, description, and keywords.</div></div>
-    <div class="card"><div class="card-title">OWNER-GATED RESULTS</div><div class="card-body">Certain pages (Approvals, Enterprise Control Panel) are owner-only. These entries are filtered from search results for non-owner members. The filter happens client-side using the is_owner flag loaded at boot. Owner pages are visually marked with a gold left border when they appear.</div></div>
-    <div class="card"><div class="card-title">LOCAL SEARCH HISTORY</div><div class="card-body">Recent visits are stored in localStorage under the key omega_recent_searches. Up to 5 recent pages are remembered per browser session. The history is local-only — it is never sent to the server, never synced across devices, and never stored in Supabase. Clear it by clearing your browser storage.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">CLIENT-SIDE INDEX</div><div class="card-body">The search index is embedded in the page as a static JavaScript array. No server-side search query is made. This means search is instant (sub-millisecond), works offline, and requires no additional API calls. The index covers all 40+ platform modules.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">KEYWORD MATCHING</div><div class="card-body">Each page entry has a keywords string (k) that extends its findability beyond the title. Searching "agents" finds the AI Agents page. Searching "nodes" finds both the Matrix and Games pages. Searching "contract" finds Commissions. The matching is case-insensitive substring search across label, description, and keywords.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">OWNER-GATED RESULTS</div><div class="card-body">Certain pages (Approvals, Enterprise Control Panel) are owner-only. These entries are filtered from search results for non-owner members. The filter happens client-side using the is_owner flag loaded at boot. Owner pages are visually marked with a gold left border when they appear.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">LOCAL SEARCH HISTORY</div><div class="card-body">Recent visits are stored in localStorage under the key omega_recent_searches. Up to 5 recent pages are remembered per browser session. The history is local-only — it is never sent to the server, never synced across devices, and never stored in Supabase. Clear it by clearing your browser storage.</div></div>
   </div>
 </div>
 <div data-page-emblem="search" style="margin:20px auto 0"></div>
@@ -281,6 +281,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

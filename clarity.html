@@ -95,7 +95,7 @@ canvas{display:block;margin:0 auto}
 
 <!-- CUSTOMIZE -->
 <div id="tab-custom" class="tab-panel">
-  <div class="card">
+  <div class="card" data-reveal="fade-up">
     <div class="card-title">PROTOCOL STEPS</div>
     <p style="font-size:.65rem;color:var(--d);margin-bottom:14px;font-family:'Courier New',monospace">CUSTOMIZE YOUR MORNING SEQUENCE. CLICK A STEP TO EDIT DURATION.</p>
     <div id="custom-list"></div>
@@ -112,12 +112,12 @@ canvas{display:block;margin:0 auto}
 
 <!-- HISTORY -->
 <div id="tab-history" class="tab-panel">
-  <div class="card">
+  <div class="card" data-reveal="fade-up">
     <div class="card-title">30-DAY STREAK</div>
     <div class="streak-grid" id="streak-grid"></div>
     <div style="font-size:.6rem;color:var(--d);margin-top:6px;font-family:'Courier New',monospace"><span style="background:var(--gold);padding:0 6px">&nbsp;</span> COMPLETE · <span style="background:#111;border:1px solid #333;padding:0 6px">&nbsp;</span> MISSED</div>
   </div>
-  <div class="card">
+  <div class="card" data-reveal="fade-up">
     <div class="card-title">SESSION LOG</div>
     <div id="session-log"><div class="empty">NO SESSIONS YET</div></div>
   </div>
@@ -137,7 +137,7 @@ canvas{display:block;margin:0 auto}
     <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
     <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
   </div>
-  <div class="card">
+  <div class="card" data-reveal="fade-up">
     <div class="card-title">THE SCIENCE OF MORNING PROTOCOLS</div>
     <div class="ref-block">
       <div class="ref-title">CORTISOL AWAKENING RESPONSE — Pruessner et al. (1997) Life Sciences</div>
@@ -372,6 +372,6 @@ function updateStats(){
 updateStats();
 renderSteps();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

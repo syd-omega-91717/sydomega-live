@@ -114,7 +114,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 
     <!-- CREATE -->
     <div id="tab-create" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">CREATE NEW MIND MAP</div>
         <div style="margin-bottom:10px">
           <label>MAP NAME</label>
@@ -147,7 +147,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
         <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">THE SCIENCE OF VISUAL THINKING</div>
         <div class="sci-block">
           <div class="sci-title">MIND MAPPING — Tony Buzan (1974)</div>
@@ -486,6 +486,6 @@ function exportMap(){
 updateMapSelect();
 render();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

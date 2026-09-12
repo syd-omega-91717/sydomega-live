@@ -14111,9 +14111,72 @@ its unreachable half (#302) while the reachable half returned "deploy" on every
 run. **Test a build-environment script under the build environment's clone
 depth, not the developer's.**
 
+## 127
+
+**Seven platform-wide `omega-*.js` modules shipped as object literals with arrow-function methods reading `this.*` — `this` resolved to `window`, so every call threw, and two of the seven monkey-patch `window.fetch` globally.**
+
+All seven landed in the same 2026-09-11 commit ("feat: comprehensive platform
+improvements across all tiers" / "advanced optimization & development
+features"): `omega-monitoring.js`, `omega-search-enhanced.js`,
+`omega-resilience.js`, `omega-query-optimizer.js`,
+`omega-animation-optimizer.js`, `omega-sync-engine.js`, `omega-devtools.js`.
+Each defines `window.OmegaX = { method: (args) => { ... this.foo ... } }`.
+An arrow function has no `this` of its own — it closes over `this` from its
+enclosing scope, here the module's top-level IIFE, called as a bare function
+(non-strict), so `this` is `window`. `window.foo` is always `undefined`, so
+`this.foo.bar` throws `TypeError: Cannot read/set properties of undefined`
+the first time any such method actually runs.
+
+Two of the seven call their broken methods **unconditionally at load, on every
+page**: `omega-search-enhanced.js:58` (`OmegaSearchEnhanced.buildIndex()`) and
+`omega-sync-engine.js:104-105` (`setupNetworkListener()`/`listenForSync()`).
+`omega-monitoring.js` wraps `window.fetch` (line 92) and calls the broken
+`trackApi`/`trackError` from inside that wrapper's own `try/catch`, so a
+tracking failure could itself reject the wrapped fetch promise in place of the
+real response — `omega-resilience.js` also wraps `window.fetch` (its
+`OmegaCircuitBreaker.check/record` are separately broken, called on demand).
+
+**This is exactly why `node scripts/verify-runtime.js` matters and why it had
+been `SKIPPED` here** (§8.4's playwright-core path mismatch, unresolved across
+multiple prior sessions): the runtime verifier is the one check that actually
+executes these modules in a browser. Every static gate — `node --check`,
+`audit.py`, the 18-gate contract suite — parses this code as syntactically
+valid, because it is; the bug only fires at runtime.
+
+**Fixed the playwright-core resolution** (§8.4's documented symlink bridge,
+this time for revision 1243 against the installed 1194 build) and ran the
+verifier for real:
+
+| state | `verify-runtime.js --pages dashboard.html` |
+|---|---|
+| before | `FAIL` — 10 uncaught errors: `reading 'has'`, `reading 'errors'`, `setting 'lcp'`/`'ttfb'`/`'cls'` |
+| after fixing `omega-monitoring.js` only | `FAIL` — 1 uncaught error: `reading 'has'` (traced to `omega-search-enhanced.js:18`) |
+| after all seven files | `PASS` — 0 uncaught errors |
+
+`--all` afterward: **13/13 capability entrypoints PASS**, 0 uncaught errors,
+only pre-existing advisory (non-blocking) contrast findings remain.
+
+**Fix, applied identically everywhere:** convert each method that reads
+`this.*` from an arrow function to a `function` expression, so normal
+method-call `this` binding (`OmegaX.method()` → `this === OmegaX`) applies.
+Methods that never reference `this` (e.g. `omega-devtools.js`'s
+`reportError`/`profile`/`inspect`, `omega-sync-engine.js`'s
+`resolveConflict`/`listenForSync`) were left as arrow functions — the bug is
+in the binding, not the syntax, and touching call sites that don't use `this`
+only widens the diff. `./scripts/ci-local.sh` (23/23 blocking checks) and
+`node scripts/verify-runtime.js` (13/13) both PASS after the fix.
+
+**Transferable rule.** An arrow function assigned as an object-literal method
+is a `this`-binding bug waiting for its first real call, not a style choice —
+and a module that also overrides `window.fetch` turns that bug into a
+platform-wide reliability risk invisible to every check except one that
+actually executes the code.
+
 ---
 
-## 127 — the particle engine loaded from esm.sh on all 189 pages, and that made it untestable as well as remote
+---
+
+## 128 — the particle engine loaded from esm.sh on all 189 pages, and that made it untestable as well as remote
 
 **Found:** a graphics-level audit rendered 12 representative pages and read
 every canvas back with `getImageData`. `#omega-particles-canvas` reported a
@@ -14176,7 +14239,7 @@ already has a name for.
 
 ---
 
-## 128 — the front door forked the design system, and the reference palette differed by hue, not by contrast
+## 129 — the front door forked the design system, and the reference palette differed by hue, not by contrast
 
 **Found:** `index.html` loaded `omega-visual-universe.css`, which declares its
 own `--omega-void` / `--omega-gold` / `--omega-ink` and sets

@@ -60,13 +60,13 @@
 
 <!-- OVERVIEW -->
 <div class="tab-panel active" id="tab-overview">
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="sk-total">—</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
-    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="sk-active">—</div><div class="kpi-label">APPROVED</div></div>
-    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="sk-apex">—</div><div class="kpi-label">APEX</div></div>
-    <div class="kpi-card" style="--kc:#9B6BF0"><div class="kpi-val" id="sk-auth-avg">—</div><div class="kpi-label">MEAN AUTH</div></div>
-    <div class="kpi-card" style="--kc:var(--solar)"><div class="kpi-val" id="sk-auth-max">—</div><div class="kpi-label">PEAK AUTH</div></div>
-    <div class="kpi-card" style="--kc:var(--crim)"><div class="kpi-val" id="sk-pctile">—</div><div class="kpi-label">YOUR PERCENTILE</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sk-total">—</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-val" id="sk-active">—</div><div class="kpi-label">APPROVED</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-val" id="sk-apex">—</div><div class="kpi-label">APEX</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:#9B6BF0"><div class="kpi-val" id="sk-auth-avg">—</div><div class="kpi-label">MEAN AUTH</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--solar)"><div class="kpi-val" id="sk-auth-max">—</div><div class="kpi-label">PEAK AUTH</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--crim)"><div class="kpi-val" id="sk-pctile">—</div><div class="kpi-label">YOUR PERCENTILE</div></div>
   </div>
 
   <div class="grid2" style="margin-bottom:14px">
@@ -564,5 +564,5 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
 
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

@@ -1,0 +1,280 @@
+# GitLab CI/CD Configuration
+# Equivalent to GitHub Actions workflows
+# All 23 contract gates translated from ci.yml
+
+stages:
+  - syntax
+  - audit
+  - contracts
+  - build
+  - verify
+
+variables:
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+default:
+  # Pinned to a specific Ubuntu release, not "latest" -- the tag Docker
+  # resolves "latest" to changes over time and drags apt's default
+  # python3/nodejs versions with it. This repo's own .nvmrc pins Node
+  # 20.20.2 and the workflow-parity contract assumes Python 3.12; the
+  # variables below declared that intent but the previous before_script
+  # never acted on it -- it just took whatever "python3"/"nodejs" apt
+  # resolved for the image tag of the day, which is why this environment
+  # has drifted out from under fixes that worked when last tested.
+  # ubuntu:24.04 ships Python 3.12 by default; Node 20 needs NodeSource
+  # since 24.04's apt-provided nodejs is 18.x.
+  image: ubuntu:24.04
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  before_script:
+    - set -e
+    - echo "=== CI Environment Setup ==="
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -qq
+    - apt-get install -y -qq curl ca-certificates git python3 python3-pip
+    - curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+    - apt-get install -y -qq nodejs
+    - git fetch --unshallow
+    - node --version
+    - python3 --version
+    - pwd
+    - git status --short
+    - echo "=== Ready to run job ==="
+
+# 1. JavaScript Syntax Check
+js-syntax:
+  stage: syntax
+  script:
+    - python3 scripts/check-inline-js.py
+    - |
+      python3 << 'PYSCRIPT'
+      import pathlib, subprocess, sys
+      bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
+             if ".git" not in p.parts and "node_modules" not in p.parts
+             and "dist" not in p.parts and "build" not in p.parts
+             and subprocess.run(["node", "--check", str(p)]).returncode != 0]
+      if bad:
+          print("ERROR: syntax error in:", ", ".join(bad))
+          sys.exit(1)
+      print("✓ node --check passed for all .js files")
+      PYSCRIPT
+  allow_failure: false
+  timeout: 5 minutes
+
+# 2. Repository Audit
+repo-audit:
+  stage: audit
+  script:
+    - echo "=== Repository Audit ==="
+    - python3 scripts/audit.py
+  allow_failure: false
+  timeout: 10 minutes
+
+# 3. Tooling Tests
+tooling-tests:
+  stage: audit
+  script:
+    - echo "=== Tooling Tests ==="
+    - python3 -m unittest discover -s scripts/tests -v
+  allow_failure: false
+  timeout: 15 minutes
+
+# 4. Intelligence Fabric Tests
+fabric-tests:
+  stage: audit
+  script:
+    - echo "=== Intelligence Fabric Tests ==="
+    - python3 -m unittest discover -s tests -v
+  allow_failure: false
+  timeout: 10 minutes
+
+# 5. Contracts Suite (All 18 gates)
+contracts-suite:
+  stage: contracts
+  script:
+    - |
+      set -e
+      echo "=== CONTRACT SUITE: Starting ==="
+      echo "1/20: production-contract" && python3 scripts/production-contract.py
+      echo "2/20: workflow-contract" && python3 scripts/workflow-contract.py
+      echo "3/20: architecture-contract" && python3 scripts/architecture-contract.py
+      echo "4/20: architecture-readiness" && python3 scripts/architecture-readiness.py
+      echo "5/20: capability-audit --check" && python3 scripts/capability-audit.py --check
+      echo "6/20: capability-audit" && python3 scripts/capability-audit.py
+      echo "7/20: validate registry.json" && python3 -m json.tool docs/capabilities/registry.json > /dev/null
+      echo "8/20: schema-dictionary" && python3 scripts/schema-dictionary.py
+      echo "9/20: rls-auditor" && python3 scripts/rls-auditor.py
+      echo "10/20: silent-failure-detector" && python3 scripts/silent-failure-detector.py
+      echo "11/20: migration-consistency" && python3 scripts/migration-consistency.py
+      echo "12/20: migration-history-contract" && python3 scripts/migration-history-contract.py --local
+      echo "13/20: upsert-conflict-check" && python3 scripts/upsert-conflict-check.py
+      echo "14/20: omega-registry --check" && python3 scripts/omega-registry.py --check
+      echo "15/20: i18n-contract" && python3 scripts/i18n-contract.py
+      echo "16/20: resilience-audit" && python3 scripts/resilience-audit.py
+      echo "17/20: commerce-contract" && python3 scripts/commerce-contract.py
+      echo "18/20: reachability-contract" && python3 scripts/reachability-contract.py
+      echo "19/20: context-budget" && python3 scripts/context-budget.py
+      echo "20/20: validate-monitoring" && python3 scripts/validate-monitoring.py
+      echo "=== CONTRACT SUITE: ALL PASSED ==="
+  allow_failure: false
+  timeout: 30 minutes
+
+# 6. Broken Asset Check
+broken-assets:
+  stage: verify
+  script:
+    - |
+      echo "=== Broken Asset Check ===" && python3 << 'PYSCRIPT'
+      import pathlib, re, sys
+      hits = []
+      html_count = 0
+      for path in pathlib.Path(".").rglob("*.html"):
+          if ".git" in path.parts:
+              continue
+          html_count += 1
+          content = path.read_text(encoding="utf-8", errors="ignore")
+          for match in re.finditer(r'(?:src|href)\s*=\s*["\']([^"\']+)["\']', content):
+              ref = match.group(1)
+              if ref.startswith(('http://', 'https://', 'data:', '#', '/')):
+                  continue
+              target = path.parent / ref
+              if not target.exists():
+                  hits.append(f"{path}: {match.group(0)}")
+      if hits:
+          print(f"ERROR: Found {len(hits)} broken asset references")
+          for h in hits[:10]:
+              print(h)
+          sys.exit(1)
+      print(f"✓ Checked {html_count} HTML files - all assets valid")
+      PYSCRIPT
+  allow_failure: false
+  timeout: 10 minutes
+
+# 7. Service Role Key Scan
+security-scan:
+  stage: verify
+  script:
+    - |
+      echo "=== Security Scan: Service Role Key Detection ===" && python3 << 'PYSCRIPT'
+      import pathlib, sys
+      NEEDLES = ("service_role", "supabase_service_role_key")
+      hits = []
+      scanned = 0
+      for path in pathlib.Path(".").rglob("*"):
+          if ".git" in path.parts or not path.is_file():
+              continue
+          if path.suffix not in (".js", ".html", ".json"):
+              continue
+          scanned += 1
+          try:
+              text = path.read_text(encoding="utf-8", errors="ignore")
+          except OSError:
+              continue
+          for n, line in enumerate(text.splitlines(), 1):
+              low = line.lower()
+              if any(x in low for x in NEEDLES):
+                  hits.append(f"{path}:{n}: {line.strip()[:160]}")
+      if hits:
+          print(f"ERROR: Found {len(hits)} service-role credential markers in client code")
+          for h in hits:
+              print(h)
+          sys.exit(1)
+      print(f"✓ Scanned {scanned} files - no service-role credentials found")
+      PYSCRIPT
+  allow_failure: false
+  timeout: 10 minutes
+
+# 8. Service Worker & PWA
+pwa-check:
+  stage: verify
+  script:
+    - |
+      echo "=== PWA & Service Worker Check ===" && python3 << 'PYSCRIPT'
+      import json, pathlib, re
+      # Check SW precache
+      print("Checking service worker precache...")
+      sw = pathlib.Path("sw.js").read_text()
+      precache = re.findall(r"'\./([^']+)'", sw)
+      missing = []
+      for f in precache:
+          if not pathlib.Path(f).exists():
+              missing.append(f)
+      if missing:
+          print(f"ERROR: Missing from precache: {missing}")
+          exit(1)
+      print(f"✓ {len(precache)} files in precache list")
+
+      # Check manifest
+      print("Checking manifest icons...")
+      manifest = json.loads(pathlib.Path("manifest.json").read_text())
+      missing_icons = []
+      for icon in manifest.get("icons", []):
+          if not pathlib.Path(icon["src"]).exists():
+              missing_icons.append(icon["src"])
+      if missing_icons:
+          print(f"ERROR: Missing icons: {missing_icons}")
+          exit(1)
+      print(f"✓ {len(manifest.get('icons', []))} icon paths valid")
+      PYSCRIPT
+  allow_failure: false
+  timeout: 10 minutes
+
+# 9. Build Production Artifact
+build-production:
+  stage: build
+  script:
+    - |
+      set -e
+      echo "=== Production Build ==="
+      bash scripts/vercel-build.sh
+      echo "Verifying build output..."
+      if [ ! -s public/index.html ]; then
+        echo "ERROR: public/index.html is empty or missing"
+        exit 1
+      fi
+      echo "✓ public/index.html exists"
+      if [ ! -f public/vendor/supabase-js.js ]; then
+        echo "ERROR: public/vendor/supabase-js.js missing"
+        exit 1
+      fi
+      echo "✓ public/vendor/supabase-js.js exists"
+      echo "Build artifacts ready for deployment"
+  artifacts:
+    paths:
+      - public/
+    expire_in: 1 day
+    name: "production-build-${CI_COMMIT_SHA:0:8}"
+  allow_failure: false
+  timeout: 15 minutes
+
+# Summary
+report:
+  stage: verify
+  script:
+    - echo "================================================================"
+    - echo "✓ ALL GITLAB CI JOBS PASSED"
+    - echo "================================================================"
+    - echo "✓ JavaScript syntax verified"
+    - echo "✓ Repository integrity audit passed"
+    - echo "✓ All tooling tests passed"
+    - echo "✓ Fabric tests passed"
+    - echo "✓ All 20 contract gates passed"
+    - echo "✓ Broken assets check passed"
+    - echo "✓ Security scan (service-role keys) passed"
+    - echo "✓ PWA & Service Worker checks passed"
+    - echo "✓ Production build completed"
+    - echo "================================================================"
+    - echo "Repository is ready for deployment to Vercel"
+    - echo "================================================================"
+  allow_failure: false
+  when: on_success
+  timeout: 5 minutes

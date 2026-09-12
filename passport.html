@@ -176,34 +176,34 @@
 
     <!-- SCIENCE -->
     <div id="tab-science" class="tab-panel">
-      <div class="kpi-row">
-        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
       </div>
-      <div class="kpi-row">
-        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
-        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
-        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="sci-card card">
+      <div class="sci-card card" data-reveal="fade-up">
         <div class="sci-title">SOVEREIGN IDENTITY</div>
         <div class="sci-body">Erikson (1950) identity theory: stable identity is built through progressive integration of past experiences, present roles, and future commitments. A documented sovereign identity — codified mission, values, provenance — creates the psychological foundation for self-directed life construction.</div>
         <div class="sci-ref">Erikson, E.H. (1950). Childhood and Society</div>
       </div>
-      <div class="sci-card card">
+      <div class="sci-card card" data-reveal="fade-up">
         <div class="sci-title">NARRATIVE IDENTITY</div>
         <div class="sci-body">McAdams (1993): people construct identity as personal narrative — a coherent story that integrates past, present, and future into a meaningful whole. High-functioning individuals have detailed, coherent self-narratives. Writing your passport forces narrative coherence and self-authorship.</div>
         <div class="sci-ref">McAdams, D.P. (1993). The Stories We Live By</div>
       </div>
-      <div class="sci-card card">
+      <div class="sci-card card" data-reveal="fade-up">
         <div class="sci-title">AUTHORITY AND IDENTITY</div>
         <div class="sci-body">Weber (1922) identified three foundations of authority: traditional, charismatic, and rational-legal. Sovereign personal authority synthesizes all three: a rational system (this OS), charismatic vision (mission), and earned legitimacy (provenance and track record). The passport documents this authority.</div>
         <div class="sci-ref">Weber, M. (1922). Economy and Society</div>
       </div>
-      <div class="sci-card card">
+      <div class="sci-card card" data-reveal="fade-up">
         <div class="sci-title">SELF-CONCEPT CLARITY</div>
         <div class="sci-body">Campbell et al. (1996): self-concept clarity — how confidently and consistently you define yourself — predicts psychological well-being, resilience, and identity-consistent behavior. High SCC individuals make faster, more consistent decisions and are less susceptible to social comparison pressure.</div>
         <div class="sci-ref">Campbell et al. (1996). Journal of Personality and Social Psychology</div>
@@ -322,6 +322,6 @@ function delStamp(id){stamps=stamps.filter(function(x){return x.id!==id;});save(
 
 load();renderPassport();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

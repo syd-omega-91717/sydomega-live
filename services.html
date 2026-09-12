@@ -29,11 +29,11 @@
 
     <!-- SERVICES TAB -->
     <div class="tab-panel active pad" id="tab-services">
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-live">--</div><div class="kpi-l">LIVE</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="k-pending">--</div><div class="kpi-l">PENDING</div></div>
-        <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n" id="k-planned">--</div><div class="kpi-l">PLANNED</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">321,489</div><div class="kpi-l">LATTICE NODES</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-live">--</div><div class="kpi-l">LIVE</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--solar)"><div class="kpi-n" id="k-pending">--</div><div class="kpi-l">PENDING</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--muted)"><div class="kpi-n" id="k-planned">--</div><div class="kpi-l">PLANNED</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n">321,489</div><div class="kpi-l">LATTICE NODES</div></div>
       </div>
       <div class="sechead">THE 21 SOVEREIGN MICROSERVICES</div>
       <div id="svc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>

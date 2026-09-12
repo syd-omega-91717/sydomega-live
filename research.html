@@ -59,11 +59,11 @@
 <div class="tab-panel active" id="tab-labs">
   <div class="sechead">SOVEREIGN RESEARCH LABORATORIES</div>
   <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val">9</div><div class="kpi-label">ACTIVE LABS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-hyp">—</div><div class="kpi-label">HYPOTHESES</div></div>
-    <div class="kpi-card"><div class="kpi-val">17</div><div class="kpi-label">BREAKTHROUGHS</div></div>
-    <div class="kpi-card"><div class="kpi-val">104,976</div><div class="kpi-label">TWIN NODES</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">9</div><div class="kpi-label">ACTIVE LABS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-hyp">—</div><div class="kpi-label">HYPOTHESES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">17</div><div class="kpi-label">BREAKTHROUGHS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">104,976</div><div class="kpi-label">TWIN NODES</div></div>
   </div>
   <div class="labs-grid" id="labs-grid"></div>
 </div>
@@ -232,6 +232,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -61,10 +61,26 @@
       if (e.data && e.data.type === 'VERSION') API.version = e.data.version;
     });
 
+    /* An in-memory flag here only blocks a double-fire within THIS page
+       instance -- it resets on every fresh load, so it cannot stop
+       controllerchange firing again on the reloaded page itself, which is
+       exactly what a real reload loop looks like. sessionStorage survives
+       the reload; a genuine one-time update still gets its single reload,
+       but a second controllerchange within the window is refused instead
+       of compounding. */
     var reloading = false;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (reloading) return;       // guard against a reload loop
+      if (reloading) return;
       reloading = true;
+      try {
+        var k = 'omega_sw_reload_at';
+        var last = +sessionStorage.getItem(k) || 0;
+        if (Date.now() - last < 10000) {
+          console.error('[OmegaSW] controllerchange fired again within 10s of the last reload -- stopping to avoid a reload loop. Call OmegaSW.nuke() if the page looks stale.');
+          return;
+        }
+        sessionStorage.setItem(k, String(Date.now()));
+      } catch (e) {}
       location.reload();
     });
   });

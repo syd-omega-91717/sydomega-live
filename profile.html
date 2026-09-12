@@ -760,25 +760,25 @@ function frame(){ctx.clearRect(0,0,120,120);
 
   <!-- STAT ROW -->
   <div class="stat-row">
-    <div class="stat-card card">
+    <div class="stat-card card" data-reveal="fade-up">
       <div class="stat-label" data-i18n="prof_portfolio_total_value">Total Portfolio Value</div>
       <div class="stat-value" id="total-val">N/A</div>
       <div class="stat-sub" data-i18n="prof_portfolio_total_value_sub">Personal tracking dormant</div>
       <div class="stat-delta up" data-i18n="prof_portfolio_total_value_delta">&#9650; Token economy not yet live</div>
     </div>
-    <div class="stat-card card">
+    <div class="stat-card card" data-reveal="fade-up">
       <div class="stat-label" data-i18n="prof_portfolio_token_supply">&#937; Token Supply</div>
       <div class="stat-value">917.4B</div>
       <div class="stat-sub" data-i18n="prof_portfolio_token_supply_sub">Total Omega tokens (reference)</div>
       <div class="stat-delta up" data-i18n="prof_portfolio_token_supply_delta">&#9650; 51% Master Vault planned (dormant)</div>
     </div>
-    <div class="stat-card card">
+    <div class="stat-card card" data-reveal="fade-up">
       <div class="stat-label" data-i18n="prof_portfolio_physical_reserves">Physical Reserves</div>
       <div class="stat-value">3-Tier</div>
       <div class="stat-sub" data-i18n="prof_portfolio_physical_reserves_sub">Gold / Rhodium / Silver</div>
       <div class="stat-delta up" data-i18n="prof_portfolio_physical_reserves_delta">&#9650; Reserve model (dormant)</div>
     </div>
-    <div class="stat-card card">
+    <div class="stat-card card" data-reveal="fade-up">
       <div class="stat-label" data-i18n="prof_portfolio_matrix_coord">Matrix Coordinate</div>
       <div class="stat-value" id="port-coord">(--, --, --)</div>
       <div class="stat-sub" data-i18n="prof_portfolio_matrix_coord_sub">Axis A / B / C</div>
@@ -1269,6 +1269,10 @@ t++;requestAnimationFrame(f);}f();})();
     <!-- TAB: SCIENCE -->
     <div class="tab-panel" id="tab-science">
       <div class="pad">
+        <div class="sechead" data-i18n="prof_science_your_element">YOUR ELEMENT</div>
+        <div style="border:1px solid rgba(201,168,76,.15);background:#000005;height:clamp(240px,34vh,380px);margin-bottom:16px;position:relative;overflow:hidden">
+          <canvas id="profile-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+        </div>
         <div class="sechead" data-i18n="prof_science_formula_header">AUTHORITY FORMULA</div>
         <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
           <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
@@ -2316,7 +2320,7 @@ async function bootKYCExtra(){
 window.bootKYCExtra = bootKYCExtra;
 
 </script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script><script src="/upload.js"></script>
+<script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script><script src="/upload.js"></script>
 <style>@keyframes np{0%,100%{box-shadow:0 0 8px currentColor}50%{box-shadow:0 0 18px currentColor}}</style>
 <script>
 if('serviceWorker' in navigator){
@@ -2370,6 +2374,16 @@ if('serviceWorker' in navigator){
                 name:pr.display_name||'Sovereign',
                 size:56
               });
+            })();
+            /* Realm sphere: same reasoning as mountSigil above -- drive it
+               directly from the real 'element' column already fetched here,
+               not omega-realm.js's own omega:user-loaded auto-mount path
+               (same latent sign-lookup bug the sigil intentionally avoids). */
+            (function mountRealm(){
+              var canvas=document.getElementById('profile-realm-canvas');
+              if(!canvas) return;
+              if(!window.OmegaRealm){setTimeout(mountRealm,300);return;}
+              window.OmegaRealm.mount(canvas,pr.element||'Void');
             })();
           });
       }).catch(function(){});

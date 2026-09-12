@@ -91,11 +91,11 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- FAST TIMER -->
     <div id="tab-timer" class="tab-panel act">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">SELECT PROTOCOL</div>
         <div class="protocol-grid" id="protocol-grid"></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title" id="protocol-title">FAST TIMER</div>
         <div class="timer-wrap">
           <div class="fast-ring-wrap">
@@ -119,7 +119,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
         </div>
       </div>
       <div id="active-controls" style="display:none">
-        <div class="card">
+        <div class="card" data-reveal="fade-up">
           <div class="card-title">FAST IN PROGRESS</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <button class="btn-ghost" onclick="pauseResume()" id="pause-btn">PAUSE</button>
@@ -133,7 +133,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- HISTORY -->
     <div id="tab-history" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">30-DAY STREAK CALENDAR</div>
         <div class="streak-grid" id="streak-grid"></div>
         <div style="display:flex;gap:12px;margin-top:8px;font-size:.6rem;color:var(--d)">
@@ -142,13 +142,13 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
           <span><span style="background:#111;border:1px solid #333;padding:0 6px">&nbsp;</span> NO FAST</span>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">FAST LOG</div>
         <div id="log-list">
           <div class="empty">NO FASTS LOGGED YET</div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">WEEKLY DURATION CHART</div>
         <canvas id="history-canvas" height="160"></canvas>
       </div>
@@ -156,7 +156,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- PROTOCOLS -->
     <div id="tab-protocols" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">METABOLIC PHASES OF FASTING</div>
         <div class="benefit-grid">
           <div class="benefit-card card"><div class="benefit-icon">&#9889;&#65038;</div><div class="benefit-name">0–4 HRS: FED STATE</div><div class="benefit-desc">Insulin elevated. Glucose used as primary fuel. Fat burning minimal. Digestion active.</div></div>
@@ -167,7 +167,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
           <div class="benefit-card card"><div class="benefit-icon">&#8853;</div><div class="benefit-name">24–72 HRS: EXTENDED FAST</div><div class="benefit-desc">Stem cell regeneration (Longo, 2019). Immune system reset. Significant metabolic reprogramming. Medical supervision recommended beyond 48h.</div></div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">PROTOCOL GUIDE</div>
         <div style="font-size:.65rem;color:var(--d);line-height:1.8">
           <p style="margin-bottom:8px"><span style="color:var(--gold)">12:12</span> — Beginner friendly. 12h fast, 12h eating window. Supports circadian alignment.</p>
@@ -194,7 +194,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
         <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">RESEARCH FOUNDATIONS</div>
         <div class="ref-block">
           <div class="ref-title">AUTOPHAGY — Yoshinori Ohsumi (2016 Nobel Prize in Physiology or Medicine)</div>
@@ -486,7 +486,7 @@ drawRing(0);
 updateStats();
 restoreActive();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script src="/omega-sparkline.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

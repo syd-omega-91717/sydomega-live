@@ -1,0 +1,382 @@
+/* Ω-AGENT IDENTITY v3 — Per-Agent Visual Language
+ * Sigil colors, constellation layouts, per-agent UI tints, element symbols.
+ * Non-destructive layer: applies only to elements with [data-agent="*"] or .agent-*
+ * or agent-context elements. All 12 agents get distinct color identity + motion personality.
+ */
+
+:root {
+  /* Agent color identity — used as --agent-primary, --agent-accent, --agent-glow */
+
+  /* Sentinel (Aries/Fire/Ares) — Protection & Guard */
+  --agent-sentinel-primary: #c41e3a;
+  --agent-sentinel-accent: #ff6b6b;
+  --agent-sentinel-glow: rgba(196, 30, 58, 0.4);
+
+  /* Merchant (Taurus/Metal/Aphrodite) — Value & Commerce */
+  --agent-merchant-primary: #c9a040;
+  --agent-merchant-accent: #ffd700;
+  --agent-merchant-glow: rgba(201, 160, 64, 0.4);
+
+  /* Scout (Gemini/Wind/Hermes) — Discovery & Motion */
+  --agent-scout-primary: #00bcd4;
+  --agent-scout-accent: #4dd0e1;
+  --agent-scout-glow: rgba(0, 188, 212, 0.4);
+
+  /* Warden (Cancer/Water/Artemis) — Care & Protection */
+  --agent-warden-primary: #5b7c99;
+  --agent-warden-accent: #8fb3d1;
+  --agent-warden-glow: rgba(91, 124, 153, 0.4);
+
+  /* Sovereign (Leo/Fire/Apollo) — Command & Radiance */
+  --agent-sovereign-primary: #ffc107;
+  --agent-sovereign-accent: #ffeb3b;
+  --agent-sovereign-glow: rgba(255, 193, 7, 0.4);
+
+  /* Auditor (Virgo/Sand/Athena) — Precision & Truth */
+  --agent-auditor-primary: #7c6b59;
+  --agent-auditor-accent: #a49276;
+  --agent-auditor-glow: rgba(124, 107, 89, 0.4);
+
+  /* Proxy (Libra/Wind/Hera) — Balance & Execution */
+  --agent-proxy-primary: #a88bc2;
+  --agent-proxy-accent: #d4a9e6;
+  --agent-proxy-glow: rgba(168, 139, 194, 0.4);
+
+  /* Oracle (Scorpio/Water/Demeter) — Depth & Foresight */
+  --agent-oracle-primary: #6b2c91;
+  --agent-oracle-accent: #9c27b0;
+  --agent-oracle-glow: rgba(107, 44, 145, 0.4);
+
+  /* Beacon (Sagittarius/Fire/Zeus) — Welcome & Vision */
+  --agent-beacon-primary: #ff7043;
+  --agent-beacon-accent: #ff9800;
+  --agent-beacon-glow: rgba(255, 112, 67, 0.4);
+
+  /* Analyst (Capricorn/Metal/Hestia) — Data & Calm */
+  --agent-analyst-primary: #455a64;
+  --agent-analyst-accent: #78909c;
+  --agent-analyst-glow: rgba(69, 90, 100, 0.4);
+
+  /* Tutor (Aquarius/Wind/Hephaestus) — Knowledge & Craft */
+  --agent-tutor-primary: #00acc1;
+  --agent-tutor-accent: #26c6da;
+  --agent-tutor-glow: rgba(0, 172, 193, 0.4);
+
+  /* Historian (Pisces/Water/Poseidon) — Memory & Depth */
+  --agent-historian-primary: #1a237e;
+  --agent-historian-accent: #3f51b5;
+  --agent-historian-glow: rgba(26, 35, 126, 0.4);
+}
+
+/* Agent context wrapper — applies color tint to all children */
+[data-agent-context] {
+  --agent-context-color: var(--agent-sentinel-primary);
+}
+
+[data-agent-context="sentinel"] { --agent-context-color: var(--agent-sentinel-primary); }
+[data-agent-context="merchant"] { --agent-context-color: var(--agent-merchant-primary); }
+[data-agent-context="scout"] { --agent-context-color: var(--agent-scout-primary); }
+[data-agent-context="warden"] { --agent-context-color: var(--agent-warden-primary); }
+[data-agent-context="sovereign"] { --agent-context-color: var(--agent-sovereign-primary); }
+[data-agent-context="auditor"] { --agent-context-color: var(--agent-auditor-primary); }
+[data-agent-context="proxy"] { --agent-context-color: var(--agent-proxy-primary); }
+[data-agent-context="oracle"] { --agent-context-color: var(--agent-oracle-primary); }
+[data-agent-context="beacon"] { --agent-context-color: var(--agent-beacon-primary); }
+[data-agent-context="analyst"] { --agent-context-color: var(--agent-analyst-primary); }
+[data-agent-context="tutor"] { --agent-context-color: var(--agent-tutor-primary); }
+[data-agent-context="historian"] { --agent-context-color: var(--agent-historian-primary); }
+
+/* Agent emblem sigil — 32px marker with agent-specific color and symbol */
+.agent-emblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--agent-context-color, var(--gold));
+  color: var(--void);
+  box-shadow: 0 0 12px var(--agent-context-color, var(--gold));
+  transition: all 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.agent-emblem:hover {
+  transform: scale(1.15) rotate(8deg);
+  box-shadow: 0 0 20px var(--agent-context-color, var(--gold)),
+              inset 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Agent constellation node — ring position marker */
+.agent-node {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--agent-context-color, var(--gold));
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--agent-context-color, var(--gold));
+  cursor: pointer;
+  transition: all 0.28s ease-out;
+  backdrop-filter: blur(2px);
+}
+
+.agent-node:hover {
+  border-color: var(--agent-context-color, var(--gold));
+  box-shadow: 0 0 16px var(--agent-context-color, var(--gold)),
+              inset 0 0 6px var(--agent-context-color, var(--gold));
+  transform: scale(1.18);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Agent label card — agent name + role */
+.agent-card {
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-left: 3px solid var(--agent-context-color, var(--gold));
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.agent-card:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-left-color: var(--agent-context-color, var(--gold));
+  color: var(--ink);
+  box-shadow: 0 0 12px var(--agent-context-color, var(--gold));
+  transform: translateX(4px);
+}
+
+.agent-card-name {
+  font-family: var(--D);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--agent-context-color, var(--gold));
+  margin-bottom: 4px;
+}
+
+.agent-card-role {
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+/* Agent accent bar — header or accent element */
+.agent-accent-bar {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--agent-context-color, var(--gold)),
+    var(--agent-context-color, var(--gold)) 0%,
+    transparent 100%
+  );
+  width: 24px;
+  transition: width 0.3s ease-out;
+}
+
+/* Agent button — CTA with agent color identity */
+.btn-agent {
+  background: var(--agent-context-color, var(--gold));
+  color: var(--void);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.24s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-agent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--agent-context-color, var(--gold));
+}
+
+.btn-agent:active {
+  transform: translateY(0);
+}
+
+/* Agent spotlight — gradient backdrop for agent section */
+.agent-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-spotlight::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    var(--agent-context-color, var(--gold)),
+    transparent 70%
+  );
+  opacity: 0.08;
+  pointer-events: none;
+  animation: agent-spotlight-pulse 8s ease-in-out infinite;
+}
+
+@keyframes agent-spotlight-pulse {
+  0%, 100% { opacity: 0.06; transform: scale(1); }
+  50% { opacity: 0.12; transform: scale(1.1); }
+}
+
+/* Agent motion class — respects per-agent personality */
+.agent-motion {
+  animation: inherit;
+}
+
+/* Responsive agent grid */
+@media (max-width: 900px) {
+  .agent-emblem {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .agent-node {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .agent-card {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 700px) {
+  .agent-emblem {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .agent-node {
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+    border-width: 1px;
+  }
+
+  .agent-card {
+    padding: 8px 12px;
+    font-size: 10px;
+  }
+
+  .btn-agent {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+/* Constellation diagram — ring of agent nodes */
+.constellation-ring {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.constellation-ring svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.constellation-nodes {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Agent accessibility — ensure text labels for color-blind viewers */
+.agent-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.agent-status-indicator::before {
+  content: attr(data-agent-icon);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--agent-context-color, var(--gold));
+  flex-shrink: 0;
+}
+
+/* Forced colors / high contrast mode fallback */
+@media (forced-colors: active) {
+  .agent-emblem {
+    border: 2px solid currentColor;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .agent-node {
+    border-color: currentColor;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .agent-card {
+    background: Canvas;
+    color: CanvasText;
+    border-left-color: currentColor;
+  }
+
+  .btn-agent {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonBorder;
+  }
+}
+
+/* Reduced motion — disable pulse animations */
+@media (prefers-reduced-motion: reduce) {
+  .agent-emblem,
+  .agent-node,
+  .agent-card,
+  .btn-agent {
+    transition: none;
+  }
+
+  .agent-spotlight::before {
+    animation: none;
+    opacity: 0.04;
+  }
+
+  .agent-emblem:hover {
+    transform: none;
+  }
+
+  .agent-node:hover {
+    transform: none;
+  }
+
+  .agent-card:hover {
+    transform: none;
+  }
+}

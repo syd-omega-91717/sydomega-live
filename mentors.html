@@ -84,7 +84,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
     <!-- ADD MENTOR -->
     <div id="tab-add" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">ADD TO YOUR BOARD</div>
         <div class="form-row">
           <div>
@@ -145,7 +145,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
         </div>
         <button class="btn btn-gold" onclick="addMentor()">+ ADD TO BOARD</button>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">SOVEREIGN SEED BOARD — HISTORICAL VIRTUAL MENTORS</div>
         <p style="font-size:.65rem;color:#888;margin-bottom:12px">THE MOST IMPACTFUL THINKERS, BUILDERS, AND STRATEGISTS OF ALL TIME.</p>
         <div id="seed-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"></div>
@@ -154,7 +154,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
     <!-- LESSON LOG -->
     <div id="tab-lessons" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">LOG A LESSON OR INSIGHT</div>
         <div class="form-row">
           <div>
@@ -191,7 +191,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
         <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">THE SCIENCE OF MENTORSHIP</div>
         <div class="ref-block">
           <div class="ref-title">SOCIAL LEARNING THEORY — Albert Bandura (1977)</div>
@@ -366,6 +366,6 @@ document.getElementById('l-date').value=new Date().toISOString().slice(0,10);
 updateStats();
 renderBoard();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

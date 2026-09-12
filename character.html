@@ -58,11 +58,11 @@
 <!-- IDENTITY TAB -->
 <div class="tab-panel active" id="tab-identity">
   <div style="padding:1.25rem">
-    <div class="kpi-row">
-      <div class="kpi-card"><div class="kpi-val" id="stat-auth" style="color:var(--gold)">--</div><div class="kpi-label">AUTHORITY</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="stat-a" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS A · KNOWLEDGE</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="stat-b" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS B · MASTERY</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="stat-c" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS C · CONTRIBUTION</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-auth" style="color:var(--gold)">--</div><div class="kpi-label">AUTHORITY</div></div>
+      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-a" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS A · KNOWLEDGE</div></div>
+      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-b" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS B · MASTERY</div></div>
+      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-c" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS C · CONTRIBUTION</div></div>
     </div>
     <p class="sechead">SOVEREIGN IDENTITY CARD</p>
     <div class="id-card card">
@@ -93,6 +93,15 @@
         <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">LATTICE TRACK</div><div style="font-family:var(--M);font-size:12px;color:var(--solar)" id="chr-track">--</div></div>
         <div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">TRIAD POSITION</div><div style="font-family:var(--M);font-size:12px;color:var(--green)" id="chr-triad">--</div></div>
       </div>
+    </div>
+
+    <!-- YOUR ELEMENT — rotating 3-D sphere (Three.js via omega-realm.js,
+         already injected sitewide by bg.js). This tab is visible on load
+         (not display:none), so the canvas has a real size the moment
+         OmegaRealm is ready -- no lazy-mount-on-tab-click needed here. -->
+    <p class="sechead" style="margin-top:1.5rem" data-i18n="chr_your_element">YOUR ELEMENT</p>
+    <div class="omega-depth-card" style="height:clamp(220px,30vh,320px);margin-bottom:1rem;overflow:hidden;border-radius:2px">
+      <canvas id="chr-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
     </div>
   </div>
 </div>
@@ -268,6 +277,12 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   sid('chr-display-name',(pr.display_name||s.user.email||'--').toUpperCase());
   sid('chr-uid-short','UID '+s.user.id.substr(0,8).toUpperCase());
   sid('chr-sign',sign||'--');sid('chr-element',elem);sid('chr-olympian',god);
+  (function mountChrRealm(){
+    var canvas=document.getElementById('chr-realm-canvas');
+    if(!canvas)return;
+    if(!window.OmegaRealm){setTimeout(mountChrRealm,300);return;}
+    window.OmegaRealm.mount(canvas,pr.element||elemId||'Void');
+  })();
   sid('chr-gate',gateIdx>0?(GNAMES[gateIdx-1]+' · GATE '+(gateIdx)):'INITIATE · GATE I');
   sid('chr-axis-a',a.toFixed(3));sid('chr-axis-b',b.toFixed(3));sid('chr-axis-c',c.toFixed(3));
   sid('chr-auth',auth.toFixed(4));sid('chr-grade',highGrade);
@@ -300,5 +315,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   });
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

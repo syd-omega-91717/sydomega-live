@@ -76,11 +76,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SIGIL ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">SIGIL DERIVATION</div><div class="card-body">Your sovereign sigil is algorithmically derived from your profile data. No two sigils are identical — the combination of zodiac sign, element, and authority score produces a unique geometric mark for every member.</div></div>
-    <div class="card"><div class="card-title">CANVAS RENDERING</div><div class="card-body">Sigils are drawn in real-time using the HTML5 Canvas API. A six-pointed star forms the primary frame; the element glyph anchors the centre; the authority value rotates around the outer perimeter in 8px monospace text.</div></div>
-    <div class="card"><div class="card-title">AUTHORITY EVOLUTION</div><div class="card-body">As your authority score increases from 0 to 27.8367, the sigil's perimeter inscription updates to reflect your current value. The star geometry and outer rings remain constant; the text evolves with your progress.</div></div>
-    <div class="card"><div class="card-title">DOWNLOAD &amp; EXPORT</div><div class="card-body">The Download PNG function uses Canvas.toDataURL() to export your sigil at full resolution. The exported file is a 220×220 or 300×300 PNG — suitable for use as a profile mark, avatar, or certificate seal.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">SIGIL DERIVATION</div><div class="card-body">Your sovereign sigil is algorithmically derived from your profile data. No two sigils are identical — the combination of zodiac sign, element, and authority score produces a unique geometric mark for every member.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CANVAS RENDERING</div><div class="card-body">Sigils are drawn in real-time using the HTML5 Canvas API. A six-pointed star forms the primary frame; the element glyph anchors the centre; the authority value rotates around the outer perimeter in 8px monospace text.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">AUTHORITY EVOLUTION</div><div class="card-body">As your authority score increases from 0 to 27.8367, the sigil's perimeter inscription updates to reflect your current value. The star geometry and outer rings remain constant; the text evolves with your progress.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">DOWNLOAD &amp; EXPORT</div><div class="card-body">The Download PNG function uses Canvas.toDataURL() to export your sigil at full resolution. The exported file is a 220×220 or 300×300 PNG — suitable for use as a profile mark, avatar, or certificate seal.</div></div>
   </div>
 </div>
 <div data-page-emblem="sigil" style="margin:20px auto 0"></div>
@@ -193,6 +193,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

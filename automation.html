@@ -99,11 +99,11 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
     </div>
   </div>
 
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="stat-active">--</div><div class="kpi-label">ACTIVE RULES</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-fired">--</div><div class="kpi-label">EVENTS FIRED</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-sys">--</div><div class="kpi-label">SYSTEM RULES</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-user">--</div><div class="kpi-label">MEMBER RULES</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-active">--</div><div class="kpi-label">ACTIVE RULES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-fired">--</div><div class="kpi-label">EVENTS FIRED</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-sys">--</div><div class="kpi-label">SYSTEM RULES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-user">--</div><div class="kpi-label">MEMBER RULES</div></div>
   </div>
 
   <div class="sechead">SOVEREIGN AUTOMATION RULES</div>
@@ -493,5 +493,5 @@ function renderLog(events){
   });
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

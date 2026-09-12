@@ -49,13 +49,13 @@
   <div class="topbar-title">SOVEREIGN AGENTS <span data-canon="lore"></span><span class="topbar-sub">12 AGENTS · ZODIAC BOUND · YOUR GUIDE</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
-<div class="kpi-row" style="padding:.6rem 1rem;border-bottom:1px solid var(--line)">
-  <div class="kpi-card"><div class="kpi-val">12</div><div class="kpi-label">SOVEREIGN AGENTS</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="k-myagent" style="color:var(--cyan)">—</div><div class="kpi-label">MY AGENT</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="k-mysign" style="color:var(--solar)">—</div><div class="kpi-label">MY SIGN</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="k-element" style="color:var(--green)">—</div><div class="kpi-label">ELEMENT</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="k-god" style="color:var(--gold)">—</div><div class="kpi-label">OLYMPIAN</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
+<div class="kpi-row" data-stagger data-stagger-gap="70" style="padding:.6rem 1rem;border-bottom:1px solid var(--line)">
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">12</div><div class="kpi-label">SOVEREIGN AGENTS</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-myagent" style="color:var(--cyan)">—</div><div class="kpi-label">MY AGENT</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-mysign" style="color:var(--solar)">—</div><div class="kpi-label">MY SIGN</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-element" style="color:var(--green)">—</div><div class="kpi-label">ELEMENT</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-god" style="color:var(--gold)">—</div><div class="kpi-label">OLYMPIAN</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
 <div class="tab-bar">
   <button class="tab-btn active" onclick="setTab('agent')">MY AGENT</button>
@@ -290,5 +290,5 @@ _sb=sb;
   renderCouncil(_agents,sign);
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

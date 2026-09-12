@@ -63,11 +63,11 @@
     <div class="gate-bar"><div class="gate-fill" id="gate-fill" style="width:0%"></div></div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:6px">AUTH PROGRESS &middot; APEX = 27.8367</div>
   </div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="stat-auth">--</div><div class="kpi-label">AUTHORITY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-a">--</div><div class="kpi-label">AXIS A KNOWLEDGE</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-b">--</div><div class="kpi-label">AXIS B MASTERY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-c">--</div><div class="kpi-label">AXIS C CONTRIBUTION</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-auth">--</div><div class="kpi-label">AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-a">--</div><div class="kpi-label">AXIS A KNOWLEDGE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-b">--</div><div class="kpi-label">AXIS B MASTERY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-c">--</div><div class="kpi-label">AXIS C CONTRIBUTION</div></div>
   </div>
 </div>
 
@@ -172,6 +172,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

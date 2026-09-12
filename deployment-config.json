@@ -1,0 +1,253 @@
+{
+  "deployment": {
+    "version": "1.0",
+    "enabled": true,
+    "provider": "vercel",
+    "strategy": "blue_green_with_canary",
+    "environments": [
+      {
+        "name": "production",
+        "domain": "sydomega.com",
+        "region": "sfo1",
+        "autoscale": true
+      },
+      {
+        "name": "staging",
+        "domain": "staging.sydomega.com",
+        "region": "sfo1",
+        "autoscale": false
+      }
+    ]
+  },
+  "blueGreen": {
+    "enabled": true,
+    "strategy": "simultaneous",
+    "slots": 2,
+    "rollover": {
+      "type": "traffic_switch",
+      "duration": 300,
+      "warningThreshold": 60
+    },
+    "healthCheck": {
+      "enabled": true,
+      "interval": 10000,
+      "timeout": 5000,
+      "path": "/health",
+      "successCriteria": {
+        "statusCode": 200,
+        "responseTime": 1000
+      }
+    },
+    "rollback": {
+      "enabled": true,
+      "triggers": [
+        {
+          "type": "error_rate",
+          "threshold": 0.05,
+          "window": 300
+        },
+        {
+          "type": "latency",
+          "threshold": 2000,
+          "window": 300
+        },
+        {
+          "type": "manual",
+          "approval": "required"
+        }
+      ],
+      "duration": 60,
+      "notification": "slack"
+    }
+  },
+  "canary": {
+    "enabled": true,
+    "stages": [
+      {
+        "percentage": 5,
+        "duration": 600,
+        "name": "Early Adopters",
+        "description": "5% of traffic for 10 minutes"
+      },
+      {
+        "percentage": 25,
+        "duration": 600,
+        "name": "Extended Group",
+        "description": "25% of traffic for 10 minutes"
+      },
+      {
+        "percentage": 50,
+        "duration": 900,
+        "name": "Half Traffic",
+        "description": "50% of traffic for 15 minutes"
+      },
+      {
+        "percentage": 100,
+        "duration": 0,
+        "name": "Full Rollout",
+        "description": "100% traffic after all checks pass"
+      }
+    ],
+    "monitoring": {
+      "metrics": [
+        {
+          "name": "error_rate",
+          "threshold": 0.02,
+          "comparison": "canary_vs_stable"
+        },
+        {
+          "name": "p95_latency",
+          "threshold": 500,
+          "comparison": "canary_vs_stable"
+        },
+        {
+          "name": "core_web_vitals",
+          "metrics": ["lcp", "fid", "cls"],
+          "threshold": 0.95,
+          "comparison": "canary_vs_baseline"
+        }
+      ],
+      "sampling": {
+        "enabled": true,
+        "canary_sample_rate": 1.0,
+        "stable_sample_rate": 0.1
+      }
+    },
+    "autoPromote": {
+      "enabled": true,
+      "criteria": {
+        "errorRate": { "max": 0.01 },
+        "latency": { "p95": 1000 },
+        "successfulStages": "all"
+      }
+    },
+    "autoRollback": {
+      "enabled": true,
+      "triggers": [
+        {
+          "metric": "error_rate",
+          "threshold": 0.05,
+          "window": 60,
+          "action": "rollback"
+        },
+        {
+          "metric": "p95_latency",
+          "threshold": 2000,
+          "window": 60,
+          "action": "stop_canary"
+        }
+      ]
+    },
+    "notifications": {
+      "slack": {
+        "enabled": true,
+        "channel": "#deployments",
+        "events": ["stage_start", "stage_complete", "auto_promote", "rollback"]
+      },
+      "email": {
+        "enabled": true,
+        "recipients": ["s.y.dagher@gmail.com"],
+        "events": ["stage_complete", "rollback"]
+      }
+    }
+  },
+  "edgeFunctions": {
+    "canaryDeployment": {
+      "enabled": true,
+      "strategy": "weighted_routing",
+      "route": "/.supabase/functions/v1/*",
+      "stages": [
+        { "version": "current", "weight": 95 },
+        { "version": "canary", "weight": 5 }
+      ]
+    },
+    "preDeploymentValidation": {
+      "enabled": true,
+      "checks": [
+        {
+          "name": "syntax",
+          "type": "deno_check",
+          "timeout": 30
+        },
+        {
+          "name": "imports",
+          "type": "dependency_pin",
+          "timeout": 60
+        },
+        {
+          "name": "secrets",
+          "type": "env_var_validation",
+          "timeout": 10
+        }
+      ]
+    },
+    "runtimeValidation": {
+      "enabled": true,
+      "timeout": 60,
+      "tests": [
+        {
+          "name": "checkout",
+          "endpoint": "/v1/checkout",
+          "method": "POST",
+          "expectedStatus": 200
+        },
+        {
+          "name": "webhook",
+          "endpoint": "/v1/stripe-webhook",
+          "method": "POST",
+          "expectedStatus": 200
+        }
+      ]
+    }
+  },
+  "rolloutSchedule": {
+    "enabled": true,
+    "windows": [
+      {
+        "day": "Tuesday",
+        "timeWindow": "14:00-16:00",
+        "timezone": "UTC",
+        "description": "Mid-week deployments for major features",
+        "riskLevel": "medium"
+      },
+      {
+        "day": "Thursday",
+        "timeWindow": "15:00-17:00",
+        "timezone": "UTC",
+        "description": "Late-week critical fixes",
+        "riskLevel": "low"
+      }
+    ],
+    "blackoutWindows": [
+      {
+        "start": "Friday 17:00 UTC",
+        "end": "Monday 08:00 UTC",
+        "reason": "Weekend stability"
+      },
+      {
+        "start": "December 24",
+        "end": "January 2",
+        "reason": "Holiday period"
+      }
+    ]
+  },
+  "monitoring": {
+    "deployment_metrics": [
+      {
+        "name": "deploy_duration",
+        "target": 120,
+        "unit": "seconds"
+      },
+      {
+        "name": "rollback_rate",
+        "target": 0.01,
+        "unit": "fraction"
+      },
+      {
+        "name": "mttr",
+        "target": 600,
+        "unit": "seconds"
+      }
+    ]
+  }
+}

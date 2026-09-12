@@ -41,9 +41,9 @@
 
 <div class="tab-panel active" id="tab-status">
   <div class="sechead">YOUR KYC STATUS</div>
-  <div class="kpi-row" id="kyc-kpis"></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="kyc-kpis"></div>
   <div class="sechead" style="margin-top:16px">AUTHORITY</div>
-  <div class="kpi-row" id="auth-kpis"></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="auth-kpis"></div>
 </div>
 
 <div class="tab-panel" id="tab-steps">
@@ -148,14 +148,14 @@ async function boot(){
     {l:'PLATFORM',v:approved?'APPROVED':'PENDING',c:approved?'var(--green)':'var(--cyan)'},
     {l:'ID VERIFY',v:'FUTURE'},
     {l:'AML CHECK',v:'FUTURE'}
-  ].map(function(k){return'<div class="kpi-card"><div class="kpi-val" style="'+(k.c?'color:'+k.c:'')+'">'+k.v+'</div><div class="kpi-label">'+k.l+'</div></div>';}).join('');
+  ].map(function(k){return'<div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="'+(k.c?'color:'+k.c:'')+'">'+k.v+'</div><div class="kpi-label">'+k.l+'</div></div>';}).join('');
 
   document.getElementById('auth-kpis').innerHTML=[
     {l:'AUTHORITY',v:auth.toFixed(4)},
     {l:'AXIS A',v:a.toFixed(1)},
     {l:'AXIS B',v:b.toFixed(1)},
     {l:'AXIS C',v:c.toFixed(1)}
-  ].map(function(k){return'<div class="kpi-card"><div class="kpi-val">'+k.v+'</div><div class="kpi-label">'+k.l+'</div></div>';}).join('');
+  ].map(function(k){return'<div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">'+k.v+'</div><div class="kpi-label">'+k.l+'</div></div>';}).join('');
 
   if(approved){
     var step2=document.getElementById('kyc-step2');
@@ -172,6 +172,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

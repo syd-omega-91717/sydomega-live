@@ -111,11 +111,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">CIPHER ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">ELEMENT-SCALE CIPHER</div><div class="card-body">The Sovereign Cipher uses musical scale semitone offsets as substitution keys. Each of the 9 elements has a unique scale pattern. The cipher rotates through scale positions to encode each character, producing a different substitution alphabet per element.</div></div>
-      <div class="card"><div class="card-title">THE 9 ELEMENT KEYS</div><div class="card-body">Fire [0,2,4,7,9] · Water [0,3,5,7,10,12] · Wind [0,2,4,6,9,11] · Metal [0,2,5,7,9] · Sand [0,2,3,7,9] · Soul [0,3,5,6,10,12] · Space [0,4,7,10,14] · Void [0,7,12] · The All [0,2,4,5,7,9,11,12]</div></div>
-      <div class="card"><div class="card-title">WAVEFORM VISUALISER</div><div class="card-body">The waveform below the ciphered output visualises the encoded character stream as a frequency wave. Each character's Unicode value modulates the wave amplitude using the element's scale pattern — the cipher made visible as sound.</div></div>
-      <div class="card"><div class="card-title">ENTROPY METRIC</div><div class="card-body">Shannon entropy measures the information density of the plaintext. Higher entropy means more unpredictable content, which typically ciphers into stronger encoded output. The Void key (scale [0,7,12]) produces the most compressed cipher alphabet — fewest substitution options, maximum pattern repetition.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">ELEMENT-SCALE CIPHER</div><div class="card-body">The Sovereign Cipher uses musical scale semitone offsets as substitution keys. Each of the 9 elements has a unique scale pattern. The cipher rotates through scale positions to encode each character, producing a different substitution alphabet per element.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">THE 9 ELEMENT KEYS</div><div class="card-body">Fire [0,2,4,7,9] · Water [0,3,5,7,10,12] · Wind [0,2,4,6,9,11] · Metal [0,2,5,7,9] · Sand [0,2,3,7,9] · Soul [0,3,5,6,10,12] · Space [0,4,7,10,14] · Void [0,7,12] · The All [0,2,4,5,7,9,11,12]</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">WAVEFORM VISUALISER</div><div class="card-body">The waveform below the ciphered output visualises the encoded character stream as a frequency wave. Each character's Unicode value modulates the wave amplitude using the element's scale pattern — the cipher made visible as sound.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">ENTROPY METRIC</div><div class="card-body">Shannon entropy measures the information density of the plaintext. Higher entropy means more unpredictable content, which typically ciphers into stronger encoded output. The Void key (scale [0,7,12]) produces the most compressed cipher alphabet — fewest substitution options, maximum pattern repetition.</div></div>
     </div>
   </div>
 </div>
@@ -330,5 +330,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   cipher();
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

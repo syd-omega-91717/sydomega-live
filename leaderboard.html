@@ -51,11 +51,11 @@
 </div>
 
 <div class="tab-panel active" id="tab-ranking">
-  <div class="kpi-row">
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="lb-total">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_total">RANKED MEMBERS</div></div>
-    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-rank">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myrank">MY GLOBAL RANK</div></div>
-    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-auth">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myauth">MY AUTHORITY</div></div>
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label" data-i18n="lead_ranking_kpi_freq">SNAPSHOT FREQUENCY</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="lb-total">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_total">RANKED MEMBERS</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-val" id="my-rank">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myrank">MY GLOBAL RANK</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-val" id="my-auth">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myauth">MY AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label" data-i18n="lead_ranking_kpi_freq">SNAPSHOT FREQUENCY</div></div>
   </div>
   <div class="sechead" data-i18n="lead_ranking_section">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED</div>
   <div class="tbl-wrap" role="table" aria-label="Leaderboard">
@@ -98,11 +98,11 @@
       <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH <span id="banner-auth" style="color:var(--gold)">--</span> &middot; <span id="banner-element">--</span> &middot; A:<span id="banner-a">--</span> B:<span id="banner-b">--</span> C:<span id="banner-c">--</span></div>
     </div>
   </div>
-  <div class="kpi-row">
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-rank-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_rank">GLOBAL RANK</div></div>
-    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-auth-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_auth">AUTHORITY SCORE</div></div>
-    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-gate">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_gate">GATE</div></div>
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_total">TOTAL MEMBERS</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="my-rank-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_rank">GLOBAL RANK</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-val" id="my-auth-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_auth">AUTHORITY SCORE</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-val" id="my-gate">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_gate">GATE</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_total">TOTAL MEMBERS</div></div>
   </div>
   <div class="glass" style="padding:14px">
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px" data-i18n="lead_myrank_formula_title">AUTHORITY FORMULA</div>
@@ -235,6 +235,6 @@ function renderTable(rows,myUid){
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

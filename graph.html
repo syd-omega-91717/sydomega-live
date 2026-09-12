@@ -104,11 +104,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">GRAPH ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, loaded dynamically from esm.sh. Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
-      <div class="card"><div class="card-title">NODE HIERARCHY</div><div class="card-body">Four node types: ELEMENT (largest, 28px, glowing), GOD (22px, glowing), SIGN (14px, element-coloured), MEMBER (6–17px, authority-scaled). Links: sign→element, sign→god, member→sign.</div></div>
-      <div class="card"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, sign, axis_a/b/c).</div></div>
-      <div class="card"><div class="card-title">SVG RENDERING</div><div class="card-body">Graph renders as inline SVG inside the page. Zoom: D3 zoom (scale 0.2–4×). Pan: drag anywhere on SVG canvas. Glow filter applied to element and god nodes via SVG feGaussianBlur. All labels are SVG text elements.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, loaded dynamically from esm.sh. Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">NODE HIERARCHY</div><div class="card-body">Four node types: ELEMENT (largest, 28px, glowing), GOD (22px, glowing), SIGN (14px, element-coloured), MEMBER (6–17px, authority-scaled). Links: sign→element, sign→god, member→sign.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, sign, axis_a/b/c).</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">SVG RENDERING</div><div class="card-body">Graph renders as inline SVG inside the page. Zoom: D3 zoom (scale 0.2–4×). Pan: drag anywhere on SVG canvas. Glow filter applied to element and god nodes via SVG feGaussianBlur. All labels are SVG text elements.</div></div>
     </div>
   </div>
 </div>
@@ -288,5 +288,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   await initGraph(d3,members);
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

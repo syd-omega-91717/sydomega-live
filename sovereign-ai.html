@@ -48,11 +48,11 @@
 
 <div class="tab-panel active" id="tab-agents">
   <div class="sechead">12 SOVEREIGN AGENTS &middot; CLICK TO ACTIVATE</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val">12</div><div class="kpi-label">AGENTS ONLINE</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-active">--</div><div class="kpi-label">ACTIVE AGENT</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-auth">--</div><div class="kpi-label">MY AUTHORITY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-sign">--</div><div class="kpi-label">MY SIGN</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">12</div><div class="kpi-label">AGENTS ONLINE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-active">--</div><div class="kpi-label">ACTIVE AGENT</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-auth">--</div><div class="kpi-label">MY AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-sign">--</div><div class="kpi-label">MY SIGN</div></div>
   </div>
   <div class="agent-grid" id="agent-grid" data-loading></div>
 </div>
@@ -229,6 +229,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

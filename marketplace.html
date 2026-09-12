@@ -69,11 +69,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SOVEREIGN EXCHANGE ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
-    <div class="card"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access is tier-gated. Free members can browse. Sovereign tier members can list. (Buying isn't built yet — see EARN ON SALE below.) The OmegaCanon.tierUnlocks() function evaluates this at listing time — the tier guard runs entirely in the client against the member's profile.</div></div>
-    <div class="card"><div class="card-title">FILE DELIVERY</div><div class="card-body">File listings are stored in Supabase Storage via OmegaStorage.upload() and the path is recorded in marketplace_listings. There is no purchase step yet, so there's nothing to gate delivery on — this is upload/listing only, not a buy-then-receive flow.</div></div>
-    <div class="card"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Completing a sale earns additional XP. The marketplace is not just commerce — it is the sovereign economy layer of the contribution axis, recognising economic action as an act of sovereignty.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access is tier-gated. Free members can browse. Sovereign tier members can list. (Buying isn't built yet — see EARN ON SALE below.) The OmegaCanon.tierUnlocks() function evaluates this at listing time — the tier guard runs entirely in the client against the member's profile.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File listings are stored in Supabase Storage via OmegaStorage.upload() and the path is recorded in marketplace_listings. There is no purchase step yet, so there's nothing to gate delivery on — this is upload/listing only, not a buy-then-receive flow.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Completing a sale earns additional XP. The marketplace is not just commerce — it is the sovereign economy layer of the contribution axis, recognising economic action as an act of sovereignty.</div></div>
   </div>
   <div class="sechead" style="margin-top:24px">LISTING PROCESS</div>
   <div class="glass">
@@ -163,6 +163,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

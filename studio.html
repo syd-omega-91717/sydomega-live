@@ -73,11 +73,11 @@
 
 <!-- STUDIO TAB -->
 <div class="tab-panel active" id="tab-studio">
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="st-works">—</div><div class="kpi-label">ARCHIVED WORKS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="st-axis-c">—</div><div class="kpi-label">AXIS C</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="st-gate">—</div><div class="kpi-label">CURRENT GATE</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="st-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="st-works">—</div><div class="kpi-label">ARCHIVED WORKS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="st-axis-c">—</div><div class="kpi-label">AXIS C</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="st-gate">—</div><div class="kpi-label">CURRENT GATE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="st-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
   </div>
 
   <div class="sechead" style="margin-top:20px">CREATION PIPELINE<a href="/publishing.html" class="btn-gold" style="font-size:12px;padding:4px 12px;margin-left:auto">+ COMMIT WORK</a></div>
@@ -405,5 +405,5 @@ function initWorksChart(works){
   }
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

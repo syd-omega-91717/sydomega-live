@@ -88,7 +88,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- ADD ENTRY -->
     <div id="tab-add" class="tab-panel act">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">NEW TRANSACTION</div>
         <div class="form-row">
           <div>
@@ -150,7 +150,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
         </div>
         <button class="btn btn-gold" onclick="addEntry()">+ ADD TRANSACTION</button>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">RECENT TRANSACTIONS</div>
         <div id="recent-list" class="expense-list">
           <div class="empty">NO TRANSACTIONS YET</div>
@@ -177,13 +177,13 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- BUDGET -->
     <div id="tab-budget" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">MONTHLY BUDGET LIMITS</div>
         <p style="font-size:.65rem;color:var(--d);margin-bottom:14px">SET LIMITS PER CATEGORY · TRACK VS ACTUAL SPENDING THIS MONTH</p>
         <div id="budget-editor"></div>
         <button class="btn btn-gold btn-sm" onclick="saveBudgets()" style="margin-top:8px">SAVE BUDGETS</button>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">BUDGET vs ACTUAL — <span id="budget-month-label"></span></div>
         <div id="budget-bars"></div>
       </div>
@@ -203,19 +203,19 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
         <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">FINANCIAL SNAPSHOT</div>
         <div class="insight-grid" id="insight-grid"></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">30-DAY SPENDING TREND</div>
         <canvas id="trend-canvas" height="160"></canvas>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">CATEGORY BREAKDOWN (THIS MONTH)</div>
         <canvas id="cat-canvas" height="180"></canvas>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">INCOME vs EXPENSE (LAST 6 MONTHS)</div>
         <canvas id="monthly-canvas" height="200"></canvas>
       </div>
@@ -550,7 +550,7 @@ document.getElementById('e-date').value=new Date().toISOString().slice(0,10);
 updateAll();
 </script>
 <script src="/omega-local-backup.js"></script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script src="/omega-sparkline.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

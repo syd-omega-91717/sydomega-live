@@ -179,8 +179,21 @@
            '[data-oc-count]') and marks what it took with __isNum. The two
            lists do not currently intersect; this guard keeps that true if
            either list grows, since two count-ups on one element would fight
-           over textContent. */
-        if (el.__omgNum || el.__isNum) return;
+           over textContent.
+
+           omega-cinematic.js's [data-countup] is the same hazard in a third
+           shape: it targets a page-author-chosen attribute that DOES
+           intersect NUM_SEL (any .kpi-n a page also marks data-countup),
+           and both systems' rAF loops mutate the same textContent every
+           frame with no awareness of each other. Each reads the OTHER's
+           mid-animation frame as its own "original"/"target" and restores
+           that stale, wrong number when it finishes -- observed live on
+           dashboard.html's MY AUTHORITY KPI, frozen at an arbitrary value
+           (including negative) instead of the real Authority score.
+           data-countup is the more specific, deliberate marker, so it wins:
+           skip here and let omega-cinematic.js's own countUp own the
+           element outright. */
+        if (el.__omgNum || el.__isNum || el.hasAttribute('data-countup')) return;
         el.__omgNum = 1;
         io.observe(el);
       });

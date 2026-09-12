@@ -87,11 +87,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">CONSULTANCY ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">DOMAIN MATRIX</div><div class="card-body">Nine advisory domains spanning sovereignty architecture, authority dynamics, element mapping, cipher design, temporal strategy, coalition building, legacy engineering, digital sovereignty, and shadow operations.</div></div>
-      <div class="card"><div class="card-title">REQUEST FLOW</div><div class="card-body">Requests submitted to <code>consult_requests</code> with domain, contact, timing, and brief. Platform owner reviews and responds. Status transitions: pending → approved → done. Full audit trail preserved.</div></div>
-      <div class="card"><div class="card-title">AUTHORITY GATE</div><div class="card-body">Consultancy access is gated by platform membership. Requests are attributed to the authenticated sovereign identity. Authority score informs prioritisation of advisory sessions.</div></div>
-      <div class="card"><div class="card-title">PRIVACY</div><div class="card-body">Request data is private to the submitting user via Supabase RLS. No domain briefings are publicly visible. All advisory content is transmitted off-platform via the contact method provided.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">DOMAIN MATRIX</div><div class="card-body">Nine advisory domains spanning sovereignty architecture, authority dynamics, element mapping, cipher design, temporal strategy, coalition building, legacy engineering, digital sovereignty, and shadow operations.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">REQUEST FLOW</div><div class="card-body">Requests submitted to <code>consult_requests</code> with domain, contact, timing, and brief. Platform owner reviews and responds. Status transitions: pending → approved → done. Full audit trail preserved.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">AUTHORITY GATE</div><div class="card-body">Consultancy access is gated by platform membership. Requests are attributed to the authenticated sovereign identity. Authority score informs prioritisation of advisory sessions.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">PRIVACY</div><div class="card-body">Request data is private to the submitting user via Supabase RLS. No domain briefings are publicly visible. All advisory content is transmitted off-platform via the contact method provided.</div></div>
     </div>
   </div>
 </div>
@@ -208,5 +208,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

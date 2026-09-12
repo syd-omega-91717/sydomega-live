@@ -42,7 +42,7 @@
 .metric-chip.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06)}
 @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr}.form-row,.form-row.trio,.form-row.quad{grid-template-columns:1fr}.measurement-grid{grid-template-columns:1fr}}
 </style>
-  <script src="/bg.js"></script>
+  <script src="/bg.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -54,11 +54,11 @@
     <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHYSICAL</div>
     <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">BODY COMPOSITION</h1>
 
-    <div class="kpi-row">
-      <div class="kpi"><div class="lv">CURRENT WEIGHT</div><div class="vv" id="kpiWeight">—</div></div>
-      <div class="kpi"><div class="lv">BODY FAT %</div><div class="vv" id="kpiBF">—</div></div>
-      <div class="kpi"><div class="lv">LEAN MASS</div><div class="vv" id="kpiLean">—</div></div>
-      <div class="kpi"><div class="lv">BMI</div><div class="vv" id="kpiBMI">—</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi" data-reveal="fade-up"><div class="lv">CURRENT WEIGHT</div><div class="vv" id="kpiWeight">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">BODY FAT %</div><div class="vv" id="kpiBF">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">LEAN MASS</div><div class="vv" id="kpiLean">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">BMI</div><div class="vv" id="kpiBMI">—</div></div>
     </div>
 
     <div class="layer-tabs">
@@ -173,17 +173,17 @@
 
     <!-- SCIENCE TAB -->
     <div class="tab-pane" id="tab-science">
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n">27.8367</div><div class="lv">APEX AUTH</div></div>
-        <div class="kpi"><div class="kpi-n">1.6180</div><div class="lv">PHI &phi;</div></div>
-        <div class="kpi"><div class="kpi-n">2.7183</div><div class="lv">EULER e</div></div>
-        <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="lv">AUTH FORMULA</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="lv">APEX AUTH</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="lv">PHI &phi;</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="lv">EULER e</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="lv">AUTH FORMULA</div></div>
       </div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n">0.001</div><div class="lv">INITIATE GATE</div></div>
-        <div class="kpi"><div class="kpi-n">1.618</div><div class="lv">SOVEREIGN GATE</div></div>
-        <div class="kpi"><div class="kpi-n">2.718</div><div class="lv">PRIME GATE</div></div>
-        <div class="kpi"><div class="kpi-n">9.000</div><div class="lv">APEX GATE</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">0.001</div><div class="lv">INITIATE GATE</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.618</div><div class="lv">SOVEREIGN GATE</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.718</div><div class="lv">PRIME GATE</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.000</div><div class="lv">APEX GATE</div></div>
       </div>
       <div class="science-card card"><h3>BODY FAT PERCENTAGE REFERENCE</h3><p><b>Essential Fat:</b> 3–5% (men) / 10–13% (women) — minimum for organ function.<br><b>Athletic:</b> 6–13% (men) / 14–20% (women) — peak performance range.<br><b>Fitness:</b> 14–17% (men) / 21–24% (women) — lean and healthy.<br><b>Average:</b> 18–24% (men) / 25–31% (women) — typical for sedentary adults.<br><b>Obese:</b> 25%+ (men) / 32%+ (women) — elevated metabolic disease risk.<br>Measurement methods by accuracy: DEXA scan > Hydrostatic weighing > BOD POD > Navy formula > BIA scale > BMI (least accurate).</p></div>
       <div class="science-card card"><h3>OPTIMAL RATES OF CHANGE</h3><p><b>Fat loss:</b> 0.5–1% body weight per week (faster = muscle loss risk). Example: 90kg person → 450–900g/week deficit. Requires ~500–1000 kcal daily deficit.<br><b>Muscle gain (natural):</b> ~0.5–1kg/month for beginners, ~0.25kg/month for advanced. Requires slight caloric surplus (200–300 kcal) + progressive overload + adequate protein (1.6–2.2g/kg).<br><b>Recomposition:</b> Simultaneous fat loss + muscle gain. Possible for beginners and those returning from training. Requires precise protein + calorie targets.</p></div>

@@ -96,11 +96,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">SIGIL ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">OmegaSigil ENGINE</div><div class="card-body">The sigil renderer is a standalone SVG generator (window.OmegaSigil). It derives glyph geometry from the sovereign identity hash, element alignment, authority score, and complexity level. Each sovereign gets a unique, mathematically derived symbol.</div></div>
-      <div class="card"><div class="card-title">VARIANT SYSTEM</div><div class="card-body">Six visual variants: STANDARD, INVERSE, MONO, NEON, GHOST, and MINIMAL. Each variant applies a different rendering pass over the base sigil geometry — same structure, different aesthetic register.</div></div>
-      <div class="card"><div class="card-title">SVG EXPORT</div><div class="card-body">The sigil exports as a clean inline SVG string. Download saves a .svg file. Copy puts the SVG source on the clipboard. The exported sigil is self-contained and renders in any SVG-capable environment.</div></div>
-      <div class="card"><div class="card-title">IDENTITY BINDING</div><div class="card-body">The sigil is bound to the authenticated user's identity hash. Axis overrides (authority, complexity, scale) are cosmetic — the underlying geometry is immutable and unique per sovereign.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">OmegaSigil ENGINE</div><div class="card-body">The sigil renderer is a standalone SVG generator (window.OmegaSigil). It derives glyph geometry from the sovereign identity hash, element alignment, authority score, and complexity level. Each sovereign gets a unique, mathematically derived symbol.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">VARIANT SYSTEM</div><div class="card-body">Six visual variants: STANDARD, INVERSE, MONO, NEON, GHOST, and MINIMAL. Each variant applies a different rendering pass over the base sigil geometry — same structure, different aesthetic register.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">SVG EXPORT</div><div class="card-body">The sigil exports as a clean inline SVG string. Download saves a .svg file. Copy puts the SVG source on the clipboard. The exported sigil is self-contained and renders in any SVG-capable environment.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">IDENTITY BINDING</div><div class="card-body">The sigil is bound to the authenticated user's identity hash. Axis overrides (authority, complexity, scale) are cosmetic — the underlying geometry is immutable and unique per sovereign.</div></div>
     </div>
   </div>
 </div>
@@ -256,5 +256,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

@@ -68,10 +68,10 @@
 <!-- SIGNALS TAB -->
 <div class="tab-panel active" id="tab-signals">
   <div class="sig-kpi">
-    <div class="kpi-card card"><div class="kpi-val" id="totalSignals">&mdash;</div><div class="kpi-label">TOTAL SIGNALS</div></div>
-    <div class="kpi-card card"><div class="kpi-val" id="topScore">&mdash;</div><div class="kpi-label">TOP SCORE</div></div>
-    <div class="kpi-card card"><div class="kpi-val" id="hnCount">&mdash;</div><div class="kpi-label">HN STORIES</div></div>
-    <div class="kpi-card card"><div class="kpi-val" id="repoStars">&mdash;</div><div class="kpi-label">TOP REPO &#9733;</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val" id="totalSignals">&mdash;</div><div class="kpi-label">TOTAL SIGNALS</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val" id="topScore">&mdash;</div><div class="kpi-label">TOP SCORE</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val" id="hnCount">&mdash;</div><div class="kpi-label">HN STORIES</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val" id="repoStars">&mdash;</div><div class="kpi-label">TOP REPO &#9733;</div></div>
   </div>
   <div class="refresh-bar">
     <button class="refresh-btn" id="refreshHN">&#8635; REFRESH HN</button>
@@ -103,11 +103,11 @@
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SIGNAL SCIENCE</div>
-  <div class="kpi-row">
-    <div class="kpi-card card"><div class="kpi-val">3</div><div class="kpi-label">DATA SOURCES</div></div>
-    <div class="kpi-card card"><div class="kpi-val">5 MIN</div><div class="kpi-label">REFRESH CYCLE</div></div>
-    <div class="kpi-card card"><div class="kpi-val">72</div><div class="kpi-label">MAX SIGNALS</div></div>
-    <div class="kpi-card card"><div class="kpi-val">LIVE</div><div class="kpi-label">FEED STATUS</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val">3</div><div class="kpi-label">DATA SOURCES</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val">5 MIN</div><div class="kpi-label">REFRESH CYCLE</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val">72</div><div class="kpi-label">MAX SIGNALS</div></div>
+    <div class="kpi-card card" data-reveal="fade-up"><div class="kpi-val">LIVE</div><div class="kpi-label">FEED STATUS</div></div>
   </div>
   <div class="card-grid" style="margin-top:16px">
     <div class="card">
@@ -331,5 +331,5 @@ function buildFeed(){
   }).join('');
 }
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

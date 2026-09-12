@@ -120,8 +120,8 @@
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div class="sechead">ELEMENTAL SYSTEM &mdash; SOVEREIGN SCIENCE</div>
-  <div class="card-grid" style="--cols:1">
-    <div class="card">
+  <div class="card-grid" data-stagger data-stagger-gap="60" style="--cols:1">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">THE NINE-ELEMENT FRAMEWORK</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
         <p>The Sovereign Element System maps nine archetypal forces to the human experience. Five physical elements are assigned at birth through the Western astrological tradition. Four transcendent elements unlock through authority progression in the 9×9×9 matrix.</p>
@@ -147,8 +147,8 @@
   </div>
 
   <div class="sechead">THE TWELVE GATES &mdash; AUTHORITY THRESHOLDS</div>
-  <div class="card-grid">
-    <div class="card">
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">GATE MATHEMATICS</div>
       <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
         <div>Genesis threshold = &radic;3 &#x2248; <span style="color:var(--gold)">1.7321</span></div>
@@ -157,7 +157,7 @@
         <div style="color:var(--cyan)">12 evenly spaced authority thresholds</div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">28 KINGS &mdash; MANSION SYSTEM</div>
       <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
         <div>28 Mansions = 28 lunar stations</div>
@@ -166,7 +166,7 @@
         <div style="color:var(--gold)">Omega King at authority = 27.8367</div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="card-title">AUTHORITY FORMULA</div>
       <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
         <div style="color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
@@ -428,5 +428,5 @@ window.bootKings=async function(){
   });
 };
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

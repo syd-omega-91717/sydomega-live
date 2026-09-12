@@ -83,7 +83,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
     <!-- ADD PRINCIPLE -->
     <div id="tab-add" class="tab-panel act">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">DEFINE A SOVEREIGN PRINCIPLE</div>
         <div style="margin-bottom:10px">
           <label>PRINCIPLE TITLE</label>
@@ -118,7 +118,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
         </div>
         <button class="btn btn-gold" onclick="addPrinciple()">+ INSCRIBE PRINCIPLE</button>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">SEED PRINCIPLES — SOVEREIGN OPERATING LAWS</div>
         <p style="font-size:.65rem;color:var(--d);margin-bottom:12px">12 FOUNDATIONAL PRINCIPLES DISTILLED FROM STOIC, STRATEGIC, AND SOVEREIGN PHILOSOPHY.</p>
         <button class="btn btn-ghost" onclick="loadSeeds()" id="seed-btn">LOAD SEED PRINCIPLES</button>
@@ -142,7 +142,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
     <!-- MANIFESTO -->
     <div id="tab-manifesto" class="tab-panel">
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">SOVEREIGN MANIFESTO — YOUR IMMUTABLE LAWS</div>
         <p style="font-size:.65rem;color:var(--d);margin-bottom:16px">YOUR PINNED PRINCIPLES, IN ORDER. THESE ARE THE LAWS BY WHICH YOU OPERATE.</p>
         <div id="manifesto-body"></div>
@@ -164,7 +164,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
         <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-reveal="fade-up">
         <div class="card-title">THE SCIENCE &amp; PHILOSOPHY OF PERSONAL PRINCIPLES</div>
         <div class="ref-block">
           <div class="ref-title">RAY DALIO — Principles (2017)</div>
@@ -344,6 +344,6 @@ function updateStats(){
 
 updateStats();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

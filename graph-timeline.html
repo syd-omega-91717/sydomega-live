@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Graph Timeline — SYD OMEGA</title>
-  <script src="/bg.js"></script>
+  <script src="/bg.js" defer></script>
   <style>
     main.main {
       display: flex;
@@ -266,19 +266,19 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-card">
+        <div class="stat-card" data-reveal="fade-up">
           <div class="stat-value" id="totalEvents">0</div>
           <div class="stat-label">Total Events</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" data-reveal="fade-up">
           <div class="stat-value" id="uniqueEntities">0</div>
           <div class="stat-label">Unique Entities</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" data-reveal="fade-up">
           <div class="stat-value" id="verifiedCount">0</div>
           <div class="stat-label">Verified Items</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" data-reveal="fade-up">
           <div class="stat-value" id="timelineSpan">0d</div>
           <div class="stat-label">Timeline Span</div>
         </div>

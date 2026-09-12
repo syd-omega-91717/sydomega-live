@@ -1,0 +1,498 @@
+/* Ω SYD OMEGA 91717 — COMPONENT LIBRARY (OPTION C)
+   INFORMATION DENSITY & VISUAL HIERARCHY
+
+   Reusable component patterns for:
+   - Dashboard metrics and status displays
+   - Data-dense tables and grids
+   - Progressive disclosure patterns
+   - Card hierarchies and states
+   - Information organization
+
+   All patterns are CSS-only (no markup changes required).
+   Loads after omega-visual-evolution.css and v3.
+   */
+
+:root {
+  /* Density tokens */
+  --component-gap-compact: 8px;
+  --component-gap-normal: 12px;
+  --component-gap-spacious: 16px;
+
+  /* Status colors */
+  --status-active: #00FF80;
+  --status-warn: #FFB800;
+  --status-alert: #FF4444;
+  --status-info: #00E5FF;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DASHBOARD METRIC PATTERNS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Primary metric card — large, prominent */
+.metric-primary {
+  padding: 20px;
+  background-color: var(--omega-glass);
+  border-radius: 8px;
+  border: 1px solid var(--omega-edge);
+}
+
+.metric-primary .metric-label {
+  display: block;
+  font-family: var(--M);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.metric-primary .metric-value {
+  display: block;
+  font-family: var(--D);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.metric-primary .metric-change {
+  font-family: var(--M);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.metric-primary .metric-change.positive {
+  color: var(--status-active);
+}
+
+.metric-primary .metric-change.negative {
+  color: var(--status-alert);
+}
+
+.metric-primary .metric-change.neutral {
+  color: var(--status-info);
+}
+
+/* Secondary metric — smaller, grid-based */
+.metric-secondary {
+  padding: 14px;
+  background-color: rgba(10, 10, 15, .5);
+  border: 1px solid rgba(201, 168, 76, .06);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.metric-secondary .metric-label {
+  display: block;
+  font-family: var(--M);
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.metric-secondary .metric-value {
+  display: block;
+  font-family: var(--D);
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+/* Gauge/progress metric */
+.metric-gauge {
+  padding: 16px;
+  position: relative;
+}
+
+.metric-gauge .gauge-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--M);
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.metric-gauge .gauge-track {
+  height: 8px;
+  background: rgba(201, 168, 76, .08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.metric-gauge .gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(201, 168, 76, .4);
+  animation: omega-charge 2.6s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TABLE ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Dense table variant (more rows, tighter spacing) */
+.tbl-dense .tbl-row {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.tbl-dense .tbl-hcell {
+  padding: 6px 12px;
+  font-size: 10px;
+}
+
+/* Spacious table variant */
+.tbl-spacious .tbl-row {
+  padding: 14px 16px;
+  font-size: 14px;
+}
+
+.tbl-spacious .tbl-hcell {
+  padding: 12px 16px;
+  font-size: 12px;
+}
+
+/* Status indicator column */
+.tbl-col-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tbl-col-status::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-active);
+}
+
+.tbl-col-status.inactive::before {
+  background: var(--status-info);
+  opacity: .4;
+}
+
+.tbl-col-status.alert::before {
+  background: var(--status-alert);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+/* Sortable column indicators */
+.tbl-sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 16px;
+}
+
+.tbl-sortable::after {
+  content: '⇅';
+  position: absolute;
+  right: 0;
+  opacity: .3;
+  font-size: 10px;
+  transition: opacity .2s ease;
+}
+
+.tbl-sortable:hover::after {
+  opacity: .6;
+}
+
+.tbl-sortable.sort-asc::after {
+  content: '↑';
+  opacity: .8;
+}
+
+.tbl-sortable.sort-desc::after {
+  content: '↓';
+  opacity: .8;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CARD HIERARCHY & STATE PATTERNS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Featured card — emphasized state */
+.card-featured {
+  border: 2px solid var(--gold);
+  box-shadow: var(--omega-rim), 0 0 24px var(--omega-glow-gold);
+}
+
+.card-featured::before {
+  content: '★';
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  font-size: 20px;
+  color: var(--gold);
+}
+
+/* Muted card — secondary or archived state */
+.card-muted {
+  opacity: .6;
+  pointer-events: none;
+}
+
+.card-muted:hover {
+  opacity: .6;
+  box-shadow: var(--omega-rim), var(--omega-bounce), 0 6px 14px rgba(0, 0, 0, .3);
+  transform: none;
+}
+
+/* Locked card — restricted access */
+.card-locked {
+  position: relative;
+  background-color: rgba(10, 10, 15, .4);
+  border-color: var(--crim);
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.card-locked::before {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  opacity: .5;
+  z-index: 10;
+}
+
+/* Loading skeleton card */
+.card-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: .5; }
+  50% { opacity: .8; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PROGRESSIVE DISCLOSURE PATTERNS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Expandable section container */
+.section-expandable {
+  border: 1px solid var(--omega-edge);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: rgba(201, 168, 76, .04);
+  cursor: pointer;
+  user-select: none;
+  transition: background .2s ease;
+}
+
+.section-header:hover {
+  background: rgba(201, 168, 76, .08);
+}
+
+.section-header-title {
+  font-family: var(--M);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.section-header-indicator {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+  color: var(--muted);
+}
+
+.section-expandable.expanded .section-header-indicator {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s cubic-bezier(.16, 1, .3, 1),
+              padding .3s cubic-bezier(.16, 1, .3, 1),
+              opacity .3s ease;
+  opacity: 0;
+  padding: 0 16px;
+}
+
+.section-expandable.expanded .section-content {
+  max-height: 2000px;
+  opacity: 1;
+  padding: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DATA VISUALIZATION COMPONENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Mini sparkline indicator */
+.sparkline-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sparkline-value {
+  font-family: var(--D);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.sparkline-canvas {
+  width: 40px;
+  height: 20px;
+  display: block;
+}
+
+/* Heatmap cell pattern */
+.heatmap-grid {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.heatmap-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all .2s ease;
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(201, 168, 76, .3);
+}
+
+.heatmap-cell.level-0 { background: rgba(201, 168, 76, .1); }
+.heatmap-cell.level-1 { background: rgba(201, 168, 76, .2); }
+.heatmap-cell.level-2 { background: rgba(201, 168, 76, .3); }
+.heatmap-cell.level-3 { background: rgba(201, 168, 76, .5); }
+.heatmap-cell.level-4 { background: rgba(201, 168, 76, .7); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE DENSITY ADJUSTMENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .metric-primary {
+    padding: 16px;
+  }
+
+  .metric-primary .metric-value {
+    font-size: clamp(24px, 3.5vw, 36px);
+  }
+
+  .tbl-dense .tbl-row {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .section-header {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .metric-primary {
+    padding: 12px;
+  }
+
+  .metric-primary .metric-value {
+    font-size: clamp(20px, 3vw, 28px);
+  }
+
+  .metric-primary .metric-label {
+    font-size: 10px;
+  }
+
+  .tbl-dense .tbl-row {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .section-content {
+    max-height: 1200px;
+  }
+
+  .card-featured::before {
+    font-size: 16px;
+    top: -6px;
+    right: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY & FORCED COLORS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-gauge .gauge-fill {
+    animation: none;
+  }
+
+  .heatmap-cell:hover {
+    transform: none;
+  }
+
+  .section-header-indicator {
+    transition: none;
+  }
+
+  .section-content {
+    transition: none;
+  }
+
+  .card-skeleton {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .metric-gauge .gauge-fill {
+    background: CanvasText;
+    box-shadow: none;
+  }
+
+  .section-header {
+    background: transparent;
+    border-bottom: 2px solid CanvasText;
+  }
+
+  .card-featured {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .heatmap-cell {
+    border: 1px solid CanvasText;
+  }
+}

@@ -75,11 +75,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">KNOWLEDGE GRAPH ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">ENTITY GRAPH</div><div class="card-body">The Knowledge Graph is a Wikipedia-inspired entity network mapping the sovereign platform's concepts. Nodes represent tracks, elements, gates, and concepts. Edges represent directed relationships (governs, enables, leads to, powers).</div></div>
-    <div class="card"><div class="card-title">NODE TYPES</div><div class="card-body">Four node types: TRACK (12 sovereign knowledge tracks), ELEMENT (9 platform elements), GATE (12 authority thresholds), and CONCEPT (formulas, lattice definitions, and structural constants).</div></div>
-    <div class="card"><div class="card-title">CANVAS RENDERING</div><div class="card-body">The graph is rendered in real-time using the HTML5 Canvas API. Nodes are positioned in rows by type. Edge arrows indicate relationship direction. Click any node to see its connections in the detail panel.</div></div>
-    <div class="card"><div class="card-title">KNOWLEDGE AXIS A</div><div class="card-body">Engaging with the Knowledge Graph contributes to your Axis A (Knowledge) score. Academy modules, lore study, and research submissions are tracked as knowledge events that advance your sovereign progression.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">ENTITY GRAPH</div><div class="card-body">The Knowledge Graph is a Wikipedia-inspired entity network mapping the sovereign platform's concepts. Nodes represent tracks, elements, gates, and concepts. Edges represent directed relationships (governs, enables, leads to, powers).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">NODE TYPES</div><div class="card-body">Four node types: TRACK (12 sovereign knowledge tracks), ELEMENT (9 platform elements), GATE (12 authority thresholds), and CONCEPT (formulas, lattice definitions, and structural constants).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CANVAS RENDERING</div><div class="card-body">The graph is rendered in real-time using the HTML5 Canvas API. Nodes are positioned in rows by type. Edge arrows indicate relationship direction. Click any node to see its connections in the detail panel.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">KNOWLEDGE AXIS A</div><div class="card-body">Engaging with the Knowledge Graph contributes to your Axis A (Knowledge) score. Academy modules, lore study, and research submissions are tracked as knowledge events that advance your sovereign progression.</div></div>
   </div>
 </div>
 <div data-page-emblem="knowledge" style="margin:20px auto 0"></div>
@@ -274,6 +274,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

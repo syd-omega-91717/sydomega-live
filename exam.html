@@ -74,10 +74,10 @@
 
   <div id="tab-exam" class="tab-panel act">
     <div class="stats-row">
-      <div class="stat-box card"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL Q&amp;A</div></div>
-      <div class="stat-box card"><div class="stat-num" id="stat-due">0</div><div class="stat-lbl">DUE TODAY</div></div>
-      <div class="stat-box card"><div class="stat-num" id="stat-mastered">0</div><div class="stat-lbl">MASTERED</div></div>
-      <div class="stat-box card"><div class="stat-num" id="stat-accuracy">0%</div><div class="stat-lbl">ACCURACY</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL Q&amp;A</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-due">0</div><div class="stat-lbl">DUE TODAY</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-mastered">0</div><div class="stat-lbl">MASTERED</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-accuracy">0%</div><div class="stat-lbl">ACCURACY</div></div>
     </div>
     <div id="exam-area"></div>
   </div>
@@ -160,24 +160,24 @@
   </div>
 
   <div id="tab-science" class="tab-panel">
-    <div class="kpi-row">
-      <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-      <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-      <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-      <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
     </div>
-    <div class="kpi-row">
-      <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
-      <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
-      <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-      <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
     </div>
-    <div class="sci-card card"><div class="sci-title">TESTING EFFECT</div><div class="sci-body">Roediger &amp; Karpicke (2006): retrieval practice (testing) produces dramatically better long-term retention than re-reading. Being forced to recall an answer — even incorrectly — strengthens the memory trace more than passive review. Tests are not assessments; they are the learning itself.</div><div class="sci-ref">Roediger &amp; Karpicke (2006). Psychological Science</div></div>
-    <div class="sci-card card"><div class="sci-title">SPACED REPETITION (SM-2)</div><div class="sci-body">Ebbinghaus (1885) forgetting curve + Wozniak (1987) SM-2 algorithm: review items at expanding intervals (1d → 6d → 14d → 28d...) calibrated by recall quality. SM-2 reduces study time by 60–80% vs. mass practice for the same retention.</div><div class="sci-ref">Wozniak (1987). SuperMemo SM-2 Algorithm</div></div>
-    <div class="sci-card card"><div class="sci-title">INTERLEAVING</div><div class="sci-body">Rohrer &amp; Taylor (2007): mixing problem types during practice produces worse immediate performance but far better long-term retention and transfer — because it forces discrimination between concepts.</div><div class="sci-ref">Rohrer &amp; Taylor (2007). European Journal of Cognitive Psychology</div></div>
-    <div class="sci-card card"><div class="sci-title">DESIRABLE DIFFICULTY</div><div class="sci-body">Bjork (1994): learning is most effective when it is effortful. The harder a retrieval feels in the moment, the stronger the memory trace it builds. Easy practice feels productive but is not.</div><div class="sci-ref">Bjork, R.A. (1994). Memory Distortions</div></div>
-    <div class="sci-card card"><div class="sci-title">METACOGNITION</div><div class="sci-body">Flavell (1979): metacognition — knowing what you know — is a trainable skill. Self-examination with grading forces calibration of confidence vs. accuracy, building the metacognitive awareness that separates experts from novices.</div><div class="sci-ref">Flavell (1979) &middot; Dunning &amp; Kruger (1999)</div></div>
-    <div class="sci-card card"><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson (1993): expert performance results from deliberate practice — focused repetition in areas of weakness with immediate feedback. 10,000 hours of random practice ≠ 10,000 hours of deliberate practice.</div><div class="sci-ref">Ericsson et al. (1993). Psychological Review</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">TESTING EFFECT</div><div class="sci-body">Roediger &amp; Karpicke (2006): retrieval practice (testing) produces dramatically better long-term retention than re-reading. Being forced to recall an answer — even incorrectly — strengthens the memory trace more than passive review. Tests are not assessments; they are the learning itself.</div><div class="sci-ref">Roediger &amp; Karpicke (2006). Psychological Science</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">SPACED REPETITION (SM-2)</div><div class="sci-body">Ebbinghaus (1885) forgetting curve + Wozniak (1987) SM-2 algorithm: review items at expanding intervals (1d → 6d → 14d → 28d...) calibrated by recall quality. SM-2 reduces study time by 60–80% vs. mass practice for the same retention.</div><div class="sci-ref">Wozniak (1987). SuperMemo SM-2 Algorithm</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">INTERLEAVING</div><div class="sci-body">Rohrer &amp; Taylor (2007): mixing problem types during practice produces worse immediate performance but far better long-term retention and transfer — because it forces discrimination between concepts.</div><div class="sci-ref">Rohrer &amp; Taylor (2007). European Journal of Cognitive Psychology</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">DESIRABLE DIFFICULTY</div><div class="sci-body">Bjork (1994): learning is most effective when it is effortful. The harder a retrieval feels in the moment, the stronger the memory trace it builds. Easy practice feels productive but is not.</div><div class="sci-ref">Bjork, R.A. (1994). Memory Distortions</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">METACOGNITION</div><div class="sci-body">Flavell (1979): metacognition — knowing what you know — is a trainable skill. Self-examination with grading forces calibration of confidence vs. accuracy, building the metacognitive awareness that separates experts from novices.</div><div class="sci-ref">Flavell (1979) &middot; Dunning &amp; Kruger (1999)</div></div>
+    <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson (1993): expert performance results from deliberate practice — focused repetition in areas of weakness with immediate feedback. 10,000 hours of random practice ≠ 10,000 hours of deliberate practice.</div><div class="sci-ref">Ericsson et al. (1993). Psychological Review</div></div>
   </div>
 
 </div>
@@ -413,6 +413,6 @@ function loadSeedQuestions(){
 
 load();renderExam();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -100,13 +100,13 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
   <div style="padding:20px var(--pad,20px)">
 
   <!-- Top KPIs -->
-  <div class="kpi-row" id="kpi-row">
-    <div class="kpi"><div class="kpi-label">EVENTS / MIN</div><div class="kpi-value" id="kpi-epm">—</div></div>
-    <div class="kpi"><div class="kpi-label">WORKERS ACTIVE</div><div class="kpi-value" id="kpi-workers">—</div></div>
-    <div class="kpi"><div class="kpi-label">CIRCUIT BREAKERS</div><div class="kpi-value" id="kpi-cb">—<span class="kpi-unit">CLOSED</span></div></div>
-    <div class="kpi"><div class="kpi-label">DLQ DEPTH</div><div class="kpi-value" id="kpi-dlq">—</div></div>
-    <div class="kpi"><div class="kpi-label">EVENTS TOTAL</div><div class="kpi-value" id="kpi-total">—</div></div>
-    <div class="kpi"><div class="kpi-label">ERROR RATE</div><div class="kpi-value" id="kpi-err">—<span class="kpi-unit">%</span></div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">EVENTS / MIN</div><div class="kpi-value" id="kpi-epm">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">WORKERS ACTIVE</div><div class="kpi-value" id="kpi-workers">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">CIRCUIT BREAKERS</div><div class="kpi-value" id="kpi-cb">—<span class="kpi-unit">CLOSED</span></div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">DLQ DEPTH</div><div class="kpi-value" id="kpi-dlq">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">EVENTS TOTAL</div><div class="kpi-value" id="kpi-total">—</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-label">ERROR RATE</div><div class="kpi-value" id="kpi-err">—<span class="kpi-unit">%</span></div></div>
   </div>
 
   <div class="tabs">
@@ -210,16 +210,16 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
   <!-- SCIENCE TAB -->
   <div class="panel" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
-      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">&lt;50ms</div><div class="stat-lbl">P95 LATENCY</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">&lt;50ms</div><div class="stat-lbl">P95 LATENCY</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN</div></div>
-      <div class="stat-card card"><div class="stat-val">3×</div><div class="stat-lbl">DLQ RETRY LIMIT</div></div>
-      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">3×</div><div class="stat-lbl">DLQ RETRY LIMIT</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="grid3" style="margin-bottom:14px">
       <div class="card">

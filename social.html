@@ -86,11 +86,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">SOCIAL ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">PLATFORM CONNECTIONS</div><div class="card-body">Ten platforms supported: Instagram, X/Twitter, Facebook, YouTube, TikTok, LinkedIn, Telegram, Discord, Snapchat, Reddit. OAuth connections stored in <code>social_connections</code> table with RLS — each member sees only their own connections.</div></div>
-      <div class="card"><div class="card-title">BROADCAST ENGINE</div><div class="card-body">Sovereign broadcasts are stored in <code>social_broadcasts</code> with the selected network array and body. In production, a Supabase edge function routes each broadcast to the relevant platform API using stored OAuth tokens.</div></div>
-      <div class="card"><div class="card-title">FEED SYSTEM</div><div class="card-body">The feed aggregates stored broadcasts plus platform-specific activity seeds. Three views: ALL PLATFORMS (full history), MY BROADCASTS (user-authored content only), HOROSCOPE (astrological shares).</div></div>
-      <div class="card"><div class="card-title">PRIVACY MODEL</div><div class="card-body">Social connections and broadcasts are private to the authenticated user via RLS. No platform credentials are stored in plaintext — OAuth tokens are encrypted at rest. Platform usernames are stored as display handles only.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">PLATFORM CONNECTIONS</div><div class="card-body">Ten platforms supported: Instagram, X/Twitter, Facebook, YouTube, TikTok, LinkedIn, Telegram, Discord, Snapchat, Reddit. OAuth connections stored in <code>social_connections</code> table with RLS — each member sees only their own connections.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">BROADCAST ENGINE</div><div class="card-body">Sovereign broadcasts are stored in <code>social_broadcasts</code> with the selected network array and body. In production, a Supabase edge function routes each broadcast to the relevant platform API using stored OAuth tokens.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">FEED SYSTEM</div><div class="card-body">The feed aggregates stored broadcasts plus platform-specific activity seeds. Three views: ALL PLATFORMS (full history), MY BROADCASTS (user-authored content only), HOROSCOPE (astrological shares).</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">PRIVACY MODEL</div><div class="card-body">Social connections and broadcasts are private to the authenticated user via RLS. No platform credentials are stored in plaintext — OAuth tokens are encrypted at rest. Platform usernames are stored as display handles only.</div></div>
     </div>
   </div>
 </div>
@@ -277,5 +277,5 @@ sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjn
   renderFeed('all');
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

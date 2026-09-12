@@ -490,6 +490,41 @@
   color: var(--ohz-dim);
 }
 
+/* ── Surface directory ────────────────────────────────────────────────
+   A plain link index carrying every destination the previous front door
+   reached (see the merge note in index.html). Deliberately quiet: four
+   grouped columns of text links, no tiles, so it reads as a footer-weight
+   directory rather than competing with the realm strip above it. */
+.ohz-directory {
+  padding: clamp(28px, 4vw, 52px) var(--ohz-gutter);
+  border-bottom: 1px solid var(--ohz-line);
+}
+.ohz-dir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 18vw, 240px), 1fr));
+  gap: clamp(18px, 3vw, 40px);
+}
+.ohz-dir-group { min-width: 0; }
+.ohz-dir-h {
+  margin: 0 0 12px;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ohz-gold-ui);
+}
+.ohz-dir-l {
+  display: block;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ohz-dim);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.ohz-dir-l:hover,
+.ohz-dir-l:focus-visible { color: var(--ohz-gold-bright); }
+
 /* ── Vision band ─────────────────────────────────────────────────────── */
 .ohz-band {
   display: grid;

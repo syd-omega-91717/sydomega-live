@@ -27,10 +27,16 @@
      most expensive recurring bug, and marketing copy is exactly where
      it hides. Provenance for each number:
        12 governed agents  — omega-agents.json, counted
-       60 governed skills  — scripts/omega_fabric_audit.py, §8.3 baseline
+       60 governed skills  — scripts/omega_fabric_audit.py
         9 realms           — nav.js SECTIONS, primary sections
-      189 surfaces         — the repository's .html page count
-       11 edge services    — supabase/functions/, counted
+      201 surfaces         — the repository's .html page count
+       14 edge services    — supabase/functions/, counted
+     RE-DERIVED after merging main, which brought in further surfaces
+     and edge functions. Both figures were first written against this
+     branch's own base and were stale by the time the branch merged --
+     which is the whole point of deriving them: a figure in
+     member-visible copy drifts silently, and scripts/page-count-claims.py
+     gates exactly this.
      The reference image's own stat row ("50+ AI MODELS · 18 MODULES ·
      9 TIERS") is NOT reproduced: those are its invented figures, and
      none of them is true of this platform.
@@ -87,8 +93,8 @@
         <dl class="ohz-stats">
           <div><dt class="ohz-stat-n">12</dt><dd class="ohz-stat-l">AGENTS</dd></div>
           <div><dt class="ohz-stat-n">9</dt><dd class="ohz-stat-l">REALMS</dd></div>
-          <div><dt class="ohz-stat-n">189</dt><dd class="ohz-stat-l">SURFACES</dd></div>
-          <div><dt class="ohz-stat-n">11</dt><dd class="ohz-stat-l">SERVICES</dd></div>
+          <div><dt class="ohz-stat-n">201</dt><dd class="ohz-stat-l">SURFACES</dd></div>
+          <div><dt class="ohz-stat-n">14</dt><dd class="ohz-stat-l">SERVICES</dd></div>
         </dl>
       </div>
 
@@ -316,6 +322,64 @@
           <span class="ohz-hex" style="--ohz-hex:#9B6BF0"><span aria-hidden="true">∞</span></span>
           <span><span class="ohz-rail-t">DURABILITY</span>
           <span class="ohz-rail-d">No build step, no bundler, no framework to outlive</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Surface directory ──────────────────────────────────────────
+         MERGE NOTE. main rewrote this page into a "unified front door"
+         while this branch rebuilt it on the platform design system, so
+         both sides changed the same file and taking either alone lost
+         something real. Measured before choosing: main's version linked
+         28 destinations to this one's 20, and **13 of the difference are
+         reachable from index.html and nowhere else** (agent,
+         omega-visual-command, frontend/platform/platform, investor-gate,
+         investor-dashboard, venture-pipeline, web/templates/leaderboard,
+         root/portal, root/dashboard/dashboard, healthz,
+         root/audit-report, web/templates/admin_console,
+         web/templates/system_health, web/templates/sovereign_health) --
+         counted by grepping every other .html and .js for each href.
+
+         Dropping them would have orphaned thirteen pages, which is what
+         scripts/reachability-contract.py exists to catch. So the
+         composition here is this branch's and the destination set is the
+         union: the nine realms stay in the strip above, and every
+         remaining surface main reached is carried here. Nothing main
+         linked is lost. -->
+    <section class="ohz-directory" aria-label="All platform surfaces">
+      <div class="ohz-kicker">EVERY SURFACE</div>
+      <div class="ohz-dir-grid">
+        <div class="ohz-dir-group">
+          <h3 class="ohz-dir-h">CORE &amp; INTELLIGENCE</h3>
+          <a class="ohz-dir-l" href="/agent.html">Agent entrypoint</a>
+          <a class="ohz-dir-l" href="/research.html">Research</a>
+          <a class="ohz-dir-l" href="/omega-visual-command.html">Visual command</a>
+          <a class="ohz-dir-l" href="/frontend/platform/platform.html">Platform surface</a>
+        </div>
+        <div class="ohz-dir-group">
+          <h3 class="ohz-dir-h">EXPLORE &amp; CREATE</h3>
+          <a class="ohz-dir-l" href="/creator.html">Create</a>
+          <a class="ohz-dir-l" href="/world-shell.html">World shell</a>
+          <a class="ohz-dir-l" href="/web/templates/leaderboard.html">Leaderboard</a>
+        </div>
+        <div class="ohz-dir-group">
+          <h3 class="ohz-dir-h">VAULT &amp; CAPITAL</h3>
+          <a class="ohz-dir-l" href="/marketplace.html">Marketplace</a>
+          <a class="ohz-dir-l" href="/portfolio.html">Portfolio</a>
+          <a class="ohz-dir-l" href="/investor-gate.html">Investor gate</a>
+          <a class="ohz-dir-l" href="/investor-dashboard.html">Investor dashboard</a>
+          <a class="ohz-dir-l" href="/venture-pipeline.html">Venture pipeline</a>
+        </div>
+        <div class="ohz-dir-group">
+          <h3 class="ohz-dir-h">SYSTEM &amp; OPERATIONS</h3>
+          <a class="ohz-dir-l" href="/root/portal.html">Root portal</a>
+          <a class="ohz-dir-l" href="/root/dashboard/dashboard.html">Root dashboard</a>
+          <a class="ohz-dir-l" href="/root/audit-report.html">Audit report</a>
+          <a class="ohz-dir-l" href="/web/templates/admin_console.html">Admin console</a>
+          <a class="ohz-dir-l" href="/health.html">Health</a>
+          <a class="ohz-dir-l" href="/healthz.html">Healthz</a>
+          <a class="ohz-dir-l" href="/web/templates/system_health.html">System health</a>
+          <a class="ohz-dir-l" href="/web/templates/sovereign_health.html">Sovereign health</a>
         </div>
       </div>
     </section>

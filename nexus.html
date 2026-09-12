@@ -83,11 +83,11 @@
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">NEXUS ARCHITECTURE</p>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">FORCE-DIRECTED GRAPH</div><div class="card-body">The Nexus renders all approved sovereigns as nodes in a live force-directed graph. Repulsion keeps nodes separated; attraction links element-aligned members. The simulation runs on raw canvas — no external libraries. Physics settles after 200 frames.</div></div>
-      <div class="card"><div class="card-title">NODE SIZE & COLOUR</div><div class="card-body">Node radius scales with authority score (AUTH ÷ APEX × 16px). Colour maps to element alignment derived from zodiac sign. Your node is highlighted with a gold ring and pulse animation to always identify you in the graph.</div></div>
-      <div class="card"><div class="card-title">EDGE FORMATION</div><div class="card-body">Edges form between nodes sharing the same element (35% probability) or adjacent gate levels (8% probability). This creates element clusters — Fire nodes cluster together, Void nodes cluster apart. Network density reflects community coherence.</div></div>
-      <div class="card"><div class="card-title">LIVE UPDATES</div><div class="card-body">A Supabase Realtime subscription listens to profile changes. When a sovereign's authority updates, the change appears in the live activity feed at the bottom of the graph. The graph structure updates on next page load.</div></div>
+    <div class="card-grid" data-stagger data-stagger-gap="60">
+      <div class="card" data-reveal="fade-up"><div class="card-title">FORCE-DIRECTED GRAPH</div><div class="card-body">The Nexus renders all approved sovereigns as nodes in a live force-directed graph. Repulsion keeps nodes separated; attraction links element-aligned members. The simulation runs on raw canvas — no external libraries. Physics settles after 200 frames.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">NODE SIZE & COLOUR</div><div class="card-body">Node radius scales with authority score (AUTH ÷ APEX × 16px). Colour maps to element alignment derived from zodiac sign. Your node is highlighted with a gold ring and pulse animation to always identify you in the graph.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">EDGE FORMATION</div><div class="card-body">Edges form between nodes sharing the same element (35% probability) or adjacent gate levels (8% probability). This creates element clusters — Fire nodes cluster together, Void nodes cluster apart. Network density reflects community coherence.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">LIVE UPDATES</div><div class="card-body">A Supabase Realtime subscription listens to profile changes. When a sovereign's authority updates, the change appears in the live activity feed at the bottom of the graph. The graph structure updates on next page load.</div></div>
     </div>
   </div>
 </div>
@@ -326,5 +326,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   }).subscribe();
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

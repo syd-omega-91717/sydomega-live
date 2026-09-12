@@ -50,7 +50,7 @@
 .score-label .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5)}
 .interrupt-wrap{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 </style>
-  <script src="/bg.js"></script>
+  <script src="/bg.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -99,10 +99,10 @@
       <!-- STATS -->
       <div class="tab-panel act" id="tab-stats">
         <div class="stats-row" id="stats-row">
-          <div class="stat-box card"><div class="sv" id="st-today">0</div><div class="sk">TODAY MIN</div></div>
-          <div class="stat-box card"><div class="sv" id="st-week">0</div><div class="sk">WEEK HRS</div></div>
-          <div class="stat-box card"><div class="sv" id="st-sessions">0</div><div class="sk">SESSIONS</div></div>
-          <div class="stat-box card"><div class="sv" id="st-score">0</div><div class="sk">FOCUS SCORE</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" id="st-today">0</div><div class="sk">TODAY MIN</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" id="st-week">0</div><div class="sk">WEEK HRS</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" id="st-sessions">0</div><div class="sk">SESSIONS</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" id="st-score">0</div><div class="sk">FOCUS SCORE</div></div>
         </div>
         <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
           <div>
@@ -155,16 +155,16 @@
       <!-- SCIENCE -->
       <div class="tab-panel" id="tab-science">
         <div class="stats-row">
-          <div class="stat-box card"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
-          <div class="stat-box card"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
-          <div class="stat-box card"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
-          <div class="stat-box card"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
         </div>
         <div class="stats-row">
-          <div class="stat-box card"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
-          <div class="stat-box card"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
-          <div class="stat-box card"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
-          <div class="stat-box card"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:20px;font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:1.9">
           <strong style="color:rgba(201,168,76,.7)">DEEP WORK (CAL NEWPORT)</strong> — Professional activity performed in a state of distraction-free concentration that pushes cognitive capabilities to the limit. These efforts create new value, improve skill, and are hard to replicate.<br><br>

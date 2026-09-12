@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autonomous Insights Dashboard</title>
+  <script src="/bg.js" defer></script>
+  <style>
+    .autonomous-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .agent-card {
+      background: var(--void2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1rem;
+    }
+
+    .agent-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      font-family: var(--D);
+    }
+
+    .agent-status {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .agent-status.inactive {
+      background: var(--muted);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric-row:last-child {
+      border-bottom: none;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .metric-value {
+      color: var(--gold);
+      font-weight: 600;
+      font-family: var(--M);
+    }
+
+    .performance-score {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .score-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--crim), var(--gold), var(--green));
+      border-radius: 3px;
+    }
+
+    .score-number {
+      color: var(--gold);
+      font-weight: 600;
+      font-family: var(--M);
+      min-width: 40px;
+    }
+
+    .insights-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--line);
+    }
+
+    .insights-title {
+      font-size: 1.4rem;
+      font-family: var(--D);
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .insight-item {
+      background: var(--void2);
+      border-left: 4px solid var(--gold);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+
+    .insight-item.warning {
+      border-left-color: #ff9500;
+    }
+
+    .insight-item.critical {
+      border-left-color: var(--crim);
+    }
+
+    .insight-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.75rem;
+    }
+
+    .insight-type {
+      color: var(--gold);
+      font-weight: 600;
+      font-family: var(--M);
+      font-size: 0.85rem;
+    }
+
+    .insight-impact {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .insight-description {
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .insight-recommendation {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .recommendation-card {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .recommendation-title {
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .recommendation-text {
+      color: var(--ink);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .estimated-impact {
+      color: var(--green);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-family: var(--M);
+      font-size: 0.9rem;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .tab-btn:hover {
+      color: var(--gold);
+    }
+
+    .tab-btn.active {
+      color: var(--gold);
+    }
+
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .experiment-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .experiment-table th,
+    .experiment-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .experiment-table th {
+      background: rgba(255, 215, 0, 0.05);
+      color: var(--gold);
+      font-weight: 600;
+      font-family: var(--M);
+    }
+
+    .experiment-table td {
+      color: var(--ink);
+    }
+
+    .winner-badge {
+      display: inline-block;
+      background: var(--green);
+      color: var(--void);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .confidence-indicator {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(0, 255, 255, 0.2);
+      border: 1px solid var(--cyan);
+      border-radius: 4px;
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-family: var(--M);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-family: var(--D);
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body data-page="autonomous-insights">
+  <div class="shell">
+    <div class="main">
+      <div id="app" style="padding: 2rem">
+        <div class="section-header">
+          <h1 class="section-title">Autonomous System Insights</h1>
+        </div>
+
+        <!-- Agent Performance Overview -->
+        <div class="section-header" style="margin-top: 2rem">
+          <h2 class="section-title" style="font-size: 1.1rem">Agent Performance</h2>
+        </div>
+
+        <div class="autonomous-grid" id="agent-performance">
+          <div class="loading">Loading agent metrics...</div>
+        </div>
+
+        <!-- Tabs for different views -->
+        <div style="margin-top: 3rem">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="experiments">Autonomous Experiments</button>
+            <button class="tab-btn" data-tab="insights">Business Insights</button>
+            <button class="tab-btn" data-tab="recommendations">Recommendations</button>
+          </div>
+
+          <!-- Experiments Tab -->
+          <div id="experiments" class="tab-content active">
+            <table class="experiment-table">
+              <thead>
+                <tr>
+                  <th>Experiment</th>
+                  <th>Status</th>
+                  <th>Sample Size</th>
+                  <th>Confidence</th>
+                  <th>Winner</th>
+                  <th>Revenue Impact</th>
+                </tr>
+              </thead>
+              <tbody id="experiments-body">
+                <tr>
+                  <td colspan="6" class="loading">Loading experiments...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Insights Tab -->
+          <div id="insights" class="tab-content">
+            <div id="insights-content">
+              <div class="loading">Loading insights...</div>
+            </div>
+          </div>
+
+          <!-- Recommendations Tab -->
+          <div id="recommendations" class="tab-content">
+            <div class="recommendations-grid" id="recommendations-content">
+              <div class="loading">Loading recommendations...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const OmegaSB = window.OmegaSupabase || {};
+
+    // Tab switching
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tabName = btn.dataset.tab;
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(tabName).classList.add("active");
+      });
+    });
+
+    // Load agent performance metrics
+    async function loadAgentMetrics() {
+      try {
+        const sb = OmegaSB.get?.() || window.supabaseClient;
+        if (!sb) return;
+
+        const { data: metrics } = await sb
+          .from("agent_performance_metrics")
+          .select("*")
+          .order("metric_date", { ascending: false })
+          .limit(6);
+
+        const agents = ["concierge", "growth", "product", "insights", "archive", "guardian"];
+        const latestMetrics = {};
+
+        agents.forEach((agent) => {
+          const latest = metrics?.find((m) => m.agent_id === agent);
+          if (latest) {
+            latestMetrics[agent] = latest;
+          }
+        });
+
+        renderAgentCards(latestMetrics);
+      } catch (error) {
+        console.error("Error loading agent metrics:", error);
+      }
+    }
+
+    function renderAgentCards(metrics) {
+      const container = document.getElementById("agent-performance");
+      container.innerHTML = "";
+
+      const agentInfo = {
+        concierge: {
+          name: "Concierge Agent",
+          icon: "",
+          description: "Support & Onboarding",
+        },
+        growth: {
+          name: "Growth Agent",
+          icon: "",
+          description: "Campaign Orchestration",
+        },
+        product: {
+          name: "Product Agent",
+          icon: "",
+          description: "Feature Adaptation",
+        },
+        insights: {
+          name: "Insights Agent",
+          icon: "",
+          description: "Anomaly Detection",
+        },
+        archive: {
+          name: "Archive Agent",
+          icon: "",
+          description: "Compliance & Export",
+        },
+        guardian: {
+          name: "Guardian Agent",
+          icon: "",
+          description: "Policy Enforcement",
+        },
+      };
+
+      Object.entries(metrics).forEach(([agentId, metric]) => {
+        const info = agentInfo[agentId];
+        const performanceScore = metric?.performance_score || 0;
+
+        const card = document.createElement("div");
+        card.className = "agent-card";
+        card.innerHTML = `
+          <div class="agent-header">
+            <span style="font-size: 1.5rem">${info.icon}</span>
+            <div>
+              <div class="agent-name">${info.name}</div>
+              <div style="color: var(--muted); font-size: 0.85rem">${info.description}</div>
+            </div>
+            <div class="agent-status ${performanceScore > 0 ? "" : "inactive"}"></div>
+          </div>
+
+          <div class="metric-row">
+            <span class="metric-label">Decisions/Day</span>
+            <span class="metric-value">${metric?.decisions_count || 0}</span>
+          </div>
+
+          <div class="metric-row">
+            <span class="metric-label">Success Rate</span>
+            <span class="metric-value">
+              ${metric ? Math.round(((metric.successful_decisions || 0) / (metric.decisions_count || 1)) * 100) : 0}%
+            </span>
+          </div>
+
+          <div class="metric-row">
+            <span class="metric-label">Avg Confidence</span>
+            <span class="metric-value">${metric?.average_confidence?.toFixed(2) || "N/A"}</span>
+          </div>
+
+          <div class="metric-row">
+            <span class="metric-label">Escalation Rate</span>
+            <span class="metric-value">
+              ${metric ? Math.round(((metric.escalated_decisions || 0) / (metric.decisions_count || 1)) * 100) : 0}%
+            </span>
+          </div>
+
+          <div class="metric-row">
+            <span class="metric-label">Member Satisfaction</span>
+            <span class="metric-value">${metric?.member_satisfaction_avg?.toFixed(1) || "N/A"}/5.0</span>
+          </div>
+
+          <div class="performance-score">
+            <div class="score-bar">
+              <div class="score-fill" style="width: ${performanceScore * 100}%"></div>
+            </div>
+            <span class="score-number">${(performanceScore * 100).toFixed(0)}%</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      if (Object.keys(metrics).length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--muted)">
+            No agent metrics available yet. Check back after agents have processed decisions.
+          </div>
+        `;
+      }
+    }
+
+    // Load experiments
+    async function loadExperiments() {
+      try {
+        const sb = OmegaSB.get?.() || window.supabaseClient;
+        if (!sb) return;
+
+        const { data: experiments } = await sb
+          .from("agent_experiments")
+          .select("*")
+          .order("started_at", { ascending: false })
+          .limit(10);
+
+        const tbody = document.getElementById("experiments-body");
+        tbody.innerHTML = "";
+
+        if (!experiments || experiments.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" class="loading">No experiments running yet</td></tr>';
+          return;
+        }
+
+        experiments.forEach((exp) => {
+          const row = document.createElement("tr");
+          const status = exp.winner ? "Completed" : "Running";
+          const confidenceLevel = exp.winner_confidence_level || 0;
+
+          row.innerHTML = `
+            <td>${exp.experiment_name || exp.experiment_type}</td>
+            <td>${status}</td>
+            <td>${exp.sample_size_a + exp.sample_size_b}</td>
+            <td><span class="confidence-indicator">${(confidenceLevel * 100).toFixed(0)}%</span></td>
+            <td>${exp.winner ? `<span class="winner-badge">${exp.winner}</span>` : "Pending"}</td>
+            <td>$${(exp.revenue_impact_usd || 0).toFixed(0)}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error loading experiments:", error);
+      }
+    }
+
+    // Load insights
+    async function loadInsights() {
+      try {
+        const sb = OmegaSB.get?.() || window.supabaseClient;
+        if (!sb) return;
+
+        const { data: insights } = await sb
+          .from("autonomous_insights")
+          .select("*")
+          .order("generated_at", { ascending: false })
+          .limit(8);
+
+        const container = document.getElementById("insights-content");
+        container.innerHTML = "";
+
+        if (!insights || insights.length === 0) {
+          container.innerHTML = '<div class="loading">No insights generated yet</div>';
+          return;
+        }
+
+        insights.forEach((insight) => {
+          const item = document.createElement("div");
+          item.className = `insight-item ${insight.severity}`;
+
+          item.innerHTML = `
+            <div class="insight-header">
+              <span class="insight-type">${insight.insight_type}</span>
+              <span class="insight-impact">Est. +$${(insight.estimated_impact_usd || 0).toFixed(0)}</span>
+            </div>
+            <div class="insight-description">${insight.finding}</div>
+            ${
+              insight.recommendation
+                ? `<div class="insight-recommendation"><strong>Recommendation:</strong> ${insight.recommendation}</div>`
+                : ""
+            }
+          `;
+          container.appendChild(item);
+        });
+      } catch (error) {
+        console.error("Error loading insights:", error);
+      }
+    }
+
+    // Load recommendations
+    async function loadRecommendations() {
+      try {
+        const sb = OmegaSB.get?.() || window.supabaseClient;
+        if (!sb) return;
+
+        const { data: insights } = await sb
+          .from("autonomous_insights")
+          .select("*")
+          .eq("actioned", false)
+          .order("estimated_impact_usd", { ascending: false })
+          .limit(6);
+
+        const container = document.getElementById("recommendations-content");
+        container.innerHTML = "";
+
+        if (!insights || insights.length === 0) {
+          container.innerHTML = '<div class="loading" style="grid-column: 1/-1">No pending recommendations</div>';
+          return;
+        }
+
+        insights.forEach((insight) => {
+          const card = document.createElement("div");
+          card.className = "recommendation-card";
+
+          card.innerHTML = `
+            <div class="recommendation-title">${insight.insight_type}</div>
+            <div class="recommendation-text">${insight.recommendation || insight.finding}</div>
+            <div class="estimated-impact">+$${(insight.estimated_impact_usd || 0).toFixed(0)} Annual</div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Error loading recommendations:", error);
+      }
+    }
+
+    // Initial load
+    loadAgentMetrics();
+    loadExperiments();
+    loadInsights();
+    loadRecommendations();
+
+    // Refresh every 60 seconds
+    setInterval(() => {
+      loadAgentMetrics();
+      loadExperiments();
+      loadInsights();
+      loadRecommendations();
+    }, 60000);
+  </script>
+</body>
+</html>

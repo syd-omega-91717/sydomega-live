@@ -29,11 +29,11 @@
 
     <!-- ASCENSION TAB -->
     <div class="tab-panel active pad" id="tab-ascension">
-      <div class="kpi-row" id="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-stage">--</div><div class="kpi-l">CURRENT STAGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-apex">27.8367</div><div class="kpi-l">APEX TARGET</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-pct">--</div><div class="kpi-l">% TO APEX</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-stage">--</div><div class="kpi-l">CURRENT STAGE</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-apex">27.8367</div><div class="kpi-l">APEX TARGET</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-pct">--</div><div class="kpi-l">% TO APEX</div></div>
       </div>
 
       <div class="sechead">9 STAGES OF SOVEREIGN ASCENSION</div>
@@ -57,6 +57,15 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- YOUR ELEMENT — rotating 3-D sphere (Three.js via omega-realm.js,
+           already injected sitewide by bg.js). This tab is visible on load
+           (not display:none), so the canvas has a real size the moment
+           OmegaRealm is ready -- no lazy-mount-on-tab-click needed here. -->
+      <div class="sechead" data-i18n="asc_your_element">YOUR ELEMENT</div>
+      <div class="omega-depth-card" style="height:clamp(220px,30vh,320px);margin-bottom:14px;overflow:hidden;border-radius:2px">
+        <canvas id="asc-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
       </div>
     </div>
 
@@ -141,12 +150,12 @@
     <div class="tab-panel pad" id="tab-science" style="display:none">
       <div class="sechead">ASCENSION SCIENCE</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
-        <div class="sci-card card"><div class="sci-num">01</div><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson's research shows 10,000 hours of deliberate practice — focused, feedback-driven repetition — separates experts from amateurs. Quality over quantity of practice determines mastery depth.</div></div>
-        <div class="sci-card card"><div class="sci-num">02</div><div class="sci-title">FLOW STATE THEORY</div><div class="sci-body">Csikszentmihalyi's flow occurs when challenge slightly exceeds skill. Sustained flow accelerates ascension by creating optimal learning conditions: high engagement, automatic processing, time distortion.</div></div>
-        <div class="sci-card card"><div class="sci-num">03</div><div class="sci-title">THRESHOLD THEORY</div><div class="sci-body">Malcolm Gladwell popularized the 10,000-hour rule from Ericsson's work. Expertise in any domain requires crossing cognitive thresholds that enable qualitatively new levels of performance and perception.</div></div>
-        <div class="sci-card card"><div class="sci-num">04</div><div class="sci-title">AXIS SYNERGY</div><div class="sci-body">The cubic root in AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) creates exponential returns when all three axes develop together. A single axis at 9.0 yields AUTH=15.3; all three at 5.0 yield AUTH=17.4.</div></div>
-        <div class="sci-card card"><div class="sci-num">05</div><div class="sci-title">NEUROPLASTICITY</div><div class="sci-body">The brain rewires itself through learning (LTP) and pruning. Consistent high-effort practice thickens myelin sheaths, increasing signal speed. Each stage of ascension represents measurable neurological change.</div></div>
-        <div class="sci-card card"><div class="sci-num">06</div><div class="sci-title">SOVEREIGN IDENTITY</div><div class="sci-body">Identity-based goal pursuit (Deci &amp; Ryan's SDT) drives intrinsic motivation. Anchoring growth to a sovereign identity — rather than external validation — creates durable, self-reinforcing ascension momentum.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">01</div><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson's research shows 10,000 hours of deliberate practice — focused, feedback-driven repetition — separates experts from amateurs. Quality over quantity of practice determines mastery depth.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">02</div><div class="sci-title">FLOW STATE THEORY</div><div class="sci-body">Csikszentmihalyi's flow occurs when challenge slightly exceeds skill. Sustained flow accelerates ascension by creating optimal learning conditions: high engagement, automatic processing, time distortion.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">03</div><div class="sci-title">THRESHOLD THEORY</div><div class="sci-body">Malcolm Gladwell popularized the 10,000-hour rule from Ericsson's work. Expertise in any domain requires crossing cognitive thresholds that enable qualitatively new levels of performance and perception.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">04</div><div class="sci-title">AXIS SYNERGY</div><div class="sci-body">The cubic root in AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) creates exponential returns when all three axes develop together. A single axis at 9.0 yields AUTH=15.3; all three at 5.0 yield AUTH=17.4.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">05</div><div class="sci-title">NEUROPLASTICITY</div><div class="sci-body">The brain rewires itself through learning (LTP) and pruning. Consistent high-effort practice thickens myelin sheaths, increasing signal speed. Each stage of ascension represents measurable neurological change.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">06</div><div class="sci-title">SOVEREIGN IDENTITY</div><div class="sci-body">Identity-based goal pursuit (Deci &amp; Ryan's SDT) drives intrinsic motivation. Anchoring growth to a sovereign identity — rather than external validation — creates durable, self-reinforcing ascension momentum.</div></div>
       </div>
     </div>
 
@@ -166,7 +175,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var STAGES=[
-  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'), desc:'The journey begins. Awareness precedes all growth.'},
+  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:'#A39D89', desc:'The journey begins. Awareness precedes all growth.'},
   {n:2,title:'ACOLYTE',     min:2.3197, max:4.6394,  color:'#C0A960', desc:'Consistent practice builds the first foundations.'},
   {n:3,title:'SCHOLAR',     min:4.6394, max:6.9592,  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Knowledge deepens. Patterns begin to emerge.'},
   {n:4,title:'KEEPER',      min:6.9592, max:9.2789,  color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'), desc:'Custodian of hard-won wisdom and discipline.'},
@@ -269,6 +278,12 @@ window.addMilestone=function(){
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function mountAscRealm(){
+      var canvas=document.getElementById('asc-realm-canvas');
+      if(!canvas)return;
+      if(!window.OmegaRealm){setTimeout(mountAscRealm,300);return;}
+      window.OmegaRealm.mount(canvas,pr.element||'Void');
+    })();
 
     var a=Number(pr.is_owner?9:pr.axis_a||0.001);
     var b=Number(pr.is_owner?9:pr.axis_b||0.001);

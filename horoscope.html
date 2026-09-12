@@ -48,14 +48,19 @@
 
 <div class="tab-panel active" id="tab-mysign">
   <div class="sechead">YOUR SOVEREIGN SIGN &amp; ORACLE</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="stat-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-a">—</div><div class="kpi-label">AXIS A</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-b">—</div><div class="kpi-label">AXIS B</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-c">—</div><div class="kpi-label">AXIS C</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-a">—</div><div class="kpi-label">AXIS A</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-b">—</div><div class="kpi-label">AXIS B</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-c">—</div><div class="kpi-label">AXIS C</div></div>
   </div>
   <div class="my-sign-panel">
     <div class="msp-label">SOVEREIGN SIGN</div>
+    <!-- bg.js's "OMEGA ICON EMBLEMS" system auto-converts this zodiac glyph
+         into a living, rotating canvas icon once JS sets its text below
+         (childless, 1-2 chars, in its recognized icon ranges) -- so no
+         aria-hidden here: that system sets its own aria-label on conversion. -->
+    <div class="omega-emblem" id="hr-sign-emblem" style="width:64px;height:64px;font-size:32px;margin-bottom:10px">—</div>
     <div class="msp-name" id="hr-sign-name">—</div>
     <div class="msp-oracle" id="hr-sign-oracle">Detecting your sign&hellip;</div>
     <div class="msp-grid">
@@ -254,6 +259,7 @@ async function boot(){
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
     var si=SNAMES.indexOf(pr.sign||'');if(si<0)si=0;
+    sid('hr-sign-emblem',SYMS[si]);
     sid('hr-sign-name',SNAMES[si]+' '+SYMS[si]);
     document.getElementById('hr-sign-oracle').textContent=SORACLES[si];
     sid('hr-god',SGODS[si]);sid('hr-elem',SELEMS[si]);sid('hr-gate',SGATES[si]);sid('hr-mode',SMODES[si]);
@@ -261,6 +267,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

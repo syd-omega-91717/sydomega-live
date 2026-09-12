@@ -47,11 +47,11 @@
 
 <div class="tab-panel active" id="tab-overview">
   <div class="sechead">PORTFOLIO SUMMARY</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="ov-assets">12</div><div class="kpi-label">ASSETS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="ov-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="ov-node">—</div><div class="kpi-label">LATTICE NODE</div></div>
-    <div class="kpi-card"><div class="kpi-val">104,976</div><div class="kpi-label">TOTAL NODES</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-assets">12</div><div class="kpi-label">ASSETS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-node">—</div><div class="kpi-label">LATTICE NODE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">104,976</div><div class="kpi-label">TOTAL NODES</div></div>
   </div>
   <div class="sechead" style="margin-top:8px">LATTICE CONSTANTS</div>
   <div class="lf-bar"><div class="lf-key">AUTH FORMULA</div><div class="lf-val">&radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div></div>
@@ -169,6 +169,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

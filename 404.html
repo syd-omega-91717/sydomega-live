@@ -49,25 +49,25 @@ a:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
   <a href="/knowledge.html">&#9670; KNOWLEDGE GRAPH</a>
 </div>
 <div id="tab-lattice" class="tab-panel">
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER NODES</div></div>
-    <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">CANONICAL NODES</div></div>
-    <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-    <div class="kpi"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER NODES</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">CANONICAL NODES</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
   </div>
 </div>
 <div id="tab-science" class="tab-panel">
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-    <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-    <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-    <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
   </div>
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
-    <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
-    <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
-    <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+    <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
   </div>
 </div>
 <!-- Outside the tab panels on purpose: a mount inside one is display:none
@@ -107,6 +107,6 @@ function switchTab(id,btn){
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

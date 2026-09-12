@@ -75,11 +75,11 @@ canvas.pattern-canvas{width:100%;display:block}
 
 <!-- CHECK-IN TAB -->
 <div class="tab-panel active" id="tab-checkin">
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="entryCount">0</div><div class="kpi-label">CHECK-INS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgEnergy">&mdash;</div><div class="kpi-label">AVG ENERGY</div><div data-omega-spark data-spark-label="ENERGY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgFocus">&mdash;</div><div class="kpi-label">AVG FOCUS</div><div data-omega-spark data-spark-label="FOCUS OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
-    <div class="kpi-card"><div class="kpi-val" id="avgClarity">&mdash;</div><div class="kpi-label">AVG CLARITY</div><div data-omega-spark data-spark-label="CLARITY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="entryCount">0</div><div class="kpi-label">CHECK-INS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="avgEnergy">&mdash;</div><div class="kpi-label">AVG ENERGY</div><div data-omega-spark data-spark-label="ENERGY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="avgFocus">&mdash;</div><div class="kpi-label">AVG FOCUS</div><div data-omega-spark data-spark-label="FOCUS OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="avgClarity">&mdash;</div><div class="kpi-label">AVG CLARITY</div><div data-omega-spark data-spark-label="CLARITY OVER RECENT CHECK-INS" hidden style="margin-top:8px"></div></div>
   </div>
   <div class="checkin-card card" id="checkinCard">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -148,11 +148,11 @@ canvas.pattern-canvas{width:100%;display:block}
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div class="sechead">MIRROR SCIENCE</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val">365</div><div class="kpi-label">MAX ENTRIES</div></div>
-    <div class="kpi-card"><div class="kpi-val">8</div><div class="kpi-label">TAG FORCES</div></div>
-    <div class="kpi-card"><div class="kpi-val">5</div><div class="kpi-label">MOOD STATES</div></div>
-    <div class="kpi-card"><div class="kpi-val">LOCAL</div><div class="kpi-label">STORAGE</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">365</div><div class="kpi-label">MAX ENTRIES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">8</div><div class="kpi-label">TAG FORCES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">5</div><div class="kpi-label">MOOD STATES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">LOCAL</div><div class="kpi-label">STORAGE</div></div>
   </div>
   <div class="card-grid" style="margin-top:16px">
     <div class="card">
@@ -435,6 +435,6 @@ function renderCharts(){
 
 window.renderCharts=renderCharts;
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script src="/omega-sparkline.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

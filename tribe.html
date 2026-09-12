@@ -69,11 +69,11 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 
 <!-- TRIBES TAB -->
 <div class="tab-panel active" id="tab-tribes">
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="sTotalMembers">—</div><div class="kpi-label">TOTAL MEMBERS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sActiveTribes">—</div><div class="kpi-label">ACTIVE TRIBES</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sDominantTribe">—</div><div class="kpi-label">DOMINANT TRIBE</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sTopAuthority">—</div><div class="kpi-label">TOP AUTHORITY</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sTotalMembers">—</div><div class="kpi-label">TOTAL MEMBERS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sActiveTribes">—</div><div class="kpi-label">ACTIVE TRIBES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sDominantTribe">—</div><div class="kpi-label">DOMINANT TRIBE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sTopAuthority">—</div><div class="kpi-label">TOP AUTHORITY</div></div>
   </div>
 
   <div class="sechead">NINE ELEMENTAL TRIBES</div>
@@ -375,5 +375,5 @@ window.addEventListener('resize',drawDominanceChart);
   setTimeout(drawDominanceChart,100);
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

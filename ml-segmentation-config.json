@@ -1,0 +1,472 @@
+{
+  "mlPipeline": {
+    "version": "1.0",
+    "enabled": true,
+    "framework": "datarobot_enterprise",
+    "updateFrequency": "daily"
+  },
+  "memberSegmentation": {
+    "enabled": true,
+    "algorithms": [
+      {
+        "name": "behavioral_clustering",
+        "type": "unsupervised",
+        "method": "k_means",
+        "k": 8,
+        "features": [
+          "days_active",
+          "feature_adoption_count",
+          "api_call_frequency",
+          "session_duration_avg",
+          "pages_per_session",
+          "content_creation_count",
+          "engagement_score",
+          "support_interactions",
+          "login_frequency_7d"
+        ],
+        "schedule": "daily_03:00Z",
+        "output": "public.member_segments_behavioral"
+      },
+      {
+        "name": "lifecycle_segmentation",
+        "type": "supervised",
+        "method": "lifecycle_stage",
+        "stages": [
+          {
+            "name": "onboarding",
+            "criteria": {
+              "days_active": {"min": 0, "max": 7},
+              "feature_adoption": {"min": 0, "max": 3}
+            }
+          },
+          {
+            "name": "growth",
+            "criteria": {
+              "days_active": {"min": 8, "max": 60},
+              "feature_adoption": {"min": 3, "max": 7}
+            }
+          },
+          {
+            "name": "maturity",
+            "criteria": {
+              "days_active": {"min": 61, "max": 365},
+              "feature_adoption": {"min": 7, "max": 12}
+            }
+          },
+          {
+            "name": "loyal",
+            "criteria": {
+              "days_active": {"min": 365},
+              "feature_adoption": {"min": 8}
+            }
+          },
+          {
+            "name": "at_risk",
+            "criteria": {
+              "days_since_login": {"min": 14},
+              "engagement_score": {"max": 0.4}
+            }
+          },
+          {
+            "name": "dormant",
+            "criteria": {
+              "days_since_login": {"min": 90}
+            }
+          }
+        ],
+        "schedule": "daily_02:00Z",
+        "output": "public.member_segments_lifecycle"
+      },
+      {
+        "name": "value_segmentation",
+        "type": "supervised",
+        "method": "ltv_clustering",
+        "segments": [
+          {
+            "name": "high_value",
+            "criteria": {
+              "ltv": {"min": 500},
+              "retention_probability_12m": {"min": 0.8}
+            }
+          },
+          {
+            "name": "mid_value",
+            "criteria": {
+              "ltv": {"min": 100, "max": 500},
+              "engagement_score": {"min": 0.5}
+            }
+          },
+          {
+            "name": "low_value",
+            "criteria": {
+              "ltv": {"max": 100}
+            }
+          },
+          {
+            "name": "dormant_value",
+            "criteria": {
+              "days_since_activity": {"min": 30},
+              "historical_ltv": {"min": 100}
+            }
+          }
+        ],
+        "schedule": "daily_04:00Z",
+        "output": "public.member_segments_value"
+      }
+    ],
+    "personas": [
+      {
+        "id": "power_user",
+        "name": "Power User",
+        "description": "High engagement, 8+ features, daily active",
+        "characteristics": {
+          "features_used": {"min": 8},
+          "days_active_30d": {"min": 25},
+          "engagement_score": {"min": 0.8},
+          "support_tickets": {"max": 2}
+        },
+        "size_estimate": "15%",
+        "ltv_estimate": 1200,
+        "retention_rate": 0.95,
+        "churn_risk": 0.02
+      },
+      {
+        "id": "regular_user",
+        "name": "Regular User",
+        "description": "Steady engagement, 4-7 features, 3-4× weekly",
+        "characteristics": {
+          "features_used": {"min": 4, "max": 7},
+          "days_active_30d": {"min": 12, "max": 24},
+          "engagement_score": {"min": 0.5, "max": 0.8},
+          "session_frequency": "3-4_per_week"
+        },
+        "size_estimate": "35%",
+        "ltv_estimate": 400,
+        "retention_rate": 0.75,
+        "churn_risk": 0.15
+      },
+      {
+        "id": "casual_user",
+        "name": "Casual User",
+        "description": "Light engagement, 1-3 features, occasional",
+        "characteristics": {
+          "features_used": {"min": 1, "max": 3},
+          "days_active_30d": {"min": 4, "max": 11},
+          "engagement_score": {"min": 0.2, "max": 0.5},
+          "session_frequency": "1-2_per_week"
+        },
+        "size_estimate": "35%",
+        "ltv_estimate": 80,
+        "retention_rate": 0.45,
+        "churn_risk": 0.45
+      },
+      {
+        "id": "explorer",
+        "name": "Explorer",
+        "description": "New member, testing features, high variance",
+        "characteristics": {
+          "days_active": {"max": 14},
+          "feature_adoption": {"min": 1, "max": 5},
+          "session_duration": {"min": 300},
+          "return_rate": "variable"
+        },
+        "size_estimate": "10%",
+        "ltv_estimate": 150,
+        "retention_rate": 0.35,
+        "churn_risk": 0.60,
+        "intervention": "onboarding_guidance"
+      },
+      {
+        "id": "at_risk",
+        "name": "At-Risk Member",
+        "description": "Previously engaged, recent disengagement",
+        "characteristics": {
+          "days_since_login": {"min": 14},
+          "historical_engagement": {"min": 0.6},
+          "engagement_score": {"max": 0.3},
+          "feature_usage_decline": "50%+"
+        },
+        "size_estimate": "5%",
+        "ltv_estimate": 0,
+        "retention_rate": 0.20,
+        "churn_risk": 0.90,
+        "intervention": "win_back_campaign"
+      }
+    ]
+  },
+  "churnPrevention": {
+    "enabled": true,
+    "models": [
+      {
+        "name": "early_warning_7d",
+        "prediction_window": 7,
+        "target": "will_churn_7d",
+        "features": [
+          "days_since_last_login",
+          "engagement_score_trend",
+          "feature_usage_trend",
+          "support_ticket_sentiment",
+          "email_open_rate"
+        ],
+        "schedule": "6_times_daily",
+        "threshold": 0.6,
+        "actions": [
+          {
+            "probability_range": [0.6, 0.75],
+            "action": "automated_email_with_tips",
+            "template": "we_miss_you_light"
+          },
+          {
+            "probability_range": [0.75, 0.9],
+            "action": "personal_outreach",
+            "template": "concierge_check_in",
+            "channel": "email"
+          },
+          {
+            "probability_range": [0.9, 1.0],
+            "action": "vip_intervention",
+            "template": "founder_personal_message",
+            "channel": ["email", "in_app_notification"]
+          }
+        ]
+      },
+      {
+        "name": "seasonal_churn",
+        "prediction_window": 30,
+        "target": "will_churn_seasonal",
+        "features": [
+          "signup_date",
+          "engagement_seasonality",
+          "historical_churn_patterns",
+          "feature_adoption_lifecycle"
+        ],
+        "schedule": "weekly",
+        "threshold": 0.7,
+        "actions": [
+          {
+            "action": "seasonal_feature_highlight",
+            "template": "new_seasonal_feature",
+            "timing": "before_high_churn_period"
+          }
+        ]
+      }
+    ],
+    "campaigns": [
+      {
+        "id": "win_back_dormant",
+        "target": "at_risk",
+        "segments": ["dormant", "at_risk"],
+        "duration_days": 14,
+        "touchpoints": [
+          {
+            "day": 0,
+            "channel": "email",
+            "template": "we_miss_you",
+            "personalization": ["member_name", "last_active_feature"]
+          },
+          {
+            "day": 3,
+            "channel": "in_app",
+            "template": "special_offer_return",
+            "personalization": ["feature_recommendations"]
+          },
+          {
+            "day": 7,
+            "channel": "email",
+            "template": "whats_new",
+            "personalization": ["new_features_relevant_to_member"]
+          },
+          {
+            "day": 14,
+            "channel": "email",
+            "template": "final_offer",
+            "personalization": ["exclusive_offer"]
+          }
+        ],
+        "success_metric": "member_return_and_engagement",
+        "target_roi": 3.0
+      },
+      {
+        "id": "upgrade_casual_to_regular",
+        "target": "casual_user",
+        "segments": ["casual"],
+        "duration_days": 30,
+        "touchpoints": [
+          {
+            "day": 0,
+            "channel": "in_app",
+            "template": "feature_discovery",
+            "personalization": ["unused_features_by_profile"]
+          },
+          {
+            "day": 5,
+            "channel": "email",
+            "template": "feature_deep_dive",
+            "personalization": ["recommended_feature"]
+          },
+          {
+            "day": 15,
+            "channel": "in_app",
+            "template": "achievement_milestone",
+            "personalization": ["progress_toward_8_features"]
+          },
+          {
+            "day": 30,
+            "channel": "email",
+            "template": "advanced_use_cases",
+            "personalization": ["power_user_stories"]
+          }
+        ],
+        "success_metric": "feature_adoption_increase",
+        "target_roi": 2.5
+      }
+    ]
+  },
+  "featureRecommendation": {
+    "enabled": true,
+    "engine": "collaborative_filtering",
+    "algorithms": [
+      {
+        "name": "content_based",
+        "method": "member_similarity",
+        "features": [
+          "member_profile",
+          "engagement_patterns",
+          "feature_adoption_history"
+        ],
+        "k_neighbors": 50,
+        "schedule": "daily",
+        "output": "recommendations_content_based"
+      },
+      {
+        "name": "collaborative",
+        "method": "member_to_member",
+        "features": [
+          "similar_member_adoptions",
+          "adoption_sequence_patterns"
+        ],
+        "schedule": "daily",
+        "output": "recommendations_collaborative"
+      },
+      {
+        "name": "trend_based",
+        "method": "trending_features",
+        "features": [
+          "feature_adoption_velocity",
+          "segment_adoption_rate",
+          "time_since_release"
+        ],
+        "boost_new_releases": true,
+        "schedule": "daily",
+        "output": "recommendations_trending"
+      }
+    ],
+    "ranking": {
+      "factors": [
+        {
+          "name": "relevance_score",
+          "weight": 0.4
+        },
+        {
+          "name": "adoption_probability",
+          "weight": 0.3
+        },
+        {
+          "name": "engagement_lift",
+          "weight": 0.2
+        },
+        {
+          "name": "personalization_fit",
+          "weight": 0.1
+        }
+      ]
+    }
+  },
+  "abTesting": {
+    "enabled": true,
+    "framework": "sequential_testing",
+    "minSampleSize": 50,
+    "minDuration": 7,
+    "statsigThreshold": 0.95,
+    "activeTests": [
+      {
+        "name": "onboarding_flow_a_b",
+        "hypothesis": "Guided onboarding increases feature adoption by 20%",
+        "control": "current_onboarding",
+        "variant": "guided_feature_discovery",
+        "segments": ["explorer"],
+        "metrics": [
+          "feature_adoption_14d",
+          "engagement_score",
+          "retention_rate_30d"
+        ]
+      },
+      {
+        "name": "churn_prevention_timing",
+        "hypothesis": "Day 7 intervention is better than day 14",
+        "control": "intervention_day_14",
+        "variant": "intervention_day_7",
+        "segments": ["casual_user"],
+        "metrics": [
+          "engagement_improvement",
+          "churn_prevention",
+          "email_open_rate"
+        ]
+      },
+      {
+        "name": "personalization_depth",
+        "hypothesis": "Member-specific recommendations > generic recommendations",
+        "control": "generic_recommendations",
+        "variant": "personalized_recommendations",
+        "segments": ["all"],
+        "metrics": [
+          "recommendation_click_rate",
+          "feature_adoption",
+          "satisfaction_nps"
+        ]
+      }
+    ]
+  },
+  "cohortAnalysis": {
+    "enabled": true,
+    "dimensions": [
+      {
+        "name": "acquisition_cohort",
+        "granularity": "weekly",
+        "retention_windows": [7, 14, 30, 90, 180, 365],
+        "metrics": [
+          "retention_rate",
+          "feature_adoption_trajectory",
+          "ltv",
+          "churn_rate"
+        ]
+      },
+      {
+        "name": "activation_cohort",
+        "granularity": "daily",
+        "activation_event": "first_feature_adoption",
+        "retention_windows": [1, 7, 30, 90],
+        "metrics": [
+          "engagement_score",
+          "feature_adoption_velocity",
+          "ltv"
+        ]
+      },
+      {
+        "name": "segment_cohort",
+        "granularity": "daily",
+        "dimensions": [
+          "behavioral_segment",
+          "lifecycle_stage",
+          "value_tier"
+        ],
+        "retention_windows": [7, 30, 90],
+        "metrics": [
+          "cross_segment_migration",
+          "engagement_variance",
+          "ltv_stability"
+        ]
+      }
+    ]
+  }
+}

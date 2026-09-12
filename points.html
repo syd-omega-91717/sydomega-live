@@ -101,11 +101,11 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">POINTS ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">THREE AXES</div><div class="card-body">Axis A (Knowledge) — earned through academy, exams, and research. Axis B (Mastery) — earned through gaming, challenges, and certifications. Axis C (Contribution) — earned through publishing, events, and service. Each axis ranges from 0.001 (genesis) to 9.000 (apex).</div></div>
-    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = &#8730;(A&#179;+B&#179;+C&#179;) &times; &phi;/e where &phi; = 1.6180339887 (golden ratio) and e = 2.7182818285 (Euler's number). The cube term ensures non-linear growth — advancing from 8 to 9 on any axis yields a larger AUTH gain than advancing from 1 to 2.</div></div>
-    <div class="card"><div class="card-title">TASK COMPLETIONS</div><div class="card-body">Every verified action is logged to the task_completions table with axis_type (knowledge/mastery/contribution), points_earned, and task_name. The log provides a chronological record of all sovereign point gains across the platform lifecycle.</div></div>
-    <div class="card"><div class="card-title">LATTICE POSITION</div><div class="card-body">The 104,976-node lattice (12&#215;12&#215;9&#215;9&#215;9) encodes every possible sovereign coordinate. Your node position is computed from matrix_track, matrix_phase, and ceiling values of axes A, B, and C. The radar diagram shows your triadic position on a normalized A/B/C triangle.</div></div>
+  <div class="card-grid" data-stagger data-stagger-gap="60">
+    <div class="card" data-reveal="fade-up"><div class="card-title">THREE AXES</div><div class="card-body">Axis A (Knowledge) — earned through academy, exams, and research. Axis B (Mastery) — earned through gaming, challenges, and certifications. Axis C (Contribution) — earned through publishing, events, and service. Each axis ranges from 0.001 (genesis) to 9.000 (apex).</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = &#8730;(A&#179;+B&#179;+C&#179;) &times; &phi;/e where &phi; = 1.6180339887 (golden ratio) and e = 2.7182818285 (Euler's number). The cube term ensures non-linear growth — advancing from 8 to 9 on any axis yields a larger AUTH gain than advancing from 1 to 2.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">TASK COMPLETIONS</div><div class="card-body">Every verified action is logged to the task_completions table with axis_type (knowledge/mastery/contribution), points_earned, and task_name. The log provides a chronological record of all sovereign point gains across the platform lifecycle.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">LATTICE POSITION</div><div class="card-body">The 104,976-node lattice (12&#215;12&#215;9&#215;9&#215;9) encodes every possible sovereign coordinate. Your node position is computed from matrix_track, matrix_phase, and ceiling values of axes A, B, and C. The radar diagram shows your triadic position on a normalized A/B/C triangle.</div></div>
   </div>
 </div>
 <div data-page-emblem="points" style="margin:20px auto 0"></div>
@@ -193,6 +193,6 @@ function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-di
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

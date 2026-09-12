@@ -100,11 +100,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--M);display:flex;a
 
   <div id="tab-frequency" class="tab-panel">
     <div class="freq">9.1717 Hz &mdash; FREQUENCY LOCK ACTIVE</div>
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz SOVEREIGN FREQ</div></div>
-      <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
-      <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-      <div class="kpi"><div class="kpi-n">9&times;9&times;9</div><div class="kpi-l">729 INNER NODES</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz SOVEREIGN FREQ</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9&times;9&times;9</div><div class="kpi-l">729 INNER NODES</div></div>
     </div>
   </div>
 
@@ -117,17 +117,17 @@ body{background:var(--void);color:var(--ink);font-family:var(--M);display:flex;a
   </div>
 
   <div id="tab-science" class="tab-panel">
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-      <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-      <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-      <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
     </div>
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
-      <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
-      <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
-      <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
     </div>
   </div>
 <div data-page-emblem="pending" style="margin:20px auto 0"></div>
@@ -190,14 +190,36 @@ import{createClient}from'/vendor/supabase-js.js';
 const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
+/* bg.js (loaded on dashboard.html etc.) independently redirects back here
+   the moment a trial's countdown hits zero. If that expire_trial write
+   hasn't landed yet when this page's own poll re-reads the same
+   still-looking-active trial, the two pages can bounce a member back and
+   forth. Same session-scoped target guard as bg.js's safeRedirect, kept
+   local since this page's module script runs before bg.js loads
+   (document order: module scripts execute before the classic deferred
+   bg.js tag placed after it). */
+function safeGo(url){
+  try{
+    var k='omega_redirect_log',now=Date.now();
+    var log=JSON.parse(sessionStorage.getItem(k)||'[]').filter(function(e){return now-e.t<10000;});
+    var p=url.split('?')[0];
+    if(log.filter(function(e){return e.p===p;}).length>=2){
+      console.error('[Omega] redirect loop guard: stopped repeated redirect to',url);
+      return;
+    }
+    log.push({p:p,t:now});sessionStorage.setItem(k,JSON.stringify(log.slice(-6)));
+  }catch(e){}
+  window.location.href=url;
+}
+
 async function checkStatus(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
   const {data:pr}=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at').eq('id',sess.user.id).maybeSingle();
   if(!pr) return;
-  if(pr.is_owner||pr.access_approved){window.location.href='/dashboard.html';return;}
+  if(pr.is_owner||pr.access_approved){safeGo('/dashboard.html');return;}
   if(pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>Date.now()){
-    window.location.href='/dashboard.html';return;
+    safeGo('/dashboard.html');return;
   }
   document.getElementById('sb-status').textContent='STILL PENDING -- ARCHITECT WILL REVIEW SHORTLY';
 }

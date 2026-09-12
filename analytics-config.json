@@ -1,0 +1,347 @@
+{
+  "analytics": {
+    "version": "1.0",
+    "enabled": true,
+    "dataWarehouse": {
+      "type": "clickhouse",
+      "endpoint": "https://clickhouse.sydomega.com",
+      "database": "omega_analytics",
+      "retention": {
+        "raw_events": 90,
+        "aggregated_metrics": 365,
+        "ml_features": 180,
+        "unit": "days"
+      }
+    },
+    "eventTracking": {
+      "enabled": true,
+      "batchSize": 50,
+      "flushInterval": 5000,
+      "retryPolicy": {
+        "maxRetries": 3,
+        "backoffMs": 1000
+      },
+      "sampling": {
+        "page_view": 0.1,
+        "api_call": 0.05,
+        "error": 1.0,
+        "performance": 0.2,
+        "member_action": 0.5
+      }
+    },
+    "events": [
+      {
+        "name": "page_view",
+        "properties": [
+          "page_path",
+          "referrer",
+          "session_id",
+          "member_id",
+          "timestamp",
+          "device_type",
+          "browser",
+          "os"
+        ],
+        "schema": "public.page_views"
+      },
+      {
+        "name": "api_call",
+        "properties": [
+          "endpoint",
+          "method",
+          "status_code",
+          "latency_ms",
+          "member_id",
+          "timestamp",
+          "error_message"
+        ],
+        "schema": "public.api_calls"
+      },
+      {
+        "name": "feature_adoption",
+        "properties": [
+          "feature_id",
+          "feature_name",
+          "member_id",
+          "adoption_date",
+          "days_active",
+          "usage_count"
+        ],
+        "schema": "public.feature_adoption"
+      },
+      {
+        "name": "member_engagement",
+        "properties": [
+          "member_id",
+          "session_id",
+          "time_on_page_ms",
+          "interactions_count",
+          "scroll_depth",
+          "timestamp"
+        ],
+        "schema": "public.member_engagement"
+      },
+      {
+        "name": "error_event",
+        "properties": [
+          "error_type",
+          "error_message",
+          "stack_trace",
+          "member_id",
+          "page_path",
+          "timestamp",
+          "browser",
+          "severity"
+        ],
+        "schema": "public.error_events"
+      }
+    ]
+  },
+  "predictions": {
+    "version": "1.0",
+    "enabled": true,
+    "datarobot": {
+      "endpoint": "https://api.datarobot.com/v2",
+      "models": [
+        {
+          "id": "churn_prediction",
+          "name": "Member Churn Risk Prediction",
+          "target": "will_churn_30d",
+          "features": [
+            "days_since_signup",
+            "days_since_last_login",
+            "feature_adoption_count",
+            "page_view_count_30d",
+            "api_call_count_30d",
+            "avg_session_duration",
+            "engagement_score",
+            "support_tickets_count",
+            "email_open_rate"
+          ],
+          "updateFrequency": "daily",
+          "predictions": {
+            "schedule": "02:00Z",
+            "destination": "public.member_churn_predictions"
+          }
+        },
+        {
+          "id": "feature_recommendation",
+          "name": "Feature Adoption Recommendation Engine",
+          "target": "likely_adoption",
+          "features": [
+            "member_profile_features",
+            "engagement_patterns",
+            "similar_member_adoptions",
+            "feature_release_date"
+          ],
+          "updateFrequency": "weekly",
+          "predictions": {
+            "schedule": "Sunday 03:00Z",
+            "destination": "public.feature_recommendations"
+          }
+        },
+        {
+          "id": "engagement_score",
+          "name": "Member Engagement Scoring",
+          "target": "engagement_level",
+          "features": [
+            "page_view_count",
+            "api_call_frequency",
+            "feature_exploration",
+            "session_duration",
+            "content_creation_count",
+            "social_engagement"
+          ],
+          "updateFrequency": "daily",
+          "predictions": {
+            "schedule": "01:00Z",
+            "destination": "public.member_engagement_scores"
+          }
+        }
+      ]
+    },
+    "alerts": {
+      "enabled": true,
+      "thresholds": {
+        "high_churn_risk": 0.7,
+        "low_engagement": 0.3,
+        "adoption_opportunity": 0.6
+      },
+      "channels": [
+        {
+          "type": "dashboard",
+          "url": "/analytics-dashboard.html"
+        },
+        {
+          "type": "email",
+          "recipients": ["s.y.dagher@gmail.com"],
+          "frequency": "daily"
+        },
+        {
+          "type": "slack",
+          "webhook": "${SLACK_WEBHOOK_URL}",
+          "frequency": "realtime"
+        }
+      ]
+    }
+  },
+  "reporting": {
+    "version": "1.0",
+    "enabled": true,
+    "gamma": {
+      "enabled": true,
+      "templates": [
+        {
+          "id": "weekly_performance",
+          "name": "Weekly Performance Brief",
+          "schedule": "Monday 06:00Z",
+          "recipients": ["s.y.dagher@gmail.com"],
+          "metrics": [
+            "member_count",
+            "avg_engagement_score",
+            "churn_rate",
+            "feature_adoption_rate",
+            "api_performance_p95",
+            "error_rate"
+          ]
+        },
+        {
+          "id": "member_insights",
+          "name": "Member Insights Report",
+          "schedule": "Thursday 08:00Z",
+          "recipients": ["s.y.dagher@gmail.com"],
+          "sections": [
+            "top_features",
+            "emerging_patterns",
+            "at_risk_members",
+            "high_engagement_cohort",
+            "recommendations"
+          ]
+        },
+        {
+          "id": "product_analytics",
+          "name": "Product Analytics Deep Dive",
+          "schedule": "Friday 09:00Z",
+          "recipients": ["s.y.dagher@gmail.com"],
+          "analysis": [
+            "feature_penetration",
+            "user_journey_funnel",
+            "retention_cohorts",
+            "ltv_analysis",
+            "acquisition_channels"
+          ]
+        }
+      ]
+    },
+    "dashboards": [
+      {
+        "id": "analytics_main",
+        "name": "Analytics Overview",
+        "path": "/analytics-dashboard.html",
+        "refreshInterval": 300000,
+        "metrics": [
+          "active_members",
+          "engagement_avg",
+          "churn_rate",
+          "feature_adoption"
+        ]
+      },
+      {
+        "id": "member_cohorts",
+        "name": "Member Cohort Analysis",
+        "path": "/cohorts-dashboard.html",
+        "refreshInterval": 3600000,
+        "dimensions": [
+          "signup_date",
+          "engagement_level",
+          "feature_adoption",
+          "geography"
+        ]
+      },
+      {
+        "id": "prediction_center",
+        "name": "Prediction Center",
+        "path": "/predictions-dashboard.html",
+        "refreshInterval": 86400000,
+        "models": [
+          "churn_prediction",
+          "feature_recommendation",
+          "engagement_score"
+        ]
+      }
+    ]
+  },
+  "supermetrics": {
+    "version": "1.0",
+    "enabled": true,
+    "dataSources": [
+      {
+        "id": "ga4",
+        "name": "Google Analytics 4",
+        "type": "analytics",
+        "metrics": [
+          "active_1day_users",
+          "sessions",
+          "engagement_rate",
+          "session_duration",
+          "bounce_rate"
+        ],
+        "dimensions": [
+          "date",
+          "page_title",
+          "user_segment",
+          "device_category"
+        ],
+        "frequency": "hourly"
+      },
+      {
+        "id": "stripe",
+        "name": "Stripe",
+        "type": "payments",
+        "metrics": [
+          "total_revenue",
+          "mrr",
+          "churn_rate",
+          "customer_count",
+          "avg_transaction"
+        ],
+        "frequency": "daily"
+      },
+      {
+        "id": "supabase",
+        "name": "Supabase Analytics",
+        "type": "database",
+        "metrics": [
+          "api_requests",
+          "database_size",
+          "storage_usage",
+          "realtime_connections"
+        ],
+        "frequency": "hourly"
+      }
+    ],
+    "queries": [
+      {
+        "name": "member_ltv",
+        "description": "Calculate lifetime value per member cohort",
+        "schedule": "daily",
+        "sources": ["stripe"],
+        "destination": "public.member_ltv"
+      },
+      {
+        "name": "retention_curve",
+        "description": "D0, D7, D30, D90 retention by cohort",
+        "schedule": "daily",
+        "sources": ["ga4", "supabase"],
+        "destination": "public.retention_analysis"
+      },
+      {
+        "name": "feature_performance",
+        "description": "Feature usage correlation with engagement",
+        "schedule": "weekly",
+        "sources": ["supabase", "ga4"],
+        "destination": "public.feature_performance"
+      }
+    ]
+  }
+}

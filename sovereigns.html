@@ -72,11 +72,11 @@
 
 <div class="tab-panel" id="tab-stats">
   <div class="sechead">ORDER STATISTICS</div>
-  <div class="kpi-row" id="stats-row">
-    <div class="kpi-card"><div class="kpi-val" id="stat-total">--</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-apex">--</div><div class="kpi-label">APEX AUTHORITY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-signs">--</div><div class="kpi-label">ACTIVE SIGNS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="stat-avg">--</div><div class="kpi-label">AVG AUTHORITY</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="stats-row">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-total">--</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-apex">--</div><div class="kpi-label">APEX AUTHORITY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-signs">--</div><div class="kpi-label">ACTIVE SIGNS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-avg">--</div><div class="kpi-label">AVG AUTHORITY</div></div>
   </div>
 </div>
 
@@ -180,6 +180,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

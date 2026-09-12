@@ -72,11 +72,11 @@
 
 <!-- SWEAR TAB -->
 <div class="tab-panel active" id="tab-swear">
-  <div class="kpi-row" id="statsRow">
-    <div class="kpi-card"><div class="kpi-val" id="sTotal">&mdash;</div><div class="kpi-label">TOTAL OATHS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sYours">&mdash;</div><div class="kpi-label">YOUR OATHS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sToday">&mdash;</div><div class="kpi-label">SWORN TODAY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="sCats">&mdash;</div><div class="kpi-label">CATEGORIES</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="statsRow">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sTotal">&mdash;</div><div class="kpi-label">TOTAL OATHS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sYours">&mdash;</div><div class="kpi-label">YOUR OATHS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sToday">&mdash;</div><div class="kpi-label">SWORN TODAY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="sCats">&mdash;</div><div class="kpi-label">CATEGORIES</div></div>
   </div>
   <div class="card" id="composeCard" style="display:flex;flex-direction:column;gap:12px">
     <div class="compose-label">&#9672; COMPOSE SOVEREIGN OATH</div>
@@ -130,11 +130,11 @@
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div class="sechead">OATH SCIENCE</div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val">SHA-256</div><div class="kpi-label">HASH ALGORITHM</div></div>
-    <div class="kpi-card"><div class="kpi-val">256 bit</div><div class="kpi-label">DIGEST SIZE</div></div>
-    <div class="kpi-card"><div class="kpi-val">1000</div><div class="kpi-label">MAX OATH CHARS</div></div>
-    <div class="kpi-card"><div class="kpi-val">6</div><div class="kpi-label">CATEGORIES</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">SHA-256</div><div class="kpi-label">HASH ALGORITHM</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">256 bit</div><div class="kpi-label">DIGEST SIZE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">1000</div><div class="kpi-label">MAX OATH CHARS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">6</div><div class="kpi-label">CATEGORIES</div></div>
   </div>
   <div class="card-grid" style="margin-top:16px">
     <div class="card">
@@ -389,5 +389,5 @@ function timeAgo(iso){
   return Math.floor(diff/86400)+'D AGO';
 }
 </script>
-<script src="/bg.js"></script>
+<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

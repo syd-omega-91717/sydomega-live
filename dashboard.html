@@ -145,16 +145,32 @@
     <div id="l-overview" class="layer-panel active">
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
-        <div class="kpi-row" data-reveal="fade-up">
-          <div class="kpi" id="kpi-auth" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='/evolution.html';}" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth">--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
-          <div class="kpi" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-members" data-live-members>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">♓︎</div></div></div>
-          <div class="kpi" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-online">--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.4s">♈︎</div></div></div>
-          <div class="kpi" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l" data-i18n="tasks_today">TASKS TODAY</div><div class="kpi-sub" data-i18n="axis_increments">AXIS INCREMENTS</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.6s">♎︎</div></div></div>
-          <div class="kpi" data-tooltip="Platform Meaning Index (0–100) · Measures operational discipline, system integration depth, and sovereign coherence." onclick="location.href='/observatory.html'" style="--kc:var(--purple)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" data-omega-pmi="platform">87</div><div class="kpi-l" data-i18n="platform_pmi">PLATFORM PMI</div><div class="kpi-sub" data-i18n="meaning_index">MEANING INDEX</div></div><div class="emblem-orb" style="--kc:var(--purple);animation-delay:.8s">♏︎</div></div></div>
-          <div class="kpi" data-living="platform-health" data-tooltip="Service Level Objective · 30-day platform uptime target is 99.9% (8.7h allowed downtime per year)." onclick="location.href='/observatory.html'" style="--kc:var(--solar)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n">99.9%</div><div class="kpi-l" data-i18n="slo_uptime">SLO UPTIME</div><div class="kpi-sub" data-i18n="thirty_day">30-DAY</div></div><div class="emblem-orb" style="--kc:var(--solar);animation-delay:1s">♑︎</div></div></div>
-          <div class="kpi" data-tooltip="Open risk items tracked under ISO 27001 information security management. Click to manage in Governance." onclick="location.href='/governance.html'" style="--kc:var(--crim)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-risks">--</div><div class="kpi-l" data-i18n="open_risks">OPEN RISKS</div><div class="kpi-sub" data-i18n="iso_27001">ISO 27001</div></div><div class="emblem-orb" style="--kc:var(--crim);animation-delay:1.2s">♏︎</div></div></div>
-          <div class="kpi" data-tooltip="Platform events logged today across all sovereign systems (task completions, gate unlocks, AI queries)." onclick="location.href='/vault.html'" style="--kc:var(--solar)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-events">--</div><div class="kpi-l" data-i18n="events_today">EVENTS TODAY</div><div class="kpi-sub" data-i18n="platform_pulse">PLATFORM PULSE</div></div><div class="emblem-orb" style="--kc:var(--solar);animation-delay:1.4s">⚡︎</div></div></div>
-          <div class="kpi" data-tooltip="Authority gates reached · 12 gates from INITIATE (2.32) to APEX (27.84). Each gate unlocks platform privileges." onclick="location.href='/leaderboard.html'" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-gates">--</div><div class="kpi-l" data-i18n="gates_reached">GATES REACHED</div><div class="kpi-sub" data-i18n="of_12">OF 12</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:1.6s">♂︎</div></div></div>
+        <div class="kpi-row" data-stagger data-stagger-gap="70">
+          <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='/evolution.html';}" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-members" data-live-members data-countup>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">♓︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-online" data-countup>--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.4s">♈︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-tasks" data-countup>--</div><div class="kpi-l" data-i18n="tasks_today">TASKS TODAY</div><div class="kpi-sub" data-i18n="axis_increments">AXIS INCREMENTS</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.6s">♎︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-tooltip="Platform Meaning Index (0–100) · Measures operational discipline, system integration depth, and sovereign coherence." onclick="location.href='/observatory.html'" style="--kc:var(--purple)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" data-omega-pmi="platform">87</div><div class="kpi-l" data-i18n="platform_pmi">PLATFORM PMI</div><div class="kpi-sub" data-i18n="meaning_index">MEANING INDEX</div></div><div class="emblem-orb" style="--kc:var(--purple);animation-delay:.8s">♏︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-living="platform-health" data-tooltip="Service Level Objective · 30-day platform uptime target is 99.9% (8.7h allowed downtime per year)." onclick="location.href='/observatory.html'" style="--kc:var(--solar)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" data-countup>99.9%</div><div class="kpi-l" data-i18n="slo_uptime">SLO UPTIME</div><div class="kpi-sub" data-i18n="thirty_day">30-DAY</div></div><div class="emblem-orb" style="--kc:var(--solar);animation-delay:1s">♑︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-tooltip="Open risk items tracked under ISO 27001 information security management. Click to manage in Governance." onclick="location.href='/governance.html'" style="--kc:var(--crim)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-risks" data-countup>--</div><div class="kpi-l" data-i18n="open_risks">OPEN RISKS</div><div class="kpi-sub" data-i18n="iso_27001">ISO 27001</div></div><div class="emblem-orb" style="--kc:var(--crim);animation-delay:1.2s">♏︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-tooltip="Platform events logged today across all sovereign systems (task completions, gate unlocks, AI queries)." onclick="location.href='/vault.html'" style="--kc:var(--solar)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-events" data-countup>--</div><div class="kpi-l" data-i18n="events_today">EVENTS TODAY</div><div class="kpi-sub" data-i18n="platform_pulse">PLATFORM PULSE</div></div><div class="emblem-orb" style="--kc:var(--solar);animation-delay:1.4s">⚡︎</div></div></div>
+          <div class="kpi" data-reveal="fade-up" data-tooltip="Authority gates reached · 12 gates from INITIATE (2.32) to APEX (27.84). Each gate unlocks platform privileges." onclick="location.href='/leaderboard.html'" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-gates">--</div><div class="kpi-l" data-i18n="gates_reached">GATES REACHED</div><div class="kpi-sub" data-i18n="of_12">OF 12</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:1.6s">♂︎</div></div></div>
+        </div>
+
+        <!-- RANK / XP HUD -- a gaming-style progress meter built from the
+             same real Authority/GATES data as the KPI row above (never a
+             fabricated percentage, per CLAUDE.md 8.1 bug class 9). In-flow,
+             not position:fixed, so it can't collide with the 5 documented
+             fixed bottom-chrome widgets. -->
+        <div class="omega-depth-card" data-reveal="fade-up" style="padding:14px 18px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap">
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)" data-i18n="dash_hud_rank">RANK &middot; <span id="hud-rank-name">--</span></div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)"><span id="hud-auth-val">--</span> / <span id="hud-auth-next">--</span> AUTH TO NEXT GATE</div>
+          </div>
+          <div style="height:14px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden;border:1px solid var(--line)">
+            <div id="hud-xp-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width 1.1s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 12px rgba(201,168,76,.6)"></div>
+          </div>
+          <div style="margin-top:6px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)"><span data-i18n="dash_hud_gates">GATES REACHED</span> <span id="hud-gates-reached">--</span>/12</div>
         </div>
 
         <!-- SYSTEM GALAXY -->
@@ -220,6 +236,14 @@
           </div>
         </div>
 
+        <!-- YOUR ELEMENT — rotating 3-D sphere (Three.js, lazy-mounted on first
+             view of this tab since it starts hidden and a canvas read at
+             display:none sizes to 0 -- see omega-realm.js's own guidance) -->
+        <div class="sechead" style="margin-top:16px" data-i18n="dash_your_element">YOUR ELEMENT</div>
+        <div class="omega-depth-card" style="height:clamp(220px,30vh,340px);margin-bottom:16px;overflow:hidden;border-radius:2px">
+          <canvas id="dash-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+        </div>
+
         <!-- SOVEREIGN ACTIVITY HEATMAP (reads public.task_completions, own rows only) -->
         <div class="sechead" style="margin-top:16px" data-i18n="dash_activity_heatmap">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
         <div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
@@ -242,7 +266,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 189 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 201 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <div id="platform-sections"></div>
         <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1s">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
@@ -353,18 +377,33 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 189 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 201 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
 <script>
 function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+/* ── YOUR ELEMENT SPHERE (lazy-mount, real element from window._dashProfile
+   set in the async load block below -- not omega-realm.js's own
+   omega:user-loaded auto-mount path, which derives element from zodiac
+   sign and has a known latent sign-lookup bug that profile.html's own
+   mount already documented and avoided) ────────────────────────────── */
+var _dashRealmMounted=false;
+function mountDashRealm(){
+  if(_dashRealmMounted) return;
+  var canvas=document.getElementById('dash-realm-canvas');
+  if(!canvas) return;
+  if(!window.OmegaRealm){setTimeout(mountDashRealm,300);return;}
+  _dashRealmMounted=true;
+  window.OmegaRealm.mount(canvas,(window._dashProfile&&window._dashProfile.element)||'Void');
+}
+
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
   var tabs=['overview','personal','platform','science'];
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
-  if(name==='personal') renderPersonalOS();
+  if(name==='personal'){renderPersonalOS();mountDashRealm();}
   if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);loadAILayer();},100);}
 }
 
@@ -895,6 +934,17 @@ function sid(id,v){
     var reached=GATES.filter(function(g){return auth>=g;}).length;
     sid('k-gates',reached+'/12');
 
+    /* RANK / XP HUD -- same auth/gi/GATES data as above, no separate fetch */
+    sid('hud-rank-name',gateName);
+    sid('hud-gates-reached',reached);
+    var hudPrev=gi>0?GATES[gi-1]:0;
+    var hudNext=gi>=0?GATES[gi]:GATES[GATES.length-1];
+    var hudPct=gi<0?100:Math.max(0,Math.min(100,(auth-hudPrev)/(hudNext-hudPrev)*100));
+    sid('hud-auth-val',auth.toFixed(2));
+    sid('hud-auth-next',hudNext.toFixed(2));
+    var hudFill=document.getElementById('hud-xp-fill');
+    if(hudFill)setTimeout(function(){hudFill.style.width=hudPct.toFixed(1)+'%';},150);
+
     /* Radar chart */
     if(window.OmegaOSS) renderRadarChart(pr);
 
@@ -978,6 +1028,13 @@ function sid(id,v){
         if((tries||0)<15) setTimeout(function(){tryFinOps((tries||0)+1);},300);
       })();
     }
+    /* Overview KPI numbers just finished filling in with real data (k-auth,
+       k-members, k-online, k-tasks, k-events, k-risks) -- omega-cinematic.js's
+       [data-countup] only animates a value present the FIRST time its
+       IntersectionObserver fires, which happens on load while these still
+       read "--". This is its documented re-init hook (see its own listener
+       for 'omega:populated') so the count-up plays once real numbers land. */
+    document.dispatchEvent(new CustomEvent('omega:populated'));
     /* Timeline */
     try{
       var tl=await sb.from('activity_feed').select('activity_type,title,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(8);

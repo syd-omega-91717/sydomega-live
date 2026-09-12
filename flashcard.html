@@ -115,7 +115,7 @@
 .ef-fill{height:100%;background:rgba(201,168,76,.6)}
 .ef-val{font-family:var(--M);font-size:12px;color:var(--dim);width:32px;text-align:right}
 </style>
-  <script src="/bg.js"></script>
+  <script src="/bg.js" defer></script>
 </head>
 <body>
 
@@ -192,7 +192,7 @@
 
   <!-- PROGRESS -->
   <div class="tab-pane" id="tab-progress">
-    <div class="kpi-row" id="fc-kpis"></div>
+    <div class="kpi-row" id="fc-kpis" data-stagger data-stagger-gap="70"></div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">EASINESS FACTOR DISTRIBUTION</div>
     <div id="fc-ef-bars"></div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:20px;margin-bottom:12px">ABOUT SM-2 ALGORITHM</div>
@@ -209,16 +209,16 @@
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card card"><div class="stat-val">SM-2</div><div class="stat-lbl">ALGORITHM</div></div>
-      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">RETENTION RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">90%</div><div class="stat-lbl">LONG-TERM RECALL</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">SM-2</div><div class="stat-lbl">ALGORITHM</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">RETENTION RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">90%</div><div class="stat-lbl">LONG-TERM RECALL</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card card"><div class="stat-val">2.5</div><div class="stat-lbl">DEFAULT EF FACTOR</div></div>
-      <div class="stat-card card"><div class="stat-val">20min</div><div class="stat-lbl">OPTIMAL SESSION</div></div>
-      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.5</div><div class="stat-lbl">DEFAULT EF FACTOR</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">20min</div><div class="stat-lbl">OPTIMAL SESSION</div></div>
+      <div class="stat-card card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
   </div>
 
@@ -577,7 +577,8 @@ function renderProgress() {
     [mature,   'MATURE (21d+)'],
     [dueToday, 'DUE TODAY'],
     [_decks.length, 'DECKS'],
-  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  ].map(([v,l])=>`<div class="kpi" data-reveal="fade-up"><div class="kpi-v" data-countup>${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  document.dispatchEvent(new CustomEvent('omega:populated'));
 
   // EF distribution
   const efBuckets = [

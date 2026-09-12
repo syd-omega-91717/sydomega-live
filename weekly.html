@@ -83,7 +83,7 @@ textarea.q-area.sm{min-height:54px}
 
 .empty-state{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
 </style>
-  <script src="/bg.js"></script>
+  <script src="/bg.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -178,26 +178,26 @@ textarea.q-area.sm{min-height:54px}
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-box card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-box card"><div class="stat-val">52</div><div class="stat-lbl">REVIEWS/YEAR</div></div>
-      <div class="stat-box card"><div class="stat-val">φ/e</div><div class="stat-lbl">REVIEW RATIO</div></div>
-      <div class="stat-box card"><div class="stat-val">6</div><div class="stat-lbl">LIFE DOMAINS</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">52</div><div class="stat-lbl">REVIEWS/YEAR</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">φ/e</div><div class="stat-lbl">REVIEW RATIO</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">6</div><div class="stat-lbl">LIFE DOMAINS</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-box card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-box card"><div class="stat-val">90</div><div class="stat-lbl">DAY CYCLE</div></div>
-      <div class="stat-box card"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
-      <div class="stat-box card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">90</div><div class="stat-lbl">DAY CYCLE</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
+      <div class="stat-box card" data-reveal="fade-up"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">THE WEEKLY REVIEW — DAVID ALLEN</div>
       <div class="sci-body" style="font-family:var(--M);font-size:12px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">David Allen's GTD system identifies the weekly review as the cornerstone of the entire productivity system. Without a consistent review practice, your mind cannot trust the system — it starts re-processing commitments, creating anxiety and cognitive overhead. The weekly review clears the mental inbox, updates project lists, and closes open loops that otherwise drain attention continuously.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">REFLECTION & DELIBERATE PRACTICE</div>
       <div class="sci-body" style="font-family:var(--M);font-size:12px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">K. Anders Ericsson's deliberate practice research shows that experts consistently outperform others not because of more practice, but because of more structured feedback and reflection. A weekly review creates a feedback loop: what worked, what failed, and why. Without systematic reflection, improvement is random rather than directed. Sovereign growth requires knowing not just what you did, but what it cost and what it produced.</div>
     </div>
-    <div class="sci-card card">
+    <div class="sci-card card" data-reveal="fade-up">
       <div class="sci-title">THE OMEGA REVIEW PROTOCOL</div>
       <div class="sci-body" style="font-family:var(--M);font-size:12px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">AUTH = √(A³+B³+C³) × φ/e where A=wins, B=lessons, C=intentions. The sovereign review scores six life domains (health, mindset, deep work, finance, relations, growth) on a 10-point scale. Weekly domain scores compound into quarterly trajectories. Trend analysis reveals which domains are growing versus stagnating — the asymmetry of sovereign attention.</div>
     </div>
@@ -516,7 +516,7 @@ function renderTrends(){
     {v:overallAvg+'/10',l:'AVG SCORE'},
     {v:totalWins,l:'WINS LOGGED'},
     {v:streak,l:'WEEK STREAK'},
-  ].map(function(x){return'<div class="stat-box card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
   drawTrend(reviews);
 }
 

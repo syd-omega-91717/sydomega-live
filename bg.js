@@ -175,6 +175,19 @@ function __omegaAppend(el){
     link.href='/omega-agent-identity-v3.css'; link.type='text/css';
     head.appendChild(link);
   }
+  /* omega-cinematic-system.css: additive-only (see its own header) --
+     styles four namespaced classes (.omega-cinematic/.omega-emblem/
+     .omega-depth-card/.omega-node) and invents its own token names, so it
+     is safe platform-wide. Previously linked from index.html alone despite
+     both this file's and the sheet's own header comments already claiming
+     sitewide reach (CLAUDE.md 4.1 / FIXES_LOG.md 114) -- wiring it here
+     makes that claim true instead of fixing the claim to match reality. */
+  if(!document.getElementById('omega-cinematic-css')){
+    var link=document.createElement('link');
+    link.id='omega-cinematic-css'; link.rel='stylesheet';
+    link.href='/omega-cinematic-system.css'; link.type='text/css';
+    head.appendChild(link);
+  }
 })();
 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
@@ -2184,6 +2197,11 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;__omegaAppend(_otour);}
   /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
   if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;__omegaAppend(_ocin);}
+  /* Cinematic emblem system — .omega-cinematic body class, ambient starfield
+     layer, pointer-parallax custom properties. A DIFFERENT guard attribute
+     than omega-cinematic.js above on purpose (CLAUDE.md bug class 5b: two
+     modules sharing one data-omega-* guard means only the first ever loads). */
+  if(!document.querySelector('script[data-omega-cinematic-system]')){var _ocsy=document.createElement('script');_ocsy.src='/omega-cinematic-system.js';_ocsy.setAttribute('data-omega-cinematic-system','1');_ocsy.defer=true;__omegaAppend(_ocsy);}
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
   if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;__omegaAppend(_oa11y);}
   /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */

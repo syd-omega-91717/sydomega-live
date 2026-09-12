@@ -88,7 +88,7 @@ var HOUSES=[
   {n:5,name:'House of Creation',   sign:'Leo',     planet:'Sun',     domain:'Expression',      color:'#FFD700',keywords:'Creativity, Children, Romance, Play',desc:'Joy, creative output, love affairs, and the sovereign spark of creation. This house governs what you make that bears your unique signature. WHAT YOU CREATE.'},
   {n:6,name:'House of Service',    sign:'Virgo',   planet:'Mercury', domain:'Work & Health',   color:'#4CAF50',keywords:'Health, Routine, Service, Craft',desc:'Daily work, health habits, and service to others. The sovereign discipline engine — rituals, systems, and the mastery achieved through disciplined practice. HOW YOU SERVE.'},
   {n:7,name:'House of Alliance',   sign:'Libra',   planet:'Venus',   domain:'Partnership',     color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),keywords:'Marriage, Partnership, Open Enemies, Contracts',desc:'One-on-one relationships and formal partnerships. The mirror that shows you what you project. Sovereign alliances are strategic — chosen consciously. WHO YOU ALLY WITH.'},
-  {n:8,name:'House of Power',      sign:'Scorpio', planet:'Pluto',   domain:'Transformation',  color:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),keywords:'Death, Rebirth, Shared Resources, Occult',desc:'The deepest house — transformation, death, sexuality, shared resources, and sovereign power. What must die for the sovereign to be reborn. WHAT TRANSFORMS YOU.'},
+  {n:8,name:'House of Power',      sign:'Scorpio', planet:'Pluto',   domain:'Transformation',  color:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),textColor:'#E2555F',keywords:'Death, Rebirth, Shared Resources, Occult',desc:'The deepest house — transformation, death, sexuality, shared resources, and sovereign power. What must die for the sovereign to be reborn. WHAT TRANSFORMS YOU.'},
   {n:9,name:'House of Wisdom',     sign:'Sagittarius',planet:'Jupiter',domain:'Expansion',    color:'#FF9800',keywords:'Philosophy, Higher Learning, Travel, Religion',desc:'Worldview, higher education, philosophy, and long-range vision. The sovereign mind expanding beyond immediate experience into systems of meaning. WHAT YOU BELIEVE.'},
   {n:10,name:'House of Legacy',    sign:'Capricorn',planet:'Saturn', domain:'Career & Status', color:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),keywords:'Career, Reputation, Achievement, Authority',desc:'The Midheaven — the highest point of the chart. Your public legacy, professional peak, and sovereign authority in the world. WHAT YOU BUILD.'},
   {n:11,name:'House of Network',   sign:'Aquarius',planet:'Uranus',  domain:'Community',       color:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),keywords:'Friends, Groups, Hopes, Collective',desc:'Networks, alliances, collective vision, and the hopes that animate sovereign ambition. Your sovereign network is your force multiplier. WHO SUPPORTS YOU.'},
@@ -103,13 +103,20 @@ function renderHouses(userSign){
   var grid=document.getElementById('house-grid');
   grid.innerHTML=HOUSES.map(function(h){
     var mine=userSign&&h.sign.toLowerCase()===userSign.toLowerCase();
+    /* h.color doubles as a border/background accent (fine at any brightness)
+       and, below, a text color -- --crim (#8B0000) is dark enough that House
+       of Power's sign badge and name measured 1.95:1 against the card's
+       near-black background, under the 3:1 floor. h.textColor is a lighter
+       shade for the text-only spots; every other house's accent is already
+       bright enough to double as both. */
+    var tc=h.textColor||h.color;
     return '<div class="hcard" style="border-top:2px solid '+h.color+'">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">HOUSE '+h.n+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+h.color+';border:1px solid '+h.color+';padding:1px 5px">'+h.sign.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+tc+';border:1px solid '+h.color+';padding:1px 5px">'+h.sign.toUpperCase()+'</div>'
       +(mine?'<div style="font-family:var(--M);font-size:12px;color:var(--green);margin-left:auto">&#10003; YOUR SIGN</div>':'')
       +'</div>'
-      +'<div style="font-family:var(--D);font-size:12px;color:'+h.color+';margin-bottom:4px">'+h.name+'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:'+tc+';margin-bottom:4px">'+h.name+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:6px">'+h.domain.toUpperCase()+' &middot; '+h.planet.toUpperCase()+'</div>'
       +'<div style="font-size:12px;line-height:1.6;color:var(--ink);opacity:.8;margin-bottom:8px">'+h.desc+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);opacity:.7">'+h.keywords+'</div>'

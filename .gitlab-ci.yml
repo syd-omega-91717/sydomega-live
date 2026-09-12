@@ -91,83 +91,86 @@ contracts-suite:
 broken-assets:
   stage: verify
   script:
-    - python3 << 'PYSCRIPT'
-import pathlib, re, sys
-hits = []
-for path in pathlib.Path(".").rglob("*.html"):
-    if ".git" in path.parts:
-        continue
-    content = path.read_text(encoding="utf-8", errors="ignore")
-    for match in re.finditer(r'(?:src|href)\s*=\s*["\']([^"\']+)["\']', content):
-        ref = match.group(1)
-        if ref.startswith(('http://', 'https://', 'data:', '#', '/')):
-            continue
-        target = path.parent / ref
-        if not target.exists():
-            hits.append(f"{path}: {match.group(0)}")
-if hits:
-    print("::error::broken asset references")
-    for h in hits[:10]:
-        print(h)
-    sys.exit(1)
-print(f"checked {len(list(pathlib.Path('.').rglob('*.html')))} HTML files - all assets valid")
-PYSCRIPT
+    - |
+      python3 << 'PYSCRIPT'
+      import pathlib, re, sys
+      hits = []
+      for path in pathlib.Path(".").rglob("*.html"):
+          if ".git" in path.parts:
+              continue
+          content = path.read_text(encoding="utf-8", errors="ignore")
+          for match in re.finditer(r'(?:src|href)\s*=\s*["\']([^"\']+)["\']', content):
+              ref = match.group(1)
+              if ref.startswith(('http://', 'https://', 'data:', '#', '/')):
+                  continue
+              target = path.parent / ref
+              if not target.exists():
+                  hits.append(f"{path}: {match.group(0)}")
+      if hits:
+          print("::error::broken asset references")
+          for h in hits[:10]:
+              print(h)
+          sys.exit(1)
+      print(f"checked {len(list(pathlib.Path('.').rglob('*.html')))} HTML files - all assets valid")
+      PYSCRIPT
   allow_failure: false
 
 # 7. Service Role Key Scan
 security-scan:
   stage: verify
   script:
-    - python3 << 'PYSCRIPT'
-import pathlib, sys
-NEEDLES = ("service_role", "supabase_service_role_key")
-hits = []
-for path in pathlib.Path(".").rglob("*"):
-    if ".git" in path.parts or not path.is_file():
-        continue
-    if path.suffix not in (".js", ".html", ".json"):
-        continue
-    try:
-        text = path.read_text(encoding="utf-8", errors="ignore")
-    except OSError:
-        continue
-    for n, line in enumerate(text.splitlines(), 1):
-        low = line.lower()
-        if any(x in low for x in NEEDLES):
-            hits.append(f"{path}:{n}: {line.strip()[:160]}")
-if hits:
-    print("::error::service-role credential marker found in client code")
-    for h in hits:
-        print(h)
-    sys.exit(1)
-print("no service-role credential marker in client code")
-PYSCRIPT
+    - |
+      python3 << 'PYSCRIPT'
+      import pathlib, sys
+      NEEDLES = ("service_role", "supabase_service_role_key")
+      hits = []
+      for path in pathlib.Path(".").rglob("*"):
+          if ".git" in path.parts or not path.is_file():
+              continue
+          if path.suffix not in (".js", ".html", ".json"):
+              continue
+          try:
+              text = path.read_text(encoding="utf-8", errors="ignore")
+          except OSError:
+              continue
+          for n, line in enumerate(text.splitlines(), 1):
+              low = line.lower()
+              if any(x in low for x in NEEDLES):
+                  hits.append(f"{path}:{n}: {line.strip()[:160]}")
+      if hits:
+          print("::error::service-role credential marker found in client code")
+          for h in hits:
+              print(h)
+          sys.exit(1)
+      print("no service-role credential marker in client code")
+      PYSCRIPT
   allow_failure: false
 
 # 8. Service Worker & PWA
 pwa-check:
   stage: verify
   script:
-    - python3 << 'PYSCRIPT'
-import json, pathlib
-# Check SW precache
-sw = pathlib.Path("sw.js").read_text()
-import re
-precache = re.findall(r"'\./([^']+)'", sw)
-for f in precache:
-    if not pathlib.Path(f).exists():
-        print(f"Missing from precache: {f}")
-        exit(1)
-print(f"✓ {len(precache)} files in precache list")
+    - |
+      python3 << 'PYSCRIPT'
+      import json, pathlib
+      # Check SW precache
+      sw = pathlib.Path("sw.js").read_text()
+      import re
+      precache = re.findall(r"'\./([^']+)'", sw)
+      for f in precache:
+          if not pathlib.Path(f).exists():
+              print(f"Missing from precache: {f}")
+              exit(1)
+      print(f"✓ {len(precache)} files in precache list")
 
-# Check manifest
-manifest = json.loads(pathlib.Path("manifest.json").read_text())
-for icon in manifest.get("icons", []):
-    if not pathlib.Path(icon["src"]).exists():
-        print(f"Missing icon: {icon['src']}")
-        exit(1)
-print(f"✓ {len(manifest.get('icons', []))} icon paths valid")
-PYSCRIPT
+      # Check manifest
+      manifest = json.loads(pathlib.Path("manifest.json").read_text())
+      for icon in manifest.get("icons", []):
+          if not pathlib.Path(icon["src"]).exists():
+              print(f"Missing icon: {icon['src']}")
+              exit(1)
+      print(f"✓ {len(manifest.get('icons', []))} icon paths valid")
+      PYSCRIPT
   allow_failure: false
 
 # 9. Build Production Artifact

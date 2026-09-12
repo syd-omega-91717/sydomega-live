@@ -107,7 +107,7 @@
       <span class="mn-label" id="b-month-lbl"></span>
       <button class="mn-btn" id="b-next-mo" aria-label="Next month">▸</button>
     </div>
-    <div class="kpi-row" id="b-kpis"></div>
+    <div class="kpi-row" id="b-kpis" data-stagger data-stagger-gap="70"></div>
     <div class="cat-section">
       <div class="sect-title">SPENDING BY CATEGORY  ·  ACTUAL vs BUDGET</div>
       <div id="b-cat-bars"></div>
@@ -318,7 +318,8 @@ function renderOverview() {
     [fmt(exp), 'EXPENSES'],
     [fmt(sav>0?sav:0), 'SURPLUS'],
     [rate+'%', 'SAVINGS RATE', rate>0?rateCol:'#E57373'],
-  ].map(([v,l,col])=>`<div class="kpi"><div class="kpi-v" style="color:${col||'var(--gold)'};">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  ].map(([v,l,col])=>`<div class="kpi" data-reveal="fade-up"><div class="kpi-v" style="color:${col||'var(--gold)'};">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  document.dispatchEvent(new CustomEvent('omega:populated'));
 
   const totalBudget = CATS.reduce((s,c)=>s+(_targets[c.id]||0),0);
   document.getElementById('b-cat-bars').innerHTML = CATS.map(c => {

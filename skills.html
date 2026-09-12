@@ -97,13 +97,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- OVERVIEW -->
     <div id="t-overview" class="panel active">
       <div class="pad">
-        <div class="kpi-row" id="ov-kpis">
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-total">0</div><div class="kpi-l">TOTAL SKILLS</div></div>
-          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="kpi-mastered">0</div><div class="kpi-l">MASTERED (8+)</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="kpi-developing">0</div><div class="kpi-l">DEVELOPING (4–7)</div></div>
-          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="kpi-sessions">0</div><div class="kpi-l">PRACTICE SESSIONS</div></div>
-          <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="kpi-hours">0</div><div class="kpi-l">HOURS LOGGED</div></div>
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-domains">0</div><div class="kpi-l">ACTIVE DOMAINS</div></div>
+        <div class="kpi-row" data-stagger data-stagger-gap="70" id="ov-kpis">
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-total">0</div><div class="kpi-l">TOTAL SKILLS</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-n" id="kpi-mastered">0</div><div class="kpi-l">MASTERED (8+)</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n" id="kpi-developing">0</div><div class="kpi-l">DEVELOPING (4–7)</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--purple)"><div class="kpi-n" id="kpi-sessions">0</div><div class="kpi-l">PRACTICE SESSIONS</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--solar)"><div class="kpi-n" id="kpi-hours">0</div><div class="kpi-l">HOURS LOGGED</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-domains">0</div><div class="kpi-l">ACTIVE DOMAINS</div></div>
         </div>
 
         <!-- RADAR CHART -->
@@ -155,11 +155,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div id="t-practice" class="panel">
       <div class="pad">
         <div class="sechead">LOG PRACTICE SESSION <span class="btn" onclick="openLogSession()" style="font-size:12px;padding:5px 10px">+ LOG SESSION</span></div>
-        <div class="kpi-row">
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="s-total">0</div><div class="kpi-l">TOTAL SESSIONS</div></div>
-          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="s-week">0</div><div class="kpi-l">THIS WEEK</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="s-hours">0h</div><div class="kpi-l">HOURS TOTAL</div></div>
-          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="s-streak">0</div><div class="kpi-l">STREAK (DAYS)</div></div>
+        <div class="kpi-row" data-stagger data-stagger-gap="70">
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n" id="s-total">0</div><div class="kpi-l">TOTAL SESSIONS</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-n" id="s-week">0</div><div class="kpi-l">THIS WEEK</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n" id="s-hours">0h</div><div class="kpi-l">HOURS TOTAL</div></div>
+          <div class="kpi" data-reveal="fade-up" style="--kc:var(--purple)"><div class="kpi-n" id="s-streak">0</div><div class="kpi-l">STREAK (DAYS)</div></div>
         </div>
         <div class="sechead">RECENT SESSIONS</div>
         <div id="session-log"></div>

@@ -168,6 +168,17 @@ button, [role="button"], .btn {
   font-weight: 600;
 }
 
+/* Off-screen at top:-40px, its box still overlaps the viewport's (0,0)
+   corner -- a real cursor resting there while a keyboard user tabs to
+   reveal this link, or a headless browser's default pointer position,
+   both trigger :hover. The generic `a:hover{color:var(--gold)}` rule
+   below is more specific than a bare `.skip-link` class selector, so it
+   won and rendered gold text on the gold background: invisible the
+   moment it was revealed. a.skip-link:hover outranks both. */
+a.skip-link:hover, a.skip-link:active {
+  color: var(--void);
+}
+
 .skip-link:focus-visible {
   top: 0;
   outline: 3px solid var(--void);

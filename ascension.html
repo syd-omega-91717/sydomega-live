@@ -29,11 +29,11 @@
 
     <!-- ASCENSION TAB -->
     <div class="tab-panel active pad" id="tab-ascension">
-      <div class="kpi-row" id="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-stage">--</div><div class="kpi-l">CURRENT STAGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-apex">27.8367</div><div class="kpi-l">APEX TARGET</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-pct">--</div><div class="kpi-l">% TO APEX</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-stage">--</div><div class="kpi-l">CURRENT STAGE</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-apex">27.8367</div><div class="kpi-l">APEX TARGET</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-pct">--</div><div class="kpi-l">% TO APEX</div></div>
       </div>
 
       <div class="sechead">9 STAGES OF SOVEREIGN ASCENSION</div>
@@ -166,7 +166,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var STAGES=[
-  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'), desc:'The journey begins. Awareness precedes all growth.'},
+  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:'#A39D89', desc:'The journey begins. Awareness precedes all growth.'},
   {n:2,title:'ACOLYTE',     min:2.3197, max:4.6394,  color:'#C0A960', desc:'Consistent practice builds the first foundations.'},
   {n:3,title:'SCHOLAR',     min:4.6394, max:6.9592,  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Knowledge deepens. Patterns begin to emerge.'},
   {n:4,title:'KEEPER',      min:6.9592, max:9.2789,  color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'), desc:'Custodian of hard-won wisdom and discipline.'},

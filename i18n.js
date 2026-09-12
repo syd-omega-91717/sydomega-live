@@ -1216,6 +1216,7 @@ var T_EN={
 "profile_field_legacy_statement":"LEGACY STATEMENT",
 "profile_btn_seal_character":"SEAL CHARACTER RECORD",
 "profile_msg_character_sealed":"Character record sealed to the immutable archive.",
+"prof_science_your_element":"YOUR ELEMENT",
 "prof_science_formula_header":"AUTHORITY FORMULA",
 "prof_science_constants_header":"SYSTEM CONSTANTS",
 "prof_science_frequency":"SOVEREIGN FREQUENCY",

@@ -66,7 +66,12 @@
     },
 
     trackError: function(error, context) {
-      this.data.errors.push({error: error.toString(), context, time: Date.now()});
+      /* window's error/unhandledrejection events can carry a null error
+         (e.g. cross-origin script errors) -- error.toString() then threw
+         inside the platform's own error tracker, on agent-network.html and
+         any other page where that fires. */
+      const message = error === null || error === undefined ? String(error) : error.toString();
+      this.data.errors.push({error: message, context, time: Date.now()});
       if(this.data.errors.length > 50) this.data.errors.shift();
     },
 

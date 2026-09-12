@@ -127,7 +127,7 @@
       <div class="jar-quote" id="jar-quote">Your gratitude jar is empty — fill it with today's entry.</div>
       <div class="jar-meta" id="jar-meta"></div>
       <button class="jar-btn" id="jar-draw">DRAW FROM THE JAR</button>
-      <div class="jar-stats" id="jar-stats"></div>
+      <div class="jar-stats" id="jar-stats" data-stagger data-stagger-gap="70"></div>
     </div>
   </div>
 
@@ -369,7 +369,8 @@ function renderJarStats() {
     [streak,         'DAY STREAK'],
     [freq.PEOPLE||0, 'PEOPLE'],
     [freq.GROWTH||0, 'GROWTH'],
-  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  ].map(([v,l])=>`<div class="kpi" data-reveal="fade-up"><div class="kpi-v" data-countup>${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  document.dispatchEvent(new CustomEvent('omega:populated'));
 }
 
 /* ── HELPERS ─────────────────────────────────────────────────────────── */

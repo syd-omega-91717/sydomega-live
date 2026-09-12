@@ -192,7 +192,7 @@
 
   <!-- PROGRESS -->
   <div class="tab-pane" id="tab-progress">
-    <div class="kpi-row" id="fc-kpis"></div>
+    <div class="kpi-row" id="fc-kpis" data-stagger data-stagger-gap="70"></div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">EASINESS FACTOR DISTRIBUTION</div>
     <div id="fc-ef-bars"></div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:20px;margin-bottom:12px">ABOUT SM-2 ALGORITHM</div>
@@ -577,7 +577,8 @@ function renderProgress() {
     [mature,   'MATURE (21d+)'],
     [dueToday, 'DUE TODAY'],
     [_decks.length, 'DECKS'],
-  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  ].map(([v,l])=>`<div class="kpi" data-reveal="fade-up"><div class="kpi-v" data-countup>${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  document.dispatchEvent(new CustomEvent('omega:populated'));
 
   // EF distribution
   const efBuckets = [

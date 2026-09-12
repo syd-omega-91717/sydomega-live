@@ -172,7 +172,7 @@
 
   <!-- INSIGHTS -->
   <div class="tab-pane" id="tab-insights">
-    <div class="kpi-row" id="j-kpis"></div>
+    <div class="kpi-row" id="j-kpis" data-stagger data-stagger-gap="70"></div>
     <div class="chart-lbl">WORD COUNT — LAST 30 DAYS</div>
     <canvas id="j-wc-chart" style="width:100%;height:100px;display:block"></canvas>
     <div class="chart-lbl">MOOD TREND — LAST 30 DAYS</div>
@@ -527,7 +527,8 @@ function renderInsights() {
     [total.toLocaleString(),'TOTAL WORDS'],
     [avg,                   'AVG WORDS'],
     [moodAvg,               'AVG MOOD'],
-  ].map(([v,l]) => `<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  ].map(([v,l]) => `<div class="kpi" data-reveal="fade-up"><div class="kpi-v"${l==='TOTAL WORDS'?'':' data-countup'}>${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+  document.dispatchEvent(new CustomEvent('omega:populated'));
 
   drawWCChart();
   drawMoodChart();

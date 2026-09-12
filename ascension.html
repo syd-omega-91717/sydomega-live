@@ -58,6 +58,15 @@
           </div>
         </div>
       </div>
+
+      <!-- YOUR ELEMENT — rotating 3-D sphere (Three.js via omega-realm.js,
+           already injected sitewide by bg.js). This tab is visible on load
+           (not display:none), so the canvas has a real size the moment
+           OmegaRealm is ready -- no lazy-mount-on-tab-click needed here. -->
+      <div class="sechead" data-i18n="asc_your_element">YOUR ELEMENT</div>
+      <div style="border:1px solid var(--line);background:#000005;height:clamp(220px,30vh,320px);margin-bottom:14px;position:relative;overflow:hidden;border-radius:2px">
+        <canvas id="asc-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+      </div>
     </div>
 
     <!-- AXES TAB -->
@@ -269,6 +278,12 @@ window.addMilestone=function(){
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function mountAscRealm(){
+      var canvas=document.getElementById('asc-realm-canvas');
+      if(!canvas)return;
+      if(!window.OmegaRealm){setTimeout(mountAscRealm,300);return;}
+      window.OmegaRealm.mount(canvas,pr.element||'Void');
+    })();
 
     var a=Number(pr.is_owner?9:pr.axis_a||0.001);
     var b=Number(pr.is_owner?9:pr.axis_b||0.001);

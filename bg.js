@@ -1566,6 +1566,25 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
   var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
   if(EX[pg])return;
+  /* pending.html independently redirects back here whenever it reads
+     is_trial+trial_expires_at as still active, racing this file's own
+     expire_trial-then-redirect flow below. A guard keyed on the redirect
+     TARGET (not a page-local flag, which a fresh navigation resets)
+     survives across the actual page loads a ping-pong produces, so a
+     genuine loop is broken instead of bouncing the member forever. */
+  function safeRedirect(url){
+    try{
+      var k='omega_redirect_log',now=Date.now();
+      var log=JSON.parse(sessionStorage.getItem(k)||'[]').filter(function(e){return now-e.t<10000;});
+      var p=url.split('?')[0];
+      if(log.filter(function(e){return e.p===p;}).length>=2){
+        console.error('[Omega] redirect loop guard: stopped repeated redirect to',url);
+        return;
+      }
+      log.push({p:p,t:now});sessionStorage.setItem(k,JSON.stringify(log.slice(-6)));
+    }catch(e){}
+    location.replace(url);
+  }
   /* shared singleton -- each extra createClient registers another GoTrueClient
      competing for the same auth-token storage key */
   (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){
@@ -1576,8 +1595,8 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
         if(!pr.data)return;
         var d=pr.data;
-        if(d.access_approved===false && !d.is_owner && !d.is_trial){location.replace('/pending.html');return;}
-        if(d.sign&&!d.terms_accepted){location.replace('/terms.html');return;}
+        if(d.access_approved===false && !d.is_owner && !d.is_trial){safeRedirect('/pending.html');return;}
+        if(d.sign&&!d.terms_accepted){safeRedirect('/terms.html');return;}
         /* Approval confirmed -- release the guard so #app may render. */
         if(window.__omegaApprove) window.__omegaApprove(true);
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
@@ -1588,7 +1607,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
              expired page either way. The wall clock says the trial is over, so
              ending the session is right regardless -- but a failed write is now
              recorded, and the next load retries expire_trial. */
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);location.replace('/pending.html?t=expired');});return;}
+          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);safeRedirect('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
@@ -1635,7 +1654,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       }
     });
     var expired=false;
-    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
+    function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(r){window.__omegaWriteFail('expire_trial',r);setTimeout(function(){safeRedirect('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
   }
 })();

@@ -190,14 +190,36 @@ import{createClient}from'/vendor/supabase-js.js';
 const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
+/* bg.js (loaded on dashboard.html etc.) independently redirects back here
+   the moment a trial's countdown hits zero. If that expire_trial write
+   hasn't landed yet when this page's own poll re-reads the same
+   still-looking-active trial, the two pages can bounce a member back and
+   forth. Same session-scoped target guard as bg.js's safeRedirect, kept
+   local since this page's module script runs before bg.js loads
+   (document order: module scripts execute before the classic deferred
+   bg.js tag placed after it). */
+function safeGo(url){
+  try{
+    var k='omega_redirect_log',now=Date.now();
+    var log=JSON.parse(sessionStorage.getItem(k)||'[]').filter(function(e){return now-e.t<10000;});
+    var p=url.split('?')[0];
+    if(log.filter(function(e){return e.p===p;}).length>=2){
+      console.error('[Omega] redirect loop guard: stopped repeated redirect to',url);
+      return;
+    }
+    log.push({p:p,t:now});sessionStorage.setItem(k,JSON.stringify(log.slice(-6)));
+  }catch(e){}
+  window.location.href=url;
+}
+
 async function checkStatus(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
   const {data:pr}=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at').eq('id',sess.user.id).maybeSingle();
   if(!pr) return;
-  if(pr.is_owner||pr.access_approved){window.location.href='/dashboard.html';return;}
+  if(pr.is_owner||pr.access_approved){safeGo('/dashboard.html');return;}
   if(pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>Date.now()){
-    window.location.href='/dashboard.html';return;
+    safeGo('/dashboard.html');return;
   }
   document.getElementById('sb-status').textContent='STILL PENDING -- ARCHITECT WILL REVIEW SHORTLY';
 }

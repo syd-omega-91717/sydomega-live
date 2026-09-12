@@ -41,9 +41,26 @@ function hexToRgb(hex){
   return [r,g,b];
 }
 
+/* profiles.element is stored lowercase ('fire'), but ELEM_PALETTE/
+   ELEM_PARTICLE_COUNTS keys are capitalized ('Fire') -- a plain
+   ELEM_PALETTE[elem] lookup on the raw column value always misses and
+   silently falls back to the generic Void palette. Confirmed live: every
+   page that mounts via window.OmegaRealm.mount(canvas, pr.element) --
+   profile.html (pre-existing) and dashboard/identity/ascension/character
+   (this session) -- rendered every member's sphere in the same dark
+   grey-blue Void colours regardless of their real element. Case-insensitive
+   match against the real palette keys fixes every caller at once, including
+   "The All" which a naive charAt(0).toUpperCase() alone would not. */
+function normalizeElem(e){
+  if(!e) return 'Void';
+  var keys=Object.keys(ELEM_PALETTE);
+  for(var i=0;i<keys.length;i++){ if(keys[i].toLowerCase()===String(e).toLowerCase()) return keys[i]; }
+  return 'Void';
+}
+
 function mount(canvas,elemName){
   if(_mounted) unmount();
-  var elem=elemName||_currentElem||'Void';
+  var elem=normalizeElem(elemName||_currentElem||'Void');
   _currentElem=elem;
   var pal=ELEM_PALETTE[elem]||ELEM_PALETTE['Void'];
   var T=_three;

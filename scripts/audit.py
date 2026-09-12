@@ -89,6 +89,31 @@ head("1/2 · MODULE GRAPH")
 
 on_disk = {f for f in os.listdir(".") if f.endswith(".js")}
 
+# Self-hosted third-party bundles live in vendor/, not the repo root, so they
+# are tracked SEPARATELY from on_disk rather than folded into it.
+#
+# Both halves of that matter. A same-origin reference is flattened to its
+# basename before it is resolved, so `.src = '/vendor/tsparticles-slim.js'`
+# arrives here as "tsparticles-slim.js" and, against a root-only listing,
+# reported CRITICAL "requested but MISSING on disk" for a file that is
+# present. vendor/supabase-js.js never tripped this only because it is
+# reached by an ESM `import`, which SRC_ASSIGN_RE does not match -- so the
+# gap sat unexposed until the first vendored bundle was loaded by src.
+#
+# But merging these into on_disk would break the OTHER check that reads it:
+# `unloaded = on_disk - reachable` would then report vendor/supabase-js.js as
+# a module nothing loads, which is false for exactly the same reason. So
+# vendored names satisfy the missing-file check and take no part in the
+# dead-file check.
+VENDOR_DIRS = ("vendor",)
+vendored = {
+    f
+    for d in VENDOR_DIRS
+    if os.path.isdir(d)
+    for f in os.listdir(d)
+    if f.endswith(".js")
+}
+
 SRC_ASSIGN_RE = re.compile(r"""\.src\s*=\s*['"]([^'"]+\.js)['"]""")
 # A module-graph edge is a SAME-ORIGIN reference. Anything carrying a scheme or
 # a protocol-relative "//" host is a third-party CDN load and resolves to no
@@ -140,7 +165,7 @@ while queue:
         reachable.add(dep)
         if os.path.exists(dep):
             queue.append(dep)
-missing = sorted(reachable - on_disk)
+missing = sorted(reachable - on_disk - vendored)
 # Exclude service workers: they are loaded via navigator.serviceWorker.register(),
 # not via <script> tags or dynamic src injection.
 unloaded = sorted((on_disk - reachable) - SERVICE_WORKER_FILES)

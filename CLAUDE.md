@@ -126,7 +126,7 @@ before styling a shared class:
 | `.card`/`.kpi`/`.kpi-card` shadow + border, `.topbar`, `.sechead`, `body::before` field | `omega-visual-evolution.css` (13) |
 | `#omega-side` (with `!important`) | `nav.js` (16) |
 | `body{background}` (with `!important`) | `omega-backdrop.js` (20) — tints to the member's element and page; a feature, don't fight it |
-| **the palette itself** — `--void`, `--crim`, `--ink`, `--muted`, `--line` | `theme.js` (`#omega-theme-css`, 19) — a "Sovereign Dusk" layer that re-declares them and, being later, **beats bg.js**. Change a token there too, or the change does not ship |
+| **the palette itself** — `--void`, `--crim`, `--ink`, `--muted`, `--line` | `theme.js` (`#omega-theme-css`, 19) — a "Sovereign Dusk" layer that re-declares them and, being later, **beats bg.js**. Change a token there too, or it does not ship. Neutrals are hue **205** (cool, measured); `--gold-bright` is the display tier |
 
 A page's own `<style>` is sheet **0**, so bg.js (1) beats it: 62 pages redefine
 canonical tokens in their own `:root` and every one of those is dead code
@@ -136,13 +136,13 @@ A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
 
-**The Supabase client is self-hosted at `/vendor/supabase-js.js`** — the
-official UMD bundle plus an ESM export footer, no bundler. Do not reintroduce
-`import ... from 'https://esm.sh/@supabase/supabase-js@2'`: that was 146
-imports putting a third-party CDN on the critical path of every page view, and
-a top-level import that never resolves runs *none* of that module's code, so
-the page paints its placeholders and sits there forever. The browser harness
-stubs that local path, not esm.sh. Upgrade with `npm pack`, per `FIXES_LOG.md`.
+**Third-party bundles are self-hosted in `/vendor/`** — `supabase-js.js`,
+`tsparticles-slim.js`; official UMD, no bundler, add with `npm pack`; `audit.py`
+tracks them apart from root modules. Never reintroduce a runtime CDN
+import: that was 146 esm.sh imports on every page view, an unresolved top-level
+import runs *none* of its module's code, and the harness blocks esm.sh — so
+`omega-particles.js` read as a dead 300×150 canvas estate-wide until vendored
+(`FIXES_LOG.md` 127).
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -161,7 +161,9 @@ against `#omega-consent`, whose height varies 80–134 with its copy.
 furniture) and `--omega-transient-bottom` (that plus any banner). Transient
 banners clear the furniture with the first; the floating ladder steps over the
 banners with the second. Never add a bottom-anchored constant — read a
-property, and mark new furniture `data-omega-bottom-chrome`.
+property, and mark new furniture `data-omega-bottom-chrome`. Top-left has the
+same problem, unpublished: bg.js puts `#om-open` (fixed, z-9000) at x=12..54
+on **every** page, so a fluid gutter walks under it; reserve `max(<gutter>, 62px)`.
 
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),
@@ -210,18 +212,16 @@ through this one file with no per-page markup changes:
   `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
   translated losslessly. Check *which properties* collide, never the mere
   presence of a pseudo.
-- **Platform-wide `.card` sweep.** `.card` was added to ~187 page-local
-  `*-card` classes across 117 files by scanner. **The standing fact:** ~34
-  classes were deliberately **not** swept, because `.card`'s hover-only
-  `border-image`/glow collides with something they already own — a page-local
-  `::before`/`::after` that sets `background` (pseudo-elements cascade per
-  *property*, and only one can win that one), or a per-instance border on the
-  card element itself (inline `style=`, JS `.style.border*`, or a same-element
-  modifier like `.mc.heir{border-left:…}`). State-modifier classes
-  (`.sel`/`.active`/`.unlocked`…) that set `border-color` *were* swept in —
-  hover-only masking hides them only during a simultaneous hover. Check a class
-  against those two failure modes before adding `.card`; the per-class list,
-  the scanner and the verification are in `FIXES_LOG.md`. Two facts before any
+- **Platform-wide `.card` sweep.** `.card` was scanner-added to ~187 page-local
+  `*-card` classes across 117 files. **The standing fact:** ~34 were
+  deliberately **not** swept, because `.card`'s hover-only `border-image`/glow
+  collides with something they own — a page-local `::before`/`::after` setting
+  `background` (pseudos cascade per *property*; only one wins it), or a
+  per-instance border on the element (inline `style=`, JS `.style.border*`, or
+  a same-element modifier like `.mc.heir{border-left:…}`). State modifiers
+  (`.sel`/`.active`…) setting `border-color` *were* swept — hover-only masking
+  hides them only during a simultaneous hover. Check both failure modes before
+  adding `.card`; per-class list, scanner and verification in `FIXES_LOG.md`. Two facts before any
   sweep. **A sweep is not additive**: `omega-visual-evolution.css` styles
   `.card,…,[class*="card"]` — that substring selector already gives *every*
   `*-card` class the glass surface — and it loads after the page's `<style>`,
@@ -262,16 +262,16 @@ through this one file with no per-page markup changes:
   ghost variants now set `background:none` themselves — without it a
   `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
   (2.33:1, 8 pages).
-- **Fallback skin for genuinely bare elements**: `input`/`textarea`/`select`/
-  `button` with `:not([class])` get the `.inp`/`.btn` glass treatment — so
-  anything with a page-local class or inline `style=` is untouched. Chosen after
-  an audit found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared
-  class. Page-local table classes are skipped and remain open work.
+- **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button`
+  with `:not([class])` get the `.inp`/`.btn` glass treatment, so anything with
+  a page-local class or inline `style=` is untouched. Chosen after an audit
+  found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared class.
+  Page-local table classes are skipped — open work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
-  Decorative / Rajdhani / Courier Prime but nothing ever loaded them — zero
-  `@font-face`, zero font files, zero Google Fonts links anywhere — so every
-  page rendered in the browser defaults. `bg.js` injects the Google Fonts
-  `<link>` (plus `preconnect`) once per page, guarded by `#omega-fonts`.
+  Decorative / Rajdhani / Courier Prime but nothing loaded them — no
+  `@font-face`, no font files, no links — so every page rendered in browser
+  defaults. `bg.js` injects the Google Fonts `<link>` + `preconnect` once per
+  page, guarded by `#omega-fonts`.
 - **Ambient noise overlay**: a fixed `pointer-events:none` `<div
   id="omega-noise-overlay">` injected by bg.js — a real element, not a
   `body::before`, because 5 pages define their own and a bare-selector rule

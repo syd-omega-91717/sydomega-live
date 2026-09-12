@@ -1,0 +1,595 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Ω-HORIZON LANDING SYSTEM  ·  omega-landing-system.css
+   ───────────────────────────────────────────────────────────────────────
+   The composition language of the front door: a full-bleed hero split
+   (copy / sculpture / capability rail), a realm strip, and a vision band.
+
+   WHY THIS FILE EXISTS, AND WHY IT IS SCOPED
+   The landing surface previously ran on omega-visual-universe.css, which
+   forks the design system: it declares its own --omega-void/-gold/-ink
+   tokens and sets font-family:Inter, so the front door rendered in a
+   different palette and a different typeface from the 188 pages behind
+   it. This file is built on the PLATFORM tokens (--gold/--cyan/--D/--R/
+   --M, each with a literal fallback so it also stands alone), so the
+   gateway and the platform are one design.
+
+   EVERY CLASS IS PREFIXED .ohz- AND CARRIES NO BARE ELEMENT SELECTOR,
+   so it never contends with bg.js (sheet 1) or any page's own block.
+   Two substrings are deliberately absent from every class name here:
+   "card" and "panel". omega-visual-evolution.css:120 selects
+   [class*="card"],[class*="panel"] and loads later, so a class named
+   .ohz-card would have had its border, background, padding and radius
+   silently rewritten — the exact trap CLAUDE.md §4.1 documents.
+
+   COLOUR PROVENANCE
+   Values below marked "measured" were sampled from the design reference
+   by drawing it to a canvas in headless Chromium and reading getImageData
+   (CLAUDE.md §8.4: presentation is measured in a render, never reasoned).
+   The reference is far darker than it looks — mean luminance 37.8/255,
+   with 22.7% of pixels at pure #000 — and its accent hue is H44, the
+   same gold the platform already uses. What differs is tier and
+   temperature, not hue: a brighter display gold (#F7E0A0, L80% S84%)
+   over a cool blue-grey text stack (H203–205), not a warm sepia one.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ohz {
+  /* Local aliases. Each falls back to the measured reference value, so
+     this sheet renders correctly even if the platform tokens are absent. */
+  --ohz-gold:        var(--gold, #C9A84C);
+  --ohz-gold-bright: var(--gold-bright, #F7E0A0);   /* measured: headline */
+  --ohz-gold-ui:     var(--solar, #D4C381);         /* measured: UI label */
+  --ohz-cyan:        var(--cyan, #00E5FF);
+  --ohz-ink:         var(--ink, #E5ECF0);
+  --ohz-dim:         var(--muted, #8796A1);
+  --ohz-line:        rgba(201, 168, 76, 0.16);
+  --ohz-line-warm:   rgba(201, 168, 76, 0.30);
+  --ohz-glass:       rgba(10, 12, 20, 0.55);
+  --ohz-gutter:      clamp(20px, 4.5vw, 64px);
+  --ohz-measure:     min(1320px, 94vw);
+
+  position: relative;
+  color: var(--ohz-ink);
+  font-family: var(--R, "Rajdhani", ui-sans-serif, system-ui, sans-serif);
+}
+
+/* ── Ambience ─────────────────────────────────────────────────────────
+   The reference's ground is near-black with two coloured lifts: a warm
+   ember low-left and a cool teal mid-right (measured accent families
+   #703818 / #004878). Rendered as fixed radials behind everything, with
+   pointer-events off so nothing here can intercept a click. */
+.ohz-ambience {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 42% at 50% 0%,   rgba(201, 168, 76, 0.11), transparent 70%),
+    radial-gradient(46% 40% at 8% 74%,   rgba(140, 58, 30, 0.16),  transparent 72%),
+    radial-gradient(44% 38% at 94% 46%,  rgba(0, 72, 120, 0.18),   transparent 72%),
+    radial-gradient(70% 50% at 50% 108%, rgba(0, 60, 104, 0.12),   transparent 70%);
+}
+/* Faint survey grid, masked out toward the foot so it never fights copy. */
+.ohz-ambience::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(72% 58% at 50% 34%, #000, transparent 78%);
+          mask-image: radial-gradient(72% 58% at 50% 34%, #000, transparent 78%);
+}
+
+.ohz-shell { position: relative; z-index: 1; }
+.ohz-wrap  { width: var(--ohz-measure); margin: 0 auto; }
+
+/* ── Top bar ──────────────────────────────────────────────────────────
+   Brand left, section links centre, utility dock + primary action right. */
+.ohz-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.4vw, 34px);
+  /* Left padding never goes below 62px: bg.js injects #om-open, a fixed
+     z-index:9000 button occupying x=12..54 on every page, and the fluid
+     gutter drops under that at narrow widths. Measured, not assumed. */
+  padding: 14px var(--ohz-gutter) 14px max(var(--ohz-gutter), 62px);
+  background: linear-gradient(to bottom, rgba(4, 5, 10, 0.94), rgba(4, 5, 10, 0.72));
+  -webkit-backdrop-filter: blur(18px);
+          backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--ohz-line);
+}
+.ohz-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ohz-ink);
+  white-space: nowrap;
+}
+.ohz-brand-mark {
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--ohz-gold-bright);
+  text-shadow: 0 0 22px rgba(201, 168, 76, 0.5);
+}
+.ohz-brand-word {
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: clamp(15px, 1.5vw, 20px);
+  letter-spacing: 0.13em;
+}
+.ohz-navlinks {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.8vw, 26px);
+  margin-inline: auto;
+}
+.ohz-navlink {
+  position: relative;
+  padding: 6px 2px;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.19em;
+  color: var(--ohz-dim);
+  text-decoration: none;
+  transition: color 0.22s ease;
+}
+.ohz-navlink:hover,
+.ohz-navlink:focus-visible { color: var(--ohz-ink); }
+/* Active tab reads as a beam under the label, matching the reference. */
+.ohz-navlink[aria-current="page"] { color: var(--ohz-gold-bright); }
+.ohz-navlink[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -15px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ohz-gold), transparent);
+}
+.ohz-dock { display: flex; align-items: center; gap: 8px; }
+.ohz-dock-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--ohz-line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--ohz-gold-ui);
+  font-size: 13px;
+  text-decoration: none;
+  transition: border-color 0.22s ease, color 0.22s ease;
+}
+.ohz-dock-btn:hover,
+.ohz-dock-btn:focus-visible {
+  border-color: var(--ohz-line-warm);
+  color: var(--ohz-gold-bright);
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────
+   Ghost pill (reference: gold rim on black, never a filled slab). */
+.ohz-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 26px;
+  border: 1px solid var(--ohz-line-warm);
+  border-radius: 999px;
+  background: rgba(201, 168, 76, 0.04);
+  color: var(--ohz-gold-bright);
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 12px;
+  letter-spacing: 0.19em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.24s ease, border-color 0.24s ease, transform 0.24s ease;
+}
+.ohz-btn:hover,
+.ohz-btn:focus-visible {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--ohz-gold);
+  transform: translateY(-1px);
+}
+.ohz-btn-sm { padding: 9px 18px; font-size: 11px; letter-spacing: 0.16em; }
+.ohz-btn .ohz-arrow { transition: transform 0.24s ease; }
+.ohz-btn:hover .ohz-arrow { transform: translateX(4px); }
+
+/* ── Section kicker ───────────────────────────────────────────────────
+   A small gold diamond, a label, then a hairline that runs to the edge. */
+.ohz-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--ohz-gold-ui);
+}
+.ohz-kicker::before { content: "\25C8"; font-size: 10px; opacity: 0.85; }
+.ohz-kicker::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ohz-line-warm), transparent);
+}
+
+/* ── Display type ─────────────────────────────────────────────────────
+   The reference's headline is a pale luminous gold (measured #F7E0A0,
+   16.1:1 on its ground) that falls off toward the baseline. Painted as
+   a clipped gradient — with -webkit-text-fill-color set explicitly,
+   because that property inherits into pseudo-elements (CLAUDE.md §8.4)
+   and a child ::before would otherwise draw its box with no text. */
+.ohz-display {
+  margin: 0;
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: clamp(38px, 5.6vw, 76px);
+  line-height: 1.02;
+  letter-spacing: 0.012em;
+  background: linear-gradient(168deg, #FCEFC4 4%, var(--ohz-gold-bright) 42%, #C08F3C 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--ohz-gold-bright);   /* fallback where background-clip:text is absent */
+}
+.ohz-subdisplay {
+  margin: 10px 0 0;
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-weight: 400;
+  font-size: clamp(17px, 2.1vw, 30px);
+  letter-spacing: 0.15em;
+  color: var(--ohz-ink);
+  opacity: 0.9;
+}
+.ohz-lede {
+  max-width: 46ch;
+  margin: 24px 0 0;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.68;
+  color: var(--ohz-dim);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────
+   Three columns: copy, sculpture, capability rail. Collapses to one
+   column under 1080px, sculpture first so the page still opens on art. */
+.ohz-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+  padding: clamp(36px, 5vw, 76px) var(--ohz-gutter) clamp(30px, 4vw, 60px);
+}
+.ohz-hero-copy { min-width: 0; }
+.ohz-hero-art  { min-width: 0; display: grid; place-items: center; }
+.ohz-hero-rail { min-width: 0; }
+
+/* Stat row. Every figure here is derived from the repository, never
+   asserted — see index.html's note on where each number comes from. */
+/* A 4-up grid, not a wrapping flex. As a flex row this measured 157px tall
+   at 1440 -- the copy column is ~395px wide, so the fourth figure orphaned
+   onto a second line with a ragged gap above it. A grid keeps all four on
+   one row and lets them compress together instead of breaking. */
+.ohz-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: start;
+  gap: clamp(12px, 2vw, 34px);
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--ohz-line);
+}
+.ohz-stats > div { margin: 0; }
+.ohz-stats dd { margin: 0; }          /* the UA sheet indents dd by 40px */
+.ohz-stat-n {
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1;
+  color: var(--ohz-gold-bright);
+}
+.ohz-stat-l {
+  margin-top: 7px;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.19em;
+  color: var(--ohz-dim);
+}
+
+/* ── Hex badge ────────────────────────────────────────────────────────
+   The reference's rail and vision rows are each led by a gold-rimmed
+   hexagon. Built as two stacked clip-paths — an outer rim and an inset
+   face — so it needs no image and retints from one custom property. */
+.ohz-hex {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 46px;
+  color: var(--ohz-hex, var(--ohz-gold-bright));
+  font-size: 16px;
+  line-height: 1;
+}
+.ohz-hex::before,
+.ohz-hex::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.ohz-hex::before { background: currentColor; opacity: 0.38; }
+.ohz-hex::after  { inset: 1.5px; background: #06070C; }
+.ohz-hex > * { position: relative; z-index: 1; }
+
+/* ── Capability rail ──────────────────────────────────────────────── */
+.ohz-rail-head {
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: 0.09em;
+  color: var(--ohz-gold-bright);
+}
+.ohz-rail-sub {
+  margin-top: 4px;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ohz-dim);
+}
+.ohz-rail-list { display: grid; gap: 4px; margin-top: 22px; }
+.ohz-rail-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.24s ease, border-color 0.24s ease;
+}
+.ohz-rail-row:hover,
+.ohz-rail-row:focus-visible {
+  background: rgba(201, 168, 76, 0.05);
+  border-color: var(--ohz-line);
+}
+.ohz-rail-t {
+  display: block;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 11.5px;
+  letter-spacing: 0.15em;
+  color: var(--ohz-gold-ui);
+}
+.ohz-rail-d {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ohz-dim);
+}
+
+/* Bordered closing slab under the rail ("BUILT FOR A SOVEREIGN FUTURE"). */
+.ohz-slab {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  padding: 16px 20px;
+  border: 1px solid var(--ohz-line-warm);
+  border-radius: 16px;
+  background: var(--ohz-glass);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.24s ease, background 0.24s ease;
+}
+.ohz-slab:hover,
+.ohz-slab:focus-visible {
+  border-color: var(--ohz-gold);
+  background: rgba(201, 168, 76, 0.06);
+}
+.ohz-slab-mark {
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ohz-gold-bright);
+}
+.ohz-slab-rule { width: 1px; align-self: stretch; background: var(--ohz-line-warm); }
+.ohz-slab-t {
+  display: block;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ohz-dim);
+}
+.ohz-slab-d {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--D, "Cinzel Decorative", Georgia, serif);
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  color: var(--ohz-ink);
+}
+.ohz-slab-arrow { margin-left: auto; color: var(--ohz-gold-ui); }
+
+/* ── Realm strip ──────────────────────────────────────────────────────
+   The reference's row of capability tiles. Named .ohz-tile, not
+   .ohz-card, for the [class*="card"] reason at the top of this file. */
+/* Explicit column counts, not auto-fit. There are exactly nine realms, and
+   auto-fit with a 150px floor laid them out 6 + 3 at 1440 -- a full row and
+   a stranded remainder, which reads as a wrapping accident rather than a
+   set. The ladder below is 9 -> 3 -> 2 columns; 9 and 3 divide the set
+   evenly, and the 2-column phone step leaves one tile on a final row, which
+   reads as the end of a list rather than as a broken row. */
+.ohz-strip {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 12px;
+  padding: clamp(22px, 3vw, 40px) var(--ohz-gutter);
+  border-block: 1px solid var(--ohz-line);
+}
+.ohz-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 16px 20px;
+  border: 1px solid var(--ohz-line);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: border-color 0.26s ease, transform 0.26s ease, box-shadow 0.26s ease;
+}
+/* Each tile carries its realm's own accent via --ohz-accent, so the glow
+   and the top bar retint per tile without a rule per realm. */
+.ohz-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ohz-accent, var(--ohz-gold)), transparent);
+  opacity: 0.75;
+}
+.ohz-tile:hover,
+.ohz-tile:focus-visible {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--ohz-accent, #C9A84C) 55%, transparent);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5),
+              0 0 34px color-mix(in srgb, var(--ohz-accent, #C9A84C) 16%, transparent);
+}
+.ohz-tile-glyph {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid color-mix(in srgb, var(--ohz-accent, #C9A84C) 34%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ohz-accent, #C9A84C) 16%, transparent), transparent 70%);
+  color: var(--ohz-accent, var(--ohz-gold));
+  font-size: 21px;
+  line-height: 1;
+}
+.ohz-tile-t {
+  display: block;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 11.5px;
+  letter-spacing: 0.17em;
+  color: var(--ohz-accent, var(--ohz-gold));
+}
+.ohz-tile-d {
+  display: block;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ohz-dim);
+}
+
+/* ── Vision band ─────────────────────────────────────────────────────── */
+.ohz-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.6fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  padding: clamp(40px, 6vw, 88px) var(--ohz-gutter);
+}
+.ohz-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 22px var(--ohz-gutter) 0;
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--ohz-dim);
+}
+.ohz-equation b { color: var(--ohz-gold-bright); font-weight: 400; }
+
+.ohz-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 26px var(--ohz-gutter) 54px;
+  border-top: 1px solid var(--ohz-line);
+  font-family: var(--M, "Courier Prime", ui-monospace, monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.15em;
+  color: var(--ohz-dim);
+}
+
+/* ── The Ω sculpture ──────────────────────────────────────────────────
+   The reference centres a photoreal 3D render. This repository ships no
+   raster hero art and has no image-generation path (see the
+   image-pipeline skill), so the sculpture is drawn procedurally: nested
+   orbital rings on separate rotation axes around a glowing core. It is
+   an <svg>, so it scales to any viewport and retints from the tokens
+   above rather than being baked at one size in one palette. */
+/* overflow:hidden, not visible. The equatorial band is rx=228 inside a 520
+   viewBox with an 8px soft stroke, so a visible overflow let it paint ~6px
+   past the element box. That never produced a horizontal scrollbar (the
+   phone render measured scrollWidth 375 == clientWidth 375), but it did put
+   painted pixels outside the layout box, which is how a fixed-chrome
+   collision scan reports a false positive later. Clipping costs nothing
+   here: every ring is inside the viewBox by construction. */
+.ohz-sculpt { width: min(100%, 560px); height: auto; overflow: hidden; }
+.ohz-sculpt .ohz-ring { transform-origin: 260px 260px; transform-box: view-box; }
+.ohz-sculpt .ohz-spin-a { animation: ohz-spin 64s linear infinite; }
+.ohz-sculpt .ohz-spin-b { animation: ohz-spin 96s linear infinite reverse; }
+.ohz-sculpt .ohz-spin-c { animation: ohz-spin 132s linear infinite; }
+.ohz-sculpt .ohz-pulse  { animation: ohz-pulse 7s ease-in-out infinite; transform-origin: 260px 260px; transform-box: view-box; }
+@keyframes ohz-spin  { to { transform: rotate(360deg); } }
+@keyframes ohz-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* ── Responsive ───────────────────────────────────────────────────────
+   Breakpoints track the platform's own ladder (1200/900/700/480). */
+@media (max-width: 1360px) {
+  .ohz-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1200px) {
+  .ohz-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ohz-hero-art  { order: -1; grid-column: 1 / -1; }
+  .ohz-sculpt { width: min(100%, 440px); }
+  /* Stacked, the sculpture sits directly above the headline and the hero's
+     own gap (20px at phone width) is not enough separation: the outer ring
+     plus the platform's fixed #omega-atmosphere / #omega-fx arcs carry
+     visual mass right down to the H1. Buy the headline clear space. */
+  .ohz-hero-art { margin-bottom: clamp(18px, 5vw, 40px); }
+}
+@media (max-width: 900px) {
+  .ohz-hero, .ohz-band { grid-template-columns: minmax(0, 1fr); }
+  .ohz-navlinks { display: none; }
+  .ohz-hero-rail { border-top: 1px solid var(--ohz-line); padding-top: 26px; }
+}
+@media (max-width: 700px) {
+  .ohz-brand-word { font-size: 14px; }
+  .ohz-dock { display: none; }
+  /* Two figures over two rows reads better than four squeezed onto one. */
+  .ohz-stats { grid-template-columns: repeat(2, minmax(0, auto)); gap: 18px 26px; }
+}
+@media (max-width: 560px) {
+  .ohz-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Motion is decoration here: every animation above is a slow rotation or
+   an opacity breath, so under reduced-motion the sculpture simply holds
+   its pose. Nothing is hidden by an animation, so nothing disappears. */
+@media (prefers-reduced-motion: reduce) {
+  .ohz-sculpt .ohz-spin-a,
+  .ohz-sculpt .ohz-spin-b,
+  .ohz-sculpt .ohz-spin-c,
+  .ohz-sculpt .ohz-pulse { animation: none; }
+  .ohz-btn, .ohz-tile, .ohz-rail-row, .ohz-slab { transition: none; }
+  .ohz-btn:hover, .ohz-tile:hover { transform: none; }
+}
+
+/* The footer's link cluster is inline; give its members breathing room. */
+.ohz-footer .ohz-navlink { margin-left: 18px; }
+.ohz-footer .ohz-navlink:first-child { margin-left: 0; }

@@ -12,7 +12,7 @@
     animations: [],
 
     // Throttled requestAnimationFrame
-    throttledRAF: (callback) => {
+    throttledRAF: function(callback) {
       const now = performance.now();
       const elapsed = now - this.lastFrame;
       
@@ -41,7 +41,7 @@
     },
 
     // Stagger animations efficiently
-    staggerAnimations: (elements, duration, delay = 50) => {
+    staggerAnimations: function(elements, duration, delay = 50) {
       return elements.map((el, i) => {
         return this.createGPUAnimation(el, 
           [{opacity: 0, transform: 'translateY(10px)'}, 

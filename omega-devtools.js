@@ -69,12 +69,12 @@
     // Performance timeline
     timeline: {
       marks: [],
-      mark: (name) => {
+      mark: function(name) {
         const time = performance.now();
         this.marks.push({name, time});
         console.log(`⏳︎ Mark: ${name} @ ${time.toFixed(2)}ms`);
       },
-      measure: (startMark, endMark) => {
+      measure: function(startMark, endMark) {
         const start = this.marks.find(m => m.name === startMark);
         const end = this.marks.find(m => m.name === endMark);
         if(start && end) {

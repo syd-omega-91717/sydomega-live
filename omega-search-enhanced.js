@@ -8,7 +8,7 @@
   window.OmegaSearchEnhanced = {
     index: new Map(),
     
-    buildIndex: () => {
+    buildIndex: function() {
       const elements = document.querySelectorAll('[data-searchable], .card, h1, h2, h3, p');
       elements.forEach(el => {
         const text = el.textContent.toLowerCase();
@@ -22,7 +22,7 @@
       });
     },
 
-    search: (query, maxResults = 10) => {
+    search: function(query, maxResults = 10) {
       const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
       if(terms.length === 0) return [];
 

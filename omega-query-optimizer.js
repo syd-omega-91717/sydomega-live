@@ -10,14 +10,14 @@
     batch: [],
     batchSize: 5,
     
-    queue: (query) => {
+    queue: function(query) {
       this.batch.push(query);
       if(this.batch.length >= this.batchSize) {
         this.flush();
       }
     },
 
-    flush: async () => {
+    flush: async function() {
       if(this.batch.length === 0) return;
       const queries = this.batch.splice(0);
       // Execute batched queries
@@ -38,12 +38,12 @@
     // Filter optimization - reuse filters across queries
     filterCache: new Map(),
     
-    cacheFilter: (key, filterFn) => {
+    cacheFilter: function(key, filterFn) {
       this.filterCache.set(key, filterFn);
       return filterFn;
     },
 
-    getFilter: (key) => {
+    getFilter: function(key) {
       return this.filterCache.get(key);
     },
 
@@ -53,14 +53,14 @@
       max: 10,
       waiting: [],
       
-      acquire: async () => {
+      acquire: async function() {
         while(this.active >= this.max) {
           await new Promise(resolve => this.waiting.push(resolve));
         }
         this.active++;
       },
 
-      release: () => {
+      release: function() {
         this.active--;
         const resolve = this.waiting.shift();
         if(resolve) resolve();

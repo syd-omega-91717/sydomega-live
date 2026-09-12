@@ -31,7 +31,7 @@
   // Circuit breaker for API endpoints
   window.OmegaCircuitBreaker = {
     state: {},
-    check: (endpoint) => {
+    check: function(endpoint) {
       const info = this.state[endpoint];
       if(!info) return true;
       if(info.state === 'open' && Date.now() - info.lastFailure > 30000) {
@@ -40,7 +40,7 @@
       }
       return info.state !== 'open';
     },
-    record: (endpoint, success) => {
+    record: function(endpoint, success) {
       if(!this.state[endpoint]) this.state[endpoint] = {failures: 0, state: 'closed'};
       const info = this.state[endpoint];
       if(success) {

@@ -17,7 +17,7 @@
       errors: []
     },
 
-    init: () => {
+    init: function() {
       // Measure Core Web Vitals
       if(window.PerformanceObserver) {
         // Largest Contentful Paint
@@ -60,17 +60,17 @@
       });
     },
 
-    trackApi: (endpoint, duration, status) => {
+    trackApi: function(endpoint, duration, status) {
       this.data.apiCalls.push({endpoint, duration, status, time: Date.now()});
       if(this.data.apiCalls.length > 100) this.data.apiCalls.shift();
     },
 
-    trackError: (error, context) => {
+    trackError: function(error, context) {
       this.data.errors.push({error: error.toString(), context, time: Date.now()});
       if(this.data.errors.length > 50) this.data.errors.shift();
     },
 
-    report: () => {
+    report: function() {
       const avgApiTime = this.data.apiCalls.length > 0
         ? Math.round(this.data.apiCalls.reduce((a, c) => a + c.duration, 0) / this.data.apiCalls.length)
         : 0;

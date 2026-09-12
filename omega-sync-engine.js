@@ -11,7 +11,7 @@
     lastSync: 0,
 
     // Queue operations for later sync
-    queueOperation: (type, table, data) => {
+    queueOperation: function(type, table, data) {
       this.queue.push({
         type,
         table,
@@ -27,7 +27,7 @@
     },
 
     // Sync pending operations
-    sync: async () => {
+    sync: async function() {
       if(this.syncInProgress || this.queue.length === 0) return;
       
       this.syncInProgress = true;
@@ -54,7 +54,7 @@
     },
 
     // Cross-tab communication
-    broadcastSync: () => {
+    broadcastSync: function() {
       try {
         const channel = new BroadcastChannel('omega_sync');
         channel.postMessage({
@@ -88,7 +88,7 @@
     },
 
     // Handle online/offline transitions
-    setupNetworkListener: () => {
+    setupNetworkListener: function() {
       window.addEventListener('online', () => {
         console.log('Online - starting sync');
         this.sync();

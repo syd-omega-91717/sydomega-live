@@ -57,6 +57,10 @@ jobs:
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           TEAM_ID: ${{ secrets.LINEAR_TEAM_ID }}
+          COMMIT_SHA: ${{ steps.migration_details.outputs.commit_sha }}
+          COMMIT_AUTHOR: ${{ steps.migration_details.outputs.commit_author }}
+          MIGRATION_FILES: ${{ steps.schema.outputs.migration_files }}
+          COMMIT_MSG: ${{ steps.migration_details.outputs.commit_msg }}
         run: |
           if [ -z "$LINEAR_API_KEY" ]; then
             echo "⚠️  LINEAR_API_KEY not configured. Schema changes detected but issue not created."
@@ -64,25 +68,18 @@ jobs:
             exit 0
           fi
 
-          TITLE="Schema Change: ${{ steps.migration_details.outputs.commit_sha }}"
-          DESCRIPTION="Migration detected in commit by ${{ steps.migration_details.outputs.commit_author }}
+          TITLE="Schema Change: $COMMIT_SHA"
+          DESCRIPTION="Migration detected in commit by $COMMIT_AUTHOR"$'\n\n'"Files changed:"$'\n'"$(printf '```\n%s\n```' "$MIGRATION_FILES")"$'\n\n'"Commit message:"$'\n'"$COMMIT_MSG"$'\n\n'"GitHub: https://github.com/${{ github.repository }}/commit/$COMMIT_SHA"
 
-Files changed:
-\`\`\`
-${{ steps.schema.outputs.migration_files }}
-\`\`\`
-
-Commit message:
-${{ steps.migration_details.outputs.commit_msg }}
-
-GitHub: https://github.com/${{ github.repository }}/commit/${{ steps.migration_details.outputs.commit_sha }}"
-
-          PAYLOAD=$(cat <<EOF
+          PAYLOAD=$(cat <<'EOF'
           {
-            "query": "mutation { issueCreate(input: {teamId: \"$TEAM_ID\", title: \"$TITLE\", description: \"$DESCRIPTION\", labelIds: [\"schema\"]}) { issue { id identifier } } }"
+            "query": "mutation { issueCreate(input: {teamId: \"TEAM_ID_VAR\", title: \"TITLE_VAR\", description: \"DESCRIPTION_VAR\", labelIds: [\"schema\"]}) { issue { id identifier } } }"
           }
           EOF
           )
+          PAYLOAD="${PAYLOAD//TEAM_ID_VAR/$TEAM_ID}"
+          PAYLOAD="${PAYLOAD//TITLE_VAR/$TITLE}"
+          PAYLOAD="${PAYLOAD//DESCRIPTION_VAR/$DESCRIPTION}"
 
           curl -X POST https://api.linear.app/graphql \
             -H "Authorization: Bearer $LINEAR_API_KEY" \

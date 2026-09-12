@@ -47,17 +47,17 @@ jobs:
         run: |
           if [ -f /tmp/lighthouse-index.json ]; then
             echo "Performance audit results available"
-            python3 << 'EOF'
-import json
-try:
-  with open('/tmp/lighthouse-index.json', 'r') as f:
-    data = json.load(f)
-    cats = data.get('categories', {})
-    for name, cat in cats.items():
-      score = cat.get('score', 0)
-      print(f"  {name}: {int(score*100)}/100")
-except:
-  print("  (report not parsed)")
-EOF
+            python3 - << 'EOF'
+          import json
+          try:
+            with open('/tmp/lighthouse-index.json', 'r') as f:
+              data = json.load(f)
+              cats = data.get('categories', {})
+              for name, cat in cats.items():
+                score = cat.get('score', 0)
+                print(f"  {name}: {int(score*100)}/100")
+          except:
+            print("  (report not parsed)")
+          EOF
           fi
           echo "✓ Weekly audit complete"

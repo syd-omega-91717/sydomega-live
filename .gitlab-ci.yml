@@ -25,17 +25,18 @@ js-syntax:
   stage: syntax
   script:
     - python3 scripts/check-inline-js.py
-    - python3 << 'PYSCRIPT'
-import pathlib, subprocess, sys
-bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
-       if ".git" not in p.parts and "node_modules" not in p.parts
-       and "dist" not in p.parts and "build" not in p.parts
-       and subprocess.run(["node", "--check", str(p)]).returncode != 0]
-if bad:
-    print("::error::syntax error in: " + ", ".join(bad))
-    sys.exit(1)
-print("node --check clean")
-PYSCRIPT
+    - |
+      python3 << 'PYSCRIPT'
+      import pathlib, subprocess, sys
+      bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
+             if ".git" not in p.parts and "node_modules" not in p.parts
+             and "dist" not in p.parts and "build" not in p.parts
+             and subprocess.run(["node", "--check", str(p)]).returncode != 0]
+      if bad:
+          print("::error::syntax error in: " + ", ".join(bad))
+          sys.exit(1)
+      print("node --check clean")
+      PYSCRIPT
   allow_failure: false
 
 # 2. Repository Audit

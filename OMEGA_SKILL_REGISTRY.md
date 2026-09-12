@@ -28,10 +28,10 @@ effectively invisible unless invoked by exact name.
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
 | `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
-| `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | uncommitted |
-| `omega-orchestrator` | yes | — | 1,300 | **nothing** | uncommitted |
+| `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | 2026-09-10 |
+| `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
-| `omega-production-verification` | yes | — | 909 | **nothing** | uncommitted |
+| `omega-production-verification` | yes | — | 909 | **nothing** | 2026-09-10 |
 | `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
@@ -84,7 +84,7 @@ this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
 | `claudeconcil` | Multi-turn guided interface for Claude Council deliberations. | 1,524 | 2026-08-18 |
-| `omega-architect` | --- | 585 | uncommitted |
+| `omega-architect` | --- | 585 | 2026-09-10 |
 
 ## 3 · Platform census
 

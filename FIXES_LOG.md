@@ -14314,3 +14314,83 @@ have, measure its hue before you reach for more contrast or more colour.* Four
 of the five differences here were temperature and tier of an accent the
 platform already owned — a token change reaching 189 pages through one file —
 and the fifth was raster art that this stack cannot produce at all.
+
+---
+
+## 130 — the elemental sphere failed silently on five pages, leaving a 300×150 canvas stretched across 1270×268
+
+**Found:** a graphics audit on merged `main` read back every visible canvas.
+Four pages carried a realm canvas at the browser's **default 300×150 buffer**
+inside boxes of 1244×622 / 1270×268 / 1270×268 / 1202×268 — the signature of
+§8.1 class 3, a canvas nothing ever sized.
+
+**It was not class 3.** Instrumenting `OmegaRealm.mount` before any page
+script ran gave the actual sequence:
+
+```
+mount() CALLED elem=Fire canvasId=realm-canvas clientW=1344 clientH=672
+mount() returned
+UNHANDLED_REJECTION: TypeError: Failed to fetch dynamically imported
+                     module: https://esm.sh/three@0.160.1
+```
+
+`mount()` is reached **with a correctly sized canvas** — the element resolved,
+the box was real. What never arrives is Three.js. `loadThree()` resolves a
+dynamic import from a third-party CDN, and an import that never resolves runs
+*none* of its `.then()` (CLAUDE.md §4; `FIXES_LOG` 128 for the particle
+engine). `_renderer.setSize()` therefore never ran and the canvas kept its
+default buffer, stretched over the layout box.
+
+**`autoMount()` had a `.catch()`. The public API did not — and no page uses
+`autoMount()`.** All five mounting pages call `window.OmegaRealm.mount()`
+directly, and that function was
+`loadThree().then(function(){mount(...)})` with no rejection handling at all.
+So the failure surfaced as an unhandled rejection and a visibly broken
+artifact, with nothing said to the member. `autoMount()`'s own catch only
+`console.warn`ed and left its canvases dead too.
+
+**The CDN is not the whole story, and that matters.** Measured with the
+import both blocked *and* allowed through a real fetch (`ok=1`), the result
+was byte-identical: 300×150 either way. So this is not "the CDN was
+unreachable that minute" — it is that **there is no path through this code
+where a failed engine load produces anything but a broken canvas.**
+
+**Fix:** a `.catch()` on both load paths that draws a real fallback —
+a layered radial orb in the member's own `ELEM_PALETTE` colours, buffer sized
+from the live box. It does not imitate the 3-D sphere or claim the engine
+loaded; it is the same palette rendered in 2D, so a member on a blocked or
+flaky network sees their element instead of a stretched blank. Nothing is
+invented (§8.1 class 9): the colour comes from the element already resolved
+for that member.
+
+**Verified** with `esm.sh` routed to `abort()`:
+
+| page | before | after | centre pixel |
+|---|---|---|---|
+| realm | 300×150 in 1244×622 | **1244×622** | `rgba(228,138,65)` |
+| identity | 300×150 in 1270×268 | **1270×268** | `rgba(228,139,65)` |
+| ascension | 300×150 in 1270×268 | **1270×268** | `rgba(228,139,65)` |
+| character | 300×150 in 1202×268 | **1202×268** | `rgba(228,139,65)` |
+
+Unhandled rejections **3 → 0**; 31–75% of each canvas painted. The centre
+pixel is the stub's real element (Fire: `core #FF6B35` → `mid #C9A84C`), not
+the generic Void palette — so the element plumbing is exercised, not bypassed.
+
+**A second defect the fix exposed.** The first version disconnected its
+`ResizeObserver` after one successful paint. Measured on `realm.html`, the
+fallback painted at `clientWidth` 1344 and the column settled to 1244 a
+moment later — an 8% horizontal stretch, the same *kind* of wrongness in
+smaller form. The observer now stays attached and re-paints only when the
+size actually changes. All four pages now measure buffer **exactly** equal to
+box.
+
+**Transferable rule.** *A canvas whose buffer is derived from its box must
+track the box for as long as it lives, not once.* And: `.catch()` is not
+optional on a promise whose failure leaves painted state behind — the
+rejection is invisible, but the stretched canvas is not.
+
+**Left open deliberately:** Three.js is still fetched from `esm.sh`.
+Vendoring it the way `tsparticles-slim` was vendored costs **670KB** (4.6× the
+particle bundle, 3× the Supabase client), which is a weight decision for the
+owner rather than a silent one. The fallback above means the feature now
+degrades honestly either way.

@@ -226,15 +226,116 @@ function autoMount(elem){
     /* Re-query after the load: the canvas set can grow while it is in flight. */
     var canvases=document.querySelectorAll('canvas[data-realm]');
     canvases.forEach(function(cv){mount(cv,elem);});
-  }).catch(function(e){console.warn('[OmegaRealm] Three.js load failed',e);});
+  }).catch(function(e){
+    console.warn('[OmegaRealm] Three.js load failed',e);
+    /* Same reasoning as the public mount(): warning alone left every
+       [data-realm] canvas at its default 300x150. */
+    document.querySelectorAll('canvas[data-realm]').forEach(function(cv){
+      drawFallback(cv,elem);
+    });
+  });
+}
+
+/* ── Static fallback when the 3-D engine cannot load ──────────────────
+   loadThree() resolves a dynamic import from a third-party CDN, and an
+   import that never resolves runs NONE of its .then() -- the same shape
+   CLAUDE.md §4 records for the Supabase client and FIXES_LOG 128 for the
+   particle engine.
+
+   MEASURED on realm / identity / ascension / character, with the import
+   both blocked and allowed:
+
+     mount() CALLED elem=Fire canvasId=realm-canvas clientW=1344 clientH=672
+     mount() returned
+     UNHANDLED_REJECTION: TypeError: Failed to fetch dynamically imported
+                          module: https://esm.sh/three@0.160.1
+
+   So mount() is reached with a correctly sized canvas -- this is NOT the
+   zero-size class-3 bug -- and then the engine never arrives. Because the
+   public mount() below had no .catch(), that rejection went unhandled and
+   the canvas kept the browser's DEFAULT 300x150 buffer stretched across
+   its 1270x268 box: a visibly broken artifact on four pages, with nothing
+   said to the member. autoMount() already had a .catch(), but it only
+   warned, and no page uses that path -- all five call OmegaRealm.mount()
+   directly.
+
+   The failure path now draws something true instead of nothing: a layered
+   radial orb in the member's OWN element colours, from the same
+   ELEM_PALETTE the 3-D sphere uses. It does not imitate the sphere and
+   does not pretend the engine loaded -- it is the same palette in 2D, so a
+   member on a blocked or flaky network sees their element rather than a
+   stretched blank. Nothing here is invented: the colour comes from the
+   element already resolved for that member. */
+function drawFallback(canvas,elemName){
+  if(!canvas||!canvas.getContext) return false;
+  var pal=ELEM_PALETTE[normalizeElem(elemName||_currentElem||'Void')]||ELEM_PALETTE['Void'];
+  /* Size the BUFFER from the live box, not from the attribute defaults --
+     leaving 300x150 is the whole defect this function exists to end. A box
+     that is still zero means the canvas is in a hidden tab; observe it and
+     draw when it is revealed (the approval guard fires no resize event). */
+  function paint(){
+    var w=canvas.clientWidth,h=canvas.clientHeight;
+    if(!w||!h) return false;
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    canvas.width=Math.round(w*dpr);
+    canvas.height=Math.round(h*dpr);
+    var g=canvas.getContext('2d');
+    if(!g) return false;              /* a WebGL context may already be bound */
+    g.setTransform(dpr,0,0,dpr,0,0);
+    g.clearRect(0,0,w,h);
+    var cx=w/2, cy=h/2, r=Math.max(24,Math.min(w,h)*0.34);
+    var halo=g.createRadialGradient(cx,cy,0,cx,cy,r*2.4);
+    halo.addColorStop(0,   pal.mid+'33');
+    halo.addColorStop(0.55,pal.outer+'1A');
+    halo.addColorStop(1,   'rgba(0,0,0,0)');
+    g.fillStyle=halo; g.fillRect(0,0,w,h);
+    var orb=g.createRadialGradient(cx-r*0.3,cy-r*0.35,r*0.08,cx,cy,r);
+    orb.addColorStop(0,   pal.core);
+    orb.addColorStop(0.55,pal.mid);
+    orb.addColorStop(1,   pal.outer);
+    g.beginPath(); g.arc(cx,cy,r,0,Math.PI*2); g.fillStyle=orb; g.fill();
+    g.beginPath(); g.arc(cx,cy,r*1.32,0,Math.PI*2);
+    g.strokeStyle=pal.mid+'55'; g.lineWidth=1; g.stroke();
+    canvas.setAttribute('data-realm-fallback','1');
+    return true;
+  }
+  var ok=paint();
+  /* Keep observing rather than disconnecting after the first success. The
+     box can still change afterwards: measured on realm.html the fallback
+     painted at clientWidth 1344 and the column settled to 1244 a moment
+     later, leaving an 8% horizontal stretch. A canvas whose buffer is
+     derived from its box has to track the box for as long as it lives, not
+     once. Re-paints only when the size actually changes, so this is idle
+     while nothing moves. */
+  if(typeof ResizeObserver==='function'){
+    var lastW=canvas.width,lastH=canvas.height;
+    var ro=new ResizeObserver(function(){
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      var w=Math.round(canvas.clientWidth*dpr),h=Math.round(canvas.clientHeight*dpr);
+      if(!w||!h||(w===lastW&&h===lastH)) return;
+      if(paint()){ lastW=canvas.width; lastH=canvas.height; }
+    });
+    ro.observe(canvas);
+  }
+  return ok;
 }
 
 /* ── Public API ── */
 window.OmegaRealm={
-  mount:function(canvas,elem){loadThree().then(function(){mount(canvas,elem||_currentElem);});},
+  mount:function(canvas,elem){
+    var want=elem||_currentElem;
+    return loadThree().then(function(){
+      mount(canvas,want);
+    }).catch(function(e){
+      /* Never leave a default-sized canvas stretched across its box. */
+      console.warn('[OmegaRealm] 3-D engine unavailable, drawing static fallback',e);
+      drawFallback(canvas,want);
+    });
+  },
   unmount:unmount,
   setElement:setElement,
-  isActive:function(){return _mounted;}
+  isActive:function(){return _mounted;},
+  drawFallback:drawFallback
 };
 
 /* ── Hook into profile load ── */

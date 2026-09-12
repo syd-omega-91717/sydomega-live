@@ -64,7 +64,7 @@ window.OmegaFeatureGates = (() => {
         const { data: profile } = await sb.auth.getUser();
         if (!profile) return;
 
-        await sb.from("member_feature_flags").upsert({
+        const { error: upsertError } = await sb.from("member_feature_flags").upsert({
           member_id: profile.id,
           feature_id: featureId,
           enabled: enabled,
@@ -72,6 +72,10 @@ window.OmegaFeatureGates = (() => {
           set_by_agent: true,
           set_reason: "product_agent_adaptation",
         });
+
+        if (upsertError) {
+          throw new Error(`Failed to upsert feature flag: ${upsertError.message}`);
+        }
 
         cache.set(featureId, { enabled, variant });
       } catch (error) {

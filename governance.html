@@ -30,11 +30,11 @@
 
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-n" id="k-risks">0</div><div class="kpi-l">OPEN RISKS</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-policies">0</div><div class="kpi-l">POLICIES</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-decisions">0</div><div class="kpi-l">DECISIONS LOGGED</div></div>
-        <div class="kpi"><div class="kpi-n" id="k-risk-score">--</div><div class="kpi-l">RISK SCORE</div></div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-risks" data-countup>0</div><div class="kpi-l">OPEN RISKS</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-policies" data-countup>0</div><div class="kpi-l">POLICIES</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-decisions" data-countup>0</div><div class="kpi-l">DECISIONS LOGGED</div></div>
+        <div class="kpi" data-reveal="fade-up" data-glow-pulse><div class="kpi-n" id="k-risk-score" data-countup>--</div><div class="kpi-l">RISK SCORE</div></div>
       </div>
       <div class="sechead">GOVERNANCE FRAMEWORK</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
@@ -290,6 +290,7 @@ window.addDecision=function(){
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     document.getElementById('hdr-auth').textContent=auth.toFixed(4);
     renderRisks();renderPolicies();renderDecisions();
+    document.dispatchEvent(new CustomEvent('omega:populated'));
     document.querySelectorAll('.tab').forEach(function(btn){
       btn.onclick=function(){
         document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});

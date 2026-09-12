@@ -96,7 +96,9 @@ function __omegaAppend(el){
   /* Phase C.5: Archetype-specific motion and visual styling rules */
   if(!document.querySelector('script[data-omega-archetype-motion]')){var os_data_omega_archetype_motion=document.createElement('script');os_data_omega_archetype_motion.src='/omega-archetype-motion.js';os_data_omega_archetype_motion.setAttribute('data-omega-archetype-motion','1');os_data_omega_archetype_motion.defer=true;__omegaAppend(os_data_omega_archetype_motion);}
   /* Phase C.6: Archetype visual surface configuration */
-  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}
+  /* Phase A: Agent brand mythology, sigil identity, constellation visualization */
+  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -165,6 +167,12 @@ function __omegaAppend(el){
     var link=document.createElement('link');
     link.id='omega-accessibility-audit-css'; link.rel='stylesheet';
     link.href='/omega-accessibility-audit.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  if(!document.getElementById('omega-agent-identity-css')){
+    var link=document.createElement('link');
+    link.id='omega-agent-identity-css'; link.rel='stylesheet';
+    link.href='/omega-agent-identity-v3.css'; link.type='text/css';
     head.appendChild(link);
   }
 })();

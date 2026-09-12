@@ -331,7 +331,7 @@
          while this branch rebuilt it on the platform design system, so
          both sides changed the same file and taking either alone lost
          something real. Measured before choosing: main's version linked
-         28 destinations to this one's 20, and **13 of the difference are
+         28 destinations to this one's 20, and **14 of the difference are
          reachable from index.html and nowhere else** (agent,
          omega-visual-command, frontend/platform/platform, investor-gate,
          investor-dashboard, venture-pipeline, web/templates/leaderboard,
@@ -340,7 +340,7 @@
          web/templates/system_health, web/templates/sovereign_health) --
          counted by grepping every other .html and .js for each href.
 
-         Dropping them would have orphaned thirteen pages, which is what
+         Dropping them would have orphaned fourteen pages, which is what
          scripts/reachability-contract.py exists to catch. So the
          composition here is this branch's and the destination set is the
          union: the nine realms stay in the strip above, and every

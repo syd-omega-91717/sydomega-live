@@ -48,7 +48,7 @@
     <div class="auth-lbl">AUTHORITY</div>
     <div class="auth-pct" id="auth-pct"></div>
   </div>
-  <div class="kpi-row" id="overview-kpis"></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="overview-kpis"></div>
   <div class="sechead" style="margin-top:16px">AXIS BREAKDOWN</div>
   <div id="axis-bars">
     <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading axes&hellip;</div>
@@ -117,7 +117,7 @@ function renderOverview(pr){
     ['NODES',pr.nodes_earned||0],
     ['TIER',pr.subscription_tier||'FREE'],
     ['TOKEN',pr.token||'—']
-  ].map(function(k){return'<div class="kpi-card"><div class="kpi-val">'+k[1]+'</div><div class="kpi-label">'+k[0]+'</div></div>';}).join('');
+  ].map(function(k){return'<div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">'+k[1]+'</div><div class="kpi-label">'+k[0]+'</div></div>';}).join('');
 
   document.getElementById('axis-bars').innerHTML=[
     {label:'A — KNOWLEDGE',val:a,col:'var(--gold)'},

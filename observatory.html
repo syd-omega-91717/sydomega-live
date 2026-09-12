@@ -51,13 +51,13 @@
 
 <div class="tab-panel active" id="tab-status">
   <div class="sechead">PLATFORM KPIs</div>
-  <div class="kpi-row">
-    <div class="kpi-card" style="border-top:2px solid var(--green)"><div class="kpi-val" id="k-uptime" style="color:var(--green)">99.9%</div><div class="kpi-label">UPTIME (30d)</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="k-members">—</div><div class="kpi-label">ACTIVE MEMBERS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="k-events">—</div><div class="kpi-label">EVENTS TODAY</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="k-tasks">—</div><div class="kpi-label">TASKS (7d)</div></div>
-    <div class="kpi-card" style="border-top:2px solid var(--crim)"><div class="kpi-val" id="k-incidents" style="color:var(--crim)">0</div><div class="kpi-label">OPEN INCIDENTS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="k-threats">—</div><div class="kpi-label">THREAT EVENTS (7d)</div></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up" style="border-top:2px solid var(--green)"><div class="kpi-val" id="k-uptime" style="color:var(--green)">99.9%</div><div class="kpi-label">UPTIME (30d)</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-members">—</div><div class="kpi-label">ACTIVE MEMBERS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-events">—</div><div class="kpi-label">EVENTS TODAY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-tasks">—</div><div class="kpi-label">TASKS (7d)</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="border-top:2px solid var(--crim)"><div class="kpi-val" id="k-incidents" style="color:var(--crim)">0</div><div class="kpi-label">OPEN INCIDENTS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-threats">—</div><div class="kpi-label">THREAT EVENTS (7d)</div></div>
   </div>
   <div class="sechead" style="margin-top:8px">CORE WEB VITALS &middot; 75TH PERCENTILE</div>
   <div class="cwv-row">

@@ -901,6 +901,12 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 (function(){if(!document.querySelector('script[data-omega-kbd-operable]')){var s=document.createElement('script');s.src='/omega-a11y-controls.js';s.setAttribute('data-omega-kbd-operable','1');s.defer=true;__omegaAppend(s);}})();
 /* ===== SOVEREIGN CONSTELLATION -- the ring-of-emblems diagram ===== */
 (function(){if(!document.querySelector('script[data-omega-constellation-js]')){var s=document.createElement('script');s.src='/omega-constellation.js';s.setAttribute('data-omega-constellation-js','1');__omegaAppend(s);}})();
+/* Omega-ATLAS: per-page identity (axis colour + hero + procedural sigil).
+   Injected on EVERY page with no mount attribute required -- that is the
+   point: 200 of 202 pages had no identity mark at all when this was written.
+   Its own guard attribute, never shared: two modules behind one data-omega-*
+   is CLAUDE.md 8.1 class 5b, which silently killed omega-emblems.js. */
+(function(){if(!document.querySelector('script[data-omega-identity-js]')){var s=document.createElement('script');s.src='/omega-identity.js';s.setAttribute('data-omega-identity-js','1');__omegaAppend(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */
 (function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');__omegaAppend(s);}})();
 /* ===== 9D ENGINE -- parallax, holographic glow, cinematic transitions, reactive audio ===== */

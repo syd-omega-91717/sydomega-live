@@ -159,6 +159,22 @@ targets and would bleed between viewport sub-rects (143); it costs one
 full-res composite per mount per frame, so `data-sculpt-bloom="off"` exists.
 `status()` reports `bloom`/`env`.
 
+**Every page has an axis, and it comes from nav.js.** `omega-identity.js`
+(bg.js, all 202 pages) reads `window.OmegaAxis` — published by `nav.js`, which
+owns the page→section map — and sets `--page-accent`/`-soft`/`-glow` plus
+`data-omega-axis` on `<html>`, then adds a hero (eyebrow, page name, drawn rule,
+and a sigil generated from a hash of the slug: 202 distinct, 0 collisions) where
+the page has a content column and no hero of its own. `host()` REJECTS any
+container holding `#omega-side` — `.shell` is a flex row, and `main`/`#app` on
+several pages *is* the shell (145, 146). Ω-ATLAS in `css/omega-system.css`
+paints it; every element-level rule there is wrapped in `:where()` so a page's
+own `<style>` (sheet 0) still wins.
+**Never give a decorative element `display:none` for being `aria-hidden`.**
+That rule sat in `omega-accessibility-audit.css` and deleted **60 of 60**
+aria-hidden elements on six pages — the particle canvas,
+`.omega-cinematic-layer`, `.omega-visual-rail`, and 31 marks on `index.html`.
+The platform's cinematic layers were switched off by its own a11y sheet (145).
+
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
 data; `omega-motion.js` owns entrance, value roll-up, tilt and press via the
@@ -167,18 +183,15 @@ hidden state. It defers to the two pre-existing reveal systems —
 `omega-content.js` (`.oc-hidden`) and `omega-animated.js` (`.oa-reveal`) —
 which already own `opacity` on what they manage.
 
-**Bottom chrome has a single measured owner.** Five modules anchor fixed bars
-and buttons to the viewport floor and used to coordinate through hardcoded
-constants (`bottom:102px`, `66px`, `224px`, and `bg.js`'s `36/98/146/228`
-ladder) — each right at one viewport, wrong elsewhere, and none measured
-against `#omega-consent`, whose height varies 80–134 with its copy.
-`omega-bottom-stack.js` publishes `--omega-chrome-bottom` (persistent
-furniture) and `--omega-transient-bottom` (that plus any banner): banners clear
-the furniture with the first, the floating ladder steps over banners with the
-second. Never add a bottom-anchored constant — read a property, and mark new
-furniture `data-omega-bottom-chrome`. Top-left has the
-same problem, unpublished: bg.js puts `#om-open` (fixed, z-9000) at x=12..54
-on **every** page, so a fluid gutter walks under it; reserve `max(<gutter>, 62px)`.
+**Bottom chrome has a single measured owner.** Five modules anchor fixed bars to
+the viewport floor and used to coordinate through hardcoded constants, each right
+at one viewport and none measured against `#omega-consent` (height varies 80–134
+with its copy). `omega-bottom-stack.js` publishes `--omega-chrome-bottom`
+(persistent furniture) and `--omega-transient-bottom` (that plus any banner).
+Never add a bottom-anchored constant — read a property, and mark new furniture
+`data-omega-bottom-chrome`. Top-left has the same problem, unpublished: bg.js puts
+`#om-open` (fixed, z-9000) at x=12..54 on **every** page, so a fluid gutter walks
+under it; reserve `max(<gutter>, 62px)`.
 
 - Palette: `--void`/`--void2` (near-black background), `--gold`/`--solar`
   (primary accent), `--cyan` (secondary accent), `--crim` (danger/red),
@@ -206,10 +219,9 @@ replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
 `.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all 178 pages
 through this one file with no per-page markup changes:
 
-- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass` panels get
-  a hover shimmer sweep and a pointer-following radial highlight (`--mx`/`--my`,
-  set by one passive rAF-throttled `pointermove` listener in bg.js — a single
-  `getBoundingClientRect()` per frame, only while hovering a match).
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass` get a hover
+  shimmer and a pointer-following highlight (`--mx`/`--my`, one passive
+  rAF-throttled `pointermove` listener in bg.js, only while hovering a match).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image` +
   box-shadow glow, both **hover-only**, never static). `border-image` wins the
   border paint regardless of specificity, so a *static* version silently
@@ -225,53 +237,42 @@ through this one file with no per-page markup changes:
   `.tier-*` gradients and `gaming.html`'s two bars translated losslessly. Check
   *which properties* collide, never the mere presence of a pseudo.
 - **Platform-wide `.card` sweep.** `.card` was scanner-added to ~187 page-local
-  `*-card` classes across 117 files. **The standing fact:** ~34 were
-  deliberately **not** swept, because `.card`'s hover-only `border-image`/glow
-  collides with something they own — a page-local `::before`/`::after` setting
-  `background` (pseudos cascade per *property*; only one wins it), or a
-  per-instance border on the element (inline `style=`, JS `.style.border*`, or
-  a same-element modifier like `.mc.heir{border-left:…}`). State modifiers
-  (`.sel`/`.active`…) setting `border-color` *were* swept — hover-only masking
-  hides them only during a simultaneous hover. Check both failure modes before
-  adding `.card`; per-class list, scanner and verification in `FIXES_LOG.md`. Two facts before any
-  sweep. **A sweep is not additive**: `omega-visual-evolution.css` styles
-  `.card,…,[class*="card"]` — that substring selector already gives *every*
-  `*-card` class the glass surface — and it loads after the page's `<style>`,
-  so at equal specificity it wins; measured, it rewrote resting
-  border/background/padding/radius on 130 swept elements. Re-assert anything
-  the page means at `.x.card`. **And `.card` enrols the element in the
-  `oa-fade-up` reveal**, whose last keyframe pins `opacity:1` — that silently
-  un-dimmed 16 `.honor-card.locked` badges; an animation beats a plain
-  declaration, and only `!important` outranks it.
-- **`.card-edge`, the left-edge accent.** `.card::before` is a *top* bar, which
-  is why 124 hand-rolled `border-left:Npx solid <colour>` sites across 68 files
-  were all excluded from the sweep. `.card.card-edge` runs the same
-  `--card-accent` bar down the left instead (width `--card-edge-w`, default
-  3px). Check the element's own `::before` first — `chronicle.html`'s
-  `.event-card` draws its timeline connector there, so it stays excluded.
+  `*-card` classes across 117 files; **~34 were deliberately NOT swept**, because
+  `.card`'s hover-only `border-image`/glow collides with something they own — a
+  page-local `::before`/`::after` setting `background` (pseudos cascade per
+  *property*), or a per-instance border (inline `style=`, JS `.style.border*`, or
+  a modifier like `.mc.heir{border-left:…}`). Check both before adding `.card`;
+  per-class list and scanner in `FIXES_LOG.md`. **A sweep is not additive**:
+  `omega-visual-evolution.css` styles `.card,…,[class*="card"]`, loads after the
+  page's `<style>`, and measured rewrote resting border/background/padding/radius
+  on 130 swept elements — re-assert anything the page means at `.x.card`. **And
+  `.card` enrols the element in the `oa-fade-up` reveal**, whose last keyframe pins
+  `opacity:1`, silently un-dimming 16 `.honor-card.locked` badges: an animation
+  beats a plain declaration, and only `!important` outranks it.
+- **`.card-edge`, the left-edge accent.** `.card::before` is a *top* bar, which is
+  why 124 hand-rolled `border-left` sites across 68 files were excluded from the
+  sweep. `.card.card-edge` runs the same `--card-accent` bar down the left instead
+  (`--card-edge-w`, default 3px). Check the element's own `::before` first —
+  `chronicle.html`'s `.event-card` draws its timeline connector there.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
-  growing from the tab centre in the page axis colour. 40 pages own `.tab-btn`
-  rules and win the cascade; none owns a pseudo — established by parsing
-  `<style>` blocks, since a whole-file grep counts every
-  `querySelectorAll('.tab-btn')` as a CSS rule.
-- **Telemetry utilities**: `.trend.up`/`.down`/`.flat` badges, `.tbl-row.up`/
-  `.down` colouring, zebra striping, `.sparkline`. `.trend` sets
-  `justify-self:start` deliberately — `.tbl-row` is `display:grid`, and without
-  it a `.trend` child fills the implicit track. **Draw them through
-  `omega-sparkline.js`** (`data-omega-spark` + `data-spark-values`; per page, not
-  bg.js), never by hand: a badge asserts a direction, so it draws nothing below
-  two real readings and its 6 adopters exclude the open day/month — §8.1 class 9
-  in code, not memory.
+  growing from the tab centre. 40 pages own `.tab-btn` rules and win the cascade;
+  none owns a pseudo — established by parsing `<style>` blocks, since a whole-file
+  grep counts every `querySelectorAll('.tab-btn')` as a CSS rule.
+- **Telemetry utilities**: `.trend.up`/`.down`/`.flat`, `.tbl-row.up`/`.down`,
+  zebra striping, `.sparkline`. `.trend` sets `justify-self:start` deliberately —
+  `.tbl-row` is `display:grid`, and without it a `.trend` child fills the implicit
+  track. **Draw them through `omega-sparkline.js`** (`data-omega-spark`), never by
+  hand: a badge asserts a direction, so it draws nothing below two real readings
+  — §8.1 class 9 in code, not memory.
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
-  pages hand-rolled a gold `.btn` at the same (0,1,0) specificity and lost, this
-  sheet loading later: `account.html`'s CREATE ACCOUNT and `reset.html`'s SEND
-  RECOVERY LINK measured **1.01:1**, invisible to signed-out visitors, and
-  `mindmap.html`'s CREATE MAP exactly **1:1**. Use `.btn.btn-fill` (retint with
-  `--btn-fill`), never a page-local override. Ghost variants now set
-  `background:none` themselves — without it a `.btn-gold` lacking `.btn` kept the
-  browser's grey face (2.33:1, 8 pages).
+  pages hand-rolled a gold `.btn` at the same (0,1,0) specificity and lost:
+  `account.html`'s CREATE ACCOUNT and `reset.html`'s SEND RECOVERY LINK measured
+  **1.01:1**, invisible to signed-out visitors. Use `.btn.btn-fill` (retint with
+  `--btn-fill`), never a page-local override. Ghost variants set `background:none`
+  themselves — without it a `.btn-gold` lacking `.btn` kept the browser's grey
+  face (2.33:1, 8 pages).
 - **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button` with
   `:not([class])` get the `.inp`/`.btn` glass treatment; anything with a class or
   inline `style=` is untouched. Page-local table classes stay open work.
@@ -898,9 +899,9 @@ the same repositories:
 |---|---|---|
 | `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug on 173 pages. Which rules transfer is in `.claude/skills/interface-guidelines/SKILL.md` — read that, do not import the upstream list. |
 | `vercel-labs/skills` → `find-skills` | wrapper over `npx skills find/add` | **Not installed** — this session already has skill discovery. Its quality-gate criteria (adopted above) were the transferable part. |
-| `anthropics/claude-plugins-official` | official plugin directory, 39 plugins | **`claude-md-management` was the find** — its conciseness rubric is what prompted measuring CLAUDE.md at ~68,900 tokens per session, §8 being 88% (`FIXES_LOG.md` header). The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`/`code-review`/`pr-review-toolkit` duplicate this session. |
-| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex` and invite-gated, with no ad surface. Evaluated twice — do not re-evaluate unless what the platform is changes. |
-| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and that a description must say *when* to use the skill — what `grill-me-codex` was missing. |
+| `anthropics/claude-plugins-official` | official plugin directory, 39 plugins | **`claude-md-management` was the find** — its conciseness rubric prompted measuring CLAUDE.md at ~68,900 tokens/session, §8 being 88%. The rest target languages, React, or duplicate this session. |
+| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills | **0 applicable.** Built for public paid-acquisition funnels; this platform is `noindex`, invite-gated, no ad surface. Evaluated twice — do not re-evaluate. |
+| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted, nothing installed.** `template/SKILL.md` confirms `name`+`description` are the whole frontmatter contract and a description must say *when* to use the skill. |
 | `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
 | `affaan-m/everything-claude-code` (+ 4 forks) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
 | `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |

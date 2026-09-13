@@ -98,6 +98,31 @@ open, recorded in `FIXES_LOG.md`:
   three-panel studio shared by every scene — pairing it with (2) so each realm
   reflects its own palette is the next real step.
 
+- **The sidebar's hover labels overlap each other on every page** (opened 2026-09-13,
+  measured). On `cosmos.html` at 1400x900, a pairwise box test over `#omega-side`'s
+  33 leaf text nodes finds **107 overlapping pairs**: the section flyout labels
+  (`COMMAND`, `IDENTITY`, `ASCEND`, `COSMOS`, `UNIVERSE`, `VAULT`, ...) are all laid
+  out at roughly the same coordinates (x 60-166, y 43, each 34px tall) and extend
+  beyond the 80px rail. **Pre-existing and untouched**: the count is identical (107)
+  rendering `HEAD` and the working tree, so the Ω-ATLAS work did not cause it. It is
+  the most-seen element on all 202 pages, so it is the highest-value visual fix
+  outstanding — deliberately not bundled into `FIXES_LOG.md` 146's PR, because a nav
+  layout change is its own increment with its own verification.
+- **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
+  2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
+  `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned
+  `window.OmegaNav`, so the guard has always been falsy and that emblem-refresh path
+  has never run on any page — §8.1 class 4b. It surfaced because publishing a section
+  map under that name made the guard pass and the call throw on every page; the map
+  was renamed to `OmegaAxis` rather than silently satisfying half an interface. Either
+  implement `updateEmblems` on a real owner or delete the call — both are small, and
+  neither should be guessed at.
+- **`graph.html` and `map.html` throw on every load** (opened 2026-09-13, measured
+  before/after so not caused by that day's work): `d3.select is not a function` and
+  `L.map is not a function`. Both are the documented unvendored-library class
+  (`FIXES_LOG.md` 128, 130-132, 135-137) — the library never arrives, so none of the
+  page's own module code runs. Fix is to vendor d3 and Leaflet into `/vendor/` the way
+  the other seven were.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

@@ -18,6 +18,32 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **`vault.html` runs a second, stricter CSP than the rest of the platform, and
+  four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
+  137). `vault.html:5` is the **only** page in the repo carrying a
+  `Content-Security-Policy` `<meta>`; every other page is governed solely by
+  the single `vercel.json` header. Both apply and the **intersection** wins.
+  The `script-src` half of that divergence was refusing four platform
+  libraries outright (tippy, popper, marked, fuse) and is now fixed by
+  vendoring them — `/vendor/` is `'self'`, so it satisfies the strict meta
+  *and* the header without weakening either. **Still divergent, deliberately
+  left alone:** `img-src` loses `https:` (only `'self'`, `data:`, `blob:` and
+  Supabase load), `font-src` loses `data:`, `media-src` and `worker-src` lose
+  `blob:` (both absent from the meta, so they fall back to a `default-src`
+  without it), and `connect-src` loses `https:`/`wss:` (Supabase only).
+  Measured at **0 CSP violations** on vault after the vendoring, so none of
+  these breaks anything today — but each is a trap for the next change to that
+  page: a `blob:` object URL, a `data:` font, a canvas exported to an image, or
+  a fetch to any non-Supabase origin will fail there and nowhere else.
+  **Open rather than fixed because the divergence is in the *safe* direction.**
+  Quietly loosening the CSP on the page that holds financial data, to match a
+  policy that is merely more permissive, is an owner's security decision and
+  not one to make as a side effect of a graphics fix. The two real options are
+  (a) tighten `vercel.json` toward vault's policy platform-wide, or (b) drop
+  the meta and accept the header — and (a) is the one worth costing out, since
+  after this change nothing on the platform still needs `unpkg.com`, and
+  `cdn.jsdelivr.net` is needed only by the lazily-loaded `dayjs`/`hljs` pair.
+
 - **The bottom chrome stack was coordinated by hand-tuned pixel offsets — now
   measured** (opened and closed 2026-09-05; `FIXES_LOG.md` entries 87-88). Five
   modules anchor fixed bars and buttons to the bottom of the viewport, and the

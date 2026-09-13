@@ -12,18 +12,34 @@
    B. CHART.JS 4.x      — MIT. Lightweight chart library. Auth/lattice graphs.
       CDN: https://cdn.jsdelivr.net/npm/chart.js@4.5.1
       
-   C. FUSE.JS 7.x       — Apache 2.0. Fuzzy search. Enhances omega-search.js.
-      CDN: https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js
+   C. FUSE.JS 6.6.2     — Apache 2.0. Fuzzy search. Enhances omega-search.js.
+      Vendored: /vendor/fuse.min.js. NOTE THE VERSION: this used to request
+      fuse.js@7.5.0/dist/fuse.min.js, a file that DOES NOT EXIST in that
+      package — 7.x dropped the UMD build entirely (its `jsdelivr` field
+      points at dist/fuse.mjs, an ES module a classic <script> cannot take a
+      global from). So the request 404'd and `Fuse` was never defined.
+      6.6.2 is the last version shipping the UMD `Fuse` global this code is
+      written against, and it serves every API used here.
       
    D. DAYJS             — MIT. Tiny date/time library. Formats timestamps.
       CDN: https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
       
-   E. MARKED.JS         — MIT. Markdown renderer for chatbot/agent responses.
-      CDN: https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js
+   E. MARKED.JS 12.0.2  — MIT. Markdown renderer for chatbot/agent responses.
+      Vendored: /vendor/marked.min.js
       
    F. HIGHLIGHT.JS      — BSD. Code syntax highlighting. For lab/research pages.
       CDN: https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js
    
+   WHY SOME ARE VENDORED: a <script src> to a third-party CDN fails silently
+   here — load() handles s.onerror with console.warn only, so the callback
+   never fires and there is no rejected promise to notice. On top of that,
+   vault.html carries its own Content-Security-Policy <meta> whose script-src
+   omits cdn.jsdelivr.net and unpkg.com; a meta CSP is enforced ALONGSIDE the
+   vercel.json header and the intersection wins, so every jsdelivr/unpkg
+   library was refused outright on that page. /vendor/ is 'self' and
+   satisfies both policies, so vendoring fixes the CSP divergence without
+   weakening the stricter policy.
+
    Design: lazy-load each library only when first needed.
    Never block page load. Always provide fallbacks.
    ========================================================================== */
@@ -71,15 +87,20 @@
        ~208KB -- loaded lazily, so only the three pages that actually draw
        a chart (dashboard, analytics, studio) ever fetch it. */
     chartjs:   {url:'/vendor/chart.umd.min.js',global:'Chart'},
-    fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js',global:'Fuse'},
+    fuse:      {url:'/vendor/fuse.min.js',global:'Fuse'},
     dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js',global:'dayjs'},
     dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js',global:'dayjs'},
-    marked:    {url:'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js',global:'marked'},
+    marked:    {url:'/vendor/marked.min.js',global:'marked'},
     hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js',global:'hljs'},
-    /* Tippy.js — MIT. Lightweight tooltip/popover library (8KB gzip).
-       Requires @popperjs/core. Lazy-loaded pair: popper first, then tippy. */
-    popper:    {url:'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js',global:'Popper'},
-    tippy:     {url:'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js',global:'tippy'},
+    /* Tippy.js — MIT. Lightweight tooltip/popover library.
+       REQUIRES @popperjs/core, and not merely to position well: the UMD
+       bundle's global branch is `(t=t||self).tippy=e(t.Popper)`, so with no
+       Popper on window it throws "Cannot read properties of undefined
+       (reading 'applyStyles')" AT LOAD and never defines window.tippy at
+       all. Measured both ways in Chromium. Hence the ordered pair below:
+       popper first, then tippy — never tippy alone. */
+    popper:    {url:'/vendor/popper.min.js',global:'Popper'},
+    tippy:     {url:'/vendor/tippy-bundle.umd.min.js',global:'tippy'},
   };
 
   /* ── PUBLIC API ───────────────────────────────────────────────── */

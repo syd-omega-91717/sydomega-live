@@ -14681,3 +14681,140 @@ rest turns every future case into a silent no-op.* This one had a
 default-drop in the reporting layer, so a correct probe still reported
 nothing — and only a planted violation could reveal it, because the clean
 run looks identical either way.
+
+## 135 — every tooltip on the platform was dead, because Tippy was loaded without Popper
+
+`omega-tooltip.js:52` loaded Tippy alone:
+
+```js
+var TIPPY_CDN = 'https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js';
+```
+
+Tippy's UMD global branch is `(t=t||self).tippy=e(t.Popper)` — it calls its
+factory with `window.Popper`. With no Popper present the factory throws
+**while the script is executing**, so the global is never assigned. Measured
+in Chromium both ways, loading nothing but the two real files:
+
+| | `window.tippy` | tooltip box |
+|---|---|---|
+| Popper loaded first | `function` | renders, `textContent` = `"hello"` |
+| Tippy alone | **`undefined`** | `TypeError: window.tippy is not a function`; pageerror `Cannot read properties of undefined (reading 'applyStyles')` |
+
+So `sc.onload` fired (the file *did* arrive), `init()`'s `if (!window.tippy)
+return;` bailed, and nothing was said. **25 `[data-tooltip]` elements across 9
+pages**, on a module `bg.js:2231` injects into *every* page.
+
+**A second divergence made it worse.** `omega-oss.js` carried its *own* tippy
+entry — same library, **different CDN** (`cdn.jsdelivr.net` vs `unpkg.com`) —
+and that one *did* load Popper first. Two loaders for one library, and whether
+a tooltip worked came down to which raced first. §8.1 class 8 (two divergent
+copies of one canonical thing) in a new place.
+
+**Proved with the network removed as a variable.** The CDNs were routed to
+serve the *genuine vendored bytes*, so nothing failed for lack of reachability:
+
+```
+BEFORE: dashboard.html   [data-tooltip]: 11   tippy-initialised: 0
+        pageerror: TypeError: Cannot read properties of undefined (reading 'applyStyles')
+AFTER : dashboard.html   [data-tooltip]: 11   tippy-initialised: 11
+```
+
+`tippy` reads as `"function"` in that BEFORE line — omega-oss.js's ordered pair
+eventually won — but omega-tooltip.js had already thrown and emptied its
+callback queue, so zero tooltips were ever built. The race, made visible.
+
+Both loaders now load the same ordered pair from `/vendor/`, and
+`loadTippy()` checks `window.Popper` before appending Tippy, degrading to
+native `title=` tooltips rather than queueing callbacks that can never run.
+
+## 136 — `Fuse` was requested from a file that does not exist in the package
+
+`omega-oss.js` asked for:
+
+```
+https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js
+```
+
+**fuse.js@7.5.0 ships no such file.** `npm pack fuse.js@7.5.0` contains only
+`.cjs`/`.mjs` builds — 7.x dropped UMD entirely — and the package's own
+`jsdelivr` field points at `./dist/fuse.mjs`, an ES module a classic
+`<script src>` cannot take a global from either way:
+
+```
+main = "./dist/fuse.cjs"     jsdelivr = "./dist/fuse.mjs"
+find fuse.js-7.5.0 -name 'fuse*.js'   ->   (nothing)
+npm pack fuse.js@6.6.2  ->  package/dist/fuse.min.js   <- the UMD the code is written for
+```
+
+So the request 404'd and `window.Fuse` was never defined — measured
+`"Fuse":"undefined"` on a page with the CDN fully reachable. `omega-search.js`
+degraded to substring matching, permanently; `OmegaOSS.fuzzySearch()` took its
+`if(!Fuse)` fallback every time. Neither said anything: §8.1 class 1 by way of
+`load()`'s `console.warn`-only `onerror`.
+
+Vendored **6.6.2** — the last version shipping the UMD `Fuse` global — at
+`/vendor/fuse.min.js`. **Apache-2.0, not MIT** (the header comment said MIT for
+the family); notice preserved in the file. Every API the repo uses was
+exercised in a render: weighted `keys`, `threshold`, `includeScore`,
+`minMatchCharLength`, `.setCollection()`, and typo tolerance —
+`search('soveren')` → `"Sovereign Vault"`.
+
+## 137 — vault.html's own CSP refused four platform libraries, and only vault.html has one
+
+`vault.html:5` carries a `Content-Security-Policy` **`<meta>`** tag. It is the
+**only page in the repo that does** — every other page is governed solely by
+the single `vercel.json` header. A meta CSP is enforced *alongside* the header
+and the **intersection** wins, so vault.html silently ran a stricter policy
+than the platform it belongs to:
+
+| directive | header allows | vault meta | vault loses |
+|---|---|---|---|
+| `script-src` | `'self' 'unsafe-inline'` + jsdelivr, esm.sh, unpkg | `'self' 'unsafe-inline'` + esm.sh | **jsdelivr, unpkg** |
+| `img-src` | `'self' blob: data: https:` | `'self' blob: data:` + supabase | `https:` |
+| `font-src` | `'self' data:` + gstatic, jsdelivr | `'self'` + gstatic | `data:` |
+| `media-src` | `'self' blob: https:` | *(absent → default-src)* | `blob:`, `https:` |
+| `worker-src` | `'self' blob:` | *(absent → default-src)* | `blob:` |
+| `connect-src` | `'self' https: wss:` | `'self'` + supabase only | `https:`, `wss:` |
+
+Rendered, that cost four refusals on a page nothing else refuses them on:
+
+```
+vault.html      CSP violations: 5    dashboard.html  CSP violations: 0
+  script-src-elem | https://unpkg.com/tippy.js@6.3.7/...
+  script-src-elem | https://cdn.jsdelivr.net/npm/marked@12.0.2/...
+  script-src-elem | https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/...  (x2)
+  script-src-elem | https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/...
+globals BEFORE: {"tippy":"undefined","Popper":"undefined","marked":"undefined","Fuse":"undefined"}
+```
+
+Global search, copilot markdown rendering and every tooltip were dead on the
+Sovereign Vault specifically — the page holding financial data.
+
+**Fixed by vendoring, deliberately not by widening the policy.** `/vendor/` is
+`'self'`, which satisfies the strict meta *and* the header, so the page keeps
+its tighter posture:
+
+```
+AFTER  vault / dashboard / profile     CSP violations: 0 / 0 / 0
+       globals: {"tippy":"function","Popper":"object","marked":"object","Fuse":"function"}
+       tippy-initialised: 1 / 11 / 1   (of 1 / 11 / 1 [data-tooltip])
+```
+
+`npm pack` → `vendor/`: `popper.min.js` 20,122 B (MIT) ·
+`tippy-bundle.umd.min.js` 25,717 B (MIT) · `marked.min.js` 35,479 B (MIT) ·
+`fuse.min.js` 23,539 B (Apache-2.0). All four stay **lazy**.
+
+**The remaining divergences are left alone on purpose.** `img-src`,
+`media-src`, `worker-src` and `connect-src` are still narrower on vault.html,
+but they break nothing today (0 violations after the fix) and they are
+*tighter* — quietly loosening the CSP on the financial page to match the rest
+is not a call to make silently. Recorded in `GAP_ANALYSIS.md` §S instead.
+
+**And `scripts/vercel-build.sh` asserted one vendored file of eight.** Line 69
+hardcoded `public/vendor/supabase-js.js`, from when that was the only one;
+`vendor/*.js` is now 8 files, each fetched by a URL the static reference scan
+cannot always see (`omega-oss.js` builds its `<script src>` from a registry
+object). Replaced with a loop over `vendor/*.js`. Verified in isolation — with
+`public/vendor/marked.min.js` removed it exits 1 naming that file; the earlier
+whole-build plant proved nothing, because the *reference* scan caught that one
+first.

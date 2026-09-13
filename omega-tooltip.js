@@ -48,30 +48,63 @@
     (document.head || document.documentElement).appendChild(s);
   })();
 
-  /* ─── TIPPY LOADER ──────────────────────────────────────────────── */
-  var TIPPY_CDN = 'https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js';
+  /* ─── TIPPY LOADER ──────────────────────────────────────────────────
+     Tippy needs Popper BEFORE it, and not just to position nicely. The UMD
+     bundle's global branch is `(t=t||self).tippy=e(t.Popper)`: with no
+     Popper on window it throws "Cannot read properties of undefined
+     (reading 'applyStyles')" while executing and NEVER DEFINES
+     window.tippy. Measured in Chromium both ways — with Popper the box
+     renders its content; without it, window.tippy is undefined.
+
+     This module used to load tippy alone, from unpkg, so sc.onload fired
+     (the file did arrive), the `if (!window.tippy) return` guard below
+     bailed, and all 25 [data-tooltip] elements across 9 pages got nothing,
+     silently. A second divergence made it worse: omega-oss.js carried its
+     own tippy entry pointing at jsdelivr — two loaders, two CDNs, one
+     library, and whether a tooltip worked depended on which raced first.
+
+     Both now load the same ordered pair from /vendor/. Being 'self' that
+     also satisfies vault.html's stricter CSP <meta>, which omits unpkg and
+     jsdelivr and was refusing this script outright. */
+  var POPPER_SRC = '/vendor/popper.min.js';
+  var TIPPY_SRC  = '/vendor/tippy-bundle.umd.min.js';
   var _loaded = false, _queue = [];
+
+  function _script(src, onload, onerror) {
+    var sc = document.createElement('script');
+    sc.src = src;
+    sc.onload = onload;
+    sc.onerror = onerror;
+    (document.head || document.body || document.documentElement).appendChild(sc);
+  }
+
+  function _drain() {
+    for (var i = 0; i < _queue.length; i++) {
+      try { _queue[i](); } catch (e) {}
+    }
+    _queue = [];
+  }
 
   function loadTippy(cb) {
     if (window.tippy) { cb(); return; }
     if (_loaded) { _queue.push(cb); return; }
     _loaded = true;
     _queue.push(cb);
-    var sc = document.createElement('script');
-    sc.src = TIPPY_CDN;
-    sc.crossOrigin = 'anonymous';
-    sc.onload = function () {
-      for (var i = 0; i < _queue.length; i++) {
-        try { _queue[i](); } catch (e) {}
-      }
-      _queue = [];
-    };
-    sc.onerror = function () {
-      /* CDN failed — fall back to native title-based tooltips (already
-         in HTML as title="" when applicable). Graceful degradation. */
-      _queue = [];
-    };
-    (document.head || document.body || document.documentElement).appendChild(sc);
+
+    /* Popper may already be on the page — omega-oss.js loads the same file
+       for its own tooltip helper, and a second <script> for it would be
+       wasted work, so reuse it. */
+    function thenTippy() {
+      /* Tippy's factory reads window.Popper as it executes. If Popper did
+         not actually arrive, loading tippy would throw and leave
+         window.tippy undefined — so degrade to native title= tooltips
+         rather than queue callbacks that can never run. */
+      if (!window.Popper) { _queue = []; return; }
+      _script(TIPPY_SRC, _drain, function () { _queue = []; });
+    }
+
+    if (window.Popper) thenTippy();
+    else _script(POPPER_SRC, thenTippy, function () { _queue = []; });
   }
 
   /* ─── INIT / RE-SCAN ────────────────────────────────────────────── */

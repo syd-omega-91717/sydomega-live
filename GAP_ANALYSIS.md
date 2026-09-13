@@ -18,6 +18,24 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **The concept art and the canon disagree in three places now** (opened
+  2026-09-13; `FIXES_LOG.md` 139, 141). Not a bug — a **decision the owner has
+  not made yet**, and every visual built from the art rather than the data
+  inherits it:
+  | subject | the concept art | the repository's canon |
+  |---|---|---|
+  | gates | "NINE GATES" | **12** (`tracks[].gate`, `gate_names`, `gate_thresholds`; `gates.html` "12 gates") |
+  | elements | 6, Greek/Egyptian gods (Enki, Geb, Vayu, Thoth, Ptah) | **9** in 3 tiers (FIRE WATER WIND METAL SAND / SOUL SPACE VOID / THE NINTH) — none of those god names appears anywhere |
+  | ascension | "9 STAGES" (Initiate, Seeker, Apprentice, Adept, Expert, Master, Sovereign, Legend, Omega) | **12 tiers** (Initiate … Ascendant), which `tierUnlocks()` actually grants against |
+  Every 3-D scene reads the **canon**, via its owning module, so the art is
+  never the source of a figure a member sees. If the owner decides the art is
+  right, the canon files change and the scenes follow with no code edit. If the
+  canon is right, the art is a mood board and should stop being read as a spec.
+  **Until that is settled, treat any count in the art as unverified.** Two
+  smaller seams inside the canon itself: the ninth element is `THE NINTH` in
+  `omega-elements.json` and `'The All'` in `ELEM_PALETTE`; and three different
+  twelve-gate name sets exist (see the entry above).
+
 - **Two divergent sets of twelve gate names** (opened 2026-09-13; `FIXES_LOG.md`
   139). The count is settled and agreed everywhere — **twelve** (`omega-canon.json`
   `tracks[].gate`, `gate_names` and `gate_thresholds` are each 12; `nav.js` says

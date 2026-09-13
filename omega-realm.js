@@ -390,7 +390,16 @@ window.OmegaRealm={
   unmount:unmount,
   setElement:setElement,
   isActive:function(){return _mounted;},
-  drawFallback:drawFallback
+  drawFallback:drawFallback,
+  /* PUBLISHED so nothing has to copy it. ELEM_PALETTE is the platform's
+     canonical per-element colour table and it lived private to this IIFE, so
+     the only way for another module to draw an element in its own colour was
+     to duplicate the nine values -- CLAUDE.md 8.1 class 8, a second copy that
+     drifts. omega-sculpture.js's `elements` scene reads it from here instead.
+     bg.js:2269 injects this module on every page, so the accessor is present
+     wherever the sculpture layer is. */
+  palette:ELEM_PALETTE,
+  elementKeys:function(){return Object.keys(ELEM_PALETTE);}
 };
 
 /* ── Hook into profile load ── */

@@ -15072,3 +15072,94 @@ entry 139's explanation of why it was wrong — and **0 times in the rendered DO
 Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime` PASS
 on all 13 entrypoints, accessible names read back in a render for all five
 mounts.
+
+## 141 — the sculpture layer grows three ways, and the concept art diverges from the canon twice more
+
+Driven by the project's own concept art, which specifies far more than was
+built: a five-state logo system, an ascension tower, an element wheel. Two of
+the three could be built as drawn. **One could not**, and finding out why is the
+substance of this entry.
+
+### The art's elements are not this platform's elements
+
+The art labels six: *Water Enki, Fire Hephaestus, Earth Geb, Air Vayu, Aether
+Thoth, Sand Ptah*. Measured against the repository:
+
+```
+for n in Earth Air Aether Enki Geb Vayu Thoth Ptah; do grep -c "\"$n\"" omega-elements.json omega-canon.json
+  Earth 0   Air 0   Aether 0   Enki 0   Geb 0   Vayu 0   Thoth 0   Ptah 0
+```
+
+Zero. The canon has **nine**, in three tiers (`omega-elements.json`):
+
+| tier | elements |
+|---|---|
+| PHYSICAL | FIRE · WATER · WIND · METAL · SAND |
+| METAPHYSICAL | SOUL · SPACE · VOID |
+| TRANSCENDENT | THE NINTH |
+
+No Earth, no Air, no Aether; WIND not Air, METAL not Earth. Building the art's
+set would have invented a canon — the identical mistake entry 139 corrected for
+the gates, three weeks of concept art later. **The art is the brief; the canon
+is the fact.** The `elements` scene renders the nine, and the *tiers are the
+composition*: five on an outer orbit, three on a smaller higher one, the ninth
+alone at the apex with a hairline from every other element converging on it.
+
+### The art's "9 STAGES ASCENSION" is twelve tiers
+
+`omega-canon.json` `tiers` is **12** — Initiate, Seeker, Adept, Warden,
+Vanguard, Architect, Sovereign, Luminary, Radiant, Unyielding, Transcendent,
+Ascendant — and `omega-canon.js` exposes `tier(n)`. The art draws nine, with
+different names again. Twelve is what the platform actually grants against, so
+the `ascension` scene is a twelve-ring tower, narrowing as it rises, read live
+from `OmegaCanon`. Verified in a render: the twelve anchors come back
+`Initiate … Ascendant` from the canon, not from the fallback.
+
+**It claims nothing about the member.** The art draws a *filled* progress tower;
+`.claude/skills/omega-cinematic-system/SKILL.md` is explicit that ascension
+progress must be tied to real data and never invented, and this module has no
+access to a member's tier. So it renders the structure — all twelve, equally
+lit — rather than a level it cannot support. Wiring a real tier is a follow-up,
+not a guess (§8.1 class 9).
+
+### The palette was published rather than copied
+
+The `elements` scene needs each element's real colour. `ELEM_PALETTE` — nine
+entries — was **private to `omega-realm.js`'s IIFE**, so the only way to draw an
+element in its own colour was to duplicate the table: §8.1 class 8, a second
+copy that drifts. Instead the owner now publishes it (`OmegaRealm.palette`), and
+`bg.js:2269` injects that module on *every* page, so the accessor is present
+wherever the sculpture layer is. Confirmed in a render: `typeof
+OmegaRealm.palette === 'object'`.
+
+One seam recorded rather than reconciled: `omega-elements.json` names the ninth
+element **THE NINTH**; `ELEM_PALETTE` keys it **'The All'**. One thing, two
+names; the crossing happens in exactly one place.
+
+### The signet gained the five states its own logo sheet specifies
+
+IDLE / PULSE / REACTOR / CUBE / SEAL, as `data-sculpt-state`. One mark, five
+behaviours — not five marks. SEAL narrows the sway from ±32° to ±9°, because a
+seal faces you. CUBE and SEAL reveal a 3×3×3 shell around the mark (readable at
+mark scale, where 9×9×9 is mush). Default stays `idle`: the only state
+appropriate to a page the member did not ask to be impressed by. **No state
+asserts a number.**
+
+### Verification, including a coincidence that had to be ruled out
+
+```
+11 mounts, 0 page errors
+elements   9 anchors: FIRE WATER WIND METAL SAND SOUL SPACE VOID THE NINTH   (live)
+ascension 12 anchors: Initiate … Ascendant                                   (live)
+46 real anchors total
+```
+
+`elements` and `ascension` both measured **lit 59.6%**, and all four signet
+states **79.9%** — identical to the decimal, which is exactly the shape of a
+shared-blit bug where every mount shows the same image. Ruled out by
+fingerprinting each canvas's actual pixels: **11 distinct of 11**. The lit
+metric is dominated by the halo, so equal values were a coincidence of a crude
+measure, not duplicated content. Identical numbers get checked, not accepted.
+
+Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime`
+PASS on all 13 entrypoints, registry regenerated, `context-budget` PASS.

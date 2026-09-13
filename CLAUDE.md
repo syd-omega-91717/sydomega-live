@@ -145,13 +145,14 @@ and Fuse each read as silently dead until vendored (`FIXES_LOG.md` 128, 130-132,
 
 **The 3-D layer is `omega-sculpture.js`** — real-time geometry on the vendored
 three.js, which drove one sphere before it. One attribute mounts it:
-`data-omega-sculpture="signet|agents|matrix|gates"`; `sculpture.html` shows them
-(`forge.html` is unrelated — FORGE TRIALS).
-ONE WebGL context per page, blitted into each mount's own canvas (a single
-fixed canvas cannot work here — read the module header first).
-bg.js injects it only where a mount exists, so no other page pays the 670KB.
-Reduced motion gets one still frame, absent WebGL a flat 2-D fallback
-(`FIXES_LOG.md` 138).
+`data-omega-sculpture="signet|agents|matrix|gates|elements|ascension"` (signet
+also takes `data-sculpt-state`: idle/pulse/reactor/cube/seal); `sculpture.html`
+shows them; `forge.html` is unrelated (FORGE TRIALS). Scenes read canon from its
+owners (`OmegaCanon`, `OmegaRealm.palette`), never a copy.
+ONE WebGL context per page, blitted into each mount's own canvas (a single fixed
+canvas cannot work here — read the module header first). bg.js injects it only
+where a mount exists, so no other page pays the 670KB. Reduced motion gets one
+still frame, absent WebGL a flat 2-D fallback (`FIXES_LOG.md` 138).
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -270,24 +271,21 @@ through this one file with no per-page markup changes:
   `background:none` themselves — without it a `.btn-gold` lacking `.btn` kept the
   browser's grey face (2.33:1, 8 pages).
 - **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button` with
-  `:not([class])` get the `.inp`/`.btn` glass treatment, so anything with a
-  page-local class or inline `style=` is untouched — chosen after finding ~380
-  bare `<input>`s. Page-local table classes stay open work.
+  `:not([class])` get the `.inp`/`.btn` glass treatment; anything with a class or
+  inline `style=` is untouched. Page-local table classes stay open work.
 - **Brand webfonts now actually load.** `--D`/`--R`/`--M` named three faces that
   nothing ever loaded — no `@font-face`, no files, no links — so every page
   rendered in browser defaults. `bg.js` injects the Google Fonts `<link>` +
   `preconnect` once per page, guarded by `#omega-fonts`.
 - **Ambient noise overlay**: a fixed `pointer-events:none`
   `<div id="omega-noise-overlay">` from bg.js — a real element, not a
-  `body::before`: 5 pages define their own and would collide.
+  `body::before`: 5 pages define their own.
 - **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
   `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
   It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
-  size is a geometric constraint, not a taste — read its header. `cosmos.html`
-  has its own agent wheel.
+  size is a geometric constraint — read its header. `cosmos.html` has its own.
 - **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear
-  infinite`, static under `prefers-reduced-motion`. Deliberate on emblem marks;
-  currently only `#ph-sigil` on `profile.html`.
+  infinite`, static under `prefers-reduced-motion`; only `#ph-sigil` today.
 - **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED almost nowhere**
   (bg.js, `#omega-cinematic-css`): its 4 rules sit in every cascade yet match
   **0/0/0/0** elements on `dashboard`/`profile` and 1/1/6/0 on `index`, so the

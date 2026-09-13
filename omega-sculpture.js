@@ -250,6 +250,81 @@
     } catch (e) { /* fallback already in place */ }
   }
 
+  /* THE NINE ELEMENTS, read from the two modules that own them.
+
+     omega-elements.json carries the names and the three-tier grouping;
+     window.OmegaRealm.palette carries the colours (published by omega-realm.js
+     rather than copied -- see that file). Both are the platform's own.
+
+     WHAT THIS SCENE DELIBERATELY DOES NOT DRAW: the project's concept art
+     shows "Water Enki / Fire Hephaestus / Earth Geb / Air Vayu / Aether Thoth
+     / Sand Ptah". Measured against the repository, Earth, Air, Aether, Enki,
+     Geb, Vayu, Thoth and Ptah appear ZERO times in omega-elements.json or
+     omega-canon.json. The canon has NINE: Fire, Water, Wind, Metal, Sand,
+     Soul, Space, Void and The Ninth, in three tiers. Drawing the art's set
+     would invent a canon this platform does not have -- the same mistake the
+     gate corridor made (FIXES_LOG 139). The art is the brief; the canon is
+     the fact. */
+  var ELEMENT_FALLBACK = [
+    { n:1, name:'FIRE',      tier:'PHYSICAL',      key:'Fire'    },
+    { n:2, name:'WATER',     tier:'PHYSICAL',      key:'Water'   },
+    { n:3, name:'WIND',      tier:'PHYSICAL',      key:'Wind'    },
+    { n:4, name:'METAL',     tier:'PHYSICAL',      key:'Metal'   },
+    { n:5, name:'SAND',      tier:'PHYSICAL',      key:'Sand'    },
+    { n:6, name:'SOUL',      tier:'METAPHYSICAL',  key:'Soul'    },
+    { n:7, name:'SPACE',     tier:'METAPHYSICAL',  key:'Space'   },
+    { n:8, name:'VOID',      tier:'METAPHYSICAL',  key:'Void'    },
+    { n:9, name:'THE NINTH', tier:'TRANSCENDENT',  key:'The All' }
+  ];
+
+  /* omega-elements.json names the ninth element "THE NINTH"; ELEM_PALETTE
+     keys it "The All". One thing, two names -- recorded, not silently
+     reconciled. The map below is the only place that seam is crossed. */
+  function elementColour(key, fallbackHex) {
+    try {
+      var pal = window.OmegaRealm && window.OmegaRealm.palette;
+      var e = pal && pal[key];
+      if (e && /^#[0-9a-f]{6}$/i.test(e.core)) return parseInt(e.core.slice(1), 16);
+    } catch (e) {}
+    return parseInt(fallbackHex.slice(1), 16);
+  }
+
+  function canonElements(cb) {
+    fetch('/omega-elements.json').then(function (r) { return r.json(); })
+      .then(function (j) {
+        var list = j && (j.elements || j);
+        if (Array.isArray(list) && list.length >= 9) {
+          cb(list.slice(0, 9).map(function (e, i) {
+            return { name: e.name || ELEMENT_FALLBACK[i].name,
+                     tier: e.tier || ELEMENT_FALLBACK[i].tier,
+                     key:  ELEMENT_FALLBACK[i].key };
+          }));
+        }
+      })['catch'](function () { /* fallback already in place */ });
+  }
+
+  /* THE TWELVE TIERS, from window.OmegaCanon. The concept art labels an
+     ascension as "9 STAGES"; omega-canon.json's `tiers` is TWELVE (Initiate ..
+     Ascendant) and omega-canon.js exposes tier(n). Twelve is what the platform
+     actually grants against, so twelve is what is built. */
+  var TIER_FALLBACK = ['Initiate','Seeker','Adept','Warden','Vanguard','Architect',
+    'Sovereign','Luminary','Radiant','Unyielding','Transcendent','Ascendant'];
+
+  function canonTiers(cb) {
+    try {
+      var C = window.OmegaCanon;
+      if (!C || typeof C.onReady !== 'function') return;
+      C.onReady(function (api) {
+        var out = [];
+        for (var i = 1; i <= 12; i++) {
+          var t = typeof api.tier === 'function' ? api.tier(i) : null;
+          if (t && t.name) out.push(t.name);
+        }
+        if (out.length) cb(out);
+      });
+    } catch (e) {}
+  }
+
   /* ══════════════════════════════════════════════════════════════════════
      THE SCENES
      ══════════════════════════════════════════════════════════════════════ */
@@ -285,7 +360,65 @@
     orbit.rotation.x = Math.PI * 0.42;
     scene.add(orbit);
 
+    /* ── THE FIVE STATES ──────────────────────────────────────────────
+       The project's logo sheet specifies the mark's animation states:
+       IDLE (rotate & glow) / PULSE (energy pulse) / REACTOR (core energy) /
+       CUBE (9x9x9 reveal) / SEAL (ultimate state). They are built here as
+       exactly that -- one mark, five behaviours -- rather than five marks.
+
+       Choose with data-sculpt-state="idle|pulse|reactor|cube|seal".
+       Default is idle, which is the only one appropriate to a page the
+       member did not ask to be impressed by. The state changes what the
+       mark DOES, never what it claims: none of them asserts a number. */
+    var lattice = new T.Group();
+    (function buildLattice() {
+      var S = 3, GAP = 0.62, half = (S - 1) / 2;   /* 3x3x3 shell, readable at mark scale */
+      var geo = new T.OctahedronGeometry(0.035, 0);
+      var mat = new T.MeshStandardMaterial({ color: p.cyan, emissive: p.cyan,
+        emissiveIntensity: 0.6, metalness: 0.7, roughness: 0.3 });
+      for (var x = 0; x < S; x++) for (var y = 0; y < S; y++) for (var z = 0; z < S; z++) {
+        if (x === 1 && y === 1 && z === 1) continue;       /* the mark occupies the centre */
+        var n = new T.Mesh(geo, mat);
+        n.position.set((x - half) * GAP, (y - half) * GAP, (z - half) * GAP);
+        lattice.add(n);
+      }
+      lattice.visible = false;
+      scene.add(lattice);
+    })();
+
+    var seal = new T.Mesh(
+      new T.TorusGeometry(1.42, 0.022, 10, 12),      /* 12 segments: the twelve */
+      new T.MeshStandardMaterial({ color: p.bright, emissive: p.bright,
+        emissiveIntensity: 0.55, metalness: 1, roughness: 0.12 }));
+    seal.visible = false;
+    scene.add(seal);
+
+    var state = (opt && opt.state) || 'idle';
+    if (state === 'cube') lattice.visible = true;
+    if (state === 'seal') { seal.visible = true; lattice.visible = true; }
+
     return { scene: scene, camera: cam, update: function (t, px, py) {
+      /* state-specific behaviour, applied before the shared sway */
+      if (state === 'pulse') {
+        var b = 1 + Math.sin(t * 2.4) * 0.055;
+        mark.scale.setScalar(b);
+        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * 0.06;
+      } else if (state === 'reactor') {
+        orbit.rotation.z = t * 1.6;
+        orbit.rotation.x = Math.PI * 0.42 + Math.sin(t * 0.8) * 0.35;
+        halo.material.opacity = 0.16 + Math.sin(t * 5.2) * 0.07;
+        halo.scale.setScalar(1 + Math.sin(t * 5.2) * 0.05);
+      } else if (state === 'cube') {
+        lattice.rotation.y = -t * 0.34;
+        lattice.rotation.x = Math.sin(t * 0.4) * 0.22;
+        lattice.scale.setScalar(1 + Math.sin(t * 1.1) * 0.04);
+      } else if (state === 'seal') {
+        lattice.rotation.y = -t * 0.2;
+        seal.rotation.z = t * 0.12;
+        seal.material.emissiveIntensity = 0.5 + Math.sin(t * 1.6) * 0.22;
+        halo.material.opacity = 0.14 + Math.sin(t * 1.2) * 0.04;
+      }
+
       /* A SWAY, NOT A SPIN. The first version ran mark.rotation.y = t * 0.42,
          a continuous turn -- which carries the mark through edge-on twice a
          cycle, where an extruded Omega reads as a plain gold slab. On the
@@ -294,7 +427,8 @@
          dimensional and lit from changing angles while never leaving it
          unreadable. The pointer adds to the sway rather than replacing it,
          so it still answers the cursor. */
-      mark.rotation.y = Math.sin(t * 0.33) * 0.56 + px * 0.42;
+      var swayAmp = state === 'seal' ? 0.16 : 0.56;   /* a seal faces you */
+      mark.rotation.y = Math.sin(t * 0.33) * swayAmp + px * (state === 'seal' ? 0.14 : 0.42);
       mark.rotation.x = Math.sin(t * 0.31) * 0.14 - py * 0.34;
       halo.rotation.z = -t * 0.16;
       halo.material.opacity = 0.085 + Math.sin(t * 0.9) * 0.030;
@@ -302,6 +436,161 @@
       cam.position.x = px * 0.34;
       cam.position.y = -py * 0.26;
       cam.lookAt(0, 0, 0);
+    }};
+  };
+
+  /* ── ELEMENTS ─────────────────────────────────────────────────────────
+     The nine, arranged as the canon groups them rather than as a flat ring:
+     PHYSICAL (5) on the outer orbit, METAPHYSICAL (3) on a smaller, higher
+     one, TRANSCENDENT (1) alone at the apex. The tiers ARE the composition --
+     a member can see the shape of the system before reading a single word. */
+  SCENES.elements = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(44, 1, 0.1, 100);
+    cam.position.set(0, 1.7, 5.7);
+    rig(T, scene, p);
+    starfield(T, scene, 240, 20, p.cyan);
+
+    var grp = new T.Group();
+    scene.add(grp);
+
+    var RING = { PHYSICAL: { r: 2.65, y: -0.55 },
+                 METAPHYSICAL: { r: 1.45, y: 0.65 },
+                 TRANSCENDENT: { r: 0.0,  y: 1.85 } };
+    var FB_HEX = ['#FF6B35','#00E5FF','#E0E0E0','#E2C86D','#FFD54F',
+                  '#CE93D8','#00E5FF','#334466','#E2C86D'];
+
+    var nodes = [], links = [], linePos = [];
+    var byTier = { PHYSICAL: 0, METAPHYSICAL: 0, TRANSCENDENT: 0 };
+    var count  = { PHYSICAL: 5, METAPHYSICAL: 3, TRANSCENDENT: 1 };
+
+    ELEMENT_FALLBACK.forEach(function (el, i) {
+      var ring = RING[el.tier] || RING.PHYSICAL;
+      var idx = byTier[el.tier]++, total = count[el.tier] || 1;
+      var a = (idx / total) * Math.PI * 2;
+      var x = Math.cos(a) * ring.r, z = Math.sin(a) * ring.r, y = ring.y;
+      var col = elementColour(el.key, FB_HEX[i]);
+
+      var m = new T.Mesh(
+        new T.IcosahedronGeometry(el.tier === 'TRANSCENDENT' ? 0.42 : 0.24, 0),
+        new T.MeshStandardMaterial({ color: col, emissive: col,
+          emissiveIntensity: el.tier === 'TRANSCENDENT' ? 0.75 : 0.45,
+          metalness: 0.88, roughness: 0.24 }));
+      m.position.set(x, y, z);
+      grp.add(m);
+      nodes.push({ mesh: m, phase: a + i, tier: el.tier });
+      links.push({ object: m, href: '/elements.html', label: el.name });
+      /* a hairline from every element to the apex: the ninth is what the
+         other eight resolve into, and the geometry should say so */
+      if (el.tier !== 'TRANSCENDENT') {
+        linePos.push(x, y, z, 0, RING.TRANSCENDENT.y, 0);
+      }
+    });
+
+    var lg = new T.BufferGeometry();
+    lg.setAttribute('position', new T.BufferAttribute(new Float32Array(linePos), 3));
+    grp.add(new T.LineSegments(lg, new T.LineBasicMaterial({
+      color: p.gold, transparent: true, opacity: 0.18 })));
+
+    [RING.PHYSICAL, RING.METAPHYSICAL].forEach(function (r) {
+      var band = new T.Mesh(new T.TorusGeometry(r.r, 0.005, 8, 180),
+        new T.MeshBasicMaterial({ color: p.gold, transparent: true, opacity: 0.28 }));
+      band.rotation.x = Math.PI / 2; band.position.y = r.y;
+      grp.add(band);
+    });
+
+    canonElements(function (list) {
+      for (var i = 0; i < links.length && i < list.length; i++) links[i].label = list[i].name;
+    });
+
+    return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
+      grp.rotation.y = t * 0.16 + px * 0.5;
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        n.mesh.rotation.y = t * 0.6 + n.phase;
+        n.mesh.rotation.x = t * 0.35;
+        if (!n.mesh.userData.omegaHovered) {
+          n.mesh.scale.setScalar(1 + Math.sin(t * 1.3 + n.phase) * 0.10);
+        }
+      }
+      cam.position.y = 1.7 - py * 0.7;
+      cam.lookAt(0, 0.5, 0);
+    }};
+  };
+
+  /* ── ASCENSION ────────────────────────────────────────────────────────
+     The twelve tiers as a tower you climb, not a list you scroll. Each ring
+     is one tier, widest at Initiate and tightest at Ascendant, so the climb
+     reads as a narrowing.
+
+     IT CLAIMS NOTHING ABOUT THE MEMBER. The concept art draws a filled
+     progress tower; the cinematic-system skill is explicit that ascension
+     progress must be tied to real data and never invented, and this module
+     has no access to a member's tier. So the tower renders the STRUCTURE --
+     all twelve, equally lit -- rather than a progress level it cannot
+     support. FIXES_LOG 139's lesson: the art is the brief, the data is the
+     fact. Wiring a real tier is a follow-up, not a guess. */
+  SCENES.ascension = function (T, opt) {
+    var p = palette();
+    var N = 12, STEP = 0.46;
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(42, 1, 0.1, 100);
+    cam.position.set(0, 0.5, 8.6);
+    rig(T, scene, p);
+    starfield(T, scene, 260, 22, p.cyan);
+
+    var tower = new T.Group();
+    scene.add(tower);
+
+    var rings = [], links = [];
+    var gold = new T.Color(p.gold), bright = new T.Color(p.bright);
+    for (var i = 0; i < N; i++) {
+      var k = i / (N - 1);
+      var rad = 1.55 - k * 0.95;                 /* narrows as it rises */
+      var col = gold.clone().lerp(bright, k);
+      var ring = new T.Mesh(
+        new T.TorusGeometry(rad, 0.028, 10, 80),
+        new T.MeshStandardMaterial({ color: col, emissive: col,
+          emissiveIntensity: 0.22 + k * 0.45, metalness: 0.94, roughness: 0.22 }));
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = -((N - 1) * STEP) / 2 + i * STEP;
+      tower.add(ring);
+      rings.push({ mesh: ring, i: i });
+      links.push({ object: ring, href: '/ascension.html', label: TIER_FALLBACK[i] });
+    }
+
+    var apex = new T.Mesh(
+      new T.OctahedronGeometry(0.30, 0),
+      new T.MeshStandardMaterial({ color: p.bright, emissive: p.bright,
+        emissiveIntensity: 0.95, metalness: 1, roughness: 0.06 }));
+    apex.position.y = -((N - 1) * STEP) / 2 + N * STEP + 0.12;
+    scene.add(apex);
+
+    var spine = new T.Mesh(
+      new T.CylinderGeometry(0.012, 0.012, (N - 1) * STEP + 0.9, 8),
+      new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.30 }));
+    spine.position.y = apex.position.y - ((N - 1) * STEP + 0.9) / 2 + 0.12;
+    scene.add(spine);
+
+    canonTiers(function (names) {
+      for (var i = 0; i < links.length && i < names.length; i++) links[i].label = names[i];
+    });
+
+    return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
+      tower.rotation.y = t * 0.22 + px * 0.55;
+      for (var i = 0; i < rings.length; i++) {
+        var r = rings[i];
+        /* a slow rise of light up the tower -- a climb, expressed as motion */
+        var wave = Math.sin(t * 0.9 - r.i * 0.42);
+        r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16;
+        if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018);
+      }
+      apex.rotation.y = t * 1.0;
+      apex.rotation.x = t * 0.6;
+      apex.material.emissiveIntensity = 0.85 + Math.sin(t * 2.2) * 0.28;
+      cam.position.y = 0.5 - py * 0.9;
+      cam.lookAt(0, 0.45, 0);
     }};
   };
 
@@ -793,7 +1082,10 @@
     cv.style.cssText = 'display:block;width:100%;height:' + h + ';border-radius:inherit';
     el.appendChild(cv);
 
-    var m = { el: el, canvas: cv, kind: kind, accent: accent, visible: false,
+    var stAttr = (el.getAttribute('data-sculpt-state') || 'idle').trim().toLowerCase();
+    if (['idle','pulse','reactor','cube','seal'].indexOf(stAttr) === -1) stAttr = 'idle';
+
+    var m = { el: el, canvas: cv, kind: kind, accent: accent, state: stAttr, visible: false,
               dead: false, scene: null, ctx: null, w: 0, h: 0, bw: 0, bh: 0,
               offset: Math.random() * 40 };
     _mounts.push(m);
@@ -813,7 +1105,7 @@
 
     loadThree().then(function (T) {
       ensureRenderer(T);
-      m.scene = SCENES[kind](T, { accent: accent });
+      m.scene = SCENES[kind](T, { accent: accent, state: m.state });
       sizeMount(m);
       wireNavigation(m);
       if (REDUCED) { renderStill(m); return; }
@@ -1025,7 +1317,7 @@
     /* Report, for the runtime harness and for anyone debugging a page. */
     status: function () {
       return _mounts.map(function (m) {
-        return { kind: m.kind, live: !!m.scene && !m.dead, fallback: m.dead,
+        return { kind: m.kind, state: m.state, live: !!m.scene && !m.dead, fallback: m.dead,
                  visible: m.visible, buffer: m.bw + 'x' + m.bh, box: m.w + 'x' + m.h,
                  links: (m.scene && m.scene.links) ? m.scene.links.length : 0,
                  hover: m.hover ? m.hover.label : null };

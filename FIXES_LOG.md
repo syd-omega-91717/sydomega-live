@@ -15293,3 +15293,120 @@ before/after here is worth what its noise floor allows, which is often nothing.
 Verified: `./scripts/ci-local.sh` **23/23 gated on exit code**,
 `verify-runtime` **PASS (13 pages)**, registry regenerated, `context-budget`
 PASS.
+
+## 145 — The accessibility sheet was switching off the platform's own cinematic layers
+
+`omega-accessibility-audit.css:397` carried, under the comment *"Properly hide
+decorative elements"*:
+
+```css
+[aria-hidden="true"] { display: none; }
+```
+
+That is an inversion. `aria-hidden="true"` already means "keep this visible,
+but do not announce it" — it is the standard marking for a decorative graphic.
+Adding `display:none` removes the element for *everyone*, which is the opposite
+of what the attribute is for and of what the comment intended.
+
+Measured in a render before removal, on six representative pages: **60 of 60**
+elements carrying `aria-hidden="true"` computed to `display:none`. Not a
+subset — every one. Among them, on every page:
+
+```
+canvas                      (the particle engine)
+div.omega-cinematic-layer
+div.omega-visual-rail
+```
+
+and on `index.html`, **31** elements including `span.ohz-brand-mark`, three
+`span.ohz-arrow`, `span.ohz-slab-mark` and `span.ohz-slab-rule`.
+
+So the platform's own ambient and cinematic layers — the ones `CLAUDE.md` §4
+documents as features, several of them vendored at real cost (`FIXES_LOG.md`
+128, 130-132) — were being switched off by its accessibility stylesheet. This
+is a large part of why the estate read as flat.
+
+**Found by accident, which is the point.** A new decorative SVG was marked
+`aria-hidden="true"` (correct practice) and did not paint. Its box measured a
+correct 92×92 with 16 valid child shapes, and `getComputedStyle` reported
+`display:none` — so the rule was found by asking the cascade *which sheet sets
+this*, not by reading source. A grep for `aria-hidden` in the HTML finds 27
+static occurrences in 2 files and would have badly understated it: the elements
+that matter are injected at runtime.
+
+Removed. Anything that must be invisible to everyone uses `.sr-only` (defined
+directly below it in the same file), the `hidden` attribute, or its own rule.
+Verified after: the same six pages render with those layers painting, `0` page
+errors, no horizontal overflow, and nav overlap counts identical before and
+after (107 on `cosmos.html` both ways — a pre-existing defect, untouched).
+
+## 146 — Ω-ATLAS: 200 of 202 pages had no identity at all
+
+Measured before writing anything: `data-omega-sculpture` appeared on **2** of
+202 pages, `data-omega-emblem` on 2, and `grep -c 'page-accent\|--axis' bg.js`
+returned **0**. Every page opened in the same palette with the same furniture;
+nothing told a member which part of the platform they were standing in. 164 of
+202 pages had no `<h1>`.
+
+`nav.js` already held the answer and kept it private: `PS` maps every page slug
+to a nav section and `SECTIONS` gives each section a colour. It is now
+published (`window.OmegaAxis`) and **read** by `omega-identity.js` rather than
+copied — a second copy of that table is §8.1 class 8, the class that once
+assigned the wrong god and agent to 9 of 12 signs.
+
+Every page now gets `--page-accent` / `--page-accent-soft` / `--page-accent-glow`
+and `data-omega-axis`, and — where it has a content column and no hero of its
+own — a header with an eyebrow, the page name in display type, a rule that
+draws itself, and a **procedural sigil**: concentric broken arcs, seeded
+spokes, an inner polygon and the Ω, generated from a 32-bit hash of the page
+slug through mulberry32. No asset, no request, no CSP question.
+
+Verified across the whole estate:
+
+```
+pages            : 202   probe errors: 0
+axis published   : 202 / 202
+hero + sigil     : 167          (the other 35 keep their own hero, or have
+                                 no content column -- both by design)
+hero < 420px wide: 0
+axis spread      : 15 sections
+```
+
+and the generator proven directly, feeding it all 202 real slugs in one page
+so no redirect could stand in for a page: **202 distinct of 202, 0 collisions,
+60 distinct shape signatures**, and identical output on three regenerations of
+the same slug.
+
+**Four things this got wrong first, each caught by a measurement:**
+
+1. **A global collision that revived dead code into a crash.** The map was
+   first published as `window.OmegaNav`. `omega-emblems-catalog.js:578` guards
+   on `window.OmegaNav` and calls `.updateEmblems()` — an API *nothing has ever
+   assigned*, so that call had never run on any page (§8.1 class 4b). Publishing
+   the name made the guard pass and the call throw on every page: clean before,
+   `TypeError` after. Renamed to `OmegaAxis`; the dead path is recorded in
+   `GAP_ANALYSIS.md` rather than papered over.
+2. **A hero suppressed on 202/202 pages by my own false positive.** `hasHero()`
+   included `[data-omega-emblem]`, which the audit had shown matches exactly
+   once on every page — shared chrome, not a page hero. Scoped to the content
+   column and to names that really are a page's opening statement.
+3. **An insertion point that would have stolen the page's width.** On
+   `dashboard.html` and `vault.html` there is no `main.main`, and the first
+   `main`/`#app` that matches **contains `#omega-side`** — it is the shell.
+   Inserting there makes the hero a sibling of the sidebar inside a flex ROW,
+   which is exactly how 23 pages once rendered ~300px wide (§4). `host()` now
+   disqualifies any candidate containing the nav.
+4. **"COMMAND / COMMAND".** With the section label as the title fallback, the
+   eyebrow and the title printed the same word on the 164 pages with no `<h1>`.
+   Only visible in a screenshot; every numeric check passed. The title is now
+   the page's own name and the eyebrow is suppressed when it would repeat it.
+
+**And one finding that was not a finding.** A first sweep reported only 177
+distinct sigils of 187, with 11 pages sharing one. All 11 were gated pages that
+**redirect** — signed-in to `dashboard.html`, signed-out to `account.html` — so
+the probe had measured the same page eleven times. §8.4 warns about exactly this
+and it was not applied. The generator was never at fault.
+
+Verified: `./scripts/ci-local.sh` **23/23 gated on exit code**,
+`verify-runtime` **PASS (13 pages)**, `audit.py` 0 critical, registry
+regenerated.

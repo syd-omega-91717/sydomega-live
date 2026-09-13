@@ -394,10 +394,22 @@ p {
    SCREEN READER ENHANCEMENTS
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* Properly hide decorative elements */
-[aria-hidden="true"] {
-  display: none;
-}
+/* Decorative elements are hidden from assistive technology by the
+   aria-hidden attribute ITSELF. This block used to add `display:none` to
+   them, which is not the same thing and is not what the comment intended:
+   aria-hidden="true" means "keep this visible, but do not announce it" --
+   the standard marking for a decorative graphic. Adding display:none
+   deletes it from the page for everyone.
+
+   Measured before removal, on six representative pages: 60 of 60 elements
+   carrying aria-hidden="true" computed to display:none -- among them the
+   particle-engine <canvas>, div.omega-cinematic-layer, div.omega-visual-rail
+   on every page, and on index.html 31 elements including .ohz-brand-mark,
+   three .ohz-arrow, .ohz-slab-mark and .ohz-slab-rule. The platform's own
+   cinematic layers were being switched off by its accessibility sheet.
+
+   Anything that genuinely must be invisible to everyone uses .sr-only
+   (below), the `hidden` attribute, or its own display rule. */
 
 .sr-only {
   position: absolute;

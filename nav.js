@@ -224,6 +224,40 @@
 
   var activeSection=PS[dp]||'command';
 
+  /* ── PUBLISH THE MAP ────────────────────────────────────────────────────
+     PS (page -> nav section) and SECTIONS (section -> label, icon, colour)
+     are the platform's single source of truth for which axis a page belongs
+     to, and they were private to this IIFE -- so anything else that wanted a
+     page's axis had to keep its own copy, which is CLAUDE.md 8.1 class 8, the
+     class that once assigned the wrong god and agent to 9 of 12 signs.
+     omega-identity.js reads this instead of duplicating it: change a page's
+     section HERE and its colour, eyebrow and hero follow with no other edit. */
+  /* Published as OmegaAxis, NOT OmegaNav. `window.OmegaNav` is already probed
+     by omega-emblems-catalog.js:578, which calls OmegaNav.updateEmblems() --
+     an API nothing has ever assigned, so that call has never run on any page
+     (CLAUDE.md 8.1 class 4b, a shared accessor nobody publishes). Publishing
+     OmegaNav here made its guard pass and the call throw on every page. The
+     dead path is recorded in GAP_ANALYSIS.md rather than papered over; this
+     object owns a different, honest name. */
+  window.OmegaAxis = window.OmegaAxis || {
+    sectionOf: function (slug) { return PS[String(slug || '').toLowerCase()] || 'command'; },
+    section: function (key) {
+      for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].key === key) return SECTIONS[i];
+      return null;
+    },
+    colourOf: function (slug) {
+      var sec = this.section(this.sectionOf(slug));
+      return sec ? sec.col : '#C9A84C';
+    },
+    labelOf: function (slug) {
+      var sec = this.section(this.sectionOf(slug));
+      return sec ? sec.label : 'COMMAND';
+    },
+    sections: function () { return SECTIONS.map(function (x) {
+      return { key: x.key, label: x.label, icon: x.icon, col: x.col, href: x.href }; }); },
+    slug: function () { return dp; }
+  };
+
   /* BUILD SIDEBAR */
   var h='';
   h+='<div class="on-hb">';

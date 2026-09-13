@@ -183,6 +183,44 @@ const CHECK_JS = `(() => {
   const seen = new Set(), dup = new Set();
   document.querySelectorAll('[id]').forEach(el => { if (seen.has(el.id)) dup.add(el.id); seen.add(el.id); });
   out.dupIds = [...dup];
+  /* CANVAS RESOLUTION.
+     A canvas has TWO sizes -- the drawing buffer (canvas.width/height) and
+     the box it is displayed in -- and nothing in the platform keeps them
+     in step automatically. This class has cost four separate fixes
+     (FIXES_LOG 130, 131, 133): a sphere stuck at the default 300x150
+     stretched across 1270x268, a 3-D renderer whose resize handler watched
+     the window while the element's own column moved, and an atmosphere
+     canvas drawn at 94% of its display size because another module
+     transforms it with scale(1.06).
+
+     Measured against getBoundingClientRect, which reports the TRANSFORMED
+     box -- that is the size actually painted to, and it is what the
+     atmosphere bug hid behind.
+
+     Only ratio < 1 is reported. A buffer LARGER than the box is the normal
+     hi-DPI pattern (draw at 2x, let CSS scale down): sharp, at worst
+     slightly wasteful. A first version of this check flagged 20 correct 2x
+     canvases across the estate as defects -- the threshold was wrong, not
+     the pages. */
+  out.canvasLowRes = [];
+  out.canvasZero = [];
+  {
+    const dpr = window.devicePixelRatio || 1;
+    document.querySelectorAll('canvas').forEach(c => {
+      const b = c.getBoundingClientRect();
+      if (b.width < 60 || b.height < 60) return;        /* glyph-sized, not artwork */
+      const cs = getComputedStyle(c);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.02) return;
+      const label = c.id || ('.' + String(c.className || '').trim().split(/\s+/)[0] || 'canvas');
+      if (!c.width || !c.height) { out.canvasZero.push(label); return; }
+      const ratio = c.width / (b.width * dpr);
+      if (ratio < 0.98) {
+        out.canvasLowRes.push(label + ' ' + c.width + 'x' + c.height +
+          ' in ' + Math.round(b.width) + 'x' + Math.round(b.height) +
+          ' (' + Math.round(ratio * 100) + '%)');
+      }
+    });
+  }
   out.hasMain = !!document.querySelector('main, [role=main], #main-content');
   const app = document.querySelector('#app, .shell, main.main');
   out.appVisible = app ? getComputedStyle(app).display !== 'none' : true;
@@ -462,6 +500,17 @@ async function main() {
       if (realErrs.length) problems.push(realErrs.length + ' uncaught error(s): ' + realErrs.slice(0, 3).join(' | '));
       if (info.overflow) problems.push('horizontal overflow');
       if (info.dupIds && info.dupIds.length) problems.push('duplicate ids: ' + info.dupIds.join(', '));
+      /* A zero drawing buffer BLOCKS: that canvas can never paint anything,
+         whatever else is right. A low-resolution one is advisory -- it does
+         paint, just softer than its box -- so it reports without failing a
+         release. Baseline at the time this check was added: 0 and 0 across
+         30 pages / 160 visible canvases. */
+      if (info.canvasZero && info.canvasZero.length) {
+        problems.push('canvas with a zero drawing buffer (can never paint): ' + info.canvasZero.join(', '));
+      }
+      if (info.canvasLowRes && info.canvasLowRes.length) {
+        advisories.push('canvas drawn below its display size: ' + info.canvasLowRes.join('; '));
+      }
       const landedPublic = landed && PUBLIC.test(landed);
       if (info.appVisible === false && !PUBLIC.test(pg) && !landedPublic) {
         if (OWNER_GATED.test(pg) && !realErrs.length) advisories.push('owner-gated: #app hidden for the member stub (gate working)');
@@ -495,6 +544,7 @@ async function main() {
     }
     // Advisories aggregated - they are platform-wide (bg.js chrome), not per-page.
     const tapSel = new Set(), unlabelled = new Set(), occluded = new Set(), noMain = [], owner = []; let midC = 0;
+    const lowResCanvas = new Set(), unclassified = new Set();
     for (const r of results) for (const a of r.advisories) {
       if (a.startsWith('tap targets')) a.replace(/tap targets < 24px: /, '').split('; ').forEach(s => tapSel.add(s.replace(/ \d+x\d+$/, '')));
       else if (a.startsWith('unlabelled')) a.replace(/unlabelled inputs: /, '').split(', ').forEach(s => unlabelled.add(s));
@@ -502,6 +552,18 @@ async function main() {
       else if (a.startsWith('owner-gated')) owner.push(r.page);
       else if (a.startsWith('occluded by fixed chrome')) a.replace(/occluded by fixed chrome: /, '').split(', ').forEach(s => occluded.add(s));
       else if (a.startsWith('contrast 3-4.5')) midC += parseInt(a.split(': ')[1], 10) || 0;
+      else if (a.startsWith('canvas drawn below')) {
+        a.replace(/canvas drawn below its display size: /, '').split('; ').forEach(x => lowResCanvas.add(r.page + ' ' + x));
+      }
+      /* CATCH-ALL. This chain matches known prefixes and, until this branch
+         existed, SILENTLY DROPPED anything else -- a new advisory simply
+         never printed. That is exactly how the canvas-resolution advisory
+         added alongside it reported nothing on its first planted-violation
+         test: collected into r.advisories, matched no prefix, gone. An
+         aggregator that discards what it does not recognise makes every
+         future advisory a silent no-op, so unrecognised strings now surface
+         verbatim rather than vanishing. */
+      else unclassified.add(r.page + ': ' + a);
     }
     console.log('\nadvisory (tracked as the `accessibility` capability, not gating):');
     if (tapSel.size) console.log('  tap targets < 24px, distinct selectors: ' + [...tapSel].join(', '));
@@ -510,6 +572,8 @@ async function main() {
     if (noMain.length) console.log('  no <main> landmark: ' + noMain.join(', '));
     if (owner.length) console.log('  owner-gated (expected): ' + owner.join(', '));
     if (midC) console.log('  text contrast 3-4.5:1 (clears the 3:1 floor, misses AA at small sizes): ' + midC);
+    if (lowResCanvas.size) console.log('  canvas drawn below its display size (soft/upsampled): ' + [...lowResCanvas].join('; '));
+    if (unclassified.size) console.log('  unclassified advisories: ' + [...unclassified].join(' | '));
   }
   const failed = results.filter(r => r.problems.length);
   if (code === 0 && failed.length) code = 1;

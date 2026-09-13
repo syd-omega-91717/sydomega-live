@@ -14611,3 +14611,73 @@ without changing either number the earlier checks looked at. When something
 else transforms your canvas, the buffer has to track the transform, not just
 the box — and the only safe source for that factor is the resolved style,
 not a copy of the constant.
+
+---
+
+## 134 — the canvas-sizing class is now gated, and the advisory aggregator was silently dropping anything it did not recognise
+
+**Why:** buffer-vs-box has now cost four separate fixes (`FIXES_LOG` 130, 131,
+133). Fixing a fifth instance by hand would be worth less than making the
+class impossible to reintroduce quietly, so it is now checked by
+`scripts/verify-runtime.js`, which already renders the capability
+entrypoints.
+
+**First, the sweep — and the threshold was wrong.** A repo-wide render across
+30 pages and 160 visible canvases flagged **21 findings**. Twenty of them
+were **false positives**: canvases with a buffer twice their box
+(`264×264` in `132×132`, `1040×1040` in `520×520`, `200×200` in `100×100`).
+That is the standard hi-DPI pattern — draw at 2×, let CSS scale down — and
+it is *correct*, sharp, at worst slightly wasteful.
+
+Only **ratio < 1** is a defect: fewer device pixels than the display needs,
+so the canvas is upsampled and soft. With the criterion corrected, the same
+30 pages report **0 findings** — the class really is closed, but the first
+number would have sent someone "fixing" twenty healthy canvases.
+*§8.4's rule about a scanner needing its own false-positive pass, met head
+on.*
+
+**The check.** Per visible canvas ≥60px, measured against
+`getBoundingClientRect` — the **transformed** box, which is the size actually
+painted to, and the one the atmosphere bug (133) hid behind:
+
+- **zero drawing buffer → BLOCKS.** That canvas can never paint anything.
+- **ratio < 0.98 → advisory.** It does paint, just softer than its box.
+
+Baseline at introduction: **0 and 0** across 30 pages / 160 canvases.
+
+**Verified in both directions, because a check that cannot fail proves
+nothing.** Planted each violation into `omega-genesis.js` and restored it:
+
+| planted | result |
+|---|---|
+| `c.width = 0` | **FAIL dashboard.html — canvas with a zero drawing buffer (can never paint): omega-atmosphere** |
+| buffer without the `× k` overscan | `canvas drawn below its display size (soft/upsampled): dashboard.html omega-atmosphere 1280x900 in 1357x954 (94%)` |
+| restored | clean, no canvas finding |
+
+The 94% in that output is exactly the real defect 133 fixed.
+
+**And the planted test caught a bug in the harness itself.** On the first
+run the low-resolution advisory reported **nothing**. The cause was not the
+probe: `verify-runtime.js` aggregates advisories through an
+`if / else if` chain matching known prefixes —
+
+```js
+if (a.startsWith('tap targets')) ...
+else if (a.startsWith('unlabelled')) ...
+else if (a.startsWith('contrast 3-4.5')) ...
+```
+
+— and **anything unrecognised was silently discarded**. The new advisory was
+collected into `r.advisories`, matched no prefix, and vanished. So *every*
+future advisory added to this harness would have been a silent no-op until
+someone noticed.
+
+Fixed with the specific branch **and a catch-all `else`** that surfaces
+unclassified strings verbatim. The catch-all is the durable half: the next
+person to add an advisory cannot lose it the same way.
+
+**Transferable rule.** *A dispatcher that matches known cases and drops the
+rest turns every future case into a silent no-op.* This one had a
+default-drop in the reporting layer, so a correct probe still reported
+nothing — and only a planted violation could reveal it, because the clean
+run looks identical either way.

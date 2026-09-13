@@ -132,6 +132,37 @@ open, recorded in `FIXES_LOG.md`:
   pages against the SQL bag alone — exactly the false-negative direction §8.4 warns
   about. 217 → **223** relations, 1852 → **1938** columns, `_captured` 2026-09-05 →
   2026-09-13; every one of the 223 column lists hash-verified against live.
+- **`matrix.html` promises 3-D and draws 2-D** (opened 2026-09-13, measured;
+  `FIXES_LOG.md` 152). Its main panel is titled **"3D Matrix Projection"** with a
+  `9×9×9 = 729 inner nodes` badge, and `matrix.html:642` obtains a **`'2d'`**
+  context. Meanwhile `omega-sculpture.js` carries a real three.js `matrix` scene of
+  exactly that lattice. Two reasons it was not fixed in that change rather than
+  recorded: the existing canvas is interactive (wired to `#coord-a/b/c`) so it
+  cannot simply be swapped for the scene, and the title is a `data-i18n` key
+  (`mat_canvas_title`) carried by `i18n.js`'s `T_EN` **and all six packs**, so
+  correcting the copy is a seven-file change. Either retitle it to what it is, or
+  mount the real scene and demote the 2-D canvas to the coordinate picker it
+  actually is.
+- **There is no safe platform-wide restyle of the metric tiles** (established
+  2026-09-13, measured — recorded so the next session does not re-derive it and
+  ship the sweep). The estate renders **295 metric tiles on 94 pages** under **21
+  distinct page-local class names**, and only 32 carry the shared `--kc` accent —
+  which reads like a large, easy unification. It is not. Per-property collision
+  measurement on all 295:
+
+  ```
+  ::before already paints          46      already has border-top > 0     259
+  ::after  already paints         211      already has a box-shadow       231
+  has an inline style=            245      value colour set by the page   284
+  SAFE for an accent hairline      36  of 295
+  ```
+
+  The tiles are not monochrome and not unstyled — **284 of 295 already have the
+  page setting the value colour**, and 259 already own a top border. An accent,
+  hairline or pseudo added centrally would collide on ~88% of them, and the type
+  scale (13 distinct value font-sizes, 12px–40px) cannot be normalised without
+  `!important`, which CLAUDE.md §9 forbids for defeating the cascade. Any real
+  unification here is a per-page migration, not a sweep.
 - **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
   of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
   is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no
@@ -143,15 +174,18 @@ open, recorded in `FIXES_LOG.md`:
   **Owner's call** — either surface the toggle on the pages that should have music
   (and vendor Tone.js + add the missing `.catch()` at that point), or stop injecting
   the module. The passport half of this pair was reachable and *was* fixed.
-- **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
-  2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
-  `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned
-  `window.OmegaNav`, so the guard has always been falsy and that emblem-refresh path
-  has never run on any page — §8.1 class 4b. It surfaced because publishing a section
-  map under that name made the guard pass and the call throw on every page; the map
-  was renamed to `OmegaAxis` rather than silently satisfying half an interface. Either
-  implement `updateEmblems` on a real owner or delete the call — both are small, and
-  neither should be guessed at.
+- ~~**`omega-emblems-catalog.js:578` calls an API nothing implements**~~
+  **CLOSED 2026-09-13** — the call and its `DOMContentLoaded` listener were deleted
+  (`FIXES_LOG.md` 153). Implementing it was ruled out on evidence, not preference: the
+  shapes do not meet. `all()` returns `EMBLEMS` keyed by **page filename**, while the
+  sidebar is built from `nav.js`'s **15 section entries**, each with its own `icon`
+  glyph and `col`; there is no mapping between them, and the sidebar already has a
+  complete icon vocabulary. The catalog's real consumer is per-page —
+  `omega-emblem-integration.js` calls `OmegaEmblems.get(pageFilename)`. Verified by
+  **arming the mine**: publishing `window.OmegaNav` via `addInitScript` threw
+  `TypeError: window.OmegaNav.updateEmblems is not a function` on **4 of 5** pages
+  against the pinned pre-fix file and on **0 of 5** after. The reasoning is left in
+  the file where the code was, so it is not re-added.
 - **`graph.html` and `map.html` throw on every load** (opened 2026-09-13, measured
   before/after so not caused by that day's work): `d3.select is not a function` and
   `L.map is not a function`. Both are the documented unvendored-library class

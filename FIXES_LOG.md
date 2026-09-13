@@ -15786,3 +15786,158 @@ through your context, transfer a fingerprint and diff it, then fetch only what
 moved.* A 223-row hash manifest is a quarter the size of the data it describes,
 it names exactly what changed, and — unlike a re-download — it doubles as the
 verification that the file you wrote equals what the database actually has.
+
+---
+
+## 152 — Six cinematic scenes existed; five subject pages existed; none of them met
+
+`omega-sculpture.js` has carried six real-time three.js scenes since 138–144:
+`signet`, `agents`, `matrix`, `gates`, `elements`, `ascension`. Every one of
+those subjects also has its own page. Measured before the change:
+
+```
+grep -l data-omega-sculpture *.html   ->  index.html, sculpture.html   (2 of 202)
+agents.html elements.html ascension.html matrix.html gates.html
+                                      ->  all exist, none mounts its own scene
+```
+
+So the platform built cinematic artwork for six subjects and rendered it only in
+the gallery that demonstrates it. The page **about** the twelve gates drew a grid
+of cards; the scene of twelve gates receding into depth was one attribute away.
+
+**What was mounted, and what deliberately was not.** Three pages had no visual of
+their own subject at all and got one — `gates`, `elements`, `ascension`. Two were
+left alone on purpose:
+
+* `agents.html` already carries `data-omega-constellation="agents"`, a ring of
+  twelve whose nodes are **real links**. A third representation of twelve agents
+  on one tab is decoration, which the cinematic skill forbids outright.
+* `matrix.html` already draws its own lattice. Worth recording separately: that
+  panel is titled **"3D Matrix Projection"** with a `9×9×9 = 729 inner nodes`
+  badge and is drawn on a **2-D context** (`matrix.html:642`,
+  `c.getContext('2d')`) — the page promises 3-D and delivers a hand-rolled
+  projection, while the real 729-node scene sits in `omega-sculpture.js`. Not
+  changed here: the canvas is interactive (wired to `#coord-a/b/c`) so it cannot
+  simply be replaced, and the title is a `data-i18n` key carried by `i18n.js`
+  `T_EN` **and all six packs**, so correcting it is a seven-file change of its
+  own. Left as a finding, not a half-fix.
+
+**The surface is shared, and its naming is load-bearing.** `sculpture.html`'s
+proven `.sc-stage` presentation was promoted to `.osc-stage`/`.osc-cap` in
+`css/omega-system.css`, so a sixth page costs one element and no CSS. No class
+contains `card` or `panel`: `omega-visual-evolution.css` selects
+`[class*="card"]` and loads after a page's own sheet, so a `*-card` name would
+have silently handed this surface's border, background, padding and radius to
+that file (CLAUDE.md §4).
+
+**Verified by pixels, not presence** — and the mount was scrolled into view
+first, because an off-screen mount measures its placeholder (144):
+
+```
+              box        litPct  meanLum  live  fallback  buffer==box  links
+gates       1112x382      40.7     37.4   true   false       true       12
+elements    1084x402      12.6     11.5   true   false       true        9
+ascension   1112x422      15.9     13.7   true   false       true       12
+```
+
+`maxChannelSpread` 255 on all three (colour present, not a grey placeholder).
+The `links` column is the part that makes these not decoration: 12 gates, 9
+elements, 12 tiers — the scenes are navigable and read canon from its owners.
+
+Phone (400px, DPR 2) and reduced-motion both paint, with no horizontal overflow:
+
+```
+phone     gates 302x359 buffer 604x718 ok   elements ok   ascension ok   hOver=false
+reduced   gates litPct 37.8   elements 14.1   ascension 16.0   live=true fallback=false
+```
+
+**Cost containment holds.** `bg.js:2254` injects the module only where a
+`[data-omega-sculpture]` mount exists, so the 670KB three.js payload stays off
+every other page — confirmed by `window.OmegaSculpture` reporting **"no global"**
+on `dashboard.html`. The five 404s the run logged (`/_vercel/insights/script.js`,
+`/optimize/*`) are pre-existing and appear identically on untouched pages.
+
+Gates: `node scripts/verify-runtime.js --pages gates.html,elements.html,ascension.html`
+PASS (3 pages), `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**The transferable rule:** *before building a new visual, grep for the one the
+repo already owns and count where it is mounted.* The most cinematic change
+available here cost three elements and one shared CSS block, because the engine,
+the six scenes, the reduced-motion path, the WebGL fallback and the payload
+gating had all been built already and were simply not pointed at anything.
+
+---
+
+## 153 — A dead call that was not merely dead: it was armed, on 202 pages
+
+`omega-emblems-catalog.js` ended with a `renderNav()` method and a
+`DOMContentLoaded` listener that invoked it. All three halves of what it needed
+were absent from the repository, measured:
+
+```
+grep -rn "window\.OmegaNav\s*=" --include=*.js --include=*.html .   ->  0 assignments
+grep -rn "updateEmblems" .                                         ->  the call site only
+grep -rn "renderNav" .                                             ->  the method + its own listener
+```
+
+`bg.js:91` loads this file on all **202** pages, so on every page load the
+listener fired, the `if (window.OmegaNav)` guard was false, and the body never
+ran. Dead by construction since it was written — not one execution, ever.
+
+**Why it was worse than dead.** `nav.js` owns the page→section map and needed to
+publish it for `omega-identity.js`. Publishing it under the obvious name,
+`window.OmegaNav`, made this guard pass for the very first time and threw on
+every page (`FIXES_LOG.md` 145). That is why the accessor ships as `OmegaAxis`
+and why `nav.js:235` carries a comment pointing here. The dead code had turned
+a correct change into a platform-wide outage, and the workaround was a rename.
+
+**Why it could not be implemented instead.** The two data shapes do not meet:
+`all()` returns `EMBLEMS` keyed by **page filename**, while the sidebar is built
+from `nav.js`'s **15 section entries**, each with its own `icon` glyph and `col`.
+There is no mapping from one to the other, and the sidebar already has a
+complete icon vocabulary. This catalog's real consumer is per-page —
+`omega-emblem-integration.js` calls `OmegaEmblems.get(pageFilename)`. So the
+method and its listener were removed, and the reasoning left in their place so
+a future session does not re-add them.
+
+**Verified by arming the mine, not by reading the diff.** The probe publishes
+`window.OmegaNav = {some:'object'}` via `addInitScript` — exactly the condition
+that broke 145 — and counts pages that throw:
+
+```
+AFTER    dashboard/profile/gates/cosmos/vault
+         catalog:object  hasGet:true  getWorks:true  renderNavGone:true
+         OmegaAxis:object            pages throwing: 0 of 5
+```
+
+A "0" is not evidence on its own, so the identical probe was re-run against the
+**pinned pre-fix file** (`git show HEAD:omega-emblems-catalog.js`), served for
+that one URL through `ctx.route()` with `contentType: 'text/javascript'` so the
+content type matches the extension:
+
+```
+CONTROL  dashboard  THREW: TypeError: window.OmegaNav.updateEmblems is not a function
+         gates      THREW   cosmos THREW   vault THREW   profile clean
+         pages throwing: 4 of 5
+```
+
+4 → 0. `profile.html` did not reproduce in the control; it is the largest page
+in the estate and the 1500ms settle almost certainly did not reach its deferred
+catalog load, so that is a timing artifact rather than immunity — and it is moot,
+since the code is gone from the file entirely and no page can reach it now.
+
+**A deletion that made the file bigger.** The replacement comment is longer than
+the code it replaced, so `omega-*.js` total went 1279 KB → 1280 KB and
+`omega-registry.py --check` failed the suite until the census was regenerated.
+Kept deliberately: this exact landmine already cost a 202-page outage once, and
+the whole point of the removal is that the next session must not re-add it.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js` PASS (13 pages).
+
+**The transferable rule:** *dead code guarded by a global nobody assigns is a
+trap armed against the next correct change.* It reads as harmless in every
+review — the guard is false, so nothing happens — right up to the day someone
+publishes that name for a good reason and the repository breaks everywhere. Grep
+a `window.*` accessor's **assignment**, and when it has none, delete the reader
+rather than leaving it waiting.

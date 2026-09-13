@@ -851,3 +851,80 @@ button:not([class]):hover{
    is still correct if the media query is unavailable. */
 .oid-still .oid-sigil{ animation:none; }
 .oid-still .oid-rule{ animation:none; transform:none; opacity:1; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Ω-STAGE — the shared mount surface for the 3-D layer
+
+   WHY THIS IS HERE AND NOT IN A PAGE <style>
+
+   omega-sculpture.js has carried six real-time scenes since FIXES_LOG 138-144
+   -- signet, agents, matrix, gates, elements, ascension -- and until now they
+   rendered on exactly TWO pages: sculpture.html (the gallery that demonstrates
+   them) and index.html. Measured:
+
+       grep -l data-omega-sculpture *.html   ->  index.html, sculpture.html
+       agents.html elements.html ascension.html matrix.html gates.html
+                                            ->  all exist, none mounts its own scene
+
+   So the platform built cinematic artwork for six subjects and showed it only
+   in the gallery. The page ABOUT the twelve gates rendered a list; the scene
+   of the twelve gates receding into depth sat one attribute away.
+
+   Mounting them is why this surface exists once here rather than five times in
+   five <style> blocks: sculpture.html's proven .sc-stage presentation, promoted
+   to a shared owner so a sixth page costs one element and no CSS.
+
+   NAMING IS LOAD-BEARING. No class below contains "card" or "panel":
+   omega-visual-evolution.css selects [class*="card"] and loads after a page's
+   own sheet, so a *-card name here would silently hand this surface's border,
+   background, padding and radius to that file (CLAUDE.md 4).
+
+   COST. bg.js injects omega-sculpture.js ONLY where a [data-omega-sculpture]
+   mount exists (bg.js:2254), so the 670KB three.js payload stays off the other
+   pages. The module itself owns reduced-motion (one still frame), absent WebGL
+   (a flat 2-D fallback), off-screen mounts (IntersectionObserver) and the
+   zero-size-at-DOMContentLoaded trap (a lifelong ResizeObserver) -- none of
+   that is re-implemented here.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.osc-stage{
+  position:relative;
+  border:1px solid var(--line,rgba(201,168,76,.13));
+  border-radius:3px;
+  overflow:hidden;
+  margin:14px 0 18px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(201,168,76,.07), rgba(0,0,0,0) 62%),
+    #05050B;
+}
+
+/* The caption sits ON the scene, bottom-anchored, and never eats a click --
+   the scenes are cursor-reactive and a caption that captured the pointer
+   would deaden the bottom third of the stage. */
+.osc-cap{
+  position:absolute; left:0; right:0; bottom:0;
+  padding:14px 18px;
+  background:linear-gradient(180deg, rgba(5,5,11,0), rgba(5,5,11,.88));
+  pointer-events:none;
+}
+.osc-cap b{
+  display:block;
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-size:clamp(15px,2.1vw,21px);
+  color:var(--solar,#E2C86D);
+  letter-spacing:.06em;
+}
+.osc-cap span{
+  font-family:var(--M,"Courier Prime",monospace);
+  font-size:12px;
+  letter-spacing:.16em;
+  color:var(--muted,#8796A1);
+  text-transform:uppercase;
+}
+
+/* Phone: the caption's two lines eat a 300px stage, so it tightens rather
+   than being hidden -- the label is the only thing naming what the scene is. */
+@media (max-width:700px){
+  .osc-cap{ padding:10px 12px; }
+  .osc-cap span{ font-size:11px; letter-spacing:.12em; }
+}

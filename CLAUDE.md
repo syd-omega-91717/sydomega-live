@@ -62,13 +62,12 @@ supabase/functions/  Edge Functions (Deno/TypeScript) — 11: checkout,
                      skill. Deployed by hand via the Supabase CLI, not CI.
 core/                The Ω Intelligence Fabric — provider-neutral Python
                      primitives (execution boundary, policy firewall, model
-                     router, proof engine, skill registry, evidence matrix).
-                     Never deployed (`*.py` is in `.vercelignore`); driven
-                     against the real platform by `scripts/omega_fabric_audit.py`.
-scripts/             Repo tooling: audit.py (CI-gating integrity check),
-                     verify-runtime.js (headless render check),
-                     capability-audit.py / release-gate.py (the §10 registry
-                     gates), check-secrets.sh, one-off migration/patch scripts.
+                     router, proof engine, skill/evidence registries). Never
+                     deployed (`.vercelignore`); driven against the real
+                     platform by `scripts/omega_fabric_audit.py`.
+scripts/             Repo tooling: audit.py, verify-runtime.js,
+                     capability-audit.py / release-gate.py (§10's gates),
+                     check-secrets.sh, one-off migration scripts.
 .github/workflows/   CI: syntax check, repo audit, prettier/eslint
                      (non-blocking), broken-asset check, service-role key
                      scan, Edge Function syntax check, PWA asset checks,
@@ -113,12 +112,11 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 ## 4. Design system (as it exists, not as a target)
 
 Tokens and layout primitives are defined once, in `bg.js`'s injected
-`<style>` block. **Paint is not.** This section used to say bg.js *is* the
-design system; a live render of `dashboard.html` enumerates **62
-stylesheets** (59 inline) and bg.js is sheet 1, so every later sheet wins an
-equal-specificity tie. Five global layers redefine the same surfaces, and
-the effective owner differs per selector — check the render, not this list,
-before styling a shared class:
+`<style>` block. **Paint is not.** A live render of `dashboard.html` enumerates
+**62 stylesheets** (59 inline) with bg.js at sheet 1, so every later sheet wins
+an equal-specificity tie. Five global layers redefine the same surfaces and the
+effective owner differs per selector — check the render, not this list, before
+styling a shared class:
 
 | surface | real owner |
 |---|---|
@@ -153,6 +151,13 @@ ONE WebGL context per page, blitted into each mount's own canvas (a single fixed
 canvas cannot work here — read the module header first). bg.js injects it only
 where a mount exists, so no other page pays the 670KB. Reduced motion gets one
 still frame, absent WebGL a flat 2-D fallback (`FIXES_LOG.md` 138).
+**Lighting is not optional here**: every mark is `metalness:0.96`, and a PBR
+metal has no diffuse term, so before a procedural `PMREMGenerator` environment
+the emblem rendered at mean luminance 40–58/255 (142). Bloom is composited in
+each mount's 2-D canvas, never `EffectComposer` — that owns renderer-sized
+targets and would bleed between viewport sub-rects (143); it costs one
+full-res composite per mount per frame, so `data-sculpt-bloom="off"` exists.
+`status()` reports `bloom`/`env`.
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -206,22 +211,19 @@ through this one file with no per-page markup changes:
   set by one passive rAF-throttled `pointermove` listener in bg.js — a single
   `getBoundingClientRect()` per frame, only while hovering a match).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image` +
-  box-shadow glow, both **hover-only**, never static). Hover-only is a
-  correction: `border-image` wins the border paint regardless of specificity, so
-  a *static* version silently discarded any page's own per-instance border the
-  moment `.card` was added (`matrix.html`'s inline `border-color`,
-  `family.html`'s `.mc.heir`, `cosmos.html`'s JS-set `.el-card` left border).
-  `:hover` keeps every page's resting border as intended, retroactively too.
-  `.kpi` is excluded outright: it carries a per-instance `--kc` accent, so it
-  gets a matching hover glow in that colour.
+  box-shadow glow, both **hover-only**, never static). `border-image` wins the
+  border paint regardless of specificity, so a *static* version silently
+  discarded any page's own per-instance border the moment `.card` was added;
+  `:hover` keeps every page's resting border, retroactively too. `.kpi` is
+  excluded outright — it carries a per-instance `--kc` accent and gets a
+  matching hover glow in that colour.
   A page-local `::before` setting `background` collides with `.card::before`
   per *property*. **That collision is solvable, and this file twice said it was
-  not**: `.card::before` is the same 2px top bar, and it reads `--card-accent`,
-  which takes a colour *or* a gradient (proven in a render). Set
-  `--card-accent` on the page-local class and delete its own pseudo —
-  `honors.html`'s five `.tier-*` gradients and `gaming.html`'s two bars
-  translated losslessly. Check *which properties* collide, never the mere
-  presence of a pseudo.
+  not**: `.card::before` is the same 2px top bar reading `--card-accent`, which
+  takes a colour *or* a gradient (proven in a render). Set `--card-accent` on
+  the page-local class and delete its own pseudo — `honors.html`'s five
+  `.tier-*` gradients and `gaming.html`'s two bars translated losslessly. Check
+  *which properties* collide, never the mere presence of a pseudo.
 - **Platform-wide `.card` sweep.** `.card` was scanner-added to ~187 page-local
   `*-card` classes across 117 files. **The standing fact:** ~34 were
   deliberately **not** swept, because `.card`'s hover-only `border-image`/glow
@@ -287,16 +289,15 @@ through this one file with no per-page markup changes:
 - **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear
   infinite`, static under `prefers-reduced-motion`; only `#ph-sigil` today.
 - **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED almost nowhere**
-  (bg.js, `#omega-cinematic-css`): its 4 rules sit in every cascade yet match
-  **0/0/0/0** elements on `dashboard`/`profile` and 1/1/6/0 on `index`, so the
-  sheet changed no page's paint — what is left is markup adoption
-  (`FIXES_LOG.md` 114). Additive; `--omega-line` is undefined outside
-  `index.html`, so read it with a fallback.
+  (bg.js, `#omega-cinematic-css`): its 4 rules match **0/0/0/0** elements on
+  `dashboard`/`profile` and 1/1/6/0 on `index`, so the sheet changed no page's
+  paint — what is left is markup adoption (114). `--omega-line` is undefined
+  outside `index.html`; read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
-Every change here was verified before shipping by rendering an isolated
-test harness (all the shared classes, plus raw unclassed elements) through
-headless Chromium — not just `node --check` on the syntax.
+Every change here was verified before shipping by rendering an isolated test
+harness (every shared class, plus raw unclassed elements) through headless
+Chromium — not just `node --check`.
 
 ### 4.2 Ω-HORIZON extension layer
 
@@ -395,16 +396,14 @@ orphaned file.
 
 ## 8. Known debt and the bug classes that keep recurring (full history: `FIXES_LOG.md`)
 
-The full, evidence-cited history of every bug found and fixed in this repo
-lives in **`FIXES_LOG.md`** — 89 entries, each citing the file:line, command
-output, or query result behind its claim. It was moved out of this file
-verbatim (see that file's own header for the measurements: it was 88% of
-CLAUDE.md, ~60,700 of ~68,900 tokens, loaded into every session before any
-work began). **Search `FIXES_LOG.md` before concluding a bug is new** — most
-bug classes here have recurred, and the prior entry usually names the root
-cause and how it was verified.
-
-What follows is the part that stays load-bearing for a session starting work.
+The full, evidence-cited history of every bug found and fixed here lives in
+**`FIXES_LOG.md`**, each entry citing the file:line, command output or query
+result behind its claim. It was moved out of this file because it was 88% of
+it (~60,700 of ~68,900 tokens) and loaded into every session before any work
+began. **Search it before concluding a bug is new** — most classes below have
+recurred, and the prior entry usually names the root cause and how it was
+verified. What follows is only what stays load-bearing at the start of a
+session.
 
 ### 8.1 The recurring bug classes — check these first
 
@@ -541,17 +540,19 @@ Only what changes what you do in the **first minutes** stays here:
   printing `VERCEL_BUILD=PASS` (`FIXES_LOG.md` 97). **Add any new web directory to that list**;
   never commit `public/`. The *Framework Settings Override* notice is expected.
 - **The self-hosted Windows runner is DEAD; `queued` on it means never.** `runner-probe.yml`,
-  whose only job is to prove that runner works, has never started a run; the two blocking gates
-  once pinned to it had **never reached a conclusion** and now use `ubuntu-latest`
-  (`FIXES_LOG.md` 106). `page-overlap-audit.yml` and `runner-probe.yml` are still pinned and
-  still never run. **A pending check is not a passing one** — read `status`, not `conclusion`.
-  `./scripts/ci-local.sh` runs every blocking step locally; `.githooks/pre-push` runs it on push
-  (`git config core.hooksPath .githooks`). Same rule, bigger outage: a **ref-keyed** group with
-  `cancel-in-progress: false` **starves** — `ci.yml` (§7's gate) was `cancelled` 30 runs
-  running on `main` — a job waited ~53min for a runner and any push in that window cancelled
-  it: **starvation, not deadlock**. **Fixed, verified on `main`**: runner assignment
-  53m06s → **3s**, all 11 workflows green in 49s (`FIXES_LOG.md` 112). Measure
-  `created_at` vs `started_at` on the **job**; the run's timestamps hide the wait. Gated; a **fixed** group with `false` is correct and exempt.
+  whose only job is to prove it works, has never started a run; `page-overlap-audit.yml` is
+  still pinned to it and still never runs (`FIXES_LOG.md` 106). **A pending check is not a
+  passing one** — read `status`, not `conclusion`. `./scripts/ci-local.sh` runs every blocking
+  step locally; `.githooks/pre-push` runs it on push (`git config core.hooksPath .githooks`).
+  Same rule, bigger outage: a **ref-keyed** group with `cancel-in-progress: false` **starves**
+  — `ci.yml` was `cancelled` 30 runs running on `main`, a job waiting ~53min while any push in
+  that window cancelled it: **starvation, not deadlock**. Fixed, verified on `main`: 53m06s →
+  **3s** (112). Measure `created_at` vs `started_at` on the **job**; the run's timestamps hide
+  the wait. Gated; a **fixed** group with `false` is correct and exempt. **Separately, Actions
+  cannot dispatch jobs at all right now** — every run dies in 1–5s with no `runner_id`, no
+  `runner_name` and no `steps`, on `main` too; six PRs (#347–#352). Read the JOB object, never
+  the logs (they 404 even for successful runs). Owner action: Settings → Billing, Settings →
+  Actions.
 
 ### 8.3 Current verification baseline
 
@@ -586,17 +587,17 @@ entries (which were accurate when written):
 
 ### 8.4 Method notes that save a session real time
 
-- **Stub `esm.sh` before any browser scan, or the results are worthless.**
-  Gated pages import the client at the top of a module script; the sandbox
-  blocks that host, and a failed top-level import runs *none* of that module's
-  code — so every `window.`-exposed function reports missing. A scan once
-  reported 44 broken pages this way; the real number was 6.
+- **Stub `esm.sh` before any browser scan, or the results are worthless.** A
+  failed top-level import runs *none* of that module's code, so every
+  `window.`-exposed function reports missing: a scan once reported 44 broken
+  pages this way and the real number was 6.
   `.claude/skills/verify-in-browser/` handles it.
 - **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
   `terms.html` and the page never renders.
 - **Verify a "0 findings" result is real.** A stopped static server reports 0;
   so does a regex damaged in transit. Cross-check with a run that must find
   something.
+
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
@@ -669,7 +670,17 @@ entries (which were accurate when written):
 - **A repo-wide grep is a candidate generator, not a verdict.** Confident
   source-grep findings (`theme-color` missing on 121 pages, 131 unreplaced
   `outline:none`) were false — the runtime showed 172/173 fine, `bg.js`
-  injects them.
+  injects them. A **minified** bundle defeats greps entirely: `class
+  PMREMGenerator` returns 0 in `three.module.js` while the export map carries
+  `Oa as PMREMGenerator`. Search the word, not the declaration.
+- **Measure the metric the effect moves, after flooring its noise.** Same-build
+  repeat runs of the 3-D layer swing **±40% on total light energy** but only
+  **±14% on lit%** (`offset: Math.random()*40` restarts every scene at a new
+  phase). An environment map moves energy and leaves lit% flat; bloom doubles
+  lit%. One metric alone put a working opt-out at "8%" and proved nothing. And
+  an **off-screen mount measures its placeholder** — the `IntersectionObserver`
+  gate never renders it, so scroll each into view first or six mounts report
+  identical figures (144, correcting 141's stated reason).
 - **A scanner needs its own false-positive pass before its number means
   anything.** A fixed-widget collision scan reported 177/178 pages by counting
   full-viewport backdrops (`omega-fx`, the particle canvas, the noise overlay)
@@ -703,11 +714,10 @@ entries (which were accurate when written):
   `data-i18n` string also lives in `i18n.js`'s `T_EN` **and** all six packs;
   fixing only the HTML leaves five translations lying.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
-  describing this repo — skills, `.html` pages (~250 vs 178), bg.js coverage,
-  module size — had gone stale, and one (`grill-me-codex`'s missing frontmatter)
-  had silently broken skill discovery. Re-derive before quoting:
-  `python3 scripts/omega-registry.py --check` regenerates the census and fails on
-  drift. A fact that is a *number* belongs in the generator, not a paragraph.
+  describing this repo — skills, pages (~250 vs 178), bg.js coverage, module
+  size — had gone stale. `python3 scripts/omega-registry.py --check` regenerates
+  the census and fails on drift. A fact that is a *number* belongs in the
+  generator, not a paragraph.
 - **Ask a script what it does before reading it.** Every `scripts/*.py`
   answers `--help` with its docstring and exits 0 — claimed here while **21 of
   47 ignored it**, running the whole job instead (one never returned). It was
@@ -754,10 +764,9 @@ entries (which were accurate when written):
 - Don't introduce a build step or framework migration without discussing
   it first — "no build step" is a deliberate, load-bearing property of
   this deploy (`vercel.json`, CI's syntax-only checks).
-- Don't write a new page without loading `bg.js` and `nav.js` the way
-  existing pages do, and without adding it to `nav.js`'s `PS` map and the
-  relevant `SECTIONS` entry — otherwise it's unreachable from navigation
-  (and `audit.py` treats unreachable-but-deployed files as a warning).
+- Don't write a new page without loading `bg.js`/`nav.js` the way existing
+  pages do, and adding it to `nav.js`'s `PS` map and a `SECTIONS` entry —
+  otherwise it is unreachable from navigation (`audit.py` warns).
 - Don't touch RLS policies without keeping `is_platform_owner()` semantics
   intact and without running `scripts/audit.py` before pushing.
 - Don't ship a new monetizable or legally-sensitive feature (tokens,
@@ -827,10 +836,9 @@ groups; `.claude/skills/README.md` is the full index:
    Supabase-shaped.
 
 The pipeline intentionally stops at "reviewable, dormant-by-default code on a
-branch" rather than auto-deploying to subscribers, matching §9's rule against
-shipping monetizable/legally-sensitive features live without an explicit
-gating decision — and this repo's own history of serious bugs that shipped
-silently (§8.1, and `FIXES_LOG.md` in full) is why that gating exists.
+branch" rather than auto-deploying, matching §9's rule against shipping
+monetizable/legally-sensitive features live without an explicit gating
+decision; §8.1's history of bugs that shipped silently is why.
 
 **Standard pipeline (LOW-RISK features: UI, docs, non-data changes)**:
 
@@ -874,17 +882,14 @@ web-trend-scout → grill-me-codex [lock intent] → feature-architect → auton
 ### 10.1 External repos and skills — what has been evaluated, and the bar
 
 This platform is a no-build, no-framework, `noindex` membership-gated static
-site with one owner. That rules out most of the public skill ecosystem, which
-targets React/Next/Tailwind, npm-packaged apps, or public marketing funnels.
-Adopting something because it is popular, rather than because it fits *this*
-stack, adds instructions a session must read and then ignore.
-
-**The bar**, adapted from `vercel-labs/skills`'s own `find-skills` guidance
-(check install count, source reputation, and repo stars before recommending —
-prefer 1K+ installs, be sceptical under 100) plus one rule this repo needs on
-top: **the skill must name a mechanism that exists here.** A skill whose steps
-assume a build step, a component tree, or a package manager does not become
-applicable by rewriting its examples.
+site with one owner — which rules out most of the public skill ecosystem
+(React/Next/Tailwind, npm apps, public marketing funnels). **The bar**, from
+`vercel-labs/skills`'s own `find-skills` guidance (install count, source
+reputation, stars; prefer 1K+, be sceptical under 100) plus the rule this repo
+needs on top: **the skill must name a mechanism that exists here.** A skill
+whose steps assume a build step, a component tree or a package manager does not
+become applicable by rewriting its examples — it just adds instructions a
+session must read and then ignore.
 
 Evaluated so far — recorded so a future session does not re-clone and re-read
 the same repositories:
@@ -909,25 +914,18 @@ the above; the GitHub REST API, `github.com` HTML and `codeload` tarballs are al
 
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
 
-`OMEGA_TAXONOMY.md` is a documentation-only reference — not a subsystem,
-registry, or runtime — that organizes the broad set of engineering/research
-concern-areas this project touches or might touch (prompting patterns,
-security, data, AI/ML, UI, infrastructure, art) into categories, each
-cross-referenced against what actually exists in this repo today. Its
-purpose is narrow: give a future `FEATURE_IDEAS.md` proposal or
-`web-trend-scout` research pass a category to point at instead of
-re-deriving context from scratch, and give unfamiliar terminology
-(commands, tool names, abbreviations encountered in a request) a place to
-be recorded honestly as "undefined here" rather than guessed at.
+`OMEGA_TAXONOMY.md` is documentation only — not a subsystem, registry or
+runtime. It sorts the engineering/research concern-areas this project touches
+(prompting, security, data, AI/ML, UI, infrastructure, art) into categories,
+each cross-referenced against what actually exists here, so a `FEATURE_IDEAS.md`
+proposal or a `web-trend-scout` pass has a category to point at instead of
+re-deriving context. It also gives unfamiliar terminology a place to be recorded
+honestly as "undefined here" rather than guessed at.
 
-It explicitly does **not** define a slash-command system, an AI-agent
-runtime, a prompt library, or any other structure this repo doesn't
-actually have — where the source material behind it assumed something
-this repo lacks (MCP as a runtime dependency, vector databases, 3D
-rendering), the document says so instead of building toward it. The real
-equivalent of a "command registry" here is the skill pipeline in §10, with
-the full generated inventory in `OMEGA_SKILL_REGISTRY.md`.
-Individual categories only become real work the normal way: a
-`FEATURE_IDEAS.md` proposal → `feature-architect` blueprint →
-`autonomous-coder` implementation → human review — the taxonomy itself is
-never a justification to build something on its own.
+It does **not** define a slash-command system, an agent runtime, or a prompt
+library — where its source material assumed something this repo lacks (MCP as a
+runtime dependency, vector databases, 3D rendering), the document says so rather
+than building toward it. The real "command registry" here is §10's skill
+pipeline, inventoried in `OMEGA_SKILL_REGISTRY.md`. A category becomes work only
+the normal way (proposal → `feature-architect` → `autonomous-coder` → review);
+the taxonomy is never on its own a justification to build something.

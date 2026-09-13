@@ -145,7 +145,8 @@ and Fuse each read as silently dead until vendored (`FIXES_LOG.md` 128, 130-132,
 three.js, which drove one sphere before it. One attribute mounts it:
 `data-omega-sculpture="signet|agents|matrix|gates|elements|ascension"` (signet
 also takes `data-sculpt-state`: idle/pulse/reactor/cube/seal); `sculpture.html`
-shows them; `forge.html` is unrelated (FORGE TRIALS). Scenes read canon from its
+shows all six; gates/elements/ascension mount their own on the shared
+`.osc-stage`; `forge.html` is unrelated (FORGE TRIALS). Scenes read canon from its
 owners (`OmegaCanon`, `OmegaRealm.palette`), never a copy.
 ONE WebGL context per page, blitted into each mount's own canvas (a single fixed
 canvas cannot work here — read the module header first). bg.js injects it only

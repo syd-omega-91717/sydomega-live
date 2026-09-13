@@ -15786,3 +15786,82 @@ through your context, transfer a fingerprint and diff it, then fetch only what
 moved.* A 223-row hash manifest is a quarter the size of the data it describes,
 it names exactly what changed, and — unlike a re-download — it doubles as the
 verification that the file you wrote equals what the database actually has.
+
+---
+
+## 152 — Six cinematic scenes existed; five subject pages existed; none of them met
+
+`omega-sculpture.js` has carried six real-time three.js scenes since 138–144:
+`signet`, `agents`, `matrix`, `gates`, `elements`, `ascension`. Every one of
+those subjects also has its own page. Measured before the change:
+
+```
+grep -l data-omega-sculpture *.html   ->  index.html, sculpture.html   (2 of 202)
+agents.html elements.html ascension.html matrix.html gates.html
+                                      ->  all exist, none mounts its own scene
+```
+
+So the platform built cinematic artwork for six subjects and rendered it only in
+the gallery that demonstrates it. The page **about** the twelve gates drew a grid
+of cards; the scene of twelve gates receding into depth was one attribute away.
+
+**What was mounted, and what deliberately was not.** Three pages had no visual of
+their own subject at all and got one — `gates`, `elements`, `ascension`. Two were
+left alone on purpose:
+
+* `agents.html` already carries `data-omega-constellation="agents"`, a ring of
+  twelve whose nodes are **real links**. A third representation of twelve agents
+  on one tab is decoration, which the cinematic skill forbids outright.
+* `matrix.html` already draws its own lattice. Worth recording separately: that
+  panel is titled **"3D Matrix Projection"** with a `9×9×9 = 729 inner nodes`
+  badge and is drawn on a **2-D context** (`matrix.html:642`,
+  `c.getContext('2d')`) — the page promises 3-D and delivers a hand-rolled
+  projection, while the real 729-node scene sits in `omega-sculpture.js`. Not
+  changed here: the canvas is interactive (wired to `#coord-a/b/c`) so it cannot
+  simply be replaced, and the title is a `data-i18n` key carried by `i18n.js`
+  `T_EN` **and all six packs**, so correcting it is a seven-file change of its
+  own. Left as a finding, not a half-fix.
+
+**The surface is shared, and its naming is load-bearing.** `sculpture.html`'s
+proven `.sc-stage` presentation was promoted to `.osc-stage`/`.osc-cap` in
+`css/omega-system.css`, so a sixth page costs one element and no CSS. No class
+contains `card` or `panel`: `omega-visual-evolution.css` selects
+`[class*="card"]` and loads after a page's own sheet, so a `*-card` name would
+have silently handed this surface's border, background, padding and radius to
+that file (CLAUDE.md §4).
+
+**Verified by pixels, not presence** — and the mount was scrolled into view
+first, because an off-screen mount measures its placeholder (144):
+
+```
+              box        litPct  meanLum  live  fallback  buffer==box  links
+gates       1112x382      40.7     37.4   true   false       true       12
+elements    1084x402      12.6     11.5   true   false       true        9
+ascension   1112x422      15.9     13.7   true   false       true       12
+```
+
+`maxChannelSpread` 255 on all three (colour present, not a grey placeholder).
+The `links` column is the part that makes these not decoration: 12 gates, 9
+elements, 12 tiers — the scenes are navigable and read canon from its owners.
+
+Phone (400px, DPR 2) and reduced-motion both paint, with no horizontal overflow:
+
+```
+phone     gates 302x359 buffer 604x718 ok   elements ok   ascension ok   hOver=false
+reduced   gates litPct 37.8   elements 14.1   ascension 16.0   live=true fallback=false
+```
+
+**Cost containment holds.** `bg.js:2254` injects the module only where a
+`[data-omega-sculpture]` mount exists, so the 670KB three.js payload stays off
+every other page — confirmed by `window.OmegaSculpture` reporting **"no global"**
+on `dashboard.html`. The five 404s the run logged (`/_vercel/insights/script.js`,
+`/optimize/*`) are pre-existing and appear identically on untouched pages.
+
+Gates: `node scripts/verify-runtime.js --pages gates.html,elements.html,ascension.html`
+PASS (3 pages), `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**The transferable rule:** *before building a new visual, grep for the one the
+repo already owns and count where it is mounted.* The most cinematic change
+available here cost three elements and one shared CSS block, because the engine,
+the six scenes, the reduced-motion path, the WebGL fallback and the payload
+gating had all been built already and were simply not pointed at anything.

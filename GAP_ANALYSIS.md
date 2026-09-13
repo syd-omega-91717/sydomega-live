@@ -132,6 +132,37 @@ open, recorded in `FIXES_LOG.md`:
   pages against the SQL bag alone — exactly the false-negative direction §8.4 warns
   about. 217 → **223** relations, 1852 → **1938** columns, `_captured` 2026-09-05 →
   2026-09-13; every one of the 223 column lists hash-verified against live.
+- **`matrix.html` promises 3-D and draws 2-D** (opened 2026-09-13, measured;
+  `FIXES_LOG.md` 152). Its main panel is titled **"3D Matrix Projection"** with a
+  `9×9×9 = 729 inner nodes` badge, and `matrix.html:642` obtains a **`'2d'`**
+  context. Meanwhile `omega-sculpture.js` carries a real three.js `matrix` scene of
+  exactly that lattice. Two reasons it was not fixed in that change rather than
+  recorded: the existing canvas is interactive (wired to `#coord-a/b/c`) so it
+  cannot simply be swapped for the scene, and the title is a `data-i18n` key
+  (`mat_canvas_title`) carried by `i18n.js`'s `T_EN` **and all six packs**, so
+  correcting the copy is a seven-file change. Either retitle it to what it is, or
+  mount the real scene and demote the 2-D canvas to the coordinate picker it
+  actually is.
+- **There is no safe platform-wide restyle of the metric tiles** (established
+  2026-09-13, measured — recorded so the next session does not re-derive it and
+  ship the sweep). The estate renders **295 metric tiles on 94 pages** under **21
+  distinct page-local class names**, and only 32 carry the shared `--kc` accent —
+  which reads like a large, easy unification. It is not. Per-property collision
+  measurement on all 295:
+
+  ```
+  ::before already paints          46      already has border-top > 0     259
+  ::after  already paints         211      already has a box-shadow       231
+  has an inline style=            245      value colour set by the page   284
+  SAFE for an accent hairline      36  of 295
+  ```
+
+  The tiles are not monochrome and not unstyled — **284 of 295 already have the
+  page setting the value colour**, and 259 already own a top border. An accent,
+  hairline or pseudo added centrally would collide on ~88% of them, and the type
+  scale (13 distinct value font-sizes, 12px–40px) cannot be normalised without
+  `!important`, which CLAUDE.md §9 forbids for defeating the cascade. Any real
+  unification here is a per-page migration, not a sweep.
 - **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
   of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
   is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no

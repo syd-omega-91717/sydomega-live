@@ -15031,3 +15031,44 @@ not depend on the decorative one.
 Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime`
 PASS on all 13 entrypoints, 0 page errors on `sculpture.html`, registry
 regenerated.
+
+## 140 — the gate fix missed the accessible name, which is where it mattered most
+
+Entry 139 corrected the gate corridor from nine to twelve and said so. It missed
+one line, and it was the worst one to miss:
+
+```js
+omega-sculpture.js:963   gates: 'The Nine Gates receding into depth toward the Crystal-Omega'
+```
+
+That is `SCULPT_LABEL.gates` — the **`aria-label` written onto the canvas**. So
+after the fix a sighted member saw twelve rings captioned THE TWELVE GATES while
+a screen-reader user was still told *Nine Gates*. The accessible layer is the one
+path entry 139 made a point of getting right (it added 25 real anchors precisely
+because a canvas tells assistive tech nothing), and it is the path that kept the
+wrong number.
+
+**How it survived the check.** Verification grepped the rendered DOM of
+`sculpture.html`, and that page sets `data-sculpt-label` on its gates mount —
+which *overrides* `SCULPT_LABEL`. The render therefore proved the page's string,
+never the module's default. The module-level `grep -c "Nine Gates"` returned
+**3** and was read as "the explanatory comment", without looking at the three
+lines: one was the comment, one a header doc line, and one was live.
+
+**Transferable rule: when a value can be overridden per call site, verifying it
+through a call site that overrides it proves nothing about the default.** The
+re-check mounts a *bare* `<div data-omega-sculpture="gates">` with no
+`data-sculpt-label` and reads what the module actually supplies:
+
+```
+module default aria-label for a bare gates mount:
+  The twelve gates receding into depth toward the Crystal-Omega
+```
+
+Also corrected: the file's own header comment described the mount as "the Nine
+Gates, in depth". `"Nine Gates"` now appears exactly once in the repository — in
+entry 139's explanation of why it was wrong — and **0 times in the rendered DOM**.
+
+Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime` PASS
+on all 13 entrypoints, accessible names read back in a render for all five
+mounts.

@@ -18,7 +18,7 @@
        <div data-omega-sculpture="signet"></div>     the Ω mark, extruded, alive
        <div data-omega-sculpture="agents"></div>     the 12 executors in orbit
        <div data-omega-sculpture="matrix"></div>     the 9x9x9 lattice, 729 nodes
-       <div data-omega-sculpture="gates"></div>      the Nine Gates, in depth
+       <div data-omega-sculpture="gates"></div>      the twelve gates, in depth
 
    Optional: data-sculpt-height (CSS length, default 420px / 300px mobile),
    data-sculpt-accent (hex, default the brand gold), data-sculpt-label.
@@ -960,7 +960,7 @@
     signet: 'The Omega signet, rendered in three dimensions and slowly rotating',
     agents: 'The twelve agent executors in orbit around the Omega core',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
-    gates:  'The Nine Gates receding into depth toward the Crystal-Omega'
+    gates:  'The twelve gates receding into depth toward the Crystal-Omega'
   };
 
   /* Only mounts actually on screen are ever rendered. On a page with several

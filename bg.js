@@ -2227,6 +2227,29 @@ setTimeout(function(){
   /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */
   if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;__omegaAppend(_oui2);}
 
+  /* THE SCULPTURE — the platform's real-time 3-D layer (omega-sculpture.js).
+
+     Injected ONLY on a page that actually carries a [data-omega-sculpture]
+     mount. This is deliberate and it is not a micro-optimisation: the module
+     itself is small, but the first mount it finds dynamic-imports
+     /vendor/three.module.js, which is 670KB. Loading the scanner everywhere
+     would put that import one DOM mutation away on all 202 pages. A page opts
+     in by carrying the attribute; every other page pays nothing at all.
+
+     bg.js is deferred, so the document is parsed by the time this runs and the
+     query sees every static mount. A page that injects a mount later can call
+     window.OmegaSculpture.mount(el) or load the module itself.
+
+     NAMED "sculpture", not "forge": forge.html is FORGE TRIALS, an existing
+     timed mental-mastery feature with its own nav entry, and a 3-D engine
+     sharing that word would be exactly the divergent-naming confusion
+     CLAUDE.md 8.1 class 8 is about. index.html's own hero comment already
+     called this thing the sculpture. */
+  if(document.querySelector('[data-omega-sculpture]') && !document.querySelector('script[data-omega-sculpture-js]')){
+    var _osc=document.createElement('script');_osc.src='/omega-sculpture.js';
+    _osc.setAttribute('data-omega-sculpture-js','1');_osc.defer=true;__omegaAppend(_osc);
+  }
+
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
   if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;__omegaAppend(_ott);}
 

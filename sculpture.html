@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>&#937; SYD OMEGA 91717 &mdash; The Sculpture Hall</title>
+<script src="/bg.js" defer></script>
+<style>
+  /* Page-local only. Every shared surface (.card, .sechead, .topbar) comes
+     from bg.js -- CLAUDE.md 4: a page <style> is sheet 0 and loses to bg.js at
+     sheet 1, so nothing canonical is redeclared here. These names are invented
+     by this page, and none contains "card" or "panel" -- omega-visual-
+     evolution.css selects [class*="card"] and would claim them. */
+  .sc-stage{position:relative;border:1px solid var(--line,rgba(201,168,76,.13));
+    border-radius:3px;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,
+    rgba(201,168,76,.07),rgba(0,0,0,0) 62%),#05050B}
+  .sc-cap{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;
+    background:linear-gradient(180deg,rgba(5,5,11,0),rgba(5,5,11,.88));
+    pointer-events:none}
+  .sc-cap b{display:block;font-family:var(--D,"Cinzel Decorative",serif);
+    font-size:clamp(15px,2.1vw,21px);color:var(--solar,#E2C86D);letter-spacing:.06em}
+  .sc-cap span{font-family:var(--M,"Courier Prime",monospace);font-size:12px;
+    letter-spacing:.16em;color:var(--muted,#8796A1);text-transform:uppercase}
+  .sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:18px;margin-top:18px}
+  .sc-lede{font-family:var(--R,Rajdhani,sans-serif);font-size:clamp(15px,1.7vw,18px);
+    line-height:1.55;color:var(--ink-dim,#CBD5DC);max-width:74ch;margin:10px 0 22px}
+  .sc-note{font-family:var(--M,"Courier Prime",monospace);font-size:12px;
+    letter-spacing:.13em;color:var(--muted,#8796A1);text-transform:uppercase;
+    margin:26px 0 8px}
+  .sc-code{font-family:var(--M,monospace);font-size:13px;color:var(--solar,#E2C86D)}
+</style>
+</head>
+<body data-page="sculpture">
+<div class="shell">
+  <main class="main" id="app">
+
+    <div class="topbar">
+      <div>
+        <h1 class="sechead">&#937; THE SCULPTURE HALL</h1>
+        <div class="sc-lede">
+          Every mark below is geometry &mdash; built, lit and turned in your
+          browser at sixty frames a second, not a picture of one. Move your
+          cursor: the light and the camera answer.
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-stage" data-omega-sculpture="signet"
+         data-sculpt-height="min(70vh,560px)"
+         data-sculpt-label="The Omega signet, extruded and swaying in three dimensions">
+      <div class="sc-cap">
+        <b>THE SIGNET</b>
+        <span>Extruded &middot; bevelled &middot; gold &middot; cursor-reactive</span>
+      </div>
+    </div>
+
+    <div class="sc-note">&#9670; The living systems</div>
+
+    <div class="sc-grid">
+
+      <div class="sc-stage" data-omega-sculpture="agents" data-sculpt-height="360px"
+           data-sculpt-label="The twelve agent executors orbiting the Omega core">
+        <div class="sc-cap">
+          <b>THE TWELVE EXECUTORS</b>
+          <span>Sentinel &middot; Oracle &middot; Analyst &middot; Warden &middot; &hellip;</span>
+        </div>
+      </div>
+
+      <div class="sc-stage" data-omega-sculpture="matrix" data-sculpt-height="360px"
+           data-sculpt-label="The nine by nine by nine matrix of 729 nodes">
+        <div class="sc-cap">
+          <b>THE 9&times;9&times;9 MATRIX</b>
+          <span>729 nodes &middot; Crystal-&#937; at the centre</span>
+        </div>
+      </div>
+
+      <div class="sc-stage" data-omega-sculpture="gates" data-sculpt-height="360px"
+           data-sculpt-label="The Nine Gates receding into depth">
+        <div class="sc-cap">
+          <b>THE NINE GATES</b>
+          <span>A corridor, not a list &middot; ascent in depth</span>
+        </div>
+      </div>
+
+      <div class="sc-stage" data-omega-sculpture="signet" data-sculpt-height="360px"
+           data-sculpt-accent="#00E5FF"
+           data-sculpt-label="The Omega signet rendered in the cyan accent">
+        <div class="sc-cap">
+          <b>THE SIGNET &middot; CYAN</b>
+          <span>data-sculpt-accent retints the mark</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sc-note">&#9670; How to use it</div>
+    <div class="card">
+      <div class="sc-lede" style="margin:0">
+        Any page adds one of these with a single attribute &mdash; no markup,
+        no wiring, no per-page script:
+        <br><br>
+        <code class="sc-code">&lt;div data-omega-sculpture="signet"&gt;&lt;/div&gt;</code>
+        <br><br>
+        <code class="sc-code" style="color:var(--muted,#8796A1)">signet
+        &middot; agents &middot; matrix &middot; gates</code>
+        <br><br>
+        One WebGL context serves every mount on a page, and only marks actually
+        on screen are ever drawn. Where motion is not wanted &mdash; a member
+        with <em>prefers-reduced-motion</em> set &mdash; each mark composes a
+        single still frame instead of a loop; where WebGL is unavailable
+        entirely it falls back to the same composition drawn flat, in the same
+        palette.
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

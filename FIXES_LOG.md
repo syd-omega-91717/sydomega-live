@@ -14818,3 +14818,132 @@ object). Replaced with a loop over `vendor/*.js`. Verified in isolation — with
 `public/vendor/marked.min.js` removed it exits 1 naming that file; the earlier
 whole-build plant proved nothing, because the *reference* scan caught that one
 first.
+
+## 138 — Ω THE SCULPTURE: the platform had no third dimension, and a 3-D engine sitting idle
+
+Every visual system in this repo was flat. `omega-emblems.js` draws SVG rings,
+`omega-constellation.js` lays marks out in a CSS circle, `omega-cinematic.js`
+slides a curtain, `omega-cinematic-system.js` prepends a starfield `<div>`.
+Meanwhile three.js — a complete 3-D engine, 670KB, MIT — has been vendored at
+`/vendor/three.module.js` since entry 131 and was imported by **exactly one
+feature**:
+
+```
+grep -rln "three.module\|THREE\." --include=*.js --include=*.html . | grep -v vendor/
+  ./omega-realm.js      <- the elemental sphere
+  ./bg.js               <- the injection only
+```
+
+The engine was bought and left idle. `omega-sculpture.js` spends it: real extruded,
+lit, cursor-reactive geometry, declared with one attribute —
+`<div data-omega-sculpture="signet|agents|matrix|gates">`. `sculpture.html`
+shows all four; `index.html`'s hero is the signet.
+
+**The architecture, and why the obvious one is wrong here.** Browsers cap live
+WebGL contexts near 16, so one renderer per mount does not scale. The standard
+three.js answer — one fixed full-viewport canvas with a scissor rect per
+placeholder — fails in *this* repo specifically: behind the content, `.card`'s
+glass surface (owned by `omega-visual-evolution.css`, CLAUDE.md §4) occludes it;
+in front, it fights five fixed-chrome layers, the bottom-stack ladder and
+`#om-open` at z-9000. So: **one renderer against one offscreen canvas, blitted
+into each mount's own normally-flowing 2-D canvas.** One GL context total, and
+every mount stacks, scrolls and clips like any other element.
+
+### Three bugs found while building it, each caught only by rendering
+
+**(a) The blit read the wrong rows — and the standalone probe passed by luck.**
+WebGL's viewport origin is bottom-left; a 2-D canvas reads top-left. Rendering
+into GL rows `[maxH-bh, maxH]` puts the image in the **top** `bh` rows as
+`drawImage` sees them, so the source rect is `y=0`. The first version used
+`maxH-bh` on both sides. In a probe where every mount was 520×420, `maxH === bh`
+and the wrong expression evaluated to 0 anyway — it rendered perfectly. In the
+real page, a 560px hero beside 360px marks:
+
+```
+BEFORE   1262x560 painted 0.00%   301x360 painted 0.00%  (x4)
+AFTER    1262x560 painted 27.51%  301x360 painted 12.34% / 21.00% / 30.85% / 69.34%
+```
+
+Right by coincidence is not right (CLAUDE.md §8.4).
+
+**(b) A ResizeObserver that wrote back into the box it observed.** `sizeMount()`
+measured `m.el.getBoundingClientRect()` — a **border** box — and assigned it as
+the canvas's **content** height. `.fg-stage` carries a 1px border, so every
+callback made the canvas 2px taller, which made the element 2px taller, which
+fired the observer again. Mounts declared 360px tall measured:
+
+```
+buffer 302x1194   302x1196   302x1198   302x1200      <- 2px apart, and each a
+                                                         different height because
+                                                         each had run a different
+                                                         number of times
+```
+
+Fixed by measuring the **canvas** and never writing its CSS size back: CSS owns
+layout, `sizeMount` owns only the drawing buffer.
+
+**(c) A zero guard that could never fire.** `var w = Math.max(1, Math.round(b.width))`
+followed by `if (!w || !h) return false` — `max(1, x)` is always truthy, so a
+mount hidden by the approval guard was assigned a **1×1** buffer instead of being
+skipped. Measured `1x1 (box 0x0) lit 100.0%`, a number that looks like a pass and
+means one lit pixel out of one. Now `if (b.width < 1 || b.height < 1) return false`,
+and the observer picks it up when the reveal gives it a real size — §8.1 class 3,
+which has no resize event.
+
+### Degradation, verified at real size rather than asserted
+
+Re-run through the harness so the approval guard actually lifts (the first run
+did not, which is how (c) surfaced):
+
+| context | result |
+|---|---|
+| baseline | 1162×560 + 4× 374×360, lit 11–87%, all live, **0 errors** |
+| `prefers-reduced-motion: reduce` | same sizes, one composed still frame, no rAF loop, **0 errors** |
+| WebGL unavailable | all five **FALLBACK**, lit 44–87%, **0 errors** |
+
+Buffer equals box on every mount, so the canvas-resolution gate from entry 134
+stays clean on the new pages.
+
+### A design correction
+
+The signet first ran `mark.rotation.y = t * 0.42`, a continuous turn — which
+carries an extruded Ω through edge-on twice a cycle, where it reads as a plain
+gold slab. On the front door that leaves the brand mark illegible for much of
+every rotation. It now oscillates inside roughly ±32°: still dimensional, still
+lit from changing angles, never unreadable.
+
+### Also
+
+`index.html`'s hero was a static SVG carrying a comment that this repository
+"ships no raster hero art and has no image generation path". It has a better one
+than raster now — geometry answers the pointer and rescales to any viewport; a
+picture does neither. `sculpture.html` is wired into `nav.js` (`PS.sculpture =
+'cosmos'` plus a COSMOS sub-link) and `reachability-contract.py` passes. Its
+first version declared two 11px rules and `type-scale` blocked it at the repo's
+12px floor.
+
+### A near-miss worth recording: the page was called `forge.html` first
+
+The showcase was written to `forge.html` **without checking whether that file
+existed**. It did — 567 lines of FORGE TRIALS, a timed mental-mastery feature
+with personal bests and realm records, plus its own `nav.js` entries. `git
+status` showed it as **modified, not new**, which is the only reason it was
+caught; it was restored byte-identical from `HEAD` before anything was
+committed.
+
+Worse, the nav wiring had silently **duplicated** keys: `forge:'cosmos'` added
+alongside the real `forge:'ascend'`, and a second `['forge',…]` SECTIONS link —
+the nav.js duplicate-key class this repo has already paid for once (CLAUDE.md
+§4.4). A shadowing key does not error; it re-sections a working page.
+
+Both were reverted and the whole system renamed to **sculpture**
+(`omega-sculpture.js` / `data-omega-sculpture` / `sculpture.html`), which also
+removes the naming collision on its own terms: `index.html`'s hero comment had
+already called this thing the sculpture. **Check `git status` for M-versus-??
+before believing a new file is new**, and grep `nav.js` for the key before
+adding it.
+
+Verified: `./scripts/ci-local.sh` **23/23** gated on exit code, `verify-runtime`
+PASS on all 13 entrypoints, `audit.py` 0 critical / 8 warnings, registry
+regenerated, `context-budget` PASS (CLAUDE.md §4 rewritten to fit — the vendor
+paragraph was stale at 3 files where `vendor/` now holds 8).

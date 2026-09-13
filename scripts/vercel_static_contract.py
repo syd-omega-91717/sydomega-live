@@ -58,7 +58,11 @@ def main() -> int:
             raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL index_marker=" + marker)
 
     build = build_path.read_text(encoding="utf-8", errors="strict")
-    for marker in ("mkdir -p public", "public/index.html", "VERCEL_BUILD=PASS", "for dir in vendor i18n", "public/vendor/supabase-js.js", "unreachable_asset=${ref}", "vercel-build-enhance.mjs"):
+    # "public/${vendored}" replaced a hardcoded "public/vendor/supabase-js.js"
+    # here: the build now asserts EVERY vendor/*.js reached public/, not just
+    # the one that happened to be vendored first. Pin the loop and its test so
+    # the generalisation cannot be narrowed back to a single file silently.
+    for marker in ("mkdir -p public", "public/index.html", "VERCEL_BUILD=PASS", "for dir in vendor i18n", "for vendored in vendor/*.js", "public/${vendored}", "unreachable_asset=${ref}", "vercel-build-enhance.mjs"):
         if marker not in build:
             raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL build_marker=" + marker)
 

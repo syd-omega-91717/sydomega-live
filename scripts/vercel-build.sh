@@ -66,7 +66,16 @@ EOF
 
 # Runtime-critical paths are sometimes assembled dynamically and cannot be
 # discovered by the static reference scan above.
-[ -f public/vendor/supabase-js.js ] || { echo 'VERCEL_BUILD=FAIL missing public/vendor/supabase-js.js'; exit 1; }
+# Every vendored bundle is fetched at runtime by a URL this scan cannot see:
+# omega-oss.js builds its <script src> from a registry object, omega-realm.js
+# import()s a variable. Naming only supabase-js.js here left the other seven
+# unasserted -- and a vendored file absent from production is exactly the
+# 404-on-127-pages failure this allow-list exists to prevent. Assert the
+# whole directory instead of one member of it.
+for vendored in vendor/*.js; do
+  [ -e "${vendored}" ] || break
+  [ -f "public/${vendored}" ] || { echo "VERCEL_BUILD=FAIL missing public/${vendored}"; exit 1; }
+done
 for lang_pack in i18n/*.json; do
   [ -e "${lang_pack}" ] || break
   [ -f "public/${lang_pack}" ] || { echo "VERCEL_BUILD=FAIL missing public/${lang_pack}"; exit 1; }

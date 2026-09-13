@@ -56,7 +56,21 @@
   /* ── LIBRARY REGISTRY ─────────────────────────────────────────── */
   var LIBS = {
     lucide:    {url:'https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js',global:'lucide'},
-    chartjs:   {url:'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js',global:'Chart'},
+    /* SELF-HOSTED. This read
+       https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js and
+       silently produced nothing whenever that host was unreachable: load()
+       below only console.warn()s on s.onerror, so the callback never fires,
+       no chart is drawn, and the member is told nothing. Measured on
+       dashboard.html with the CDN blocked -- #dash-radar stayed at the
+       browser's default 300x150 with 0 painted pixels and window.Chart
+       undefined, on the page that shows a member their own axis scores.
+       Same class as the Supabase client (CLAUDE.md 4), the particle engine
+       (FIXES_LOG 128) and Three.js (131). Vendored per the same recipe:
+       `npm pack chart.js@<version>`, copy package/dist/chart.umd.min.js to
+       vendor/. Self-contained UMD, defines the `Chart` global, MIT,
+       ~208KB -- loaded lazily, so only the three pages that actually draw
+       a chart (dashboard, analytics, studio) ever fetch it. */
+    chartjs:   {url:'/vendor/chart.umd.min.js',global:'Chart'},
     fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7.5.0/dist/fuse.min.js',global:'Fuse'},
     dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js',global:'dayjs'},
     dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js',global:'dayjs'},

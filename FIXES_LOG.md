@@ -14462,3 +14462,222 @@ be observed while the engine never loaded. Fixing the load surfaced it in
 the same session — which is the argument for making a feature testable
 first and correct second, not the reverse.
 
+
+---
+
+## 132 — the dashboard radar chart never drew when jsdelivr was unreachable, and said nothing
+
+**Found:** continuing the graphics audit, `omega-oss.js` still loaded Chart.js
+from `https://cdn.jsdelivr.net/npm/chart.js@4.5.1/...`. Measured from this
+environment, **that host is unreachable** — `curl` returns HTTP 000, as do
+`unpkg.com` and `esm.sh`.
+
+Rendered `dashboard.html` with those three hosts routed to `abort()`:
+
+| | before |
+|---|---|
+| `#dash-radar` buffer | **300×150** (browser default) |
+| `#dash-radar` box (platform tab open) | 300×150 |
+| painted pixels | **0** |
+| `window.Chart` | **undefined** |
+
+So the member's own axis chart — `axis_a` / `axis_b` / `axis_c` plotted
+against the Apex 9/9/9 reference — simply did not exist on a network that
+could not reach jsdelivr.
+
+**And it failed silently in a subtler way than the earlier cases.**
+`omega-oss.js`'s `load()` handles `s.onerror` by doing
+`console.warn(...)` and `delete _loading[name]` — **the callback is never
+invoked**. There is no rejected promise, so unlike `FIXES_LOG` 130's sphere
+this produced **no unhandled rejection at all**: the chart request simply
+evaporated. Measured: `unhandled: 0` both before and after. A failure that
+does not even throw is harder to notice than one that does.
+
+**Fix:** `npm pack chart.js@4.5.1`, copy `package/dist/chart.umd.min.js` to
+`vendor/chart.umd.min.js` — self-contained UMD, defines the `Chart` global,
+verified to import no external specifier, MIT, **208,522 bytes**. The
+registry entry in `omega-oss.js` now points at `/vendor/chart.umd.min.js`.
+It stays **lazy**: `OmegaOSS.require()` loads on demand, so only the three
+pages that actually draw a chart ever fetch it.
+
+**Verified with jsdelivr, unpkg and esm.sh all routed to `abort()`:**
+
+| page | `window.Chart` | vendor reqs | canvas | painted |
+|---|---|---|---|---|
+| dashboard `#dash-radar` | **function** | 1 | **603×180** (= box) | **8,550** |
+| analytics `#an-chart-auth` | **function** | 1 | 197×98 (box 198×99) | 930 |
+| studio | **function** | 1 | — | — |
+
+Buffer **603×180 exactly equals the box**, against 300×150 before. A
+screenshot confirms the radar plots the stub's real axis values (6.2 / 4.5 /
+7.8) inside the Apex ring, in the gold palette.
+
+**Two things deliberately NOT done.**
+
+`omega-qr.js` also loads from jsdelivr, but **no page references it** —
+`grep -rln "OmegaQR\|omega-qr" *.html` returns nothing. It is dormant, so
+vendoring it would add weight for no reader. Recorded rather than fixed.
+
+`lucide` is registered in `omega-oss.js` but **0 pages use it** (`new
+Chart(` and `lucide` both grep to 0 HTML files; the chart consumers reach it
+through `OmegaOSS.chart()` / `omega-chart.js` instead). Also left alone.
+The remaining CDN entries — `marked`, `fuse`, `dayjs`, `hljs`, `popper`,
+`tippy`, plus `shepherd` in `omega-tour.js` and `jspdf` in
+`omega-passport.js` — are not graphics and are out of this pass's scope;
+they are measured as still-CDN and still silently failing by the same
+`load()` path.
+
+**A measurement correction worth recording.** An earlier pass reported
+`#galaxy-canvas` on `dashboard.html` as *visible but blank* (0 painted in a
+correctly sized 1286×360). Re-measured with a longer settle, it paints
+**17,527–17,601 pixels**. The first reading sampled before the draw; the
+canvas was never broken. *A canvas read too early is indistinguishable from
+a canvas that never paints* — wait for the draw before calling it dead.
+
+**Transferable rule.** *The quietest failure is the one that does not even
+reject.* The sphere at least produced an unhandled rejection; this one
+handled its own error and dropped the callback, so nothing surfaced
+anywhere — no throw, no log a member would see, no artifact. When a loader
+swallows `onerror`, absence of errors is not evidence that anything worked.
+
+---
+
+## 133 — the atmosphere canvas was drawn at 94% of its own display size, on every page
+
+**Found:** while measuring the chart fix, `#omega-atmosphere` reported a
+**1440×900 drawing buffer inside a 1526×954 box** on a 1440×900 viewport.
+Exactly 6% in both axes, on every page — so the starfield, orbital rings and
+sigil were being drawn at viewport resolution and then upsampled.
+
+**Two modules, each correct alone.** `omega-genesis.js` creates the canvas
+and sizes the buffer to `innerWidth × DPR`; its CSS is
+`position:fixed;inset:0`, so the box would be exactly the viewport.
+`omega-9d.js`'s `parallax()` then applies
+
+```js
+atmo.style.transform = 'translate(cx,cy) scale(1.06)';
+```
+
+The **overscan is deliberate and right** — without it a ±12px parallax
+translate would expose the canvas edge. What was wrong is that the buffer
+never accounted for it, so 1440 device pixels were stretched across 1526.
+
+**Fix — read the applied scale, never repeat the constant.** `size()` now
+derives the factor from `getComputedStyle(c).transform`, parsing the first
+component of the resolved `matrix(...)`/`matrix3d(...)`:
+
+```js
+var k = overscan();
+var w = Math.floor(innerWidth * DPR * k);
+```
+
+This file owns the buffer; `omega-9d.js` owns the transform. Copying `1.06`
+across that boundary is the coordination failure `CLAUDE.md` §4 records for
+the bottom-chrome ladder — correct at one setting, silently wrong the moment
+the other side is retuned. Reading the resolved matrix stays correct if the
+overscan changes, and falls back to 1 when no transform is applied.
+
+**Timing.** `omega-9d.js` sets the transform inside its rAF loop, which
+starts *after* `omega-genesis.js` runs, so the first `size()` necessarily
+reads scale 1. Bounded re-checks at 250/1000/3000ms pick it up once; not a
+permanent poll, because the scale component stops changing as soon as the
+parallax layer is up.
+
+**Assigning `canvas.width` clears the bitmap**, and these re-checks run
+repeatedly, so `size()` now only assigns on an actual change. `frame()`
+redraws every tick, so a genuine resize is invisible; a no-op re-check no
+longer blanks a frame.
+
+**Verified in a render**, CDNs aborted, waiting past the 3000ms re-check:
+
+| context | buffer | box | match | painted |
+|---|---|---|---|---|
+| desktop 1440×900 | **1526×954** | 1526×954 | ✅ | 121,699 |
+| phone 390×844 | **413×894** | 413×895 | ✅ (1px round) | 26,847 |
+| reduced-motion | — | — | canvas **absent** | — |
+
+**A comment of mine was wrong and was corrected before shipping.** The first
+draft cited `prefers-reduced-motion` as the scale-1 case. It is not: the
+whole canvas sits behind `if (!REDUCED)`, so under reduced motion it is
+never created — the render shows the element absent entirely. Confirmed
+pre-existing by reading the same guard at `HEAD` before the change. The
+scale-1 path actually covers the window before the rAF loop starts, and
+`omega-9d.js` being absent or failing.
+
+**Transferable rule.** *A canvas has two sizes and a transform can separate
+them.* Buffer-vs-box was checked in `FIXES_LOG` 130–131 against the layout
+box; a CSS transform moves the *displayed* size away from that box again
+without changing either number the earlier checks looked at. When something
+else transforms your canvas, the buffer has to track the transform, not just
+the box — and the only safe source for that factor is the resolved style,
+not a copy of the constant.
+
+---
+
+## 134 — the canvas-sizing class is now gated, and the advisory aggregator was silently dropping anything it did not recognise
+
+**Why:** buffer-vs-box has now cost four separate fixes (`FIXES_LOG` 130, 131,
+133). Fixing a fifth instance by hand would be worth less than making the
+class impossible to reintroduce quietly, so it is now checked by
+`scripts/verify-runtime.js`, which already renders the capability
+entrypoints.
+
+**First, the sweep — and the threshold was wrong.** A repo-wide render across
+30 pages and 160 visible canvases flagged **21 findings**. Twenty of them
+were **false positives**: canvases with a buffer twice their box
+(`264×264` in `132×132`, `1040×1040` in `520×520`, `200×200` in `100×100`).
+That is the standard hi-DPI pattern — draw at 2×, let CSS scale down — and
+it is *correct*, sharp, at worst slightly wasteful.
+
+Only **ratio < 1** is a defect: fewer device pixels than the display needs,
+so the canvas is upsampled and soft. With the criterion corrected, the same
+30 pages report **0 findings** — the class really is closed, but the first
+number would have sent someone "fixing" twenty healthy canvases.
+*§8.4's rule about a scanner needing its own false-positive pass, met head
+on.*
+
+**The check.** Per visible canvas ≥60px, measured against
+`getBoundingClientRect` — the **transformed** box, which is the size actually
+painted to, and the one the atmosphere bug (133) hid behind:
+
+- **zero drawing buffer → BLOCKS.** That canvas can never paint anything.
+- **ratio < 0.98 → advisory.** It does paint, just softer than its box.
+
+Baseline at introduction: **0 and 0** across 30 pages / 160 canvases.
+
+**Verified in both directions, because a check that cannot fail proves
+nothing.** Planted each violation into `omega-genesis.js` and restored it:
+
+| planted | result |
+|---|---|
+| `c.width = 0` | **FAIL dashboard.html — canvas with a zero drawing buffer (can never paint): omega-atmosphere** |
+| buffer without the `× k` overscan | `canvas drawn below its display size (soft/upsampled): dashboard.html omega-atmosphere 1280x900 in 1357x954 (94%)` |
+| restored | clean, no canvas finding |
+
+The 94% in that output is exactly the real defect 133 fixed.
+
+**And the planted test caught a bug in the harness itself.** On the first
+run the low-resolution advisory reported **nothing**. The cause was not the
+probe: `verify-runtime.js` aggregates advisories through an
+`if / else if` chain matching known prefixes —
+
+```js
+if (a.startsWith('tap targets')) ...
+else if (a.startsWith('unlabelled')) ...
+else if (a.startsWith('contrast 3-4.5')) ...
+```
+
+— and **anything unrecognised was silently discarded**. The new advisory was
+collected into `r.advisories`, matched no prefix, and vanished. So *every*
+future advisory added to this harness would have been a silent no-op until
+someone noticed.
+
+Fixed with the specific branch **and a catch-all `else`** that surfaces
+unclassified strings verbatim. The catch-all is the durable half: the next
+person to add an advisory cannot lose it the same way.
+
+**Transferable rule.** *A dispatcher that matches known cases and drops the
+rest turns every future case into a silent no-op.* This one had a
+default-drop in the reporting layer, so a correct probe still reported
+nothing — and only a planted violation could reveal it, because the clean
+run looks identical either way.

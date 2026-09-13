@@ -204,6 +204,52 @@
     return pts;
   }
 
+  /* The twelve gates, read from the module that owns them. window.OmegaCanon
+     is published by omega-canon.js, which bg.js loads on every page; it
+     exposes onReady() and tracks[]. The inline list is a fallback for the case
+     where that fetch never resolves -- transcribed from omega-canon.json's
+     tracks[].gate, not invented here.
+
+     NOTE, recorded rather than silently resolved: gates.html shows a DIFFERENT
+     set of twelve names (Gate of Awareness / Knowledge / Discipline / ...).
+     Which set is canonical is an owner's call, so this reads the documented
+     single source of truth and the divergence is filed in GAP_ANALYSIS.md. */
+  /* The twelve executors, from omega-agents.json -- the roster agents.html and
+     omega-constellation.js already consume. Inline list is the same fallback
+     posture those take when the fetch fails. */
+  var AGENT_FALLBACK = ['Sentinel', 'Merchant', 'Scout', 'Warden', 'Sovereign',
+    'Auditor', 'Proxy', 'Oracle', 'Beacon', 'Analyst', 'Tutor', 'Historian'];
+
+  function canonAgents(cb) {
+    fetch('/omega-agents.json').then(function (r) { return r.json(); })
+      .then(function (j) {
+        var list = j && (j.agents || j);
+        if (Array.isArray(list) && list.length) {
+          cb(list.slice(0, 12).map(function (a) { return a.name || ''; }));
+        }
+      })['catch'](function () { /* fallback already in place */ });
+  }
+
+  var GATE_FALLBACK = ['Gate of Ignition', 'Gate of Abundance', 'Gate of Discourse',
+    'Gate of the Hearth', 'Gate of Radiance', 'Gate of Precision', 'Gate of Balance',
+    'Gate of Transmutation', 'Gate of Vision', 'Gate of Sovereignty',
+    'Gate of Innovation', 'Gate of Dreams'];
+
+  function canonGates(cb) {
+    try {
+      var C = window.OmegaCanon;
+      if (!C || typeof C.onReady !== 'function') return;
+      C.onReady(function (api) {
+        var out = [];
+        for (var i = 1; i <= 12; i++) {
+          var g = typeof api.gate === 'function' ? api.gate(i) : null;
+          if (g) out.push(g);
+        }
+        if (out.length) cb(out);
+      });
+    } catch (e) { /* fallback already in place */ }
+  }
+
   /* ══════════════════════════════════════════════════════════════════════
      THE SCENES
      ══════════════════════════════════════════════════════════════════════ */
@@ -309,15 +355,32 @@
     band.rotation.x = Math.PI / 2;
     ring.add(band);
 
-    return { scene: scene, camera: cam, update: function (t, px, py) {
+    /* Each node is a real door. The destination is /agents.html for all
+       twelve -- the same href omega-constellation.js:209 uses for the same
+       roster. agents.html carries no per-agent anchor (only #app and
+       #agent-greeting), so a deep link like #Sentinel would be a destination
+       this platform does not have. */
+    var links = nodes.map(function (n, i) {
+      return { object: n.mesh, href: '/agents.html', label: AGENT_FALLBACK[i] };
+    });
+    canonAgents(function (names) {
+      for (var i = 0; i < links.length && i < names.length; i++) links[i].label = names[i];
+    });
+
+    return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
       ring.rotation.y = t * 0.20 + px * 0.5;
       core.rotation.y = Math.sin(t * 0.42) * 0.62;   /* sway, per the signet note above */
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
         n.mesh.rotation.x = t * 0.8 + n.phase;
         n.mesh.rotation.y = t * 0.6;
-        var pulse = 1 + Math.sin(t * 1.6 + n.phase * 2) * 0.16;
-        n.mesh.scale.setScalar(pulse);
+        /* Skip the pulse on a hovered node: setHover owns its scale while the
+           pointer is on it, and two writers on one property is a flicker, not
+           an effect. The flag lives on the mesh because the update closure
+           cannot see the mount. */
+        if (!n.mesh.userData.omegaHovered) {
+          n.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + n.phase * 2) * 0.16);
+        }
         n.mesh.material.emissiveIntensity = 0.34 + Math.sin(t * 1.6 + n.phase * 2) * 0.20;
       }
       cam.position.y = 2.45 - py * 0.8;
@@ -351,7 +414,7 @@
 
     var dummy = new T.Object3D();
     var cGold = new T.Color(p.gold), cCyan = new T.Color(p.cyan), cBright = new T.Color(p.bright);
-    var half = (S - 1) / 2, i = 0, live = [];
+    var half = (S - 1) / 2, i = 0;
     for (var x = 0; x < S; x++) for (var y = 0; y < S; y++) for (var z = 0; z < S; z++) {
       dummy.position.set((x - half) * GAP, (y - half) * GAP, (z - half) * GAP);
       dummy.updateMatrix();
@@ -362,7 +425,6 @@
       var edge = Math.max(Math.abs(x - half), Math.abs(y - half), Math.abs(z - half)) / half;
       var c = edge > 0.82 ? cCyan : (Math.random() < 0.06 ? cBright : cGold);
       mesh.instanceColor.setXYZ(i, c.r, c.g, c.b);
-      if (Math.random() < 0.05) live.push(i);
       i++;
     }
     mesh.instanceMatrix.needsUpdate = true;
@@ -391,7 +453,14 @@
     scene.add(grp);
     grp.add(mesh); grp.add(shell);
 
-    return { scene: scene, camera: cam, update: function (t, px, py) {
+    /* One door, not 729: the Crystal-Omega at the centre. The lattice itself
+       is the platform's real structure -- omega-canon.json's structure block
+       reads "each phase is a full 9x9x9 cube on 3 axes", 729
+       nodes_per_track_per_phase, on Knowledge / Mastery / Contribution -- but
+       an individual node is not a page, so only the core is a link. */
+    var links = [{ object: crystal, href: '/matrix.html', label: 'The 9x9x9 lattice' }];
+
+    return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
       grp.rotation.y = t * 0.18 + px * 0.6;
       grp.rotation.x = Math.sin(t * 0.22) * 0.20 - py * 0.4;
       crystal.rotation.y = t * 0.9;
@@ -405,12 +474,26 @@
   };
 
   /* ── GATES ────────────────────────────────────────────────────────────
-     The Nine Gates as an actual corridor receding into depth, each ring a
+     The gates as an actual corridor receding into depth, each ring a
      threshold. The camera drifts forward and loops, so the sequence never
-     ends -- ascent, not a list. */
+     ends -- ascent, not a list.
+
+     TWELVE, NOT NINE. The first version of this scene drew NINE rings and the
+     page called them "THE NINE GATES", taken from the platform's concept art.
+     The platform's own canon says otherwise, and it is not ambiguous:
+       omega-canon.json  tracks[].gate      -> 12 named gates
+       omega-canon.json  gate_names         -> 12
+       omega-canon.json  gate_thresholds    -> 12
+       nav.js            '12 GATES'         -> /elements.html#gates
+       gates.html                           -> "12 gates"
+     "Nine Gates" appeared nowhere in this repository except the page this
+     module shipped. That is CLAUDE.md 8.1 class 8 -- a second, divergent copy
+     of a canonical table -- and it is read from the owner now: window
+     .OmegaCanon, the single source of truth bg.js loads on every page
+     (omega-canon.js). GATE_FALLBACK is used only if that never resolves. */
   SCENES.gates = function (T, opt) {
     var p = palette();
-    var N = 9, SPACING = 1.65;
+    var N = 12, SPACING = 1.42;
     var scene = new T.Scene();
     var cam = new T.PerspectiveCamera(55, 1, 0.1, 100);
     rig(T, scene, p);
@@ -444,7 +527,16 @@
     crystal.position.z = -N * SPACING;
     scene.add(crystal);
 
-    return { scene: scene, camera: cam, update: function (t, px, py) {
+    /* Every ring is a real destination. The label is the gate's own name from
+       the canon, so the 3-D scene and the page it leads to agree. */
+    var links = gates.map(function (g, i) {
+      return { object: g, href: '/gates.html', label: GATE_FALLBACK[i] };
+    });
+    canonGates(function (names) {
+      for (var i = 0; i < links.length && i < names.length; i++) links[i].label = names[i];
+    });
+
+    return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
       var drift = (t * 0.55) % SPACING;
       cam.position.set(px * 0.5, -py * 0.4, 2.2 - drift);
       cam.lookAt(0, 0, -N * SPACING);
@@ -723,6 +815,7 @@
       ensureRenderer(T);
       m.scene = SCENES[kind](T, { accent: accent });
       sizeMount(m);
+      wireNavigation(m);
       if (REDUCED) { renderStill(m); return; }
       observe(m);
       startLoop();
@@ -731,6 +824,135 @@
          between the probe and the first render. Never leave a dead box. */
       m.dead = true;
       fallback(cv, kind, accent);
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     NAVIGATION — the scene is a map you travel, not a diagram you look at
+
+     A scene may declare `links`: [{object, href, label}]. Hovering one lifts
+     and brightens it and names it; clicking it goes there.
+
+     AND EVERY LINK IS ALSO A REAL <a>. A <canvas> is one element: it cannot be
+     tabbed into, it exposes no destinations to a screen reader, and a
+     raycaster answers a pointer only. So the same list is emitted as real
+     anchors under the mount -- visually quiet, fully focusable, in the DOM
+     whether or not WebGL ever starts. This is the rule omega-constellation.js
+     already holds for the 2-D ring ("each node a real link"); a third
+     dimension is not a reason to drop it. A member on a keyboard reaches every
+     destination the pointer can.
+     ══════════════════════════════════════════════════════════════════════ */
+  function linkList(m) {
+    if (!m.scene || !m.scene.links || !m.scene.links.length) return;
+    if (m.linkEl) return;
+    var wrap = document.createElement('nav');
+    wrap.className = 'omega-sculpt-links';
+    wrap.setAttribute('aria-label', (m.kind === 'agents' ? 'The twelve executors'
+      : m.kind === 'gates' ? 'The twelve gates' : 'Destinations') + ' in this sculpture');
+    wrap.style.cssText = 'position:absolute;left:0;right:0;top:0;bottom:0;' +
+      'pointer-events:none;overflow:hidden';
+    var seen = {};
+    m.scene.links.forEach(function (lk) {
+      if (!lk.href) return;
+      var key = lk.href + '|' + lk.label;
+      if (seen[key]) return;
+      seen[key] = 1;
+      var a = document.createElement('a');
+      a.href = lk.href;
+      a.textContent = lk.label || lk.href;
+      /* Off-screen until focused, then shown in place -- the standard
+         skip-link pattern, so it never fights the artwork but a keyboard
+         still finds it. */
+      a.style.cssText = 'position:absolute;left:-9999px;top:auto;width:1px;height:1px;' +
+        'overflow:hidden;pointer-events:auto;font:12px/1.4 var(--M,monospace);' +
+        'letter-spacing:.08em;color:var(--void,#08080F);background:var(--solar,#E2C86D);' +
+        'padding:6px 10px;border-radius:2px;text-decoration:none';
+      a.addEventListener('focus', function () {
+        a.style.left = '12px'; a.style.top = '12px';
+        a.style.width = 'auto'; a.style.height = 'auto'; a.style.overflow = 'visible';
+        a.style.zIndex = '5';
+      });
+      a.addEventListener('blur', function () {
+        a.style.left = '-9999px'; a.style.width = '1px'; a.style.height = '1px';
+        a.style.overflow = 'hidden';
+      });
+      wrap.appendChild(a);
+    });
+    if (!wrap.childNodes.length) return;
+    m.el.appendChild(wrap);
+    m.linkEl = wrap;
+  }
+
+  /* The hovered node's name, drawn as a caption inside the mount. */
+  function hoverLabel(m, text) {
+    if (!m.capEl) {
+      var c = document.createElement('div');
+      c.setAttribute('aria-hidden', 'true');   /* the <a> list carries this for AT */
+      c.style.cssText = 'position:absolute;left:12px;bottom:12px;pointer-events:none;' +
+        'font:12px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:.14em;' +
+        'text-transform:uppercase;color:var(--solar,#E2C86D);' +
+        'background:rgba(5,5,11,.72);padding:5px 9px;border-radius:2px;' +
+        'opacity:0;transition:opacity .16s;z-index:4';
+      m.el.appendChild(c);
+      m.capEl = c;
+    }
+    if (text) { m.capEl.textContent = text; m.capEl.style.opacity = '1'; }
+    else m.capEl.style.opacity = '0';
+  }
+
+  function pickAt(m, clientX, clientY) {
+    if (!_three || !m.scene || !m.scene.links || !m.scene.links.length) return null;
+    var b = m.canvas.getBoundingClientRect();
+    if (b.width < 1 || b.height < 1) return null;
+    if (!m.ray) m.ray = new _three.Raycaster();
+    var ndc = new _three.Vector2(
+      ((clientX - b.left) / b.width) * 2 - 1,
+      -((clientY - b.top) / b.height) * 2 + 1);
+    m.ray.setFromCamera(ndc, m.scene.camera);
+    var objs = m.scene.links.map(function (l) { return l.object; });
+    var hits = m.ray.intersectObjects(objs, true);
+    if (!hits.length) return null;
+    /* intersectObjects(…, true) can report a descendant, so walk back up to
+       the object the link was declared on. */
+    for (var h = 0; h < hits.length; h++) {
+      var node = hits[h].object;
+      while (node) {
+        for (var i = 0; i < m.scene.links.length; i++) {
+          if (m.scene.links[i].object === node) return m.scene.links[i];
+        }
+        node = node.parent;
+      }
+    }
+    return null;
+  }
+
+  function setHover(m, link) {
+    if (m.hover === link) return;
+    if (m.hover && m.hover.object) {
+      m.hover.object.userData.omegaHovered = false;
+      m.hover.object.scale.setScalar(m.hoverBase || 1);
+    }
+    m.hover = link;
+    if (link && link.object) {
+      m.hoverBase = link.object.scale.x;
+      link.object.userData.omegaHovered = true;
+      link.object.scale.setScalar(m.hoverBase * 1.45);
+    }
+    m.canvas.style.cursor = link ? 'pointer' : '';
+    hoverLabel(m, link ? link.label : '');
+  }
+
+  function wireNavigation(m) {
+    if (!m.scene || !m.scene.links || !m.scene.links.length) return;
+    linkList(m);
+    if (REDUCED) return;    /* no hover motion; the <a> list still works */
+    m.canvas.addEventListener('pointermove', function (e) {
+      setHover(m, pickAt(m, e.clientX, e.clientY));
+    }, { passive: true });
+    m.canvas.addEventListener('pointerleave', function () { setHover(m, null); }, { passive: true });
+    m.canvas.addEventListener('click', function (e) {
+      var hit = pickAt(m, e.clientX, e.clientY);
+      if (hit && hit.href) window.location.href = hit.href;
     });
   }
 
@@ -804,7 +1026,9 @@
     status: function () {
       return _mounts.map(function (m) {
         return { kind: m.kind, live: !!m.scene && !m.dead, fallback: m.dead,
-                 visible: m.visible, buffer: m.bw + 'x' + m.bh, box: m.w + 'x' + m.h };
+                 visible: m.visible, buffer: m.bw + 'x' + m.bh, box: m.w + 'x' + m.h,
+                 links: (m.scene && m.scene.links) ? m.scene.links.length : 0,
+                 hover: m.hover ? m.hover.label : null };
       });
     }
   };

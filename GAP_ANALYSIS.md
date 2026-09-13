@@ -18,6 +18,26 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **Two divergent sets of twelve gate names** (opened 2026-09-13; `FIXES_LOG.md`
+  139). The count is settled and agreed everywhere — **twelve** (`omega-canon.json`
+  `tracks[].gate`, `gate_names` and `gate_thresholds` are each 12; `nav.js` says
+  `12 GATES`; `gates.html` says "12 gates"). The **names** are not:
+  | source | names |
+  |---|---|
+  | `omega-canon.json` `tracks[].gate` | Gate of Ignition · Abundance · Discourse · the Hearth · Radiance · Precision · Balance · Transmutation · Vision · Sovereignty · Innovation · Dreams |
+  | `omega-canon.json` `gate_names` | INITIATE · ACOLYTE · SCHOLAR · KEEPER · GUARDIAN · ARCHITECT · SOVEREIGN · VANGUARD · HERALD · ORACLE · PRIME · APEX |
+  | `gates.html` | Gate of Awareness · Knowledge · Discipline · Creation · Contribution · Finance · Leadership · Legacy · Apex … |
+  Three vocabularies for one twelve-fold: `tracks[].gate` reads as the
+  zodiac-track gates, `gate_names` as rank titles, and `gates.html`'s as an
+  authority ladder (nav calls that page **AUTHORITY GATES**, a different label
+  again). They may be three real systems that merely share a word, or §8.1
+  class 8 — a canonical table that drifted. **Open rather than fixed because
+  deciding which is authoritative is an owner's call about the platform's own
+  canon, not a rendering decision.** `omega-sculpture.js` reads
+  `window.OmegaCanon` — the single source of truth `CLAUDE.md` names and
+  `omega-canon.js` publishes — so it cannot be the copy that drifts; if the
+  owner settles this, the scene follows the canon automatically.
+
 - **The 3-D layer exists but four scenes is where it stops** (opened 2026-09-13;
   `FIXES_LOG.md` 138). `omega-sculpture.js` gives the platform real-time geometry
   for the first time — `signet`, `agents`, `matrix`, `gates` — mounted with one

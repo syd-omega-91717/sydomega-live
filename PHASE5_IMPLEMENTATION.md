@@ -273,7 +273,7 @@ Master configuration for all 6 agents:
 - Safety controls (frequency caps, escalation rules, sampling rates)
 - Cost control (context summarization, token budgets, monthly spend)
 
-### `supabase/migrations/20260911120000_phase5_autonomous_agents.sql`
+### `supabase/migrations/20260911222734_phase5_autonomous_agents.sql`
 New tables with RLS policies:
 - `autonomous_decisions` — All agent decisions, member-readable with owner audit
 - `agent_experiments` — Experiment tracking with winner validation

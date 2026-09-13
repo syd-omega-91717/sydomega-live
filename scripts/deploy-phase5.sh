@@ -51,7 +51,7 @@ check_prerequisites() {
   fi
 
   # Check for migration file
-  if [ ! -f "supabase/migrations/20260911120000_phase5_autonomous_agents.sql" ]; then
+  if [ ! -f "supabase/migrations/20260911222734_phase5_autonomous_agents.sql" ]; then
     error "Migration file not found"
   fi
 
@@ -96,7 +96,7 @@ validate_sql() {
 
   if ! python3 -c "
 import re
-with open('supabase/migrations/20260911120000_phase5_autonomous_agents.sql') as f:
+with open('supabase/migrations/20260911222734_phase5_autonomous_agents.sql') as f:
   sql = f.read()
   # Basic checks
   if sql.count('CREATE TABLE') < 6:
@@ -157,7 +157,7 @@ if not supabase_url or not service_role_key:
     sys.exit(1)
 
 # Read migration file
-with open('supabase/migrations/20260911120000_phase5_autonomous_agents.sql') as f:
+with open('supabase/migrations/20260911222734_phase5_autonomous_agents.sql') as f:
     migration_sql = f.read()
 
 print(f"Connecting to {supabase_url}")

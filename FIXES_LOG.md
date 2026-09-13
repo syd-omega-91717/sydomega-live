@@ -15549,3 +15549,95 @@ test, a before/after comparison that reproduced it identically on `HEAD` (which
 only proved the *artifact* was stable), and a screenshot that appeared to show
 crowding. **Reproducibility is not correctness** — a stable measurement of the
 wrong quantity reproduces perfectly.
+
+## 149 — `graph.html` and `map.html` ran none of their own code, for want of two libraries
+
+Both pages opened an async IIFE with a runtime CDN import:
+
+```js
+graph.html:287   var d3 = await import('https://esm.sh/d3@7.9.0');
+map.html:238     var L  = await import('https://esm.sh/leaflet@1.9.4');
+map.html:241     css.href = 'https://esm.sh/leaflet@1.9.4/dist/leaflet.css';
+```
+
+A rejected dynamic import **aborts the whole IIFE**, so everything after that
+line — the entire graph build, the entire map build — never ran. Measured
+identically on `HEAD` and on the branch, so pre-existing:
+
+```
+BEFORE  graph.html  {"d3":"undefined", svgs:88,  circles:230}  TypeError: d3.select is not a function
+BEFORE  map.html    {"L":"undefined",  panes:0}                TypeError: L.map is not a function
+```
+
+The 88 SVGs on `graph.html` are nav and emblem chrome; **the graph itself was
+not among them.** `map.html` had **zero** `.leaflet-pane` — no map at all.
+
+Same class as the Supabase client (`CLAUDE.md` §4), the particle engine
+(128), the realm sphere, Chart.js, tippy, marked and Fuse (130-132, 135-137).
+`esm.sh` is also refused outright by `vault.html`'s stricter `script-src`.
+
+**Vendored per the established recipe.** `npm pack`, official builds, into
+`/vendor/` — which is `'self'`, so it satisfies both the platform header and
+`vault.html`'s meta CSP:
+
+```
+vendor/d3.min.js      279,706   UMD
+vendor/leaflet.js     147,552   UMD
+vendor/leaflet.css     14,806
+vendor/images/*.png         5   referenced by leaflet.css url(images/…)
+```
+
+**d3 forced the UMD choice**: its `package.json` has `main: src/index.js`
+(which imports ~30 sibling `d3-*` packages and needs a bundler this repo does
+not have) and `exports.umd: ./dist/d3.min.js`. The UMD global is the only
+self-contained form. Leaflet ships an ESM build but the UMD one is smaller and
+matches the other eight vendored bundles.
+
+**Not `OmegaOSS.require()`, deliberately.** Both IIFEs run from a
+`<script type="module">` that the browser executes *before* the
+`<script src="/bg.js" defer>` further down the page, so `window.OmegaOSS` does
+not exist yet at that point — guarding on an accessor nothing has published is
+§8.1 class 4b, the bug that left `omega-emblems-catalog.js` calling an API that
+never existed. Each page uses a small promise loader that does not depend on
+load order and, unlike `OmegaOSS.load()`, **rejects** on failure instead of
+`console.warn`-ing — the silent death these pages actually suffered. Both
+libraries are still registered in `omega-oss.js`'s registry as the canonical
+record of where they live.
+
+Result:
+
+```
+AFTER   graph.html  {"d3":"object", svgs:333, circles:489}   0 errors
+AFTER   map.html    {"L":"object",  panes:7}                 0 errors
+```
+
++245 SVGs and +259 circles on `graph.html` — the force simulation drawing for
+the first time. 7 `.leaflet-pane` and a 400px map on `map.html`.
+
+**Two supporting fixes, both needed:**
+
+- `scripts/vercel-build.sh` asserted only `vendor/*.js`. `leaflet.css` is
+  fetched by a `<link>` the reference scan cannot see, and its five PNGs are
+  referenced from **inside that CSS** by `url(images/…)`, which the HTML/JS
+  scan cannot see either — so all six would have shipped unasserted, the exact
+  404-on-127-pages shape that loop exists to prevent (97). It now asserts every
+  file under `vendor/`, plus a parent-shell count because `find | while` runs
+  the loop in a subshell where `exit 1` cannot fail the script.
+  `scripts/vercel_static_contract.py` pins that code as a marker string, so it
+  was updated in the same change — otherwise the gate fails on its own fix.
+- Member-visible copy on both pages said the library is *"loaded dynamically
+  from esm.sh"*. That is now false. Corrected — §8.4's rule that a claim in
+  copy drifts too, and neither string is `data-i18n`-keyed, so no pack needed.
+
+**A fourth repeat of the same reading error, caught before it was reported.**
+The probe read `#map-loading`'s `textContent` and got `"INITIALISING MAP…"`
+after the fix, which looks like the map never finished. It had:
+`display:none`, `visibleBox:false`. `textContent` returns the string whether
+or not anything is on screen — the same family as 148's `opacity:0` boxes and
+clipped rects. **Read the computed style, not the text.**
+
+**Still unvendored, measured in the same sweep** (recorded, not fixed here):
+`omega-music.js` imports `tone@14.9.17` and `omega-passport.js` imports
+`jspdf@2.5.2`, neither with a `/vendor/` path — the identical silent-death
+class. `omega-particles.js` and `omega-realm.js` also name `esm.sh` but try
+`/vendor/` **first**, so those are fallbacks and are fine.

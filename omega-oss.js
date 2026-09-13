@@ -99,6 +99,19 @@
        (reading 'applyStyles')" AT LOAD and never defines window.tippy at
        all. Measured both ways in Chromium. Hence the ordered pair below:
        popper first, then tippy — never tippy alone. */
+    /* SELF-HOSTED, added 2026-09-13. graph.html and map.html each opened an
+       async IIFE with a dynamic import of a CDN-hosted module, and that host
+       is refused by vault.html's stricter script-src and unreachable from the
+       verification sandbox. A rejected dynamic import
+       aborts the whole IIFE, so NEITHER PAGE RAN ANY OF ITS OWN CODE --
+       `d3.select is not a function` / `L.map is not a function` on every
+       load, measured identically on HEAD and branch. Same class as the
+       Supabase client, the particle engine and three.js.
+       d3 ships no self-contained ESM build (`main` is src/index.js, which
+       needs a bundler); its package `exports.umd` IS dist/d3.min.js, so the
+       UMD global is the only form that works in a no-build repo. */
+    d3:        {url:'/vendor/d3.min.js',global:'d3'},
+    leaflet:   {url:'/vendor/leaflet.js',global:'L'},
     popper:    {url:'/vendor/popper.min.js',global:'Popper'},
     tippy:     {url:'/vendor/tippy-bundle.umd.min.js',global:'tippy'},
   };

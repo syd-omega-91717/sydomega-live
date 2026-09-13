@@ -129,6 +129,17 @@ open, recorded in `FIXES_LOG.md`:
   blocked, but §8.4's warning applies: a dated snapshot produces false findings in
   both directions. A session with live access should regenerate it; this one repaired
   the ledger only and did not touch the database.
+- **`omega-music.js` and `omega-passport.js` still import from `esm.sh` with no
+  vendored fallback** (opened 2026-09-13, measured; `FIXES_LOG.md` 149).
+  `omega-music.js` does `import('https://esm.sh/tone@14.9.17')` and
+  `omega-passport.js` does `import('https://esm.sh/jspdf@2.5.2')`, and neither names
+  a `/vendor/` path at all — `grep -c "'/vendor/"` returns **0** for both, against 1
+  for `omega-particles.js` and `omega-realm.js`, which try the vendored copy first and
+  only fall back. So these two are in exactly the state `graph.html` and `map.html`
+  were in: a rejected import aborts the caller, and the feature is silently dead.
+  Vendor them the same way (`npm pack`, official UMD build into `/vendor/`, register
+  in `omega-oss.js`); check first whether a PDF/audio feature is reachable at all, so
+  the fix is not spent on a dormant page.
 - **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
   2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
   `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned

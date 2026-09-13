@@ -72,10 +72,19 @@ EOF
 # unasserted -- and a vendored file absent from production is exactly the
 # 404-on-127-pages failure this allow-list exists to prevent. Assert the
 # whole directory instead of one member of it.
-for vendored in vendor/*.js; do
-  [ -e "${vendored}" ] || break
+# Every FILE under vendor/, not just *.js: leaflet.css is fetched by a <link>
+# this scan cannot see either, and vendor/images/*.png are referenced from
+# inside that CSS by url(images/...) -- a CSS url() is invisible to the HTML/JS
+# reference scan above, so those five PNGs had no assertion at all.
+find vendor -type f 2>/dev/null | while IFS= read -r vendored; do
   [ -f "public/${vendored}" ] || { echo "VERCEL_BUILD=FAIL missing public/${vendored}"; exit 1; }
 done
+# `find | while` runs the loop in a subshell, so its exit 1 cannot fail this
+# script. Re-assert the count in the parent shell.
+vendor_src="$(find vendor -type f 2>/dev/null | wc -l | tr -d ' ')"
+vendor_out="$(find public/vendor -type f 2>/dev/null | wc -l | tr -d ' ')"
+[ "${vendor_src}" -eq "${vendor_out}" ] || {
+  echo "VERCEL_BUILD=FAIL vendor files src=${vendor_src} public=${vendor_out}"; exit 1; }
 for lang_pack in i18n/*.json; do
   [ -e "${lang_pack}" ] || break
   [ -f "public/${lang_pack}" ] || { echo "VERCEL_BUILD=FAIL missing public/${lang_pack}"; exit 1; }

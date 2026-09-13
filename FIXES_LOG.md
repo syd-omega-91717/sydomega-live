@@ -14947,3 +14947,87 @@ Verified: `./scripts/ci-local.sh` **23/23** gated on exit code, `verify-runtime`
 PASS on all 13 entrypoints, `audit.py` 0 critical / 8 warnings, registry
 regenerated, `context-budget` PASS (CLAUDE.md §4 rewritten to fit — the vendor
 paragraph was stale at 3 files where `vendor/` now holds 8).
+
+## 139 — the sculpture's gate corridor asserted NINE gates; this platform has TWELVE
+
+`omega-sculpture.js` shipped in entry 138 with a `gates` scene that drew **nine**
+rings, and `sculpture.html` captioned it **"THE NINE GATES"**. That figure came
+from the platform's concept art, not from the platform. Its own canon is not
+ambiguous:
+
+```
+omega-canon.json  tracks[].gate     -> 12   ("Gate of Ignition" .. "Gate of Dreams")
+omega-canon.json  gate_names        -> 12   (INITIATE .. APEX)
+omega-canon.json  gate_thresholds   -> 12
+nav.js                              -> '12 GATES'  /elements.html#gates
+gates.html                          -> "12 gates"
+grep -rl "Nine Gates" --include=*.html .   ->  ./sculpture.html   (only my own page)
+```
+
+§8.1 class 8 — a second, divergent copy of a canonical table — written by the
+same hand that documents the class. The scene is now **12**, and it does not
+carry its own list: it reads `window.OmegaCanon`, the single source of truth
+`omega-canon.js` publishes and `bg.js` loads on every page. `GATE_FALLBACK` is
+transcribed from `tracks[].gate` for the case where that fetch never resolves.
+Verified in a render — the corridor's twelve links read `Gate of Ignition`,
+`Gate of Abundance`, `Gate of Discourse`, … straight from the live canon, not
+from the fallback.
+
+**The matrix scene was checked the same way and is correct.** `structure` says
+`nodes_per_track_per_phase: 729`, "each phase is a full 9x9x9 cube on 3 axes",
+`axes_names: ["Knowledge (A)","Mastery (B)","Contribution (C)"]` — so 9×9×9 is
+canon, and the caption now names the three axes instead of asserting anything
+about the member. A dead `live` array (a random 5% sample computed and never
+read) was removed with it.
+
+**Recorded, not resolved:** three different vocabularies exist for the twelve —
+`tracks[].gate`, `gate_names`, and a third set in `gates.html` (nav calls that
+page AUTHORITY GATES). Which is authoritative is an owner's call about the
+platform's canon, so it is filed in `GAP_ANALYSIS.md` §S rather than decided
+here. Reading `OmegaCanon` means the scene follows whatever the owner settles.
+
+### The scenes became navigable — and a canvas cannot do that alone
+
+A scene may now declare `links: [{object, href, label}]`, and the engine
+raycasts the pointer against them: hover lifts and brightens the node and names
+it in a caption; a click goes there. Destinations are the real ones, not
+invented:
+
+| scene | destination | why |
+|---|---|---|
+| `agents` (12 nodes) | `/agents.html` | the same href `omega-constellation.js:209` uses for the same roster; `agents.html` has no per-agent anchor (only `#app`, `#agent-greeting`), so `#Sentinel` would be a destination this platform does not have |
+| `gates` (12 rings) | `/gates.html` | the real page nav points at |
+| `matrix` (Crystal-Ω) | `/matrix.html` | one door, not 729 — a lattice node is not a page |
+
+**And every link is also a real `<a>`.** A `<canvas>` is one element: it cannot
+be tabbed into, exposes no destinations to a screen reader, and a raycaster
+answers a pointer only. The same list is emitted as focusable anchors under the
+mount, off-screen until focused (the standard skip-link pattern), present
+whether or not WebGL ever starts. This is the rule `omega-constellation.js`
+already holds for the 2-D ring — *each node a real link* — and a third dimension
+is not a reason to drop it.
+
+Measured in a render, sweeping synthetic `pointermove` across each canvas:
+
+```
+agents   links 12   distinct raycast hits 9   (Analyst, Tutor, Beacon, Historian, Sentinel, ...)
+gates    links 12   distinct raycast hits 12  (Gate of Ignition, Abundance, Discourse, ...)
+matrix   links  1   distinct raycast hits 1   (The 9x9x9 lattice)
+DOM      25 real anchors across 3 <nav> elements; first anchor focuses to left:12px
+```
+
+agents reports 9 of 12 at a single instant because the far side of a rotating
+ring faces away from the camera; the ring turns, and all twelve are in the
+anchor list regardless. **The first run of this check reported "no hit found"
+and the raycaster was fine** — the probe swept an 18px grid and looked for a
+caption element that is created lazily, so it was testing its own blind spot.
+`OmegaSculpture.status()` now reports `links` and `hover`, which is what made
+the second run conclusive.
+
+Under `prefers-reduced-motion` the hover handlers are not attached at all (no
+pointer-driven motion), and the anchors still work — the accessible path does
+not depend on the decorative one.
+
+Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime`
+PASS on all 13 entrypoints, 0 page errors on `sculpture.html`, registry
+regenerated.

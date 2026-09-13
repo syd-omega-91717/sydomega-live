@@ -14394,3 +14394,71 @@ Vendoring it the way `tsparticles-slim` was vendored costs **670KB** (4.6× the
 particle bundle, 3× the Supabase client), which is a weight decision for the
 owner rather than a silent one. The fallback above means the feature now
 degrades honestly either way.
+
+---
+
+## 131 — Three.js vendored: the elemental sphere renders for the first time, and its resize handler was watching the wrong thing
+
+**Owner decision, taken explicitly.** `FIXES_LOG` 130 left the engine on
+`esm.sh` and named the cost of vendoring it (670KB, 4.6x the particle
+bundle) rather than deciding silently. The owner chose to vendor.
+
+**Fix:** `npm pack three@0.160.1` and copy
+`package/build/three.module.min.js` to `vendor/three.module.js` — the
+self-contained ESM build, verified to import no external specifier, MIT,
+670,681 bytes. `loadThree()` now does `import('/vendor/three.module.js')`.
+A same-origin dynamic import needed no other change: the failure mode was
+the HOST, not the mechanism, so the module-namespace shape the file relies
+on (`_three.WebGLRenderer`, `_three.Scene`, ...) is untouched. `vendor` is
+already on `scripts/vercel-build.sh`'s allow-list, so it ships.
+
+**Measured with `esm.sh` routed to `abort()`** — so nothing can silently fall
+back to the network:
+
+| page | esm.sh reqs | vendor reqs | buffer | box | used fallback | sphere active |
+|---|---|---|---|---|---|---|
+| realm | **0** | 1 | 1244x672 | 1244x672 | no | **yes** |
+| identity | **0** | 1 | 1270x268 | 1270x268 | no | **yes** |
+| ascension | **0** | 1 | 1270x268 | 1270x268 | no | **yes** |
+| character | **0** | 1 | 1202x268 | 1202x268 | no | **yes** |
+
+`usedFallback:false` with `isActive():true` is the load-bearing pair: the
+REAL sphere mounts now, not the 2-D fallback from 130. A screenshot confirms
+geometry, orbital ring and the element-coloured particle field.
+
+**The vendoring then exposed a real bug that the broken engine had been
+hiding.** With the sphere finally mounting, `realm.html` measured a
+**1344-wide drawing buffer inside a 1244-wide box**. `mount()` did have a
+resize handler — but it was
+`window.addEventListener('resize',onResize)`, and **the window never
+resized**. The canvas's own column settled narrower a moment after mount,
+and an element-box change fires no window resize event. That is the same
+shape as the approval-guard reveal in §8.1 class 3, and exactly the rule
+130 had just written down: *a canvas whose buffer is derived from its box
+must track the box for as long as it lives, not once.* The 2-D fallback
+already followed it; the 3-D path did not.
+
+Added a `ResizeObserver` on the canvas **alongside** the window listener
+rather than replacing it — `ResizeObserver` covers element-box changes, and
+the window listener still covers a `devicePixelRatio` change on a monitor
+switch, which does not alter `clientWidth`. All four pages then measured
+buffer **exactly** equal to box.
+
+**And a leak the fix would have introduced.** `mount()` calls `unmount()`
+first when something is already mounted, so every re-mount — a tab switch,
+`setElement()`, a second page-level mount — would have left another live
+observer holding the old canvas and the old `onResize` closure.
+`unmount()` now disconnects it. Caught by reading `unmount()` before
+shipping, not by a failure.
+
+**Baseline moved:** `vendor/` now holds three bundles —
+`supabase-js.js` (215KB), `three.module.js` (670KB),
+`tsparticles-slim.js` (144KB). `audit.py` stays 0 critical / 8 warnings;
+`ci-local.sh` 23/23; `verify-runtime.js` PASS on all six affected pages.
+
+**Transferable rule.** *A broken feature hides the bugs behind it.* The
+sphere's resize handler had been wrong since it was written, and could not
+be observed while the engine never loaded. Fixing the load surfaced it in
+the same session — which is the argument for making a feature testable
+first and correct second, not the reverse.
+

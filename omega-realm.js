@@ -23,12 +23,41 @@ var ELEM_PARTICLE_COUNTS={Fire:800,Water:600,Wind:1200,Metal:400,Sand:1000,Soul:
 
 var _three=null,_renderer=null,_scene=null,_camera=null,_raf=null,_mounted=false;
 var _sphere=null,_particles=null,_ring=null,_lights=[];
+var _resizeObs=null;
 var _currentElem='Void';
 
-/* ── Load Three.js ── */
+/* ── Load Three.js ──────────────────────────────────────────────────
+   SELF-HOSTED at /vendor/three.module.js, not fetched from esm.sh.
+
+   This used to be import('https://esm.sh/three@0.160.1'), and it did not
+   work: measured on realm / identity / ascension / character, with the
+   import both blocked AND allowed through a real fetch, the result was
+   byte-identical -- the module never resolved, so _renderer.setSize()
+   never ran and the canvas kept the browser's default 300x150 buffer
+   stretched across boxes up to 1270x268 (FIXES_LOG 130). The sphere was
+   not rendering for anyone behind a network that could not reach esm.sh,
+   and it could never be tested, because the verification harness blocks
+   that host by design (CLAUDE.md 8.4).
+
+   Same fix as the Supabase client (CLAUDE.md 4) and the particle engine
+   (FIXES_LOG 128): vendor the official bundle and serve it from this
+   origin. A same-origin dynamic import is fine -- the failure mode was
+   the HOST, not the mechanism -- so the module-namespace shape this file
+   already relies on (_three.WebGLRenderer, _three.Scene, ...) is
+   unchanged.
+
+   Upgrading: `npm pack three@<version>` and copy
+   package/build/three.module.min.js to vendor/three.module.js. It is the
+   self-contained ESM build (verified: no import/from of any external
+   specifier), MIT, ~670KB minified. It is fetched only by the six pages
+   that actually mount a sphere, and only when one is mounted -- the
+   guard in autoMount() below keeps it off every other page.
+
+   The .catch() on both call sites stays regardless: a local file can
+   still fail to parse, and WebGL itself can be unavailable. */
 function loadThree(){
   if(_three) return Promise.resolve(_three);
-  return import('https://esm.sh/three@0.160.1').then(function(mod){
+  return import('/vendor/three.module.js').then(function(mod){
     _three=mod;
     return _three;
   });
@@ -168,14 +197,34 @@ function mount(canvas,elemName){
   },{passive:true});
   canvas.addEventListener('touchend',function(){drag.active=false;});
 
-  /* Resize */
+  /* Resize.
+     A window 'resize' listener alone is not enough here, and measurably so:
+     with the engine vendored and the sphere really mounting, realm.html
+     still measured a 1344-wide drawing buffer inside a 1244-wide box. The
+     WINDOW never resized -- the canvas's own column settled narrower a
+     moment after mount, and an element-box change fires no window resize.
+     That is the same shape as the approval-guard reveal in CLAUDE.md
+     8.1 class 3, and the same rule the 2-D fallback below already follows:
+     a canvas whose buffer is derived from its box must track the box for
+     as long as it lives, not once.
+
+     So observe the element too. Kept alongside the window listener rather
+     than replacing it: ResizeObserver covers element-box changes, the
+     window listener still covers a devicePixelRatio change on a monitor
+     switch, which does not alter clientWidth. */
   function onResize(){
     if(!_renderer||!_camera)return;
-    _renderer.setSize(canvas.clientWidth,canvas.clientHeight);
-    _camera.aspect=canvas.clientWidth/canvas.clientHeight;
+    var w=canvas.clientWidth,h=canvas.clientHeight;
+    if(!w||!h)return;                       /* hidden tab: nothing to size to */
+    _renderer.setSize(w,h);
+    _camera.aspect=w/h;
     _camera.updateProjectionMatrix();
   }
   window.addEventListener('resize',onResize);
+  if(typeof ResizeObserver==='function'){
+    _resizeObs=new ResizeObserver(onResize);
+    _resizeObs.observe(canvas);
+  }
 
   /* Animate */
   var t=0;
@@ -202,6 +251,12 @@ function mount(canvas,elemName){
 
 function unmount(){
   if(_raf){cancelAnimationFrame(_raf);_raf=null;}
+  /* Disconnect the element observer too. mount() calls unmount() first when
+     something is already mounted, so without this every re-mount -- a tab
+     switch, setElement(), a second page-level mount -- would leave another
+     live observer behind holding the old canvas and the old onResize
+     closure. */
+  if(_resizeObs){_resizeObs.disconnect();_resizeObs=null;}
   if(_renderer){_renderer.dispose();_renderer=null;}
   _scene=null;_camera=null;_sphere=null;_particles=null;_ring=null;
   _lights=[];_mounted=false;

@@ -18,6 +18,33 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **The 3-D layer exists but four scenes is where it stops** (opened 2026-09-13;
+  `FIXES_LOG.md` 138). `omega-sculpture.js` gives the platform real-time geometry
+  for the first time — `signet`, `agents`, `matrix`, `gates` — mounted with one
+  attribute and carried by the already-vendored three.js. What is deliberately
+  **not** built yet, in rough order of value:
+  **(1) The Sovereign Ident.** A three-second cinematic title on first visit,
+  the way a film studio opens a picture: the signet forms out of the lattice,
+  the wordmark sets, the page resolves behind it. This is the single most
+  "movie" thing the platform could have and it is a *product* decision, not a
+  technical one — a forced intro on every load is hostile, so it wants
+  first-visit-only, skippable, off under reduced motion, and remembered. Not
+  shipped without that call being made.
+  **(2) Scene-per-realm.** Nine realms, nine backdrops; today every page that
+  mounts the sculpture layer gets the same four. The element/realm palettes already exist
+  in `omega-realm.js`'s `ELEM_PALETTE`.
+  **(3) Navigable scenes.** The nodes in `agents` and `matrix` are geometry, not
+  links. `omega-constellation.js` already proves the pattern in 2-D — each mark
+  IS the door into its page — and raycasting would give the 3-D scenes the same
+  property, turning a diagram into a map you travel.
+  **(4) Post-processing.** Real bloom on the Crystal-Ω and the gate corridor
+  needs `EffectComposer`, which is NOT in `three.module.js` — it lives in
+  `examples/jsm/` and would be a second vendored file. The additive halo is a
+  deliberate stand-in for it.
+  **(5) A texture/environment map** for true metal reflection. Procedural
+  generation in-canvas avoids a binary asset and the CSP question entirely;
+  worth doing before reaching for any image pipeline.
+
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

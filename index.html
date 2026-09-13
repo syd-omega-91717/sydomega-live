@@ -29,7 +29,7 @@
        12 governed agents  — omega-agents.json, counted
        60 governed skills  — scripts/omega_fabric_audit.py
         9 realms           — nav.js SECTIONS, primary sections
-      201 surfaces         — the repository's .html page count
+      202 surfaces         — the repository's .html page count
        14 edge services    — supabase/functions/, counted
      RE-DERIVED after merging main, which brought in further surfaces
      and edge functions. Both figures were first written against this
@@ -93,99 +93,25 @@
         <dl class="ohz-stats">
           <div><dt class="ohz-stat-n">12</dt><dd class="ohz-stat-l">AGENTS</dd></div>
           <div><dt class="ohz-stat-n">9</dt><dd class="ohz-stat-l">REALMS</dd></div>
-          <div><dt class="ohz-stat-n">201</dt><dd class="ohz-stat-l">SURFACES</dd></div>
+          <div><dt class="ohz-stat-n">202</dt><dd class="ohz-stat-l">SURFACES</dd></div>
           <div><dt class="ohz-stat-n">14</dt><dd class="ohz-stat-l">SERVICES</dd></div>
         </dl>
       </div>
 
-      <!-- The sculpture. The reference centres a photorealistic 3D render;
-           this repository ships no raster hero art and has no image
-           generation path, so the same silhouette — nested orbital rings
-           around a lit core — is drawn as vector geometry instead. It
-           scales to any viewport and retints from the design tokens. -->
-      <div class="ohz-hero-art">
-        <svg class="ohz-sculpt" viewBox="0 0 520 520" role="img"
-             aria-label="The Omega sigil at the centre of four orbital rings">
-          <defs>
-            <radialGradient id="ohzCore">
-              <stop offset="0%"   stop-color="#FFF6DC" stop-opacity=".95"/>
-              <stop offset="38%"  stop-color="#F7E0A0" stop-opacity=".55"/>
-              <stop offset="72%"  stop-color="#C9A84C" stop-opacity=".18"/>
-              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="ohzGold" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%"   stop-color="#F7E0A0"/>
-              <stop offset="55%"  stop-color="#C9A84C"/>
-              <stop offset="100%" stop-color="#6E4A18"/>
-            </linearGradient>
-            <linearGradient id="ohzCyan" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%"   stop-color="#7FE9FF"/>
-              <stop offset="60%"  stop-color="#00A6D6"/>
-              <stop offset="100%" stop-color="#003C68"/>
-            </linearGradient>
-            <radialGradient id="ohzWell">
-              <stop offset="0%"   stop-color="#06070C" stop-opacity=".92"/>
-              <stop offset="62%"  stop-color="#06070C" stop-opacity=".78"/>
-              <stop offset="100%" stop-color="#0B0A10" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="ohzEmber" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%"   stop-color="#FF9B6A"/>
-              <stop offset="60%"  stop-color="#C4453C"/>
-              <stop offset="100%" stop-color="#3A1008"/>
-            </linearGradient>
-          </defs>
+      <!-- The sculpture. THE SCULPTURE layer renders it: real extruded geometry,
+           lit and turning in the browser, cursor-reactive (omega-sculpture.js).
+           This was a static SVG silhouette, carrying a comment that said this
+           repository had no path to a dimensional hero. It has one now, and
+           it is better than raster art would have been -- geometry answers
+           the pointer and rescales to any viewport, and a picture cannot.
 
-          <!-- Core bloom -->
-          <circle cx="260" cy="260" r="215" fill="url(#ohzCore)" class="ohz-pulse"/>
-
-          <!-- Outer survey ring: the widest, slowest band -->
-          <g class="ohz-ring ohz-spin-c">
-            <circle cx="260" cy="260" r="238" fill="none" stroke="url(#ohzGold)"
-                    stroke-width="1" stroke-opacity=".45"
-                    stroke-dasharray="2 12" stroke-linecap="round"/>
-            <circle cx="260" cy="22"  r="4.5" fill="#F7E0A0" fill-opacity=".9"/>
-            <circle cx="260" cy="498" r="3"   fill="#00E5FF" fill-opacity=".7"/>
-          </g>
-
-          <!-- Ember band, tilted -->
-          <g class="ohz-ring ohz-spin-b">
-            <ellipse cx="260" cy="260" rx="205" ry="78" fill="none"
-                     stroke="url(#ohzEmber)" stroke-width="2.5" stroke-opacity=".75"
-                     transform="rotate(-24 260 260)"/>
-            <ellipse cx="260" cy="260" rx="182" ry="66" fill="none"
-                     stroke="url(#ohzEmber)" stroke-width="1" stroke-opacity=".35"
-                     transform="rotate(-24 260 260)"/>
-          </g>
-
-          <!-- Cyan band, counter-tilted -->
-          <g class="ohz-ring ohz-spin-a">
-            <ellipse cx="260" cy="260" rx="196" ry="72" fill="none"
-                     stroke="url(#ohzCyan)" stroke-width="2.5" stroke-opacity=".8"
-                     transform="rotate(58 260 260)"/>
-            <ellipse cx="260" cy="260" rx="216" ry="84" fill="none"
-                     stroke="url(#ohzCyan)" stroke-width="1" stroke-opacity=".3"
-                     transform="rotate(58 260 260)"/>
-          </g>
-
-          <!-- Gold equatorial band: the platform disc of the reference -->
-          <g class="ohz-ring ohz-spin-b">
-            <ellipse cx="260" cy="260" rx="228" ry="60" fill="none"
-                     stroke="url(#ohzGold)" stroke-width="3" stroke-opacity=".9"/>
-            <ellipse cx="260" cy="260" rx="228" ry="60" fill="none"
-                     stroke="#F7E0A0" stroke-width="8" stroke-opacity=".07"/>
-          </g>
-
-          <!-- Inner ring and the sigil -->
-          <circle cx="260" cy="260" r="104" fill="none"
-                  stroke="url(#ohzGold)" stroke-width="1.5" stroke-opacity=".7"/>
-          <circle cx="260" cy="260" r="92" fill="url(#ohzWell)"/>
-          <circle cx="260" cy="260" r="92" fill="none"
-                  stroke="#F7E0A0" stroke-width="1" stroke-opacity=".35"/>
-          <text x="260" y="262" text-anchor="middle" dominant-baseline="central"
-                font-family="var(--D, 'Cinzel Decorative', Georgia, serif)"
-                font-size="104" fill="#F7E0A0" opacity=".96">Ω</text>
-        </svg>
-      </div>
+           The mount is self-sufficient: where WebGL is unavailable it draws
+           the same composition flat, in the same palette, and where the
+           member has asked for reduced motion it composes one still frame
+           instead of a loop. -->
+      <div class="ohz-hero-art" data-omega-sculpture="signet"
+           data-sculpt-height="min(62vh,520px)"
+           data-sculpt-label="The Omega signet, extruded and turning, ringed by its orbit"></div>
 
       <!-- Capability rail. These four rows are the real primitives of
            core/ — the Ω Intelligence Fabric — not invented feature names.

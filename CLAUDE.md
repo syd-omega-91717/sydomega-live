@@ -136,13 +136,22 @@ A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
 
-**Third-party bundles are self-hosted in `/vendor/`** — `supabase-js.js`,
-`tsparticles-slim.js`, `three.module.js` (670KB); official builds, no bundler,
-add with `npm pack`; `audit.py` tracks them apart from root modules. Never reintroduce a runtime CDN
-import: that was 146 esm.sh imports on every page view, an unresolved import runs
-*none* of its module's code, and the harness blocks esm.sh — so both
-`omega-particles.js` and the realm sphere read as dead 300×150 canvases
-until vendored (`FIXES_LOG.md` 128, 130-131).
+**Third-party bundles are self-hosted in `/vendor/`** — 8 files, official builds,
+no bundler, add with `npm pack`; `audit.py` tracks them apart from root modules.
+Never reintroduce a runtime CDN import: an unresolved one runs *none* of its
+module's code, so the particle engine, the realm sphere, Chart.js, tippy, marked
+and Fuse each read as silently dead until vendored (`FIXES_LOG.md` 128, 130-132,
+135-137).
+
+**The 3-D layer is `omega-sculpture.js`** — real-time geometry on the vendored
+three.js, which drove one sphere before it. One attribute mounts it:
+`data-omega-sculpture="signet|agents|matrix|gates"`; `sculpture.html` shows them
+(`forge.html` is unrelated — FORGE TRIALS).
+ONE WebGL context per page, blitted into each mount's own canvas (a single
+fixed canvas cannot work here — read the module header first).
+bg.js injects it only where a mount exists, so no other page pays the 670KB.
+Reduced motion gets one still frame, absent WebGL a flat 2-D fallback
+(`FIXES_LOG.md` 138).
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -158,10 +167,10 @@ constants (`bottom:102px`, `66px`, `224px`, and `bg.js`'s `36/98/146/228`
 ladder) — each right at one viewport, wrong elsewhere, and none measured
 against `#omega-consent`, whose height varies 80–134 with its copy.
 `omega-bottom-stack.js` publishes `--omega-chrome-bottom` (persistent
-furniture) and `--omega-transient-bottom` (that plus any banner). Transient
-banners clear the furniture with the first; the floating ladder steps over the
-banners with the second. Never add a bottom-anchored constant — read a
-property, and mark new furniture `data-omega-bottom-chrome`. Top-left has the
+furniture) and `--omega-transient-bottom` (that plus any banner): banners clear
+the furniture with the first, the floating ladder steps over banners with the
+second. Never add a bottom-anchored constant — read a property, and mark new
+furniture `data-omega-bottom-chrome`. Top-left has the
 same problem, unpublished: bg.js puts `#om-open` (fixed, z-9000) at x=12..54
 on **every** page, so a fluid gutter walks under it; reserve `max(<gutter>, 62px)`.
 
@@ -253,44 +262,38 @@ through this one file with no per-page markup changes:
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
-  pages hand-rolled `.btn{background:var(--gold);color:var(--void)}` at the same
-  (0,1,0) specificity — and lost, since this sheet loads after the page block.
-  Measured: `account.html`'s CREATE ACCOUNT/LOG IN and `reset.html`'s SEND
-  RECOVERY LINK at **1.01:1**, invisible to signed-out visitors;
-  `mindmap.html`'s CREATE MAP at exactly **1:1**, gold on gold. Use
-  `.btn.btn-fill` (retint with `--btn-fill`), never a page-local override. The
-  ghost variants now set `background:none` themselves — without it a
-  `<button class="btn-gold">` lacking `.btn` kept the browser's grey face
-  (2.33:1, 8 pages).
-- **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button`
-  with `:not([class])` get the `.inp`/`.btn` glass treatment, so anything with
-  a page-local class or inline `style=` is untouched. Chosen after an audit
-  found ~380 raw `<input>`s and dozens of raw `<button>`s with no shared class.
-  Page-local table classes are skipped — open work.
-- **Brand webfonts now actually load.** `--D`/`--R`/`--M` named Cinzel
-  Decorative / Rajdhani / Courier Prime but nothing loaded them — no
-  `@font-face`, no font files, no links — so every page rendered in browser
-  defaults. `bg.js` injects the Google Fonts `<link>` + `preconnect` once per
-  page, guarded by `#omega-fonts`.
-- **Ambient noise overlay**: a fixed `pointer-events:none` `<div
-  id="omega-noise-overlay">` injected by bg.js — a real element, not a
-  `body::before`, because 5 pages define their own and a bare-selector rule
-  would collide.
+  pages hand-rolled a gold `.btn` at the same (0,1,0) specificity and lost, this
+  sheet loading later: `account.html`'s CREATE ACCOUNT and `reset.html`'s SEND
+  RECOVERY LINK measured **1.01:1**, invisible to signed-out visitors, and
+  `mindmap.html`'s CREATE MAP exactly **1:1**. Use `.btn.btn-fill` (retint with
+  `--btn-fill`), never a page-local override. Ghost variants now set
+  `background:none` themselves — without it a `.btn-gold` lacking `.btn` kept the
+  browser's grey face (2.33:1, 8 pages).
+- **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button` with
+  `:not([class])` get the `.inp`/`.btn` glass treatment, so anything with a
+  page-local class or inline `style=` is untouched — chosen after finding ~380
+  bare `<input>`s. Page-local table classes stay open work.
+- **Brand webfonts now actually load.** `--D`/`--R`/`--M` named three faces that
+  nothing ever loaded — no `@font-face`, no files, no links — so every page
+  rendered in browser defaults. `bg.js` injects the Google Fonts `<link>` +
+  `preconnect` once per page, guarded by `#omega-fonts`.
+- **Ambient noise overlay**: a fixed `pointer-events:none`
+  `<div id="omega-noise-overlay">` from bg.js — a real element, not a
+  `body::before`: 5 pages define their own and would collide.
 - **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
   `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
   It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
   size is a geometric constraint, not a taste — read its header. `cosmos.html`
   has its own agent wheel.
-- **`.omega-spin-slow`**: the signature motion motif — `animation:spin-slow 60s
-  linear infinite`, static under `prefers-reduced-motion`. Used deliberately on
-  emblem marks, not scattered; currently only `#ph-sigil` on `profile.html`.
-- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED on one page**
-  (bg.js, `#omega-cinematic-css`). Rendered: its 4 rules are in every cascade, yet
-  `.omega-cinematic`/`.omega-emblem`/`.omega-depth-card`/`.omega-node` match
-  **0/0/0/0** on `dashboard`/`profile` and **1/1/6/0** on `index` — the sheet changed
-  no page's paint; what remains is markup adoption (`FIXES_LOG.md` 114). Additive;
-  `:root` declares only names it invents (108); `--omega-line` is undefined outside
-  `index.html` — read it with a fallback.
+- **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear
+  infinite`, static under `prefers-reduced-motion`. Deliberate on emblem marks;
+  currently only `#ph-sigil` on `profile.html`.
+- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED almost nowhere**
+  (bg.js, `#omega-cinematic-css`): its 4 rules sit in every cascade yet match
+  **0/0/0/0** elements on `dashboard`/`profile` and 1/1/6/0 on `index`, so the
+  sheet changed no page's paint — what is left is markup adoption
+  (`FIXES_LOG.md` 114). Additive; `--omega-line` is undefined outside
+  `index.html`, so read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated

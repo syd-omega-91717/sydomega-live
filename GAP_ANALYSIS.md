@@ -120,15 +120,18 @@ open, recorded in `FIXES_LOG.md`:
   declared `overflow-y:auto` behaviour rather than a defect, but it does mean the
   lower sections are effectively undiscoverable on a laptop — an information-
   architecture question for the owner, not a layout bug to fix.
-- **`supabase/live-schema.json` is older than three applied migrations** (opened
-  2026-09-13). While repairing the migration ledger (`FIXES_LOG.md` 147) the live
-  `schema_migrations` table proved to hold **174** versions against a snapshot of 172,
-  and the three it lacked — `20260908032828` (profiles UPDATE policy),
-  `20260911222734` (phase-5 agents), `20260913173753` (phase-5 RLS INSERT hardening)
-  — all change policies or grants. `schema-dictionary.py` still passes, so nothing is
-  blocked, but §8.4's warning applies: a dated snapshot produces false findings in
-  both directions. A session with live access should regenerate it; this one repaired
-  the ledger only and did not touch the database.
+- ~~**`supabase/live-schema.json` is older than three applied migrations**~~
+  **CLOSED 2026-09-13** — regenerated from live (`FIXES_LOG.md` 151). It was stale by
+  **six relations and one column set**: the phase-5 tables `agent_experiments`,
+  `agent_performance_metrics`, `autonomous_decisions`, `autonomous_insights`,
+  `member_agent_interactions`, `member_feature_flags` (all from
+  `20260911222734_phase5_autonomous_agents.sql`), plus `ai_memory`, which live carries
+  `content` and `expires_at` on and the snapshot did not. **Five of the six are read by
+  shipped client code** (`autonomous-insights.html`, `omega-feature-gates.js`,
+  `omega-autonomous-onboarding.js`), so `schema-dictionary.py` had been checking those
+  pages against the SQL bag alone — exactly the false-negative direction §8.4 warns
+  about. 217 → **223** relations, 1852 → **1938** columns, `_captured` 2026-09-05 →
+  2026-09-13; every one of the 223 column lists hash-verified against live.
 - **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
   of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
   is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no

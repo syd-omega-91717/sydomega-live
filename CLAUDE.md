@@ -507,7 +507,7 @@ Only what changes what you do in the **first minutes** stays here:
 
 - **Live Supabase access works from this session type.** `mcp__Supabase__*` against project
   `ydqhzvvoyufiiqvzcjns` executes SQL, applies migrations and reads advisors — verified
-  2026-09-05, despite a harness banner that says authorization is required. **Try the call
+  2026-09-13, despite a harness banner that says authorization is required. **Try the call
   before reporting it blocked.** Several sessions wrongly recorded this as unavailable and
   deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
   With it you can settle live what no scan can (§8.4's impersonation test), and you are then
@@ -580,7 +580,7 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
-| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 18 STATIC / 2 BROKEN / 2 UNREACHABLE (189 pages); **0 declared relations absent live**, and **120** declared (see §8.4 on the phantom 121st) |
+| `python3 scripts/evidence-audit.py --summary` | 96 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 19 STATIC / 2 BROKEN / 13 UNREACHABLE (202 pages); **0 declared relations absent live** (snapshot 2026-09-13, **223** relations), and **126** declared |
 | `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **17** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. It mirrored only five until `migration-history-contract` and `supabase-migration-security-audit` were added, and both were failing unsatisfiably: mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |

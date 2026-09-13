@@ -15410,3 +15410,87 @@ and it was not applied. The generator was never at fault.
 Verified: `./scripts/ci-local.sh` **23/23 gated on exit code**,
 `verify-runtime` **PASS (13 pages)**, `audit.py` 0 critical, registry
 regenerated.
+
+## 147 — `main` went red on a merge, and `supabase db push` would have failed
+
+`#354` merged at 18:56 and `main` was **red within the minute**: `ci-local.sh`
+exit 1, 2 of 23 blocking checks failing. Neither was from that PR. Both came
+from `a50c5623 security: harden Phase 5 RLS insert paths`, merged alongside it
+— the pattern §8.2 records, where a third party lands an estate-wide change
+without the bookkeeping that goes with it.
+
+**1. The census was stale.** Migrations went 172 → 173 without
+`omega-registry.py` being run. Mechanical; regenerated.
+
+**2. `migration-drift` FAIL — and this one was a live deployment hazard.**
+
+```
+20260913190000 (…harden_phase5_rls_insert_policies.sql) has never been
+applied — `db push` would run it
+```
+
+Live access settled it (§8.2: *try the call before reporting it blocked* —
+it worked). The ledger's last row is:
+
+```
+version 20260913173753   name harden_phase5_rls_insert_policies
+```
+
+Same migration, **different version**: applied as `…173753`, committed as
+`…190000`. That file's `CREATE POLICY` is unguarded, so `db push` would have
+re-run it and failed with `42710 policy already exists`.
+
+**The change itself is live and correct** — verified in the database, not
+inferred from the file: policy `member_agent_interactions_member_insert`
+exists; `INSERT` is granted to `authenticated` on `member_agent_interactions`
+only; and `agent_experiments`, `agent_performance_metrics`,
+`autonomous_decisions`, `autonomous_insights` and `member_feature_flags` carry
+**no** `INSERT` grant to `anon` or `authenticated`. Exactly the migration's
+intent. Only the bookkeeping was wrong.
+
+**The stale snapshot was hiding two more.** `supabase/remote-migrations.json`
+was captured 2026-09-12 with 172 versions; live has **174**. Diffed:
+
+```
+in live, missing from snapshot : 20260908032828, 20260911222734, 20260913173753
+in snapshot, absent live       : 20260911120000
+```
+
+That last line is the tell: the snapshot carried a version **that was never
+applied**, recorded from a local filename rather than from the database. So
+`20260911120000_phase5_autonomous_agents.sql` had the same defect as the new
+one and had been sitting in `main` unnoticed, masked by a snapshot that agreed
+with the file instead of with production.
+
+**Fixed, all three, without touching the database:**
+
+- `20260913190000_…` → `20260913173753_…` (no references; contained)
+- `20260911120000_…` → `20260911222734_…`, and its 3 references in
+  `scripts/deploy-phase5.sh` plus one in `PHASE5_IMPLEMENTATION.md` updated
+  with it — renaming without those would have broken the deploy script
+- `20260908032828_harden_profiles_update_policy.sql` **materialised** from
+  `schema_migrations.statements`, transcribed verbatim: it was applied through
+  `apply_migration`, which writes a remote row and no local file, so `db push`
+  reported *"Remote migration versions not found in local migrations
+  directory"*. Not re-applied — the policy was verified already in place first.
+- `remote-migrations.json` regenerated **from the live ledger**, 174 versions,
+  captured 2026-09-13.
+
+Renaming is not renumbering an applied migration (§5's prohibition): at their
+committed numbers these files were **never applied**. Renaming them to the
+versions that *were* applied is the gate's own remedy — *"register the applied
+version"* — and it is the only form in which the repo states something true.
+
+```
+MIGRATION DRIFT: PASS (174 versions, local and remote agree; snapshot 2026-09-13)
+ALL 23 BLOCKING CHECKS PASSED                     (ci-local.sh, exit 0)
+supabase-migration-security-audit  exit 0
+migration-history-contract         exit 0
+migration-consistency              exit 0
+```
+
+**The transferable rule:** a snapshot that agrees with the local files proves
+nothing — both can be wrong together, and here they were, for days. It has to
+be regenerated from the ledger, and the only session that can do that is one
+holding live access. Two of these three defects were invisible until the
+snapshot was made true.

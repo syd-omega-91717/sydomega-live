@@ -108,6 +108,15 @@ open, recorded in `FIXES_LOG.md`:
   the most-seen element on all 202 pages, so it is the highest-value visual fix
   outstanding — deliberately not bundled into `FIXES_LOG.md` 146's PR, because a nav
   layout change is its own increment with its own verification.
+- **`supabase/live-schema.json` is older than three applied migrations** (opened
+  2026-09-13). While repairing the migration ledger (`FIXES_LOG.md` 147) the live
+  `schema_migrations` table proved to hold **174** versions against a snapshot of 172,
+  and the three it lacked — `20260908032828` (profiles UPDATE policy),
+  `20260911222734` (phase-5 agents), `20260913173753` (phase-5 RLS INSERT hardening)
+  — all change policies or grants. `schema-dictionary.py` still passes, so nothing is
+  blocked, but §8.4's warning applies: a dated snapshot produces false findings in
+  both directions. A session with live access should regenerate it; this one repaired
+  the ledger only and did not touch the database.
 - **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
   2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
   `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned

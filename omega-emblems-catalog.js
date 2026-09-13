@@ -571,22 +571,37 @@ window.OmegaEmblems = (() => {
       const emblem = this.get(pageFilename);
       const svg = emblem.svg.replace(/currentColor/g, color);
       return `data:image/svg+xml;base64,${btoa(svg)}`;
-    },
-
-    renderNav() {
-      // Auto-injected by bg.js for sidebar rendering
-      if (typeof window !== 'undefined' && window.OmegaNav) {
-        window.OmegaNav.updateEmblems(this.all());
-      }
     }
+
+    /* THERE WAS A renderNav() HERE. DO NOT PUT IT BACK.
+       ────────────────────────────────────────────────
+       It read `window.OmegaNav` and called `OmegaNav.updateEmblems(this.all())`
+       from a DOMContentLoaded listener. Measured, all three halves were absent:
+
+         window.OmegaNav = ...     assigned by NOTHING in the repo
+         updateEmblems             implemented by NOTHING in the repo
+         renderNav()               called only by that one listener
+
+       So on each of the 202 pages this file loads on (bg.js:91) the listener
+       fired, the guard was false, and nothing happened -- dead by construction
+       since it was written, never once executing its body.
+
+       It was worse than dead: it was armed. `nav.js` owns the page -> section
+       map and needed to publish it; publishing it as `window.OmegaNav` made
+       this guard pass for the first time and threw `TypeError: ...
+       updateEmblems is not a function` on EVERY page -- clean before, broken
+       after (FIXES_LOG.md 145). That is why the accessor ships as `OmegaAxis`,
+       and the comment at nav.js:235 says so.
+
+       It could not be implemented either, because the two data shapes do not
+       meet: `all()` returns EMBLEMS keyed by PAGE FILENAME, while the sidebar
+       is built from nav.js's 15 SECTION entries, each with its own `icon` glyph
+       and `col`. There is no sensible mapping from one to the other, and the
+       sidebar already has a complete icon vocabulary of its own.
+
+       This catalog's real consumer is per-page, not the sidebar:
+       `omega-emblem-integration.js` calls `OmegaEmblems.get(pageFilename)`.
+       CLAUDE.md 8.1 class 4b -- grep a `window.*` accessor's ASSIGNMENT, not
+       just its readers. */
   };
 })();
-
-// Auto-inject emblems into sidebar when ready
-if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', () => {
-    if (typeof OmegaEmblems !== 'undefined') {
-      OmegaEmblems.renderNav();
-    }
-  });
-}

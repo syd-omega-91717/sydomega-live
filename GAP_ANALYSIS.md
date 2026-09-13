@@ -174,15 +174,18 @@ open, recorded in `FIXES_LOG.md`:
   **Owner's call** — either surface the toggle on the pages that should have music
   (and vendor Tone.js + add the missing `.catch()` at that point), or stop injecting
   the module. The passport half of this pair was reachable and *was* fixed.
-- **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
-  2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
-  `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned
-  `window.OmegaNav`, so the guard has always been falsy and that emblem-refresh path
-  has never run on any page — §8.1 class 4b. It surfaced because publishing a section
-  map under that name made the guard pass and the call throw on every page; the map
-  was renamed to `OmegaAxis` rather than silently satisfying half an interface. Either
-  implement `updateEmblems` on a real owner or delete the call — both are small, and
-  neither should be guessed at.
+- ~~**`omega-emblems-catalog.js:578` calls an API nothing implements**~~
+  **CLOSED 2026-09-13** — the call and its `DOMContentLoaded` listener were deleted
+  (`FIXES_LOG.md` 153). Implementing it was ruled out on evidence, not preference: the
+  shapes do not meet. `all()` returns `EMBLEMS` keyed by **page filename**, while the
+  sidebar is built from `nav.js`'s **15 section entries**, each with its own `icon`
+  glyph and `col`; there is no mapping between them, and the sidebar already has a
+  complete icon vocabulary. The catalog's real consumer is per-page —
+  `omega-emblem-integration.js` calls `OmegaEmblems.get(pageFilename)`. Verified by
+  **arming the mine**: publishing `window.OmegaNav` via `addInitScript` threw
+  `TypeError: window.OmegaNav.updateEmblems is not a function` on **4 of 5** pages
+  against the pinned pre-fix file and on **0 of 5** after. The reasoning is left in
+  the file where the code was, so it is not re-added.
 - **`graph.html` and `map.html` throw on every load** (opened 2026-09-13, measured
   before/after so not caused by that day's work): `d3.select is not a function` and
   `L.map is not a function`. Both are the documented unvendored-library class

@@ -15865,3 +15865,79 @@ repo already owns and count where it is mounted.* The most cinematic change
 available here cost three elements and one shared CSS block, because the engine,
 the six scenes, the reduced-motion path, the WebGL fallback and the payload
 gating had all been built already and were simply not pointed at anything.
+
+---
+
+## 153 — A dead call that was not merely dead: it was armed, on 202 pages
+
+`omega-emblems-catalog.js` ended with a `renderNav()` method and a
+`DOMContentLoaded` listener that invoked it. All three halves of what it needed
+were absent from the repository, measured:
+
+```
+grep -rn "window\.OmegaNav\s*=" --include=*.js --include=*.html .   ->  0 assignments
+grep -rn "updateEmblems" .                                         ->  the call site only
+grep -rn "renderNav" .                                             ->  the method + its own listener
+```
+
+`bg.js:91` loads this file on all **202** pages, so on every page load the
+listener fired, the `if (window.OmegaNav)` guard was false, and the body never
+ran. Dead by construction since it was written — not one execution, ever.
+
+**Why it was worse than dead.** `nav.js` owns the page→section map and needed to
+publish it for `omega-identity.js`. Publishing it under the obvious name,
+`window.OmegaNav`, made this guard pass for the very first time and threw on
+every page (`FIXES_LOG.md` 145). That is why the accessor ships as `OmegaAxis`
+and why `nav.js:235` carries a comment pointing here. The dead code had turned
+a correct change into a platform-wide outage, and the workaround was a rename.
+
+**Why it could not be implemented instead.** The two data shapes do not meet:
+`all()` returns `EMBLEMS` keyed by **page filename**, while the sidebar is built
+from `nav.js`'s **15 section entries**, each with its own `icon` glyph and `col`.
+There is no mapping from one to the other, and the sidebar already has a
+complete icon vocabulary. This catalog's real consumer is per-page —
+`omega-emblem-integration.js` calls `OmegaEmblems.get(pageFilename)`. So the
+method and its listener were removed, and the reasoning left in their place so
+a future session does not re-add them.
+
+**Verified by arming the mine, not by reading the diff.** The probe publishes
+`window.OmegaNav = {some:'object'}` via `addInitScript` — exactly the condition
+that broke 145 — and counts pages that throw:
+
+```
+AFTER    dashboard/profile/gates/cosmos/vault
+         catalog:object  hasGet:true  getWorks:true  renderNavGone:true
+         OmegaAxis:object            pages throwing: 0 of 5
+```
+
+A "0" is not evidence on its own, so the identical probe was re-run against the
+**pinned pre-fix file** (`git show HEAD:omega-emblems-catalog.js`), served for
+that one URL through `ctx.route()` with `contentType: 'text/javascript'` so the
+content type matches the extension:
+
+```
+CONTROL  dashboard  THREW: TypeError: window.OmegaNav.updateEmblems is not a function
+         gates      THREW   cosmos THREW   vault THREW   profile clean
+         pages throwing: 4 of 5
+```
+
+4 → 0. `profile.html` did not reproduce in the control; it is the largest page
+in the estate and the 1500ms settle almost certainly did not reach its deferred
+catalog load, so that is a timing artifact rather than immunity — and it is moot,
+since the code is gone from the file entirely and no page can reach it now.
+
+**A deletion that made the file bigger.** The replacement comment is longer than
+the code it replaced, so `omega-*.js` total went 1279 KB → 1280 KB and
+`omega-registry.py --check` failed the suite until the census was regenerated.
+Kept deliberately: this exact landmine already cost a 202-page outage once, and
+the whole point of the removal is that the next session must not re-add it.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js` PASS (13 pages).
+
+**The transferable rule:** *dead code guarded by a global nobody assigns is a
+trap armed against the next correct change.* It reads as harmless in every
+review — the guard is false, so nothing happens — right up to the day someone
+publishes that name for a good reason and the repository breaks everywhere. Grep
+a `window.*` accessor's **assignment**, and when it has none, delete the reader
+rather than leaving it waiting.

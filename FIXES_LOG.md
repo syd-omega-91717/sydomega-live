@@ -14462,3 +14462,80 @@ be observed while the engine never loaded. Fixing the load surfaced it in
 the same session — which is the argument for making a feature testable
 first and correct second, not the reverse.
 
+
+---
+
+## 132 — the dashboard radar chart never drew when jsdelivr was unreachable, and said nothing
+
+**Found:** continuing the graphics audit, `omega-oss.js` still loaded Chart.js
+from `https://cdn.jsdelivr.net/npm/chart.js@4.5.1/...`. Measured from this
+environment, **that host is unreachable** — `curl` returns HTTP 000, as do
+`unpkg.com` and `esm.sh`.
+
+Rendered `dashboard.html` with those three hosts routed to `abort()`:
+
+| | before |
+|---|---|
+| `#dash-radar` buffer | **300×150** (browser default) |
+| `#dash-radar` box (platform tab open) | 300×150 |
+| painted pixels | **0** |
+| `window.Chart` | **undefined** |
+
+So the member's own axis chart — `axis_a` / `axis_b` / `axis_c` plotted
+against the Apex 9/9/9 reference — simply did not exist on a network that
+could not reach jsdelivr.
+
+**And it failed silently in a subtler way than the earlier cases.**
+`omega-oss.js`'s `load()` handles `s.onerror` by doing
+`console.warn(...)` and `delete _loading[name]` — **the callback is never
+invoked**. There is no rejected promise, so unlike `FIXES_LOG` 130's sphere
+this produced **no unhandled rejection at all**: the chart request simply
+evaporated. Measured: `unhandled: 0` both before and after. A failure that
+does not even throw is harder to notice than one that does.
+
+**Fix:** `npm pack chart.js@4.5.1`, copy `package/dist/chart.umd.min.js` to
+`vendor/chart.umd.min.js` — self-contained UMD, defines the `Chart` global,
+verified to import no external specifier, MIT, **208,522 bytes**. The
+registry entry in `omega-oss.js` now points at `/vendor/chart.umd.min.js`.
+It stays **lazy**: `OmegaOSS.require()` loads on demand, so only the three
+pages that actually draw a chart ever fetch it.
+
+**Verified with jsdelivr, unpkg and esm.sh all routed to `abort()`:**
+
+| page | `window.Chart` | vendor reqs | canvas | painted |
+|---|---|---|---|---|
+| dashboard `#dash-radar` | **function** | 1 | **603×180** (= box) | **8,550** |
+| analytics `#an-chart-auth` | **function** | 1 | 197×98 (box 198×99) | 930 |
+| studio | **function** | 1 | — | — |
+
+Buffer **603×180 exactly equals the box**, against 300×150 before. A
+screenshot confirms the radar plots the stub's real axis values (6.2 / 4.5 /
+7.8) inside the Apex ring, in the gold palette.
+
+**Two things deliberately NOT done.**
+
+`omega-qr.js` also loads from jsdelivr, but **no page references it** —
+`grep -rln "OmegaQR\|omega-qr" *.html` returns nothing. It is dormant, so
+vendoring it would add weight for no reader. Recorded rather than fixed.
+
+`lucide` is registered in `omega-oss.js` but **0 pages use it** (`new
+Chart(` and `lucide` both grep to 0 HTML files; the chart consumers reach it
+through `OmegaOSS.chart()` / `omega-chart.js` instead). Also left alone.
+The remaining CDN entries — `marked`, `fuse`, `dayjs`, `hljs`, `popper`,
+`tippy`, plus `shepherd` in `omega-tour.js` and `jspdf` in
+`omega-passport.js` — are not graphics and are out of this pass's scope;
+they are measured as still-CDN and still silently failing by the same
+`load()` path.
+
+**A measurement correction worth recording.** An earlier pass reported
+`#galaxy-canvas` on `dashboard.html` as *visible but blank* (0 painted in a
+correctly sized 1286×360). Re-measured with a longer settle, it paints
+**17,527–17,601 pixels**. The first reading sampled before the draw; the
+canvas was never broken. *A canvas read too early is indistinguishable from
+a canvas that never paints* — wait for the draw before calling it dead.
+
+**Transferable rule.** *The quietest failure is the one that does not even
+reject.* The sphere at least produced an unhandled rejection; this one
+handled its own error and dropped the callback, so nothing surfaced
+anywhere — no throw, no log a member would see, no artifact. When a loader
+swallows `onerror`, absence of errors is not evidence that anything worked.

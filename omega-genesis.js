@@ -87,14 +87,56 @@
     var ctx = c.getContext('2d');
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W, H;
+    /* The parallax layer (omega-9d.js) transforms this canvas with
+       scale(1.06), so a translate never exposes an edge. The buffer was
+       sized to exactly innerWidth x innerHeight, so every pixel was then
+       upsampled 6%: measured a 1440x900 buffer displayed in a 1526x954 box
+       on a 1440x900 viewport, on every page. The overscan is deliberate;
+       drawing at the un-overscanned resolution was not.
+
+       Read the scale that is ACTUALLY applied rather than repeating 1.06
+       here. This file owns the buffer and omega-9d.js owns the transform,
+       and a constant copied across that boundary is the coordination
+       failure CLAUDE.md 4 records for the bottom-chrome ladder -- right at
+       one setting, silently wrong the moment the other side changes.
+       getComputedStyle resolves to a matrix whose first component is the
+       horizontal scale, so this stays correct if the overscan is retuned
+       and if omega-9d.js never applies a transform at all -- then it reads
+       1 and the buffer is exactly the viewport, as before. (That scale-1
+       path covers the window before the parallax rAF loop starts, and
+       omega-9d.js being absent or failing. It is NOT the reduced-motion
+       case: this whole canvas sits behind `if (!REDUCED)` below, so under
+       prefers-reduced-motion it is never created -- verified in a render,
+       the element is absent entirely.) */
+    function overscan() {
+      var tf = getComputedStyle(c).transform;
+      if (!tf || tf === 'none') return 1;
+      var m = /^matrix(?:3d)?\(([^)]+)\)/.exec(tf);
+      if (!m) return 1;
+      var a = parseFloat(m[1].split(',')[0]);
+      return (isFinite(a) && a > 0) ? a : 1;
+    }
     function size() {
-      W = c.width = Math.floor(innerWidth * DPR);
-      H = c.height = Math.floor(innerHeight * DPR);
+      var k = overscan();
+      var w = Math.floor(innerWidth * DPR * k);
+      var h = Math.floor(innerHeight * DPR * k);
+      /* Assigning canvas.width CLEARS the bitmap, so only touch it on a
+         real change -- these re-checks run repeatedly. frame() redraws
+         every tick, so a genuine resize is invisible. */
+      if (c.width !== w) c.width = w;
+      if (c.height !== h) c.height = h;
+      W = c.width; H = c.height;
       c.style.width = innerWidth + 'px';
       c.style.height = innerHeight + 'px';
     }
     size();
     addEventListener('resize', size);
+    /* The transform is applied by omega-9d.js's rAF loop, which starts
+       after this module runs -- so the size() above necessarily reads
+       scale 1. Re-check a few times to pick the overscan up once it
+       exists. Bounded retries, not a permanent poll: the scale component
+       stops changing as soon as the parallax layer is up. */
+    [250, 1000, 3000].forEach(function (ms) { setTimeout(size, ms); });
 
     var N = Math.max(46, Math.min(150, Math.floor(innerWidth * innerHeight / 10000)));
     var P = [];

@@ -14539,3 +14539,75 @@ reject.* The sphere at least produced an unhandled rejection; this one
 handled its own error and dropped the callback, so nothing surfaced
 anywhere — no throw, no log a member would see, no artifact. When a loader
 swallows `onerror`, absence of errors is not evidence that anything worked.
+
+---
+
+## 133 — the atmosphere canvas was drawn at 94% of its own display size, on every page
+
+**Found:** while measuring the chart fix, `#omega-atmosphere` reported a
+**1440×900 drawing buffer inside a 1526×954 box** on a 1440×900 viewport.
+Exactly 6% in both axes, on every page — so the starfield, orbital rings and
+sigil were being drawn at viewport resolution and then upsampled.
+
+**Two modules, each correct alone.** `omega-genesis.js` creates the canvas
+and sizes the buffer to `innerWidth × DPR`; its CSS is
+`position:fixed;inset:0`, so the box would be exactly the viewport.
+`omega-9d.js`'s `parallax()` then applies
+
+```js
+atmo.style.transform = 'translate(cx,cy) scale(1.06)';
+```
+
+The **overscan is deliberate and right** — without it a ±12px parallax
+translate would expose the canvas edge. What was wrong is that the buffer
+never accounted for it, so 1440 device pixels were stretched across 1526.
+
+**Fix — read the applied scale, never repeat the constant.** `size()` now
+derives the factor from `getComputedStyle(c).transform`, parsing the first
+component of the resolved `matrix(...)`/`matrix3d(...)`:
+
+```js
+var k = overscan();
+var w = Math.floor(innerWidth * DPR * k);
+```
+
+This file owns the buffer; `omega-9d.js` owns the transform. Copying `1.06`
+across that boundary is the coordination failure `CLAUDE.md` §4 records for
+the bottom-chrome ladder — correct at one setting, silently wrong the moment
+the other side is retuned. Reading the resolved matrix stays correct if the
+overscan changes, and falls back to 1 when no transform is applied.
+
+**Timing.** `omega-9d.js` sets the transform inside its rAF loop, which
+starts *after* `omega-genesis.js` runs, so the first `size()` necessarily
+reads scale 1. Bounded re-checks at 250/1000/3000ms pick it up once; not a
+permanent poll, because the scale component stops changing as soon as the
+parallax layer is up.
+
+**Assigning `canvas.width` clears the bitmap**, and these re-checks run
+repeatedly, so `size()` now only assigns on an actual change. `frame()`
+redraws every tick, so a genuine resize is invisible; a no-op re-check no
+longer blanks a frame.
+
+**Verified in a render**, CDNs aborted, waiting past the 3000ms re-check:
+
+| context | buffer | box | match | painted |
+|---|---|---|---|---|
+| desktop 1440×900 | **1526×954** | 1526×954 | ✅ | 121,699 |
+| phone 390×844 | **413×894** | 413×895 | ✅ (1px round) | 26,847 |
+| reduced-motion | — | — | canvas **absent** | — |
+
+**A comment of mine was wrong and was corrected before shipping.** The first
+draft cited `prefers-reduced-motion` as the scale-1 case. It is not: the
+whole canvas sits behind `if (!REDUCED)`, so under reduced motion it is
+never created — the render shows the element absent entirely. Confirmed
+pre-existing by reading the same guard at `HEAD` before the change. The
+scale-1 path actually covers the window before the rAF loop starts, and
+`omega-9d.js` being absent or failing.
+
+**Transferable rule.** *A canvas has two sizes and a transform can separate
+them.* Buffer-vs-box was checked in `FIXES_LOG` 130–131 against the layout
+box; a CSS transform moves the *displayed* size away from that box again
+without changing either number the earlier checks looked at. When something
+else transforms your canvas, the buffer has to track the transform, not just
+the box — and the only safe source for that factor is the resolved style,
+not a copy of the constant.

@@ -15641,3 +15641,71 @@ clipped rects. **Read the computed style, not the text.**
 `jspdf@2.5.2`, neither with a `/vendor/` path — the identical silent-death
 class. `omega-particles.js` and `omega-realm.js` also name `esm.sh` but try
 `/vendor/` **first**, so those are fallbacks and are fine.
+
+## 150 — The Sovereign Passport button did nothing, and reachability decided what to vendor
+
+`omega-passport.js` and `omega-music.js` were the last two modules importing a
+library from a CDN with no `/vendor/` fallback (`grep -c "'/vendor/"` → **0**
+for both, against 1 for `omega-particles.js` and `omega-realm.js`, which try
+the vendored copy first and only fall back). Both are injected by `bg.js` on
+every page.
+
+**They are not the same severity, and the difference decided the work.**
+
+Unlike `graph.html` and `map.html` (149), where the import sat at the top of an
+async IIFE and aborted the whole page, here both imports are *inside functions*
+— `generate()` and `loadTone()` — so the page is fine and only the feature
+fails, when invoked. The question was whether anyone can invoke it.
+
+**`omega-music.js`: nobody can.** Its trigger is `[data-music-toggle]`, and
+
+```
+grep -l "data-music-toggle" *.html   →   (no matches)
+```
+
+**Zero of 202 pages** surface it. Vendoring Tone.js (350KB) would have fixed a
+feature with no way in. Not vendored; recorded in `GAP_ANALYSIS.md` as the
+owner's call — wire it up or stop injecting 245 lines on every page.
+
+**`omega-passport.js`: a member can, and it silently failed.** `profile.html`
+carries the identity card, so the download button *is* injected and visible
+(measured: `button:true, visible:true, label:"↓ PASSPORT PDF"`). Clicking it ran
+
+```js
+import('<cdn>/jspdf@2.5.2')
+  .then(…)
+  .catch(function(e){ console.warn('[OmegaPassport] jsPDF load failed', e); });
+```
+
+so the rejection was swallowed into the console and **nothing happened** — no
+file, no message, no way to tell a slow network from a broken build. That is
+§8.1 class 1 wearing a different hat: the UI says nothing while the action does
+nothing. Measured before the fix, clicking the real button:
+
+```
+jspdf: undefined   ctor: false   label unchanged   0 page errors
+```
+
+**Fixed.** `vendor/jspdf.umd.min.js` (365,730 bytes, official UMD). Its wrapper
+is `(t=t||self).jspdf={}`, so the global is the **namespace** `jspdf` and the
+constructor is `window.jspdf.jsPDF` — reading `window.jsPDF` would have found
+nothing. Registered in `omega-oss.js` for the record; the module uses its own
+promise loader that **rejects**, and the rejection is now shown on the button:
+
+```
+AFTER, normal:          jspdf: object   ctor: true    → PDF generated
+AFTER, file blocked:    "PASSPORT UNAVAILABLE — failed to load /vendor/jspdf.umd.min.js"
+                        visible: true, restores to "↓ PASSPORT PDF" after 6s, 0 page errors
+```
+
+**The failure path was tested, not assumed.** An error handler that never fires
+is worse than none — `ctx.route(…).abort()` on the vendored file proves the
+member is actually told. Four separate readings this session were wrong because
+something was measured that was not what the member sees; an untested catch
+block is the same mistake in advance.
+
+**The transferable rule:** *reachability decides whether a fix is worth
+shipping.* Both modules had the identical defect and the identical remedy. One
+was a broken button on a live page; the other was a library for a feature with
+no UI on any of 202 pages. Checking `grep -l` for the trigger before vendoring
+cost one command and saved 350KB of dead payload.

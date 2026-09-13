@@ -111,6 +111,12 @@
        needs a bundler); its package `exports.umd` IS dist/d3.min.js, so the
        UMD global is the only form that works in a no-build repo. */
     d3:        {url:'/vendor/d3.min.js',global:'d3'},
+    /* jsPDF's UMD wrapper does `(t=t||self).jspdf={}`, so the global is the
+       NAMESPACE `jspdf`, not the `jsPDF` constructor -- read it as
+       window.jspdf.jsPDF. Vendored 2026-09-13: the Sovereign Passport button
+       on profile.html called a CDN import whose rejection was swallowed by a
+       console.warn, so the member clicked Download and nothing happened. */
+    jspdf:     {url:'/vendor/jspdf.umd.min.js',global:'jspdf'},
     leaflet:   {url:'/vendor/leaflet.js',global:'L'},
     popper:    {url:'/vendor/popper.min.js',global:'Popper'},
     tippy:     {url:'/vendor/tippy-bundle.umd.min.js',global:'tippy'},

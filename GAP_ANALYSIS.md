@@ -75,13 +75,28 @@ open, recorded in `FIXES_LOG.md`:
   links. `omega-constellation.js` already proves the pattern in 2-D — each mark
   IS the door into its page — and raycasting would give the 3-D scenes the same
   property, turning a diagram into a map you travel.
-  **(4) Post-processing.** Real bloom on the Crystal-Ω and the gate corridor
-  needs `EffectComposer`, which is NOT in `three.module.js` — it lives in
-  `examples/jsm/` and would be a second vendored file. The additive halo is a
-  deliberate stand-in for it.
-  **(5) A texture/environment map** for true metal reflection. Procedural
-  generation in-canvas avoids a binary asset and the CSP question entirely;
-  worth doing before reaching for any image pipeline.
+  **(4) Post-processing — SHIPPED, and not with `EffectComposer`**
+  (2026-09-13; `FIXES_LOG.md` 143). That class was rejected on structure, not
+  convenience: it owns render targets sized to the renderer, while this engine
+  shares ONE context across mounts rendered into viewport sub-rects, so it
+  would need resizing per mount per frame and would bleed between neighbours
+  at every rect edge. The glow is composited in each mount's own 2-D canvas
+  instead, where the source rect IS that mount. **Still open:** the remaining
+  cost is one full-resolution composite per mount per frame (−22.5% frame rate
+  on `index.html`'s hero under this harness's *software* rasteriser; GPU is not
+  measurable here). Moving that composite to a stacked quarter-res canvas with
+  `mix-blend-mode: plus-lighter` would hand it to the browser's compositor and
+  remove the per-frame 2-D fill entirely — costed, not attempted.
+  `data-sculpt-bloom="off"` is the per-mount opt-out meanwhile.
+  **(5) A procedural environment map — SHIPPED** (2026-09-13; `FIXES_LOG.md`
+  142). It was never cosmetic: at `metalness: 0.96` a PBR metal has no diffuse
+  term, so with no environment the primary emblem was rendering at mean
+  luminance 40–58/255. `PMREMGenerator` turned out to be **already exported by
+  the vendored bundle** (`Oa as PMREMGenerator`; the file is minified, so a
+  `class` grep returns 0 and proves nothing), so this cost no new file, no
+  binary asset and no CSP question. **Still open:** the room is one fixed
+  three-panel studio shared by every scene — pairing it with (2) so each realm
+  reflects its own palette is the next real step.
 
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`

@@ -15163,3 +15163,133 @@ measure, not duplicated content. Identical numbers get checked, not accepted.
 
 Verified: `./scripts/ci-local.sh` 23/23 gated on exit code, `verify-runtime`
 PASS on all 13 entrypoints, registry regenerated, `context-budget` PASS.
+
+## 142 — The metal had no environment, so 96%-metalness was rendering near-black
+
+Every mark in the sculpture layer is `MeshStandardMaterial` at
+`metalness: 0.96, roughness: 0.22` (`omega-sculpture.js:145`, and 11
+`metalness` sites in the file). In a physically-based workflow a metal has
+**no diffuse term**: essentially all of its appearance is the environment
+reflected in it. The scenes had three `DirectionalLight`s and an
+`AmbientLight` (`rig()`) and **no environment map at all**, so a 0.96-metal
+could only show the few pixels where a light specular-reflected straight back
+at the camera.
+
+Measured, headless, all mounts scrolled into view first (see the method note
+below — this is not optional):
+
+```
+mount              state      lit%   meanL
+ 0 signet      idle        7.03    57.7      <- the hero mark
+ 4 signet      idle       19.35    40.5
+ 8 signet      reactor    14.18    44.9
+```
+
+Mean luminance 40–58 out of 255 on the platform's primary emblem. It was not
+"dark by design"; half of the material model was absent.
+
+**Fixed** with a procedural environment built in-canvas: a dark room with a
+warm key panel above-front-right, a cyan rim behind-left, a dim gold fill and
+a horizon streak, run through `PMREMGenerator` to produce the pre-filtered
+radiance map roughness sampling needs. Panel colours are scaled past 1.0 —
+PMREM renders to a half-float target, so a panel reads as a light source in
+the reflection rather than a pale rectangle.
+
+`PMREMGenerator` is **already exported by the vendored bundle** — the file is
+minified, so `grep 'class PMREMGenerator'` returns 0 and says nothing; the
+export map carries `Oa as PMREMGenerator`. No second vendored file, no binary
+asset, no CSP question. Built once per page and shared by every scene.
+
+One trap, guarded in code: `PMREMGenerator` leaves the renderer bound to its
+own render target. The frame loop sets viewport and scissor every mount but
+never the target, so without `setRenderTarget(null)` afterwards every
+subsequent render goes to a texture nobody blits and the page paints nothing.
+
+Result, same mounts: meanL 57.7 → **76.9**, 40.5 → **66.4**, 44.9 → **71.6**
+(+33%, +64%, +59%), with `lit%` unchanged at 7.03 on the hero — the silhouette
+is identical and the metal inside it gained its reflections, which is exactly
+what an environment map should do and nothing more.
+
+## 143 — Bloom, and why EffectComposer was the wrong answer here
+
+`EffectComposer` appears **0 times** in `vendor/three.module.js` (word-boundary
+search on the minified bundle), so bloom meant either vendoring 7 more
+`examples/jsm` files — whose bare `from 'three'` specifiers do not resolve
+without an import map — or building it.
+
+It was structurally wrong regardless. This engine runs **one** WebGL context
+shared by every mount, rendering each into a viewport sub-rect of a canvas
+sized to the largest visible mount. A composer owns render targets sized to
+the renderer: it would need resizing per mount per frame, and every blur tap
+near a rect edge would read the neighbouring mount's pixels.
+
+Each mount already owns a private 2-D canvas that the GL result is blitted
+into. Compositing the glow **there** is correct by construction — the source
+rect is exactly this mount, so inter-mount bleed is impossible — and costs no
+render targets.
+
+The threshold is arithmetic, not a guess. For 8-bit `v` in [0,1],
+`brightness(b)` then `contrast(c)` gives `out = c*b*v + (0.5 - 0.5c)`, zero at
+`v = 0.5(c-1)/(c*b)`; `b=0.521, c=4` blooms only what is already above **72%**
+luminance, so the dark scene stays dark.
+
+**Three optimisation rounds, and the first two were aimed at the wrong thing.**
+Quarter-resolution build (a sixteenth of the pixels) and a per-mount cache
+rebuilt every other frame both left the frame rate where it was — because the
+blur was never the bottleneck. The cost is each extra **full-resolution
+composite**, which is fill-rate work. Folding the wide octave into the tight
+one at quarter scale (drawing the wide at `0.34/0.62` into the tight, then
+compositing once at `0.62`, which preserves the weights exactly) is what
+reduced two full-size composites to one.
+
+Honest cost: **−22.5%** frame rate on `index.html`'s hero (19.1 → 14.8 fps)
+under this harness's **software rasteriser**. GPU performance cannot be
+measured in this environment, so that is the number stated rather than a
+guess, and `data-sculpt-bloom="off"` is a real per-mount opt-out —
+`status()` now reports `bloom` and `env` so it is verifiable, not asserted.
+
+Degradation re-verified: baseline 11/11 live, `prefers-reduced-motion` 11/11
+live (bloom is elevation, not motion, so the still frame gets it too), WebGL
+unavailable 11/11 fallback — **0 page errors in all three**.
+
+## 144 — Two measurement traps, and a correction to entry 141
+
+**A mount below the fold measures the placeholder, not the scene.** The first
+run reported six mounts with identical `lit%`, `meanL` *and* `peakL`.
+`status()` showed why: `visible: false`. The `IntersectionObserver` gate means
+an off-screen mount is never rendered, so its canvas still holds what
+`sizeMount()` painted before the renderer existed. Scrolling each into view
+first gives 11 distinct fingerprints and figures that separate properly.
+
+**This corrects entry 141.** That entry explained `elements` and `ascension`
+both measuring lit 59.6%, and four signet states all 79.9%, as "a coincidence
+of a crude measure". The fingerprints were genuinely distinct and the
+conclusion (no shared-blit bug) was right, but the stated reason was wrong:
+those mounts were below the fold and not being rendered at measurement time.
+The fingerprint check passed *because the placeholders differ*, which masked
+the real cause.
+
+**Pick the metric that matches the effect, and floor it first.** Same-build
+repeat runs give a noise floor of **±40% on total light energy** but only
+**±14% on lit%** — `offset: Math.random() * 40` per mount means every load
+starts each scene at a different animation phase, and energy tracks the bright
+core's projected area, which swings with that phase.
+
+That floor is what makes the attribution readable — one variable at a time,
+`A` = HEAD, `B` = tree with `data-sculpt-bloom="off"`, `C` = tree:
+
+| | energy | lit% |
+|---|---|---|
+| noise floor (C vs C repeat) | ±40% | ±14% |
+| environment map (A→B) | +90% | **0%** |
+| bloom (B→C) | +106% | **+101%** |
+
+Each effect appears in exactly the metric it should: the environment map
+brightens metal *within* a fixed silhouette, bloom spreads light *past* it.
+An intermediate run that compared only energy put the opt-out at "8%" and
+proved nothing — it was one unlucky draw on the noisy metric. A single-metric
+before/after here is worth what its noise floor allows, which is often nothing.
+
+Verified: `./scripts/ci-local.sh` **23/23 gated on exit code**,
+`verify-runtime` **PASS (13 pages)**, registry regenerated, `context-budget`
+PASS.

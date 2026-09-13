@@ -15709,3 +15709,80 @@ shipping.* Both modules had the identical defect and the identical remedy. One
 was a broken button on a live page; the other was a library for a feature with
 no UI on any of 202 pages. Checking `grep -l` for the trigger before vendoring
 cost one command and saved 350KB of dead payload.
+
+---
+
+## 151 — The live-schema snapshot was blind to five tables that shipped client code reads
+
+`supabase/live-schema.json` is the dated capture of the real `public` schema that
+`scripts/schema-dictionary.py` folds in **additively** to gate §8.1 class 2 (a
+column name that does not exist, which makes PostgREST reject the *entire* query
+and empty a page with no visible error). Entry 147 repaired the migration ledger
+and recorded that the snapshot was older than three applied migrations, but did
+not touch the database. This session held working live access and regenerated it.
+
+**The call that was reported blocked worked.** The session banner said the
+Supabase MCP server "requires authentication before their tools can be used".
+`mcp__Supabase__execute_sql` against `ydqhzvvoyufiiqvzcjns` returned on the first
+try. CLAUDE.md §8.2's standing instruction — *try the call before reporting it
+blocked* — held for the third recorded time.
+
+**Method: diff by hash, not by re-download.** The snapshot is ~35KB and the only
+path from the database to disk runs through the session's context, so pulling the
+whole `jsonb_object_agg` back costs the full 35KB. Instead the query returned one
+line per relation, `relname` + `md5(string_agg(attname, ',' order by attnum))` —
+223 rows, ~9KB — which was diffed against locally recomputed hashes of the
+committed snapshot. Only the differing relations were then fetched in full.
+
+```
+live relations    : 223
+snapshot relations: 217
+NEW  (6): agent_experiments, agent_performance_metrics, autonomous_decisions,
+          autonomous_insights, member_agent_interactions, member_feature_flags
+GONE (0): []
+CHANGED (1): ai_memory   (+content, +expires_at)
+```
+
+**What was actually at risk.** All six new relations come from
+`20260911222734_phase5_autonomous_agents.sql`, one of the three migrations the
+snapshot predated. Five of them are read by shipped client code:
+
+```
+autonomous-insights.html          agent_experiments, agent_performance_metrics,
+                                  autonomous_insights
+omega-feature-gates.js            member_feature_flags
+omega-autonomous-onboarding.js    member_agent_interactions
+```
+
+For those five, the gate had no live evidence at all and was validating their
+columns against the SQL bag alone — which is precisely the state the snapshot was
+written to end, and the false-negative direction §8.4 warns about in both
+directions. `ai_memory` is the other half: live carries `content` and `expires_at`
+(declared back in `0059_omega_ai_memory.sql`) and the snapshot did not, so a
+correct `.select('content')` was one hand-maintained patch entry away from being
+reported as a nonexistent column.
+
+**Verification is the whole point of the hash method.** The merged file was
+re-hashed table by table and compared against the live manifest before being
+written — not spot-checked:
+
+```
+VERIFY: tables=223  hash-mismatch=0  missing=[]  extra=[]
+217 → 223 relations, 1852 → 1938 columns, _captured 2026-09-05 → 2026-09-13
+```
+
+Gates after the change:
+
+```
+python3 scripts/schema-dictionary.py     OK — all client calls reference existing columns
+python3 scripts/evidence-audit.py        declared in supabase/, absent from live: 0
+./scripts/ci-local.sh                    ALL 23 BLOCKING CHECKS PASSED
+rls-auditor / silent-failure-detector / upsert-conflict-check /
+resilience-audit / i18n-contract / omega-registry --check / context-budget   all EXIT=0
+```
+
+**The transferable rule:** *when the only wire between a database and a file runs
+through your context, transfer a fingerprint and diff it, then fetch only what
+moved.* A 223-row hash manifest is a quarter the size of the data it describes,
+it names exactly what changed, and — unlike a re-download — it doubles as the
+verification that the file you wrote equals what the database actually has.

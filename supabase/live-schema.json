@@ -14,10 +14,10 @@
   "are applied live: it is dated evidence, not a target. The query that",
   "produced it is in supabase/live-schema.README.md."
  ],
- "_captured": "2026-09-05",
+ "_captured": "2026-09-13",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
- "_table_count": 217,
+ "_table_count": 223,
  "tables": {
   "academy_access": [
    "user_id",
@@ -169,6 +169,42 @@
    "ends_at",
    "created_at"
   ],
+  "agent_experiments": [
+   "id",
+   "agent_id",
+   "experiment_type",
+   "experiment_name",
+   "variant_a",
+   "variant_b",
+   "cohort_filter",
+   "population_size",
+   "sample_size_a",
+   "sample_size_b",
+   "started_at",
+   "ended_at",
+   "winner",
+   "winner_confidence_level",
+   "statistical_result",
+   "revenue_impact_usd",
+   "auto_rolled_out",
+   "rollout_timestamp",
+   "created_at"
+  ],
+  "agent_performance_metrics": [
+   "id",
+   "agent_id",
+   "metric_date",
+   "decisions_count",
+   "successful_decisions",
+   "escalated_decisions",
+   "average_confidence",
+   "average_revenue_impact",
+   "member_satisfaction_avg",
+   "cost_usd",
+   "performance_score",
+   "improvement_vs_baseline",
+   "created_at"
+  ],
   "agent_threads": [
    "id",
    "user_id",
@@ -240,7 +276,9 @@
    "memory_key",
    "memory_type",
    "agent_name",
-   "updated_at"
+   "updated_at",
+   "content",
+   "expires_at"
   ],
   "ai_memory_links": [
    "id",
@@ -383,6 +421,38 @@
    "action_key",
    "action_note",
    "is_on",
+   "created_at"
+  ],
+  "autonomous_decisions": [
+   "id",
+   "agent_id",
+   "member_id",
+   "decision_type",
+   "context_snapshot",
+   "reasoning",
+   "decision_payload",
+   "confidence_score",
+   "model_used",
+   "temperature",
+   "execution_timestamp",
+   "outcome_recorded",
+   "outcome_value",
+   "revenue_impact_usd",
+   "created_at"
+  ],
+  "autonomous_insights": [
+   "id",
+   "insight_type",
+   "severity",
+   "cohort_affected",
+   "finding",
+   "recommendation",
+   "estimated_impact_usd",
+   "evidence",
+   "generated_at",
+   "actioned",
+   "action_details",
+   "action_timestamp",
    "created_at"
   ],
   "billing_features": [
@@ -1249,6 +1319,22 @@
    "notes",
    "created_at"
   ],
+  "member_agent_interactions": [
+   "id",
+   "member_id",
+   "agent_id",
+   "interaction_type",
+   "prompt_used",
+   "member_input",
+   "agent_response",
+   "interaction_timestamp",
+   "resolved",
+   "satisfaction_score",
+   "escalated",
+   "escalation_reason",
+   "follow_up_action",
+   "created_at"
+  ],
   "member_events": [
    "id",
    "user_id",
@@ -1257,6 +1343,18 @@
    "format",
    "event_type",
    "description",
+   "created_at"
+  ],
+  "member_feature_flags": [
+   "id",
+   "member_id",
+   "feature_id",
+   "enabled",
+   "variant",
+   "rollout_percentage",
+   "set_by_agent",
+   "set_reason",
+   "set_timestamp",
    "created_at"
   ],
   "member_perks": [

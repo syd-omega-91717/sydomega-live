@@ -1,6 +1,7 @@
 /* ==========================================================================
    Ω SYD OMEGA 91717 — SOVEREIGN PASSPORT GENERATOR (omega-passport.js)
-   jsPDF (MIT) via esm.sh — generates a formatted sovereign passport PDF.
+   jsPDF (MIT), self-hosted at /vendor/jspdf.umd.min.js — generates a
+   formatted sovereign passport PDF.
    Any element with [data-passport-download] triggers a download.
    Reads profile data from window.__omegaProfile.
    ========================================================================== */
@@ -134,21 +135,61 @@ function drawPassport(pdf, pr, user){
   pdf.text('SOVEREIGN PASSPORT · SYD OMEGA 91717 · AUTH=√(A³+B³+C³)×φ/e',W/2,H-7,{align:'center'});
 }
 
-function generate(){
+/* Load the vendored jsPDF and resolve its global.
+
+   jsPDF's UMD wrapper is `(t=t||self).jspdf={}`, so the global is the
+   NAMESPACE `jspdf` and the constructor is `window.jspdf.jsPDF`. */
+function loadJsPDF(){
+  return new Promise(function(resolve,reject){
+    if(window.jspdf&&window.jspdf.jsPDF) return resolve(window.jspdf.jsPDF);
+    var s=document.createElement('script');
+    s.src='/vendor/jspdf.umd.min.js';s.async=true;
+    s.onload=function(){
+      (window.jspdf&&window.jspdf.jsPDF)
+        ? resolve(window.jspdf.jsPDF)
+        : reject(new Error('jspdf.jsPDF undefined after load'));
+    };
+    s.onerror=function(){ reject(new Error('failed to load /vendor/jspdf.umd.min.js')); };
+    document.head.appendChild(s);
+  });
+}
+
+/* Tell the member when it did not work.
+
+   This used to read `import('<cdn>/jspdf@2.5.2')` and swallow the rejection
+   with a bare console.warn -- so a member on profile.html clicked DOWNLOAD
+   PASSPORT and absolutely nothing happened: no file, no message, no way to
+   tell a slow network from a broken build. That is CLAUDE.md 8.1 class 1
+   wearing a different hat (the UI says nothing while the action does
+   nothing), and the library was unreachable from the platform CSP anyway. */
+function passportError(btn, msg){
+  if(btn){
+    var prev=btn.getAttribute('data-passport-label')||btn.textContent;
+    btn.setAttribute('data-passport-label',prev);
+    btn.textContent='PASSPORT UNAVAILABLE — '+msg;
+    btn.disabled=false;
+    setTimeout(function(){ btn.textContent=prev; },6000);
+  }
+  console.warn('[OmegaPassport] '+msg);
+}
+
+function generate(btn){
   var pr=window.__omegaProfile||{};
   var user=window.__omegaUser||{};
-  import('https://esm.sh/jspdf@2.5.2').then(function(mod){
-    var jsPDF=mod.jsPDF||mod.default;
+  loadJsPDF().then(function(jsPDF){
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a6'});
     drawPassport(pdf,pr,user);
     pdf.save('sovereign-passport-'+Date.now()+'.pdf');
-  }).catch(function(e){console.warn('[OmegaPassport] jsPDF load failed',e);});
+  })['catch'](function(e){
+    passportError(btn, (e&&e.message)||'could not load the PDF engine');
+  });
 }
 
 window.OmegaPassport={generate:generate};
 
 document.addEventListener('click',function(e){
-  if(e.target.closest('[data-passport-download]')) generate();
+  var btn=e.target.closest('[data-passport-download]');
+  if(btn) generate(btn);
 });
 
 /* Inject download button into character.html automatically */

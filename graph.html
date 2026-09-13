@@ -105,7 +105,7 @@
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">GRAPH ARCHITECTURE</p>
     <div class="card-grid" data-stagger data-stagger-gap="60">
-      <div class="card" data-reveal="fade-up"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, loaded dynamically from esm.sh. Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, served from this origin (/vendor/d3.min.js). Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
       <div class="card" data-reveal="fade-up"><div class="card-title">NODE HIERARCHY</div><div class="card-body">Four node types: ELEMENT (largest, 28px, glowing), GOD (22px, glowing), SIGN (14px, element-coloured), MEMBER (6–17px, authority-scaled). Links: sign→element, sign→god, member→sign.</div></div>
       <div class="card" data-reveal="fade-up"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, sign, axis_a/b/c).</div></div>
       <div class="card" data-reveal="fade-up"><div class="card-title">SVG RENDERING</div><div class="card-body">Graph renders as inline SVG inside the page. Zoom: D3 zoom (scale 0.2–4×). Pan: drag anywhere on SVG canvas. Glow filter applied to element and god nodes via SVG feGaussianBlur. All labels are SVG text elements.</div></div>
@@ -274,6 +274,32 @@ async function initGraph(d3,members){
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+  /* Load a vendored UMD bundle and resolve its global.
+
+     NOT OmegaOSS.require(): this IIFE runs from a <script type="module"> that
+     the browser executes BEFORE `<script src="/bg.js" defer>` further down the
+     page, so window.OmegaOSS does not exist yet here -- guarding on an
+     accessor nothing has published yet is CLAUDE.md 8.1 class 4b, which is
+     how omega-emblems-catalog.js came to call an API that never existed.
+     The registry entry in omega-oss.js is still the canonical record of where
+     this library lives; this loader just does not depend on load order.
+
+     It REJECTS on failure, deliberately. OmegaOSS.load() only console.warn()s,
+     which is precisely the silent death this page suffered for months. */
+  function loadUMD(src, global){
+    return new Promise(function(resolve, reject){
+      if(window[global]) return resolve(window[global]);
+      var s=document.createElement('script');
+      s.src=src; s.async=true;
+      s.onload=function(){
+        window[global] ? resolve(window[global])
+                       : reject(new Error(global+' undefined after loading '+src));
+      };
+      s.onerror=function(){ reject(new Error('failed to load '+src)); };
+      document.head.appendChild(s);
+    });
+  }
+
 (async function(){
   var s=(await sb.auth.getSession()).data.session;
   if(!s){location.replace('/account.html');return;}
@@ -284,7 +310,16 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   var membersRes=await sb.from('profiles').select('id,display_name,sign,axis_a,axis_b,axis_c,is_owner').eq('access_approved',true);
   var members=membersRes.data||[];
   buildMembersTab(members);
-  var d3=await import('https://esm.sh/d3@7.9.0');
+  var d3;
+  try{
+    d3=await loadUMD('/vendor/d3.min.js','d3');
+  }catch(e){
+    /* Say so, rather than leaving an empty panel. The old dynamic import
+       rejected here and took the whole IIFE with it, silently. */
+    var gl=document.getElementById('graph-loading')||document.getElementById('app');
+    if(gl) gl.textContent='COULD NOT LOAD THE GRAPH ENGINE — '+(e.message||'load failed');
+    return;
+  }
   await initGraph(d3,members);
 })();
 </script>

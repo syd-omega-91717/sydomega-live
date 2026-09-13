@@ -129,6 +129,17 @@ open, recorded in `FIXES_LOG.md`:
   blocked, but §8.4's warning applies: a dated snapshot produces false findings in
   both directions. A session with live access should regenerate it; this one repaired
   the ledger only and did not touch the database.
+- **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
+  of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
+  is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no
+  matches** — zero pages. `bg.js` still injects its 245 lines everywhere. Its
+  `loadTone()` also imports Tone.js from a CDN with no `/vendor/` path, and its two
+  callers (`omega-music.js:190`, `:208`) do `loadTone().then(…)` with **no `.catch()`**,
+  so a failure would be an unhandled rejection and a silently dead toggle. Nothing was
+  vendored for it deliberately: 350KB for a feature with no way in is dead payload.
+  **Owner's call** — either surface the toggle on the pages that should have music
+  (and vendor Tone.js + add the missing `.catch()` at that point), or stop injecting
+  the module. The passport half of this pair was reachable and *was* fixed.
 - **`omega-emblems-catalog.js:578` calls an API nothing implements** (opened
   2026-09-13; `FIXES_LOG.md` 146). It guards on `window.OmegaNav` and then calls
   `OmegaNav.updateEmblems(this.all())`. Nothing in the repo has ever assigned

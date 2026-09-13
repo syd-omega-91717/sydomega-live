@@ -101,7 +101,7 @@
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">MAP ARCHITECTURE</p>
     <div class="card-grid">
-      <div class="card"><div class="card-title">LEAFLET ENGINE</div><div class="card-body">Map renders via Leaflet 1.9 loaded dynamically from esm.sh. Tile layer uses OpenStreetMap. Markers are custom SVG elements coloured by elemental alignment. No external map API keys required.</div></div>
+      <div class="card"><div class="card-title">LEAFLET ENGINE</div><div class="card-body">Map renders via Leaflet 1.9 served from this origin (/vendor/leaflet.js). Tile layer uses OpenStreetMap. Markers are custom SVG elements coloured by elemental alignment. No external map API keys required.</div></div>
       <div class="card"><div class="card-title">PRIVACY MODEL</div><div class="card-body">Member coordinates are stored at city granularity only. Exact locations are never collected. The public:true flag on profiles controls whether a member appears on the map at all.</div></div>
       <div class="card"><div class="card-title">LAYER SYSTEM</div><div class="card-body">Two toggleable layers: MEMBERS (all public-profile sovereigns by element colour) and NODES (strategic platform anchor points). Each layer is independently togglable without map reload.</div></div>
       <div class="card"><div class="card-title">DATA SOURCE</div><div class="card-body">Member pins sourced from the <code>profiles</code> table where <code>is_public=true</code> and <code>lat/lon</code> are set. Nodes sourced from the <code>map_nodes</code> table if present, else hardcoded to strategic capitals.</div></div>
@@ -213,6 +213,32 @@ function initMap(L,members){
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+  /* Load a vendored UMD bundle and resolve its global.
+
+     NOT OmegaOSS.require(): this IIFE runs from a <script type="module"> that
+     the browser executes BEFORE `<script src="/bg.js" defer>` further down the
+     page, so window.OmegaOSS does not exist yet here -- guarding on an
+     accessor nothing has published yet is CLAUDE.md 8.1 class 4b, which is
+     how omega-emblems-catalog.js came to call an API that never existed.
+     The registry entry in omega-oss.js is still the canonical record of where
+     this library lives; this loader just does not depend on load order.
+
+     It REJECTS on failure, deliberately. OmegaOSS.load() only console.warn()s,
+     which is precisely the silent death this page suffered for months. */
+  function loadUMD(src, global){
+    return new Promise(function(resolve, reject){
+      if(window[global]) return resolve(window[global]);
+      var s=document.createElement('script');
+      s.src=src; s.async=true;
+      s.onload=function(){
+        window[global] ? resolve(window[global])
+                       : reject(new Error(global+' undefined after loading '+src));
+      };
+      s.onerror=function(){ reject(new Error('failed to load '+src)); };
+      document.head.appendChild(s);
+    });
+  }
+
 (async function(){
   var s=(await sb.auth.getSession()).data.session;
   if(!s){location.replace('/account.html');return;}
@@ -235,12 +261,19 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     return;
   }
   var members=membersRes.data||[];
-  var L=await import('https://esm.sh/leaflet@1.9.4');
   var css=document.createElement('link');
   css.rel='stylesheet';
-  css.href='https://esm.sh/leaflet@1.9.4/dist/leaflet.css';
+  css.href='/vendor/leaflet.css';
   document.head.appendChild(css);
-  initMap(L.default||L,members);
+  var L;
+  try{
+    L=await loadUMD('/vendor/leaflet.js','L');
+  }catch(e){
+    var ml2=document.getElementById('map-loading');
+    if(ml2)ml2.textContent='COULD NOT LOAD THE MAP ENGINE — '+(e.message||'load failed');
+    return;
+  }
+  initMap(L,members);
 })();
 </script>
 <script src="/bg.js" defer></script>

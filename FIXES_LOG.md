@@ -15549,3 +15549,163 @@ test, a before/after comparison that reproduced it identically on `HEAD` (which
 only proved the *artifact* was stable), and a screenshot that appeared to show
 crowding. **Reproducibility is not correctness** — a stable measurement of the
 wrong quantity reproduces perfectly.
+
+## 149 — `graph.html` and `map.html` ran none of their own code, for want of two libraries
+
+Both pages opened an async IIFE with a runtime CDN import:
+
+```js
+graph.html:287   var d3 = await import('https://esm.sh/d3@7.9.0');
+map.html:238     var L  = await import('https://esm.sh/leaflet@1.9.4');
+map.html:241     css.href = 'https://esm.sh/leaflet@1.9.4/dist/leaflet.css';
+```
+
+A rejected dynamic import **aborts the whole IIFE**, so everything after that
+line — the entire graph build, the entire map build — never ran. Measured
+identically on `HEAD` and on the branch, so pre-existing:
+
+```
+BEFORE  graph.html  {"d3":"undefined", svgs:88,  circles:230}  TypeError: d3.select is not a function
+BEFORE  map.html    {"L":"undefined",  panes:0}                TypeError: L.map is not a function
+```
+
+The 88 SVGs on `graph.html` are nav and emblem chrome; **the graph itself was
+not among them.** `map.html` had **zero** `.leaflet-pane` — no map at all.
+
+Same class as the Supabase client (`CLAUDE.md` §4), the particle engine
+(128), the realm sphere, Chart.js, tippy, marked and Fuse (130-132, 135-137).
+`esm.sh` is also refused outright by `vault.html`'s stricter `script-src`.
+
+**Vendored per the established recipe.** `npm pack`, official builds, into
+`/vendor/` — which is `'self'`, so it satisfies both the platform header and
+`vault.html`'s meta CSP:
+
+```
+vendor/d3.min.js      279,706   UMD
+vendor/leaflet.js     147,552   UMD
+vendor/leaflet.css     14,806
+vendor/images/*.png         5   referenced by leaflet.css url(images/…)
+```
+
+**d3 forced the UMD choice**: its `package.json` has `main: src/index.js`
+(which imports ~30 sibling `d3-*` packages and needs a bundler this repo does
+not have) and `exports.umd: ./dist/d3.min.js`. The UMD global is the only
+self-contained form. Leaflet ships an ESM build but the UMD one is smaller and
+matches the other eight vendored bundles.
+
+**Not `OmegaOSS.require()`, deliberately.** Both IIFEs run from a
+`<script type="module">` that the browser executes *before* the
+`<script src="/bg.js" defer>` further down the page, so `window.OmegaOSS` does
+not exist yet at that point — guarding on an accessor nothing has published is
+§8.1 class 4b, the bug that left `omega-emblems-catalog.js` calling an API that
+never existed. Each page uses a small promise loader that does not depend on
+load order and, unlike `OmegaOSS.load()`, **rejects** on failure instead of
+`console.warn`-ing — the silent death these pages actually suffered. Both
+libraries are still registered in `omega-oss.js`'s registry as the canonical
+record of where they live.
+
+Result:
+
+```
+AFTER   graph.html  {"d3":"object", svgs:333, circles:489}   0 errors
+AFTER   map.html    {"L":"object",  panes:7}                 0 errors
+```
+
++245 SVGs and +259 circles on `graph.html` — the force simulation drawing for
+the first time. 7 `.leaflet-pane` and a 400px map on `map.html`.
+
+**Two supporting fixes, both needed:**
+
+- `scripts/vercel-build.sh` asserted only `vendor/*.js`. `leaflet.css` is
+  fetched by a `<link>` the reference scan cannot see, and its five PNGs are
+  referenced from **inside that CSS** by `url(images/…)`, which the HTML/JS
+  scan cannot see either — so all six would have shipped unasserted, the exact
+  404-on-127-pages shape that loop exists to prevent (97). It now asserts every
+  file under `vendor/`, plus a parent-shell count because `find | while` runs
+  the loop in a subshell where `exit 1` cannot fail the script.
+  `scripts/vercel_static_contract.py` pins that code as a marker string, so it
+  was updated in the same change — otherwise the gate fails on its own fix.
+- Member-visible copy on both pages said the library is *"loaded dynamically
+  from esm.sh"*. That is now false. Corrected — §8.4's rule that a claim in
+  copy drifts too, and neither string is `data-i18n`-keyed, so no pack needed.
+
+**A fourth repeat of the same reading error, caught before it was reported.**
+The probe read `#map-loading`'s `textContent` and got `"INITIALISING MAP…"`
+after the fix, which looks like the map never finished. It had:
+`display:none`, `visibleBox:false`. `textContent` returns the string whether
+or not anything is on screen — the same family as 148's `opacity:0` boxes and
+clipped rects. **Read the computed style, not the text.**
+
+**Still unvendored, measured in the same sweep** (recorded, not fixed here):
+`omega-music.js` imports `tone@14.9.17` and `omega-passport.js` imports
+`jspdf@2.5.2`, neither with a `/vendor/` path — the identical silent-death
+class. `omega-particles.js` and `omega-realm.js` also name `esm.sh` but try
+`/vendor/` **first**, so those are fallbacks and are fine.
+
+## 150 — The Sovereign Passport button did nothing, and reachability decided what to vendor
+
+`omega-passport.js` and `omega-music.js` were the last two modules importing a
+library from a CDN with no `/vendor/` fallback (`grep -c "'/vendor/"` → **0**
+for both, against 1 for `omega-particles.js` and `omega-realm.js`, which try
+the vendored copy first and only fall back). Both are injected by `bg.js` on
+every page.
+
+**They are not the same severity, and the difference decided the work.**
+
+Unlike `graph.html` and `map.html` (149), where the import sat at the top of an
+async IIFE and aborted the whole page, here both imports are *inside functions*
+— `generate()` and `loadTone()` — so the page is fine and only the feature
+fails, when invoked. The question was whether anyone can invoke it.
+
+**`omega-music.js`: nobody can.** Its trigger is `[data-music-toggle]`, and
+
+```
+grep -l "data-music-toggle" *.html   →   (no matches)
+```
+
+**Zero of 202 pages** surface it. Vendoring Tone.js (350KB) would have fixed a
+feature with no way in. Not vendored; recorded in `GAP_ANALYSIS.md` as the
+owner's call — wire it up or stop injecting 245 lines on every page.
+
+**`omega-passport.js`: a member can, and it silently failed.** `profile.html`
+carries the identity card, so the download button *is* injected and visible
+(measured: `button:true, visible:true, label:"↓ PASSPORT PDF"`). Clicking it ran
+
+```js
+import('<cdn>/jspdf@2.5.2')
+  .then(…)
+  .catch(function(e){ console.warn('[OmegaPassport] jsPDF load failed', e); });
+```
+
+so the rejection was swallowed into the console and **nothing happened** — no
+file, no message, no way to tell a slow network from a broken build. That is
+§8.1 class 1 wearing a different hat: the UI says nothing while the action does
+nothing. Measured before the fix, clicking the real button:
+
+```
+jspdf: undefined   ctor: false   label unchanged   0 page errors
+```
+
+**Fixed.** `vendor/jspdf.umd.min.js` (365,730 bytes, official UMD). Its wrapper
+is `(t=t||self).jspdf={}`, so the global is the **namespace** `jspdf` and the
+constructor is `window.jspdf.jsPDF` — reading `window.jsPDF` would have found
+nothing. Registered in `omega-oss.js` for the record; the module uses its own
+promise loader that **rejects**, and the rejection is now shown on the button:
+
+```
+AFTER, normal:          jspdf: object   ctor: true    → PDF generated
+AFTER, file blocked:    "PASSPORT UNAVAILABLE — failed to load /vendor/jspdf.umd.min.js"
+                        visible: true, restores to "↓ PASSPORT PDF" after 6s, 0 page errors
+```
+
+**The failure path was tested, not assumed.** An error handler that never fires
+is worse than none — `ctx.route(…).abort()` on the vendored file proves the
+member is actually told. Four separate readings this session were wrong because
+something was measured that was not what the member sees; an untested catch
+block is the same mistake in advance.
+
+**The transferable rule:** *reachability decides whether a fix is worth
+shipping.* Both modules had the identical defect and the identical remedy. One
+was a broken button on a live page; the other was a library for a feature with
+no UI on any of 202 pages. Checking `grep -l` for the trigger before vendoring
+cost one command and saved 350KB of dead payload.

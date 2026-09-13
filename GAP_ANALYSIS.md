@@ -98,16 +98,28 @@ open, recorded in `FIXES_LOG.md`:
   three-panel studio shared by every scene — pairing it with (2) so each realm
   reflects its own palette is the next real step.
 
-- **The sidebar's hover labels overlap each other on every page** (opened 2026-09-13,
-  measured). On `cosmos.html` at 1400x900, a pairwise box test over `#omega-side`'s
-  33 leaf text nodes finds **107 overlapping pairs**: the section flyout labels
-  (`COMMAND`, `IDENTITY`, `ASCEND`, `COSMOS`, `UNIVERSE`, `VAULT`, ...) are all laid
-  out at roughly the same coordinates (x 60-166, y 43, each 34px tall) and extend
-  beyond the 80px rail. **Pre-existing and untouched**: the count is identical (107)
-  rendering `HEAD` and the working tree, so the Ω-ATLAS work did not cause it. It is
-  the most-seen element on all 202 pages, so it is the highest-value visual fix
-  outstanding — deliberately not bundled into `FIXES_LOG.md` 146's PR, because a nav
-  layout change is its own increment with its own verification.
+- **RETRACTED 2026-09-13, the same day it was opened: the sidebar labels do NOT
+  overlap.** This entry claimed 107 overlapping label pairs on every page. That
+  number was a measurement artifact, twice over, and the correction is the useful
+  part: (1) the probe counted every leaf text node in `#omega-side` with **no
+  visibility filter**, and each `.on-icon` contains an `.on-tip` flyout at
+  **`opacity:0`** whose contents still have layout boxes — filtering for visibility
+  took 107 → **1**; (2) that last pair was `.on-lbl` "MEDIA" (rect 849–861) against
+  `.on-logout` (854–886), but `.on-sections` is `overflow-y:auto` and clips at 850,
+  so the label's *rect* crosses while the label never paints — `elementFromPoint`
+  sampled down the whole LOG OUT box returns no `.on-lbl` at any point: **0** real
+  overlaps. §8.1 class 10 says *DOM presence is not visibility*; the other half of
+  the same rule is that **a rect is not paint** — an `opacity:0` element and an
+  overflow-clipped one both keep their geometry. Ask `elementFromPoint`, or look at
+  a viewport screenshot — note `page.screenshot({clip})` uses PAGE coordinates, so a
+  clip computed from `getBoundingClientRect` on sticky chrome captures the wrong
+  region and produced a third wrong answer before this was settled.
+  **What is true and stays open:** `.on-sections` is scroll-clipped at every viewport
+  height below ~1400px (scrollHeight 737 vs clientHeight 725 at 900px; 702 vs 525 at
+  700px), so several nav sections sit below the fold behind a scroll. That is the
+  declared `overflow-y:auto` behaviour rather than a defect, but it does mean the
+  lower sections are effectively undiscoverable on a laptop — an information-
+  architecture question for the owner, not a layout bug to fix.
 - **`supabase/live-schema.json` is older than three applied migrations** (opened
   2026-09-13). While repairing the migration ledger (`FIXES_LOG.md` 147) the live
   `schema_migrations` table proved to hold **174** versions against a snapshot of 172,

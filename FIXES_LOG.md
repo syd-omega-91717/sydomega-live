@@ -15494,3 +15494,58 @@ nothing — both can be wrong together, and here they were, for days. It has to
 be regenerated from the ledger, and the only session that can do that is one
 holding live access. Two of these three defects were invisible until the
 snapshot was made true.
+
+## 148 — A defect that did not exist: 107 → 1 → 0, and why each step was wrong
+
+`FIXES_LOG.md` 146 and `GAP_ANALYSIS.md` recorded, and PR #354 announced, that
+the sidebar's section labels overlap on all 202 pages — *"107 overlapping pairs
+on `cosmos.html`, identical rendering `HEAD` and the tree"*. It was called the
+highest-value visual fix outstanding.
+
+**There is no such defect.** The number collapsed twice under its own probe:
+
+**107 → 1.** The probe took every leaf text node in `#omega-side` and tested
+the pairs — with **no visibility filter**. Each `.on-icon` contains an
+`.on-tip` flyout that is hidden at **`opacity:0`**, not `display:none`, so all
+of its contents — a `.tip-head` per section plus every sub-link — keep full
+layout boxes stacked at the same coordinates. Filtering for visibility (self
+*and* ancestors) leaves **1** pair.
+
+**1 → 0.** That last pair was `.on-lbl` "MEDIA" (rect 849–861) against
+`.on-logout` (854–886). But `.on-sections` is `overflow-y:auto` and clips at
+**850**, so exactly 1px of the label's box lies outside the clip and the label
+never paints there. `elementFromPoint` sampled down the entire LOG OUT box
+returns no `.on-lbl` at any point:
+
+```
+sectionsClipAt 850   logout [0,854,79,32]
+anyLabelPaintingInLogout: false
+```
+
+**A third wrong answer, on the way to the right one.** The first attempt to
+settle it visually used `page.screenshot({clip})` with a rect from
+`getBoundingClientRect`. That clip is in **page** coordinates while the rail is
+sticky in the **viewport**, so it captured empty page below the fold and came
+back solid black — which reads exactly like "nothing is there" for the wrong
+reason. A viewport screenshot, or the element's own `.screenshot()`, is the
+instrument; a page-coordinate clip is not.
+
+**The rule, stated properly this time.** §8.1 class 10 says *DOM presence is
+not visibility*. The other half is that **a rect is not paint**: `opacity:0`
+elements and overflow-clipped elements both keep their geometry, and
+`getBoundingClientRect` reports it happily. A pairwise box test over a
+component that has hover flyouts or a scroll container measures the DOM's
+ambitions, not the screen. Ask `elementFromPoint`.
+
+**What survives, and it is not a bug:** `.on-sections` is scroll-clipped at
+every viewport height below ~1400px — scrollHeight 737 vs clientHeight 725 at
+900px, 702 vs 525 at 700px — so several nav sections sit below the fold behind
+a scroll. That is the declared `overflow-y:auto` behaviour. Whether the lower
+sections being undiscoverable on a laptop is acceptable is an
+information-architecture question for the owner, not a layout defect.
+
+Three checks agreed on "107" before any of them was right: a pairwise geometry
+test, a before/after comparison that reproduced it identically on `HEAD` (which
+only proved the *artifact* was stable), and a screenshot that appeared to show
+crowding. **Reproducibility is not correctness** — a stable measurement of the
+wrong quantity reproduces perfectly.

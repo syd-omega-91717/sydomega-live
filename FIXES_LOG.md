@@ -17619,3 +17619,122 @@ so the documented **1** was correct.
 glow — not to the sentence.* And before inventing a colour to fix a contrast
 finding, check whether the page's own stylesheet already specified the right one
 and something is overriding it.
+
+---
+
+## 171 — Three defects a working tooltip exposed, and a stacking context that voided a z-index
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+Entry 169 made the 15 nav section tooltips render for the first time on all 202
+pages. Everything below was invisible until then — not regressions, but latent
+faults in a component nobody could see. A **screenshot** found the first one; no
+computed-style check would have.
+
+### 1. Four pairs of links sharing a row
+
+```
+dashboard.html SERVICES tooltip:  33 links, 29 distinct rows
+shared: EVENTS/TRAVEL · HABITS/JOURNAL · NUTRITION/OATH · RITUALS/SLEEP
+```
+
+`.tip-a` computed **`inline-flex`**, not the `display:flex` `nav.js:179` declares.
+Inline-flex boxes flow inline, so two *short* labels fit one 240px line and long
+ones do not — which is why only four pairs, and why it read as random.
+
+The override is `omega-accessibility-audit.css` (bg.js injects it estate-wide):
+
+```css
+button, [role="button"], a[href], .clickable {
+  min-height: var(--a11y-touch-min);   /* 44px */
+  min-width:  var(--a11y-touch-min);
+  display: inline-flex; justify-content: center; … }
+```
+
+`a[href]` is (0,1,1); `.tip-a` is (0,1,0). **An earlier sheet won on specificity.**
+Fixed by scoping the rule to `.on-tip .tip-a` (0,2,0) — 33 links, 33 rows, and
+15/15 sections clean across 235 links.
+
+### 2. A ragged left edge
+
+With the rows separated, the render showed each one *centred* in the panel. That
+same a11y rule sets `justify-content:center`, and `nav.js` never declared the
+property, so it applied unopposed. Adding `justify-content:flex-start` — which
+looks redundant against flex's own default and is not — gives every row one
+shared margin:
+
+```
+distinct .tip-dot left positions   ragged -> 1   (all at x=121)
+distinct .tip-a  left positions    ragged -> 1
+```
+
+### 3. The one that mattered: 5 of 18 links were not clickable
+
+```
+NOTES     y=637  topmost element = BUTTON#ofb-btn      z-index 9000
+PROJECTS  y=681  topmost element = DIV#omega-ticker-strip  z-index 200
+```
+
+`.on-tip` declares `z-index:9990`, far above both. It lost anyway: **`#omega-side`
+is `z-index:200 !important`, which makes it a stacking context**, so the panel's
+9990 is scoped *inside* the sidebar and the whole sidebar competes at 200. A
+z-index only ranks against siblings in its own context.
+
+Fixed by keeping the panel above the published chrome line rather than restacking
+the estate — `max-height:calc(100vh - 16px - var(--omega-chrome-bottom, 0px))`
+plus the same term in `placeTip()`'s clamp. `omega-bottom-stack.js` publishes
+**94px**, which covers both `#ofb-btn` (y=620–664) and `#omega-ticker-strip`
+(y=672–700). CLAUDE.md §4's rule — *never add a bottom-anchored constant, read a
+property* — is what made this a two-line fix instead of a judgement call.
+
+```
+panel   684px tall, bottom 692   ->   590px tall, bottom 598
+```
+
+Raising `#omega-side`'s own z-index would have fixed the symptom and restacked
+everything else in the estate.
+
+### The probe was wrong twice, in both directions
+
+**Over-reporting.** After the clamp, the blocked count was *still* 5 — because the
+probe hit-tests every `.tip-a`, and links scrolled outside a `max-height` +
+`overflow-y:auto` panel are legitimately not at their own coordinates. Filtering
+to links inside the panel's visible box, then scrolling to the end and re-checking
+the tail:
+
+```
+dashboard  panel [8,598]  visibleTop 12 blocked []   visibleTail 13 blocked []
+services   panel [8,598]  visibleTop 12 blocked []   visibleTail 13 blocked []
+```
+
+**Finding the cause.** Two separate attempts to enumerate the CSS rules matching
+`.tip-a` through `document.styleSheets` both returned an **empty list** while the
+computed value was plainly `inline-flex` (the first broke on comma-splitting
+`:is()`/`:where()` selector lists; the second still found nothing). What settled it
+was **disabling each sheet in turn** and watching the value flip — `inline-flex` →
+`flex` the moment sheet 8 was disabled. *When rule enumeration disagrees with the
+computed value, trust the bisect.*
+
+### Recorded, not acted on
+
+- The 44px touch-target rule was briefly suspected of damaging the estate. It is
+  not: ~354 of ~440 links per page are **navigation** (sidebar, tooltips, drawer)
+  where 44px is correct, only 5–8 content links are visible per page, and **zero**
+  links sit inside running text on dashboard/settings/vault/services. Its one real
+  side effect was §1 above.
+- `services.html` carries **three** stacked skip-links (`z-index` 10000, 10000,
+  99999) with `pointer-events:auto` reaching y=19. None blocks a tooltip link, but
+  three duplicates intercepting the top-left corner is worth a look on its own.
+
+```
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED
+verify-runtime          PASS (13 pages)
+8 blocking audits       all exit 0
+```
+
+**The transferable rule:** *a `z-index` is meaningless without knowing which
+stacking context it is in* — an ancestor with `position` + `z-index` caps every
+descendant, however large their number. And a component nobody can see accumulates
+faults silently; the first render of a repaired one is a bug-finding exercise, not
+a victory lap.

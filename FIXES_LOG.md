@@ -16205,3 +16205,68 @@ This bug had survived every prior session because the capability entrypoints
 `verify-runtime.js` checks by default do not include `nexus.html`; only `--all`
 reaches it, and only a change big enough to justify `--all` was ever going to
 surface it.
+
+---
+
+## 157 — The sheet this file called inert paints on every one of 202 pages
+
+`CLAUDE.md` §4.1 carried this as a standing fact:
+
+> **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED almost nowhere**
+> … its 4 rules match **0/0/0/0** elements on `dashboard`/`profile` and 1/1/6/0
+> on `index`, so the sheet changed no page's paint — what is left is markup
+> adoption (114).
+
+Both halves are false. Measured on merged `main` across **all 202 pages** in a
+render, not on the three the original claim sampled:
+
+```
+pages that LOAD the stylesheet : 202
+.omega-cinematic   matches on 202 pages, 202 elements     <- every page, not 0
+.omega-depth-card  matches on  15 pages,  34 elements     <- dashboard has 2, not 0
+.omega-emblem      matches on   1 page,    1 element
+.omega-node        matches on   0 pages,   0 elements
+```
+
+**The mechanism explains the gap between the two measurements.**
+`omega-cinematic-system.js` — injected by `bg.js:2210` on every page — runs
+`document.body.classList.add('omega-cinematic')`. Only **2** pages name the class
+in markup, so all 202 matches come from JS. Counting markup, or measuring before
+that module was wired, gives 0; counting the live DOM gives 202.
+
+**And "matches" was not taken as "paints".** This repo's own lesson is that a
+rule can apply and still change nothing, so the class was toggled off and on with
+the animated layers hidden to floor the noise, and the viewport diffed:
+
+```
+              class on vs off      noise floor (on vs on)
+dashboard     23.9% of pixels      1.1%
+profile       54.0%                13.6%
+vault          4.5%                 1.2%
+```
+
+Every page moves several times its own floor, so the fixed radial-gradient field
+is genuinely painting. `profile.html`'s floor is high because residual animation
+survived the hiding pass; 54% against 13.6% still clears it comfortably.
+
+**What this changes about the open work.** It is not "adopt the sheet" — the
+sheet's flagship rule is universal. The real remaining gap is far smaller and now
+stated as such: `.omega-node` has **0** uses and `.omega-emblem` has **1**, so
+those two either earn a real use or leave the file.
+
+**And one thing that must not be done with it:** `.omega-depth-card` sets
+`background`, `border`, `box-shadow` and an animated `::after`. Sweeping it onto
+`.card` would hit exactly the per-property collision profile that stopped the
+metric-tile sweep (`GAP_ANALYSIS.md` §S — 36 of 295 tiles safe). 15 pages use it
+deliberately; that is where it stays until a per-property collision scan says
+otherwise.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`python3 scripts/context-budget.py` PASS. No code changed — `CLAUDE.md` only.
+
+**The transferable rule:** *a "matches nothing" claim ages badly, because the
+thing that makes it match may be added later and elsewhere.* This one was true
+when written and became false the moment a module started adding the class at
+runtime — and nothing re-measured it, because a fact stated as settled does not
+invite a second look. Re-measure a zero across the whole estate before building
+on it, and check paint, not just matching.

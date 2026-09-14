@@ -237,36 +237,35 @@ through this one file with no per-page markup changes:
   the page-local class and delete its own pseudo — `honors.html`'s five
   `.tier-*` gradients and `gaming.html`'s two bars translated losslessly. Check
   *which properties* collide, never the mere presence of a pseudo.
-- **Platform-wide `.card` sweep.** `.card` was scanner-added to ~187 page-local
-  `*-card` classes across 117 files; **~34 were deliberately NOT swept**, because
-  `.card`'s hover-only `border-image`/glow collides with something they own — a
-  page-local `::before`/`::after` setting `background` (pseudos cascade per
-  *property*), or a per-instance border (inline `style=`, JS `.style.border*`, or
-  a modifier like `.mc.heir{border-left:…}`). Check both before adding `.card`;
-  per-class list and scanner in `FIXES_LOG.md`. **A sweep is not additive**:
-  `omega-visual-evolution.css` styles `.card,…,[class*="card"]`, loads after the
-  page's `<style>`, and measured rewrote resting border/background/padding/radius
-  on 130 swept elements — re-assert anything the page means at `.x.card`. **And
-  `.card` enrols the element in the `oa-fade-up` reveal**, whose last keyframe pins
-  `opacity:1`, silently un-dimming 16 `.honor-card.locked` badges: an animation
-  beats a plain declaration, and only `!important` outranks it.
+- **Platform-wide `.card` sweep.** `.card` reached ~187 page-local `*-card`
+  classes across 117 files; **~34 were deliberately NOT swept** — `.card`'s
+  hover-only `border-image`/glow collides with a page-local `::before`/`::after`
+  setting `background` (pseudos cascade per *property*) or a per-instance border
+  (inline `style=`, JS, or a modifier). Check both before adding `.card`; list and
+  scanner in `FIXES_LOG.md`. **A sweep is not additive**:
+  `omega-visual-evolution.css` styles `[class*="card"]` and loads later, measured
+  rewriting resting border/background/padding/radius on 130 swept elements —
+  re-assert what the page means at `.x.card`. **And `.card` enrols the element in
+  `oa-fade-up`**, whose last keyframe pins `opacity:1`, silently un-dimming 16
+  `.honor-card.locked` badges: an animation beats a declaration; only `!important`
+  outranks it.
 - **`.card-edge`, the left-edge accent.** `.card::before` is a *top* bar, which is
   why 124 hand-rolled `border-left` sites across 68 files were excluded from the
   sweep. `.card.card-edge` runs the same `--card-accent` bar down the left instead
   (`--card-edge-w`, default 3px). Check the element's own `::before` first —
   `chronicle.html`'s `.event-card` draws its timeline connector there.
 - **Active-tab beam** — `.tab-btn::after`, a positioned 3px bar (not a border)
-  growing from the tab centre. 40 pages own `.tab-btn` rules and win the cascade;
-  none owns a pseudo — established by parsing `<style>` blocks, since a whole-file
-  grep counts every `querySelectorAll('.tab-btn')` as a CSS rule.
+  from the tab centre. 40 pages own `.tab-btn` rules and win; none owns a pseudo
+  — parse `<style>` blocks to check, never grep (a `querySelectorAll('.tab-btn')`
+  reads as a CSS rule).
 - **Telemetry utilities**: `.trend.up`/`.down`/`.flat`, `.tbl-row.up`/`.down`,
   zebra striping, `.sparkline`. `.trend` sets `justify-self:start` deliberately —
   `.tbl-row` is `display:grid`, and without it a `.trend` child fills the implicit
   track. **Draw them through `omega-sparkline.js`** (`data-omega-spark`), never by
   hand: a badge asserts a direction, so it draws nothing below two real readings
   — §8.1 class 9 in code, not memory.
-- **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
-  `.field` + `.field label` gives an opt-in floating-label pattern.
+- **Glass form controls**: `.inp` gets deeper blur + a focus ring; `.field` +
+  `.field label` is an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
   hand-rolled gold buttons lost at equal specificity and measured **1.01:1** —
   invisible. Use `.btn.btn-fill` (retint `--btn-fill`), never a page-local
@@ -279,19 +278,21 @@ through this one file with no per-page markup changes:
   rendered in browser defaults. `bg.js` injects the Google Fonts `<link>` +
   `preconnect` once per page, guarded by `#omega-fonts`.
 - **Ambient noise overlay**: a fixed `pointer-events:none`
-  `<div id="omega-noise-overlay">` from bg.js — a real element, not a
-  `body::before`: 5 pages define their own.
+  `<div id="omega-noise-overlay">` from bg.js — an element, not a `body::before`.
 - **`omega-constellation.js`** (`.ocn-`): the ring-of-emblems diagram —
   `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
   It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
   size is a geometric constraint — read its header. `cosmos.html` has its own.
-- **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear
-  infinite`, static under `prefers-reduced-motion`; only `#ph-sigil` today.
-- **`omega-cinematic-system.css` is LOADED everywhere, ADOPTED almost nowhere**
-  (bg.js, `#omega-cinematic-css`): its 4 rules match **0/0/0/0** elements on
-  `dashboard`/`profile` and 1/1/6/0 on `index`, so the sheet changed no page's
-  paint — what is left is markup adoption (114). `--omega-line` is undefined
-  outside `index.html`; read it with a fallback.
+- **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear`,
+  static under `prefers-reduced-motion`; only `#ph-sigil` today.
+- **`omega-cinematic-system.css` is LIVE on all 202 pages**, not inert as this
+  file long claimed (157). `.omega-cinematic` matches **202/202** — its JS adds it
+  to `<body>`; only 2 pages name it in markup — and it *paints*: toggling moves
+  23.9/54.0/4.5% of pixels against 1.1/13.6/1.2% noise floors. `.omega-depth-card`
+  15 pages, `.omega-emblem` 1, `.omega-node` **0**: those last two are the open
+  work, not adoption. Never sweep `.omega-depth-card` onto `.card` (background +
+  border + shadow + animated `::after` — the metric-tile collision profile).
+  `--omega-line` is undefined outside `index.html`; read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated test

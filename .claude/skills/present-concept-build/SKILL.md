@@ -1,3 +1,8 @@
+---
+name: present-concept-build
+description: Inventory-first change procedure for this repo — find the existing owner of a surface and extend it rather than building a parallel system, check the request against docs/CANONICAL_PRESENT_CONCEPT.md and docs/PRODUCTION_TRUTH_MATRIX.md for material conflicts, and refuse changes that weaken RLS, expose secrets, bypass payment/authorization or add unsafe autonomous behavior. Use before modifying the repository to add or change a platform capability, and whenever a request could duplicate or replace a working surface.
+---
+
 # Ω Present-Concept Build Skill
 
 Before modifying the repository:

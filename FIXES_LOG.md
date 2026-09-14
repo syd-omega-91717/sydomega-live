@@ -16644,3 +16644,107 @@ estate" is a different claim from "safe to delete". The 10 unloaded stylesheets
 **The transferable rule:** *a gate's false-positive rate is part of its output.*
 This one was 40%, and nobody reads a list that is 40% wrong — which is the whole
 mechanism by which entry 160's genuine entry stayed invisible in it for a week.
+
+---
+
+## 162 — The gate for entry 160's bug class, and the two live contracts it found
+
+Entry 160 restored a module nothing loaded. Entry 161 made the warning that named
+it trustworthy. This is the gate that would have caught it in a day, plus the two
+broken contracts it found on its first run.
+
+### Why a publisher-exists check would not have worked
+
+`omega-bottom-stack.js` was on disk the whole eight days and published correctly.
+It was never *loaded*. So a contract is intact only when **both** hold:
+
+1. something publishes the value, **and**
+2. that publisher is **reachable** — transitively, from the real roots.
+
+`scripts/module-contract.py` asserts the conjunction over every root `.js`:
+`setProperty('--omega-x')` / `var(--omega-x)` for custom properties, and
+`window.OmegaThing =` / `window.OmegaThing` for shared accessors.
+
+### The A/B that makes a green result mean something
+
+Run with `bg.js` pinned to `658c3849` — the real tree as it shipped for eight days:
+
+```
+BROKEN CONTRACT (4)
+  --omega-chrome-bottom     published only by UNREACHABLE omega-bottom-stack.js
+                            read by: omega-legal.js, omega-pwa.js
+  --omega-transient-bottom  published only by UNREACHABLE omega-bottom-stack.js
+                            read by: omega-share.js
+```
+
+Run against the fix: neither appears. A planted `window.OmegaPlantedGhost` on the
+fixed tree is caught. `scripts/tests/test_module_contract.py` pins both halves —
+the load-bearing test is `test_unreachable_publisher_is_a_broken_contract`, which
+**a publisher-exists check passes and this gate must not**.
+
+### The scanner failed on its own explanation first
+
+Writing the fix for `window.OmegaCelebrate` meant naming it in the comment that
+explains it — and the scanner read its own explanation as a live read, so it kept
+failing on the tree where the bug was already gone. *A scanner that counts prose
+about a bug as the bug cannot be used to prove the bug is gone.* Comments are now
+stripped; **string literals are not**, because a dispatcher naming its target in a
+string still depends on it. Both directions are pinned by tests, and the BEFORE
+control was re-run after the change rather than assumed (a smaller number after a
+scanner edit is exactly what `evidence-audit.py` got wrong once).
+
+### Finding 1 — three names, one implementation, zero matches
+
+`omega-workers.js:142`, the notification worker's gate-unlock branch:
+
+```js
+/* Fire a platform notification via OmegaConfetti or topbar alert */
+if(evt.name==='sovereign.gate.unlocked'&&window.OmegaCelebrate){
+  window.OmegaCelebrate.gate(evt.payload.gate);
+}
+```
+
+Three spellings in four lines. The real module is `omega-confetti.js` — injected
+by `bg.js`, its header describing `OmegaCelebration.gate(gateNum, gateName)` as
+the *"cinematic gate-unlock sequence"*. `window.OmegaCelebrate` has **never been
+assigned in any commit in this repo's history** (`git log --all -S"OmegaCelebrate ="`
+returns nothing), so the guard was permanently false and the burst never played —
+while `architect.html:322` describes that exact behaviour to the member.
+
+Fixed, and verified in a render rather than by reading the rename:
+
+```
+window.OmegaCelebration      : object   .gate: function
+window.OmegaCelebrate (old)  : undefined
+gate(7,"THE SEVENTH GATE")   : canvases 82 -> 83, gate name rendered: true
+page errors                  : none
+```
+
+The call also now passes `evt.payload.name`. `gate()` renders
+`(gateName || '').toUpperCase()` as its banner, so the old one-argument call would
+have drawn an empty line even had the guard ever been true — the payload carries
+the name, and the feed entry three lines below already reads it.
+
+### Finding 2 — a hook whose implementation was deliberately deleted
+
+`omega-world-shell.js:197` called `window.OmegaLayeredUI.enhance(wrapper)` behind
+a guard. Its only publisher, `omega-layered-ui.js`, was removed on purpose in
+`c7ca3569` *"Clean up 33 orphaned modules never loaded by platform"* — the cleanup
+deleted the module and left the caller. Removed rather than re-implemented: the
+wrapper's two layers are already built directly above it and nothing else asks.
+
+### Also: `main` was red on arrival
+
+`2c934af5` added `.claude/skills/present-concept-build/SKILL.md` with **no YAML
+frontmatter**, so `omega-registry.py --check` failed on a clean checkout of `main`
+— blocking every open PR. Frontmatter added from the file's own content, with a
+description that says *when* to use the skill (CLAUDE.md §10.1). This is the
+estate-wide-merge pattern §8.2 already records; the remedy is the same.
+
+### Baseline moves
+
+`ci-local.sh` **23 → 24** blocking checks; `scripts/tests` **293 → 303**.
+
+**The transferable rule:** *a gate that checks one half of a conjunction reports
+green on the exact failure it was built for.* "A publisher exists" and "a reader
+exists" were both true for all eight days.

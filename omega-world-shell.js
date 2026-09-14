@@ -194,7 +194,12 @@ if (ch !== layer1) layer2.appendChild(ch);
 wrapper.appendChild(layer1);
 wrapper.appendChild(layer2);
 main.appendChild(wrapper);
-if (window.OmegaLayeredUI) window.OmegaLayeredUI.enhance(wrapper);
+/* An enhance() hook whose only implementation, omega-layered-ui.js, was
+   deleted on purpose in c7ca3569 ("Clean up 33 orphaned modules never
+   loaded by platform"). The call survived the deletion, guarded, so it has
+   been permanently false since. Removed rather than re-implemented: the
+   wrapper's two layers are already built above and nothing else asks for
+   this hook. */
 }
 }
 document.dispatchEvent(new CustomEvent('omega:world-shell-ready', {

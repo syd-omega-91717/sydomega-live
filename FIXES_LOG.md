@@ -16346,3 +16346,84 @@ not create is a race you will usually lose.* The element existed, the read
 succeeded, the value was valid — and wrong, because it was taken before the page
 finished deciding. When a read like that can only fail in one direction, make the
 failing value mean "unresolved" rather than trusting it.
+
+---
+
+## 159 — The line telling a member a page is unbuilt was invisible; and a class I had called dead was load-bearing
+
+Two small changes, both decided by measurement, one of which reverses a
+conclusion recorded earlier in this session.
+
+### 1. `--line` used as text colour, at 13% alpha
+
+`cohorts-dashboard.html` and `predictions-dashboard.html` are 963-byte
+placeholders. They are **honest** ones — each carries the line *"Phase 5 feature
+in development"*, exactly the future-tense copy CLAUDE.md §9 asks for on anything
+not yet shipped. But that line was styled `color: var(--line)`, a **border**
+token, which resolves to `rgba(201,168,76,0.13)`.
+
+Measured from rendered pixels rather than computed from CSS, because a 13% alpha
+colour composited over a near-black backdrop cannot be judged from its
+declaration:
+
+```
+BEFORE   backgroundPixel [5,5,10]   brightestGlyphPixel [9,9,16]   1.02:1
+```
+
+Invisible — the same signature as the `.btn-fill` finding at 1.01:1. The effect
+is to invert the page's honesty: the member sees a titled dashboard with one
+sentence and no readable explanation, and concludes the feature is **broken**
+rather than **unbuilt**.
+
+Now `var(--muted)`:
+
+```
+AFTER    cohorts-dashboard.html       bg [10,6,6]   glyph [116,129,139]   5.05:1
+         predictions-dashboard.html   bg [18,8,8]   glyph [137,152,163]   6.66:1
+```
+
+Both clear AA 4.5:1; computed colour `rgb(135,150,161)` on each. The gap between
+5.05 and 6.66 is `omega-backdrop.js` tinting each page differently — a feature,
+not a discrepancy. **Legibility only**: nothing else about these pages changed,
+because decorating a placeholder so it reads as a shipped feature is §8.1 class 9
+pointed the other way.
+
+*A measurement note.* The first AFTER run reported `cohorts` still at **1.02:1**
+while its twin read 6.66. The source of both files was byte-identical, so the
+number was wrong, not the fix: the screenshot clip was taken before the element
+settled and captured background only. Re-run with `scrollIntoView` plus a settle,
+it reads 5.05. **When two identical inputs give different answers, suspect the
+instrument.**
+
+### 2. `.omega-node` deleted, `.omega-emblem` deliberately kept
+
+`omega-cinematic-system.css` has two barely-used classes, and this file earlier
+framed them together as "adopt or delete". That was too binary, and one half was
+wrong.
+
+* **`.omega-node` — 0 uses across 202 pages.** `omega-constellation.js` owns this
+  role properly with `.ocn-node` (positioned, hover, `:focus-visible`, and each
+  node a real link). Removed: zero uses, zero risk.
+* **`.omega-emblem` — 1 use, and it is load-bearing.** Toggling the class at
+  runtime on `horoscope.html`'s `#hr-sign-emblem` and diffing a padded screenshot
+  of the region:
+
+```
+with class     litPx 13456   meanBright 36.3
+without class  litPx 13456   meanBright 33.4
+changed on/off 26.43%        noise floor (on vs on) 2.59%
+```
+
+Ten times the floor, with an identical lit area and measurably lower brightness:
+the class supplies the ring, glow and radial field around the canvas that
+`bg.js`'s icon converter fills (visible again since 158). **Deleting it would
+have degraded the page.** One genuine load-bearing use is not dead code.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js --pages cohorts-dashboard.html,predictions-dashboard.html`
+PASS.
+
+**The transferable rule:** *"unused" is a claim about the whole estate, but
+"safe to delete" is a claim about each remaining use.* Counting uses told me both
+classes were nearly dead; only rendering the one surviving use told me which of
+them was actually doing work.

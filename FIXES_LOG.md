@@ -16748,3 +16748,91 @@ estate-wide-merge pattern §8.2 already records; the remedy is the same.
 **The transferable rule:** *a gate that checks one half of a conjunction reports
 green on the exact failure it was built for.* "A publisher exists" and "a reader
 exists" were both true for all eight days.
+
+---
+
+## 163 — A cleanup deleted one side of ten pairs, and the surviving side read as a feature waiting to be switched on
+
+`audit.py` check 2b had reported **10 stylesheets nothing loads** for eight days, and
+`GAP_ANALYSIS.md` framed eight of them as an *"entire authored subsystem behind one
+entry point"*, claiming **"adding one `<script>` line to `bg.js` would light all
+twenty at once."** That framing is why nobody deleted them — it read like a feature
+one line from shipping.
+
+Both halves of it are false.
+
+### The entry point, and all twenty modules, are gone
+
+```
+omega-interface-v2.js                  ENTRY POINT ABSENT
+the 20 modules it "injects"            present: 0   absent: 20
+$ git log --diff-filter=D -- omega-interface-v2.js
+c7ca3569 Clean up 33 orphaned modules never loaded by platform
+```
+
+Same commit that left `omega-world-shell.js` calling a deleted `OmegaLayeredUI`
+(entry 162). It deleted 33 modules and **zero** stylesheets — and eight of the ten
+survivors had their **same-named partner module** deleted by it:
+
+```
+omega-agent-factory.css      partner deleted: omega-agent-factory.js
+omega-autonomous-ops.css     partner deleted: omega-autonomous-ops.js
+omega-command-palette.css    partner deleted: omega-command-palette.js
+omega-content-studio.css     partner deleted: omega-content-studio.js
+omega-content-workspace.css  partner deleted: omega-content-workspace.js
+omega-mission-control.css    partner deleted: omega-mission-control.js
+omega-nexus-visualizer.css   partner deleted: omega-nexus-visualizer.js
+omega-project-hub.css        partner deleted: omega-project-hub.js
+```
+
+### The one line would have lit nothing
+
+The half nobody had measured is whether anything wears these classes. Nothing does:
+
+| check | result |
+|---|---|
+| classes in any page's `class=` attribute | **0** for 9 of 10 sheets |
+| classes emitted by any of the 144 root `.js` | **0** for 9 of 10 sheets |
+| `omega-mc-backdrop`, `ocs-grid`, `omega-hub-grid`, `omega-nexus-node`, `omega-agent-card`, `omega-command-backdrop`, `omega-ops-badge`, `omega-react-grid` | emitted by **no module** |
+
+Each sheet's markup came from its own module, and those modules are gone. The
+exceptions are generic names — `omega-platform-visual.css` matches `.card` (176
+pages), `.panel` (152), `.glass` (37), which is precisely what made it *look*
+load-bearing; every rule of it is scoped to `.omega-visual-platform`, a class that
+appears nowhere. `omega-content-workspace.css` matches only `.full`.
+
+### It was not authored design awaiting adoption either
+
+The likeliest counter-hypothesis: these are design systems for pages that would
+benefit. Measured against the nine live pages they name, each page **already owns a
+working design and uses zero of its sheet's classes**:
+
+```
+sheet                        page                  page   own <style>   sheet classes in page
+omega-agent-factory.css      agents.html            20K        4201 ch        0 / 3
+omega-autonomous-ops.css     ops.html               32K        6139 ch        0 / 3
+omega-command-palette.css    command.html           26K        5747 ch        0 / 8
+omega-content-studio.css     studio.html            23K        5047 ch        0 / 13
+omega-mission-control.css    control-plane.html     14K        3502 ch        0 / 8
+omega-nexus-visualizer.css   nexus.html             18K        1882 ch        0 / 4
+omega-project-hub.css        projects.html          27K        6368 ch        0 / 5
+react-foundation.css         interface-omni.html    17K        2989 ch        0 / 8
+```
+
+Wiring any of them would mean rewriting a working page's markup to an unadopted
+alternative's class names — exactly what `.claude/skills/present-concept-build`
+forbids: *"extend the existing owner, do not create a parallel system"* and *"do not
+replace working surfaces with demos or scaffolds."* `project-studio.html` is small
+(4.9KB) only because `omega-project-studio.js` renders its content into
+`[data-omega-project-studio]` mounts; it is not thin.
+
+### Result
+
+All ten deleted. `audit.py` drops from **8 warnings to 7** and check 2b now reports
+no unloaded stylesheet at all. `ci-local.sh` 24/24; `verify-runtime.js` PASS on all
+nine pages whose sheets were removed.
+
+**The transferable rule:** *a cleanup that deletes one side of a pair leaves the
+other side looking like a feature waiting to be switched on.* The residue is not
+neutral — it accrued a standing GAP_ANALYSIS item and an eight-day warning, and the
+one-line promise in that item is what kept it alive.

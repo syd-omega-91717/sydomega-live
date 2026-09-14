@@ -558,7 +558,7 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **3 `.js` + 10 `.css` nothing loads** (2/2b; ESM `import` is an edge since 161). **A warning is not a null finding** — `omega-bottom-stack.js` sat there inert 8 days (160) |
+| `python3 scripts/audit.py` | 0 critical / **7** warnings — incl. **3 `.js`, 0 `.css`** nothing loads (2/2b; ESM `import` is an edge since 161). **A warning is not a null finding** — `omega-bottom-stack.js` sat there inert 8 days (160); the 10 dead sheets were a cleanup's unfinished half (163) |
 | `python3 -m unittest discover -s scripts/tests` | **303** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |

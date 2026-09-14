@@ -517,19 +517,36 @@ verifying the *current* guard says nothing about what may have happened before i
   orphaned `omega-*.js` but not an orphaned `.css` — a gate for that would have caught
   both.
 
-  **Superseded in part, 2026-09-06 (`FIXES_LOG.md` 111).** The gate now exists and is
-  transitive, and the honest count is **10** dead stylesheets, not 2 — see the item
-  below, which subsumes eight of them. `omega-platform-visual.css` and
-  `react-foundation.css` remain open for the `--omega-line` reason above.
+  **CLOSED 2026-09-14 (`FIXES_LOG.md` 163).** All ten are deleted, this pair included.
+  The `--omega-line` reservation above turned out to be moot for
+  `omega-platform-visual.css`: the rule that reads the token is scoped to
+  `.omega-visual-platform`, so it could never have applied to any page's borders
+  whatever the token resolved to — the danger was in a branch that cannot execute.
+  `react-foundation.css` was measured the same way and had 0 of its 8 classes in any
+  page's markup. `audit.py` check 2b now reports no unloaded stylesheet at all.
 
-- **An entire authored subsystem sits behind one entry point nothing loads**
-  (opened 2026-09-06; `FIXES_LOG.md` 111). `omega-interface-v2.js` injects **20** of
-  the 34 orphaned modules and **8** of the 10 dead stylesheets, and every file it asks
-  for exists on disk — the command palette (catalog, router, history, adapter, UI),
-  the content group (agent, library, studio, workspace), the nexus trio (intelligence,
-  visualizer, export), mission control, project hub, agent factory/evaluation,
-  autonomous ops, evidence engine, provenance ledger. Adding one `<script>` line to
-  `bg.js` would light all twenty at once.
+- **CLOSED 2026-09-14 (`FIXES_LOG.md` 163) — the subsystem no longer exists, and
+  the one-line claim was never true.** This item read: *"`omega-interface-v2.js`
+  injects 20 of the 34 orphaned modules and 8 of the 10 dead stylesheets, and every
+  file it asks for exists on disk … adding one `<script>` line to `bg.js` would light
+  all twenty at once."* Re-measured, both halves fail:
+
+  - `omega-interface-v2.js` **is not on disk**, and neither is a single one of the
+    twenty (`0 present / 20 absent`). All were deleted in `c7ca3569` *"Clean up 33
+    orphaned modules never loaded by platform"* — the same commit that left
+    `omega-world-shell.js` calling a deleted `OmegaLayeredUI` (`FIXES_LOG.md` 162).
+  - The line would have lit nothing anyway. **No module in the repository emits any
+    of those stylesheets' classes** — `omega-mc-backdrop`, `ocs-grid`,
+    `omega-hub-grid`, `omega-nexus-node`, `omega-agent-card`, `omega-command-backdrop`,
+    `omega-ops-badge`, `omega-react-grid` each return zero across all 144 root `.js`.
+    Each sheet's markup came from its own module, and those modules are gone.
+
+  `c7ca3569` deleted 33 modules and **0 stylesheets**, so the ten sheets were the
+  unfinished half of a merged cleanup: eight of them had a same-named partner module
+  deleted by that very commit. All ten are now removed, `audit.py` check 2b reports
+  none, and the nine corresponding pages render PASS. **The transferable rule: a
+  cleanup that deletes one side of a pair leaves the other side looking like a
+  feature waiting to be switched on.**
 
   It is open rather than done because four blockers are **measured**, not suspected.
   The first is disqualifying on its own and was found in a render, not a read:

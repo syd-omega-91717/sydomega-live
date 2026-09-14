@@ -1088,6 +1088,21 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     +'#omega-controls-dock{bottom:36px!important}'
     +'#ofb-btn{bottom:calc(36px'+_tb+'!important}'
     +'#omega-voice-btn{bottom:calc(90px'+_tb+'!important}'
+    /* X, not just Y. This ladder has always set `bottom` for the left-edge
+       floats and left `left` to each module's own inline cssText -- and
+       omega-voice.js only ever sets x for MOBILE (left:120px inside its own
+       max-width:760px block, where #omega-side is display:none so nothing
+       collides). On desktop the button therefore sits at x=24..68, inside the
+       80px sidebar, and #omega-side is `z-index:200 !important` -- a stacking
+       context -- while the button is z-4500 and NOT its descendant, so it
+       paints over the dock permanently. Measured at 1280x700 and 1280x900 on
+       six pages: it covered a section glyph and its label every time
+       (SERVICES on dashboard/vault, ORDER on honors/cosmos/family/media).
+       96px is the mobile ladder's own `x-clear` intent (its comment reads
+       `x 120..164 (left column, x-clear)`) applied to the 80px desktop dock:
+       80 + 16 gutter. A z-index cannot fix this -- see the stacking-context
+       note in nav.js -- so the geometry has to. */
+    +'html #omega-voice-btn{left:96px!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-desktop-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);

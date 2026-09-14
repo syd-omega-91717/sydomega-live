@@ -16054,3 +16054,154 @@ collapsed it — and neither was visible in the animated view that everyone look
 at. Reduced motion is not the same picture held still; it is a pose you have
 chosen, and choosing it by convention picked one of the two worst angles
 available.
+
+---
+
+## 155 — 426 token declarations on 63 pages that never applied, and the file they were supposed to be overriding declares none of them
+
+CLAUDE.md §4 states that a page's own `<style>` is sheet **0** and `bg.js` is
+sheet **1**, so at equal specificity every page-local `:root{--gold:…}` loses.
+It also recorded that ~62 pages redefine canonical tokens this way and that all
+of it is dead code. That was measured once and then carried as prose. Re-measured
+now, and swept.
+
+```
+pages redefining a canonical token in their own :root/html : 63
+total (page, token) declarations                           : 430
+declarations removed                                       : 426
+```
+
+The four not removed sit in blocks the remover left alone (a declaration outside
+a `:root`/`html` rule); the 426 are every canonical-token declaration inside a
+page's own `:root`. Page-specific custom properties in the same block were kept —
+only the 15 canonical names were taken.
+
+**Proven dead by measurement, not by the cascade argument.** Every one of the 63
+pages was rendered before and after, reading the computed value of all 15 tokens
+off `documentElement` plus `body`'s background, colour and font:
+
+```
+pages compared : 63     load errors : none     VALUE DIFFS : 0
+```
+
+**And the zero was proven to be a real zero.** A checker that reports nothing
+looks identical to a checker that is not running (§8.4), so the same pipeline was
+re-run against a deliberately broken build — `--gold:#C9A84C` → `#FF0000` in its
+real owner:
+
+```
+CONTROL diffs detected: 3
+   404.html       --gold  '#C9A84C' -> '#FF0000'
+   academy.html   --gold  '#C9A84C' -> '#FF0000'
+   account.html   --gold  '#C9A84C' -> '#FF0000'
+```
+
+The perturbation was reverted and verified byte-clean (`git diff` empty, no
+`FF0000` anywhere in the file).
+
+### The control failed first, and that is the more useful finding
+
+The control was written against `bg.js`, because CLAUDE.md §4 opens with
+*"Tokens and layout primitives are defined once, in `bg.js`'s injected `<style>`
+block"* and its ownership table assigns **tokens** to `bg.js` (sheet 1). The
+perturbation could not be applied — there was nothing to perturb:
+
+```
+grep -o -- "--[a-zA-Z][a-zA-Z0-9-]* *:" bg.js | wc -l     ->  0
+```
+
+**`bg.js` declares no custom properties at all.** The real declaring files:
+
+| token | declared in |
+|---|---|
+| `--void`, `--gold`, `--solar`, `--cyan`, `--crim`, `--green`, `--muted`, `--ink`, `--line` | `theme.js` **and** `css/omega-system.css` |
+| `--gold-bright` | `theme.js` only |
+| `--void2`, `--purple`, `--D`, `--R`, `--M` | `css/omega-system.css` only |
+| `--gold` … et al. | **never `bg.js`** |
+
+`bg.js` touches custom properties only through four `setProperty` calls, and
+three are runtime values rather than palette: `--mx`/`--my` (pointer position,
+bg.js:234-235) and `--sy` (scroll parallax, :260). The fourth is load-bearing and
+undocumented: **bg.js:781 sets `--void` as an inline style on `documentElement`
+from `localStorage['omega_bg']`**, the member's saved background — an inline
+style, so it outranks every stylesheet including `theme.js`.
+
+So the mental model "edit the token in bg.js" was wrong in both directions: there
+is nothing there to edit, and for `--void` a runtime inline style wins anyway.
+CLAUDE.md §4 corrected.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED. `theme.js`,
+`bg.js` and `css/omega-system.css` unmodified — the diff is 63 page files.
+
+**The transferable rule:** *write the negative control against the thing you
+believe owns the behaviour — when it cannot be perturbed, the ownership belief
+is the bug.* The control here was not a formality that passed; it failed to even
+start, and that failure corrected a claim sitting in the first paragraph of the
+design-system section that every session reads before doing any work.
+
+---
+
+## 156 — A canvas with a zero drawing buffer, found by sweeping all 202 pages
+
+`node scripts/verify-runtime.js --all` was run because the change in 155 touched
+63 pages and a spot check would not have covered them. It reported one failure —
+on a page that change had not touched:
+
+```
+RUNTIME VERIFICATION - 202 page(s), chromium
+  FAIL nexus.html
+        x canvas with a zero drawing buffer (can never paint): nexus-canvas
+```
+
+`nexus.html` was not in the 63, `git status` showed it unmodified, and it failed
+identically in isolation, so the defect was pre-existing. Measured against the
+pinned `HEAD` file served through `ctx.route()`:
+
+```
+BEFORE (HEAD)   buffer 0x642    box 1084x642     <- width literally zero
+AFTER           buffer 1084x590 box 1084x590
+```
+
+**The cause is CLAUDE.md §8.1 class 3, with an extra edge.** The sizing was
+
+```js
+var W=wrap.offsetWidth, H=wrap.offsetHeight||500;
+cv.width=W; cv.height=H;
+```
+
+read exactly once. `H` carried a fallback; **`W` did not**. `#nexus-wrap` sits
+inside the `#tab-nexus` tab panel, so whenever that panel is not the active tab
+its box is 0 — and a canvas assigned `width = 0` has a zero drawing buffer and
+can never paint, however many frames the rAF loop runs. The usual trigger for
+this class is the approval guard; here a plain inactive tab does it too.
+
+The fix is the documented remedy plus the part that is easy to miss: **a measured
+0 means "not laid out yet", not "zero wide"**, so `size()` keeps the last good
+size and waits for the `ResizeObserver` to fire again rather than committing a
+zero. Node positions are seeded once, on the first real size, and **rescaled**
+rather than re-seeded on later resizes so a window drag does not scramble the
+layout. `draw()` keeps the loop alive but skips work until seeded.
+
+**What this did NOT fix, stated plainly.** The canvas is now correctly sized and
+the loop runs, but it still paints nothing under the test harness:
+
+```
+buffer 1084x552   rafFrames 907   arcsDrawnOnNexus 0   statCards ["0","0","—"]
+```
+
+Zero nodes and zero edges — the stub does not populate this page's graph, so
+there is genuinely nothing to draw. The reported defect (a buffer that could
+never paint) is fixed and verified; whether marks appear depends on data this
+harness does not provide, and that is not claimed here. A member with no graph
+data still gets a black rectangle and `0 / 0 / —`, which is honest but poor: an
+empty state for this page is open work, recorded rather than built.
+
+Gates: `node scripts/verify-runtime.js --pages nexus.html` PASS,
+`./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**The transferable rule:** *sweep the whole estate when a change touches many
+pages, and read the failure even when it lands on a page you did not touch.*
+This bug had survived every prior session because the capability entrypoints
+`verify-runtime.js` checks by default do not include `nexus.html`; only `--all`
+reaches it, and only a change big enough to justify `--all` was ever going to
+surface it.

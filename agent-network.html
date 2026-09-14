@@ -6,15 +6,28 @@
 <title>Ω SYDOMEGA — Agent Network</title>
 <style>
 :root {
-  /* Canonical tokens are deliberately NOT redefined here. bg.js owns --void,
-     --gold, --cyan and the rest for every page; this file carried its own
-     divergent set (--gold:#ffd700 against the brand's #C9A84C, and nine more),
-     and a page <style> beats bg.js, so it would have rendered in a palette no
-     other page uses -- CLAUDE.md 8.1 class 8, two divergent copies of one
-     canonical table. Variables genuinely local to this page are kept below. */
+  /* Canonical tokens are deliberately NOT redefined here. This file carried its
+     own divergent set (--gold:#ffd700 against the brand's #C9A84C, and nine
+     more) -- CLAUDE.md 8.1 class 8, two divergent copies of one canonical
+     table. Variables genuinely local to this page are kept below.
+
+     This comment previously said two things that are both false, measured in
+     FIXES_LOG 155, and they are corrected here so the error stops spreading:
+
+       "bg.js owns --void, --gold, --cyan"
+           bg.js declares ZERO custom properties. The owners are theme.js and
+           css/omega-system.css. (--void additionally has a runtime owner that
+           beats every stylesheet: bg.js:781 sets it inline on <html> from
+           localStorage['omega_bg'].)
+
+       "a page <style> beats bg.js"
+           Backwards. A page's own <style> is sheet 0 and every injected sheet
+           lands after it, so the page LOSES every equal-specificity tie. That
+           inversion is exactly why so much of the estate accumulated token
+           declarations that never applied to anything; the swept count is in
+           FIXES_LOG 155, derived rather than typed here, because a number
+           written into a page is a number that goes stale. */
   --D: 'Cinzel Decorative', serif;
-  --R: 'Rajdhani', sans-serif;
-  --M: 'Courier Prime', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }

@@ -17053,3 +17053,106 @@ since entry 162 fixed `OmegaCelebrate` → `OmegaCelebration`.
 **The transferable rule:** *when a fix looks like a no-op, suspect the probe before
 the fix.* Twice today the first element matching a selector was not the element
 that was measured.
+
+---
+
+## 166 — A 24px target minimum, and the substring edit that nearly applied it to every link and button on the estate
+
+### The finding, and why measuring on a phone hides it
+
+`verify-runtime`'s advisory names six sub-24px selectors: `pub-toggle`,
+`toggle-analytics`, `toggle-recommendations`, `toggle-marketing`,
+`toggle-personalisation`, `set-done`. **Four of the six are `privacy.html`'s GDPR
+consent toggles.**
+
+At **1280x900** — the viewport that gate uses — all six measure **20px tall**:
+native `<input type=checkbox>` at browser default, `appearance:auto`.
+
+At **375x750 mobile they already measure ≥24.** The browser's own mobile
+form-control sizing lifts them. So the defect is on **desktop**, which is the
+opposite of how a target-size check is usually framed:
+
+```
+  ===== 1280x900 =====
+   portfolio.html   pub-toggle 763x20
+   privacy.html     toggle-analytics 44x20 | toggle-recommendations 44x20
+                    toggle-marketing 44x20 | toggle-personalisation 44x20
+   workout.html     set-done 20x20 (x3)
+  ===== 375x750 =====
+   all three pages  none below 24px
+```
+
+Measuring only at phone width reports **"none below 24px"** and closes the lead.
+
+Scope: 8 pages, 17 checkbox/radio inputs in markup, and **no page sets a size** —
+so `bg.js` is the sole owner and one rule reaches dynamically created ones too.
+
+### The mistake: a unique match is not a correct one
+
+`bg.js` already carried what looked like the right rule to extend:
+
+```
+input[type=checkbox],input[type=radio]{touch-action:manipulation}
+```
+
+It is not that rule. It is the **tail of a seven-selector group**:
+
+```
+a[href],button,[role=button],label,summary,select,
+input[type=checkbox],input[type=radio]{touch-action:manipulation}
+```
+
+A `.replace()` on the substring appended `min-width:24px;min-height:24px` to the
+**whole group's** declaration block — putting a 24px floor on **every link,
+button, `[role=button]`, label, summary and select on 202 pages**. The guard
+`assert count == 1` proved the *match* was unique; it never established that the
+*selector* was what it looked like.
+
+It was caught by measurement, not review. An identity-keyed layout diff showed
+real elements moving:
+
+```
+BUTTON|filter-btn|OVERDUE   -20px
+BUTTON|set-rm|✕             -20px
+BUTTON|tnav-btn|← BACK      -18px
+DIV|◆ LOG SESSION           -43px
+```
+
+And it was only believable because the **negative control** ran first: the same
+A/B with an **empty diff** reported ±1px on SVG elements and nothing else. A
+noise floor of ±1px is what made a −20px button unambiguous.
+
+Three earlier instruments had to be discarded before that one worked — a
+position-keyed DOM path (the body's child order differs run to run by 21
+injected elements), a raw `scrollHeight` comparison, and a suspicion that
+`ctx.route()` pinning itself shifted layout (disproved: pinning the *current*
+file and serving it normally gave identical heights).
+
+### The fix as shipped
+
+A **separate rule**, leaving the `touch-action` group untouched:
+
+```
+input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}
+```
+
+Re-verified against the same ±1px floor:
+
+```
+layout diff      INPUT|set-done +4px, and ±1px SVG jitter — nothing else
+all 8 pages      page height IDENTICAL before/after on every one
+sub-24 targets   portfolio 1->0 · privacy 4->0 · workout 3->0   (8 -> 0)
+overflow         0 -> 0 everywhere      page errors  0 -> 0 everywhere
+verify-runtime   the tap-target advisory is gone from all three pages
+```
+
+### Two transferable rules
+
+1. *An accessibility target-size check must run at desktop width too.* Mobile was
+   already compliant here; desktop was not, and a phone-only measurement returns
+   a clean result.
+2. *Matching a substring of a selector list silently widens the rule.* CLAUDE.md
+   §8.4 already records that a programmatic edit inside `bg.js`'s injected
+   stylesheet can silently **no-op**; this is the inverse — it silently
+   **over-applied**. Read the whole rule from its first selector to its closing
+   brace before replacing any part of it.

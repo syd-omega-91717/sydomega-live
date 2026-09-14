@@ -15941,3 +15941,116 @@ review — the guard is false, so nothing happens — right up to the day someon
 publishes that name for a good reason and the repository breaks everywhere. Grep
 a `window.*` accessor's **assignment**, and when it has none, delete the reader
 rather than leaving it waiting.
+
+---
+
+## 154 — `matrix.html` drew `Math.random()` as the member's own lattice, 60 times a second
+
+The 9×9×9 lattice on `matrix.html` is the platform's progress model: three axes
+(Knowledge, Mastery, Contribution), each scored **out of 9.000** — the page says
+so itself three times — and the member's coordinate is read live from
+`profiles.axis_a/b/c` and printed underneath the canvas as `#coord-a/b/c`.
+
+The canvas above that readout decided which of its 729 nodes were lit like this:
+
+```js
+const lit = Math.random() > .97 || isApex;      // matrix.html, inside draw()
+```
+
+Re-rolled **every frame**, for every node. It was painted in `--cyan`, the same
+accent the page uses for the member's axis values, inside a panel badged
+`9×9×9 = 729 inner nodes`. So random noise was rendered in the visual language
+of attainment, immediately above the real thing — CLAUDE.md §8.1 class 9, the
+`hercules.html` class, where `Math.random()*100` was drawn as the member's own
+progress.
+
+**The truthful mapping needed no invention**, because the page already held both
+halves. Each axis is out of 9 and the lattice is 9×9×9, so the node at zero-based
+`(x,y,z)` stands for tier `(x+1,y+1,z+1)` and is **reached** exactly when
+
+```
+x+1 <= a  &&  y+1 <= b  &&  z+1 <= c
+```
+
+which is what "your coordinate is (a,b,c)" already means in the readout below it.
+`loadRealMatrix()` now hands the same three numbers to the canvas, so the lit
+nodes and the printed coordinate cannot disagree — one value, read once. **Before
+the data arrives nothing is lit**, and if the profile read fails it stays that
+way: the honest picture rather than a flattering one.
+
+**Measured before and after**, with the pre-fix file pinned (`git show
+HEAD:matrix.html`) and served for that one URL through `ctx.route()`. Counting
+actual cyan `fill()` calls per draw, not pixels, over the last six frames:
+
+```
+BEFORE  tailCyan [19,17,26,17,17,17]   <- different every frame
+AFTER   tailCyan [27,27,27,27,27,27]   <- locked to 3x3x3 = 27 (stub axis 3,3,3)
+```
+
+### Two further defects the verification found, both mine, both real
+
+**1. Assigning `canvas.width` clears the canvas.** The rewrite added a
+`ResizeObserver` (the documented §8.1 class 3 remedy). Under
+`prefers-reduced-motion` there is no rAF loop, so the resize that follows the
+approval guard revealing `.shell` wiped the lattice and nothing ever repainted
+it. Caught only because the reduced-motion path was tested rather than assumed.
+`setSize()` now repaints when it resizes and the loop is not running:
+`draws [0,0,27,27]` — nothing before data, 27 after, **27 retained across the
+resize**.
+
+**2. The still frame froze in a degenerate pose.** The projection is
+
+```
+iso_x = (x-z)*cos(angle)          iso_y = (x+z)*sin(angle)*0.5 - y
+```
+
+so at `angle 0` the sin term vanishes, the whole z depth collapses onto the x
+axis, and 729 nodes pile onto a fraction of the positions. The animated loop
+passed through that pose too fast to notice; the still frame sat in it forever.
+The first fix started at `Math.PI/6` on convention — and a sweep of the real
+projection showed **30° is itself a degeneracy**:
+
+```
+  0deg  opaque  1755  lit    6      <- total collapse
+ 25deg  opaque  6618  lit  243      <- peak, but a trough on either side
+ 30deg  opaque  3620  lit   15      <- PI/6, chosen by convention, nearly as bad
+ 45deg  opaque  6374  lit  242      <- mid-plateau, chosen
+ 55deg  opaque  6622  lit  240
+ 90deg  opaque   434  lit    0      <- total collapse
+```
+
+`sin(30°)*0.5 = 0.25` lands many integer coordinates on the same point. 40–60°
+is a broad plateau, so `Math.PI/4` was taken over the 25° peak: a plateau
+survives change, a peak between troughs does not. Live result — reduced motion
+now matches normal motion instead of showing a third of it:
+
+```
+                 opaque px   cyan px
+angle 0            1767         8
+PI/6 (30deg)       3574        20
+PI/4 (45deg)       6244       248      normal motion: 6478 / 231
+```
+
+### What was NOT changed, and a finding withdrawn
+
+`FIXES_LOG.md` 152 and `GAP_ANALYSIS.md` recorded that this panel "promises 3-D
+and draws 2-D" because it is titled *3D Matrix Projection* on a `'2d'` context.
+**That finding is withdrawn**: a *projection* of a 3-D matrix onto a plane is
+exactly what an isometric projection is, and the title is honest. No i18n key
+was touched.
+
+`SCENES.matrix` in `omega-sculpture.js` also contains a `Math.random() < 0.06`,
+and it is **not** this bug: it assigns a decorative colour scatter **once at
+build time** on an abstract sculpture that claims nothing about the member, and
+its own comment says so. Per-frame re-rolling next to real data is the defect,
+not the presence of `Math.random` — read what the number is claiming.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js --pages matrix.html` PASS.
+
+**The transferable rule:** *a frozen frame is a new code path, so measure it.*
+Both extra defects existed only in the still frame — one blanked it, one
+collapsed it — and neither was visible in the animated view that everyone looks
+at. Reduced motion is not the same picture held still; it is a pose you have
+chosen, and choosing it by convention picked one of the two worst angles
+available.

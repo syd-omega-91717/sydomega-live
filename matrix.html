@@ -558,6 +558,11 @@ async function loadRealMatrix(){
   document.getElementById('coord-b').textContent=fmt(b);
   document.getElementById('coord-c').textContent=fmt(c);
 
+  /* Hand the SAME three numbers to the lattice above, so the lit nodes and
+     this readout can never disagree -- they are one value, read once. The
+     lattice draws nothing until this call lands (CLAUDE.md 8.1 class 9). */
+  if(window.OmegaMatrixLattice){ window.OmegaMatrixLattice.setCoord(a,b,c); }
+
   // axis track detail
   document.getElementById('track-a-score').textContent=fmt(a)+' / 9.000';
   document.getElementById('track-b-score').textContent=fmt(b)+' / 9.000';
@@ -633,14 +638,100 @@ for(let i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.rand
 function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(201,168,76,0.022)';for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}requestAnimationFrame(draw);}draw();
 })();
 
-// 3D Matrix
+/* THE 9x9x9 LATTICE — the member's real coordinate, not a random one.
+
+   WHAT THIS USED TO DO, AND WHY IT WAS WRONG
+
+   Every frame, for all 729 nodes, this drew:
+
+       const lit = Math.random() > .97 || isApex;
+
+   -- re-rolled at 60fps, so roughly 22 nodes lit at random per frame. It was
+   painted in --cyan, the same accent this page uses for the member's axis
+   values, inside a panel captioned "9x9x9 = 729 inner nodes" and sitting
+   directly above the member's REAL coordinate readout (#coord-a/b/c, read
+   from profiles.axis_a/b/c). So random noise was rendered in the visual
+   language of attainment, next to the real thing. CLAUDE.md 8.1 class 9 --
+   the hercules.html class, where Math.random()*100 was drawn as the member's
+   own progress.
+
+   WHAT IT DOES NOW
+
+   The page already holds everything needed, and the mapping needs no
+   invention: each axis is scored out of 9.000 (this page says so itself --
+   "Knowledge axis, out of 9.000") and the lattice is 9x9x9. So the node at
+   zero-based index (x,y,z) stands for tier (x+1, y+1, z+1), and it is
+   REACHED exactly when the member has passed that tier on all three axes:
+
+       x+1 <= a  &&  y+1 <= b  &&  z+1 <= c
+
+   which is precisely what "your coordinate is (a,b,c)" already means in the
+   readout below it.
+
+   BEFORE THE DATA ARRIVES, NOTHING IS LIT. Not a guess, not a sample, not a
+   shimmer: the resting state is the unlit lattice, because at that moment the
+   page knows nothing about this member. If the profile read fails the state
+   stays exactly there, which is the honest picture rather than a flattering
+   one. loadRealMatrix() below calls setCoord() once it has real values. */
 (function(){
 const c=document.getElementById('matrix-canvas');
 if(!c)return;
-function setSize(){c.width=c.offsetWidth;c.height=420;}
-setSize();window.addEventListener('resize',setSize);
 const ctx=c.getContext('2d');
-const N=9;let angle=0;
+const N=9;
+/* START AT A REAL ISOMETRIC ANGLE, NEVER 0. The projection is
+       iso_x = (x-z)*cos(angle)      iso_y = (x+z)*sin(angle)*0.5 - y
+   so at angle 0 the sin term vanishes, the whole z depth collapses onto the
+   x axis, and 729 nodes pile onto a fraction of the positions. The animated
+   loop passed through that pose too fast to notice; the reduced-motion still
+   frame sits in it forever. Measured at angle 0: 1767 opaque pixels against
+   6110 for a proper pose, and the 27 lit nodes overlapped down to 8 visible
+   pixels.
+
+   The pose was then chosen by sweeping 0-90 degrees through this exact
+   projection and counting covered pixels and separated lit nodes:
+
+       0deg  opaque  1755  lit    6      <- total collapse
+      25deg  opaque  6618  lit  243      <- peak, but wedged between two dips
+      30deg  opaque  3620  lit   15      <- PI/6 is ITSELF a degeneracy
+      45deg  opaque  6374  lit  242      <- mid-plateau, chosen
+      55deg  opaque  6622  lit  240
+      90deg  opaque   434  lit    0      <- total collapse
+
+   sin(30deg)*0.5 = 0.25 lands many integer coordinates on the same point, so
+   the classic isometric angle is one of the worst poses here. 40-60deg is a
+   broad plateau; PI/4 sits in the middle of it, which is safer than the 25deg
+   peak with a trough on either side. Both modes start from this pose. */
+let angle=Math.PI/4;
+
+/* The buffer follows the live box for the element's whole life. A one-shot
+   read at script time is the CLAUDE.md 8.1 class 3 trap -- it happens to
+   survive here only because this plain <script> runs before the deferred
+   bg.js injects the approval guard, which is luck, not design. */
+function setSize(){
+  const w=Math.max(1,Math.round(c.getBoundingClientRect().width||c.offsetWidth||1));
+  let resized=false;
+  if(c.width!==w){c.width=w;resized=true;}
+  if(c.height!==420){c.height=420;resized=true;}
+  /* ASSIGNING canvas.width CLEARS THE CANVAS. When the rAF loop is running the
+     next frame repaints it, but under prefers-reduced-motion there is no next
+     frame -- so a resize after the last draw leaves the lattice permanently
+     blank. Measured: the approval guard revealing .shell changes the layout
+     after the still frame, and every node vanished. Repaint here instead. */
+  if(resized&&REDUCED&&typeof draw==='function'){draw();}
+}
+/* The member's real coordinate. null until the profile read returns. */
+let AX=null;
+window.OmegaMatrixLattice={
+  setCoord:function(a,b,cc){
+    AX={a:Number(a)||0,b:Number(b)||0,c:Number(cc)||0};
+  }
+};
+
+const REDUCED=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+setSize();
+if(window.ResizeObserver){new ResizeObserver(setSize).observe(c);}
+else{window.addEventListener('resize',setSize);}
 
 function project(x,y,z,cx,cy,scale){
 const iso_x=((x-z)*Math.cos(angle))*scale;
@@ -653,21 +744,23 @@ const W=c.width,H=420;
 ctx.clearRect(0,0,W,H);
 const cx=W/2,cy=H/2,scale=Math.min(W,H)*0.042;
 
+/* Apex is the 9-9-9 node, and it is lit only when all three axes are at 9. */
+const apex=!!(AX&&AX.a>=9&&AX.b>=9&&AX.c>=9);
+
 for(let x=0;x<N;x++){
 for(let y=0;y<N;y++){
 for(let z=0;z<N;z++){
 const p=project(x-4,y-4,z-4,cx,cy,scale);
-const dist=Math.sqrt((x-8)**2+(y-8)**2+(z-8)**2);
 const isApex=(x===8&&y===8&&z===8);
-const lit=Math.random()>.97||isApex;
+const reached=!!(AX&&(x+1)<=AX.a&&(y+1)<=AX.b&&(z+1)<=AX.c);
 const alpha=0.12+0.08*((x+y+z)/(N*3));
 ctx.beginPath();
 ctx.arc(p.px,p.py,isApex?4:1.5,0,Math.PI*2);
-if(isApex){
+if(isApex&&apex){
 ctx.fillStyle='rgba(201,168,76,0.9)';
 ctx.shadowColor='rgba(201,168,76,0.8)';
 ctx.shadowBlur=10;
-}else if(lit){
+}else if(reached){
 ctx.fillStyle=`rgba(0,229,255,${alpha+0.15})`;
 ctx.shadowBlur=0;
 }else{
@@ -679,9 +772,17 @@ ctx.fill();
 }
 }
 ctx.shadowBlur=0;
+if(REDUCED){return;}          /* one still frame, no rotation */
 angle+=0.003;
 requestAnimationFrame(draw);
-}draw();
+}
+draw();
+/* Under reduced motion the loop does not run, so a later setCoord() would
+   never be painted. Redraw on demand instead. */
+if(REDUCED){
+  const base=window.OmegaMatrixLattice.setCoord;
+  window.OmegaMatrixLattice.setCoord=function(a,b,cc){base(a,b,cc);draw();};
+}
 })();
 
 // Node grid

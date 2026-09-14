@@ -16836,3 +16836,115 @@ nine pages whose sheets were removed.
 other side looking like a feature waiting to be switched on.* The residue is not
 neutral — it accrued a standing GAP_ANALYSIS item and an eight-day warning, and the
 one-line promise in that item is what kept it alive.
+
+---
+
+## 164 — Eight modules listen for an event one page hand-rolls; dispatching it correctly would have shipped two invisible dead buttons
+
+**No code change. This entry exists because the fix looked like one line and measured as three defects**, and the next session should not re-derive that.
+
+### The contract, and that it has never met
+
+`omega-user.js` is injected by `bg.js`, runs on all 202 pages, populates
+`window.__omegaProfile` / `__omegaUser` / `__omegaIsOwner`, and dispatches
+**`omega:populated` on `document`** (`:233`).
+
+Eight modules listen for **`omega:user-loaded` on `window`**:
+
+```
+omega-music.js (x2)   omega-ambient.js (x2)   omega-passport.js
+omega-sigil-gen.js    omega-realm.js          omega-particles.js
+omega-workers.js      omega-event-bus.js
+```
+
+**Different name, different target.** Only `chronicle.html:449` dispatches it,
+hand-rolled inside its own auth callback. Seven of the eight have no
+`DOMContentLoaded` fallback. This is §8.1 class 4(b) one level up: a shared
+*accessor* nothing publishes became a shared *event* nothing dispatches, and it
+is just as quiet — every listener is an `addEventListener` that never runs.
+
+Measured directly, instrumenting the event before page load rather than
+inferring it from effects:
+
+```
+chronicle.html    events fired: omega:user-loaded, doc:omega-canon-ready
+dashboard.html    events fired: doc:omega-canon-ready
+profile.html      events fired: doc:omega-canon-ready
+                  __omegaProfile: object on ALL THREE
+```
+
+The profile exists everywhere; only the event is missing.
+
+### A control that disproved the first hypothesis
+
+The obvious control — `chronicle.html` dispatches, the others do not — returned
+**identical** counts on all four pages (`particles:1 realm:2` everywhere,
+`music/sigil/passport/ambient:0` everywhere). So the event was *not* the
+discriminator for particles and realm: those mount by another path. Measuring
+the event itself is what separated the cases. *An effect shared by the control
+and the treatment is evidence about neither.*
+
+### Dispatching it: measured, and then not shipped
+
+Prototyped at runtime, then implemented in `omega-user.js` and A/B'd against a
+pinned `HEAD` control:
+
+```
+profile.html     music 0->1  ambient 0->1
+vault.html       music 0->1  ambient 0->1
+chronicle.html   music 0->1  ambient 0->1     <- the dispatching page gained them TOO
+settings.html    music 0->1  ambient 0->1
+dashboard.html   no change                    <- has no .topbar
+realm / particles / canvases / duplicate ids   unchanged everywhere, 0 new errors
+```
+
+`chronicle.html` gaining them is the tell: its inline dispatch runs **before**
+`bg.js`'s deferred modules attach their listeners, so the one page that
+dispatched reached nobody either. The feature was unreachable on **202** pages,
+not 201.
+
+**Then the render said not to ship it.** DOM presence is not visibility
+(§8.1 class 10), and `0 -> 1` was measuring presence:
+
+```
+music:   {"text":"♬ MUSIC OFF","w":0,"h":0,"x":0,"y":0,"clickable":false}
+ambient: {"text":"♪ SOUND OFF","w":0,"h":0,"x":0,"y":0,"clickable":false}
+errors on click: TypeError: T.start is not a function
+```
+
+Tracing the ancestor chain explains it:
+
+```
+BUTTON                          display:flex   0x0
+  DIV.topbar                    display:flex   0x0
+    DIV#tab-passport.tab-panel  display:none   0x0     <- an INACTIVE TAB
+      MAIN#omega-main-content   display:flex   1200x1325
+```
+
+`omega-music.js:232` mounts into `document.querySelector('.topbar')` — the
+**first** match in the document. On a tabbed page the first `.topbar` is inside
+a `display:none` pane. **85 pages** carry more than one `topbar` mention
+alongside tab panels.
+
+And `omega-music.js:88` loads its audio engine with
+`import('https://esm.sh/tone@14.9.17')` — a **runtime CDN import**, which §4
+forbids outright and which `/vendor/` does not carry. `window.Tone` is
+`undefined`, which is what `T.start is not a function` actually is.
+
+### Why this shipped as a finding instead of a fix
+
+Three independent defects, and fixing only the first makes the platform worse:
+two invisible, unclickable buttons on 174 pages, one of which throws. The
+remaining two are a mount-selector rewrite and vendoring an audio library — for
+a **generative music feature no owner has asked for**, already sitting in
+`GAP_ANALYSIS.md` as an owner decision. `omega-user.js` was reverted
+byte-for-byte.
+
+What this does change is that the owner decision is now *decidable*: the item
+used to read "injected on 202 pages with `[data-music-toggle]` on zero", which
+framed it as dead code. It is not dead — it is three fixes away from working,
+and the entry below names them.
+
+**The transferable rule:** *`0 -> 1` on a `querySelectorAll` count is presence,
+not a working control.* The same probe that made the fix look finished is the one
+that cannot see a zero-size element inside a hidden tab.

@@ -16566,3 +16566,81 @@ downgrades a finding to a warning will be read as a null result.* `audit.py` nam
 this file on every run for eight days, in a list a previous session's note had
 mis-sized by a factor of six — and mis-sizing it is what made it look like
 background noise rather than six specific questions.
+
+---
+
+## 161 — Two of the five "nothing loads this" findings were false, because the module graph could not see an `import`
+
+Entry 160's real cost was not the eight days; it was that the list naming the
+problem read as noise. This closes that.
+
+### The gap, in the script's own words
+
+`scripts/audit.py:100` already documented it:
+
+> `vendor/supabase-js.js` never tripped this only because it is reached by an
+> ESM `import`, **which `SRC_ASSIGN_RE` does not match**
+
+The author hit this for the *missing-file* check and worked around it with a
+vendored-names exemption. The *dead-file* check kept the gap for root modules,
+where no exemption applies:
+
+```
+omega-analytics-init.js:6      import { inject } from './omega-analytics.js';
+omega-speed-insights-init.js:6 import { injectSpeedInsights } from './omega-speed-insights.js';
+```
+
+Both shims are loaded by **~180 pages** each, as `<script type="module" src=…>`.
+Both targets were reported "on disk but never loaded".
+
+### Proven reachable in a render, not by reading the import
+
+"Referenced" is not "runs". Both are self-hosted Vercel bundles whose proof of
+execution is the global each installs:
+
+```
+omega-analytics.js      -> window.va = function
+omega-speed-insights.js -> window.si = function
+module scripts on page  : /omega-analytics-init.js /omega-speed-insights-init.js
+page errors             : none
+```
+
+### The fix, and why a smaller number needed proving
+
+`js_injected_by()` now unions `SRC_ASSIGN_RE` with an `ESM_IMPORT_RE` covering
+`import … from 'x.js'`, bare `import 'x.js'` and dynamic `import('x.js')`, with
+the same `REMOTE_SRC_RE` filter. **5 → 3.**
+
+A scan that finds less is not thereby more correct (CLAUDE.md §8.4), so:
+
+**Control 1 — does it still bite?** Planting one `omega-planted-dead.js`:
+`3 → 4`. It does.
+
+**Control 2 — does the regex over-match?** Every local edge it adds, enumerated:
+**22**, across 18 files. Twenty are `/vendor/supabase-js.js` or
+`/vendor/three.module.js` — vendored, already exempt from the dead-file check,
+but they close the missing-file gap the comment above describes. The other two
+are the actual finds. **Zero false edges.**
+
+**Control 3 — do the new tests bite?** Run against `HEAD:scripts/audit.py`:
+`FAILED (failures=2)`. Against the fix: `OK`. Four tests added, one of them the
+control that a new edge type must not let a dead module vouch for what it
+imports — the orphan set collapsing to empty is the failure mode that would make
+this check silently useless.
+
+### The three that remain are each verified dead, individually
+
+| file | evidence |
+|---|---|
+| `omega-autonomous-onboarding.js` | 0 references anywhere; added by `ffb53e06` "Phase 5: AI-Driven Autonomous Systems", the same never-wired scaffold family as `cohorts-dashboard.html` |
+| `omega-feature-gates.js` | same commit, same state |
+| `service-worker.js` | superseded orphan. All **29** in-page `serviceWorker.register` calls **and** `omega-sw-register.js:35` name `/sw.js`; nothing names `/service-worker.js`. 1137 bytes against `sw.js`'s 6096, and only `sw.js` has a CI-gated precache list |
+
+They are left in place rather than deleted here: entry 160 is precisely the case
+of a file that looked orphaned and was load-bearing, and "unused across the
+estate" is a different claim from "safe to delete". The 10 unloaded stylesheets
+(652–2876 bytes, 0 references each) need the same per-file pass.
+
+**The transferable rule:** *a gate's false-positive rate is part of its output.*
+This one was 40%, and nobody reads a list that is 40% wrong — which is the whole
+mechanism by which entry 160's genuine entry stayed invisible in it for a week.

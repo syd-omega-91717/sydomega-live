@@ -16346,3 +16346,301 @@ not create is a race you will usually lose.* The element existed, the read
 succeeded, the value was valid — and wrong, because it was taken before the page
 finished deciding. When a read like that can only fail in one direction, make the
 failing value mean "unresolved" rather than trusting it.
+
+---
+
+## 159 — The line telling a member a page is unbuilt was invisible; and a class I had called dead was load-bearing
+
+Two small changes, both decided by measurement, one of which reverses a
+conclusion recorded earlier in this session.
+
+### 1. `--line` used as text colour, at 13% alpha
+
+`cohorts-dashboard.html` and `predictions-dashboard.html` are 963-byte
+placeholders. They are **honest** ones — each carries the line *"Phase 5 feature
+in development"*, exactly the future-tense copy CLAUDE.md §9 asks for on anything
+not yet shipped. But that line was styled `color: var(--line)`, a **border**
+token, which resolves to `rgba(201,168,76,0.13)`.
+
+Measured from rendered pixels rather than computed from CSS, because a 13% alpha
+colour composited over a near-black backdrop cannot be judged from its
+declaration:
+
+```
+BEFORE   backgroundPixel [5,5,10]   brightestGlyphPixel [9,9,16]   1.02:1
+```
+
+Invisible — the same signature as the `.btn-fill` finding at 1.01:1. The effect
+is to invert the page's honesty: the member sees a titled dashboard with one
+sentence and no readable explanation, and concludes the feature is **broken**
+rather than **unbuilt**.
+
+Now `var(--muted)`:
+
+```
+AFTER    cohorts-dashboard.html       bg [10,6,6]   glyph [116,129,139]   5.05:1
+         predictions-dashboard.html   bg [18,8,8]   glyph [137,152,163]   6.66:1
+```
+
+Both clear AA 4.5:1; computed colour `rgb(135,150,161)` on each. The gap between
+5.05 and 6.66 is `omega-backdrop.js` tinting each page differently — a feature,
+not a discrepancy. **Legibility only**: nothing else about these pages changed,
+because decorating a placeholder so it reads as a shipped feature is §8.1 class 9
+pointed the other way.
+
+*A measurement note.* The first AFTER run reported `cohorts` still at **1.02:1**
+while its twin read 6.66. The source of both files was byte-identical, so the
+number was wrong, not the fix: the screenshot clip was taken before the element
+settled and captured background only. Re-run with `scrollIntoView` plus a settle,
+it reads 5.05. **When two identical inputs give different answers, suspect the
+instrument.**
+
+### 2. `.omega-node` deleted, `.omega-emblem` deliberately kept
+
+`omega-cinematic-system.css` has two barely-used classes, and this file earlier
+framed them together as "adopt or delete". That was too binary, and one half was
+wrong.
+
+* **`.omega-node` — 0 uses across 202 pages.** `omega-constellation.js` owns this
+  role properly with `.ocn-node` (positioned, hover, `:focus-visible`, and each
+  node a real link). Removed: zero uses, zero risk.
+* **`.omega-emblem` — 1 use, and it is load-bearing.** Toggling the class at
+  runtime on `horoscope.html`'s `#hr-sign-emblem` and diffing a padded screenshot
+  of the region:
+
+```
+with class     litPx 13456   meanBright 36.3
+without class  litPx 13456   meanBright 33.4
+changed on/off 26.43%        noise floor (on vs on) 2.59%
+```
+
+Ten times the floor, with an identical lit area and measurably lower brightness:
+the class supplies the ring, glow and radial field around the canvas that
+`bg.js`'s icon converter fills (visible again since 158). **Deleting it would
+have degraded the page.** One genuine load-bearing use is not dead code.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js --pages cohorts-dashboard.html,predictions-dashboard.html`
+PASS.
+
+**The transferable rule:** *"unused" is a claim about the whole estate, but
+"safe to delete" is a claim about each remaining use.* Counting uses told me both
+classes were nearly dead; only rendering the one surviving use told me which of
+them was actually doing work.
+
+---
+
+## 160 — A one-line rewrite silently deleted a shipped module's only wiring, and the platform ran 8 days with the collision it fixed
+
+**Found by:** working the `audit.py` check-2 warning list, which CLAUDE.md §8.3
+described as "34 `.js` … that nothing loads". The real number was **6**, and one
+of the six was `omega-bottom-stack.js` — a module CLAUDE.md §4 describes as the
+*single measured owner* of bottom-chrome positioning, with three live consumers.
+
+### 1 · The module was real, complete, and reached by nothing
+
+```
+$ grep -rn "omega-bottom-stack" --include=*.js --include=*.html .
+CLAUDE.md:190  AGENTS.md:298  FIXES_LOG.md:10594  GAP_ANALYSIS.md:240
+```
+
+Four documents, zero code. `bg.js` injects 121 distinct `omega-*.js` modules and
+this is not one of them. Its three consumers all read the properties it publishes
+**with a `0px` fallback**, so nothing errored and nothing logged:
+
+```
+omega-share.js:33  #osh-btn{bottom:calc(224px + var(--omega-transient-bottom,0px))}
+omega-legal.js:68  #omega-consent{position:fixed;bottom:var(--omega-chrome-bottom,0px);…}
+omega-pwa.js:42    position:fixed;bottom:var(--omega-chrome-bottom,0px);…
+```
+
+This is §8.1 class 4(b) — *a shared accessor that nothing publishes* — in its
+quietest possible form. The fallback that makes the module safe to load late is
+exactly what makes its absence invisible.
+
+### 2 · What deleted it
+
+```
+$ git log --all -S"omega-bottom-stack.js" -- bg.js
+c7ec9c0e Measure the bottom chrome instead of hardcoding five constants
+```
+
+**One** commit — the one that added it. `-S` finds no removal because the removal
+was not a line edit. Bisecting the file content instead:
+
+```
+3d538057  bottom-stack-injections=1
+ed9eb76b  bottom-stack-injections=0   "Enhance platform visual architecture …"
+```
+
+`ed9eb76b`'s diffstat on `bg.js` is **202 insertions, 1 deletion**, and that one
+deleted line was the entire injected stylesheet — `style.textContent='…'`, a
+single JS string thousands of characters long. Rewriting it took everything that
+lived on it, including the injection and the ladder's `var(--omega-transient-bottom)`
+terms. `node --check` passed. `audit.py` logged a WARNING. Nothing else noticed.
+
+**The transferable rule:** *a file with a multi-thousand-character single line has
+no diff granularity.* A change to any part of it is a change to all of it, and
+review sees one `-` and one `+`.
+
+### 3 · The collision, re-measured on today's code
+
+`dashboard.html`, consent banner **not** pre-dismissed, `bg.js` pinned at HEAD:
+
+```
+BEFORE  1280x800  cp-btn 52px inside the banner · ofb-btn 44 · voice-btn 22
+                  osh-btn 14 · controls-dock 58 · ticker-strip 28      6 collisions
+BEFORE   420x760  omega-mob 61px · dock 44 · ticker 28 · ded-widget 84
+                  ofb-btn 48 · voice-btn 48 · osh-btn 11               7 collisions
+                  + 2 float-on-float at rest (cp×osh 2px, osh×ded 10px)
+```
+
+`#omega-mob` is the mobile navigation, buried entirely by a banner at the **same**
+z-index 9990. On a phone, a first-time member's way out of the page was underneath
+the bar they had to dismiss — the exact defect `c7ec9c0e` was written to fix,
+restored in full and shipped for eight days.
+
+### 4 · Restoring it truthfully required three corrections
+
+**(a) The module's code did not match its own header.** It claims the ladder
+offset is *"0 when none, so the resting ladder is byte-for-byte the measured one"*.
+The code published `Math.max(inset, reachOf(trans))` unconditionally, so with no
+banner anywhere it published the **furniture's** reach — measured **94px** at
+1280x800 — lifting every floating control 94px on every page, permanently. The
+`max` is a correctness floor only *while a banner is up*. Now `tRaw > 0 ?
+Math.max(inset, tRaw) : 0`, and the resting ladder measures byte-for-byte
+identical to the BEFORE control at all four viewports.
+
+**(b) Restoring the ladder alone made one control worse.** `#omega-voice-btn`
+sits at `bottom:90px` from `omega-voice.js`'s inline cssText and was never a rung.
+It was 22px inside the banner before; once the banner lifted off the dock it was
+**40px** inside. Added as a rung, with `#ofb-btn`.
+
+**(c) A derived constant had drifted for the third time.** `#omega-cap-badge`'s
+rung is computed from `#omega-ded-widget`'s height: 215 when it was 61px, 228 when
+it was 74px. Re-measured at 1280x900 **and** 1440x900 it is **h=84, reaching 230**
+— so the badge at 228 started 2px inside it. 230 + 8 = **238**. Same disease on
+mobile: the widget reaches 234, `#osh-btn` sat at 224 (10px in) and `#cp-btn` at
+270 (2px into osh) → **242** and **298**.
+
+### 5 · The fix that shifting could not express
+
+Lifting the mobile ladder over the banner works at 420x760 and **fails** below it:
+
+```
+375x667   cp-btn top -32     OFF SCREEN
+360x640   cp-btn top -59     OFF SCREEN
+```
+
+A 235px consent banner over 146px of chrome leaves a 640px phone no room for a
+four-rung ladder, and no arithmetic fixes that. So the module now also sets
+`data-omega-transient` on `<html>` while any transient bar is up — a boolean the
+cascade can branch on, which a custom property cannot be — and on
+`@media(max-width:760px)` the five floats step **aside** rather than over. Desktop
+keeps the lift; verified it fits at 1024x600, 900x700, 1280x800 and 1440x900.
+
+**The selector's space is load-bearing.** `html#omega-ded-widget` selects an
+`<html>` element carrying that id — it matches nothing. It parsed, applied
+cleanly, and moved none of the three floats; only the render showed it.
+`html #id` (0,1,1) is what beats each module's own `#id!important` rule regardless
+of which of five defer-loaded sheets lands last.
+
+### 6 · Result
+
+```
+                     BEFORE                AFTER
+1280x800 banner up   6 collisions          0
+1440x900 banner up   (not measured)        0
+ 900x700 banner up   (not measured)        0
+ 420x760 banner up   7 + 2 at rest         0
+ 420x760 at rest     2 collisions          0
+```
+
+Round-trip proven with a real click on `#omega-consent-accept`, not a stub:
+`data-omega-transient` 1 → null, `--omega-transient-bottom` 381px → 0px, and every
+float back at its exact measured resting position (`cp-btn` 298, `osh-btn` 242,
+the three at 150). Consent's own buttons hit-tested top-most at every viewport.
+
+**The transferable rule, and it is the one that cost the eight days:** *a gate that
+downgrades a finding to a warning will be read as a null result.* `audit.py` named
+this file on every run for eight days, in a list a previous session's note had
+mis-sized by a factor of six — and mis-sizing it is what made it look like
+background noise rather than six specific questions.
+
+---
+
+## 161 — Two of the five "nothing loads this" findings were false, because the module graph could not see an `import`
+
+Entry 160's real cost was not the eight days; it was that the list naming the
+problem read as noise. This closes that.
+
+### The gap, in the script's own words
+
+`scripts/audit.py:100` already documented it:
+
+> `vendor/supabase-js.js` never tripped this only because it is reached by an
+> ESM `import`, **which `SRC_ASSIGN_RE` does not match**
+
+The author hit this for the *missing-file* check and worked around it with a
+vendored-names exemption. The *dead-file* check kept the gap for root modules,
+where no exemption applies:
+
+```
+omega-analytics-init.js:6      import { inject } from './omega-analytics.js';
+omega-speed-insights-init.js:6 import { injectSpeedInsights } from './omega-speed-insights.js';
+```
+
+Both shims are loaded by **~180 pages** each, as `<script type="module" src=…>`.
+Both targets were reported "on disk but never loaded".
+
+### Proven reachable in a render, not by reading the import
+
+"Referenced" is not "runs". Both are self-hosted Vercel bundles whose proof of
+execution is the global each installs:
+
+```
+omega-analytics.js      -> window.va = function
+omega-speed-insights.js -> window.si = function
+module scripts on page  : /omega-analytics-init.js /omega-speed-insights-init.js
+page errors             : none
+```
+
+### The fix, and why a smaller number needed proving
+
+`js_injected_by()` now unions `SRC_ASSIGN_RE` with an `ESM_IMPORT_RE` covering
+`import … from 'x.js'`, bare `import 'x.js'` and dynamic `import('x.js')`, with
+the same `REMOTE_SRC_RE` filter. **5 → 3.**
+
+A scan that finds less is not thereby more correct (CLAUDE.md §8.4), so:
+
+**Control 1 — does it still bite?** Planting one `omega-planted-dead.js`:
+`3 → 4`. It does.
+
+**Control 2 — does the regex over-match?** Every local edge it adds, enumerated:
+**22**, across 18 files. Twenty are `/vendor/supabase-js.js` or
+`/vendor/three.module.js` — vendored, already exempt from the dead-file check,
+but they close the missing-file gap the comment above describes. The other two
+are the actual finds. **Zero false edges.**
+
+**Control 3 — do the new tests bite?** Run against `HEAD:scripts/audit.py`:
+`FAILED (failures=2)`. Against the fix: `OK`. Four tests added, one of them the
+control that a new edge type must not let a dead module vouch for what it
+imports — the orphan set collapsing to empty is the failure mode that would make
+this check silently useless.
+
+### The three that remain are each verified dead, individually
+
+| file | evidence |
+|---|---|
+| `omega-autonomous-onboarding.js` | 0 references anywhere; added by `ffb53e06` "Phase 5: AI-Driven Autonomous Systems", the same never-wired scaffold family as `cohorts-dashboard.html` |
+| `omega-feature-gates.js` | same commit, same state |
+| `service-worker.js` | superseded orphan. All **29** in-page `serviceWorker.register` calls **and** `omega-sw-register.js:35` name `/sw.js`; nothing names `/service-worker.js`. 1137 bytes against `sw.js`'s 6096, and only `sw.js` has a CI-gated precache list |
+
+They are left in place rather than deleted here: entry 160 is precisely the case
+of a file that looked orphaned and was load-bearing, and "unused across the
+estate" is a different claim from "safe to delete". The 10 unloaded stylesheets
+(652–2876 bytes, 0 references each) need the same per-file pass.
+
+**The transferable rule:** *a gate's false-positive rate is part of its output.*
+This one was 40%, and nobody reads a list that is 40% wrong — which is the whole
+mechanism by which entry 160's genuine entry stayed invisible in it for a week.

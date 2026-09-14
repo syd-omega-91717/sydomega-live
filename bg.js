@@ -1045,18 +1045,49 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
        #ofb-btn      36..74  x 12..111   vs #omega-voice-btn 90..134 x 24..68  -> 16px clear
        #omega-controls-dock 36..70 x 432..848 vs cp-btn x 1204..1256           -> no x overlap
      !important for the same reason as above: these are set via inline cssText. */
+  /* Every rung adds var(--omega-transient-bottom), published by
+     omega-bottom-stack.js as the reach of whatever consent or install banner
+     is currently up (0 when none — the module publishes a real zero rather
+     than the furniture's own reach, so the resting ladder is byte-for-byte
+     the measured one above; that took a fix in the module, see its header).
+     The ladder was computed against the ticker strip and the controls dock; the consent banner did not exist in that measurement
+     and lands straight through it — re-measured at 1280x800 with the banner
+     up, #cp-btn sits 52px inside it, #ofb-btn 44px, #omega-voice-btn 22px and
+     #osh-btn 14px, under a bar at z-index 9990. Shifting the whole ladder by
+     one value keeps its internal spacing exactly as measured and restores it
+     the moment the banner is dismissed. Not one member of this ladder is
+     measured as chrome, so this cannot feed back into the value. */
+  var _tb = ' + var(--omega-transient-bottom,0px))';
   var css='@media(min-width:761px){'
-    +'#cp-btn{right:24px!important;bottom:36px!important}'
-    +'#osh-btn{right:24px!important;bottom:98px!important}'
-    +'#omega-ded-widget{right:24px!important;bottom:146px!important}'
-    /* 228, not the 215 this ladder originally computed. That figure came
-       from `146 + 61 + 8`, and 61px was the wrong height for
-       #omega-ded-widget: measured at 1440x900 it occupies 146..220, i.e.
-       74px. The badge therefore started 5px inside the widget above it,
-       on 6 of 6 sampled pages. 220 + 8 = 228; 228..266 verified clear. */
-    +'#omega-cap-badge{right:24px!important;bottom:228px!important}'
+    +'#cp-btn{right:24px!important;bottom:calc(36px'+_tb+'!important}'
+    +'#osh-btn{right:24px!important;bottom:calc(98px'+_tb+'!important}'
+    +'#omega-ded-widget{right:24px!important;bottom:calc(146px'+_tb+'!important}'
+    /* 238, and this rung has now been wrong twice for the same reason: it is
+       derived from #omega-ded-widget's height, and that height keeps
+       growing. 215 came from `146 + 61 + 8` when the widget was 61px; 228
+       came from `146 + 74 + 8` when it was 74. Re-measured at both 1280x900
+       and 1440x900 it is h=84 and reaches 230, so the badge at 228 started
+       2px inside it -- small, but it is the widget's border sitting under
+       the badge's. 230 + 8 = 238; 238..276 verified clear, x 1235..1416
+       against nothing else fixed in that band. A derived constant that has
+       drifted three times is the ladder's real weakness, noted in
+       GAP_ANALYSIS.md §S -- the honest form measures the widget the way
+       omega-bottom-stack.js measures the chrome. */
+    +'#omega-cap-badge{right:24px!important;bottom:calc(238px'+_tb+'!important}'
+    /* The dock is measured CHROME, so the banner clears IT and it must not
+       move: giving it the offset too would feed its own displacement back
+       into the measurement. The two left-edge floats are not chrome, so
+       they step over the banner exactly like the right-edge ladder does.
+       #omega-voice-btn is a rung this ladder never had — it is positioned
+       from omega-voice.js's inline cssText at bottom:90px, which is inside
+       the banner's band at every viewport that has bottom furniture
+       (measured 40px inside once the banner is lifted off the dock, which
+       is worse than the 22px it started at, so restoring the ladder
+       without this rung would ship a regression). !important for the same
+       reason as every other rung: inline cssText beats a stylesheet. */
     +'#omega-controls-dock{bottom:36px!important}'
-    +'#ofb-btn{bottom:36px!important}'
+    +'#ofb-btn{bottom:calc(36px'+_tb+'!important}'
+    +'#omega-voice-btn{bottom:calc(90px'+_tb+'!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-desktop-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
@@ -1097,8 +1128,49 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
    ========================================================================= */
 (function(){
   if(document.getElementById('omega-mobile-ladder'))return;
+  /* Same transient offset as the desktop ladder, and the same re-spacing.
+
+     RE-MEASURED at 420x760 on dashboard.html, because the 262/270 figures above
+     no longer describe this column -- #omega-ded-widget has grown from 74px to
+     84px, exactly as it did under the desktop badge rung:
+
+       150..234  x 214..406   #omega-ded-widget   (h 84, not the 74 above)
+       224..272  x 310..408   #osh-btn            <- 10px INTO the widget
+       270..322  x 344..396   #cp-btn             <-  2px INTO osh-btn
+       150..198  x  10..114   #ofb-btn            (left column, x-clear)
+       150..198  x 120..164   #omega-voice-btn    (left column, x-clear)
+
+     So 234 + 8 = 242 for #osh-btn (omega-share.js owns that number) and
+     242 + 48 + 8 = 298 here.
+
+     The three floats on the 150px rung are each positioned by their OWN module
+     -- omega-chrono.js:211, omega-feedback.js:34, omega-voice.js:141 -- and two
+     of those already carry !important, so an equal-specificity rule here would
+     be decided by sheet ORDER between five defer-loaded modules. `html #id`
+     raises specificity to 0,1,1 and settles it whatever that order turns out
+     to be. The SPACE is load-bearing: `html#id` with no combinator selects an
+     <html> element that carries the id, which matches nothing — written that
+     way first, it parsed, shipped, and moved none of the three, and only the
+     render showed it. The offset resolves to 0 at rest, so not one of these
+     moves until a banner is actually up. */
   var css='@media(max-width:760px){'
-    +'#cp-btn{right:24px!important;bottom:270px!important}'
+    +'#cp-btn{right:24px!important;bottom:calc(298px + var(--omega-transient-bottom,0px))!important}'
+    +'html #omega-ded-widget{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'
+    +'html #ofb-btn{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'
+    +'html #omega-voice-btn{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'
+    /* ...but only where the lift FITS. At 420x760 it does; at 375x667 and
+       360x640 the same shift put #cp-btn at top -32 and -59, off the screen.
+       A 235px consent banner over 146px of chrome leaves a 640px phone no
+       room for a four-rung ladder, and no arithmetic fixes that. While a
+       transient banner is up the floats step aside instead: the banner is the
+       one thing to act on, it clears on a single tap, and every float returns
+       in the same frame the attribute is removed. Desktop keeps the lift --
+       verified it fits at 1024x600, 900x700, 1280x800 and 1440x900. */
+    +'html[data-omega-transient] #cp-btn,'
+    +'html[data-omega-transient] #osh-btn,'
+    +'html[data-omega-transient] #omega-ded-widget,'
+    +'html[data-omega-transient] #ofb-btn,'
+    +'html[data-omega-transient] #omega-voice-btn{display:none!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-mobile-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
@@ -2204,6 +2276,20 @@ setTimeout(function(){
   /* Platform keyboard navigation — g-sequences, ?, Ctrl+K, n, c shortcuts */
   if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;__omegaAppend(_okb);}
   /* Legal compliance — copyright badge, GDPR consent, terms footer links */
+  /* BOTTOM STACK — publishes --omega-chrome-bottom / --omega-transient-bottom,
+     the measured reach of the persistent bottom furniture and of whatever
+     transient banner is up. omega-legal.js, omega-pwa.js, omega-share.js and
+     the desktop ladder below all read those properties WITH A 0px FALLBACK,
+     so when this injection is missing nothing errors and nothing moves — the
+     consent banner simply lands on top of the mobile nav again. That is
+     exactly what happened: ed9eb76b rewrote the one-line injected stylesheet
+     and took this line with it, and the platform shipped eight days with the
+     collision restored and no signal louder than an audit.py WARNING.
+     Injected BEFORE omega-legal.js so the property is set by the time that
+     banner can appear; the var() fallback covers the race anyway. Its own
+     guard attribute — a guard is the module's identity, not the feature
+     area's (CLAUDE.md 8.1 class 5b). */
+  if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
   if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}

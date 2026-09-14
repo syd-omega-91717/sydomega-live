@@ -113,7 +113,32 @@
        a banner still sitting at its previous offset would understate the reach.
        The observers below re-fire when it moves, so this converges rather than
        relying on one pass being right. */
-    var tReach = Math.max(inset, reachOf(trans));
+    /* max(inset, ...) ONLY while a banner is actually up. A transient bar is
+       positioned FROM --omega-chrome-bottom and grows upward, so its reach is
+       inherently >= inset and the floor is what keeps a banner mid-relayout
+       from understating it. With no banner on screen reachOf() is 0, and the
+       unconditional max published `inset` instead -- measured at 1280x800 on
+       dashboard.html, --omega-transient-bottom rested at 94px with no banner
+       anywhere, lifting every rung of the floating ladder 94px on every page
+       for every member, permanently. The ladder exists to step over BANNERS;
+       it was already measured clear of the furniture (#cp-btn x 1204..1256 vs
+       the dock's 432..848 -- no x overlap at all). So publish the honest
+       zero, which is what this module's own header always claimed it did:
+       "0 when none, so the resting ladder is byte-for-byte the measured one".
+       The code did not match the comment; the render is what settled it. */
+    var tRaw = reachOf(trans);
+    var tReach = tRaw > 0 ? Math.max(inset, tRaw) : 0;
+    /* A boolean the cascade can actually branch on. A custom property cannot
+       be tested in a media query or a selector, and @container style() is not
+       broadly available, so "is a banner up" needs an attribute. bg.js's
+       mobile ladder uses it to STEP ASIDE instead of stepping over: measured
+       at 375x667 and 360x640, lifting the four floats over a 235px consent
+       banner put #cp-btn at top -32 and -59 -- off the screen entirely, which
+       is worse than the overlap it was fixing. Shifting works where there is
+       room and stops working where there is not, and only the short viewports
+       show which is which. */
+    if (tRaw > 0) document.documentElement.setAttribute('data-omega-transient', '1');
+    else document.documentElement.removeAttribute('data-omega-transient');
     if (tReach !== _lastT) {
       _lastT = tReach;
       document.documentElement.style.setProperty(PROP_T, tReach + 'px');

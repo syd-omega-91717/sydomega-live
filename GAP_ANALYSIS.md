@@ -237,6 +237,29 @@ open, recorded in `FIXES_LOG.md`:
   measured against `#omega-consent`, whose height is 80, 102 or 134 depending
   on how its copy wraps.
 
+  > **RE-OPENED AND RE-CLOSED, 2026-09-14 (`FIXES_LOG.md` 160).** Everything
+  > below was true when written and then silently stopped being true:
+  > `ed9eb76b` rewrote `bg.js`'s single-line injected stylesheet (202 insertions,
+  > **1** deletion — that one line WAS the stylesheet) and took the module's only
+  > injection with it. Nothing loaded `omega-bottom-stack.js` for eight days;
+  > every consumer reads its properties with a `0px` fallback, so nothing errored
+  > and the collision below returned in full — re-measured at 6 overlaps on
+  > 1280x800 and 7 on 420x760, `#omega-mob` buried entirely again. Restored, plus
+  > three corrections the restoration exposed: the module published the
+  > furniture's reach instead of `0` at rest (lifting every float 94px on every
+  > page, permanently); `#omega-voice-btn` and `#ofb-btn` were never rungs; and
+  > the `#omega-cap-badge` rung had drifted a third time (228 → **238**) because
+  > `#omega-ded-widget` grew 74px → 84px. Below 420px wide the lift does not fit
+  > at all (`#cp-btn` measured at top **-32** and **-59** on 375x667 and 360x640),
+  > so the module now sets `data-omega-transient` on `<html>` and the mobile
+  > floats step aside instead of over. 0 collisions at every viewport, banner up
+  > and down, with the resting layout byte-for-byte unchanged.
+  >
+  > **The standing risk this leaves open:** a module whose only wiring is one
+  > line inside a multi-thousand-character JS string has no diff granularity, and
+  > `audit.py` reports its loss as a WARNING among fourteen others. The gate that
+  > would have caught this in a day does not exist.
+
   `omega-bottom-stack.js` now publishes two measured values —
   `--omega-chrome-bottom` (the persistent furniture) and
   `--omega-transient-bottom` (furniture plus whatever banner is up). The

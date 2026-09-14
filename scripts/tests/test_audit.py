@@ -147,6 +147,53 @@ class ModuleGraphTests(unittest.TestCase):
         self.assertIn("OK — every requested module exists.", out)
         self.assertNotIn("relativeTime.min.js", out)
 
+    # ---- ESM imports are edges too (FIXES_LOG.md 161) --------------------
+
+    def test_module_reached_only_by_an_esm_import_is_not_reported_dead(self):
+        # omega-analytics.js and omega-speed-insights.js are each reached ONLY
+        # by an `import` in a -init.js shim that ~180 pages load with a
+        # <script type=module> tag. Counting only `.src =` reported both as
+        # orphans -- 2 of 5 entries false, and a list that is 40% false reads
+        # as noise, which is how a genuine entry in it sat inert for 8 days.
+        self.fx.write("page.html", "<script type=module src=/omega-init.js></script>")
+        self.fx.write("omega-init.js", "import { inject } from './omega-lib.js';\ninject();\n")
+        self.fx.write("omega-lib.js", "export function inject(){}\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("omega-lib.js", out)
+
+    def test_bare_and_dynamic_esm_imports_are_edges(self):
+        self.fx.write("page.html", "<script type=module src=/omega-init.js></script>")
+        self.fx.write("omega-init.js",
+                      "import './omega-side.js';\n"
+                      "const p = import('./omega-lazy.js');\n")
+        self.fx.write("omega-side.js", "// side-effect import\n")
+        self.fx.write("omega-lazy.js", "// dynamic import\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("omega-side.js", out)
+        self.assertNotIn("omega-lazy.js", out)
+
+    def test_esm_import_does_not_let_a_dead_module_vouch(self):
+        # THE CONTROL for the edge above, and the reason this file's earlier
+        # control exists: teaching the graph a new kind of edge must not turn
+        # the orphan set into the empty set. Nothing loads omega-dead.js, so
+        # what it imports is dead too.
+        self.fx.write("bg.js", "// loads nothing\n")
+        self.fx.write("omega-dead.js", "import './omega-alsodead.js';\n")
+        self.fx.write("omega-alsodead.js", "// only a dead module imports this\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("omega-dead.js", out)
+        self.assertIn("omega-alsodead.js", out)
+
+    def test_a_remote_esm_import_is_not_a_local_module_edge(self):
+        self.fx.write("bg.js", "import { x } from 'https://esm.sh/tone@14.8.49/build/esm/index.js';")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("OK — every requested module exists.", out)
+        self.assertNotIn("index.js", out)
+
     # ---- stylesheet graph, same closure (FIXES_LOG.md 111) ---------------
 
     def test_stylesheet_reached_only_by_a_dead_module_is_reported_dead(self):

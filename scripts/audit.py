@@ -123,11 +123,28 @@ SRC_ASSIGN_RE = re.compile(r"""\.src\s*=\s*['"]([^'"]+\.js)['"]""")
 REMOTE_SRC_RE = re.compile(r"""^(?:[a-z][a-z0-9+.-]*:)?//""", re.I)
 
 
+# An ESM `import` is a module-graph edge too, and this scan could not see one.
+# The note above already records that SRC_ASSIGN_RE does not match `import`,
+# and works around it for the MISSING-file check with a vendored-names
+# exemption -- but the DEAD-file check kept the gap for root modules. Measured:
+# omega-analytics.js and omega-speed-insights.js are each imported by a
+# `-init.js` shim that ~180 pages load with a <script> tag, and both were
+# reported as "on disk but never loaded". Two of five entries were false, and a
+# list that is 40% false reads as noise -- which is how omega-bottom-stack.js,
+# a genuine entry in the same list, sat inert for eight days (FIXES_LOG.md 160).
+# Matches `import … from 'x.js'`, bare `import 'x.js'` and dynamic `import('x.js')`.
+ESM_IMPORT_RE = re.compile(
+    r"""(?:\bimport\s*\(\s*|\bimport\b[^;'"]*?\bfrom\s*|\bimport\s*)"""
+    r"""['"]([^'"]+\.js)['"]""")
+
+
 def js_injected_by(path):
-    """Same-origin .js filenames a module injects via `x.src = '/y.js'`."""
+    """Same-origin .js filenames a module pulls in -- by `x.src = '/y.js'` or
+    by an ESM `import`. Both are edges; only one used to be counted."""
+    src = read(path)
     return {
         m.split("/")[-1].split("?")[0]
-        for m in SRC_ASSIGN_RE.findall(read(path))
+        for m in SRC_ASSIGN_RE.findall(src) + ESM_IMPORT_RE.findall(src)
         if not REMOTE_SRC_RE.match(m)
     }
 

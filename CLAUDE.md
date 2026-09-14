@@ -488,6 +488,11 @@ are listed in rough order of how often they have recurred.
    Detect it in a render, never a grep: an attribute whose value is `""` and
    which is not a real valueless attribute. **DOM presence is not visibility** —
    `querySelectorAll` happily counts 171 rows inside a `display:none` panel.
+   **Invalid nesting does not fail either — the parser rewrites the tree.**
+   `nav.js` put `.on-tip` (it holds `.tip-a` anchors) inside `<a class="on-icon">`;
+   adoption-agency inverted them, `.on-icon .on-tip` matched **0**, and all 15 nav
+   tooltips were invisible on 202 pages (169). Check `querySelectorAll('a a')` and
+   the live parent chain against the template — no grep sees it.
 
 ### 8.2 What is genuinely open
 
@@ -558,7 +563,7 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160); the last 3 were scaffold for a product this platform is not (168) |
+| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
 | `python3 -m unittest discover -s scripts/tests` | **303** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
@@ -572,7 +577,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **9**, after 10 of 19 turned out to be one broken DOM, not a palette (169) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
@@ -723,14 +728,12 @@ entries (which were accurate when written):
   `test_script_help_contract.py` now sweeps all of them, with a planted
   violator.
 - **External repo research is partly blocked at the egress proxy.**
-  `raw.githubusercontent.com` returns 200, so named files (`README.md`,
-  `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
-  `github.com` HTML and `codeload` tarballs are all **403**, and `agentskills.io`
-  is blocked outright. So stars, contributor counts, commit recency and
-  dependency-tree security **cannot be measured** in this environment, and a repo
-  cannot be cloned or its tree listed. Do not present those dimensions as
-  assessed; `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` marks them NOT VERIFIED. Also:
-  the file tree cannot be enumerated, so a path guess that 404s means nothing.
+  `raw.githubusercontent.com` returns 200, so named files are fetchable — but
+  `api.github.com/repos/...`, `github.com` HTML and `codeload` tarballs are **403**
+  and `agentskills.io` is blocked. Stars, contributor counts, commit recency and
+  dependency security **cannot be measured** here, a repo cannot be cloned, and the
+  tree cannot be listed — so a path guess that 404s means nothing. Do not present
+  those dimensions as assessed.
 - **Per-session context cost is gated.** `scripts/context-budget.py` is blocking
   in CI; `.claude/skills/context-budget/` says where new documentation belongs
   and how to read this repo's very large files cheaply (`FIXES_LOG.md`,
@@ -903,11 +906,8 @@ the same repositories:
 | `affaan-m/everything-claude-code` (+ 4 forks) | Claude Code config collection | **WATCH.** Stars/activity unverifiable — GitHub API is egress-blocked. |
 | `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook`, `cporter202/ai-growth-stack` | agent harnesses, generative-UI, other SDKs, one empty repo | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic runtime; `agent-browser` duplicates `verify-in-browser`. |
 
-Full evidence, per-repo blockers, and what could not be verified this session:
-**`OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`**. Read that before re-evaluating any of
-the above; the GitHub REST API, `github.com` HTML and `codeload` tarballs are all
-403 at the egress proxy, so stars/activity/dependency dimensions stay
-**NOT VERIFIED** until a session has API access.
+Full evidence and per-repo blockers: **`OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`** —
+read it before re-evaluating any of the above.
 
 
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)

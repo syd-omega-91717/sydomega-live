@@ -17389,3 +17389,136 @@ test_module_contract.py     10 tests, all passing, failure demonstrated by contr
 when the defect does.* Calibrate against an invariant that survives the fix — here,
 that two duplicated closures agree — and plant the violator rather than borrowing
 one from the repo.
+
+---
+
+## 169 — An `<a>` inside an `<a>`: 15 nav tooltips invisible on 202 pages, and the palette change that would have been wrong
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+### How this was reached, which matters more than the bug
+
+The lead was `verify-runtime`'s contrast advisory: 19 text elements in the
+3–4.5:1 band. Instrumenting the real classifier (never a second one — a second
+implementation gives a second answer) to emit per-element detail gave three
+clusters:
+
+```
+10x  DIV.tip-head "UNIVERSE"   4.33-4.48   rgb(214,83,74) on rgb(35,19,14)
+ 5x  --crim #C4453C            3.62-4.20   .kpi-n, .phm-badge, .gate-title, SPAN
+ 4x  LinkedIn #0A66C2 / Discord #5865F2   3.45-4.25   social.html brand marks
+```
+
+The obvious move was to lift the section colours. Against the *lightest backdrop
+tint `omega-backdrop.js` can emit* — `hsl(46,55%,10.5%)` = `#2A230C`, which none
+of the 13 rendered pages happened to use — five section colours fall under AA,
+not one:
+
+```
+UNIVERSE                  #D6534A  3.87
+ARENA/COSMOS/INTEL/MEDIA  #9B6BF0  4.28   (never appeared in the 13-page advisory)
+```
+
+**That change was computed, and not shipped.** `#9B6BF0` is `--purple`'s literal
+value, used as the fallback in `profile.html` ×7 — changing it only in `nav.js`
+is §8.1 class 8 (two divergent copies of one canonical value) written by hand.
+So the surface was measured instead of the palette, and the surface was the bug.
+
+### The actual defect
+
+`.on-tip` declares an **opaque** background, `#0d0d18`. On that surface every
+section colour clears AA:
+
+```
+UNIVERSE #D6534A 4.78   purple #9B6BF0 5.29   ASCEND #E86A3A 6.02
+gold #C9A84C 8.45   green #3fb27f 7.25   cyan #00E5FF 12.55
+(and #C4453C, last session's value, 3.92 -- so FIXES_LOG 165's fix was real)
+```
+
+So why was the probe reading a warm-brown backdrop? Because the DOM was not what
+`nav.js` writes. Measured on `dashboard.html`:
+
+```
+nav.js:282 writes   <a class="on-icon"> ... <div class="on-tip"><div class="tip-head">
+live DOM             .on-sections > .on-tip > a.on-icon > .tip-head
+```
+
+Inverted. `.on-tip` contains `.tip-a` **anchors**, and `nav.js:278` opens the
+whole thing inside `<a class="on-icon">` — an `<a>` inside an `<a>`. That is
+invalid, and the HTML parser's **adoption agency algorithm** silently rebuilds
+the tree: it hoists `.on-tip` out and re-parents the icon inside it.
+
+The consequence is not cosmetic. `nav.js:177` is a *descendant* selector:
+
+```
+BEFORE   document.querySelectorAll('.on-icon .on-tip').length   ->  0
+         document.querySelectorAll('.on-tip').length            -> 15
+         page.hover('.on-icon') then computed opacity           -> "0"
+```
+
+**All 15 section tooltips were permanently invisible on all 202 pages** — the
+icon dock's entire hover affordance, section name plus its page list. `.tip-head`
+also landed at x=60..166 while its own panel sat at x=78..275, so 18px of the
+heading rendered on the page backdrop. That is the surface the probe measured,
+and it was measuring honestly.
+
+### Fixing the nesting was necessary and not sufficient
+
+With `.on-icon` and `.on-tip` made siblings inside a new `.on-item` wrapper, the
+rule matched 15/15 and hover set opacity 1 — and the panel was *still* invisible:
+
+```
+.on-sections   overflow auto/auto, box [0,125,79,525]   -- 79px wide
+.on-tip        box [78,125,190,1044]                    -- entirely outside it
+elementFromPoint inside the tooltip's own rect:
+   at top   -> HEADER.oid-hero
+   at mid   -> DIV.omega-depth-card
+   at y=400 -> CANVAS
+bottom 469px below a 700px viewport
+```
+
+An absolutely-positioned panel is clipped by any `overflow != visible` ancestor,
+and both `.on-sections` and `#omega-side` are `auto`. No ancestor sets
+`transform`/`filter`/`backdrop-filter`/`perspective`/`contain`/`will-change`
+(measured on the whole chain), so `position:fixed` escapes both clips. Fixed
+cannot track its icon in CSS, so `placeTip()` places it on `mouseover`/`focusin`
+and re-places on scroll and resize, clamped into the viewport, with
+`max-height:calc(100vh - 16px)` + `overflow-y:auto`.
+
+Placed 2px **over** the icon's right edge deliberately: a gap is a dead zone that
+drops `:hover` as the pointer crosses it, and the panel's links are reachable
+only while hover holds.
+
+### Result — worst case is SERVICES, 33 links
+
+```
+                          before                          after
+rule .on-item .on-tip     0 matches                       15
+opacity after hover       0                               1
+box                       190x1044, 469px off-screen      240x684, fully in viewport
+elementFromPoint in rect  HEADER.oid-hero / CANVAS        IN-TIP:DIV.tip-head / IN-TIP:A.tip-a
+nested anchors            present                         0
+```
+
+Six pages (dashboard, profile, vault, media, services, settings), all identical:
+`items=15 rule=15 nestedA=0 opacity=1 inViewport=true hitTestable=true`.
+
+`.on-item:focus-within` was added alongside `:hover` — the tip links are in the
+tab order either way, and were previously focusable while invisible.
+
+```
+verify-runtime contrast advisory   19 -> 9     (the 10 .tip-head findings, gone)
+./scripts/ci-local.sh              ALL 24 BLOCKING CHECKS PASSED
+verify-runtime                     PASS (13 pages)
+8 GitHub-blocking audits           all exit 0
+```
+
+The advisory fell without touching a single colour, which is the proof that the
+palette change would have been treating a symptom.
+
+**The transferable rule:** *invalid HTML does not fail — the parser rewrites your
+tree and every descendant selector written against the source stops matching.*
+`<a>` inside `<a>`, a block inside `<p>`, anything inside `<table>` but a row.
+Check `querySelectorAll('a a').length` and compare the live parent chain against
+the template that wrote it; a grep of the generator can never see this.

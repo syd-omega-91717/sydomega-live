@@ -132,17 +132,17 @@ open, recorded in `FIXES_LOG.md`:
   pages against the SQL bag alone — exactly the false-negative direction §8.4 warns
   about. 217 → **223** relations, 1852 → **1938** columns, `_captured` 2026-09-05 →
   2026-09-13; every one of the 223 column lists hash-verified against live.
-- **`matrix.html` promises 3-D and draws 2-D** (opened 2026-09-13, measured;
-  `FIXES_LOG.md` 152). Its main panel is titled **"3D Matrix Projection"** with a
-  `9×9×9 = 729 inner nodes` badge, and `matrix.html:642` obtains a **`'2d'`**
-  context. Meanwhile `omega-sculpture.js` carries a real three.js `matrix` scene of
-  exactly that lattice. Two reasons it was not fixed in that change rather than
-  recorded: the existing canvas is interactive (wired to `#coord-a/b/c`) so it
-  cannot simply be swapped for the scene, and the title is a `data-i18n` key
-  (`mat_canvas_title`) carried by `i18n.js`'s `T_EN` **and all six packs**, so
-  correcting the copy is a seven-file change. Either retitle it to what it is, or
-  mount the real scene and demote the 2-D canvas to the coordinate picker it
-  actually is.
+- ~~**`matrix.html` promises 3-D and draws 2-D**~~ **WITHDRAWN 2026-09-13, same day
+  it was opened.** The panel is titled *3D Matrix Projection* and uses a `'2d'`
+  context, which I recorded as a false claim. It is not: a **projection** of a 3-D
+  matrix onto a plane is exactly what an isometric projection is, and the title is
+  honest. No i18n key needed changing. **But looking properly found a real bug in the
+  same canvas** — it drew `Math.random() > .97` as the member's own lattice, re-rolled
+  every frame, in `--cyan` directly above the real coordinate readout (§8.1 class 9).
+  Fixed and verified in `FIXES_LOG.md` 154: the lit nodes now come from
+  `profiles.axis_a/b/c` (`tailCyan [27,27,27,27,27,27]` against the old
+  `[19,17,26,17,17,17]`), nothing is lit before the data arrives, and two further
+  defects in the reduced-motion still frame were found and fixed on the way.
 - **There is no safe platform-wide restyle of the metric tiles** (established
   2026-09-13, measured — recorded so the next session does not re-derive it and
   ship the sweep). The estate renders **295 metric tiles on 94 pages** under **21

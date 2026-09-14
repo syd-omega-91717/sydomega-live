@@ -17522,3 +17522,100 @@ tree and every descendant selector written against the source stops matching.*
 `<a>` inside `<a>`, a block inside `<p>`, anything inside `<table>` but a row.
 Check `querySelectorAll('a a').length` and compare the live parent chain against
 the template that wrote it; a grep of the generator can never see this.
+
+---
+
+## 170 — A brand colour used as body text, and a class that was never defined
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+### The last of the contrast advisory that was actually a bug
+
+Entry 169 took `verify-runtime`'s 3–4.5:1 advisory from 19 to 9 by fixing a DOM,
+without touching a colour. Of the remaining 9, four were `social.html`:
+
+```
+3.47  14px      rgb(10,102,194)  .plat-name  "LinkedIn"
+3.47  11px/600  rgb(10,102,194)  .btn-plat   "CONNECT LINKEDIN"
+4.29  14px      rgb(88,101,242)  .plat-name  "Discord"
+4.29  11px/600  rgb(88,101,242)  .btn-plat   "CONNECT DISCORD"
+```
+
+LinkedIn at 3.47:1 was the worst text contrast measured anywhere in the estate.
+
+**The page's own CSS already said the right thing.** `social.html:10` declares
+`.plat-name{color:var(--gold)}` and `:16` declares `.btn-plat{color:var(--muted)}`.
+Two lines of JS overrode both with the platform's brand hex, inline — and an
+inline style beats every sheet:
+
+```js
+:135  nameEl.className='plat-name';  nameEl.style.color=p.col;  …
+:150  connBtn.className='btn-plat';  connBtn.style.color=p.col;  connBtn.style.borderColor=p.col+'60';
+```
+
+Computed across all eight marks on the real card surface `rgb(10,10,15)`, exactly
+two are illegible as text and six are fine — which is why this never looked like a
+systemic problem:
+
+```
+Facebook 4.63   YouTube 4.91   TikTok 10.15   Telegram  7.09
+Reddit   5.70   Snapchat 17.91 | LinkedIn 3.47   Discord 4.26
+```
+
+### Fix: the brand colour keeps the mark, not the sentence
+
+Deleted the two inline **text** colours. Deliberately untouched:
+
+```
+:133  card.style.borderTopColor = p.col     the card's accent edge
+:134  iconEl.style.color        = p.col     the platform glyph
+:150  connBtn.style.borderColor = p.col+'60'   the button's accent border
+```
+
+No brand hex was changed — those are the official marks, and altering them to pass
+a contrast check would misrepresent the brand. The colour simply stops carrying
+text and goes back to carrying the *mark*.
+
+### Measurement — prototyped first, then re-measured on the real edit
+
+```
+PROTOTYPE (runtime, removing only the inline color)
+  before  20 elements, 4 below AA        after  0 below AA, worst 6.50
+REAL EDIT (the committed file, same probe)
+  before  20 elements, 0 below AA        worst 6.50
+  .plat-name -> rgb(201,168,76) gold  8.64
+  .btn-plat  -> rgb(135,150,161) muted 6.50
+  IDENTITY  icon rgb(225,48,108) and card border-top rgb(225,48,108) unchanged
+```
+
+```
+verify-runtime contrast advisory   9 -> 5   (only the --crim cluster left, owner's call)
+./scripts/ci-local.sh              ALL 24 BLOCKING CHECKS PASSED
+verify-runtime                     PASS (13 pages)
+```
+
+### Second item: `.omega-node` was never open work
+
+`CLAUDE.md` §4.1 listed `.omega-emblem` (1 page) and `.omega-node` (0) together as
+"the open work, not adoption". The first is right. The second is not:
+
+```
+$ grep -rn "omega-node" --include=*.{css,js,html} .
+./bg.js:180:   .omega-depth-card/.omega-node) and invents its own token names, so it
+```
+
+**One occurrence repo-wide, inside a comment.** No CSS rule in
+`omega-cinematic-system.css` or anywhere else, no markup, nothing to adopt. As
+written, §4.1 would send a future session hunting for a class that was never
+defined. Corrected in place.
+
+`.omega-emblem`'s count was verified rather than trusted: six files match a grep,
+but five are comments or the *different* `data-omega-emblem` attribute that
+`omega-emblems.js` fills. Only `horoscope.html` carries `class="omega-emblem"` —
+so the documented **1** was correct.
+
+**The transferable rule:** *a brand colour belongs to the mark — icon, border,
+glow — not to the sentence.* And before inventing a colour to fix a contrast
+finding, check whether the page's own stylesheet already specified the right one
+and something is overriding it.

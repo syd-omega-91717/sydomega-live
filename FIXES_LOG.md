@@ -16427,3 +16427,142 @@ PASS.
 "safe to delete" is a claim about each remaining use.* Counting uses told me both
 classes were nearly dead; only rendering the one surviving use told me which of
 them was actually doing work.
+
+---
+
+## 160 — A one-line rewrite silently deleted a shipped module's only wiring, and the platform ran 8 days with the collision it fixed
+
+**Found by:** working the `audit.py` check-2 warning list, which CLAUDE.md §8.3
+described as "34 `.js` … that nothing loads". The real number was **6**, and one
+of the six was `omega-bottom-stack.js` — a module CLAUDE.md §4 describes as the
+*single measured owner* of bottom-chrome positioning, with three live consumers.
+
+### 1 · The module was real, complete, and reached by nothing
+
+```
+$ grep -rn "omega-bottom-stack" --include=*.js --include=*.html .
+CLAUDE.md:190  AGENTS.md:298  FIXES_LOG.md:10594  GAP_ANALYSIS.md:240
+```
+
+Four documents, zero code. `bg.js` injects 121 distinct `omega-*.js` modules and
+this is not one of them. Its three consumers all read the properties it publishes
+**with a `0px` fallback**, so nothing errored and nothing logged:
+
+```
+omega-share.js:33  #osh-btn{bottom:calc(224px + var(--omega-transient-bottom,0px))}
+omega-legal.js:68  #omega-consent{position:fixed;bottom:var(--omega-chrome-bottom,0px);…}
+omega-pwa.js:42    position:fixed;bottom:var(--omega-chrome-bottom,0px);…
+```
+
+This is §8.1 class 4(b) — *a shared accessor that nothing publishes* — in its
+quietest possible form. The fallback that makes the module safe to load late is
+exactly what makes its absence invisible.
+
+### 2 · What deleted it
+
+```
+$ git log --all -S"omega-bottom-stack.js" -- bg.js
+c7ec9c0e Measure the bottom chrome instead of hardcoding five constants
+```
+
+**One** commit — the one that added it. `-S` finds no removal because the removal
+was not a line edit. Bisecting the file content instead:
+
+```
+3d538057  bottom-stack-injections=1
+ed9eb76b  bottom-stack-injections=0   "Enhance platform visual architecture …"
+```
+
+`ed9eb76b`'s diffstat on `bg.js` is **202 insertions, 1 deletion**, and that one
+deleted line was the entire injected stylesheet — `style.textContent='…'`, a
+single JS string thousands of characters long. Rewriting it took everything that
+lived on it, including the injection and the ladder's `var(--omega-transient-bottom)`
+terms. `node --check` passed. `audit.py` logged a WARNING. Nothing else noticed.
+
+**The transferable rule:** *a file with a multi-thousand-character single line has
+no diff granularity.* A change to any part of it is a change to all of it, and
+review sees one `-` and one `+`.
+
+### 3 · The collision, re-measured on today's code
+
+`dashboard.html`, consent banner **not** pre-dismissed, `bg.js` pinned at HEAD:
+
+```
+BEFORE  1280x800  cp-btn 52px inside the banner · ofb-btn 44 · voice-btn 22
+                  osh-btn 14 · controls-dock 58 · ticker-strip 28      6 collisions
+BEFORE   420x760  omega-mob 61px · dock 44 · ticker 28 · ded-widget 84
+                  ofb-btn 48 · voice-btn 48 · osh-btn 11               7 collisions
+                  + 2 float-on-float at rest (cp×osh 2px, osh×ded 10px)
+```
+
+`#omega-mob` is the mobile navigation, buried entirely by a banner at the **same**
+z-index 9990. On a phone, a first-time member's way out of the page was underneath
+the bar they had to dismiss — the exact defect `c7ec9c0e` was written to fix,
+restored in full and shipped for eight days.
+
+### 4 · Restoring it truthfully required three corrections
+
+**(a) The module's code did not match its own header.** It claims the ladder
+offset is *"0 when none, so the resting ladder is byte-for-byte the measured one"*.
+The code published `Math.max(inset, reachOf(trans))` unconditionally, so with no
+banner anywhere it published the **furniture's** reach — measured **94px** at
+1280x800 — lifting every floating control 94px on every page, permanently. The
+`max` is a correctness floor only *while a banner is up*. Now `tRaw > 0 ?
+Math.max(inset, tRaw) : 0`, and the resting ladder measures byte-for-byte
+identical to the BEFORE control at all four viewports.
+
+**(b) Restoring the ladder alone made one control worse.** `#omega-voice-btn`
+sits at `bottom:90px` from `omega-voice.js`'s inline cssText and was never a rung.
+It was 22px inside the banner before; once the banner lifted off the dock it was
+**40px** inside. Added as a rung, with `#ofb-btn`.
+
+**(c) A derived constant had drifted for the third time.** `#omega-cap-badge`'s
+rung is computed from `#omega-ded-widget`'s height: 215 when it was 61px, 228 when
+it was 74px. Re-measured at 1280x900 **and** 1440x900 it is **h=84, reaching 230**
+— so the badge at 228 started 2px inside it. 230 + 8 = **238**. Same disease on
+mobile: the widget reaches 234, `#osh-btn` sat at 224 (10px in) and `#cp-btn` at
+270 (2px into osh) → **242** and **298**.
+
+### 5 · The fix that shifting could not express
+
+Lifting the mobile ladder over the banner works at 420x760 and **fails** below it:
+
+```
+375x667   cp-btn top -32     OFF SCREEN
+360x640   cp-btn top -59     OFF SCREEN
+```
+
+A 235px consent banner over 146px of chrome leaves a 640px phone no room for a
+four-rung ladder, and no arithmetic fixes that. So the module now also sets
+`data-omega-transient` on `<html>` while any transient bar is up — a boolean the
+cascade can branch on, which a custom property cannot be — and on
+`@media(max-width:760px)` the five floats step **aside** rather than over. Desktop
+keeps the lift; verified it fits at 1024x600, 900x700, 1280x800 and 1440x900.
+
+**The selector's space is load-bearing.** `html#omega-ded-widget` selects an
+`<html>` element carrying that id — it matches nothing. It parsed, applied
+cleanly, and moved none of the three floats; only the render showed it.
+`html #id` (0,1,1) is what beats each module's own `#id!important` rule regardless
+of which of five defer-loaded sheets lands last.
+
+### 6 · Result
+
+```
+                     BEFORE                AFTER
+1280x800 banner up   6 collisions          0
+1440x900 banner up   (not measured)        0
+ 900x700 banner up   (not measured)        0
+ 420x760 banner up   7 + 2 at rest         0
+ 420x760 at rest     2 collisions          0
+```
+
+Round-trip proven with a real click on `#omega-consent-accept`, not a stub:
+`data-omega-transient` 1 → null, `--omega-transient-bottom` 381px → 0px, and every
+float back at its exact measured resting position (`cp-btn` 298, `osh-btn` 242,
+the three at 150). Consent's own buttons hit-tested top-most at every viewport.
+
+**The transferable rule, and it is the one that cost the eight days:** *a gate that
+downgrades a finding to a warning will be read as a null result.* `audit.py` named
+this file on every run for eight days, in a list a previous session's note had
+mis-sized by a factor of six — and mis-sizing it is what made it look like
+background noise rather than six specific questions.

@@ -27,10 +27,15 @@
     '#osh-row{display:flex;gap:10px;margin-top:16px}',
     '#osh-copy{flex:1;height:38px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:#E2C86D;border-radius:19px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer}',
     '#osh-close{height:38px;padding:0 18px;border:1px solid rgba(201,168,76,.2);background:none;color:#c8c5ba;border-radius:19px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer}',
-    /* 224 was measured against the mobile nav and controls dock; the consent
-       banner reaches 280px at 420x760 and swallowed this button. Same shared
-       inset the desktop ladder in bg.js uses. */
-    '@media(max-width:760px){#osh-btn{bottom:calc(224px + var(--omega-transient-bottom,0px))}}'
+    /* 242, not the 224 measured earlier: the rung above this one is
+       #omega-ded-widget, and it has grown. Re-measured at 420x760 it sits at
+       bottom:150 with h=84 and so reaches 234, leaving this button 10px
+       inside it; 234 + 8 = 242, reaching 290. The button above (#cp-btn, in
+       bg.js's mobile ladder) moves to 298 in the same change. The
+       var(--omega-transient-bottom) term is what lifts it clear of the
+       consent banner, which reaches 381px here -- and it resolves to 0 at
+       rest, so 242 IS the resting position. */
+    '@media(max-width:760px){#osh-btn{bottom:calc(242px + var(--omega-transient-bottom,0px))}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'osh-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);

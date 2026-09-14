@@ -16948,3 +16948,108 @@ and the entry below names them.
 **The transferable rule:** *`0 -> 1` on a `querySelectorAll` count is presence,
 not a working control.* The same probe that made the fix look finished is the one
 that cannot see a zero-size element inside a hidden tab.
+
+---
+
+## 165 — The only nav section below AA, and a third event that had never fired
+
+Two small fixes, each measured against a pinned `HEAD` control, plus the event
+survey that found the second.
+
+### 1 · `UNIVERSE` is the only nav section below AA
+
+Grouping every sub-AA text node by colour across a 12-page sample gives a very
+short list — **19 instances, 15 of them one colour**:
+
+```
+  12x  rgb(196, 69, 60) @3.92   12px    e.g. "UNIVERSE"
+   2x  rgb(196, 69, 60) @4.13   9/12px  e.g. "ABSOLUTE SOVEREIGN"
+   1x  rgb(196, 69, 60) @4.01   22px
+   2x  rgb(10, 102, 194) @3.47  LinkedIn
+   2x  rgb(88, 101, 242) @4.29  Discord
+```
+
+The last four are **official brand marks** on share buttons and are correctly out
+of scope — a brand colour is not ours to correct.
+
+`nav.js` gives each section a literal hex as its **identity colour**, and against
+the platform ground `#05050B` `UNIVERSE` is the sole outlier:
+
+| colour | contrast | section |
+|---|---|---|
+| **`#C4453C`** | **4.13:1** | **UNIVERSE — the only one below AA** |
+| `#9B6BF0` | 5.57:1 | |
+| `#E86A3A` | 6.34:1 | |
+| `#3fb27f` | 7.63:1 | |
+| `#C9A84C` | 8.90:1 | |
+| `#D9B86A` | 10.66:1 | |
+| `#E2C86D` | 12.31:1 | |
+| `#00E5FF` | 13.22:1 | |
+
+**This is not the `--crim` token.** `nav.js` hardcodes a literal that merely
+*equals* `--crim`; the danger token has three owners (§4) and stays an owner
+decision. Two literals changed (`nav.js:83`, `:423`), `#C4453C` → `#D6534A`.
+
+Measured in situ, every element whose own text is `UNIVERSE`:
+
+```
+BEFORE  .tip-head  rgb(196, 69, 60)   12px  3.92:1
+AFTER   .tip-head  rgb(214, 83, 74)   12px  4.78:1
+        (unchanged: .tip-a 5.08, .dss-label 5.26, .ds-link 6.57, .on-lbl 6.69)
+```
+
+**The first probe measured the wrong element.** A `.find()` for text `UNIVERSE`
+returned a *muted nav link* at 6.69:1 and made the fix look like a no-op. Only
+enumerating **every** element whose own text node is `UNIVERSE` surfaced
+`.tip-head`. Same class as the `0 -> 1` trap in entry 164: *the first match is not
+the element you measured.*
+
+The other two elements rendering `rgb(196,69,60)` on `dashboard.html` — `.kpi-n`
+and `.cc-icon` at 22px — are **large text**, where AA needs 3:1, and are the
+danger colour doing its actual job. Untouched.
+
+### 2 · A third event contract that had never met
+
+`omega-9d.js:99` listened for **`omega-sound` on `window`**. `omega-controls.js:149`
+dispatches **`omega:sound` on `document`**. Wrong separator *and* wrong target.
+Confirmed by wrapping `addEventListener` before load and clicking the real
+`#omega-sound-btn`:
+
+```
+BEFORE  sound listeners that fired: (none)
+AFTER   sound listeners that fired: document:omega:sound
+```
+
+Third shape of the same class in one day, after `OmegaCelebrate` (162, a global)
+and `omega:user-loaded` (164, an event one page hand-rolled).
+
+`tone()` still gates on `on()`, so this changes nothing for a member who has not
+enabled sound — **and that default is itself inconsistent**, which is why only
+half of this was fixed. See `GAP_ANALYSIS.md`: `omega-controls.js:17` and
+`audio.js:60` both default the shared `omega_sound` key to **on**, while
+`omega-9d.js:79` defaults it to **off**. Aligning it would start a click-chime for
+every member who never opted in — consent-sensitive, and the owner's call.
+
+### The survey behind it
+
+Every custom event across all modules and pages: **32 events, 11 healthy
+cross-module contracts, 8 orphaned** — `omega-sound`, `omega:apex`,
+`omega:gate-unlock`, `omega:music-started`, `omega:music-stopped`,
+`omega:feedback`, `omega:search_performed`, plus `omega:user-loaded` from 164.
+
+Two false positives had to be cleared before that number meant anything:
+
+- `'omega:'+e` in `omega-sovereign-os.js`'s `EventBus.emit` and `'omega:data-'+kind`
+  in `omega-dataguard.js` are **template prefixes**, not event names.
+- `omega:apex` and `omega:gate-unlock` *appeared* to have dispatch sites. Both were
+  `omega-confetti.js`'s **own header comment** (lines 12 and 14). *A grep that does
+  not strip comments reports a module's documentation as its implementation* —
+  the same trap `module-contract.py` hit from the other direction in entry 162.
+
+`omega-confetti.js` documents a three-part public surface — global API,
+`omega:gate-unlock`, `omega:apex` — of which only the global API works, and only
+since entry 162 fixed `OmegaCelebrate` → `OmegaCelebration`.
+
+**The transferable rule:** *when a fix looks like a no-op, suspect the probe before
+the fix.* Twice today the first element matching a selector was not the element
+that was measured.

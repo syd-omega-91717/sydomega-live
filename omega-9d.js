@@ -96,7 +96,16 @@
       var t = e.target.closest && e.target.closest('button, .btn, a.card, .om-card, .osh-b');
       if (t) tone(458.5, 0.16, 0.035); // ~9.17 x 50
     }, true);
-    window.addEventListener('omega-sound', function (ev) { if (ev.detail && ev.detail.on) tone(550.2, 0.22, 0.045); });
+    /* omega-controls.js:149 dispatches 'omega:sound' on DOCUMENT. This listened
+       for 'omega-sound' on WINDOW -- wrong separator AND wrong target, so it has
+       never fired once. Measured: clicking the real #omega-sound-btn produced
+       heard=["doc:omega:sound"] and nothing else. Same class as OmegaCelebrate
+       (FIXES_LOG 162) and omega:user-loaded (164), in a third shape.
+       tone() still gates on on(), so this changes nothing for a member who has
+       not enabled sound -- and that default is itself inconsistent across three
+       modules, which is an owner decision recorded in GAP_ANALYSIS.md, not
+       something to quietly align here. */
+    document.addEventListener('omega:sound', function (ev) { if (ev.detail && ev.detail.on) tone(550.2, 0.22, 0.045); });
   }
 
   function boot() {

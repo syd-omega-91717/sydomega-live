@@ -1857,7 +1857,15 @@ setTimeout(function(){
   }
   var items=[], hidden=false;
   function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h);}
-  function rgbOf(c){var m=c&&c.match(/(\d+),\s*(\d+),\s*(\d+)/);return m?m[1]+','+m[2]+','+m[3]:'201,168,76';}
+  /* A PURE-BLACK READING IS AN UNRESOLVED ONE, NOT A CHOICE. collect() reads
+     getComputedStyle(el).color once, and many of these glyphs are inserted by
+     JS and converted before the colour that styles them applies -- so the read
+     lands on the initial value, rgb(0,0,0). Measured: account.html filled its
+     zodiac emblems rgba(0,0,0,0.60-0.96) while architect.html, whose icons are
+     in the markup, filled rgba(226,200,109,...). Black on this platform's
+     near-black surface is invisible, and no page asks for it, so it is treated
+     exactly like a failed match and falls back to the brand gold. */
+  function rgbOf(c){var m=c&&c.match(/(\d+),\s*(\d+),\s*(\d+)/);if(!m||(+m[1]===0&&+m[2]===0&&+m[3]===0))return '201,168,76';return m[1]+','+m[2]+','+m[3];}
 
   function collect(){
     var all=document.querySelectorAll('span,div,i,b,em,h1,h2,h3,h4,small,strong');

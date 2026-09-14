@@ -16270,3 +16270,79 @@ when written and became false the moment a module started adding the class at
 runtime — and nothing re-measured it, because a fact stated as settled does not
 invite a second look. Re-measure a zero across the whole estate before building
 on it, and check paint, not just matching.
+
+---
+
+## 158 — The platform's icon emblems were drawn in pure black, on a near-black platform
+
+`bg.js`'s "OMEGA ICON EMBLEMS" converter turns every static icon glyph — the
+twelve zodiac signs among them — into a small living canvas. Measured across the
+whole estate, most of them were invisible:
+
+```
+pages with icon-emblem canvases : 68
+icon-emblem canvases total      : 1477
+  drawn in a visible colour     : 369
+  drawn invisible               : 1108      (75%)
+```
+
+**Not "failed to draw" — drawn, in black.** The distinction matters and a
+threshold-based count hid it. Reading raw pixels rather than a lit-count:
+
+```
+account.html  .emblem-orb   maxAlpha 187-243   nonZeroAlphaPx 620-751   maxChannel 0
+architect.html .pc-icon     maxAlpha 170-250   nonZeroAlphaPx 462-837   maxChannel 255
+```
+
+Hundreds of pixels with real alpha and **every channel at zero**: the glyph is
+fully rendered in `rgb(0,0,0)` on a transparent canvas, over a near-black
+surface. Intercepting the `fillStyle` setter confirmed it directly:
+
+```
+account.html    .emblem-orb / .cc-icon   rgba(0,0,0,0.60) … rgba(0,0,0,0.96)
+architect.html  .pc-icon                 rgba(226,200,109,0.60) … (226,200,109,0.96)
+```
+
+**Root cause.** `collect()` reads `getComputedStyle(el).color` **once**, at
+conversion time, and passes it through `rgbOf()` (`bg.js:1860`). Icons written
+into the markup — `architect.html`'s `.pc-icon`, `cinema.html`'s — are already
+styled when that read happens and yield the brand gold. Icons inserted by JS —
+`.emblem-orb`, `.cc-icon` — are converted before the colour that styles them
+applies, so the read lands on the initial value, `rgb(0,0,0)`. The same elements
+compute to `rgb(229,236,240)` moments later, which is why nothing looked wrong
+in DevTools afterwards.
+
+Three things were ruled out first, each by measurement rather than argument:
+
+* **Off-screen.** The first sweep scrolled every candidate into view and *then*
+  measured, so only the last was visible — the `FIXES_LOG.md` 144 trap, fallen
+  into again. Re-measured one at a time: 75 of 88 still invisible, and every
+  canvas actually inside the viewport was among them.
+* **Timing.** Waiting 12s instead of 1.5s changed nothing: `account.html` held at
+  8 visible / 62 invisible either way.
+* **A dim-but-present glyph.** `maxChannel 0` is not dim; it is black.
+
+**The fix** treats a pure-black reading as an unresolved one. `rgbOf()` already
+falls back to the brand gold when its match fails; a fully-black result is now
+the same case. Black on this platform's `--void` surface is invisible and no page
+asks for it, so nothing legitimate is overridden.
+
+```
+BEFORE  account 8/70   agent 8/70   horoscope 0/23   cosmos 11/37   architect 7/7   cinema 5/5
+AFTER   account 70/70  agent 70/70  horoscope 23/23  cosmos 37/37   architect 7/7   cinema 5/5
+estate-wide: 369/1477  ->  1477/1477 across 68 pages
+```
+
+Verified against the pinned pre-fix `bg.js` served for that one URL through
+`ctx.route()`. The pages that already worked are byte-identical in outcome —
+`architect` 7/7 and `cinema` 5/5 before and after — so the change adds colour
+where there was none and touches nothing that was correct.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED,
+`node scripts/verify-runtime.js` PASS.
+
+**The transferable rule:** *a one-shot `getComputedStyle` on an element you did
+not create is a race you will usually lose.* The element existed, the read
+succeeded, the value was valid — and wrong, because it was taken before the page
+finished deciding. When a read like that can only fail in one direction, make the
+failing value mean "unresolved" rather than trusting it.

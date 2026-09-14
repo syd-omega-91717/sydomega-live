@@ -17738,3 +17738,104 @@ stacking context it is in* — an ancestor with `position` + `z-index` caps ever
 descendant, however large their number. And a component nobody can see accumulates
 faults silently; the first render of a repaired one is a bug-finding exercise, not
 a victory lap.
+
+---
+
+## 172 — The first thing a keyboard user tabs to went nowhere, on 75% of pages
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+### Found while diagnosing something else
+
+Entry 171 recorded, without acting on it, that `services.html` carried three
+stacked skip-links. Measuring that observation properly turned it into a real
+defect.
+
+Two modules inject a "Skip to main content" link and neither knows the other
+exists — CLAUDE.md §8.1 class 5(b), a guard that is the module's identity rather
+than the feature's:
+
+```
+omega-a11y.js:85      if(document.getElementById('omega-skip')) return;   ← guards against ITSELF
+omega-wcag-aaa.js:33  const skipLink = document.createElement('a');       ← no guard at all
+                      skipLink.href = '#main-content';                    ← hardcoded
+```
+
+A third comes from the 33 pages carrying their own skip markup.
+
+### Measured, 16 pages
+
+```
+36 skip links, 12 pointing at a target that DOES NOT EXIST
+
+12 of 16 pages · 2 links, one dead  vault profile media settings intelligence honors
+                                    matrix cosmos family achievements social news
+ 4 of 16 pages · 3 links, all valid  dashboard services governance heritage
+```
+
+The dead one is `omega-wcag-aaa.js`'s hardcoded `#main-content`, and it is
+**prepended to `<body>`** — so it is the *first thing a keyboard user tabs to*:
+
+```
+dashboard, before:  Skip to main content → Skip to main content → SKIP TO CONTENT → ⌂
+vault,     before:  [dead link] → Skip to main content → ⌂
+```
+
+### Which implementation to keep was measured, not assumed
+
+`omega-a11y.js`'s `#omega-skip` resolves to a real element on **12/12** pages,
+adapting per page:
+
+```
+dashboard                    #main-content        → MAIN.main
+vault profile cosmos family  #omega-main-content  → MAIN.main
+media honors matrix          #omega-main-content  → DIV
+settings social news         #app                 → DIV.page-shell
+```
+
+Beyond the target, it is better in three ways the deleted copy was worse:
+
+| | `omega-a11y.js` | `omega-wcag-aaa.js` |
+|---|---|---|
+| position | `fixed` | `absolute` — scrolls away with the page |
+| body not ready | `requestAnimationFrame` retry | `if(document.body)` — **drops it**, §8.1 class 5(a) |
+| target focusable | sets `tabindex="-1"` and calls `.focus()` | nothing |
+
+That last row is the one that decides it. `omega-a11y.js` carries its own comment
+explaining why: without `tabindex`, following the fragment scrolls the page but
+leaves focus on `<body>`, so the next Tab restarts at the top and walks straight
+back into the ~15-section sidebar the link exists to skip. The deleted copy would
+not have worked even where its href resolved.
+
+So nothing was worth porting. The injection block was removed and replaced with a
+comment recording why this module does not own the affordance.
+
+### Result
+
+```
+skip links        36 → 20        dead targets  12 → 0
+per page          2 → 1 (12 pages)   3 → 2 (4 pages)
+vault tab order   [dead] → Skip → ⌂      becomes      Skip → ⌂ → ⌖COMMAND → GATEWAY
+```
+
+`window.OmegaA11y` (published immediately after the removed block) is untouched.
+
+```
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED
+verify-runtime          PASS (13 pages)
+```
+
+### Still open, deliberately
+
+The 3rd link on four pages is the pages' own markup. Those targets **are** valid,
+so they are duplicates rather than breakage — a separate sweep at lower priority.
+A duplicated skip link is still a screen-reader defect (the same affordance
+announced twice), just not a broken one.
+
+**The transferable rule:** *an accessibility feature can be broken in a way that
+only accessibility users meet.* Nothing renders wrong, no gate fires, and the
+defect sits on the very first tab stop. The other half: when two modules implement
+one affordance, decide which to keep by measuring both against every page — the
+one with the richer comments here was also the only correct one, and the naive
+call would have been to keep the newer file.

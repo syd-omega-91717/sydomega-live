@@ -29,24 +29,21 @@
   `;
   document.head.appendChild(focusStyle);
 
-  // Skip links for keyboard navigation
-  const skipLink = document.createElement('a');
-  skipLink.href = '#main-content';
-  skipLink.textContent = 'Skip to main content';
-  skipLink.style.cssText = `
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--gold);
-    color: var(--void);
-    padding: 8px 12px;
-    text-decoration: none;
-    z-index: 10000;
-    font-weight: 700;
-  `;
-  skipLink.onfocus = () => skipLink.style.top = '0';
-  skipLink.onblur = () => skipLink.style.top = '-40px';
-  if(document.body) document.body.prepend(skipLink);
+  /* The skip link lives in omega-a11y.js, which OWNS it. This module used to
+     inject a second one and the two never knew about each other: omega-a11y.js
+     guards on its own `#omega-skip` id, and the copy here had no guard at all.
+     Measured across 16 pages -- 36 skip links, 12 pointing at a target that does
+     not exist, because this copy hardcoded href="#main-content" while
+     omega-a11y.js resolves the real container per page (#main-content,
+     #omega-main-content or #app; valid on 12/12). So the FIRST thing a keyboard
+     user tabbed to went nowhere on 75% of pages, and every page announced the
+     same affordance twice.
+     Nothing here was worth porting: omega-a11y.js's link is position:fixed
+     rather than absolute, retries via requestAnimationFrame instead of dropping
+     itself when document.body is not ready yet, and -- the part that makes a
+     skip link actually work -- gives its target tabindex="-1" and focuses it,
+     without which the fragment scrolls but focus stays on <body> and the next
+     Tab walks back into the sidebar the link exists to skip. */
 
   // Enhanced screen reader announcements
   window.OmegaA11y = {

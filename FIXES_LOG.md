@@ -17839,3 +17839,95 @@ defect sits on the very first tab stop. The other half: when two modules impleme
 one affordance, decide which to keep by measuring both against every page — the
 one with the richer comments here was also the only correct one, and the naive
 call would have been to keep the newer file.
+
+---
+
+## 173 — A float that never got an X, and the ladder comment that said where it belonged
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+### Controls covering controls
+
+Screenshot review after entry 171 showed the sidebar's own dock partly obscured.
+Measured with `elementFromPoint` at the centre of every `.on-lbl`, `.on-glyph`,
+`.on-logout` and `.on-btn`, at 1280×700 **and** 1280×900:
+
+```
+#om-open            covers  "⌂"  the dock's own HOME button     both viewports
+#omega-voice-btn    covers  "✦" and "SERVICES"                  both viewports
+#omega-ticker-strip covers  "●" and "INTEL"                     both viewports
+#ofb-btn            intrudes geometrically, covers nothing checked
+```
+
+`#omega-side` is 80px wide and `z-index:200 !important` — a stacking context — so
+a float at z-4500 that is *not* its descendant paints over the dock whatever the
+numbers say. Confirmed across six pages: the voice button covered a section glyph
+and its label every time (SERVICES on dashboard/vault, ORDER on
+honors/cosmos/family/media).
+
+### Why it had no X
+
+`bg.js`'s desktop ladder sets `bottom` for the three left-edge floats and leaves
+`left` to each module's own inline `cssText`. `omega-voice.js:141` sets one —
+inside its **own** `@media(max-width:760px)` block:
+
+```js
+'@media(max-width:760px){#omega-voice-btn{bottom:150px!important;left:120px!important}}'
+```
+
+On mobile `#omega-side` is `display:none`, so nothing collides there. **Desktop
+never got an X at all**, and the button defaulted to x=24..68 — inside the dock.
+
+The mobile ladder's own comment names the intent the desktop side was missing:
+
+```
+150..198  x 120..164   #omega-voice-btn    (left column, x-clear)
+```
+
+*x-clear.* So the fix is that intent applied to the 80px desktop dock: 80 + a 16px
+gutter = 96. Added as a rung in the desktop ladder beside its siblings, using the
+`html #id` form the ladder already documents for beating inline `cssText`.
+
+### Result
+
+```
+                    before                  after
+voice button        x 24..68                x 96..140
+intrudesSidebar     true  (700 and 900)     false (both)
+covers              "✦" + "SERVICES"        nothing, on any page
+```
+
+Re-running the content-occlusion probe across six pages, `#omega-voice-btn`
+appears in **zero** findings — it was in six — and no new collision was introduced
+at its new position.
+
+```
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED
+verify-runtime          PASS (13 pages)
+```
+
+### Deliberately not fixed here
+
+Two of the three coverers are separate mechanisms and are **not** touched:
+
+- **`#om-open` over the dock's `⌂` button.** CLAUDE.md §4 already records this
+  float (fixed, z-9000, x=12..54, every page) as an unpublished top-left problem.
+  It is a control covering a control, which is worse than covering a label, but
+  relocating the estate's menu affordance is a design decision.
+- **`#omega-ticker-strip` over the dock's last label.** The dock scrolls
+  (`.on-sections`, ~1440px of content in a 900px viewport) and the ticker is
+  fixed full-width at the floor, so the tail passes under it. Two fixes were
+  prototyped and **both rejected by measurement**: `padding-bottom` on the
+  scrolled content changed nothing (the bar is viewport-fixed, so content padding
+  cannot move it out of the way), and shortening `#omega-side` made it *worse*
+  — 3 covered labels instead of 2, because the dock re-flowed. Recorded in
+  GAP_ANALYSIS rather than patched.
+
+**The transferable rule:** *a ladder that owns one axis silently disowns the
+other.* This one had managed `bottom` for five floats for its whole life, with
+careful re-measured arithmetic and three drift corrections in its comments — and
+never set `left` for any of them, because on mobile the collision partner is
+`display:none`. A layout invariant that holds at one breakpoint is not an
+invariant. The second half: the answer was already written down, in the *mobile*
+ladder's own comment, as `x-clear`.

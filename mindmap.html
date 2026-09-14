@@ -69,7 +69,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
     <!-- MAP -->
     <div id="tab-map" class="tab-panel act">
       <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
-        <select id="map-select" style="max-width:260px;padding:6px 10px;font-size:.65rem" onchange="loadMap(this.value)">
+        <select id="map-select" aria-label="Select mind map" style="max-width:260px;padding:6px 10px;font-size:.65rem" onchange="loadMap(this.value)">
           <option value="">— SELECT MAP —</option>
         </select>
         <button class="tool-btn" onclick="switchTab('create',document.querySelector('.tab-btn[data-tab=create]'))">+ NEW MAP</button>
@@ -96,7 +96,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
           <input class="ne-input" id="ne-text" type="text" placeholder="Node label...">
           <div class="color-row" id="color-row"></div>
           <div style="margin-bottom:8px">
-            <select id="ne-shape" style="padding:5px;font-size:.6rem">
+            <select id="ne-shape" aria-label="Node shape" style="padding:5px;font-size:.6rem">
               <option value="rect">RECT</option>
               <option value="round">ROUND RECT</option>
               <option value="ellipse">ELLIPSE</option>

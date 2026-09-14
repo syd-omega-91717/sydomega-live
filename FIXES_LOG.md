@@ -17156,3 +17156,75 @@ verify-runtime   the tap-target advisory is gone from all three pages
    stylesheet can silently **no-op**; this is the inverse — it silently
    **over-applied**. Read the whole rule from its first selector to its closing
    brace before replacing any part of it.
+
+---
+
+## 167 — 21 form controls a screen reader announced as nothing, and the 3 the gate should never have counted
+
+`verify-runtime`'s `unlabelled inputs` advisory listed **24** controls. Every one
+was checked individually rather than swept.
+
+### Every one was genuinely unlabelled
+
+No `aria-label`, no `aria-labelledby`, no `title`, no `label[for]`, no ancestor
+`<label>`, no `placeholder`. Four of them — `stoic.html`'s cardinal-virtue
+sliders — had **no adjacent text at all**. A screen reader announced these as
+bare *"select"* and *"edit text"*.
+
+### The classification that mattered
+
+A first pass measured only 7 as reachable and would have fixed just those. The
+other 17 compute `display:none` at scan time — but **that is not one category**:
+
+| why hidden | count | needs a label? |
+|---|---|---|
+| visible on load | 7 | yes |
+| inside an **inactive tab panel** — `#tab-virtues`, `#tab-tasks`, `#tab-new`, `#tab-milestones`, `#tab-schedule`, `#tab-member-posts`, `#t-skills` | 10 | **yes — one click away** |
+| inside a **conditional form** — `#node-editor`, `#study-form`, `#j-main` | 3 | **yes — opened on demand** |
+| the control's **own** `display:none` — a file input behind a visible IMPORT BACKUP button | 3 | **no — never focusable** |
+
+So **21 of 24 are real**, not 7. Treating "hidden at scan time" as one bucket
+would have dropped two-thirds of the work; treating it as none would have added
+three labels nothing can reach.
+
+### The labels, derived not guessed
+
+Each came from the control's own `<option>` list or its section heading —
+`ml-cat` from *Knowledge / Mastery / Continuity*, `lt-side` from *Paternal
+(Father's side) / Maternal*, `depthSelect` from *QUICK / STANDARD / DEEP*,
+`filter-sort` from *LEVEL: HIGH → LOW*, `blockTime` from **TODAY'S TIME BLOCKS**.
+The four `stoic.html` sliders are `type=range min=1 max=10`, so each reads
+*"Wisdom rating, 1 to 10"* rather than a bare noun.
+
+One had **no `id` and no `name`**: the gate reported it by its `type` fallback as
+`select-one`, which is why it looked unfindable. It is
+`workout.html`'s `<select class="exer-muscle">` → *"Muscle group"*.
+
+### And the gate now stops over-reporting
+
+`scripts/verify-runtime.js` excluded `type=hidden` but nothing else, so it
+counted the three button-triggered file inputs. It now skips a control whose
+**own** computed display is `none` — deliberately self-only, because an ancestor
+check would blind it to the ten tab-panel cases.
+
+Proven by control, since a smaller number proves nothing on its own:
+
+```
+remove ONE aria-label from a control inside an INACTIVE TAB (vWisdom, #tab-virtues)
+  -> unlabelled inputs: vWisdom        the gate still bites
+restore it, scan stoic + journal + habits + water
+  -> no unlabelled-inputs advisory     the three self-hidden inputs are gone
+```
+
+### Result
+
+```
+advisory across the 15 affected pages   24 -> 0
+verify-runtime                          PASS (15 pages)
+./scripts/ci-local.sh                   ALL 24 BLOCKING CHECKS PASSED
+```
+
+**The transferable rule:** *"hidden" is not one category.* A control hidden by an
+inactive tab is a control a member reaches on the next click; a control hidden by
+itself is furniture. Collapsing the two in either direction gets the work wrong
+by a factor of three.

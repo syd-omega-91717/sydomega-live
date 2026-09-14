@@ -297,7 +297,7 @@ function addExercise(){
   div.innerHTML=
     '<div class="exer-top">'+
       '<div class="exer-name-wrap"><input class="exer-name-input" type="text" list="exercise-datalist" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
-      '<select class="exer-muscle">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
+      '<select class="exer-muscle" aria-label="Muscle group">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
     '</div>'+
     '<div class="tbl-wrap sets-table">'+
       '<div class="tbl-head" style="grid-template-columns:30px 90px 70px 60px 40px 40px"><span>#</span><span>WEIGHT (kg)</span><span>REPS</span><span>RIR</span><span>✓</span><span></span></div>'+

@@ -113,6 +113,7 @@ step "2k.  i18n contract"                      python3 scripts/i18n-contract.py
 step "2l.  Resilience audit"                   python3 scripts/resilience-audit.py
 step "2m.  Commerce contract"                  python3 scripts/commerce-contract.py
 step "2n.  Reachability contract"              python3 scripts/reachability-contract.py
+step "2o.  Module contracts"                   python3 scripts/module-contract.py
 # One step, eleven gates -- the same scripts/contract-suite.py that
 # .github/workflows/contracts.yml runs, so this list and GitHub's cannot drift.
 # They HAD drifted: content-uniqueness-contract and page-experience-contract

@@ -185,6 +185,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/reachability-contract.py']).returncode)
+      - name: Module contracts
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/module-contract.py']).returncode)
       - name: Context budget
         shell: python
         run: |

@@ -138,9 +138,19 @@ var notifWorker=new Worker({
   name:'notification-worker',
   events:['sovereign.gate.unlocked','sovereign.member.approved','sovereign.member.ascended','sovereign.member.approved'],
   handler:function(evt){
-    /* Fire a platform notification via OmegaConfetti or topbar alert */
-    if(evt.name==='sovereign.gate.unlocked'&&window.OmegaCelebrate){
-      window.OmegaCelebrate.gate(evt.payload.gate);
+    /* The gate-unlock celebration, which had never once fired. This guarded on
+       window.OmegaCelebrate -- a name NOTHING has assigned in any commit in this
+       repo's history. The real module is omega-confetti.js (injected by bg.js),
+       publishing window.OmegaCelebration with exactly this API:
+       `gate(gateNum, gateName)`, its own header calling it the "cinematic
+       gate-unlock sequence". The comment here named a THIRD spelling,
+       OmegaConfetti. Three names, one implementation, zero matches: the guard
+       was permanently false and the burst never played.
+       gateName is passed too -- gate() renders `(gateName || '').toUpperCase()`
+       as the banner, so omitting it drew an empty line. The payload carries it;
+       the feed entry below already reads evt.payload.name. */
+    if(evt.name==='sovereign.gate.unlocked'&&window.OmegaCelebration){
+      window.OmegaCelebration.gate(evt.payload.gate,evt.payload.name);
     }
     /* Append to notification feed if exists */
     var feed=document.getElementById('omega-notif-feed');

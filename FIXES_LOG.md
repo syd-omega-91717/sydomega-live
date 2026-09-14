@@ -16644,3 +16644,195 @@ estate" is a different claim from "safe to delete". The 10 unloaded stylesheets
 **The transferable rule:** *a gate's false-positive rate is part of its output.*
 This one was 40%, and nobody reads a list that is 40% wrong — which is the whole
 mechanism by which entry 160's genuine entry stayed invisible in it for a week.
+
+---
+
+## 162 — The gate for entry 160's bug class, and the two live contracts it found
+
+Entry 160 restored a module nothing loaded. Entry 161 made the warning that named
+it trustworthy. This is the gate that would have caught it in a day, plus the two
+broken contracts it found on its first run.
+
+### Why a publisher-exists check would not have worked
+
+`omega-bottom-stack.js` was on disk the whole eight days and published correctly.
+It was never *loaded*. So a contract is intact only when **both** hold:
+
+1. something publishes the value, **and**
+2. that publisher is **reachable** — transitively, from the real roots.
+
+`scripts/module-contract.py` asserts the conjunction over every root `.js`:
+`setProperty('--omega-x')` / `var(--omega-x)` for custom properties, and
+`window.OmegaThing =` / `window.OmegaThing` for shared accessors.
+
+### The A/B that makes a green result mean something
+
+Run with `bg.js` pinned to `658c3849` — the real tree as it shipped for eight days:
+
+```
+BROKEN CONTRACT (4)
+  --omega-chrome-bottom     published only by UNREACHABLE omega-bottom-stack.js
+                            read by: omega-legal.js, omega-pwa.js
+  --omega-transient-bottom  published only by UNREACHABLE omega-bottom-stack.js
+                            read by: omega-share.js
+```
+
+Run against the fix: neither appears. A planted `window.OmegaPlantedGhost` on the
+fixed tree is caught. `scripts/tests/test_module_contract.py` pins both halves —
+the load-bearing test is `test_unreachable_publisher_is_a_broken_contract`, which
+**a publisher-exists check passes and this gate must not**.
+
+### The scanner failed on its own explanation first
+
+Writing the fix for `window.OmegaCelebrate` meant naming it in the comment that
+explains it — and the scanner read its own explanation as a live read, so it kept
+failing on the tree where the bug was already gone. *A scanner that counts prose
+about a bug as the bug cannot be used to prove the bug is gone.* Comments are now
+stripped; **string literals are not**, because a dispatcher naming its target in a
+string still depends on it. Both directions are pinned by tests, and the BEFORE
+control was re-run after the change rather than assumed (a smaller number after a
+scanner edit is exactly what `evidence-audit.py` got wrong once).
+
+### Finding 1 — three names, one implementation, zero matches
+
+`omega-workers.js:142`, the notification worker's gate-unlock branch:
+
+```js
+/* Fire a platform notification via OmegaConfetti or topbar alert */
+if(evt.name==='sovereign.gate.unlocked'&&window.OmegaCelebrate){
+  window.OmegaCelebrate.gate(evt.payload.gate);
+}
+```
+
+Three spellings in four lines. The real module is `omega-confetti.js` — injected
+by `bg.js`, its header describing `OmegaCelebration.gate(gateNum, gateName)` as
+the *"cinematic gate-unlock sequence"*. `window.OmegaCelebrate` has **never been
+assigned in any commit in this repo's history** (`git log --all -S"OmegaCelebrate ="`
+returns nothing), so the guard was permanently false and the burst never played —
+while `architect.html:322` describes that exact behaviour to the member.
+
+Fixed, and verified in a render rather than by reading the rename:
+
+```
+window.OmegaCelebration      : object   .gate: function
+window.OmegaCelebrate (old)  : undefined
+gate(7,"THE SEVENTH GATE")   : canvases 82 -> 83, gate name rendered: true
+page errors                  : none
+```
+
+The call also now passes `evt.payload.name`. `gate()` renders
+`(gateName || '').toUpperCase()` as its banner, so the old one-argument call would
+have drawn an empty line even had the guard ever been true — the payload carries
+the name, and the feed entry three lines below already reads it.
+
+### Finding 2 — a hook whose implementation was deliberately deleted
+
+`omega-world-shell.js:197` called `window.OmegaLayeredUI.enhance(wrapper)` behind
+a guard. Its only publisher, `omega-layered-ui.js`, was removed on purpose in
+`c7ca3569` *"Clean up 33 orphaned modules never loaded by platform"* — the cleanup
+deleted the module and left the caller. Removed rather than re-implemented: the
+wrapper's two layers are already built directly above it and nothing else asks.
+
+### Also: `main` was red on arrival
+
+`2c934af5` added `.claude/skills/present-concept-build/SKILL.md` with **no YAML
+frontmatter**, so `omega-registry.py --check` failed on a clean checkout of `main`
+— blocking every open PR. Frontmatter added from the file's own content, with a
+description that says *when* to use the skill (CLAUDE.md §10.1). This is the
+estate-wide-merge pattern §8.2 already records; the remedy is the same.
+
+### Baseline moves
+
+`ci-local.sh` **23 → 24** blocking checks; `scripts/tests` **293 → 303**.
+
+**The transferable rule:** *a gate that checks one half of a conjunction reports
+green on the exact failure it was built for.* "A publisher exists" and "a reader
+exists" were both true for all eight days.
+
+---
+
+## 163 — A cleanup deleted one side of ten pairs, and the surviving side read as a feature waiting to be switched on
+
+`audit.py` check 2b had reported **10 stylesheets nothing loads** for eight days, and
+`GAP_ANALYSIS.md` framed eight of them as an *"entire authored subsystem behind one
+entry point"*, claiming **"adding one `<script>` line to `bg.js` would light all
+twenty at once."** That framing is why nobody deleted them — it read like a feature
+one line from shipping.
+
+Both halves of it are false.
+
+### The entry point, and all twenty modules, are gone
+
+```
+omega-interface-v2.js                  ENTRY POINT ABSENT
+the 20 modules it "injects"            present: 0   absent: 20
+$ git log --diff-filter=D -- omega-interface-v2.js
+c7ca3569 Clean up 33 orphaned modules never loaded by platform
+```
+
+Same commit that left `omega-world-shell.js` calling a deleted `OmegaLayeredUI`
+(entry 162). It deleted 33 modules and **zero** stylesheets — and eight of the ten
+survivors had their **same-named partner module** deleted by it:
+
+```
+omega-agent-factory.css      partner deleted: omega-agent-factory.js
+omega-autonomous-ops.css     partner deleted: omega-autonomous-ops.js
+omega-command-palette.css    partner deleted: omega-command-palette.js
+omega-content-studio.css     partner deleted: omega-content-studio.js
+omega-content-workspace.css  partner deleted: omega-content-workspace.js
+omega-mission-control.css    partner deleted: omega-mission-control.js
+omega-nexus-visualizer.css   partner deleted: omega-nexus-visualizer.js
+omega-project-hub.css        partner deleted: omega-project-hub.js
+```
+
+### The one line would have lit nothing
+
+The half nobody had measured is whether anything wears these classes. Nothing does:
+
+| check | result |
+|---|---|
+| classes in any page's `class=` attribute | **0** for 9 of 10 sheets |
+| classes emitted by any of the 144 root `.js` | **0** for 9 of 10 sheets |
+| `omega-mc-backdrop`, `ocs-grid`, `omega-hub-grid`, `omega-nexus-node`, `omega-agent-card`, `omega-command-backdrop`, `omega-ops-badge`, `omega-react-grid` | emitted by **no module** |
+
+Each sheet's markup came from its own module, and those modules are gone. The
+exceptions are generic names — `omega-platform-visual.css` matches `.card` (176
+pages), `.panel` (152), `.glass` (37), which is precisely what made it *look*
+load-bearing; every rule of it is scoped to `.omega-visual-platform`, a class that
+appears nowhere. `omega-content-workspace.css` matches only `.full`.
+
+### It was not authored design awaiting adoption either
+
+The likeliest counter-hypothesis: these are design systems for pages that would
+benefit. Measured against the nine live pages they name, each page **already owns a
+working design and uses zero of its sheet's classes**:
+
+```
+sheet                        page                  page   own <style>   sheet classes in page
+omega-agent-factory.css      agents.html            20K        4201 ch        0 / 3
+omega-autonomous-ops.css     ops.html               32K        6139 ch        0 / 3
+omega-command-palette.css    command.html           26K        5747 ch        0 / 8
+omega-content-studio.css     studio.html            23K        5047 ch        0 / 13
+omega-mission-control.css    control-plane.html     14K        3502 ch        0 / 8
+omega-nexus-visualizer.css   nexus.html             18K        1882 ch        0 / 4
+omega-project-hub.css        projects.html          27K        6368 ch        0 / 5
+react-foundation.css         interface-omni.html    17K        2989 ch        0 / 8
+```
+
+Wiring any of them would mean rewriting a working page's markup to an unadopted
+alternative's class names — exactly what `.claude/skills/present-concept-build`
+forbids: *"extend the existing owner, do not create a parallel system"* and *"do not
+replace working surfaces with demos or scaffolds."* `project-studio.html` is small
+(4.9KB) only because `omega-project-studio.js` renders its content into
+`[data-omega-project-studio]` mounts; it is not thin.
+
+### Result
+
+All ten deleted. `audit.py` drops from **8 warnings to 7** and check 2b now reports
+no unloaded stylesheet at all. `ci-local.sh` 24/24; `verify-runtime.js` PASS on all
+nine pages whose sheets were removed.
+
+**The transferable rule:** *a cleanup that deletes one side of a pair leaves the
+other side looking like a feature waiting to be switched on.* The residue is not
+neutral — it accrued a standing GAP_ANALYSIS item and an eight-day warning, and the
+one-line promise in that item is what kept it alive.

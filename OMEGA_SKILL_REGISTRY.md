@@ -7,7 +7,7 @@ Regenerate with `python3 scripts/omega-registry.py`;
 Every number here is read off the filesystem at generation time. It exists
 because the hand-written equivalents all drifted: `.claude/skills/README.md`
 said "Four skills", `CLAUDE.md` §10 said "Five", §11 said "4-skill pipeline",
-and 22 exist.
+and 23 exist.
 
 ## 1 · Skills
 
@@ -32,6 +32,7 @@ effectively invisible unless invoked by exact name.
 | `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
 | `omega-platform` | yes | — | 1,729 | README.md | 2026-08-31 |
 | `omega-production-verification` | yes | — | 909 | **nothing** | 2026-09-10 |
+| `present-concept-build` | yes | — | 757 | **nothing** | 2026-09-14 |
 | `runtime-verify` | yes | — | 1,731 | CLAUDE.md, README.md | 2026-09-03 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
@@ -41,10 +42,10 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**22 skills, ~37,840 tokens** if every SKILL.md were read in one
+**23 skills, ~38,597 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
-> **2 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`. Reachable by description-matching, but a reader of `CLAUDE.md` or
+> **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
 > `.claude/skills/README.md` will not learn they exist.
 
 ### Purpose of each
@@ -64,6 +65,7 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`omega-orchestrator`** — Autonomous production workflow for Ω SYD OMEGA 91717.
 - **`omega-platform`** — "Cross-discipline production engineering skill for SYD OMEGA 91717.
 - **`omega-production-verification`** — Evidence-first verification workflow for Ω SYD OMEGA 91717 covering static checks, browser behavior, Supabase contracts, Vercel deployment state, links,…
+- **`present-concept-build`** — Inventory-first change procedure for this repo — find the existing owner of a surface and extend it rather than building a parallel system, check the…
 - **`runtime-verify`** — Verify a change to sydomega-live at runtime — render the real capability entrypoints in a headless browser with scripts/verify-runtime.js — and keep…
 - **`subscriber-portal`** — Surfaces an already-built, human-approved feature inside the real subscriber-facing UI (dashboard/hub pages, existing tier and notification systems) —…
 - **`supabase`** — "Use when doing ANY task involving Supabase.
@@ -94,12 +96,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 202 |
 | pages loading `bg.js` | 202 of 202 |
-| `omega-*.js` modules | 135 (1283 KB) |
+| `omega-*.js` modules | 135 (1284 KB) |
 | root `.js` files | 144 |
 | `supabase/*.sql` (flat bag) | 126 |
 | `supabase/migrations/*.sql` | 174 (106 numbered `NNNN_`, 68 timestamped) |
 | Edge Functions | 14 |
-| skills | 22 |
+| skills | 23 |
 | agent definitions | 2 |
 
 ### Translation coverage

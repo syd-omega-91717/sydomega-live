@@ -429,16 +429,13 @@ are listed in rough order of how often they have recurred.
    `offsetHeight`/`getBoundingClientRect` at `DOMContentLoaded` reads 0. A
    canvas sized that way gets a zero drawing buffer and can never paint. Use a
    `ResizeObserver`, or check for an already-set value before overriding.
-4. **A global that only one page ever assigns.** Two shapes. (a) A function
-   declared inside `<script type="module">` but called from an inline `onclick=`
-   is not global, so the click throws `ReferenceError` silently; `window.fn = fn`.
-   Swept to 0. (b) **A shared accessor that nothing publishes.**
-   `window.OmegaSupabase` was read by 11 files and assigned by one
-   (`graphify.html:168`), so the knowledge-graph and council features never
-   initialised — `graph-admin.html:83` re-polled every 100ms forever. `bg.js`
-   now publishes it from `OmegaSB.get()`; the same shape broke
-   `omega-hercules.js`, which guarded on `window.sb`. **Grep a `window.*`
-   accessor's assignment, not just its readers.**
+4. **A global that only one page ever assigns.** (a) A function declared inside
+   `<script type="module">` but called from an inline `onclick=` is not global;
+   `window.fn = fn`. Swept to 0. (b) **A shared accessor nothing publishes** —
+   `OmegaSupabase` (11 readers, 1 assigner, on a dead page), `window.sb`,
+   `OmegaCelebrate` (never assigned; the module published `OmegaCelebration`),
+   `--omega-chrome-bottom` (publisher loaded by nothing, 8 days).
+   `scripts/module-contract.py` gates it: a reachable *publisher*, not just one.
 5. **An injection guard that discards, or that two modules share.** Two
    shapes. (a) `if (document.body) document.body.appendChild(x)` drops the work
    entirely when body does not exist yet; `bg.js` now routes every injection
@@ -561,8 +558,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **8** warnings — incl. **3 `.js` + 10 `.css` nothing loads** (2/2b, transitive; ESM `import` is an edge since 161). Said 34; never was. **A warning is not a null finding** — `omega-bottom-stack.js` sat there inert 8 days (160) |
-| `python3 -m unittest discover -s scripts/tests` | **293** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **7** warnings — incl. **3 `.js`, 0 `.css`** nothing loads (2/2b; ESM `import` is an edge since 161). **A warning is not a null finding** — `omega-bottom-stack.js` sat there inert 8 days (160); the 10 dead sheets were a cleanup's unfinished half (163) |
+| `python3 -m unittest discover -s scripts/tests` | **303** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -579,8 +576,9 @@ entries (which were accurate when written):
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
+| `python3 scripts/module-contract.py` | 0 broken; **118** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
 | `python3 scripts/evidence-audit.py --summary` | 96 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 19 STATIC / 2 BROKEN / 13 UNREACHABLE (202 pages); **0 declared relations absent live** (snapshot 2026-09-13, **223** relations), and **126** declared |
-| `./scripts/ci-local.sh` | **23** blocking checks, all passing (`contract-suite.py` holds **18** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
+| `./scripts/ci-local.sh` | **24** blocking checks, all passing (`contract-suite.py` holds **18** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

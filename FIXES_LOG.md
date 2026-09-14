@@ -16138,3 +16138,70 @@ believe owns the behaviour — when it cannot be perturbed, the ownership belief
 is the bug.* The control here was not a formality that passed; it failed to even
 start, and that failure corrected a claim sitting in the first paragraph of the
 design-system section that every session reads before doing any work.
+
+---
+
+## 156 — A canvas with a zero drawing buffer, found by sweeping all 202 pages
+
+`node scripts/verify-runtime.js --all` was run because the change in 155 touched
+63 pages and a spot check would not have covered them. It reported one failure —
+on a page that change had not touched:
+
+```
+RUNTIME VERIFICATION - 202 page(s), chromium
+  FAIL nexus.html
+        x canvas with a zero drawing buffer (can never paint): nexus-canvas
+```
+
+`nexus.html` was not in the 63, `git status` showed it unmodified, and it failed
+identically in isolation, so the defect was pre-existing. Measured against the
+pinned `HEAD` file served through `ctx.route()`:
+
+```
+BEFORE (HEAD)   buffer 0x642    box 1084x642     <- width literally zero
+AFTER           buffer 1084x590 box 1084x590
+```
+
+**The cause is CLAUDE.md §8.1 class 3, with an extra edge.** The sizing was
+
+```js
+var W=wrap.offsetWidth, H=wrap.offsetHeight||500;
+cv.width=W; cv.height=H;
+```
+
+read exactly once. `H` carried a fallback; **`W` did not**. `#nexus-wrap` sits
+inside the `#tab-nexus` tab panel, so whenever that panel is not the active tab
+its box is 0 — and a canvas assigned `width = 0` has a zero drawing buffer and
+can never paint, however many frames the rAF loop runs. The usual trigger for
+this class is the approval guard; here a plain inactive tab does it too.
+
+The fix is the documented remedy plus the part that is easy to miss: **a measured
+0 means "not laid out yet", not "zero wide"**, so `size()` keeps the last good
+size and waits for the `ResizeObserver` to fire again rather than committing a
+zero. Node positions are seeded once, on the first real size, and **rescaled**
+rather than re-seeded on later resizes so a window drag does not scramble the
+layout. `draw()` keeps the loop alive but skips work until seeded.
+
+**What this did NOT fix, stated plainly.** The canvas is now correctly sized and
+the loop runs, but it still paints nothing under the test harness:
+
+```
+buffer 1084x552   rafFrames 907   arcsDrawnOnNexus 0   statCards ["0","0","—"]
+```
+
+Zero nodes and zero edges — the stub does not populate this page's graph, so
+there is genuinely nothing to draw. The reported defect (a buffer that could
+never paint) is fixed and verified; whether marks appear depends on data this
+harness does not provide, and that is not claimed here. A member with no graph
+data still gets a black rectangle and `0 / 0 / —`, which is honest but poor: an
+empty state for this page is open work, recorded rather than built.
+
+Gates: `node scripts/verify-runtime.js --pages nexus.html` PASS,
+`./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED.
+
+**The transferable rule:** *sweep the whole estate when a change touches many
+pages, and read the failure even when it lands on a page you did not touch.*
+This bug had survived every prior session because the capability entrypoints
+`verify-runtime.js` checks by default do not include `nexus.html`; only `--all`
+reaches it, and only a change big enough to justify `--all` was ever going to
+surface it.

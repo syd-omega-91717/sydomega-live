@@ -183,15 +183,50 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   /* Canvas force simulation */
   var cv=document.getElementById('nexus-canvas');
   var wrap=document.getElementById('nexus-wrap');
-  var W=wrap.offsetWidth,H=wrap.offsetHeight||500;
-  cv.width=W;cv.height=H;
   var ctx=cv.getContext('2d');
 
-  nodes.forEach(function(n){
-    n.x=W/2+(Math.random()-.5)*W*.8;
-    n.y=H/2+(Math.random()-.5)*H*.8;
-    n.vx=0;n.vy=0;
-  });
+  /* SIZE FROM A LIVE BOX, NEVER A ONE-SHOT READ. CLAUDE.md 8.1 class 3.
+     This was `var W=wrap.offsetWidth, H=wrap.offsetHeight||500; cv.width=W`.
+     H had a fallback; W did not. #nexus-wrap lives inside the #tab-nexus tab
+     panel, so whenever that panel is not the active tab its box is 0 -- and a
+     canvas assigned width 0 has a zero drawing buffer and can NEVER paint, no
+     matter how many frames the rAF loop runs. `scripts/verify-runtime.js
+     --all` caught it as the one failing page of 202:
+
+         FAIL nexus.html
+           x canvas with a zero drawing buffer (can never paint): nexus-canvas
+
+     A measurement of 0 means "not laid out yet", not "zero wide", so size()
+     KEEPS THE LAST GOOD SIZE and waits for the observer to fire again. */
+  var W=0,H=0,seeded=false;
+
+  function seedNodes(){
+    nodes.forEach(function(n){
+      n.x=W/2+(Math.random()-.5)*W*.8;
+      n.y=H/2+(Math.random()-.5)*H*.8;
+      n.vx=0;n.vy=0;
+    });
+  }
+
+  function size(){
+    var r=wrap.getBoundingClientRect();
+    var w=Math.round(r.width||wrap.offsetWidth||0);
+    var h=Math.round(r.height||wrap.offsetHeight||0)||500;
+    if(w<2||h<2)return;               /* hidden tab: keep what we had */
+    if(w===W&&h===H)return;
+    var oldW=W,oldH=H;
+    W=w;H=h;cv.width=W;cv.height=H;   /* assigning width also clears it; the
+                                         rAF loop repaints on the next frame */
+    if(!seeded){seedNodes();seeded=true;}
+    else if(oldW>0&&oldH>0){          /* rescale rather than re-seed, so a
+                                         resize does not scramble the layout */
+      var sx=W/oldW,sy=H/oldH;
+      nodes.forEach(function(n){n.x*=sx;n.y*=sy;});
+    }
+  }
+  size();
+  if(window.ResizeObserver){new ResizeObserver(size).observe(wrap);}
+  else{window.addEventListener('resize',size);}
 
   function tick(){
     var alpha=0.1;
@@ -253,6 +288,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   var myIdx=nodes.findIndex(function(n){return n.id===myId;});
 
   function draw(){
+    /* Nothing is laid out yet (hidden tab, or the approval guard still on).
+       Keep the loop alive so the first real size paints immediately. */
+    if(!seeded){requestAnimationFrame(draw);return;}
     ctx.clearRect(0,0,W,H);
     ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
     edges.forEach(function(e){

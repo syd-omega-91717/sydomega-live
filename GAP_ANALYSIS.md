@@ -163,6 +163,14 @@ open, recorded in `FIXES_LOG.md`:
   scale (13 distinct value font-sizes, 12px–40px) cannot be normalised without
   `!important`, which CLAUDE.md §9 forbids for defeating the cascade. Any real
   unification here is a per-page migration, not a sweep.
+- **`nexus.html` shows a member with no graph data a black rectangle** (opened
+  2026-09-14; `FIXES_LOG.md` 156). Its canvas could never paint at all until now —
+  a zero drawing buffer, §8.1 class 3, fixed and verified (`0x642` → `1084x590`).
+  But with the harness stub the page renders `rafFrames 907`, `arcs 0`,
+  `statCards ["0","0","—"]`: the loop runs correctly over an empty graph. That is
+  honest and it is also a poor first impression. The page needs a real empty state
+  — what the nexus is, and what populates it — rather than an unexplained void.
+  Not built here: it is a content and copy decision, not a sizing bug.
 - **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
   of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
   is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no

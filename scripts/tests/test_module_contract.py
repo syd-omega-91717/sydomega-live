@@ -164,10 +164,49 @@ class ContractTests(unittest.TestCase):
 class ReachabilityAgreesWithAuditTests(unittest.TestCase):
     """module-contract.py re-derives audit.py's closure rather than importing it
     (audit.py chdir()s to its own ROOT and cannot be pointed at a fixture). That
-    duplication is only safe while the two agree, so assert it on the real repo:
-    every module audit.py calls dead must be absent from this gate's live set."""
+    duplication is only safe while the two agree, so assert it on the real repo.
 
-    def test_live_set_excludes_every_module_audit_calls_dead(self):
+    This assertion used to be "every module audit.py calls dead is absent from
+    this gate's live set", guarded by `assertTrue(dead)` so a changed output
+    format could not silently pass as agreement. That guard made the test FAIL
+    the moment the repo reached zero dead modules -- the goal state. A check
+    that requires the defect it checks against to still exist cannot be part of
+    a suite whose purpose is to remove it.
+
+    Set equality is the assertion that means the same thing at three dead
+    modules and at zero: the two closures partition the same files identically.
+    The output-format concern is handled by anchoring on audit.py's section
+    heading instead, so "no dead-module heading" is distinguishable from "the
+    heading moved and nothing was parsed".
+    """
+
+    AUDIT_SECTION = "1/2 \u00b7 MODULE GRAPH"
+
+    def _audit_dead(self):
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "audit.py")],
+                              capture_output=True, text=True, cwd=ROOT)
+        out = proc.stdout
+        self.assertIn(self.AUDIT_SECTION, out,
+                      "audit.py's module-graph section heading is gone; the two "
+                      "scanners can no longer be compared -- check its output format")
+        dead, grab = set(), False
+        for line in out.splitlines():
+            # audit.py prints TWO such headings -- stylesheets first, then
+            # modules. Matching the substring alone grabs the CSS list, whose
+            # names end in .css, and the filter below then yields an empty set --
+            # which looks exactly like "audit.py found nothing".
+            if ("on disk but never loaded" in line
+                    and "stylesheet" not in line.lower()):
+                grab = True
+                continue
+            if grab:
+                if line.strip() and not line.startswith("="):
+                    dead = {x.strip() for x in line.split(",")
+                            if x.strip().endswith(".js")}
+                break
+        return dead
+
+    def test_the_two_closures_partition_the_repo_identically(self):
         import importlib.util
         spec = importlib.util.spec_from_file_location("mc", SRC)
         mc = importlib.util.module_from_spec(spec)
@@ -176,33 +215,15 @@ class ReachabilityAgreesWithAuditTests(unittest.TestCase):
         try:
             os.chdir(ROOT)
             live = mc.reachable_modules()
+            on_disk = {f for f in os.listdir(".") if f.endswith(".js")}
         finally:
             os.chdir(cwd)
 
-        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "audit.py")],
-                              capture_output=True, text=True, cwd=ROOT)
-        dead = []
-        grab = False
-        for line in proc.stdout.splitlines():
-            # audit.py prints TWO such headings -- stylesheets first, then
-            # modules. Matching the substring alone grabs the CSS list, whose
-            # names end in .css, and the filter below then yields [] -- which
-            # looked exactly like "audit.py found nothing" and is why this
-            # assertion exists at all.
-            if ("on disk but never loaded" in line
-                    and "stylesheet" not in line.lower()):
-                grab = True
-                continue
-            if grab:
-                if line.strip() and not line.startswith("="):
-                    dead = [x.strip() for x in line.split(",") if x.strip().endswith(".js")]
-                break
-        self.assertTrue(dead, "audit.py reported no dead modules; the two scanners "
-                              "can no longer be compared — check its output format")
-        for module in dead:
-            self.assertNotIn(module, live,
-                             f"{module}: audit.py calls it dead, module-contract.py "
-                             f"calls it live — the two closures have drifted")
+        self.assertFalse(live - on_disk,
+                         "module-contract.py calls a non-existent file reachable")
+        self.assertEqual(on_disk - live, self._audit_dead(),
+                         "the two closures have drifted: each scanner calls a "
+                         "different set of root modules dead")
 
 
 if __name__ == "__main__":

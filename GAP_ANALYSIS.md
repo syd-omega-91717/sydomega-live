@@ -1748,3 +1748,19 @@ here for a future session rather than acted on speculatively.
     ("navigation friction") in `UX_REDESIGN_BRIEF.md`; the go-ahead this item was waiting on.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.
+
+11. **Three Phase-5 tables now have no client at all** — `member_feature_flags`,
+    `member_attributes`, `member_agent_interactions`. Discovered 2026-09-14 while deleting
+    the three modules `audit.py` check 2 had been calling dead (`FIXES_LOG.md` 168): those
+    modules were the *only* code in the repo that named these tables, so the count of
+    non-dead client files was measured at **0** for each before the deletion, not created
+    by it. The tables are real and deliberately hardened — `20260913173753` dropped
+    `member_feature_flags`'s `WITH CHECK(true)` INSERT policy, revoked INSERT from
+    `anon, authenticated`, and left UPDATE `USING(is_platform_owner())` — so the deleted
+    `setFlag()` could not have succeeded from a member session even if something had
+    called it. This is `evidence-audit.py`'s "absent and unread is a dormant backend"
+    case and correctly does not gate. It is recorded here because the *capability* is
+    real and unbuilt: per-member feature flags with variants, and a per-member attribute
+    store. Whoever builds a client for them should note that `member_agent_interactions`
+    was deliberately granted INSERT to `authenticated` with a member-scoped policy in that
+    same migration, so it is the one of the three designed to be written from the client.

@@ -162,19 +162,29 @@
       '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
       '.on-sections::-webkit-scrollbar{display:none}',
       /* Each icon cell: icon + permanent label */
+      '.on-item{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}',
       '.on-icon{width:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;cursor:pointer;transition:all .15s;position:relative;border-radius:8px;text-decoration:none;border:1px solid transparent}',
-      '.on-icon:hover,.on-icon.on-active{background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.25)}',
+      '.on-item:hover .on-icon,.on-icon.on-active{background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.25)}',
       '.on-icon.on-active{box-shadow:0 0 10px rgba(201,168,76,0.15)}',
       '.on-glyph{font-size:16px;line-height:1;transition:transform .2s}',
-      '.on-icon:hover .on-glyph,.on-icon.on-active .on-glyph{transform:scale(1.15)}',
+      '.on-item:hover .on-glyph,.on-icon.on-active .on-glyph{transform:scale(1.15)}',
       /* was #55534e -- 2.57:1 on --void, measured across 179 pages as the
          widest-reaching contrast failure in the repo. var(--muted) is 5.41:1
          and follows theme.js, so the dock stays dim without being unreadable. */
       '.on-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);text-align:center;line-height:1;transition:color .15s}',
-      '.on-icon:hover .on-lbl,.on-icon.on-active .on-lbl{color:var(--col,#C9A84C)}',
+      '.on-item:hover .on-lbl,.on-icon.on-active .on-lbl{color:var(--col,#C9A84C)}',
       /* Fly-out tooltip */
-      '.on-tip{position:absolute;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
-      '.on-icon:hover .on-tip{opacity:1;pointer-events:all}',
+      /* position:FIXED, not absolute. .on-sections and #omega-side are both
+         overflow:auto and 79px wide, so an absolutely-positioned panel at
+         x=78..268 was clipped away entirely -- elementFromPoint inside its own
+         rect returned the page behind it, never the tooltip. No ancestor sets
+         transform/filter/backdrop-filter/contain/will-change (measured), so
+         fixed escapes both clips. max-height keeps a 23-link section (1044px)
+         inside a 700px viewport instead of running 469px off the bottom. */
+      '.on-tip{position:fixed;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;max-width:240px;max-height:calc(100vh - 16px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
+      '.on-tip::-webkit-scrollbar{width:6px}',
+      '.on-tip::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:3px}',
+      '.on-item:hover .on-tip,.on-item:focus-within .on-tip{opacity:1;pointer-events:all}',
       '.tip-head{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.12)}',
       '.tip-a{display:flex;align-items:center;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
       '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
@@ -275,10 +285,16 @@
   h+='<div class="on-sections">';
   SECTIONS.forEach(function(sec){
     var isAct=sec.key===activeSection;
+    h+='<div class="on-item">';
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
     h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
     h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
-    /* Tooltip */
+    h+='</a>';
+    /* Tooltip -- a SIBLING of the icon, never a child. It contains .tip-a
+       anchors, and an <a> inside an <a> is invalid: the HTML parser's adoption
+       agency algorithm hoists .on-tip out of .on-icon and re-parents the icon
+       INSIDE the tooltip, so `.on-icon:hover .on-tip` matched 0 elements and
+       all 15 section tooltips were permanently invisible on all 202 pages. */
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
     sec.sub.forEach(function(sub){
       var on=sub[0]===dp;
@@ -286,13 +302,48 @@
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
-    h+='</div></a>';
+    h+='</div></div>';
   });
   h+='</div>';
   h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
 
   el.className='omega-side';
   el.innerHTML=h;
+
+  /* Tooltip placement. .on-tip is position:fixed (see the CSS note above), so
+     nothing in CSS can keep it beside its own icon -- place it here, clamped
+     into the viewport. It is measured while still opacity:0, which is safe:
+     opacity does not affect layout, and max-height has already clamped the
+     height by the time offsetHeight is read. Placed 2px OVER the icon's right
+     edge on purpose: a gap is a dead zone that drops :hover as the pointer
+     crosses it, and the panel's links are only reachable while hover holds. */
+  function placeTip(item){
+    if(!item) return;
+    var tip=item.querySelector('.on-tip'); if(!tip) return;
+    var icon=item.querySelector('.on-icon')||item;
+    var ir=icon.getBoundingClientRect();
+    tip.style.left=Math.round(ir.right-2)+'px';
+    var h=tip.offsetHeight;
+    var top=Math.round(ir.top);
+    var lowest=window.innerHeight-8-h;
+    if(top>lowest) top=lowest;
+    if(top<8) top=8;
+    tip.style.top=top+'px';
+  }
+  var sections=el.querySelector('.on-sections');
+  if(sections){
+    sections.addEventListener('mouseover',function(e){
+      placeTip(e.target.closest?e.target.closest('.on-item'):null);
+    });
+    sections.addEventListener('focusin',function(e){
+      placeTip(e.target.closest?e.target.closest('.on-item'):null);
+    });
+    /* The dock scrolls and the panel does not follow a fixed element, so
+       re-place whatever is currently open rather than leaving it stranded. */
+    var reflow=function(){ placeTip(el.querySelector('.on-item:hover')||el.querySelector('.on-item:focus-within')); };
+    sections.addEventListener('scroll',reflow,{passive:true});
+    window.addEventListener('resize',reflow,{passive:true});
+  }
 
   /* Back btn */
   document.getElementById('on-back')?.addEventListener('click',function(){

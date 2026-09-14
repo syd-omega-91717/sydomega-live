@@ -17228,3 +17228,164 @@ verify-runtime                          PASS (15 pages)
 inactive tab is a control a member reaches on the next click; a control hidden by
 itself is furniture. Collapsing the two in either direction gets the work wrong
 by a factor of three.
+
+---
+
+## 168 — Three modules nothing loads, and the cross-check test that failed the moment the repo was clean
+
+**Date:** 2026-09-14
+**Branch:** `claude/graphic-visual-design-lx192k`
+
+### What `audit.py` had been saying, and for how long
+
+Check 2 had carried the same warning since the ESM-import fix in entry 161 narrowed
+it from five files to three:
+
+```
+WARNING — on disk but never loaded (3):
+  omega-autonomous-onboarding.js, omega-feature-gates.js, service-worker.js
+```
+
+Entry 160 is the reason this was not simply actioned on sight: `omega-bottom-stack.js`
+sat in exactly this warning for eight days and was **load-bearing** — the fix was to
+restore its injection, not to delete it. So each of the three was re-verified
+independently before anything was removed.
+
+### Measurement, per file
+
+```
+$ for m in omega-feature-gates.js omega-autonomous-onboarding.js service-worker.js; do
+    grep -l "$m" *.js | grep -v "^$m$"      # injected by a loader?
+    grep -l "$m" *.html                     # named in markup?
+    grep -rl "$m" --include=*.{js,html,json,sql} . | grep -v "^./$m$"
+  done
+→ every one of the nine greps returned EMPTY
+```
+
+Globals, checked from the reader side rather than the publisher side (CLAUDE.md
+§8.1 class 4(b) is specifically about greping the *assignment*, so this is the
+mirror check):
+
+```
+omega-feature-gates.js         publishes window.OmegaFeatureGates
+omega-autonomous-onboarding.js publishes window.OmegaAutonomousOnboarding
+$ grep -rn "OmegaFeatureGates\|OmegaAutonomousOnboarding" --include=*.{js,html} .
+  (excluding the two files themselves)  →  0 hits
+```
+
+`service-worker.js` is reached by `navigator.serviceWorker.register()`, which no
+closure can see, so it was checked against every registration in the repo:
+
+```
+$ grep -rhno "serviceWorker\.register([^)]*)" --include=*.{js,html} .
+     15  '/sw.js')
+     13  "/sw.js")
+      1  '/sw.js', { scope: '/' })
+```
+
+29 registrations, all naming `/sw.js`; `sw.js` and `manifest.json` name
+`service-worker.js` nowhere. Its body is an older, strictly smaller shell cache
+(`omega-shell-v1`, two static entries) than the live `sw.js`.
+
+### The correction to my own first reading
+
+The check-in note written before this session called all three "duplicates of a
+live owner". Two of them are not, and the accurate reading is a stronger reason to
+delete, not a weaker one:
+
+| module | what it actually is |
+|---|---|
+| `omega-feature-gates.js` | **PER-MEMBER** flags with variants (`member_feature_flags`, keyed `member_id`, `set_by_agent:true`). `omega-flags.js` — the live owner, bg.js ×3 — is **PLATFORM** flags (`platform_settings` via `rpc('get_platform_flag')`). Different concepts, not a duplicate |
+| `omega-autonomous-onboarding.js` | a generic-SaaS onboarding planner. Its own step catalog names `api_keys`, `webhooks`, `custom_domain`, `sandbox_environment`, `team_collaboration`, `help_center` — **none of which exist on this platform**. The live owner `omega-onboard.js` implements the real model: sign → element → Olympian → agent → token |
+| `service-worker.js` | superseded by `sw.js`; registered by 0 of 29 registrations |
+
+So the first two are not parallel implementations of *this* product — they are
+implementations of a product this platform is not, sitting unreferenced. That is
+the §8.2 "~83-table SaaS scaffold" shape appearing on the client side.
+
+`omega-feature-gates.js`'s only write path could not have worked regardless:
+`20260913173753` dropped `member_feature_flags`'s `WITH CHECK(true)` INSERT policy,
+revoked INSERT from `anon, authenticated`, and left UPDATE `USING(is_platform_owner())`.
+Its `.upsert()` from a member session was already dead at the database.
+
+### What the deletion exposed, and was recorded rather than lost
+
+The three tables these modules named have **zero** other client files — measured
+before deleting, so the deletion did not create the condition:
+
+```
+member_attributes:          0 other client file(s)
+member_agent_interactions:  0 other client file(s)
+member_feature_flags:       0 other client file(s)
+```
+
+That is `evidence-audit.py`'s "absent and unread is a dormant backend" case and
+correctly does not gate. `GAP_ANALYSIS.md` §S item 11 now carries it as a real
+unbuilt capability rather than a silently removed one.
+
+### The second bug: a test that required the defect to still exist
+
+Deleting the three took `audit.py` check 2 to zero dead modules — and the suite
+went red on my own test from entry 162:
+
+```
+FAIL: test_live_set_excludes_every_module_audit_calls_dead
+  audit.py reported no dead modules; the two scanners can no longer be compared
+```
+
+The assertion was "every module `audit.py` calls dead is absent from
+`module-contract.py`'s live set", guarded by `assertTrue(dead)` so a changed output
+format could not pass as agreement. The guard was right about the format risk and
+wrong about everything else: it made the repo reaching the goal state a test
+failure. **A cross-check that samples the defect it checks against cannot belong
+to a suite whose purpose is to remove that defect.**
+
+The fix is the assertion that means the same thing at three dead modules and at
+zero — **set equality**, that the two closures partition the repo identically:
+
+```python
+self.assertEqual(on_disk - live, self._audit_dead(),
+                 "the two closures have drifted: each scanner calls a "
+                 "different set of root modules dead")
+```
+
+with the format concern moved to an anchor on `audit.py`'s own section heading
+(`1/2 · MODULE GRAPH`), so "no dead-module heading printed" is distinguishable
+from "the heading moved and nothing was parsed".
+
+### Negative control — and the first one that proved nothing
+
+```
+control A   drop nav.js from module-contract's LOADERS      test still PASSED
+```
+
+Which was not a perturbation at all: ~9 pages carry their own
+`<script src="/nav.js">`, so `nav.js` stays reachable through the page-script-tag
+root and the measured set never moved. A control that does not move the
+measurement cannot validate the assertion.
+
+```
+control A2  remove module-contract's sw.js exemption
+              → module-contract now calls dead ['sw.js'], audit.py does not
+              → FAILED: "'sw.js' : the two closures have drifted"     correct
+control B   plant omega-planted-dead.js (0 loaders, 0 readers)
+              → module-contract dead: ['omega-planted-dead.js']
+              → audit.py  WARNING — on disk but never loaded (1)
+              → PASSED, and non-vacuously: both scanners saw the file
+```
+
+### Result
+
+```
+audit.py                    7 warnings → 6;  "never loaded (3)" heading gone entirely
+root .js on disk            144 → 141
+omega-*.js modules          135 (1284 KB) → 133 (1269 KB)
+module-contract.py          141 reachable, 141 on disk, 0 dead — the two sets now equal
+test_module_contract.py     10 tests, all passing, failure demonstrated by control A2
+./scripts/ci-local.sh       ALL 24 BLOCKING CHECKS PASSED
+```
+
+**The transferable rule:** *a gate that samples a defect to calibrate itself dies
+when the defect does.* Calibrate against an invariant that survives the fix — here,
+that two duplicated closures agree — and plant the violator rather than borrowing
+one from the repo.

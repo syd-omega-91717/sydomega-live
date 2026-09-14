@@ -173,8 +173,8 @@ own `<style>` (sheet 0) still wins.
 **Never give a decorative element `display:none` for being `aria-hidden`.**
 That rule sat in `omega-accessibility-audit.css` and deleted **60 of 60**
 aria-hidden elements on six pages — the particle canvas,
-`.omega-cinematic-layer`, `.omega-visual-rail`, and 31 marks on `index.html`.
-The platform's cinematic layers were switched off by its own a11y sheet (145).
+`.omega-cinematic-layer`, `.omega-visual-rail`, and 31 marks on `index.html` —
+the cinematic layers switched off by the platform's own a11y sheet (145).
 
 **Motion and load-state have single owners too.** `bg.js` wraps `fetch`
 synchronously (a recorder only) and `omega-dataguard.js` surfaces slow/failed
@@ -289,10 +289,11 @@ through this one file with no per-page markup changes:
   file long claimed (157). `.omega-cinematic` matches **202/202** — its JS adds it
   to `<body>`; only 2 pages name it in markup — and it *paints*: toggling moves
   23.9/54.0/4.5% of pixels against 1.1/13.6/1.2% noise floors. `.omega-depth-card`
-  15 pages, `.omega-emblem` 1, `.omega-node` **0**: those last two are the open
-  work, not adoption. Never sweep `.omega-depth-card` onto `.card` (background +
-  border + shadow + animated `::after` — the metric-tile collision profile).
-  `--omega-line` is undefined outside `index.html`; read it with a fallback.
+  15 pages, `.omega-emblem` **1** — the open work. `.omega-node` is **not**: no
+  rule, no markup, only `bg.js:180`'s comment. Never sweep
+  `.omega-depth-card` onto `.card` (background + border + shadow + animated
+  `::after` — the metric-tile profile). `--omega-line` is undefined outside
+  `index.html`; read it with a fallback.
 - Motion respects `prefers-reduced-motion`.
 
 Every change here was verified before shipping by rendering an isolated test
@@ -529,8 +530,8 @@ Only what changes what you do in the **first minutes** stays here:
   serves **200 with the full index.html** at its own URL, while the production alias serves a
   **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
   `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
-  `vercel.json` sets `git.deploymentEnabled {"*": false}` — so no promotion path is active.
-  Only `VERCEL_TOKEN` is still needed; org/project ids now default in the workflow. Also
+  `vercel.json` sets `git.deploymentEnabled {"*": false}` — no promotion path is
+  active. Only `VERCEL_TOKEN` is needed; org/project ids default in the workflow. Also
   `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
   while the custom domain returns **404** — two failures that look like one. Read a deployment
   URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
@@ -604,8 +605,8 @@ entries (which were accurate when written):
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
-  their extension, or an `.html` served as `text/javascript` makes every
-  element report absent, which looks exactly like a dramatic improvement.
+  their extension: an `.html` served as `text/javascript` makes every element
+  report absent, which looks exactly like a dramatic improvement.
 - **Test RLS by impersonating a real member, in-database.** `execute_sql`
   through the Supabase MCP runs privileged, so it proves nothing about what a
   member can see. `set_config('role','authenticated',true)` plus

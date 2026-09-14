@@ -132,7 +132,7 @@ function buildPlatforms(){
     card.className='plat-card'+(conn?' connected':'');
     card.style.borderTopColor=conn?'var(--green)':p.col;
     var iconEl=document.createElement('div');iconEl.className='plat-icon';iconEl.style.color=p.col;iconEl.textContent=p.icon;
-    var nameEl=document.createElement('div');nameEl.className='plat-name';nameEl.style.color=p.col;nameEl.textContent=p.name;
+    var nameEl=document.createElement('div');nameEl.className='plat-name';nameEl.textContent=p.name;
     var descEl=document.createElement('div');descEl.className='plat-desc';descEl.textContent=p.desc;
     var statusEl=document.createElement('div');
     statusEl.className='plat-status'+(conn?' conn':'');
@@ -147,7 +147,7 @@ function buildPlatforms(){
       discBtn.addEventListener('click',function(){disconnectPlatform(p.id);});
       btns.appendChild(openBtn);btns.appendChild(discBtn);
     } else {
-      var connBtn=document.createElement('button');connBtn.className='btn-plat';connBtn.style.color=p.col;connBtn.style.borderColor=p.col+'60';
+      var connBtn=document.createElement('button');connBtn.className='btn-plat';connBtn.style.borderColor=p.col+'60';
       connBtn.textContent='CONNECT '+p.name.toUpperCase().split('/')[0].trim();
       connBtn.addEventListener('click',function(){connectPlatform(p.id,p.name);});
       btns.appendChild(connBtn);

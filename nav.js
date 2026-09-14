@@ -180,13 +180,36 @@
          rect returned the page behind it, never the tooltip. No ancestor sets
          transform/filter/backdrop-filter/contain/will-change (measured), so
          fixed escapes both clips. max-height keeps a 23-link section (1044px)
-         inside a 700px viewport instead of running 469px off the bottom. */
-      '.on-tip{position:fixed;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;max-width:240px;max-height:calc(100vh - 16px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
+         inside a 700px viewport instead of running 469px off the bottom.
+         The bottom clamp reads --omega-chrome-bottom (omega-bottom-stack.js
+         publishes 94px) rather than a constant, per CLAUDE.md 4. It is not
+         cosmetic: #omega-side is `z-index:200 !important`, which makes it a
+         STACKING CONTEXT, so this panel's z-index:9990 is scoped inside it and
+         the whole sidebar competes at 200. #ofb-btn (z-9000, x=12..116) and
+         #omega-ticker-strip (z-200) therefore paint OVER the panel's lower edge,
+         and 5 of 18 links were not clickable. Keeping the panel above the
+         published chrome line is what makes them reachable; raising the
+         sidebar's own z-index would fix the symptom and restack the estate. */
+      '.on-tip{position:fixed;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;max-width:240px;max-height:calc(100vh - 16px - var(--omega-chrome-bottom, 0px));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
       '.on-tip::-webkit-scrollbar{width:6px}',
       '.on-tip::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:3px}',
       '.on-item:hover .on-tip,.on-item:focus-within .on-tip{opacity:1;pointer-events:all}',
       '.tip-head{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.12)}',
-      '.tip-a{display:flex;align-items:center;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
+      /* `.on-tip .tip-a`, not `.tip-a`. omega-accessibility-audit.css sets
+         `button,[role=button],a[href],.clickable{display:inline-flex;...}` for the
+         44px touch target, and `a[href]` (0,1,1) outranks `.tip-a` (0,1,0) — so an
+         EARLIER sheet won and these links computed inline-flex. Inline-flex boxes
+         flow inline, so two SHORT labels shared a 240px line while long ones did
+         not: 33 links rendered on 29 rows (EVENTS/TRAVEL, HABITS/JOURNAL,
+         NUTRITION/OATH, RITUALS/SLEEP). Raising specificity here fixes the rows
+         without touching the estate-wide touch-target rule, which is correct:
+         ~354 of ~440 links per page ARE navigation, and 0 sit in running text.
+         `justify-content:flex-start` looks redundant -- it is flex's own default --
+         but that same a11y rule sets `center`, and nav.js never declared the
+         property, so every row centred itself in the panel and the list rendered
+         with a ragged left edge. Restoring it here is what gives the links one
+         shared margin. */
+      '.on-tip .tip-a{display:flex;align-items:center;justify-content:flex-start;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
       '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
       '.tip-a.tip-on{color:#C9A84C}',
       '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
@@ -325,7 +348,9 @@
     tip.style.left=Math.round(ir.right-2)+'px';
     var h=tip.offsetHeight;
     var top=Math.round(ir.top);
-    var lowest=window.innerHeight-8-h;
+    var chrome=parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--omega-chrome-bottom'))||0;
+    var lowest=window.innerHeight-8-chrome-h;
     if(top>lowest) top=lowest;
     if(top<8) top=8;
     tip.style.top=top+'px';

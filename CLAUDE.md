@@ -111,8 +111,8 @@ does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 
 ## 4. Design system (as it exists, not as a target)
 
-Tokens and layout primitives are defined once, in `bg.js`'s injected
-`<style>` block. **Paint is not.** A live render of `dashboard.html` enumerates
+Layout primitives are defined in `bg.js`'s injected `<style>` block. **Tokens
+and paint are not** — `bg.js` declares **zero** custom properties (measured). A live render of `dashboard.html` enumerates
 **62 stylesheets** (59 inline) with bg.js at sheet 1, so every later sheet wins
 an equal-specificity tie. Five global layers redefine the same surfaces and the
 effective owner differs per selector — check the render, not this list, before
@@ -120,15 +120,15 @@ styling a shared class:
 
 | surface | real owner |
 |---|---|
-| tokens, layout, `.glass`, `.kpi-n`, `.chip`, `.bar-*`, `.btn`, `.tbl-head` | `bg.js` (sheet 1) |
+| layout, `.glass`, `.kpi-n`, `.chip`, `.bar-*`, `.btn`, `.tbl-head` | `bg.js` (sheet 1) — **no tokens**; only `--mx`/`--my`/`--sy` via `setProperty` |
 | `.card`/`.kpi`/`.kpi-card` shadow + border, `.topbar`, `.sechead`, `body::before` field | `omega-visual-evolution.css` (13) |
 | `#omega-side` (with `!important`) | `nav.js` (16) |
 | `body{background}` (with `!important`) | `omega-backdrop.js` (20) — tints to the member's element and page; a feature, don't fight it |
-| **the palette itself** — `--void`, `--crim`, `--ink`, `--muted`, `--line` | `theme.js` (`#omega-theme-css`, 19) — a "Sovereign Dusk" layer that re-declares them and, being later, **beats bg.js**. Change a token there too, or it does not ship. Neutrals are hue **205** (cool, measured); `--gold-bright` is the display tier |
+| **every palette/type token** | `theme.js` (19) **and** `css/omega-system.css` — never `bg.js` (155). `--gold-bright` theme.js only; `--void2`/`--purple`/`--D`/`--R`/`--M` omega-system.css only. Change both owners or it does not ship. Neutrals hue **205**. `--void` also has a runtime owner beating every sheet: bg.js:781 sets it inline on `<html>` from `localStorage['omega_bg']` |
 
-A page's own `<style>` is sheet **0**, so bg.js (1) beats it: 62 pages redefine
-canonical tokens in their own `:root` and every one of those is dead code
-(measured). Only the 51 sheets after bg.js can win.
+A page's own `<style>` is sheet **0**, so every later sheet beats it. 63 pages
+redefined canonical tokens there — **426 dead declarations, now removed**, proven
+by 0 computed differences across all 63 renders (`FIXES_LOG.md` 155).
 
 A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
@@ -268,12 +268,9 @@ through this one file with no per-page markup changes:
 - **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
   `.field` + `.field label` gives an opt-in floating-label pattern.
 - **`.btn-fill`, the filled primary action.** bg.js had only *ghost* buttons, so
-  pages hand-rolled a gold `.btn` at the same (0,1,0) specificity and lost:
-  `account.html`'s CREATE ACCOUNT and `reset.html`'s SEND RECOVERY LINK measured
-  **1.01:1**, invisible to signed-out visitors. Use `.btn.btn-fill` (retint with
-  `--btn-fill`), never a page-local override. Ghost variants set `background:none`
-  themselves — without it a `.btn-gold` lacking `.btn` kept the browser's grey
-  face (2.33:1, 8 pages).
+  hand-rolled gold buttons lost at equal specificity and measured **1.01:1** —
+  invisible. Use `.btn.btn-fill` (retint `--btn-fill`), never a page-local
+  override. Ghost variants set `background:none` themselves.
 - **Fallback skin for bare elements**: `input`/`textarea`/`select`/`button` with
   `:not([class])` get the `.inp`/`.btn` glass treatment; anything with a class or
   inline `style=` is untouched. Page-local table classes stay open work.

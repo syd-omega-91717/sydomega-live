@@ -16054,3 +16054,87 @@ collapsed it — and neither was visible in the animated view that everyone look
 at. Reduced motion is not the same picture held still; it is a pose you have
 chosen, and choosing it by convention picked one of the two worst angles
 available.
+
+---
+
+## 155 — 426 token declarations on 63 pages that never applied, and the file they were supposed to be overriding declares none of them
+
+CLAUDE.md §4 states that a page's own `<style>` is sheet **0** and `bg.js` is
+sheet **1**, so at equal specificity every page-local `:root{--gold:…}` loses.
+It also recorded that ~62 pages redefine canonical tokens this way and that all
+of it is dead code. That was measured once and then carried as prose. Re-measured
+now, and swept.
+
+```
+pages redefining a canonical token in their own :root/html : 63
+total (page, token) declarations                           : 430
+declarations removed                                       : 426
+```
+
+The four not removed sit in blocks the remover left alone (a declaration outside
+a `:root`/`html` rule); the 426 are every canonical-token declaration inside a
+page's own `:root`. Page-specific custom properties in the same block were kept —
+only the 15 canonical names were taken.
+
+**Proven dead by measurement, not by the cascade argument.** Every one of the 63
+pages was rendered before and after, reading the computed value of all 15 tokens
+off `documentElement` plus `body`'s background, colour and font:
+
+```
+pages compared : 63     load errors : none     VALUE DIFFS : 0
+```
+
+**And the zero was proven to be a real zero.** A checker that reports nothing
+looks identical to a checker that is not running (§8.4), so the same pipeline was
+re-run against a deliberately broken build — `--gold:#C9A84C` → `#FF0000` in its
+real owner:
+
+```
+CONTROL diffs detected: 3
+   404.html       --gold  '#C9A84C' -> '#FF0000'
+   academy.html   --gold  '#C9A84C' -> '#FF0000'
+   account.html   --gold  '#C9A84C' -> '#FF0000'
+```
+
+The perturbation was reverted and verified byte-clean (`git diff` empty, no
+`FF0000` anywhere in the file).
+
+### The control failed first, and that is the more useful finding
+
+The control was written against `bg.js`, because CLAUDE.md §4 opens with
+*"Tokens and layout primitives are defined once, in `bg.js`'s injected `<style>`
+block"* and its ownership table assigns **tokens** to `bg.js` (sheet 1). The
+perturbation could not be applied — there was nothing to perturb:
+
+```
+grep -o -- "--[a-zA-Z][a-zA-Z0-9-]* *:" bg.js | wc -l     ->  0
+```
+
+**`bg.js` declares no custom properties at all.** The real declaring files:
+
+| token | declared in |
+|---|---|
+| `--void`, `--gold`, `--solar`, `--cyan`, `--crim`, `--green`, `--muted`, `--ink`, `--line` | `theme.js` **and** `css/omega-system.css` |
+| `--gold-bright` | `theme.js` only |
+| `--void2`, `--purple`, `--D`, `--R`, `--M` | `css/omega-system.css` only |
+| `--gold` … et al. | **never `bg.js`** |
+
+`bg.js` touches custom properties only through four `setProperty` calls, and
+three are runtime values rather than palette: `--mx`/`--my` (pointer position,
+bg.js:234-235) and `--sy` (scroll parallax, :260). The fourth is load-bearing and
+undocumented: **bg.js:781 sets `--void` as an inline style on `documentElement`
+from `localStorage['omega_bg']`**, the member's saved background — an inline
+style, so it outranks every stylesheet including `theme.js`.
+
+So the mental model "edit the token in bg.js" was wrong in both directions: there
+is nothing there to edit, and for `--void` a runtime inline style wins anyway.
+CLAUDE.md §4 corrected.
+
+Gates: `./scripts/ci-local.sh` ALL 23 BLOCKING CHECKS PASSED. `theme.js`,
+`bg.js` and `css/omega-system.css` unmodified — the diff is 63 page files.
+
+**The transferable rule:** *write the negative control against the thing you
+believe owns the behaviour — when it cannot be perturbed, the ownership belief
+is the bug.* The control here was not a formality that passed; it failed to even
+start, and that failure corrected a claim sitting in the first paragraph of the
+design-system section that every session reads before doing any work.

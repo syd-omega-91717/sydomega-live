@@ -234,6 +234,17 @@ const CHECK_JS = `(() => {
   out.smallTapTargets = small.slice(0, 8);
   const unl = [];
   document.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=checkbox]):not([type=radio]), select, textarea').forEach(el => {
+    /* A control hidden BY ITSELF is a button-triggered file input -- habits,
+       journal and water each hide one behind a visible IMPORT BACKUP button --
+       and no screen reader ever reaches it, so a label on it is unreachable
+       too. Excluding it is the difference between an advisory of 24 and one of
+       21 real findings (FIXES_LOG.md 167).
+       The check is deliberately SELF-only. Ten of the 24 sat inside an inactive
+       tab panel (#tab-virtues, #tab-tasks, #tab-new, ...) or a conditional form
+       (#node-editor, #study-form), which also compute display:none at scan
+       time -- and those ARE reachable, one click away, so excluding every
+       display:none would have silently dropped two-thirds of the real work. */
+    if (getComputedStyle(el).display === 'none') return;
     const ok = el.getAttribute('aria-label') || el.getAttribute('aria-labelledby') || el.getAttribute('title')
       || (el.id && document.querySelector('label[for="' + CSS.escape(el.id) + '"]')) || el.closest('label');
     if (!ok) unl.push(el.name || el.id || el.type || 'input');

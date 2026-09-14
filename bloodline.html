@@ -34,11 +34,11 @@
         <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">ADD LINEAGE MEMBER</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
           <input id="lt-name" class="inp" style="width:100%" placeholder="Full name">
-          <select id="lt-gen" class="inp" style="width:100%">
+          <select id="lt-gen" aria-label="Generation" class="inp" style="width:100%">
             <option value="0">Self</option><option value="1">Parent</option><option value="2">Grandparent</option>
             <option value="3">Great-grandparent</option><option value="4">2× Great-grandparent</option>
           </select>
-          <select id="lt-side" class="inp" style="width:100%">
+          <select id="lt-side" aria-label="Family side" class="inp" style="width:100%">
             <option value="paternal">Paternal (Father's side)</option><option value="maternal">Maternal (Mother's side)</option>
             <option value="self">Self / Both</option>
           </select>

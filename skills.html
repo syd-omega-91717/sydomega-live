@@ -132,7 +132,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <select id="filter-domain" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:6px 10px;border-radius:2px;outline:none">
             <option value="">ALL DOMAINS</option>
           </select>
-          <select id="filter-sort" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:6px 10px;border-radius:2px;outline:none">
+          <select id="filter-sort" aria-label="Sort skills by" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:12px;padding:6px 10px;border-radius:2px;outline:none">
             <option value="level-desc">LEVEL: HIGH → LOW</option>
             <option value="level-asc">LEVEL: LOW → HIGH</option>
             <option value="name">NAME A–Z</option>

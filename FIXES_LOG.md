@@ -17053,3 +17053,178 @@ since entry 162 fixed `OmegaCelebrate` → `OmegaCelebration`.
 **The transferable rule:** *when a fix looks like a no-op, suspect the probe before
 the fix.* Twice today the first element matching a selector was not the element
 that was measured.
+
+---
+
+## 166 — A 24px target minimum, and the substring edit that nearly applied it to every link and button on the estate
+
+### The finding, and why measuring on a phone hides it
+
+`verify-runtime`'s advisory names six sub-24px selectors: `pub-toggle`,
+`toggle-analytics`, `toggle-recommendations`, `toggle-marketing`,
+`toggle-personalisation`, `set-done`. **Four of the six are `privacy.html`'s GDPR
+consent toggles.**
+
+At **1280x900** — the viewport that gate uses — all six measure **20px tall**:
+native `<input type=checkbox>` at browser default, `appearance:auto`.
+
+At **375x750 mobile they already measure ≥24.** The browser's own mobile
+form-control sizing lifts them. So the defect is on **desktop**, which is the
+opposite of how a target-size check is usually framed:
+
+```
+  ===== 1280x900 =====
+   portfolio.html   pub-toggle 763x20
+   privacy.html     toggle-analytics 44x20 | toggle-recommendations 44x20
+                    toggle-marketing 44x20 | toggle-personalisation 44x20
+   workout.html     set-done 20x20 (x3)
+  ===== 375x750 =====
+   all three pages  none below 24px
+```
+
+Measuring only at phone width reports **"none below 24px"** and closes the lead.
+
+Scope: 8 pages, 17 checkbox/radio inputs in markup, and **no page sets a size** —
+so `bg.js` is the sole owner and one rule reaches dynamically created ones too.
+
+### The mistake: a unique match is not a correct one
+
+`bg.js` already carried what looked like the right rule to extend:
+
+```
+input[type=checkbox],input[type=radio]{touch-action:manipulation}
+```
+
+It is not that rule. It is the **tail of a seven-selector group**:
+
+```
+a[href],button,[role=button],label,summary,select,
+input[type=checkbox],input[type=radio]{touch-action:manipulation}
+```
+
+A `.replace()` on the substring appended `min-width:24px;min-height:24px` to the
+**whole group's** declaration block — putting a 24px floor on **every link,
+button, `[role=button]`, label, summary and select on 202 pages**. The guard
+`assert count == 1` proved the *match* was unique; it never established that the
+*selector* was what it looked like.
+
+It was caught by measurement, not review. An identity-keyed layout diff showed
+real elements moving:
+
+```
+BUTTON|filter-btn|OVERDUE   -20px
+BUTTON|set-rm|✕             -20px
+BUTTON|tnav-btn|← BACK      -18px
+DIV|◆ LOG SESSION           -43px
+```
+
+And it was only believable because the **negative control** ran first: the same
+A/B with an **empty diff** reported ±1px on SVG elements and nothing else. A
+noise floor of ±1px is what made a −20px button unambiguous.
+
+Three earlier instruments had to be discarded before that one worked — a
+position-keyed DOM path (the body's child order differs run to run by 21
+injected elements), a raw `scrollHeight` comparison, and a suspicion that
+`ctx.route()` pinning itself shifted layout (disproved: pinning the *current*
+file and serving it normally gave identical heights).
+
+### The fix as shipped
+
+A **separate rule**, leaving the `touch-action` group untouched:
+
+```
+input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}
+```
+
+Re-verified against the same ±1px floor:
+
+```
+layout diff      INPUT|set-done +4px, and ±1px SVG jitter — nothing else
+all 8 pages      page height IDENTICAL before/after on every one
+sub-24 targets   portfolio 1->0 · privacy 4->0 · workout 3->0   (8 -> 0)
+overflow         0 -> 0 everywhere      page errors  0 -> 0 everywhere
+verify-runtime   the tap-target advisory is gone from all three pages
+```
+
+### Two transferable rules
+
+1. *An accessibility target-size check must run at desktop width too.* Mobile was
+   already compliant here; desktop was not, and a phone-only measurement returns
+   a clean result.
+2. *Matching a substring of a selector list silently widens the rule.* CLAUDE.md
+   §8.4 already records that a programmatic edit inside `bg.js`'s injected
+   stylesheet can silently **no-op**; this is the inverse — it silently
+   **over-applied**. Read the whole rule from its first selector to its closing
+   brace before replacing any part of it.
+
+---
+
+## 167 — 21 form controls a screen reader announced as nothing, and the 3 the gate should never have counted
+
+`verify-runtime`'s `unlabelled inputs` advisory listed **24** controls. Every one
+was checked individually rather than swept.
+
+### Every one was genuinely unlabelled
+
+No `aria-label`, no `aria-labelledby`, no `title`, no `label[for]`, no ancestor
+`<label>`, no `placeholder`. Four of them — `stoic.html`'s cardinal-virtue
+sliders — had **no adjacent text at all**. A screen reader announced these as
+bare *"select"* and *"edit text"*.
+
+### The classification that mattered
+
+A first pass measured only 7 as reachable and would have fixed just those. The
+other 17 compute `display:none` at scan time — but **that is not one category**:
+
+| why hidden | count | needs a label? |
+|---|---|---|
+| visible on load | 7 | yes |
+| inside an **inactive tab panel** — `#tab-virtues`, `#tab-tasks`, `#tab-new`, `#tab-milestones`, `#tab-schedule`, `#tab-member-posts`, `#t-skills` | 10 | **yes — one click away** |
+| inside a **conditional form** — `#node-editor`, `#study-form`, `#j-main` | 3 | **yes — opened on demand** |
+| the control's **own** `display:none` — a file input behind a visible IMPORT BACKUP button | 3 | **no — never focusable** |
+
+So **21 of 24 are real**, not 7. Treating "hidden at scan time" as one bucket
+would have dropped two-thirds of the work; treating it as none would have added
+three labels nothing can reach.
+
+### The labels, derived not guessed
+
+Each came from the control's own `<option>` list or its section heading —
+`ml-cat` from *Knowledge / Mastery / Continuity*, `lt-side` from *Paternal
+(Father's side) / Maternal*, `depthSelect` from *QUICK / STANDARD / DEEP*,
+`filter-sort` from *LEVEL: HIGH → LOW*, `blockTime` from **TODAY'S TIME BLOCKS**.
+The four `stoic.html` sliders are `type=range min=1 max=10`, so each reads
+*"Wisdom rating, 1 to 10"* rather than a bare noun.
+
+One had **no `id` and no `name`**: the gate reported it by its `type` fallback as
+`select-one`, which is why it looked unfindable. It is
+`workout.html`'s `<select class="exer-muscle">` → *"Muscle group"*.
+
+### And the gate now stops over-reporting
+
+`scripts/verify-runtime.js` excluded `type=hidden` but nothing else, so it
+counted the three button-triggered file inputs. It now skips a control whose
+**own** computed display is `none` — deliberately self-only, because an ancestor
+check would blind it to the ten tab-panel cases.
+
+Proven by control, since a smaller number proves nothing on its own:
+
+```
+remove ONE aria-label from a control inside an INACTIVE TAB (vWisdom, #tab-virtues)
+  -> unlabelled inputs: vWisdom        the gate still bites
+restore it, scan stoic + journal + habits + water
+  -> no unlabelled-inputs advisory     the three self-hidden inputs are gone
+```
+
+### Result
+
+```
+advisory across the 15 affected pages   24 -> 0
+verify-runtime                          PASS (15 pages)
+./scripts/ci-local.sh                   ALL 24 BLOCKING CHECKS PASSED
+```
+
+**The transferable rule:** *"hidden" is not one category.* A control hidden by an
+inactive tab is a control a member reaches on the next click; a control hidden by
+itself is furniture. Collapsing the two in either direction gets the work wrong
+by a factor of three.

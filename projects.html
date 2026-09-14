@@ -168,7 +168,7 @@
   <div id="ms-list"></div>
   <div class="add-task-row" style="margin-bottom:20px">
     <input type="text" id="ms-input" placeholder="Add milestone..." onkeydown="if(event.key==='Enter'){addMilestone();event.preventDefault();}">
-    <input type="date" id="ms-date" style="width:130px;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:8px;font-family:'Courier New',monospace;font-size:12px">
+    <input type="date" id="ms-date" aria-label="Milestone due date" style="width:130px;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:8px;font-family:'Courier New',monospace;font-size:12px">
     <button class="add-task-btn" onclick="addMilestone()">+ ADD</button>
   </div>
   <div style="display:flex;gap:8px">
@@ -181,7 +181,7 @@
 <!-- TASKS -->
 <div id="tab-tasks" class="tab-panel">
   <div class="proj-select-row">
-    <select id="task-project-sel" onchange="renderTasks()">
+    <select id="task-project-sel" aria-label="Project for this task" onchange="renderTasks()">
       <option value="">— Select project —</option>
     </select>
   </div>

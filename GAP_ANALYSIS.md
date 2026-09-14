@@ -171,17 +171,44 @@ open, recorded in `FIXES_LOG.md`:
   honest and it is also a poor first impression. The page needs a real empty state
   — what the nexus is, and what populates it — rather than an unexplained void.
   Not built here: it is a content and copy decision, not a sizing bug.
-- **`omega-music.js` is injected on all 202 pages and cannot be triggered from any
-  of them** (opened 2026-09-13, measured; `FIXES_LOG.md` 150). Its documented trigger
-  is `[data-music-toggle]`, and `grep -l "data-music-toggle" *.html` returns **no
-  matches** — zero pages. `bg.js` still injects its 245 lines everywhere. Its
-  `loadTone()` also imports Tone.js from a CDN with no `/vendor/` path, and its two
-  callers (`omega-music.js:190`, `:208`) do `loadTone().then(…)` with **no `.catch()`**,
-  so a failure would be an unhandled rejection and a silently dead toggle. Nothing was
-  vendored for it deliberately: 350KB for a feature with no way in is dead payload.
-  **Owner's call** — either surface the toggle on the pages that should have music
-  (and vendor Tone.js + add the missing `.catch()` at that point), or stop injecting
-  the module. The passport half of this pair was reachable and *was* fixed.
+- **`omega-music.js` and `omega-ambient.js` are injected on all 202 pages and cannot
+  be reached from any of them — for three separate reasons** (opened 2026-09-13,
+  **re-diagnosed 2026-09-14**; `FIXES_LOG.md` 150, **164**).
+
+  The original diagnosis here was *"its documented trigger is `[data-music-toggle]`,
+  and grep returns no matches — zero pages"*. **That is true of page markup and is not
+  the blocker.** `omega-music.js:230-234` **creates its own toggle**: given a
+  `.topbar` and no existing one, it builds the button and sets the attribute itself.
+  A grep over pages cannot see a module that self-mounts. The three real blockers,
+  each measured in a render:
+
+  1. **The mount is gated on an event nothing dispatches.** Both modules hang their
+     auto-injection on `omega:user-loaded` (`window`), while `omega-user.js:233` —
+     which owns the profile and runs on every page — dispatches `omega:populated`
+     (`document`). Instrumented before page load, `omega:user-loaded` fires on
+     `chronicle.html` **and on no other page**; even there it loses the race, since
+     the page's inline dispatch runs before `bg.js`'s deferred listeners attach.
+     Eight modules listen for it: music, ambient, passport, sigil-gen, realm,
+     particles, workers, event-bus.
+  2. **The mount target is wrong on tabbed pages.** Dispatching the event
+     (prototyped, then A/B'd against a pinned `HEAD`) mounts both toggles — and they
+     render **0x0 and un-clickable**. `omega-music.js:232` takes
+     `document.querySelector('.topbar')`, the *first* match, which on
+     `profile.html` sits inside `#tab-passport.tab-panel` at `display:none`.
+     **85 pages** carry more than one `topbar` mention alongside tab panels.
+  3. **The audio engine is a runtime CDN import.** `omega-music.js:88` does
+     `import('https://esm.sh/tone@14.9.17')`; Tone is not in `/vendor/`, §4 forbids
+     runtime CDN imports outright, and `window.Tone` measures `undefined` —
+     which is what the observed `TypeError: T.start is not a function` is. Its two
+     callers (`:190`, `:208`) still have **no `.catch()`**.
+
+  **Still the owner's call, but now a decidable one.** Fixing (1) alone is a
+  regression: two invisible dead buttons on the 174 pages that have a topbar, one of
+  which throws. Wanting the feature means all three — dispatch the event from
+  `omega-user.js`, mount into the *visible* topbar, and vendor Tone (≈350KB) with the
+  missing `.catch()`. Not wanting it means dropping both modules from `bg.js`, two
+  lines. The `omega-user.js` dispatch was written, measured and **reverted
+  byte-for-byte** rather than shipped alone.
 - ~~**`omega-emblems-catalog.js:578` calls an API nothing implements**~~
   **CLOSED 2026-09-13** — the call and its `DOMContentLoaded` listener were deleted
   (`FIXES_LOG.md` 153). Implementing it was ruled out on evidence, not preference: the

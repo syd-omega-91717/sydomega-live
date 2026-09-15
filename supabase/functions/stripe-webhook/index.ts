@@ -1,29 +1,9 @@
 // SYD OMEGA 91717 -- Stripe Webhook receiver
 //
 // Activates, updates, or cancels member subscriptions in response to real
-// Stripe events. This is the missing half of the checkout flow: the checkout
-// Edge Function creates a Stripe session; this function listens for payment
-// confirmation and writes the result to public.profiles via apply_subscription().
-//
-// EVENTS HANDLED:
-//   checkout.session.completed   → payment successful, activate subscription
-//   customer.subscription.updated → renewal, upgrade, downgrade
-//   customer.subscription.deleted → cancellation / non-renewal
-//   invoice.payment_failed        → mark status 'past_due' to trigger gating
-//
-// SECURITY:
-//   - Validates Stripe-Signature header with the webhook signing secret.
-//   - Calls apply_subscription() which enforces service_role requirement server-side.
-//   - Never exposes database/Stripe error details to the webhook caller.
-//   - Fails closed when required payment secrets are absent.
-//   - Returns 200 for unhandled event types so Stripe doesn't retry them.
-//
-// ENV (Supabase secrets):
-//   STRIPE_WEBHOOK_SECRET   whsec_… from Stripe Dashboard → Webhooks
-//   STRIPE_SECRET_KEY       sk_… for authoritative subscription lookup when a
-//                           webhook payload contains only a subscription ID
-//   SUPABASE_URL             injected automatically
-//   SUPABASE_SERVICE_ROLE_KEY injected automatically
+// Stripe events. The existing Edge Function -> RPC architecture is preserved.
+// Stripe event IDs are passed to apply_subscription() so each event is
+// persisted and applied at most once transactionally.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
@@ -94,15 +74,20 @@ async function fetchStripeSubscription(subscriptionId: string): Promise<Record<s
   const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
   if (!stripeKey) return null;
 
-  const response = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`, {
-    headers: {
-      Authorization: `Bearer ${stripeKey}`,
-      "Stripe-Version": STRIPE_API_VERSION,
-    },
-  });
+  const response = await fetch(
+    `https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${stripeKey}`,
+        "Stripe-Version": STRIPE_API_VERSION,
+      },
+    }
+  );
   if (!response.ok) return null;
   const value = await response.json();
-  return value && typeof value === "object" ? value as Record<string, unknown> : null;
+  return value && typeof value === "object"
+    ? value as Record<string, unknown>
+    : null;
 }
 
 async function applySubscription(
@@ -113,6 +98,8 @@ async function applySubscription(
     status: string;
     periodEnd: string | null;
     customer: string | null;
+    eventId: string;
+    eventType: string;
   }
 ) {
   const { data: result, error } = await admin.rpc("apply_subscription", {
@@ -121,6 +108,8 @@ async function applySubscription(
     p_status: args.status,
     p_period_end: args.periodEnd,
     p_customer: args.customer,
+    p_event_id: args.eventId,
+    p_event_type: args.eventType,
   });
   if (error) {
     console.error("[stripe-webhook] apply_subscription failed:", error.message);
@@ -152,7 +141,10 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_json" }, 400);
   }
 
-  const eventType = event.type as string;
+  const eventId = typeof event.id === "string" ? event.id.trim() : "";
+  const eventType = typeof event.type === "string" ? event.type : "";
+  if (!eventId || !eventType) return json({ error: "invalid_event" }, 400);
+
   const data = event.data as { object: Record<string, unknown> };
   const obj = data?.object || {};
 
@@ -173,8 +165,6 @@ Deno.serve(async (req) => {
       }
 
       const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
-      // Stripe Checkout normally supplies only the subscription ID. Do not
-      // invent a 30-day period when the authoritative subscription can be read.
       const sub = subscriptionId ? await fetchStripeSubscription(subscriptionId) : null;
       const subPeriodEnd = periodEndSeconds(sub || obj.subscription);
       const periodEnd = subPeriodEnd !== null
@@ -190,6 +180,8 @@ Deno.serve(async (req) => {
         status: "active",
         periodEnd,
         customer,
+        eventId,
+        eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
@@ -217,6 +209,8 @@ Deno.serve(async (req) => {
         status,
         periodEnd,
         customer,
+        eventId,
+        eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
@@ -236,6 +230,8 @@ Deno.serve(async (req) => {
         status: "cancelled",
         periodEnd: null,
         customer,
+        eventId,
+        eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
@@ -263,6 +259,8 @@ Deno.serve(async (req) => {
           ? new Date(failedPeriodEnd * 1000).toISOString()
           : null,
         customer: typeof subData.customer === "string" ? subData.customer : null,
+        eventId,
+        eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });

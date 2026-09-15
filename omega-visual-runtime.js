@@ -30,6 +30,7 @@
   addSheet('omega-visual-runtime-css','omega-visual-universe.css');
   addSheet('omega-page-elevation-css','omega-page-elevation.css');
   addSheet('omega-world-design-system-css','omega-world-design-system.css');
+  addSheet('omega-spatial-system-css','omega-spatial-system.css');
   markRuntime();
   if(page!=='index') return;
   addSheet('omega-opening-system-css','omega-opening-system.css');

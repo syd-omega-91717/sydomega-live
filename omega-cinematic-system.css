@@ -1,3 +1,4 @@
+@import url('/omega-spatial-system.css');
 /* This sheet reaches every page through bg.js, so it must never REDEFINE a
    token another sheet already owns. It used to declare --omega-gold,
    --omega-void and --omega-line at :root with values that disagree with the

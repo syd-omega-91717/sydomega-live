@@ -14,6 +14,10 @@ import sys
 from datetime import date
 from pathlib import Path
 
+if "--help" in sys.argv:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 REGISTRY = Path("docs/capabilities/registry.json")
 MAX_DAYS = 7
 DATE_RE = re.compile(r"\b(20\d{2})-(\d{2})-(\d{2})\b")

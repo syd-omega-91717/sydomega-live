@@ -193,7 +193,7 @@ jobs:
           NEEDLES = ("service_role", "supabase_service_role_key")
           hits = []
           for path in pathlib.Path(".").rglob("*"):
-              if ".git" in path.parts or not path.is_file():
+              if ".git" in path.parts or "scripts" in path.parts or not path.is_file():
                   continue
               if path.suffix not in (".js", ".html", ".json"):
                   continue

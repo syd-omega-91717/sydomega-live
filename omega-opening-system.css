@@ -1,0 +1,22 @@
+/* Ω OPENING SYSTEM — restrained sovereign gateway for the existing index hero.
+   Additive only: it owns the new .omega-gateway-* layer and leaves the
+   existing sculpture/canvas, page layout, navigation and platform tokens alone.
+*/
+.omega-gateway{position:absolute;inset:0;z-index:8;display:grid;place-items:center;pointer-events:none;perspective:1200px;transform-style:preserve-3d;transition:transform .22s ease-out}
+.omega-gateway-field{position:absolute;inset:8% 6%;transform-style:preserve-3d;transform:translateZ(-90px);opacity:.9}
+.omega-gateway-field::before,.omega-gateway-field::after{content:"";position:absolute;border:1px solid rgba(201,168,76,.18);border-radius:50%;inset:12% 18%;transform:rotateX(67deg) rotateZ(-8deg);box-shadow:0 0 60px rgba(201,168,76,.045)}
+.omega-gateway-field::after{inset:24% 29%;border-color:rgba(0,229,255,.16);transform:rotateX(67deg) rotateZ(18deg);box-shadow:0 0 44px rgba(0,229,255,.035)}
+.omega-gateway-horizon{position:absolute;left:7%;right:7%;bottom:13%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.18) 20%,rgba(201,168,76,.62) 50%,rgba(0,229,255,.18) 80%,transparent);box-shadow:0 0 22px rgba(201,168,76,.12);transform:translateZ(-10px)}
+.omega-gateway-core{position:relative;width:min(25vw,270px);height:min(25vw,270px);min-width:180px;min-height:180px;display:grid;place-items:center;transform-style:preserve-3d;transform:translateZ(55px)}
+.omega-gateway-core::before{content:"";position:absolute;inset:4%;border:1px solid rgba(201,168,76,.42);border-radius:50%;box-shadow:0 0 45px rgba(201,168,76,.10),inset 0 0 36px rgba(0,229,255,.035)}
+.omega-gateway-core::after{content:"";position:absolute;inset:17%;border:1px solid rgba(0,229,255,.24);border-radius:50%;transform:rotateX(66deg) scaleY(.55);box-shadow:0 0 28px rgba(0,229,255,.08)}
+.omega-gateway-mark{position:relative;z-index:3;font-family:var(--D,"Cinzel Decorative",Georgia,serif);font-size:clamp(104px,12vw,170px);line-height:.8;font-weight:400;letter-spacing:-.08em;color:#F4D98E;text-shadow:0 0 16px rgba(247,224,160,.62),0 0 55px rgba(201,168,76,.24),0 12px 24px rgba(0,0,0,.45);transform:translateZ(70px)}
+.omega-gateway-mark::after{content:"";position:absolute;left:-25%;right:-25%;bottom:-30%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.7),rgba(0,229,255,.34),transparent);box-shadow:0 0 14px rgba(201,168,76,.24)}
+.omega-gateway-node{position:absolute;width:5px;height:5px;border-radius:50%;background:#E8C97A;box-shadow:0 0 14px rgba(232,201,122,.8);transform:translateZ(30px)}
+.omega-gateway-node:nth-child(1){left:9%;top:39%}.omega-gateway-node:nth-child(2){left:18%;top:68%;background:#00E5FF;box-shadow:0 0 14px rgba(0,229,255,.7)}.omega-gateway-node:nth-child(3){right:10%;top:42%}.omega-gateway-node:nth-child(4){right:19%;top:71%;background:#00E5FF;box-shadow:0 0 14px rgba(0,229,255,.7)}
+.omega-gateway-caption{position:absolute;bottom:3%;left:50%;transform:translateX(-50%) translateZ(28px);font-family:var(--M,"Courier Prime",monospace);font-size:9px;letter-spacing:.34em;color:rgba(232,201,122,.72);white-space:nowrap;text-transform:uppercase;text-shadow:0 0 12px rgba(201,168,76,.18)}
+.omega-gateway-code{position:absolute;top:8%;right:3%;font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:.26em;color:rgba(0,229,255,.45);writing-mode:vertical-rl;transform:translateZ(26px)}
+.omega-gateway-rule{position:absolute;top:10%;left:4%;width:15%;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.4),transparent);opacity:.7}
+@media(max-width:1080px){.omega-gateway-core{width:min(36vw,270px);height:min(36vw,270px)}}
+@media(max-width:700px){.omega-gateway{min-height:380px}.omega-gateway-core{width:62vw;height:62vw;min-width:165px;min-height:165px}.omega-gateway-mark{font-size:clamp(88px,25vw,132px)}.omega-gateway-caption{font-size:7px;letter-spacing:.22em}.omega-gateway-code{display:none}.omega-gateway-field{inset:10% 2%}}
+@media(prefers-reduced-motion:reduce){.omega-gateway{transition:none}}

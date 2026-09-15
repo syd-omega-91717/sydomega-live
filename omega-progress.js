@@ -1,52 +1,12 @@
 /* ============================================================================
    SYD OMEGA 91717 -- PROGRESSION BRIDGE
-
-   WHY THIS EXISTS
-   Audited across the platform: of the thirteen member-facing systems that write
-   real data, only FIVE advanced the matrix -- academy, gaming, exam,
-   contributions, publishing. The other eight (consultancy, marketplace, events,
-   research, social, travel, health, automation) let a member act, saved the
-   row, and moved nothing. Book a consultation, list an asset, create an event,
-   log a journey: the Order recorded it and the member's standing stayed
-   exactly where it was.
-
-   That is what "the systems do not operate with each other" means in practice.
-   The matrix is the spine; a system that never touches it is a limb with no
-   nerve.
-
-   WHAT THIS DOES
-   One shared call, so every system advances progression the same way instead
-   of each page re-implementing it:
-
-     OmegaProgress.record({kind:'events', task:'event:'+id,
-                           axis:'c', title:'Hosted a Gathering'});
-
-   AXIS SEMANTICS (canon: Knowledge A / Mastery B / Contribution C)
-     a  Knowledge      -- you learned or discovered something
-     b  Mastery        -- you demonstrated skill or discipline
-     c  Contribution   -- you gave something back to the Order
-
-   DEDUPLICATION
-   complete_task is keyed on (user, task), so passing a stable task id means an
-   action counts once no matter how many times the page is re-submitted. Callers
-   should include the row id in the task string.
-
-   WEIGHT
-   Defaults to 0.12 -- roughly half the 0.25 used by academy/gaming, because
-   these are lighter single actions rather than completing a discipline or
-   clearing a game stage. Progression stays meaningful; it does not become
-   confetti.
-
-   FEEDBACK
-   Shows a brief, honest confirmation of what actually moved. If the RPC fails
-   the member is never shown a false advance.
    ============================================================================ */
 (function () {
   'use strict';
   if (window.OmegaProgress) return;
 
   var AXIS_NAME = { a: 'KNOWLEDGE', b: 'MASTERY', c: 'CONTRIBUTION' };
-  var AXIS_COL  = { a: '#00E5FF',   b: '#C9A84C', c: '#3fb27f' };
+  var AXIS_COL  = { a: '#00E5FF', b: '#C9A84C', c: '#3fb27f' };
 
   function styles() {
     if (document.getElementById('omp-css')) return;
@@ -73,10 +33,27 @@
       var el = document.createElement('div');
       el.className = 'omp-toast';
       var col = AXIS_COL[axis] || '#C9A84C';
-      el.innerHTML = '<span class="omp-dot" style="background:' + col + '"></span>'
-        + '<span><span class="omp-axis" style="color:' + col + '">'
-        + (AXIS_NAME[axis] || 'MATRIX') + ' +' + Number(delta).toFixed(2) + '</span>'
-        + (title ? ' &middot; ' + String(title).replace(/[<>]/g, '') : '') + '</span>';
+
+      var dot = document.createElement('span');
+      dot.className = 'omp-dot';
+      dot.style.background = col;
+
+      var body = document.createElement('span');
+      var axisEl = document.createElement('span');
+      axisEl.className = 'omp-axis';
+      axisEl.style.color = col;
+      axisEl.textContent = (AXIS_NAME[axis] || 'MATRIX') + ' +' + Number(delta).toFixed(2);
+      body.appendChild(axisEl);
+
+      if (title) {
+        body.appendChild(document.createTextNode(' · '));
+        var titleEl = document.createElement('span');
+        titleEl.textContent = String(title);
+        body.appendChild(titleEl);
+      }
+
+      el.appendChild(dot);
+      el.appendChild(body);
       document.body.appendChild(el);
       requestAnimationFrame(function () { el.classList.add('on'); });
       setTimeout(function () {
@@ -94,9 +71,6 @@
     });
   }
 
-  /* Returns a promise resolving to {applied:boolean, ...}. Never rejects, and
-     never blocks the caller's own save -- progression is a consequence of the
-     action, not a precondition for it. */
   function record(opts) {
     opts = opts || {};
     var axis = String(opts.axis || 'a').toLowerCase();
@@ -112,15 +86,14 @@
       return sb.auth.getSession().then(function (r) {
         if (!r || !r.data || !r.data.session) return { applied: false, error: 'signed out' };
         return sb.rpc('complete_task', {
-          p_task_type:  String(opts.kind),
-          p_task_name:  String(opts.task),
-          p_axis_type:  axis,
+          p_task_type: String(opts.kind),
+          p_task_name: String(opts.task),
+          p_axis_type: axis,
           p_description: opts.title || null,
           p_points: weight
         }).then(function (res) {
           if (res.error) throw res.error;
           var d = res.data || {};
-          /* only celebrate a real advance -- a repeat action applies nothing */
           if (d.applied && !silent) toast(axis, opts.title, weight);
           return d;
         });

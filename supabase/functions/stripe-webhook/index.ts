@@ -1,17 +1,8 @@
 // SYD OMEGA 91717 -- Stripe Webhook receiver
-//
-// Activates, updates, or cancels member subscriptions in response to real
-// Stripe events. The existing Edge Function -> RPC architecture is preserved.
-// Stripe event IDs are passed to apply_subscription() so each event is
-// persisted and applied at most once transactionally.
-
+// Existing Edge Function -> RPC architecture preserved.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
-const json = (b: unknown, s = 200) =>
-  new Response(JSON.stringify(b), {
-    status: s,
-    headers: { "Content-Type": "application/json" },
-  });
+const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "Content-Type": "application/json" } });
 
 async function verifyStripeSignature(payload: string, sigHeader: string, secret: string): Promise<boolean> {
   let timestamp = "";
@@ -29,18 +20,10 @@ async function verifyStripeSignature(payload: string, sigHeader: string, secret:
   if (!Number.isFinite(timestampSeconds)) return false;
   const age = Date.now() / 1000 - timestampSeconds;
   if (age > 300 || age < -300) return false;
-
   const signedPayload = `${timestamp}.${payload}`;
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signedPayload));
   const computed = Array.from(new Uint8Array(signature)).map((b) => b.toString(16).padStart(2, "0")).join("");
-
   return signatures.some((candidate) => {
     if (computed.length !== candidate.length) return false;
     let mismatch = 0;
@@ -63,35 +46,33 @@ function periodEndSeconds(subLike: unknown): number | null {
 }
 
 const STRIPE_API_VERSION = "2025-02-24.acacia";
+const STRIPE_LOOKUP_TIMEOUT_MS = 8_000;
 
 async function fetchStripeSubscription(subscriptionId: string): Promise<Record<string, unknown> | null> {
   const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
   if (!stripeKey) return null;
-  const response = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`, {
-    headers: { Authorization: `Bearer ${stripeKey}`, "Stripe-Version": STRIPE_API_VERSION },
-  });
-  if (!response.ok) return null;
-  const value = await response.json();
-  return value && typeof value === "object" ? value as Record<string, unknown> : null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), STRIPE_LOOKUP_TIMEOUT_MS);
+  try {
+    const response = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`, {
+      headers: { Authorization: `Bearer ${stripeKey}`, "Stripe-Version": STRIPE_API_VERSION },
+      signal: controller.signal,
+    });
+    if (!response.ok) return null;
+    const value = await response.json();
+    return value && typeof value === "object" ? value as Record<string, unknown> : null;
+  } catch (error) {
+    console.error("[stripe-webhook] Stripe subscription lookup failed:", error instanceof Error ? error.name : "unknown");
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
-async function applySubscription(admin: ReturnType<typeof createClient>, args: {
-  uid: string;
-  tier: string | null;
-  status: string;
-  periodEnd: string | null;
-  customer: string | null;
-  eventId: string;
-  eventType: string;
-}) {
+async function applySubscription(admin: ReturnType<typeof createClient>, args: { uid: string; tier: string | null; status: string; periodEnd: string | null; customer: string | null; eventId: string; eventType: string }) {
   const { data: result, error } = await admin.rpc("apply_subscription", {
-    p_uid: args.uid,
-    p_tier: args.tier,
-    p_status: args.status,
-    p_period_end: args.periodEnd,
-    p_customer: args.customer,
-    p_event_id: args.eventId,
-    p_event_type: args.eventType,
+    p_uid: args.uid, p_tier: args.tier, p_status: args.status, p_period_end: args.periodEnd,
+    p_customer: args.customer, p_event_id: args.eventId, p_event_type: args.eventType,
   });
   if (error) {
     console.error("[stripe-webhook] apply_subscription failed:", error.message);
@@ -107,30 +88,21 @@ async function applySubscription(admin: ReturnType<typeof createClient>, args: {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok");
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
-
   const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
   if (!secret) {
     console.error("[stripe-webhook] STRIPE_WEBHOOK_SECRET is not configured; refusing webhook.");
     return json({ error: "webhook_not_configured" }, 503);
   }
-
   const sigHeader = req.headers.get("stripe-signature") || "";
   const rawBody = await req.text();
   if (!(await verifyStripeSignature(rawBody, sigHeader, secret))) return json({ error: "invalid_signature" }, 400);
-
   let event: Record<string, unknown>;
-  try {
-    event = JSON.parse(rawBody);
-  } catch {
-    return json({ error: "invalid_json" }, 400);
-  }
-
+  try { event = JSON.parse(rawBody); } catch { return json({ error: "invalid_json" }, 400); }
   const eventId = typeof event.id === "string" ? event.id.trim() : "";
   const eventType = typeof event.type === "string" ? event.type : "";
-  if (!eventId || !eventType) return json({ error: "invalid_event" }, 400);
-
-  const data = event.data as { object: Record<string, unknown> };
-  const obj = data?.object || {};
+  const data = event.data as { object?: Record<string, unknown> } | undefined;
+  const obj = data?.object;
+  if (!eventId || !eventType || !obj || typeof obj !== "object") return json({ error: "invalid_event" }, 400);
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl || !serviceKey) {
@@ -138,16 +110,12 @@ Deno.serve(async (req) => {
     return json({ error: "webhook_not_configured" }, 503);
   }
   const admin = createClient(supabaseUrl, serviceKey);
-
   try {
     if (eventType === "checkout.session.completed") {
       const { uid, tier } = extractMetadata(obj);
       if (!uid || !tier) return json({ received: true, skipped: "missing_metadata" });
-
       const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
       const sub = subscriptionId ? await fetchStripeSubscription(subscriptionId) : null;
-      // A subscription ID means Stripe is the authoritative entitlement source.
-      // Never grant active access when that authoritative lookup fails.
       if (subscriptionId && !sub) {
         console.error("[stripe-webhook] subscription lookup failed for checkout.session.completed");
         return json({ error: "stripe_lookup_failed" }, 503);
@@ -158,16 +126,11 @@ Deno.serve(async (req) => {
       const applied = await applySubscription(admin, {
         uid,
         tier: sub?.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
-        status: "active",
-        periodEnd,
-        customer,
-        eventId,
-        eventType,
+        status: "active", periodEnd, customer, eventId, eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
-
     if (eventType === "customer.subscription.updated") {
       const { uid, tier } = extractMetadata(obj);
       if (!uid) return json({ received: true, skipped: "missing_uid" });
@@ -180,7 +143,6 @@ Deno.serve(async (req) => {
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
-
     if (eventType === "customer.subscription.deleted") {
       const { uid } = extractMetadata(obj);
       if (!uid) return json({ received: true, skipped: "missing_uid" });
@@ -189,7 +151,6 @@ Deno.serve(async (req) => {
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
-
     if (eventType === "invoice.payment_failed") {
       const subId = typeof obj.subscription === "string" ? obj.subscription : null;
       if (!subId) return json({ received: true, skipped: "no_subscription" });
@@ -203,18 +164,13 @@ Deno.serve(async (req) => {
       const failedPeriodEnd = periodEndSeconds(subData);
       const meta = (subData.metadata as Record<string, string>) || {};
       const applied = await applySubscription(admin, {
-        uid,
-        tier: meta.tier || null,
-        status: "past_due",
+        uid, tier: meta.tier || null, status: "past_due",
         periodEnd: failedPeriodEnd !== null ? new Date(failedPeriodEnd * 1000).toISOString() : null,
-        customer: typeof subData.customer === "string" ? subData.customer : null,
-        eventId,
-        eventType,
+        customer: typeof subData.customer === "string" ? subData.customer : null, eventId, eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
-
     return json({ received: true, event: eventType, handled: false });
   } catch (e) {
     console.error("[stripe-webhook] unhandled error:", e instanceof Error ? e.message : "unknown error");

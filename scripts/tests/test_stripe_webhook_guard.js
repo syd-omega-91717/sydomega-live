@@ -17,6 +17,7 @@ assert.match(source, /p_event_type: args\.eventType/, 'webhook must pass event t
 
 assert.match(source, /typeof obj\.subscription === "string"/, 'checkout webhook must recognize subscription IDs');
 assert.match(source, /fetchStripeSubscription\(subscriptionId\)/, 'checkout webhook must resolve authoritative subscription data');
+assert.match(source, /if \(subscriptionId && !sub\)\s*\{[\s\S]*?return json\(\{ error: "stripe_lookup_failed" \}, 503\);/, 'checkout must fail closed when its authoritative subscription lookup fails');
 assert.doesNotMatch(source, /Date\.now\(\) \+ 30 \* 24 \* 3600 \* 1000/, 'webhook must not invent a 30-day entitlement');
 
 assert.match(source, /result\)\.ok !== true/, 'webhook must reject a non-success RPC result');

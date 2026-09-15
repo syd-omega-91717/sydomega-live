@@ -39,12 +39,13 @@ class SpatialVisualContractTests(unittest.TestCase):
         self.assertIn("omega-gateway-core", opening)
         self.assertIn("omega-gateway-mark", opening)
         self.assertIn("omega-gateway-floor", opening)
+        self.assertIn("omega-nexus-drift-a", opening)
         self.assertIn("preserve-3d", opening)
         self.assertIn("IS_INDEX", genesis)
         self.assertIn("if (!IS_INDEX) atmosphere();", genesis)
         self.assertNotIn("rotateY(360deg)", runtime)
         self.assertNotIn("omegaGenesisOrbit", runtime)
-        self.assertNotIn("animation:omega", opening)
+        self.assertNotIn("omegaGenesisSpin", opening)
 
     def test_opening_keeps_existing_sculpture_mount(self):
         index = (ROOT / "index.html").read_text()

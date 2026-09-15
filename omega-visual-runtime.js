@@ -29,6 +29,7 @@
   root.style.setProperty('--omega-leading','1.62');
   addSheet('omega-visual-runtime-css','omega-visual-universe.css');
   addSheet('omega-page-elevation-css','omega-page-elevation.css');
+  addSheet('omega-world-design-system-css','omega-world-design-system.css');
   markRuntime();
   if(page!=='index') return;
   addSheet('omega-opening-system-css','omega-opening-system.css');

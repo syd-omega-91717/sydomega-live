@@ -19,6 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Checkout exact release source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify non-conflict release contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release-contract-audit.py
+
       - name: Wait for Vercel production propagation
         if: github.event_name == 'push'
         shell: bash

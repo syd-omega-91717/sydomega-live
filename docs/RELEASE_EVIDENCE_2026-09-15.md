@@ -8,7 +8,7 @@ This file records observed release evidence without converting incomplete eviden
 
 - Repository: `syd-omega-91717/sydomega-live`
 - Default branch: `main`
-- Latest source SHA reviewed: `ecbc8919419352053f56f258d7dbea9742e00783`
+- Latest source SHA reviewed: `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`
 - Current architecture: framework-free static delivery through Vercel with Supabase as the production backend.
 - The release-contract audit distinguishes repository-contract PASS from live provider/runtime verification.
 - The release contract scans shipped source and generated `public/` output for non-canonical Supabase endpoints and checks shipped web files for privileged credential patterns.
@@ -22,7 +22,7 @@ The first Production Smoke run for commit `080f8347d1656b4c40d62834dd1727cace431
 1. `.mcp.json` was incorrectly classified as shipped source because it contains the legitimate `https://mcp.supabase.com/mcp` control-plane endpoint.
 2. The canonical present-concept document did not contain the exact invariant phrase `framework-free static architecture`, even though it described the same architecture semantically.
 
-These were corrected additively in commits `66cc7f1db1c6fe15a27a59cd61b9fd7a4516f7a1` and `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58`. The release audit then returned **zero errors / zero warnings** on the new production-smoke run.
+These were corrected additively in commits `66cc7f1db1c6fe15a27a59cd61b9fd7a4516f7a1` and `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58`. The release audit then returned **zero errors / zero warnings** on the production-smoke run.
 
 ## Free-tier password-breach compensating control
 
@@ -33,6 +33,7 @@ Commit `ecbc8919419352053f56f258d7dbea9742e00783` adds:
 - `docs/security/PASSWORD_BREACH_COMPENSATING_CONTROL.md` — records the threat model, privacy boundary, failure semantics and closure criteria.
 - `scripts/tests/test_omega_password_guard.js` — deterministic checks for strength validation, five-character HIBP k-anonymity requests, positive compromised-password detection, clean results and unavailable-service semantics.
 - The existing `omega-password-guard.js` remains the shared browser-side control for the account and password-recovery password-setting paths.
+- Commit `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` fixes the regression test's Node `vm` cross-realm assertion behavior without weakening the assertions.
 
 The control uses the HIBP Pwned Passwords range model: the browser hashes locally, sends only the first five SHA-1 characters, and compares returned suffixes locally. The full password is not sent to HIBP. This is a **compensating control, not an equivalent replacement for Supabase's server-side Auth feature**. Direct callers of Supabase Auth can bypass a browser-only control.
 
@@ -43,22 +44,56 @@ Accordingly:
 - No SQL, RLS policy, application flag, or documentation may represent the provider finding as fixed.
 - The project does not need to purchase Pro solely to obtain a truthful repository-side password-breach control, unless server-side enforcement against direct Auth callers becomes a required business/security policy.
 
-## Observed live deployment signal
+## Current GitHub Actions and deployment evidence
 
-The Vercel status for source SHA `ecbc8919419352053f56f258d7dbea9742e00783` reports **success** and `Deployment has completed`.
+A fresh push-triggered verification set for the current `main` SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` completed successfully on 2026-09-15. The observed runs include:
 
-The preceding production-smoke release `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58` established the following observed front-door evidence on 2026-09-15:
+- CI run `34940165487` — **success**.
+- Capability Evidence run `34940165617` — **success**.
+- Repository Integrity run `34940165486` — **success**.
+- Production Contract run `34940165651` — **success**.
+- Omega Release Readiness run `34940165623` — **success**.
+- Supabase Runtime Contract run `34940165553` — **success**.
+- Production Smoke run `34940165539` — **success**.
+- Production Surface Verification run `34940165661` — **success**.
+- Vercel Production run `34940165662` — **success**.
 
-- `https://sydomega.com/healthz.html` returned **HTTP 200** with a non-empty response.
-- `https://www.sydomega.com/healthz.html` returned **HTTP 200** with a non-empty response.
-- `https://sydomega.com/` returned **HTTP 200** with HTML.
-- `https://www.sydomega.com/` returned **HTTP 200** with HTML.
-- The production smoke gate reported `PRODUCTION_SMOKE=PASS`.
-- Canonical Supabase Auth transport returned **HTTP 401**.
-- Canonical Supabase REST transport returned **HTTP 401**.
-- The Supabase smoke gate reported `SUPABASE_ENDPOINT=REACHABLE`; the check treats 5xx as failure, so 401 is interpreted as a reachable authenticated boundary rather than successful unauthenticated application access.
+The CI run includes the password-breach guard regression test and the repository's broader architecture, security, migration, capability, reachability, commerce, resilience, credential-scan and configuration contracts. The Capability Evidence run completed its headless capability-entrypoint runtime audit. The Repository Integrity run completed the production artifact build and emitted-artifact validation.
 
-The new Vercel deployment is confirmed complete, but the new SHA must still receive its own full production-smoke workflow evidence before that evidence is promoted to a current release gate.
+## Current production smoke evidence
+
+Production Smoke run `34940165539` checked out the exact current SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`.
+
+The release-contract audit returned:
+
+- architecture: `current framework-free static + Vercel + Supabase`
+- errors: `0`
+- warnings: `0`
+- `RELEASE_CONTRACT=PASS`
+
+Vercel propagation checks observed:
+
+- `https://sydomega.com/healthz.html` — HTTP **200**, 991 bytes.
+- `https://www.sydomega.com/healthz.html` — HTTP **200**, 991 bytes.
+- `VERCEL_PROPAGATION=READY`
+
+Production HTTP smoke observed:
+
+- `https://sydomega.com/` — HTTP **200**, HTML.
+- `https://www.sydomega.com/` — HTTP **200**, HTML.
+- `https://sydomega.com/healthz.html` — HTTP **200**, HTML.
+- `https://www.sydomega.com/healthz.html` — HTTP **200**, HTML.
+- `PRODUCTION_SMOKE=PASS`
+
+Canonical Supabase transport observed:
+
+- `https://ydqhzvvoyufiiqvzcjns.supabase.co/auth/v1/health` — HTTP **401**.
+- `https://ydqhzvvoyufiiqvzcjns.supabase.co/rest/v1/` — HTTP **401**.
+- `SUPABASE_ENDPOINT=REACHABLE`.
+
+The smoke gate treats 5xx responses as failure; HTTP 401 is interpreted as a reachable authenticated boundary, not successful unauthenticated application access.
+
+The separate Production Surface Verification workflow for the same SHA also completed successfully. It independently verified the configured production site, Supabase Auth transport and security headers when the site was reachable.
 
 ## Current security state
 
@@ -79,7 +114,7 @@ The capability-evidence freshness gate detects stale evidence that is incorrectl
 The following remain open until directly exercised and recorded with sufficient evidence:
 
 - Supabase Security Advisor = zero warnings. **This remains provider-plan dependent while the project is on Free.**
-- Current RLS regression state against the live database.
+- Current live RLS regression state against the live database.
 - Authentication/MFA/RBAC end-to-end flows.
 - Stripe checkout, signed webhook, entitlement lifecycle and idempotency.
 - Backup/restore exercise.
@@ -102,4 +137,4 @@ No completion claim is made for an item above until appropriate evidence exists.
 
 The current evidence supports this narrower statement:
 
-> The current `main` commit `ecbc8919419352053f56f258d7dbea9742e00783` has been successfully deployed by Vercel and adds a tested/documented Free-tier password-breach compensating control without claiming to resolve Supabase's provider-level Security Advisor warning. The previous release has a passing repository release contract and successful production smoke verification of both custom-domain front doors, both health endpoints, and the canonical Supabase transport boundaries. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.
+> The current `main` commit `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` has a fresh green GitHub verification set, a successful Vercel Production workflow, and a successful production smoke that directly observed both custom-domain front doors, both health endpoints, and the canonical Supabase transport boundaries. The password-breach compensating control is tested and documented without claiming to resolve Supabase's provider-level Security Advisor warning. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.

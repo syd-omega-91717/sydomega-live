@@ -35,23 +35,26 @@ function addMount(file,realm){
 }
 function addNavigationEntries(){
   let src=read(navFile);
-  const requiredPaths=['/characters.html','/movies.html'];
-  for(const p of requiredPaths){
-    if(!src.includes(p)){
-      const mediaMarker="['cinema','CINEMA','/cinema.html']";
-      const at=src.indexOf(mediaMarker);
-      if(at<0) throw new Error('nav.js has no canonical cinema navigation anchor; refusing unsafe edit');
-      const end=at+mediaMarker.length;
-      const entry=p==='/characters.html' ? ",[\'characters\',\'CHARACTERS\',\'/characters.html\']" : ",[\'movies\',\'MOVIES\',\'/movies.html\']";
-      src=src.slice(0,end)+entry+src.slice(end);
-    }
-  }
-  // nav.js PS is a page-to-section map, not a page-to-path map.
-  // Keep characters in ARCHIVE and movies in MEDIA, matching the canonical IA.
+  // nav.js contains a page-to-section PS map and a separate SECTIONS IA.
+  // Characters and movies are added only to the correct structures.
   if(!src.includes("characters:'archive'")){
     const marker="cinema:'media'";
     if(!src.includes(marker)) throw new Error('nav.js has no canonical cinema PS entry; refusing unsafe edit');
     src=src.replace(marker,marker+",characters:'archive',movies:'media'");
+  }
+  const archiveAnchor="['character','CHARACTER','/profile.html#character']";
+  if(!src.includes("['characters','CHARACTERS','/characters.html']")){
+    const at=src.indexOf(archiveAnchor);
+    if(at<0) throw new Error('nav.js has no canonical identity navigation anchor; refusing unsafe edit');
+    const end=at+archiveAnchor.length;
+    src=src.slice(0,end)+",['characters','CHARACTERS','/characters.html']"+src.slice(end);
+  }
+  const mediaAnchor="['cinema','CINEMA & SAGA','/media.html']";
+  if(!src.includes("['movies','MOVIES','/movies.html']")){
+    const at=src.indexOf(mediaAnchor);
+    if(at<0) throw new Error('nav.js has no canonical universe navigation anchor; refusing unsafe edit');
+    const end=at+mediaAnchor.length;
+    src=src.slice(0,end)+",['movies','MOVIES','/movies.html']"+src.slice(end);
   }
   write(navFile,src);
   return true;

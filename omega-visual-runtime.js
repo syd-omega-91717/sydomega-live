@@ -47,6 +47,7 @@
     if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;
     mount.dataset.omegaGatewayInstalled='1';
     mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional gateway');
+    mount.setAttribute('data-sculpt-label','Omega signet dimensional architecture with restrained orbital depth');
 
     var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var scene=document.createElement('div');

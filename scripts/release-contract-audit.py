@@ -80,19 +80,20 @@ for header in (
 for required in ("index.html", "healthz.html", "bg.js", "nav.js"):
     require_file(required)
 
-# 5. Detect Supabase endpoint drift in source and generated web output.
-# Documentation, tests, and repository-only agent/CI instructions may contain
-# historical/example provider hosts; they are not browser-delivered source.
-# The public directory is deliberately included: it is the actual Vercel
-# output and must not drift.
+# 5. Detect Supabase endpoint drift in shipped source and generated web output.
+# Documentation, tests, repository-only agent/CI instructions, and local MCP
+# configuration may legitimately reference provider control-plane endpoints;
+# they are not browser-delivered production source. The public directory is
+# deliberately included because it is the actual Vercel output.
 canonical_host = "ydqhzvvoyufiiqvzcjns.supabase.co"
 supabase_host_re = re.compile(r"https://([a-z0-9-]+\.supabase\.co)", re.I)
 source_extensions = {".html", ".js", ".css", ".json", ".yml", ".yaml", ".sql", ".sh", ".ts", ".tsx"}
 non_shipped_parts = {".git", "node_modules", "docs", "tests", ".claude", ".github"}
+non_shipped_files = {".mcp.json"}
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in source_extensions:
         continue
-    if any(part in non_shipped_parts for part in path.parts):
+    if path.name in non_shipped_files or any(part in non_shipped_parts for part in path.parts):
         continue
     try:
         body = path.read_text(encoding="utf-8", errors="ignore")

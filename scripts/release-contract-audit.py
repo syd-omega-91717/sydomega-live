@@ -2,7 +2,7 @@
 """
 Ω SYD OMEGA 91717 — non-conflict release contract audit.
 
-Source-only release guard. It does not replace browser/runtime/provider
+Source/build-output release guard. It does not replace browser/runtime/provider
 verification. It protects the current production architecture from accidental
 rewrites, missing front-door assets, security-header regressions, stale
 Supabase endpoints, and browser exposure of privileged credentials.
@@ -76,15 +76,17 @@ for header in (
 for required in ("index.html", "healthz.html", "bg.js", "nav.js"):
     require_file(required)
 
-# 5. Detect Supabase endpoint drift without inventing a list of historical IDs.
-# Documentation is excluded because it intentionally records historical state.
+# 5. Detect Supabase endpoint drift in both source and generated web output.
+# Documentation and tests are excluded because they intentionally record or
+# exercise historical/fixture state. The public directory is deliberately
+# included: it is the actual Vercel-delivered build output and must not drift.
 canonical_host = "ydqhzvvoyufiiqvzcjns.supabase.co"
 supabase_host_re = re.compile(r"https://([a-z0-9-]+\.supabase\.co)", re.I)
 source_extensions = {".html", ".js", ".css", ".json", ".yml", ".yaml", ".sql", ".sh", ".ts", ".tsx"}
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in source_extensions:
         continue
-    if any(part in {".git", "node_modules", "public", "docs", "tests"} for part in path.parts):
+    if any(part in {".git", "node_modules", "docs", "tests"} for part in path.parts):
         continue
     try:
         body = path.read_text(encoding="utf-8", errors="ignore")
@@ -148,4 +150,4 @@ if errors:
     raise SystemExit(1)
 
 print("RELEASE_CONTRACT=PASS")
-print("NOTE: PASS means source contracts are intact; it does not certify live provider/runtime behavior.")
+print("NOTE: PASS means source/build-output contracts are intact; it does not certify live provider/runtime behavior.")

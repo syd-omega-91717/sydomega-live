@@ -13,25 +13,17 @@
 //
 // SECURITY:
 //   - Validates Stripe-Signature header with the webhook signing secret.
-//     Without this check, any HTTP call could fake a payment.
 //   - Calls apply_subscription() which enforces service_role requirement server-side.
+//   - Never exposes database/Stripe error details to the webhook caller.
+//   - Fails closed when required payment secrets are absent.
 //   - Returns 200 for unhandled event types so Stripe doesn't retry them.
 //
 // ENV (Supabase secrets):
 //   STRIPE_WEBHOOK_SECRET   whsec_… from Stripe Dashboard → Webhooks
-//   SUPABASE_URL            injected automatically
-//   SUPABASE_SERVICE_ROLE_KEY  injected automatically (needed to call apply_subscription)
-//
-// DEPLOY:
-//   supabase functions deploy stripe-webhook --no-verify-jwt
-//
-// STRIPE DASHBOARD SETUP:
-//   Webhooks → Add endpoint → https://<project>.supabase.co/functions/v1/stripe-webhook
-//   Events to listen for (minimum):
-//     checkout.session.completed
-//     customer.subscription.updated
-//     customer.subscription.deleted
-//     invoice.payment_failed
+//   STRIPE_SECRET_KEY       sk_… for authoritative subscription lookup when a
+//                           webhook payload contains only a subscription ID
+//   SUPABASE_URL             injected automatically
+//   SUPABASE_SERVICE_ROLE_KEY injected automatically
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
@@ -41,9 +33,6 @@ const json = (b: unknown, s = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 
-// Stripe signature verification using the Web Crypto API (no Node.js crypto
-// module available in Deno Edge Functions). Follows the Stripe webhook signature
-// verification spec: https://stripe.com/docs/webhooks/signatures
 async function verifyStripeSignature(
   payload: string,
   sigHeader: string,
@@ -56,8 +45,6 @@ async function verifyStripeSignature(
   const sig = parts["v1"];
   if (!timestamp || !sig) return false;
 
-  // Guard against replay attacks: reject webhooks older than 5 minutes.
-  // Future timestamps are also rejected to avoid accepting malformed signatures.
   const timestampSeconds = Number(timestamp);
   if (!Number.isFinite(timestampSeconds)) return false;
   const age = Date.now() / 1000 - timestampSeconds;
@@ -80,7 +67,6 @@ async function verifyStripeSignature(
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  // Constant-time comparison to prevent timing attacks
   if (computed.length !== sig.length) return false;
   let mismatch = 0;
   for (let i = 0; i < computed.length; i++) {
@@ -89,25 +75,11 @@ async function verifyStripeSignature(
   return mismatch === 0;
 }
 
-// Extract the Supabase user ID and tier from Stripe metadata.
-// The checkout function writes both as metadata on the session and
-// on the subscription_data, so both paths are available.
 function extractMetadata(obj: Record<string, unknown>): { uid: string | null; tier: string | null } {
   const meta = (obj.metadata as Record<string, string>) || {};
-  return {
-    uid: meta["uid"] || null,
-    tier: meta["tier"] || null,
-  };
+  return { uid: meta["uid"] || null, tier: meta["tier"] || null };
 }
 
-// Stripe moved `current_period_end` off the Subscription object and onto its
-// items in API version 2025-03-31.basil. Three call sites here read it, and
-// two of them read it from the INBOUND webhook payload, whose version is a
-// dashboard setting on the endpoint -- not something this repo can pin. So
-// rather than depend on a version we cannot control, read both shapes: the
-// pre-basil top-level field, then the basil per-item field. Returns the unix
-// seconds value, or null when neither shape carries one, so each call site
-// keeps its own fallback behaviour.
 function periodEndSeconds(subLike: unknown): number | null {
   const s = (subLike || {}) as Record<string, unknown>;
   const top = s["current_period_end"];
@@ -116,13 +88,46 @@ function periodEndSeconds(subLike: unknown): number | null {
   return typeof item === "number" ? item : null;
 }
 
-// Pinned deliberately. Without this header Stripe applies the ACCOUNT default
-// version, which moves when Stripe migrates the account or someone clicks
-// upgrade in the dashboard -- changing payload shapes under code that never
-// changed. 2025-02-24.acacia is the last version before basil's subscription
-// reshape, matching what this file was written against; periodEndSeconds()
-// above keeps it correct even if that ever changes again.
 const STRIPE_API_VERSION = "2025-02-24.acacia";
+
+async function fetchStripeSubscription(subscriptionId: string): Promise<Record<string, unknown> | null> {
+  const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!stripeKey) return null;
+
+  const response = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`, {
+    headers: {
+      Authorization: `Bearer ${stripeKey}`,
+      "Stripe-Version": STRIPE_API_VERSION,
+    },
+  });
+  if (!response.ok) return null;
+  const value = await response.json();
+  return value && typeof value === "object" ? value as Record<string, unknown> : null;
+}
+
+async function applySubscription(
+  admin: ReturnType<typeof createClient>,
+  args: {
+    uid: string;
+    tier: string | null;
+    status: string;
+    periodEnd: string | null;
+    customer: string | null;
+  }
+) {
+  const { data: result, error } = await admin.rpc("apply_subscription", {
+    p_uid: args.uid,
+    p_tier: args.tier,
+    p_status: args.status,
+    p_period_end: args.periodEnd,
+    p_customer: args.customer,
+  });
+  if (error) {
+    console.error("[stripe-webhook] apply_subscription failed:", error.message);
+    return { ok: false as const };
+  }
+  return { ok: true as const, result };
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok");
@@ -130,18 +135,15 @@ Deno.serve(async (req) => {
 
   const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
   if (!secret) {
-    // Fail closed. A webhook endpoint without its signing secret must never
-    // acknowledge a payment event because that would allow Stripe retries to
-    // stop while no authenticated event could be accepted.
     console.error("[stripe-webhook] STRIPE_WEBHOOK_SECRET is not configured; refusing webhook.");
     return json({ error: "webhook_not_configured" }, 503);
   }
 
   const sigHeader = req.headers.get("stripe-signature") || "";
   const rawBody = await req.text();
-
-  const valid = await verifyStripeSignature(rawBody, sigHeader, secret);
-  if (!valid) return json({ error: "invalid_signature" }, 400);
+  if (!(await verifyStripeSignature(rawBody, sigHeader, secret))) {
+    return json({ error: "invalid_signature" }, 400);
+  }
 
   let event: Record<string, unknown>;
   try {
@@ -154,49 +156,45 @@ Deno.serve(async (req) => {
   const data = event.data as { object: Record<string, unknown> };
   const obj = data?.object || {};
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceKey) {
+    console.error("[stripe-webhook] Supabase server credentials are not configured.");
+    return json({ error: "webhook_not_configured" }, 503);
+  }
   const admin = createClient(supabaseUrl, serviceKey);
 
   try {
-    // ── checkout.session.completed ─────────────────────────────────────────
-    // Member paid; activate their subscription immediately.
     if (eventType === "checkout.session.completed") {
       const { uid, tier } = extractMetadata(obj);
       if (!uid || !tier) {
-        console.warn("[stripe-webhook] checkout.session.completed: missing uid/tier in metadata", obj.metadata);
+        console.warn("[stripe-webhook] checkout.session.completed: missing uid/tier metadata");
         return json({ received: true, skipped: "missing_metadata" });
       }
 
-      // period_end comes from the subscription object embedded in the session
-      // when mode=subscription. Fall back to now+30 days if absent.
-      const sub = obj.subscription as Record<string, unknown> | null;
-      const subPeriodEnd = periodEndSeconds(sub);
+      const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
+      // Stripe Checkout normally supplies only the subscription ID. Do not
+      // invent a 30-day period when the authoritative subscription can be read.
+      const sub = subscriptionId ? await fetchStripeSubscription(subscriptionId) : null;
+      const subPeriodEnd = periodEndSeconds(sub || obj.subscription);
       const periodEnd = subPeriodEnd !== null
         ? new Date(subPeriodEnd * 1000).toISOString()
-        : new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
+        : null;
+      const customer = typeof obj.customer === "string" ? obj.customer : null;
 
-      const customer = (obj.customer as string) || null;
-
-      const { data: result, error } = await admin.rpc("apply_subscription", {
-        p_uid: uid,
-        p_tier: tier,
-        p_status: "active",
-        p_period_end: periodEnd,
-        p_customer: customer,
+      const applied = await applySubscription(admin, {
+        uid,
+        tier: sub?.metadata && typeof sub.metadata === "object"
+          ? ((sub.metadata as Record<string, string>).tier || tier)
+          : tier,
+        status: "active",
+        periodEnd,
+        customer,
       });
-
-      if (error) {
-        console.error("[stripe-webhook] apply_subscription failed:", error);
-        return json({ error: "db_error", detail: error.message }, 500);
-      }
-
-      console.log("[stripe-webhook] checkout.session.completed applied:", result);
-      return json({ received: true, event: eventType, result });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, result: applied.result });
     }
 
-    // ── customer.subscription.updated ────────────────────────────────────
-    // Renewal, plan change, trial end, etc.
     if (eventType === "customer.subscription.updated") {
       const { uid, tier } = extractMetadata(obj);
       if (!uid) {
@@ -206,31 +204,24 @@ Deno.serve(async (req) => {
 
       const resolvedTier = tier || (obj.items as any)?.data?.[0]?.plan?.nickname
         || (obj.items as any)?.data?.[0]?.price?.nickname || "unknown";
-      const status = (obj.status as string) || "active";
+      const status = typeof obj.status === "string" ? obj.status : "active";
       const updPeriodEnd = periodEndSeconds(obj);
       const periodEnd = updPeriodEnd !== null
         ? new Date(updPeriodEnd * 1000).toISOString()
         : null;
-      const customer = (obj.customer as string) || null;
+      const customer = typeof obj.customer === "string" ? obj.customer : null;
 
-      const { data: result, error } = await admin.rpc("apply_subscription", {
-        p_uid: uid,
-        p_tier: resolvedTier,
-        p_status: status,
-        p_period_end: periodEnd,
-        p_customer: customer,
+      const applied = await applySubscription(admin, {
+        uid,
+        tier: resolvedTier,
+        status,
+        periodEnd,
+        customer,
       });
-
-      if (error) {
-        console.error("[stripe-webhook] apply_subscription (update) failed:", error);
-        return json({ error: "db_error", detail: error.message }, 500);
-      }
-
-      return json({ received: true, event: eventType, result });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, result: applied.result });
     }
 
-    // ── customer.subscription.deleted ────────────────────────────────────
-    // Subscription cancelled or not renewed; revoke access.
     if (eventType === "customer.subscription.deleted") {
       const { uid } = extractMetadata(obj);
       if (!uid) {
@@ -238,71 +229,48 @@ Deno.serve(async (req) => {
         return json({ received: true, skipped: "missing_uid" });
       }
 
-      const customer = (obj.customer as string) || null;
-
-      const { data: result, error } = await admin.rpc("apply_subscription", {
-        p_uid: uid,
-        p_tier: null,
-        p_status: "cancelled",
-        p_period_end: null,
-        p_customer: customer,
+      const customer = typeof obj.customer === "string" ? obj.customer : null;
+      const applied = await applySubscription(admin, {
+        uid,
+        tier: null,
+        status: "cancelled",
+        periodEnd: null,
+        customer,
       });
-
-      if (error) {
-        console.error("[stripe-webhook] apply_subscription (cancel) failed:", error);
-        return json({ error: "db_error", detail: error.message }, 500);
-      }
-
-      return json({ received: true, event: eventType, result });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, result: applied.result });
     }
 
-    // ── invoice.payment_failed ────────────────────────────────────────────
-    // Renewal payment failed; mark the subscription past_due so gating pages
-    // can warn the member without revoking access immediately.
     if (eventType === "invoice.payment_failed") {
-      const subId = obj.subscription as string | null;
+      const subId = typeof obj.subscription === "string" ? obj.subscription : null;
       if (!subId) return json({ received: true, skipped: "no_subscription" });
 
-      // Fetch the subscription to get the uid from its metadata
-      const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-      if (!stripeKey) return json({ received: true, skipped: "no_stripe_key" });
-
-      const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${subId}`, {
-        headers: {
-          Authorization: `Bearer ${stripeKey}`,
-          "Stripe-Version": STRIPE_API_VERSION,
-        },
-      });
-      if (!subRes.ok) return json({ received: true, skipped: "stripe_fetch_failed" });
-
-      const subData = await subRes.json();
+      const subData = await fetchStripeSubscription(subId);
+      if (!subData) {
+        console.error("[stripe-webhook] subscription lookup failed for invoice.payment_failed");
+        return json({ error: "stripe_lookup_failed" }, 503);
+      }
       const { uid } = extractMetadata(subData);
       if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
 
       const failedPeriodEnd = periodEndSeconds(subData);
-      const { data: result, error } = await admin.rpc("apply_subscription", {
-        p_uid: uid,
-        p_tier: subData.metadata?.tier || null,
-        p_status: "past_due",
-        p_period_end: failedPeriodEnd !== null
+      const meta = (subData.metadata as Record<string, string>) || {};
+      const applied = await applySubscription(admin, {
+        uid,
+        tier: meta.tier || null,
+        status: "past_due",
+        periodEnd: failedPeriodEnd !== null
           ? new Date(failedPeriodEnd * 1000).toISOString()
           : null,
-        p_customer: subData.customer || null,
+        customer: typeof subData.customer === "string" ? subData.customer : null,
       });
-
-      if (error) {
-        console.error("[stripe-webhook] apply_subscription (past_due) failed:", error);
-        return json({ error: "db_error", detail: error.message }, 500);
-      }
-
-      return json({ received: true, event: eventType, result });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, result: applied.result });
     }
 
-    // Acknowledge unhandled events so Stripe doesn't retry them
     return json({ received: true, event: eventType, handled: false });
-
   } catch (e) {
-    console.error("[stripe-webhook] unhandled error:", e);
-    return json({ error: String(e) }, 500);
+    console.error("[stripe-webhook] unhandled error:", e instanceof Error ? e.message : "unknown error");
+    return json({ error: "webhook_processing_failed" }, 500);
   }
 });

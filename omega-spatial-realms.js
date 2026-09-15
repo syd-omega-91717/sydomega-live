@@ -38,7 +38,7 @@
     .omega-spatial-core{animation:omegaSpatialFloat 7s ease-in-out infinite}
     .omega-spatial-orbit{animation:omegaSpatialOrbit 24s linear infinite}
     .omega-spatial-orbit.o2{animation-duration:31s;animation-direction:reverse}
-    @media(max-width:700px){.omega-spatial-realm{min-height:360px;margin:14px}.omega-spatial-node{min-width:68px;padding:7px 6px;font-size:9px}.omega-spatial-node.n1{left:8%}.omega-spatial-node.n2{right:8%}.omega-spatial-node.n3{left:10%}.omega-spatial-node.n4{right:10%}.omega-spatial-actions{left:18px;right:18px;bottom:16px}.omega-spatial-title{bottom:62px}.omega-spatial-grid{background-size:32px 32px}}
+    @media(max-width:700px){.omega-spatial-realm{min-height:360px;margin:14px}.omega-spatial-node{min-width:68px;padding:7px 6px;font-size:12px}.omega-spatial-node.n1{left:8%}.omega-spatial-node.n2{right:8%}.omega-spatial-node.n3{left:10%}.omega-spatial-node.n4{right:10%}.omega-spatial-actions{left:18px;right:18px;bottom:16px}.omega-spatial-title{bottom:62px}.omega-spatial-grid{background-size:32px 32px}}
     @media(prefers-reduced-motion:reduce){.omega-spatial-core,.omega-spatial-orbit,.omega-spatial-orbit.o2{animation:none}.omega-spatial-grid{transform:rotateX(67deg) translateZ(-90px)}}
   `;
   var style = document.createElement('style');

@@ -37,7 +37,7 @@
 | Tables without policies | **0** at live verification 2026-09-15 | Preserve this invariant |
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
-| Migration history | Live migrations applied; latest known migration recorded separately | Check schema drift before each release |
+| Migration history | **177 applied** at live verification 2026-09-15; latest migration `20260915100009` | Check schema drift before each release |
 | Storage | Present in architecture | Audit buckets/policies and exercise upload/download |
 | Edge Functions | Present | Verify deployed versions and secrets without exposing them |
 
@@ -61,9 +61,9 @@
 |---|---|---|
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
-| Vercel production deployment | Current main SHA `724775cca97f9b0d8b907e84987049f618829fa8` has a successful Vercel Production workflow | Keep production propagation/smoke gates mandatory |
-| GitHub workflows | Current main verification set is green | Preserve concurrency policy and investigate any new failure at root cause |
-| Production smoke checks | Implemented and successful for current release SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` | Require successful execution as release evidence |
+| Vercel production deployment | Current main SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567` has a successful Vercel status | Keep production propagation/smoke gates mandatory |
+| GitHub workflows | Current main verification set is green; no failed/cancelled runs reported for the 12 workflows triggered by this SHA | Preserve concurrency policy and investigate any new failure at root cause |
+| Production smoke checks | Implemented and successful for current release SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567` | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
 ## Payments / financial integrity
@@ -127,7 +127,7 @@ A production release should not be declared complete until all P0/P1 items below
 
 - [x] Current Vercel deployment succeeds for the current release evidence set.
 - [x] `sydomega.com` and `www.sydomega.com` serve the intended build.
-- [x] Production smoke tests pass for current release SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`.
+- [x] Production smoke tests pass for current release SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567`.
 - [x] GitHub verification workflows execute successfully for current main verification set.
 - [ ] Supabase Security Advisor has zero unresolved findings. **Open provider-level item: leaked-password protection is disabled on the current Free plan.**
 - [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 218/218 RLS-enabled and 0 tables without policies.

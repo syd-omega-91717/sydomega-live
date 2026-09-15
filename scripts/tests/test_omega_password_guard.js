@@ -44,7 +44,9 @@ assert.strictEqual(emailDerived.ok, false);
     return { ok: true, text: async () => 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:2\n' };
   };
   const clean = await guard.breachCheck('Correct-Horse-91717!');
-  assert.deepStrictEqual(clean, { breached: false, count: 0, checked: true });
+  assert.strictEqual(clean.breached, false);
+  assert.strictEqual(clean.count, 0);
+  assert.strictEqual(clean.checked, true);
 
   context.fetch = async () => ({
     ok: true,
@@ -57,7 +59,9 @@ assert.strictEqual(emailDerived.ok, false);
 
   context.fetch = async () => { throw new Error('HIBP unavailable'); };
   const unknown = await guard.breachCheck('Correct-Horse-91717!');
-  assert.deepStrictEqual(unknown, { breached: null, count: 0, checked: false });
+  assert.strictEqual(unknown.breached, null);
+  assert.strictEqual(unknown.count, 0);
+  assert.strictEqual(unknown.checked, false);
 
   context.fetch = originalFetch;
   console.log('OMEGA_PASSWORD_GUARD_TEST=PASS');

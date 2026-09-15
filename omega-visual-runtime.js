@@ -34,6 +34,7 @@
   addSheet('omega-opening-system-css','omega-opening-system.css');
   addSheet('omega-home-depth-correction-css','omega-home-depth-correction.css');
   addSheet('omega-entertainment-3d-css','omega-entertainment-3d.css');
+  addSheet('omega-world-atmosphere-css','omega-world-atmosphere.css');
   function installOpeningStage(){
     var mount=document.querySelector('.ohz-hero-art[data-omega-sculpture="signet"]') || document.querySelector('.ohz-hero-art[data-omega-sculpture]');
     if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;

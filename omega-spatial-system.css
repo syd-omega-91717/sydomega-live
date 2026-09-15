@@ -1,0 +1,97 @@
+/* Ω SPATIAL SYSTEM — additive 3-D depth for existing platform surfaces.
+   Architecture-safe: no new DOM, no route changes, no component replacement.
+   It only decorates existing primitives already owned by the platform.
+*/
+:root{
+  --omega-spatial-depth: 18px;
+  --omega-spatial-perspective: 1400px;
+}
+
+.omega-cinematic{
+  perspective:var(--omega-spatial-perspective);
+  perspective-origin:50% 12%;
+}
+
+.omega-cinematic .main,
+.omega-cinematic .page-shell,
+.omega-cinematic main{
+  transform-style:preserve-3d;
+}
+
+/* Existing cards/panels gain physical depth without taking ownership of
+   their transform animations. */
+.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){
+  position:relative;
+  transform-style:preserve-3d;
+  isolation:isolate;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.045) inset,
+    0 var(--omega-spatial-depth) 42px rgba(0,0,0,.20),
+    0 0 0 1px rgba(201,168,76,.025);
+}
+
+.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:-1;
+  transform:translateZ(-10px) scale(.985);
+  background:linear-gradient(145deg,rgba(201,168,76,.055),transparent 34%,rgba(0,229,255,.028));
+  filter:blur(1px);
+  opacity:.8;
+}
+
+.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card):hover{
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.065) inset,
+    0 24px 58px rgba(0,0,0,.28),
+    0 0 32px rgba(201,168,76,.055);
+}
+
+/* Spatial section headers: a restrained plane behind the information rather
+   than decorative motion that competes with the content. */
+.omega-cinematic :where(.sechead,.section-head,.section-title){
+  position:relative;
+  transform-style:preserve-3d;
+}
+
+.omega-cinematic :where(.sechead,.section-head,.section-title)::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:12%;
+  bottom:-7px;
+  height:1px;
+  background:linear-gradient(90deg,var(--page-accent,var(--omega-gold-hi,#f2d783)),transparent);
+  opacity:.30;
+  transform:translateZ(-3px);
+  pointer-events:none;
+}
+
+/* Tables remain operational/readable; only their shell receives depth. */
+.omega-cinematic :where(.table-wrap,.tbl-wrap,.data-table-wrap){
+  transform-style:preserve-3d;
+  box-shadow:0 18px 42px rgba(0,0,0,.16);
+}
+
+/* Existing emblem/sigil systems can sit in the same spatial field. */
+.omega-cinematic :where(.omega-emblem,.oid-sigil,.page-sigil){
+  transform-style:preserve-3d;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.28));
+}
+
+@media(max-width:760px){
+  .omega-cinematic{perspective:900px;}
+  .omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){
+    box-shadow:0 12px 30px rgba(0,0,0,.18),0 1px 0 rgba(255,255,255,.04) inset;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card)::before{
+    transform:none;
+    filter:none;
+  }
+}

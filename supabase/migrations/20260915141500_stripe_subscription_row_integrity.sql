@@ -2,13 +2,8 @@
 -- SYD OMEGA 91717 — STRIPE SUBSCRIPTION ROW INTEGRITY
 --
 -- Additive correction only. Preserves the existing Edge Function ->
--- apply_subscription() architecture.
---
--- The idempotency layer correctly prevents duplicate Stripe events, but an
--- UPDATE that matches zero profile rows would otherwise still return ok=true.
--- That could acknowledge a payment event without actually granting or
--- updating an entitlement. Treat a missing profile as a transactional failure
--- so Stripe retries instead of silently losing the subscription mutation.
+-- apply_subscription() architecture and fails closed when the profile row is
+-- absent, preventing an acknowledged payment event from creating no state.
 -- ============================================================================
 
 BEGIN;
@@ -25,7 +20,7 @@ CREATE OR REPLACE FUNCTION public.apply_subscription(
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path TO 'public'
+SET search_path = public, pg_temp
 AS $function$
 DECLARE
   inserted_count integer;
@@ -42,11 +37,7 @@ BEGIN
 
     GET DIAGNOSTICS inserted_count = ROW_COUNT;
     IF inserted_count = 0 THEN
-      RETURN jsonb_build_object(
-        'ok', true,
-        'duplicate', true,
-        'event_id', p_event_id
-      );
+      RETURN jsonb_build_object('ok', true, 'duplicate', true, 'event_id', p_event_id);
     END IF;
   END IF;
 
@@ -66,13 +57,8 @@ BEGIN
     RAISE EXCEPTION 'subscription_profile_not_found';
   END IF;
 
-  RETURN jsonb_build_object(
-    'ok', true,
-    'uid', p_uid,
-    'tier', p_tier,
-    'status', p_status,
-    'event_id', p_event_id
-  );
+  RETURN jsonb_build_object('ok', true, 'uid', p_uid, 'tier', p_tier,
+    'status', p_status, 'event_id', p_event_id);
 END;
 $function$;
 

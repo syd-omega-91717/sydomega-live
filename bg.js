@@ -521,6 +521,15 @@ function __omegaAppend(el){
    their own createClient() fallback, so if this ever fails they behave exactly
    as before.
    ========================================================================= */
+
+  /* Ω SPATIAL REALMS — additive loader; WebGL remains owned by omega-sculpture.js. */
+  if (!document.querySelector('[data-omega-spatial-realms-js]')) {
+    var _osr = document.createElement('script');
+    _osr.src = '/omega-spatial-realms.js';
+    _osr.setAttribute('data-omega-spatial-realms-js', '1');
+    _osr.defer = true;
+    (document.head || document.documentElement).appendChild(_osr);
+  }
 (function () {
   if (window.OmegaSB) return;
   var URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";

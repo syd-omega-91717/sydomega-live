@@ -56,9 +56,12 @@ async function verifyStripeSignature(
   const sig = parts["v1"];
   if (!timestamp || !sig) return false;
 
-  // Guard against replay attacks: reject webhooks older than 5 minutes
-  const age = Date.now() / 1000 - parseInt(timestamp, 10);
-  if (age > 300) return false;
+  // Guard against replay attacks: reject webhooks older than 5 minutes.
+  // Future timestamps are also rejected to avoid accepting malformed signatures.
+  const timestampSeconds = Number(timestamp);
+  if (!Number.isFinite(timestampSeconds)) return false;
+  const age = Date.now() / 1000 - timestampSeconds;
+  if (age > 300 || age < -300) return false;
 
   const signedPayload = `${timestamp}.${payload}`;
   const key = await crypto.subtle.importKey(
@@ -127,9 +130,11 @@ Deno.serve(async (req) => {
 
   const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
   if (!secret) {
-    // Not configured yet — acknowledge so Stripe doesn't retry, but log.
-    console.warn("[stripe-webhook] STRIPE_WEBHOOK_SECRET not set; skipping verification.");
-    return json({ received: true, configured: false });
+    // Fail closed. A webhook endpoint without its signing secret must never
+    // acknowledge a payment event because that would allow Stripe retries to
+    // stop while no authenticated event could be accepted.
+    console.error("[stripe-webhook] STRIPE_WEBHOOK_SECRET is not configured; refusing webhook.");
+    return json({ error: "webhook_not_configured" }, 503);
   }
 
   const sigHeader = req.headers.get("stripe-signature") || "";

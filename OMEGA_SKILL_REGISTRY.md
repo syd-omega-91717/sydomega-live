@@ -4,11 +4,17 @@
 Regenerate with `python3 scripts/omega-registry.py`;
 `--check` runs in CI and fails when this file no longer matches the repo.
 
-Every number here is read off the filesystem at generation time.
+Every number here is read off the filesystem at generation time. It exists
+because the hand-written equivalents all drifted: `.claude/skills/README.md`
+said "Four skills", `CLAUDE.md` §10 said "Five", §11 said "4-skill pipeline",
+and 23 exist.
 
 ## 1 · Skills
 
-`.claude/skills/<name>/SKILL.md`.
+`.claude/skills/<name>/SKILL.md`. **Discoverable** means the frontmatter carries
+both a `name:` and a `description:` — that description is what a coding agent
+matches against to decide whether the skill applies, so a skill without one is
+effectively invisible unless invoked by exact name.
 
 | Skill | Discoverable | Support files | ~tokens | Named in | Last touched |
 |---|---|---|---|---|---|
@@ -36,39 +42,46 @@ Every number here is read off the filesystem at generation time.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,590 tokens** if every SKILL.md were read in one session.
+**23 skills, ~38,590 tokens** if every SKILL.md were read in one
+session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
-> **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`.
+> **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
+> `.claude/skills/README.md` will not learn they exist.
 
 ### Purpose of each
 
-- **`autonomous-coder`** — Implements a feature-architect blueprint into real files in this repo.
-- **`cinematic-media`** — Work on the video and cinematic motion surface.
-- **`context-budget`** — Keep per-session context cost measured and controlled.
-- **`deploy-gate`** — Ship changes to the static Vercel site and Supabase backend with evidence gates.
-- **`edge-functions`** — Work on Supabase Edge Functions.
-- **`feature-architect`** — Turns feature proposals into exact implementation blueprints.
-- **`grill-me-codex`** — Safety gate for high-risk auth, database, payments, RLS and RPC changes.
-- **`i18n`** — Work on the translation layer.
-- **`image-pipeline`** — Produce or change project imagery and visual assets.
-- **`interface-guidelines`** — Audit the interface against applicable web-interface rules.
-- **`omega-cinematic-system`** — Production visual design and motion system.
-- **`omega-orchestrator`** — Autonomous production workflow.
-- **`omega-platform`** — Cross-discipline production engineering.
-- **`omega-production-verification`** — Evidence-first production verification across source, browser, Supabase and Vercel.
-- **`present-concept-build`** — Inventory-first procedure that extends existing owners rather than creating parallel systems.
-- **`runtime-verify`** — Verify real capability entrypoints in a headless browser.
-- **`subscriber-portal`** — Surface approved features inside subscriber-facing UI.
-- **`supabase`** — Supabase database/backend workflow.
-- **`supabase-postgres-best-practices`** — Postgres best practices for Supabase.
-- **`supabase-server`** — Server-side Supabase and Edge Function work.
-- **`verify-in-browser`** — Browser rendering and repository-wide runtime scans.
-- **`visual-assets`** — Visual design and asset work consistent with the Ω system.
-- **`web-trend-scout`** — Research external platforms/APIs/open-source trends and produce grounded proposals.
+- **`autonomous-coder`** — Implements a feature-architect blueprint into real files in this repo (static .html page, optional omega-*.js module, idempotent supabase/*.sql, nav.js…
+- **`cinematic-media`** — Work on sydomega-live's video and "cinematic" motion surface — the welcome demo video and its wiring, the transition/2.5D/motion engines, and the…
+- **`context-budget`** — Keep this repo's per-session context cost down — measure what every agent session loads before it starts, decide where new documentation belongs so…
+- **`deploy-gate`** — Ship a change to sydomega-live's real deployment surface — the static Vercel site and, separately, the Supabase backend — without letting a green local…
+- **`edge-functions`** — Work on sydomega-live's Supabase Edge Functions — the 14 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge,…
+- **`feature-architect`** — Turns a FEATURE_IDEAS.md proposal into an exact, file-by-file implementation blueprint for this repo's real static-HTML/Supabase architecture (no…
+- **`grill-me-codex`** — Safety gate for HIGH-RISK changes in this repo — auth, database schema, payments/Stripe, RLS policies, or any new public-callable function/RPC.
+  - carries: `THREAT_MODEL.md`
+- **`i18n`** — Work on sydomega-live's translation layer — i18n.js (the inlined English key set T_EN) and i18n/{ar,es,fr,hi,nl,zh}.json.
+- **`image-pipeline`** — Produce, add, or change imagery for sydomega-live — procedural SVG, canvas-rendered PNG (share cards, QR, exports), PWA/favicon raster, and…
+- **`interface-guidelines`** — Audit sydomega-live against the Web Interface Guidelines, using only the rules that apply to a no-build vanilla-HTML stack.
+- **`omega-cinematic-system`** — Production visual design and motion system for Ω SYD OMEGA 91717.
+- **`omega-orchestrator`** — Autonomous production workflow for Ω SYD OMEGA 91717.
+- **`omega-platform`** — "Cross-discipline production engineering skill for SYD OMEGA 91717.
+- **`omega-production-verification`** — Evidence-first verification workflow for Ω SYD OMEGA 91717 covering static checks, browser behavior, Supabase contracts, Vercel deployment state, links,…
+- **`present-concept-build`** — Inventory-first change procedure for this repo — find the existing owner of a surface and extend it rather than building a parallel system, check the…
+- **`runtime-verify`** — Verify a change to sydomega-live at runtime — render the real capability entrypoints in a headless browser with scripts/verify-runtime.js — and keep…
+- **`subscriber-portal`** — Surfaces an already-built, human-approved feature inside the real subscriber-facing UI (dashboard/hub pages, existing tier and notification systems) —…
+- **`supabase`** — "Use when doing ANY task involving Supabase.
+  - carries: `CHANGELOG.md`, `assets/feedback-issue-template.md`, `references/skill-feedback.md`
+- **`supabase-postgres-best-practices`** — "Postgres best practices maintained by Supabase, for Postgres running anywhere.
+  - carries: `CHANGELOG.md`, `references/_contributing.md`, `references/_sections.md`, `references/_template.md`, `references/advanced-full-text-search.md`, `references/advanced-jsonb-indexing.md`, `references/conn-idle-timeout.md`, `references/conn-limits.md`, `references/conn-pooling.md`, `references/conn-prepared-statements.md`, `references/data-batch-inserts.md`, `references/data-n-plus-one.md`, `references/data-pagination.md`, `references/data-upsert.md`, `references/lock-advisory.md`, `references/lock-deadlock-prevention.md`, `references/lock-short-transactions.md`, `references/lock-skip-locked.md`, `references/monitor-explain-analyze.md`, `references/monitor-pg-stat-statements.md`, `references/monitor-vacuum-analyze.md`, `references/query-composite-indexes.md`, `references/query-covering-indexes.md`, `references/query-index-types.md`, `references/query-missing-indexes.md`, `references/query-partial-indexes.md`, `references/schema-constraints.md`, `references/schema-data-types.md`, `references/schema-foreign-key-indexes.md`, `references/schema-lowercase-identifiers.md`, `references/schema-partitioning.md`, `references/schema-primary-keys.md`, `references/security-privileges.md`, `references/security-rls-basics.md`, `references/security-rls-performance.md`
+- **`supabase-server`** — Use when planning or writing server-side code that uses `@supabase/server` — Edge Functions, Hono apps, webhook handlers, or any backend that creates…
+- **`verify-in-browser`** — Verify a change to sydomega-live by rendering the real pages in headless Chromium, and run repo-wide scans (page errors, mobile tap targets, horizontal…
+  - carries: `harness/sbstub.js`, `harness/scan.js`, `harness/serve.js`, `harness/session.js`
+- **`visual-assets`** — Design or change any visual element of sydomega-live — SVG assets, sigils, emblems, share cards, page marks, palette, typography — so it matches the…
+- **`web-trend-scout`** — Researches external platforms, APIs, and open-source trends via real web search, then writes a proposal-only feature idea grounded in this repo's actual…
 
 ## 2 · Agents
 
-`.claude/agents/*.md`.
+`.claude/agents/*.md`. These are conversational role definitions, not a runtime —
+this repo has no multi-agent execution engine (see `CLAUDE.md` §6).
 
 | Agent | Role | ~tokens | Last touched |
 |---|---|---|---|
@@ -77,22 +90,28 @@ Every number here is read off the filesystem at generation time.
 
 ## 3 · Platform census
 
+Counted at generation time. These are the numbers that kept going stale in prose.
+
 | What | Count |
-|---|---:|
+|---|---|
 | `.html` pages | 204 |
 | pages loading `bg.js` | 204 of 204 |
 | `omega-*.js` modules | 134 (1279 KB) |
 | root `.js` files | 142 |
 | `supabase/*.sql` (flat bag) | 126 |
-| `supabase/migrations/*.sql` | 182 (106 numbered `NNNN_`, 76 timestamped) |
+| `supabase/migrations/*.sql` | 186 (106 numbered `NNNN_`, 80 timestamped) |
 | Edge Functions | 14 |
 | skills | 23 |
 | agent definitions | 2 |
 
 ### Translation coverage
 
+Committed on purpose: a pack that loses keys changes a number here and
+fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
+`data-i18n` key resolves, no orphan pack keys, no HTML entities in values).
+
 | Source | Keys |
-|---|---:|
+|---|---|
 | `T_EN` (English, inlined in `i18n.js`) | 1174 |
 | `i18n/ar.json` | 1167 — 7 short of `T_EN` |
 | `i18n/es.json` | 1167 — 7 short of `T_EN` |
@@ -101,6 +120,14 @@ Every number here is read off the filesystem at generation time.
 | `i18n/nl.json` | 1167 — 7 short of `T_EN` |
 | `i18n/zh.json` | 1167 — 7 short of `T_EN` |
 
-`supabase/migrations/README.md` records one end-to-end run against a fresh PostgreSQL 16 instance covering the 94-file numbered sequence (`0001`–`0094`). The later files were not part of that validation; treat `0001`–`0094` as the validated migration scope.
+`supabase/migrations/README.md` records exactly one end-to-end run against a
+fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
+(`0001`–`0094`) — see its heading *"Full 94-file sequence validated
+end-to-end for the first time"*. The 92 files added since (numbered and
+timestamped alike) were **not part of that validation**, and no run has covered
+all 186. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 204 pages.** It is a hard single point of failure for the platform, so its syntax remains a CI gate.
+**`bg.js` is loaded by all 204 pages.** It is a hard single point of
+failure for the entire platform, not a partial one — if it fails to parse, every
+page is down. This is why `node --check` on it gates CI.
+

@@ -17,6 +17,10 @@ import re
 import sys
 from pathlib import Path
 
+if "--help" in sys.argv:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 errors: list[str] = []
 warnings: list[str] = []
@@ -81,7 +85,7 @@ for required in ("index.html", "healthz.html", "bg.js", "nav.js"):
 # exercise historical/fixture state. The public directory is deliberately
 # included: it is the actual Vercel-delivered build output and must not drift.
 canonical_host = "ydqhzvvoyufiiqvzcjns.supabase.co"
-supabase_host_re = re.compile(r"https://([a-z0-9-]+\.supabase\.co)", re.I)
+supabase_host_re = re.compile(r"https://([a-z0-9-]+\\.supabase\\.co)", re.I)
 source_extensions = {".html", ".js", ".css", ".json", ".yml", ".yaml", ".sql", ".sh", ".ts", ".tsx"}
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in source_extensions:
@@ -101,10 +105,10 @@ for path in ROOT.rglob("*"):
 web_extensions = {".html", ".js", ".css", ".json", ".webmanifest"}
 secret_patterns = [
     re.compile(r"SUPABASE_SERVICE_ROLE", re.I),
-    re.compile(r"STRIPE_SECRET_KEY\s*[:=]", re.I),
-    re.compile(r"OPENAI_API_KEY\s*[:=]", re.I),
-    re.compile(r"ANTHROPIC_API_KEY\s*[:=]", re.I),
-    re.compile(r"GEMINI_API_KEY\s*[:=]", re.I),
+    re.compile(r"STRIPE_SECRET_KEY\\s*[:=]", re.I),
+    re.compile(r"OPENAI_API_KEY\\s*[:=]", re.I),
+    re.compile(r"ANTHROPIC_API_KEY\\s*[:=]", re.I),
+    re.compile(r"GEMINI_API_KEY\\s*[:=]", re.I),
 ]
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in web_extensions:

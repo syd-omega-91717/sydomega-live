@@ -18,7 +18,7 @@ This repository is a living production surface. Future agents and engineers MUST
 
 ## 2. Current production architecture
 
-The current repository's production architecture is:
+The current repository's production architecture is a **framework-free static architecture**:
 
 ```text
 User Browser

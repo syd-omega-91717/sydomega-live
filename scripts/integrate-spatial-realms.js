@@ -46,10 +46,12 @@ function addNavigationEntries(){
       src=src.slice(0,end)+entry+src.slice(end);
     }
   }
-  if(!src.includes("characters:'/characters.html'") && !src.includes('characters:"/characters.html"')){
-    const marker="cinema:'/cinema.html'";
-    if(!src.includes(marker)) throw new Error('nav.js has no canonical cinema page map anchor; refusing unsafe edit');
-    src=src.replace(marker,marker+",characters:'/characters.html',movies:'/movies.html'");
+  // nav.js PS is a page-to-section map, not a page-to-path map.
+  // Keep characters in ARCHIVE and movies in MEDIA, matching the canonical IA.
+  if(!src.includes("characters:'archive'")){
+    const marker="cinema:'media'";
+    if(!src.includes(marker)) throw new Error('nav.js has no canonical cinema PS entry; refusing unsafe edit');
+    src=src.replace(marker,marker+",characters:'archive',movies:'media'");
   }
   write(navFile,src);
   return true;

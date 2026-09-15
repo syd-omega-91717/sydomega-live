@@ -50,6 +50,8 @@ jobs:
         run: python scripts/production-contract.py
       - name: Capability registry contract
         run: python scripts/capability-audit.py --check
+      - name: Capability evidence freshness
+        run: python scripts/capability-evidence-freshness.py
       - name: Module contract reachability
         run: python scripts/module-contract.py
       - name: Evidence audit

@@ -56,8 +56,8 @@
     style.id='omega-genesis-opening-css';
     style.textContent='\
 .ohz-hero-art[data-omega-sculpture]{position:relative;min-height:min(68vh,620px);isolation:isolate;overflow:visible;perspective:1100px;transform-style:preserve-3d}\
-.ohz-hero-art[data-omega-sculpture] canvas{position:relative!important;z-index:1!important;opacity:.30!important;filter:saturate(.82) brightness(.82) contrast(1.05)!important;transform:none!important;mix-blend-mode:screen}\
-.omega-genesis{position:absolute;inset:0;z-index:8;display:grid;place-items:center;pointer-events:none;transform-style:preserve-3d;perspective:1100px}\
+.ohz-hero-art[data-omega-sculpture] canvas{position:relative!important;z-index:1!important;opacity:.07!important;filter:saturate(.70) brightness(.72) contrast(1.02)!important;transform:none!important;mix-blend-mode:screen}\
+.omega-genesis{position:absolute;inset:0;z-index:8;display:grid;place-items:center;pointer-events:none;transform-style:preserve-3d;perspective:1100px;transition:transform .18s ease-out}\
 .omega-genesis-depth{position:absolute;inset:4%;border:1px solid rgba(201,168,76,.12);border-radius:50%;transform:translateZ(-110px) rotateX(64deg) scaleY(.56);box-shadow:0 0 90px rgba(0,229,255,.04);opacity:.8}\
 .omega-genesis-depth::before,.omega-genesis-depth::after{content:"";position:absolute;border:1px solid rgba(0,229,255,.10);border-radius:50%;inset:10%;transform:translateZ(55px)}\
 .omega-genesis-depth::after{inset:21%;border-color:rgba(201,168,76,.16);transform:translateZ(90px)}\
@@ -80,7 +80,7 @@
 @keyframes omegaGenesisHalo{0%,100%{transform:translateZ(-45px) scale(.96);opacity:.62}50%{transform:translateZ(-45px) scale(1.04);opacity:1}}\
 @media(max-width:1080px){.omega-genesis-core{width:min(54vw,340px);height:min(54vw,340px)}.omega-genesis-code{right:5%}}\
 @media(max-width:700px){.ohz-hero-art[data-omega-sculpture]{min-height:380px}.omega-genesis-core{min-width:190px;min-height:190px;width:68vw;height:68vw}.omega-genesis-mark{font-size:clamp(124px,34vw,180px)}.omega-genesis-label{font-size:8px;letter-spacing:.24em}.omega-genesis-label::before,.omega-genesis-label::after{width:24px}.omega-genesis-code{display:none}.omega-genesis-depth{inset:7%}}\
-@media(prefers-reduced-motion:reduce){.omega-genesis-core::before,.omega-genesis-halo{animation:none}.omega-genesis-core::before{opacity:.86}.omega-genesis-halo{opacity:.82}}\
+@media(prefers-reduced-motion:reduce){.omega-genesis-core::before,.omega-genesis-halo{animation:none}.omega-genesis-core::before{opacity:.86}.omega-genesis-halo{opacity:.82}.omega-genesis{transition:none}}\
 ';
     document.head.appendChild(style);
 
@@ -90,15 +90,11 @@
     mount.appendChild(scene);
 
     if(!reduced){
-      var lastX=0,lastY=0;
       mount.addEventListener('pointermove',function(ev){
         var rect=mount.getBoundingClientRect();
         var nx=((ev.clientX-rect.left)/Math.max(rect.width,1)-.5)*2;
         var ny=((ev.clientY-rect.top)/Math.max(rect.height,1)-.5)*2;
-        lastX=nx; lastY=ny;
-        scene.style.setProperty('--omega-parallax-x',(nx*8).toFixed(2)+'px');
-        scene.style.setProperty('--omega-parallax-y',(ny*6).toFixed(2)+'px');
-        scene.style.transform='translate3d('+lastX+'px,'+lastY+'px,0)';
+        scene.style.transform='translate3d('+(nx*8).toFixed(2)+'px,'+(ny*6).toFixed(2)+'px,0)';
       },{passive:true});
       mount.addEventListener('pointerleave',function(){scene.style.transform='translate3d(0,0,0)';},{passive:true});
     }

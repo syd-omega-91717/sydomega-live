@@ -115,17 +115,24 @@ Deno.serve(async (req) => {
       const { uid, tier } = extractMetadata(obj);
       if (!uid || !tier) return json({ received: true, skipped: "missing_metadata" });
       const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
-      const sub = subscriptionId ? await fetchStripeSubscription(subscriptionId) : null;
-      if (subscriptionId && !sub) {
+      // Checkout is created with Stripe `mode=subscription`. A missing subscription
+      // identifier therefore means the signed event is incomplete for entitlement
+      // purposes. Do not grant an active subscription from checkout metadata alone.
+      if (!subscriptionId) {
+        console.error("[stripe-webhook] subscription ID missing for subscription checkout");
+        return json({ error: "subscription_missing" }, 503);
+      }
+      const sub = await fetchStripeSubscription(subscriptionId);
+      if (!sub) {
         console.error("[stripe-webhook] subscription lookup failed for checkout.session.completed");
         return json({ error: "stripe_lookup_failed" }, 503);
       }
-      const subPeriodEnd = periodEndSeconds(sub || obj.subscription);
+      const subPeriodEnd = periodEndSeconds(sub);
       const periodEnd = subPeriodEnd !== null ? new Date(subPeriodEnd * 1000).toISOString() : null;
       const customer = typeof obj.customer === "string" ? obj.customer : null;
       const applied = await applySubscription(admin, {
         uid,
-        tier: sub?.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
+        tier: sub.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
         status: "active", periodEnd, customer, eventId, eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);

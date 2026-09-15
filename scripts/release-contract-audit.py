@@ -80,17 +80,19 @@ for header in (
 for required in ("index.html", "healthz.html", "bg.js", "nav.js"):
     require_file(required)
 
-# 5. Detect Supabase endpoint drift in both source and generated web output.
-# Documentation and tests are excluded because they intentionally record or
-# exercise historical/fixture state. The public directory is deliberately
-# included: it is the actual Vercel-delivered build output and must not drift.
+# 5. Detect Supabase endpoint drift in source and generated web output.
+# Documentation, tests, and repository-only agent/CI instructions may contain
+# historical/example provider hosts; they are not browser-delivered source.
+# The public directory is deliberately included: it is the actual Vercel
+# output and must not drift.
 canonical_host = "ydqhzvvoyufiiqvzcjns.supabase.co"
 supabase_host_re = re.compile(r"https://([a-z0-9-]+\.supabase\.co)", re.I)
 source_extensions = {".html", ".js", ".css", ".json", ".yml", ".yaml", ".sql", ".sh", ".ts", ".tsx"}
+non_shipped_parts = {".git", "node_modules", "docs", "tests", ".claude", ".github"}
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in source_extensions:
         continue
-    if any(part in {".git", "node_modules", "docs", "tests"} for part in path.parts):
+    if any(part in non_shipped_parts for part in path.parts):
         continue
     try:
         body = path.read_text(encoding="utf-8", errors="ignore")
@@ -113,7 +115,7 @@ secret_patterns = [
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in web_extensions:
         continue
-    if any(part in {".git", "node_modules", "tests", "scripts", "supabase", "docs"} for part in path.parts):
+    if any(part in {".git", "node_modules", "tests", "scripts", "supabase", "docs", ".claude", ".github"} for part in path.parts):
         continue
     try:
         body = path.read_text(encoding="utf-8", errors="ignore")

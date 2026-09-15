@@ -45,39 +45,27 @@
 
   function appendTrustedMarkup(parent, markup) {
     if (!markup) return;
-    var tpl = document.createElement('template');
-    tpl.innerHTML = String(markup);
-    while (tpl.content.firstChild) parent.appendChild(tpl.content.firstChild);
+    var parsed = new DOMParser().parseFromString(String(markup), 'image/svg+xml');
+    if (parsed.querySelector('parsererror')) return;
+    Array.prototype.slice.call(parsed.documentElement.children).forEach(function (node) {
+      parent.appendChild(document.importNode(node, true));
+    });
   }
 
   function buildDOM() {
     if (document.getElementById('oep-overlay')) return;
-    var ov = document.createElement('div');
-    ov.id = 'oep-overlay';
-    var panel = document.createElement('div');
-    panel.id = 'oep-panel';
-    panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-modal', 'true');
-    panel.setAttribute('aria-labelledby', 'oep-title');
-    var closeButton = document.createElement('button');
-    closeButton.id = 'oep-close';
-    closeButton.type = 'button';
-    closeButton.setAttribute('aria-label', 'Close');
-    closeButton.textContent = '\u00d7';
-    var head = document.createElement('div');
-    head.className = 'oep-head';
-    var badge = document.createElement('span');
-    badge.className = 'oep-badge'; badge.id = 'oep-badge'; badge.hidden = true;
-    var emblem = document.createElement('span');
-    emblem.className = 'oep-emblem'; emblem.id = 'oep-emblem';
-    var title = document.createElement('div');
-    title.className = 'oep-title'; title.id = 'oep-title';
-    var sub = document.createElement('div');
-    sub.className = 'oep-sub'; sub.id = 'oep-sub';
+    var ov = document.createElement('div'); ov.id = 'oep-overlay';
+    var panel = document.createElement('div'); panel.id = 'oep-panel';
+    panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-labelledby', 'oep-title');
+    var closeButton = document.createElement('button'); closeButton.id = 'oep-close'; closeButton.type = 'button'; closeButton.setAttribute('aria-label', 'Close'); closeButton.textContent = '\u00d7';
+    var head = document.createElement('div'); head.className = 'oep-head';
+    var badge = document.createElement('span'); badge.className = 'oep-badge'; badge.id = 'oep-badge'; badge.hidden = true;
+    var emblem = document.createElement('span'); emblem.className = 'oep-emblem'; emblem.id = 'oep-emblem';
+    var title = document.createElement('div'); title.className = 'oep-title'; title.id = 'oep-title';
+    var sub = document.createElement('div'); sub.className = 'oep-sub'; sub.id = 'oep-sub';
     head.appendChild(badge); head.appendChild(emblem); head.appendChild(title); head.appendChild(sub);
     var body = document.createElement('div'); body.className = 'oep-body'; body.id = 'oep-body';
-    panel.appendChild(closeButton); panel.appendChild(head); panel.appendChild(body); ov.appendChild(panel);
-    document.body.appendChild(ov);
+    panel.appendChild(closeButton); panel.appendChild(head); panel.appendChild(body); ov.appendChild(panel); document.body.appendChild(ov);
     ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
     closeButton.addEventListener('click', close);
     document.addEventListener('keydown', function (e) {
@@ -112,9 +100,7 @@
       if (!window.OmegaEmblem) return false;
       var isSign = window.OmegaEmblem.signs && window.OmegaEmblem.signs.indexOf(glyph) !== -1;
       var markup = isSign ? window.OmegaEmblem.svg(glyph) : window.OmegaEmblem.ring(glyph, color || '#C9A84C', {});
-      el.replaceChildren();
-      appendTrustedMarkup(el, markup);
-      return true;
+      el.replaceChildren(); appendTrustedMarkup(el, markup); return true;
     }
     if (fill()) return;
     var tries = 0;
@@ -122,38 +108,34 @@
   }
 
   function renderSections(sections) {
-    var body = document.getElementById('oep-body');
-    body.replaceChildren();
+    var body = document.getElementById('oep-body'); body.replaceChildren();
     (sections || []).forEach(function (sec) {
+      sec = sec || {};
       var wrap = document.createElement('div'); wrap.className = 'oep-sec';
-      var label = document.createElement('div'); label.className = 'oep-label'; label.textContent = sec && sec.label || '';
-      wrap.appendChild(label);
-      if (sec && sec.body) {
-        var text = document.createElement('div'); text.className = 'oep-text'; text.textContent = String(sec.body); wrap.appendChild(text);
-      }
-      if (sec && Array.isArray(sec.stats) && sec.stats.length) {
+      var label = document.createElement('div'); label.className = 'oep-label'; label.textContent = sec.label || ''; wrap.appendChild(label);
+      if (sec.body) { var text = document.createElement('div'); text.className = 'oep-text'; text.textContent = String(sec.body); wrap.appendChild(text); }
+      if (Array.isArray(sec.stats) && sec.stats.length) {
         var stats = document.createElement('div'); stats.className = 'oep-stats';
         sec.stats.forEach(function (item) {
-          var stat = document.createElement('div'); stat.className = 'oep-stat';
-          var k = document.createElement('div'); k.className = 'k'; k.textContent = item && item.k || '';
-          var v = document.createElement('div'); v.className = 'v'; v.textContent = item && item.v || '';
+          item = item || {}; var stat = document.createElement('div'); stat.className = 'oep-stat';
+          var k = document.createElement('div'); k.className = 'k'; k.textContent = item.k || '';
+          var v = document.createElement('div'); v.className = 'v'; v.textContent = item.v || '';
           stat.appendChild(k); stat.appendChild(v); stats.appendChild(stat);
         });
         wrap.appendChild(stats);
       }
-      if (sec && Array.isArray(sec.actions) && sec.actions.length) {
+      if (Array.isArray(sec.actions) && sec.actions.length) {
         var actions = document.createElement('div'); actions.className = 'oep-actions';
-        sec.actions.forEach(function (action, index) {
+        sec.actions.forEach(function (action) {
           var a = action || {};
           if (a.href) {
-            var href = safeHref(a.href);
-            if (!href) return;
+            var href = safeHref(a.href); if (!href) return;
             var link = document.createElement('a'); link.className = 'oep-action'; link.href = href; link.textContent = a.label || '';
-            if (/^https?:/i.test(href) && new URL(href).origin !== window.location.origin) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+            var parsedHref = new URL(href, window.location.href);
+            if (parsedHref.origin !== window.location.origin) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
             actions.appendChild(link);
           } else {
-            var button = document.createElement('button'); button.type = 'button'; button.className = 'oep-action';
-            button.textContent = a.label || '';
+            var button = document.createElement('button'); button.type = 'button'; button.className = 'oep-action'; button.textContent = a.label || '';
             if (typeof a.onClick === 'function') button.addEventListener('click', a.onClick);
             actions.appendChild(button);
           }
@@ -165,15 +147,11 @@
   }
 
   function open(cfg) {
-    cfg = cfg || {};
-    injectStyles(); buildDOM();
-    lastFocused = document.activeElement;
+    cfg = cfg || {}; injectStyles(); buildDOM(); lastFocused = document.activeElement;
     document.getElementById('oep-title').textContent = cfg.title || '';
     document.getElementById('oep-sub').textContent = cfg.subtitle || '';
-    var badge = document.getElementById('oep-badge');
-    badge.textContent = cfg.badge || ''; badge.hidden = !cfg.badge;
-    fillEmblem(cfg.glyph, cfg.color);
-    renderSections(cfg.sections);
+    var badge = document.getElementById('oep-badge'); badge.textContent = cfg.badge || ''; badge.hidden = !cfg.badge;
+    fillEmblem(cfg.glyph, cfg.color); renderSections(cfg.sections);
     var ov = document.getElementById('oep-overlay'); ov.classList.add('open'); document.body.style.overflow = 'hidden';
     setTimeout(function () { document.getElementById('oep-close').focus(); }, 0);
   }

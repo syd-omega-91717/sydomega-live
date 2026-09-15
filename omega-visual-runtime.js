@@ -6,67 +6,49 @@
   'use strict';
   if(window.__OMEGA_VISUAL_RUNTIME__) return;
   window.__OMEGA_VISUAL_RUNTIME__=true;
-
   var root=document.documentElement;
   var page=(location.pathname||'/').split('/').pop()||'index.html';
   page=page.replace(/\.html?$/i,'').toLowerCase()||'index';
   root.dataset.omegaPage=page;
   root.dataset.omegaVisual='active';
-
   function addSheet(id,href){
     if(document.getElementById(id) || document.querySelector('link[rel="stylesheet"][href$="'+href+'"]')) return;
-    var link=document.createElement('link');
-    link.id=id;
-    link.rel='stylesheet';
-    link.href='/'+href;
+    var link=document.createElement('link'); link.id=id; link.rel='stylesheet'; link.href='/'+href;
     (document.head||document.documentElement).appendChild(link);
   }
-
   function markRuntime(){
     function mount(){
       if(!document.body || document.querySelector('[data-omega-runtime-mark]')) return;
-      var mark=document.createElement('span');
-      mark.dataset.omegaRuntimeMark='true';
-      mark.setAttribute('aria-hidden','true');
+      var mark=document.createElement('span'); mark.dataset.omegaRuntimeMark='true'; mark.setAttribute('aria-hidden','true');
       mark.style.cssText='position:fixed;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden';
-      mark.textContent='SYD OMEGA visual runtime active: '+page;
-      document.body.appendChild(mark);
+      mark.textContent='SYD OMEGA visual runtime active: '+page; document.body.appendChild(mark);
     }
-    if(document.body) mount();
-    else document.addEventListener('DOMContentLoaded',mount,{once:true});
+    if(document.body) mount(); else document.addEventListener('DOMContentLoaded',mount,{once:true});
   }
-
   addSheet('omega-visual-runtime-css','omega-visual-universe.css');
   addSheet('omega-page-elevation-css','omega-page-elevation.css');
   markRuntime();
   if(page!=='index') return;
   addSheet('omega-opening-system-css','omega-opening-system.css');
-
+  addSheet('omega-home-depth-correction-css','omega-home-depth-correction.css');
   function installOpeningStage(){
     var mount=document.querySelector('.ohz-hero-art[data-omega-sculpture="signet"]') || document.querySelector('.ohz-hero-art[data-omega-sculpture]');
     if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;
     mount.dataset.omegaGatewayInstalled='1';
     mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional gateway');
     mount.setAttribute('data-sculpt-label','Omega Nexus architectural gateway with dimensional vault, monoliths and restrained orbital depth');
-
     var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var scene=document.createElement('div');
-    scene.className='omega-gateway';
+    var scene=document.createElement('div'); scene.className='omega-gateway';
     scene.innerHTML='<div class="omega-gateway-chamber" aria-hidden="true">'
       +'<div class="omega-gateway-monolith left"></div><div class="omega-gateway-monolith right"></div>'
       +'<div class="omega-gateway-pillar left"></div><div class="omega-gateway-pillar right"></div>'
-      +'<div class="omega-gateway-portal">'
-      +'<div class="omega-gateway-vault"></div>'
+      +'<div class="omega-gateway-portal"><div class="omega-gateway-vault"></div>'
       +'<div class="omega-gateway-ring r1"></div><div class="omega-gateway-ring r2"></div><div class="omega-gateway-ring r3"></div><div class="omega-gateway-ring r4"></div>'
-      +'<div class="omega-gateway-core"><div class="omega-gateway-mark">Ω</div></div>'
-      +'</div>'
+      +'<div class="omega-gateway-core"><div class="omega-gateway-mark">Ω</div></div></div>'
       +'<div class="omega-gateway-beam"></div><div class="omega-gateway-floor"></div>'
       +'<i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i>'
-      +'<div class="omega-gateway-code">91717 · GENESIS FIELD</div>'
-      +'<div class="omega-gateway-caption">THE CODE · THE FREQUENCY · THE LEGACY</div>'
-      +'</div>';
+      +'<div class="omega-gateway-code">91717 · GENESIS FIELD</div><div class="omega-gateway-caption">THE CODE · THE FREQUENCY · THE LEGACY</div></div>';
     mount.appendChild(scene);
-
     if(!reduced){
       mount.addEventListener('pointermove',function(ev){
         var rect=mount.getBoundingClientRect();
@@ -78,15 +60,9 @@
     }
     return true;
   }
-
   function boot(){
-    if(installOpeningStage()) return;
-    var tries=0;
-    var timer=setInterval(function(){
-      if(installOpeningStage() || ++tries>=40) clearInterval(timer);
-    },100);
+    if(installOpeningStage()) return; var tries=0;
+    var timer=setInterval(function(){if(installOpeningStage() || ++tries>=40) clearInterval(timer);},100);
   }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
 })();

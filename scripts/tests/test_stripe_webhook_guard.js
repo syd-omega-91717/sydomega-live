@@ -30,12 +30,30 @@ assert.match(
   'stripe webhook signature verification must reject malformed timestamps'
 );
 
+// Every handled Stripe event must carry the provider event ID into the
+// canonical subscription mutation so duplicate deliveries are idempotent.
+assert.match(
+  source,
+  /typeof event\.id === "string"/,
+  'webhook must require the Stripe event ID'
+);
+assert.match(
+  source,
+  /p_event_id: args\.eventId/,
+  'webhook must pass the Stripe event ID to apply_subscription'
+);
+assert.match(
+  source,
+  /p_event_type: args\.eventType/,
+  'webhook must pass the event type to apply_subscription'
+);
+
 // Stripe Checkout normally carries a subscription ID, not an embedded
 // Subscription object. The handler must resolve that ID against Stripe before
 // deriving the billing period and must not manufacture a 30-day entitlement.
 assert.match(
   source,
-  /typeof obj\.subscription === "string"/, 
+  /typeof obj\.subscription === "string"/,
   'checkout webhook must recognize Stripe subscription IDs'
 );
 assert.match(

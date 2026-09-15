@@ -54,17 +54,22 @@
     }
   };
 
-  // Graceful degradation for failed components
+  // Graceful degradation for failed components.
+  // Render message text through textContent so callers cannot inject HTML.
   window.OmegaGracefulDegrade = {
     show: (containerId, message) => {
       const el = document.getElementById(containerId);
       if(el) {
-        el.innerHTML = `<div style="padding:16px;background:rgba(139,0,0,0.1);border:1px solid #C4453C;border-radius:4px;color:#C4453C;font-size:13px">${message}</div>`;
+        el.textContent = '';
+        const state = document.createElement('div');
+        state.style.cssText = 'padding:16px;background:rgba(139,0,0,0.1);border:1px solid #C4453C;border-radius:4px;color:#C4453C;font-size:13px';
+        state.textContent = String(message == null ? '' : message);
+        el.appendChild(state);
       }
     },
     hide: (containerId) => {
       const el = document.getElementById(containerId);
-      if(el) el.innerHTML = '';
+      if(el) el.textContent = '';
     }
   };
 })();

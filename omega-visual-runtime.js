@@ -47,14 +47,16 @@
     if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;
     mount.dataset.omegaGatewayInstalled='1';
     mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional gateway');
-    mount.setAttribute('data-sculpt-label','Omega signet dimensional architecture with restrained orbital depth');
+    mount.setAttribute('data-sculpt-label','Omega Nexus architectural gateway with dimensional vault, monoliths and restrained orbital depth');
 
     var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var scene=document.createElement('div');
     scene.className='omega-gateway';
     scene.innerHTML='<div class="omega-gateway-chamber" aria-hidden="true">'
       +'<div class="omega-gateway-monolith left"></div><div class="omega-gateway-monolith right"></div>'
+      +'<div class="omega-gateway-pillar left"></div><div class="omega-gateway-pillar right"></div>'
       +'<div class="omega-gateway-portal">'
+      +'<div class="omega-gateway-vault"></div>'
       +'<div class="omega-gateway-ring r1"></div><div class="omega-gateway-ring r2"></div><div class="omega-gateway-ring r3"></div><div class="omega-gateway-ring r4"></div>'
       +'<div class="omega-gateway-core"><div class="omega-gateway-mark">Ω</div></div>'
       +'</div>'

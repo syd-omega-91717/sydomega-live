@@ -1,0 +1,45 @@
+name: Ω Spatial Navigation Materialization
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'scripts/integrate-spatial-realms.js'
+      - 'nav.js'
+      - 'gaming.html'
+      - 'cinema.html'
+      - 'characters.html'
+      - 'movies.html'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-spatial-nav-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify canonical spatial navigation is already materialized
+        run: |
+          node scripts/integrate-spatial-realms.js
+          node --check scripts/integrate-spatial-realms.js
+          grep -q '/characters.html' nav.js
+          grep -q '/movies.html' nav.js
+          grep -q 'data-omega-spatial-realm="gaming"' gaming.html
+          grep -q 'data-omega-spatial-realm="cinema"' cinema.html
+          git diff --exit-code

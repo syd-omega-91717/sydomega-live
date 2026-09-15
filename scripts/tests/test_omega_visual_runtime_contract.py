@@ -8,6 +8,7 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
     def setUp(self):
         self.runtime = (ROOT / "omega-visual-runtime.js").read_text(encoding="utf-8")
         self.opening = (ROOT / "omega-opening-system.css").read_text(encoding="utf-8")
+        self.elevation = (ROOT / "omega-page-elevation.css").read_text(encoding="utf-8")
         self.index = (ROOT / "index.html").read_text(encoding="utf-8")
 
     def test_opening_runtime_preserves_canonical_mount(self):
@@ -15,13 +16,17 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn('.ohz-hero-art[data-omega-sculpture=\"signet\"]', self.runtime)
         self.assertIn('data-omega-sculpture=\"signet\"', self.index)
 
-    def test_opening_stage_is_real_3d_not_logo_rotation(self):
-        self.assertIn("perspective:1500px", self.opening)
+    def test_opening_stage_is_architectural_3d_not_logo_rotation(self):
+        self.assertIn("perspective:1800px", self.opening)
         self.assertIn("transform-style:preserve-3d", self.opening)
-        self.assertIn("translateZ(80px)", self.opening)
-        self.assertIn("rotateX(70deg)", self.opening)
+        self.assertIn(".omega-gateway-vault", self.opening)
+        self.assertIn(".omega-gateway-monolith", self.opening)
+        self.assertIn(".omega-gateway-pillar", self.opening)
+        self.assertIn("translateZ(126px)", self.opening)
+        self.assertIn("rotateX(69deg)", self.opening)
         self.assertNotIn("animation:omegaGenesisSpin", self.runtime)
         self.assertNotIn("rotateY(360deg)", self.runtime)
+        self.assertIn("omega-gateway-vault", self.runtime)
 
     def test_runtime_is_dom_timing_safe(self):
         self.assertIn("if(document.body) mount();", self.runtime)
@@ -33,6 +38,12 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn("prefers-reduced-motion:reduce", self.opening)
         self.assertIn("pointermove", self.runtime)
         self.assertIn("pointerleave", self.runtime)
+
+    def test_platform_wide_elevation_remains_additive(self):
+        self.assertIn("transform-style:preserve-3d", self.elevation)
+        self.assertIn("perspective:1400px", self.elevation)
+        self.assertIn("prefers-reduced-motion:reduce", self.elevation)
+        self.assertNotIn("display:none", self.elevation)
 
     def test_entrypoint_remains_deferred(self):
         self.assertIn('<script src="/omega-visual-runtime.js" defer></script>', self.index)

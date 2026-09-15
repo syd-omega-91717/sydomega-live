@@ -1,9 +1,7 @@
 /* Ω VISUAL RUNTIME — opening composition and visual-universe bridge.
    Additive only. The existing omega-sculpture renderer remains the dimensional
-   object; this runtime adds a restrained gateway around it and never rotates
-   the Omega mark. Page architecture, routes and component contracts remain
-   unchanged.
-*/
+   object; the landing gateway is a separate architectural presentation layer.
+   No route, component, renderer or page contract is replaced. */
 (function(){
   'use strict';
   if(window.__OMEGA_VISUAL_RUNTIME__) return;
@@ -39,6 +37,7 @@
   }
 
   addSheet('omega-visual-runtime-css','omega-visual-universe.css');
+  addSheet('omega-page-elevation-css','omega-page-elevation.css');
   markRuntime();
   if(page!=='index') return;
   addSheet('omega-opening-system-css','omega-opening-system.css');
@@ -47,12 +46,22 @@
     var mount=document.querySelector('.ohz-hero-art[data-omega-sculpture="signet"]') || document.querySelector('.ohz-hero-art[data-omega-sculpture]');
     if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;
     mount.dataset.omegaGatewayInstalled='1';
-    mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional field');
+    mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional gateway');
 
     var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var scene=document.createElement('div');
     scene.className='omega-gateway';
-    scene.innerHTML='<div class="omega-gateway-field" aria-hidden="true"><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i></div><div class="omega-gateway-core"><div class="omega-gateway-mark" aria-hidden="true">Ω</div></div><div class="omega-gateway-horizon" aria-hidden="true"></div><div class="omega-gateway-rule" aria-hidden="true"></div><div class="omega-gateway-code" aria-hidden="true">91717 · GENESIS FIELD</div><div class="omega-gateway-caption">THE CODE · THE FREQUENCY · THE LEGACY</div>';
+    scene.innerHTML='<div class="omega-gateway-chamber" aria-hidden="true">'
+      +'<div class="omega-gateway-monolith left"></div><div class="omega-gateway-monolith right"></div>'
+      +'<div class="omega-gateway-portal">'
+      +'<div class="omega-gateway-ring r1"></div><div class="omega-gateway-ring r2"></div><div class="omega-gateway-ring r3"></div><div class="omega-gateway-ring r4"></div>'
+      +'<div class="omega-gateway-core"><div class="omega-gateway-mark">Ω</div></div>'
+      +'</div>'
+      +'<div class="omega-gateway-beam"></div><div class="omega-gateway-floor"></div>'
+      +'<i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i>'
+      +'<div class="omega-gateway-code">91717 · GENESIS FIELD</div>'
+      +'<div class="omega-gateway-caption">THE CODE · THE FREQUENCY · THE LEGACY</div>'
+      +'</div>';
     mount.appendChild(scene);
 
     if(!reduced){
@@ -60,7 +69,7 @@
         var rect=mount.getBoundingClientRect();
         var nx=((ev.clientX-rect.left)/Math.max(rect.width,1)-.5)*2;
         var ny=((ev.clientY-rect.top)/Math.max(rect.height,1)-.5)*2;
-        scene.style.transform='translate3d('+(nx*5).toFixed(2)+'px,'+(ny*4).toFixed(2)+'px,0)';
+        scene.style.transform='translate3d('+(nx*4).toFixed(2)+'px,'+(ny*3).toFixed(2)+'px,0)';
       },{passive:true});
       mount.addEventListener('pointerleave',function(){scene.style.transform='translate3d(0,0,0)';},{passive:true});
     }

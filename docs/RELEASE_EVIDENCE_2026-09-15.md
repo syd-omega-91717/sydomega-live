@@ -8,7 +8,7 @@ This file records observed release evidence without converting incomplete eviden
 
 - Repository: `syd-omega-91717/sydomega-live`
 - Default branch: `main`
-- Latest source SHA reviewed: `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58`
+- Latest source SHA reviewed: `ecbc8919419352053f56f258d7dbea9742e00783`
 - Current architecture: framework-free static delivery through Vercel with Supabase as the production backend.
 - The release-contract audit distinguishes repository-contract PASS from live provider/runtime verification.
 - The release contract scans shipped source and generated `public/` output for non-canonical Supabase endpoints and checks shipped web files for privileged credential patterns.
@@ -24,11 +24,30 @@ The first Production Smoke run for commit `080f8347d1656b4c40d62834dd1727cace431
 
 These were corrected additively in commits `66cc7f1db1c6fe15a27a59cd61b9fd7a4516f7a1` and `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58`. The release audit then returned **zero errors / zero warnings** on the new production-smoke run.
 
+## Free-tier password-breach compensating control
+
+The current Supabase Free organization cannot enable the provider-side `auth_leaked_password_protection` setting. The repository therefore implements a documented compensating control rather than falsely claiming the Supabase finding is resolved.
+
+Commit `ecbc8919419352053f56f258d7dbea9742e00783` adds:
+
+- `docs/security/PASSWORD_BREACH_COMPENSATING_CONTROL.md` — records the threat model, privacy boundary, failure semantics and closure criteria.
+- `scripts/tests/test_omega_password_guard.js` — deterministic checks for strength validation, five-character HIBP k-anonymity requests, positive compromised-password detection, clean results and unavailable-service semantics.
+- The existing `omega-password-guard.js` remains the shared browser-side control for the account and password-recovery password-setting paths.
+
+The control uses the HIBP Pwned Passwords range model: the browser hashes locally, sends only the first five SHA-1 characters, and compares returned suffixes locally. The full password is not sent to HIBP. This is a **compensating control, not an equivalent replacement for Supabase's server-side Auth feature**. Direct callers of Supabase Auth can bypass a browser-only control.
+
+Accordingly:
+
+- `COMPENSATING_CONTROL=PASS` must remain distinct from `SUPABASE_ADVISOR=PASS`.
+- `auth_leaked_password_protection` remains an external/unresolved Supabase Security Advisor finding on Free.
+- No SQL, RLS policy, application flag, or documentation may represent the provider finding as fixed.
+- The project does not need to purchase Pro solely to obtain a truthful repository-side password-breach control, unless server-side enforcement against direct Auth callers becomes a required business/security policy.
+
 ## Observed live deployment signal
 
-The Production Smoke run for source SHA `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58` completed successfully.
+The Vercel status for source SHA `ecbc8919419352053f56f258d7dbea9742e00783` reports **success** and `Deployment has completed`.
 
-Observed on 2026-09-15:
+The preceding production-smoke release `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58` established the following observed front-door evidence on 2026-09-15:
 
 - `https://sydomega.com/healthz.html` returned **HTTP 200** with a non-empty response.
 - `https://www.sydomega.com/healthz.html` returned **HTTP 200** with a non-empty response.
@@ -39,7 +58,7 @@ Observed on 2026-09-15:
 - Canonical Supabase REST transport returned **HTTP 401**.
 - The Supabase smoke gate reported `SUPABASE_ENDPOINT=REACHABLE`; the check treats 5xx as failure, so 401 is interpreted as a reachable authenticated boundary rather than successful unauthenticated application access.
 
-These checks establish current external reachability and selected boundary behavior. They do **not** prove every application capability, database workflow, payment flow, AI integration, authorization path, recovery procedure, or business rule is production-correct.
+The new Vercel deployment is confirmed complete, but the new SHA must still receive its own full production-smoke workflow evidence before that evidence is promoted to a current release gate.
 
 ## Current security state
 
@@ -47,7 +66,7 @@ The current Supabase Security Advisor reports exactly one remaining warning:
 
 - `auth_leaked_password_protection` — Leaked Password Protection is disabled.
 
-This is an external Supabase Auth configuration item and is **not claimed fixed** by repository changes. GitHub issue #375 tracks the required provider-side remediation and verification.
+This is an external Supabase Auth configuration item and is **not claimed fixed** by repository changes. GitHub issue #375 tracks the provider-side remediation and verification. The Free-tier compensating control described above reduces password-breach exposure through the platform's own password-setting UI but does not close the provider-level finding.
 
 ## Capability evidence boundary
 
@@ -59,7 +78,7 @@ The capability-evidence freshness gate detects stale evidence that is incorrectl
 
 The following remain open until directly exercised and recorded with sufficient evidence:
 
-- Supabase Security Advisor = zero warnings.
+- Supabase Security Advisor = zero warnings. **This remains provider-plan dependent while the project is on Free.**
 - Current RLS regression state against the live database.
 - Authentication/MFA/RBAC end-to-end flows.
 - Stripe checkout, signed webhook, entitlement lifecycle and idempotency.
@@ -83,4 +102,4 @@ No completion claim is made for an item above until appropriate evidence exists.
 
 The current evidence supports this narrower statement:
 
-> The current `main` commit `ec58ff48cab2a343ee25d6d9b77955ad1f7ccc58` has a passing repository release contract and a successful production smoke verification of both custom-domain front doors, both health endpoints, and the canonical Supabase transport boundaries. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.
+> The current `main` commit `ecbc8919419352053f56f258d7dbea9742e00783` has been successfully deployed by Vercel and adds a tested/documented Free-tier password-breach compensating control without claiming to resolve Supabase's provider-level Security Advisor warning. The previous release has a passing repository release contract and successful production smoke verification of both custom-domain front doors, both health endpoints, and the canonical Supabase transport boundaries. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.

@@ -1,0 +1,18 @@
+{
+  "functions": [
+    "checkout",
+    "concierge",
+    "concierge-orchestrator",
+    "graphify-ai-ingest",
+    "graphify-ai-query",
+    "growth-orchestrator",
+    "intel-feed",
+    "market-price",
+    "notify-access",
+    "product-orchestrator",
+    "rankings",
+    "snapshot-leaderboard",
+    "stripe-webhook",
+    "weekly-digest"
+  ]
+}

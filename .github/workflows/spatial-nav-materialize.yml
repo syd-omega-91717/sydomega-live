@@ -1,0 +1,58 @@
+name: Ω Spatial Navigation Materialization
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'scripts/integrate-spatial-realms.js'
+      - 'nav.js'
+      - 'gaming.html'
+      - 'cinema.html'
+      - 'characters.html'
+      - 'movies.html'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-spatial-nav-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Materialize canonical spatial navigation
+        run: node scripts/integrate-spatial-realms.js
+
+      - name: Verify canonical routes
+        run: |
+          node --check scripts/integrate-spatial-realms.js
+          grep -q '/characters.html' nav.js
+          grep -q '/movies.html' nav.js
+          grep -q 'data-omega-spatial-realm="gaming"' gaming.html
+          grep -q 'data-omega-spatial-realm="cinema"' cinema.html
+
+      - name: Commit only if materialization changed files
+        run: |
+          if git diff --quiet; then
+            echo 'Canonical spatial navigation already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nav.js gaming.html cinema.html bg.js
+          git commit -m 'feat(spatial): materialize canonical character and movie navigation'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

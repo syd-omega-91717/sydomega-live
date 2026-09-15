@@ -143,7 +143,7 @@ var today=new Date().toISOString().slice(0,10);
 function seedSystemNotifs(){
   var seeds=[
     {id:'sys-1',type:'system',title:'Welcome to OMEGA',body:'Your sovereign notification center is active. Manage reminders, alerts, and system messages here.',read:false,date:today},
-    {id:'sys-2',type:'system',title:'Platform Status',body:'202 pages across 15 navigation sections. This centre collects reminders, alerts and system messages.',read:false,date:today},
+    {id:'sys-2',type:'system',title:'Platform Status',body:'204 pages across 15 navigation sections. This centre collects reminders, alerts and system messages.',read:false,date:today},
   ];
   seeds.forEach(function(s){if(!notifs.find(function(n){return n.id===s.id;}))notifs.push(s);});
   localStorage.setItem(NK,JSON.stringify(notifs));

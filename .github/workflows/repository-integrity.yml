@@ -31,6 +31,8 @@ jobs:
           node-version: '20'
       - name: Repository-wide integrity audit
         run: python scripts/repository_integrity_audit.py
+      - name: Edge Function census
+        run: python scripts/edge-function-census.py --json
       - name: Build production artifact
         run: bash scripts/vercel-build.sh
       - name: Validate emitted artifact

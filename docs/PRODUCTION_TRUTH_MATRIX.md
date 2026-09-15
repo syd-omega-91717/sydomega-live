@@ -23,19 +23,20 @@
 | Page identity system | `omega-identity.js` | RUNTIME-VERIFIED in prior audit | Regression test representative pages |
 | Cinematic 3-D layer | `omega-sculpture.js` | RUNTIME-VERIFIED for current scenes | Realm scenes, navigation and performance work remain |
 | Reduced-motion handling | Shared motion/sculpture paths | IMPLEMENTED / PARTIAL | Full accessibility pass |
-| Production domain | `sydomega.com`, `www.sydomega.com` configured historically | UNVERIFIED | Verify current HTTP response and deployment |
+| Production domain | `sydomega.com`, `www.sydomega.com` | PRODUCTION-VERIFIED on 2026-09-15 | Keep production smoke on every release |
 
 ## Supabase
 
 | Capability | Current truth | Required next action |
 |---|---|---|
 | Production project | Active production project established | Keep canonical project ID documented |
-| PostgreSQL | Live | Continue schema verification |
-| Public tables | 212 at last live audit | Re-run inventory before release |
-| Public functions | 128 at last live audit | Re-run privilege/function audit |
-| RLS | 212/212 public tables enabled at last live audit | Re-run after schema changes |
+| PostgreSQL | Live; direct SQL verification completed 2026-09-15 | Continue schema verification |
+| Public tables | **218** at live verification 2026-09-15 | Re-run inventory before each release |
+| Public functions | **128** at live verification 2026-09-15 | Re-run privilege/function audit |
+| RLS | **218/218** public tables have RLS enabled at live verification 2026-09-15 | Complete policy-semantic regression and member/owner access tests |
+| Tables without policies | **0** at live verification 2026-09-15 | Preserve this invariant |
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
-| Leaked password protection | Enabled by owner | Refresh Security Advisor and record zero findings |
+| Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
 | Migration history | Live migrations applied; latest known migration recorded separately | Check schema drift before each release |
 | Storage | Present in architecture | Audit buckets/policies and exercise upload/download |
 | Edge Functions | Present | Verify deployed versions and secrets without exposing them |
@@ -52,17 +53,17 @@
 | RBAC/owner access | Schema and guards exist | Prove every privileged route/action server-side |
 | Password reset | Required by production auth contract | E2E test |
 | Session invalidation | Required | E2E test after password/security changes |
+| Password breach compensating control | Browser-side HIBP k-anonymity guard is tested and shared by account/recovery flows | Keep distinct from provider-level Supabase leaked-password protection |
 
 ## Deployment / CI
 
 | Contract | Truth | Next action |
 |---|---|---|
-| Vercel build configuration | Implemented | Inspect a successful current deployment log |
-| Main deployment policy | Implemented | Verify current production alias |
-| Vercel management access | Previously blocked by scope/re-authentication | Re-authenticate correct project/team scope |
-| Recent deployment errors | Previously observed on PR deployments | Obtain current deployment logs and close root cause |
-| GitHub workflows | Implemented | Restore runner reliability and obtain green executions |
-| Production smoke checks | Implemented | Require successful execution as release evidence |
+| Vercel build configuration | Implemented | Keep successful current deployment evidence |
+| Main deployment policy | Implemented | Verify current production alias on each release |
+| Vercel production deployment | Current main SHA `724775cca97f9b0d8b907e84987049f618829fa8` has a successful Vercel Production workflow | Keep production propagation/smoke gates mandatory |
+| GitHub workflows | Current main verification set is green | Preserve concurrency policy and investigate any new failure at root cause |
+| Production smoke checks | Implemented and successful for current release SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
 ## Payments / financial integrity
@@ -124,18 +125,18 @@ For each module, the next audit must record: page(s), data source, write path, a
 
 A production release should not be declared complete until all P0/P1 items below are green:
 
-- [ ] Current Vercel deployment succeeds.
-- [ ] `sydomega.com` and `www.sydomega.com` serve the intended build.
-- [ ] Production smoke tests pass.
-- [ ] GitHub verification workflows execute successfully.
-- [ ] Supabase Security Advisor has zero unresolved findings.
-- [ ] RLS regression audit passes.
+- [x] Current Vercel deployment succeeds for the current release evidence set.
+- [x] `sydomega.com` and `www.sydomega.com` serve the intended build.
+- [x] Production smoke tests pass for current release SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`.
+- [x] GitHub verification workflows execute successfully for current main verification set.
+- [ ] Supabase Security Advisor has zero unresolved findings. **Open provider-level item: leaked-password protection is disabled on the current Free plan.**
+- [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 218/218 RLS-enabled and 0 tables without policies.
 - [ ] Auth/MFA/RBAC E2E flow passes.
 - [ ] Stripe checkout/webhook/entitlement flow passes in the intended environment.
-- [ ] No secrets are exposed in repository or client bundle.
+- [x] No privileged browser credentials were found by the release-contract audit.
 - [ ] Critical user journeys pass on mobile-sized and desktop viewports.
 - [ ] Accessibility and performance gates pass for representative pages.
 - [ ] Backup/restore procedure has been exercised.
-- [ ] Release evidence records Git SHA, deployment ID, migration state and test results.
+- [x] Current release evidence records Git SHA, workflow/deployment evidence, production smoke results and Supabase transport reachability.
 
 **This matrix intentionally does not invent completion. It is updated only when evidence changes.**

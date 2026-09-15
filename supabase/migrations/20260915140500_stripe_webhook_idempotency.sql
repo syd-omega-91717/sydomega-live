@@ -3,12 +3,6 @@
 --
 -- Preserves the existing Supabase Edge Function -> apply_subscription()
 -- architecture while making Stripe event delivery idempotent.
---
--- Stripe may deliver the same event more than once. The event identifier is
--- therefore persisted in the same transaction as the subscription mutation.
--- If the subscription update fails, the transaction rolls back and Stripe can
--- retry safely. If the event already exists, the function returns a duplicate
--- result without mutating the subscription again.
 -- ============================================================================
 
 BEGIN;
@@ -20,7 +14,6 @@ CREATE TABLE IF NOT EXISTS public.stripe_webhook_events (
 );
 
 ALTER TABLE public.stripe_webhook_events ENABLE ROW LEVEL SECURITY;
-
 REVOKE ALL ON TABLE public.stripe_webhook_events FROM anon, authenticated;
 
 CREATE OR REPLACE FUNCTION public.apply_subscription(
@@ -35,7 +28,7 @@ CREATE OR REPLACE FUNCTION public.apply_subscription(
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path TO 'public'
+SET search_path = public, pg_temp
 AS $function$
 DECLARE
   inserted_count integer;
@@ -51,11 +44,7 @@ BEGIN
 
     GET DIAGNOSTICS inserted_count = ROW_COUNT;
     IF inserted_count = 0 THEN
-      RETURN jsonb_build_object(
-        'ok', true,
-        'duplicate', true,
-        'event_id', p_event_id
-      );
+      RETURN jsonb_build_object('ok', true, 'duplicate', true, 'event_id', p_event_id);
     END IF;
   END IF;
 
@@ -70,13 +59,8 @@ BEGIN
     END
   WHERE id = p_uid;
 
-  RETURN jsonb_build_object(
-    'ok', true,
-    'uid', p_uid,
-    'tier', p_tier,
-    'status', p_status,
-    'event_id', p_event_id
-  );
+  RETURN jsonb_build_object('ok', true, 'uid', p_uid, 'tier', p_tier,
+    'status', p_status, 'event_id', p_event_id);
 END;
 $function$;
 

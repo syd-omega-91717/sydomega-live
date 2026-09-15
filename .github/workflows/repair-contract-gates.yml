@@ -24,7 +24,7 @@ jobs:
           from pathlib import Path
 
           replacements = {
-              "dashboard.html": [("ALL 202 PAGES", "ALL 204 PAGES"), ("ALL 202 pages", "ALL 204 pages")],
+              "dashboard.html": [("202 PAGES", "204 PAGES"), ("202 pages", "204 pages")],
               "ecosystem.html": [("202 pages", "204 pages")],
               "notifications.html": [("202 pages", "204 pages")],
               "roadmap.html": [("202 pages", "204 pages")],
@@ -47,7 +47,7 @@ jobs:
 
       - name: Validate targeted repairs
         run: |
-          ! grep -n '202 pages\|202 PAGES' dashboard.html ecosystem.html notifications.html roadmap.html world-shell.html
+          ! grep -nE '202 pages|202 PAGES' dashboard.html ecosystem.html notifications.html roadmap.html world-shell.html
           ! grep -n 'font-size:9px' omega-spatial-realms.js
           python scripts/contract-suite.py
 

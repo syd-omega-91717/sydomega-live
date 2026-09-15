@@ -9,6 +9,8 @@ placeholder language, and obviously unreadable micro-copy declarations.
 It is intentionally diagnostic rather than destructive: it never rewrites a
 page and it never invents content. Findings must be reviewed against the
 page's capability state before a copy change is made.
+
+Use --help to print this contract without scanning or modifying the repository.
 """
 from __future__ import annotations
 
@@ -19,10 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML_FILES = sorted(ROOT.glob("*.html"))
-PLACEHOLDER = re.compile(
-    r"\b(?:coming soon|placeholder|lorem ipsum|under construction|not implemented)\b",
-    re.I,
-)
+PLACEHOLDER = re.compile(r"\b(?:coming soon|placeholder|lorem ipsum|under construction|not implemented)\b", re.I)
 UNBUILT = re.compile(r"\b(?:phase\s+\d+\s+feature\s+in\s+development|feature\s+in\s+development)\b", re.I)
 MICROCOPY = re.compile(r"font-size\s*:\s*(\d+(?:\.\d+)?)px", re.I)
 
@@ -34,7 +33,6 @@ def strip_tags(value: str) -> str:
 def audit(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8", errors="replace")
     findings: list[str] = []
-
     if not re.search(r"<meta[^>]+name=[\"']viewport[\"']", text, re.I):
         findings.append("missing viewport meta")
     if not re.search(r"<title>\s*[^<]+\s*</title>", text, re.I):
@@ -57,19 +55,19 @@ def audit(path: Path) -> list[str]:
             findings.append(f"micro-copy font-size {size:g}px at line {line}")
             break
 
-    # A page with a title but almost no member-visible copy is usually either a
-    # deliberate signed-out gate or an unbuilt surface. Flag it for review,
-    # never auto-fill it.
     body = re.search(r"<body\b[^>]*>(.*?)</body>", text, re.I | re.S)
     if body:
         words = re.findall(r"[A-Za-z0-9Ω]{2,}", strip_tags(body.group(1)))
         if len(words) < 12 and path.name not in {"reset.html", "pending.html"}:
             findings.append(f"very-low-visible-copy ({len(words)} tokens)")
-
     return findings
 
 
 def main() -> int:
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
+        print(__doc__.strip())
+        return 0
+
     total = len(HTML_FILES)
     findings: list[tuple[str, list[str]]] = []
     for path in HTML_FILES:

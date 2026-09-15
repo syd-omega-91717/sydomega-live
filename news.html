@@ -112,7 +112,7 @@ function renderWire(posts){
   box.innerHTML='<div class="glass">'+posts.map(function(p){
     var dt=p.created_at?new Date(p.created_at).toLocaleString():'';
     return'<div class="wire-post">'
-      +'<div class="wire-head"><span class="wire-sign">'+(p.sign?esc(p.sign).toUpperCase():'A SOVEREIGN')+'</span><span class="wire-date">'+dt+'</span></div>'
+      +'<div class="wire-head"><span class="wire-sign">'+(p.sign?esc(p.sign).toUpperCase():'A SOVEREIGN')+'</span><span class="wire-date">'+esc(dt)+'</span></div>'
       +'<div class="wire-body"></div>'
       +'</div>';
   }).join('')+'</div>';
@@ -124,19 +124,36 @@ function renderWire(posts){
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
+function safeIntelUrl(value){
+  try{
+    var u=new URL(String(value||''),window.location.origin);
+    if(u.protocol!=='https:'&&u.protocol!=='http:')return '';
+    return u.href;
+  }catch(e){return '';}
+}
+function showIntelState(box,message){
+  box.textContent='';
+  var state=document.createElement('div');
+  state.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:12px';
+  state.textContent=message;
+  box.appendChild(state);
+}
+
 async function loadDispatches(){
   try{
     var r=await sb.rpc('published_dispatches',{p_limit:30});
+    if(r.error)throw r.error;
     if(r.data&&r.data.length){renderDispatches(r.data);return;}
-  }catch(e){}
+  }catch(e){console.warn('[omega-news] published_dispatches failed; using seeded dispatches',e);}
   renderDispatches(null);
 }
 
 async function loadWire(){
   try{
     var r=await sb.from('dispatches').select('sign,body,created_at').order('created_at',{ascending:false}).limit(60);
+    if(r.error)throw r.error;
     renderWire(r.data||[]);
-  }catch(e){renderWire([]);}
+  }catch(e){console.warn('[omega-news] wire load failed',e);renderWire([]);}
 }
 
 async function loadIntel(){
@@ -145,16 +162,23 @@ async function loadIntel(){
     var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/intel-feed',{
       headers:{'apikey':'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'}
     });
-    if(!r.ok){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
+    if(!r.ok){showIntelState(box,'FIELD INTELLIGENCE UNAVAILABLE');return;}
     var d=await r.json();
-    if(!d.items||!d.items.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
-    box.innerHTML='<div class="glass">'+d.items.map(function(it){
+    if(!d.items||!d.items.length){showIntelState(box,'NO RELEVANT SIGNALS AT THIS TIME');return;}
+    var wrap=document.createElement('div');wrap.className='glass';
+    d.items.forEach(function(it){
       var age=it.age_h>0?(it.age_h+'h ago'):'FRESH';
-      function e(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-      return'<div class="intel-item"><a class="intel-link" href="'+e(it.url)+'" target="_blank" rel="noopener noreferrer">'+e(it.title)+'</a>'
-        +'<div class="intel-meta"><b>'+it.points+'&#9650;</b><br>'+it.comments+' cmt<br>'+age+'</div></div>';
-    }).join('')+'</div>';
-  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';}
+      var url=safeIntelUrl(it.url);
+      var row=document.createElement('div');row.className='intel-item';
+      var link=document.createElement('a');link.className='intel-link';link.textContent=it.title||'';link.target='_blank';link.rel='noopener noreferrer';
+      if(url)link.href=url;else link.removeAttribute('href');
+      var meta=document.createElement('div');meta.className='intel-meta';
+      var score=document.createElement('b');score.textContent=String(it.points||0)+'▲';
+      meta.appendChild(score);meta.appendChild(document.createElement('br'));meta.appendChild(document.createTextNode(String(it.comments||0)+' cmt'));meta.appendChild(document.createElement('br'));meta.appendChild(document.createTextNode(age));
+      row.appendChild(link);row.appendChild(meta);wrap.appendChild(row);
+    });
+    box.textContent='';box.appendChild(wrap);
+  }catch(e){console.warn('[omega-news] intelligence feed failed',e);showIntelState(box,'FIELD INTELLIGENCE UNAVAILABLE');}
 }
 
 async function send(){

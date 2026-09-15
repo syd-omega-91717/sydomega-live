@@ -70,16 +70,21 @@ async function fetchStripeSubscription(subscriptionId: string): Promise<Record<s
 }
 
 async function applySubscription(admin: ReturnType<typeof createClient>, args: { uid: string; tier: string | null; status: string; periodEnd: string | null; customer: string | null; eventId: string; eventType: string }) {
-  const { data: result, error } = await admin.rpc("apply_subscription", {
-    p_uid: args.uid, p_tier: args.tier, p_status: args.status, p_period_end: args.periodEnd,
-    p_customer: args.customer, p_event_id: args.eventId, p_event_type: args.eventType,
+  const { data: result, error } = await admin.rpc("apply_subscription_event", {
+    p_event_id: args.eventId,
+    p_event_type: args.eventType,
+    p_uid: args.uid,
+    p_tier: args.tier,
+    p_status: args.status,
+    p_period_end: args.periodEnd,
+    p_customer: args.customer,
   });
   if (error) {
-    console.error("[stripe-webhook] apply_subscription failed:", error.message);
+    console.error("[stripe-webhook] apply_subscription_event failed:", error.message);
     return { ok: false as const };
   }
   if (!result || typeof result !== "object" || (result as Record<string, unknown>).ok !== true) {
-    console.error("[stripe-webhook] apply_subscription returned a non-success result");
+    console.error("[stripe-webhook] apply_subscription_event returned a non-success result");
     return { ok: false as const };
   }
   return { ok: true as const, result };
@@ -115,9 +120,6 @@ Deno.serve(async (req) => {
       const { uid, tier } = extractMetadata(obj);
       if (!uid || !tier) return json({ received: true, skipped: "missing_metadata" });
       const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
-      // Checkout is created with Stripe `mode=subscription`. A missing subscription
-      // identifier therefore means the signed event is incomplete for entitlement
-      // purposes. Do not grant an active subscription from checkout metadata alone.
       if (!subscriptionId) {
         console.error("[stripe-webhook] subscription ID missing for subscription checkout");
         return json({ error: "subscription_missing" }, 503);

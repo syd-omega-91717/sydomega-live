@@ -1,0 +1,17 @@
+/* Ω PAGE ELEVATION — additive visual layer for the existing page system.
+   No route, component, token owner, or layout contract is replaced here.
+   The goal is a coherent physical 3-D surface language across the platform:
+   depth, material separation, readable hierarchy and restrained motion. */
+html[data-omega-visual="active"] body{--omega-depth-shadow:0 24px 70px rgba(0,0,0,.34);--omega-edge-light:rgba(232,201,122,.13);--omega-cyan-edge:rgba(0,229,255,.09)}
+html[data-omega-visual="active"] .card,html[data-omega-visual="active"] .panel,html[data-omega-visual="active"] .module,html[data-omega-visual="active"] .tile,html[data-omega-visual="active"] .glass,html[data-omega-visual="active"] [class*="card"],html[data-omega-visual="active"] [class*="panel"]{transform-style:preserve-3d;backface-visibility:hidden;box-shadow:var(--omega-depth-shadow),inset 0 1px 0 var(--omega-edge-light);position:relative}
+html[data-omega-visual="active"] .card::before,html[data-omega-visual="active"] .panel::before,html[data-omega-visual="active"] .module::before,html[data-omega-visual="active"] .tile::before,html[data-omega-visual="active"] .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;transform:translateZ(1px);background:linear-gradient(135deg,rgba(255,255,255,.045),transparent 24%,transparent 72%,rgba(0,229,255,.025));opacity:.75}
+html[data-omega-visual="active"] main,html[data-omega-visual="active"] .main,html[data-omega-visual="active"] .page-shell{perspective:1400px;transform-style:preserve-3d}
+html[data-omega-visual="active"] h1,html[data-omega-visual="active"] h2,html[data-omega-visual="active"] h3{transform:translateZ(5px);text-wrap:balance}
+html[data-omega-visual="active"] button,html[data-omega-visual="active"] .btn,html[data-omega-visual="active"] a[class*="btn"]{transform:translateZ(4px);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+html[data-omega-visual="active"] button:hover,html[data-omega-visual="active"] .btn:hover,html[data-omega-visual="active"] a[class*="btn"]:hover{transform:translate3d(0,-2px,8px);filter:brightness(1.06)}
+html[data-omega-visual="active"] input,html[data-omega-visual="active"] select,html[data-omega-visual="active"] textarea{transform:translateZ(2px);box-shadow:inset 0 2px 12px rgba(0,0,0,.24),0 1px 0 var(--omega-edge-light)}
+html[data-omega-visual="active"] table{border-collapse:separate;border-spacing:0;transform:translateZ(2px)}
+html[data-omega-visual="active"] th{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));box-shadow:inset 0 -1px 0 var(--omega-edge-light)}
+html[data-omega-visual="active"] .section-header,html[data-omega-visual="active"] .page-header,html[data-omega-visual="active"] [class*="hero"]{transform-style:preserve-3d}
+@media(max-width:760px){html[data-omega-visual="active"] .card,html[data-omega-visual="active"] .panel,html[data-omega-visual="active"] .module,html[data-omega-visual="active"] .tile,html[data-omega-visual="active"] .glass{box-shadow:0 16px 42px rgba(0,0,0,.28),inset 0 1px 0 var(--omega-edge-light)}}
+@media(prefers-reduced-motion:reduce){html[data-omega-visual="active"] button,html[data-omega-visual="active"] .btn,html[data-omega-visual="active"] a[class*="btn"]{transition:none}html[data-omega-visual="active"] button:hover,html[data-omega-visual="active"] .btn:hover,html[data-omega-visual="active"] a[class*="btn"]:hover{transform:translateZ(4px)}}

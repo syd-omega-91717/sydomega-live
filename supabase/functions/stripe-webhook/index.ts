@@ -14,22 +14,39 @@ const json = (b: unknown, s = 200) =>
   });
 
 async function verifyStripeSignature(payload: string, sigHeader: string, secret: string): Promise<boolean> {
-  const parts = Object.fromEntries(sigHeader.split(",").map((p) => p.split("=") as [string, string]));
-  const timestamp = parts["t"];
-  const sig = parts["v1"];
-  if (!timestamp || !sig) return false;
+  let timestamp = "";
+  const signatures: string[] = [];
+  for (const part of sigHeader.split(",")) {
+    const separator = part.indexOf("=");
+    if (separator <= 0) continue;
+    const key = part.slice(0, separator).trim();
+    const value = part.slice(separator + 1).trim();
+    if (key === "t" && !timestamp) timestamp = value;
+    if (key === "v1" && value) signatures.push(value);
+  }
+  if (!timestamp || signatures.length === 0) return false;
   const timestampSeconds = Number(timestamp);
   if (!Number.isFinite(timestampSeconds)) return false;
   const age = Date.now() / 1000 - timestampSeconds;
   if (age > 300 || age < -300) return false;
+
   const signedPayload = `${timestamp}.${payload}`;
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
   const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signedPayload));
   const computed = Array.from(new Uint8Array(signature)).map((b) => b.toString(16).padStart(2, "0")).join("");
-  if (computed.length !== sig.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < computed.length; i++) mismatch |= computed.charCodeAt(i) ^ sig.charCodeAt(i);
-  return mismatch === 0;
+
+  return signatures.some((candidate) => {
+    if (computed.length !== candidate.length) return false;
+    let mismatch = 0;
+    for (let i = 0; i < computed.length; i++) mismatch |= computed.charCodeAt(i) ^ candidate.charCodeAt(i);
+    return mismatch === 0;
+  });
 }
 
 function extractMetadata(obj: Record<string, unknown>): { uid: string | null; tier: string | null } {

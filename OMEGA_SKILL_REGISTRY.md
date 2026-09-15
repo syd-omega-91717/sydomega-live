@@ -71,11 +71,11 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`supabase`** — "Use when doing ANY task involving Supabase.
   - carries: `CHANGELOG.md`, `assets/feedback-issue-template.md`, `references/skill-feedback.md`
 - **`supabase-postgres-best-practices`** — "Postgres best practices maintained by Supabase, for Postgres running anywhere.
-  - carries: `CHANGELOG.md`, `references/_contributing.md`, `references/_sections.md`, `references/_template.md`, `references/advanced-full-text-search.md`, `references/advanced-jsonb-indexing.md`, `references/conn-idle-timeout.md`, `references/conn-limits.md`, `references/conn-pooling.md`, `references/conn-prepared-statements.md`, `references/data-batch-inserts.md`, `references/data-n-plus-one.md`, `references/data-pagination.md`, `references/data-upsert.md`, `references/lock-advisory.md`, `references/lock-deadlock-prevention.md`, `references/lock-short-transactions.md`, `references/lock-skip-locked.md`, `references/monitor-explain-analyze.md`, `references/monitor-pg-stat-statements.md`, `references/monitor-vacuum-analyze.md`, `references/query-composite-indexes.md`, `references/query-covering-indexes.md`, `references/query-index-types.md`, `references/query-missing-indexes.md`, `references/query-partial-indexes.md`, `references/schema-constraints.md`, `references/schema-data-types.md`, `references/schema-foreign-key-indexes.md`, `references/schema-lowercase-identifiers.md`, `references/schema-partitioning.md`, `references/schema-primary-keys.md`, `references/security-privileges.md`, `references/security-rls-basics.md`, `references/security-rls-performance.md`
+  - carries: `CHANGELOG.md`, `references/_contributing.md`, `references/_sections.md`, `references/_template.md`, `references/advanced-full-text-search.md`, `references/advanced-jsonb-indexing.md`, `references/conn-idle-timeout.md`, `references/conn-limits.md`, `references/conn-pooling.md`, `references/conn-prepared-statements.md`, `references/data-batch-inserts.md`, `references/data-n-plus-one.md`, `references/data-pagination.md`, `references/data-upsert.md`, `references/lock-advisory.md`, `references/lock-deadlock-prevention.md`, `references/lock-short-transactions.md`, `references/lock-skip-locked.md`, `references/monitor-explain-analyze.md`, `references/monitor-pg-stat-statements.md`, `references/query-composite-indexes.md`, `references/query-covering-indexes.md`, `references/query-index-types.md`, `references/query-missing-indexes.md`, `references/query-partial-indexes.md`, `references/schema-constraints.md`, `references/schema-data-types.md`, `references/schema-foreign-key-indexes.md`, `references/schema-lowercase-identifiers.md`, `references/schema-partitioning.md`, `references/schema-primary-keys.md`, `references/security-privileges.md`, `references/security-rls-basics.md`, `references/security-rls-performance.md`
 - **`supabase-server`** — Use when planning or writing server-side code that uses `@supabase/server` — Edge Functions, Hono apps, webhook handlers, or any backend that creates…
 - **`verify-in-browser`** — Verify a change to sydomega-live by rendering the real pages in headless Chromium, and run repo-wide scans (page errors, mobile tap targets, horizontal…
   - carries: `harness/sbstub.js`, `harness/scan.js`, `harness/serve.js`, `harness/session.js`
-- **`visual-assets`** — Design or change any visual element of sydomega-live — SVG assets, sigils, emblems, share cards, page marks, palette, typography — so it matches the…
+- **`visual-assets`** — Design or change any visual element of sydomega-live — SVG assets, sigils, emblems, share cards, palette, typography — so it matches the…
 - **`web-trend-scout`** — Researches external platforms, APIs, and open-source trends via real web search, then writes a proposal-only feature idea grounded in this repo's actual…
 
 ## 2 · Agents
@@ -96,10 +96,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 204 |
 | pages loading `bg.js` | 204 of 204 |
-| `omega-*.js` modules | 134 (1279 KB) |
+| `omega-*.js` modules | 134 (1266 KB) |
 | root `.js` files | 142 |
 | `supabase/*.sql` (flat bag) | 126 |
-| `supabase/migrations/*.sql` | 186 (106 numbered `NNNN_`, 80 timestamped) |
+| `supabase/migrations/*.sql` | 187 (106 numbered `NNNN_`, 81 timestamped) |
 | Edge Functions | 14 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -108,7 +108,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 Committed on purpose: a pack that loses keys changes a number here and
 fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
-`data-i18n` key resolves, no orphan pack keys, no HTML entities in values).
+data-i18n key resolves, no orphan pack keys, no HTML entities in values).
 
 | Source | Keys |
 |---|---|
@@ -123,9 +123,9 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 92 files added since (numbered and
+end-to-end for the first time"*. The 93 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 186. Treat the validated scope as `0001`–`0094` only.
+all 187. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 204 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

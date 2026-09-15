@@ -23,6 +23,9 @@
       through a small hash, so every page has its own mark, the same mark on
       every visit, with no asset, no network request and no CSP question.
       202 distinct marks out of one function.
+   4. A shared readability/navigation polish layer, scoped to established
+      platform primitives only. It increases legibility, spacing, focus
+      clarity and content hierarchy without replacing page markup or layout.
 
    WHAT IT REFUSES TO DO
    - It never inserts a hero on a page that already has one (index.html's
@@ -39,6 +42,38 @@
   if (window.OmegaIdentity) return;
 
   var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── SHARED PAGE POLISH ────────────────────────────────────────────────
+     This is deliberately additive. It does not invent new components and
+     does not compete with page-specific classes. The selectors below are
+     existing platform primitives already owned by omega-system.css. The
+     layer concentrates on the user's recurring usability requirements:
+     readable text, clear hierarchy, comfortable controls, stronger page
+     identity and a quieter visual field. */
+  function installPagePolish() {
+    if (document.getElementById('omega-page-polish')) return;
+    var style = document.createElement('style');
+    style.id = 'omega-page-polish';
+    style.textContent = '\
+:root{--omega-reading:clamp(14px,1.05vw,16px);--omega-leading:1.62}\
+body{font-size:var(--omega-reading);line-height:var(--omega-leading)}\
+.main,.page-shell{min-width:0}\
+.main>main,.page-shell>main,.main>.content,.page-shell>.content,.main>#app,.page-shell>#app{width:min(100%,1480px);margin-inline:auto}\
+.card,.card-grid>.card,.kpi,.kpi-card{transition:border-color .22s ease,background-color .22s ease,box-shadow .22s ease,transform .22s ease}\
+.card-body,.kpi-sub,.muted,.small,.help,.hint,.description,.lede{line-height:1.65}\
+.card-body{font-size:clamp(13px,.92vw,15px)}\
+.sechead{font-size:clamp(12px,.82vw,14px);letter-spacing:.18em;line-height:1.35}\
+button,.btn,a.btn,input[type=button],input[type=submit]{min-height:40px}\
+input,select,textarea{font-size:16px;line-height:1.45}\
+:where(button,.btn,a,input,select,textarea):focus-visible{outline:2px solid var(--page-accent,var(--cyan));outline-offset:3px;box-shadow:0 0 0 4px color-mix(in srgb,var(--page-accent,var(--cyan)) 16%,transparent)}\
+.table-wrap,.tbl-wrap,.data-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}\
+.table,.tbl,.data-table{min-width:640px}\
+@media(max-width:760px){.main>main,.page-shell>main,.main>.content,.page-shell>.content,.main>#app,.page-shell>#app{width:100%}.card,.kpi,.kpi-card{padding:14px}.sechead{letter-spacing:.12em}.topbar{padding-inline:14px}.btn{min-height:42px}}\
+@media(prefers-reduced-motion:reduce){.card,.kpi,.kpi-card{transition:none}}\
+';
+    (document.head || document.documentElement).appendChild(style);
+  }
+  installPagePolish();
 
   /* ── the page's own slug ─────────────────────────────────────────────── */
   function slug() {
@@ -112,7 +147,6 @@
              'A' + rad + ' ' + rad + ' 0 ' + large + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2);
     }
 
-    /* outer ring, broken into 3-6 arcs with seeded gaps */
     var segs = 3 + Math.floor(r() * 4);
     var off = r() * Math.PI * 2;
     var gap = 0.18 + r() * 0.22;
@@ -123,7 +157,6 @@
                    'stroke-width': 1.6, 'stroke-linecap': 'round', opacity: 0.85 });
     }
 
-    /* spokes — 6, 8 or 12, always a divisor-friendly count so it reads ordered */
     var spokes = [6, 8, 12][Math.floor(r() * 3)];
     var sOff = r() * Math.PI;
     for (var j = 0; j < spokes; j++) {
@@ -136,7 +169,6 @@
       });
     }
 
-    /* inner polygon, 3-7 sides */
     var sides = 3 + Math.floor(r() * 5);
     var pOff = r() * Math.PI * 2, pts = [];
     for (var k = 0; k < sides; k++) {
@@ -146,7 +178,6 @@
     el('polygon', { points: pts.join(' '), fill: 'none', stroke: col,
                     'stroke-width': 1.1, opacity: 0.62 });
 
-    /* the constant: Ω at the centre, the one part that is never seeded */
     var t = el('text', {
       x: 50, y: 50, 'text-anchor': 'middle', 'dominant-baseline': 'central',
       fill: col, 'font-size': 22, 'font-family': 'var(--D, Georgia, serif)', opacity: 0.95
@@ -155,13 +186,6 @@
     return svg;
   }
 
-  /* ── title: the PAGE's name, never the section's ─────────────────────
-     Measured in a render: with the section label as the fallback, the hero
-     printed "COMMAND / COMMAND" and "COSMOS / COSMOS" -- eyebrow and title
-     the same word, on the 164 pages that have no <h1>. The eyebrow is the
-     SECTION; the title must be the PAGE, so the fallback is the page's own
-     slug, spelled out. That is the page's real name, not an invented one:
-     naming is not the same as fabricating a figure (8.1 class 9). */
   function prettify(sl) {
     return sl.replace(/[-_]+/g, ' ')
              .replace(/\b\w/g, function (c) { return c.toUpperCase(); })
@@ -178,41 +202,21 @@
     return null;
   }
 
-  /* ── where the hero belongs: inside the content column, never after it ─
-     .shell is a flex ROW (CLAUDE.md 4), so anything appended as a sibling of
-     <main> becomes a third COLUMN and steals width -- 23 pages once rendered
-     ~300px wide exactly that way. The hero goes INSIDE the content element. */
   function host() {
-    /* MEASURED, not assumed: on dashboard.html and vault.html there is no
-       `main.main`, and the first `main`/`#app` that matches CONTAINS
-       #omega-side -- it is the shell, not the content column. Inserting the
-       hero there would make it a sibling of the sidebar inside a flex ROW,
-       which is precisely how 23 pages once rendered ~300px wide (CLAUDE.md
-       §4). So a candidate that contains the nav is disqualified outright. */
     var cands = ['main.main', '.main', 'main', '#app', '.content', '.wrap'];
     for (var i = 0; i < cands.length; i++) {
       var el = document.querySelector(cands[i]);
       if (!el) continue;
-      if (el.querySelector('#omega-side, .side, nav.side')) continue;  /* the shell */
-      if (el.closest && el.closest('#omega-side')) continue;           /* inside the nav */
+      if (el.querySelector('#omega-side, .side, nav.side')) continue;
+      if (el.closest && el.closest('#omega-side')) continue;
       return el;
     }
-    return null;   /* no content column found -> publish the axis, add no hero */
+    return null;
   }
 
   function hasHero(h) {
-    /* MEASURED: [data-omega-emblem] matches exactly ONCE on every one of the
-       202 pages -- it is shared chrome, not a page hero. Counting it as one
-       suppressed the hero on 202/202 pages in the first run of this module.
-       So the test is scoped to the CONTENT COLUMN and names only elements
-       that really are a page's own opening statement. */
     if (document.querySelector('.oid-hero')) return true;
     if (!h) return false;
-    /* 26 pages carry their own hero under page-local names -- hero-band,
-       hero-title, hero-eyebrow, okr-hero and the rest (measured). Stacking a
-       second hero above one of those would be worse than adding none, so the
-       substring match is deliberate here: this is the one place where a
-       loose test is the safe one. */
     return !!h.querySelector(
       '.page-hero,.ohz-hero,[data-omega-sculpture],[data-omega-constellation],' +
       '[class*="hero"]');
@@ -225,16 +229,12 @@
     var sl = slug();
     var ax = axis(sl);
 
-    /* 1. publish the axis -- this half always runs, on every page, even where
-          a hero is not wanted. It is what makes 202 pages stop looking alike. */
     var root = document.documentElement;
     root.style.setProperty('--page-accent', ax.col);
     root.style.setProperty('--page-accent-soft', ax.col + '2E');
     root.style.setProperty('--page-accent-glow', ax.col + '66');
     root.setAttribute('data-omega-axis', ax.key);
 
-    /* Wait for nav.js before committing to a hero: without OmegaNav the axis
-       is a guess, and a hero built on a guess would need rebuilding. */
     if (!window.OmegaAxis) return;
     _done = true;
 
@@ -254,7 +254,6 @@
 
     var copy = document.createElement('div');
     copy.className = 'oid-copy';
-    /* Two lines that say the same word are worse than one line. */
     var sameWord = ttl && ax.label &&
         ttl.text.replace(/\s+/g, '').toUpperCase() === ax.label.replace(/\s+/g, '').toUpperCase();
     if (ax.label && !sameWord) {
@@ -264,8 +263,6 @@
       copy.appendChild(eyebrow);
     }
     if (ttl) {
-      /* The page's own <h1> keeps its semantics and moves into the hero --
-         a second <h1> would be a duplicate heading for a screen reader. */
       if (ttl.from === 'h1' && ttl.el && ttl.el.parentNode) {
         ttl.el.classList.add('oid-title');
         copy.appendChild(ttl.el);
@@ -288,10 +285,6 @@
   function boot() {
     build();
     if (_done) return;
-    /* nav.js is injected by bg.js and may land after this module. Re-try on a
-       short poll with a hard stop -- graph-admin.html:83 polled every 100ms
-       FOREVER for an accessor nobody published (8.1 class 4b); this one gives
-       up after 5s and leaves the axis token it already set. */
     var tries = 0;
     var iv = setInterval(function () {
       build();

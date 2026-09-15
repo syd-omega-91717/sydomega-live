@@ -14,6 +14,7 @@
   window.__omegaGenesis = 1;
 
   var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var IS_INDEX = /(^|\/)index\.html?$/i.test(location.pathname || '') || location.pathname === '/';
 
   var PAL = {
     FIRE:      { ring: '201,168,76',  accent: '139,0,0',    core: '226,200,109', p: ['201,168,76', '139,0,0', '226,200,109'] },
@@ -53,11 +54,6 @@
   style.textContent = css;
   (document.head || document.documentElement).appendChild(style);
 
-  /* Desynchronize the breathing glow across many simultaneous cards -- without
-     this, every .card/.tier/.node/.tile/.mod on a content-dense page (e.g. a
-     144-card grid) pulses in perfect unison, which reads as a flash/strobe
-     rather than a calm ambient effect. A small random delay per element fixes
-     that cheaply, re-applied whenever new cards get added to the page. */
   function destagger() {
     if (REDUCED) return;
     document.querySelectorAll('.card,.tier,.node,.tile,.mod').forEach(function (el) {
@@ -87,27 +83,6 @@
     var ctx = c.getContext('2d');
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W, H;
-    /* The parallax layer (omega-9d.js) transforms this canvas with
-       scale(1.06), so a translate never exposes an edge. The buffer was
-       sized to exactly innerWidth x innerHeight, so every pixel was then
-       upsampled 6%: measured a 1440x900 buffer displayed in a 1526x954 box
-       on a 1440x900 viewport, on every page. The overscan is deliberate;
-       drawing at the un-overscanned resolution was not.
-
-       Read the scale that is ACTUALLY applied rather than repeating 1.06
-       here. This file owns the buffer and omega-9d.js owns the transform,
-       and a constant copied across that boundary is the coordination
-       failure CLAUDE.md 4 records for the bottom-chrome ladder -- right at
-       one setting, silently wrong the moment the other side changes.
-       getComputedStyle resolves to a matrix whose first component is the
-       horizontal scale, so this stays correct if the overscan is retuned
-       and if omega-9d.js never applies a transform at all -- then it reads
-       1 and the buffer is exactly the viewport, as before. (That scale-1
-       path covers the window before the parallax rAF loop starts, and
-       omega-9d.js being absent or failing. It is NOT the reduced-motion
-       case: this whole canvas sits behind `if (!REDUCED)` below, so under
-       prefers-reduced-motion it is never created -- verified in a render,
-       the element is absent entirely.) */
     function overscan() {
       var tf = getComputedStyle(c).transform;
       if (!tf || tf === 'none') return 1;
@@ -120,9 +95,6 @@
       var k = overscan();
       var w = Math.floor(innerWidth * DPR * k);
       var h = Math.floor(innerHeight * DPR * k);
-      /* Assigning canvas.width CLEARS the bitmap, so only touch it on a
-         real change -- these re-checks run repeatedly. frame() redraws
-         every tick, so a genuine resize is invisible. */
       if (c.width !== w) c.width = w;
       if (c.height !== h) c.height = h;
       W = c.width; H = c.height;
@@ -131,81 +103,47 @@
     }
     size();
     addEventListener('resize', size);
-    /* The transform is applied by omega-9d.js's rAF loop, which starts
-       after this module runs -- so the size() above necessarily reads
-       scale 1. Re-check a few times to pick the overscan up once it
-       exists. Bounded retries, not a permanent poll: the scale component
-       stops changing as soon as the parallax layer is up. */
     [250, 1000, 3000].forEach(function (ms) { setTimeout(size, ms); });
 
     var N = Math.max(46, Math.min(150, Math.floor(innerWidth * innerHeight / 10000)));
     var P = [];
     for (var i = 0; i < N; i++) {
-      P.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: (Math.random() * 1.5 + 0.4) * DPR,
-        vx: (Math.random() - 0.5) * 0.11 * DPR,
-        vy: (Math.random() - 0.5) * 0.11 * DPR,
-        ph: Math.random() * 6.2832,
-        ci: Math.floor(Math.random() * 3)
-      });
+      P.push({ x: Math.random() * W, y: Math.random() * H, r: (Math.random() * 1.5 + 0.4) * DPR, vx: (Math.random() - 0.5) * 0.11 * DPR, vy: (Math.random() - 0.5) * 0.11 * DPR, ph: Math.random() * 6.2832, ci: Math.floor(Math.random() * 3) });
     }
-
     var t = 0, hidden = false;
     document.addEventListener('visibilitychange', function () { hidden = document.hidden; });
-
     function frame() {
       if (!hidden) {
         var pal = STATE.pal;
         ctx.clearRect(0, 0, W, H);
         var cx = W * 0.5, cy = H * 0.4, base = Math.min(W, H) * 0.36;
-
         ctx.save();
         ctx.translate(cx, cy);
         for (var k = 0; k < 6; k++) {
           var rot = t * (0.00018 + k * 0.00007) * (k % 2 ? 1 : -1);
-          ctx.save();
-          ctx.rotate(rot);
-          ctx.beginPath();
+          ctx.save(); ctx.rotate(rot); ctx.beginPath();
           ctx.ellipse(0, 0, base * (0.5 + k * 0.17), base * (0.18 + k * 0.15), k * 0.5, 0, 6.2832);
           ctx.strokeStyle = 'rgba(' + (k % 2 ? pal.accent : pal.ring) + ',' + (0.075 + 0.03 * Math.sin(t * 0.001 + k)).toFixed(3) + ')';
-          ctx.lineWidth = 1 * DPR;
-          ctx.stroke();
-          ctx.restore();
+          ctx.lineWidth = 1 * DPR; ctx.stroke(); ctx.restore();
         }
         var pulse = 0.085 + 0.05 * (0.5 + 0.5 * Math.sin(t * 0.0016));
         var g = ctx.createRadialGradient(0, 0, 0, 0, 0, base * 0.55);
         g.addColorStop(0, 'rgba(' + pal.core + ',' + pulse.toFixed(3) + ')');
         g.addColorStop(0.5, 'rgba(' + pal.accent + ',' + (pulse * 0.4).toFixed(3) + ')');
         g.addColorStop(1, 'rgba(' + pal.accent + ',0)');
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(0, 0, base * 0.55, 0, 6.2832);
-        ctx.fill();
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, base * 0.55, 0, 6.2832); ctx.fill();
         ctx.rotate(-t * 0.00012);
-        ctx.font = (base * 0.34).toFixed(0) + 'px "Cinzel Decorative", serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.globalAlpha = 0.10 + 0.05 * (0.5 + 0.5 * Math.sin(t * 0.0016));
-        ctx.fillStyle = 'rgba(' + pal.core + ',1)';
-        ctx.fillText(STATE.glyph, 0, 0);
-        ctx.globalAlpha = 1;
-        ctx.restore();
-
+        ctx.font = (base * 0.34).toFixed(0) + 'px "Cinzel Decorative", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.globalAlpha = 0.10 + 0.05 * (0.5 + 0.5 * Math.sin(t * 0.0016)); ctx.fillStyle = 'rgba(' + pal.core + ',1)'; ctx.fillText(STATE.glyph, 0, 0); ctx.globalAlpha = 1; ctx.restore();
         for (var j = 0; j < P.length; j++) {
-          var p = P[j];
-          p.x += p.vx; p.y += p.vy;
+          var p = P[j]; p.x += p.vx; p.y += p.vy;
           if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
           if (p.y < 0) p.y = H; else if (p.y > H) p.y = 0;
           var tw = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * 0.002 + p.ph));
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-          ctx.fillStyle = 'rgba(' + pal.p[p.ci] + ',' + (0.5 * tw).toFixed(3) + ')';
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fillStyle = 'rgba(' + pal.p[p.ci] + ',' + (0.5 * tw).toFixed(3) + ')'; ctx.fill();
         }
       }
-      t += 16;
-      requestAnimationFrame(frame);
+      t += 16; requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }
@@ -232,7 +170,10 @@
     reveal();
     detect();
     if (!REDUCED) {
-      atmosphere();
+      /* The index now has its own measured gateway and existing 3-D sculpture.
+         Keeping the old rotating atmosphere behind it created two competing
+         hero systems. Other pages retain the established living atmosphere. */
+      if (!IS_INDEX) atmosphere();
       destagger();
       try { new MutationObserver(destagger).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
     }

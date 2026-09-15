@@ -5,6 +5,10 @@
   if(window.__omegaSearchEnhanced) return;
   window.__omegaSearchEnhanced = true;
 
+  function escapeRegExp(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   window.OmegaSearchEnhanced = {
     index: new Map(),
     
@@ -47,9 +51,39 @@
     },
 
     highlight: (query) => {
-      const regex = new RegExp(`(${query})`, 'gi');
+      const raw = String(query || '').trim();
+      if(!raw) return;
+
+      /* Highlight text nodes only. Never rebuild an element with innerHTML:
+         search input is user-controlled and must not become executable markup. */
+      const regex = new RegExp('(' + escapeRegExp(raw) + ')', 'gi');
       document.querySelectorAll('.card, p, h1, h2, h3').forEach(el => {
-        el.innerHTML = el.innerHTML.replace(regex, '<mark style="background:rgba(201,168,76,0.3)">$1</mark>');
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        let node;
+        while((node = walker.nextNode())) {
+          if(node.parentElement && node.parentElement.closest('mark')) continue;
+          regex.lastIndex = 0;
+          if(regex.test(node.nodeValue)) nodes.push(node);
+        }
+
+        nodes.forEach(textNode => {
+          const value = textNode.nodeValue;
+          regex.lastIndex = 0;
+          const fragment = document.createDocumentFragment();
+          let last = 0;
+          let match;
+          while((match = regex.exec(value))) {
+            if(match.index > last) fragment.appendChild(document.createTextNode(value.slice(last, match.index)));
+            const mark = document.createElement('mark');
+            mark.style.background = 'rgba(201,168,76,0.3)';
+            mark.textContent = match[0];
+            fragment.appendChild(mark);
+            last = match.index + match[0].length;
+          }
+          if(last < value.length) fragment.appendChild(document.createTextNode(value.slice(last)));
+          if(last > 0 && textNode.parentNode) textNode.parentNode.replaceChild(fragment, textNode);
+        });
       });
     }
   };

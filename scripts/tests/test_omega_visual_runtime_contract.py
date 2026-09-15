@@ -27,7 +27,7 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn("if(document.body) mount();", self.runtime)
         self.assertIn("document.addEventListener('DOMContentLoaded',mount", self.runtime)
         self.assertIn("document.addEventListener('DOMContentLoaded,boot", self.runtime.replace("'DOMContentLoaded',boot", "'DOMContentLoaded,boot"))
-        self.assertIn("document.addEventListener('DOMContentLoaded,boot", self.runtime.replace("'DOMContentLoaded',boot", "'DOMContentLoaded,boot"))
+        self.assertIn("document.addEventListener('DOMContentLoaded',boot", self.runtime)
 
     def test_motion_and_interaction_are_accessible(self):
         self.assertIn("prefers-reduced-motion: reduce", self.runtime)

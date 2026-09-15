@@ -3,7 +3,7 @@ name: Ω Spatial Realm Integration
 on:
   push:
     branches:
-      - feature/spatial-gaming-cinema-safe
+      - fix/registry-regeneration-20260915
   workflow_dispatch:
 
 permissions:
@@ -38,6 +38,8 @@ jobs:
           grep -q 'omega-spatial-realms.js' bg.js
           grep -q 'data-omega-spatial-realm="gaming"' gaming.html
           grep -q 'data-omega-spatial-realm="cinema"' cinema.html
+          grep -q '/characters.html' nav.js
+          grep -q '/movies.html' nav.js
 
       - name: Commit materialized integration
         run: |
@@ -47,6 +49,6 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add bg.js gaming.html cinema.html
-          git commit -m 'feat(spatial): materialize gaming and cinema realm mounts'
+          git add bg.js gaming.html cinema.html nav.js
+          git commit -m 'feat(spatial): materialize gaming, cinema, character and movie navigation'
           git push

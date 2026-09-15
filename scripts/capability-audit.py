@@ -7,11 +7,6 @@ import re
 import sys
 from pathlib import Path
 
-# CLAUDE.md 8.4: "Ask a script what it does before reading it." That only works
-# if asking is cheap and safe. This gate used to run its whole job on --help --
-# a repo-wide scan, or in one case an O(n^2) page comparison that never
-# returned -- so the cheapest way to learn what it did was to read it. The
-# guard runs before any work, and must stay ahead of it.
 if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
     print(__doc__)
     raise SystemExit(0)
@@ -19,20 +14,35 @@ if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/capabilities/registry.json"
 STATUS_ORDER = ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"]
-
-# The six-part contract every capability must carry, in full, before it can be
-# promoted. Matches docs/capabilities/registry.json -> contract_fields and the
-# acceptance criteria: implemented entrypoint, persistence/data contract,
-# authorization boundary, failure path, automated/static evidence, and live
-# verification where provider access permits.
-CONTRACT_KEYS = ("entrypoint", "data_contract", "authorization",
-                 "failure_path", "static_evidence", "live_verification")
-# Placeholder words that mean the field was not actually filled in.
+CONTRACT_KEYS = ("entrypoint", "data_contract", "authorization", "failure_path", "static_evidence", "live_verification")
 _PLACEHOLDERS = ("tbd", "todo", "unknown", "?", "n/a?", "fixme", "xxx")
 
 
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
+
+
+def validate_entrypoints(capabilities: list[dict]) -> list[str]:
+    """Reject registry drift when a declared shipped file no longer exists."""
+    failures: list[str] = []
+    for item in capabilities:
+        ident = item.get("id", "<missing-id>")
+        for entrypoint in item.get("entrypoints", []) or []:
+            if not isinstance(entrypoint, str) or not entrypoint.strip():
+                continue
+            value = entrypoint.strip()
+            if value.startswith(("http://", "https://", "none ")):
+                continue
+            # Registry entrypoints are repo-relative shipped files. Ignore prose
+            # fragments, but enforce concrete file paths ending in a known web
+            # or script extension so a renamed/deleted surface cannot silently
+            # remain claimed as built.
+            if not re.search(r"\.(?:html?|js|css|json|webmanifest)$", value, re.I):
+                continue
+            path = ROOT / value.lstrip("/")
+            if not path.is_file() and not (ROOT / "public" / value.lstrip("/")).is_file():
+                failures.append(f"{ident}: declared entrypoint is missing: {value}")
+    return failures
 
 
 def validate_registry() -> int:
@@ -71,18 +81,15 @@ def validate_registry() -> int:
                     failures.append(f"{ident}: contract.{key} must be a concrete sentence")
                 elif val.strip().lower().rstrip(".") in _PLACEHOLDERS:
                     failures.append(f"{ident}: contract.{key} is a placeholder, not evidence")
-            # A capability promoted above PARTIAL must not hide an unaddressed
-            # failure path or an empty data contract behind a high status.
-            promoted = STATUS_ORDER.index(item.get("status", "STATIC")) >= STATUS_ORDER.index("BUILT") \
-                and item.get("status") not in ("BROKEN", "UNREACHABLE")
-            if promoted and isinstance(contract.get("failure_path"), str) \
-                    and contract["failure_path"].strip().upper().startswith(("GAP", "WEAK", "MISSING")):
+            promoted = STATUS_ORDER.index(item.get("status", "STATIC")) >= STATUS_ORDER.index("BUILT") and item.get("status") not in ("BROKEN", "UNREACHABLE")
+            if promoted and isinstance(contract.get("failure_path"), str) and contract["failure_path"].strip().upper().startswith(("GAP", "WEAK", "MISSING")):
                 failures.append(f"{ident}: status {item.get('status')} but contract.failure_path starts with a gap marker - keep it PARTIAL until the failure path is real")
         if item.get("status") == "VERIFIED" and item.get("verified") is not True:
             failures.append(f"{ident}: VERIFIED requires verified=true")
         lv = (contract or {}).get("live_verification", "") if isinstance(contract, dict) else ""
         if item.get("verified") is True and "BLOCKED" in str(lv).upper():
             failures.append(f"{ident}: verified=true but live_verification is BLOCKED - no capability may be marked verified without evidence")
+    failures.extend(validate_entrypoints(capabilities))
     if failures:
         print("CAPABILITY REGISTRY FAILED")
         for failure in failures:
@@ -98,7 +105,6 @@ def source_audit() -> int:
     missing_runtime = []
     for page in pages:
         src = read(page)
-        # Unquoted attribute values are valid HTML5 and used by several pages.
         if not re.search(r'<script[^>]+src=["\']?/+bg\.js(?:[?#"\'\s>]|$)', src, re.I):
             missing_runtime.append(page.name)
             continue

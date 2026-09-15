@@ -115,6 +115,10 @@ async function applySubscription(
     console.error("[stripe-webhook] apply_subscription failed:", error.message);
     return { ok: false as const };
   }
+  if (!result || typeof result !== "object" || (result as Record<string, unknown>).ok !== true) {
+    console.error("[stripe-webhook] apply_subscription returned a non-success result");
+    return { ok: false as const };
+  }
   return { ok: true as const, result };
 }
 

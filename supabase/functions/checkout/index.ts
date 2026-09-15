@@ -15,12 +15,21 @@ const json = (b: unknown, s = 200) =>
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try {
-    const url = Deno.env.get("SUPABASE_URL")!;
-    const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const url = Deno.env.get("SUPABASE_URL");
+    const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const anon = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!url || !svc || !anon) {
+      console.error("[checkout] required Supabase server configuration is missing");
+      return json({ error: "checkout_not_configured" }, 503);
+    }
     const admin = createClient(url, svc);
 
     // GATE 1 -- the founder's feature flag
-    const { data: flag } = await admin.rpc("get_platform_flag", { p_key: "payments_enabled" });
+    const { data: flag, error: flagError } = await admin.rpc("get_platform_flag", { p_key: "payments_enabled" });
+    if (flagError) {
+      console.error("[checkout] payments flag lookup failed:", flagError.message);
+      return json({ error: "checkout_not_configured" }, 503);
+    }
     if (flag !== true) return json({ enabled: false, message: "Payments are not active yet." });
 
     // GATE 2 -- the Stripe secret must be configured
@@ -29,13 +38,20 @@ Deno.serve(async (req) => {
 
     // identify the member from their JWT
     const jwt = (req.headers.get("Authorization") || "").replace("Bearer ", "");
-    const { data: u } = await createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, {
+    const userClient = createClient(url, anon, {
       global: { headers: { Authorization: `Bearer ${jwt}` } },
-    }).auth.getUser();
-    if (!u?.user) return json({ error: "not_authenticated" }, 401);
+    });
+    const { data: u, error: authError } = await userClient.auth.getUser();
+    if (authError || !u?.user) return json({ error: "not_authenticated" }, 401);
 
     const { tier } = await req.json().catch(() => ({ tier: "" }));
-    const priceMap = JSON.parse(Deno.env.get("STRIPE_PRICE_MAP") || "{}");
+    let priceMap: Record<string, string>;
+    try {
+      priceMap = JSON.parse(Deno.env.get("STRIPE_PRICE_MAP") || "{}");
+    } catch {
+      console.error("[checkout] STRIPE_PRICE_MAP is invalid JSON");
+      return json({ error: "checkout_not_configured" }, 503);
+    }
     const price = priceMap[tier];
     if (!price) return json({ error: "unknown_tier" }, 400);
 
@@ -59,18 +75,22 @@ Deno.serve(async (req) => {
       headers: {
         Authorization: `Bearer ${sk}`,
         "Content-Type": "application/x-www-form-urlencoded",
-        // Pinned deliberately: without it Stripe applies the ACCOUNT default
-        // version, which moves outside this repo and can change the response
-        // shape under code that never changed. This is the last version
-        // before basil's subscription reshape, matching what this file reads.
         "Stripe-Version": "2025-02-24.acacia",
       },
       body: form,
     });
     const session = await r.json();
-    if (!r.ok) return json({ error: "stripe_error", detail: session?.error?.message }, 400);
+    if (!r.ok) {
+      console.error("[checkout] Stripe session creation failed:", session?.error?.message || "unknown Stripe error");
+      return json({ error: "stripe_error" }, 502);
+    }
+    if (!session?.url) {
+      console.error("[checkout] Stripe returned no checkout URL");
+      return json({ error: "stripe_response_invalid" }, 502);
+    }
     return json({ url: session.url });
   } catch (e) {
-    return json({ error: String(e) }, 500);
+    console.error("[checkout] unhandled error:", e instanceof Error ? e.message : "unknown error");
+    return json({ error: "checkout_failed" }, 500);
   }
 });

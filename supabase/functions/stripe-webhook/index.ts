@@ -13,45 +13,22 @@ const json = (b: unknown, s = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 
-async function verifyStripeSignature(
-  payload: string,
-  sigHeader: string,
-  secret: string
-): Promise<boolean> {
-  const parts = Object.fromEntries(
-    sigHeader.split(",").map((p) => p.split("=") as [string, string])
-  );
+async function verifyStripeSignature(payload: string, sigHeader: string, secret: string): Promise<boolean> {
+  const parts = Object.fromEntries(sigHeader.split(",").map((p) => p.split("=") as [string, string]));
   const timestamp = parts["t"];
   const sig = parts["v1"];
   if (!timestamp || !sig) return false;
-
   const timestampSeconds = Number(timestamp);
   if (!Number.isFinite(timestampSeconds)) return false;
   const age = Date.now() / 1000 - timestampSeconds;
   if (age > 300 || age < -300) return false;
-
   const signedPayload = `${timestamp}.${payload}`;
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    new TextEncoder().encode(signedPayload)
-  );
-  const computed = Array.from(new Uint8Array(signature))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signedPayload));
+  const computed = Array.from(new Uint8Array(signature)).map((b) => b.toString(16).padStart(2, "0")).join("");
   if (computed.length !== sig.length) return false;
   let mismatch = 0;
-  for (let i = 0; i < computed.length; i++) {
-    mismatch |= computed.charCodeAt(i) ^ sig.charCodeAt(i);
-  }
+  for (let i = 0; i < computed.length; i++) mismatch |= computed.charCodeAt(i) ^ sig.charCodeAt(i);
   return mismatch === 0;
 }
 
@@ -73,35 +50,23 @@ const STRIPE_API_VERSION = "2025-02-24.acacia";
 async function fetchStripeSubscription(subscriptionId: string): Promise<Record<string, unknown> | null> {
   const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
   if (!stripeKey) return null;
-
-  const response = await fetch(
-    `https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${stripeKey}`,
-        "Stripe-Version": STRIPE_API_VERSION,
-      },
-    }
-  );
+  const response = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`, {
+    headers: { Authorization: `Bearer ${stripeKey}`, "Stripe-Version": STRIPE_API_VERSION },
+  });
   if (!response.ok) return null;
   const value = await response.json();
-  return value && typeof value === "object"
-    ? value as Record<string, unknown>
-    : null;
+  return value && typeof value === "object" ? value as Record<string, unknown> : null;
 }
 
-async function applySubscription(
-  admin: ReturnType<typeof createClient>,
-  args: {
-    uid: string;
-    tier: string | null;
-    status: string;
-    periodEnd: string | null;
-    customer: string | null;
-    eventId: string;
-    eventType: string;
-  }
-) {
+async function applySubscription(admin: ReturnType<typeof createClient>, args: {
+  uid: string;
+  tier: string | null;
+  status: string;
+  periodEnd: string | null;
+  customer: string | null;
+  eventId: string;
+  eventType: string;
+}) {
   const { data: result, error } = await admin.rpc("apply_subscription", {
     p_uid: args.uid,
     p_tier: args.tier,
@@ -134,9 +99,7 @@ Deno.serve(async (req) => {
 
   const sigHeader = req.headers.get("stripe-signature") || "";
   const rawBody = await req.text();
-  if (!(await verifyStripeSignature(rawBody, sigHeader, secret))) {
-    return json({ error: "invalid_signature" }, 400);
-  }
+  if (!(await verifyStripeSignature(rawBody, sigHeader, secret))) return json({ error: "invalid_signature" }, 400);
 
   let event: Record<string, unknown>;
   try {
@@ -151,7 +114,6 @@ Deno.serve(async (req) => {
 
   const data = event.data as { object: Record<string, unknown> };
   const obj = data?.object || {};
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl || !serviceKey) {
@@ -163,24 +125,22 @@ Deno.serve(async (req) => {
   try {
     if (eventType === "checkout.session.completed") {
       const { uid, tier } = extractMetadata(obj);
-      if (!uid || !tier) {
-        console.warn("[stripe-webhook] checkout.session.completed: missing uid/tier metadata");
-        return json({ received: true, skipped: "missing_metadata" });
-      }
+      if (!uid || !tier) return json({ received: true, skipped: "missing_metadata" });
 
       const subscriptionId = typeof obj.subscription === "string" ? obj.subscription : null;
       const sub = subscriptionId ? await fetchStripeSubscription(subscriptionId) : null;
+      // A subscription ID means Stripe is the authoritative entitlement source.
+      // Never grant active access when that authoritative lookup fails.
+      if (subscriptionId && !sub) {
+        console.error("[stripe-webhook] subscription lookup failed for checkout.session.completed");
+        return json({ error: "stripe_lookup_failed" }, 503);
+      }
       const subPeriodEnd = periodEndSeconds(sub || obj.subscription);
-      const periodEnd = subPeriodEnd !== null
-        ? new Date(subPeriodEnd * 1000).toISOString()
-        : null;
+      const periodEnd = subPeriodEnd !== null ? new Date(subPeriodEnd * 1000).toISOString() : null;
       const customer = typeof obj.customer === "string" ? obj.customer : null;
-
       const applied = await applySubscription(admin, {
         uid,
-        tier: sub?.metadata && typeof sub.metadata === "object"
-          ? ((sub.metadata as Record<string, string>).tier || tier)
-          : tier,
+        tier: sub?.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
         status: "active",
         periodEnd,
         customer,
@@ -193,50 +153,22 @@ Deno.serve(async (req) => {
 
     if (eventType === "customer.subscription.updated") {
       const { uid, tier } = extractMetadata(obj);
-      if (!uid) {
-        console.warn("[stripe-webhook] subscription.updated: no uid in metadata");
-        return json({ received: true, skipped: "missing_uid" });
-      }
-
-      const resolvedTier = tier || (obj.items as any)?.data?.[0]?.plan?.nickname
-        || (obj.items as any)?.data?.[0]?.price?.nickname || "unknown";
+      if (!uid) return json({ received: true, skipped: "missing_uid" });
+      const resolvedTier = tier || (obj.items as any)?.data?.[0]?.plan?.nickname || (obj.items as any)?.data?.[0]?.price?.nickname || "unknown";
       const status = typeof obj.status === "string" ? obj.status : "active";
       const updPeriodEnd = periodEndSeconds(obj);
-      const periodEnd = updPeriodEnd !== null
-        ? new Date(updPeriodEnd * 1000).toISOString()
-        : null;
+      const periodEnd = updPeriodEnd !== null ? new Date(updPeriodEnd * 1000).toISOString() : null;
       const customer = typeof obj.customer === "string" ? obj.customer : null;
-
-      const applied = await applySubscription(admin, {
-        uid,
-        tier: resolvedTier,
-        status,
-        periodEnd,
-        customer,
-        eventId,
-        eventType,
-      });
+      const applied = await applySubscription(admin, { uid, tier: resolvedTier, status, periodEnd, customer, eventId, eventType });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
 
     if (eventType === "customer.subscription.deleted") {
       const { uid } = extractMetadata(obj);
-      if (!uid) {
-        console.warn("[stripe-webhook] subscription.deleted: no uid in metadata");
-        return json({ received: true, skipped: "missing_uid" });
-      }
-
+      if (!uid) return json({ received: true, skipped: "missing_uid" });
       const customer = typeof obj.customer === "string" ? obj.customer : null;
-      const applied = await applySubscription(admin, {
-        uid,
-        tier: null,
-        status: "cancelled",
-        periodEnd: null,
-        customer,
-        eventId,
-        eventType,
-      });
+      const applied = await applySubscription(admin, { uid, tier: null, status: "cancelled", periodEnd: null, customer, eventId, eventType });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
     }
@@ -244,7 +176,6 @@ Deno.serve(async (req) => {
     if (eventType === "invoice.payment_failed") {
       const subId = typeof obj.subscription === "string" ? obj.subscription : null;
       if (!subId) return json({ received: true, skipped: "no_subscription" });
-
       const subData = await fetchStripeSubscription(subId);
       if (!subData) {
         console.error("[stripe-webhook] subscription lookup failed for invoice.payment_failed");
@@ -252,16 +183,13 @@ Deno.serve(async (req) => {
       }
       const { uid } = extractMetadata(subData);
       if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
-
       const failedPeriodEnd = periodEndSeconds(subData);
       const meta = (subData.metadata as Record<string, string>) || {};
       const applied = await applySubscription(admin, {
         uid,
         tier: meta.tier || null,
         status: "past_due",
-        periodEnd: failedPeriodEnd !== null
-          ? new Date(failedPeriodEnd * 1000).toISOString()
-          : null,
+        periodEnd: failedPeriodEnd !== null ? new Date(failedPeriodEnd * 1000).toISOString() : null,
         customer: typeof subData.customer === "string" ? subData.customer : null,
         eventId,
         eventType,

@@ -27,6 +27,8 @@ BASELINE = pathlib.Path("scripts/supabase-migration-security-baseline.json")
 RULES = [
     (re.compile(r"\bgrant\s+(?:all|insert|update|delete|truncate|references|trigger)\b[^;]*\bto\s+(?:anon|public)\b", re.I | re.S), "unsafe privilege grant to anon/public"),
     (re.compile(r"\bgrant\s+all\b[^;]*\bto\s+authenticated\b", re.I | re.S), "broad ALL privilege grant to authenticated"),
+    (re.compile(r"\bgrant\s+(?:truncate|references|trigger)(?:\s*,\s*(?:truncate|references|trigger))*\b[^;]*\bto\s+authenticated\b", re.I | re.S), "unsafe non-DML privilege grant to authenticated"),
+    (re.compile(r"\balter\s+default\s+privileges\b[^;]*\bgrant\s+(?:all|truncate|references|trigger)\b[^;]*\bto\s+(?:anon|authenticated|public)\b", re.I | re.S), "unsafe client default privilege grant"),
     (re.compile(r"\bdisable\s+row\s+level\s+security\b", re.I), "RLS is being disabled"),
     (re.compile(r"\bsecurity\s+definer\b(?![^;]{0,800}\bset\s+search_path\s*=)", re.I | re.S), "SECURITY DEFINER function without explicit search_path"),
 ]

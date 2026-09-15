@@ -1,0 +1,8 @@
+/* Ω WORLD ATMOSPHERE — additive cinematic/game-world depth layer. */
+.omega-gateway-worlds::before{content:"";position:absolute;inset:10% 18%;background:radial-gradient(ellipse at center,rgba(0,229,255,.07),transparent 36%),radial-gradient(ellipse at center,rgba(201,168,76,.06),transparent 62%);transform:translateZ(24px);pointer-events:none;filter:blur(2px)}
+.omega-world-card::before{background:linear-gradient(120deg,transparent 0 42%,rgba(255,255,255,.08) 50%,transparent 58%);background-size:220% 100%;transition:background-position .8s ease}
+.omega-world-card:hover::before{background-position:-120% 0}
+.omega-world-game .omega-world-depth{background-image:linear-gradient(35deg,transparent 0 18%,rgba(0,229,255,.11) 19% 20%,transparent 21% 42%,rgba(0,229,255,.07) 43% 44%,transparent 45%),linear-gradient(145deg,transparent 0 58%,rgba(0,229,255,.08) 59% 60%,transparent 61%);}
+.omega-world-game .omega-world-depth::before{content:"";position:absolute;inset:16% 10%;border-left:2px solid rgba(0,229,255,.18);border-bottom:2px solid rgba(0,229,255,.12);transform:skewY(-7deg) translateZ(8px)}
+.omega-world-cinema .omega-world-depth::before{content:"";position:absolute;left:14%;right:14%;top:23%;bottom:23%;border:1px solid rgba(232,201,122,.18);box-shadow:0 0 26px rgba(201,168,76,.06),inset 0 0 25px rgba(0,229,255,.025);transform:translateZ(9px)}
+@media(prefers-reduced-motion:reduce){.omega-world-card::before{transition:none}}

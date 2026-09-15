@@ -19,6 +19,8 @@ assert.match(source, /typeof obj\.subscription === "string"/, 'checkout webhook 
 assert.match(source, /fetchStripeSubscription\(subscriptionId\)/, 'checkout webhook must resolve authoritative subscription data');
 assert.doesNotMatch(source, /Date\.now\(\) \+ 30 \* 24 \* 3600 \* 1000/, 'webhook must not invent a 30-day entitlement');
 
+assert.match(source, /result\)\.ok !== true/, 'webhook must reject a non-success RPC result');
+assert.doesNotMatch(source, /if \(!result\)/, 'webhook must not treat result presence alone as success');
 assert.doesNotMatch(source, /detail:\s*error\.message/, 'webhook must not expose database error details');
 assert.match(source, /return json\(\{ error: "db_error" \}, 500\);/, 'database failures must remain retryable');
 assert.match(source, /return json\(\{ error: "stripe_lookup_failed" \}, 503\);/, 'Stripe lookup failures must remain retryable');

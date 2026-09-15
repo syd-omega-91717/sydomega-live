@@ -41,7 +41,7 @@
    * Honours prefers-reduced-motion (no spinner animation when set).
    * Never swallows an error. Everything is also logged to the console and,
      if omega-telemetry.js is present, reported to it.
-   * If load() throws, the previous content is preserved rather than wiped —
+   * If load() throws, existing rendered content is preserved when available —
      a stale list beats an empty page.
    ========================================================================== */
 
@@ -169,18 +169,17 @@
     console.error('[OmegaShell]', this.node.id || this.node, err);
     report('error', {
       region: this.node.id || this.node.className,
-      message: err && err.message
+      code: err && err.code
     });
 
     var box = el('div', 'omega-shell-state');
     box.setAttribute('role', 'alert');
     box.appendChild(el('p', 'omega-shell-msg', humanise(err)));
 
-    // Technical detail is visible but de-emphasised — it makes support
-    // conversations possible without exposing a stack trace.
-    if (err && (err.code || err.message)) {
-      box.appendChild(el('p', 'omega-shell-detail',
-        (err.code ? err.code + ' · ' : '') + (err.message || '')));
+    // Expose only a stable provider error code, never a raw provider message,
+    // URL, query, stack trace, or other implementation detail to members.
+    if (err && err.code) {
+      box.appendChild(el('p', 'omega-shell-detail', String(err.code)));
     }
 
     if (typeof retry === 'function') {
@@ -188,8 +187,21 @@
       btn.type = 'button';
       btn.addEventListener('click', function () { retry(); });
       box.appendChild(btn);
-      this._swap(box, false);
+
+      // Preserve the last successful content when an async refresh fails.
+      // The error state is appended after it, rather than replacing it.
+      if (this._prev !== null) {
+        this.restore();
+        this.node.appendChild(box);
+        this.node.setAttribute('aria-busy', 'false');
+      } else {
+        this._swap(box, false);
+      }
       try { btn.focus({ preventScroll: true }); } catch (_) { btn.focus(); }
+    } else if (this._prev !== null) {
+      this.restore();
+      this.node.appendChild(box);
+      this.node.setAttribute('aria-busy', 'false');
     } else {
       this._swap(box, false);
     }

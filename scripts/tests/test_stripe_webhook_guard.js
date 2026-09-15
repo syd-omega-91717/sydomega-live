@@ -1,91 +1,30 @@
 const fs = require('fs');
 const assert = require('assert');
 
-const path = 'supabase/functions/stripe-webhook/index.ts';
-const source = fs.readFileSync(path, 'utf8');
+const webhookPath = 'supabase/functions/stripe-webhook/index.ts';
+const migrationPath = 'supabase/migrations/20260915141500_stripe_subscription_row_integrity.sql';
+const source = fs.readFileSync(webhookPath, 'utf8');
+const migration = fs.readFileSync(migrationPath, 'utf8');
 
-// A webhook endpoint must never acknowledge payment events when its signing
-// secret is absent. This is a source-level regression guard because the Edge
-// Function is Deno code and is not imported into the Node test process.
-assert.match(
-  source,
-  /if \(!secret\)\s*\{[\s\S]*?return json\(\{ error: "webhook_not_configured" \}, 503\);/,
-  'stripe webhook must fail closed with HTTP 503 when STRIPE_WEBHOOK_SECRET is missing'
-);
-assert.doesNotMatch(
-  source,
-  /if \(!secret\)\s*\{[\s\S]*?return json\(\{ received: true, configured: false \}\);/,
-  'stripe webhook must not acknowledge an unconfigured endpoint'
-);
+assert.match(source, /if \(!secret\)\s*\{[\s\S]*?return json\(\{ error: "webhook_not_configured" \}, 503\);/, 'webhook must fail closed when signing secret is missing');
+assert.doesNotMatch(source, /configured: false/, 'webhook must not acknowledge an unconfigured endpoint');
+assert.match(source, /if \(age > 300 \|\| age < -300\) return false;/, 'webhook signature timestamp must be bounded');
+assert.match(source, /if \(!Number\.isFinite\(timestampSeconds\)\) return false;/, 'webhook must reject malformed timestamps');
 
-// Replay protection must reject both stale and implausibly future timestamps.
-assert.match(
-  source,
-  /if \(age > 300 \|\| age < -300\) return false;/,
-  'stripe webhook signature verification must enforce a bounded timestamp tolerance'
-);
-assert.match(
-  source,
-  /if \(!Number\.isFinite\(timestampSeconds\)\) return false;/,
-  'stripe webhook signature verification must reject malformed timestamps'
-);
+assert.match(source, /typeof event\.id === "string"/, 'webhook must require Stripe event ID');
+assert.match(source, /p_event_id: args\.eventId/, 'webhook must pass Stripe event ID');
+assert.match(source, /p_event_type: args\.eventType/, 'webhook must pass event type');
 
-// Every handled Stripe event must carry the provider event ID into the
-// canonical subscription mutation so duplicate deliveries are idempotent.
-assert.match(
-  source,
-  /typeof event\.id === "string"/,
-  'webhook must require the Stripe event ID'
-);
-assert.match(
-  source,
-  /p_event_id: args\.eventId/,
-  'webhook must pass the Stripe event ID to apply_subscription'
-);
-assert.match(
-  source,
-  /p_event_type: args\.eventType/,
-  'webhook must pass the event type to apply_subscription'
-);
+assert.match(source, /typeof obj\.subscription === "string"/, 'checkout webhook must recognize subscription IDs');
+assert.match(source, /fetchStripeSubscription\(subscriptionId\)/, 'checkout webhook must resolve authoritative subscription data');
+assert.doesNotMatch(source, /Date\.now\(\) \+ 30 \* 24 \* 3600 \* 1000/, 'webhook must not invent a 30-day entitlement');
 
-// Stripe Checkout normally carries a subscription ID, not an embedded
-// Subscription object. The handler must resolve that ID against Stripe before
-// deriving the billing period and must not manufacture a 30-day entitlement.
-assert.match(
-  source,
-  /typeof obj\.subscription === "string"/,
-  'checkout webhook must recognize Stripe subscription IDs'
-);
-assert.match(
-  source,
-  /fetchStripeSubscription\(subscriptionId\)/,
-  'checkout webhook must resolve the authoritative subscription when available'
-);
-assert.doesNotMatch(
-  source,
-  /Date\.now\(\) \+ 30 \* 24 \* 3600 \* 1000/,
-  'checkout webhook must not silently invent a 30-day billing period'
-);
+assert.doesNotMatch(source, /detail:\s*error\.message/, 'webhook must not expose database error details');
+assert.match(source, /return json\(\{ error: "db_error" \}, 500\);/, 'database failures must remain retryable');
+assert.match(source, /return json\(\{ error: "stripe_lookup_failed" \}, 503\);/, 'Stripe lookup failures must remain retryable');
 
-// Provider/database internals must never be returned to an untrusted webhook
-// caller. Keep detailed diagnostics in server logs only.
-assert.doesNotMatch(
-  source,
-  /detail:\s*error\.message/,
-  'webhook must not expose database error details'
-);
-assert.match(
-  source,
-  /return json\(\{ error: "db_error" \}, 500\);/,
-  'database failures must remain retryable without leaking internals'
-);
-
-// A failed subscription lookup is a transient integration failure and must
-// remain retryable rather than being acknowledged as successfully processed.
-assert.match(
-  source,
-  /return json\(\{ error: "stripe_lookup_failed" \}, 503\);/,
-  'failed Stripe subscription lookup must return a retryable 503'
-);
+assert.match(migration, /GET DIAGNOSTICS updated_count = ROW_COUNT;/, 'RPC must inspect affected profile rows');
+assert.match(migration, /IF updated_count <> 1 THEN/, 'RPC must reject a missing or unexpected profile update');
+assert.match(migration, /RAISE EXCEPTION 'subscription_profile_not_found';/, 'missing profile must rollback the webhook transaction');
 
 console.log('Stripe webhook guard: PASS');

@@ -138,6 +138,16 @@
   function _centerX() { return window.innerWidth / 2; }
   function _centerY() { return window.innerHeight * 0.4; }
 
+  /* Dynamic event text is escaped before entering the banner's trusted markup. */
+  function _escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   /* ─── BANNER SYSTEM ─────────────────────────────────────────────── */
   function _showBanner(html, accentColor, duration) {
     var old = document.getElementById('omega-celeb-banner');
@@ -204,7 +214,7 @@
       var ROMAN = ['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
       _showBanner(
         '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:4px;color:' + accentColor + ';margin-bottom:6px">GATE ' + (ROMAN[gateNum] || gateNum) + ' UNLOCKED</div>' +
-        '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(16px,3vw,22px);color:#e9e6dc;letter-spacing:2px">' + (gateName || '').toUpperCase() + '</div>' +
+        '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(16px,3vw,22px);color:#e9e6dc;letter-spacing:2px">' + _escapeHtml((gateName || '').toUpperCase()) + '</div>' +
         '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(233,230,220,.45);margin-top:6px">AUTHORITY THRESHOLD CROSSED &middot; SYD OMEGA 91717</div>',
         accentColor, 4000
       );
@@ -215,7 +225,7 @@
       _spawnBurst(cx, cy, 50, { speed: 4, upBias: 2, size: 5, color: '#3fb27f' });
       _showBanner(
         '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:#3fb27f;margin-bottom:5px">MILESTONE REACHED</div>' +
-        '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(13px,2.5vw,18px);color:#e9e6dc">' + String(text || 'SOVEREIGN MILESTONE').toUpperCase() + '</div>',
+        '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(13px,2.5vw,18px);color:#e9e6dc">' + _escapeHtml(String(text || 'SOVEREIGN MILESTONE').toUpperCase()) + '</div>',
         '#3fb27f', 3000
       );
     },

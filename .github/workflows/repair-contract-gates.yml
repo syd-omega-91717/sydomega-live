@@ -1,0 +1,66 @@
+name: Omega Contract Repair
+
+on:
+  push:
+    branches:
+      - fix/canonical-spatial-routes
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/canonical-spatial-routes
+          fetch-depth: 0
+
+      - name: Repair deterministic contract failures
+        shell: python
+        run: |
+          from pathlib import Path
+
+          replacements = {
+              "dashboard.html": [("ALL 202 PAGES", "ALL 204 PAGES"), ("ALL 202 pages", "ALL 204 pages")],
+              "ecosystem.html": [("202 pages", "204 pages")],
+              "notifications.html": [("202 pages", "204 pages")],
+              "roadmap.html": [("202 pages", "204 pages")],
+              "world-shell.html": [("202 pages", "204 pages")],
+          }
+
+          for name, pairs in replacements.items():
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              original = text
+              for old, new in pairs:
+                  text = text.replace(old, new)
+              if text != original:
+                  path.write_text(text, encoding="utf-8")
+
+          path = Path("omega-spatial-realms.js")
+          text = path.read_text(encoding="utf-8")
+          text = text.replace("font-size:9px", "font-size:12px")
+          path.write_text(text, encoding="utf-8")
+
+      - name: Validate targeted repairs
+        run: |
+          ! grep -n '202 pages\|202 PAGES' dashboard.html ecosystem.html notifications.html roadmap.html world-shell.html
+          ! grep -n 'font-size:9px' omega-spatial-realms.js
+          python scripts/contract-suite.py
+
+      - name: Commit and remove repair workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/repair-contract-gates.yml
+          git add dashboard.html ecosystem.html notifications.html roadmap.html world-shell.html omega-spatial-realms.js
+          if git diff --cached --quiet; then
+            echo "No repair changes required."
+            exit 0
+          fi
+          git commit -m "fix: restore contract truth and type-scale floor"
+          git push origin HEAD:fix/canonical-spatial-routes

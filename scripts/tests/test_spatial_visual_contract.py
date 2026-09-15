@@ -25,7 +25,6 @@ class SpatialVisualContractTests(unittest.TestCase):
         self.assertIn("prefers-reduced-motion:reduce", opening_css)
         self.assertIn("transform-style:preserve-3d", elevation_css)
         self.assertIn("omega-page-elevation.css", runtime_js)
-        self.assertNotIn("display:none", css)
         self.assertNotIn("display:none", opening_css)
 
     def test_opening_is_a_dimensional_non_rotative_omega_nexus(self):

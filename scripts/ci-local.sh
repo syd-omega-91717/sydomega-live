@@ -70,9 +70,9 @@ sw_precache() {
   local bad=0 assets
   assets=$(node -e "
     const src = require('fs').readFileSync('sw.js','utf8');
-    const m = src.match(/var CORE_ASSETS\s*=\s*\[([\s\S]*?)\]/);
+    const m = src.match(/var CORE_ASSETS\\s*=\\s*\\[([\\s\\S]*?)\\]/);
     if(!m) process.exit(0);
-    (m[1].replace(/\/\/[^\n]*/g,'').match(/'([^']+)'/g)||[])
+    (m[1].replace(/\\/\\/[^\\n]*/g,'').match(/'([^']+)'/g)||[])
       .forEach(a => console.log(a.replace(/'/g,'')));
   ") || return 1
   for asset in $assets; do
@@ -88,7 +88,7 @@ manifest_icons() {
     const icons = [...(m.icons||[]), ...(m.shortcuts||[]).flatMap(s=>s.icons||[])];
     let bad = 0;
     icons.forEach(i => {
-      if(!fs.existsSync(i.src.replace(/^\//,''))){ console.log('  missing icon ' + i.src); bad = 1; }
+      if(!fs.existsSync(i.src.replace(/^\\//,''))){ console.log('  missing icon ' + i.src); bad = 1; }
     });
     process.exit(bad);
   "
@@ -102,9 +102,6 @@ step "1.   JavaScript syntax"                  js_syntax
 step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
 step "2.   Repository audit"                   python3 scripts/audit.py
 step "2b.  Audit tooling self-tests"           python3 -m unittest discover -s scripts/tests
-# The fabric tests live in tests/, not scripts/tests/, and GitHub ran them
-# (omega-intelligence-fabric.yml) while this script did not -- the same
-# local/GitHub divergence contract-suite.py's header was written about.
 step "2c.  Intelligence fabric self-tests"     python3 -m unittest discover -s tests
 step "2g.  TypeScript types from schema"       python3 scripts/types-from-schema.py
 step "2h.  Context budget"                     python3 scripts/context-budget.py
@@ -114,11 +111,6 @@ step "2l.  Resilience audit"                   python3 scripts/resilience-audit.
 step "2m.  Commerce contract"                  python3 scripts/commerce-contract.py
 step "2n.  Reachability contract"              python3 scripts/reachability-contract.py
 step "2o.  Module contracts"                   python3 scripts/module-contract.py
-# One step, eleven gates -- the same scripts/contract-suite.py that
-# .github/workflows/contracts.yml runs, so this list and GitHub's cannot drift.
-# They HAD drifted: content-uniqueness-contract and page-experience-contract
-# were blocking workflows on GitHub and absent here, so this script and the
-# pre-push hook both reported green while main carried two failing gates.
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan
@@ -130,40 +122,26 @@ step "10b. Capability registry JSON"            python3 -m json.tool docs/capabi
 step "11.  Production JavaScript syntax"       js_syntax
 
 if [ "$RUN_ALL" -eq 1 ]; then
-  # NOT advisory on GitHub. All five of these are BLOCKING in
-  # .github/workflows/ci.yml (lines 121-146) since 71a464db, "ci: make security
-  # and database audits blocking gates", which removed their continue-on-error.
-  # This header used to read "advisory (never blocks a merge)", and the `|| true`
-  # below still swallows their exit codes -- so this script reported
-  # "ALL BLOCKING CHECKS PASSED" on a tree GitHub rejects. Nobody noticed for
-  # five days because the CI workflow almost never concluded on the self-hosted
-  # Windows runner; moving it to a hosted runner is what surfaced it.
-  #
-  # Measured 2026-09-05, all seven now at 0: schema-dictionary, rls-auditor,
-  # silent-failure-detector, migration-consistency, migration-history-contract,
-  # upsert-conflict-check, supabase-migration-security-audit.
-  #
-  # Two of these were ABSENT from this list until 2026-09-05, and both were
-  # failing unsatisfiably -- each demanding an edit to an already-applied
-  # migration, which is never rewritten (migrations/README.md:60):
-  #   migration-history-contract, a step of ci.yml's `verify` job. That job
-  #     stops at its first failing step and migration-consistency ran before
-  #     it, so nothing here or there ever reached it.
-  #   supabase-migration-security-audit, its own workflow, queued behind every
-  #     other job on the single self-hosted runner.
-  # Mirror every blocking gate here, from every workflow: a gate this script
-  # does not run is a gate it cannot vouch for.
-  printf '\n\033[1m── blocking on GitHub, reported only here ──────────────────\033[0m\n'
+  # These audits are blocking in .github/workflows/ci.yml. Mirror them locally
+  # without swallowing their exit codes: a local command that says ALL PASSED
+  # must not conceal a failing GitHub merge gate.
+  printf '\n\033[1m── blocking on GitHub, mirrored locally ──────────────────\033[0m\n'
   for s in schema-dictionary rls-auditor silent-failure-detector \
            migration-consistency migration-history-contract upsert-conflict-check \
            supabase-migration-security-audit; do
     printf '\n\033[1m── %s (blocking in ci.yml)\033[0m\n' "$s"
-    # --local is the mode ci.yml runs; without it the history contract still
-    # checks the local tree but signs off with a misleading trailer.
     if [ "$s" = "migration-history-contract" ]; then
-      python3 "scripts/$s.py" --local || true
+      if python3 "scripts/$s.py" --local; then
+        printf '\033[32m   PASS\033[0m  %s\n' "$s"; pass=$((pass+1))
+      else
+        printf '\033[31m   FAIL\033[0m  %s\n' "$s"; fail=$((fail+1))
+      fi
     else
-      python3 "scripts/$s.py" || true
+      if python3 "scripts/$s.py"; then
+        printf '\033[32m   PASS\033[0m  %s\n' "$s"; pass=$((pass+1))
+      else
+        printf '\033[31m   FAIL\033[0m  %s\n' "$s"; fail=$((fail+1))
+      fi
     fi
   done
   printf '\n\033[1m── runtime verification (advisory; needs playwright-core + Chrome)\033[0m\n'

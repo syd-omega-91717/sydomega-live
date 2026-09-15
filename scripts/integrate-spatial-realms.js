@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const files = { gaming:path.join(root,'gaming.html'), cinema:path.join(root,'cinema.html') };
+const navFile = path.join(root,'nav.js');
 const mounts = {
   gaming:'\n<!-- Ω SPATIAL REALM: GAMING — additive mount; functional content remains authoritative -->\n<section class="omega-spatial-realm" data-omega-spatial-realm="gaming" aria-label="Gaming spatial realm"></section>\n',
   cinema:'\n<!-- Ω SPATIAL REALM: CINEMA — additive mount; functional content remains authoritative -->\n<section class="omega-spatial-realm" data-omega-spatial-realm="cinema" aria-label="Cinema spatial realm"></section>\n'
@@ -32,5 +33,27 @@ function addMount(file,realm){
   }
   throw new Error(realm+'.html has no safe insertion boundary; refusing unsafe edit');
 }
+function addNavigationEntries(){
+  let src=read(navFile);
+  const requiredPaths=['/characters.html','/movies.html'];
+  for(const p of requiredPaths){
+    if(!src.includes(p)){
+      const mediaMarker="['cinema','CINEMA','/cinema.html']";
+      const at=src.indexOf(mediaMarker);
+      if(at<0) throw new Error('nav.js has no canonical cinema navigation anchor; refusing unsafe edit');
+      const end=at+mediaMarker.length;
+      const entry=p==='/characters.html' ? ",[\'characters\',\'CHARACTERS\',\'/characters.html\']" : ",[\'movies\',\'MOVIES\',\'/movies.html\']";
+      src=src.slice(0,end)+entry+src.slice(end);
+    }
+  }
+  if(!src.includes("characters:'/characters.html'") && !src.includes('characters:"/characters.html"')){
+    const marker="cinema:'/cinema.html'";
+    if(!src.includes(marker)) throw new Error('nav.js has no canonical cinema page map anchor; refusing unsafe edit');
+    src=src.replace(marker,marker+",characters:'/characters.html',movies:'/movies.html'");
+  }
+  write(navFile,src);
+  return true;
+}
 for(const [realm,file] of Object.entries(files)){addRuntimeScript(file);addMount(file,realm);}
-console.log('Ω spatial realm integration verified: page-local runtime, additive mount, WebGL-single-owner safe.');
+addNavigationEntries();
+console.log('Ω spatial realm integration verified: page-local runtime, additive mount, canonical navigation reachability, WebGL-single-owner safe.');

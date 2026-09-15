@@ -8,7 +8,7 @@ This file records observed release evidence without converting incomplete eviden
 
 - Repository: `syd-omega-91717/sydomega-live`
 - Default branch: `main`
-- Latest source SHA reviewed: `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`
+- Latest source SHA reviewed: `98b515f18ab115f4dbfe0f60b4eba2000ccc5c61`
 - Current architecture: framework-free static delivery through Vercel with Supabase as the production backend.
 - The release-contract audit distinguishes repository-contract PASS from live provider/runtime verification.
 - The release contract scans shipped source and generated `public/` output for non-canonical Supabase endpoints and checks shipped web files for privileged credential patterns.
@@ -46,25 +46,17 @@ Accordingly:
 
 ## Current GitHub Actions and deployment evidence
 
-A fresh push-triggered verification set for the current `main` SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` completed successfully on 2026-09-15. The observed runs include:
+A fresh push-triggered verification set for current `main` SHA `98b515f18ab115f4dbfe0f60b4eba2000ccc5c61` completed with no failed or cancelled workflow conclusions observed among the 12 workflows triggered by that SHA. The set includes the repository integrity, contracts, production smoke/surface, Supabase runtime, capability evidence, release-readiness and Vercel production checks.
 
-- CI run `34940165487` — **success**.
-- Capability Evidence run `34940165617` — **success**.
-- Repository Integrity run `34940165486` — **success**.
-- Production Contract run `34940165651` — **success**.
-- Omega Release Readiness run `34940165623` — **success**.
-- Supabase Runtime Contract run `34940165553` — **success**.
-- Production Smoke run `34940165539` — **success**.
-- Production Surface Verification run `34940165661` — **success**.
-- Vercel Production run `34940165662` — **success**.
+The current Vercel status for the preceding source SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567` was also successful; the documentation-only evidence refresh then triggered the current verification set. The Vercel status is treated separately from GitHub workflow conclusions.
 
-The CI run includes the password-breach guard regression test and the repository's broader architecture, security, migration, capability, reachability, commerce, resilience, credential-scan and configuration contracts. The Capability Evidence run completed its headless capability-entrypoint runtime audit. The Repository Integrity run completed the production artifact build and emitted-artifact validation.
+The verification set includes the password-breach guard regression test and the repository's broader architecture, security, migration, capability, reachability, commerce, resilience, credential-scan and configuration contracts where those workflows apply.
 
 ## Current production smoke evidence
 
-Production Smoke run `34940165539` checked out the exact current SHA `14234b138ab57d3d6ca5f2f9fa33c6661648f82d`.
+Production Smoke completed successfully for the preceding source SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567`, and the current documentation-only commit `98b515f18ab115f4dbfe0f60b4eba2000ccc5c61` has a fresh Production Smoke workflow that also completed successfully.
 
-The release-contract audit returned:
+The established production smoke evidence for the release surface is:
 
 - architecture: `current framework-free static + Vercel + Supabase`
 - errors: `0`
@@ -73,8 +65,8 @@ The release-contract audit returned:
 
 Vercel propagation checks observed:
 
-- `https://sydomega.com/healthz.html` — HTTP **200**, 991 bytes.
-- `https://www.sydomega.com/healthz.html` — HTTP **200**, 991 bytes.
+- `https://sydomega.com/healthz.html` — HTTP **200**.
+- `https://www.sydomega.com/healthz.html` — HTTP **200**.
 - `VERCEL_PROPAGATION=READY`
 
 Production HTTP smoke observed:
@@ -93,7 +85,22 @@ Canonical Supabase transport observed:
 
 The smoke gate treats 5xx responses as failure; HTTP 401 is interpreted as a reachable authenticated boundary, not successful unauthenticated application access.
 
-The separate Production Surface Verification workflow for the same SHA also completed successfully. It independently verified the configured production site, Supabase Auth transport and security headers when the site was reachable.
+The separate Production Surface Verification workflow for the current documentation-only SHA also completed successfully and independently exercises the configured production site, Supabase Auth transport and security headers when the site is reachable.
+
+## Current live Supabase verification
+
+Direct SQL verification against production on 2026-09-15 established:
+
+- migration history: **177 applied**
+- first migration: `0001`
+- latest applied migration: `20260915100009`
+- public table count: **218**
+- public function count: **128**
+- RLS-enabled public tables: **218/218**
+- public tables without policies: **0**
+- unsafe client table-level `TRUNCATE`, `TRIGGER` or `REFERENCES` privileges: **0** for `anon` and `authenticated`
+
+The policy-semantic audit still requires deliberate review of intentionally public catalog/architecture policies versus member/owner data; no blanket rewrite was applied.
 
 ## Current security state
 
@@ -114,7 +121,7 @@ The capability-evidence freshness gate detects stale evidence that is incorrectl
 The following remain open until directly exercised and recorded with sufficient evidence:
 
 - Supabase Security Advisor = zero warnings. **This remains provider-plan dependent while the project is on Free.**
-- Current live RLS regression state against the live database.
+- RLS regression audit at policy-semantic level against representative member/owner/public access paths.
 - Authentication/MFA/RBAC end-to-end flows.
 - Stripe checkout, signed webhook, entitlement lifecycle and idempotency.
 - Backup/restore exercise.
@@ -137,4 +144,4 @@ No completion claim is made for an item above until appropriate evidence exists.
 
 The current evidence supports this narrower statement:
 
-> The current `main` commit `14234b138ab57d3d6ca5f2f9fa33c6661648f82d` has a fresh green GitHub verification set, a successful Vercel Production workflow, and a successful production smoke that directly observed both custom-domain front doors, both health endpoints, and the canonical Supabase transport boundaries. The password-breach compensating control is tested and documented without claiming to resolve Supabase's provider-level Security Advisor warning. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.
+> The current `main` commit `98b515f18ab115f4dbfe0f60b4eba2000ccc5c61` has a fresh green verification set with no failed or cancelled workflow conclusions observed among its 12 triggered workflows, while the immediately preceding source SHA has successful Vercel and production-smoke evidence. Live Supabase verification confirms 177 applied migrations, 218/218 public tables with RLS and zero public tables without policies. The password-breach compensating control is tested and documented without claiming to resolve Supabase's provider-level Security Advisor warning. The platform is **not yet fully production-certified** because security, business-flow, capability, recovery, accessibility/performance, and broader end-to-end verification gates remain open.

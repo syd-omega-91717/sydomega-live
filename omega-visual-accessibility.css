@@ -1,0 +1,25 @@
+/* Ω VISUAL ACCESSIBILITY + READABILITY LAYER
+   Additive, scoped to existing visual contracts. No renderer or route changes. */
+:root{
+  --omega-reading:clamp(15px,1.08vw,17px);
+  --omega-reading-leading:1.7;
+  --omega-focus:var(--omega-cyan,#00e5ff);
+}
+body{font-size:var(--omega-reading);line-height:var(--omega-reading-leading);text-rendering:optimizeLegibility;}
+:where(a,button,[role="button"],input,select,textarea):focus-visible{outline:2px solid var(--omega-focus);outline-offset:4px;box-shadow:0 0 0 4px rgba(0,229,255,.14);}
+:where(.omega-card,.omega-world-card,.omega-atlas-card,.omega-action){-webkit-tap-highlight-color:transparent;}
+:where(.omega-card,.omega-world-card,.omega-atlas-card){isolation:isolate;}
+:where(.omega-card p,.omega-lede,.omega-atlas-copy,.omega-world-meta,.omega-atlas-axis){max-width:70ch;text-wrap:pretty;}
+:where(.omega-card h2,.omega-world-title,.omega-atlas-name,.omega-title){text-wrap:balance;}
+:where(.omega-action,.omega-atlas-enter,.omega-world-arrow){min-height:44px;align-items:center;}
+@media (max-width:800px){
+  .omega-nav{gap:16px;align-items:flex-start;flex-wrap:wrap;}
+  .omega-main{width:min(94vw,1180px);padding-bottom:64px;}
+  .omega-grid{gap:14px;}
+  .omega-card{min-height:0;padding:22px;}
+  .omega-title{font-size:clamp(42px,12vw,76px);line-height:.95;letter-spacing:-.035em;}
+  .omega-lede{font-size:clamp(16px,4.4vw,20px);}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
+}

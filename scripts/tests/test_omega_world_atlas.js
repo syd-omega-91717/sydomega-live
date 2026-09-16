@@ -18,6 +18,7 @@ assert(runtime.includes('data-omega-world-atlas'), 'atlas must have a duplicate-
 assert(!/THREE|WebGLRenderer|new\s+THREE\./.test(runtime), 'visual atlas runtime must not create a second WebGL renderer');
 assert(css.includes('.omega-atlas-grid'), 'atlas grid styles must exist');
 assert(css.includes('prefers-reduced-motion'), 'atlas must respect reduced motion');
+assert(css.includes('omega-atlas-card:focus-visible'), 'atlas must expose a keyboard focus state');
 for (const route of portals) {
   assert(fs.existsSync(path.join(root, route.slice(1))), `atlas destination must exist: ${route}`);
   assert(runtime.includes(`'${route}'`), `atlas must expose real destination: ${route}`);

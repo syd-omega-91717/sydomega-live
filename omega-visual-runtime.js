@@ -77,6 +77,7 @@
     if(document.querySelector('[data-omega-world-atlas]')) return true;
     var anchor=document.querySelector('.ohz-hero-art[data-omega-sculpture]');
     if(!anchor) return false;
+    var host=anchor.closest('.ohz-hero') || anchor.parentElement && anchor.parentElement.parentElement;
     var host=anchor.closest('.ohz-hero') || (anchor.parentElement && anchor.parentElement.parentElement);
     if(!host || !host.parentElement) return false;
     var atlas=document.createElement('section');

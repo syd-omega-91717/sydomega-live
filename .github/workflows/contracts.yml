@@ -30,6 +30,8 @@ jobs:
       - name: Run contract suite
         run: python scripts/contract-suite.py
       - name: Enforce information architecture audit
+        if: always()
         run: python scripts/audit-information-architecture.py
       - name: Enforce single WebGL owner
+        if: always()
         run: python scripts/audit-webgl-ownership.py

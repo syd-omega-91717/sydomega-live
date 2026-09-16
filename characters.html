@@ -1,1 +1,68 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ω SYD OMEGA 91717 — Characters</title><meta name="description" content="Ω character gateway into the sovereign identity and genealogy systems."><script src="/bg.js" defer></script></head><body><aside id="omega-side" data-page="characters"></aside><main style="padding:clamp(24px,5vw,64px);max-width:1100px;margin:auto"><header><div style="font:12px var(--M,Courier Prime,monospace);letter-spacing:3px;color:var(--cyan)">Ω / CHARACTER SYSTEM</div><h1 style="font:clamp(32px,6vw,64px);font-family:var(--D,Cinzel,serif);margin:.4em 0">CHARACTERS</h1><p style="max-width:720px;color:var(--muted);line-height:1.8">Character identity, archetype, inheritance and genealogy gateway. The functional character surfaces remain the canonical source of profile data.</p></header><section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:32px"><a href="/character.html" style="display:block;padding:20px;border:1px solid var(--line);color:inherit;text-decoration:none"><strong>CHARACTER SHEET</strong><br><small style="color:var(--muted)">Archetype, evolution and sovereign identity.</small></a><a href="/profile.html" style="display:block;padding:20px;border:1px solid var(--line);color:inherit;text-decoration:none"><strong>PROFILE & GENEALOGY</strong><br><small style="color:var(--muted)">Character genealogy tree and inheritance settings.</small></a><a href="/bloodline.html" style="display:block;padding:20px;border:1px solid var(--line);color:inherit;text-decoration:none"><strong>BLOODLINE</strong><br><small style="color:var(--muted)">Ancestral lineage and heritage records.</small></a></section></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ω SYD OMEGA 91717 — Characters</title>
+<meta name="description" content="Ω character gateway into the sovereign identity, archetype, inheritance and genealogy systems.">
+<script src="/bg.js" defer></script>
+<script src="/omega-cinematic-system.js" defer></script>
+<style>
+:root{--cg-gold:#C9A84C;--cg-cyan:#00E5FF;--cg-purple:#9B6BF0;--cg-green:#3fb27f;--cg-red:#8B0000}
+.character-realm{min-height:100vh;padding:clamp(28px,5vw,72px) clamp(18px,4vw,60px);max-width:1240px;margin:auto;position:relative;overflow:hidden}
+.character-realm:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 20%,rgba(0,229,255,.07),transparent 35%),radial-gradient(circle at 15% 80%,rgba(155,107,240,.06),transparent 30%)}
+.character-head{position:relative;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:24px;align-items:end;margin-bottom:28px}
+.character-kicker{font:11px var(--M,Courier Prime,monospace);letter-spacing:4px;color:var(--cg-cyan)}
+.character-title{font:clamp(38px,7vw,86px) var(--D,Cinzel,serif);letter-spacing:.04em;margin:.16em 0;background:linear-gradient(90deg,var(--cg-gold),#fff,var(--cg-cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.character-copy{max-width:760px;color:var(--muted);line-height:1.8;font-size:14px}
+.character-orb{width:170px;height:170px;margin-left:auto;border:1px solid rgba(201,168,76,.35);border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle,rgba(0,229,255,.13),rgba(2,2,6,.2) 45%,transparent 70%);box-shadow:0 0 70px rgba(0,229,255,.08),inset 0 0 35px rgba(201,168,76,.08);animation:cg-orbit 12s linear infinite}
+.character-orb:before,.character-orb:after{content:"";position:absolute;border:1px solid rgba(0,229,255,.22);border-radius:50%}.character-orb:before{inset:18px;transform:rotateX(68deg)}.character-orb:after{inset:34px;transform:rotateY(68deg)}
+.character-omega{font:56px Cinzel,serif;color:var(--cg-gold);text-shadow:0 0 24px rgba(201,168,76,.35)}
+.archetype-grid{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.archetype-card{min-height:230px;padding:18px;border:1px solid rgba(201,168,76,.16);background:linear-gradient(145deg,rgba(10,10,15,.9),rgba(2,2,6,.7));text-decoration:none;color:inherit;position:relative;overflow:hidden;transform:perspective(800px) rotateX(0) translateZ(0);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.archetype-card:before{content:"";position:absolute;width:130px;height:130px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:50%;right:-48px;top:-48px;box-shadow:0 0 35px color-mix(in srgb,var(--accent) 12%,transparent)}
+.archetype-card:hover,.archetype-card:focus-visible{transform:perspective(800px) rotateX(3deg) translateY(-5px);border-color:var(--accent);box-shadow:0 16px 45px rgba(0,0,0,.3);outline:none}
+.archetype-card:focus-visible{box-shadow:0 0 0 2px rgba(0,229,255,.32),0 16px 45px rgba(0,0,0,.3)}
+.archetype-index{font:10px var(--M,Courier Prime,monospace);letter-spacing:3px;color:var(--accent);display:block;margin-bottom:24px}
+.archetype-name{font:22px var(--D,Cinzel,serif);color:var(--ink);display:block;margin-bottom:8px}
+.archetype-role{font:12px var(--M,Courier Prime,monospace);letter-spacing:1.4px;color:var(--accent);display:block;margin-bottom:12px}
+.archetype-desc{font-size:13px;line-height:1.65;color:var(--muted);display:block}
+.character-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;position:relative}
+.character-action{padding:14px;border:1px solid var(--line);background:rgba(10,10,15,.62);color:var(--ink);text-decoration:none;font:12px var(--M,Courier Prime,monospace);letter-spacing:1.5px;transition:.2s}
+.character-action:hover,.character-action:focus-visible{border-color:var(--cg-cyan);color:var(--cg-cyan);outline:none}
+.character-foot{margin-top:24px;padding-top:12px;border-top:1px solid rgba(201,168,76,.12);display:flex;justify-content:space-between;gap:12px;font:10px var(--M,Courier Prime,monospace);letter-spacing:1.8px;color:var(--muted)}
+@keyframes cg-orbit{to{transform:rotate(360deg)}}
+@media(max-width:900px){.character-head{grid-template-columns:1fr}.character-orb{margin:0 auto}.archetype-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.character-realm{padding:24px 14px}.character-title{font-size:44px}.archetype-grid,.character-actions{grid-template-columns:1fr}.archetype-card{min-height:180px}.character-foot{display:block}.character-foot span{display:block;margin-top:5px}}
+@media(prefers-reduced-motion:reduce){.character-orb{animation:none}.archetype-card,.character-action{transition:none}.archetype-card:hover,.archetype-card:focus-visible{transform:none}}
+</style>
+</head>
+<body>
+<aside id="omega-side" data-page="characters" aria-label="Navigation"></aside>
+<main class="character-realm">
+<header class="character-head">
+<div>
+<div class="character-kicker">Ω / CHARACTER SYSTEM · IDENTITY DOMAIN</div>
+<h1 class="character-title">CHARACTERS</h1>
+<p class="character-copy">Every page has a character. This gateway exposes the canonical character framework as a visual system: archetype, purpose, motion, depth and destination. Functional identity, genealogy and inheritance remain on their canonical pages.</p>
+</div>
+<div class="character-orb" aria-hidden="true"><span class="character-omega">Ω</span></div>
+</header>
+<section aria-labelledby="archetype-title">
+<div class="character-kicker" id="archetype-title" style="margin-bottom:10px">PRIMARY ARCHETYPES · VISUAL CHARACTER LANGUAGE</div>
+<div class="archetype-grid">
+<a class="archetype-card" style="--accent:var(--cg-cyan)" href="/character.html"><span class="archetype-index">IDENTITY / 01</span><span class="archetype-name">Observatory</span><span class="archetype-role">OBSERVE · PROFILE · ANALYZE</span><span class="archetype-desc">Identity and character sheet surfaces where the member observes their current state, archetype and progression.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-purple)" href="/gaming.html"><span class="archetype-index">ACTION / 02</span><span class="archetype-name">Arena</span><span class="archetype-role">PLAY · COMPETE · EVOLVE</span><span class="archetype-desc">Action-oriented character identity for games, challenges, missions and competitive progression.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-gold)" href="/identity.html"><span class="archetype-index">CREATION / 03</span><span class="archetype-name">Studio</span><span class="archetype-role">CREATE · CUSTOMIZE · COMPOSE</span><span class="archetype-desc">Persona and identity customization surfaces where character expression becomes an authored artifact.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-green)" href="/bloodline.html"><span class="archetype-index">LEGACY / 04</span><span class="archetype-name">Archive</span><span class="archetype-role">REMEMBER · TRACE · INHERIT</span><span class="archetype-desc">Genealogy and heritage surfaces connecting character identity to lineage, records and legacy.</span></a>
+</div>
+</section>
+<nav class="character-actions" aria-label="Character destinations">
+<a class="character-action" href="/character.html">CHARACTER SHEET →</a>
+<a class="character-action" href="/profile.html">PROFILE & GENEALOGY →</a>
+<a class="character-action" href="/bloodline.html">BLOODLINE →</a>
+</nav>
+<footer class="character-foot"><span>Ω · 91717 · CHARACTER REALM</span><span>DATA SOURCES: PROFILE · CHARACTER DATA · BLOODLINE</span></footer>
+</main>
+</body>
+</html>

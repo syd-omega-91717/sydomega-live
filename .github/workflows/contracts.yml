@@ -29,3 +29,5 @@ jobs:
           python-version: '3.12'
       - name: Run contract suite
         run: python scripts/contract-suite.py
+      - name: Enforce single WebGL owner
+        run: python scripts/audit-webgl-ownership.py

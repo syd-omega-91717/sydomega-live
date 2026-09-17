@@ -21,6 +21,9 @@ def fail(message: str) -> None:
 
 
 def main() -> int:
+    if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+        print(__doc__)
+        return 0
     if not NAV.exists():
         fail("nav.js is missing")
         return 1

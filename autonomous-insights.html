@@ -335,7 +335,7 @@
           <h2 class="section-title" style="font-size: 1.1rem">Agent Performance</h2>
         </div>
 
-        <div class="autonomous-grid" id="agent-performance">
+        <div class="autonomous-grid" id="agent-performance" data-stagger data-stagger-gap="60">
           <div class="loading">Loading agent metrics...</div>
         </div>
 
@@ -377,7 +377,7 @@
 
           <!-- Recommendations Tab -->
           <div id="recommendations" class="tab-content">
-            <div class="recommendations-grid" id="recommendations-content">
+            <div class="recommendations-grid" id="recommendations-content" data-stagger data-stagger-gap="60">
               <div class="loading">Loading recommendations...</div>
             </div>
           </div>
@@ -471,6 +471,7 @@
 
         const card = document.createElement("div");
         card.className = "agent-card";
+        card.setAttribute("data-reveal", "depth-in");
         card.innerHTML = `
           <div class="agent-header">
             <span style="font-size: 1.5rem">${info.icon}</span>
@@ -637,6 +638,7 @@
         insights.forEach((insight) => {
           const card = document.createElement("div");
           card.className = "recommendation-card";
+          card.setAttribute("data-reveal", "rotate-in");
 
           card.innerHTML = `
             <div class="recommendation-title">${insight.insight_type}</div>

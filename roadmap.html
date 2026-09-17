@@ -28,44 +28,44 @@
 
     <!-- HORIZONS TAB -->
     <div class="tab-panel active pad" id="tab-horizons">
-      <div class="glass-cyan" style="text-align:center;padding:24px;margin-bottom:20px">
+      <div class="glass-cyan" data-reveal="depth-in" style="text-align:center;padding:24px;margin-bottom:20px">
         <div style="font-family:var(--D);font-size:clamp(36px,7vw,64px);color:var(--gold);line-height:1">87<span style="font-size:.4em">/100</span></div>
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-top:8px">EXECUTIVE PLATFORM HEALTH SCORE</div>
         <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:6px">ARCHITECTURE 92 &middot; ENGINEERING 88 &middot; AI 84 &middot; SECURITY 89 &middot; UX 86 &middot; BUSINESS 82</div>
       </div>
       <div class="sechead">HORIZON PLANNING &middot; 100-YEAR ARCHITECTURE VISION</div>
-      <div id="horizon-grid" class="card-grid"></div>
+      <div id="horizon-grid" class="card-grid" data-stagger data-stagger-gap="70"></div>
     </div>
 
     <!-- PRIORITY MATRIX TAB -->
     <div class="tab-panel pad" id="tab-priority" style="display:none">
       <div class="sechead">PRIORITY MATRIX &middot; CLASSIFIED BY IMPACT &times; EFFORT</div>
-      <div id="priority-grid" class="card-grid"></div>
+      <div id="priority-grid" class="card-grid" data-stagger data-stagger-gap="60"></div>
     </div>
 
     <!-- MATURITY TAB -->
     <div class="tab-panel pad" id="tab-maturity" style="display:none">
       <div class="sechead">PLATFORM MATURITY ASSESSMENT &middot; 12 DIMENSIONS</div>
-      <div id="maturity-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px"></div>
+      <div id="maturity-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" data-stagger data-stagger-gap="50"></div>
     </div>
 
     <!-- SCIENCE TAB -->
     <div class="tab-panel pad" id="tab-science" style="display:none">
       <div class="sechead">EVOLUTION ROADMAP &middot; THE SCIENCE</div>
-      <div class="card-grid">
-        <div class="card" style="--card-accent:var(--green)">
+      <div class="card-grid" data-stagger data-stagger-gap="70">
+        <div class="card" data-reveal="depth-in" style="--card-accent:var(--green)">
           <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">HORIZON METHODOLOGY</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Four planning horizons (H1–H4) cover Foundation (0–6 months), Growth (6–18 months), Global Expansion (18 months–5 years), and Civilisation-Grade Sovereignty (5–25 years). Each horizon compounds on the last.</div>
         </div>
-        <div class="card" style="--card-accent:var(--gold)">
+        <div class="card" data-reveal="depth-in" style="--card-accent:var(--gold)">
           <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">IMPACT × EFFORT MATRIX</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Priorities are classified by two axes: impact (Critical/High/Strategic/Future) and effort (Low/Medium/High). The upper-left quadrant (high impact, low effort) contains the most valuable immediate actions — run migrations, deploy Edge Functions, rotate credentials.</div>
         </div>
-        <div class="card" style="--card-accent:var(--cyan)">
+        <div class="card" data-reveal="depth-in" style="--card-accent:var(--cyan)">
           <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">MATURITY SCORING</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 platform dimensions scored 0–100. Architecture (92), Security (89), Compliance (90) lead. Business (82) and Observability (81) are growth areas. The composite score (87/100) reflects a production-ready platform awaiting market activation.</div>
         </div>
-        <div class="card" style="--card-accent:var(--purple)">
+        <div class="card" data-reveal="depth-in" style="--card-accent:var(--purple)">
           <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">100-YEAR THINKING</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Horizon 4 (5–25 years) envisions quantum-resistant cryptography, IoT sovereign cities, neural interfaces, interplanetary sovereignty, and Open Sovereign Standard for third-party platform forks. The architecture is designed to evolve into civilisation-grade infrastructure.</div>
         </div>
@@ -116,7 +116,7 @@ var MATURITY=[
 function build(){
   var hg=document.getElementById('horizon-grid');
   if(hg){hg.innerHTML=HORIZONS.map(function(h){
-    return '<div class="card" style="--card-accent:'+h.col+'">'
+    return '<div class="card" data-reveal="depth-in" style="--card-accent:'+h.col+'">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:'+h.col+';margin-bottom:6px">'+h.label+'</div>'
       +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:10px">'+h.title+'</div>'
       +'<ul style="list-style:none">'
@@ -125,7 +125,7 @@ function build(){
   }).join('');}
   var pg=document.getElementById('priority-grid');
   if(pg){pg.innerHTML=PRIORITIES.map(function(p){
-    return '<div class="card" style="--card-accent:'+p.col+';border-left:3px solid '+p.col+'">'
+    return '<div class="card" data-reveal="rotate-in" style="--card-accent:'+p.col+';border-left:3px solid '+p.col+'">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+p.col+';margin-bottom:5px">'+p.badge+'</div>'
       +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:5px">'+p.title+'</div>'
       +'<div style="font-size:12px;line-height:1.65;color:var(--muted);margin-bottom:8px">'+p.desc+'</div>'
@@ -135,7 +135,7 @@ function build(){
   var mg=document.getElementById('maturity-grid');
   if(mg){mg.innerHTML=MATURITY.map(function(m){
     var col=m.s>=90?'var(--green)':m.s>=85?'var(--gold)':'var(--solar)';
-    return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">'
+    return '<div data-reveal="depth-in" style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">'
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
       +'<span style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)">'+m.d+'</span>'
       +'<span style="font-family:var(--D);font-size:16px;color:'+col+'">'+m.s+'</span>'

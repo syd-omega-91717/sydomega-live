@@ -261,7 +261,7 @@ body {
     
     <div id="agent-panel" class="agent-panel">
       <button class="close-panel" onclick="closePanel()">✕</button>
-      <div id="agent-content"></div>
+      <div id="agent-content" data-stagger data-stagger-gap="60"></div>
     </div>
     <div data-page-emblem="agent-network" style="margin:20px auto 0"></div>
 </main>
@@ -433,24 +433,24 @@ function openPanel(agentId) {
   const content = document.getElementById('agent-content');
   
   content.innerHTML = `
-    <div class="agent-panel-title">${agent.name}</div>
-    <div class="agent-stat">
+    <div class="agent-panel-title" data-reveal="fade-up">${agent.name}</div>
+    <div class="agent-stat" data-reveal="rotate-in">
       <div class="agent-stat-label">Symbol</div>
       <div class="agent-stat-value" style="font-size: 2.5rem;">${agent.symbol}</div>
     </div>
-    <div class="agent-stat">
+    <div class="agent-stat" data-reveal="depth-in">
       <div class="agent-stat-label">Domain</div>
       <div class="agent-info">${agent.domain}</div>
     </div>
-    <div class="agent-stat">
+    <div class="agent-stat" data-reveal="depth-in">
       <div class="agent-stat-label">Status</div>
       <div class="agent-info" style="color: ${agent.status === 'core' ? 'var(--gold)' : 'var(--green)'}">${agent.status.toUpperCase()}</div>
     </div>
-    <div class="agent-stat">
+    <div class="agent-stat" data-reveal="depth-in">
       <div class="agent-stat-label">Authority</div>
       <div class="agent-info">Level 7 · Active Executor</div>
     </div>
-    <div class="agent-stat">
+    <div class="agent-stat" data-reveal="depth-in">
       <div class="agent-stat-label">Last Activity</div>
       <div class="agent-info">Real-time · Live monitoring</div>
     </div>

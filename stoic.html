@@ -62,14 +62,14 @@
   </div>
   <div style="padding:20px var(--pad,20px)">
 
-    <div class="stoic-hero">
-      <div class="memento-card card">
+    <div class="stoic-hero" data-stagger data-stagger-gap="90">
+      <div class="memento-card card" data-reveal="rotate-in">
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px">MEMENTO MORI</div>
         <canvas id="mementoCanvas" width="120" height="120"></canvas>
         <div style="font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:2px;margin:8px 0" id="mementoClock">—</div>
         <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);line-height:1.6" id="mementoSub">Set your birth year to activate</div>
       </div>
-      <div class="daily-quote">
+      <div class="daily-quote" data-reveal="fade-left">
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:10px">TODAY'S SOVEREIGN WISDOM</div>
         <div style="font-family:var(--M);font-size:13px;color:rgba(220,210,180,.8);line-height:1.7;font-style:italic" id="dailyQuote">—</div>
         <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-top:10px" id="dailyAuthor">—</div>
@@ -115,11 +115,11 @@
       <div style="display:flex;justify-content:center;margin-bottom:20px">
         <canvas id="virtueRadar" width="260" height="260"></canvas>
       </div>
-      <div class="virtue-grid">
-        <div class="virtue-card card"><div class="vc-name">WISDOM</div><div class="vc-greek">SOPHIA / PHRONESIS</div><div class="vc-desc">The root virtue — knowing what is good, harmful, or indifferent. All other virtues require wisdom to apply correctly.</div><div class="vc-score"><input type="range" id="vWisdom" aria-label="Wisdom rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vWisdomVal">5/10</div></div></div>
-        <div class="virtue-card card"><div class="vc-name">COURAGE</div><div class="vc-greek">ANDREIA</div><div class="vc-desc">Right action in the face of fear. Includes moral courage — speaking truth, holding position under pressure, enduring hardship with dignity.</div><div class="vc-score"><input type="range" id="vCourage" aria-label="Courage rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vCourageVal">5/10</div></div></div>
-        <div class="virtue-card card"><div class="vc-name">JUSTICE</div><div class="vc-greek">DIKAIOSYNĒ</div><div class="vc-desc">Treating others fairly. The social virtue — governing how we interact with others, fulfill our roles, and contribute to the common good.</div><div class="vc-score"><input type="range" id="vJustice" aria-label="Justice rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vJusticeVal">5/10</div></div></div>
-        <div class="virtue-card card"><div class="vc-name">TEMPERANCE</div><div class="vc-greek">SŌPHROSYNĒ</div><div class="vc-desc">Self-discipline and moderation. Knowing when enough is enough. Mastery of desire and appetite — the foundation of freedom.</div><div class="vc-score"><input type="range" id="vTemperance" aria-label="Temperance rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vTemperanceVal">5/10</div></div></div>
+      <div class="virtue-grid" data-stagger data-stagger-gap="60">
+        <div class="virtue-card card" data-reveal="depth-in"><div class="vc-name">WISDOM</div><div class="vc-greek">SOPHIA / PHRONESIS</div><div class="vc-desc">The root virtue — knowing what is good, harmful, or indifferent. All other virtues require wisdom to apply correctly.</div><div class="vc-score"><input type="range" id="vWisdom" aria-label="Wisdom rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vWisdomVal">5/10</div></div></div>
+        <div class="virtue-card card" data-reveal="depth-in"><div class="vc-name">COURAGE</div><div class="vc-greek">ANDREIA</div><div class="vc-desc">Right action in the face of fear. Includes moral courage — speaking truth, holding position under pressure, enduring hardship with dignity.</div><div class="vc-score"><input type="range" id="vCourage" aria-label="Courage rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vCourageVal">5/10</div></div></div>
+        <div class="virtue-card card" data-reveal="depth-in"><div class="vc-name">JUSTICE</div><div class="vc-greek">DIKAIOSYNĒ</div><div class="vc-desc">Treating others fairly. The social virtue — governing how we interact with others, fulfill our roles, and contribute to the common good.</div><div class="vc-score"><input type="range" id="vJustice" aria-label="Justice rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vJusticeVal">5/10</div></div></div>
+        <div class="virtue-card card" data-reveal="depth-in"><div class="vc-name">TEMPERANCE</div><div class="vc-greek">SŌPHROSYNĒ</div><div class="vc-desc">Self-discipline and moderation. Knowing when enough is enough. Mastery of desire and appetite — the foundation of freedom.</div><div class="vc-score"><input type="range" id="vTemperance" aria-label="Temperance rating, 1 to 10" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vTemperanceVal">5/10</div></div></div>
       </div>
       <div style="text-align:center"><button class="btn-gold" onclick="saveVirtues()">SAVE VIRTUE ASSESSMENT</button></div>
       <div style="border-top:1px solid var(--dim);margin-top:24px;padding-top:16px">
@@ -206,19 +206,19 @@
         <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">CBT</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">BUILT ON STOICISM</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="virtue-card card">
+        <div class="virtue-card card" data-reveal="depth-in">
           <div class="vc-name">STOICISM &amp; MODERN NEUROSCIENCE</div>
           <div class="vc-desc">The Stoics discovered through philosophy what neuroscience confirmed: the amygdala fires before the prefrontal cortex. The 90-second rule (Jill Bolte Taylor) — any emotion lasts 90 seconds neurologically. Beyond that, you are choosing to stay in it. The Stoic pause is neurological recalibration.</div>
         </div>
-        <div class="virtue-card card">
+        <div class="virtue-card card" data-reveal="depth-in">
           <div class="vc-name">COGNITIVE BEHAVIOURAL THERAPY</div>
           <div class="vc-desc">CBT, the world's most evidence-backed psychotherapy, is Stoicism formalized. Aaron Beck and Albert Ellis directly cited Epictetus: "Men are disturbed not by events, but by their opinions about events." Reframing, thought records, and behavioural activation all derive from Stoic practice.</div>
         </div>
-        <div class="virtue-card card">
+        <div class="virtue-card card" data-reveal="depth-in">
           <div class="vc-name">NEGATIVE VISUALIZATION</div>
           <div class="vc-desc">Modern research on hedonic adaptation confirms the Stoic technique of premeditatio malorum. Visualizing loss increases gratitude (positive psychology) and reduces anxiety through exposure desensitization. Athletes use this as "stress inoculation training" — pre-experiencing adversity to remove its sting.</div>
         </div>
-        <div class="virtue-card card">
+        <div class="virtue-card card" data-reveal="depth-in">
           <div class="vc-name">THE SOVEREIGN PHILOSOPHY</div>
           <div class="vc-desc">Stoicism is not emotional suppression — it is emotional sovereignty. The Stoic feels fully, then chooses their response. Viktor Frankl in the concentration camps discovered what Marcus Aurelius built an empire on: between stimulus and response lies freedom. That gap is where sovereignty lives.</div>
         </div>

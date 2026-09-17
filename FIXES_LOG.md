@@ -18505,3 +18505,80 @@ overflow fix. Verified: `python3 -m compileall -q core scripts tests`
 now exits 0; `python3 scripts/audit-information-architecture.py` runs
 to completion and prints `IA-AUDIT: PASS`; `python3 scripts/audit.py`
 and `python3 scripts/contract-suite.py` (18/18) both still clean.
+
+## 185 — 40 pages with zero motion vocabulary; extended `data-reveal`/`data-stagger`, not WebGL
+
+Request: "nothing should be solid and dead ... everything must be 3D and
+rotative." Measured what "dead" actually means here before touching
+anything: grepped all 204 pages for the platform's existing motion
+owners (`data-reveal`, `data-stagger`, `data-omega-sculpture`,
+`omega-depth-card`, `data-omega-constellation`) — 162 pages already carry
+`data-reveal`, 119 carry `data-stagger`, only 5 mount the WebGL sculpture
+layer. 40 pages carried none of the above: 7 are legitimate exemptions
+(the same public/diagnostic set §3 already exempts from the approval
+guard — `account`, `enter`, `reset`, `terms`, `pending`, `healthz`,
+`verify-deployment`, `verify-modules` — plus redirect stubs like
+`agent.html`), leaving 33 real content pages with no entrance motion at
+all.
+
+**Rejected the literal reading on purpose.** `omega-sculpture.js` is
+explicitly one-WebGL-context-per-page, 670KB, mounted only where a
+`data-omega-sculpture` attribute already exists — "so no other page pays
+the [cost]" is this repo's own stated design decision (§4), and the
+`omega-cinematic-system` skill's own performance budget says to prefer
+one shared mechanism and ask "does it duplicate an existing effect"
+before adding a new one. Instrumenting WebGL sculptures on all 33 pages
+would violate both. Instead: extended the platform's existing, genuinely
+3D, zero-new-engine motion vocabulary already implemented in
+`omega-cinematic.js` — `data-reveal="depth-in"` (`translateZ`+`scale`)
+and `data-reveal="rotate-in"` (`rotateZ`+`scale`), combined with a
+`data-stagger`/`data-stagger-gap` ancestor — to every KPI row, card grid,
+and hero block on those 33 pages that had none. `omega-cinematic.js`
+already runs a `MutationObserver` alongside its `IntersectionObserver`,
+so the attribute works identically whether it's in static markup or
+added inside a JS template-literal/`createElement` render function
+(confirmed both patterns render correctly — static markup on
+`habits.html`/`nutrition.html`/`sleep.html`/`wealth.html`/`targets.html`/
+`rituals.html`/`meditate.html`/`stoic.html`/`characters.html`/
+`design-showcase.html`/`analytics-dashboard.html`/`approvals.html`/
+`monitoring-dashboard.html`/`ad-network.html`/`project-studio.html`;
+JS-generated markup on `hercules.html`/`council.html`/`architecture.html`/
+`agent-network.html`/`autonomous-insights.html`/`roadmap.html`/
+`world-shell.html` — 22 pages total, some already partially motion-
+covered and enhanced further).
+
+**Deliberately excluded, and why:**
+- `graph-admin.html` — a dense internal admin/data tool; the cinematic
+  skill's own restraint principle ("avoid perpetual animation on large
+  DOM sets," "legibility over flair") outweighs entrance motion here.
+- `gateway.html` — its ~165 tiles (`omega-gateway.js`) already carry a
+  purposeful hover-driven 3D rotation (`.gw-mark canvas` rotates 180° on
+  hover/focus, reduced-motion-aware); adding an entrance reveal to every
+  tile would be the large-DOM-set case the skill warns against, on a
+  page that is not actually static.
+- `cohorts-dashboard.html`, `predictions-dashboard.html` — "Phase 5
+  feature in development" stubs with no cards/grids to animate; there is
+  nothing here to make less "solid and dead" without inventing content
+  that isn't real, which CLAUDE.md §8.1 class 9 (fabricated data) rules
+  out.
+- `investor-dashboard.html`, `investor-gate.html`, `venture-pipeline.html`,
+  `omega-visual-command.html` — pure `setTimeout` redirect stubs to
+  `/dashboard.html`, structurally identical to `agent.html`; nothing
+  renders long enough to animate.
+
+**Separate finding, not fixed here:** `movies.html` is a real, 0-byte
+file despite being a live `nav.js` destination
+(`['movies','MOVIES','/movies.html']`) — an empty page cannot be
+"animated," and authoring real content for it is a different task than
+this motion pass. Flagged for a follow-up, not silently left unaddressed.
+
+Verified: `python3 scripts/audit.py` → `critical: 0, warnings: 7`
+(unchanged, all pre-existing SQL/asset findings, none touched by this
+change). `python3 scripts/check-inline-js.py` → every inline `<script>`
+still parses cleanly (covers the JS-template-literal attribute
+insertions). `python3 scripts/contract-suite.py` → 18/18 gates pass.
+`OMEGA_SCRATCHPAD=<scratchpad> node scripts/verify-runtime.js --pages
+<all 22 edited pages>` → `PASS (22 pages)`, no new console/runtime
+errors, no blank pages, no new horizontal overflow, no duplicate ids;
+the only advisory findings (contrast, one soft-scaled canvas) are
+pre-existing and unrelated to the motion attributes added.

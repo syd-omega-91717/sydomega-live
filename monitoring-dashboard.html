@@ -332,8 +332,8 @@
         </div>
 
         <!-- Core Web Vitals -->
-        <div class="metrics-grid">
-          <div class="metric-card">
+        <div class="metrics-grid" data-stagger data-stagger-gap="60">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Largest Contentful Paint (LCP)</div>
             <div class="metric-value" id="lcp-value">2.4s</div>
             <div class="metric-detail">
@@ -341,7 +341,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Cumulative Layout Shift (CLS)</div>
             <div class="metric-value" id="cls-value">0.08</div>
             <div class="metric-detail">
@@ -349,7 +349,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">First Input Delay (FID)</div>
             <div class="metric-value" id="fid-value">45ms</div>
             <div class="metric-detail">
@@ -357,7 +357,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Time to First Byte (TTFB)</div>
             <div class="metric-value" id="ttfb-value">180ms</div>
             <div class="metric-detail">
@@ -365,7 +365,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Page Load Time</div>
             <div class="metric-value" id="page-load-value">3.2s</div>
             <div class="metric-detail">
@@ -373,7 +373,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">API Success Rate</div>
             <div class="metric-value" id="success-rate">98.5%</div>
             <div class="metric-detail">
@@ -473,8 +473,8 @@
         </div>
 
         <!-- Performance Summary -->
-        <div class="metrics-grid">
-          <div class="metric-card">
+        <div class="metrics-grid" data-stagger data-stagger-gap="60">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Cache Hit Rate</div>
             <div class="gauge">
               <div class="gauge-circle" style="--gauge-percent: 68%;"><span class="gauge-val">68%</span></div>
@@ -489,7 +489,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Error Rate</div>
             <div class="gauge">
               <div class="gauge-circle" style="--gauge-percent: 1.5%;"><span class="gauge-val">1.5%</span></div>
@@ -504,7 +504,7 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Optimization Impact</div>
             <div class="gauge">
               <div class="gauge-circle" style="--gauge-percent: 92%;"><span class="gauge-val">92%</span></div>
@@ -523,28 +523,28 @@
         <!-- System Status -->
         <div class="chart-container">
           <div class="chart-title">System Status</div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;" data-stagger data-stagger-gap="50">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Production</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ OPERATIONAL</div>
             </div>
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">CI Pipeline</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ PASSING</div>
             </div>
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Database</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ HEALTHY</div>
             </div>
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Cache</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ ACTIVE</div>
             </div>
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Security</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ SECURED</div>
             </div>
-            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;">
+            <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Uptime</div>
               <div style="color: #3fb27f; font-weight: 700;">✓ 99.9%</div>
             </div>

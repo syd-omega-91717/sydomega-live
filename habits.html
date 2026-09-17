@@ -67,11 +67,11 @@
 <main class="main">
   <div class="topbar"><div class="t">HABITS<small>ATOMIC HABIT STACK &middot; SYD OMEGA 91717</small></div><button class="add-habit-btn" onclick="openModal()">&#43; NEW HABIT</button></div>
   <div style="padding:20px var(--pad,20px)">
-    <div class="habit-hero" id="habit-hero">
-      <div class="hero-stat kpi"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
-      <div class="hero-stat kpi"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
-      <div class="hero-stat kpi"><div class="sv" id="stat-streak">0</div><div class="sk">BEST STREAK</div></div>
-      <div class="hero-stat kpi"><div class="sv" id="stat-rate">0%</div><div class="sk">30-DAY RATE</div></div>
+    <div class="habit-hero" id="habit-hero" data-stagger data-stagger-gap="80">
+      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
+      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
+      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-streak">0</div><div class="sk">BEST STREAK</div></div>
+      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-rate">0%</div><div class="sk">30-DAY RATE</div></div>
     </div>
 
     <div class="tab-row">

@@ -18283,3 +18283,55 @@ history touches `vercel.json`. Recorded as closed by evidence, not
 re-opened as a mystery: the live fetch is the fact that matters, and it
 says production is correct today. `CLAUDE.md` §8.2 rewritten in place to
 describe the current state rather than the 2026-09-06 outage.
+
+## 181 — Row-visibility RLS impersonation extended from 3 tables to every client-reachable table
+
+`FIXES_LOG.md` #177 verified `profiles`/`task_completions`/`certificates`
+under real `SET LOCAL ROLE authenticated` impersonation and left the
+other ~221 tables as an open item. Closed the reachable slice of it:
+queried `information_schema.role_table_grants` for every `public` table
+carrying an `authenticated` `SELECT` grant — **90 tables** (the complete
+set a signed-in member's client can actually query; `signups` has only
+an `anon` `INSERT` grant, correctly write-only, and was excluded from a
+SELECT sweep for that reason, not skipped).
+
+Ran the identical `count(*)` over all 90 twice in one pass each: once
+privileged (service role, no impersonation) and once under a real
+non-owner UUID (`SET LOCAL ROLE authenticated` + `request.jwt.claims`,
+one `BEGIN;...COMMIT;` block, per #177's corrected method). Compared
+every pair. Of the 90, most non-empty tables scoped to `0` visible rows
+for the non-owner exactly as expected (`access_audit`, `ai_memory`,
+`automation_rules`, `certificates`, `client_errors`, `error_budget_policy`,
+`evolution_events`, `exam_results`, `lesson_completions`, `medals`,
+`member_state`, `news`, `sovereign_points_ledger`, `task_completions`,
+`user_dedication`), and `profiles` correctly returned exactly **1** row
+(their own) against **9** privileged — real per-user scoping, not a leak.
+
+**Eight tables returned equal, non-zero counts for owner and non-owner.**
+Read each policy's full `qual` before trusting the shape (per #177's own
+rule — a label is not a read): `feature_flags` and `governance_policies`
+were already recorded in `GAP_ANALYSIS.md` as readable-by-every-approved-
+member by pre-existing policy, and this reproduces that unchanged.
+`matrix_phases` (`mph_read`, `qual: true`), `matrix_tracks` (`mt_read`,
+`qual: true`), `point_perks` (`perks_read`, `qual: true`), and
+`token_catalog` (`tc_read`, `qual: true`) are genuine reference/catalog
+tables with no per-user column — full visibility is the design, not a
+gap. `platform_settings` has `qual: true` on `SELECT` only, with
+`INSERT`/`UPDATE`/`DELETE` all correctly gated on
+`private.is_platform_owner()` — matches CLAUDE.md §5's own description
+of it as the flag store every client needs to read. `dispatches`'
+single visible row is a real `is_published = true` row under
+`dispatches_select`'s `((is_published = true) OR is_platform_owner() OR
+(user_id = auth.uid()))` — a published announcement, deliberately public,
+while its `INSERT`/`UPDATE`/`DELETE` policies are correctly self- or
+owner-scoped.
+
+**No new finding.** Every one of the 90 currently client-reachable
+tables is either correctly member-scoped, correctly owner-only, or
+correctly public-by-design; nothing here needed a fix. Combined with
+#179's grant sweep (the other 130 tables, 129 dormant, 1 fixed) and
+#177's original 3, this is the first pass to have actually looked at
+every table this platform's own client code can reach — not just a
+sample — even though the harder-to-automate case (per-row correctness
+inside a table with hundreds of rows across many users, versus this
+pass's aggregate-count check) is still open.

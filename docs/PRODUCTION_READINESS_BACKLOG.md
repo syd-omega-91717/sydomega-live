@@ -42,8 +42,9 @@
       before this — that method silently never engages RLS despite
       reading back as if it does) — all three correctly scoped, no leak.
       Only 3 of ~224 tables checked; the rest of this item is still open.
-      Separately found: `profiles.is_owner = true` on two accounts, only
-      one documented in `CLAUDE.md` §1 — flagged to the user, not resolved.
+      `FIXES_LOG.md` #178: the two-`is_owner`-accounts anomaly this
+      surfaced is resolved — the account owner confirmed both addresses
+      are theirs; `CLAUDE.md` §1 now documents both. Not a security gap.
 - [ ] Verify MFA, RBAC, audit logging, retention, deletion, incident response, and vendor records.
 
 ## Runtime verification

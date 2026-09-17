@@ -18187,3 +18187,13 @@ session state around it — is what actually proves whether a security
 control is live. A finding this severe, on live production data, gets one
 more round of "what would make this false" before it gets reported as
 fact — here, that round is what caught it.
+
+## 178 — The two-owner-accounts anomaly (#177) is confirmed intentional
+
+The account owner confirmed directly: `slmndghr@gmail.com` is their own
+second account, not an unauthorized grant. Both `is_owner = true` rows
+(`s.y.dagher@gmail.com`, `slmndghr@gmail.com`) are legitimate. `CLAUDE.md`
+§1 updated in place to document both addresses instead of only the first.
+No RLS, policy, or schema change made — this was a documentation gap, not
+a security gap, and the live behavior underneath (verified in #177) was
+already correct.

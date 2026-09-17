@@ -14,8 +14,9 @@ themed around a consistent zodiac/Greek-god/element brand system. It is a
 static site with a Supabase backend — no framework, no build step, no
 bundler.
 
-- **Owner:** one account (`profiles.is_owner = true`, keyed to
-  `s.y.dagher@gmail.com`) has elevated access across the schema.
+- **Owner:** `profiles.is_owner = true` grants elevated schema-wide access,
+  held by two accounts of the same owner: `s.y.dagher@gmail.com` and
+  `slmndghr@gmail.com` (confirmed 2026-09-17, closing `FIXES_LOG.md` #177).
 - **Members:** other accounts request access, sit in a pending/approved
   state (`access_approved`, `pending.html`, `approvals.html`), and once
   approved get full app access. This is an invite/approval-gated personal
@@ -800,9 +801,8 @@ entries (which were accurate when written):
   replaced them — don't repeat it.
 - **Never show a success state without checking the write's actual result
   first.** This is the single most repeated root cause of real bugs found
-  in this repo's history (§8.1 bug class 1; `FIXES_LOG.md`: `extend_trial`, `complete_task`,
-  `member_presence`, onboarding, the GDPR export, the activity ticker, the
-  dispatch fallback — each one silently did nothing while the UI reported
+  in this repo's history (§8.1 bug class 1; seven confirmed cases cited in
+  `FIXES_LOG.md`, each silently doing nothing while the UI reported
   success). Every new `sb.from(...)`/`sb.rpc(...)` call that isn't a pure
   read must check `.error` (Supabase resolves to `{data:null,error}`, it
   does not throw) before rendering a success toast, updating in-memory

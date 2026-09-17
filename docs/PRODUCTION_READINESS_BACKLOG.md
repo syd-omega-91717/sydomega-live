@@ -105,6 +105,18 @@
 
 ## Runtime verification
 
+`FIXES_LOG.md` #183: a real headless Chromium is available in this
+session type (two prior sessions wrongly wrote it off as unrunnable —
+see the `runtime-verify` skill's own correction). `node
+scripts/verify-runtime.js` ran for real for the first time: found and
+fixed a genuine bug (`#omega-atmosphere`'s scaled fixed canvas inflating
+`document.documentElement.scrollWidth` on 12 of 13 capability
+entrypoints, confirmed harmless to real users but a real measurement
+defect — full writeup in #183) and confirmed all 13 pages plus 5
+spot-checked others now pass. This closes only the horizontal-overflow
+slice of the item below; keyboard access, reduced motion and accessible
+names are not yet covered by a pass.
+
 - [ ] Test authentication and session recovery.
 - [ ] Test navigation targets and duplicate navigation keys.
 - [ ] Test storage upload, download, and authorization boundaries.

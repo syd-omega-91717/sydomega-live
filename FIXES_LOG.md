@@ -18392,3 +18392,116 @@ anywhere," so it was not attempted without the account owner's sign-off.
 **Conclusion: the mechanism is soundly built by every check available
 without live traffic or a synthetic write, and untested by actual
 execution — both true, neither overclaimed as the other.**
+
+## 183 — `node scripts/verify-runtime.js` actually ran for the first time this session, and found a real bug on 12 of 13 capability entrypoints
+
+Two prior sessions (per the `runtime-verify` skill's own note) wrote this
+verifier off as unrunnable and fell back to ad-hoc harnesses. This
+session's remote environment actually ships the browser: Chromium at
+`/opt/pw-browsers` (confirmed: `chromium-1194/chrome-linux/chrome`,
+`chromium_headless_shell-1194/chrome-linux/headless_shell`). Installed
+`playwright-core` into the scratchpad (`npm install playwright-core
+--no-save`), which resolved revision `1243` under `chrome-linux64`/
+`chrome-headless-shell-linux64` naming — exactly the skill's documented
+three-way mismatch (revision, `linux` vs `linux64`, binary name).
+Bridged with the skill's own symlink recipe, then **confirmed with a
+direct `chromium.launch()`** before trusting the verifier, per the
+skill's explicit instruction.
+
+`OMEGA_SCRATCHPAD=<scratchpad> node scripts/verify-runtime.js` then ran
+for real: **12 of 13 capability entrypoints failed on "horizontal
+overflow"** (`ops.html` was the sole pass). Did not report this as fact
+without finding the actual cause — wrote a standalone script reusing the
+harness's own server/stub/viewport setup to walk every element and find
+which one's `getBoundingClientRect()` exceeded the 1280px viewport.
+
+**Root cause, confirmed by isolation, not inference.** `#omega-atmosphere`
+(`omega-genesis.js`) is `position:fixed;inset:0` (a full-viewport
+decorative starfield canvas), and `omega-9d.js` applies `transform:
+translate(...) scale(1.06)` to it directly for a cursor-parallax depth
+effect (the canvas's own drawing buffer is deliberately oversized by the
+same factor via `overscan()`, so the scale doesn't blur it — that part
+was already correct). Scaling a `position:fixed;inset:0` box by 1.06
+around its center grows it symmetrically by ~38px on every side (1280 ×
+0.06 ÷ 2), and — measured directly by toggling `display:none` on it
+mid-page and re-reading `document.documentElement.scrollWidth` — that
+alone accounted for the entire 1318-vs-1280 delta; hiding the other
+overflow candidate the element-walk surfaced (`.ss-item`, a
+`position:static` KPI-row child) changed nothing, ruling it out.
+
+**Confirmed harmless to real users before ruling it cosmetic-only, not
+after.** `bg.js:986` sets `html,body{overflow-x:hidden}`, but computed
+style showed `overflow-x:visible` on both — that rule isn't reaching the
+cascade on this page, a live instance of the "programmatic edit that
+doesn't reach the cascade" class (§8.4). Despite that, `window.scrollTo(200,0)`
+left `scrollX` at `0`: a `position:fixed` element's transformed geometry
+inflated `scrollWidth` here, but per spec it doesn't join the
+document's *scrollable* overflow region, so nothing was ever actually
+scrollable or visible to a member — a real measurement artifact, not a
+user-facing defect, and the two are not the same claim.
+
+**Fixed anyway, because a false positive in a checker that gates real
+work is still worth closing, and the fix is free.** Wrapped the canvas
+in `#omega-atmosphere-mask` (`position:fixed;inset:0;overflow:hidden`,
+the exact box the canvas itself used to occupy) and made the canvas
+`position:absolute;inset:0` inside it. The mask never receives the
+transform, so it never grows past the viewport, and it clips the
+canvas's scaled geometry at exactly the boundary that was already
+invisible — nothing the mask clips was ever painted inside the
+viewport. Zero-risk by construction, verified three ways: `--all`-scope
+re-run on the 13 entrypoints plus 5 spot-checked non-capability pages
+(`index`, `enter`, `account`, `gates`, `cosmos`) all now `PASS`; the
+canvas's own resolution diagnostic (`canvasZero`/`canvasLowRes`) stayed
+clean; and a same-code noise-floor screenshot pair (7.6% pixel diff from
+the starfield's own animation and a 1s clock tick) versus the
+before/after pair, both visually inspected directly — identical layout,
+numbers and chrome, the only differences being drifting stars and the
+clock, exactly what an animated background predicts with a real time
+gap between shots, not a regression.
+
+`python3 scripts/audit.py` → `critical: 0, warnings: 7`, unchanged.
+`python3 scripts/contract-suite.py` → 18/18. `node --check
+omega-genesis.js` and `python3 scripts/check-inline-js.py` clean.
+
+## 184 — `main` itself red: two whole scripts concatenated into one file
+
+CI failed on this session's own PR (#416) on a step that touches nothing
+this session changed: `python -m compileall -q core scripts tests`,
+`SyntaxError: from __future__ imports must occur at the beginning of
+the file`, `scripts/audit-information-architecture.py:89`. Ruled out
+"this PR's problem" before treating it as one: `git show
+origin/main:scripts/audit-information-architecture.py` is byte-identical
+to the working tree's copy, and `main`'s own most recent merge commits
+(PR #414 at `d571393`, PR #415 at `ba7dd25`) both show `conclusion:
+failure` on this exact check via `get_workflow_job` — main was already
+broken before this session touched anything.
+
+**Root cause: two complete, independent scripts concatenated into one
+file**, both apparently written for the same purpose (nav.js overlap
+auditing) and merged without either replacing the other. Lines 1–82 is
+a no-argument script that fails only on missing `nav.js`/no href
+matches and prints `IA-AUDIT:`-prefixed findings; lines 83–147 is an
+unrelated second script (`argparse`, a `root`/`--strict` CLI, `NAV_
+ENTRIES=`-style output) with its own `from __future__ import
+annotations` statement — illegal anywhere but the very first lines of a
+file, which is what actually threw. `.github/workflows/contracts.yml`
+invokes the script with no arguments, so only the first implementation's
+behavior was ever in effect; the second was dead weight that happened to
+be syntactically fatal.
+
+Traced likely origin to PR #415 ("test: add deterministic information
+architecture audit," merged to `main` as `ba7dd25`) — introduced
+alongside a same-purpose script this repo evidently already had,
+without reconciling the two. Not fixed by picking a "better" one on
+taste: kept the first (already in effect via file order, matches this
+repo's established report-don't-block convention verbatim in its own
+comment), deleted the second in full.
+
+**Root-caused and fixed on `main`, not bundled silently into an
+unrelated PR** — the fix travels in its own commit on this session's
+branch with its own message, and PR #416's description is updated to
+name it as a separate, CI-unblocking change rather than part of the
+overflow fix. Verified: `python3 -m compileall -q core scripts tests`
+now exits 0; `python3 scripts/audit-information-architecture.py` runs
+to completion and prints `IA-AUDIT: PASS`; `python3 scripts/audit.py`
+and `python3 scripts/contract-suite.py` (18/18) both still clean.

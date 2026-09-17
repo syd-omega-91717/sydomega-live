@@ -18125,3 +18125,65 @@ like a true one. When live database access is actually available, per
 `CLAUDE.md` §8.2's own standing note, prefer querying it directly over
 reasoning from a dated capture, especially for the specific claim ("is X
 applied") the capture cannot make either way.
+
+## 177 — A "critical RLS breach" that was a broken impersonation method, and a real anomaly it uncovered on the way
+
+**The false alarm, caught before it was reported as fact.** Following
+CLAUDE.md §8.4's own documented method
+(`set_config('role','authenticated',true)` + `set_config('request.jwt.claims',
+..., true)`), impersonating a real, approved, non-owner member
+(`5ca6ae1c-ea68-45ce-8424-434629c8d21c`) and counting rows showed
+`profiles_visible = 9 = profiles_total`, `task_completions_visible = 10 =
+task_completions_total`, `certificates_visible = 24 = certificates_total` —
+by that file's own stated rule ("equal counts on a table that should be
+scoped is the finding"), a member reading every other member's profile,
+task history and certificates. Ruled out, in order, before trusting it:
+unspecified evaluation order across a target list of side-effecting
+function calls (retested with a `MATERIALIZED` CTE forcing sequencing —
+same result); query-plan-cache reuse (retested with entirely fresh SQL
+text — same result); `authenticated.rolbypassrls` (confirmed `false`);
+table-owner RLS exemption (`relforcerowsecurity=false`, but `authenticated`
+is not the owner nor a member of it — checked `pg_auth_members` directly,
+found the membership ran the *other* direction, `postgres` is a member of
+`authenticated`, not vice versa); the `row_security` GUC (explicitly forced
+`'on'` in the same block — no change). Every diagnostic inside the same
+statement — `current_user`, `current_setting('role')`, `auth.uid()`,
+`private.is_platform_owner()` — read back exactly as an authenticated,
+non-owner impersonation should. `EXPLAIN` settled it: under
+`set_config('role',...)` the plan carries no `Filter:` clause at all —
+row security was never engaged, despite every session variable it depends
+on reading correctly. Switching to real `SET LOCAL ROLE authenticated` (a
+command, not a function call) inside one `BEGIN;...COMMIT;` block made the
+`Filter: (((InitPlan 1).col1 = id) OR private.is_platform_owner())` appear
+in the plan, and re-running the same three tables under the *working*
+method showed exactly what should be there: `profiles` → 1 (self only),
+`task_completions` → 0, `certificates` → 0 (this member has completed no
+tasks and earned no certificates — legitimately zero, not itself a second
+finding). **RLS on these three tables is correct.** The vulnerability was
+in the test, not the platform, and the correction is recorded directly in
+`CLAUDE.md` §8.4 so the next session doesn't spend a live-database
+investigation rediscovering it.
+
+**The real anomaly this surfaced on the way, not yet resolved.**
+`select id from public.profiles where is_owner = true` (privileged, no
+impersonation needed) returns **two** rows: `s.y.dagher@gmail.com` (matches
+CLAUDE.md §1's documented single owner) and a second address,
+`slmndghr@gmail.com` — not documented anywhere in this repo as an owner
+account. The name reads as a plausible alternate address for the same
+person (a consonant-only rendering of "Sleiman Dagher"), so this is very
+likely intentional — but "very likely" is not verified, and `is_owner`
+grants elevated read/write across member-scoped tables platform-wide
+(CLAUDE.md §1/§5). Left untouched rather than acted on unilaterally:
+revoking or confirming someone's owner flag without asking is exactly the
+kind of consequential, hard-to-reverse action this session's own operating
+rules call for confirming first. Flagged to the user directly; not
+resolved in this entry.
+
+**The transferable rule:** a testing method that reproduces every *visible*
+symptom of working (`current_user`, `auth.uid()`, the owner-check function
+all read back correctly) can still fail to engage the mechanism being
+tested. `EXPLAIN` on the actual query — not diagnostic reads of the
+session state around it — is what actually proves whether a security
+control is live. A finding this severe, on live production data, gets one
+more round of "what would make this false" before it gets reported as
+fact — here, that round is what caught it.

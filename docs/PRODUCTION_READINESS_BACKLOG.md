@@ -36,6 +36,14 @@
 - [ ] Rotate any credential that was exposed or cannot be proven non-secret.
 - [ ] Verify Stripe webhook signature validation, replay protection, and idempotency in a deployed environment.
 - [ ] Verify RLS policies against authenticated, anonymous, and privileged access paths.
+      `FIXES_LOG.md` #177: `profiles`/`task_completions`/`certificates`
+      spot-checked with real in-database impersonation (`SET LOCAL ROLE`,
+      not the `set_config('role',...)` method CLAUDE.md §8.4 documented
+      before this — that method silently never engages RLS despite
+      reading back as if it does) — all three correctly scoped, no leak.
+      Only 3 of ~224 tables checked; the rest of this item is still open.
+      Separately found: `profiles.is_owner = true` on two accounts, only
+      one documented in `CLAUDE.md` §1 — flagged to the user, not resolved.
 - [ ] Verify MFA, RBAC, audit logging, retention, deletion, incident response, and vendor records.
 
 ## Runtime verification

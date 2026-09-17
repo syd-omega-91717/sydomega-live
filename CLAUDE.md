@@ -596,37 +596,36 @@ entries (which were accurate when written):
   `window.`-exposed function reports missing: a scan once reported 44 broken
   pages this way and the real number was 6.
   `.claude/skills/verify-in-browser/` handles it.
-- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
-  `terms.html` and the page never renders.
+- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects
+  to `terms.html` and the page never renders.
 - **Verify a "0 findings" result is real.** A stopped static server reports 0;
-  so does a regex damaged in transit. Cross-check with a run that must find
-  something.
+  so does a regex damaged in transit. Cross-check with a run that must find one.
 
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
   their extension: an `.html` served as `text/javascript` makes every element
   report absent, which looks exactly like a dramatic improvement.
-- **Test RLS by impersonating a real member, in-database.** `execute_sql`
-  through the Supabase MCP runs privileged, so it proves nothing about what a
-  member can see. `set_config('role','authenticated',true)` plus
-  `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role',
-  'authenticated')::text, true)` reproduces exactly what PostgREST does, and is
-  what surfaced the missing-GRANT class above. Always compare the non-owner
-  count against the privileged count — equal counts on a table that should be
-  scoped is the finding.
+- **Test RLS by impersonating a member — `set_config('role',...)` is not
+  that test.** It even makes `current_user` read `'authenticated'`, but
+  measured 2026-09-17 it does not engage RLS — a non-owner impersonated
+  this way saw every row of `profiles`/`task_completions`/`certificates`,
+  a false breach that vanished once fixed. Use real commands, one block:
+  `BEGIN; SET LOCAL ROLE authenticated; SET LOCAL "request.jwt.claims" =
+  '{"sub":"<uuid>","role":"authenticated"}'; <query>; COMMIT;`. `EXPLAIN`
+  confirms which is live — `Filter:` shows under `SET LOCAL ROLE`, absent
+  under `set_config('role',...)`. Compare non-owner vs privileged counts;
+  equal is the finding.
 - **Classifying a policy by substring is not reading it.** A qual containing
   `is_platform_owner` was labelled "owner-only" by a first-pass classifier and
   turned out to be `is_platform_owner() OR status = 'active'` — a second branch
-  that makes rows member-visible. The classifier's own false-positive pass is
-  what caught it, but only because the result was checked against real row
-  counts rather than trusted. Read the full `qual` before acting on a label.
-- **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** At `--depth 1` every file dates to the clone, so any per-file date from
-  it is a guess — three wrong dates reached the committed registry that way.
-  `omega-registry.py` now checks the SHA against `.git/shallow` and refuses rather
-  than guessing; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the
-  shallowness.
+  making rows member-visible, caught only because the result was checked
+  against real row counts rather than trusted. Read the full `qual` first.
+- **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it
+  does not fail.** At `--depth 1` every file dates to the clone, so a per-file
+  date from it is a guess — three wrong dates reached the committed registry
+  that way. `omega-registry.py` checks the SHA against `.git/shallow` and
+  refuses rather than guessing; `ci.yml` sets `fetch-depth: 0`.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches

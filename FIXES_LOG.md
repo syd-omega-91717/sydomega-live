@@ -18335,3 +18335,60 @@ every table this platform's own client code can reach — not just a
 sample — even though the harder-to-automate case (per-row correctness
 inside a table with hundreds of rows across many users, versus this
 pass's aggregate-count check) is still open.
+
+## 182 — Stripe webhook signature/idempotency reviewed against live schema; the mechanism has never actually fired
+
+Read `supabase/functions/stripe-webhook/index.ts` and `checkout/index.ts`
+in full, then checked every claim the code makes against the live
+database rather than the SQL bag (`task_completions`' three competing
+definitions is the standing reminder that the bag and live diverge).
+
+**Signature validation**: HMAC-SHA256 over `{timestamp}.{rawBody}`
+against the `v1` signature(s) in the `Stripe-Signature` header, using
+`crypto.subtle` and a constant-time byte comparison (XOR-accumulate, no
+early return on mismatch — only on length, which is safe here since a
+SHA-256 hex digest is always 64 chars and reveals nothing an attacker
+doesn't already know). A `t`/timestamp tolerance of ±300s rejects stale
+signatures — real replay protection at the transport layer, matching
+Stripe's own documented scheme. No `STRIPE_WEBHOOK_SECRET` → `503`
+before the body is even parsed, never a silent accept.
+
+**Idempotency, verified against the live table, not assumed from the
+migration file**: `stripe_webhook_events.event_id` carries a real
+`UNIQUE`/PK btree index (`stripe_webhook_events_pkey`) — the exact
+precondition §8.1 class 7 says an `ON CONFLICT` needs and that this repo
+has shipped without before. `apply_subscription_event`'s live body
+(`pg_get_functiondef`, not the SQL bag) does `INSERT ... ON CONFLICT
+(event_id) DO NOTHING`, then on conflict `SELECT ... FOR UPDATE` the
+existing row: `status='processed'` returns `{ok:true, duplicate:true}`
+without reprocessing, any other status raises `stripe_event_in_progress`
+(blocks a second concurrent delivery of the same event rather than
+racing it). The row lock is real: `FOR UPDATE` serializes concurrent
+callers on the same `event_id`. `apply_subscription`
+(`private.apply_subscription`, the live-applied version — the bag has
+duplicates) checks `GET DIAGNOSTICS updated_count` and raises rather
+than silently no-oping when `p_uid` doesn't match a real profile —
+follows §9's rule, doesn't violate it. `stripe_webhook_events` itself
+carries a live `RESTRICTIVE` deny-all policy for `anon`/`authenticated`
+(`stripe_webhook_events_deny_client_access`, `qual: false` — the table
+#176 restored), and both RPCs gate internally on `auth.role() =
+'service_role' OR is_platform_owner()`, so the SECURITY DEFINER doesn't
+widen who can call them even if a future migration ever granted EXECUTE
+too broadly.
+
+**What this is not: a test of the deployed function actually receiving
+a request.** `select status, count(*) from stripe_webhook_events group
+by status` returns **zero rows** — this table, and therefore this whole
+mechanism, has never processed a single real event. `platform_settings`
+confirms why: `payments_enabled = false` live, so `checkout`'s own first
+gate refuses before Stripe is ever involved (verified live, not read
+from intent). A true end-to-end test needs either real Stripe test-mode
+traffic (not available in this environment) or a synthetic call to
+`apply_subscription_event` against a real profile row — the latter
+writes to `subscription_tier`/`subscription_status`/`membership_tier`
+on an actual account, which is exactly the kind of payment-adjacent
+write CLAUDE.md §5 says "needs the same care as production payment code
+anywhere," so it was not attempted without the account owner's sign-off.
+**Conclusion: the mechanism is soundly built by every check available
+without live traffic or a synthetic write, and untested by actual
+execution — both true, neither overclaimed as the other.**

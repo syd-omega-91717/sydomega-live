@@ -41,7 +41,7 @@
     </section>
 
     <section class="main-content">
-      <div class="card" style="margin-bottom: 2rem;">
+      <div class="card" style="margin-bottom: 2rem;" data-reveal="depth-in">
         <h2>The Twelve Labors</h2>
         <p>Legendary trials that forge strength. Track your own labors, triumphs, and the obstacles overcome.</p>
         <div class="labor-progress" style="margin-top:1.25rem;">
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div id="labors-list" class="labors-grid" data-loading>
+      <div id="labors-list" class="labors-grid" data-loading data-stagger data-stagger-gap="50">
         <!-- Loaded dynamically -->
       </div>
     </section>
@@ -75,7 +75,7 @@
 var listEl, overallFill, overallLabel;
 
 function laborCard(labor, theme, done, canAct) {
-  return '<div class="card labor-card' + (done ? ' done' : '') + '" style="border-left-color: ' + theme.color + '">'
+  return '<div class="card labor-card' + (done ? ' done' : '') + '" data-reveal="depth-in" style="border-left-color: ' + theme.color + '">'
     + '<div class="labor-num">' + theme.icon + ' Labor ' + labor.num + '</div>'
     + '<div class="labor-title">' + labor.title + '</div>'
     + '<p class="labor-desc">' + labor.desc + '</p>'

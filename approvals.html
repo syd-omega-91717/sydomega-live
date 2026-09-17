@@ -169,12 +169,12 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
 
     <!-- STATS BAR (clickable filters) -->
-    <div class="stats-bar">
-      <div class="stat-cell on" data-filter="all" onclick="filterClick(this,'all')"><div class="stat-n" id="stat-total" style="color:var(--gold)">--</div><div class="stat-l" data-i18n="filter_all_members"></div></div>
-      <div class="stat-cell" data-filter="pending" onclick="filterClick(this,'pending')"><div class="stat-n" id="stat-pending" style="color:var(--crim)">--</div><div class="stat-l" data-i18n="status_pending"></div></div>
-      <div class="stat-cell" data-filter="active" onclick="filterClick(this,'active')"><div class="stat-n" id="stat-active" style="color:var(--green)">--</div><div class="stat-l" data-i18n="status_trial_active"></div></div>
-      <div class="stat-cell" data-filter="approved" onclick="filterClick(this,'approved')"><div class="stat-n" id="stat-approved" style="color:var(--cyan)">--</div><div class="stat-l" data-i18n="status_permanent"></div></div>
-      <div class="stat-cell" data-filter="rejected" onclick="filterClick(this,'rejected')"><div class="stat-n" id="stat-rejected" style="color:var(--muted)">--</div><div class="stat-l" data-i18n="status_rejected"></div></div>
+    <div class="stats-bar" data-stagger data-stagger-gap="60">
+      <div class="stat-cell on" data-filter="all" data-reveal="depth-in" onclick="filterClick(this,'all')"><div class="stat-n" id="stat-total" style="color:var(--gold)">--</div><div class="stat-l" data-i18n="filter_all_members"></div></div>
+      <div class="stat-cell" data-filter="pending" data-reveal="depth-in" onclick="filterClick(this,'pending')"><div class="stat-n" id="stat-pending" style="color:var(--crim)">--</div><div class="stat-l" data-i18n="status_pending"></div></div>
+      <div class="stat-cell" data-filter="active" data-reveal="depth-in" onclick="filterClick(this,'active')"><div class="stat-n" id="stat-active" style="color:var(--green)">--</div><div class="stat-l" data-i18n="status_trial_active"></div></div>
+      <div class="stat-cell" data-filter="approved" data-reveal="depth-in" onclick="filterClick(this,'approved')"><div class="stat-n" id="stat-approved" style="color:var(--cyan)">--</div><div class="stat-l" data-i18n="status_permanent"></div></div>
+      <div class="stat-cell" data-filter="rejected" data-reveal="depth-in" onclick="filterClick(this,'rejected')"><div class="stat-n" id="stat-rejected" style="color:var(--muted)">--</div><div class="stat-l" data-i18n="status_rejected"></div></div>
     </div>
 
     <!-- HERO BAND -->

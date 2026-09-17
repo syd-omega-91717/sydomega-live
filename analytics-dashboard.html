@@ -71,11 +71,11 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <!-- OVERVIEW TAB -->
 <div id=overview class="tab-content active">
 <div class=sechead>REAL-TIME METRICS</div>
-<div class=kpi-row id=kpi-overview>
-<div class=kpi><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
-<div class=kpi><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
-<div class=kpi><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
-<div class=kpi><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
+<div class=kpi-row id=kpi-overview data-stagger data-stagger-gap=70>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
 </div>
 
 <div class=sechead>ENGAGEMENT TRENDS (7-DAY)</div>
@@ -101,11 +101,11 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <!-- ENGAGEMENT TAB -->
 <div id=engagement class=tab-content>
 <div class=sechead>ENGAGEMENT METRICS</div>
-<div class=kpi-row>
-<div class=kpi><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
-<div class=kpi><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
-<div class=kpi><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
-<div class=kpi><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
+<div class=kpi-row data-stagger data-stagger-gap=70>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
 </div>
 
 <div class=sechead>TOP PAGES</div>

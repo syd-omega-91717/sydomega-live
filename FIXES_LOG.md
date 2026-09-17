@@ -18462,3 +18462,46 @@ gap between shots, not a regression.
 `python3 scripts/audit.py` → `critical: 0, warnings: 7`, unchanged.
 `python3 scripts/contract-suite.py` → 18/18. `node --check
 omega-genesis.js` and `python3 scripts/check-inline-js.py` clean.
+
+## 184 — `main` itself red: two whole scripts concatenated into one file
+
+CI failed on this session's own PR (#416) on a step that touches nothing
+this session changed: `python -m compileall -q core scripts tests`,
+`SyntaxError: from __future__ imports must occur at the beginning of
+the file`, `scripts/audit-information-architecture.py:89`. Ruled out
+"this PR's problem" before treating it as one: `git show
+origin/main:scripts/audit-information-architecture.py` is byte-identical
+to the working tree's copy, and `main`'s own most recent merge commits
+(PR #414 at `d571393`, PR #415 at `ba7dd25`) both show `conclusion:
+failure` on this exact check via `get_workflow_job` — main was already
+broken before this session touched anything.
+
+**Root cause: two complete, independent scripts concatenated into one
+file**, both apparently written for the same purpose (nav.js overlap
+auditing) and merged without either replacing the other. Lines 1–82 is
+a no-argument script that fails only on missing `nav.js`/no href
+matches and prints `IA-AUDIT:`-prefixed findings; lines 83–147 is an
+unrelated second script (`argparse`, a `root`/`--strict` CLI, `NAV_
+ENTRIES=`-style output) with its own `from __future__ import
+annotations` statement — illegal anywhere but the very first lines of a
+file, which is what actually threw. `.github/workflows/contracts.yml`
+invokes the script with no arguments, so only the first implementation's
+behavior was ever in effect; the second was dead weight that happened to
+be syntactically fatal.
+
+Traced likely origin to PR #415 ("test: add deterministic information
+architecture audit," merged to `main` as `ba7dd25`) — introduced
+alongside a same-purpose script this repo evidently already had,
+without reconciling the two. Not fixed by picking a "better" one on
+taste: kept the first (already in effect via file order, matches this
+repo's established report-don't-block convention verbatim in its own
+comment), deleted the second in full.
+
+**Root-caused and fixed on `main`, not bundled silently into an
+unrelated PR** — the fix travels in its own commit on this session's
+branch with its own message, and PR #416's description is updated to
+name it as a separate, CI-unblocking change rather than part of the
+overflow fix. Verified: `python3 -m compileall -q core scripts tests`
+now exits 0; `python3 scripts/audit-information-architecture.py` runs
+to completion and prints `IA-AUDIT: PASS`; `python3 scripts/audit.py`
+and `python3 scripts/contract-suite.py` (18/18) both still clean.

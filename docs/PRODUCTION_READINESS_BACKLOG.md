@@ -4,18 +4,30 @@
 
 ## Release blockers
 
-- [ ] Resolve `migration-drift` without editing the remote migration snapshot by assumption.
-      One item remains after `FIXES_LOG.md` #174 collapsed a duplicate:
-      `20260916204000_harden_stripe_webhook_events_rls.sql` is real, correct,
-      unapplied schema — apply it live with authenticated Supabase access, then
-      regenerate `supabase/remote-migrations.json` in the same change.
-- [ ] Obtain authorized live Supabase migration state for project `ydqhzvvoyufiiqvzcjns`.
+- [x] Resolve `migration-drift` without editing the remote migration snapshot by assumption.
+      `FIXES_LOG.md` #176: #174's premise was wrong — the 2026-09-15 snapshot
+      predated both `20260916204000`/`20260916210000` and could not have shown
+      either as applied, but `mcp__Supabase__list_migrations` (authenticated,
+      2026-09-17) confirms both *are* in the live ledger. Restored the file
+      #174 wrongly deleted, regenerated `supabase/remote-migrations.json` from
+      live truth (189 versions). `python3 scripts/migration-drift.py` →
+      `MIGRATION DRIFT: PASS`.
+- [x] Obtain authorized live Supabase migration state for project `ydqhzvvoyufiiqvzcjns`.
+      `mcp__Supabase__list_projects` confirmed `ydqhzvvoyufiiqvzcjns` (name
+      "sydomega", `ACTIVE_HEALTHY`) as the correct project — matches
+      `ydqhzvvoyufiiqvzcjns.supabase.co` hardcoded in shipped `bg.js` — before
+      any query ran against it; two other projects on the account are
+      `INACTIVE` and unrelated. `list_migrations` and `execute_sql` both work
+      from this session.
 - [ ] Reconcile duplicate and local-only migration files through a reviewed migration plan.
-      `FIXES_LOG.md` #174: two independently-merged PRs duplicated the same
-      `stripe_webhook_events` RLS fix (resolved, redundant file deleted); a
-      second pair (`creator_proposals`, `0105_` and `20260901143526_`) is
-      already live on both sides and is left as historical record, not touched.
-- [ ] Re-run the full contract suite after reconciliation and preserve failure visibility.
+      `FIXES_LOG.md` #174/#176: the `stripe_webhook_events` pair is resolved —
+      both versions are genuinely live-applied and both files now exist,
+      matching the ledger. A second pair (`creator_proposals`, `0105_` and
+      `20260901143526_`) is already live on both sides and is left as
+      historical record, not touched.
+- [x] Re-run the full contract suite after reconciliation and preserve failure visibility.
+      `python3 scripts/contract-suite.py` → `CONTRACT SUITE: PASS`, 18/18
+      gates — first fully-green run this session, `migration-drift` included.
 - [ ] Verify the Vercel repository integration and production deployment from the canonical project.
 
 ## Security and compliance

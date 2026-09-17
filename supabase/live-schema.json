@@ -14,10 +14,10 @@
   "are applied live: it is dated evidence, not a target. The query that",
   "produced it is in supabase/live-schema.README.md."
  ],
- "_captured": "2026-09-13",
+ "_captured": "2026-09-17",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
- "_table_count": 223,
+ "_table_count": 224,
  "tables": {
   "academy_access": [
    "user_id",
@@ -2055,6 +2055,13 @@
    "permission",
    "expires_at",
    "created_at"
+  ],
+  "stripe_webhook_events": [
+   "event_id",
+   "event_type",
+   "status",
+   "received_at",
+   "processed_at"
   ],
   "subscriptions": [
    "id",

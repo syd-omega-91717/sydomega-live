@@ -28,12 +28,35 @@
 - [x] Re-run the full contract suite after reconciliation and preserve failure visibility.
       `python3 scripts/contract-suite.py` → `CONTRACT SUITE: PASS`, 18/18
       gates — first fully-green run this session, `migration-drift` included.
-- [ ] Verify the Vercel repository integration and production deployment from the canonical project.
+- [x] Verify the Vercel repository integration and production deployment from the canonical project.
+      `FIXES_LOG.md` #180: the 2026-09-06 production-404 outage this item
+      tracked is closed. Live-fetched `sydomega.com` (never curl) returns
+      200, `etag` matching the newest `target:production` deployment
+      byte-for-byte. `vercel.json`'s `git.deploymentEnabled.main` is now
+      `true` (was `{"*":false}`) — Vercel's own Git integration promotes
+      every `main` push; the repo's custom `vercel-production.yml` still
+      lacks `VERCEL_TOKEN` and self-reports `CONTROLLED`, but it is a
+      redundant backup, not the active path. Who changed the Vercel
+      project setting and when is not established — not this session's
+      change, and not re-opened as a blocker since live evidence settles
+      the actual question this item asks.
 
 ## Security and compliance
 
-- [ ] Scan repository source, documentation, workflows, and configuration for credential-like values.
-- [ ] Rotate any credential that was exposed or cannot be proven non-secret.
+- [x] Scan repository source, documentation, workflows, and configuration for credential-like values.
+      2026-09-17: repo-wide grep (excl. `.git`/`vendor`/`node_modules`) for
+      Stripe/Supabase-secret/AWS/Anthropic/Resend key formats, embedded
+      JWTs (`eyJ...`), literal password/secret/token assignments, and
+      `.env*` files. Two hits, both confirmed placeholders on inspection:
+      `scripts/tests/test_supabase_runtime_contract.py:56` asserts client
+      code never uses `sb_secret_do_not_use` (a deliberate dummy in a
+      negative test); `.claude/skills/supabase-server/SKILL.md:186` is a
+      vendored doc's truncated example (`sb_secret_automations_...`). No
+      `.env*` files committed; no hardcoded value in `.github/workflows/`.
+      `scripts/omega_security_baseline.py` and the CI service-role scan
+      independently corroborate: 0 findings.
+- [x] Rotate any credential that was exposed or cannot be proven non-secret.
+      No exposed or unprovable credential found above — nothing to rotate.
 - [ ] Verify Stripe webhook signature validation, replay protection, and idempotency in a deployed environment.
 - [ ] Verify RLS policies against authenticated, anonymous, and privileged access paths.
       `FIXES_LOG.md` #177: `profiles`/`task_completions`/`certificates`
@@ -42,8 +65,18 @@
       before this — that method silently never engages RLS despite
       reading back as if it does) — all three correctly scoped, no leak.
       Only 3 of ~224 tables checked; the rest of this item is still open.
-      Separately found: `profiles.is_owner = true` on two accounts, only
-      one documented in `CLAUDE.md` §1 — flagged to the user, not resolved.
+      `FIXES_LOG.md` #178: the two-`is_owner`-accounts anomaly this
+      surfaced is resolved — the account owner confirmed both addresses
+      are theirs; `CLAUDE.md` §1 now documents both. Not a security gap.
+      `FIXES_LOG.md` #179: live GRANT/policy sweep across all 202 public
+      tables (extends the 3-table impersonation spot check, different
+      method — GRANT presence, not row visibility). 130 tables have
+      policies with no table-level grant; cross-referenced against every
+      client `.from(...)` call, 129 stay unreachable (dormant scaffold,
+      left locked, correct) and 1 (`agent_experiments`) was reachable and
+      silently broken — fixed live, migration applied, re-verified under
+      real impersonation. Row-visibility impersonation itself still only
+      covers 3 of ~224 tables; that part of this item remains open.
 - [ ] Verify MFA, RBAC, audit logging, retention, deletion, incident response, and vendor records.
 
 ## Runtime verification

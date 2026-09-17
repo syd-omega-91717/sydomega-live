@@ -14,8 +14,9 @@ themed around a consistent zodiac/Greek-god/element brand system. It is a
 static site with a Supabase backend — no framework, no build step, no
 bundler.
 
-- **Owner:** one account (`profiles.is_owner = true`, keyed to
-  `s.y.dagher@gmail.com`) has elevated access across the schema.
+- **Owner:** `profiles.is_owner = true` grants elevated schema-wide access,
+  held by two accounts of the same owner: `s.y.dagher@gmail.com` and
+  `slmndghr@gmail.com` (confirmed 2026-09-17, closing `FIXES_LOG.md` #177).
 - **Members:** other accounts request access, sit in a pending/approved
   state (`access_approved`, `pending.html`, `approvals.html`), and once
   approved get full app access. This is an invite/approval-gated personal
@@ -525,18 +526,14 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production 404s because NOTHING PROMOTES IT, and two gates go green anyway.** Measured via
-  the Vercel MCP 2026-09-06 (`FIXES_LOG.md` 107): the newest `target:production` deployment
-  serves **200 with the full index.html** at its own URL, while the production alias serves a
-  **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
-  `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
-  `vercel.json` sets `git.deploymentEnabled {"*": false}` — no promotion path is
-  active. Only `VERCEL_TOKEN` is needed; org/project ids default in the workflow. Also
-  `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
-  while the custom domain returns **404** — two failures that look like one. Read a deployment
-  URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
-  design and marks the outage with `::warning::` (105) — **a green board does not mean the site
-  is up**.
+- **Production is live and current (re-verified 2026-09-17, `FIXES_LOG.md` #180) — the
+  2026-09-06 outage this used to describe is closed.** `sydomega.com` now returns **200** with
+  the exact HTML of the newest `target:production` deployment (matching `etag`); `vercel.json`
+  now sets `git.deploymentEnabled.main: true`, so Vercel's own Git integration promotes every
+  `main` push. `vercel-production.yml`'s `deploy` job still self-reports `CONTROLLED` (no
+  `VERCEL_TOKEN`) — harmless, since it isn't the active promotion path. Read a deployment URL
+  with `web_fetch_vercel_url`, never curl (`ssoProtection=all_except_custom_domains` 401s a
+  bare `*.vercel.app` curl). Re-verify before trusting this if it's been a while.
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies the
   web surface into `public/` from a fixed directory allow-list, so a top-level directory not on
   it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
@@ -800,9 +797,8 @@ entries (which were accurate when written):
   replaced them — don't repeat it.
 - **Never show a success state without checking the write's actual result
   first.** This is the single most repeated root cause of real bugs found
-  in this repo's history (§8.1 bug class 1; `FIXES_LOG.md`: `extend_trial`, `complete_task`,
-  `member_presence`, onboarding, the GDPR export, the activity ticker, the
-  dispatch fallback — each one silently did nothing while the UI reported
+  in this repo's history (§8.1 bug class 1; seven confirmed cases cited in
+  `FIXES_LOG.md`, each silently doing nothing while the UI reported
   success). Every new `sb.from(...)`/`sb.rpc(...)` call that isn't a pure
   read must check `.error` (Supabase resolves to `{data:null,error}`, it
   does not throw) before rendering a success toast, updating in-memory

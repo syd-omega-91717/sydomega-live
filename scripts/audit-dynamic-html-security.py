@@ -31,7 +31,11 @@ def candidate(path: pathlib.Path) -> bool:
     )
 
 
-def main() -> int:
+def main(argv: list[str]) -> int:
+    if "--help" in argv or "-h" in argv:
+        print(__doc__)
+        return 0
+
     findings: list[tuple[pathlib.Path, int, str, str]] = []
     for path in sorted(ROOT.rglob("*")):
         if not path.is_file() or not candidate(path):
@@ -57,4 +61,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

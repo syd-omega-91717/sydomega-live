@@ -17931,3 +17931,407 @@ never set `left` for any of them, because on mobile the collision partner is
 `display:none`. A layout invariant that holds at one breakpoint is not an
 invariant. The second half: the answer was already written down, in the *mobile*
 ladder's own comment, as `x-clear`.
+
+## 174 — Two PRs fixed the same RLS gap independently; one migration was pure duplicate debt
+
+An external audit pass (of documents outside this repo, not repo content) called
+out "check open pull requests for overlap" as a standing rule this project
+should follow. Checking it against real history found a live instance:
+commits `fcc4be3` (2026-09-16, adds `supabase/migrations/20260916204000_harden_stripe_webhook_events_rls.sql`)
+and `cafd904` (2026-09-16, adds `20260916210000_harden_stripe_webhook_events_rls.sql`)
+both independently revoke `anon`/`authenticated` grants and add the same
+restrictive `stripe_webhook_events_deny_client_access` deny-all policy on
+`public.stripe_webhook_events` — same table, same policy name, same `using
+(false) with check (false)` body, 20 minutes apart, both merged to `main` via
+`a241130`. Neither reconciled with the other before merging.
+
+`python3 scripts/migration-drift.py` was failing on `main` as a result — not
+because of the duplication itself, but because both new files postdate the
+2026-09-15 `supabase/remote-migrations.json` snapshot and neither had been
+applied live yet (confirmed: `grep -n "20260916" supabase/remote-migrations.json`
+returns nothing for either).
+
+**Contrast with a second same-name pair found by the same sweep** —
+`0105_creator_proposals.sql` and `20260901143526_creator_proposals.sql`,
+identical `CREATE TABLE creator_proposals` bodies (one comment line apart) —
+which turned out to be a *closed* case: both `0105` and `20260901143526`
+already appear in `supabase/remote-migrations.json`'s applied list. Per this
+file's own rule (`README.md:60`, CLAUDE.md §5), an applied migration is never
+renumbered or rewritten, so that pair is left as historical record and not
+touched here — it is documented, not fixed.
+
+The `stripe_webhook_events` pair had no such history: neither side was
+applied, so keeping both was pure unforced duplication, not reconciled
+production state. Deleted the later, purely-redundant file
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) and kept the earlier,
+first-merged one. `scripts/audit.py` still reports `critical: 0, warnings: 7`
+(unchanged) and `scripts/migration-consistency.py` still reports OK.
+`scripts/migration-drift.py` now reports exactly one pending item —
+`20260916204000` — which is a real, separate, already-known gap: it has not
+yet been applied to the live database and `supabase/remote-migrations.json`
+has not been regenerated against an authenticated capture, which this session
+had no credentials to perform. That single remaining item is tracked in
+`docs/PRODUCTION_READINESS_BACKLOG.md` ("Resolve `migration-drift` without
+editing the remote migration snapshot by assumption") — not fabricated here.
+
+**The transferable rule:** two same-day, same-goal, differently-timestamped
+migration files with no shared PR are not evidence of anything by themselves —
+check `remote-migrations.json` before touching either. Applied-and-duplicated
+is a closed historical fact to record. Unapplied-and-duplicated is unforced
+debt safe to collapse to one file.
+
+## 175 — Two CI gates red on `main`, from a --help contract nobody actually satisfied and a scanner that couldn't tell a probe from a renderer
+
+Diagnosed and proposed in a PR comment (#408) but left unfixed there as out of
+scope for that diff; fixed here since this session's mandate widened to "find
+and fix real problems."
+
+**Gate 1 — `scripts/tests/test_script_help_contract.py`, part of `ci.yml`'s
+`verify` job.** Two failures:
+
+- `audit-dynamic-html-security.py` and `audit-webgl-ownership.py`: `--help`
+  exited `1` instead of `0`. Not actually a `--help`-handling bug in the
+  sense of missing flag parsing — both scripts simply have no `--help`
+  branch at all, so passing `--help` runs the full scan regardless, and
+  the full scan happened to have real findings (see Gate 2) that made it
+  exit 1. Fixed by adding the same `if '--help' in argv or '-h' in argv:
+  print(__doc__); return 0` guard `brand-glyph-check.py` already uses,
+  ahead of any real work, in both scripts.
+- `security-check-emblem-panel.py`: no module docstring at all (it's a
+  four-line inline assertion script, not built from the `main(argv)`
+  template the others use). Added one, plus the same `--help` guard for
+  consistency — the assertions on `omega-emblem-panel.js` are unchanged.
+
+**Gate 2 — `contracts.yml`'s direct `python scripts/audit-webgl-ownership.py`
+step.** This was the *real*, non-`--help` reason the script exited 1, and
+without it Gate 1's fix alone would have made `--help` pass while the
+actual scan (which is what `contracts.yml` runs) stayed red. Two distinct
+false positives, found one after the other because fixing the first
+revealed the second was still there underneath it:
+
+1. `vendor/three.module.js:6` — the vendored Three.js library's own source
+   necessarily defines `THREE.WebGLRenderer` and calls `getContext('webgl2')`
+   internally; that's the implementation `omega-sculpture.js` (the one real
+   owner) calls into, not a second owner. `vendor/` was already excluded
+   from analogous scans elsewhere in this repo (`audit.py` "tracks them
+   apart from root modules," CLAUDE.md §4) but not from this script's
+   `SKIP_PARTS` — added it.
+2. Excluding `vendor/` surfaced a second, previously-masked finding:
+   `omega-page-features.js:37` calls `getContext('webgl')` on a `<canvas>`
+   it creates, probes, and immediately discards — never attached to the
+   DOM, never rendered to — as one of roughly fifteen sibling capability
+   checks in the same file (`canvas` 2d, `audioContext`, `fetch`,
+   `websocket`, `serviceWorker`...). Confirmed via `grep` this and
+   `omega-sculpture.js` are the *only* two `getContext('webgl...')` call
+   sites in the whole repo. Feature detection on a throwaway canvas is not
+   "a second rendering owner" in the sense this scanner's own docstring
+   describes; added it as a second named exception (`ALLOWED_DETECTION_FILES`),
+   same pattern as the existing `OWNER` exception, with a comment recording
+   why so a future genuine second-owner regression in that same file still
+   gets caught (the exception is file-scoped, matching `OWNER`'s own
+   granularity — not scoped to the specific line).
+
+**Verified, not assumed:** `python3 -m unittest scripts.tests.test_script_help_contract`
+→ 3/3 pass (was 2 failures). `python3 -m unittest discover -s scripts/tests`
+→ 312/312 pass, unchanged count from CLAUDE.md's baseline. `python3
+scripts/audit-webgl-ownership.py` (real run, not `--help`) → `PASS: only
+omega-sculpture.js may own WebGL renderer/context creation`, 387 files
+scanned, 0 findings (was 1: the vendor false positive; fixing that
+revealed and required fixing a second). `python3 scripts/audit.py` →
+`critical: 0, warnings: 7`, unchanged. `audit-dynamic-html-security.py`'s
+own *non*-`--help` findings (real `innerHTML`/template-interpolation hits
+in `workout.html`, `workers/rate-limiter.js`) are untouched and unaffected
+by this fix — confirmed via `grep` that script is invoked nowhere in any
+CI workflow except through this test's `--help` probe, so those findings
+were never gating anything and are out of scope here.
+
+**The transferable rule:** a scanner exception written for one real owner
+(`OWNER = "omega-sculpture.js"`) does not automatically cover every other
+legitimate reason to touch the same API — a capability probe on a discarded
+canvas needed its own, separately-justified exception, not a loosened
+pattern. And a `--help` contract failure is not always a `--help` bug: here
+both instances were the *underlying scan* failing, surfaced through the one
+code path (`--help`) that happened to run it.
+
+## 176 — Correcting #174: a stale snapshot, not live truth, said a migration was unapplied — it had been, and deleting its file was the actual mistake
+
+This session finally got authenticated Supabase MCP access to project
+`ydqhzvvoyufiiqvzcjns` (`mcp__Supabase__list_projects` confirmed it: name
+"sydomega", `ACTIVE_HEALTHY`, matches `ydqhzvvoyufiiqvzcjns.supabase.co`
+hardcoded in the shipped `bg.js` — the only project this repo actually
+serves from, distinguished from two other, unrelated, `INACTIVE` projects
+on the same account and a fourth project a user pasted credentials for that
+does not appear in this account's project list at all). First real use of
+it: `mcp__Supabase__list_migrations` against that project, which is ground
+truth `supabase_migrations.schema_migrations`, not a dated snapshot.
+
+**#174 was wrong.** It reasoned from `supabase/remote-migrations.json`'s
+2026-09-15 capture — dated *before* `20260916204000` and `20260916210000`
+existed, so neither could possibly appear in it — and treated that absence
+as evidence neither had been applied. `list_migrations` now shows **both**
+versions recorded in the live ledger. The file #174 deleted
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) documented a
+migration that really had run in production; deleting it broke the rule
+this repo states explicitly (`CLAUDE.md` §5, `migrations/README.md:60`):
+never remove or rewrite the record of an applied migration. The
+distinguishing test #174 itself proposed — "check `remote-migrations.json`
+before touching either" — was applied to a snapshot that was structurally
+incapable of answering the question, and the result was trusted anyway
+without noticing the date problem.
+
+**No harm to the live table**, verified directly rather than assumed:
+`pg_policies` shows exactly one restrictive policy,
+`stripe_webhook_events_deny_client_access`, `cmd=ALL`,
+`qual=false`, `with_check=false`, `roles={anon,authenticated}`;
+`information_schema.role_table_grants` shows zero grants to `anon` or
+`authenticated` on the table. Both migrations are idempotent
+(`drop policy if exists` + `revoke all` + recreate), so whichever ran,
+or both, the end state is identical and correct — this was purely a
+bookkeeping break, not a security or data issue.
+
+**Fixed:** restored `20260916210000_harden_stripe_webhook_events_rls.sql`
+verbatim from git history (`git show aa5ef934^:...`, the commit before
+#174 deleted it — not retyped from memory). Regenerated
+`supabase/remote-migrations.json` from the actual live
+`list_migrations` output (189 versions, `_captured` 2026-09-17) rather
+than hand-editing the stale one. Regenerated `supabase/live-schema.json`
+the same way, running the exact query `live-schema.README.md` specifies
+against the live project rather than reasoning around its staleness — it
+was itself four days stale and missing a real table entirely
+(`stripe_webhook_events` was absent from the 2026-09-13 capture even
+though the table already existed live; now present, 224 tables). Checked
+`mcp__Supabase__get_advisors(type=security)` afterward per that tool's own
+guidance to run it after DDL-adjacent changes: one pre-existing,
+unrelated finding (`auth_leaked_password_protection`, a dashboard Auth
+setting, not a migration), nothing new.
+
+**Verified, not assumed:** `python3 scripts/migration-drift.py` →
+`MIGRATION DRIFT: PASS (189 versions, local and remote agree; snapshot
+2026-09-17)` — this session's first PASS on this gate, every prior run
+having shown the one genuinely-pending item that turned out to already be
+resolved by restoring the file. `python3 scripts/schema-dictionary.py` →
+`OK`, 225 tables from the SQL bag, all client calls resolve.
+`python3 scripts/contract-suite.py` → **`CONTRACT SUITE: PASS`, 18/18
+gates** — the first fully green run of this suite anywhere in this
+session's history, `migration-drift` included. Full `scripts/tests`
+suite: 312/312, unchanged.
+
+**The transferable rule, sharpened from #174's own:** a local snapshot can
+only speak for the period it was captured in. Before trusting "absent
+from the snapshot" as "not applied," check whether the item in question
+even *could* have appeared — a snapshot dated before something existed is
+not evidence about it, and reads as a false negative that looks exactly
+like a true one. When live database access is actually available, per
+`CLAUDE.md` §8.2's own standing note, prefer querying it directly over
+reasoning from a dated capture, especially for the specific claim ("is X
+applied") the capture cannot make either way.
+
+## 177 — A "critical RLS breach" that was a broken impersonation method, and a real anomaly it uncovered on the way
+
+**The false alarm, caught before it was reported as fact.** Following
+CLAUDE.md §8.4's own documented method
+(`set_config('role','authenticated',true)` + `set_config('request.jwt.claims',
+..., true)`), impersonating a real, approved, non-owner member
+(`5ca6ae1c-ea68-45ce-8424-434629c8d21c`) and counting rows showed
+`profiles_visible = 9 = profiles_total`, `task_completions_visible = 10 =
+task_completions_total`, `certificates_visible = 24 = certificates_total` —
+by that file's own stated rule ("equal counts on a table that should be
+scoped is the finding"), a member reading every other member's profile,
+task history and certificates. Ruled out, in order, before trusting it:
+unspecified evaluation order across a target list of side-effecting
+function calls (retested with a `MATERIALIZED` CTE forcing sequencing —
+same result); query-plan-cache reuse (retested with entirely fresh SQL
+text — same result); `authenticated.rolbypassrls` (confirmed `false`);
+table-owner RLS exemption (`relforcerowsecurity=false`, but `authenticated`
+is not the owner nor a member of it — checked `pg_auth_members` directly,
+found the membership ran the *other* direction, `postgres` is a member of
+`authenticated`, not vice versa); the `row_security` GUC (explicitly forced
+`'on'` in the same block — no change). Every diagnostic inside the same
+statement — `current_user`, `current_setting('role')`, `auth.uid()`,
+`private.is_platform_owner()` — read back exactly as an authenticated,
+non-owner impersonation should. `EXPLAIN` settled it: under
+`set_config('role',...)` the plan carries no `Filter:` clause at all —
+row security was never engaged, despite every session variable it depends
+on reading correctly. Switching to real `SET LOCAL ROLE authenticated` (a
+command, not a function call) inside one `BEGIN;...COMMIT;` block made the
+`Filter: (((InitPlan 1).col1 = id) OR private.is_platform_owner())` appear
+in the plan, and re-running the same three tables under the *working*
+method showed exactly what should be there: `profiles` → 1 (self only),
+`task_completions` → 0, `certificates` → 0 (this member has completed no
+tasks and earned no certificates — legitimately zero, not itself a second
+finding). **RLS on these three tables is correct.** The vulnerability was
+in the test, not the platform, and the correction is recorded directly in
+`CLAUDE.md` §8.4 so the next session doesn't spend a live-database
+investigation rediscovering it.
+
+**The real anomaly this surfaced on the way, not yet resolved.**
+`select id from public.profiles where is_owner = true` (privileged, no
+impersonation needed) returns **two** rows: `s.y.dagher@gmail.com` (matches
+CLAUDE.md §1's documented single owner) and a second address,
+`slmndghr@gmail.com` — not documented anywhere in this repo as an owner
+account. The name reads as a plausible alternate address for the same
+person (a consonant-only rendering of "Sleiman Dagher"), so this is very
+likely intentional — but "very likely" is not verified, and `is_owner`
+grants elevated read/write across member-scoped tables platform-wide
+(CLAUDE.md §1/§5). Left untouched rather than acted on unilaterally:
+revoking or confirming someone's owner flag without asking is exactly the
+kind of consequential, hard-to-reverse action this session's own operating
+rules call for confirming first. Flagged to the user directly; not
+resolved in this entry.
+
+**The transferable rule:** a testing method that reproduces every *visible*
+symptom of working (`current_user`, `auth.uid()`, the owner-check function
+all read back correctly) can still fail to engage the mechanism being
+tested. `EXPLAIN` on the actual query — not diagnostic reads of the
+session state around it — is what actually proves whether a security
+control is live. A finding this severe, on live production data, gets one
+more round of "what would make this false" before it gets reported as
+fact — here, that round is what caught it.
+
+## 178 — The two-owner-accounts anomaly (#177) is confirmed intentional
+
+The account owner confirmed directly: `slmndghr@gmail.com` is their own
+second account, not an unauthorized grant. Both `is_owner = true` rows
+(`s.y.dagher@gmail.com`, `slmndghr@gmail.com`) are legitimate. `CLAUDE.md`
+§1 updated in place to document both addresses instead of only the first.
+No RLS, policy, or schema change made — this was a documentation gap, not
+a security gap, and the live behavior underneath (verified in #177) was
+already correct.
+
+## 179 — Live GRANT/policy sweep found the no-grant scaffold grew 39→130, one table client-reachable and broken
+
+Extending #177's 3-table spot check with the full class-6c sweep
+`GAP_ANALYSIS.md` §S already tracked (39 tables, policies with no
+table-level `GRANT`, re-counted 2026-08-29): a live query joining
+`pg_class`/`pg_policies`/`information_schema.role_table_grants` across
+all 202 `public` tables found **130** now in that state, not 39 — the
+scaffold grew with the estate. Cross-referenced all 130 against every
+`.from('<table>')` call in shipped `.html`/`.js` (excluding
+`supabase/`/`scripts/`, which reference table names in migrations and
+audits, not live client calls): **129 stay genuinely unreachable**,
+consistent with #`GAP_ANALYSIS.md`'s prior finding — dormant SaaS-scaffold
+tables (`organizations`, `billing_plans`, `workflow_definitions`, etc.,
+matching the "~83-table SaaS scaffold" already recorded there), correctly
+left locked pending a real feature decision, not touched.
+
+**One, `agent_experiments`, is queried live** —
+`autonomous-insights.html:539`, `sb.from("agent_experiments").select("*")`
+in `loadExperiments()`. Its only policy (`agent_experiments_read`,
+PERMISSIVE, `is_platform_owner()`) had never had a table-level `GRANT`,
+so every call — owner included — hit `42501 permission denied` before
+row security ever ran (§8.1 class 6c). The page's
+`const { data: experiments } = await sb.from(...)` discards `.error`
+(§8.1 class 1, again), so this rendered "No experiments running yet" —
+indistinguishable from a real empty table.
+
+**Verified, not assumed, both before and after.** Confirmed the failure
+mode is real by reproducing it on a sibling still-ungranted table
+(`capability_registry`) under real impersonation (`SET LOCAL ROLE
+authenticated`, per #177's corrected method): `ERROR 42501: permission
+denied for table capability_registry`, with Postgres's own hint naming
+the exact missing `GRANT`. Fixed with a new migration,
+`20260917115719_grant_agent_experiments_select.sql` (`grant select on
+public.agent_experiments to authenticated`), applied live via
+`apply_migration`, `remote-migrations.json` regenerated (190 versions),
+`python3 scripts/migration-drift.py` → PASS. Re-verified under
+impersonation post-fix: the owner UUID now reads `0` rows with no error
+(table is genuinely empty — nothing to show yet, correctly reported this
+time), a real non-owner reads `0` rows with no error too (RLS's
+`is_platform_owner()` qual still scopes it — the `GRANT` only lifted the
+42501, it did not widen visibility). `python3 scripts/contract-suite.py`
+→ 18/18 gates passing.
+
+**Left open, correctly:** the other 129 tables. `GAP_ANALYSIS.md` §S's
+"39 tables" line is now stale by count (not by conclusion) and needs
+updating to 130/129 with this session's date — recorded as a moved
+baseline number, not re-litigating the underlying decision (don't grant
+without deciding the feature is wanted, still correct).
+
+## 180 — The 2026-09-06 production-404 outage (FIXES_LOG.md #105/#107) is closed
+
+CLAUDE.md §8.2 carried a standing, serious claim: the production alias
+(`sydomega.com`) served a stale 404 while `target:production` deployments
+built fine, because nothing promoted them (`vercel.json`'s
+`git.deploymentEnabled` was `{"*": false}`, `vercel-production.yml`'s
+`deploy` job had no `VERCEL_TOKEN`). Re-checked live rather than assumed
+current, since this file's own method notes warn a snapshot's date is not
+its freshness.
+
+**Re-verified 2026-09-17 via `mcp__Vercel__web_fetch_vercel_url`** (never
+curl, per the existing rule — `ssoProtection` 401s a bare `*.vercel.app`
+fetch): `sydomega.com` returns **200** with `age: 20`, `x-vercel-cache:
+HIT`, and an `etag` (`W/"ad5b84f1101f1466b4e89a4fb639c081"`) that matches
+byte-for-byte the newest `target:production` deployment
+(`dpl_3oFM8HpAtDybh5bDTMwNgm4MNphm`, the merge of PR #411) fetched
+directly. `vercel.json` now reads `"git":{"deploymentEnabled":{"*":false,
+"main":true}}` — main-branch pushes are explicitly promotable again.
+
+**The custom workflow still can't do it, and that's fine now.** Checked
+the latest `vercel-production.yml` run (id `35201784140`, on `main` at
+`42874c1d624...`): the `Production promotion` job still runs its
+"Controlled state when token is unavailable" branch and skips the actual
+`vercel deploy --prod` step — `VERCEL_TOKEN` is still not configured.
+But production is current anyway, because **Vercel's own Git integration
+is the active promotion path**, independent of this repo's custom
+workflow — `git.deploymentEnabled.main: true` is what it needed. The
+custom workflow is now a redundant, harmlessly-inert backup, not the
+thing standing between a merge and production.
+
+**Not explained: who changed `git.deploymentEnabled`, or when, between
+2026-09-06 and now.** Not this session — no commit in this branch's
+history touches `vercel.json`. Recorded as closed by evidence, not
+re-opened as a mystery: the live fetch is the fact that matters, and it
+says production is correct today. `CLAUDE.md` §8.2 rewritten in place to
+describe the current state rather than the 2026-09-06 outage.
+
+## 181 — Row-visibility RLS impersonation extended from 3 tables to every client-reachable table
+
+`FIXES_LOG.md` #177 verified `profiles`/`task_completions`/`certificates`
+under real `SET LOCAL ROLE authenticated` impersonation and left the
+other ~221 tables as an open item. Closed the reachable slice of it:
+queried `information_schema.role_table_grants` for every `public` table
+carrying an `authenticated` `SELECT` grant — **90 tables** (the complete
+set a signed-in member's client can actually query; `signups` has only
+an `anon` `INSERT` grant, correctly write-only, and was excluded from a
+SELECT sweep for that reason, not skipped).
+
+Ran the identical `count(*)` over all 90 twice in one pass each: once
+privileged (service role, no impersonation) and once under a real
+non-owner UUID (`SET LOCAL ROLE authenticated` + `request.jwt.claims`,
+one `BEGIN;...COMMIT;` block, per #177's corrected method). Compared
+every pair. Of the 90, most non-empty tables scoped to `0` visible rows
+for the non-owner exactly as expected (`access_audit`, `ai_memory`,
+`automation_rules`, `certificates`, `client_errors`, `error_budget_policy`,
+`evolution_events`, `exam_results`, `lesson_completions`, `medals`,
+`member_state`, `news`, `sovereign_points_ledger`, `task_completions`,
+`user_dedication`), and `profiles` correctly returned exactly **1** row
+(their own) against **9** privileged — real per-user scoping, not a leak.
+
+**Eight tables returned equal, non-zero counts for owner and non-owner.**
+Read each policy's full `qual` before trusting the shape (per #177's own
+rule — a label is not a read): `feature_flags` and `governance_policies`
+were already recorded in `GAP_ANALYSIS.md` as readable-by-every-approved-
+member by pre-existing policy, and this reproduces that unchanged.
+`matrix_phases` (`mph_read`, `qual: true`), `matrix_tracks` (`mt_read`,
+`qual: true`), `point_perks` (`perks_read`, `qual: true`), and
+`token_catalog` (`tc_read`, `qual: true`) are genuine reference/catalog
+tables with no per-user column — full visibility is the design, not a
+gap. `platform_settings` has `qual: true` on `SELECT` only, with
+`INSERT`/`UPDATE`/`DELETE` all correctly gated on
+`private.is_platform_owner()` — matches CLAUDE.md §5's own description
+of it as the flag store every client needs to read. `dispatches`'
+single visible row is a real `is_published = true` row under
+`dispatches_select`'s `((is_published = true) OR is_platform_owner() OR
+(user_id = auth.uid()))` — a published announcement, deliberately public,
+while its `INSERT`/`UPDATE`/`DELETE` policies are correctly self- or
+owner-scoped.
+
+**No new finding.** Every one of the 90 currently client-reachable
+tables is either correctly member-scoped, correctly owner-only, or
+correctly public-by-design; nothing here needed a fix. Combined with
+#179's grant sweep (the other 130 tables, 129 dormant, 1 fixed) and
+#177's original 3, this is the first pass to have actually looked at
+every table this platform's own client code can reach — not just a
+sample — even though the harder-to-automate case (per-row correctness
+inside a table with hundreds of rows across many users, versus this
+pass's aggregate-count check) is still open.

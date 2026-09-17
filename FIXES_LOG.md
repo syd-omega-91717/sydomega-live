@@ -18582,3 +18582,134 @@ insertions). `python3 scripts/contract-suite.py` → 18/18 gates pass.
 errors, no blank pages, no new horizontal overflow, no duplicate ids;
 the only advisory findings (contrast, one soft-scaled canvas) are
 pre-existing and unrelated to the motion attributes added.
+
+## 186 — A mirror red while the real gate was green, and a scanner blind to the authoritative schema
+
+Two gates, both wrong in the same direction: each was reporting on a repo
+that does not exist.
+
+### 186a — `./scripts/ci-local.sh` was RED on `main`
+
+A clean checkout of `main` (`ff198392`) failed its own blocking suite:
+
+```
+── 5.   Service-role key scan
+./scripts/tests/test_stripe_webhook_guard.js:41:assert.match(migration,
+  /GRANT EXECUTE ON FUNCTION public\.apply_subscription_event[\s\S]*TO
+  service_role;/, 'event RPC must be callable by the server-side service role');
+  service_role reference found in client code
+   FAIL  5.   Service-role key scan
+  1 BLOCKING CHECK(S) FAILED (23 passed)
+```
+
+That is not a leak. It is a test asserting that a *migration* grants EXECUTE
+to the server-side role — the assertion text contains the words, nothing else.
+
+The two scanners had drifted. `ci.yml:194` skips any path with a `.git` or
+`scripts` component:
+
+```python
+if ".git" in path.parts or "scripts" in path.parts or not path.is_file():
+    continue
+```
+
+`ci-local.sh:61` had no such exemption, so it grepped the whole tree.
+
+Which side is right is a question of fact, and the repo answers it:
+`scripts/vercel-build.sh:28` carries `! -path './scripts/*' \` in the
+allow-list `find`, so `scripts/` is **provably not copied into the production
+surface**. A match there cannot be the client-shipped leak this gate exists to
+catch. Local scope now mirrors `ci.yml` exactly.
+
+The reason this mattered more than one red line: a mirror that fails when the
+real gate passes is worse than no mirror at all. `CLAUDE.md` §8.3 tells every
+session to run `ci-local.sh` before pushing. A gate that is *expected* to be
+red is a gate nobody reads.
+
+### 186b — `audit.py` could not see `supabase/migrations/`
+
+`scripts/audit.py:290` loads the schema with a **non-recursive** listing:
+
+```python
+sql_files = sorted(f for f in os.listdir(SQL_DIR) if f.endswith(".sql"))
+```
+
+`os.listdir` does not descend, so all 171 files under `supabase/migrations/`
+were invisible to checks 7 and 8. That is exactly backwards from `CLAUDE.md`
+§5, where `migrations/` is **authoritative** and the flat bag is reference
+material that *never deploys*. The gate was checking the non-deploying copy
+and ignoring the one that ships.
+
+Seven relations were reported as `never CREATE TABLE'd`. Cross-checked
+against `supabase/live-schema.json` (224 relations) and `migrations/`:
+
+| relation | in flat bag | in `migrations/` | live |
+|---|---|---|---|
+| `agent_experiments` | no | **yes** | **YES** |
+| `agent_performance_metrics` | no | **yes** | **YES** |
+| `autonomous_decisions` | no | **yes** | **YES** |
+| `autonomous_insights` | no | **yes** | **YES** |
+| `member_feature_flags` | no | **yes** | **YES** |
+| `transactions` | no | no | NO |
+| `wallet_balances` | no | no | NO |
+
+Five of seven were phantoms — declared in the authoritative location *and*
+present in production. So was the eighth finding, `apply_subscription_event`,
+the live Stripe webhook RPC, declared at
+`supabase/migrations/20260915150223_stripe_webhook_event_boundary.sql:25`.
+
+The two genuine ones are already handled correctly, by earlier sessions:
+`subscriptions.html:225-232` and `vault.html:479-495` each read `.error` and
+distinguish *"the ledger does not exist"* from *"you have no records"* — the
+§8.1 class 1 distinction, with the em-dash rendering rather than a fabricated
+count (`vault.html`'s comment records that this field once read
+`wallets.length||'12'` and showed a member twelve wallets they did not have).
+
+So the fix is not to the pages. It is that **five phantoms around two honest
+findings is how a real one gets ignored** — the same shape as §8.4's "a
+scanner needs its own false-positive pass before its number means anything".
+
+**Scope of the widening, deliberately narrow.** Only the *existence* checks
+("is this declared anywhere?") now read `migrations/`. The divergence checks
+(§4's duplicate-definition and diverging-RPC warnings) still read the flat bag
+alone, because those ask whether the **bag** is internally consistent — and
+migrations legitimately re-declare a relation as it evolves, so folding 171
+ordered files into a divergence set would report the schema's own history as
+drift.
+
+### Verification — both directions, because a widening can become an excuse
+
+- **Planted control, tables/RPCs.** `sb.from('__omega_negctl_absent__')` +
+  `sb.rpc('__omega_negctl_fn__')` appended to `dashboard.html`: both reported
+  (`(3):` and `(1):`). Removed; tree clean.
+- **Planted control, credentials.** `service_role_key` in a root `.js`, then
+  `SUPABASE_SERVICE_KEY` in a root `.json`: scan `FAIL` on each, `PASS` on the
+  clean tree before and after.
+- **Pinned-BEFORE test run.** The four new tests in
+  `scripts/tests/test_audit.py::ClientSchemaReferenceTests` were run against
+  `git show HEAD:scripts/audit.py`: `FAILED (failures=2)` — precisely the two
+  "declared only in migrations is not reported missing" cases. Against the
+  fixed file: `OK`. The other two are over-widening guards and pass on both,
+  which is the correct shape for a guard.
+- **Literal/comment control.** A migration containing
+  `INSERT INTO public.ddl_log(tag) VALUES ('CREATE TABLE literal_table')`
+  plus a `--` and a `/* */` commented CREATE must *not* excuse those three
+  names. Asserted. This is §8.4's `CREATE TABLE AS` → relation `as` bug, in
+  its more expensive direction: harvesting a name from a literal would
+  silently excuse a genuinely missing relation.
+
+### Baselines after
+
+```
+./scripts/ci-local.sh                     ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/audit.py                  critical: 0    warnings: 6   PASSED
+python3 -m unittest discover -s scripts/tests   Ran 312 tests ... OK  (was 308)
+python3 -m unittest discover -s tests           Ran 23 tests ... OK
+node scripts/verify-runtime.js            PASS (13 pages)
+```
+
+`audit.py`'s warning count returns to the **6** §8.3 documents; it had been
+**7** on `main`. The composition is what changed: the `.from()` warning went
+7 → 2 and the `.rpc()` warning disappeared, while a real duplicate-table and
+deploy-hygiene warning set stayed. A count matching the baseline is not the
+same as the baseline being met — check the composition.

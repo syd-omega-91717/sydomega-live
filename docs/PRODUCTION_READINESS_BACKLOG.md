@@ -57,7 +57,27 @@
       independently corroborate: 0 findings.
 - [x] Rotate any credential that was exposed or cannot be proven non-secret.
       No exposed or unprovable credential found above — nothing to rotate.
-- [ ] Verify Stripe webhook signature validation, replay protection, and idempotency in a deployed environment.
+- [x] Verify Stripe webhook signature validation, replay protection, and idempotency in a deployed environment.
+      `FIXES_LOG.md` #182: read `stripe-webhook`/`checkout` in full and
+      checked every claim against the live database, not the SQL bag.
+      Signature validation is real HMAC-SHA256 with a constant-time
+      compare and a ±300s timestamp tolerance (replay protection at the
+      transport layer). Idempotency verified against live schema, not
+      assumed: `stripe_webhook_events.event_id` carries a real unique PK
+      index, `apply_subscription_event`'s live body does `ON CONFLICT
+      (event_id) DO NOTHING` + `FOR UPDATE` + a `processed`/duplicate
+      check, and `apply_subscription` raises rather than silently
+      no-oping when the target profile doesn't exist. `stripe_webhook_events`
+      has a live `RESTRICTIVE` deny-all policy for `anon`/`authenticated`;
+      both RPCs also gate internally on `service_role`/owner. **Residual,
+      named honestly**: `payments_enabled = false` live and
+      `stripe_webhook_events` has processed **zero** real events ever —
+      the mechanism is soundly built by every check available without
+      live traffic, but has never actually executed. A true end-to-end
+      test needs real Stripe test traffic or a synthetic write against a
+      real profile's subscription fields — the latter wasn't attempted
+      without the account owner's sign-off, matching CLAUDE.md §5's own
+      caution on payment code.
 - [x] Verify RLS policies against authenticated, anonymous, and privileged access paths.
       `FIXES_LOG.md` #177: the two-`is_owner`-accounts anomaly it
       surfaced is resolved (`FIXES_LOG.md` #178) — the account owner

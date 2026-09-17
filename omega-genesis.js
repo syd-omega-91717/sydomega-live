@@ -46,7 +46,8 @@
     '.card,.panel,.tier,.node,.sb,.metric,.box,.glass,.tile,.mod,.qa,.krow,.stat{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease,border-color .3s ease}',
     '.card,.tier,.node,.tile,.mod{animation:omgBreath 11s ease-in-out infinite}',
     '.card:hover,.tier:hover,.node:hover,.tile:hover,.mod:hover,.qa:hover{transform:translateY(-3px) scale(1.006)}',
-    '#omega-atmosphere{position:fixed;inset:0;z-index:0;pointer-events:none}',
+    '#omega-atmosphere-mask{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}',
+    '#omega-atmosphere{position:absolute;inset:0}',
     '.shell,.main,main,header,nav,footer,.side,.topbar,.head{position:relative;z-index:1}'
   ].join('');
   var style = document.createElement('style');
@@ -77,9 +78,12 @@
 
   function atmosphere() {
     if (document.getElementById('omega-atmosphere')) return;
+    var mask = document.createElement('div');
+    mask.id = 'omega-atmosphere-mask';
     var c = document.createElement('canvas');
     c.id = 'omega-atmosphere';
-    document.body.appendChild(c);
+    mask.appendChild(c);
+    document.body.appendChild(mask);
     var ctx = c.getContext('2d');
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W, H;

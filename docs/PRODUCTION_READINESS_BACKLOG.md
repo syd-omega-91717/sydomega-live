@@ -28,7 +28,18 @@
 - [x] Re-run the full contract suite after reconciliation and preserve failure visibility.
       `python3 scripts/contract-suite.py` → `CONTRACT SUITE: PASS`, 18/18
       gates — first fully-green run this session, `migration-drift` included.
-- [ ] Verify the Vercel repository integration and production deployment from the canonical project.
+- [x] Verify the Vercel repository integration and production deployment from the canonical project.
+      `FIXES_LOG.md` #180: the 2026-09-06 production-404 outage this item
+      tracked is closed. Live-fetched `sydomega.com` (never curl) returns
+      200, `etag` matching the newest `target:production` deployment
+      byte-for-byte. `vercel.json`'s `git.deploymentEnabled.main` is now
+      `true` (was `{"*":false}`) — Vercel's own Git integration promotes
+      every `main` push; the repo's custom `vercel-production.yml` still
+      lacks `VERCEL_TOKEN` and self-reports `CONTROLLED`, but it is a
+      redundant backup, not the active path. Who changed the Vercel
+      project setting and when is not established — not this session's
+      change, and not re-opened as a blocker since live evidence settles
+      the actual question this item asks.
 
 ## Security and compliance
 

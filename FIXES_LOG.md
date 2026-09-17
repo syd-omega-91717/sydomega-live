@@ -18246,3 +18246,40 @@ time), a real non-owner reads `0` rows with no error too (RLS's
 updating to 130/129 with this session's date — recorded as a moved
 baseline number, not re-litigating the underlying decision (don't grant
 without deciding the feature is wanted, still correct).
+
+## 180 — The 2026-09-06 production-404 outage (FIXES_LOG.md #105/#107) is closed
+
+CLAUDE.md §8.2 carried a standing, serious claim: the production alias
+(`sydomega.com`) served a stale 404 while `target:production` deployments
+built fine, because nothing promoted them (`vercel.json`'s
+`git.deploymentEnabled` was `{"*": false}`, `vercel-production.yml`'s
+`deploy` job had no `VERCEL_TOKEN`). Re-checked live rather than assumed
+current, since this file's own method notes warn a snapshot's date is not
+its freshness.
+
+**Re-verified 2026-09-17 via `mcp__Vercel__web_fetch_vercel_url`** (never
+curl, per the existing rule — `ssoProtection` 401s a bare `*.vercel.app`
+fetch): `sydomega.com` returns **200** with `age: 20`, `x-vercel-cache:
+HIT`, and an `etag` (`W/"ad5b84f1101f1466b4e89a4fb639c081"`) that matches
+byte-for-byte the newest `target:production` deployment
+(`dpl_3oFM8HpAtDybh5bDTMwNgm4MNphm`, the merge of PR #411) fetched
+directly. `vercel.json` now reads `"git":{"deploymentEnabled":{"*":false,
+"main":true}}` — main-branch pushes are explicitly promotable again.
+
+**The custom workflow still can't do it, and that's fine now.** Checked
+the latest `vercel-production.yml` run (id `35201784140`, on `main` at
+`42874c1d624...`): the `Production promotion` job still runs its
+"Controlled state when token is unavailable" branch and skips the actual
+`vercel deploy --prod` step — `VERCEL_TOKEN` is still not configured.
+But production is current anyway, because **Vercel's own Git integration
+is the active promotion path**, independent of this repo's custom
+workflow — `git.deploymentEnabled.main: true` is what it needed. The
+custom workflow is now a redundant, harmlessly-inert backup, not the
+thing standing between a merge and production.
+
+**Not explained: who changed `git.deploymentEnabled`, or when, between
+2026-09-06 and now.** Not this session — no commit in this branch's
+history touches `vercel.json`. Recorded as closed by evidence, not
+re-opened as a mystery: the live fetch is the fact that matters, and it
+says production is correct today. `CLAUDE.md` §8.2 rewritten in place to
+describe the current state rather than the 2026-09-06 outage.

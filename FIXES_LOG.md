@@ -17931,3 +17931,51 @@ never set `left` for any of them, because on mobile the collision partner is
 `display:none`. A layout invariant that holds at one breakpoint is not an
 invariant. The second half: the answer was already written down, in the *mobile*
 ladder's own comment, as `x-clear`.
+
+## 174 — Two PRs fixed the same RLS gap independently; one migration was pure duplicate debt
+
+An external audit pass (of documents outside this repo, not repo content) called
+out "check open pull requests for overlap" as a standing rule this project
+should follow. Checking it against real history found a live instance:
+commits `fcc4be3` (2026-09-16, adds `supabase/migrations/20260916204000_harden_stripe_webhook_events_rls.sql`)
+and `cafd904` (2026-09-16, adds `20260916210000_harden_stripe_webhook_events_rls.sql`)
+both independently revoke `anon`/`authenticated` grants and add the same
+restrictive `stripe_webhook_events_deny_client_access` deny-all policy on
+`public.stripe_webhook_events` — same table, same policy name, same `using
+(false) with check (false)` body, 20 minutes apart, both merged to `main` via
+`a241130`. Neither reconciled with the other before merging.
+
+`python3 scripts/migration-drift.py` was failing on `main` as a result — not
+because of the duplication itself, but because both new files postdate the
+2026-09-15 `supabase/remote-migrations.json` snapshot and neither had been
+applied live yet (confirmed: `grep -n "20260916" supabase/remote-migrations.json`
+returns nothing for either).
+
+**Contrast with a second same-name pair found by the same sweep** —
+`0105_creator_proposals.sql` and `20260901143526_creator_proposals.sql`,
+identical `CREATE TABLE creator_proposals` bodies (one comment line apart) —
+which turned out to be a *closed* case: both `0105` and `20260901143526`
+already appear in `supabase/remote-migrations.json`'s applied list. Per this
+file's own rule (`README.md:60`, CLAUDE.md §5), an applied migration is never
+renumbered or rewritten, so that pair is left as historical record and not
+touched here — it is documented, not fixed.
+
+The `stripe_webhook_events` pair had no such history: neither side was
+applied, so keeping both was pure unforced duplication, not reconciled
+production state. Deleted the later, purely-redundant file
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) and kept the earlier,
+first-merged one. `scripts/audit.py` still reports `critical: 0, warnings: 7`
+(unchanged) and `scripts/migration-consistency.py` still reports OK.
+`scripts/migration-drift.py` now reports exactly one pending item —
+`20260916204000` — which is a real, separate, already-known gap: it has not
+yet been applied to the live database and `supabase/remote-migrations.json`
+has not been regenerated against an authenticated capture, which this session
+had no credentials to perform. That single remaining item is tracked in
+`docs/PRODUCTION_READINESS_BACKLOG.md` ("Resolve `migration-drift` without
+editing the remote migration snapshot by assumption") — not fabricated here.
+
+**The transferable rule:** two same-day, same-goal, differently-timestamped
+migration files with no shared PR are not evidence of anything by themselves —
+check `remote-migrations.json` before touching either. Applied-and-duplicated
+is a closed historical fact to record. Unapplied-and-duplicated is unforced
+debt safe to collapse to one file.

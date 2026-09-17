@@ -5,8 +5,16 @@
 ## Release blockers
 
 - [ ] Resolve `migration-drift` without editing the remote migration snapshot by assumption.
+      One item remains after `FIXES_LOG.md` #174 collapsed a duplicate:
+      `20260916204000_harden_stripe_webhook_events_rls.sql` is real, correct,
+      unapplied schema — apply it live with authenticated Supabase access, then
+      regenerate `supabase/remote-migrations.json` in the same change.
 - [ ] Obtain authorized live Supabase migration state for project `ydqhzvvoyufiiqvzcjns`.
 - [ ] Reconcile duplicate and local-only migration files through a reviewed migration plan.
+      `FIXES_LOG.md` #174: two independently-merged PRs duplicated the same
+      `stripe_webhook_events` RLS fix (resolved, redundant file deleted); a
+      second pair (`creator_proposals`, `0105_` and `20260901143526_`) is
+      already live on both sides and is left as historical record, not touched.
 - [ ] Re-run the full contract suite after reconciliation and preserve failure visibility.
 - [ ] Verify the Vercel repository integration and production deployment from the canonical project.
 

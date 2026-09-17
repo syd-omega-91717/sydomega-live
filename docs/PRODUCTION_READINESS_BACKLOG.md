@@ -58,25 +58,29 @@
 - [x] Rotate any credential that was exposed or cannot be proven non-secret.
       No exposed or unprovable credential found above — nothing to rotate.
 - [ ] Verify Stripe webhook signature validation, replay protection, and idempotency in a deployed environment.
-- [ ] Verify RLS policies against authenticated, anonymous, and privileged access paths.
-      `FIXES_LOG.md` #177: `profiles`/`task_completions`/`certificates`
-      spot-checked with real in-database impersonation (`SET LOCAL ROLE`,
-      not the `set_config('role',...)` method CLAUDE.md §8.4 documented
-      before this — that method silently never engages RLS despite
-      reading back as if it does) — all three correctly scoped, no leak.
-      Only 3 of ~224 tables checked; the rest of this item is still open.
-      `FIXES_LOG.md` #178: the two-`is_owner`-accounts anomaly this
-      surfaced is resolved — the account owner confirmed both addresses
-      are theirs; `CLAUDE.md` §1 now documents both. Not a security gap.
-      `FIXES_LOG.md` #179: live GRANT/policy sweep across all 202 public
-      tables (extends the 3-table impersonation spot check, different
-      method — GRANT presence, not row visibility). 130 tables have
-      policies with no table-level grant; cross-referenced against every
-      client `.from(...)` call, 129 stay unreachable (dormant scaffold,
-      left locked, correct) and 1 (`agent_experiments`) was reachable and
-      silently broken — fixed live, migration applied, re-verified under
-      real impersonation. Row-visibility impersonation itself still only
-      covers 3 of ~224 tables; that part of this item remains open.
+- [x] Verify RLS policies against authenticated, anonymous, and privileged access paths.
+      `FIXES_LOG.md` #177: the two-`is_owner`-accounts anomaly it
+      surfaced is resolved (`FIXES_LOG.md` #178) — the account owner
+      confirmed both addresses are theirs; `CLAUDE.md` §1 documents both.
+      `FIXES_LOG.md` #177/#179/#181, in combination, now cover every one
+      of the 202 `public` tables one of two ways: **130** have no
+      table-level grant to `anon`/`authenticated` at all (129 correctly
+      dormant, 1 — `agent_experiments` — was reachable and silently
+      broken, fixed in #179) and **90** carry a real `authenticated`
+      `SELECT` grant, every one of which was impersonation-tested in
+      #181 (real `SET LOCAL ROLE authenticated`, not the broken
+      `set_config` method #177 replaced) with its row count compared
+      against a privileged count. All 90 are correctly scoped: per-user
+      (`profiles` correctly returns 1 of 9), owner-only writes on
+      shared-read tables (`platform_settings`, `dispatches`), or genuine
+      public catalogs (`matrix_phases`/`matrix_tracks`/`point_perks`/
+      `token_catalog`, plus the already-documented `feature_flags`/
+      `governance_policies`). `signups` (anon `INSERT` only, no `SELECT`
+      grant to anyone) is correctly write-only. **What this does not
+      cover**: per-row correctness inside a shared table across many
+      real users (this pass compared aggregate counts, not which rows) —
+      narrower, real residual scope, not the ~221-of-224 gap this item
+      opened with.
 - [ ] Verify MFA, RBAC, audit logging, retention, deletion, incident response, and vendor records.
 
 ## Runtime verification

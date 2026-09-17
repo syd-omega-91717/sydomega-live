@@ -18052,3 +18052,76 @@ canvas needed its own, separately-justified exception, not a loosened
 pattern. And a `--help` contract failure is not always a `--help` bug: here
 both instances were the *underlying scan* failing, surfaced through the one
 code path (`--help`) that happened to run it.
+
+## 176 — Correcting #174: a stale snapshot, not live truth, said a migration was unapplied — it had been, and deleting its file was the actual mistake
+
+This session finally got authenticated Supabase MCP access to project
+`ydqhzvvoyufiiqvzcjns` (`mcp__Supabase__list_projects` confirmed it: name
+"sydomega", `ACTIVE_HEALTHY`, matches `ydqhzvvoyufiiqvzcjns.supabase.co`
+hardcoded in the shipped `bg.js` — the only project this repo actually
+serves from, distinguished from two other, unrelated, `INACTIVE` projects
+on the same account and a fourth project a user pasted credentials for that
+does not appear in this account's project list at all). First real use of
+it: `mcp__Supabase__list_migrations` against that project, which is ground
+truth `supabase_migrations.schema_migrations`, not a dated snapshot.
+
+**#174 was wrong.** It reasoned from `supabase/remote-migrations.json`'s
+2026-09-15 capture — dated *before* `20260916204000` and `20260916210000`
+existed, so neither could possibly appear in it — and treated that absence
+as evidence neither had been applied. `list_migrations` now shows **both**
+versions recorded in the live ledger. The file #174 deleted
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) documented a
+migration that really had run in production; deleting it broke the rule
+this repo states explicitly (`CLAUDE.md` §5, `migrations/README.md:60`):
+never remove or rewrite the record of an applied migration. The
+distinguishing test #174 itself proposed — "check `remote-migrations.json`
+before touching either" — was applied to a snapshot that was structurally
+incapable of answering the question, and the result was trusted anyway
+without noticing the date problem.
+
+**No harm to the live table**, verified directly rather than assumed:
+`pg_policies` shows exactly one restrictive policy,
+`stripe_webhook_events_deny_client_access`, `cmd=ALL`,
+`qual=false`, `with_check=false`, `roles={anon,authenticated}`;
+`information_schema.role_table_grants` shows zero grants to `anon` or
+`authenticated` on the table. Both migrations are idempotent
+(`drop policy if exists` + `revoke all` + recreate), so whichever ran,
+or both, the end state is identical and correct — this was purely a
+bookkeeping break, not a security or data issue.
+
+**Fixed:** restored `20260916210000_harden_stripe_webhook_events_rls.sql`
+verbatim from git history (`git show aa5ef934^:...`, the commit before
+#174 deleted it — not retyped from memory). Regenerated
+`supabase/remote-migrations.json` from the actual live
+`list_migrations` output (189 versions, `_captured` 2026-09-17) rather
+than hand-editing the stale one. Regenerated `supabase/live-schema.json`
+the same way, running the exact query `live-schema.README.md` specifies
+against the live project rather than reasoning around its staleness — it
+was itself four days stale and missing a real table entirely
+(`stripe_webhook_events` was absent from the 2026-09-13 capture even
+though the table already existed live; now present, 224 tables). Checked
+`mcp__Supabase__get_advisors(type=security)` afterward per that tool's own
+guidance to run it after DDL-adjacent changes: one pre-existing,
+unrelated finding (`auth_leaked_password_protection`, a dashboard Auth
+setting, not a migration), nothing new.
+
+**Verified, not assumed:** `python3 scripts/migration-drift.py` →
+`MIGRATION DRIFT: PASS (189 versions, local and remote agree; snapshot
+2026-09-17)` — this session's first PASS on this gate, every prior run
+having shown the one genuinely-pending item that turned out to already be
+resolved by restoring the file. `python3 scripts/schema-dictionary.py` →
+`OK`, 225 tables from the SQL bag, all client calls resolve.
+`python3 scripts/contract-suite.py` → **`CONTRACT SUITE: PASS`, 18/18
+gates** — the first fully green run of this suite anywhere in this
+session's history, `migration-drift` included. Full `scripts/tests`
+suite: 312/312, unchanged.
+
+**The transferable rule, sharpened from #174's own:** a local snapshot can
+only speak for the period it was captured in. Before trusting "absent
+from the snapshot" as "not applied," check whether the item in question
+even *could* have appeared — a snapshot dated before something existed is
+not evidence about it, and reads as a false negative that looks exactly
+like a true one. When live database access is actually available, per
+`CLAUDE.md` §8.2's own standing note, prefer querying it directly over
+reasoning from a dated capture, especially for the specific claim ("is X
+applied") the capture cannot make either way.

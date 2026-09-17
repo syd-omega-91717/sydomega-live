@@ -17979,3 +17979,76 @@ migration files with no shared PR are not evidence of anything by themselves —
 check `remote-migrations.json` before touching either. Applied-and-duplicated
 is a closed historical fact to record. Unapplied-and-duplicated is unforced
 debt safe to collapse to one file.
+
+## 175 — Two CI gates red on `main`, from a --help contract nobody actually satisfied and a scanner that couldn't tell a probe from a renderer
+
+Diagnosed and proposed in a PR comment (#408) but left unfixed there as out of
+scope for that diff; fixed here since this session's mandate widened to "find
+and fix real problems."
+
+**Gate 1 — `scripts/tests/test_script_help_contract.py`, part of `ci.yml`'s
+`verify` job.** Two failures:
+
+- `audit-dynamic-html-security.py` and `audit-webgl-ownership.py`: `--help`
+  exited `1` instead of `0`. Not actually a `--help`-handling bug in the
+  sense of missing flag parsing — both scripts simply have no `--help`
+  branch at all, so passing `--help` runs the full scan regardless, and
+  the full scan happened to have real findings (see Gate 2) that made it
+  exit 1. Fixed by adding the same `if '--help' in argv or '-h' in argv:
+  print(__doc__); return 0` guard `brand-glyph-check.py` already uses,
+  ahead of any real work, in both scripts.
+- `security-check-emblem-panel.py`: no module docstring at all (it's a
+  four-line inline assertion script, not built from the `main(argv)`
+  template the others use). Added one, plus the same `--help` guard for
+  consistency — the assertions on `omega-emblem-panel.js` are unchanged.
+
+**Gate 2 — `contracts.yml`'s direct `python scripts/audit-webgl-ownership.py`
+step.** This was the *real*, non-`--help` reason the script exited 1, and
+without it Gate 1's fix alone would have made `--help` pass while the
+actual scan (which is what `contracts.yml` runs) stayed red. Two distinct
+false positives, found one after the other because fixing the first
+revealed the second was still there underneath it:
+
+1. `vendor/three.module.js:6` — the vendored Three.js library's own source
+   necessarily defines `THREE.WebGLRenderer` and calls `getContext('webgl2')`
+   internally; that's the implementation `omega-sculpture.js` (the one real
+   owner) calls into, not a second owner. `vendor/` was already excluded
+   from analogous scans elsewhere in this repo (`audit.py` "tracks them
+   apart from root modules," CLAUDE.md §4) but not from this script's
+   `SKIP_PARTS` — added it.
+2. Excluding `vendor/` surfaced a second, previously-masked finding:
+   `omega-page-features.js:37` calls `getContext('webgl')` on a `<canvas>`
+   it creates, probes, and immediately discards — never attached to the
+   DOM, never rendered to — as one of roughly fifteen sibling capability
+   checks in the same file (`canvas` 2d, `audioContext`, `fetch`,
+   `websocket`, `serviceWorker`...). Confirmed via `grep` this and
+   `omega-sculpture.js` are the *only* two `getContext('webgl...')` call
+   sites in the whole repo. Feature detection on a throwaway canvas is not
+   "a second rendering owner" in the sense this scanner's own docstring
+   describes; added it as a second named exception (`ALLOWED_DETECTION_FILES`),
+   same pattern as the existing `OWNER` exception, with a comment recording
+   why so a future genuine second-owner regression in that same file still
+   gets caught (the exception is file-scoped, matching `OWNER`'s own
+   granularity — not scoped to the specific line).
+
+**Verified, not assumed:** `python3 -m unittest scripts.tests.test_script_help_contract`
+→ 3/3 pass (was 2 failures). `python3 -m unittest discover -s scripts/tests`
+→ 312/312 pass, unchanged count from CLAUDE.md's baseline. `python3
+scripts/audit-webgl-ownership.py` (real run, not `--help`) → `PASS: only
+omega-sculpture.js may own WebGL renderer/context creation`, 387 files
+scanned, 0 findings (was 1: the vendor false positive; fixing that
+revealed and required fixing a second). `python3 scripts/audit.py` →
+`critical: 0, warnings: 7`, unchanged. `audit-dynamic-html-security.py`'s
+own *non*-`--help` findings (real `innerHTML`/template-interpolation hits
+in `workout.html`, `workers/rate-limiter.js`) are untouched and unaffected
+by this fix — confirmed via `grep` that script is invoked nowhere in any
+CI workflow except through this test's `--help` probe, so those findings
+were never gating anything and are out of scope here.
+
+**The transferable rule:** a scanner exception written for one real owner
+(`OWNER = "omega-sculpture.js"`) does not automatically cover every other
+legitimate reason to touch the same API — a capability probe on a discarded
+canvas needed its own, separately-justified exception, not a loosened
+pattern. And a `--help` contract failure is not always a `--help` bug: here
+both instances were the *underlying scan* failing, surfaced through the one
+code path (`--help`) that happened to run it.

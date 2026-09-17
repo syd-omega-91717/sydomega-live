@@ -18197,3 +18197,52 @@ second account, not an unauthorized grant. Both `is_owner = true` rows
 No RLS, policy, or schema change made — this was a documentation gap, not
 a security gap, and the live behavior underneath (verified in #177) was
 already correct.
+
+## 179 — Live GRANT/policy sweep found the no-grant scaffold grew 39→130, one table client-reachable and broken
+
+Extending #177's 3-table spot check with the full class-6c sweep
+`GAP_ANALYSIS.md` §S already tracked (39 tables, policies with no
+table-level `GRANT`, re-counted 2026-08-29): a live query joining
+`pg_class`/`pg_policies`/`information_schema.role_table_grants` across
+all 202 `public` tables found **130** now in that state, not 39 — the
+scaffold grew with the estate. Cross-referenced all 130 against every
+`.from('<table>')` call in shipped `.html`/`.js` (excluding
+`supabase/`/`scripts/`, which reference table names in migrations and
+audits, not live client calls): **129 stay genuinely unreachable**,
+consistent with #`GAP_ANALYSIS.md`'s prior finding — dormant SaaS-scaffold
+tables (`organizations`, `billing_plans`, `workflow_definitions`, etc.,
+matching the "~83-table SaaS scaffold" already recorded there), correctly
+left locked pending a real feature decision, not touched.
+
+**One, `agent_experiments`, is queried live** —
+`autonomous-insights.html:539`, `sb.from("agent_experiments").select("*")`
+in `loadExperiments()`. Its only policy (`agent_experiments_read`,
+PERMISSIVE, `is_platform_owner()`) had never had a table-level `GRANT`,
+so every call — owner included — hit `42501 permission denied` before
+row security ever ran (§8.1 class 6c). The page's
+`const { data: experiments } = await sb.from(...)` discards `.error`
+(§8.1 class 1, again), so this rendered "No experiments running yet" —
+indistinguishable from a real empty table.
+
+**Verified, not assumed, both before and after.** Confirmed the failure
+mode is real by reproducing it on a sibling still-ungranted table
+(`capability_registry`) under real impersonation (`SET LOCAL ROLE
+authenticated`, per #177's corrected method): `ERROR 42501: permission
+denied for table capability_registry`, with Postgres's own hint naming
+the exact missing `GRANT`. Fixed with a new migration,
+`20260917115719_grant_agent_experiments_select.sql` (`grant select on
+public.agent_experiments to authenticated`), applied live via
+`apply_migration`, `remote-migrations.json` regenerated (190 versions),
+`python3 scripts/migration-drift.py` → PASS. Re-verified under
+impersonation post-fix: the owner UUID now reads `0` rows with no error
+(table is genuinely empty — nothing to show yet, correctly reported this
+time), a real non-owner reads `0` rows with no error too (RLS's
+`is_platform_owner()` qual still scopes it — the `GRANT` only lifted the
+42501, it did not widen visibility). `python3 scripts/contract-suite.py`
+→ 18/18 gates passing.
+
+**Left open, correctly:** the other 129 tables. `GAP_ANALYSIS.md` §S's
+"39 tables" line is now stale by count (not by conclusion) and needs
+updating to 130/129 with this session's date — recorded as a moved
+baseline number, not re-litigating the underlying decision (don't grant
+without deciding the feature is wanted, still correct).

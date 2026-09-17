@@ -308,6 +308,69 @@ class ClientSchemaReferenceTests(unittest.TestCase):
         self.assertIn("ghost_table", out)
         self.assertIn("page.html", out)
 
+    # --- supabase/migrations/ is the AUTHORITATIVE schema (CLAUDE.md §5) ------
+    # audit.py loaded the flat bag with a non-recursive os.listdir(), so every
+    # relation declared only in migrations/ read as "never CREATE TABLE'd" --
+    # five phantom warnings on live, present relations, plus the live Stripe
+    # webhook RPC. These lock the widened scope in both directions.
+
+    def test_table_declared_only_in_migrations_is_not_reported_missing(self):
+        self.fx.write(
+            "supabase/migrations/20260101000000_add.sql",
+            "CREATE TABLE IF NOT EXISTS public.mig_only_table(id uuid PRIMARY KEY);\n"
+            "ALTER TABLE public.mig_only_table ENABLE ROW LEVEL SECURITY;\n",
+        )
+        self.fx.write("page.html", "<script>sb.from('mig_only_table').select('*');</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("mig_only_table", out)
+
+    def test_function_declared_only_in_migrations_is_not_reported_missing(self):
+        self.fx.write(
+            "supabase/migrations/20260101000001_fn.sql",
+            "CREATE OR REPLACE FUNCTION public.mig_only_fn(p uuid)\n"
+            "RETURNS void LANGUAGE sql AS $$ SELECT 1 $$;\n",
+        )
+        self.fx.write("page.html", "<script>sb.rpc('mig_only_fn',{p:1});</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("mig_only_fn", out)
+
+    def test_absent_table_is_still_warned_after_the_widening(self):
+        """The widening must not become a blanket excuse."""
+        self.fx.write(
+            "supabase/migrations/20260101000000_add.sql",
+            "CREATE TABLE IF NOT EXISTS public.mig_only_table(id uuid PRIMARY KEY);\n"
+            "ALTER TABLE public.mig_only_table ENABLE ROW LEVEL SECURITY;\n",
+        )
+        self.fx.write("page.html", "<script>sb.from('ghost_table').select('*');</script>")
+        code, out = self.fx.run()
+        self.assertIn("never CREATE TABLE'd/VIEW'd", out)
+        self.assertIn("ghost_table", out)
+
+    def test_a_name_inside_a_migration_string_literal_does_not_count(self):
+        """CLAUDE.md §8.4: a relation named `as` was once harvested out of the
+        literal "CREATE TABLE AS". Excusing a missing relation that way is the
+        expensive direction of that error."""
+        self.fx.write(
+            "supabase/migrations/20260101000002_log.sql",
+            "CREATE TABLE IF NOT EXISTS public.ddl_log(tag text);\n"
+            "ALTER TABLE public.ddl_log ENABLE ROW LEVEL SECURITY;\n"
+            "-- CREATE TABLE public.commented_out_table(id int);\n"
+            "/* CREATE TABLE public.block_commented_table(id int); */\n"
+            "INSERT INTO public.ddl_log(tag) VALUES ('CREATE TABLE literal_table');\n",
+        )
+        self.fx.write(
+            "page.html",
+            "<script>sb.from('literal_table').select('*');"
+            "sb.from('commented_out_table').select('*');"
+            "sb.from('block_commented_table').select('*');</script>",
+        )
+        code, out = self.fx.run()
+        self.assertIn("never CREATE TABLE'd/VIEW'd", out)
+        for ghost in ("literal_table", "commented_out_table", "block_commented_table"):
+            self.assertIn(ghost, out, f"{ghost} must not be excused by a non-DDL match")
+
 
 class DivergingRPCTests(unittest.TestCase):
     def setUp(self):

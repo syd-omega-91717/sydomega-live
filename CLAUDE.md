@@ -191,7 +191,9 @@ at one viewport and none measured against `#omega-consent` (height varies 80–1
 with its copy). `omega-bottom-stack.js` publishes `--omega-chrome-bottom`
 (persistent furniture) and `--omega-transient-bottom` (that plus any banner).
 Never add a bottom-anchored constant — read a property, and mark new furniture
-`data-omega-bottom-chrome`. Top-left has the same problem, unpublished: bg.js puts
+`data-omega-bottom-chrome`. **An ancestor's `perspective` voids it** — it becomes
+the containing block for `position:fixed` descendants, so `bottom` ignores the
+viewport. `<body>` had one; 8 widgets sat below the fold on 198/204 (187). Top-left has the same problem, unpublished: bg.js puts
 `#om-open` (fixed, z-9000) at x=12..54 on **every** page, so a fluid gutter walks
 under it; reserve `max(<gutter>, 62px)`.
 
@@ -561,7 +563,7 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too, so the count matching is not the baseline being met — check the composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
+| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
 | `python3 -m unittest discover -s scripts/tests` | **312** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
@@ -575,7 +577,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **6**, after 10 of 19 turned out to be one broken DOM, not a palette (169) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **6** (10 of 19 were one broken DOM, not a palette — 169) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |

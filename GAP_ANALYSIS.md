@@ -221,12 +221,14 @@ open, recorded in `FIXES_LOG.md`:
   `TypeError: window.OmegaNav.updateEmblems is not a function` on **4 of 5** pages
   against the pinned pre-fix file and on **0 of 5** after. The reasoning is left in
   the file where the code was, so it is not re-added.
-- **`graph.html` and `map.html` throw on every load** (opened 2026-09-13, measured
-  before/after so not caused by that day's work): `d3.select is not a function` and
-  `L.map is not a function`. Both are the documented unvendored-library class
-  (`FIXES_LOG.md` 128, 130-132, 135-137) — the library never arrives, so none of the
-  page's own module code runs. Fix is to vendor d3 and Leaflet into `/vendor/` the way
-  the other seven were.
+- ~~**`graph.html` and `map.html` throw on every load**~~ **CLOSED** — `494ad666`
+  vendored both libraries (`vendor/d3.min.js`, `vendor/leaflet.js` + `leaflet.css`)
+  and both pages already load them via `loadUMD('/vendor/...')`, same-origin, not a
+  CDN. Re-verified this session: a full-estate headless render (204 pages, this
+  session) reports `pages with uncaught errors or rejections: 0`, and
+  `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
+  `verify-in-browser` skill's own gotcha list still called these two (plus
+  `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

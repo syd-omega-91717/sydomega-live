@@ -4,7 +4,7 @@
 <meta charset=UTF-8>
 <meta name=viewport content=width=device-width,initial-scale=1>
 <title>Analytics Dashboard · SYD OMEGA 91717</title>
-<meta name=description content="Real-time member analytics, engagement metrics, and predictive insights.">
+<meta name=description content="Preview of the planned member analytics, engagement metrics, and predictive insights dashboard (Phase 5, not yet wired to live data).">
 <link rel=manifest href=/manifest.json>
 <script src=/bg.js defer></script>
 <style>
@@ -45,6 +45,7 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 .loading{text-align:center;padding:40px 20px;color:var(--muted)}
 .error{background:rgba(139,0,0,.1);border:1px solid var(--crim);border-radius:4px;padding:12px;color:var(--crim);margin:12px 0;font-size:12px}
 .success{background:rgba(63,178,127,.1);border:1px solid var(--green);border-radius:4px;padding:12px;color:var(--green);margin:12px 0;font-size:12px}
+.preview-banner{background:rgba(226,200,109,.1);border:1px solid var(--solar);border-radius:4px;padding:12px 16px;color:var(--solar);margin-bottom:16px;font-family:var(--M);font-size:12px;letter-spacing:.5px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -59,6 +60,8 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div class=pad>
 <div style=font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px>INTELLIGENCE · INSIGHTS</div>
 <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">ANALYTICS DASHBOARD</h1>
+
+<div class=preview-banner>&#9888; PREVIEW &middot; SIMULATED DATA &mdash; this Phase 5 dashboard is not yet wired to live Supabase data. Every number below is a placeholder, not a real member metric.</div>
 
 <div class=tab-container>
 <button class="tab-btn active" data-tab=overview>OVERVIEW</button>

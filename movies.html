@@ -1,1 +1,118 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ω SYD OMEGA 91717 — Movies</title><script src="/bg.js" defer></script></head><body><main style="padding:40px;max-width:1000px;margin:auto"><div style="font:12px monospace;letter-spacing:3px">Ω / MEDIA UNIVERSE</div><h1>MOVIES</h1><p>Movie gateway for the sovereign cinema canon.</p><p><a href="/cinema.html">OPEN CINEMA</a> · <a href="/media.html">MEDIA UNIVERSE</a> · <a href="/series.html">SERIES</a></p></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Movies</title>
+<meta name="description" content="Sovereign Franchises — the 12 film + series sagas of the Omega media universe, one per Olympian."/>
+<meta name="theme-color" content="#C9A84C"/>
+<style>
+.fr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fr-card{border:1px solid var(--line);background:var(--surface);border-top:3px solid var(--fc,var(--gold));padding:16px;transition:.18s;position:relative;overflow:hidden}
+.fr-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.fr-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.fr-god{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--fc,var(--gold));margin-bottom:4px}
+.fr-title{font-family:var(--D);font-size:15px;color:var(--ink);margin-bottom:8px;line-height:1.3}
+.fr-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);padding:5px 0;border-top:1px solid rgba(201,168,76,.08)}
+.fr-row span:last-child{color:var(--ink);text-align:right}
+.fr-meta{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.fr-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
+.elem-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.elem-row{border:1px solid var(--line);background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:14px}
+.elem-glyph{font-family:var(--D);font-size:18px;flex-shrink:0;width:32px;text-align:center}
+.elem-info{flex:1;min-width:0}
+.elem-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
+.elem-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
+</style>
+<script src="/omega-spatial-realms.js" data-omega-spatial-realms-js defer></script>
+</head>
+<body>
+<aside id="omega-side" data-page="movies"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">MOVIES<span class="topbar-sub">M6 &middot; 12 FRANCHISES &middot; FILM + SERIES UNDER ONE SAGA</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="kpi-row" data-stagger data-stagger-gap="70" style="margin:12px 0 0">
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-a">—</div><div class="kpi-label">AXIS A KNOWLEDGE</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-b">—</div><div class="kpi-label">AXIS B MASTERY</div></div>
+  <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-c">—</div><div class="kpi-label">AXIS C CONTRIBUTION</div></div>
+</div>
+<div class="tab-bar" style="margin-top:8px">
+  <button class="tab-btn active" onclick="setTab('all')">ALL FRANCHISES</button>
+  <button class="tab-btn" onclick="setTab('elements')">BY ELEMENT</button>
+  <button class="tab-btn" onclick="setTab('science')">ARCHITECTURE</button>
+</div>
+
+<div class="tab-panel active" id="tab-all">
+  <div class="sechead">12 SOVEREIGN FRANCHISES &middot; ONE FILM + ONE CHRONICLES SERIES EACH</div>
+  <div class="fr-grid">
+    <div class="fr-card card" style="--fc:#E86A3A" data-reveal="fade-up"><div class="fr-num">FRANCHISE I</div><div class="fr-god">ARES &middot; ARIES</div><div class="fr-title">WAR SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>War Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Aries Chronicles</span></div><div class="fr-meta"><span class="fr-tag">FIRE</span><span class="fr-tag">GATE I+</span></div></div>
+    <div class="fr-card card" style="--fc:#9B6BF0" data-reveal="fade-up"><div class="fr-num">FRANCHISE II</div><div class="fr-god">APHRODITE &middot; TAURUS</div><div class="fr-title">LOVE SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Love Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Taurus Chronicles</span></div><div class="fr-meta"><span class="fr-tag">METAL</span><span class="fr-tag">GATE II+</span></div></div>
+    <div class="fr-card card" style="--fc:#00E5FF" data-reveal="fade-up"><div class="fr-num">FRANCHISE III</div><div class="fr-god">HERMES &middot; GEMINI</div><div class="fr-title">MESSENGER SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Messenger Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Gemini Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WIND</span><span class="fr-tag">GATE III+</span></div></div>
+    <div class="fr-card card" style="--fc:#3fb27f" data-reveal="fade-up"><div class="fr-num">FRANCHISE IV</div><div class="fr-god">ARTEMIS &middot; CANCER</div><div class="fr-title">HUNT SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Hunt Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Cancer Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WATER</span><span class="fr-tag">GATE IV+</span></div></div>
+    <div class="fr-card card" style="--fc:#E2C86D" data-reveal="fade-up"><div class="fr-num">FRANCHISE V</div><div class="fr-god">APOLLO &middot; LEO</div><div class="fr-title">LIGHT SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Light Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Leo Chronicles</span></div><div class="fr-meta"><span class="fr-tag">FIRE</span><span class="fr-tag">GATE V+</span></div></div>
+    <div class="fr-card card" style="--fc:#C9A84C" data-reveal="fade-up"><div class="fr-num">FRANCHISE VI</div><div class="fr-god">ATHENA &middot; VIRGO</div><div class="fr-title">WISDOM SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Wisdom Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Virgo Chronicles</span></div><div class="fr-meta"><span class="fr-tag">SAND</span><span class="fr-tag">GATE VI+</span></div></div>
+    <div class="fr-card card" style="--fc:#9B6BF0" data-reveal="fade-up"><div class="fr-num">FRANCHISE VII</div><div class="fr-god">HERA &middot; LIBRA</div><div class="fr-title">QUEEN SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Queen Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Libra Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WIND</span><span class="fr-tag">GATE VII+</span></div></div>
+    <div class="fr-card card" style="--fc:#3fb27f" data-reveal="fade-up"><div class="fr-num">FRANCHISE VIII</div><div class="fr-god">DEMETER &middot; SCORPIO</div><div class="fr-title">EARTH SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Earth Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Scorpio Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WATER</span><span class="fr-tag">GATE VIII+</span></div></div>
+    <div class="fr-card card" style="--fc:#E2C86D" data-reveal="fade-up"><div class="fr-num">FRANCHISE IX</div><div class="fr-god">ZEUS &middot; SAGITTARIUS</div><div class="fr-title">THUNDER SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Thunder Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Sagittarius Chronicles</span></div><div class="fr-meta"><span class="fr-tag">FIRE</span><span class="fr-tag">GATE IX+</span></div></div>
+    <div class="fr-card card" style="--fc:#E86A3A" data-reveal="fade-up"><div class="fr-num">FRANCHISE X</div><div class="fr-god">HESTIA &middot; CAPRICORN</div><div class="fr-title">HEARTH SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Hearth Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Capricorn Chronicles</span></div><div class="fr-meta"><span class="fr-tag">METAL</span><span class="fr-tag">GATE X+</span></div></div>
+    <div class="fr-card card" style="--fc:#C9A84C" data-reveal="fade-up"><div class="fr-num">FRANCHISE XI</div><div class="fr-god">HEPHAESTUS &middot; AQUARIUS</div><div class="fr-title">FORGE SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Forge Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Aquarius Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WIND</span><span class="fr-tag">GATE XI+</span></div></div>
+    <div class="fr-card card" style="--fc:#00E5FF" data-reveal="fade-up"><div class="fr-num">FRANCHISE XII &middot; APEX</div><div class="fr-god">POSEIDON &middot; PISCES</div><div class="fr-title">OCEAN SOVEREIGN SAGA</div><div class="fr-row"><span>ANCHOR FILM</span><span>Ocean Sovereign</span></div><div class="fr-row"><span>CHRONICLES SERIES</span><span>Pisces Chronicles</span></div><div class="fr-meta"><span class="fr-tag">WATER</span><span class="fr-tag">GATE XII</span></div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-elements">
+  <div class="sechead">FRANCHISES BY ELEMENTAL AFFINITY</div>
+  <div class="elem-band">
+    <div class="elem-row"><div class="elem-glyph" style="color:#E86A3A">&#9906;</div><div class="elem-info"><div class="elem-title">Fire &middot; War, Light &amp; Thunder Sovereign</div><div class="elem-meta">Franchises I, V &amp; IX</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#00E5FF">&#9728;</div><div class="elem-info"><div class="elem-title">Water &middot; Hunt, Earth &amp; Ocean Sovereign</div><div class="elem-meta">Franchises IV, VIII &amp; XII</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#A9C2D8">&#9841;</div><div class="elem-info"><div class="elem-title">Wind &middot; Messenger, Queen &amp; Forge Sovereign</div><div class="elem-meta">Franchises III, VII &amp; XI</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#C9A84C">&#9843;</div><div class="elem-info"><div class="elem-title">Metal &middot; Love &amp; Hearth Sovereign</div><div class="elem-meta">Franchises II &amp; X</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#D9B86A">&#9733;</div><div class="elem-info"><div class="elem-title">Sand &middot; Wisdom Sovereign</div><div class="elem-meta">Franchise VI &mdash; amplifier track</div></div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">FRANCHISE ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">THE 12 FRANCHISES</div><div class="card-body">Every sovereign film on <a href="/cinema.html" style="color:var(--cyan)">Cinema</a> is the anchor of a franchise: one Olympian, one sign, one element, plus its matching Chronicles series on <a href="/series.html" style="color:var(--cyan)">Series</a>. Movies is the index that ties both together into one saga per sign.</div></div>
+    <div class="card"><div class="card-title">NOT A DUPLICATE OF CINEMA</div><div class="card-body">Cinema lists the 12 films themselves. Series lists all 144 episodes across every track. Movies is the franchise-level view — what belongs to what, at a glance, before drilling into either.</div></div>
+    <div class="card"><div class="card-title">GATE-LOCKED LIKE THE REST</div><div class="card-body">Each franchise unlocks at the same gate as its anchor film. Franchise XII (Ocean Sovereign) is the apex saga, requiring AUTH = 27.8367 — the same apex credential as every other Gate XII surface on the platform.</div></div>
+  </div>
+</div>
+<div data-page-emblem="movies" style="margin:20px auto 0"></div>
+</div>
+
+<script>
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['all','elements','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+</script>
+<script type="module">
+import{createClient}from'/vendor/supabase-js.js';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+</script>
+<script src="/bg.js" defer></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
+<!-- Ω SPATIAL REALM: MOVIES — additive mount; functional content remains authoritative -->
+<section class="omega-spatial-realm" data-omega-spatial-realm="movies" aria-label="Movies spatial realm"></section>
+</body>
+</html>

@@ -18850,3 +18850,100 @@ premise. `omega-bottom-stack.js` publishes `--omega-chrome-bottom` correctly,
 and five modules read it correctly — and none of it could work, because the
 elements were not anchored to the viewport at all. **A coordination protocol
 cannot be verified by reading the protocol; measure where the element lands.**
+
+## 188 — `movies.html` was 0 bytes and a live nav destination; two more pages silently lost their sidebar; one WIP dashboard rendered fabricated numbers as fact
+
+A visual/content audit pass across the estate, evidence gathered with the
+`verify-in-browser` harness (204-page headless render) rather than static
+reading, per `CLAUDE.md` §8.4's own rule.
+
+### `movies.html` — a real, 0-byte file, live in `nav.js`'s MEDIA section
+
+`FIXES_LOG.md` 185 had already flagged this ("a separate finding, not fixed
+there") without building content. `nav.js:139` links `['movies','MOVIES','
+/movies.html']`, so any member clicking MOVIES got a blank page. Built as
+**THE TWELVE FRANCHISES** — a franchise-level index over the *existing*
+canon rather than new lore: each of the 12 entries reuses `cinema.html`'s
+already-established god/sign/element/film mapping verbatim (Ares · Aries ·
+Fire · War Sovereign, …) and pairs it with `series.html`'s already-named
+"<Sign> Chronicles" series, so nothing here contradicts either page — it
+just ties them together, the way `bg.js:1277`'s unused `lensMovies` label
+("THE TWELVE FRANCHISES") already implied a page like this should exist.
+118 lines, same `bg.js`/`nav.js` load and auth-gate pattern as `cinema.html`.
+Verified: `check-inline-js.py` clean; `scan.js errors` 0/4 on
+`movies,graph,map,realm`; `verify-runtime.js --pages movies.html` → PASS, 5
+benign (same count as `cinema.html`/`series.html`); `reachability-contract.py`
+no longer lists it under "NO NAV CONTAINER".
+
+### `sculpture.html` and `autonomous-insights.html` had `.shell` with no `<aside id="omega-side">` inside it
+
+Both are real nav destinations (not `SYSTEM_PAGES`-exempt) that render a
+`.shell > .main` structure but never gave `nav.js` its mount point — so
+`nav.js:4`'s `if(!el) return;` fired every time and neither page ever showed
+a sidebar. Fixed by inserting `<aside id="omega-side" data-page="…"
+aria-label="Navigation"></aside>` as the first child of `.shell`, matching
+the convention already used on `series.html` and ~180 other pages.
+`.shell{display:flex}` / `.main{flex:1;…}` already exist globally in
+`css/omega-system.css:72,81`, so no new CSS was needed — confirmed with a
+real layout measurement before/after (`getBoundingClientRect` on `#omega-side`
+and the content sibling), not assumed from the class name: before, `#omega-side`
+was `null` on both pages; after, `x:8,y:8,w:80` for the aside and `x:88` for
+the content on both, matching `cinema.html`'s already-working `x:88`.
+`reachability-contract.py`'s "NO NAV CONTAINER" list dropped from
+`autonomous-insights.html, design-showcase.html, sculpture.html` to just
+`design-showcase.html` — left alone, since that one is a deliberately
+chromeless design-token reference page (`<title>…Design System</title>`),
+not a content page members browse.
+
+### `analytics-dashboard.html` rendered invented member metrics as fact, ungated
+
+Not `SYSTEM_PAGES`-exempt only in the reachability sense (it's `pending nav
+wiring`, per that file's own comment) — but it is a plain static file with
+**no auth gate at all** (no `sb.auth.getSession()` redirect, unlike every
+other member page), so it was directly reachable by URL to anyone, signed in
+or not. Its meta description said "Real-time member analytics" while
+`loadAnalytics()`'s own comment admitted `// Simulated analytics data
+(replace with real API calls)` and hard-coded `active_members:487`,
+`engagement_score:72.4`, `churn_rate:'2.1%'`, four fabricated member
+segments, and three canvases (`chart-sessions`, `chart-engagement-dist`,
+`chart-adoption-cohort`) with no Chart.js loaded and no data behind them —
+`CLAUDE.md` §8.1 class 9, "fabricated data rendered as fact." This is a much
+larger scaffold than a bug fix can responsibly grow into (4 more tabs —
+predictions, cohorts, reports — each with its own permanently-stuck
+"Loading…" state and no backing query at all), so the real analytics
+pipeline was **not** built here; that is a Phase 5 feature decision, not a
+gap-closing fix (same reasoning as `signal_saves`, `FIXES_LOG.md` archive).
+What was fixed: the meta description no longer claims "real-time," and a
+visible `PREVIEW · SIMULATED DATA` banner now sits above the KPI row so
+nobody — owner, visitor, or a future session — mistakes the placeholder
+numbers for real ones. `cohorts-dashboard.html`, the sibling page in the
+same `SYSTEM_PAGES` entry, already did this correctly ("Phase 5 feature in
+development", no fabricated numbers) — this brings the other page in line
+with its own sibling's convention rather than inventing a new one.
+
+### Two stale doc claims corrected
+
+`GAP_ANALYSIS.md`'s "`graph.html` and `map.html` throw on every load" entry
+(opened 2026-09-13) and the `verify-in-browser` skill's gotcha list ("Three
+pages throw from blocked CDNs… `graph.html`, `map.html`, `realm.html`") were
+both already false: `494ad666` vendored d3 and Leaflet into `/vendor/`
+(three.js was already there) before either doc was last touched. Verified
+this session with a fresh, full 204-page `scan.js errors` run: **0 pages
+with uncaught errors or rejections** — not "these three are exempt," actually
+zero. Both docs corrected rather than left to mislead the next session into
+re-fixing an already-fixed bug or re-excusing a page that no longer throws.
+
+### Baselines
+
+```
+./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/check-inline-js.py                 clean
+python3 scripts/reachability-contract.py           OK (design-showcase.html the only remaining advisory)
+node .claude/skills/verify-in-browser/harness/scan.js errors   204 pages, 0 with uncaught errors/rejections
+node .claude/skills/verify-in-browser/harness/scan.js canvas   0 canvases with a zero drawing buffer
+node scripts/verify-runtime.js --pages movies.html,graph.html,map.html,cinema.html,series.html,sculpture.html,autonomous-insights.html,analytics-dashboard.html   PASS (8 pages)
+```
+
+Clone was shallow at session start (`git fetch --unshallow` run first) —
+`omega-registry.py`'s graft-boundary guard would otherwise have refused to
+write dates for ~24 skill files, per `CLAUDE.md` §8.4.

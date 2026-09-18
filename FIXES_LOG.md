@@ -18713,3 +18713,140 @@ node scripts/verify-runtime.js            PASS (13 pages)
 7 → 2 and the `.rpc()` warning disappeared, while a real duplicate-table and
 deploy-hygiene warning set stayed. A count matching the baseline is not the
 same as the baseline being met — check the composition.
+
+## 187 — A `perspective` on `<body>` had un-anchored the platform's entire floating chrome on 198 of 204 pages
+
+The original task was small: re-measure two sidebar-overlap fixes prototyped
+against an older `main`. The first measurement made both moot and found
+something much larger.
+
+### What the measurement showed
+
+Probing `position:fixed` elements on `dashboard.html` at 1280x700:
+
+```
+{"id":"ofb-btn","pos":"fixed","bottom":"36px","rectY":2470,"inViewport":false,
+ "blockers":[{"el":"body.omega-approved","why":["perspective"],"h":2546}]}
+{"id":"omega-voice-btn","pos":"fixed","bottom":"90px","rectY":2412,"inViewport":false,...}
+{"id":"om-open","pos":"fixed","top":"10px","rectY":10,"inViewport":true,...}
+```
+
+`#ofb-btn` declares `bottom:36px` and rendered at **y=2470** on a 700px
+viewport — 1770px below the fold. `#om-open` survived only because it is
+top-anchored.
+
+**Cause.** A `perspective` makes its element a containing block for every
+`position:fixed` *descendant*. `<body>` had `perspective:1400px`, so every
+bottom-anchored fixed element resolved `bottom` against the body's full
+scroll height (2546px here) instead of the viewport. They were not floating;
+they were parked near the bottom of the document.
+
+### Finding the owner took two corrections
+
+CSS rule enumeration returned an **empty list** while the computed value was
+plainly `1400px`. Two separate reasons, both worth remembering:
+
+1. **`@import`ed sheets are not in the parent's `cssRules` as style rules.**
+   `omega-cinematic-system.css:1` is `@import url('/omega-spatial-system.css')`.
+   Sheet bisection (disable each sheet, watch the value flip — §8.4) pointed
+   at sheet 10, `omega-cinematic-system.css`, which contains **zero**
+   `perspective` in source. Descending through `CSSImportRule.styleSheet`
+   found the real one.
+2. **CSSOM returns `""` for a declaration whose value contains `var()`.**
+   The rule is `perspective:var(--omega-spatial-perspective)`, so
+   `rule.style.perspective` reads empty and every `.style.perspective` scan
+   silently skips it. A scan for a property must not assume the typed getter
+   sees a `var()` value.
+
+The owner is `omega-spatial-system.css:12` —
+`.omega-cinematic{perspective:var(--omega-spatial-perspective)}` — and
+`.omega-cinematic` is on `<body>` on 202/202 pages (§4.1).
+
+### Three measured facts decided the fix
+
+- `data-omega-visual` is **never set on `<html>`** (measured `null`).
+  `omega-sovereign-os.js:30` sets it on a `<link>` element. So every
+  `html[data-omega-visual="active"] …` rule in `omega-spatial-system.css`
+  **and** all of `omega-page-elevation.css` is dead — including
+  `omega-page-elevation.css:8`, which already tried to put this exact
+  perspective on `main`. Measured: `mainPerspective: "none"`.
+- Therefore the **reduced-motion escape hatch never fired**: the only rule
+  clearing the 3-D was `html[data-omega-visual="active"] body{perspective:none}`.
+- All three floats are **direct children of `<body>`**, and all 37 cards on
+  `dashboard.html` are inside `main`.
+
+`omega-spatial-system.css:13` already declared the content column the 3-D
+stage (`transform-style:preserve-3d`). The `perspective` was simply one level
+too high. Moving it down onto that same selector list keeps the depth and
+frees the chrome.
+
+`index.html` was the lone survivor of the first pass: it is the **only** page
+where `html[data-omega-visual]` reads `"active"` (measured; `dashboard.html`
+reads `null`), so line 9's separate `… body{perspective:…}` still applied
+there and kept all seven of its widgets stranded. Its 3-D properties moved
+with the rest; its ambient `background-image` stayed on `<body>`, where it
+creates no containing block.
+
+### A/B across all 204 pages, same build, pinned with `gitShow('HEAD')`
+
+Counting only **bottom-anchored** (`bottom` set, not `auto`), visible,
+pointer-interactive fixed elements. `#omega-skip` is excluded by id: it is a
+skip link parked off-screen until focused, and counting it put *both* arms at
+~203 and hid the entire signal.
+
+| | BEFORE | AFTER |
+|---|---|---|
+| pages with `perspective` on `<body>` | **204** | **0** |
+| pages with stranded bottom chrome | **198** | **1** |
+| `#ofb-btn` stranded | 194 pages | 0 |
+| `#omega-controls-dock` | 194 pages | 0 |
+| `#cp-btn` | 191 pages | 0 |
+| `#osh-btn` | 191 pages | 0 |
+| `#omega-ded-widget` | 186 pages | 0 |
+| `#omega-voice-btn` | 128 pages | 0 |
+| `#omega-ticker-strip` | 125 pages | 0 |
+| `#omega-cap-badge` | 30 pages | 0 |
+
+Spot-check of the restored anchoring, two viewports:
+`#ofb-btn` (`bottom:36px`) → y=624 at 1280x700 and y=744 at 1440x820;
+`#omega-voice-btn` (`bottom:90px`) → y=566 and y=686. Both exact.
+Reduced motion (via `emulateMedia`, not a hand-rolled context) now reports
+`body=none main=none` — the hatch fires for the first time.
+
+**Depth preserved:** 3377/3389 cards and KPIs still have a perspective
+ancestor. `#omega-main-content` was added to the selector list to cover
+`honors`/`matrix`/`media` (media alone has 336 cards), which have no
+`main`/`.main`/`.page-shell`; it is the content column and does not contain
+`#omega-side`, so it creates no containing block for the sidebar.
+
+**The one page that loses this effect is `404.html`** — its 12 KPIs sit
+directly on `<body>` with no content wrapper, so no selector can reach them
+without markup changes. Twelve KPIs on the error page is the correct trade
+against the floating chrome on 204.
+
+### Two page-local leftovers, one fixed
+
+- `agent-network.html .legend` was `position:fixed; bottom:2rem; left:2rem`
+  inside `.network-container`. Wrong twice: it is a legend *for* the canvas
+  beside it, not viewport furniture, and at x=32 it would have sat under the
+  80px sidebar even had it worked. It rendered at **y=1457**. The container is
+  already `position:relative`, so `absolute` pins it to the graph's bottom-left
+  — measured **y=408**. Note this was stranded *before* this change too
+  (anchored to `<body>`); the platform fix moved its containing block from
+  `<body>` to the content column without freeing it, so it needed its own fix.
+- `index.html` has one element with a computed `bottom:-3106.61px` — a
+  deliberate negative offset, intentionally off-screen. Left alone.
+
+### Baselines
+
+```
+./scripts/ci-local.sh            ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/audit.py         critical: 0    warnings: 6   PASSED
+node scripts/verify-runtime.js   PASS (13 pages); contrast advisory 6
+```
+
+This is the §4 "bottom chrome has a single measured owner" paragraph's missing
+premise. `omega-bottom-stack.js` publishes `--omega-chrome-bottom` correctly,
+and five modules read it correctly — and none of it could work, because the
+elements were not anchored to the viewport at all. **A coordination protocol
+cannot be verified by reading the protocol; measure where the element lands.**

@@ -161,7 +161,16 @@ body {
 }
 
 .legend {
-  position: fixed;
+  /* Was `position: fixed`, which was wrong twice over. It is a legend FOR the
+     canvas it sits beside inside .network-container, not viewport furniture --
+     and at `left: 2rem` (x=32) it would have sat under the 80px sidebar even
+     if it had worked. It never did work: a fixed element resolves `bottom`
+     against its nearest containing block, and this one is inside a
+     perspective'd ancestor, so it rendered at y=1457 on a 700px viewport --
+     757px below the fold. .network-container is already `position: relative`,
+     so `absolute` pins it to the bottom-left of the graph, which is what a
+     graph legend is for. */
+  position: absolute;
   bottom: 2rem;
   left: 2rem;
   background: rgba(10,14,21,0.95);

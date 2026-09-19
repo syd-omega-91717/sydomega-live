@@ -45,7 +45,7 @@
 .galaxy-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
 /* COMMAND GRID */
 .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.cmd-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;border-left:3px solid var(--cc,var(--gold))}
+.cmd-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;--card-accent:var(--cc)}
 .cmd-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .cc-icon{font-family:var(--D);font-size:22px;color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
 .cc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:4px}
@@ -251,14 +251,14 @@
         <!-- PERSONAL TOOL GRID -->
         <div class="sechead" style="margin-top:16px" data-i18n="dash_personal_tools">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
-          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
-          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;&#65038;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
-          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
-          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;&#65038;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
-          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
-          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
-          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#9873;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
-          <div class="cmd-card card" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;&#65038;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;&#65038;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#9873;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
         </div>
       </div>
     </div>
@@ -311,11 +311,11 @@
         </div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:2s">⟡</span><span data-i18n="dash_active_workflows">ACTIVE WORKFLOWS</span></span></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
-          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name" data-i18n="workflow_onboarding">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
-          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name" data-i18n="workflow_gate_unlock">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
-          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name" data-i18n="workflow_task_complete">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
-          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name" data-i18n="workflow_dedication_award">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
-          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name" data-i18n="workflow_onboarding">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name" data-i18n="workflow_gate_unlock">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name" data-i18n="workflow_task_complete">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name" data-i18n="workflow_dedication_award">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
+          <div class="cmd-card card card-edge" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.6s">⊕</span><span data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS</span></span> <span class="sechead-action" onclick="location.href='/sovereign-ai.html'" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
@@ -588,7 +588,7 @@ function renderCommandGrid(){
   var grid=document.getElementById('cmd-grid');if(!grid) return;
   grid.innerHTML=CMD_MODULES.map(function(m){
     var clickFn=m.onclick?m.onclick:'location.href=\''+m.href+'\'';
-    return '<div class="cmd-card card" style="--cc:'+m.col+'" onclick="'+clickFn+'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')('+clickFn+')">'
+    return '<div class="cmd-card card card-edge" style="--cc:'+m.col+'" onclick="'+clickFn+'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')('+clickFn+')">'
       +'<div class="cc-icon" style="color:'+m.col+'">'+m.icon+'</div>'
       +'<div class="cc-name">'+m.name+'</div>'
       +'<div class="cc-desc">'+m.desc+'</div>'

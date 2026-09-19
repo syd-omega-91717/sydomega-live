@@ -30,7 +30,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 /* SKILL CARD */
-.skill-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;border-left:3px solid var(--sc,var(--gold));transition:.18s;margin-bottom:8px}
+.skill-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;transition:.18s;margin-bottom:8px;--card-accent:var(--sc)}
 .skill-card:hover{border-color:rgba(201,168,76,.25);box-shadow:0 4px 16px rgba(0,0,0,.3)}
 .sk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .sk-name{font-family:var(--D);font-size:12px;color:var(--ink)}
@@ -391,7 +391,7 @@ function renderSkillBar(s, d, actions){
   var pct=((s.current||1)/10)*100;
   var tpct=((s.target||8)/10)*100;
   var label=LEVEL_LABELS[Math.round(s.current)]||'';
-  return '<div class="skill-card card" style="--sc:'+d.color+'">'
+  return '<div class="skill-card card card-edge" style="--sc:'+d.color+'">'
     +'<div class="sk-top">'
     +'<div><div class="sk-name">'+escH(s.name)+'</div><div class="sk-domain">'+d.label+(s.desc?' &middot; '+escH(s.desc.slice(0,40)):'')+'</div></div>'
     +(actions?'<div class="sk-actions"><button class="btn-sm" onclick="logSessionForSkill(\''+s.id+'\')">+ SESSION</button><button class="btn-sm" onclick="editSkill(\''+s.id+'\')">EDIT</button><button class="btn-sm" onclick="deleteSkill(\''+s.id+'\')" style="color:var(--crim)">&#10005;</button></div>':'')

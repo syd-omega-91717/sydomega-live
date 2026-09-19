@@ -1,0 +1,583 @@
+/* omega-cinematic-animations-phase2.css
+   Phase 2: Advanced 3D and Scroll-Driven Enhancements
+
+   Extends Phase 1 with:
+   - Section D: 3D Depth Cards (perspective, transform-style preserve-3d)
+   - Section V: Volumetric Lighting Effects (pseudo-lighting, radial gradients)
+   - Section S: Scroll-Driven Parallax (scrollY-based positioning)
+   - Section C: Constellation Backdrop Animations (orbital mechanics)
+
+   All animations respect prefers-reduced-motion and maintain GPU safety.
+   Dependencies: none (pure CSS; JavaScript optional for scroll tracking).
+   Scope: Global, safe to load on all 202 pages.
+*/
+
+/* ===== SECTION D: 3D DEPTH CARDS ========================================
+   Perspective-based layering for card stacks, hero sections, and KPI groups.
+   Creates dimensional appearance through transform-style: preserve-3d and
+   rotateY/X staging. Hover states deepen the 3D effect.
+*/
+
+.omega-depth-card {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.omega-depth-card .card,
+.omega-depth-card .kpi-card,
+.omega-depth-card .glass {
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.320, 1),
+              box-shadow 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+}
+
+.omega-depth-card:hover .card,
+.omega-depth-card:hover .kpi-card,
+.omega-depth-card:hover .glass {
+  transform: translateZ(40px) rotateX(2deg) rotateY(-3deg);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(var(--page-accent-rgb, 184, 145, 42), 0.2);
+}
+
+/* Staggered depth for card lists (each child +20px deeper) */
+.omega-depth-card .card:nth-child(1) { transform: translateZ(0px); }
+.omega-depth-card .card:nth-child(2) { transform: translateZ(20px); }
+.omega-depth-card .card:nth-child(3) { transform: translateZ(40px); }
+.omega-depth-card .card:nth-child(4) { transform: translateZ(60px); }
+.omega-depth-card .card:nth-child(5) { transform: translateZ(80px); }
+
+/* Depth tilt on hover (separate from card hover) */
+.omega-depth-tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.omega-depth-tilt-card:hover {
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+/* Respond to reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .omega-depth-card .card,
+  .omega-depth-card .kpi-card,
+  .omega-depth-card .glass,
+  .omega-depth-tilt-card {
+    transition-duration: 0.01ms;
+    perspective: none;
+    transform: none !important;
+  }
+}
+
+/* Mobile: reduce 3D intensity to avoid layout shifts */
+@media (max-width: 700px) {
+  .omega-depth-card .card,
+  .omega-depth-card .kpi-card,
+  .omega-depth-card .glass {
+    transition: transform 0.4s ease-out;
+  }
+
+  .omega-depth-card:hover .card,
+  .omega-depth-card:hover .kpi-card,
+  .omega-depth-card:hover .glass {
+    transform: translateZ(20px) rotateX(1deg) rotateY(-1.5deg);
+  }
+}
+
+/* ===== SECTION V: VOLUMETRIC LIGHTING EFFECTS =========================
+   Pseudo-lighting layers using radial gradients and layered ::before/::after
+   pseudo-elements. Creates depth field and ambient light impressions.
+   Compatible with sculpture.js 3D environments.
+*/
+
+.omega-volumetric-light {
+  position: relative;
+  overflow: hidden;
+}
+
+.omega-volumetric-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(var(--page-accent-rgb, 184, 145, 42), 0.15) 0%,
+    rgba(var(--page-accent-rgb, 184, 145, 42), 0.05) 25%,
+    transparent 60%
+  );
+  pointer-events: none;
+  animation: volumetric-pulse 8s ease-in-out infinite;
+}
+
+.omega-volumetric-light::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 70% 70%,
+    rgba(var(--page-soft-rgb, 100, 116, 139), 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: volumetric-shift 12s ease-in-out infinite;
+}
+
+@keyframes volumetric-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes volumetric-shift {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px);
+  }
+  50% {
+    transform: translateX(0) translateY(10px);
+  }
+  75% {
+    transform: translateX(-10px) translateY(-5px);
+  }
+}
+
+/* Volumetric bloom on high-value elements */
+.omega-volumetric-bloom {
+  position: relative;
+}
+
+.omega-volumetric-bloom::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--page-accent-rgb, 184, 145, 42), 0.2) 0%,
+    rgba(var(--page-accent-rgb, 184, 145, 42), 0.05) 30%,
+    transparent 70%
+  );
+  filter: blur(30px);
+  animation: bloom-pulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bloom-pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omega-volumetric-light::before,
+  .omega-volumetric-light::after,
+  .omega-volumetric-bloom::before {
+    animation: none;
+  }
+}
+
+/* High-contrast mode: add distinct borders */
+@media (prefers-contrast: more) {
+  .omega-volumetric-light {
+    border: 1px solid currentColor;
+  }
+}
+
+/* ===== SECTION S: SCROLL-DRIVEN PARALLAX ==============================
+   Parallax positioning driven by scroll offset. Uses CSS custom properties
+   set via JavaScript (window.pageYOffset or IntersectionObserver).
+   Elements with data-parallax="factor" (0.1 to 0.9) move at that speed.
+*/
+
+[data-parallax] {
+  transition: transform 0.05s linear;
+}
+
+[data-parallax="0.1"] {
+  will-change: transform;
+}
+
+[data-parallax="0.2"] {
+  will-change: transform;
+}
+
+[data-parallax="0.3"] {
+  will-change: transform;
+}
+
+[data-parallax="0.5"] {
+  will-change: transform;
+}
+
+/* Parallax layers in hero sections */
+.omega-parallax-hero {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.omega-parallax-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  transform: translateY(var(--parallax-offset, 0px));
+  will-change: transform;
+}
+
+/* Parallax text that moves faster than background */
+.omega-parallax-text {
+  position: relative;
+  z-index: 1;
+  transform: translateY(var(--parallax-offset-fast, 0px));
+  will-change: transform;
+}
+
+/* Parallax card overlay effect */
+.omega-parallax-card {
+  position: relative;
+  transform: translateY(var(--parallax-offset-slow, 0px));
+  transition: transform 0.1s ease-out;
+}
+
+/* Parallax depth: foreground moves faster than background */
+.omega-parallax-depth-fg {
+  transform: translateY(calc(var(--scroll-y, 0px) * 0.3));
+}
+
+.omega-parallax-depth-bg {
+  transform: translateY(calc(var(--scroll-y, 0px) * 0.1));
+}
+
+.omega-parallax-depth-mbg {
+  transform: translateY(calc(var(--scroll-y, 0px) * 0.05));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax],
+  .omega-parallax-hero::before,
+  .omega-parallax-text,
+  .omega-parallax-card,
+  .omega-parallax-depth-fg,
+  .omega-parallax-depth-bg,
+  .omega-parallax-depth-mbg {
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+/* Mobile: disable parallax for performance */
+@media (max-width: 700px) {
+  [data-parallax],
+  .omega-parallax-hero::before,
+  .omega-parallax-text,
+  .omega-parallax-card,
+  .omega-parallax-depth-fg,
+  .omega-parallax-depth-bg,
+  .omega-parallax-depth-mbg {
+    transform: none;
+  }
+}
+
+/* ===== SECTION C: CONSTELLATION BACKDROP ANIMATIONS ==================
+   Orbital mechanics and constellation field animations.
+   Stars pulse in constellation patterns; orbits rotate around focal point.
+*/
+
+.omega-constellation-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: transparent;
+}
+
+.ocn-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbit-rotate 60s linear infinite;
+}
+
+@keyframes orbit-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.ocn-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--page-accent, #b8912a);
+  animation: constellation-pulse 3s ease-in-out infinite;
+  box-shadow:
+    0 0 10px var(--page-accent, #b8912a),
+    0 0 20px rgba(var(--page-accent-rgb, 184, 145, 42), 0.5);
+}
+
+@keyframes constellation-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.ocn-node:nth-child(odd) {
+  animation-delay: 0s;
+}
+
+.ocn-node:nth-child(even) {
+  animation-delay: 1.5s;
+}
+
+/* Constellation link lines */
+.ocn-link {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--page-accent, #b8912a),
+    transparent
+  );
+  transform-origin: left center;
+  opacity: 0.4;
+  animation: link-pulse 4s ease-in-out infinite;
+}
+
+@keyframes link-pulse {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Constellation focal point (center star) */
+.ocn-focal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--page-accent, #b8912a),
+    rgba(var(--page-accent-rgb, 184, 145, 42), 0.5)
+  );
+  box-shadow:
+    0 0 20px var(--page-accent, #b8912a),
+    0 0 40px rgba(var(--page-accent-rgb, 184, 145, 42), 0.3);
+  animation: focal-glow 4s ease-in-out infinite;
+}
+
+@keyframes focal-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* Respond to reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ocn-orbit,
+  .ocn-node,
+  .ocn-link,
+  .ocn-focal {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* High-contrast mode */
+@media (prefers-contrast: more) {
+  .ocn-node {
+    border: 1px solid var(--page-accent, #b8912a);
+  }
+
+  .ocn-link {
+    opacity: 0.7;
+    height: 2px;
+  }
+}
+
+/* Mobile: simplified constellation */
+@media (max-width: 700px) {
+  .ocn-orbit {
+    animation-duration: 90s;
+  }
+
+  .ocn-node {
+    width: 6px;
+    height: 6px;
+  }
+
+  .ocn-link {
+    opacity: 0.2;
+  }
+}
+
+/* ===== INTEGRATION & ACCESSIBILITY ====================================
+   Fallbacks and comprehensive accessibility support for all Phase 2 effects.
+*/
+
+/* Disable all Phase 2 effects under reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .omega-depth-card,
+  .omega-depth-tilt-card,
+  .omega-volumetric-light,
+  .omega-volumetric-bloom,
+  [data-parallax],
+  .omega-parallax-hero,
+  .omega-parallax-text,
+  .omega-parallax-card,
+  .omega-constellation-backdrop {
+    animation: none;
+    perspective: none;
+    transform: none !important;
+  }
+}
+
+/* Fallback for browsers without transform-style support */
+@supports not (transform-style: preserve-3d) {
+  .omega-depth-card {
+    perspective: none;
+    transform-style: initial;
+  }
+
+  .omega-depth-card .card,
+  .omega-depth-card .kpi-card {
+    transform: none !important;
+  }
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(1px)) {
+  .omega-volumetric-light::before,
+  .omega-volumetric-bloom::before {
+    background: rgba(0, 0, 0, 0.1);
+    filter: none;
+  }
+}
+
+/* High-contrast mode enhancements */
+@media (prefers-contrast: more) {
+  .omega-depth-card .card:hover,
+  .omega-depth-card .kpi-card:hover {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  [data-parallax] {
+    border: 1px solid currentColor;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATION ========================================
+   GPU acceleration and paint reduction for smooth animations.
+*/
+
+.omega-depth-card .card,
+.omega-depth-card .kpi-card,
+.omega-volumetric-light,
+.omega-parallax-text,
+.ocn-orbit {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Will-change applied selectively to prevent memory bloat */
+.omega-depth-card:hover .card,
+.omega-volumetric-bloom,
+[data-parallax="0.5"] {
+  will-change: transform;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ==========================================
+   Comprehensive mobile, tablet, and desktop optimizations.
+*/
+
+/* Tablet (900px - 1200px) */
+@media (max-width: 1200px) and (min-width: 901px) {
+  .omega-depth-card:hover .card,
+  .omega-depth-card:hover .kpi-card {
+    transform: translateZ(25px) rotateX(1.5deg) rotateY(-2deg);
+  }
+
+  @keyframes volumetric-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+}
+
+/* Small tablet (700px - 900px) */
+@media (max-width: 900px) and (min-width: 701px) {
+  .omega-depth-card:hover .card,
+  .omega-depth-card:hover .kpi-card {
+    transform: translateZ(15px) rotateX(0.5deg) rotateY(-1deg);
+  }
+
+  .ocn-node {
+    animation-duration: 2.5s;
+  }
+
+  [data-parallax="0.5"] {
+    transform: translateY(calc(var(--scroll-y, 0px) * 0.2)) !important;
+  }
+}
+
+/* Landscape mobile (700px width, various heights) */
+@media (max-height: 500px) {
+  .omega-depth-card,
+  .omega-parallax-hero,
+  .omega-constellation-backdrop {
+    perspective: none;
+  }
+
+  .ocn-orbit {
+    animation-duration: 120s;
+  }
+}

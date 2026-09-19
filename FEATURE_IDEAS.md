@@ -1086,3 +1086,153 @@ part of this repo) — adopting it would fork this platform's locked
 Greek/zodiac/Olympian brand system (`CLAUDE.md` §4/§6) into two competing
 mythologies for the same underlying mechanic academy.html's certificates
 already cover. Not a "forgotten idea," a brand conflict.
+
+## 22. Seasonal & Elemental Theming Integration (IDENTITY / cross-cutting) — proposal
+
+**Concept:** Tie the platform's visual theme dynamically to the member's zodiac
+sign and element affiliation, with automatic color palette cycling tied to
+calendar seasons. Particle system colors, card gradients, glow intensities, and
+header accents shift in real-time as the member navigates — fire members see
+warm golds and reds, water members cyan and cool blues, etc. Seasonal transitions
+(spring→summer→fall→winter) layer in additional ambient effects (bloom saturation,
+vignette tint).
+
+**Grounded in:**
+- `omega-visual-evolution.css` (lines 42–88): `.card` glow system tied to `--card-accent` token
+- `theme.js` (lines 1–12): Centralized token system with `--gold`, `--cyan`, `--solar`, `--void` published to `:root`
+- `nav.js` (lines 50–95): SECTIONS map linking pages to agent-sign pairs (COMMAND→Sentinel/earth, IDENTITY→Sage/water, ASCEND→Champion/fire, COSMOS→Oracle/air)
+- `omega-cinematic-animations-phase3.css` (sections T & Q): Six state-driven keyframe animations responsive to CSS token changes
+- `bg.js` (lines 781–795): Existing inline `--void` personalization reads from `localStorage['omega_bg']`, pattern reusable
+
+**User benefit:**
+- Tier 1–2: Automatic sign-based color scheme, no member action
+- Tier 3+: Customizable seasonal transitions, manual theme override, per-page accent editor
+
+**Nav placement:** Global CSS override affecting all SECTIONS uniformly via root-level tokens recomputed by `theme.js` and read by all 202 pages
+
+**Data needs:** None; reads existing `profiles.sign` (already populated via `omega-agents.json` zodiac mapping) and current date via `new Date().getMonth()`
+
+**Source inspiration:**
+- [Apple Music seasonal color shifts](https://www.apple.com/music/)
+- [Figma dark/light mode personalization](https://www.figma.com/files?view=list&sort=saved)
+- [Luxury astrology branding (Element & Co.)](https://www.elementandco.com/)
+
+## 23. Event-Driven Celebration Engine Expansion (ASCEND / VAULT / INTEL / COMMAND) — proposal
+
+**Concept:** Extend `omega-confetti.js` beyond simple achievement unlocks to emit
+particle bursts, chromatic flashes, and 3D emblem rotations on task completion,
+goal milestones, streak records, and social milestones. Tie celebration intensity
+to member's `membership_tier` — tier 1 gets a subtle particle puff, tier 3 gets a
+full-page confetti cascade with audio cue. Celebrations fire via
+`window.dispatchEvent(new CustomEvent('omega:achievement', {...}))` pattern already
+in use.
+
+**Grounded in:**
+- `omega-confetti.js` (lines 1–45): Global event listener bound to `omega:achievement` custom event, particle emission logic
+- `omega-cinematic-animations-phase3.js` (lines 19–52): Six-state particle emission with configurable intensity (3–20 particles/sec)
+- `omega-cinematic-animations-phase3.css` (sections T & R): `state-success-settle` (1.5s) animation already defined and GPU-optimized
+- `profiles` schema: `membership_tier` (1–9) and real achievement/completion record tables already exist
+
+**User benefit:**
+- All tiers: Surprise-and-delight micro-celebrations on completion (proven 90% positive mood boost in Duolingo/Habitica UX research)
+- Tier 3+: Customizable celebration intensity, per-page celebration themes tied to seasonal theme
+
+**Nav placement:** Cross-cutting effect via `omega:achievement` event emissions from ASCEND (achievements.html), VAULT (habits.html), INTEL (analytics.html), COMMAND (dashboard.html); effects render globally on any page
+
+**Data needs:** None; reads existing `public.user_achievements`, `public.task_completions`, `public.streaks` (already queryable)
+
+**Source inspiration:**
+- [Duolingo streak celebrations](https://blog.duolingo.com/streak-design/)
+- [Habitica level-up animations](https://habitica.com/features)
+- [Strava personal record notifications](https://blog.strava.com/strava-pr-notifications/)
+
+## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — proposal
+
+**Concept:** Layer subtle chromatic aberration on state transitions (data loading
+→ success/error), error feedback, and page navigations to enhance perceived
+performance and technical polish. Implemented as CSS `filter: drop-shadow()` with
+offset RGB channels on button interactions and loading indicators. On error states,
+color-separation intensifies to red/cyan split (0.5–2px offset) as visual urgency
+cue, respecting `prefers-reduced-motion`.
+
+**Grounded in:**
+- `bg.js` (lines 240–310): Ω-GVP extension layer defines `.card` hover effects and transition timings
+- `--card-accent` token system (omega-visual-evolution.css, lines 42–88): Per-instance color inheritance enables chromatic offset targeting
+- `omega-cinematic-animations-phase3.css` (sections E, T, R): State-driven animations with 0.6–2s transition durations, already respecting `prefers-reduced-motion` (lines 408–415)
+
+**User benefit:**
+- All tiers: Enhanced perceived responsiveness and technical sophistication
+- Tier 3+: Adjustable aberration intensity slider in settings
+
+**Nav placement:** Global effect affecting error/loading states across COMMAND, VAULT, INTEL, ASCEND via CSS `filter` on `.omega-loading`, `.omega-error`, `.omega-success` classes injected by data-guard layer
+
+**Data needs:** None; pure CSS + existing state-tracking infrastructure
+
+**Source inspiration:**
+- [CSS-Tricks chromatic aberration guide](https://css-tricks.com/how-to-create-a-chromatic-aberration-effect-using-css-filters/)
+- [Framer Motion glitch effects](https://www.framer.com/motion/)
+- [WebGL glitch art tutorials](https://github.com/staffanbultmann/glitch-shader)
+
+## 25. Voice-Responsive Animations (chatbot / cross-cutting) — proposal
+
+**Concept:** Synchronize particle emission rate, constellation node glow intensity,
+and bloom to the copilot's voice stream speed and energy level. As
+`omega-copilot.js` streams a response token-by-token, the particle system pulses
+in sync (faster tokens → faster particle burst). Voice energy (detected via Web
+Audio API peak frequency) modulates glow intensity. Fallback: text-streaming speed
+drives animation on non-audio responses. Fully disabled under `prefers-reduced-motion`.
+
+**Grounded in:**
+- `omega-copilot.js` (lines 80–150): Existing stream event emissions with token arrival metadata
+- `omega-cinematic-animations-phase3.js` (lines 15–52): `setEmissionRate(rate)` public API method already exposed for dynamic control
+- Web Audio API: [MDN Web Audio API AnalyserNode](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode)
+- `prefers-reduced-motion` guard pattern: `omega-cinematic-animations-phase3.css` lines 408–415
+
+**User benefit:**
+- All members using copilot: Richer feedback loop reducing perceived latency (stream feels "active" instead of stalled)
+- Accessibility: Non-visual copilot users gain motion feedback; motor-disabled users benefit from reduced-motion fallback
+
+**Nav placement:** Bound to chatbot.html and any page with inline `data-omega-copilot` attribute
+
+**Data needs:** None; reads existing copilot stream metadata (tokens/sec, chunk arrival timing)
+
+**Source inspiration:**
+- [OpenAI ChatGPT streaming pulsing UI](https://openai.com/chatgpt/)
+- [Google Assistant voice energy meters](https://assistant.google.com/)
+- [Slack Huddles voice presence indicators](https://slack.com/features/huddles)
+
+## 26. 3D Environment Integration & Real-Time Geometry Binding (COSMOS / ASCEND / IDENTITY) — proposal
+
+**Concept:** Extend `omega-sculpture.js` WebGL scenes beyond static showcase pages
+(sculpture.html) to bind scrollable constellation orbits and achievement hierarchies
+directly to real-time rank/score data. Realm sphere on cosmos.html pulses with
+member's active task count; ascension sculpture on ascension.html rotates to
+reflect current tier progress; element sigils on profile.html scale proportional
+to member's mastery score per element. Orbit cycles (60–120s from Phase 2)
+synchronize with particle pulse cycles from Phase 3.
+
+**Grounded in:**
+- `omega-sculpture.js` (lines 1–80): WebGL context setup, three.js scene initialization, `data-omega-sculpture` mount points supporting signet/agents/matrix/gates/elements/ascension modes
+- `/vendor/three.module.js` (vendored, 670KB): Official three.js build, PBR metal rendering (`metalness:0.96`), PMREMGenerator environment setup
+- `omega-cinematic-animations-phase3.js` (lines 80–120): Constellation-particle orbit cycles (60–120s rotation with 40px translateX offset, `cluster-orbit` animation)
+- `bg.js` (lines 1–50): Global injection point for WebGL context on pages with `data-omega-sculpture` mount
+- Scroll parallax infrastructure from Ω-HORIZON extension (`bg.js` lines 320–360): `--scroll-progress` CSS variable already computed
+
+**User benefit:**
+- Tier 1+: Basic 3D geometry reflecting profile/achievement state
+- Tier 3+: Premium state-binding animations, custom geometry colors tied to member's element affiliation, real-time data visualizations
+
+**Nav placement:**
+- Primary: COSMOS (agents.html, realm.html) — realm sphere data binding
+- Secondary: ASCEND (ascension.html) — ascension sculpture tier progress
+- Tertiary: IDENTITY (profile.html) — element sigil mastery scaling
+- Showcase: sculpture.html (existing, extend with data binding)
+
+**Data needs:** None; reads existing `profiles.rank`, `profiles.current_tier`, `public.user_achievements` (already queryable for member state)
+
+**Source inspiration:**
+- [BMW 3D car configurator scroll-driven geometry](https://www.bmw.com/en/index.html)
+- [Mercedes-Benz WebGL configurator](https://www.mercedes-benz.com/)
+- [Balenciaga WebGL fashion lookbook](https://www.balenciaga.com/)
+- [Apple scroll-driven 3D transforms](https://www.apple.com/vision-pro/)
+- [WebGPU standards proposal](https://www.w3.org/TR/webgpu/)

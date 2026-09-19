@@ -35,3 +35,9 @@ jobs:
       - name: Enforce single WebGL owner
         if: always()
         run: python scripts/audit-webgl-ownership.py
+      - name: Enforce schema consolidation (migrations authoritative)
+        if: always()
+        run: python scripts/schema-consolidation-gate.py
+      - name: Enforce RPC consolidation (no duplicates)
+        if: always()
+        run: python scripts/rpc-consolidation-gate.py

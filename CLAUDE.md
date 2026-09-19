@@ -319,27 +319,20 @@ animation-beats-declaration trap it hit, are in `FIXES_LOG.md`.
   (`scripts/audit.py`, check 4) and if a `service_role` key ever appears
   in client-shipped code (`ci.yml`, step 5) — treat both as invariants,
   not suggestions.
-- **Schema management: `supabase/migrations/` is authoritative; the flat
-  `supabase/*.sql` bag is reference material.** This file said the opposite until
-  2026-09-05, and the contradiction with `migrations/README.md:69` made
-  `migration-consistency` fail every PR. Production settled it: the live
-  `supabase_migrations.schema_migrations` ledger matches `migrations/` file for
-  file (**171** on 2026-09-05, `0001` .. `20260905211725`). The flat bag
-  has no ledger and is applied by hand, so **schema declared only there never
-  deploys** — the one asymmetry the gate now checks (`FIXES_LOG.md` 99). New
-  schema goes in a **new** timestamped migration; never renumber or rewrite an
-  applied one (`README.md:60`), and `apply_migration` writes a remote row with no
-  local file, so add both plus `remote-migrations.json` in the same change.
-  **The sequence is still not fresh-appliable, but only by ordering now**:
-  `20260819071913` does an unguarded `ALTER POLICY … ON
-  public.council_deliberations` and sorts *before* `20260905211725`, which is
-  what finally creates that table and `advertisements` — both transcribed from
-  live, so a fresh apply reproduces production (`FIXES_LOG.md` 102) — so use it
-  for scratch/staging with that caveat, and for
-  production use the individually live-verified files. A migration is also not
-  proof of live state: `task_completions` (live `id bigint` + `axis`/`increment`)
-  matches none of its 3 competing definitions in the bag. Duplicate-definition
-  list: `REPOSITORY_AUDIT.md` §4; derive counts from `evidence-audit.py`.
+- **Schema & RPC management: `supabase/migrations/` is sole authoritative source;
+  `supabase/*.sql` files are reference documentation only.**
+  Schema tables: every `CREATE TABLE` must exist in `migrations/`. New schema goes
+  in a **new** timestamped migration; never renumber or rewrite applied ones. RPC
+  functions: each `CREATE OR REPLACE FUNCTION` must be defined in exactly one file
+  (the canonical source, typically an early-numbered migration or a named
+  `*_rpc.sql` file); duplicate definitions across multiple files are silently
+  superseded by whichever file is applied last, a category of "invisible bug" (§8.1
+  class 6). `scripts/schema-consolidation-gate.py` and `scripts/rpc-consolidation-gate.py`
+  enforce both rules. The flat bag has no ledger (`migrations/README.md:69` warns)
+  and is applied by hand — schema declared only there never deploys, and
+  RPCs in the bag outside their canonical source are dead code. Do not treat
+  `supabase/*.sql` as a place to add schema — add it to `migrations/` and let
+  it propagate.
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching

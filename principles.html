@@ -25,7 +25,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .principle-list{display:flex;flex-direction:column;gap:12px}
 .principle-card{background:var(--p);border:1px solid #1a1a1a;border-radius:4px;padding:16px;position:relative;transition:border-color .2s}
 .principle-card:hover{border-color:#333}
-.principle-card.pinned{border-left:3px solid var(--gold)}
 .principle-num{font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:6px}
 .principle-title{font-size:.95rem;color:var(--t);letter-spacing:.05em;margin-bottom:8px;font-weight:bold}
 .principle-body{font-size:.75rem;color:#aaa;line-height:1.7;margin-bottom:10px}
@@ -296,7 +295,7 @@ function renderLibrary(){
   else if(DOMAINS[libFilter]) data=data.filter(function(p){return p.domain===libFilter;});
   if(!data.length){list.innerHTML='<div class="empty">NO PRINCIPLES IN THIS VIEW</div>';return;}
   list.innerHTML=data.map(function(p){
-    return '<div class="principle-card card '+(p.pinned?'pinned':'')+'">'
+    return '<div class="principle-card card '+(p.pinned?'pinned card-edge':'')+'"'+(p.pinned?' style="--card-accent:var(--gold)"':'')+'>'
       +'<div class="principle-num">PRINCIPLE #'+p.num+' &middot; <span class="principle-domain dom-'+p.domain+'">'+(DOMAINS[p.domain]||p.domain)+'</span></div>'
       +'<div class="principle-title">'+p.title+'</div>'
       +'<div class="principle-body">'+p.body+'</div>'

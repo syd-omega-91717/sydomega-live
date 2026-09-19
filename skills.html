@@ -62,7 +62,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .fg textarea{resize:vertical;min-height:60px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 /* SCIENCE */
-.sci-block{border:1px solid var(--line);border-left:3px solid var(--sc,var(--cyan));background:rgba(10,10,15,.4);padding:14px;border-radius:2px;margin-bottom:10px}
+.sci-block{border:1px solid var(--line);background:rgba(10,10,15,.4);padding:14px;border-radius:2px;margin-bottom:10px;--card-accent:var(--sc,var(--cyan))}
 .sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 .sci-cite{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:6px}
@@ -174,38 +174,38 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div id="t-science" class="panel">
       <div class="pad">
         <div class="sechead">THE SCIENCE OF SKILL ACQUISITION</div>
-        <div class="sci-block" style="--sc:var(--gold)">
+        <div class="sci-block card card-edge" style="--sc:var(--gold)">
           <div class="sci-title">DELIBERATE PRACTICE (Ericsson, 1993)</div>
           <div class="sci-body">Elite performance is not a product of raw talent but of deliberate practice — focused, effortful training at the edge of current ability with immediate feedback and repetition. Ericsson's research across chess masters, violinists, and surgeons showed that ~10,000 hours of deliberate practice (not mere experience) separated experts from novices. The key: practice must be <em>deliberate</em> — specific goals, full concentration, immediate feedback, and working outside your comfort zone.</div>
           <div class="sci-cite">Ericsson, K.A., Krampe, R.T., &amp; Tesch-Römer, C. (1993). Psychological Review, 100(3), 363–406.</div>
         </div>
-        <div class="sci-block" style="--sc:var(--cyan)">
+        <div class="sci-block card card-edge" style="--sc:var(--cyan)">
           <div class="sci-title">SKILL STACKING (Scott Adams, 2013)</div>
           <div class="sci-body">You don't need to be the world's best at any single skill. Being in the top 25% at several complementary skills multiplies your competitive advantage. Adams combined mediocre skills in writing, humor, business, and drawing to create Dilbert — a career no one else could replicate. The insight: rare combinations beat rare excellence. Identify your 3–5 skill intersections to find your unfair advantage.</div>
           <div class="sci-cite">Adams, S. (2013). How to Fail at Almost Everything and Still Win Big. Portfolio/Penguin.</div>
         </div>
-        <div class="sci-block" style="--sc:var(--purple)">
+        <div class="sci-block card card-edge" style="--sc:var(--purple)">
           <div class="sci-title">COGNITIVE LOAD THEORY (Sweller, 1988)</div>
           <div class="sci-body">Working memory can hold 7±2 chunks of information simultaneously. Skill acquisition works by chunking — combining practiced sub-skills into single mental units that require less conscious attention. This is why beginners are overwhelmed while experts see patterns. The implication: break skills into sub-components, master each chunk, then integrate. Use worked examples before problem-solving.</div>
           <div class="sci-cite">Sweller, J. (1988). Cognitive Science, 12(2), 257–285. Miller, G.A. (1956). Psychological Review, 63(2).</div>
         </div>
-        <div class="sci-block" style="--sc:var(--green)">
+        <div class="sci-block card card-edge" style="--sc:var(--green)">
           <div class="sci-title">THE LEARNING CURVE (Bryan &amp; Harter, 1897)</div>
           <div class="sci-body">Skill acquisition follows a predictable S-curve: slow initial gains, rapid acceleration through deliberate practice, then a plateau at expert level. Plateaus are not failure — they precede breakthroughs as the brain reorganizes neural pathways. Research shows skills that feel "stuck" often experience sudden jumps when a threshold of underlying practice accumulates. Trust the process.</div>
           <div class="sci-cite">Bryan, W.L., &amp; Harter, N. (1897). Psychological Review, 4(1), 27–53.</div>
         </div>
-        <div class="sci-block" style="--sc:var(--solar)">
+        <div class="sci-block card card-edge" style="--sc:var(--solar)">
           <div class="sci-title">INTERLEAVED PRACTICE (Kornell &amp; Bjork, 2008)</div>
           <div class="sci-body">Blocked practice (repeating one skill until perfect) feels productive but produces weaker long-term retention. Interleaved practice (mixing different skills in a session) feels harder but creates stronger transfer to novel situations. This works because interleaving forces the brain to discriminate between skills and retrieve the right strategy — building flexible, context-independent expertise.</div>
           <div class="sci-cite">Kornell, N., &amp; Bjork, R.A. (2008). Psychological Science, 19(6), 585–592.</div>
         </div>
         <div class="sechead" style="margin-top:8px">SOVEREIGN SKILL LEVELS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
-          <div class="sci-block" style="--sc:var(--muted)"><div class="sci-title" style="color:var(--muted)">1–2: NOVICE</div><div class="sci-body">Basic awareness. Needs constant guidance. Follows rules without judgment.</div></div>
-          <div class="sci-block" style="--sc:var(--cyan)"><div class="sci-title" style="color:var(--cyan)">3–4: BEGINNER</div><div class="sci-body">Recognizes patterns in limited situations. Building foundational mental models.</div></div>
-          <div class="sci-block" style="--sc:var(--green)"><div class="sci-title" style="color:var(--green)">5–6: COMPETENT</div><div class="sci-body">Can plan and execute without supervision. Sees actions in terms of goals.</div></div>
-          <div class="sci-block" style="--sc:var(--gold)"><div class="sci-title" style="color:var(--gold)">7–8: PROFICIENT</div><div class="sci-body">Intuitive grasp of situations. Adapts to context. Guides others effectively.</div></div>
-          <div class="sci-block" style="--sc:var(--solar)"><div class="sci-title" style="color:var(--solar)">9–10: MASTER</div><div class="sci-body">Transcends rules. Creates new approaches. Shapes the domain itself.</div></div>
+          <div class="sci-block card card-edge" style="--sc:var(--muted)"><div class="sci-title" style="color:var(--muted)">1–2: NOVICE</div><div class="sci-body">Basic awareness. Needs constant guidance. Follows rules without judgment.</div></div>
+          <div class="sci-block card card-edge" style="--sc:var(--cyan)"><div class="sci-title" style="color:var(--cyan)">3–4: BEGINNER</div><div class="sci-body">Recognizes patterns in limited situations. Building foundational mental models.</div></div>
+          <div class="sci-block card card-edge" style="--sc:var(--green)"><div class="sci-title" style="color:var(--green)">5–6: COMPETENT</div><div class="sci-body">Can plan and execute without supervision. Sees actions in terms of goals.</div></div>
+          <div class="sci-block card card-edge" style="--sc:var(--gold)"><div class="sci-title" style="color:var(--gold)">7–8: PROFICIENT</div><div class="sci-body">Intuitive grasp of situations. Adapts to context. Guides others effectively.</div></div>
+          <div class="sci-block card card-edge" style="--sc:var(--solar)"><div class="sci-title" style="color:var(--solar)">9–10: MASTER</div><div class="sci-body">Transcends rules. Creates new approaches. Shapes the domain itself.</div></div>
         </div>
       </div>
     </div>

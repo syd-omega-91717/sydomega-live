@@ -35,7 +35,7 @@
 .realm-loading-txt{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-top:20px;animation:realm-blink 1.4s ease-in-out infinite}
 @keyframes realm-blink{0%,100%{opacity:1}50%{opacity:.3}}
 .elem-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.elem-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--ec,var(--gold));padding:14px;cursor:pointer;transition:.15s}
+.elem-card{border:1px solid var(--line);background:var(--surface);padding:14px;cursor:pointer;transition:.15s;--card-accent:var(--ec)}
 .elem-card:hover{border-color:rgba(201,168,76,.4)}
 .elem-sigil-big{font-size:28px;margin-bottom:6px}
 .elem-card-name{font-family:var(--D);font-size:13px;color:var(--ec,var(--gold));margin-bottom:4px}
@@ -193,7 +193,7 @@ window.switchElem=function(elem){
 var ec=document.getElementById('elem-cards');
 Object.keys(ELEM_INFO).forEach(function(key){
   var info=ELEM_INFO[key];
-  var d=document.createElement('div');d.className='elem-card card';d.style.setProperty('--ec',info.color);
+  var d=document.createElement('div');d.className='elem-card card card-edge';d.style.setProperty('--ec',info.color);
   d.innerHTML='<div class="elem-sigil-big">'+info.sigil+'</div>'
     +'<div class="elem-card-name">'+key.toUpperCase()+'</div>'
     +'<div class="elem-card-desc">'+info.desc+'</div>';

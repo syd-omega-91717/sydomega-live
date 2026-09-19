@@ -34,7 +34,7 @@
   <div class="topbar-title" data-i18n="ana_topbar_title">ANALYTICS<span class="topbar-sub" data-i18n="ana_topbar_subtitle">DATA SCIENCE · ML · INTELLIGENCE</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
-<div class="kpi-row" data-stagger data-stagger-gap="70" id="an-kpis" style="padding:.75rem 1rem;border-bottom:1px solid var(--line)">
+<div class="kpi-row" data-stagger data-stagger-gap="70" id="an-kpis" style="padding:.75rem 1rem;border-bottom:1px solid var(--line)" data-omega-depth-tilt>
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="an-auth" style="color:var(--gold)">—</div><div class="kpi-label" data-i18n="ana_kpi_authority">AUTHORITY</div></div>
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="an-nodes">—</div><div class="kpi-label" data-i18n="ana_kpi_nodes">NODES CLEARED</div></div>
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="an-tasks">—</div><div class="kpi-label" data-i18n="ana_kpi_actions">VERIFIED ACTIONS</div></div>
@@ -311,6 +311,11 @@ var PHI=1.6180339887,EU=2.7182818285;
     var authCv=document.getElementById('an-chart-auth');
     if(authCv)window.OmegaChart.auth(authCv,uid);
   })();
+  /* Telemetry sweep on data load completion */
+  if(window.omegaSweep){
+    var kpiRows=document.querySelectorAll('[data-omega-depth-tilt]');
+    if(kpiRows.length) window.omegaSweep.sweepParallel(Array.from(kpiRows),350);
+  }
 })();
 </script>
 <script src="/bg.js" defer></script>

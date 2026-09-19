@@ -102,7 +102,7 @@
 
     <!-- ASSETS TAB -->
     <div class="tab-panel act" id="tab-assets">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px" data-stagger data-stagger-gap="70">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
 
         <!-- Cash & Liquid -->
         <div class="asset-class-card card" data-reveal="depth-in">
@@ -654,6 +654,11 @@ window.switchTab=switchTab;
 renderAssets();
 renderHistory();
 calcCompound();calcFIRE();calcDebt();calcNWP();
+/* Telemetry sweep on data load completion */
+if(window.omegaSweep){
+  var assetGrid=document.querySelector('[data-omega-depth-tilt]');
+  if(assetGrid) window.omegaSweep.sweep(assetGrid,350);
+}
 </script>
 <script src="omega-local-backup.js"></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

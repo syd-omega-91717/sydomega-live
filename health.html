@@ -148,7 +148,7 @@
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">WELLNESS ARCHITECTURE</div>
-  <div class="card-grid" data-stagger data-stagger-gap="60">
+  <div class="card-grid" data-stagger data-stagger-gap="60" data-omega-depth-tilt>
     <div class="card" data-reveal="fade-up"><div class="card-title">THE NINTH ELEMENT</div><div class="card-body">The Ninth Element layer covers the 10 life domains: Religion, Character, Mind, Heart, Birth, Death, Life, Family, Friends, Work. Each domain has a wellness dimension. Health data feeds directly into the matrix — maintaining your biological sovereignty is part of your ascension path.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">MASTERY AXIS (B)</div><div class="card-body">Each wellness log fires an OmegaProgress event that advances the Mastery axis (B). This is the discipline axis — consistent daily logging demonstrates the sovereign discipline required to maintain peak frequency. The axis advance is recorded in the health_logs table and reflected on your profile ring.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">THE 5 DIMENSIONS</div><div class="card-body">Mind, Heart, Energy, Body, and Soul form the five wellness pillars. Each is scored 1–9 (matching the sovereign matrix scale). The Sovereign Score is the mean of all five, providing a single at-a-glance frequency rating. Scores are averaged across the last 14 entries for display.</div></div>
@@ -259,6 +259,11 @@ async function boot(){
   loadHistory();
 }
 boot();
+/* Telemetry sweep on data load completion */
+if(window.omegaSweep){
+  var cardGrid=document.querySelector('[data-omega-depth-tilt]');
+  if(cardGrid) window.omegaSweep.sweep(cardGrid,350);
+}
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

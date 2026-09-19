@@ -145,7 +145,7 @@
     <div id="l-overview" class="layer-panel active">
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
-        <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
           <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='/evolution.html';}" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-members" data-live-members data-countup>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">♓︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-online" data-countup>--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.4s">♈︎</div></div></div>
@@ -195,7 +195,7 @@
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
         <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.4s">♇</span><span data-i18n="command_index">COMMAND INDEX</span></span> &middot; 18 <span data-i18n="module_portals">SOVEREIGN MODULE PORTALS</span></div>
-        <div class="cmd-grid" id="cmd-grid"></div>
+        <div class="cmd-grid" id="cmd-grid" data-omega-depth-tilt></div>
       </div>
     </div>
 
@@ -1035,6 +1035,11 @@ function sid(id,v){
        read "--". This is its documented re-init hook (see its own listener
        for 'omega:populated') so the count-up plays once real numbers land. */
     document.dispatchEvent(new CustomEvent('omega:populated'));
+    /* Telemetry sweep on data load completion */
+    if(window.omegaSweep){
+      var kpiRows=document.querySelectorAll('[data-omega-depth-tilt]');
+      if(kpiRows.length) window.omegaSweep.sweepParallel(Array.from(kpiRows),350);
+    }
     /* Timeline */
     try{
       var tl=await sb.from('activity_feed').select('activity_type,title,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(8);

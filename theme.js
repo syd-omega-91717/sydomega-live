@@ -17,6 +17,11 @@
       --panel-warm:#120F1A;
       --gold:#C9A84C;
       --solar:#E2C86D;
+      /* Seasonal & elemental theme tokens (fallbacks; omega-theme-personalization.js overrides at runtime) */
+      --theme-primary:#d97706;
+      --theme-secondary:#0891b2;
+      --theme-accent:#f59e0b;
+      --theme-glow:#fbbf24;
       /* Display tier, measured straight off the reference's headline
          (#F7E0A0, hue 44 -- the same hue --gold already uses, but L80%
          S84% against --gold's L54% S54%). The reference's premium look

@@ -352,6 +352,12 @@ function unlock(id){
   unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[a.rarity],rarity:a.rarity,cat:a.cat,date:a.unlockedAt});
   save();renderBoard();
   showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[a.rarity]+' XP');
+  /* Dispatch achievement celebration event */
+  if(window.OmegaCelebrate) {
+    document.dispatchEvent(new CustomEvent('omega:achievement', {
+      detail: { title: a.name, rarity: a.rarity, metadata: { id: a.id, xp: XP_MAP[a.rarity] } }
+    }));
+  }
 }
 
 function showNotif(msg){

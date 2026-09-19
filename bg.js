@@ -118,7 +118,11 @@ function __omegaAppend(el){
   /* Phase 3: Particle Systems Integration -- State-driven particle emission, constellation-
      particle cluster linkage, data load indicators. Integrates with omega-particles.js;
      synchronizes orbit timing with Phase 2. Safe global; respects prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-cinematic-animations-phase3]')){var os_data_omega_cinematic_animations_phase3=document.createElement('script');os_data_omega_cinematic_animations_phase3.src='/omega-cinematic-animations-phase3.js';os_data_omega_cinematic_animations_phase3.setAttribute('data-omega-cinematic-animations-phase3','1');os_data_omega_cinematic_animations_phase3.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase3);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase3]')){var os_data_omega_cinematic_animations_phase3=document.createElement('script');os_data_omega_cinematic_animations_phase3.src='/omega-cinematic-animations-phase3.js';os_data_omega_cinematic_animations_phase3.setAttribute('data-omega-cinematic-animations-phase3','1');os_data_omega_cinematic_animations_phase3.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase3);}
+  /* Phase 4: Elemental Theming -- Seasonal/elemental color cycling synchronized with nav axis.
+     Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
+     persists to localStorage with 24h expiry. Grounded in: proposal #22. */
+  if(!document.querySelector('script[data-omega-theme-elemental]')){var os_data_omega_theme_elemental=document.createElement('script');os_data_omega_theme_elemental.src='/omega-theme-elemental.js';os_data_omega_theme_elemental.setAttribute('data-omega-theme-elemental','1');os_data_omega_theme_elemental.defer=true;__omegaAppend(os_data_omega_theme_elemental);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

@@ -233,6 +233,17 @@ window.transmit=async function(){
   var sm=document.getElementById('sent-msg');sm.style.display='block';
   setTimeout(function(){sm.style.display='none';},3500);
   storedBroadcasts.unshift({networks:[...selectedNets],body:text,created_at:new Date().toISOString()});
+  /* Dispatch social-milestone celebration event for broadcast */
+  if(window.OmegaCelebrate) {
+    var s=(await sb.auth.getSession()).data.session;
+    if(s) {
+      var pr=(await sb.from('profiles').select('membership_tier').eq('id',s.user.id).maybeSingle()).data||{};
+      var tier=pr.membership_tier||1;
+      document.dispatchEvent(new CustomEvent('omega:social-milestone',{
+        detail:{type:'publish',tier:tier,metadata:{networks:[...selectedNets],length:text.length}}
+      }));
+    }
+  }
 };
 
 (function(){

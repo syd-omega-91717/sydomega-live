@@ -1,24 +1,48 @@
-/* omega-confetti.js   SYD OMEGA 91717   v1
+/* omega-confetti.js   SYD OMEGA 91717   v2
    Sovereign celebration engine — canvas particle burst for gate unlocks,
-   achievement completions, and milestone events.
+   achievement completions, milestone events, and tier-based celebration events.
 
    API:
      OmegaCelebration.burst(options?)     — one immediate burst at center
      OmegaCelebration.gate(gateNum, name) — cinematic gate-unlock sequence
      OmegaCelebration.milestone(text)     — softer glow burst + banner
      OmegaCelebration.apex()             — maximum effect for Gate XII
+     OmegaCelebrate.emit(eventType, metadata) — emit custom celebration
+     OmegaCelebrate.setTier(tier)         — set member tier (1-3+)
+     OmegaCelebrate.getTier()             — get current tier
+     OmegaCelebrate.enable()              — enable celebrations
+     OmegaCelebrate.disable()             — disable celebrations
 
    Auto-trigger: listens for the custom events:
      'omega:gate-unlock'  → e.detail { gate, name }
      'omega:achievement'  → e.detail { title }
      'omega:apex'         → (no detail)
+     'omega:task-complete' → e.detail { intensity?, metadata? }
+     'omega:streak-record' → e.detail { streak, metadata? }
+     'omega:social-milestone' → e.detail { type, metadata? }
 
-   Respects prefers-reduced-motion (disables particles, keeps flash banner). */
+   Respects prefers-reduced-motion (pulse glow instead of particles).
+   Tier-based intensity: tier 1 (low), tier 2 (medium), tier 3+ (high). */
 (function () {
   'use strict';
   if (window.OmegaCelebration) return;
 
   var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var _enabled = true;
+  var _currentTier = 1;
+
+  /* ─── TIER CONFIGURATION ────────────────────────────────────────── */
+  var TIER_CONFIG = {
+    1: { particlesPerSec: 3, duration: 800, opacity: 0.4, audio: false },
+    2: { particlesPerSec: 8, duration: 1200, opacity: 0.5, audio: false },
+    3: { particlesPerSec: 15, duration: 1800, opacity: 0.7, audio: true },
+    4: { particlesPerSec: 20, duration: 2000, opacity: 0.8, audio: true },
+    5: { particlesPerSec: 25, duration: 2500, opacity: 0.9, audio: true }
+  };
+
+  function _getTierConfig() {
+    return TIER_CONFIG[Math.min(_currentTier, 5)] || TIER_CONFIG[1];
+  }
 
   /* ─── PALETTE ───────────────────────────────────────────────────── */
   var COLORS = ['#C9A84C','#E2C86D','#00E5FF','#9B6BF0','#3fb27f','#ffffff','#E86A3A'];
@@ -125,9 +149,33 @@
     if (!_raf) { getCanvas(); _raf = requestAnimationFrame(_loop); }
   }
 
+  /* ─── STATIC FALLBACK FOR PREFERS-REDUCED-MOTION ──────────────────── */
+  function _staticPulse(accentColor) {
+    if (!REDUCE) return;
+    var old = document.getElementById('omega-celeb-pulse');
+    if (old) old.remove();
+    var div = document.createElement('div');
+    div.id = 'omega-celeb-pulse';
+    div.style.cssText = [
+      'position:fixed;inset:0;width:100%;height:100%;',
+      'pointer-events:none;z-index:9998;',
+      'background-color:' + (accentColor || '#C9A84C') + ';',
+      'opacity:0;animation:omega-pulse 0.3s ease-out forwards'
+    ].join('');
+    var style = document.createElement('style');
+    if (!document.getElementById('omega-pulse-keyframes')) {
+      style.id = 'omega-pulse-keyframes';
+      style.textContent = '@keyframes omega-pulse{0%{opacity:0.15}100%{opacity:0}}';
+      document.head.appendChild(style);
+    }
+    document.body.appendChild(div);
+    setTimeout(function () { if (div.parentNode) div.remove(); }, 350);
+  }
+
   /* ─── BURST FACTORY ─────────────────────────────────────────────── */
   function _spawnBurst(x, y, count, opts) {
-    if (REDUCE) return;
+    if (!_enabled) return;
+    if (REDUCE) { _staticPulse(opts && opts.color); return; }
     getCanvas();
     for (var i = 0; i < count; i++) {
       _particles.push(new Particle(x, y, opts));
@@ -253,16 +301,105 @@
   /* ─── AUTO-TRIGGER FROM CUSTOM EVENTS ───────────────────────────── */
   window.addEventListener('omega:gate-unlock', function (e) {
     if (!e.detail) return;
+    var tier = e.detail.tier;
+    if (tier) _currentTier = tier;
     var g = e.detail.gate, n = e.detail.name;
     if (g >= 12) { API.apex(); }
     else { API.gate(g, n); }
   });
 
   window.addEventListener('omega:achievement', function (e) {
+    if (!e.detail) return;
+    var tier = e.detail.tier;
+    if (tier) _currentTier = tier;
     API.milestone(e.detail && e.detail.title);
+  });
+
+  window.addEventListener('omega:task-complete', function (e) {
+    if (!e.detail) return;
+    var tier = e.detail.tier;
+    if (tier) _currentTier = tier;
+    var cfg = _getTierConfig();
+    var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000));
+    var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    _spawnBurst(cx, cy, count, {
+      speed: 4 + (tier || 1),
+      upBias: 2,
+      color: '#00E5FF',
+      shape: 'circle'
+    });
+    _showBanner(
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#00E5FF">TASK COMPLETED</div>' +
+      '<div style="font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#e9e6dc">progress recorded</div>',
+      '#00E5FF', cfg.duration
+    );
+  });
+
+  window.addEventListener('omega:streak-record', function (e) {
+    if (!e.detail) return;
+    var tier = e.detail.tier;
+    if (tier) _currentTier = tier;
+    var streak = e.detail.streak || 0;
+    var cfg = _getTierConfig();
+    var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000) * 1.2);
+    var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    _spawnBurst(cx, cy, count, {
+      speed: 5 + (tier || 1),
+      upBias: 3,
+      color: '#3fb27f',
+      shape: 'star'
+    });
+    _showBanner(
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#3fb27f">STREAK MILESTONE</div>' +
+      '<div style="font-family:\'Cinzel Decorative\',serif;font-size:16px;color:#e9e6dc">' + streak + ' DAYS</div>',
+      '#3fb27f', cfg.duration
+    );
+  });
+
+  window.addEventListener('omega:social-milestone', function (e) {
+    if (!e.detail) return;
+    var tier = e.detail.tier;
+    if (tier) _currentTier = tier;
+    var type = e.detail.type || 'milestone';
+    var cfg = _getTierConfig();
+    var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000));
+    var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    var accentMap = {
+      follower: '#E2C86D',
+      badge: '#9B6BF0',
+      publish: '#00E5FF',
+      milestone: '#C9A84C'
+    };
+    var accent = accentMap[type] || '#C9A84C';
+    _spawnBurst(cx, cy, count, {
+      speed: 4 + (tier || 1),
+      upBias: 2,
+      color: accent,
+      shape: 'rect'
+    });
+    var typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+    _showBanner(
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:' + accent + '">' + typeLabel.toUpperCase() + '</div>' +
+      '<div style="font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#e9e6dc">social impact</div>',
+      accent, cfg.duration
+    );
   });
 
   window.addEventListener('omega:apex', function () { API.apex(); });
 
+  /* ─── EXTENDED API WITH TIER MANAGEMENT ─────────────────────────── */
+  var ExtendedAPI = Object.assign({}, API, {
+    setTier: function (tier) { _currentTier = Math.max(1, Math.min(tier, 5)); },
+    getTier: function () { return _currentTier; },
+    enable: function () { _enabled = true; },
+    disable: function () { _enabled = false; },
+    emit: function (eventType, detail) {
+      detail = detail || {};
+      if (detail.tier === undefined) detail.tier = _currentTier;
+      document.dispatchEvent(new CustomEvent('omega:' + eventType, { detail: detail }));
+    }
+  });
+
   window.OmegaCelebration = API;
+  window.OmegaCelebrate = ExtendedAPI;
 })();

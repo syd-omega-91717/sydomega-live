@@ -19141,3 +19141,62 @@ python3 scripts/silent-failure-detector.py   0 findings
 python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+### `.card-edge` sweep, part 4: the "already has `.card`" bucket, 17 files (2026-09-19)
+
+The first sweep's triage script had a second output list alongside the 73
+"safe" candidates — 21 sites where the border-left-bearing class already
+co-occurred with `.card` in the same markup, which the script treated as
+"already correct, like `kings.html`" and excluded. `vocabulary.html` (part 3)
+proved that assumption wrong once already, so this entry checked all 21
+rather than trusting the label a second time.
+
+Most were a single, widely copy-pasted "science citation" component,
+`.sci-card`, already fixed-color and already-`.card` in 9 files
+(`achievements`, `exam`, `revenue`, `investment`, `wallet`, `intelligence`,
+`lab`, `charter`, `passport`) — each file's `.sci-card` uses one constant
+colour for all of its instances (no per-instance variance, closer to
+`heritage.html`'s original ancestor rows than to `kings.html`), so each
+just needed `--card-accent:<that file's colour>` in the base rule and
+`card-edge` added to the one repeated markup string. `charter.html` doubles
+up with a second class, `.article-card`, same shape.
+
+Five more already had their own per-instance custom property doing exactly
+`--card-accent`'s job, just under a different name — `cinema.html`
+(`--oc`), `dashboard.html`'s `.cmd-card` (`--cc`, a different card family
+on the same page already touched for `.alert-item` in part 3),
+`phases.html` (`--pc`), `factions.html`'s `.knight-card` (`--kc`), and
+`skills.html`'s `.skill-card` (`--sc`, again a different class from part
+3's `.sci-block` on the same page) — each just needed
+`--card-accent:var(--xx)` aliased in and `card-edge` added to their markup.
+
+`blockchain.html`'s `.nft-card` and `command.html`'s `.quote-card` were
+simple fixed-colour, no-variable cases (gold and translucent gold
+respectively), converted the same way as the `.sci-card` group.
+
+`hercules.html`'s `.labor-card` had the same silent-colour-loss shape as
+`notes.html`/`projects.html` in part 3 — `border-left:4px solid var(--gold)`
+in CSS, always overridden by an unconditional inline
+`style="border-left-color:'+theme.color+'"` — converted to
+`--card-accent`/`card-edge` with `--card-edge-w:4px` preserving the
+original width, and verified past this page's own timing quirk: its
+`renderLabors()` runs on `DOMContentLoaded` before `/omega-hercules.js`
+finishes loading in the harness, prints "Labor data unavailable" on the
+first pass, and only renders real cards on a second call — confirmed the
+CSS was correct by re-invoking `renderLabors()` once the module was ready,
+not by chasing that pre-existing race condition.
+
+A find-and-verify note for whoever does the next batch of the ~35 files
+still unexamined: a script boolean (`already_has_card_class`,
+`has_before`/`has_after`, the card-likeness score) is a candidate filter,
+not a verdict — this entry and part 3 both found real conversions inside
+buckets a prior pass had labelled "skip."
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```

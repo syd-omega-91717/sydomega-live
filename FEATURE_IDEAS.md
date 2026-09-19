@@ -1146,7 +1146,11 @@ in use.
 - [Habitica level-up animations](https://habitica.com/features)
 - [Strava personal record notifications](https://blog.strava.com/strava-pr-notifications/)
 
-## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — proposal
+## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — SHIPPED
+
+**Shipped** (commit pending; CSS-only implementation via `css/omega-system.css` Ω-CHROMATIC section) — pure CSS filter-based approach implemented exactly as proposed. Four animation states: `.omega-loading` (0.5px gold/cyan offset, 0.8s loop indicating activity), `.omega-error` (1.5–2px red/cyan split, 0.6s urgency cue), `.omega-success` (0.5px green/gold shimmer, 1.2s affirmation, clears to no filter), `.omega-press` (button press ripple effect, 0.4s decay). Three intensity variants (`.omega-chromatic-subtle/moderate/intense`, 0.25–1.5px offset range) available via `--chromatic-offset` CSS variable for Tier 3+ settings panel. Reduced-motion compliance: all animations disabled, visual feedback via border color + background tint instead on `.omega-error` and `.omega-success` states.
+
+**Implementation:** CSS-only (no JavaScript module), injected platform-wide via existing `css/omega-system.css` shared stylesheet (loaded by every page). Grounded in existing state-tracking infrastructure (`omega-dataguard.js` class injection pattern) and animation discipline (matching Ω-HORIZON transition easing + reduced-motion guard pattern). No new HTML, no new RLS surface, no `platform_settings` flag required — pure visual enhancement on existing infrastructure.
 
 **Concept:** Layer subtle chromatic aberration on state transitions (data loading
 → success/error), error feedback, and page navigations to enhance perceived
@@ -1162,7 +1166,7 @@ cue, respecting `prefers-reduced-motion`.
 
 **User benefit:**
 - All tiers: Enhanced perceived responsiveness and technical sophistication
-- Tier 3+: Adjustable aberration intensity slider in settings
+- Tier 3+: Adjustable aberration intensity slider in settings (via `--chromatic-offset` variable)
 
 **Nav placement:** Global effect affecting error/loading states across COMMAND, VAULT, INTEL, ASCEND via CSS `filter` on `.omega-loading`, `.omega-error`, `.omega-success` classes injected by data-guard layer
 

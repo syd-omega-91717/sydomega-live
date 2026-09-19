@@ -935,3 +935,113 @@ button:not([class]):hover{
   .osc-cap{ padding:10px 12px; }
   .osc-cap span{ font-size:11px; letter-spacing:.12em; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Ω-CHROMATIC — Chromatic Aberration & Color-Separation Effects
+   
+   Purpose: Enhance perceived responsiveness and technical polish via CSS
+   filters on state transitions (loading → success/error). Error states
+   intensify to red/cyan split as a visual urgency cue.
+   
+   Grounded in: Proposal #24 — Chromatic Aberration & Color-Separation Effects
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── SVG FILTER DEFINITIONS (for browser-native chromatic effects) ────────── */
+svg#omega-filters{display:none}
+
+/* ── CHROMATIC EFFECT STATES ─────────────────────────────────────────────── */
+
+/* Loading state: subtle color-channel offset (0.5px) to indicate activity */
+.omega-loading{
+  animation:omega-chromatic-loading .8s ease-in-out infinite;
+}
+
+@keyframes omega-chromatic-loading{
+  0%,100%{filter:drop-shadow(-0.25px 0 0 rgba(201,168,76,.4)) drop-shadow(0.25px 0 0 rgba(0,229,255,.3))}
+  50%{filter:drop-shadow(-0.5px 0 0 rgba(201,168,76,.5)) drop-shadow(0.5px 0 0 rgba(0,229,255,.4))}
+}
+
+/* Error state: intense red/cyan split (1.5–2px) signals urgency */
+.omega-error{
+  animation:omega-chromatic-error .6s ease-in-out;
+  filter:drop-shadow(-1px 0 0 #C4453C) drop-shadow(1px 0 0 #00E5FF);
+}
+
+@keyframes omega-chromatic-error{
+  0%{filter:drop-shadow(-2px 0 0 #C4453C) drop-shadow(2px 0 0 #00E5FF) brightness(1.1)}
+  50%{filter:drop-shadow(-1.5px 0 0 #C4453C) drop-shadow(1.5px 0 0 #00E5FF) brightness(1)}
+  100%{filter:drop-shadow(-1px 0 0 #C4453C) drop-shadow(1px 0 0 #00E5FF) brightness(1)}
+}
+
+/* Success state: gentle green/gold shimmer (0.5px) affirms completion */
+.omega-success{
+  animation:omega-chromatic-success 1.2s cubic-bezier(.34,1.4,.64,1);
+}
+
+@keyframes omega-chromatic-success{
+  0%{filter:drop-shadow(-0.5px 0 0 #3fb27f) drop-shadow(0.5px 0 0 #C9A84C) brightness(.95)}
+  50%{filter:drop-shadow(-0.25px 0 0 #3fb27f) drop-shadow(0.25px 0 0 #C9A84C) brightness(1.05)}
+  100%{filter:none}
+}
+
+/* ── INTENSITY VARIANTS (Tier 3+ control via settings) ────────────────────── */
+
+/* Subtle: minimal aberration (0.25–0.5px) — default for all tiers */
+.omega-chromatic-subtle{
+  --chromatic-offset:0.25px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.3)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.2))
+}
+
+/* Moderate: balanced aberration (0.75–1.5px) — Tier 3+ preferred */
+.omega-chromatic-moderate{
+  --chromatic-offset:0.75px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.4)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.3))
+}
+
+/* Intense: strong aberration (1.5–2px) — Tier 5+ power users */
+.omega-chromatic-intense{
+  --chromatic-offset:1.5px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.5)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.4))
+}
+
+/* ── BUTTON & CONTROL INTERACTIONS ───────────────────────────────────────── */
+
+/* Apply chromatic shimmer on button press (rapid offset pulse) */
+.btn-gold.omega-press, .btn-cyan.omega-press, .btn-crim.omega-press,
+button:not([class*='omega-']).omega-press{
+  animation:omega-chromatic-press .4s cubic-bezier(.34,1.4,.64,1);
+}
+
+@keyframes omega-chromatic-press{
+  0%{filter:drop-shadow(-1px 0 0 rgba(201,168,76,.6)) drop-shadow(1px 0 0 rgba(0,229,255,.5)) scale(0.98)}
+  50%{filter:drop-shadow(-0.5px 0 0 rgba(201,168,76,.4)) drop-shadow(0.5px 0 0 rgba(0,229,255,.3)) scale(1)}
+  100%{filter:none;scale(1)}
+}
+
+/* ── ACCESSIBILITY: REDUCED MOTION ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion:reduce){
+  .omega-loading, .omega-error, .omega-success,
+  .omega-chromatic-subtle, .omega-chromatic-moderate, .omega-chromatic-intense,
+  .btn-gold.omega-press, .btn-cyan.omega-press, .btn-crim.omega-press,
+  button:not([class*='omega-']).omega-press{
+    animation:none !important;
+    filter:none !important;
+  }
+  
+  .omega-error{
+    border-color:var(--crim);
+    background-color:rgba(196,69,60,.08);
+  }
+  
+  .omega-success{
+    border-color:var(--green);
+    background-color:rgba(63,178,127,.08);
+  }
+}
+
+/* ── STATE TRANSITION HELPERS (page-level integration) ─────────────────────── */
+
+/* Pages using omega-dataguard.js inject these classes on data state changes */
+.omega-data-wait{cursor:wait}
+.omega-data-hold{pointer-events:none;opacity:.7}

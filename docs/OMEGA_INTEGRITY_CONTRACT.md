@@ -4,6 +4,23 @@
 
 `python3 scripts/omega-integrity-contract.py` provides a deterministic, dependency-free preflight check before visual or deployment changes are accepted.
 
+**Corrected 2026-09-19**: the first version's `CANONICAL_ASSETS` list named four
+files (`omega-visual-system.css`, `omega-visual-system-v2.css`,
+`omega-visual-engine.js`, `omega-evidence.js`) that do not exist anywhere in
+this repository — verified with `find . -iname 'omega-visual-system*' -o
+-iname 'omega-visual-engine*' -o -iname 'omega-evidence.js'`, zero hits. It
+now checks the design system's real owners per `CLAUDE.md` §4: `bg.js`,
+`nav.js`, `theme.js`, `css/omega-system.css`, `omega-visual-evolution.css`.
+The reference-resolution regexes also false-positived on three real,
+already-working patterns and were fixed: `data-src="…"` attributes (matched
+as if `src=`), JS template-literal interpolation inside dynamically-built
+markup such as `src="${cover}"` in `library.html`, and a percent-encoded
+SVG-internal fragment (`url(%23n)`) nested inside a `data:` URI in
+`css/omega-system.css`. Before this fix, running the checker against this
+repo reported 13 errors; all 13 were false positives from these three
+causes, and none reflected a real defect (`scripts/tests` also failed
+because the script didn't answer `--help`, which is now fixed too).
+
 ## Checks
 
 - Canonical visual/runtime assets exist in either the repository root or `public/`.

@@ -12,19 +12,27 @@ Usage: python3 scripts/omega-integrity-contract.py [repository-root]
 """
 from __future__ import annotations
 
+import sys as _sys
+
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import re
 import sys
 from pathlib import Path
 from collections import Counter
 
 CANONICAL_ASSETS = (
-    "omega-visual-system.css",
-    "omega-visual-system-v2.css",
-    "omega-visual-engine.js",
-    "omega-evidence.js",
+    "bg.js",
+    "nav.js",
+    "theme.js",
+    "css/omega-system.css",
+    "omega-visual-evolution.css",
 )
 IGNORED_DIRS = {".git", "node_modules", "vendor", "dist", "build", ".next"}
-LOCAL_REF_RE = re.compile(r"(?:src|href)=[\"']([^\"'#?]+)", re.I)
+# (?<![\w-]) keeps "src="/"href=" from matching inside "data-src="/"srcset=" etc.
+LOCAL_REF_RE = re.compile(r"(?<![\w-])(?:src|href)=[\"']([^\"'#?]+)", re.I)
 CSS_URL_RE = re.compile(r"url\(\s*[\"']?([^\"')?#]+)", re.I)
 ID_RE = re.compile(r"\bid\s*=\s*[\"']([^\"']+)[\"']", re.I)
 LIGHT_MODE_RE = re.compile(r"(?:prefers-color-scheme\s*:\s*light|\blight-mode\b|\btheme-light\b)", re.I)
@@ -40,7 +48,11 @@ def files(root: Path, suffixes: tuple[str, ...]):
 
 
 def resolve_local(root: Path, source: Path, ref: str) -> bool:
-    if not ref or ref.startswith(("/", "#", "http:", "https:", "mailto:", "data:", "javascript:", "tel:")):
+    if "${" in ref:
+        # JS template-literal interpolation (e.g. src="${cover}") inside markup a
+        # script builds at runtime -- not a static path this checker can resolve.
+        return True
+    if not ref or ref.startswith(("/", "#", "%23", "http:", "https:", "mailto:", "data:", "javascript:", "tel:")):
         candidate = root / ref.lstrip("/") if ref.startswith("/") else None
         return candidate is None or candidate.exists()
     candidate = (source.parent / ref).resolve()

@@ -19006,3 +19006,64 @@ python3 scripts/check-inline-js.py  clean
 python3 scripts/module-contract.py  0 broken; 120 contracts
 node --check bg.js                  OK
 ```
+
+### `.card-edge` sweep, part 2: 4 more files, and sizing what's left (2026-09-19)
+
+Follow-up to the entry above. With `.card-edge` actually working, scanned every
+hand-rolled `border-left:Npx solid` accent in the repo (76 files) rather than
+guessing which other pages might have the same pattern as `chronicle.html`/
+`city.html`/`heritage.html`. Filtering out sites that already carry `.card`
+and the one genuine pseudo-element collision (`chronicle.html`'s `.event-card`,
+already excluded) left 73 candidate sites across ~50 files — far more than a
+mechanical sweep should touch in one pass: most of them (`.ref-block` citation
+callouts in 5 files, `.notice`/`.notice-bar` banners, `.tbl-row.me`,
+`.hl-item`) aren't cards at all, and giving them `.card` would add unwanted
+hover-elevation and shimmer to a static citation or a table row. A background/
+padding-only heuristic script isn't reliable enough to tell those apart from a
+genuine unmigrated card — it flagged `.ref-block` as card-like on that basis,
+which is wrong.
+
+Converted the four highest-confidence genuine cards instead, each checked for
+whether its modifiers are ever simultaneously true on one element (a real
+constraint: `.card`'s accent is a single pseudo-element, so two modifiers
+sharing it must be mutually exclusive, unlike `contacts.html`'s independent
+`.vip`/`.overdue`, which use two different physical properties and can both be
+true — `.vip` was left on its own `border-top`, only `.overdue` moved):
+
+- `contacts.html` — `.contact-card.overdue` (`border-left` → `card-edge` +
+  `--card-accent:var(--red)`, JS-set only when the card is actually overdue).
+- `automation.html` — `.rule-card.active`/`.paused` (mutually exclusive by
+  construction: a rule is one or the other, never both).
+- `oath.html` — `.oath-card.personal`/`.verified` (same mutual exclusion,
+  `isOwn ? personal : verified`), both call sites (`renderList`,
+  `renderLocalArchive`).
+- `family.html` — the three static `.fr-card` role divs (`founder`/
+  `chairperson`/`heir`, one role per div) and `.mc.heir` (a boolean flag, the
+  only modifier `.mc` carries).
+
+`family.html`'s cards live behind `#owner-only-family` (`display:none` for a
+non-owner session, which the harness stub is by default) — verified geometry
+with that container forced visible rather than trusting the `height:auto`
+computed for an undisplayed box, which is a used-value artifact, not a real
+zero-height bug. `oath.html`'s `renderList`/`renderLocalArchive` and
+`family.html`'s `buildMemberCards` are declared inside `<script type="module">`
+(`CLAUDE.md` §8.1 class 4a: not on `window`), so their real render paths
+weren't callable from the harness; verified the CSS mechanics instead by
+reproducing the exact markup the edited template now produces and checking
+the resulting `::before` computed style.
+
+The other ~46 files are recorded here, not converted: each needs a per-file
+look at whether its `*-card`/`*-item`/`*-row` class is genuinely a card (this
+entry's four) or a differently-shaped UI element the sweep would misapply
+`.card` to (this entry's exclusions). Left for a future pass taken one file at
+a time, per this file's own precedent for exactly this kind of set
+(`FIXES_LOG.md`, 2026-09-04: "recorded as unblocked, to be taken one page at a
+time with judgement").
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```

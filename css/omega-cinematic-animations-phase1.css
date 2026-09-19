@@ -1,0 +1,693 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   OMEGA CINEMATIC ANIMATIONS — PHASE 1
+   High-impact, low-effort visual enhancements for Ω platform
+
+   Sections:
+   - A: Accent Color Modulation (page-domain-specific colors)
+   - B: Kinetic Typography (character reveal animations)
+   - F: Micro-Interactions (button ripple, form feedback)
+   - N: Advanced Typography (gradient text, link animations)
+   - O: Interaction Feedback (form validation, dropdowns)
+
+   All animations respect prefers-reduced-motion via fallbacks.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION A: ACCENT COLOR MODULATION BY PAGE DOMAIN
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Enhance card borders with page-domain accent color modulation */
+.card,
+.kpi-card {
+  --card-accent: var(--page-accent, var(--gold));
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.card::before,
+.kpi-card::before {
+  background: var(--card-accent);
+  transition: all 0.4s ease-out;
+}
+
+.card:hover::before,
+.kpi-card:hover::before {
+  background: var(--card-accent);
+  opacity: 1;
+}
+
+/* Border-image glow with page accent on card hover */
+.card:hover {
+  border-image: linear-gradient(135deg,
+    var(--card-accent),
+    color-mix(in srgb, var(--card-accent) 50%, transparent))
+    1 / 1 / 0 stretch;
+  box-shadow:
+    0 0 12px -3px var(--card-accent),
+    0 4px 12px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* KPI cards with tier-specific glass depth */
+.kpi-card {
+  --kc: var(--page-accent, var(--gold));
+}
+
+html.tier-2 .kpi-card,
+html.tier-3 .kpi-card {
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.08);
+}
+
+html.tier-3 .kpi-card {
+  backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION B: KINETIC TYPOGRAPHY — CHARACTER REVEAL ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Keyframes for character-by-character reveal */
+@keyframes char-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) rotateX(80deg);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes char-breathing {
+  0%, 100% {
+    letter-spacing: 0;
+  }
+  50% {
+    letter-spacing: 2px;
+  }
+}
+
+/* Page hero headlines with kinetic entrance */
+.sechead[data-omega-kinetic="title"],
+h1[data-omega-kinetic="title"] {
+  perspective: 1000px;
+  font-family: var(--D, serif);
+  animation: kinetic-headline-entrance 1.2s cubic-bezier(0.34, 1.4, 0.64, 1) 0.2s both;
+}
+
+@keyframes kinetic-headline-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scaleY(0.8);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    filter: blur(0);
+  }
+}
+
+/* Enhanced eyebrow with gradient animation */
+.sechead::before,
+h1::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--page-accent, var(--gold)),
+    transparent);
+  margin-bottom: 12px;
+  animation: accent-bar-reveal 0.8s ease-out;
+}
+
+@keyframes accent-bar-reveal {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION F: MICRO-INTERACTIONS — BUTTON RIPPLE & FORM FEEDBACK
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Button ripple animation on click */
+.btn,
+button,
+[role="button"] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+}
+
+.btn::before,
+button::before,
+[role="button"]::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    var(--page-accent, rgba(201,168,76,0.4)),
+    transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.btn:active::before,
+button:active::before,
+[role="button"]:active::before {
+  animation: button-ripple 0.6s ease-out;
+}
+
+@keyframes button-ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+/* Primary action button glow on focus */
+.btn-fill,
+button[class*="primary"],
+.btn-gold,
+.btn-cyan {
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.btn-fill:focus-visible,
+button[class*="primary"]:focus-visible,
+.btn-gold:focus-visible,
+.btn-cyan:focus-visible {
+  outline: 2px solid var(--page-accent, var(--gold));
+  outline-offset: 2px;
+  box-shadow: 0 0 16px -2px var(--page-accent, rgba(201,168,76,0.5));
+  transform: translateY(-2px);
+}
+
+/* Button pulse glow on primary action */
+.btn-fill,
+button[class*="primary"] {
+  animation: button-pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes button-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(201,168,76,0.3);
+  }
+  50% {
+    box-shadow: 0 0 8px 4px rgba(201,168,76,0.1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION N: ADVANCED TYPOGRAPHY — GRADIENT TEXT & LINK ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hero headline with animated gradient text fill */
+h1[data-omega-kinetic="gradient"],
+.sechead[data-omega-kinetic="gradient"] {
+  background: linear-gradient(90deg,
+    var(--page-accent, var(--gold)),
+    var(--page-soft, rgba(201,168,76,0.6)),
+    var(--page-accent, var(--gold)));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-flow 8s ease-in-out infinite;
+  font-family: var(--D, serif);
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 700;
+}
+
+@keyframes gradient-flow {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Link underline animation with gradient sweep */
+a,
+.link {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+a::after,
+.link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--page-accent, var(--gold));
+  transition: width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+a:hover::after,
+a:focus-visible::after,
+.link:hover::after,
+.link:focus-visible::after {
+  width: 100%;
+}
+
+/* Callout text with animated border & glow */
+.callout,
+.emphasis,
+.highlight {
+  border-left: 3px solid var(--page-accent, var(--gold));
+  padding-left: 12px;
+  animation: callout-border-pulse 2s ease-in-out infinite;
+}
+
+@keyframes callout-border-pulse {
+  0%, 100% {
+    border-left-width: 2px;
+  }
+  50% {
+    border-left-width: 4px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION O: INTERACTION FEEDBACK — FORM VALIDATION & AUTOCOMPLETE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Form field validation with confidence score */
+.inp,
+input,
+textarea,
+select {
+  position: relative;
+  transition: all 0.3s ease-out;
+}
+
+.inp:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(0,0,0,0.2),
+    0 0 12px -3px var(--page-accent, rgba(201,168,76,0.5)),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+.inp[aria-valid="true"],
+input[aria-valid="true"],
+textarea[aria-valid="true"],
+select[aria-valid="true"] {
+  border-color: var(--green, #00FF00);
+  box-shadow:
+    0 0 8px -2px rgba(0,255,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.inp[aria-invalid="true"],
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: var(--crim, #8B0000);
+  animation: field-shake 0.3s ease-in-out;
+}
+
+@keyframes field-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Field label floating effect */
+.field {
+  position: relative;
+}
+
+.field label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+  pointer-events: none;
+}
+
+.field input:focus ~ label,
+.field input:not(:placeholder-shown) ~ label {
+  top: -8px;
+  left: 0;
+  font-size: 12px;
+  color: var(--page-accent, var(--gold));
+  background: var(--void, #0a0a0a);
+  padding: 0 4px;
+}
+
+/* Autocomplete dropdown animation */
+.autocomplete-dropdown,
+[data-autocomplete-dropdown] {
+  animation: dropdown-slide-down 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+  transform-origin: top;
+}
+
+@keyframes dropdown-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scaleY(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* Autocomplete result row stagger */
+.autocomplete-row,
+[data-autocomplete-row] {
+  animation: row-fade-in 0.4s ease-out backwards;
+}
+
+.autocomplete-row:nth-child(1) { animation-delay: 0ms; }
+.autocomplete-row:nth-child(2) { animation-delay: 50ms; }
+.autocomplete-row:nth-child(3) { animation-delay: 100ms; }
+.autocomplete-row:nth-child(4) { animation-delay: 150ms; }
+.autocomplete-row:nth-child(5) { animation-delay: 200ms; }
+
+@keyframes row-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.autocomplete-row:hover {
+  background: rgba(201,168,76,0.06);
+  border-left: 3px solid var(--page-accent, var(--gold));
+  padding-left: 12px;
+  transition: all 0.2s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION P: TOAST NOTIFICATIONS — SLIDE, GLOW & PROGRESS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.toast,
+[role="alert"],
+[data-omega-toast] {
+  position: fixed;
+  bottom: calc(var(--omega-chrome-bottom, 0px) + 16px);
+  right: 16px;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.25);
+  backdrop-filter: blur(8px);
+  z-index: 9001;
+  animation: toast-slide-in 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+@keyframes toast-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* Toast with color-matched glow by type */
+.toast.success {
+  border-color: rgba(0,255,0,0.3);
+  box-shadow:
+    0 0 16px -4px rgba(0,255,0,0.3),
+    0 8px 24px rgba(0,0,0,0.3);
+}
+
+.toast.error {
+  border-color: rgba(139,0,0,0.4);
+  box-shadow:
+    0 0 16px -4px rgba(139,0,0,0.4),
+    0 8px 24px rgba(0,0,0,0.3);
+}
+
+.toast.warning {
+  border-color: rgba(201,168,76,0.4);
+  box-shadow:
+    0 0 16px -4px rgba(201,168,76,0.4),
+    0 8px 24px rgba(0,0,0,0.3);
+}
+
+/* Toast progress bar */
+.toast::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--page-accent, var(--gold));
+  animation: toast-progress 6s linear forwards;
+}
+
+@keyframes toast-progress {
+  0% {
+    width: 100%;
+    opacity: 1;
+  }
+  90% {
+    width: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 0;
+    opacity: 0;
+  }
+}
+
+.toast:hover::after {
+  animation-play-state: paused;
+}
+
+/* Toast icon animations */
+.toast-icon {
+  display: inline-block;
+  margin-right: 8px;
+  animation: toast-icon-entrance 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.toast.success .toast-icon {
+  animation: icon-checkmark-rotate 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.toast.error .toast-icon {
+  animation: icon-x-shake 0.4s ease-in-out;
+}
+
+@keyframes icon-checkmark-rotate {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotateZ(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0);
+  }
+}
+
+@keyframes icon-x-shake {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(8deg); }
+  75% { transform: rotate(-8deg); }
+}
+
+@keyframes toast-icon-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PREFERS-REDUCED-MOTION FALLBACKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Maintain visual feedback with instant state changes */
+  .btn-fill,
+  button[class*="primary"] {
+    animation: none;
+  }
+
+  .btn-fill:focus-visible,
+  button[class*="primary"]:focus-visible {
+    outline: 2px solid var(--page-accent, var(--gold));
+    box-shadow: 0 0 8px -2px var(--page-accent, rgba(201,168,76,0.5));
+  }
+
+  a::after,
+  .link::after {
+    width: 100%;
+  }
+
+  .toast {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .sechead[data-omega-kinetic="title"],
+  h1[data-omega-kinetic="title"] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS — MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 700px) {
+  /* Reduce stagger on mobile for faster reveals */
+  .sechead[data-omega-kinetic="title"],
+  h1[data-omega-kinetic="title"] {
+    animation-duration: 0.8s;
+    animation-delay: 0.1s;
+  }
+
+  /* Smaller buttons on mobile */
+  .btn,
+  button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Toast positioning for smaller screens */
+  .toast,
+  [role="alert"],
+  [data-omega-toast] {
+    right: 8px;
+    left: 8px;
+    min-width: auto;
+  }
+
+  /* Simpler ripple on mobile (smaller amplitude) */
+  .btn:active::before,
+  button:active::before,
+  [role="button"]:active::before {
+    animation: button-ripple-mobile 0.4s ease-out;
+  }
+
+  @keyframes button-ripple-mobile {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      width: 150px;
+      height: 150px;
+      opacity: 0;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY: FOCUS INDICATORS & HIGH CONTRAST
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Clear focus indicators for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--page-accent, var(--gold));
+  outline-offset: 2px;
+}
+
+/* High contrast mode enhancements */
+@media (prefers-contrast: more) {
+  .card:hover,
+  .kpi-card:hover {
+    border: 2px solid var(--card-accent);
+  }
+
+  .btn,
+  button,
+  [role="button"] {
+    border: 2px solid currentColor;
+  }
+
+  .trend.up::after,
+  .trend.down::after {
+    content: attr(data-symbol);
+    margin-left: 4px;
+    font-weight: bold;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY: DATA ATTRIBUTE CONTROLS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Disable animations on specific elements if needed */
+[data-omega-no-animation] {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Trigger animations on demand */
+[data-omega-animate="entrance"] {
+  animation: kinetic-headline-entrance 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+[data-omega-animate="pulse"] {
+  animation: button-pulse-glow 2s ease-in-out infinite;
+}
+
+[data-omega-animate="shimmer"] {
+  animation: cinematic-shimmer 3s ease-in-out infinite;
+}

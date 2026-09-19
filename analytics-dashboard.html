@@ -218,7 +218,10 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById(tab).classList.add('active');
+    const activePanel=document.getElementById(tab);
+    activePanel.classList.add('active');
+    /* Telemetry sweep on tab switch */
+    if(window.omegaSweep&&activePanel.children.length) window.omegaSweep.sweep(activePanel,350);
   });
 });
 
@@ -255,6 +258,11 @@ function loadAnalytics(){
   document.getElementById('member-segments').innerHTML=segments.map(s=>
     `<tr><td>${s.name}</td><td>${s.count}</td><td>${s.engagement}%</td><td><span class="status-badge status-${s.status}">${s.status.toUpperCase()}</span></td></tr>`
   ).join('');
+  /* Telemetry sweep on analytics load */
+  if(window.omegaSweep){
+    var kpiContainer=document.getElementById('kpi-overview');
+    if(kpiContainer) window.omegaSweep.sweep(kpiContainer,350);
+  }
 }
 
 loadAnalytics();

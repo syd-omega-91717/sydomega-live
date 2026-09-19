@@ -160,6 +160,11 @@ var TWIN_NODES=[
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['labs','hypothesis','discoveries','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  /* Telemetry sweep on tab switch */
+  if(window.omegaSweep){
+    var panel=document.getElementById('tab-'+name);
+    if(panel&&panel.children.length) window.omegaSweep.sweep(panel,350);
+  }
 }
 function renderLabs(){
   var g=document.getElementById('labs-grid');if(!g)return;
@@ -178,6 +183,8 @@ function renderLabs(){
       +'</div>';
   }).join('');
   setTimeout(function(){document.querySelectorAll('.lc-bar-fill').forEach(function(el){el.style.width=(el.dataset.pct||0)+'%';});},200);
+  /* Telemetry sweep on labs render */
+  if(window.omegaSweep) window.omegaSweep.sweep(g,350);
 }
 function renderDiscoveries(){
   var f=document.getElementById('discoveries-feed');if(!f)return;
@@ -187,12 +194,16 @@ function renderDiscoveries(){
       +'<div class="disc-desc">'+d.desc+'</div>'
       +'<div class="disc-meta">'+d.meta+'</div></div></div>';
   }).join('');
+  /* Telemetry sweep on discoveries render */
+  if(window.omegaSweep) window.omegaSweep.sweep(f,350);
 }
 function renderTwins(){
   var g=document.getElementById('twin-grid');if(!g)return;
   g.innerHTML=TWIN_NODES.map(function(t){
     return'<div class="twin-cell"><div class="tc-name">'+t.name+'</div><div class="tc-val">'+t.val+'</div></div>';
   }).join('');
+  /* Telemetry sweep on twins render */
+  if(window.omegaSweep) window.omegaSweep.sweep(g,350);
 }
 document.addEventListener('DOMContentLoaded',function(){renderLabs();renderDiscoveries();renderTwins();});
 </script>

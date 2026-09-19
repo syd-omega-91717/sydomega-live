@@ -529,6 +529,8 @@
           </div>
         `;
       }
+      /* Telemetry sweep on agent cards render */
+      if(window.omegaSweep&&Object.keys(metrics).length) window.omegaSweep.sweep(container,350);
     }
 
     // Load experiments
@@ -567,6 +569,8 @@
           `;
           tbody.appendChild(row);
         });
+        /* Telemetry sweep on experiments table render */
+        if(window.omegaSweep&&experiments.length) window.omegaSweep.sweep(tbody,350);
       } catch (error) {
         console.error("Error loading experiments:", error);
       }
@@ -610,6 +614,8 @@
           `;
           container.appendChild(item);
         });
+        /* Telemetry sweep on insights render */
+        if(window.omegaSweep&&insights.length) window.omegaSweep.sweep(container,350);
       } catch (error) {
         console.error("Error loading insights:", error);
       }
@@ -648,6 +654,8 @@
           `;
           container.appendChild(card);
         });
+        /* Telemetry sweep on recommendations render */
+        if(window.omegaSweep&&insights.length) window.omegaSweep.sweep(container,350);
       } catch (error) {
         console.error("Error loading recommendations:", error);
       }

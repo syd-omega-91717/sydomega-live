@@ -180,7 +180,14 @@ body:has(> aside#omega-side){display:flex;min-height:100vh}
 }
 .card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);
   box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--gold))}
+/* .card.card is a specificity bump, not a typo: omega-spatial-system.css's
+   cinematic shimmer (`.omega-cinematic :where(.card,...)::before`) ties this
+   rule's specificity (0,1,1) and, since body.omega-cinematic is on every page,
+   silently wins the background and hides every per-instance --card-accent
+   colour -- measured on kings.html's per-king top bar and intelligence.html's
+   SWOT boxes: both rendered the shimmer's flat gradient instead of the
+   assigned colour. */
+.card.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--gold))}
 :where(.card-title){font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 /* -- CARD MARK -- a card title is subordinate to a section heading, so it
    gets a subordinate mark: a 7px open diamond in the page axis colour, not a

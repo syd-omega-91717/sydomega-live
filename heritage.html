@@ -152,7 +152,7 @@ function renderAncestors(){
   var el=document.getElementById('ancestor-list');
   if(!ancestors.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:10px">No ancestors logged yet.</div>';return;}
   el.innerHTML=[].concat(ancestors).reverse().map(function(a){
-    return '<div style="border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px">'
+    return '<div class="card card-edge" style="--card-accent:var(--gold)">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">'
       +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+a.name+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+a.relation+'</div>'

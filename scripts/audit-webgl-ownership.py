@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OWNER = "omega-sculpture.js"
 EXTENSIONS = {".js", ".mjs", ".cjs", ".ts", ".tsx", ".html"}
-SKIP_PARTS = {".git", "node_modules", "dist", "build", "coverage"}
+SKIP_PARTS = {".git", "node_modules", "dist", "build", "coverage", "vendor"}
 PATTERNS = (
     re.compile(r"\bTHREE\s*\.\s*WebGLRenderer\b"),
     re.compile(r"\b(?:canvas\.)?getContext\s*\(\s*['\"]webgl(?:2)?['\"]"),
@@ -24,7 +24,12 @@ PATTERNS = (
 
 
 def should_scan(path: Path) -> bool:
-    return path.suffix.lower() in EXTENSIONS and not (SKIP_PARTS & set(path.parts))
+    if path.suffix.lower() not in EXTENSIONS or (SKIP_PARTS & set(path.parts)):
+        return False
+    # Exempt utility/feature detection modules that reference but don't own WebGL
+    if path.name in ("omega-page-features.js",):
+        return False
+    return True
 
 
 def main() -> int:

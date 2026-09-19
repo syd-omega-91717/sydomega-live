@@ -25,8 +25,6 @@
 .oath-list{display:flex;flex-direction:column;gap:10px}
 .oath-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px 18px;cursor:pointer;transition:.15s;position:relative}
 .oath-card:hover{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.02)}
-.oath-card.verified{border-left:3px solid var(--gold)}
-.oath-card.personal{border-left:3px solid var(--cyan)}
 .oc-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .oc-cat{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:1px;color:rgba(201,168,76,.7)}
 .oc-author{font-family:var(--M);font-size:12px;color:var(--muted)}
@@ -332,7 +330,8 @@ function renderList(){
   allOaths.forEach(function(o){
     var isOwn=currentUser&&o.user_id===currentUser.id;
     var card=document.createElement('div');
-    card.className='oath-card card '+(isOwn?'personal':'verified');
+    card.className='oath-card card card-edge '+(isOwn?'personal':'verified');
+    card.style.setProperty('--card-accent',isOwn?'var(--cyan)':'var(--gold)');
     var meta=document.createElement('div');meta.className='oc-meta';
     var cat=document.createElement('span');cat.className='oc-cat';cat.textContent=o.category||'OATH';
     var auth=document.createElement('span');auth.className='oc-author';auth.textContent=isOwn?'YOU':'USER·'+((o.user_id||'').slice(-4)||'?');
@@ -354,7 +353,7 @@ function renderLocalArchive(){
   if(!local.length){list.innerHTML='<div class="empty">NO LOCAL ARCHIVE ENTRIES</div>';return;}
   list.innerHTML='';
   local.forEach(function(o){
-    var item=document.createElement('div');item.className='oath-card card personal';
+    var item=document.createElement('div');item.className='oath-card card card-edge personal';item.style.setProperty('--card-accent','var(--cyan)');
     var meta=document.createElement('div');meta.className='oc-meta';
     var cat=document.createElement('span');cat.className='oc-cat';cat.textContent=o.category||'OATH';
     var ts=document.createElement('span');ts.className='oc-ts';ts.textContent=timeAgo(o.sworn_at);

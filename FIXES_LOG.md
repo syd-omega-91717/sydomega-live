@@ -19141,3 +19141,45 @@ python3 scripts/silent-failure-detector.py   0 findings
 python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+### `.card-edge` sweep, part 5: 6 more files from the remaining 28 (2026-09-19)
+
+Scanned the 28 files still unexamined after parts 1-4 with the same
+real-border/radius/cursor filter. Most confirmed as genuinely not cards —
+`clarity.html`/`fasting.html`/`mentors.html`/`physiology.html`'s `.ref-block`
+citation callouts, `payments.html`'s `.notice-bar` and `profile.html`'s
+`.notice` banners, `leaderboard.html`/`network.html`'s table/list rows,
+`media.html`'s `.sg-card`/`.fc` (a false-positive match: their `border-left`
+is 1px `var(--border)`, the same colour as the other three sides completing
+a uniform box border, not an accent — same shape as `.game-card` on the same
+page, excluded in part 3). `account.html`'s `.agent` rule is dead CSS: the
+class exists nowhere in that page's markup, so it was left alone rather than
+fixed as a "bug" that has zero effect either way.
+
+Six were genuine and converted: `autonomous-insights.html`'s `.insight-item`
+(default/`.warning`/`.critical`, all three states already carry some accent
+colour, so unconditional), `knowledge.html`'s `.concept-cell` (six static
+instances, one fixed colour, same shape as `heritage.html`'s original
+pattern), `news.html`'s `.dispatch` (single fixed colour), `chatbot.html`'s
+`.agent-card` (already used `--ac` and already had `.card` — missed by every
+prior triage pass because it's set via `d.className='agent-card card'`, a JS
+property assignment the `class="..."` regex never matches; same detection
+gap as `vocabulary.html` in part 3, different syntax), `kyc.html`'s
+`.kyc-step.done` (conditional — unmodified steps have no accent, and it can
+also be added by JS at runtime via `classList.add('done')`, so that call site
+needed the same `card`/`card-edge`/`--card-accent` addition as the static
+markup), and `trophies.html`'s `.medal-card.earned` (conditional, same
+reasoning — unearned medals have no accent).
+
+`trophies.html`'s `.cert-row.issued` was found and correctly **not**
+converted: `.cert-row` has no real box border (`border-bottom:1px dashed`
+only) and no `border-radius` — a table-row shape, not a card, matching this
+page's own `.tbl-row`-style exclusions elsewhere.
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```

@@ -8,7 +8,6 @@
 <meta name="theme-color" content="#C9A84C"/>
 <style>
 .kyc-step{display:flex;gap:16px;align-items:flex-start;padding:16px;border:1px solid var(--line);background:var(--surface);margin-bottom:8px}
-.kyc-step.done{border-left:3px solid var(--green)}
 .kyc-step.locked{opacity:.55}
 .kyc-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--M);font-size:12px;font-weight:700;border:1.5px solid var(--line)}
 .kyc-dot.done{background:rgba(63,178,127,.12);color:var(--green);border-color:rgba(63,178,127,.4)}
@@ -48,7 +47,7 @@
 
 <div class="tab-panel" id="tab-steps">
   <div class="sechead">VERIFICATION PATHWAY &mdash; 4 STEPS</div>
-  <div class="kyc-step done" id="kyc-step1">
+  <div class="kyc-step done card card-edge" id="kyc-step1" style="--card-accent:var(--green)">
     <div class="kyc-dot done">&#10003;</div>
     <div class="kyc-body">
       <div class="kyc-title">Step 1 &mdash; Email Verification</div>
@@ -159,7 +158,7 @@ async function boot(){
 
   if(approved){
     var step2=document.getElementById('kyc-step2');
-    if(step2)step2.classList.add('done');
+    if(step2){step2.classList.add('done','card','card-edge');step2.style.setProperty('--card-accent','var(--green)');}
     var dot2=document.getElementById('kyc-dot2');
     if(dot2){dot2.textContent='✓';dot2.className='kyc-dot done';}
     var chip2=document.getElementById('kyc-s2-chip');

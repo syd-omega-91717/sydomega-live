@@ -21,7 +21,6 @@
 .medal-rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .medal-card{border:1px solid var(--line);background:var(--surface);padding:14px;display:flex;gap:12px;align-items:center;transition:all .2s}
 .medal-card:hover{border-color:rgba(201,168,76,.3)}
-.medal-card.earned{border-left:3px solid var(--mc,var(--gold))}
 .mc-icon{width:36px;height:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;flex-shrink:0}
 .mc-body .mcb-name{font-family:var(--D);font-size:12px;font-weight:700;margin-bottom:2px}
 .mc-body .mcb-cat{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
@@ -254,7 +253,8 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     var mg=document.getElementById('medal-rack');mg.innerHTML='';
     MEDAL_DATA.forEach(function(md){
       var earned=mnums.indexOf(md.n)>=0;
-      var c=document.createElement('div');c.className='medal-card card'+(earned?' earned':'');c.style.setProperty('--mc',md.col);
+      var c=document.createElement('div');c.className='medal-card card'+(earned?' earned card-edge':'');c.style.setProperty('--mc',md.col);
+      if(earned)c.style.setProperty('--card-accent','var(--mc)');
       var iconEl=document.createElement('div');iconEl.className='mc-icon';iconEl.style.borderColor=earned?md.col:'rgba(133,131,123,.2)';iconEl.style.color=earned?md.col:'var(--muted)';iconEl.textContent=String(md.n);
       var bodyEl=document.createElement('div');bodyEl.className='mc-body';
       var nameEl=document.createElement('div');nameEl.className='mcb-name';nameEl.style.color=earned?md.col:'var(--muted)';nameEl.textContent=md.name;

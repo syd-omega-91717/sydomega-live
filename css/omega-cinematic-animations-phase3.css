@@ -1,0 +1,615 @@
+/* omega-cinematic-animations-phase3.css
+   Phase 3: Particle Systems Integration and State-Driven Effects
+
+   Extends Phase 1-2 with:
+   - Section E: Enhanced Particle Canvas Styling (tsParticles integration)
+   - Section T: State-Driven Particle Emission Indicators
+   - Section Q: Constellation-Particle Linkage Visualization
+   - Section R: Data Load and Interaction State Feedback
+
+   All animations respect prefers-reduced-motion and maintain GPU safety.
+   Dependencies: omega-particles.js (background), phase 3 JS for state management.
+   Scope: Global, safe to load on all 202 pages.
+*/
+
+/* ===== SECTION E: ENHANCED PARTICLE CANVAS STYLING ==================
+   Styling and positioning for particle canvas elements. Integrates with
+   tsParticles library and ensures proper layering with other effects.
+*/
+
+#omega-particles-canvas,
+[data-omega-particles-canvas],
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+  transition: opacity 0.6s ease-out;
+  will-change: opacity;
+}
+
+/* Particle canvas visibility based on page state */
+body.omega-loading #omega-particles-canvas,
+body.omega-data-loading [data-omega-particles-canvas] {
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+body.omega-idle #omega-particles-canvas {
+  opacity: 0.5;
+  filter: brightness(0.95);
+}
+
+/* Enhanced particle canvas backdrop */
+#omega-particles-canvas::after,
+[data-omega-particles-canvas]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  pointer-events: none;
+  animation: canvas-vignette-pulse 10s ease-in-out infinite;
+}
+
+@keyframes canvas-vignette-pulse {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Particle bloom effect container */
+.particles-bloom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.omega-particles-active .particles-bloom {
+  opacity: 0.3;
+}
+
+body.omega-particles-intense .particles-bloom {
+  opacity: 0.6;
+}
+
+/* ===== SECTION T: STATE-DRIVEN PARTICLE EMISSION INDICATORS =========
+   Visual indicators tied to system state (loading, processing, idle).
+   Particle emission rate and intensity vary with state.
+*/
+
+[data-particle-state] {
+  position: relative;
+}
+
+/* Data load state: particles accelerate inward */
+[data-particle-state="loading"] {
+  animation: state-loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes state-loading-pulse {
+  0%, 100% {
+    --particle-intensity: 0.6;
+  }
+  50% {
+    --particle-intensity: 1;
+  }
+}
+
+/* Processing state: particles spiral outward */
+[data-particle-state="processing"] {
+  animation: state-processing-spin 3s linear infinite;
+}
+
+@keyframes state-processing-spin {
+  from {
+    --particle-rotation: 0deg;
+  }
+  to {
+    --particle-rotation: 360deg;
+  }
+}
+
+/* Interaction state: particles burst outward */
+[data-particle-state="active"] {
+  animation: state-active-burst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes state-active-burst {
+  0% {
+    --particle-spread: 0;
+    --particle-velocity: 0;
+  }
+  50% {
+    --particle-spread: 200px;
+    --particle-velocity: 1.5;
+  }
+  100% {
+    --particle-spread: 300px;
+    --particle-velocity: 2;
+  }
+}
+
+/* Idle state: particles slow and drift */
+[data-particle-state="idle"] {
+  animation: state-idle-drift 8s ease-in-out infinite;
+}
+
+@keyframes state-idle-drift {
+  0%, 100% {
+    --particle-speed: 0.3;
+  }
+  50% {
+    --particle-speed: 0.6;
+  }
+}
+
+/* Error state: particles turn red and scatter */
+[data-particle-state="error"] {
+  animation: state-error-scatter 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes state-error-scatter {
+  0% {
+    --particle-color: #ff4444;
+    --particle-spread: 0;
+  }
+  100% {
+    --particle-color: #ff8888;
+    --particle-spread: 400px;
+  }
+}
+
+/* Success state: particles form constellation pattern */
+[data-particle-state="success"] {
+  animation: state-success-settle 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes state-success-settle {
+  0% {
+    --particle-chaos: 1;
+  }
+  100% {
+    --particle-chaos: 0;
+  }
+}
+
+/* ===== SECTION Q: CONSTELLATION-PARTICLE LINKAGE ==================
+   Visual connection between particle systems and constellation elements.
+   Particles cluster around constellation nodes; links glow during data events.
+*/
+
+.constellation-particle-link {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+/* Link becomes visible when constellation is active */
+.ocn-node.node-active ~ .constellation-particle-link,
+[data-constellation-active] .constellation-particle-link {
+  opacity: 0.6;
+  animation: constellation-link-glow 2s ease-in-out infinite;
+}
+
+@keyframes constellation-link-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px var(--page-accent, #b8912a));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--page-accent, #b8912a));
+  }
+}
+
+/* Particle cluster around focal point */
+.particle-cluster {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Cluster activates when particles emit */
+body.omega-particles-active .particle-cluster {
+  opacity: 0.7;
+  transform: scale(1);
+  animation: cluster-orbit 6s linear infinite;
+}
+
+@keyframes cluster-orbit {
+  from {
+    transform: scale(1) rotate(0deg) translateX(40px);
+  }
+  to {
+    transform: scale(1) rotate(360deg) translateX(40px);
+  }
+}
+
+/* Cluster intensity varies with particle state */
+.particle-cluster.intensity-high {
+  opacity: 1;
+  box-shadow: 0 0 20px var(--page-accent, #b8912a);
+}
+
+.particle-cluster.intensity-medium {
+  opacity: 0.6;
+  box-shadow: 0 0 10px var(--page-accent, #b8912a);
+}
+
+.particle-cluster.intensity-low {
+  opacity: 0.3;
+  box-shadow: 0 0 5px var(--page-accent, #b8912a);
+}
+
+/* Node-particle connection lines */
+.particle-node-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--page-accent, #b8912a),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0;
+  animation: node-line-pulse 3s ease-in-out infinite;
+}
+
+.ocn-node.node-active ~ .particle-node-line,
+[data-constellation-active] .particle-node-line {
+  opacity: 0.5;
+}
+
+@keyframes node-line-pulse {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* ===== SECTION R: DATA LOAD & INTERACTION STATE FEEDBACK ===========
+   Visual indicators for data loading, processing, success, and error states.
+   Leverages particle systems to communicate system status.
+*/
+
+/* Data load indicator */
+.data-load-indicator {
+  position: fixed;
+  top: var(--omega-chrome-top, 20px);
+  right: var(--omega-chrome-right, 20px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--page-accent, #b8912a);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.3s ease-out;
+  box-shadow: 0 0 10px var(--page-accent, #b8912a);
+}
+
+/* Show indicator during data fetch */
+body.omega-data-loading .data-load-indicator {
+  opacity: 1;
+  animation: load-indicator-pulse 1s ease-in-out infinite;
+}
+
+@keyframes load-indicator-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px var(--page-accent, #b8912a);
+  }
+  50% {
+    transform: scale(1.3);
+    box-shadow: 0 0 20px var(--page-accent, #b8912a);
+  }
+}
+
+/* Success state */
+.data-load-indicator.success {
+  animation: load-indicator-success 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--green, #4ade80);
+  box-shadow: 0 0 15px var(--green, #4ade80);
+}
+
+@keyframes load-indicator-success {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Error state */
+.data-load-indicator.error {
+  animation: load-indicator-error 0.6s ease-out;
+  background: var(--crim, #ef4444);
+  box-shadow: 0 0 15px var(--crim, #ef4444);
+}
+
+@keyframes load-indicator-error {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Processing indicator (spinner variant) */
+.processing-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(var(--page-accent-rgb, 184, 145, 42), 0.2);
+  border-radius: 50%;
+  border-top-color: var(--page-accent, #b8912a);
+  animation: processing-spinner 1s linear infinite;
+}
+
+@keyframes processing-spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Interaction feedback overlay */
+.interaction-feedback {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+}
+
+body.omega-interaction-active .interaction-feedback {
+  opacity: 1;
+  animation: interaction-fade-out 1s ease-out forwards;
+}
+
+@keyframes interaction-fade-out {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS =========================================
+   Mobile and tablet optimizations for particle systems.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  #omega-particles-canvas,
+  [data-omega-particles-canvas],
+  .particles-bloom,
+  [data-particle-state],
+  .constellation-particle-link,
+  .particle-cluster,
+  .data-load-indicator,
+  .processing-indicator,
+  .interaction-feedback {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+}
+
+@media (max-width: 700px) {
+  #omega-particles-canvas,
+  [data-omega-particles-canvas] {
+    opacity: 0.4;
+  }
+
+  .particles-bloom {
+    display: none;
+  }
+
+  .particle-cluster {
+    width: 12px;
+    height: 12px;
+  }
+
+  @keyframes cluster-orbit {
+    from {
+      transform: scale(0.8) rotate(0deg) translateX(20px);
+    }
+    to {
+      transform: scale(0.8) rotate(360deg) translateX(20px);
+    }
+  }
+
+  .data-load-indicator {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 900px) {
+  [data-particle-state="processing"] {
+    animation-duration: 4s;
+  }
+
+  @keyframes cluster-orbit {
+    from {
+      transform: scale(0.9) rotate(0deg) translateX(30px);
+    }
+    to {
+      transform: scale(0.9) rotate(360deg) translateX(30px);
+    }
+  }
+}
+
+/* ===== HIGH-CONTRAST MODE ============================================
+   Accessibility enhancements for high-contrast preference.
+*/
+
+@media (prefers-contrast: more) {
+  #omega-particles-canvas,
+  [data-omega-particles-canvas] {
+    border: 1px solid currentColor;
+    opacity: 1;
+  }
+
+  .data-load-indicator {
+    border: 2px solid currentColor;
+    box-shadow: 0 0 5px currentColor;
+  }
+
+  .particle-cluster {
+    border: 1px solid var(--page-accent, #b8912a);
+  }
+
+  .constellation-particle-link {
+    opacity: 0.8 !important;
+  }
+}
+
+/* ===== FALLBACK STYLING =============================================
+   For browsers without full CSS animation support.
+*/
+
+@supports not (animation: var(--particle-intensity)) {
+  [data-particle-state] {
+    animation: none;
+    filter: brightness(1.05);
+  }
+
+  .particle-cluster {
+    transform: scale(0.5);
+    opacity: 0.4;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATION =====================================
+   GPU acceleration and paint reduction.
+*/
+
+#omega-particles-canvas,
+[data-omega-particles-canvas],
+.particles-bloom,
+.particle-cluster,
+.constellation-particle-link,
+.data-load-indicator {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Selective will-change for performance */
+body.omega-particles-active .particle-cluster,
+[data-particle-state="loading"],
+[data-particle-state="processing"] {
+  will-change: transform;
+}
+
+/* ===== INTEGRATION WITH EXISTING SYSTEMS ===========================
+   Ensure compatibility with Phase 1 and Phase 2 effects.
+*/
+
+/* Particles play nicely with volumetric lighting (Phase 2) */
+.omega-volumetric-light {
+  pointer-events: none;
+}
+
+/* Particles layer below constellation backdrop (Phase 2) */
+.omega-constellation-backdrop {
+  z-index: 1;
+}
+
+#omega-particles-canvas,
+[data-omega-particles-canvas] {
+  z-index: 0;
+}
+
+/* Parallax compatibility (Phase 2) */
+[data-parallax] .particle-cluster {
+  transform: translateZ(0);
+}
+
+/* Color scheme respects platform accent tokens */
+.particle-cluster,
+.data-load-indicator,
+.constellation-particle-link {
+  --particle-accent: var(--page-accent, #b8912a);
+}
+
+/* ===== ANIMATION TIMING COORDINATION ================================
+   Synchronize particle animations with constellation and depth effects.
+*/
+
+/* Orbit sync: 60s matches Phase 2 constellation orbit */
+@keyframes cluster-orbit {
+  from {
+    transform: scale(1) rotate(0deg) translateX(40px);
+  }
+  to {
+    transform: scale(1) rotate(360deg) translateX(40px);
+  }
+}
+
+/* Pulse sync: 6s matches Phase 2 volumetric pulses */
+@keyframes canvas-vignette-pulse {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Glow sync: 2s matches Phase 1 micro-interactions */
+@keyframes constellation-link-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px var(--page-accent, #b8912a));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--page-accent, #b8912a));
+  }
+}

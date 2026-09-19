@@ -114,7 +114,11 @@ function __omegaAppend(el){
   /* Phase 2: 3D Depth, Volumetric Lighting, Scroll Parallax -- Advanced
      cinematic effects. Scroll-tracking via rAF; constellation orbits;
      depth-card tilt. Safe global; respects prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-cinematic-animations-phase2]')){var os_data_omega_cinematic_animations_phase2=document.createElement('script');os_data_omega_cinematic_animations_phase2.src='/omega-cinematic-animations-phase2.js';os_data_omega_cinematic_animations_phase2.setAttribute('data-omega-cinematic-animations-phase2','1');os_data_omega_cinematic_animations_phase2.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase2);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase2]')){var os_data_omega_cinematic_animations_phase2=document.createElement('script');os_data_omega_cinematic_animations_phase2.src='/omega-cinematic-animations-phase2.js';os_data_omega_cinematic_animations_phase2.setAttribute('data-omega-cinematic-animations-phase2','1');os_data_omega_cinematic_animations_phase2.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase2);}
+  /* Phase 3: Particle Systems Integration -- State-driven particle emission, constellation-
+     particle cluster linkage, data load indicators. Integrates with omega-particles.js;
+     synchronizes orbit timing with Phase 2. Safe global; respects prefers-reduced-motion. */
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase3]')){var os_data_omega_cinematic_animations_phase3=document.createElement('script');os_data_omega_cinematic_animations_phase3.src='/omega-cinematic-animations-phase3.js';os_data_omega_cinematic_animations_phase3.setAttribute('data-omega-cinematic-animations-phase3','1');os_data_omega_cinematic_animations_phase3.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase3);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -240,6 +244,17 @@ function __omegaAppend(el){
     var link=document.createElement('link');
     link.id='omega-cinematic-animations-phase2-css'; link.rel='stylesheet';
     link.href='/css/omega-cinematic-animations-phase2.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  /* Phase 3: Cinematic Animations -- Particle systems integration and state-driven effects:
+     particle emission control tied to system states (loading, processing, active, idle,
+     error, success); constellation-particle cluster linkage; data load indicators with
+     state transitions. All GPU-safe transforms; respects prefers-reduced-motion. Safe
+     global on all 202 pages. */
+  if(!document.getElementById('omega-cinematic-animations-phase3-css')){
+    var link=document.createElement('link');
+    link.id='omega-cinematic-animations-phase3-css'; link.rel='stylesheet';
+    link.href='/css/omega-cinematic-animations-phase3.css'; link.type='text/css';
     head.appendChild(link);
   }
 })();

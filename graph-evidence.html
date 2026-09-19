@@ -123,21 +123,21 @@
     .evidence-item {
       padding: 12px;
       background: rgba(201, 168, 76, 0.04);
-      border-left: 3px solid var(--cyan);
       border-radius: 4px;
       margin-bottom: 12px;
       cursor: pointer;
       transition: all 0.14s;
+      --card-accent: var(--cyan);
     }
 
     .evidence-item:hover {
       background: rgba(201, 168, 76, 0.08);
-      border-left-color: var(--gold);
+      --card-accent: var(--gold);
     }
 
     .evidence-item.selected {
       background: rgba(0, 229, 255, 0.1);
-      border-left-color: var(--gold);
+      --card-accent: var(--gold);
     }
 
     .evidence-timestamp {
@@ -447,7 +447,7 @@
         const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
         return `
-          <div class="evidence-item ${selectedEventId === event.id ? 'selected' : ''}" onclick="selectEvent('${event.id}', ${idx})">
+          <div class="evidence-item card card-edge ${selectedEventId === event.id ? 'selected' : ''}" onclick="selectEvent('${event.id}', ${idx})">
             <div class="evidence-timestamp">${dateStr} · ${timeStr}</div>
             <div class="evidence-entity">${(event.entity_name || 'SYSTEM').substring(0, 30)}</div>
             <span class="evidence-type">${event.event_type.toUpperCase().replace(/_/g, ' ')}</span>

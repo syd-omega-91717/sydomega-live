@@ -53,7 +53,7 @@
 .cc-desc{font-size:12px;line-height:1.6;color:var(--ink);opacity:.6}
 /* ALERTS + RECOMMENDATIONS */
 .alert-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.alert-item{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:11px 14px;border-radius:2px;display:flex;align-items:flex-start;gap:10px;border-left:3px solid var(--ac,var(--gold))}
+.alert-item{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:11px 14px;border-radius:2px;display:flex;align-items:flex-start;gap:10px;--card-accent:var(--ac)}
 .alert-icon{font-family:var(--M);font-size:12px;color:var(--ac,var(--gold));flex-shrink:0;line-height:1.5}
 .alert-text{font-size:12px;line-height:1.65;color:var(--ink);opacity:.8}
 .alert-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px}
@@ -900,12 +900,12 @@ function sid(id,v){
       }
     }
     if(!items.length){
-      host.innerHTML='<div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Nothing needs your attention right now.</div><div class="alert-meta">NO PRIORITY ITEMS</div></div></div>';
+      host.innerHTML='<div class="alert-item card card-edge" style="--ac:var(--green)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Nothing needs your attention right now.</div><div class="alert-meta">NO PRIORITY ITEMS</div></div></div>';
       return;
     }
     host.innerHTML=items.map(function(x){
       var open=x.href?' onclick="location.href=\''+x.href+'\'" style="--ac:'+x.c+';cursor:pointer"':' style="--ac:'+x.c+'"';
-      return '<div class="alert-item"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+x.t+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
+      return '<div class="alert-item card card-edge"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+x.t+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
     }).join('');
   }
 

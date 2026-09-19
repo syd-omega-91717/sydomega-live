@@ -19067,3 +19067,77 @@ python3 scripts/module-contract.py   0 broken; 120 contracts
 python3 scripts/silent-failure-detector.py   0 findings
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+### `.card-edge` sweep, part 3: 11 more files, and two more already-broken cases (2026-09-19)
+
+Continuing the previous entry's scan of the ~50-file remainder. Re-ran it with a
+tighter filter (a real box `border`, `border-radius`, and `cursor:pointer` as
+three independent card-likeness signals, not background+padding alone, which
+had wrongly flagged `.ref-block`) and manually verified every hit before
+touching it — the automated `already_has_card_class` check had a real miss
+(`vocabulary.html`'s `` `<div class="word-card card ${w.status}">` `` template
+literal), caught only by grepping the actual markup for each candidate rather
+than trusting the script's boolean a second time.
+
+Three files (`dashboard.html`'s `.alert-item`, `realm.html`'s `.elem-card`,
+`skills.html`'s `.sci-block`) were already using their own per-instance CSS
+custom property for the same purpose (`--ac`, `--ec`, `--sc` respectively) —
+these needed no markup changes at all, just `.alert-item{--card-accent:var(--ac)}`
+(etc.) in the base rule, since `--card-accent` then resolves against whatever
+value the element's own `--ac`/`--ec`/`--sc` already carries.
+
+Two more silent bugs found in the process, same shape as the `.card-edge`
+regression two entries up — a class-based colour rule that inline `style=`
+JS-set on the same element always overrides, so it never painted:
+`notes.html`'s `.note-card.pinned{border-left-color:#FFD700}` (every note's
+`style="border-left-color:'+col+'"` is category-based and always wins) and
+`projects.html`'s four `.status-*{border-left-color:...}` rules (same
+pattern, `col` is category-based via `CAT_COLORS`, not status-based).
+Preserved the existing (if inert) behaviour exactly — category colour always
+wins — rather than "fixing" it into showing status colours, since that
+wasn't part of this task's scope.
+
+Converted, each checked for whether the un-modified/base state already carried
+an accent (safe to add `.card-edge` unconditionally) or not (must stay
+conditional, `contacts.html`'s pattern from the first sweep):
+`mirror.html` (`.journal-entry`, always has a mood colour), `notes.html`
+(`.note-card`, always has a category colour), `projects.html` (`.proj-card`,
+always has a category colour; original width was 4px, preserved via
+`--card-edge-w:4px`), `graph-evidence.html` (`.evidence-item`, default cyan,
+gold on `:hover`/`.selected` — the accent colour changes on interaction, which
+works because `--card-accent` is just reassigned in those rules same as any
+other custom property), `dashboard.html`, `vocabulary.html` (`.word-card`,
+already had `.card`; status is a required enum, never absent), `principles.html`
+(`.principle-card.pinned` — **conditional**: unpinned cards had no border-left
+at all before, so `card-edge` is added only when `pinned`, otherwise the
+default `.card::before` top bar would newly appear on every unpinned card),
+`realm.html`, `agents.html` (`.agent-card`, no `.card` yet — added it, matching
+its own `:hover{transform:translateY(-2px);box-shadow:...}`, nearly identical
+to `.card:hover`'s own rule), `skills.html`'s `.sci-block` (10 static
+instances, each already carrying `--sc` inline), `mindmap.html`'s `.sci-block`
+(unrelated file, same class name, fully static gold, no modifier — original
+was 2px, preserved via `--card-edge-w:2px`).
+
+`search.html`'s `.res.owner-only` was found and deliberately **not** converted:
+`.res` is a search-result row, not a card, and `.card`'s own background/border/
+radius would apply only to owner-only rows (the only ones with the accent),
+producing a visibly different shape between owner and non-owner results rather
+than just adding the accent bar. Left as its existing hand-rolled `border-left`.
+
+Verification followed the same discipline as the previous two entries — real
+headless renders, not a diff read. Several pages needed a tab or panel forced
+active first (`realm.html`'s `#tab-elements`, `agents.html`'s `#tab-council`,
+`skills.html`/`mindmap.html`'s science panels), and `graph-evidence.html`'s
+real load path needs a signed-in Supabase session the harness stub doesn't
+provide, so its module-scoped `renderEvents`/`selectEvent` were exercised
+directly with synthetic data instead (same approach as the previous entry's
+`oath.html`/`family.html`).
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```

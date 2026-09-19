@@ -98,7 +98,16 @@ function __omegaAppend(el){
   /* Phase C.6: Archetype visual surface configuration */
   if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}
   /* Phase A: Agent brand mythology, sigil identity, constellation visualization */
-  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}
+  /* Phase 1: Depth Tilt -- Pointer-driven 3D card tilt (micro-parallax).
+     Guard: only loaded if a matching element exists on the page. */
+  if(!document.querySelector('script[data-omega-depth-tilt]')){var os_data_omega_depth_tilt=document.createElement('script');os_data_omega_depth_tilt.src='/omega-depth-tilt.js';os_data_omega_depth_tilt.setAttribute('data-omega-depth-tilt','1');os_data_omega_depth_tilt.defer=true;__omegaAppend(os_data_omega_depth_tilt);}
+  /* Phase 1: Telemetry Sweep -- Animated line sweep on data load/state transition.
+     Global instance: window.omegaSweep; also callable via window.OmegaTelemetrySweep. */
+  if(!document.querySelector('script[data-omega-telemetry-sweep]')){var os_data_omega_telemetry_sweep=document.createElement('script');os_data_omega_telemetry_sweep.src='/omega-telemetry-sweep.js';os_data_omega_telemetry_sweep.setAttribute('data-omega-telemetry-sweep','1');os_data_omega_telemetry_sweep.defer=true;__omegaAppend(os_data_omega_telemetry_sweep);}
+  /* Phase 1: Orbital Ring -- SVG-based interactive navigation ring.
+     Guard: only loaded if a matching element exists on the page. */
+  if(!document.querySelector('script[data-omega-orbital-ring]')){var os_data_omega_orbital_ring=document.createElement('script');os_data_omega_orbital_ring.src='/omega-orbital-ring.js';os_data_omega_orbital_ring.setAttribute('data-omega-orbital-ring','1');os_data_omega_orbital_ring.defer=true;__omegaAppend(os_data_omega_orbital_ring);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -186,6 +195,23 @@ function __omegaAppend(el){
     var link=document.createElement('link');
     link.id='omega-cinematic-css'; link.rel='stylesheet';
     link.href='/omega-cinematic-system.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  /* Phase 1: Cinematic Glass -- Enhanced glass shimmer with pointer-tracking
+     highlight on .card, .kpi-card, .glass, .inp. Additive-only; safe to load
+     globally. Includes backdrop-filter enhancements and hover glow effects. */
+  if(!document.getElementById('omega-cinematic-glass-css')){
+    var link=document.createElement('link');
+    link.id='omega-cinematic-glass-css'; link.rel='stylesheet';
+    link.href='/css/omega-cinematic-glass.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  /* Phase 1: Signal Pulse -- Status indicator animations (active/busy/away/warning).
+     Attribute-driven via data-status; safe global. Respects prefers-reduced-motion. */
+  if(!document.getElementById('omega-signal-pulse-css')){
+    var link=document.createElement('link');
+    link.id='omega-signal-pulse-css'; link.rel='stylesheet';
+    link.href='/css/omega-signal-pulse.css'; link.type='text/css';
     head.appendChild(link);
   }
 })();

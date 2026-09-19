@@ -1,0 +1,250 @@
+/**
+ * Ω SIGNAL PULSE — Status Indicator Animation
+ *
+ * Subtle, continuous pulse for:
+ * - Live/active status indicators
+ * - Real-time connection status
+ * - Active agent/member presence
+ * - System state feedback
+ *
+ * Usage:
+ *   <span class="status-indicator" data-status="active">Online</span>
+ *
+ * Attributes:
+ *   data-status="active"      — Green pulse (live)
+ *   data-status="inactive"    — Gray, no pulse
+ *   data-status="busy"        — Amber pulse
+ *   data-status="away"        — Yellow pulse
+ *
+ * Performance: GPU-accelerated (scale + box-shadow only)
+ * Accessibility: Respects prefers-reduced-motion (no animation)
+ */
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Keyframe Definitions                                                    */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+@keyframes omega-pulse-active {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7),
+                0 0 0 0 rgba(0, 255, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 255, 0, 0),
+                0 0 0 12px rgba(0, 255, 0, 0);
+  }
+}
+
+@keyframes omega-pulse-busy {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(204, 169, 106, 0.7),
+                0 0 0 0 rgba(204, 169, 106, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(204, 169, 106, 0),
+                0 0 0 12px rgba(204, 169, 106, 0);
+  }
+}
+
+@keyframes omega-pulse-away {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6),
+                0 0 0 0 rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 215, 0, 0),
+                0 0 0 12px rgba(255, 215, 0, 0);
+  }
+}
+
+@keyframes omega-pulse-warning {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7),
+                0 0 0 0 rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 0, 0, 0),
+                0 0 0 12px rgba(255, 0, 0, 0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Status Indicator Base                                                   */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 200ms ease-out;
+}
+
+[data-status]::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Active Status (Green)                                                   */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status="active"]::before {
+  background: #00ff00;
+  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+  animation: omega-pulse-active 2s ease-in-out infinite;
+}
+
+[data-status="active"] {
+  color: #00ff00;
+  background: rgba(0, 255, 0, 0.05);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Busy Status (Amber)                                                     */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status="busy"]::before {
+  background: #ccaa6a;
+  box-shadow: 0 0 0 0 rgba(204, 169, 106, 0.7);
+  animation: omega-pulse-busy 1.5s ease-in-out infinite;
+}
+
+[data-status="busy"] {
+  color: #ccaa6a;
+  background: rgba(204, 169, 106, 0.05);
+  border: 1px solid rgba(204, 169, 106, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Away Status (Yellow)                                                    */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status="away"]::before {
+  background: #ffd700;
+  box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6);
+  animation: omega-pulse-away 2.5s ease-in-out infinite;
+}
+
+[data-status="away"] {
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Warning/Error Status (Red)                                              */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status="warning"],
+[data-status="error"] {
+  --status-color: #ff0000;
+}
+
+[data-status="warning"]::before,
+[data-status="error"]::before {
+  background: var(--status-color, #ff0000);
+  box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+  animation: omega-pulse-warning 1.2s ease-in-out infinite;
+}
+
+[data-status="warning"],
+[data-status="error"] {
+  color: var(--status-color, #ff0000);
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Inactive Status (Gray)                                                  */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+[data-status="inactive"] {
+  color: var(--muted, #888);
+  background: rgba(128, 128, 128, 0.05);
+  border: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+[data-status="inactive"]::before {
+  background: var(--muted, #888);
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Live Indicator Alias Classes                                            */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+.indicator-live {
+  animation: omega-pulse-active 2s ease-in-out infinite;
+}
+
+.indicator-live::before {
+  background: #00ff00;
+}
+
+.status-active {
+  color: #00ff00;
+}
+
+.status-active::before {
+  background: #00ff00;
+  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+  animation: omega-pulse-active 2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Accessibility: Respect prefers-reduced-motion                           */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes omega-pulse-active { 0%, 100% { box-shadow: none; } }
+  @keyframes omega-pulse-busy { 0%, 100% { box-shadow: none; } }
+  @keyframes omega-pulse-away { 0%, 100% { box-shadow: none; } }
+  @keyframes omega-pulse-warning { 0%, 100% { box-shadow: none; } }
+
+  [data-status]::before {
+    animation: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-status="active"]::before {
+    box-shadow: 0 0 4px rgba(0, 255, 0, 0.4) !important;
+  }
+
+  [data-status="busy"]::before {
+    box-shadow: 0 0 4px rgba(204, 169, 106, 0.4) !important;
+  }
+
+  [data-status="away"]::before {
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.3) !important;
+  }
+
+  [data-status="warning"]::before,
+  [data-status="error"]::before {
+    box-shadow: 0 0 4px rgba(255, 0, 0, 0.4) !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* Responsive Sizing                                                       */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  [data-status] {
+    font-size: 0.8125rem;
+    padding: 3px 6px;
+  }
+
+  [data-status]::before {
+    width: 6px;
+    height: 6px;
+  }
+}

@@ -441,7 +441,7 @@
 
   /* ─── EXTENDED API WITH TIER MANAGEMENT ─────────────────────────── */
   var ExtendedAPI = Object.assign({}, API, {
-    setTier: function (tier) { _currentTier = Math.max(1, Math.min(tier, 5)); },
+    setTier: function (tier) { _currentTier = Math.max(1, Math.min(tier, 9)); },
     getTier: function () { return _currentTier; },
     enable: function () { _enabled = true; },
     disable: function () { _enabled = false; },

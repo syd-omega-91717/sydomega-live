@@ -20,7 +20,7 @@
 .chat-input-row input{flex:1;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:12px;padding:10px 12px;outline:none}
 .chat-input-row input:focus{border-color:rgba(201,168,76,.4)}
 .agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.agent-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--ac,var(--gold));padding:14px}
+.agent-card{border:1px solid var(--line);background:var(--surface);padding:14px;--card-accent:var(--ac)}
 .agent-sign{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .agent-name{font-family:var(--D);font-size:14px;color:var(--ac,var(--gold));margin-bottom:4px}
 .agent-domain{font-size:12px;color:var(--muted);line-height:1.5}
@@ -98,7 +98,7 @@ function setTab(name){
 }
 var g=document.getElementById('agent-grid');
 AGENTS.forEach(function(a){
-  var d=document.createElement('div');d.className='agent-card card';d.style.setProperty('--ac',a.col);
+  var d=document.createElement('div');d.className='agent-card card card-edge';d.style.setProperty('--ac',a.col);
   d.innerHTML='<div class="agent-sign">'+a.sign.toUpperCase()+'</div><div class="agent-name">'+a.name+'</div><div class="agent-domain">'+a.domain+'</div>';
   g.appendChild(d);
 });

@@ -129,18 +129,18 @@
 
     .insight-item {
       background: var(--void2);
-      border-left: 4px solid var(--gold);
       padding: 1.25rem;
       margin-bottom: 1rem;
       border-radius: 4px;
+      --card-edge-w: 4px;
     }
 
     .insight-item.warning {
-      border-left-color: #ff9500;
+      --card-accent: #ff9500;
     }
 
     .insight-item.critical {
-      border-left-color: var(--crim);
+      --card-accent: var(--crim);
     }
 
     .insight-header {
@@ -594,7 +594,7 @@
 
         insights.forEach((insight) => {
           const item = document.createElement("div");
-          item.className = `insight-item ${insight.severity}`;
+          item.className = `insight-item card card-edge ${insight.severity}`;
 
           item.innerHTML = `
             <div class="insight-header">

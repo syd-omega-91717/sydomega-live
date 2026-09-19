@@ -561,6 +561,16 @@
     });
   }
 
+  /* ── ELEMENTAL THEMING DISPATCHER (Phase 4) ────────────────────────────
+     Listen for nav section changes and emit theme-update events. */
+  var currentAxis = PS[dp] || 'command';
+  window.addEventListener('omega-axis-change', function(e) {
+    var detail = e.detail || {};
+    currentAxis = detail.axis || currentAxis;
+    /* Theme module subscribes to this event and handles tier gating */
+    document.dispatchEvent(new CustomEvent('omega-theme-update', { detail: detail }));
+  });
+
   /* Top scan bar */
   if(!document.getElementById('omega-top')){
     var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);

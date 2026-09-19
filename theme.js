@@ -49,6 +49,10 @@
       --line-bright:rgba(201,168,76,0.25);
       --glow-gold:rgba(201,168,76,0.18);
       --glow-cyan:rgba(0,229,255,0.12);
+      /* Elemental theming (tier 3+ only, phase-4) */
+      --page-accent:#C9A84C;
+      --page-soft:#C4B5A0;
+      --page-glow:#D4C5B5;
     }
     body { background:var(--void); color:var(--ink); }
     /* body::before is the ambient field, and omega-visual-evolution.css owns

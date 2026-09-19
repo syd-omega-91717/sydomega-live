@@ -399,10 +399,15 @@
 
     return { scene: scene, camera: cam, update: function (t, px, py) {
       /* state-specific behaviour, applied before the shared sway */
+      var taskPulse = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) {
+        taskPulse = window.OmegaSculptureDataViz.getActiveTaskCount();
+      }
       if (state === 'pulse') {
-        var b = 1 + Math.sin(t * 2.4) * 0.055;
+        var pulseAmp = 0.055 + taskPulse * 0.035;
+        var b = 1 + Math.sin(t * 2.4) * pulseAmp;
         mark.scale.setScalar(b);
-        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * 0.06;
+        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * (0.06 + taskPulse * 0.04);
       } else if (state === 'reactor') {
         orbit.rotation.z = t * 1.6;
         orbit.rotation.x = Math.PI * 0.42 + Math.sin(t * 0.8) * 0.35;
@@ -669,8 +674,12 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
+      var taskPulse = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) {
+        taskPulse = window.OmegaSculptureDataViz.getActiveTaskCount();
+      }
       ring.rotation.y = t * 0.20 + px * 0.5;
-      core.rotation.y = Math.sin(t * 0.42) * 0.62;   /* sway, per the signet note above */
+      core.rotation.y = Math.sin(t * 0.42) * 0.62 + taskPulse * 0.18;
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
         n.mesh.rotation.x = t * 0.8 + n.phase;
@@ -680,9 +689,11 @@
            an effect. The flag lives on the mesh because the update closure
            cannot see the mount. */
         if (!n.mesh.userData.omegaHovered) {
-          n.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + n.phase * 2) * 0.16);
+          var pulseAmp = 0.16 + taskPulse * 0.12;
+          n.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + n.phase * 2) * pulseAmp);
         }
-        n.mesh.material.emissiveIntensity = 0.34 + Math.sin(t * 1.6 + n.phase * 2) * 0.20;
+        var emAmp = 0.20 + taskPulse * 0.15;
+        n.mesh.material.emissiveIntensity = 0.34 + Math.sin(t * 1.6 + n.phase * 2) * emAmp;
       }
       cam.position.y = 2.45 - py * 0.8;
       cam.lookAt(0, 0, 0);

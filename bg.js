@@ -110,7 +110,11 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-orbital-ring]')){var os_data_omega_orbital_ring=document.createElement('script');os_data_omega_orbital_ring.src='/omega-orbital-ring.js';os_data_omega_orbital_ring.setAttribute('data-omega-orbital-ring','1');os_data_omega_orbital_ring.defer=true;__omegaAppend(os_data_omega_orbital_ring);}
   /* Phase 1: Kinetic Reveal -- Character-by-character animation for kinetic typography.
      Wraps text in spans for staggered reveal; respects prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-cinematic-animations-phase1]')){var os_data_omega_cinematic_animations_phase1=document.createElement('script');os_data_omega_cinematic_animations_phase1.src='/omega-cinematic-animations-phase1.js';os_data_omega_cinematic_animations_phase1.setAttribute('data-omega-cinematic-animations-phase1','1');os_data_omega_cinematic_animations_phase1.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase1);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase1]')){var os_data_omega_cinematic_animations_phase1=document.createElement('script');os_data_omega_cinematic_animations_phase1.src='/omega-cinematic-animations-phase1.js';os_data_omega_cinematic_animations_phase1.setAttribute('data-omega-cinematic-animations-phase1','1');os_data_omega_cinematic_animations_phase1.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase1);}
+  /* Phase 2: 3D Depth, Volumetric Lighting, Scroll Parallax -- Advanced
+     cinematic effects. Scroll-tracking via rAF; constellation orbits;
+     depth-card tilt. Safe global; respects prefers-reduced-motion. */
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase2]')){var os_data_omega_cinematic_animations_phase2=document.createElement('script');os_data_omega_cinematic_animations_phase2.src='/omega-cinematic-animations-phase2.js';os_data_omega_cinematic_animations_phase2.setAttribute('data-omega-cinematic-animations-phase2','1');os_data_omega_cinematic_animations_phase2.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase2);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -226,6 +230,16 @@ function __omegaAppend(el){
     var link=document.createElement('link');
     link.id='omega-cinematic-animations-phase1-css'; link.rel='stylesheet';
     link.href='/css/omega-cinematic-animations-phase1.css'; link.type='text/css';
+    head.appendChild(link);
+  }
+  /* Phase 2: Cinematic Animations -- Advanced 3D and scroll-driven effects: depth cards
+     with perspective layering, volumetric lighting with radial gradients, scroll-driven
+     parallax, constellation backdrop orbital mechanics. All GPU-safe transforms;
+     respects prefers-reduced-motion. Safe global on all 202 pages. */
+  if(!document.getElementById('omega-cinematic-animations-phase2-css')){
+    var link=document.createElement('link');
+    link.id='omega-cinematic-animations-phase2-css'; link.rel='stylesheet';
+    link.href='/css/omega-cinematic-animations-phase2.css'; link.type='text/css';
     head.appendChild(link);
   }
 })();

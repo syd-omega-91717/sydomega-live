@@ -119,6 +119,10 @@ function __omegaAppend(el){
      particle cluster linkage, data load indicators. Integrates with omega-particles.js;
      synchronizes orbit timing with Phase 2. Safe global; respects prefers-reduced-motion. */
   if(!document.querySelector('script[data-omega-cinematic-animations-phase3]')){var os_data_omega_cinematic_animations_phase3=document.createElement('script');os_data_omega_cinematic_animations_phase3.src='/omega-cinematic-animations-phase3.js';os_data_omega_cinematic_animations_phase3.setAttribute('data-omega-cinematic-animations-phase3','1');os_data_omega_cinematic_animations_phase3.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase3);}
+  /* Voice-Responsive Animations -- Synchronize particle emission, constellation glow, and bloom
+     to copilot stream speed and voice energy. Listens to omega:copilot-* events; Web Audio API
+     for optional voice detection. Respects prefers-reduced-motion. Grounded in: proposal #25. */
+  if(!document.querySelector('script[data-omega-voice-responsive]')){var os_data_omega_voice_responsive=document.createElement('script');os_data_omega_voice_responsive.src='/omega-voice-responsive.js';os_data_omega_voice_responsive.setAttribute('data-omega-voice-responsive','1');os_data_omega_voice_responsive.defer=true;__omegaAppend(os_data_omega_voice_responsive);}
   /* Phase 4: Elemental Theming -- Seasonal/elemental color cycling synchronized with nav axis.
      Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
      persists to localStorage with 24h expiry. Grounded in: proposal #22. */

@@ -506,12 +506,19 @@
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
       grp.rotation.y = t * 0.16 + px * 0.5;
+      var masteries = {};
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getAllElementMasteries) {
+        masteries = window.OmegaSculptureDataViz.getAllElementMasteries();
+      }
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
+        var el = ELEMENT_FALLBACK[i];
+        var mastery = (el && masteries[el.key]) ? masteries[el.key] : 0;
         n.mesh.rotation.y = t * 0.6 + n.phase;
         n.mesh.rotation.x = t * 0.35;
         if (!n.mesh.userData.omegaHovered) {
-          n.mesh.scale.setScalar(1 + Math.sin(t * 1.3 + n.phase) * 0.10);
+          var base = 1 + Math.sin(t * 1.3 + n.phase) * 0.10;
+          n.mesh.scale.setScalar(base + mastery * 0.18);
         }
       }
       cam.position.y = 1.7 - py * 0.7;
@@ -578,17 +585,22 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
-      tower.rotation.y = t * 0.22 + px * 0.55;
+      var tierProgress = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getTierProgress) {
+        tierProgress = window.OmegaSculptureDataViz.getTierProgress() / 100;
+      }
+      tower.rotation.y = (tierProgress * Math.PI * 2) + t * 0.22 + px * 0.55;
       for (var i = 0; i < rings.length; i++) {
         var r = rings[i];
         /* a slow rise of light up the tower -- a climb, expressed as motion */
         var wave = Math.sin(t * 0.9 - r.i * 0.42);
-        r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16;
-        if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018);
+        var ringProgress = tierProgress * N;
+        r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16 + (ringProgress > r.i ? 0.18 : 0);
+        if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018 + (ringProgress > r.i ? 0.08 : 0));
       }
-      apex.rotation.y = t * 1.0;
+      apex.rotation.y = t * 1.0 + (tierProgress * 3.14);
       apex.rotation.x = t * 0.6;
-      apex.material.emissiveIntensity = 0.85 + Math.sin(t * 2.2) * 0.28;
+      apex.material.emissiveIntensity = tierProgress > 0.98 ? 1.0 : (0.85 + Math.sin(t * 2.2) * 0.28);
       cam.position.y = 0.5 - py * 0.9;
       cam.lookAt(0, 0.45, 0);
     }};

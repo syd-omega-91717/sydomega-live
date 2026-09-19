@@ -29,22 +29,52 @@
 
   var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var _enabled = true;
-  var _currentTier = 1;
+  var _currentTier = (window.__omegaProfile && window.__omegaProfile.membership_tier) ? window.__omegaProfile.membership_tier : 1;
 
-  /* ─── TIER CONFIGURATION ────────────────────────────────────────── */
+  /* ─── THEME TOKEN READERS ──────────────────────────────────────── */
+  function _getThemeToken(name, fallback) {
+    try {
+      var val = getComputedStyle(document.documentElement).getPropertyValue(name);
+      return val.trim() || fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  /* ─── TIER CONFIGURATION (1-9 TIERS, WITH SEASON/ELEMENT AWARENESS) ── */
   var TIER_CONFIG = {
-    1: { particlesPerSec: 3, duration: 800, opacity: 0.4, audio: false },
-    2: { particlesPerSec: 8, duration: 1200, opacity: 0.5, audio: false },
-    3: { particlesPerSec: 15, duration: 1800, opacity: 0.7, audio: true },
-    4: { particlesPerSec: 20, duration: 2000, opacity: 0.8, audio: true },
-    5: { particlesPerSec: 25, duration: 2500, opacity: 0.9, audio: true }
+    1: { particlesPerSec: 2, duration: 600, opacity: 0.4, maxParticles: 30, audio: false },
+    2: { particlesPerSec: 4, duration: 800, opacity: 0.5, maxParticles: 50, audio: false },
+    3: { particlesPerSec: 7, duration: 1000, opacity: 0.6, maxParticles: 80, audio: false },
+    4: { particlesPerSec: 12, duration: 1200, opacity: 0.7, maxParticles: 120, audio: true },
+    5: { particlesPerSec: 16, duration: 1500, opacity: 0.8, maxParticles: 160, audio: true },
+    6: { particlesPerSec: 20, duration: 1800, opacity: 0.85, maxParticles: 210, audio: true },
+    7: { particlesPerSec: 25, duration: 2000, opacity: 0.9, maxParticles: 270, audio: true },
+    8: { particlesPerSec: 30, duration: 2300, opacity: 0.95, maxParticles: 350, audio: true },
+    9: { particlesPerSec: 35, duration: 2600, opacity: 1.0, maxParticles: 450, audio: true }
   };
 
   function _getTierConfig() {
-    return TIER_CONFIG[Math.min(_currentTier, 5)] || TIER_CONFIG[1];
+    var tier = Math.max(1, Math.min(_currentTier, 9));
+    return TIER_CONFIG[tier] || TIER_CONFIG[1];
   }
 
-  /* ─── PALETTE ───────────────────────────────────────────────────── */
+  /* ─── PALETTE (WITH THEME TOKEN FALLBACKS) ───────────────────────── */
+  function _getThemeColors() {
+    var primary = _getThemeToken('--theme-primary', '#d97706');
+    var secondary = _getThemeToken('--theme-secondary', '#0891b2');
+    return {
+      primary: primary,
+      secondary: secondary,
+      accent: _getThemeToken('--theme-accent', '#f59e0b'),
+      glow: _getThemeToken('--theme-glow', '#fbbf24'),
+      cyan: _getThemeToken('--cyan', '#00E5FF'),
+      green: _getThemeToken('--green', '#3fb27f'),
+      gold: _getThemeToken('--gold', '#C9A84C'),
+      solar: _getThemeToken('--solar', '#E2C86D')
+    };
+  }
+
   var COLORS = ['#C9A84C','#E2C86D','#00E5FF','#9B6BF0','#3fb27f','#ffffff','#E86A3A'];
 
   /* ─── CANVAS LAYER ──────────────────────────────────────────────── */
@@ -177,7 +207,10 @@
     if (!_enabled) return;
     if (REDUCE) { _staticPulse(opts && opts.color); return; }
     getCanvas();
-    for (var i = 0; i < count; i++) {
+    var cfg = _getTierConfig();
+    var maxAllowed = cfg.maxParticles;
+    var actualCount = Math.min(count, maxAllowed);
+    for (var i = 0; i < actualCount; i++) {
       _particles.push(new Particle(x, y, opts));
     }
     _startLoop();
@@ -235,21 +268,31 @@
       opts = opts || {};
       var cx = opts.x !== undefined ? opts.x : _centerX();
       var cy = opts.y !== undefined ? opts.y : _centerY();
-      _spawnBurst(cx, cy, opts.count || 80, {
+      var cfg = _getTierConfig();
+      var count = opts.count || (cfg.maxParticles * 0.35);
+      var color = opts.color;
+      if (!color) {
+        var themeColors = _getThemeColors();
+        color = themeColors.primary || '#C9A84C';
+      }
+      _spawnBurst(cx, cy, count, {
         speed: opts.speed || 6,
         upBias: 3,
         size: opts.size || 6,
-        color: opts.color || null,
+        color: color,
         shape: opts.shape || null
       });
     },
 
     gate: function (gateNum, gateName) {
       var cx = _centerX(), cy = _centerY();
-      var accentColor = gateNum >= 10 ? '#E2C86D' : '#C9A84C';
-      var count = 40 + gateNum * 8;
+      var themeColors = _getThemeColors();
+      var accentColor = gateNum >= 10 ? (themeColors.solar || '#E2C86D') : (themeColors.primary || '#C9A84C');
+      var cfg = _getTierConfig();
+      var baseBurst = Math.max(40, Math.ceil(cfg.maxParticles * 0.25));
+      var count = baseBurst + gateNum * 8;
 
-      /* Multi-wave burst */
+      /* Multi-wave burst (tier-aware) */
       _spawnBurst(cx, cy, count, { speed: 7, upBias: 4, shape: 'star', color: accentColor });
       setTimeout(function () {
         _spawnBurst(cx - 80, cy + 40, Math.floor(count / 2), { speed: 5, upBias: 2 });
@@ -264,17 +307,21 @@
         '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:4px;color:' + accentColor + ';margin-bottom:6px">GATE ' + (ROMAN[gateNum] || gateNum) + ' UNLOCKED</div>' +
         '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(16px,3vw,22px);color:#e9e6dc;letter-spacing:2px">' + _escapeHtml((gateName || '').toUpperCase()) + '</div>' +
         '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(233,230,220,.45);margin-top:6px">AUTHORITY THRESHOLD CROSSED &middot; SYD OMEGA 91717</div>',
-        accentColor, 4000
+        accentColor, cfg.duration + 1000
       );
     },
 
     milestone: function (text) {
       var cx = _centerX(), cy = _centerY();
-      _spawnBurst(cx, cy, 50, { speed: 4, upBias: 2, size: 5, color: '#3fb27f' });
+      var themeColors = _getThemeColors();
+      var accentColor = themeColors.green || '#3fb27f';
+      var cfg = _getTierConfig();
+      var count = Math.ceil(cfg.particlesPerSec * 0.8 * (cfg.duration / 1000));
+      _spawnBurst(cx, cy, count, { speed: 4, upBias: 2, size: 5, color: accentColor });
       _showBanner(
-        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:#3fb27f;margin-bottom:5px">MILESTONE REACHED</div>' +
+        '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:3px;color:' + accentColor + ';margin-bottom:5px">MILESTONE REACHED</div>' +
         '<div style="font-family:\'Cinzel Decorative\',serif;font-size:clamp(13px,2.5vw,18px);color:#e9e6dc">' + _escapeHtml(String(text || 'SOVEREIGN MILESTONE').toUpperCase()) + '</div>',
-        '#3fb27f', 3000
+        accentColor, cfg.duration
       );
     },
 
@@ -322,16 +369,18 @@
     var cfg = _getTierConfig();
     var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000));
     var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    var themeColors = _getThemeColors();
+    var accentColor = themeColors.secondary || '#00E5FF';
     _spawnBurst(cx, cy, count, {
       speed: 4 + (tier || 1),
       upBias: 2,
-      color: '#00E5FF',
+      color: accentColor,
       shape: 'circle'
     });
     _showBanner(
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#00E5FF">TASK COMPLETED</div>' +
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:' + accentColor + '">TASK COMPLETED</div>' +
       '<div style="font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#e9e6dc">progress recorded</div>',
-      '#00E5FF', cfg.duration
+      accentColor, cfg.duration
     );
   });
 
@@ -343,16 +392,18 @@
     var cfg = _getTierConfig();
     var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000) * 1.2);
     var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    var themeColors = _getThemeColors();
+    var accentColor = themeColors.green || '#3fb27f';
     _spawnBurst(cx, cy, count, {
       speed: 5 + (tier || 1),
       upBias: 3,
-      color: '#3fb27f',
+      color: accentColor,
       shape: 'star'
     });
     _showBanner(
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#3fb27f">STREAK MILESTONE</div>' +
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:' + accentColor + '">STREAK MILESTONE</div>' +
       '<div style="font-family:\'Cinzel Decorative\',serif;font-size:16px;color:#e9e6dc">' + streak + ' DAYS</div>',
-      '#3fb27f', cfg.duration
+      accentColor, cfg.duration
     );
   });
 
@@ -364,13 +415,14 @@
     var cfg = _getTierConfig();
     var count = Math.ceil(cfg.particlesPerSec * (cfg.duration / 1000));
     var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    var themeColors = _getThemeColors();
     var accentMap = {
-      follower: '#E2C86D',
+      follower: themeColors.solar || '#E2C86D',
       badge: '#9B6BF0',
-      publish: '#00E5FF',
-      milestone: '#C9A84C'
+      publish: themeColors.secondary || '#00E5FF',
+      milestone: themeColors.primary || '#C9A84C'
     };
-    var accent = accentMap[type] || '#C9A84C';
+    var accent = accentMap[type] || (themeColors.primary || '#C9A84C');
     _spawnBurst(cx, cy, count, {
       speed: 4 + (tier || 1),
       upBias: 2,

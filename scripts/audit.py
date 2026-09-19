@@ -463,9 +463,60 @@ for path in call_sites:
     for kind, name in CALL_RE.findall(read(path)):
         (from_calls if kind == "from" else rpc_calls)[name].append(path)
 
-known_tables = {t.lower() for t in creates} | views
+# `creates`/`views`/`funcs` above come from os.listdir(SQL_DIR), which is NOT
+# recursive -- so the 171 files in supabase/migrations/ were invisible to it.
+# That is exactly backwards from CLAUDE.md §5: migrations/ is the AUTHORITATIVE
+# schema and the flat bag is reference material that never deploys. The result
+# was five phantom warnings naming relations that are both declared in
+# migrations/ and present in supabase/live-schema.json (agent_experiments,
+# agent_performance_metrics, autonomous_decisions, autonomous_insights,
+# member_feature_flags), plus apply_subscription_event -- the live Stripe
+# webhook RPC, declared at 20260915150223_stripe_webhook_event_boundary.sql:25.
+# Five phantoms around two honest findings is how a real one gets ignored.
+#
+# Scope note: this widening applies ONLY to the existence questions below
+# ("is this declared anywhere?"). The divergence checks keep reading the flat
+# bag alone, because those ask whether the BAG is internally consistent --
+# migrations legitimately re-declare a relation as it evolves, so folding 171
+# ordered files into a divergence set would report the schema's own history as
+# drift.
+def _declared_in_migrations():
+    """Relation and function names declared under supabase/migrations/."""
+    tables, functions = set(), set()
+    mig_dir = os.path.join(SQL_DIR, "migrations")
+    if not os.path.isdir(mig_dir):
+        return tables, functions
+    t_re = re.compile(
+        r"create\s+(?:or\s+replace\s+)?(?:materialized\s+)?(?:table|view)"
+        r"(?:\s+if\s+not\s+exists)?\s+(?:public\.)?[\"']?([a-z0-9_]+)",
+        re.I)
+    f_re = re.compile(
+        r"create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?[\"']?([a-z0-9_]+)",
+        re.I)
+    for name in sorted(os.listdir(mig_dir)):
+        if not name.endswith(".sql"):
+            continue
+        body = read(os.path.join(mig_dir, name))
+        # Same stripping as the flat-bag scan above (line comments), plus block
+        # comments and single-quoted literals. CLAUDE.md §8.4: evidence-audit.py
+        # once captured a relation literally named `as` out of the string
+        # "CREATE TABLE AS" inside a command_tag list. A name harvested from a
+        # literal would silently EXCUSE a missing relation here, which is the
+        # more expensive direction of that error.
+        body = re.sub(r"--[^\n]*", "", body)
+        body = re.sub(r"/\*.*?\*/", "", body, flags=re.S)
+        body = re.sub(r"'(?:[^']|'')*'", "''", body)
+        tables.update(m.group(1).lower() for m in t_re.finditer(body)
+                      if m.group(1).lower() not in NOT_A_TABLE)
+        functions.update(m.group(1).lower() for m in f_re.finditer(body))
+    return tables, functions
+
+mig_tables, mig_funcs = _declared_in_migrations()
+
+known_tables = {t.lower() for t in creates} | views | mig_tables
+known_funcs = {f.lower() for f in funcs} | mig_funcs
 missing_tables = sorted(t for t in from_calls if t.lower() not in known_tables)
-missing_funcs = sorted(f for f in rpc_calls if f.lower() not in funcs)
+missing_funcs = sorted(f for f in rpc_calls if f.lower() not in known_funcs)
 
 print(f"  .from() tables/views referenced: {len(from_calls)}   "
       f".rpc() functions referenced: {len(rpc_calls)}")

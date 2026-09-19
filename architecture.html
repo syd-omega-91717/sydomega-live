@@ -61,7 +61,7 @@
           infrastructure that is not there.
         </p>
         <div id="arc-status" style="font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--muted,rgba(138,134,118,.55));margin-bottom:12px">reading runtime&hellip;</div>
-        <div class="arc-grid" id="architecture-diagram"></div>
+        <div class="arc-grid" id="architecture-diagram" data-stagger data-stagger-gap="60"></div>
       </div>
     <div data-page-emblem="architecture" style="margin:20px auto 0"></div>
 </main>
@@ -100,7 +100,7 @@
       var st=A.status(), keys=Object.keys(st).sort(), html='';
       for(var i=0;i<keys.length;i++){
         var b=st[keys[i]];
-        html+='<div class="arc-b card" data-block="'+esc(b.id)+'">'+
+        html+='<div class="arc-b card" data-block="'+esc(b.id)+'" data-reveal="depth-in">'+
           '<div class="n">'+(i+1<10?'0':'')+(i+1)+'</div>'+
           '<div class="t card-title">'+(T[b.id]||esc(b.id).toUpperCase())+'</div>'+
           '<span class="arc-s built"></span>'+

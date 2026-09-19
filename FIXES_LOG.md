@@ -17931,3 +17931,1314 @@ never set `left` for any of them, because on mobile the collision partner is
 `display:none`. A layout invariant that holds at one breakpoint is not an
 invariant. The second half: the answer was already written down, in the *mobile*
 ladder's own comment, as `x-clear`.
+
+## 174 — Two PRs fixed the same RLS gap independently; one migration was pure duplicate debt
+
+An external audit pass (of documents outside this repo, not repo content) called
+out "check open pull requests for overlap" as a standing rule this project
+should follow. Checking it against real history found a live instance:
+commits `fcc4be3` (2026-09-16, adds `supabase/migrations/20260916204000_harden_stripe_webhook_events_rls.sql`)
+and `cafd904` (2026-09-16, adds `20260916210000_harden_stripe_webhook_events_rls.sql`)
+both independently revoke `anon`/`authenticated` grants and add the same
+restrictive `stripe_webhook_events_deny_client_access` deny-all policy on
+`public.stripe_webhook_events` — same table, same policy name, same `using
+(false) with check (false)` body, 20 minutes apart, both merged to `main` via
+`a241130`. Neither reconciled with the other before merging.
+
+`python3 scripts/migration-drift.py` was failing on `main` as a result — not
+because of the duplication itself, but because both new files postdate the
+2026-09-15 `supabase/remote-migrations.json` snapshot and neither had been
+applied live yet (confirmed: `grep -n "20260916" supabase/remote-migrations.json`
+returns nothing for either).
+
+**Contrast with a second same-name pair found by the same sweep** —
+`0105_creator_proposals.sql` and `20260901143526_creator_proposals.sql`,
+identical `CREATE TABLE creator_proposals` bodies (one comment line apart) —
+which turned out to be a *closed* case: both `0105` and `20260901143526`
+already appear in `supabase/remote-migrations.json`'s applied list. Per this
+file's own rule (`README.md:60`, CLAUDE.md §5), an applied migration is never
+renumbered or rewritten, so that pair is left as historical record and not
+touched here — it is documented, not fixed.
+
+The `stripe_webhook_events` pair had no such history: neither side was
+applied, so keeping both was pure unforced duplication, not reconciled
+production state. Deleted the later, purely-redundant file
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) and kept the earlier,
+first-merged one. `scripts/audit.py` still reports `critical: 0, warnings: 7`
+(unchanged) and `scripts/migration-consistency.py` still reports OK.
+`scripts/migration-drift.py` now reports exactly one pending item —
+`20260916204000` — which is a real, separate, already-known gap: it has not
+yet been applied to the live database and `supabase/remote-migrations.json`
+has not been regenerated against an authenticated capture, which this session
+had no credentials to perform. That single remaining item is tracked in
+`docs/PRODUCTION_READINESS_BACKLOG.md` ("Resolve `migration-drift` without
+editing the remote migration snapshot by assumption") — not fabricated here.
+
+**The transferable rule:** two same-day, same-goal, differently-timestamped
+migration files with no shared PR are not evidence of anything by themselves —
+check `remote-migrations.json` before touching either. Applied-and-duplicated
+is a closed historical fact to record. Unapplied-and-duplicated is unforced
+debt safe to collapse to one file.
+
+## 175 — Two CI gates red on `main`, from a --help contract nobody actually satisfied and a scanner that couldn't tell a probe from a renderer
+
+Diagnosed and proposed in a PR comment (#408) but left unfixed there as out of
+scope for that diff; fixed here since this session's mandate widened to "find
+and fix real problems."
+
+**Gate 1 — `scripts/tests/test_script_help_contract.py`, part of `ci.yml`'s
+`verify` job.** Two failures:
+
+- `audit-dynamic-html-security.py` and `audit-webgl-ownership.py`: `--help`
+  exited `1` instead of `0`. Not actually a `--help`-handling bug in the
+  sense of missing flag parsing — both scripts simply have no `--help`
+  branch at all, so passing `--help` runs the full scan regardless, and
+  the full scan happened to have real findings (see Gate 2) that made it
+  exit 1. Fixed by adding the same `if '--help' in argv or '-h' in argv:
+  print(__doc__); return 0` guard `brand-glyph-check.py` already uses,
+  ahead of any real work, in both scripts.
+- `security-check-emblem-panel.py`: no module docstring at all (it's a
+  four-line inline assertion script, not built from the `main(argv)`
+  template the others use). Added one, plus the same `--help` guard for
+  consistency — the assertions on `omega-emblem-panel.js` are unchanged.
+
+**Gate 2 — `contracts.yml`'s direct `python scripts/audit-webgl-ownership.py`
+step.** This was the *real*, non-`--help` reason the script exited 1, and
+without it Gate 1's fix alone would have made `--help` pass while the
+actual scan (which is what `contracts.yml` runs) stayed red. Two distinct
+false positives, found one after the other because fixing the first
+revealed the second was still there underneath it:
+
+1. `vendor/three.module.js:6` — the vendored Three.js library's own source
+   necessarily defines `THREE.WebGLRenderer` and calls `getContext('webgl2')`
+   internally; that's the implementation `omega-sculpture.js` (the one real
+   owner) calls into, not a second owner. `vendor/` was already excluded
+   from analogous scans elsewhere in this repo (`audit.py` "tracks them
+   apart from root modules," CLAUDE.md §4) but not from this script's
+   `SKIP_PARTS` — added it.
+2. Excluding `vendor/` surfaced a second, previously-masked finding:
+   `omega-page-features.js:37` calls `getContext('webgl')` on a `<canvas>`
+   it creates, probes, and immediately discards — never attached to the
+   DOM, never rendered to — as one of roughly fifteen sibling capability
+   checks in the same file (`canvas` 2d, `audioContext`, `fetch`,
+   `websocket`, `serviceWorker`...). Confirmed via `grep` this and
+   `omega-sculpture.js` are the *only* two `getContext('webgl...')` call
+   sites in the whole repo. Feature detection on a throwaway canvas is not
+   "a second rendering owner" in the sense this scanner's own docstring
+   describes; added it as a second named exception (`ALLOWED_DETECTION_FILES`),
+   same pattern as the existing `OWNER` exception, with a comment recording
+   why so a future genuine second-owner regression in that same file still
+   gets caught (the exception is file-scoped, matching `OWNER`'s own
+   granularity — not scoped to the specific line).
+
+**Verified, not assumed:** `python3 -m unittest scripts.tests.test_script_help_contract`
+→ 3/3 pass (was 2 failures). `python3 -m unittest discover -s scripts/tests`
+→ 312/312 pass, unchanged count from CLAUDE.md's baseline. `python3
+scripts/audit-webgl-ownership.py` (real run, not `--help`) → `PASS: only
+omega-sculpture.js may own WebGL renderer/context creation`, 387 files
+scanned, 0 findings (was 1: the vendor false positive; fixing that
+revealed and required fixing a second). `python3 scripts/audit.py` →
+`critical: 0, warnings: 7`, unchanged. `audit-dynamic-html-security.py`'s
+own *non*-`--help` findings (real `innerHTML`/template-interpolation hits
+in `workout.html`, `workers/rate-limiter.js`) are untouched and unaffected
+by this fix — confirmed via `grep` that script is invoked nowhere in any
+CI workflow except through this test's `--help` probe, so those findings
+were never gating anything and are out of scope here.
+
+**The transferable rule:** a scanner exception written for one real owner
+(`OWNER = "omega-sculpture.js"`) does not automatically cover every other
+legitimate reason to touch the same API — a capability probe on a discarded
+canvas needed its own, separately-justified exception, not a loosened
+pattern. And a `--help` contract failure is not always a `--help` bug: here
+both instances were the *underlying scan* failing, surfaced through the one
+code path (`--help`) that happened to run it.
+
+## 176 — Correcting #174: a stale snapshot, not live truth, said a migration was unapplied — it had been, and deleting its file was the actual mistake
+
+This session finally got authenticated Supabase MCP access to project
+`ydqhzvvoyufiiqvzcjns` (`mcp__Supabase__list_projects` confirmed it: name
+"sydomega", `ACTIVE_HEALTHY`, matches `ydqhzvvoyufiiqvzcjns.supabase.co`
+hardcoded in the shipped `bg.js` — the only project this repo actually
+serves from, distinguished from two other, unrelated, `INACTIVE` projects
+on the same account and a fourth project a user pasted credentials for that
+does not appear in this account's project list at all). First real use of
+it: `mcp__Supabase__list_migrations` against that project, which is ground
+truth `supabase_migrations.schema_migrations`, not a dated snapshot.
+
+**#174 was wrong.** It reasoned from `supabase/remote-migrations.json`'s
+2026-09-15 capture — dated *before* `20260916204000` and `20260916210000`
+existed, so neither could possibly appear in it — and treated that absence
+as evidence neither had been applied. `list_migrations` now shows **both**
+versions recorded in the live ledger. The file #174 deleted
+(`20260916210000_harden_stripe_webhook_events_rls.sql`) documented a
+migration that really had run in production; deleting it broke the rule
+this repo states explicitly (`CLAUDE.md` §5, `migrations/README.md:60`):
+never remove or rewrite the record of an applied migration. The
+distinguishing test #174 itself proposed — "check `remote-migrations.json`
+before touching either" — was applied to a snapshot that was structurally
+incapable of answering the question, and the result was trusted anyway
+without noticing the date problem.
+
+**No harm to the live table**, verified directly rather than assumed:
+`pg_policies` shows exactly one restrictive policy,
+`stripe_webhook_events_deny_client_access`, `cmd=ALL`,
+`qual=false`, `with_check=false`, `roles={anon,authenticated}`;
+`information_schema.role_table_grants` shows zero grants to `anon` or
+`authenticated` on the table. Both migrations are idempotent
+(`drop policy if exists` + `revoke all` + recreate), so whichever ran,
+or both, the end state is identical and correct — this was purely a
+bookkeeping break, not a security or data issue.
+
+**Fixed:** restored `20260916210000_harden_stripe_webhook_events_rls.sql`
+verbatim from git history (`git show aa5ef934^:...`, the commit before
+#174 deleted it — not retyped from memory). Regenerated
+`supabase/remote-migrations.json` from the actual live
+`list_migrations` output (189 versions, `_captured` 2026-09-17) rather
+than hand-editing the stale one. Regenerated `supabase/live-schema.json`
+the same way, running the exact query `live-schema.README.md` specifies
+against the live project rather than reasoning around its staleness — it
+was itself four days stale and missing a real table entirely
+(`stripe_webhook_events` was absent from the 2026-09-13 capture even
+though the table already existed live; now present, 224 tables). Checked
+`mcp__Supabase__get_advisors(type=security)` afterward per that tool's own
+guidance to run it after DDL-adjacent changes: one pre-existing,
+unrelated finding (`auth_leaked_password_protection`, a dashboard Auth
+setting, not a migration), nothing new.
+
+**Verified, not assumed:** `python3 scripts/migration-drift.py` →
+`MIGRATION DRIFT: PASS (189 versions, local and remote agree; snapshot
+2026-09-17)` — this session's first PASS on this gate, every prior run
+having shown the one genuinely-pending item that turned out to already be
+resolved by restoring the file. `python3 scripts/schema-dictionary.py` →
+`OK`, 225 tables from the SQL bag, all client calls resolve.
+`python3 scripts/contract-suite.py` → **`CONTRACT SUITE: PASS`, 18/18
+gates** — the first fully green run of this suite anywhere in this
+session's history, `migration-drift` included. Full `scripts/tests`
+suite: 312/312, unchanged.
+
+**The transferable rule, sharpened from #174's own:** a local snapshot can
+only speak for the period it was captured in. Before trusting "absent
+from the snapshot" as "not applied," check whether the item in question
+even *could* have appeared — a snapshot dated before something existed is
+not evidence about it, and reads as a false negative that looks exactly
+like a true one. When live database access is actually available, per
+`CLAUDE.md` §8.2's own standing note, prefer querying it directly over
+reasoning from a dated capture, especially for the specific claim ("is X
+applied") the capture cannot make either way.
+
+## 177 — A "critical RLS breach" that was a broken impersonation method, and a real anomaly it uncovered on the way
+
+**The false alarm, caught before it was reported as fact.** Following
+CLAUDE.md §8.4's own documented method
+(`set_config('role','authenticated',true)` + `set_config('request.jwt.claims',
+..., true)`), impersonating a real, approved, non-owner member
+(`5ca6ae1c-ea68-45ce-8424-434629c8d21c`) and counting rows showed
+`profiles_visible = 9 = profiles_total`, `task_completions_visible = 10 =
+task_completions_total`, `certificates_visible = 24 = certificates_total` —
+by that file's own stated rule ("equal counts on a table that should be
+scoped is the finding"), a member reading every other member's profile,
+task history and certificates. Ruled out, in order, before trusting it:
+unspecified evaluation order across a target list of side-effecting
+function calls (retested with a `MATERIALIZED` CTE forcing sequencing —
+same result); query-plan-cache reuse (retested with entirely fresh SQL
+text — same result); `authenticated.rolbypassrls` (confirmed `false`);
+table-owner RLS exemption (`relforcerowsecurity=false`, but `authenticated`
+is not the owner nor a member of it — checked `pg_auth_members` directly,
+found the membership ran the *other* direction, `postgres` is a member of
+`authenticated`, not vice versa); the `row_security` GUC (explicitly forced
+`'on'` in the same block — no change). Every diagnostic inside the same
+statement — `current_user`, `current_setting('role')`, `auth.uid()`,
+`private.is_platform_owner()` — read back exactly as an authenticated,
+non-owner impersonation should. `EXPLAIN` settled it: under
+`set_config('role',...)` the plan carries no `Filter:` clause at all —
+row security was never engaged, despite every session variable it depends
+on reading correctly. Switching to real `SET LOCAL ROLE authenticated` (a
+command, not a function call) inside one `BEGIN;...COMMIT;` block made the
+`Filter: (((InitPlan 1).col1 = id) OR private.is_platform_owner())` appear
+in the plan, and re-running the same three tables under the *working*
+method showed exactly what should be there: `profiles` → 1 (self only),
+`task_completions` → 0, `certificates` → 0 (this member has completed no
+tasks and earned no certificates — legitimately zero, not itself a second
+finding). **RLS on these three tables is correct.** The vulnerability was
+in the test, not the platform, and the correction is recorded directly in
+`CLAUDE.md` §8.4 so the next session doesn't spend a live-database
+investigation rediscovering it.
+
+**The real anomaly this surfaced on the way, not yet resolved.**
+`select id from public.profiles where is_owner = true` (privileged, no
+impersonation needed) returns **two** rows: `s.y.dagher@gmail.com` (matches
+CLAUDE.md §1's documented single owner) and a second address,
+`slmndghr@gmail.com` — not documented anywhere in this repo as an owner
+account. The name reads as a plausible alternate address for the same
+person (a consonant-only rendering of "Sleiman Dagher"), so this is very
+likely intentional — but "very likely" is not verified, and `is_owner`
+grants elevated read/write across member-scoped tables platform-wide
+(CLAUDE.md §1/§5). Left untouched rather than acted on unilaterally:
+revoking or confirming someone's owner flag without asking is exactly the
+kind of consequential, hard-to-reverse action this session's own operating
+rules call for confirming first. Flagged to the user directly; not
+resolved in this entry.
+
+**The transferable rule:** a testing method that reproduces every *visible*
+symptom of working (`current_user`, `auth.uid()`, the owner-check function
+all read back correctly) can still fail to engage the mechanism being
+tested. `EXPLAIN` on the actual query — not diagnostic reads of the
+session state around it — is what actually proves whether a security
+control is live. A finding this severe, on live production data, gets one
+more round of "what would make this false" before it gets reported as
+fact — here, that round is what caught it.
+
+## 178 — The two-owner-accounts anomaly (#177) is confirmed intentional
+
+The account owner confirmed directly: `slmndghr@gmail.com` is their own
+second account, not an unauthorized grant. Both `is_owner = true` rows
+(`s.y.dagher@gmail.com`, `slmndghr@gmail.com`) are legitimate. `CLAUDE.md`
+§1 updated in place to document both addresses instead of only the first.
+No RLS, policy, or schema change made — this was a documentation gap, not
+a security gap, and the live behavior underneath (verified in #177) was
+already correct.
+
+## 179 — Live GRANT/policy sweep found the no-grant scaffold grew 39→130, one table client-reachable and broken
+
+Extending #177's 3-table spot check with the full class-6c sweep
+`GAP_ANALYSIS.md` §S already tracked (39 tables, policies with no
+table-level `GRANT`, re-counted 2026-08-29): a live query joining
+`pg_class`/`pg_policies`/`information_schema.role_table_grants` across
+all 202 `public` tables found **130** now in that state, not 39 — the
+scaffold grew with the estate. Cross-referenced all 130 against every
+`.from('<table>')` call in shipped `.html`/`.js` (excluding
+`supabase/`/`scripts/`, which reference table names in migrations and
+audits, not live client calls): **129 stay genuinely unreachable**,
+consistent with #`GAP_ANALYSIS.md`'s prior finding — dormant SaaS-scaffold
+tables (`organizations`, `billing_plans`, `workflow_definitions`, etc.,
+matching the "~83-table SaaS scaffold" already recorded there), correctly
+left locked pending a real feature decision, not touched.
+
+**One, `agent_experiments`, is queried live** —
+`autonomous-insights.html:539`, `sb.from("agent_experiments").select("*")`
+in `loadExperiments()`. Its only policy (`agent_experiments_read`,
+PERMISSIVE, `is_platform_owner()`) had never had a table-level `GRANT`,
+so every call — owner included — hit `42501 permission denied` before
+row security ever ran (§8.1 class 6c). The page's
+`const { data: experiments } = await sb.from(...)` discards `.error`
+(§8.1 class 1, again), so this rendered "No experiments running yet" —
+indistinguishable from a real empty table.
+
+**Verified, not assumed, both before and after.** Confirmed the failure
+mode is real by reproducing it on a sibling still-ungranted table
+(`capability_registry`) under real impersonation (`SET LOCAL ROLE
+authenticated`, per #177's corrected method): `ERROR 42501: permission
+denied for table capability_registry`, with Postgres's own hint naming
+the exact missing `GRANT`. Fixed with a new migration,
+`20260917115719_grant_agent_experiments_select.sql` (`grant select on
+public.agent_experiments to authenticated`), applied live via
+`apply_migration`, `remote-migrations.json` regenerated (190 versions),
+`python3 scripts/migration-drift.py` → PASS. Re-verified under
+impersonation post-fix: the owner UUID now reads `0` rows with no error
+(table is genuinely empty — nothing to show yet, correctly reported this
+time), a real non-owner reads `0` rows with no error too (RLS's
+`is_platform_owner()` qual still scopes it — the `GRANT` only lifted the
+42501, it did not widen visibility). `python3 scripts/contract-suite.py`
+→ 18/18 gates passing.
+
+**Left open, correctly:** the other 129 tables. `GAP_ANALYSIS.md` §S's
+"39 tables" line is now stale by count (not by conclusion) and needs
+updating to 130/129 with this session's date — recorded as a moved
+baseline number, not re-litigating the underlying decision (don't grant
+without deciding the feature is wanted, still correct).
+
+## 180 — The 2026-09-06 production-404 outage (FIXES_LOG.md #105/#107) is closed
+
+CLAUDE.md §8.2 carried a standing, serious claim: the production alias
+(`sydomega.com`) served a stale 404 while `target:production` deployments
+built fine, because nothing promoted them (`vercel.json`'s
+`git.deploymentEnabled` was `{"*": false}`, `vercel-production.yml`'s
+`deploy` job had no `VERCEL_TOKEN`). Re-checked live rather than assumed
+current, since this file's own method notes warn a snapshot's date is not
+its freshness.
+
+**Re-verified 2026-09-17 via `mcp__Vercel__web_fetch_vercel_url`** (never
+curl, per the existing rule — `ssoProtection` 401s a bare `*.vercel.app`
+fetch): `sydomega.com` returns **200** with `age: 20`, `x-vercel-cache:
+HIT`, and an `etag` (`W/"ad5b84f1101f1466b4e89a4fb639c081"`) that matches
+byte-for-byte the newest `target:production` deployment
+(`dpl_3oFM8HpAtDybh5bDTMwNgm4MNphm`, the merge of PR #411) fetched
+directly. `vercel.json` now reads `"git":{"deploymentEnabled":{"*":false,
+"main":true}}` — main-branch pushes are explicitly promotable again.
+
+**The custom workflow still can't do it, and that's fine now.** Checked
+the latest `vercel-production.yml` run (id `35201784140`, on `main` at
+`42874c1d624...`): the `Production promotion` job still runs its
+"Controlled state when token is unavailable" branch and skips the actual
+`vercel deploy --prod` step — `VERCEL_TOKEN` is still not configured.
+But production is current anyway, because **Vercel's own Git integration
+is the active promotion path**, independent of this repo's custom
+workflow — `git.deploymentEnabled.main: true` is what it needed. The
+custom workflow is now a redundant, harmlessly-inert backup, not the
+thing standing between a merge and production.
+
+**Not explained: who changed `git.deploymentEnabled`, or when, between
+2026-09-06 and now.** Not this session — no commit in this branch's
+history touches `vercel.json`. Recorded as closed by evidence, not
+re-opened as a mystery: the live fetch is the fact that matters, and it
+says production is correct today. `CLAUDE.md` §8.2 rewritten in place to
+describe the current state rather than the 2026-09-06 outage.
+
+## 181 — Row-visibility RLS impersonation extended from 3 tables to every client-reachable table
+
+`FIXES_LOG.md` #177 verified `profiles`/`task_completions`/`certificates`
+under real `SET LOCAL ROLE authenticated` impersonation and left the
+other ~221 tables as an open item. Closed the reachable slice of it:
+queried `information_schema.role_table_grants` for every `public` table
+carrying an `authenticated` `SELECT` grant — **90 tables** (the complete
+set a signed-in member's client can actually query; `signups` has only
+an `anon` `INSERT` grant, correctly write-only, and was excluded from a
+SELECT sweep for that reason, not skipped).
+
+Ran the identical `count(*)` over all 90 twice in one pass each: once
+privileged (service role, no impersonation) and once under a real
+non-owner UUID (`SET LOCAL ROLE authenticated` + `request.jwt.claims`,
+one `BEGIN;...COMMIT;` block, per #177's corrected method). Compared
+every pair. Of the 90, most non-empty tables scoped to `0` visible rows
+for the non-owner exactly as expected (`access_audit`, `ai_memory`,
+`automation_rules`, `certificates`, `client_errors`, `error_budget_policy`,
+`evolution_events`, `exam_results`, `lesson_completions`, `medals`,
+`member_state`, `news`, `sovereign_points_ledger`, `task_completions`,
+`user_dedication`), and `profiles` correctly returned exactly **1** row
+(their own) against **9** privileged — real per-user scoping, not a leak.
+
+**Eight tables returned equal, non-zero counts for owner and non-owner.**
+Read each policy's full `qual` before trusting the shape (per #177's own
+rule — a label is not a read): `feature_flags` and `governance_policies`
+were already recorded in `GAP_ANALYSIS.md` as readable-by-every-approved-
+member by pre-existing policy, and this reproduces that unchanged.
+`matrix_phases` (`mph_read`, `qual: true`), `matrix_tracks` (`mt_read`,
+`qual: true`), `point_perks` (`perks_read`, `qual: true`), and
+`token_catalog` (`tc_read`, `qual: true`) are genuine reference/catalog
+tables with no per-user column — full visibility is the design, not a
+gap. `platform_settings` has `qual: true` on `SELECT` only, with
+`INSERT`/`UPDATE`/`DELETE` all correctly gated on
+`private.is_platform_owner()` — matches CLAUDE.md §5's own description
+of it as the flag store every client needs to read. `dispatches`'
+single visible row is a real `is_published = true` row under
+`dispatches_select`'s `((is_published = true) OR is_platform_owner() OR
+(user_id = auth.uid()))` — a published announcement, deliberately public,
+while its `INSERT`/`UPDATE`/`DELETE` policies are correctly self- or
+owner-scoped.
+
+**No new finding.** Every one of the 90 currently client-reachable
+tables is either correctly member-scoped, correctly owner-only, or
+correctly public-by-design; nothing here needed a fix. Combined with
+#179's grant sweep (the other 130 tables, 129 dormant, 1 fixed) and
+#177's original 3, this is the first pass to have actually looked at
+every table this platform's own client code can reach — not just a
+sample — even though the harder-to-automate case (per-row correctness
+inside a table with hundreds of rows across many users, versus this
+pass's aggregate-count check) is still open.
+
+## 182 — Stripe webhook signature/idempotency reviewed against live schema; the mechanism has never actually fired
+
+Read `supabase/functions/stripe-webhook/index.ts` and `checkout/index.ts`
+in full, then checked every claim the code makes against the live
+database rather than the SQL bag (`task_completions`' three competing
+definitions is the standing reminder that the bag and live diverge).
+
+**Signature validation**: HMAC-SHA256 over `{timestamp}.{rawBody}`
+against the `v1` signature(s) in the `Stripe-Signature` header, using
+`crypto.subtle` and a constant-time byte comparison (XOR-accumulate, no
+early return on mismatch — only on length, which is safe here since a
+SHA-256 hex digest is always 64 chars and reveals nothing an attacker
+doesn't already know). A `t`/timestamp tolerance of ±300s rejects stale
+signatures — real replay protection at the transport layer, matching
+Stripe's own documented scheme. No `STRIPE_WEBHOOK_SECRET` → `503`
+before the body is even parsed, never a silent accept.
+
+**Idempotency, verified against the live table, not assumed from the
+migration file**: `stripe_webhook_events.event_id` carries a real
+`UNIQUE`/PK btree index (`stripe_webhook_events_pkey`) — the exact
+precondition §8.1 class 7 says an `ON CONFLICT` needs and that this repo
+has shipped without before. `apply_subscription_event`'s live body
+(`pg_get_functiondef`, not the SQL bag) does `INSERT ... ON CONFLICT
+(event_id) DO NOTHING`, then on conflict `SELECT ... FOR UPDATE` the
+existing row: `status='processed'` returns `{ok:true, duplicate:true}`
+without reprocessing, any other status raises `stripe_event_in_progress`
+(blocks a second concurrent delivery of the same event rather than
+racing it). The row lock is real: `FOR UPDATE` serializes concurrent
+callers on the same `event_id`. `apply_subscription`
+(`private.apply_subscription`, the live-applied version — the bag has
+duplicates) checks `GET DIAGNOSTICS updated_count` and raises rather
+than silently no-oping when `p_uid` doesn't match a real profile —
+follows §9's rule, doesn't violate it. `stripe_webhook_events` itself
+carries a live `RESTRICTIVE` deny-all policy for `anon`/`authenticated`
+(`stripe_webhook_events_deny_client_access`, `qual: false` — the table
+#176 restored), and both RPCs gate internally on `auth.role() =
+'service_role' OR is_platform_owner()`, so the SECURITY DEFINER doesn't
+widen who can call them even if a future migration ever granted EXECUTE
+too broadly.
+
+**What this is not: a test of the deployed function actually receiving
+a request.** `select status, count(*) from stripe_webhook_events group
+by status` returns **zero rows** — this table, and therefore this whole
+mechanism, has never processed a single real event. `platform_settings`
+confirms why: `payments_enabled = false` live, so `checkout`'s own first
+gate refuses before Stripe is ever involved (verified live, not read
+from intent). A true end-to-end test needs either real Stripe test-mode
+traffic (not available in this environment) or a synthetic call to
+`apply_subscription_event` against a real profile row — the latter
+writes to `subscription_tier`/`subscription_status`/`membership_tier`
+on an actual account, which is exactly the kind of payment-adjacent
+write CLAUDE.md §5 says "needs the same care as production payment code
+anywhere," so it was not attempted without the account owner's sign-off.
+**Conclusion: the mechanism is soundly built by every check available
+without live traffic or a synthetic write, and untested by actual
+execution — both true, neither overclaimed as the other.**
+
+## 183 — `node scripts/verify-runtime.js` actually ran for the first time this session, and found a real bug on 12 of 13 capability entrypoints
+
+Two prior sessions (per the `runtime-verify` skill's own note) wrote this
+verifier off as unrunnable and fell back to ad-hoc harnesses. This
+session's remote environment actually ships the browser: Chromium at
+`/opt/pw-browsers` (confirmed: `chromium-1194/chrome-linux/chrome`,
+`chromium_headless_shell-1194/chrome-linux/headless_shell`). Installed
+`playwright-core` into the scratchpad (`npm install playwright-core
+--no-save`), which resolved revision `1243` under `chrome-linux64`/
+`chrome-headless-shell-linux64` naming — exactly the skill's documented
+three-way mismatch (revision, `linux` vs `linux64`, binary name).
+Bridged with the skill's own symlink recipe, then **confirmed with a
+direct `chromium.launch()`** before trusting the verifier, per the
+skill's explicit instruction.
+
+`OMEGA_SCRATCHPAD=<scratchpad> node scripts/verify-runtime.js` then ran
+for real: **12 of 13 capability entrypoints failed on "horizontal
+overflow"** (`ops.html` was the sole pass). Did not report this as fact
+without finding the actual cause — wrote a standalone script reusing the
+harness's own server/stub/viewport setup to walk every element and find
+which one's `getBoundingClientRect()` exceeded the 1280px viewport.
+
+**Root cause, confirmed by isolation, not inference.** `#omega-atmosphere`
+(`omega-genesis.js`) is `position:fixed;inset:0` (a full-viewport
+decorative starfield canvas), and `omega-9d.js` applies `transform:
+translate(...) scale(1.06)` to it directly for a cursor-parallax depth
+effect (the canvas's own drawing buffer is deliberately oversized by the
+same factor via `overscan()`, so the scale doesn't blur it — that part
+was already correct). Scaling a `position:fixed;inset:0` box by 1.06
+around its center grows it symmetrically by ~38px on every side (1280 ×
+0.06 ÷ 2), and — measured directly by toggling `display:none` on it
+mid-page and re-reading `document.documentElement.scrollWidth` — that
+alone accounted for the entire 1318-vs-1280 delta; hiding the other
+overflow candidate the element-walk surfaced (`.ss-item`, a
+`position:static` KPI-row child) changed nothing, ruling it out.
+
+**Confirmed harmless to real users before ruling it cosmetic-only, not
+after.** `bg.js:986` sets `html,body{overflow-x:hidden}`, but computed
+style showed `overflow-x:visible` on both — that rule isn't reaching the
+cascade on this page, a live instance of the "programmatic edit that
+doesn't reach the cascade" class (§8.4). Despite that, `window.scrollTo(200,0)`
+left `scrollX` at `0`: a `position:fixed` element's transformed geometry
+inflated `scrollWidth` here, but per spec it doesn't join the
+document's *scrollable* overflow region, so nothing was ever actually
+scrollable or visible to a member — a real measurement artifact, not a
+user-facing defect, and the two are not the same claim.
+
+**Fixed anyway, because a false positive in a checker that gates real
+work is still worth closing, and the fix is free.** Wrapped the canvas
+in `#omega-atmosphere-mask` (`position:fixed;inset:0;overflow:hidden`,
+the exact box the canvas itself used to occupy) and made the canvas
+`position:absolute;inset:0` inside it. The mask never receives the
+transform, so it never grows past the viewport, and it clips the
+canvas's scaled geometry at exactly the boundary that was already
+invisible — nothing the mask clips was ever painted inside the
+viewport. Zero-risk by construction, verified three ways: `--all`-scope
+re-run on the 13 entrypoints plus 5 spot-checked non-capability pages
+(`index`, `enter`, `account`, `gates`, `cosmos`) all now `PASS`; the
+canvas's own resolution diagnostic (`canvasZero`/`canvasLowRes`) stayed
+clean; and a same-code noise-floor screenshot pair (7.6% pixel diff from
+the starfield's own animation and a 1s clock tick) versus the
+before/after pair, both visually inspected directly — identical layout,
+numbers and chrome, the only differences being drifting stars and the
+clock, exactly what an animated background predicts with a real time
+gap between shots, not a regression.
+
+`python3 scripts/audit.py` → `critical: 0, warnings: 7`, unchanged.
+`python3 scripts/contract-suite.py` → 18/18. `node --check
+omega-genesis.js` and `python3 scripts/check-inline-js.py` clean.
+
+## 184 — `main` itself red: two whole scripts concatenated into one file
+
+CI failed on this session's own PR (#416) on a step that touches nothing
+this session changed: `python -m compileall -q core scripts tests`,
+`SyntaxError: from __future__ imports must occur at the beginning of
+the file`, `scripts/audit-information-architecture.py:89`. Ruled out
+"this PR's problem" before treating it as one: `git show
+origin/main:scripts/audit-information-architecture.py` is byte-identical
+to the working tree's copy, and `main`'s own most recent merge commits
+(PR #414 at `d571393`, PR #415 at `ba7dd25`) both show `conclusion:
+failure` on this exact check via `get_workflow_job` — main was already
+broken before this session touched anything.
+
+**Root cause: two complete, independent scripts concatenated into one
+file**, both apparently written for the same purpose (nav.js overlap
+auditing) and merged without either replacing the other. Lines 1–82 is
+a no-argument script that fails only on missing `nav.js`/no href
+matches and prints `IA-AUDIT:`-prefixed findings; lines 83–147 is an
+unrelated second script (`argparse`, a `root`/`--strict` CLI, `NAV_
+ENTRIES=`-style output) with its own `from __future__ import
+annotations` statement — illegal anywhere but the very first lines of a
+file, which is what actually threw. `.github/workflows/contracts.yml`
+invokes the script with no arguments, so only the first implementation's
+behavior was ever in effect; the second was dead weight that happened to
+be syntactically fatal.
+
+Traced likely origin to PR #415 ("test: add deterministic information
+architecture audit," merged to `main` as `ba7dd25`) — introduced
+alongside a same-purpose script this repo evidently already had,
+without reconciling the two. Not fixed by picking a "better" one on
+taste: kept the first (already in effect via file order, matches this
+repo's established report-don't-block convention verbatim in its own
+comment), deleted the second in full.
+
+**Root-caused and fixed on `main`, not bundled silently into an
+unrelated PR** — the fix travels in its own commit on this session's
+branch with its own message, and PR #416's description is updated to
+name it as a separate, CI-unblocking change rather than part of the
+overflow fix. Verified: `python3 -m compileall -q core scripts tests`
+now exits 0; `python3 scripts/audit-information-architecture.py` runs
+to completion and prints `IA-AUDIT: PASS`; `python3 scripts/audit.py`
+and `python3 scripts/contract-suite.py` (18/18) both still clean.
+
+## 185 — 40 pages with zero motion vocabulary; extended `data-reveal`/`data-stagger`, not WebGL
+
+Request: "nothing should be solid and dead ... everything must be 3D and
+rotative." Measured what "dead" actually means here before touching
+anything: grepped all 204 pages for the platform's existing motion
+owners (`data-reveal`, `data-stagger`, `data-omega-sculpture`,
+`omega-depth-card`, `data-omega-constellation`) — 162 pages already carry
+`data-reveal`, 119 carry `data-stagger`, only 5 mount the WebGL sculpture
+layer. 40 pages carried none of the above: 7 are legitimate exemptions
+(the same public/diagnostic set §3 already exempts from the approval
+guard — `account`, `enter`, `reset`, `terms`, `pending`, `healthz`,
+`verify-deployment`, `verify-modules` — plus redirect stubs like
+`agent.html`), leaving 33 real content pages with no entrance motion at
+all.
+
+**Rejected the literal reading on purpose.** `omega-sculpture.js` is
+explicitly one-WebGL-context-per-page, 670KB, mounted only where a
+`data-omega-sculpture` attribute already exists — "so no other page pays
+the [cost]" is this repo's own stated design decision (§4), and the
+`omega-cinematic-system` skill's own performance budget says to prefer
+one shared mechanism and ask "does it duplicate an existing effect"
+before adding a new one. Instrumenting WebGL sculptures on all 33 pages
+would violate both. Instead: extended the platform's existing, genuinely
+3D, zero-new-engine motion vocabulary already implemented in
+`omega-cinematic.js` — `data-reveal="depth-in"` (`translateZ`+`scale`)
+and `data-reveal="rotate-in"` (`rotateZ`+`scale`), combined with a
+`data-stagger`/`data-stagger-gap` ancestor — to every KPI row, card grid,
+and hero block on those 33 pages that had none. `omega-cinematic.js`
+already runs a `MutationObserver` alongside its `IntersectionObserver`,
+so the attribute works identically whether it's in static markup or
+added inside a JS template-literal/`createElement` render function
+(confirmed both patterns render correctly — static markup on
+`habits.html`/`nutrition.html`/`sleep.html`/`wealth.html`/`targets.html`/
+`rituals.html`/`meditate.html`/`stoic.html`/`characters.html`/
+`design-showcase.html`/`analytics-dashboard.html`/`approvals.html`/
+`monitoring-dashboard.html`/`ad-network.html`/`project-studio.html`;
+JS-generated markup on `hercules.html`/`council.html`/`architecture.html`/
+`agent-network.html`/`autonomous-insights.html`/`roadmap.html`/
+`world-shell.html` — 22 pages total, some already partially motion-
+covered and enhanced further).
+
+**Deliberately excluded, and why:**
+- `graph-admin.html` — a dense internal admin/data tool; the cinematic
+  skill's own restraint principle ("avoid perpetual animation on large
+  DOM sets," "legibility over flair") outweighs entrance motion here.
+- `gateway.html` — its ~165 tiles (`omega-gateway.js`) already carry a
+  purposeful hover-driven 3D rotation (`.gw-mark canvas` rotates 180° on
+  hover/focus, reduced-motion-aware); adding an entrance reveal to every
+  tile would be the large-DOM-set case the skill warns against, on a
+  page that is not actually static.
+- `cohorts-dashboard.html`, `predictions-dashboard.html` — "Phase 5
+  feature in development" stubs with no cards/grids to animate; there is
+  nothing here to make less "solid and dead" without inventing content
+  that isn't real, which CLAUDE.md §8.1 class 9 (fabricated data) rules
+  out.
+- `investor-dashboard.html`, `investor-gate.html`, `venture-pipeline.html`,
+  `omega-visual-command.html` — pure `setTimeout` redirect stubs to
+  `/dashboard.html`, structurally identical to `agent.html`; nothing
+  renders long enough to animate.
+
+**Separate finding, not fixed here:** `movies.html` is a real, 0-byte
+file despite being a live `nav.js` destination
+(`['movies','MOVIES','/movies.html']`) — an empty page cannot be
+"animated," and authoring real content for it is a different task than
+this motion pass. Flagged for a follow-up, not silently left unaddressed.
+
+Verified: `python3 scripts/audit.py` → `critical: 0, warnings: 7`
+(unchanged, all pre-existing SQL/asset findings, none touched by this
+change). `python3 scripts/check-inline-js.py` → every inline `<script>`
+still parses cleanly (covers the JS-template-literal attribute
+insertions). `python3 scripts/contract-suite.py` → 18/18 gates pass.
+`OMEGA_SCRATCHPAD=<scratchpad> node scripts/verify-runtime.js --pages
+<all 22 edited pages>` → `PASS (22 pages)`, no new console/runtime
+errors, no blank pages, no new horizontal overflow, no duplicate ids;
+the only advisory findings (contrast, one soft-scaled canvas) are
+pre-existing and unrelated to the motion attributes added.
+
+## 186 — A mirror red while the real gate was green, and a scanner blind to the authoritative schema
+
+Two gates, both wrong in the same direction: each was reporting on a repo
+that does not exist.
+
+### 186a — `./scripts/ci-local.sh` was RED on `main`
+
+A clean checkout of `main` (`ff198392`) failed its own blocking suite:
+
+```
+── 5.   Service-role key scan
+./scripts/tests/test_stripe_webhook_guard.js:41:assert.match(migration,
+  /GRANT EXECUTE ON FUNCTION public\.apply_subscription_event[\s\S]*TO
+  service_role;/, 'event RPC must be callable by the server-side service role');
+  service_role reference found in client code
+   FAIL  5.   Service-role key scan
+  1 BLOCKING CHECK(S) FAILED (23 passed)
+```
+
+That is not a leak. It is a test asserting that a *migration* grants EXECUTE
+to the server-side role — the assertion text contains the words, nothing else.
+
+The two scanners had drifted. `ci.yml:194` skips any path with a `.git` or
+`scripts` component:
+
+```python
+if ".git" in path.parts or "scripts" in path.parts or not path.is_file():
+    continue
+```
+
+`ci-local.sh:61` had no such exemption, so it grepped the whole tree.
+
+Which side is right is a question of fact, and the repo answers it:
+`scripts/vercel-build.sh:28` carries `! -path './scripts/*' \` in the
+allow-list `find`, so `scripts/` is **provably not copied into the production
+surface**. A match there cannot be the client-shipped leak this gate exists to
+catch. Local scope now mirrors `ci.yml` exactly.
+
+The reason this mattered more than one red line: a mirror that fails when the
+real gate passes is worse than no mirror at all. `CLAUDE.md` §8.3 tells every
+session to run `ci-local.sh` before pushing. A gate that is *expected* to be
+red is a gate nobody reads.
+
+### 186b — `audit.py` could not see `supabase/migrations/`
+
+`scripts/audit.py:290` loads the schema with a **non-recursive** listing:
+
+```python
+sql_files = sorted(f for f in os.listdir(SQL_DIR) if f.endswith(".sql"))
+```
+
+`os.listdir` does not descend, so all 171 files under `supabase/migrations/`
+were invisible to checks 7 and 8. That is exactly backwards from `CLAUDE.md`
+§5, where `migrations/` is **authoritative** and the flat bag is reference
+material that *never deploys*. The gate was checking the non-deploying copy
+and ignoring the one that ships.
+
+Seven relations were reported as `never CREATE TABLE'd`. Cross-checked
+against `supabase/live-schema.json` (224 relations) and `migrations/`:
+
+| relation | in flat bag | in `migrations/` | live |
+|---|---|---|---|
+| `agent_experiments` | no | **yes** | **YES** |
+| `agent_performance_metrics` | no | **yes** | **YES** |
+| `autonomous_decisions` | no | **yes** | **YES** |
+| `autonomous_insights` | no | **yes** | **YES** |
+| `member_feature_flags` | no | **yes** | **YES** |
+| `transactions` | no | no | NO |
+| `wallet_balances` | no | no | NO |
+
+Five of seven were phantoms — declared in the authoritative location *and*
+present in production. So was the eighth finding, `apply_subscription_event`,
+the live Stripe webhook RPC, declared at
+`supabase/migrations/20260915150223_stripe_webhook_event_boundary.sql:25`.
+
+The two genuine ones are already handled correctly, by earlier sessions:
+`subscriptions.html:225-232` and `vault.html:479-495` each read `.error` and
+distinguish *"the ledger does not exist"* from *"you have no records"* — the
+§8.1 class 1 distinction, with the em-dash rendering rather than a fabricated
+count (`vault.html`'s comment records that this field once read
+`wallets.length||'12'` and showed a member twelve wallets they did not have).
+
+So the fix is not to the pages. It is that **five phantoms around two honest
+findings is how a real one gets ignored** — the same shape as §8.4's "a
+scanner needs its own false-positive pass before its number means anything".
+
+**Scope of the widening, deliberately narrow.** Only the *existence* checks
+("is this declared anywhere?") now read `migrations/`. The divergence checks
+(§4's duplicate-definition and diverging-RPC warnings) still read the flat bag
+alone, because those ask whether the **bag** is internally consistent — and
+migrations legitimately re-declare a relation as it evolves, so folding 171
+ordered files into a divergence set would report the schema's own history as
+drift.
+
+### Verification — both directions, because a widening can become an excuse
+
+- **Planted control, tables/RPCs.** `sb.from('__omega_negctl_absent__')` +
+  `sb.rpc('__omega_negctl_fn__')` appended to `dashboard.html`: both reported
+  (`(3):` and `(1):`). Removed; tree clean.
+- **Planted control, credentials.** `service_role_key` in a root `.js`, then
+  `SUPABASE_SERVICE_KEY` in a root `.json`: scan `FAIL` on each, `PASS` on the
+  clean tree before and after.
+- **Pinned-BEFORE test run.** The four new tests in
+  `scripts/tests/test_audit.py::ClientSchemaReferenceTests` were run against
+  `git show HEAD:scripts/audit.py`: `FAILED (failures=2)` — precisely the two
+  "declared only in migrations is not reported missing" cases. Against the
+  fixed file: `OK`. The other two are over-widening guards and pass on both,
+  which is the correct shape for a guard.
+- **Literal/comment control.** A migration containing
+  `INSERT INTO public.ddl_log(tag) VALUES ('CREATE TABLE literal_table')`
+  plus a `--` and a `/* */` commented CREATE must *not* excuse those three
+  names. Asserted. This is §8.4's `CREATE TABLE AS` → relation `as` bug, in
+  its more expensive direction: harvesting a name from a literal would
+  silently excuse a genuinely missing relation.
+
+### Baselines after
+
+```
+./scripts/ci-local.sh                     ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/audit.py                  critical: 0    warnings: 6   PASSED
+python3 -m unittest discover -s scripts/tests   Ran 312 tests ... OK  (was 308)
+python3 -m unittest discover -s tests           Ran 23 tests ... OK
+node scripts/verify-runtime.js            PASS (13 pages)
+```
+
+`audit.py`'s warning count returns to the **6** §8.3 documents; it had been
+**7** on `main`. The composition is what changed: the `.from()` warning went
+7 → 2 and the `.rpc()` warning disappeared, while a real duplicate-table and
+deploy-hygiene warning set stayed. A count matching the baseline is not the
+same as the baseline being met — check the composition.
+
+## 187 — A `perspective` on `<body>` had un-anchored the platform's entire floating chrome on 198 of 204 pages
+
+The original task was small: re-measure two sidebar-overlap fixes prototyped
+against an older `main`. The first measurement made both moot and found
+something much larger.
+
+### What the measurement showed
+
+Probing `position:fixed` elements on `dashboard.html` at 1280x700:
+
+```
+{"id":"ofb-btn","pos":"fixed","bottom":"36px","rectY":2470,"inViewport":false,
+ "blockers":[{"el":"body.omega-approved","why":["perspective"],"h":2546}]}
+{"id":"omega-voice-btn","pos":"fixed","bottom":"90px","rectY":2412,"inViewport":false,...}
+{"id":"om-open","pos":"fixed","top":"10px","rectY":10,"inViewport":true,...}
+```
+
+`#ofb-btn` declares `bottom:36px` and rendered at **y=2470** on a 700px
+viewport — 1770px below the fold. `#om-open` survived only because it is
+top-anchored.
+
+**Cause.** A `perspective` makes its element a containing block for every
+`position:fixed` *descendant*. `<body>` had `perspective:1400px`, so every
+bottom-anchored fixed element resolved `bottom` against the body's full
+scroll height (2546px here) instead of the viewport. They were not floating;
+they were parked near the bottom of the document.
+
+### Finding the owner took two corrections
+
+CSS rule enumeration returned an **empty list** while the computed value was
+plainly `1400px`. Two separate reasons, both worth remembering:
+
+1. **`@import`ed sheets are not in the parent's `cssRules` as style rules.**
+   `omega-cinematic-system.css:1` is `@import url('/omega-spatial-system.css')`.
+   Sheet bisection (disable each sheet, watch the value flip — §8.4) pointed
+   at sheet 10, `omega-cinematic-system.css`, which contains **zero**
+   `perspective` in source. Descending through `CSSImportRule.styleSheet`
+   found the real one.
+2. **CSSOM returns `""` for a declaration whose value contains `var()`.**
+   The rule is `perspective:var(--omega-spatial-perspective)`, so
+   `rule.style.perspective` reads empty and every `.style.perspective` scan
+   silently skips it. A scan for a property must not assume the typed getter
+   sees a `var()` value.
+
+The owner is `omega-spatial-system.css:12` —
+`.omega-cinematic{perspective:var(--omega-spatial-perspective)}` — and
+`.omega-cinematic` is on `<body>` on 202/202 pages (§4.1).
+
+### Three measured facts decided the fix
+
+- `data-omega-visual` is **never set on `<html>`** (measured `null`).
+  `omega-sovereign-os.js:30` sets it on a `<link>` element. So every
+  `html[data-omega-visual="active"] …` rule in `omega-spatial-system.css`
+  **and** all of `omega-page-elevation.css` is dead — including
+  `omega-page-elevation.css:8`, which already tried to put this exact
+  perspective on `main`. Measured: `mainPerspective: "none"`.
+- Therefore the **reduced-motion escape hatch never fired**: the only rule
+  clearing the 3-D was `html[data-omega-visual="active"] body{perspective:none}`.
+- All three floats are **direct children of `<body>`**, and all 37 cards on
+  `dashboard.html` are inside `main`.
+
+`omega-spatial-system.css:13` already declared the content column the 3-D
+stage (`transform-style:preserve-3d`). The `perspective` was simply one level
+too high. Moving it down onto that same selector list keeps the depth and
+frees the chrome.
+
+`index.html` was the lone survivor of the first pass: it is the **only** page
+where `html[data-omega-visual]` reads `"active"` (measured; `dashboard.html`
+reads `null`), so line 9's separate `… body{perspective:…}` still applied
+there and kept all seven of its widgets stranded. Its 3-D properties moved
+with the rest; its ambient `background-image` stayed on `<body>`, where it
+creates no containing block.
+
+### A/B across all 204 pages, same build, pinned with `gitShow('HEAD')`
+
+Counting only **bottom-anchored** (`bottom` set, not `auto`), visible,
+pointer-interactive fixed elements. `#omega-skip` is excluded by id: it is a
+skip link parked off-screen until focused, and counting it put *both* arms at
+~203 and hid the entire signal.
+
+| | BEFORE | AFTER |
+|---|---|---|
+| pages with `perspective` on `<body>` | **204** | **0** |
+| pages with stranded bottom chrome | **198** | **1** |
+| `#ofb-btn` stranded | 194 pages | 0 |
+| `#omega-controls-dock` | 194 pages | 0 |
+| `#cp-btn` | 191 pages | 0 |
+| `#osh-btn` | 191 pages | 0 |
+| `#omega-ded-widget` | 186 pages | 0 |
+| `#omega-voice-btn` | 128 pages | 0 |
+| `#omega-ticker-strip` | 125 pages | 0 |
+| `#omega-cap-badge` | 30 pages | 0 |
+
+Spot-check of the restored anchoring, two viewports:
+`#ofb-btn` (`bottom:36px`) → y=624 at 1280x700 and y=744 at 1440x820;
+`#omega-voice-btn` (`bottom:90px`) → y=566 and y=686. Both exact.
+Reduced motion (via `emulateMedia`, not a hand-rolled context) now reports
+`body=none main=none` — the hatch fires for the first time.
+
+**Depth preserved:** 3377/3389 cards and KPIs still have a perspective
+ancestor. `#omega-main-content` was added to the selector list to cover
+`honors`/`matrix`/`media` (media alone has 336 cards), which have no
+`main`/`.main`/`.page-shell`; it is the content column and does not contain
+`#omega-side`, so it creates no containing block for the sidebar.
+
+**The one page that loses this effect is `404.html`** — its 12 KPIs sit
+directly on `<body>` with no content wrapper, so no selector can reach them
+without markup changes. Twelve KPIs on the error page is the correct trade
+against the floating chrome on 204.
+
+### Two page-local leftovers, one fixed
+
+- `agent-network.html .legend` was `position:fixed; bottom:2rem; left:2rem`
+  inside `.network-container`. Wrong twice: it is a legend *for* the canvas
+  beside it, not viewport furniture, and at x=32 it would have sat under the
+  80px sidebar even had it worked. It rendered at **y=1457**. The container is
+  already `position:relative`, so `absolute` pins it to the graph's bottom-left
+  — measured **y=408**. Note this was stranded *before* this change too
+  (anchored to `<body>`); the platform fix moved its containing block from
+  `<body>` to the content column without freeing it, so it needed its own fix.
+- `index.html` has one element with a computed `bottom:-3106.61px` — a
+  deliberate negative offset, intentionally off-screen. Left alone.
+
+### Baselines
+
+```
+./scripts/ci-local.sh            ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/audit.py         critical: 0    warnings: 6   PASSED
+node scripts/verify-runtime.js   PASS (13 pages); contrast advisory 6
+```
+
+This is the §4 "bottom chrome has a single measured owner" paragraph's missing
+premise. `omega-bottom-stack.js` publishes `--omega-chrome-bottom` correctly,
+and five modules read it correctly — and none of it could work, because the
+elements were not anchored to the viewport at all. **A coordination protocol
+cannot be verified by reading the protocol; measure where the element lands.**
+
+## 188 — `movies.html` was 0 bytes and a live nav destination; two more pages silently lost their sidebar; one WIP dashboard rendered fabricated numbers as fact
+
+A visual/content audit pass across the estate, evidence gathered with the
+`verify-in-browser` harness (204-page headless render) rather than static
+reading, per `CLAUDE.md` §8.4's own rule.
+
+### `movies.html` — a real, 0-byte file, live in `nav.js`'s MEDIA section
+
+`FIXES_LOG.md` 185 had already flagged this ("a separate finding, not fixed
+there") without building content. `nav.js:139` links `['movies','MOVIES','
+/movies.html']`, so any member clicking MOVIES got a blank page. Built as
+**THE TWELVE FRANCHISES** — a franchise-level index over the *existing*
+canon rather than new lore: each of the 12 entries reuses `cinema.html`'s
+already-established god/sign/element/film mapping verbatim (Ares · Aries ·
+Fire · War Sovereign, …) and pairs it with `series.html`'s already-named
+"<Sign> Chronicles" series, so nothing here contradicts either page — it
+just ties them together, the way `bg.js:1277`'s unused `lensMovies` label
+("THE TWELVE FRANCHISES") already implied a page like this should exist.
+118 lines, same `bg.js`/`nav.js` load and auth-gate pattern as `cinema.html`.
+Verified: `check-inline-js.py` clean; `scan.js errors` 0/4 on
+`movies,graph,map,realm`; `verify-runtime.js --pages movies.html` → PASS, 5
+benign (same count as `cinema.html`/`series.html`); `reachability-contract.py`
+no longer lists it under "NO NAV CONTAINER".
+
+### `sculpture.html` and `autonomous-insights.html` had `.shell` with no `<aside id="omega-side">` inside it
+
+Both are real nav destinations (not `SYSTEM_PAGES`-exempt) that render a
+`.shell > .main` structure but never gave `nav.js` its mount point — so
+`nav.js:4`'s `if(!el) return;` fired every time and neither page ever showed
+a sidebar. Fixed by inserting `<aside id="omega-side" data-page="…"
+aria-label="Navigation"></aside>` as the first child of `.shell`, matching
+the convention already used on `series.html` and ~180 other pages.
+`.shell{display:flex}` / `.main{flex:1;…}` already exist globally in
+`css/omega-system.css:72,81`, so no new CSS was needed — confirmed with a
+real layout measurement before/after (`getBoundingClientRect` on `#omega-side`
+and the content sibling), not assumed from the class name: before, `#omega-side`
+was `null` on both pages; after, `x:8,y:8,w:80` for the aside and `x:88` for
+the content on both, matching `cinema.html`'s already-working `x:88`.
+`reachability-contract.py`'s "NO NAV CONTAINER" list dropped from
+`autonomous-insights.html, design-showcase.html, sculpture.html` to just
+`design-showcase.html` — left alone, since that one is a deliberately
+chromeless design-token reference page (`<title>…Design System</title>`),
+not a content page members browse.
+
+### `analytics-dashboard.html` rendered invented member metrics as fact, ungated
+
+Not `SYSTEM_PAGES`-exempt only in the reachability sense (it's `pending nav
+wiring`, per that file's own comment) — but it is a plain static file with
+**no auth gate at all** (no `sb.auth.getSession()` redirect, unlike every
+other member page), so it was directly reachable by URL to anyone, signed in
+or not. Its meta description said "Real-time member analytics" while
+`loadAnalytics()`'s own comment admitted `// Simulated analytics data
+(replace with real API calls)` and hard-coded `active_members:487`,
+`engagement_score:72.4`, `churn_rate:'2.1%'`, four fabricated member
+segments, and three canvases (`chart-sessions`, `chart-engagement-dist`,
+`chart-adoption-cohort`) with no Chart.js loaded and no data behind them —
+`CLAUDE.md` §8.1 class 9, "fabricated data rendered as fact." This is a much
+larger scaffold than a bug fix can responsibly grow into (4 more tabs —
+predictions, cohorts, reports — each with its own permanently-stuck
+"Loading…" state and no backing query at all), so the real analytics
+pipeline was **not** built here; that is a Phase 5 feature decision, not a
+gap-closing fix (same reasoning as `signal_saves`, `FIXES_LOG.md` archive).
+What was fixed: the meta description no longer claims "real-time," and a
+visible `PREVIEW · SIMULATED DATA` banner now sits above the KPI row so
+nobody — owner, visitor, or a future session — mistakes the placeholder
+numbers for real ones. `cohorts-dashboard.html`, the sibling page in the
+same `SYSTEM_PAGES` entry, already did this correctly ("Phase 5 feature in
+development", no fabricated numbers) — this brings the other page in line
+with its own sibling's convention rather than inventing a new one.
+
+### Two stale doc claims corrected
+
+`GAP_ANALYSIS.md`'s "`graph.html` and `map.html` throw on every load" entry
+(opened 2026-09-13) and the `verify-in-browser` skill's gotcha list ("Three
+pages throw from blocked CDNs… `graph.html`, `map.html`, `realm.html`") were
+both already false: `494ad666` vendored d3 and Leaflet into `/vendor/`
+(three.js was already there) before either doc was last touched. Verified
+this session with a fresh, full 204-page `scan.js errors` run: **0 pages
+with uncaught errors or rejections** — not "these three are exempt," actually
+zero. Both docs corrected rather than left to mislead the next session into
+re-fixing an already-fixed bug or re-excusing a page that no longer throws.
+
+### Baselines
+
+```
+./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
+python3 scripts/check-inline-js.py                 clean
+python3 scripts/reachability-contract.py           OK (design-showcase.html the only remaining advisory)
+node .claude/skills/verify-in-browser/harness/scan.js errors   204 pages, 0 with uncaught errors/rejections
+node .claude/skills/verify-in-browser/harness/scan.js canvas   0 canvases with a zero drawing buffer
+node scripts/verify-runtime.js --pages movies.html,graph.html,map.html,cinema.html,series.html,sculpture.html,autonomous-insights.html,analytics-dashboard.html   PASS (8 pages)
+```
+
+Clone was shallow at session start (`git fetch --unshallow` run first) —
+`omega-registry.py`'s graft-boundary guard would otherwise have refused to
+write dates for ~24 skill files, per `CLAUDE.md` §8.4.
+
+### `.card-edge` was a malformed fragment, and `.card::before`'s accent colour was already invisible platform-wide (2026-09-19)
+
+Converting `chronicle.html`/`city.html`/`heritage.html`'s hand-rolled
+`border-left` accents to the shared `.card-edge` system (§4.1) surfaced two
+live bugs, neither related to those three pages.
+
+**`.card-edge` itself was broken.** `ce5a1b4b` (2026-09-06, a contract-
+compliance restoration pass) re-added the class as
+`.card-edge{width:3px;background:var(--card-accent,var(--gold))}` — a rule
+that sets `width` on the *element*, not a `::before` bar. The documented,
+previously-verified fix (`.card.card-edge::before{top:0;bottom:0;left:0;
+right:auto;width:var(--card-edge-w,3px);height:auto}`, this file's own
+2026-09-04 entry) was gone from both `bg.js` and `css/omega-system.css`.
+Measured on `intelligence.html`'s 4 SWOT boxes (the only live callers):
+`.swot-box.card-edge` computed `width:42px` — the whole card collapsed to a
+sliver — and its `::before` was an untouched 40×2px top bar, not a left
+edge. The contract checker had only verified the selector *existed*, not
+that it did anything (`CLAUDE.md` §8.4's "a rule that reached the file but
+not the cascade" class).
+
+**Separately, `.card::before`'s accent colour was already losing to the
+cinematic shimmer on every page, top-bar or left-edge.**
+`omega-spatial-system.css`'s `.omega-cinematic :where(.card,...)::before`
+(the depth-field sheen) and `css/omega-system.css`'s `.card::before` (the
+accent bar) tie at specificity (0,1,1), and `body.omega-cinematic` is on all
+202 pages (`CLAUDE.md` §4.1), so this was never conditional on hover or
+theme — whichever sheet the page happened to load later silently won.
+Measured on `kings.html` (a live per-king top-bar accent, not a new one):
+`.card::before`'s `background-color` computed `rgba(0,0,0,0)`, painting the
+shimmer's flat `rgba(201,168,76,.055)` gradient instead of each king's
+colour. Fixed both without `!important` (forbidden by the
+`omega-cinematic-system` skill) — a same-file specificity bump most of this
+codebase already uses for exactly this: `.card::before` → `.card.card::before`
+(0,1,1)→(0,2,1), and `.card-edge`'s combinator → `.card.card-edge.card-edge::before`
+(0,2,1)→(0,3,1), so the geometry override still wins even where the two
+rules now tie on `top`/`left`/`right`/`height`. Verified in a headless
+render: `kings.html`'s top bar now computes solid `rgb(201,168,76)`;
+`intelligence.html`'s SWOT boxes compute a full-width card with a 3px,
+full-height, correctly-coloured left bar.
+
+`chronicle.html`'s `.event-card` was checked and correctly **excluded** from
+the sweep, per this file's own existing guidance: its `::before` draws the
+timeline's connector tick to the spine (`top:14px;width:14px;height:1px`),
+and `.card` already claims both `::before` (accent bar) and `::after` (hover
+shimmer) — there is no free pseudo-element left to move the tick to without
+a real DOM element, which is a larger change than a border-left→card-edge
+swap. `city.html`'s `.district-card` (no pseudo-element, JS already set
+`borderLeftColor` per-instance) and `heritage.html`'s ancestor rows
+(inline-styled, no class) had no such collision and were converted cleanly:
+JS now does `style.setProperty('--card-accent', …)` instead of
+`style.borderLeftColor = …`.
+
+```
+python3 scripts/audit.py            0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py  clean
+python3 scripts/module-contract.py  0 broken; 120 contracts
+node --check bg.js                  OK
+```
+
+### `.card-edge` sweep, part 2: 4 more files, and sizing what's left (2026-09-19)
+
+Follow-up to the entry above. With `.card-edge` actually working, scanned every
+hand-rolled `border-left:Npx solid` accent in the repo (76 files) rather than
+guessing which other pages might have the same pattern as `chronicle.html`/
+`city.html`/`heritage.html`. Filtering out sites that already carry `.card`
+and the one genuine pseudo-element collision (`chronicle.html`'s `.event-card`,
+already excluded) left 73 candidate sites across ~50 files — far more than a
+mechanical sweep should touch in one pass: most of them (`.ref-block` citation
+callouts in 5 files, `.notice`/`.notice-bar` banners, `.tbl-row.me`,
+`.hl-item`) aren't cards at all, and giving them `.card` would add unwanted
+hover-elevation and shimmer to a static citation or a table row. A background/
+padding-only heuristic script isn't reliable enough to tell those apart from a
+genuine unmigrated card — it flagged `.ref-block` as card-like on that basis,
+which is wrong.
+
+Converted the four highest-confidence genuine cards instead, each checked for
+whether its modifiers are ever simultaneously true on one element (a real
+constraint: `.card`'s accent is a single pseudo-element, so two modifiers
+sharing it must be mutually exclusive, unlike `contacts.html`'s independent
+`.vip`/`.overdue`, which use two different physical properties and can both be
+true — `.vip` was left on its own `border-top`, only `.overdue` moved):
+
+- `contacts.html` — `.contact-card.overdue` (`border-left` → `card-edge` +
+  `--card-accent:var(--red)`, JS-set only when the card is actually overdue).
+- `automation.html` — `.rule-card.active`/`.paused` (mutually exclusive by
+  construction: a rule is one or the other, never both).
+- `oath.html` — `.oath-card.personal`/`.verified` (same mutual exclusion,
+  `isOwn ? personal : verified`), both call sites (`renderList`,
+  `renderLocalArchive`).
+- `family.html` — the three static `.fr-card` role divs (`founder`/
+  `chairperson`/`heir`, one role per div) and `.mc.heir` (a boolean flag, the
+  only modifier `.mc` carries).
+
+`family.html`'s cards live behind `#owner-only-family` (`display:none` for a
+non-owner session, which the harness stub is by default) — verified geometry
+with that container forced visible rather than trusting the `height:auto`
+computed for an undisplayed box, which is a used-value artifact, not a real
+zero-height bug. `oath.html`'s `renderList`/`renderLocalArchive` and
+`family.html`'s `buildMemberCards` are declared inside `<script type="module">`
+(`CLAUDE.md` §8.1 class 4a: not on `window`), so their real render paths
+weren't callable from the harness; verified the CSS mechanics instead by
+reproducing the exact markup the edited template now produces and checking
+the resulting `::before` computed style.
+
+The other ~46 files are recorded here, not converted: each needs a per-file
+look at whether its `*-card`/`*-item`/`*-row` class is genuinely a card (this
+entry's four) or a differently-shaped UI element the sweep would misapply
+`.card` to (this entry's exclusions). Left for a future pass taken one file at
+a time, per this file's own precedent for exactly this kind of set
+(`FIXES_LOG.md`, 2026-09-04: "recorded as unblocked, to be taken one page at a
+time with judgement").
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
+### `.card-edge` sweep, part 3: 11 more files, and two more already-broken cases (2026-09-19)
+
+Continuing the previous entry's scan of the ~50-file remainder. Re-ran it with a
+tighter filter (a real box `border`, `border-radius`, and `cursor:pointer` as
+three independent card-likeness signals, not background+padding alone, which
+had wrongly flagged `.ref-block`) and manually verified every hit before
+touching it — the automated `already_has_card_class` check had a real miss
+(`vocabulary.html`'s `` `<div class="word-card card ${w.status}">` `` template
+literal), caught only by grepping the actual markup for each candidate rather
+than trusting the script's boolean a second time.
+
+Three files (`dashboard.html`'s `.alert-item`, `realm.html`'s `.elem-card`,
+`skills.html`'s `.sci-block`) were already using their own per-instance CSS
+custom property for the same purpose (`--ac`, `--ec`, `--sc` respectively) —
+these needed no markup changes at all, just `.alert-item{--card-accent:var(--ac)}`
+(etc.) in the base rule, since `--card-accent` then resolves against whatever
+value the element's own `--ac`/`--ec`/`--sc` already carries.
+
+Two more silent bugs found in the process, same shape as the `.card-edge`
+regression two entries up — a class-based colour rule that inline `style=`
+JS-set on the same element always overrides, so it never painted:
+`notes.html`'s `.note-card.pinned{border-left-color:#FFD700}` (every note's
+`style="border-left-color:'+col+'"` is category-based and always wins) and
+`projects.html`'s four `.status-*{border-left-color:...}` rules (same
+pattern, `col` is category-based via `CAT_COLORS`, not status-based).
+Preserved the existing (if inert) behaviour exactly — category colour always
+wins — rather than "fixing" it into showing status colours, since that
+wasn't part of this task's scope.
+
+Converted, each checked for whether the un-modified/base state already carried
+an accent (safe to add `.card-edge` unconditionally) or not (must stay
+conditional, `contacts.html`'s pattern from the first sweep):
+`mirror.html` (`.journal-entry`, always has a mood colour), `notes.html`
+(`.note-card`, always has a category colour), `projects.html` (`.proj-card`,
+always has a category colour; original width was 4px, preserved via
+`--card-edge-w:4px`), `graph-evidence.html` (`.evidence-item`, default cyan,
+gold on `:hover`/`.selected` — the accent colour changes on interaction, which
+works because `--card-accent` is just reassigned in those rules same as any
+other custom property), `dashboard.html`, `vocabulary.html` (`.word-card`,
+already had `.card`; status is a required enum, never absent), `principles.html`
+(`.principle-card.pinned` — **conditional**: unpinned cards had no border-left
+at all before, so `card-edge` is added only when `pinned`, otherwise the
+default `.card::before` top bar would newly appear on every unpinned card),
+`realm.html`, `agents.html` (`.agent-card`, no `.card` yet — added it, matching
+its own `:hover{transform:translateY(-2px);box-shadow:...}`, nearly identical
+to `.card:hover`'s own rule), `skills.html`'s `.sci-block` (10 static
+instances, each already carrying `--sc` inline), `mindmap.html`'s `.sci-block`
+(unrelated file, same class name, fully static gold, no modifier — original
+was 2px, preserved via `--card-edge-w:2px`).
+
+`search.html`'s `.res.owner-only` was found and deliberately **not** converted:
+`.res` is a search-result row, not a card, and `.card`'s own background/border/
+radius would apply only to owner-only rows (the only ones with the accent),
+producing a visibly different shape between owner and non-owner results rather
+than just adding the accent bar. Left as its existing hand-rolled `border-left`.
+
+Verification followed the same discipline as the previous two entries — real
+headless renders, not a diff read. Several pages needed a tab or panel forced
+active first (`realm.html`'s `#tab-elements`, `agents.html`'s `#tab-council`,
+`skills.html`/`mindmap.html`'s science panels), and `graph-evidence.html`'s
+real load path needs a signed-in Supabase session the harness stub doesn't
+provide, so its module-scoped `renderEvents`/`selectEvent` were exercised
+directly with synthetic data instead (same approach as the previous entry's
+`oath.html`/`family.html`).
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
+### `.card-edge` sweep, part 4: the "already has `.card`" bucket, 17 files (2026-09-19)
+
+The first sweep's triage script had a second output list alongside the 73
+"safe" candidates — 21 sites where the border-left-bearing class already
+co-occurred with `.card` in the same markup, which the script treated as
+"already correct, like `kings.html`" and excluded. `vocabulary.html` (part 3)
+proved that assumption wrong once already, so this entry checked all 21
+rather than trusting the label a second time.
+
+Most were a single, widely copy-pasted "science citation" component,
+`.sci-card`, already fixed-color and already-`.card` in 9 files
+(`achievements`, `exam`, `revenue`, `investment`, `wallet`, `intelligence`,
+`lab`, `charter`, `passport`) — each file's `.sci-card` uses one constant
+colour for all of its instances (no per-instance variance, closer to
+`heritage.html`'s original ancestor rows than to `kings.html`), so each
+just needed `--card-accent:<that file's colour>` in the base rule and
+`card-edge` added to the one repeated markup string. `charter.html` doubles
+up with a second class, `.article-card`, same shape.
+
+Five more already had their own per-instance custom property doing exactly
+`--card-accent`'s job, just under a different name — `cinema.html`
+(`--oc`), `dashboard.html`'s `.cmd-card` (`--cc`, a different card family
+on the same page already touched for `.alert-item` in part 3),
+`phases.html` (`--pc`), `factions.html`'s `.knight-card` (`--kc`), and
+`skills.html`'s `.skill-card` (`--sc`, again a different class from part
+3's `.sci-block` on the same page) — each just needed
+`--card-accent:var(--xx)` aliased in and `card-edge` added to their markup.
+
+`blockchain.html`'s `.nft-card` and `command.html`'s `.quote-card` were
+simple fixed-colour, no-variable cases (gold and translucent gold
+respectively), converted the same way as the `.sci-card` group.
+
+`hercules.html`'s `.labor-card` had the same silent-colour-loss shape as
+`notes.html`/`projects.html` in part 3 — `border-left:4px solid var(--gold)`
+in CSS, always overridden by an unconditional inline
+`style="border-left-color:'+theme.color+'"` — converted to
+`--card-accent`/`card-edge` with `--card-edge-w:4px` preserving the
+original width, and verified past this page's own timing quirk: its
+`renderLabors()` runs on `DOMContentLoaded` before `/omega-hercules.js`
+finishes loading in the harness, prints "Labor data unavailable" on the
+first pass, and only renders real cards on a second call — confirmed the
+CSS was correct by re-invoking `renderLabors()` once the module was ready,
+not by chasing that pre-existing race condition.
+
+A find-and-verify note for whoever does the next batch of the ~35 files
+still unexamined: a script boolean (`already_has_card_class`,
+`has_before`/`has_after`, the card-likeness score) is a candidate filter,
+not a verdict — this entry and part 3 both found real conversions inside
+buckets a prior pass had labelled "skip."
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+python3 scripts/reachability-contract.py     OK (pre-existing advisories only)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
+### `.card-edge` sweep, part 5: 6 more files from the remaining 28 (2026-09-19)
+
+Scanned the 28 files still unexamined after parts 1-4 with the same
+real-border/radius/cursor filter. Most confirmed as genuinely not cards —
+`clarity.html`/`fasting.html`/`mentors.html`/`physiology.html`'s `.ref-block`
+citation callouts, `payments.html`'s `.notice-bar` and `profile.html`'s
+`.notice` banners, `leaderboard.html`/`network.html`'s table/list rows,
+`media.html`'s `.sg-card`/`.fc` (a false-positive match: their `border-left`
+is 1px `var(--border)`, the same colour as the other three sides completing
+a uniform box border, not an accent — same shape as `.game-card` on the same
+page, excluded in part 3). `account.html`'s `.agent` rule is dead CSS: the
+class exists nowhere in that page's markup, so it was left alone rather than
+fixed as a "bug" that has zero effect either way.
+
+Six were genuine and converted: `autonomous-insights.html`'s `.insight-item`
+(default/`.warning`/`.critical`, all three states already carry some accent
+colour, so unconditional), `knowledge.html`'s `.concept-cell` (six static
+instances, one fixed colour, same shape as `heritage.html`'s original
+pattern), `news.html`'s `.dispatch` (single fixed colour), `chatbot.html`'s
+`.agent-card` (already used `--ac` and already had `.card` — missed by every
+prior triage pass because it's set via `d.className='agent-card card'`, a JS
+property assignment the `class="..."` regex never matches; same detection
+gap as `vocabulary.html` in part 3, different syntax), `kyc.html`'s
+`.kyc-step.done` (conditional — unmodified steps have no accent, and it can
+also be added by JS at runtime via `classList.add('done')`, so that call site
+needed the same `card`/`card-edge`/`--card-accent` addition as the static
+markup), and `trophies.html`'s `.medal-card.earned` (conditional, same
+reasoning — unearned medals have no accent).
+
+`trophies.html`'s `.cert-row.issued` was found and correctly **not**
+converted: `.cert-row` has no real box border (`border-bottom:1px dashed`
+only) and no `border-radius` — a table-row shape, not a card, matching this
+page's own `.tbl-row`-style exclusions elsewhere.
+
+```
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py   clean
+python3 scripts/module-contract.py   0 broken; 120 contracts
+python3 scripts/silent-failure-detector.py   0 findings
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```

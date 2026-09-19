@@ -71,9 +71,6 @@ a{color:inherit;text-decoration:none}
 /* FAMILY MEMBERS */
 .family-roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 clamp(14px,3vw,36px);margin-bottom:14px}
 .fr-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:16px;position:relative}
-.fr-card.founder{border-left:3px solid var(--gold)}
-.fr-card.heir{border-left:3px solid var(--cyan)}
-.fr-card.chairperson{border-left:3px solid var(--purple)}
 .frc-role{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
 .frc-name{font-family:var(--D);font-size:14px;font-weight:700;margin-bottom:4px}
 .frc-status{font-size:12px;font-weight:300;color:var(--muted);margin-bottom:8px}
@@ -111,7 +108,6 @@ a{color:inherit;text-decoration:none}
 .member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .mc{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:14px;transition:all .2s}
 .mc:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
-.mc.heir{border-left:3px solid var(--gold)}
 .mc-rel{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
 .mc-name{font-family:var(--D);font-size:13px;font-weight:700;color:var(--solar);margin-bottom:3px}
 .mc-sign{font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px}
@@ -259,7 +255,7 @@ a{color:inherit;text-decoration:none}
     <div class="sechead" data-reveal="fade-up">FAMILY ROLES -- SOVEREIGN CONSTITUTION <span data-canon-lattice="nine"></span></div>
     <div class="family-roles">
       <!-- FOUNDER -->
-      <div class="fr-card card founder">
+      <div class="fr-card card card-edge founder" style="--card-accent:var(--gold)">
         <div class="frc-role">FOUNDER & ARCHITECT</div>
         <div class="frc-name" style="color:var(--gold)"><span id="family-founder-name" style="display:none">MAJOR SLEIMAN YOUSSEF DAGHER</span></div>
         <div class="frc-status">Sovereign Founder . Lebanese Engineer #30875 . Architecture<br/>Born: 19 April 1982, Tripoli, Lebanon</div>
@@ -267,7 +263,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--gold);border-color:rgba(201,168,76,.4)">RANK 9.9.9 -- ALL-TIME ACCESS</span>
       </div>
       <!-- WIFE - CHAIRPERSON (Image 6 inspired) -->
-      <div class="fr-card card chairperson">
+      <div class="fr-card card card-edge chairperson" style="--card-accent:var(--purple)">
         <div class="frc-role">WIFE -- CHAIRPERSON</div>
         <div class="frc-name" style="color:var(--purple)" id="wife-name">DAGHER FAMILY CHAIRPERSON</div>
         <div class="frc-status" id="wife-status">Designated successor . Sovereign trustee . Family vault access</div>
@@ -279,7 +275,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--purple);border-color:rgba(155,107,240,.4)">CHAIRPERSON -- FULL TRUST ACCESS</span>
       </div>
       <!-- CHILDREN - HEIRS (Image 6 inspired) -->
-      <div class="fr-card card heir" style="grid-column:1/-1">
+      <div class="fr-card card card-edge heir" style="grid-column:1/-1;--card-accent:var(--cyan)">
         <div class="frc-role">CHILDREN -- DESIGNATED HEIRS</div>
         <div class="frc-name" style="color:var(--cyan)">DAGHER LINEAGE HEIRS</div>
         <div class="frc-status">Succession structure designated by the Founder. Children's Trust intended to activate at maturity.</div>
@@ -527,7 +523,7 @@ function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
   if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:12px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
   rows.forEach(m=>{
-    const c=document.createElement('div');c.className='mc card'+(m.is_heir?' heir':'');c.id='node-'+m.id;
+    const c=document.createElement('div');c.className='mc card'+(m.is_heir?' card-edge heir':'');if(m.is_heir)c.style.setProperty('--card-accent','var(--gold)');c.id='node-'+m.id;
     c.innerHTML='<div class="mc-rel">'+((m.relation||'FAMILY').toUpperCase())+'</div><div class="mc-name">'+m.name+'</div><div class="mc-sign">'+(m.sign||'SIGN NOT SET')+'</div><div class="mc-actions"><button class="mc-btn mc-heir-btn">'+((m.is_heir?'REVOKE HEIR':'SET HEIR'))+'</button><button class="mc-btn mc-del">REMOVE</button></div>';
     const heirBtn=c.querySelector('.mc-heir-btn');heirBtn.dataset.id=m.id;heirBtn.dataset.heir=m.is_heir?1:0;
     const delBtn=c.querySelector('.mc-del');delBtn.dataset.id=m.id;

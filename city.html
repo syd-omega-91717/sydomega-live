@@ -9,7 +9,7 @@
 .city-stat{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;background:rgba(7,7,11,.8)}
 .city-stat b{color:var(--gold)}
 .district-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
-.district-card{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:16px;border-left:3px solid var(--gold);transition:border-left-color .2s}
+.district-card{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:16px}
 .d-zone{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .d-name{font-family:var(--M);font-size:12px;color:var(--gold);font-weight:700;margin-bottom:6px}
 .d-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:8px}
@@ -170,7 +170,7 @@ function renderDistricts(){
   if(!grid)return;
   grid.innerHTML='';
   DISTRICTS.forEach(function(d){
-    var card=document.createElement('div');card.className='district-card';card.style.borderLeftColor=d.col;
+    var card=document.createElement('div');card.className='district-card card card-edge';card.style.setProperty('--card-accent',d.col);
     var zone=document.createElement('div');zone.className='d-zone';zone.textContent=d.zone;
     var nm=document.createElement('div');nm.className='d-name';nm.textContent=d.name;
     var desc=document.createElement('div');desc.className='d-desc';desc.textContent=d.desc;

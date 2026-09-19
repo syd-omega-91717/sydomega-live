@@ -15,12 +15,8 @@
 .stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
 .stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--gold);font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
-.proj-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:4px solid var(--gold);padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s;position:relative}
+.proj-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s;position:relative;--card-edge-w:4px}
 .proj-card:hover{border-color:var(--gold)}
-.proj-card.status-complete{border-left-color:var(--grn)}
-.proj-card.status-blocked{border-left-color:var(--crim)}
-.proj-card.status-paused{border-left-color:#555}
-.proj-card.status-planning{border-left-color:var(--prp)}
 .proj-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
 .proj-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;flex:1}
 .status-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;border:1px solid;white-space:nowrap}
@@ -323,7 +319,7 @@ function projCard(p){
     var d=Math.ceil((new Date(p.due)-new Date())/86400000);
     daysLeft=d<0?'OVERDUE '+(Math.abs(d))+'d':d===0?'DUE TODAY':d+'d LEFT';
   }
-  return '<div class="proj-card status-'+p.status+'" style="border-left-color:'+col+'">'
+  return '<div class="proj-card card card-edge status-'+p.status+'" style="--card-accent:'+col+'">'
     +'<div class="proj-actions">'
     +'<button class="action-btn" onclick="editProject(\''+p.id+'\',event)">EDIT</button>'
     +'<button class="action-btn" onclick="cycleStatus(\''+p.id+'\',event)" title="Cycle status">STATUS</button>'

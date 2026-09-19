@@ -410,7 +410,7 @@
         <!-- Center Panel: Role Analyses -->
         <div class="council-panel">
           <h2>Council Analysis</h2>
-          <div id="roleAnalysisPanel">
+          <div id="roleAnalysisPanel" data-stagger data-stagger-gap="60">
             <div class="empty-state">Start a deliberation to see role analyses</div>
           </div>
         </div>
@@ -510,7 +510,7 @@
         const questions = roleData?.questions || [];
 
         return `
-          <div class="role-card">
+          <div class="role-card" data-reveal="depth-in">
             <div class="role-header" onclick="toggleRoleDetails(this)">
               <span class="role-icon">${role.icon}</span>
               <span class="role-title">${role.title}</span>
@@ -573,16 +573,16 @@
           <div class="verdict-description">${esc(verdict.description)}</div>
         </div>
 
-        <div class="consensus-grid">
-          <div class="consensus-card">
+        <div class="consensus-grid" data-stagger data-stagger-gap="70">
+          <div class="consensus-card" data-reveal="depth-in">
             <div class="consensus-value">${syn.consensus_ready}</div>
             <div class="consensus-label">Ready</div>
           </div>
-          <div class="consensus-card">
+          <div class="consensus-card" data-reveal="depth-in">
             <div class="consensus-value">${syn.consensus_not_ready}</div>
             <div class="consensus-label">Not Ready</div>
           </div>
-          <div class="consensus-card">
+          <div class="consensus-card" data-reveal="depth-in">
             <div class="consensus-value">${syn.consensus_conditional}</div>
             <div class="consensus-label">Conditional</div>
           </div>

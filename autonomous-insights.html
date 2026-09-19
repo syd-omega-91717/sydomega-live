@@ -129,18 +129,18 @@
 
     .insight-item {
       background: var(--void2);
-      border-left: 4px solid var(--gold);
       padding: 1.25rem;
       margin-bottom: 1rem;
       border-radius: 4px;
+      --card-edge-w: 4px;
     }
 
     .insight-item.warning {
-      border-left-color: #ff9500;
+      --card-accent: #ff9500;
     }
 
     .insight-item.critical {
-      border-left-color: var(--crim);
+      --card-accent: var(--crim);
     }
 
     .insight-header {
@@ -324,6 +324,7 @@
 </head>
 <body data-page="autonomous-insights">
   <div class="shell">
+    <aside id="omega-side" data-page="autonomous-insights" aria-label="Navigation"></aside>
     <div class="main">
       <div id="app" style="padding: 2rem">
         <div class="section-header">
@@ -335,7 +336,7 @@
           <h2 class="section-title" style="font-size: 1.1rem">Agent Performance</h2>
         </div>
 
-        <div class="autonomous-grid" id="agent-performance">
+        <div class="autonomous-grid" id="agent-performance" data-stagger data-stagger-gap="60">
           <div class="loading">Loading agent metrics...</div>
         </div>
 
@@ -377,7 +378,7 @@
 
           <!-- Recommendations Tab -->
           <div id="recommendations" class="tab-content">
-            <div class="recommendations-grid" id="recommendations-content">
+            <div class="recommendations-grid" id="recommendations-content" data-stagger data-stagger-gap="60">
               <div class="loading">Loading recommendations...</div>
             </div>
           </div>
@@ -471,6 +472,7 @@
 
         const card = document.createElement("div");
         card.className = "agent-card";
+        card.setAttribute("data-reveal", "depth-in");
         card.innerHTML = `
           <div class="agent-header">
             <span style="font-size: 1.5rem">${info.icon}</span>
@@ -592,7 +594,7 @@
 
         insights.forEach((insight) => {
           const item = document.createElement("div");
-          item.className = `insight-item ${insight.severity}`;
+          item.className = `insight-item card card-edge ${insight.severity}`;
 
           item.innerHTML = `
             <div class="insight-header">
@@ -637,6 +639,7 @@
         insights.forEach((insight) => {
           const card = document.createElement("div");
           card.className = "recommendation-card";
+          card.setAttribute("data-reveal", "rotate-in");
 
           card.innerHTML = `
             <div class="recommendation-title">${insight.insight_type}</div>

@@ -11,9 +11,8 @@
 .kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
 .kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:var(--cyan)}
-.note-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--cyan);padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
+.note-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
 .note-card:hover{border-color:var(--cyan);background:#111}
-.note-card.pinned{border-left-color:#FFD700}
 .note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
 .note-preview{font-size:12px;color:var(--muted);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
 .note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
@@ -343,7 +342,7 @@ function renderNotes(){
 function noteCard(n){
   var col=CAT_COLORS[n.cat]||'#00E5FF';
   var prev=n.body.slice(0,180).replace(/[*#`_>]/g,'');
-  return '<div class="note-card'+(n.pinned?' pinned':'')+'" style="border-left-color:'+col+'" onclick="viewNote(\''+n.id+'\')">'
+  return '<div class="note-card card card-edge'+(n.pinned?' pinned':'')+'" style="--card-accent:'+col+'" onclick="viewNote(\''+n.id+'\')">'
     +'<button class="del-btn" onclick="delNote(event,\''+n.id+'\')">DEL</button>'
     +'<button class="pin-btn'+(n.pinned?' pinned':'')+'" onclick="togglePin(event,\''+n.id+'\')">'+(n.pinned?'★':'☆')+'</button>'
     +'<div class="note-title">'+esc(n.title)+'</div>'

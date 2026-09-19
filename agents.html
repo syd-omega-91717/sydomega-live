@@ -16,7 +16,7 @@
 .meta-val{font-family:var(--D);font-size:.9rem;color:var(--gold)}
 .meta-lbl{font-family:var(--M);font-size:.65rem;letter-spacing:.1em;color:var(--muted);margin-top:.2rem}
 .council-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;padding:1rem}
-.agent-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1rem;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s;border-left:3px solid transparent;position:relative}
+.agent-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1rem;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s;position:relative}
 .agent-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .agent-card.is-mine{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.04);box-shadow:0 0 24px rgba(201,168,76,.08)}
 .agent-mine-badge{position:absolute;top:.5rem;right:.65rem;font-family:var(--M);font-size:.6rem;letter-spacing:.12em;color:rgba(201,168,76,.55)}
@@ -188,8 +188,8 @@ function renderCouncil(agents,mySign){
     var glyph=SIGN_GLYPHS[ag.sign]||'✦';
     var isMine=ag.sign&&mySign&&ag.sign.toLowerCase()===mySign.toLowerCase();
     var card=document.createElement('div');
-    card.className='agent-card'+(isMine?' is-mine':'');
-    card.style.borderLeftColor=col+'55';
+    card.className='agent-card card card-edge'+(isMine?' is-mine':'');
+    card.style.setProperty('--card-accent',col+'55');
     if(isMine){var badge=document.createElement('div');badge.className='agent-mine-badge';badge.textContent='YOUR AGENT';card.appendChild(badge);}
     var glyphEl=document.createElement('div');glyphEl.className='agent-glyph';glyphEl.style.color=col;glyphEl.textContent=glyph;
     var nameEl=document.createElement('div');nameEl.className='agent-name';nameEl.style.color=col;nameEl.textContent=ag.name.toUpperCase();

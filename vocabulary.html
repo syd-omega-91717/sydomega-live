@@ -30,9 +30,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .word-card{background:#111;border:1px solid #1a1a1a;border-radius:4px;padding:14px;position:relative;transition:border-color .2s}
 .word-card:hover{border-color:#333}
-.word-card.mastered{border-left:3px solid #27ae60}
-.word-card.learning{border-left:3px solid var(--gold)}
-.word-card.new{border-left:3px solid #3498db}
+.word-card.mastered{--card-accent:#27ae60}
+.word-card.learning{--card-accent:var(--gold)}
+.word-card.new{--card-accent:#3498db}
 .word-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
 .word-term{font-size:1rem;color:#fff;letter-spacing:.05em}
 .word-pos{font-size:.55rem;color:var(--gold);letter-spacing:.08em;background:#1a1a1a;padding:2px 6px;border-radius:2px}
@@ -387,7 +387,7 @@ function renderLibrary(){
   else if(libFilter==='due') data=data.filter(w=>w.nextReview<=today&&w.status!=='mastered');
   if(q) data=data.filter(w=>w.term.toLowerCase().includes(q)||w.def.toLowerCase().includes(q)||(w.synonyms||'').toLowerCase().includes(q));
   if(!data.length){grid.innerHTML='<div class="empty">NO WORDS MATCH</div>';return;}
-  grid.innerHTML=data.map(w=>`<div class="word-card card ${w.status}">
+  grid.innerHTML=data.map(w=>`<div class="word-card card card-edge ${w.status}">
     <div class="word-head"><span class="word-term">${w.term}</span><span class="word-pos">${POS_LABELS[w.pos]||''} ${(DOMAIN_LABELS[w.domain]||w.domain).slice(0,8)}</span></div>
     <div class="word-def">${w.def}</div>
     ${w.example?`<div class="word-example">"${w.example}"</div>`:''}

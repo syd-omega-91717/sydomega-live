@@ -14,8 +14,9 @@ themed around a consistent zodiac/Greek-god/element brand system. It is a
 static site with a Supabase backend — no framework, no build step, no
 bundler.
 
-- **Owner:** one account (`profiles.is_owner = true`, keyed to
-  `s.y.dagher@gmail.com`) has elevated access across the schema.
+- **Owner:** `profiles.is_owner = true` grants elevated schema-wide access,
+  held by two accounts of the same owner: `s.y.dagher@gmail.com` and
+  `slmndghr@gmail.com` (confirmed 2026-09-17, closing `FIXES_LOG.md` #177).
 - **Members:** other accounts request access, sit in a pending/approved
   state (`access_approved`, `pending.html`, `approvals.html`), and once
   approved get full app access. This is an invite/approval-gated personal
@@ -190,7 +191,9 @@ at one viewport and none measured against `#omega-consent` (height varies 80–1
 with its copy). `omega-bottom-stack.js` publishes `--omega-chrome-bottom`
 (persistent furniture) and `--omega-transient-bottom` (that plus any banner).
 Never add a bottom-anchored constant — read a property, and mark new furniture
-`data-omega-bottom-chrome`. Top-left has the same problem, unpublished: bg.js puts
+`data-omega-bottom-chrome`. **An ancestor's `perspective` voids it** — it becomes
+the containing block for `position:fixed` descendants, so `bottom` ignores the
+viewport. `<body>` had one; 8 widgets sat below the fold on 198/204 (187). Top-left has the same problem, unpublished: bg.js puts
 `#om-open` (fixed, z-9000) at x=12..54 on **every** page, so a fluid gutter walks
 under it; reserve `max(<gutter>, 62px)`.
 
@@ -525,18 +528,14 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production 404s because NOTHING PROMOTES IT, and two gates go green anyway.** Measured via
-  the Vercel MCP 2026-09-06 (`FIXES_LOG.md` 107): the newest `target:production` deployment
-  serves **200 with the full index.html** at its own URL, while the production alias serves a
-  **404** with `age: 68498`. The build is fine; the alias is stale. `vercel-production.yml`'s
-  `deploy` job is **skipped on every run** (`ready=false`, no `VERCEL_TOKEN`) and
-  `vercel.json` sets `git.deploymentEnabled {"*": false}` — no promotion path is
-  active. Only `VERCEL_TOKEN` is needed; org/project ids default in the workflow. Also
-  `ssoProtection=all_except_custom_domains`: `*.vercel.app` returns **401** to anonymous curl
-  while the custom domain returns **404** — two failures that look like one. Read a deployment
-  URL with `web_fetch_vercel_url`, never curl. `Production Surface Verification` stays green by
-  design and marks the outage with `::warning::` (105) — **a green board does not mean the site
-  is up**.
+- **Production is live and current (re-verified 2026-09-17, `FIXES_LOG.md` #180) — the
+  2026-09-06 outage this used to describe is closed.** `sydomega.com` now returns **200** with
+  the exact HTML of the newest `target:production` deployment (matching `etag`); `vercel.json`
+  now sets `git.deploymentEnabled.main: true`, so Vercel's own Git integration promotes every
+  `main` push. `vercel-production.yml`'s `deploy` job still self-reports `CONTROLLED` (no
+  `VERCEL_TOKEN`) — harmless, since it isn't the active promotion path. Read a deployment URL
+  with `web_fetch_vercel_url`, never curl (`ssoProtection=all_except_custom_domains` 401s a
+  bare `*.vercel.app` curl). Re-verify before trusting this if it's been a while.
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies the
   web surface into `public/` from a fixed directory allow-list, so a top-level directory not on
   it is absent from production — that already cost `/vendor/supabase-js.js` on 127 pages while
@@ -564,8 +563,8 @@ entries (which were accurate when written):
 
 | check | current baseline |
 |---|---|
-| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **303** tests, all passing |
+| `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
+| `python3 -m unittest discover -s scripts/tests` | **312** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -578,7 +577,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **9**, after 10 of 19 turned out to be one broken DOM, not a palette (169) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **6** (10 of 19 were one broken DOM, not a palette — 169) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
@@ -596,37 +595,36 @@ entries (which were accurate when written):
   `window.`-exposed function reports missing: a scan once reported 44 broken
   pages this way and the real number was 6.
   `.claude/skills/verify-in-browser/` handles it.
-- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects to
-  `terms.html` and the page never renders.
+- **A signed-in stub needs `terms_accepted: true`**, or `bg.js:1002` redirects
+  to `terms.html` and the page never renders.
 - **Verify a "0 findings" result is real.** A stopped static server reports 0;
-  so does a regex damaged in transit. Cross-check with a run that must find
-  something.
+  so does a regex damaged in transit. Cross-check with a run that must find one.
 
 - **`git show <rev>:<file>` to pin a real BEFORE**, not `git stash` — once the
   change is committed there is nothing to stash and the "before" run silently
   executes the fixed code. Serve pinned files with the content type matching
   their extension: an `.html` served as `text/javascript` makes every element
   report absent, which looks exactly like a dramatic improvement.
-- **Test RLS by impersonating a real member, in-database.** `execute_sql`
-  through the Supabase MCP runs privileged, so it proves nothing about what a
-  member can see. `set_config('role','authenticated',true)` plus
-  `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role',
-  'authenticated')::text, true)` reproduces exactly what PostgREST does, and is
-  what surfaced the missing-GRANT class above. Always compare the non-owner
-  count against the privileged count — equal counts on a table that should be
-  scoped is the finding.
+- **Test RLS by impersonating a member — `set_config('role',...)` is not
+  that test.** It even makes `current_user` read `'authenticated'`, but
+  measured 2026-09-17 it does not engage RLS — a non-owner impersonated
+  this way saw every row of `profiles`/`task_completions`/`certificates`,
+  a false breach that vanished once fixed. Use real commands, one block:
+  `BEGIN; SET LOCAL ROLE authenticated; SET LOCAL "request.jwt.claims" =
+  '{"sub":"<uuid>","role":"authenticated"}'; <query>; COMMIT;`. `EXPLAIN`
+  confirms which is live — `Filter:` shows under `SET LOCAL ROLE`, absent
+  under `set_config('role',...)`. Compare non-owner vs privileged counts;
+  equal is the finding.
 - **Classifying a policy by substring is not reading it.** A qual containing
   `is_platform_owner` was labelled "owner-only" by a first-pass classifier and
   turned out to be `is_platform_owner() OR status = 'active'` — a second branch
-  that makes rows member-visible. The classifier's own false-positive pass is
-  what caught it, but only because the result was checked against real row
-  counts rather than trusted. Read the full `qual` before acting on a label.
-- **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
-  not fail.** At `--depth 1` every file dates to the clone, so any per-file date from
-  it is a guess — three wrong dates reached the committed registry that way.
-  `omega-registry.py` now checks the SHA against `.git/shallow` and refuses rather
-  than guessing; `ci.yml` sets `fetch-depth: 0`. Detect the boundary, not the
-  shallowness.
+  making rows member-visible, caught only because the result was checked
+  against real row counts rather than trusted. Read the full `qual` first.
+- **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it
+  does not fail.** At `--depth 1` every file dates to the clone, so a per-file
+  date from it is a guess — three wrong dates reached the committed registry
+  that way. `omega-registry.py` checks the SHA against `.git/shallow` and
+  refuses rather than guessing; `ci.yml` sets `fetch-depth: 0`.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']`, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches
@@ -801,9 +799,8 @@ entries (which were accurate when written):
   replaced them — don't repeat it.
 - **Never show a success state without checking the write's actual result
   first.** This is the single most repeated root cause of real bugs found
-  in this repo's history (§8.1 bug class 1; `FIXES_LOG.md`: `extend_trial`, `complete_task`,
-  `member_presence`, onboarding, the GDPR export, the activity ticker, the
-  dispatch fallback — each one silently did nothing while the UI reported
+  in this repo's history (§8.1 bug class 1; seven confirmed cases cited in
+  `FIXES_LOG.md`, each silently doing nothing while the UI reported
   success). Every new `sb.from(...)`/`sb.rpc(...)` call that isn't a pure
   read must check `.error` (Supabase resolves to `{data:null,error}`, it
   does not throw) before rendering a success toast, updating in-memory

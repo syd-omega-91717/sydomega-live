@@ -28,7 +28,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .contact-card{background:var(--p);border:1px solid #1a1a1a;border-radius:6px;padding:16px;position:relative;transition:border-color .2s;cursor:pointer}
 .contact-card:hover{border-color:#333}
 .contact-card.vip{border-top:3px solid var(--gold)}
-.contact-card.overdue{border-left:3px solid var(--red)}
 .contact-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:bold;margin-bottom:10px}
 .contact-name{font-size:.9rem;color:var(--t);letter-spacing:.04em;margin-bottom:2px}
 .contact-role{font-size:.6rem;color:var(--d);letter-spacing:.06em;margin-bottom:8px}
@@ -312,7 +311,7 @@ function renderContacts(){
   grid.innerHTML=data.map(function(c){
     var due=isDue(c);
     var lastInt=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
-    return '<div class="contact-card card '+(c.vip?'vip':'')+' '+(due?'overdue':'')+'">'
+    return '<div class="contact-card card '+(c.vip?'vip':'')+' '+(due?'overdue card-edge':'')+'"'+(due?' style="--card-accent:var(--red)"':'')+'>'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
       +'<div class="contact-avatar" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44">'+initials(c.name)+'</div>'
       +'<button class="btn-red" onclick="deleteContact('+c.id+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'

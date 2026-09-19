@@ -159,9 +159,11 @@ revealing `#app` fires no resize event to recover. This killed the dashboard's
 `#galaxy-canvas` and `ecosystem.html`'s `#eco-canvas` outright. A
 `ResizeObserver` is the fix; `scan.js canvas` is the detector.
 
-**Three pages throw from blocked CDNs, not from bugs**: `graph.html` (d3),
-`map.html` (Leaflet), `realm.html` (three.js). Expected in the sandbox,
-fine in production.
+**`graph.html`/`map.html`/`realm.html` no longer throw at all — d3, Leaflet
+and three.js are vendored (`494ad666`) and load same-origin from `/vendor/`,
+never a CDN.** This note used to say the opposite; corrected after a full
+204-page `scan.js errors` run reported 0 pages with uncaught errors. If one
+of these three throws again, it is a real regression, not sandbox noise.
 
 ## Rules
 

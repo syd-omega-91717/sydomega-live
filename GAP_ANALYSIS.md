@@ -221,12 +221,14 @@ open, recorded in `FIXES_LOG.md`:
   `TypeError: window.OmegaNav.updateEmblems is not a function` on **4 of 5** pages
   against the pinned pre-fix file and on **0 of 5** after. The reasoning is left in
   the file where the code was, so it is not re-added.
-- **`graph.html` and `map.html` throw on every load** (opened 2026-09-13, measured
-  before/after so not caused by that day's work): `d3.select is not a function` and
-  `L.map is not a function`. Both are the documented unvendored-library class
-  (`FIXES_LOG.md` 128, 130-132, 135-137) — the library never arrives, so none of the
-  page's own module code runs. Fix is to vendor d3 and Leaflet into `/vendor/` the way
-  the other seven were.
+- ~~**`graph.html` and `map.html` throw on every load**~~ **CLOSED** — `494ad666`
+  vendored both libraries (`vendor/d3.min.js`, `vendor/leaflet.js` + `leaflet.css`)
+  and both pages already load them via `loadUMD('/vendor/...')`, same-origin, not a
+  CDN. Re-verified this session: a full-estate headless render (204 pages, this
+  session) reports `pages with uncaught errors or rejections: 0`, and
+  `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
+  `verify-in-browser` skill's own gotcha list still called these two (plus
+  `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a
@@ -382,14 +384,14 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **39 tables have RLS policies and no grant** (re-counted live 2026-08-29).
-  Left locked out — the safe state. **Measured, not inferred:** of 202 public
-  tables RLS is enabled on **all 202** (the `audit.py` check-4 invariant holds
-  in production), 74 have policies *and* a grant, 39 have policies and no
-  grant, 1 has a grant and no policy (still locked — RLS with no policy denies).
-  All 39 were cross-referenced against client `.from(...)` calls: **none is
-  reachable from any page**. Do not "fix" it by granting without deciding the
-  feature is wanted.
+- **130 tables have RLS policies and no grant** (re-counted live 2026-09-17,
+  `FIXES_LOG.md` #179 — up from 39 on 2026-08-29 as the scaffold grew). Left
+  locked out — the safe state. All 130 cross-referenced against client
+  `.from(...)` calls: **129 unreachable from any page**, do not "fix" by
+  granting without deciding the feature is wanted. **One was reachable and
+  broken** — `agent_experiments` (`autonomous-insights.html`) hit a real,
+  live `42501` on every read; granted and verified in #179, not a case of
+  this rule.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

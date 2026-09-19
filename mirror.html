@@ -35,7 +35,7 @@ input[type=range]{width:100%;accent-color:var(--gold);height:4px;cursor:pointer}
 .submit-btn:hover{background:rgba(155,89,182,.2);box-shadow:0 0 20px rgba(155,89,182,.15)}
 
 /* JOURNAL */
-.journal-entry{background:rgba(255,255,255,.03);border:1px solid rgba(155,89,182,.12);border-left:3px solid transparent;border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.journal-entry{background:rgba(255,255,255,.03);border:1px solid rgba(155,89,182,.12);border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 .je-date{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 .je-metrics{display:flex;gap:12px;flex-wrap:wrap}
 .je-metric{text-align:center}
@@ -340,8 +340,8 @@ function renderJournal(){
   entries.slice(0,30).forEach(function(e){
     var m=MOODS[e.mood-1]||MOODS[2];
     var entry=document.createElement('div');
-    entry.className='journal-entry';
-    entry.style.borderLeftColor=m.color;
+    entry.className='journal-entry card card-edge';
+    entry.style.setProperty('--card-accent',m.color);
     var dt=document.createElement('div');dt.className='je-date';
     dt.textContent=new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
     var metrics=document.createElement('div');metrics.className='je-metrics';

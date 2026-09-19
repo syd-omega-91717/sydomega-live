@@ -4,7 +4,7 @@
 <meta charset=UTF-8>
 <meta name=viewport content=width=device-width,initial-scale=1>
 <title>Analytics Dashboard · SYD OMEGA 91717</title>
-<meta name=description content="Real-time member analytics, engagement metrics, and predictive insights.">
+<meta name=description content="Preview of the planned member analytics, engagement metrics, and predictive insights dashboard (Phase 5, not yet wired to live data).">
 <link rel=manifest href=/manifest.json>
 <script src=/bg.js defer></script>
 <style>
@@ -45,6 +45,7 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 .loading{text-align:center;padding:40px 20px;color:var(--muted)}
 .error{background:rgba(139,0,0,.1);border:1px solid var(--crim);border-radius:4px;padding:12px;color:var(--crim);margin:12px 0;font-size:12px}
 .success{background:rgba(63,178,127,.1);border:1px solid var(--green);border-radius:4px;padding:12px;color:var(--green);margin:12px 0;font-size:12px}
+.preview-banner{background:rgba(226,200,109,.1);border:1px solid var(--solar);border-radius:4px;padding:12px 16px;color:var(--solar);margin-bottom:16px;font-family:var(--M);font-size:12px;letter-spacing:.5px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -60,6 +61,8 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div style=font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px>INTELLIGENCE · INSIGHTS</div>
 <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">ANALYTICS DASHBOARD</h1>
 
+<div class=preview-banner>&#9888; PREVIEW &middot; SIMULATED DATA &mdash; this Phase 5 dashboard is not yet wired to live Supabase data. Every number below is a placeholder, not a real member metric.</div>
+
 <div class=tab-container>
 <button class="tab-btn active" data-tab=overview>OVERVIEW</button>
 <button class=tab-btn data-tab=engagement>ENGAGEMENT</button>
@@ -71,11 +74,11 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <!-- OVERVIEW TAB -->
 <div id=overview class="tab-content active">
 <div class=sechead>REAL-TIME METRICS</div>
-<div class=kpi-row id=kpi-overview>
-<div class=kpi><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
-<div class=kpi><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
-<div class=kpi><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
-<div class=kpi><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
+<div class=kpi-row id=kpi-overview data-stagger data-stagger-gap=70>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
 </div>
 
 <div class=sechead>ENGAGEMENT TRENDS (7-DAY)</div>
@@ -101,11 +104,11 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <!-- ENGAGEMENT TAB -->
 <div id=engagement class=tab-content>
 <div class=sechead>ENGAGEMENT METRICS</div>
-<div class=kpi-row>
-<div class=kpi><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
-<div class=kpi><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
-<div class=kpi><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
-<div class=kpi><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
+<div class=kpi-row data-stagger data-stagger-gap=70>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
 </div>
 
 <div class=sechead>TOP PAGES</div>

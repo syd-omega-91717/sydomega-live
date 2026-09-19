@@ -38,11 +38,11 @@ effectively invisible unless invoked by exact name.
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-server` | yes | — | 5,094 | CLAUDE.md, README.md | 2026-08-30 |
-| `verify-in-browser` | yes | 4 | 2,257 | CLAUDE.md, README.md | 2026-08-30 |
+| `verify-in-browser` | yes | 4 | 2,310 | CLAUDE.md, README.md | 2026-09-18 |
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,590 tokens** if every SKILL.md were read in one
+**23 skills, ~38,643 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -99,7 +99,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `omega-*.js` modules | 134 (1270 KB) |
 | root `.js` files | 142 |
 | `supabase/*.sql` (flat bag) | 126 |
-| `supabase/migrations/*.sql` | 187 (106 numbered `NNNN_`, 81 timestamped) |
+| `supabase/migrations/*.sql` | 190 (106 numbered `NNNN_`, 84 timestamped) |
 | Edge Functions | 14 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -123,9 +123,9 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 93 files added since (numbered and
+end-to-end for the first time"*. The 96 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 187. Treat the validated scope as `0001`–`0094` only.
+all 190. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 204 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

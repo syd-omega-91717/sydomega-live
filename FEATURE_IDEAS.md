@@ -976,3 +976,113 @@ the pattern that produced `hercules.html`'s `Math.random()` progress and
 
 Wiring it is roughly a day's work and would give the platform a genuine
 power-user surface it has already paid for.
+
+## 20. Count-up and reveal motion on index.html's own hero — SHIPPED
+
+**Implementation note:** built directly rather than routed through
+`feature-architect`/`autonomous-coder`, since it's a bounded, zero-risk
+markup-only change (three attributes already documented and used
+platform-wide) — same category as idea #17.
+
+**Grounded in:** an external "forgotten ideas" review of this platform
+(2026-09-17 session) proposed a battery of enterprise-microservices/
+blockchain concepts, nearly all either architecturally incompatible with
+this repo (no build step, static HTML + Supabase) or already built under a
+different name once checked against real code (a "Bloodline Vault" already
+exists as `family.html`'s genealogy tree over `bloodline_nodes`; a "Digital
+Artifact Museum" already exists as `trophies.html` querying
+`certificates`/`trophies`/`medals`; "interactive 3D Knowledge Cubes" already
+exist as `academy.html`'s click-to-3D lattice view via `omega-lattice-3d.js`,
+confirmed wired, not a dead promise). One genuine, small, real gap survived
+the check: `omega-cinematic.js` ships `[data-countup]`, `[data-reveal]`, and
+`[data-stagger]` to every page via `bg.js`, and a repo-wide grep for
+`data-countup=` before this change returned **zero** matches anywhere —
+the platform's own front door, `index.html`, used none of its own
+already-built cinematic vocabulary.
+
+**Change:** `index.html`'s hero stat row (`12 AGENTS · 9 REALMS ·
+202 SURFACES · 14 SERVICES`) now staggers in with `data-stagger` +
+`data-reveal="fade-up"` per stat and counts up from 0 via `data-countup`
+(matches `countUp()`'s plain-integer parsing exactly, no code change
+needed); the four capability-rail rows (`agents.html`/`intelligence.html`/
+`governance.html`/`services.html` links) now stagger-reveal the same way,
+mirroring the exact `data-stagger` > `[data-reveal]` pattern already used
+on `gates.html`/`dashboard.html`.
+
+**Deliberately not done:** did not add `data-reveal` to the `.ohz-hero-art`
+sculpture mount itself, or to the `<aside id="fabric">` wrapper around the
+stagger group. Neither combination (`data-omega-sculpture` + `data-reveal`
+on the same element; a `data-reveal` element containing a nested
+`data-stagger` group) has a precedent anywhere else in the codebase, and
+this repo's own bug history (`CLAUDE.md` §8.1 class 3) is specifically
+about opacity/visibility state interacting badly with sized or WebGL-backed
+elements. No environment with a headless browser was available this
+session to verify either combination empirically, so both were left alone
+rather than shipped on the strength of reading the code alone — verify with
+`verify-in-browser` before adding either.
+
+**Verification performed:** `python3 scripts/check-inline-js.py` (clean),
+`python3 scripts/audit.py` (critical: 0, warnings: 7, unchanged baseline).
+Not verified: an actual render (no headless browser available this
+session) — run `verify-in-browser`'s `scan.js errors` + `canvas` checks on
+`index.html` before treating this as fully confirmed in production.
+
+## 21. Faction-style team competition layer (COSMOS / ASCEND) — proposal, needs product scoping
+
+**Status: proposal. Do not build as-is — see the open decisions below.**
+
+**Source:** the same external review (idea #20's header) proposed "10
+Factions: ideological groups... that drive community competition and
+territorial influence." Unlike most of that review's content, this one
+doesn't require a different architecture or conflict with anything already
+built — it's a genuinely new, additive social mechanic this platform
+doesn't have yet.
+
+**Grounded in real infrastructure already here:** `leaderboard.html` +
+`public.order_stats`/the ranking RPCs already compute and display
+individual standings; `public.task_completions` already has per-user,
+per-axis activity to aggregate into a group score; `complete_task()`'s
+notification path (`public.notifications`, gated by
+`platform_settings.notifications_enabled`) is a working pattern for
+"your faction moved up a rank" style pushes. None of this requires new
+axes, new currencies, or the token economy — a faction score can be a
+pure aggregate of existing `axis_a/b/c`/`authority` values across its
+members.
+
+**What is NOT proposed:** the source material's own name — "Omega, Nexus,
+Sentinel"-style faction names collide directly with this platform's
+already-locked 12-agent roster (`Sentinel` is agent #1, per `CLAUDE.md`
+§6) and would read as a second, competing identity system layered over
+the zodiac/agent one members already have. Any real version of this needs
+its own naming, independent of both the agent roster and the "28
+Kings"/angelic-archetype idea from the same source (rejected outright —
+see below).
+
+**Open decisions before this can go to `feature-architect`:**
+1. **Assignment.** Chosen by the member, assigned by a formula (e.g. by
+   element or by house), or assigned at random on first approval? Each has
+   different fairness and re-assignment implications the source material
+   doesn't address.
+2. **Does it compete with or complement zodiac/agent identity?** A member
+   already has a sign, a god, a planet, an agent, and an element assigned
+   at onboarding (`CLAUDE.md` §1/§6). A faction is a sixth identity axis —
+   worth asking whether that's additive richness or identity clutter
+   before committing schema.
+3. **Scoring and territoriality.** "Territorial influence" implies factions
+   compete for something visible and possibly zero-sum (a shared
+   leaderboard slot, a cosmetic platform-wide state). Needs a concrete
+   definition, not the source's abstract "influence."
+4. **New table, RLS from day one.** A `faction_id` on `profiles` (or a
+   separate `faction_members` join table) needs the same additive-migration
+   + RLS treatment as every other table here (`CLAUDE.md` §5/§9) — own-row
+   read/insert, no `anon` grant, `is_platform_owner()` for admin
+   reassignment.
+
+**Explicitly rejected, no further consideration:** the source material's
+"28 Kings" (named Metatron, Raziel, etc.) as a parallel Knowledge-axis
+achievement layer. This traces to the same Kabbalistic/Islamic-angelology
+content reviewed earlier in this session (a separate uploaded document, not
+part of this repo) — adopting it would fork this platform's locked
+Greek/zodiac/Olympian brand system (`CLAUDE.md` §4/§6) into two competing
+mythologies for the same underlying mechanic academy.html's certificates
+already cover. Not a "forgotten idea," a brand conflict.

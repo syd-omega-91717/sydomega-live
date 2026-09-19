@@ -6,11 +6,39 @@
 
 /* Every page that reaches the existing visual runtime receives one shared
    spatial stage. No content is moved or recreated. */
-html[data-omega-visual="active"] body{perspective:var(--omega-spatial-perspective);perspective-origin:50% 14%;transform-style:preserve-3d;background-image:radial-gradient(ellipse 75% 55% at 50% 0%,rgba(201,168,76,.055),transparent 70%),radial-gradient(ellipse 55% 45% at 100% 45%,rgba(0,229,255,.035),transparent 72%)}
+/* Same containing-block bug as the rule below, on the one page that sets
+   this attribute: index.html is the only page where html[data-omega-visual]
+   reads "active" (measured; dashboard.html reads null), so this was the
+   lone survivor after the .omega-cinematic fix -- index.html kept
+   perspective on <body> and kept all seven of its floating widgets
+   stranded below the fold. The 3-D properties move to the content column
+   with the rest; the ambient background-image stays on <body>, where it
+   belongs and where it creates no containing block. */
+html[data-omega-visual="active"] body{background-image:radial-gradient(ellipse 75% 55% at 50% 0%,rgba(201,168,76,.055),transparent 70%),radial-gradient(ellipse 55% 45% at 100% 45%,rgba(0,229,255,.035),transparent 72%)}
 html[data-omega-visual="active"] body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.28;background-image:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(70% 62% at 50% 28%,#000,transparent 82%);-webkit-mask-image:radial-gradient(70% 62% at 50% 28%,#000,transparent 82%)}
 
-.omega-cinematic{perspective:var(--omega-spatial-perspective);perspective-origin:50% 12%;transform-style:preserve-3d}
-.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main{transform-style:preserve-3d}
+/* The perspective belongs on the CONTENT COLUMN, not on <body>.
+   `.omega-cinematic` is on <body> on 202/202 pages, and a `perspective` makes
+   its element a containing block for every `position:fixed` DESCENDANT. That
+   silently re-anchored the platform's bottom chrome from the viewport to the
+   body box: measured on dashboard.html at 1280x700, #ofb-btn resolved its
+   `bottom:36px` against body's 2546px scroll height and rendered at y=2470 --
+   1770px below the fold -- and #omega-voice-btn at y=2412. Both are direct
+   children of <body> and both are meant to float. #om-open survived only
+   because it is top-anchored (`top:10px`).
+   The line below already declared the content column the 3-D stage; the
+   perspective was simply one level too high. All 37 cards on dashboard.html
+   are inside `main`, so the depth effect is unchanged -- it is the same value
+   and origin, applied to the element the author already prepared for it.
+   Scope, measured across all 204 pages: 8 lack main/.main/.page-shell and only
+   4 of those have cards. #omega-main-content is added for three of them
+   (honors, matrix, media -- media alone has 336 cards); it is the content
+   column and does NOT hold #omega-side, so it creates no containing block for
+   the sidebar. 404.html is the one page the selector cannot reach: its 12 KPIs
+   sit directly on <body> with no wrapper, so it loses this subtle depth until
+   it gets a content column. That is the correct trade against re-breaking the
+   floating chrome on all 204. */
+.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main,.omega-cinematic #omega-main-content{perspective:var(--omega-spatial-perspective);perspective-origin:50% 12%;transform-style:preserve-3d}
 
 /* Existing cards/panels gain physical depth without taking ownership of
    their transform animations. */
@@ -31,5 +59,5 @@ html[data-omega-visual="active"] body::before{content:"";position:fixed;inset:0;
 html[data-omega-visual="active"] :where(button,.btn,a.btn,input,select,textarea){transform-style:preserve-3d}
 html[data-omega-visual="active"] :where(button,.btn,a.btn):hover{box-shadow:0 10px 26px rgba(0,0,0,.22),0 0 18px rgba(201,168,76,.045)}
 
-@media(max-width:760px){html[data-omega-visual="active"] body{perspective:900px}.omega-cinematic{perspective:900px}.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){box-shadow:0 12px 30px rgba(0,0,0,.18),0 1px 0 rgba(255,255,255,.04) inset}html[data-omega-visual="active"] body::before{background-size:54px 54px;opacity:.18}}
-@media(prefers-reduced-motion:reduce){html[data-omega-visual="active"] body{perspective:none}html[data-omega-visual="active"] body::before{display:none}.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card)::before{transform:none;filter:none}}
+@media(max-width:760px){.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main,.omega-cinematic #omega-main-content{perspective:900px}.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){box-shadow:0 12px 30px rgba(0,0,0,.18),0 1px 0 rgba(255,255,255,.04) inset}html[data-omega-visual="active"] body::before{background-size:54px 54px;opacity:.18}}
+@media(prefers-reduced-motion:reduce){/* This cleared perspective only via html[data-omega-visual="active"] body. That attribute is set on a <link> by omega-sovereign-os.js:30, never on <html> -- measured null -- so the reduced-motion escape hatch for the 3-D layer never actually fired. Clear the rule that is live. */.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main,.omega-cinematic #omega-main-content{perspective:none}html[data-omega-visual="active"] body{perspective:none}html[data-omega-visual="active"] body::before{display:none}.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card)::before{transform:none;filter:none}}

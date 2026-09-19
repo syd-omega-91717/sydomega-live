@@ -11,6 +11,10 @@ from pathlib import Path
 from collections import defaultdict
 import hashlib
 
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print(__doc__)
+    sys.exit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 SUPABASE_DIR = ROOT / "supabase"
 MIGRATIONS_DIR = SUPABASE_DIR / "migrations"

@@ -13,6 +13,10 @@ import sys
 from pathlib import Path
 from collections import defaultdict
 
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print(__doc__)
+    sys.exit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 PAGES_DIR = ROOT
 

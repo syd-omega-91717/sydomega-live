@@ -18947,3 +18947,62 @@ node scripts/verify-runtime.js --pages movies.html,graph.html,map.html,cinema.ht
 Clone was shallow at session start (`git fetch --unshallow` run first) —
 `omega-registry.py`'s graft-boundary guard would otherwise have refused to
 write dates for ~24 skill files, per `CLAUDE.md` §8.4.
+
+### `.card-edge` was a malformed fragment, and `.card::before`'s accent colour was already invisible platform-wide (2026-09-19)
+
+Converting `chronicle.html`/`city.html`/`heritage.html`'s hand-rolled
+`border-left` accents to the shared `.card-edge` system (§4.1) surfaced two
+live bugs, neither related to those three pages.
+
+**`.card-edge` itself was broken.** `ce5a1b4b` (2026-09-06, a contract-
+compliance restoration pass) re-added the class as
+`.card-edge{width:3px;background:var(--card-accent,var(--gold))}` — a rule
+that sets `width` on the *element*, not a `::before` bar. The documented,
+previously-verified fix (`.card.card-edge::before{top:0;bottom:0;left:0;
+right:auto;width:var(--card-edge-w,3px);height:auto}`, this file's own
+2026-09-04 entry) was gone from both `bg.js` and `css/omega-system.css`.
+Measured on `intelligence.html`'s 4 SWOT boxes (the only live callers):
+`.swot-box.card-edge` computed `width:42px` — the whole card collapsed to a
+sliver — and its `::before` was an untouched 40×2px top bar, not a left
+edge. The contract checker had only verified the selector *existed*, not
+that it did anything (`CLAUDE.md` §8.4's "a rule that reached the file but
+not the cascade" class).
+
+**Separately, `.card::before`'s accent colour was already losing to the
+cinematic shimmer on every page, top-bar or left-edge.**
+`omega-spatial-system.css`'s `.omega-cinematic :where(.card,...)::before`
+(the depth-field sheen) and `css/omega-system.css`'s `.card::before` (the
+accent bar) tie at specificity (0,1,1), and `body.omega-cinematic` is on all
+202 pages (`CLAUDE.md` §4.1), so this was never conditional on hover or
+theme — whichever sheet the page happened to load later silently won.
+Measured on `kings.html` (a live per-king top-bar accent, not a new one):
+`.card::before`'s `background-color` computed `rgba(0,0,0,0)`, painting the
+shimmer's flat `rgba(201,168,76,.055)` gradient instead of each king's
+colour. Fixed both without `!important` (forbidden by the
+`omega-cinematic-system` skill) — a same-file specificity bump most of this
+codebase already uses for exactly this: `.card::before` → `.card.card::before`
+(0,1,1)→(0,2,1), and `.card-edge`'s combinator → `.card.card-edge.card-edge::before`
+(0,2,1)→(0,3,1), so the geometry override still wins even where the two
+rules now tie on `top`/`left`/`right`/`height`. Verified in a headless
+render: `kings.html`'s top bar now computes solid `rgb(201,168,76)`;
+`intelligence.html`'s SWOT boxes compute a full-width card with a 3px,
+full-height, correctly-coloured left bar.
+
+`chronicle.html`'s `.event-card` was checked and correctly **excluded** from
+the sweep, per this file's own existing guidance: its `::before` draws the
+timeline's connector tick to the spine (`top:14px;width:14px;height:1px`),
+and `.card` already claims both `::before` (accent bar) and `::after` (hover
+shimmer) — there is no free pseudo-element left to move the tick to without
+a real DOM element, which is a larger change than a border-left→card-edge
+swap. `city.html`'s `.district-card` (no pseudo-element, JS already set
+`borderLeftColor` per-instance) and `heritage.html`'s ancestor rows
+(inline-styled, no class) had no such collision and were converted cleanly:
+JS now does `style.setProperty('--card-accent', …)` instead of
+`style.borderLeftColor = …`.
+
+```
+python3 scripts/audit.py            0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py  clean
+python3 scripts/module-contract.py  0 broken; 120 contracts
+node --check bg.js                  OK
+```

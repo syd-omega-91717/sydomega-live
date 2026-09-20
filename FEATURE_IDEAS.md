@@ -1943,22 +1943,67 @@ just crossfades from that black frame into the new page underneath the
 veil's own removal — additive, not a second, competing animation the member
 would perceive as a conflict.
 
-**Standing todo, not closed:** re-verify activation in a real (non-headless)
-browser or in production before this is described anywhere as a delivered
-visual change rather than a safe, dormant-by-default addition. If it turns
-out the transition never activates on this platform for a reason specific
-to `bg.js`, the CSS rule is inert cost with no visible benefit and a future
-session should either find the real cause or remove it; if it does activate
-in a real browser, the manual veil can then be revisited for possibly being
-made lighter (a shorter fade, since the native crossfade would be carrying
-more of the visual work).
+**Re-verified in a real, non-headless browser — the mystery narrowed, not
+solved, and headless was ruled out as the explanation.** `xvfb-run` gave a
+genuinely headed Chromium (not the headless mode the first investigation
+used) against a real X display. The cleanest, most valid comparison —
+identical stub setup (the real Supabase-client stub this harness always
+needs, since without it every page's real, unstubbed auth check makes a
+network call to `supabase.co` that this sandbox's egress policy rejects,
+which triggers `bg.js`'s own `location.replace`-based auth redirect to
+`account.html` and contaminates the result with an unrelated navigation),
+`PRIMED_STORAGE`, overlay dismissal, across four different real page pairs —
+showed **`false` in both headed and headless mode, identically**. Headless
+rendering is therefore not the explanation; whatever disqualifies the
+transition on this repo's real pages does so in a real browser too.
+
+Two further things surfaced along the way, kept here rather than treated as
+resolved:
+- Testing *without* the Supabase stub (to rule out `ctx.route()`
+  interception itself as a factor) hit exactly the redirect chain above —
+  `dashboard.html` → `account.html` on every run, both headed and headless,
+  once egress to `supabase.co` was confirmed rejected
+  (`connect_rejected ... organization policy`) rather than merely slow. That
+  redirect is real `bg.js` behavior (the `safeRedirect()`/`location.replace`
+  path, `bg.js:1774`), not a view-transition artifact, but it is *specific to
+  this sandbox's network policy* — production reaches the real
+  `ydqhzvvoyufiiqvzcjns.supabase.co` and would not hit it. One single such
+  unstubbed run, before the redirect chain was understood, showed
+  `hadViewTransition: true` on the hop that happened to fire mid-redirect;
+  it did not reproduce across repeated identical runs and is recorded here
+  only so a future session does not rediscover it as new signal — treat it
+  as noise from an invalid (redirect-contaminated) test, not evidence either
+  way.
+- `ctx.route()`-based interception (the mechanism this harness's Supabase/
+  font stubs use) was tested in isolation (`route().abort()` on the same
+  unreachable domains, to keep the interception without the slow real
+  network failure) and also showed `false`, headed and headless alike — so
+  route-interception-as-such is not obviously the cause either, though it
+  cannot be fully separated from the redirect confound above without a
+  network egress this sandbox does not grant.
+
+**Conclusion this session is willing to stand behind:** under every
+controlled, valid (non-redirect-contaminated) test run this session could
+construct — headless and headed, both with the stub required for a working
+authenticated session — cross-document View Transitions did not activate on
+this repo's real pages. This is now a stronger, better-isolated finding than
+the original headless-only result, not a resolved one: the specific
+disqualifying factor in `bg.js` or these pages' markup remains unidentified.
+The shipped CSS stays exactly as reasoned before — harmless, additive, kept
+alongside the unconditional manual veil — since a real production
+environment (real, reachable Supabase, no test-harness interception) is the
+one condition this session could not reproduce, and is therefore the one
+place this could still turn out to work. Re-verifying against the real
+deployed site (not this sandbox) is the only test left that would actually
+close this out.
 
 ```
 node --check bg.js                                OK
 python3 scripts/check-inline-js.py                 OK -- every inline <script> block parses cleanly
 python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
-scan.js errors (204 pages, full sweep)              see FIXES_LOG.md for this session's run
+scan.js errors (204 pages, full sweep)              0/204
 CSS rule presence on live pages                     confirmed: CSSViewTransitionRule, navigation:auto
 prefers-reduced-motion coverage                     confirmed: group + old + new pseudo levels all gated
 manual #omega-veil fallback                         confirmed present and unconditional, unchanged behavior
+headed-browser re-test (xvfb-run, 4 real page pairs) false in both headed and headless under valid (stubbed, non-redirecting) conditions
 ```

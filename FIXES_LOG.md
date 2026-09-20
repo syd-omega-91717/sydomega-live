@@ -19913,3 +19913,45 @@ python3 scripts/audit.py                            0 critical / 6 warnings (bas
 scan.js errors (204 pages, full sweep)               0/204
 manual #omega-veil                                   confirmed present, unconditional, unchanged behavior
 ```
+
+## Re-verified View Transitions in a real headed browser (FEATURE_IDEAS.md #30) — headless ruled out, root cause still open
+
+FEATURE_IDEAS.md #30 explicitly left "re-verify in a real (non-headless)
+browser" as a standing todo. `xvfb-run` (available in this sandbox) gave a
+genuine headed Chromium against a real X display, not just the headless mode
+the original investigation used.
+
+**Found and had to rule out a confound first.** Testing without this
+harness's Supabase stub — to check whether `ctx.route()` interception itself
+was the disqualifier — hit a real, reproducible redirect: `dashboard.html` to
+`account.html` on every run, because the sandbox's egress proxy rejects
+`ydqhzvvoyufiiqvzcjns.supabase.co` (`connect_rejected ... organization
+policy`), and `bg.js`'s own auth check (`safeRedirect()`/`location.replace`,
+`bg.js:1774`) treats that failed session lookup as unauthenticated. One
+unstubbed run, before this was understood, showed a stray
+`hadViewTransition: true` on a hop that happened to fire mid-redirect; it did
+not reproduce across repeats and is recorded as noise from an invalid test,
+not a real signal.
+
+**The valid comparison** (identical stub, `PRIMED_STORAGE`, overlay
+dismissal, four different real page pairs, headed vs. headless with nothing
+else changed) showed **`false` in both modes, identically**. Headless
+rendering is therefore ruled out as the explanation — whatever disqualifies
+the transition on this repo's real pages does so in a real browser too.
+Also tested `ctx.route().abort()` on the unreachable domains (interception
+without the slow real-network failure): also `false`, headed and headless.
+
+**Conclusion:** this is now a better-isolated finding, not a resolved one.
+The specific disqualifying factor remains unidentified, and the one
+condition this session could not reproduce — a real, reachable Supabase
+backend with no test-harness network interception at all — is exactly
+production. The CSS stays exactly as previously shipped (harmless, additive,
+alongside the unconditional manual veil); re-verifying against the real
+deployed site is the only remaining test that would close this out for good.
+
+```
+xvfb-run -a node <headed test>                       Xvfb + headed Chromium confirmed working in this sandbox
+headed vs headless, 4 real page pairs, stubbed        false / false (identical)
+route().abort() on unreachable domains, both modes    false / false (identical)
+python3 scripts/audit.py                              0 critical / 6 warnings (baseline, unchanged)
+```

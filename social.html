@@ -71,6 +71,9 @@
 
 <!-- FEED TAB -->
 <div class="tab-panel" id="tab-feed">
+  <div class="kpi-row" style="padding:0 1.5rem;margin-bottom:.5rem">
+    <div class="kpi"><div class="kpi-n" id="soc-week-count">0</div><div class="kpi-l">BROADCASTS THIS WEEK</div><div data-omega-spark id="social-broadcast-spark" data-spark-label="BROADCASTS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div>
+  </div>
   <div class="feed-tabs">
     <button class="feed-tab on" data-tab="all" onclick="switchFeed('all',this)">ALL PLATFORMS</button>
     <button class="feed-tab" data-tab="broadcasts" onclick="switchFeed('broadcasts',this)">MY BROADCASTS</button>
@@ -223,6 +226,36 @@ window.switchFeed=function(tab,btn){
   renderFeed(tab);
 };
 
+/* Real KPI tile for the FEED tab: sourced entirely from storedBroadcasts,
+   the same social_broadcasts fetch the page already makes (limit 30,
+   real Supabase rows, RLS-scoped) -- no new query, no invented numbers.
+   "THIS WEEK" is a count within the fetched window, which only undercounts
+   (never fabricates) in the unlikely case a member exceeds 30 broadcasts
+   in 7 days. A day with no broadcast is a true 0. */
+function renderSocialStats(){
+  var weekEl=document.getElementById('soc-week-count');
+  var spEl=document.getElementById('social-broadcast-spark');
+  if(!weekEl&&!spEl)return;
+  var now=new Date();
+  var weekAgo=new Date(now);weekAgo.setDate(now.getDate()-7);
+  var weekCount=storedBroadcasts.filter(function(b){
+    return b.created_at&&new Date(b.created_at)>=weekAgo;
+  }).length;
+  if(weekEl)weekEl.textContent=weekCount;
+  if(spEl){
+    var series=[];
+    for(var i=13;i>=0;i--){
+      var dd=new Date(now);dd.setDate(now.getDate()-i);
+      var key=dd.toISOString().slice(0,10);
+      var count=storedBroadcasts.filter(function(b){
+        return b.created_at&&b.created_at.slice(0,10)===key;
+      }).length;
+      series.push(count);
+    }
+    spEl.setAttribute('data-spark-values',JSON.stringify(series));
+  }
+}
+
 window.transmit=async function(){
   var text=document.getElementById('broadcast-text').value.trim();
   if(!text||!selectedNets.size){alert('Write a message and select at least one channel.');return;}
@@ -286,7 +319,9 @@ sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjn
   storedBroadcasts=(brRes.data||[]);
   buildPlatforms();
   renderFeed('all');
+  renderSocialStats();
 })();
 </script>
+<script src="/omega-sparkline.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

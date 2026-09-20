@@ -211,6 +211,7 @@ textarea.form-input{min-height:72px;resize:none;line-height:1.75}
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 <script>
 const AFF_KEY   = 'omega_affirmations';
 const LOG_KEY   = 'omega_aff_log';
@@ -416,12 +417,29 @@ function renderTracking(){
 
   stats.innerHTML=[
     {v:total,l:'TOTAL AFFIRMED'},
-    {v:todayCount,l:'TODAY'},
+    {v:todayCount,l:'TODAY',spark:'aff-today-spark'},
     {v:days,l:'ACTIVE DAYS'},
     {v:streak,l:'DAY STREAK'},
     {v:allAffirmations.length,l:'LIBRARY SIZE'},
     {v:favCount,l:'FAVORITES'},
-  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div>'+(x.spark?'<div data-omega-spark id="'+x.spark+'" data-spark-label="AFFIRMATIONS READ/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div>':'')+'</div>';}).join('');
+
+  /* FEATURE_IDEAS.md #27 Wave 4: real count per day, last 14 days -- same
+     `log` array this function already loads (loadLog()), no new query.
+     Neither #streak-display (binary active/not) nor #log-list (a plain
+     text list) shows this magnitude, so it is additive, not a duplicate. */
+  var spEl=document.getElementById('aff-today-spark');
+  if(spEl){
+    var series=[];
+    var base=new Date();
+    for(var si=13;si>=0;si--){
+      var sd2=new Date(base);sd2.setDate(base.getDate()-si);
+      var skey=sd2.toISOString().slice(0,10);
+      var entry=log.find(function(l){return l.date===skey;});
+      series.push(entry?entry.count:0);
+    }
+    spEl.setAttribute('data-spark-values',JSON.stringify(series));
+  }
 
   /* 30-day streak dots */
   var sd = document.getElementById('streak-display');

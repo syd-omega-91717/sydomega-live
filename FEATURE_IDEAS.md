@@ -1433,6 +1433,154 @@ calling the render function directly:
 - Zero page errors, zero console errors, no horizontal overflow on
   either page. `./scripts/ci-local.sh`: ALL 24 BLOCKING CHECKS PASSED.
 
+**Wave 2 — SHIPPED.** Individually audited the ~20 pages Wave 1 left
+unaudited (`academy.html`, `analytics.html`, `agents.html`, `ops.html`,
+`skills.html`, `research.html`, `studio.html`, `budget.html`,
+`nutrition.html`, `kyc.html`, `feed.html`, `command.html`, `gates.html`,
+and a broader re-grep of every `.kpi`/`.kpi-card`/stat-tile page for a
+real dated log or Supabase table), the same per-page verification method
+as Wave 1 — reading the actual data source before wiring anything, never
+trusting a grep hit alone:
+
+- **`habits.html` — genuine candidate.** Real Supabase `habit_logs` table
+  (`user_id, habit_id, log_date`, RLS-scoped) exists but is a *write-only
+  mirror* (documented in the page's own code comment: "writes go up;
+  localStorage stays the source the UI reads," to avoid a hydration race).
+  The actual read path is `getLogs()` — a `localStorage` dict keyed by
+  date already loaded synchronously on every render. Each individual habit
+  already draws its own 28-day streak-dot row and a 90-day heatmap
+  (`renderHeatmap()`), so a *per-habit* sparkline would duplicate an
+  existing visualization — same reasoning as `journal.html`/`physiology.html`
+  in Wave 1. The aggregate view does not exist anywhere: added
+  `#habits-done-spark` inside the `DONE TODAY` hero tile, summing
+  completions across *all* habits per day, last 14 days (weekly-frequency
+  habits collapse onto their week-key exactly like the existing dot/heatmap
+  code already does — not a new behavior).
+- **`vocabulary.html` — genuine candidate, zero new query.** `reviewLog`
+  (`localStorage`, `{date, count}` per real drill session) already existed
+  with no existing chart. Added `#vocab-review-spark` inside the `TODAY'S
+  REVIEWS` tile, reading the same array `updateStats()` already loads.
+- **`contacts.html` — genuine candidate, zero new query.** `interactions`
+  (`localStorage`, `{contactId, date, channel, quality}` per logged touch)
+  already existed; its own `#net-canvas` chart is a tier/composition
+  breakdown, not a time trend, so no duplication. Added
+  `#contacts-touch-spark` inside `CONTACTED THIS MONTH`, counting total
+  interaction events per day (a different, still-real cut than that tile's
+  own unique-contacts-this-month number).
+- **`clarity.html` — genuine candidate, zero new query.** `sessions`
+  (`localStorage`, `{date, done, total, complete}` per real logged
+  protocol run) already existed; its only canvas is a progress ring, not a
+  trend chart. Added `#clarity-steps-spark` inside `AVG STEPS DONE`,
+  reading `done` per day from the same array `updateStats()` loads.
+- **`health.html` — genuine candidate, zero new query.** Real Supabase
+  `health_logs` (RLS-scoped, `mind/heart/energy/body/soul/total/created_at`)
+  already fetched (last 60 rows) by `loadHistory()`, which already computes
+  a "last 14 entries" average per the page's own SCIENCE-tab copy. No
+  existing chart. Added `#health-score-spark` inside the SOVEREIGN SCORE
+  tile, taking the same `rows.slice(0,14)` reversed to chronological order
+  — labelled "LAST 14 ENTRIES," not "LAST 14 DAYS," since real member
+  logs are irregular, not daily; the module's own `nums()` filter (only
+  finite values are plotted) means an entry-based series is honest here
+  where a calendar-day series with invented zero-scores would not be.
+- **`social.html` — Wave 3, built.** The gap Wave 2 deferred: no existing
+  KPI tile to attach a mount to. Rather than leave it or invent numbers to
+  fill a tile, built the real tile — one `.kpi-row`/`.kpi` (the platform's
+  actual shared classes, not page-local CSS) added to the FEED tab, showing
+  `BROADCASTS THIS WEEK` and a 14-day sparkline, both computed from
+  `storedBroadcasts` (the same `social_broadcasts` fetch the page already
+  makes, `limit(30)`, RLS-scoped, no new query). "THIS WEEK" only
+  undercounts, never fabricates, in the edge case a member exceeds 30
+  broadcasts in 7 days. A day with zero broadcasts is a true 0 — the
+  stub-baseline render correctly shows a flat 14-zero line (14 finite
+  values, all real zeros, same behavior as `dashboard.html` in Wave 1),
+  not a hidden mount and not an invented number.
+- **Re-confirmed exclusions:** `achievements.html` (`unlockLog` exists but
+  achievements unlock rarely, not daily — a 14-day window would sit below
+  the module's own 2-finite-value floor for most members, correctly
+  staying hidden rather than showing a misleading near-empty line);
+  `chronicle.html`, `signal.html` (grepped for a `_KEY = 'omega_...'`
+  constant pattern too, not just a literal `localStorage.setItem('omega_...`
+  call — see Wave 4's correction below for why the narrower grep was not
+  enough — genuinely zero matches on either page); `expenses.html`/
+  `revenue.html` (each already has a dedicated trend canvas —
+  `#trend-canvas`/`#monthly-canvas`,`#rev-canvas` — consolidation-only,
+  same as Wave 1's `journal.html`/`physiology.html`).
+
+**Correction (Wave 4):** this wave's own grep —
+`localStorage\.(setItem|getItem)\('omega_[a-z_]+'` — only matches a
+*literal* string argument. `affirmations.html`, `library.html`,
+`rituals.html`, `targets.html`, `wealth.html`, `time.html`, and
+`reading.html` all store their key in a `const FOO_KEY = 'omega_...'`
+variable and call `localStorage.setItem(FOO_KEY, ...)` — the literal
+string appears once, on the constant declaration, never inside the
+`setItem(`/`getItem(` call itself, so the grep found nothing and this
+wave wrongly reported "zero matches on either" for all seven. Re-audited
+each with `_KEY\s*=\s*['"]omega_` instead — see Wave 4 below for what
+that found and what was actually built vs. correctly still excluded.
+
+Verified each of the 5 shipped pages in a real headless render: seeded
+realistic, gap-including `localStorage` logs (or, for `health.html`,
+confirmed the harness's empty-array Supabase stub correctly leaves the
+mount `hidden` — the anti-fabrication guard working as designed — then
+called `window.OmegaSpark.render()` on the live mount with a synthetic
+series to prove the render path itself handles real variation). All 5
+produced a real `<svg>` with a genuinely varying series where seeded, or
+stayed correctly hidden with insufficient data. `scan.js errors`: 0/5.
+`scan.js overflow`: 0/5. `python3 scripts/check-inline-js.py`: clean.
+`python3 scripts/audit.py`: 0 critical / 6 warnings (baseline).
+
+**Wave 4 — SHIPPED, correcting Wave 2's grep methodology.** Re-audited the
+7 pages Wave 2 wrongly cleared, reading each real log before deciding —
+same discipline as every prior wave, applied to this wave's own mistake:
+
+- **`wealth.html` — genuine candidate, built.** `getSnapshots()`
+  (`localStorage`, `{date,nw,change}`) already exists — a real,
+  member-initiated ("SAVE SNAPSHOT" button) net-worth history — with only
+  a plain text list (`renderHistory()`) to show it, no compact trend.
+  Added `#wealth-nw-spark` inside the net-worth hero box, reading
+  `getSnapshots().slice(-14)` chronologically. Snapshots are manual and
+  irregular, so labelled "LAST 14 SNAPSHOTS," not "LAST 14 DAYS" — same
+  reasoning as `health.html` in Wave 2.
+- **`affirmations.html` — genuine candidate, built.** `markRead()` already
+  logs `{date,count}` per real practice session (`omega_aff_log`). The
+  page already visualizes this data twice — a 30-day binary streak-dot
+  grid and a 14-row text list — but neither shows *count* (magnitude),
+  only presence or raw text, so a sparkline of daily count is additive,
+  not a duplicate. Added inside the `TODAY` stat-box in the TRACK tab
+  (`renderTracking()`, itself lazy-rendered on tab switch — confirmed by
+  driving the real tab click, same as `gratitude.html` in Wave 1).
+- **`rituals.html` — already done, not a gap.** Has a real, fully-wired
+  `#spark-rituals` mount and `drawRitualSpark()` function, more carefully
+  reasoned than this wave's own new work: it deliberately excludes "today"
+  from the series since the day is still open, avoiding a misleading
+  apparent drop. Built before this session; Wave 2 simply never looked
+  closely enough to find it. No action needed — confirmed by reading the
+  function, not just grepping for the key.
+- **`time.html` — real data, already charted.** `TIME_KEY`'s log is real,
+  but the page already has a "7-DAY FOCUS TREND" `#daily-canvas` drawing
+  exactly this trend. Consolidation-only, same as `journal.html`/
+  `physiology.html` in Wave 1.
+- **`library.html`, `targets.html`, `reading.html` — real logs, correctly
+  still excluded, for a different and more precise reason than Wave 2's
+  "no signal found."** `library.html`'s `shelf.push` and `reading.html`'s
+  book `addedAt` are per-book events (occasional, not daily); `targets.html`'s
+  `reviews.push` is an explicitly *weekly* review cadence
+  (`getISOWeek`), each entry qualitative text with no single numeric value
+  to plot. All three would sit below the module's own 2-finite-value floor
+  for most members in any 14-day window — same reasoning as `achievements.html`,
+  correctly excluded in Wave 2 for the right reason, just not extended to
+  these three because Wave 2 never found their logs in the first place.
+
+Verified `wealth.html` and `affirmations.html` in a real headless render:
+seeded realistic data, confirmed a genuine varying `<svg>` in both (driving
+the real TRACK-tab click for `affirmations.html`, not calling the render
+function directly). `wealth.html`'s series correctly returned fewer than
+14 points when fewer snapshots existed (11 seeded → 11 plotted), rather
+than padding with fabricated zeros. `scan.js errors`: 0/2. `scan.js
+overflow`: 0/2. `python3 scripts/check-inline-js.py`: clean. `python3
+scripts/audit.py`: 0 critical / 6 warnings (baseline). `python3
+scripts/repository_integrity_audit.py`: PASS.
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that

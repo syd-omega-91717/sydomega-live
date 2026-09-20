@@ -66,7 +66,7 @@ canvas{display:block;margin:0 auto}
   <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
   <div class="stat"><div class="stat-val" id="st-sessions">0</div><div class="stat-lbl">TOTAL SESSIONS</div></div>
   <div class="stat"><div class="stat-val" id="st-today" style="font-size:.9rem">—</div><div class="stat-lbl">TODAY'S STATUS</div></div>
-  <div class="stat"><div class="stat-val" id="st-avg-steps">0</div><div class="stat-lbl">AVG STEPS DONE</div></div>
+  <div class="stat"><div class="stat-val" id="st-avg-steps">0</div><div class="stat-lbl">AVG STEPS DONE</div><div data-omega-spark id="clarity-steps-spark" data-spark-label="STEPS DONE/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div>
 </div>
 
 <div class="tab-row">
@@ -367,11 +367,27 @@ function updateStats(){
   document.getElementById('st-streak').textContent=streak;
   var avgSteps=sessions.length?Math.round(sessions.reduce(function(s,x){return s+x.done;},0)/sessions.length):0;
   document.getElementById('st-avg-steps').textContent=avgSteps;
+  /* FEATURE_IDEAS.md #27 Wave 2: steps done per real logged session, last
+     14 calendar days -- same `sessions` array already loaded, no new
+     query. A day with no session is a true 0, not the average. */
+  var spEl=document.getElementById('clarity-steps-spark');
+  if(spEl){
+    var series=[];
+    var base=new Date();
+    for(var i=13;i>=0;i--){
+      var dd=new Date(base);dd.setDate(base.getDate()-i);
+      var key=dd.toISOString().slice(0,10);
+      var s=sessions.find(function(x){return x.date===key;});
+      series.push(s?s.done:0);
+    }
+    spEl.setAttribute('data-spark-values', JSON.stringify(series));
+  }
 }
 
 updateStats();
 renderSteps();
 </script>
+<script src="/omega-sparkline.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

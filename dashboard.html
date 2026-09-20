@@ -267,6 +267,8 @@
     <div id="l-platform" class="layer-panel">
       <div class="pad">
         <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 204 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
+        <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
         <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1s">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
@@ -821,15 +823,81 @@ function renderPlatformSections(){
       {n:'Automation',u:'/automation.html'},{n:'Queue',u:'/queue.html'},{n:'Architect',u:'/architect.html'},
       {n:'Ops',u:'/ops.html'},{n:'Lab',u:'/lab.html'},{n:'Research',u:'/research.html'}]},
   ];
-  el.innerHTML=SECTIONS.map(function(sec){
-    return '<div style="margin-bottom:20px">'
-      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:'+sec.col+';padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px">'+sec.name+'</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+  /* Collapse state is per-member, real personalization: which of the 15
+     sections stay open is remembered across visits rather than always
+     showing all 133 chips at once. Defaults to open (unchanged behavior)
+     for anyone with no stored preference yet. */
+  var COLLAPSE_KEY='omega_platform_sections_collapsed';
+  function getCollapsed(){try{return JSON.parse(localStorage.getItem(COLLAPSE_KEY)||'{}');}catch(e){return {};}}
+  function setCollapsed(map){try{localStorage.setItem(COLLAPSE_KEY,JSON.stringify(map));}catch(e){}}
+  var collapsed=getCollapsed();
+
+  el.innerHTML=SECTIONS.map(function(sec,si){
+    var isCollapsed=!!collapsed[sec.name];
+    return '<div class="pf-section" data-sec="'+si+'" style="margin-bottom:14px">'
+      +'<button type="button" class="pf-sechead" data-sec="'+si+'" onclick="togglePlatformSection('+si+')" '
+        +'aria-expanded="'+(!isCollapsed)+'" '
+        +'style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;border-bottom:1px solid var(--line);'
+        +'padding:0 0 6px;margin-bottom:8px;cursor:pointer;text-align:left;font-family:var(--M);font-size:12px;letter-spacing:3px;color:'+sec.col+'">'
+        +'<span class="pf-caret" style="display:inline-block;transition:transform .15s;transform:rotate('+(isCollapsed?'-90':'0')+'deg)">&#9662;</span>'
+        +'<span>'+sec.name+'</span>'
+        +'<span style="margin-left:auto;color:var(--muted);letter-spacing:1px">'+sec.pages.length+'</span>'
+        +'</button>'
+      +'<div class="pf-body" data-sec="'+si+'" style="display:'+(isCollapsed?'none':'flex')+';flex-wrap:wrap;gap:6px">'
       +sec.pages.map(function(p){
-        return '<a href="'+p.u+'" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
+        return '<a href="'+p.u+'" class="pf-chip" data-name="'+p.n.toLowerCase()+'" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
       }).join('')
       +'</div></div>';
   }).join('');
+
+  window.togglePlatformSection=function(si){
+    var map=getCollapsed();
+    var body=el.querySelector('.pf-body[data-sec="'+si+'"]');
+    var btn=el.querySelector('.pf-sechead[data-sec="'+si+'"]');
+    var caret=btn.querySelector('.pf-caret');
+    var nowCollapsed=body.style.display!=='none';
+    body.style.display=nowCollapsed?'none':'flex';
+    caret.style.transform='rotate('+(nowCollapsed?'-90':'0')+'deg)';
+    btn.setAttribute('aria-expanded',String(!nowCollapsed));
+    map[SECTIONS[si].name]=nowCollapsed;
+    setCollapsed(map);
+  };
+
+  /* Real-time filter, not a fake placeholder: hides non-matching chips and
+     whole sections with zero matches, and force-expands sections that DO
+     match (a member's chosen collapse state resumes once the search is
+     cleared, restored from the same localStorage map rather than lost). */
+  window.filterPlatformSections=function(q){
+    q=(q||'').trim().toLowerCase();
+    var anyVisible=false;
+    var map=getCollapsed();
+    el.querySelectorAll('.pf-section').forEach(function(secEl){
+      var si=secEl.getAttribute('data-sec');
+      var body=secEl.querySelector('.pf-body');
+      var btn=secEl.querySelector('.pf-sechead');
+      var caret=btn.querySelector('.pf-caret');
+      var chips=secEl.querySelectorAll('.pf-chip');
+      var matches=0;
+      chips.forEach(function(chip){
+        var hit=!q||chip.getAttribute('data-name').indexOf(q)!==-1;
+        chip.style.display=hit?'':'none';
+        if(hit)matches++;
+      });
+      var show=!q||matches>0;
+      secEl.style.display=show?'':'none';
+      if(show)anyVisible=true;
+      if(q){
+        body.style.display=matches>0?'flex':'none';
+        caret.style.transform='rotate('+(matches>0?'0':'-90')+'deg)';
+      } else {
+        var wasCollapsed=!!map[SECTIONS[si].name];
+        body.style.display=wasCollapsed?'none':'flex';
+        caret.style.transform='rotate('+(wasCollapsed?'-90':'0')+'deg)';
+      }
+    });
+    var empty=document.getElementById('platform-search-empty');
+    if(empty)empty.style.display=(q&&!anyVisible)?'block':'none';
+  };
 }
 
 window.setTab=setTab;

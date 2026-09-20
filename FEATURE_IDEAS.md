@@ -2136,3 +2136,57 @@ scan.js errors / overflow (intelligence.html)      0/1 each
 python3 scripts/check-inline-js.py                 OK
 python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## 34. The dashboard's 133-chip "all pages" wall becomes searchable and collapsible — real personalization, zero pages removed
+
+**Grounded in:** direct feedback that 204 pages is a lot for a member to navigate, and a request
+to find "a smart and intelligent way to make these pages less without losing any features and
+contents." Investigated whether the page *count* is actually the problem members would hit, or
+whether it's a specific presentation of that count. `nav.js`'s sidebar already groups all 204 pages
+into 15 sections — nobody browsing normally ever sees a flat list. The one place the raw scale
+*does* hit a member unmediated is `dashboard.html`'s "PLATFORM COMMAND INDEX" panel: measured at
+**133 chips across 15 sections, all rendered open and visible simultaneously, no filter, no
+collapse** (`renderPlatformSections()`).
+
+**Decision: don't reduce the page count.** Actually merging pages to shrink "204" would mean
+rewriting `nav.js`'s routing, breaking every existing bookmark/external link into a merged page,
+and fighting `reachability-contract.py`'s CI gate — real risk, for a number no member ever
+confronts as a flat list today. That is the opposite of "less confusing": it trades a solved
+navigation problem for a real architectural one. The actual, narrow problem — one panel showing
+133 things at once — has a narrow, safe fix.
+
+**What shipped:** `renderPlatformSections()` rewritten to add, with **zero pages added or
+removed** (confirmed: still 133 chips, 15 sections, same 121 unique destination URLs):
+- **Collapsible sections** — each section header is now a real `<button>` (keyboard-operable for
+  free, no reliance on `omega-a11y-controls.js`'s sweep) toggling its chip list, with a page-count
+  badge so a collapsed section still tells you how much is inside.
+- **Per-member persistence** — which sections stay open is remembered in `localStorage`
+  (`omega_platform_sections_collapsed`), a real personalization: a member who only ever opens
+  FINANCE and WELLNESS gets that layout back on every future visit, not a fixed default.
+- **A real, immediate search filter** — typing narrows chips to real substring matches on the page
+  name and hides sections with zero matches; a match force-expands its section (a collapsed
+  section stays discoverable, never hides a real match); clearing the search restores each
+  section's own remembered collapse state rather than snapping back to "all open."
+- **An honest empty state** ("NO PAGES MATCH") for a genuine zero-result search, instead of
+  silently showing nothing with no explanation.
+
+Verified in a real headless render, every claim driven through the real UI, not asserted from the
+diff: real button click collapses a section and flips `aria-expanded`; a real page **reload**
+confirms the collapsed state survives via `localStorage` (this is the actual mechanism, not a
+same-session-only illusion); a real `fill()` of the search box for "journal" narrows 133 chips down
+to exactly 1, in exactly 1 of 15 sections; clearing the search restores all 15 sections *and* the
+specific section collapsed earlier stays collapsed; a nonsense query shows the real empty state;
+zero horizontal overflow, zero console errors, zero change to `python3 scripts/audit.py`'s
+baseline. Screenshot confirms the visual result matches the existing design system exactly (the
+search input is the shared `.inp` glass-form class — no new CSS needed).
+
+```
+python3 scripts/check-inline-js.py                     OK
+python3 scripts/audit.py                               0 critical / 6 warnings (baseline, unchanged)
+chip/section count before vs after                     133 chips / 15 sections -- unchanged, nothing removed
+real click: collapse + aria-expanded                   confirmed via DOM after a real button click
+real reload: collapse state persistence                confirmed -- survives a full page reload
+real search: "journal"                                 133 chips -> 1 chip, 15 sections -> 1 section
+real search clear: restores prior collapse state        confirmed per-section, not a blanket reset
+scan.js errors / overflow / taps (dashboard.html)       0/1, 0/1, 0 undersized controls
+```

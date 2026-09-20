@@ -19606,3 +19606,52 @@ python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cl
 python3 scripts/audit.py             0 critical / 6 warnings (baseline)
 python3 scripts/repository_integrity_audit.py   PASS
 ```
+
+## Trend-sparkline pass Wave 4 shipped — a grep methodology bug in Wave 2 corrected (FEATURE_IDEAS.md #27)
+
+Wave 2's own audit grep — `localStorage\.(setItem|getItem)\('omega_[a-z_]+'`
+— only matches a *literal* string argument. Seven pages
+(`affirmations.html`, `library.html`, `rituals.html`, `targets.html`,
+`wealth.html`, `time.html`, `reading.html`) store their key in a
+`const FOO_KEY='omega_...'` variable and call
+`localStorage.setItem(FOO_KEY,...)` — the string never appears inside the
+call itself, so the grep found nothing and Wave 2 wrongly reported all
+seven as having no real per-day signal. Re-audited each with
+`_KEY\s*=\s*['"]omega_` and read every real log before deciding, same
+discipline as every prior wave:
+
+- `wealth.html`'s `#wealth-nw-spark` — real, member-initiated
+  ("SAVE SNAPSHOT") net-worth history already existed
+  (`{date,nw,change}`), shown only as a text list. Added inside the
+  net-worth hero box, last 14 real snapshots, chronological.
+- `affirmations.html`'s `#aff-today-spark` — real `{date,count}` practice
+  log already existed; the page shows it twice already (a binary 30-day
+  streak grid, a 14-row text list) but neither shows *count*, so this is
+  additive. Added inside the TODAY stat-box, lazy-rendered on the TRACK
+  tab's own existing render function.
+- `rituals.html` — turned out to already have a real, fully-wired
+  sparkline (`#spark-rituals`/`drawRitualSpark()`), built before this
+  session and more carefully reasoned than this wave's own new work (it
+  excludes "today" since the day is still open). Wave 2 never found it
+  because it never found the page's real log at all. No action needed.
+- `time.html` — real log, but already has a "7-DAY FOCUS TREND" canvas.
+  Consolidation-only.
+- `library.html`, `targets.html`, `reading.html` — real logs, but each is
+  a low-frequency event (book adds, weekly reviews) that would sit below
+  the module's own 2-finite-value floor most of the time. Correctly still
+  excluded, now for the right, specific reason instead of "no data
+  found."
+
+Verified `wealth.html` and `affirmations.html` in a real headless render,
+driving the real TRACK-tab click on `affirmations.html` rather than
+calling the render function directly. `wealth.html` correctly plotted
+fewer than 14 points when fewer snapshots existed, rather than padding
+with fabricated zeros.
+
+```
+scan.js errors (2 pages)              0/2
+scan.js overflow (2 pages)             0/2
+python3 scripts/check-inline-js.py    OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py              0 critical / 6 warnings (baseline)
+python3 scripts/repository_integrity_audit.py   PASS
+```

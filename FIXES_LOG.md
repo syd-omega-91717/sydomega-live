@@ -19242,3 +19242,80 @@ python3 scripts/module-contract.py   0 broken; 120 contracts
 python3 scripts/silent-failure-detector.py   0 findings
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+## `.card-edge` sweep, batch 6 — the expanded 57-file `border-left` re-scan
+
+`main` advanced far past the original `.card-edge` inventory (batches 1–5,
+PRs #425–#428) while this sweep was in progress, via unrelated PRs (#429,
+#430, #432) that added ~60 new files matching a `border-left` grep. Re-ran
+the same triage discipline against all 57 files not already covered by a
+prior batch, rather than assuming the pattern repeats mechanically.
+
+**Two genuine conversions**, both matching the established
+`.card` + hardcoded `border-left` → `.card.card-edge` + `--card-accent`
+shape from every prior batch:
+
+- `roadmap.html`'s `PRIORITIES` grid card was already `class="card"` with
+  `--card-accent` set (for the hover-glow colour) but *also* carried a
+  redundant literal `border-left:3px solid <col>` alongside it — a
+  half-finished conversion, not a working pattern: the sibling `HORIZONS`
+  grid two blocks above (`bg.js`'s default top-bar `.card` behaviour) uses
+  `--card-accent` alone with no leftover border. Added `.card-edge`,
+  dropped the redundant inline `border-left`, and verified in a render that
+  `.card.card-edge::before` now draws the same 3px accent bar the old
+  inline property drew, at `left:0`, coloured from `--card-accent`.
+- `graphify.html`'s anomaly-detection card (`detectAnomalies()`) was
+  `class="card"` with a page-local `background` override and a hardcoded
+  `border-left:3px solid var(--crim)`. Converted to `.card.card-edge` with
+  `--card-accent:var(--crim)`; the page-local `background` inline style
+  survives untouched (inline `style=` always wins, per §4.1's collision
+  rule), verified in a render alongside the accent bar.
+
+**The remaining 55 files were not converted, and the reason differs by
+group — this is not partial completion, it is the correct scope**:
+
+- 18 files (`404`, `academy`, `compliance`, `design-system`, `gaming`,
+  `grid`, `identity`, `interface-omni`, `maintenance`, `pending`, `queue`,
+  `reset`, `series`, `social`, `sovereign-covenant`, `terms`, `trailers`,
+  `vault`) match on `.tab-btn{...border-left:none...}` — a false positive:
+  zeroing three border sides to leave only the active-tab bottom bar, the
+  same shape already excluded platform-wide, not an accent.
+- 2 files (`approvals.html`'s `.hb-cell.right`, `subscriptions.html`'s
+  `.sb-right`) use `border-left:1px solid var(--line)` as a neutral grid-
+  column divider, not a coloured accent — the same false-positive shape as
+  `media.html` in batch 3.
+- `chronicle.html` is excluded by name already (§4.1): its `.event-card`
+  draws its own timeline connector via `border-left`, a different
+  component than `.card-edge`'s accent bar.
+- 13 files (`ascension`, `bloodline`, `gates`, `houses`, `kings`,
+  `publications`, `contributions`, `governance`, `levels`, `phases`,
+  `notifications`, `treasury`, `services`) plus `monitoring-dashboard.html`
+  share one JS-templated shape —
+  `border:1px solid var(--line);border-left:3px solid <color>;background:
+  rgba(10,10,15,.4-.55);border-radius:2px` — repeated identically across
+  many render functions. None of these elements carry a `.card`/`*-card`
+  class; they are a distinct, deliberately flatter "list row" component,
+  not the shared glass-card surface. Adding `.card` to make them
+  `.card-edge`-eligible would pull in `.card`'s blur, box-shadow, and
+  hover-shimmer across every rendered row on 14 pages at once — a real
+  design decision, not a mechanical accent-bar swap, and exactly the class
+  of platform-wide `.card` sweep §4.1 says needs a render check before
+  committing to it. Left as-is; a candidate for a dedicated design pass,
+  not this sweep.
+- The remaining files (`agent-network`, `clarity`, `cosmos`, `decisions`,
+  `fasting`, `gratitude`, `matrix`, `mentors`, `mood`, `network`, `payments`,
+  `physiology`, `profile`, `reading`, `sovereign-ai`, `stoic`, `time`) use
+  `border-left` on text/quote-style elements (`.ref-block`, `.dec-outcome`,
+  `.g-he-note`, `.pattern-item`, `.hl-item`, `.insight-item`, `.notice`,
+  `.agent-greeting`, `.disc`, `.ev-item`) — a coloured rule beside body
+  copy, never a boxed card (no background/shadow/radius to match `.card`'s
+  shape). `account.html`'s `.agent` panel is the one bordered box in this
+  group, but it is a single bespoke instance (the copilot chat panel, keyed
+  to a per-member `--acc` colour) predating the shared card system —
+  converting it is a component redesign, not this sweep's mechanical scope.
+
+```
+grep -rl border-left --include=*.html . | wc -l    74 (57 new since batch 5)
+python3 scripts/check-inline-js.py                 OK -- every inline <script> block parses cleanly
+./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
+```

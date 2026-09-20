@@ -1491,3 +1491,95 @@ dense, monospace-numeral command surfaces (OpenTerminal and
 bloomberg-terminal open-source projects, both explicitly "dark, dense,
 keyboard-driven" builds) as the tonal reference for which three pages
 should get this treatment first.
+
+## Blueprint (feature-architect, 2026-09-20)
+
+**Confirmed scope, re-verified against live files (not assumed from the
+proposal text):** `grep -c data-omega-sculpture` on all three target pages
+returns 0 — none mounts the 3-D layer. Each page's real header element:
+
+| page | header element | class |
+|---|---|---|
+| `dashboard.html` | `.mission-bar` (page-local, line 17/109) | add `omega-signal-sweep` |
+| `treasury.html` | `.topbar` (shared, `css/omega-system.css`) | add `omega-signal-sweep` |
+| `intelligence.html` | `.topbar` (shared, `css/omega-system.css`) | add `omega-signal-sweep` |
+
+**Collision check (the part a sweep like this lives or dies on):**
+`.topbar` already owns `::after` — `omega-visual-evolution.css`'s travelling
+seam (`omega-seam 7s`, confirmed at `omega-visual-evolution.css:152,237`).
+`::before` on `.topbar` is unclaimed (grepped `css/omega-system.css`,
+`omega-visual-evolution.css`, `bg.js`, `theme.js` — 0 hits). `.mission-bar`
+is page-local to `dashboard.html` and owns neither pseudo. Both elements
+already carry `position:sticky` (`css/omega-system.css:94`,
+`dashboard.html:17`), which is a valid containing block for an
+`inset:0`-sized absolutely-positioned child — no new `position:relative`
+needed, and critically **no `overflow:hidden` added to either element**:
+`.topbar` carries its own drop shadow (`omega-visual-evolution.css:150`,
+`0 8px 35px` extending past its own box) and clipping would silently erase
+it, exactly the class of bug `CLAUDE.md` §4 warns about for this file.
+
+**Where it's defined — `css/omega-system.css`, not `bg.js`.** Per
+`CLAUDE.md` §4's ownership table, every palette/motif token lives here (and
+in `theme.js`), never in `bg.js`; `.omega-spin-slow` is the direct
+precedent (defined `css/omega-system.css:363-364`, applied via explicit
+class on exactly one mount in `profile.html`, not a sweep). New rule added
+immediately after it in the same `── ANIMATIONS ──` block:
+
+```css
+/* Signature HUD motif #2: a restrained conic "signal sweep" for hub headers
+   with no data-omega-sculpture mount. Opt-in class, not a platform sweep --
+   FEATURE_IDEAS.md #28. Sized to inset:0 so it never exceeds its own box:
+   no overflow:hidden needed, which would otherwise clip .topbar's own
+   drop shadow (omega-visual-evolution.css). ::before is free on .topbar
+   (::after is its existing seam) and on .mission-bar (unclaimed). */
+.omega-signal-sweep{position:relative;isolation:isolate}
+.omega-signal-sweep::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:conic-gradient(from 200deg at 12% 50%,
+    transparent 0deg, rgba(0,229,255,.12) 22deg, transparent 55deg,
+    transparent 305deg, rgba(201,168,76,.12) 338deg, transparent 360deg);
+  opacity:.8;
+  animation:omega-signal-sweep-rotate 34s linear infinite;
+}
+@keyframes omega-signal-sweep-rotate{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.omega-signal-sweep::before{animation:none}}
+```
+
+`isolation:isolate` on the class keeps the pseudo's stacking local to the
+bar (so `z-index:0` can't fight the page's own stacking contexts); the bar's
+real content (`.t`, the auth ring, nav) is unaffected since none of it is
+`position:absolute` inside these bars, so normal flow paints above the
+pseudo without needing a z-index bump. `rotate` (not `background-position`)
+is used here deliberately — unlike the `body::before`/`.card` sheen this
+file already runs on `background-position` (`omega-field-drift`,
+`omega-seam`), a *conic* gradient's own geometry is the sweep, so rotating
+the pseudo-element's transform is the correct GPU-composited primitive
+(`transform`-only, matches `.omega-spin-slow`'s own rule) rather than
+reinterpolating the gradient definition every frame.
+
+**Page changes — one class attribute each, no markup restructuring:**
+- `dashboard.html`: `<div class="mission-bar">` → `<div class="mission-bar omega-signal-sweep">`
+- `treasury.html`: `<div class="topbar">` → `<div class="topbar omega-signal-sweep">`
+- `intelligence.html`: `<div class="topbar">` → `<div class="topbar omega-signal-sweep">`
+
+**Data needs:** none — pure CSS, zero new fetch/table/RPC, confirmed by the
+proposal itself.
+
+**Verification plan for `autonomous-coder`:**
+1. `python3 scripts/audit.py` — no new CRITICAL findings (CSS-only change,
+   no new file).
+2. Render all three pages headless: confirm `getComputedStyle` on the
+   `::before` shows the conic-gradient background and `animation-name` is
+   `none` under `page.emulateMedia({reducedMotion:'reduce'})` (see this
+   session's earlier finding that `S.launch({reducedMotion})` itself is not
+   wired — call `emulateMedia` directly after `S.open()`).
+3. Screenshot each of the three bars at rest and confirm: (a) the existing
+   `.topbar::after` seam and drop shadow are still visually present
+   (proves no clipping regression), (b) header text/ring/nav contrast is
+   unaffected (the sweep sits at `z-index:0`, `opacity:.8` on a gradient
+   that is mostly `transparent`), (c) no horizontal overflow introduced
+   (`scan.js overflow` on these three pages).
+4. Confirm the class was **not** added to any 4th page — this is a
+   3-surface opt-in motif by design, matching `#19`'s own precedent; a
+   platform-wide `.topbar` sweep would be the "busy" outcome the proposal
+   explicitly rejects.

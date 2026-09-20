@@ -125,7 +125,7 @@ function build(){
   }).join('');}
   var pg=document.getElementById('priority-grid');
   if(pg){pg.innerHTML=PRIORITIES.map(function(p){
-    return '<div class="card" data-reveal="rotate-in" style="--card-accent:'+p.col+';border-left:3px solid '+p.col+'">'
+    return '<div class="card card-edge" data-reveal="rotate-in" style="--card-accent:'+p.col+'">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+p.col+';margin-bottom:5px">'+p.badge+'</div>'
       +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:5px">'+p.title+'</div>'
       +'<div style="font-size:12px;line-height:1.65;color:var(--muted);margin-bottom:8px">'+p.desc+'</div>'

@@ -2093,3 +2093,46 @@ scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-no
 distinct sampled colours (agents / pantheons)       292 / 244 -- real geometry, not blank
 overflow / console errors (agents, pantheons)       false/false, 0/0
 ```
+
+## 33. Sparkline audit, Wave 6 — the same discipline against Supabase-backed queries, not just localStorage
+
+**Grounded in:** Waves 1-5 audited `localStorage`-based per-day logs exhaustively. This wave asked
+a different question: which pages already fetch real, dated Supabase rows and render them as a
+bare stat-box number with no existing chart? Grepped every page for `.order('created_at'/
+'occurred_at', ...)` outside the pages Waves 1-5 already covered or decided, filtered to those with
+no canvas already covering the same concept: `approvals`, `consultancy`, `enterprise`, `events`,
+`family`, `feed`, `intelligence`, `news`, `observatory`, `profile`, `queue`, `travel`. Read every
+one's actual query and rendering before deciding, same as every prior wave:
+
+- **`intelligence.html`'s GRAPHIFY tab — real, and shipped.** `loadGraphStats()` already fetches
+  the member's last 20 `graph_events` rows (`occurred_at`, real timestamps) to build the "RECENT
+  GRAPH EVENTS" feed, right next to a flat `EVENTS LOGGED` count with no chart. Bucketed the
+  *already-fetched* rows by calendar day (no new query) into `#graph-events-spark`, labelled
+  "GRAPH EVENTS PER DAY, RECENT ACTIVITY" — not "LAST 14 DAYS," since only the days present in the
+  most-recent-20 window are counted, never padded with invented zero days.
+- `approvals.html`/`profile.html` query `profiles` ordered by `created_at`, but for a signup/admin
+  list, not a personal numeric metric to trend. `consultancy.html`/`enterprise.html` query business/
+  admin entities (`consult_requests`, `enterprise_accounts`, `api_keys`) with no numeric per-row
+  field. `events.html`/`family.html`/`news.html`/`queue.html`/`travel.html` all fetch real, dated
+  rows (`member_events`, `heritage_records`, `dispatches`, `travel_journeys`) that are qualitative
+  records (title/body/category/notes) with nothing numeric to plot — same "different data shape"
+  exclusion this file has applied before, not a missed candidate.
+- `feed.html`'s `member_posts` carries real `likes_count`/`comments_count`, but per a shared feed of
+  (potentially other members') posts, not the visiting member's own metric over time — doesn't fit
+  the module's "my trend" shape without inventing an aggregation the page doesn't already compute.
+- `observatory.html` has genuinely numeric SRE data (`error_budget_policy.budget_4wk_pct`,
+  `platform_metrics.dimensions`) — but every query is `.limit(1).maybeSingle()`, the latest value
+  only, no history fetched. A sparkline here needs a real query change, not wiring an existing
+  fetch — a different, larger task than this pass's scope (reuse what's already fetched).
+
+Verified `intelligence.html` in a real headless render: clicked the real GRAPHIFY tab (driving the
+actual `loadGraphStats()` against the stub — correctly stayed hidden with zero real events, proving
+the anti-fabrication floor holds); separately confirmed the bucketing algorithm itself (copied
+verbatim from the shipped code) against a realistic fixture (`3,1,2` events across 3 real days)
+produces the correct series and that the sparkline module renders it correctly once fed real data.
+
+```
+scan.js errors / overflow (intelligence.html)      0/1 each
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
+```

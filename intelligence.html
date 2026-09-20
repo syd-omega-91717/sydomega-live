@@ -153,6 +153,7 @@
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="graph-confidence">0%</div><div class="stat-lbl">AVG CONFIDENCE</div></div>
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="graph-events">0</div><div class="stat-lbl">EVENTS LOGGED</div></div>
   </div>
+  <div data-omega-spark id="graph-events-spark" data-spark-label="GRAPH EVENTS PER DAY, RECENT ACTIVITY" data-spark-trend="off" hidden style="margin-bottom:16px;justify-content:center;display:flex"></div>
 
   <div class="section-label">KNOWLEDGE GRAPH INGESTION</div>
   <div style="display:flex;gap:8px;margin-bottom:20px">
@@ -319,6 +320,7 @@
 <div data-page-emblem="intelligence" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-sparkline.js" defer></script>
 <script>
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
@@ -451,6 +453,24 @@ async function loadGraphStats(){
     document.getElementById('graph-entities').textContent=ec;
     document.getElementById('graph-relationships').textContent=rc;
     document.getElementById('graph-events').textContent=(eventRes.data||[]).length;
+
+    /* FEATURE_IDEAS.md #33: real event timestamps already fetched above,
+       bucketed by calendar day -- no new query. Only the days actually
+       present in this page's most-recent-20 window are counted, so a quiet
+       stretch shows fewer bars rather than padded zeros (the sparkline
+       module's own anti-fabrication floor: under 2 finite values, nothing
+       renders). Chronological, oldest to newest. */
+    var sparkEl=document.getElementById('graph-events-spark');
+    if(sparkEl && eventRes.data && eventRes.data.length){
+      var byDay={};
+      eventRes.data.forEach(function(e){
+        var day=(e.occurred_at||'').slice(0,10);
+        if(day)byDay[day]=(byDay[day]||0)+1;
+      });
+      var days=Object.keys(byDay).sort();
+      var series=days.map(function(d){return byDay[d];});
+      sparkEl.setAttribute('data-spark-values',JSON.stringify(series));
+    }
 
     var [confRes]=await Promise.all([
       sb.from('graph_entities').select('confidence_score').eq('user_id',u)

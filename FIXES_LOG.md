@@ -20030,4 +20030,37 @@ python3 scripts/audit.py                            0 critical / 6 warnings (bas
 scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-nothing
 distinct sampled colours (agents / pantheons)       292 / 244
 overflow / console errors                           false/false, 0/0
+scan.js errors (204 pages, full sweep)              0/204
+```
+
+## Sparkline Wave 6 — intelligence.html's graph-events log gets a real sparkline from data it already fetches (FEATURE_IDEAS.md #33)
+
+Extended the sparkline audit from `localStorage`-based logs (Waves 1-5) to Supabase-backed ones:
+grepped every page for `.order('created_at'/'occurred_at', ...)` outside pages already covered,
+filtered to those with no existing chart, and read all 12 candidates' real queries before deciding.
+
+`intelligence.html`'s GRAPHIFY tab already fetches the member's last 20 `graph_events` rows
+(real `occurred_at` timestamps) to build its "RECENT GRAPH EVENTS" feed, right beside a flat
+`EVENTS LOGGED` count with no chart. Bucketed the already-fetched rows by calendar day (no new
+query) into `#graph-events-spark`, labelled "GRAPH EVENTS PER DAY, RECENT ACTIVITY" since only
+days actually present in the 20-row window are counted, never padded with invented zeros.
+
+The other 11 candidates were read and correctly excluded: `approvals`/`profile` query `profiles`
+for a signup/admin list, not a personal metric; `consultancy`/`enterprise` query business entities
+with no numeric field; `events`/`family`/`news`/`queue`/`travel` fetch real but qualitative
+records (title/body/category/notes) with nothing to plot; `feed.html`'s `member_posts` has real
+`likes_count`/`comments_count` but for a shared feed, not the visiting member's own trend;
+`observatory.html` has genuinely numeric SRE data but every query is `.limit(1).maybeSingle()` —
+latest value only, no history fetched, so a sparkline there needs a real query change rather than
+wiring an existing fetch.
+
+Verified in a real render: clicked the actual GRAPHIFY tab (real `loadGraphStats()` call against
+the stub, correctly stayed hidden with zero real events); separately confirmed the shipped
+bucketing algorithm against a realistic fixture (3/1/2 events across 3 real days) produces the
+correct series and the sparkline module renders it once fed real data.
+
+```
+scan.js errors / overflow (intelligence.html)      0/1 each
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
 ```

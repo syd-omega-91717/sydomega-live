@@ -20105,3 +20105,43 @@ scan.js errors / overflow (both pages)                    0/2, 0/2
 python3 scripts/check-inline-js.py                        OK
 python3 scripts/audit.py                                  0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## Dashboard's 133-chip "all pages" wall becomes searchable and collapsible (FEATURE_IDEAS.md #34)
+
+`dashboard.html`'s "PLATFORM COMMAND INDEX" (`renderPlatformSections()`) read `nav.js`'s real
+`SECTIONS` table and rendered it flat: 133 page-link chips across 15 always-open sections, all
+visible at once, no filter. This is the one surface where the platform's real page count reaches a
+member unmediated — everywhere else, `nav.js`'s own 15-section grouping already does the
+organizing. Explicitly decided **not** to reduce the actual page count (that would mean rewriting
+`nav.js`'s routing table to solve a problem that does not exist for a member navigating the
+sidebar) and instead fixed the one place scale becomes noise: this flat grid.
+
+Added a real-time search input (`#platform-search`, `oninput="filterPlatformSections(this.value)"`)
+and an honest empty state (`#platform-search-empty`, "NO PAGES MATCH") directly under the sechead.
+Rewrote the render tail to emit collapsible sections — each with a real `<button>` header,
+`aria-expanded`, a page-count badge, and a chip list — wired to `window.togglePlatformSection` and
+persisted via `localStorage['omega_platform_sections_collapsed']` (a per-viewer UI-state
+convenience, not data — same pattern as this repo's other `localStorage`-only preferences).
+`window.filterPlatformSections` does substring matching per chip, hides non-matching chips and
+whole empty sections, force-expands any section with a match regardless of its stored collapsed
+state, and restores each section's actual prior collapsed state when the query is cleared (not a
+blanket re-expand-all).
+
+Verified with real Playwright interactions, not read-throughs of the code:
+
+- Initial render: 15 sections, 133 chips, matching the pre-existing count.
+- A real `page.click()` on a section header collapses it and flips `aria-expanded="false"`.
+- A real page reload preserves that one section's collapsed state via localStorage — confirms the
+  persistence round-trip, not just that the write call was made.
+- A real `fill()` search for "journal" narrows to 1 matching chip in 1 section, hiding the rest.
+- Clearing the search restores all 15 sections **and** the specific section collapsed earlier —
+  proving the "restore prior state" path, not a naive expand-all.
+- A nonsense query renders the empty state; zero chips remain in the DOM as visible.
+- Zero horizontal overflow, zero console errors, throughout every interaction above.
+
+```
+scan.js errors / overflow (dashboard.html)   0/1 each
+python3 scripts/check-inline-js.py           OK
+python3 scripts/audit.py                     0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (all 204 pages)               0 pages with uncaught errors or rejections
+```

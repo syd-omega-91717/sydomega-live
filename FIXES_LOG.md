@@ -19784,3 +19784,58 @@ python3 scripts/check-inline-js.py         OK -- every inline <script> block par
 python3 scripts/audit.py                   0 critical / 6 warnings (baseline, unchanged)
 scan.js errors (204 pages, full sweep)     0/204
 ```
+
+## Trend-sparkline pass Wave 5 shipped — contributions.html's gift log gets a real sparkline; the signal-sweep motif stays at 3 surfaces (FEATURE_IDEAS.md #27, #28)
+
+Two follow-ups, both closing questions this file's own prior waves left
+open rather than opening new scope.
+
+**#28's signal sweep — a 4th candidate considered, closed with no
+change.** `command.html`'s `.topbar` ("DAILY COMMAND BRIEF... STRATEGY ·
+OPERATIONS") has no `data-omega-sculpture` mount and reads as
+command/control-room identity at least as directly as the three pages the
+motif already shipped on. But `#28`'s own blueprint states the restraint
+explicitly — three surfaces, matching `#19`'s "one motif, three surfaces"
+precedent, specifically to avoid the "busy" platform-wide sweep the
+proposal rejected outright. A 4th page meeting the same picking criteria
+isn't new evidence against that reasoning; it's the exact situation the
+cap exists to hold the line on, since a real sweep is never short of
+one-at-a-time qualifiers. `command.html` keeps its plain `.topbar`.
+
+**Sparkline audit widened past both prior grep patterns.** Waves 2 and 4
+found real per-day logs by matching `localStorage.setItem('omega_...'`
+and, after correcting Wave 2's own methodology bug, `_KEY='omega_...'`.
+Wave 5 widened further to any `push`/`unshift` of an object literal
+carrying a `date`/`day`/`ts`/`at` field, across every page not already
+covered, filtered to pages whose only `<canvas>` (or none) isn't a real
+chart — 13 candidates surfaced this way. Read every one of their real
+logs before deciding:
+
+- **`contributions.html`'s `gifts` (`{org,amount,date}`) — real, and a
+  genuine gap**: a numeric, dated, member-logged series shown only as
+  totals and a text list, the same shape as Wave 4's `wealth.html` net-worth
+  spark. Added `#gift-amount-spark` to the GIVING LEDGER tab, fed the last
+  14 real gift amounts from `renderGifts()`, loaded `omega-sparkline.js` on
+  the page (it isn't `bg.js`-injected — every adopting page loads it
+  itself, same as `wealth.html`/`affirmations.html`).
+- `achievements.html`'s unlock log, `passport.html`'s stamps — real but
+  one-time-per-item events, the same low-cadence shape already excluded
+  in Wave 4. `charter.html`, `kings.html`, `governance.html`,
+  `heritage.html`, `notifications.html`, `publications.html` — real logs
+  with no numeric field at all (audit trails, notes, tasks) — nothing to
+  plot. `horoscope.html`/`oracle.html` — computed arrays, not member logs.
+  `payments.html`'s reward-ledger push formula (`(i+1)*91.717`) reads as
+  synthetic rather than real transaction data — noted in `FEATURE_IDEAS.md`
+  as a separate, out-of-scope concern for a future pass, not fixed here.
+
+Verified `contributions.html` in a real headless render: clicked the real
+GIVING LEDGER tab, logged three gifts through the actual `addGift()`
+button handler (not a direct render call), confirmed the mount un-hid and
+drew a real SVG polyline from `[50,120,30]`, zero overflow, zero console
+errors. Screenshot confirms correct placement with no layout shift.
+
+```
+scan.js errors / overflow (contributions.html)   0/1 each
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```

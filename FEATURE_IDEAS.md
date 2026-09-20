@@ -1595,6 +1595,65 @@ purpose-built chart for a smaller, less informative one — a downgrade
 presented as a consolidation. Closed with no code change: both pages keep
 their existing charts.
 
+**Wave 5 — a widened audit beyond `localStorage`-key patterns, to check
+whether Waves 1-4 had exhausted the real candidates.** Broadened the grep
+past both prior patterns (`localStorage.(setItem|getItem)('omega_...`
+and `_KEY = 'omega_...`) to any `push`/`unshift` of an object literal
+carrying a `date`/`day`/`ts`/`at` field, across every page not already
+covered or already decided, then filtered to pages with **zero** existing
+`<canvas>` chart of their own (`achievements.html`, `charter.html`,
+`passport.html`, `projects.html`) plus pages whose only canvas is the
+shared, unrelated authority-ring widget (`contributions.html`,
+`governance.html`, `heritage.html`, `horoscope.html`, `kings.html`,
+`notifications.html`, `oracle.html`, `payments.html`, `publications.html`
+— all `<canvas data-omega-ring>`, not a chart).
+
+Read each real log before deciding, same discipline as every prior wave:
+
+- **`contributions.html`'s `gifts` array (`{org,amount,date}`) is a real
+  find** — structurally identical to Wave 4's `wealth.html` net-worth
+  snapshots: a member-initiated, dated, *numeric* log, shown only as a
+  totals row (`g-total`/`g-annual`/`g-pct`) and a text list, no chart.
+  Added `#gift-amount-spark` inside the GIVING LEDGER tab's KPI block,
+  fed the last 14 real gift amounts in `renderGifts()`, labelled "GIVING,
+  LAST 14 GIFTS" (not "...DAYS" — gifts are irregular, same framing as
+  `wealth.html`'s snapshot spark).
+- `achievements.html`'s `unlockLog`, `passport.html`'s `stamps` — real
+  dated logs, but each entry is a one-time, non-repeating unlock/stamp
+  per achievement/trip, the same low-cadence shape Wave 4 already
+  excluded `library.html`/`targets.html`/`reading.html` for. Correctly
+  excluded, same reason.
+- `charter.html`'s `history`, `kings.html`'s `studyNotes`,
+  `governance.html`'s `risks`/`policies`/`decisions`,
+  `heritage.html`'s `stories`, `notifications.html`'s `reminders`,
+  `publications.html`'s `pubs` — real logs, but **no numeric field at
+  all**: each entry is an edit-audit trail, a qualitative note, or a task,
+  not a measurement. A sparkline plots a number over time; there is
+  nothing here to plot. Different data shape than the sparkline module
+  was built for, not a missed candidate.
+- `horoscope.html`'s `candidates` and `oracle.html`'s `rows` are
+  internally computed arrays (season dates, generated affirmation text),
+  never a member log at all.
+- `payments.html`'s `rows` push formula (`(i+1)*91.717`) reads as a
+  synthetic/computed reward ledger rather than real transaction data —
+  flagged here as a candidate for a future, separate look under
+  `CLAUDE.md` §8.1 class 9 (fabricated data rendered as fact); out of
+  scope for this sparkline pass and not touched.
+
+Verified `contributions.html` in a real headless render: clicked the real
+GIVING LEDGER tab, logged three real gifts through `window.addGift()` (the
+actual button handler, not a direct render call), confirmed the mount
+un-hid, rendered a real SVG polyline from the actual `[50,120,30]` series,
+zero horizontal overflow, zero console errors. Screenshot confirms correct
+placement between the KPI row and the giving-target form with no layout
+shift.
+
+```
+scan.js errors / overflow (contributions.html)   0/1 each
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline)
+```
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that
@@ -1745,6 +1804,23 @@ proposal itself.
    3-surface opt-in motif by design, matching `#19`'s own precedent; a
    platform-wide `.topbar` sweep would be the "busy" outcome the proposal
    explicitly rejects.
+
+**A 4th surface — considered, closed with no code change.**
+`command.html`'s `.topbar` (`<div class="t">DAILY COMMAND BRIEF<small>
+STRATEGY · OPERATIONS · SYD OMEGA 91717</small></div>`) reads, if anything,
+*more* directly as command/control-room identity than `treasury.html` or
+`intelligence.html` — no `data-omega-sculpture` mount, real `.topbar`,
+genuinely a candidate on the same criteria used to pick the original three.
+But this proposal's own blueprint step 4 above states the restraint
+explicitly: three surfaces, matching `#19`'s "one motif, three surfaces"
+precedent, specifically to avoid "the busy outcome this platform's own
+brief already warned against." A 4th page meeting the same criteria is not
+new evidence against that reasoning — it is exactly the situation the
+3-surface cap was written to hold the line against, since a genuine
+platform-wide sweep is never short of qualifying pages one at a time.
+Overriding a documented restraint decision needs a reason the decision
+didn't already anticipate; this isn't one. Closed: `command.html` keeps
+its plain `.topbar`, no `omega-signal-sweep` class added.
 
 ## 29. Live signal pulse — a real, ambient "the platform is alive" indicator (visual design system)
 

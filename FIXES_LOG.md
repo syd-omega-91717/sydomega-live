@@ -19243,6 +19243,40 @@ python3 scripts/silent-failure-detector.py   0 findings
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
 
+## Two independent `main` CI failures at `a8ac03f9` (PR #432), both fixed
+
+PR #432 ("Event-Driven Celebration Engine Expansion") left `main` red on both
+the "CI" and "Contracts" GitHub Actions workflows — two unrelated root causes
+in the same merge, confirmed via `mcp__github__get_job_logs` on each failed
+run rather than assumed from one:
+
+1. **"CI" workflow — `scripts/check-inline-js.py`, `publishing.html:104`
+   fails to parse ("missing `)` after argument list").** The new
+   `omega:social-milestone` dispatch this PR added to `publishing.html`'s
+   commit-flow handler was missing one closing paren:
+   `document.dispatchEvent(new CustomEvent('omega:social-milestone',{...}));`
+   had only one `)` for two open calls (`dispatchEvent(` and `CustomEvent(`).
+   The whole inline `<script>` block failed to parse as a result, not just
+   that one statement, since a single unclosed call breaks the block's
+   grammar. Fixed by adding the missing `)`.
+2. **"Contracts" workflow — `scripts/contract-suite.py`'s `type-scale` gate,
+   `omega-confetti.js` declares interface text at `11px`**, below the
+   platform's hard 12px floor (CLAUDE.md §7 check 9 material). Three
+   `Courier Prime` eyebrow labels in the new social/streak/task-completion
+   celebration banners (`TASK COMPLETED`, `STREAK MILESTONE`, and the
+   dynamic `<type> milestone` label) were set at `font-size:11px`, while
+   every other eyebrow label already in the same file (gate-unlock, apex,
+   milestone banners) uses `12px` at various `letter-spacing` widths. Bumped
+   all three to `12px` to match the file's own existing convention — no
+   visual regression, since the surrounding banners already read at that
+   size.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/contract-suite.py    18 gate(s), 0 failing (type-scale: ok)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
 ## `.card-edge` sweep, batch 6 — the expanded 57-file `border-left` re-scan
 
 `main` advanced far past the original `.card-edge` inventory (batches 1–5,

@@ -1433,6 +1433,85 @@ calling the render function directly:
 - Zero page errors, zero console errors, no horizontal overflow on
   either page. `./scripts/ci-local.sh`: ALL 24 BLOCKING CHECKS PASSED.
 
+**Wave 2 — SHIPPED.** Individually audited the ~20 pages Wave 1 left
+unaudited (`academy.html`, `analytics.html`, `agents.html`, `ops.html`,
+`skills.html`, `research.html`, `studio.html`, `budget.html`,
+`nutrition.html`, `kyc.html`, `feed.html`, `command.html`, `gates.html`,
+and a broader re-grep of every `.kpi`/`.kpi-card`/stat-tile page for a
+real dated log or Supabase table), the same per-page verification method
+as Wave 1 — reading the actual data source before wiring anything, never
+trusting a grep hit alone:
+
+- **`habits.html` — genuine candidate.** Real Supabase `habit_logs` table
+  (`user_id, habit_id, log_date`, RLS-scoped) exists but is a *write-only
+  mirror* (documented in the page's own code comment: "writes go up;
+  localStorage stays the source the UI reads," to avoid a hydration race).
+  The actual read path is `getLogs()` — a `localStorage` dict keyed by
+  date already loaded synchronously on every render. Each individual habit
+  already draws its own 28-day streak-dot row and a 90-day heatmap
+  (`renderHeatmap()`), so a *per-habit* sparkline would duplicate an
+  existing visualization — same reasoning as `journal.html`/`physiology.html`
+  in Wave 1. The aggregate view does not exist anywhere: added
+  `#habits-done-spark` inside the `DONE TODAY` hero tile, summing
+  completions across *all* habits per day, last 14 days (weekly-frequency
+  habits collapse onto their week-key exactly like the existing dot/heatmap
+  code already does — not a new behavior).
+- **`vocabulary.html` — genuine candidate, zero new query.** `reviewLog`
+  (`localStorage`, `{date, count}` per real drill session) already existed
+  with no existing chart. Added `#vocab-review-spark` inside the `TODAY'S
+  REVIEWS` tile, reading the same array `updateStats()` already loads.
+- **`contacts.html` — genuine candidate, zero new query.** `interactions`
+  (`localStorage`, `{contactId, date, channel, quality}` per logged touch)
+  already existed; its own `#net-canvas` chart is a tier/composition
+  breakdown, not a time trend, so no duplication. Added
+  `#contacts-touch-spark` inside `CONTACTED THIS MONTH`, counting total
+  interaction events per day (a different, still-real cut than that tile's
+  own unique-contacts-this-month number).
+- **`clarity.html` — genuine candidate, zero new query.** `sessions`
+  (`localStorage`, `{date, done, total, complete}` per real logged
+  protocol run) already existed; its only canvas is a progress ring, not a
+  trend chart. Added `#clarity-steps-spark` inside `AVG STEPS DONE`,
+  reading `done` per day from the same array `updateStats()` loads.
+- **`health.html` — genuine candidate, zero new query.** Real Supabase
+  `health_logs` (RLS-scoped, `mind/heart/energy/body/soul/total/created_at`)
+  already fetched (last 60 rows) by `loadHistory()`, which already computes
+  a "last 14 entries" average per the page's own SCIENCE-tab copy. No
+  existing chart. Added `#health-score-spark` inside the SOVEREIGN SCORE
+  tile, taking the same `rows.slice(0,14)` reversed to chronological order
+  — labelled "LAST 14 ENTRIES," not "LAST 14 DAYS," since real member
+  logs are irregular, not daily; the module's own `nums()` filter (only
+  finite values are plotted) means an entry-based series is honest here
+  where a calendar-day series with invented zero-scores would not be.
+- **`social.html` — real data, explicitly not touched.** `social_broadcasts`
+  (Supabase, `created_at`) is fetched and real, but the page has no
+  existing KPI/stat tile of any kind to attach a mount to — adding one
+  would mean designing new tile layout, a different (and larger) decision
+  than wiring the shared module onto an existing tile. Left for a
+  dedicated pass.
+- **Re-confirmed exclusions:** `achievements.html` (`unlockLog` exists but
+  achievements unlock rarely, not daily — a 14-day window would sit below
+  the module's own 2-finite-value floor for most members, correctly
+  staying hidden rather than showing a misleading near-empty line);
+  `affirmations.html`, `library.html`, `rituals.html`, `targets.html`,
+  `wealth.html`, `time.html`, `chronicle.html`, `reading.html`,
+  `signal.html` (grepped for `localStorage.setItem('omega_...` and
+  `.from('...')` Supabase calls — zero matches on either, meaning no real
+  per-day log exists to source a series from, only static/no-persistence
+  content); `expenses.html`/`revenue.html` (each already has a dedicated
+  trend canvas — `#trend-canvas`/`#monthly-canvas`,`#rev-canvas` —
+  consolidation-only, same as Wave 1's `journal.html`/`physiology.html`).
+
+Verified each of the 5 shipped pages in a real headless render: seeded
+realistic, gap-including `localStorage` logs (or, for `health.html`,
+confirmed the harness's empty-array Supabase stub correctly leaves the
+mount `hidden` — the anti-fabrication guard working as designed — then
+called `window.OmegaSpark.render()` on the live mount with a synthetic
+series to prove the render path itself handles real variation). All 5
+produced a real `<svg>` with a genuinely varying series where seeded, or
+stayed correctly hidden with insufficient data. `scan.js errors`: 0/5.
+`scan.js overflow`: 0/5. `python3 scripts/check-inline-js.py`: clean.
+`python3 scripts/audit.py`: 0 critical / 6 warnings (baseline).
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that

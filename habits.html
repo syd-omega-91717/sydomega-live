@@ -69,7 +69,7 @@
   <div style="padding:20px var(--pad,20px)">
     <div class="habit-hero" id="habit-hero" data-stagger data-stagger-gap="80" data-omega-depth-tilt>
       <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
-      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
+      <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div><div data-omega-spark id="habits-done-spark" data-spark-label="COMPLETIONS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div>
       <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-streak">0</div><div class="sk">BEST STREAK</div></div>
       <div class="hero-stat kpi" data-reveal="depth-in"><div class="sv" id="stat-rate">0%</div><div class="sk">30-DAY RATE</div></div>
     </div>
@@ -227,6 +227,7 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 <script type="module">
 const HABITS_KEY = 'omega_habits_v2';
 const LOGS_KEY   = 'omega_habit_logs_v2';
@@ -594,6 +595,28 @@ function renderHeatmap(){
   container.appendChild(legend);
 }
 
+/* FEATURE_IDEAS.md #27 Wave 2: aggregate completions/day across all habits,
+   last 14 days -- reads the same getLogs() dict every render already uses,
+   no new storage key. Weekly habits collapse onto their week-key exactly
+   like getStreakDots()/renderHeatmap() already do; that is existing
+   behaviour, not new. A day with 0 completions is a true 0. */
+function habitsSparkSeries(){
+  const habits=getHabits()||DEFAULTS;
+  const logs=getLogs();
+  const today=new Date();today.setHours(0,0,0,0);
+  const series=[];
+  for(let i=13;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    let count=0;
+    habits.forEach(function(h){
+      const key=h.freq==='weekly'?weekKey(d):d.toISOString().slice(0,10);
+      if(logs[key]&&logs[key][h.id]) count++;
+    });
+    series.push(count);
+  }
+  return series;
+}
+
 function renderStats(){
   const habits=getHabits()||DEFAULTS;
   const todayHabits=habits.filter(shouldDoToday);
@@ -604,6 +627,8 @@ function renderStats(){
   document.getElementById('stat-done').textContent=`${doneToday}/${todayHabits.length}`;
   document.getElementById('stat-streak').textContent=best+'d';
   document.getElementById('stat-rate').textContent=avg+'%';
+  const spEl=document.getElementById('habits-done-spark');
+  if(spEl) spEl.setAttribute('data-spark-values', JSON.stringify(habitsSparkSeries()));
 }
 
 function renderAll(){

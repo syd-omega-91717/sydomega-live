@@ -842,12 +842,32 @@ normal and reduced motion:
 - `node --check bg.js`, `check-inline-js.py`, `audit.py` (0 critical), `production-contract.py`
   all pass.
 
-**Phase 2 — not yet done (own PR):** the same class on `dashboard.html` and the `cosmos.html`
-hero emblem; both need their own explicit mount point since neither carries a `[data-sigil]`
-element today.
+**Phase 2 — SHIPPED.** Mounted a real per-member `OmegaSigil` on `dashboard.html` (next to the
+mission-bar's authority ring, `#dash-sigil`) and `cosmos.html` (below the zodiac hero wheel,
+`#cosmos-sigil`), both using profile data each page already loads (no extra fetch) and the same
+`auth`/`axisA/B/C`/`gate`/`name` shape as `profile.html`'s `#ph-sigil`. `.omega-spin-slow` applies
+automatically via `bg.js`'s existing generic `[class*="sigil"]` selector — no class needed on the
+new elements.
 
-**Phase 3 — flagged, not this feature:** registering `omega-page-emblem.js` in the `bg.js`
-loader for the ~40 flat pages. Additive but touches the loader; do it as its own reviewed step.
+Deliberately **not** applied to `cosmos.html`'s `#hero-wheel` canvas, despite that being this
+proposal's original target: reading the actual code first showed it already runs its own
+continuous per-frame rotation of the 12-sign ring (`drawHeroWheel`'s own `requestAnimationFrame`
+loop), so stacking a second, unsynced CSS rotation on top would have fought the existing motion
+rather than enhanced it — exactly the "two motion systems on one element" class this repo's own
+motion rules warn against. Mounted a real sigil next to it instead, which serves the proposal's
+actual goal (a per-member mark on this hub page) without touching working code.
+
+Verified in a headless render (signed-in stub, both pages): real `<svg>` present in both mounts,
+`animation-name: spin-slow` / `60s` under normal motion, `animation-name: none` under
+`prefers-reduced-motion: reduce` (cross-checked against `profile.html`'s known-working `#ph-sigil`
+as a control, since the test harness's `S.launch({reducedMotion:...})` option turned out not to
+be wired up — `page.emulateMedia()` is the one that actually works with this harness). Zero page
+errors, zero console errors, no horizontal overflow on either page.
+
+**Phase 3 — already shipped, this doc was stale.** `git log -S"data-omega-page-emblem" -- bg.js`
+shows `omega-page-emblem.js` has been registered in the `bg.js` loader since **2026-07-20**,
+months before this entry claimed it as "flagged, not this feature." No code change needed here;
+this paragraph exists so the next session doesn't re-propose already-shipped work.
 
 **Source inspiration:** `UX_REDESIGN_BRIEF.md` §3 and §5 (this repo's own friend-feedback →
 action plan); `omega-sigil-gen.js` / `omega-cinematic-engine.js` / `omega-page-emblem.js`

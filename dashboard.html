@@ -107,7 +107,7 @@
 
     <!-- MISSION BAR -->
     <div class="mission-bar">
-      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div id="dash-sigil" class="sigil-mount" data-sigil-mount style="width:36px;height:36px;flex-shrink:0" role="img" aria-label="Sovereign sigil — procedurally generated from your element, axis values, and gate"></div></div>
       <div class="mb-meta">
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
@@ -933,6 +933,21 @@ function sid(id,v){
     /* Gates reached */
     var reached=GATES.filter(function(g){return auth>=g;}).length;
     sid('k-gates',reached+'/12');
+
+    /* Signature cinematic tier Phase 2 (FEATURE_IDEAS.md #19): same sigil as
+       profile.html's #ph-sigil, mounted directly (not via omega:user-loaded --
+       see FEATURE_IDEAS.md #10) using data already loaded above, no extra fetch.
+       .omega-spin-slow applies automatically via bg.js's generic
+       [class*="sigil"] selector -- no class needed here. */
+    (function mountDashSigil(){
+      var el=document.getElementById('dash-sigil');
+      if(!el) return;
+      if(!window.OmegaSigil){setTimeout(mountDashSigil,300);return;}
+      window.OmegaSigil.mount(el,{
+        auth:auth,elem:pr.element||'Void',axisA:a,axisB:b,axisC:c,
+        gate:Math.max(1,reached),name:pr.display_name||'Sovereign',size:36
+      });
+    })();
 
     /* RANK / XP HUD -- same auth/gi/GATES data as above, no separate fetch */
     sid('hud-rank-name',gateName);

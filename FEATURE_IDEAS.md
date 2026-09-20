@@ -1943,22 +1943,196 @@ just crossfades from that black frame into the new page underneath the
 veil's own removal — additive, not a second, competing animation the member
 would perceive as a conflict.
 
-**Standing todo, not closed:** re-verify activation in a real (non-headless)
-browser or in production before this is described anywhere as a delivered
-visual change rather than a safe, dormant-by-default addition. If it turns
-out the transition never activates on this platform for a reason specific
-to `bg.js`, the CSS rule is inert cost with no visible benefit and a future
-session should either find the real cause or remove it; if it does activate
-in a real browser, the manual veil can then be revisited for possibly being
-made lighter (a shorter fade, since the native crossfade would be carrying
-more of the visual work).
+**Re-verified in a real, non-headless browser — the mystery narrowed, not
+solved, and headless was ruled out as the explanation.** `xvfb-run` gave a
+genuinely headed Chromium (not the headless mode the first investigation
+used) against a real X display. The cleanest, most valid comparison —
+identical stub setup (the real Supabase-client stub this harness always
+needs, since without it every page's real, unstubbed auth check makes a
+network call to `supabase.co` that this sandbox's egress policy rejects,
+which triggers `bg.js`'s own `location.replace`-based auth redirect to
+`account.html` and contaminates the result with an unrelated navigation),
+`PRIMED_STORAGE`, overlay dismissal, across four different real page pairs —
+showed **`false` in both headed and headless mode, identically**. Headless
+rendering is therefore not the explanation; whatever disqualifies the
+transition on this repo's real pages does so in a real browser too.
+
+Two further things surfaced along the way, kept here rather than treated as
+resolved:
+- Testing *without* the Supabase stub (to rule out `ctx.route()`
+  interception itself as a factor) hit exactly the redirect chain above —
+  `dashboard.html` → `account.html` on every run, both headed and headless,
+  once egress to `supabase.co` was confirmed rejected
+  (`connect_rejected ... organization policy`) rather than merely slow. That
+  redirect is real `bg.js` behavior (the `safeRedirect()`/`location.replace`
+  path, `bg.js:1774`), not a view-transition artifact, but it is *specific to
+  this sandbox's network policy* — production reaches the real
+  `ydqhzvvoyufiiqvzcjns.supabase.co` and would not hit it. One single such
+  unstubbed run, before the redirect chain was understood, showed
+  `hadViewTransition: true` on the hop that happened to fire mid-redirect;
+  it did not reproduce across repeated identical runs and is recorded here
+  only so a future session does not rediscover it as new signal — treat it
+  as noise from an invalid (redirect-contaminated) test, not evidence either
+  way.
+- `ctx.route()`-based interception (the mechanism this harness's Supabase/
+  font stubs use) was tested in isolation (`route().abort()` on the same
+  unreachable domains, to keep the interception without the slow real
+  network failure) and also showed `false`, headed and headless alike — so
+  route-interception-as-such is not obviously the cause either, though it
+  cannot be fully separated from the redirect confound above without a
+  network egress this sandbox does not grant.
+
+**Conclusion this session is willing to stand behind:** under every
+controlled, valid (non-redirect-contaminated) test run this session could
+construct — headless and headed, both with the stub required for a working
+authenticated session — cross-document View Transitions did not activate on
+this repo's real pages. This is now a stronger, better-isolated finding than
+the original headless-only result, not a resolved one: the specific
+disqualifying factor in `bg.js` or these pages' markup remains unidentified.
+The shipped CSS stays exactly as reasoned before — harmless, additive, kept
+alongside the unconditional manual veil — since a real production
+environment (real, reachable Supabase, no test-harness interception) is the
+one condition this session could not reproduce, and is therefore the one
+place this could still turn out to work. Re-verifying against the real
+deployed site (not this sandbox) is the only test left that would actually
+close this out.
 
 ```
 node --check bg.js                                OK
 python3 scripts/check-inline-js.py                 OK -- every inline <script> block parses cleanly
 python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
-scan.js errors (204 pages, full sweep)              see FIXES_LOG.md for this session's run
+scan.js errors (204 pages, full sweep)              0/204
 CSS rule presence on live pages                     confirmed: CSSViewTransitionRule, navigation:auto
 prefers-reduced-motion coverage                     confirmed: group + old + new pseudo levels all gated
 manual #omega-veil fallback                         confirmed present and unconditional, unchanged behavior
+headed-browser re-test (xvfb-run, 4 real page pairs) false in both headed and headless under valid (stubbed, non-redirecting) conditions
+```
+
+## 31. The constellation ring becomes a real navigable universe map — plus a real cross-module class collision found and fixed along the way
+
+**Grounded in:** `omega-constellation.js` (CLAUDE.md §4.1) already draws a real, well-built ring of the 12 agent emblems on `agents.html` and `pantheons.html` — but every one of its 12 nodes hard-coded `href:'/agents.html'`, so all 12 were decorative dead ends pointing at the same page rather than a real map of anything. `omega-agents.json` already carries each agent's real `domains` array (e.g. Sentinel: `security, access, protection, threats, privacy`); nav.js's own `SECTIONS` array is the platform's real routing table, with real per-page sub-links (`PRIVACY` → `/privacy.html`, `ORACLE PREDICT` → `/prediction.html`, etc.).
+
+**What shipped:** a mechanical, non-subjective matching pass — every agent's own `domains` keywords searched as literal substrings against every real `SECTIONS` sub-link's slug/label across the whole nav — resolved all 12 agents to a genuinely real, existing page with no manual judgment calls needed:
+
+| agent | resolved via | destination |
+|---|---|---|
+| Sentinel | `privacy` | `/privacy.html` |
+| Merchant | `treasury` | `/vault.html#reserve` |
+| Scout | `search` | `/search.html` |
+| Warden | `family` | `/family.html` |
+| Sovereign | `command` | `/command.html` |
+| Auditor | `compliance` | `/compliance.html` |
+| Proxy | `contracts` | `/contracts.html` |
+| Oracle | `prediction` | `/prediction.html` |
+| Beacon | `vision` | `/vision.html` |
+| Analyst | `intelligence` | `/intelligence.html` |
+| Tutor | `academy` | `/academy.html` |
+| Historian | `heritage` | `/family.html#heritage` |
+
+Added as an `href` field directly on each agent in `omega-agents.json` — a property of the agent itself, not a second copy of nav.js's routing table (CLAUDE.md §8.1 class 8) — with `omega-constellation.js`'s `nodesFor('agents')` reading `a.href` per-node instead of the old hardcoded single destination, falling back to `/agents.html` for any future roster entry with none. The module's own `FALLBACK_AGENTS` (used only if the JSON fetch fails) got the same hrefs, kept in sync by hand since it is a small, static array.
+
+Mounted the same ring on `dashboard.html` — the platform's actual, highest-traffic front door — replacing a hand-rolled `#agent-quick` grid whose 12 cards had the *exact same* bug (`onclick="location.href='/agents.html'"` on every card). One canonical, now-fixed component instead of two independently-broken ones.
+
+**A real, previously-invisible bug found while verifying, not assumed.** Rendering the new dashboard mount showed 6 of the 12 nodes with a solid gold background and 6 dimmed — reproducibly, identically, across repeated runs, at every settle time tried (ruling out a load-timing race). Traced with a real rule-matching script (walk every stylesheet, test `element.matches(selector)`) rather than guessing: `css/omega-cinematic-animations-phase2.css` already owned `.ocn-node`/`.ocn-orbit` for a *completely unrelated* decorative "constellation backdrop" star-field effect (`.omega-constellation-backdrop`, dead code — grepped all 204 pages, zero create that container), and `omega-cinematic-animations-phase2.js`'s `updateConstellationNodes()` calls `document.querySelectorAll('.ocn-node')` with **no scoping to its own backdrop container**, plus a `MutationObserver` that re-fires the same unscoped query on every DOM insertion. So the moment `omega-constellation.js` mounted real ring nodes, this dead module's CSS (`background:var(--page-accent)`, a `constellation-pulse` animation) and JS (staggered `animationDelay` values cycling `[0,1.5,0.8,1.3,0.5,1.1]`) silently painted over them — a second, textbook case of CLAUDE.md §8.1 class 5 ("a guard/class name is the module's identity, not the feature area's"), and one that had been live and corrupting `agents.html`'s and `pantheons.html`'s *existing* rings the whole time, just masked there by the purple page-accent tint reading as a plausible "themed" look rather than an obvious bug.
+
+Fixed by renaming the dead, never-mounted intruder — `.ocn-node`/`.ocn-orbit`/`.ocn-link`/`.ocn-focal` → `.ocnbg-node`/`.ocnbg-orbit`/`.ocnbg-link`/`.ocnbg-focal` across `css/omega-cinematic-animations-phase2.css`, `omega-cinematic-animations-phase2.js`, `css/omega-cinematic-animations-phase3.css`, `omega-cinematic-animations-phase3.js` — never the real, working, meaningfully-used module. Zero risk: confirmed by grep that no page ever creates the backdrop's own container, so nothing depended on the old names for their intended effect.
+
+Verified in a real headless render, not just the diff: `agents.html`'s COUNCIL tab now shows each node in its own correct per-sign emblem colour (fire/water/wind/metal/sand) instead of a flat purple box on every node; the new `dashboard.html` mount shows the same correct colours with zero alternation; all 12 dashboard nodes resolved to 12 *distinct* real hrefs (checked via DOM query, not assumed); zero horizontal overflow on `dashboard.html`/`agents.html`/`pantheons.html`; zero console errors across all three.
+
+```
+node --check (constellation.js, phase2.js, phase3.js)   OK
+python3 scripts/check-inline-js.py                       OK
+python3 scripts/audit.py                                 0 critical / 6 warnings (baseline, unchanged)
+dashboard.html: 12 nodes, 12 unique hrefs                confirmed via DOM query
+dashboard/agents/pantheons: overflow                     false / false / false
+dashboard/agents/pantheons: console errors               0 / 0 / 0
+.ocn-node collision (rule-matching script, before/after)  identical colliding rule found, then gone
+scan.js errors (204 pages, full sweep)                    0/204
+python3 scripts/omega-registry.py --check                 OK (regenerated for byte-size drift)
+python3 scripts/module-contract.py                        0 broken, 127 contracts
+python3 scripts/reachability-contract.py                  OK -- every destination linked
+python3 scripts/omega_fabric_audit.py                     VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
+```
+
+## 32. Real 3-D sculpture coverage extended to agents.html and pantheons.html — matrix.html considered and correctly excluded
+
+**Grounded in:** `omega-sculpture.js`'s real three.js layer (CLAUDE.md §4) mounts on only 5 of 204
+pages (`ascension`, `elements`, `gates`, `index`, `sculpture`), and two of its six built-in scene
+types — `agents` (a 12-spoke wheel around the Ω, alternating cyan/gold cube nodes) and `matrix`
+(a 9×9×9 dot grid) — are fully implemented and already demoed on `sculpture.html`, but were never
+actually mounted on the real pages their names describe. bg.js injects the 670KB module only where
+a `[data-omega-sculpture]` mount exists, so extending coverage costs nothing on any other page.
+
+**Shipped:** the `agents` scene mounted on `agents.html`'s COUNCIL tab (above the existing
+`omega-constellation.js` ring — the sculpture is the real-time 3-D centrepiece, the ring stays the
+navigable map, neither duplicates the other) and on `pantheons.html`'s Olympians tab (a genuinely
+real second use for the same scene: pantheons.html's own header comment already documents that a
+second *ring* was considered and rejected as duplicating cosmos/houses's existing wheels — the
+sculpture is a different visual register, not a second ring, so it does not hit that same
+objection). Both use the shared `.osc-stage` class already defined once in `css/omega-system.css`
+and injected on every page — no new CSS.
+
+**`matrix.html` considered and excluded, not just skipped.** It already has a real, working
+`#matrix-canvas` — a "3D Matrix Projection" panel labelled "9×9×9 = 729 inner nodes", the identical
+concept the sculpture's `matrix` scene renders. Mounting the sculpture there would be two
+competing visualisations of the same 729-node idea on one page, not a genuine addition — the same
+"read from the one thing that already covers this" discipline this file has applied to
+`journal.html`/`physiology.html` (Wave 1) and `time.html` (Wave 4).
+
+Verified in a real headless render, not assumed from the diff: both new mounts produce a real
+canvas with a non-zero drawing buffer (`scan.js canvas`: 0 zero-buffer, 0 painting-nothing);
+drew each canvas onto a fresh 2-D canvas via `drawImage` and sampled 292 / 244 distinct colours
+respectively — real geometry, not a blank frame; screenshots confirm the same glossy, PBR-lit
+signet-and-orbiting-cubes render already proven on `sculpture.html`; zero horizontal overflow,
+zero console errors on both pages.
+
+```
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-nothing
+distinct sampled colours (agents / pantheons)       292 / 244 -- real geometry, not blank
+overflow / console errors (agents, pantheons)       false/false, 0/0
+```
+
+## 33. Sparkline audit, Wave 6 — the same discipline against Supabase-backed queries, not just localStorage
+
+**Grounded in:** Waves 1-5 audited `localStorage`-based per-day logs exhaustively. This wave asked
+a different question: which pages already fetch real, dated Supabase rows and render them as a
+bare stat-box number with no existing chart? Grepped every page for `.order('created_at'/
+'occurred_at', ...)` outside the pages Waves 1-5 already covered or decided, filtered to those with
+no canvas already covering the same concept: `approvals`, `consultancy`, `enterprise`, `events`,
+`family`, `feed`, `intelligence`, `news`, `observatory`, `profile`, `queue`, `travel`. Read every
+one's actual query and rendering before deciding, same as every prior wave:
+
+- **`intelligence.html`'s GRAPHIFY tab — real, and shipped.** `loadGraphStats()` already fetches
+  the member's last 20 `graph_events` rows (`occurred_at`, real timestamps) to build the "RECENT
+  GRAPH EVENTS" feed, right next to a flat `EVENTS LOGGED` count with no chart. Bucketed the
+  *already-fetched* rows by calendar day (no new query) into `#graph-events-spark`, labelled
+  "GRAPH EVENTS PER DAY, RECENT ACTIVITY" — not "LAST 14 DAYS," since only the days present in the
+  most-recent-20 window are counted, never padded with invented zero days.
+- `approvals.html`/`profile.html` query `profiles` ordered by `created_at`, but for a signup/admin
+  list, not a personal numeric metric to trend. `consultancy.html`/`enterprise.html` query business/
+  admin entities (`consult_requests`, `enterprise_accounts`, `api_keys`) with no numeric per-row
+  field. `events.html`/`family.html`/`news.html`/`queue.html`/`travel.html` all fetch real, dated
+  rows (`member_events`, `heritage_records`, `dispatches`, `travel_journeys`) that are qualitative
+  records (title/body/category/notes) with nothing numeric to plot — same "different data shape"
+  exclusion this file has applied before, not a missed candidate.
+- `feed.html`'s `member_posts` carries real `likes_count`/`comments_count`, but per a shared feed of
+  (potentially other members') posts, not the visiting member's own metric over time — doesn't fit
+  the module's "my trend" shape without inventing an aggregation the page doesn't already compute.
+- `observatory.html` has genuinely numeric SRE data (`error_budget_policy.budget_4wk_pct`,
+  `platform_metrics.dimensions`) — but every query is `.limit(1).maybeSingle()`, the latest value
+  only, no history fetched. A sparkline here needs a real query change, not wiring an existing
+  fetch — a different, larger task than this pass's scope (reuse what's already fetched).
+
+Verified `intelligence.html` in a real headless render: clicked the real GRAPHIFY tab (driving the
+actual `loadGraphStats()` against the stub — correctly stayed hidden with zero real events, proving
+the anti-fabrication floor holds); separately confirmed the bucketing algorithm itself (copied
+verbatim from the shipped code) against a realistic fixture (`3,1,2` events across 3 real days)
+produces the correct series and that the sparkline module renders it correctly once fed real data.
+
+```
+scan.js errors / overflow (intelligence.html)      0/1 each
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
 ```

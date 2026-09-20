@@ -318,7 +318,7 @@
           <div class="cmd-card card card-edge" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.6s">⊕</span><span data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS</span></span> <span class="sechead-action" onclick="location.href='/sovereign-ai.html'" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
-        <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
+        <div data-omega-constellation="agents" data-cn-title="THE TWELVE" data-cn-sub="AGENT NETWORK" style="margin-bottom:16px"></div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:2.2s">⌘</span><span data-i18n="dash_admin_actions">ADMIN ACTIONS</span></span> &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
           <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
@@ -404,7 +404,7 @@ function setTab(name){
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
   if(name==='personal'){renderPersonalOS();mountDashRealm();}
-  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);loadAILayer();},100);}
+  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);},100);}
 }
 
 /* ── SYSTEM GALAXY CANVAS ─────────────────────────────────── */
@@ -624,24 +624,6 @@ async function askAI(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('ai-query'))askAI();});
 
-function loadAILayer(){
-  /* Load agent quick grid */
-  var qg=document.getElementById('agent-quick');
-  if(!qg||qg.dataset.loaded) return;
-  qg.dataset.loaded='1';
-  fetch('/omega-agents.json').then(function(r){return r.json();}).then(function(data){
-    var agents=data.agents||[];
-    var EL={'fire':'#E25800','water':'#0088FF','wind':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'metal':(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'),'sand':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
-    qg.innerHTML=agents.map(function(ag){
-      var col=EL[(ag.element||'fire').toLowerCase()]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
-      return '<div style="border:1px solid rgba(201,168,76,.15);padding:10px;border-radius:2px;cursor:pointer;border-left:2px solid '+col+';transition:.15s" onclick="location.href=\'/agents.html\'" onmouseover="this.style.background=\'rgba(201,168,76,.04)\'" onmouseout="this.style.background=\'none\'">'
-        +'<div style="font-family:var(--D);font-size:12px;color:'+col+'">'+ag.name+'</div>'
-        +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
-        +'</div>';
-    }).join('');
-  }).catch(function(){qg.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">Load agents.html to view all 12 agents.</div>';});
-}
-
 /* ── PERSONAL OS RENDERER ───────────────────────────────────── */
 function today(){ return new Date().toISOString().slice(0,10); }
 function daysSince(d){ if(!d) return 999; return Math.round((Date.now()-new Date(d).getTime())/864e5); }
@@ -854,6 +836,7 @@ window.setTab=setTab;
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-constellation.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));

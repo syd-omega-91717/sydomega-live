@@ -116,7 +116,7 @@
     if (prefersReduced) return;
 
     /* Query constellation nodes and create particle clusters around them */
-    const constellationNodes = document.querySelectorAll('.ocn-node');
+    const constellationNodes = document.querySelectorAll('.ocnbg-node');
 
     constellationNodes.forEach((node, idx) => {
       const cluster = document.createElement('div');
@@ -143,7 +143,7 @@
   function repositionParticleClusters() {
     if (prefersReduced) return;
 
-    const constellationNodes = document.querySelectorAll('.ocn-node');
+    const constellationNodes = document.querySelectorAll('.ocnbg-node');
 
     constellationNodes.forEach((node, idx) => {
       if (particleClusters[idx]) {
@@ -192,7 +192,7 @@
     if (prefersReduced) return;
 
     /* Synchronize particle cluster orbit timing with constellation orbits */
-    const orbits = document.querySelectorAll('.ocn-orbit');
+    const orbits = document.querySelectorAll('.ocnbg-orbit');
     const speeds = [60, 80, 100, 120, 90, 75]; /* seconds per rotation */
 
     orbits.forEach((orbit, idx) => {

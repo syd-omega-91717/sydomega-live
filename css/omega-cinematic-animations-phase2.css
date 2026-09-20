@@ -321,7 +321,7 @@
   background: transparent;
 }
 
-.ocn-orbit {
+.ocnbg-orbit {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -338,7 +338,7 @@
   }
 }
 
-.ocn-node {
+.ocnbg-node {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -361,16 +361,16 @@
   }
 }
 
-.ocn-node:nth-child(odd) {
+.ocnbg-node:nth-child(odd) {
   animation-delay: 0s;
 }
 
-.ocn-node:nth-child(even) {
+.ocnbg-node:nth-child(even) {
   animation-delay: 1.5s;
 }
 
 /* Constellation link lines */
-.ocn-link {
+.ocnbg-link {
   position: absolute;
   height: 1px;
   background: linear-gradient(
@@ -394,7 +394,7 @@
 }
 
 /* Constellation focal point (center star) */
-.ocn-focal {
+.ocnbg-focal {
   position: absolute;
   width: 12px;
   height: 12px;
@@ -423,10 +423,10 @@
 
 /* Respond to reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .ocn-orbit,
-  .ocn-node,
-  .ocn-link,
-  .ocn-focal {
+  .ocnbg-orbit,
+  .ocnbg-node,
+  .ocnbg-link,
+  .ocnbg-focal {
     animation: none;
     opacity: 0.5;
   }
@@ -434,11 +434,11 @@
 
 /* High-contrast mode */
 @media (prefers-contrast: more) {
-  .ocn-node {
+  .ocnbg-node {
     border: 1px solid var(--page-accent, #b8912a);
   }
 
-  .ocn-link {
+  .ocnbg-link {
     opacity: 0.7;
     height: 2px;
   }
@@ -446,16 +446,16 @@
 
 /* Mobile: simplified constellation */
 @media (max-width: 700px) {
-  .ocn-orbit {
+  .ocnbg-orbit {
     animation-duration: 90s;
   }
 
-  .ocn-node {
+  .ocnbg-node {
     width: 6px;
     height: 6px;
   }
 
-  .ocn-link {
+  .ocnbg-link {
     opacity: 0.2;
   }
 }
@@ -524,7 +524,7 @@
 .omega-depth-card .kpi-card,
 .omega-volumetric-light,
 .omega-parallax-text,
-.ocn-orbit {
+.ocnbg-orbit {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -560,7 +560,7 @@
     transform: translateZ(15px) rotateX(0.5deg) rotateY(-1deg);
   }
 
-  .ocn-node {
+  .ocnbg-node {
     animation-duration: 2.5s;
   }
 
@@ -577,7 +577,7 @@
     perspective: none;
   }
 
-  .ocn-orbit {
+  .ocnbg-orbit {
     animation-duration: 120s;
   }
 }

@@ -90,6 +90,7 @@
         <div class="nw-label">SOVEREIGN NET WORTH</div>
         <div class="nw-val" id="net-worth-val">$0</div>
         <div class="nw-sub" id="net-worth-sub">ASSETS — LIABILITIES = SOVEREIGNTY</div>
+        <div data-omega-spark id="wealth-nw-spark" data-spark-label="NET WORTH, LAST 14 SNAPSHOTS" data-spark-trend="off" hidden style="margin-top:10px;justify-content:center;display:flex"></div>
       </div>
     </div>
 
@@ -350,6 +351,7 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 <script type="module">
 const ASSETS_KEY    = 'omega_wealth_assets';
 const SNAPSHOT_KEY  = 'omega_wealth_snapshots';
@@ -627,6 +629,16 @@ window.saveSnapshot=saveSnapshot;
 function renderHistory(){
   const snaps=getSnapshots().slice().reverse();
   const maxNW=Math.max(...snaps.map(s=>s.nw),1);
+  /* FEATURE_IDEAS.md #27 Wave 4: same getSnapshots() this function already
+     reads, chronological order, no new query. Snapshots are a manual,
+     irregular member action ("SAVE SNAPSHOT"), not a daily event -- labelled
+     "LAST 14 SNAPSHOTS", not "LAST 14 DAYS", same reasoning as health.html's
+     entry-based series. */
+  const sparkEl=document.getElementById('wealth-nw-spark');
+  if(sparkEl){
+    const series=getSnapshots().slice(-14).map(s=>s.nw);
+    sparkEl.setAttribute('data-spark-values',JSON.stringify(series));
+  }
   document.getElementById('snapshot-list').innerHTML=snaps.map(s=>{
     const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     const chg=s.change;

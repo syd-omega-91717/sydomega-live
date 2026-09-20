@@ -19522,3 +19522,57 @@ python3 scripts/repository_integrity_audit.py   PASS (was FAIL merge_conflict_ma
 python3 scripts/check-inline-js.py              OK -- every inline <script> block parses cleanly
 python3 scripts/audit.py                        0 critical / 6 warnings (baseline)
 ```
+
+## Trend-sparkline pass Wave 2 shipped — habits, vocabulary, contacts, clarity, health (FEATURE_IDEAS.md #27)
+
+Individually audited the ~20 pages Wave 1 left unaudited, same per-page
+method: read the real data source before wiring anything, never trust a
+grep hit alone. Five genuine candidates found and wired, all zero new
+query:
+
+- `habits.html`'s `#habits-done-spark` — the real read path is
+  `getLogs()` (`localStorage`), not the `habit_logs` Supabase table (that
+  table is a write-only mirror, by design, per the page's own comment).
+  Each habit already draws its own streak-dot row and heatmap, so the
+  mount is an *aggregate* completions-per-day view that doesn't exist
+  anywhere else on the page.
+- `vocabulary.html`'s `#vocab-review-spark` — `reviewLog`
+  (`{date,count}`, localStorage), no existing chart.
+- `contacts.html`'s `#contacts-touch-spark` — `interactions`
+  (`{contactId,date,...}`, localStorage); its own `#net-canvas` is a
+  tier-composition breakdown, not a time trend, so no duplication.
+- `clarity.html`'s `#clarity-steps-spark` — `sessions`
+  (`{date,done,total}`, localStorage); its only canvas is a progress
+  ring, not a trend chart.
+- `health.html`'s `#health-score-spark` — real Supabase `health_logs`
+  (RLS-scoped), reusing the same 60-row fetch `loadHistory()` already
+  makes. Labelled "LAST 14 ENTRIES" rather than "LAST 14 DAYS" since
+  member logs are irregular — the module's own finite-value filter makes
+  an entry-based series honest here where a calendar-day series with
+  invented zero-scores for un-logged days would not be.
+
+`social.html` has real Supabase data (`social_broadcasts`) but no
+existing KPI/stat tile to attach a mount to — left for its own pass
+rather than improvising new tile layout. Re-confirmed 9 pages with zero
+real per-day signal (`achievements.html` — real log, but achievements
+unlock too rarely for a 14-day window to clear the module's own
+2-finite-value floor; `affirmations.html`, `library.html`, `rituals.html`,
+`targets.html`, `wealth.html`, `time.html`, `chronicle.html`,
+`reading.html`, `signal.html` — no `localStorage` log or Supabase table
+found on either) and 2 pages already charted (`expenses.html`,
+`revenue.html` — consolidation-only, same reasoning as Wave 1's
+`journal.html`/`physiology.html`).
+
+Verified each shipped page in a real headless render: seeded realistic,
+gap-including logs (or, for `health.html`, confirmed the harness's
+empty-array Supabase stub correctly left the mount `hidden` — the
+anti-fabrication guard working as designed — then called
+`window.OmegaSpark.render()` on the live mount with a synthetic series to
+prove the render path itself handles real variation).
+
+```
+scan.js errors (5 pages)             0/5 pages with uncaught errors
+scan.js overflow (5 pages)           0/5 pages scrolling horizontally
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+```

@@ -95,6 +95,7 @@
       <div class="w-score" id="ws-total" style="color:var(--gold)">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div>
       <div class="w-caption">Overall wellness rating</div>
+      <div data-omega-spark id="health-score-spark" data-spark-label="SOVEREIGN SCORE, LAST 14 ENTRIES" data-spark-trend="off" hidden style="margin-top:4px"></div>
     </div>
   </div>
   <div class="sechead" style="margin-top:24px">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>
@@ -226,6 +227,17 @@ async function loadHistory(){
     var tv=document.getElementById('ws-total');if(tv)tv.textContent=(total*9).toFixed(1);
     var tb=document.getElementById('wb-total');if(tb)tb.style.width=(total*100)+'%';
   }
+  /* FEATURE_IDEAS.md #27 Wave 2: same `rows` this function already fetched
+     from health_logs (real Supabase data, RLS-scoped to this member), same
+     "last 14 entries" window this page's own SCIENCE tab copy already
+     describes -- no new query. Oldest-to-newest so the line reads
+     left-to-right as time; entries are irregular (member-logged, not
+     daily), so this is "last 14 real entries," not "last 14 days." */
+  var spEl=document.getElementById('health-score-spark');
+  if(spEl){
+    var series=rows.slice(0,14).reverse().map(function(e){return Number(e.total);});
+    spEl.setAttribute('data-spark-values', JSON.stringify(series));
+  }
 }
 
 document.getElementById('btn-log').addEventListener('click',async function(){
@@ -265,6 +277,7 @@ if(window.omegaSweep){
   if(cardGrid) window.omegaSweep.sweep(cardGrid,350);
 }
 </script>
+<script src="/omega-sparkline.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

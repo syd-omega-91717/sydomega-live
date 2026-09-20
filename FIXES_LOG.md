@@ -19354,46 +19354,6 @@ python3 scripts/check-inline-js.py                 OK -- every inline <script> b
 ./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
 ```
 
-<<<<<<< HEAD
-## Trend-sparkline pass Wave 1 shipped — gratitude.html + dashboard.html (FEATURE_IDEAS.md #27)
-
-Built the narrower of #27's two options: audited the ~25 pages (of 74
-`.kpi`/`.kpi-card`/`.trend` candidates) that grep-matched a real-history
-signal, individually verified each rather than trusting the grep, and
-wired `omega-sparkline.js` onto exactly the two that had genuine
-per-day/per-item history with **zero new query**:
-
-- `gratitude.html`'s `#grat-spark` reads `_log` (already loaded from
-  `localStorage`) grouped by date, last 14 days.
-- `dashboard.html`'s `#dash-tasks-spark` reads `hm.data` (already fetched
-  for the contribution heatmap, `task_completions.completed_at` scoped to
-  the signed-in member) grouped by day, same window — mounted inside
-  `#kpi-auth` ("MY AUTHORITY"), not the platform-wide "TASKS TODAY" tile,
-  since `hm` is member-scoped and that tile's own tooltip says "across all
-  members" — attaching a personal series there would have misrepresented
-  what the tile counts.
-
-Two real candidates found and explicitly **not** touched: `journal.html`
-and `physiology.html` both already hand-roll their own canvas trend charts
-over the same kind of data — wiring the shared module there means
-replacing working, tested code, a consolidation decision left for its own
-pass. `payments.html` excluded outright: its own copy states history
-populates "once payments are active," so there is no real data to source
-yet (`CLAUDE.md` §9's dormancy rule).
-
-Verified by driving the real interaction, not calling the render function
-directly: `gratitude.html`'s mount only populates after actually clicking
-the JAR tab (pre-existing lazy-render behaviour — confirmed load-alone
-leaves it correctly empty, then confirmed the click produces a real `<svg>`
-from a seeded, genuinely-varying `localStorage` log). `dashboard.html`'s
-mount renders on load with the test harness's stub (`{data:[]}` for every
-table by design) producing a correct flat 14-zero series, plus a synthetic
-`OmegaSpark.render()` call on the same live mount proving the wiring
-handles real variation end-to-end.
-
-```
-python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
-=======
 ## Signature cinematic tier, Phase 2 shipped — dashboard.html + cosmos.html sigil mounts (FEATURE_IDEAS.md #19)
 
 Continued the design-system-scoped proposal whose Phase 1 shipped earlier (the
@@ -19438,7 +19398,46 @@ console errors, no horizontal overflow on either page.
 ```
 python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
 node --check bg.js                   OK
->>>>>>> origin/claude/visual-inspiration-proposals
+```
+
+## Trend-sparkline pass Wave 1 shipped — gratitude.html + dashboard.html (FEATURE_IDEAS.md #27)
+
+Built the narrower of #27's two options: audited the ~25 pages (of 74
+`.kpi`/`.kpi-card`/`.trend` candidates) that grep-matched a real-history
+signal, individually verified each rather than trusting the grep, and
+wired `omega-sparkline.js` onto exactly the two that had genuine
+per-day/per-item history with **zero new query**:
+
+- `gratitude.html`'s `#grat-spark` reads `_log` (already loaded from
+  `localStorage`) grouped by date, last 14 days.
+- `dashboard.html`'s `#dash-tasks-spark` reads `hm.data` (already fetched
+  for the contribution heatmap, `task_completions.completed_at` scoped to
+  the signed-in member) grouped by day, same window — mounted inside
+  `#kpi-auth` ("MY AUTHORITY"), not the platform-wide "TASKS TODAY" tile,
+  since `hm` is member-scoped and that tile's own tooltip says "across all
+  members" — attaching a personal series there would have misrepresented
+  what the tile counts.
+
+Two real candidates found and explicitly **not** touched: `journal.html`
+and `physiology.html` both already hand-roll their own canvas trend charts
+over the same kind of data — wiring the shared module there means
+replacing working, tested code, a consolidation decision left for its own
+pass. `payments.html` excluded outright: its own copy states history
+populates "once payments are active," so there is no real data to source
+yet (`CLAUDE.md` §9's dormancy rule).
+
+Verified by driving the real interaction, not calling the render function
+directly: `gratitude.html`'s mount only populates after actually clicking
+the JAR tab (pre-existing lazy-render behaviour — confirmed load-alone
+leaves it correctly empty, then confirmed the click produces a real `<svg>`
+from a seeded, genuinely-varying `localStorage` log). `dashboard.html`'s
+mount renders on load with the test harness's stub (`{data:[]}` for every
+table by design) producing a correct flat 14-zero series, plus a synthetic
+`OmegaSpark.render()` call on the same live mount proving the wiring
+handles real variation end-to-end.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
 

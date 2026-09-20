@@ -1319,6 +1319,120 @@ page or section.
 series; `omega-sparkline.js` takes numbers via `data-spark-values`, no new
 table or RPC.
 
+## Blueprint (feature-architect, 2026-09-20)
+
+Re-read `omega-sparkline.js` in full before planning against it (confirmed
+current, matches its own header exactly): mount is
+`<div data-omega-spark data-spark-label="...">`, values are pushed with
+`el.setAttribute('data-spark-values', JSON.stringify([...]))` — a
+`MutationObserver` on `data-spark-values` plus a `childList`/`subtree`
+watch means load order never matters. Optional `data-spark-unit`,
+`data-spark-trend="off"`, `data-spark-line="off"`, `data-spark-digits`.
+Fewer than 2 finite values → mount stays `hidden`, nothing drawn — this is
+the module's own fabrication guard, not something the wiring needs to
+special-case.
+
+**Audited, not assumed.** Grepped all 74 `.kpi`/`.kpi-card`/`.trend` pages
+for existing signals of real per-day/per-month series (`history`,
+`streak`, `weekly`, `monthly`, `last 7/30 days`, an existing canvas chart).
+That narrowed 74 to ~25 plausible pages; of those, individually verified:
+
+- **`gratitude.html` — genuine candidate, zero new query.** `_log` (line
+  231, `[{date, items, note, ts}]`, `localStorage`-backed) already holds
+  every real dated entry client-side; `calcStreak()` (line 378) already
+  buckets by `.date`. No existing chart for this data — `renderJarStats()`
+  (line 360) renders 5 `.kpi` tiles from it and stops there.
+- **`dashboard.html` — genuine candidate, zero new query.** The
+  contribution-heatmap fetch (line 974) already pulls
+  `task_completions.completed_at` for the signed-in member over the last
+  90 days into `hm.data` and feeds only `renderContributionHeatmap()`
+  (line 754) with it — the same array can supply a 14-day per-day count
+  series with no second fetch.
+- **`journal.html` and `physiology.html` — real history, but NOT clean
+  additions.** Both already hand-roll their own canvas trend charts
+  (`drawMoodChart()`/`drawWCChart()` in `journal.html`; `drawTrend()` in
+  `physiology.html`) over the same kind of data a sparkline would show.
+  Wiring `omega-sparkline.js` here means *replacing* working, tested
+  custom code, not adding to empty space — a consolidation decision, not
+  this pass's scope. Left for a separate, explicitly-scoped follow-up.
+- **`payments.html` — excluded.** Its own copy states "READY TO ACTIVATE
+  ... your full history will populate once payments are active." There is
+  no real data to source yet; wiring a sparkline here would either draw
+  nothing (harmless but pointless) or invite someone to fake a series
+  later. Matches `CLAUDE.md` §9's dormancy rule.
+- **The remaining ~20 pages with some signal** (`academy.html`,
+  `analytics.html`, `agents.html`, `ops.html`, `skills.html`,
+  `research.html`, `studio.html`, `budget.html`, `nutrition.html`,
+  `kyc.html`, `feed.html`, `command.html`, `gates.html`, and others) were
+  grep-matched but not individually verified for a genuine per-item
+  historical series vs. a false-positive hit on the word "history"/
+  "weekly" in unrelated copy. Left for a follow-up pass using the same
+  per-page verification method as above — flagging this explicitly rather
+  than claiming full coverage.
+
+**Wave 1 (this implementation): `gratitude.html` + `dashboard.html` only.**
+
+- `gratitude.html`: add `<div data-omega-spark id="grat-spark"
+  data-spark-label="ENTRIES PER DAY, LAST 14 DAYS" hidden
+  style="margin-top:10px"></div>` immediately after `#jar-stats`.
+  `renderJarStats()` gains a series build: bucket `_log` by `.date` over
+  the last 14 calendar days (today back 13 days), counting `items.length`
+  per day (0 for a day with no entry — a true zero, not a fabricated one),
+  then `el.setAttribute('data-spark-values', JSON.stringify(series))`.
+- `dashboard.html`: `hm.data` (the heatmap fetch) is scoped
+  `.eq('user_id', s.user.id)` — the signed-in member's own completions
+  only. The "TASKS TODAY" tile's own tooltip says "across all members",
+  so a personal-scoped sparkline mounted there would misrepresent what
+  that tile counts. Mounted inside `#kpi-auth` ("MY AUTHORITY") instead,
+  which is already explicitly personal — after `#k-gate-sub`, labelled
+  "MY TASKS/DAY, LAST 14 DAYS", `data-spark-trend="off"` (the tile's own
+  `#k-auth` number is the primary trend-worthy figure here; the sparkline
+  adds shape without a second, competing badge). Inside the same `try`
+  block that already computes `hm` (line 974), after
+  `renderContributionHeatmap(hm.data||[])`, bucket `hm.data` by the date
+  portion of `.completed_at` over the last 14 days (today back 13) and
+  set `data-spark-values` the same way.
+
+**Module plan:** none — no new file. Both pages already load
+`omega-sparkline.js` platform-wide? No: neither currently has the
+`<script src="/omega-sparkline.js">` tag (only the original 6 adopters
+do) — this blueprint adds that one `<script>` tag to each of the two
+pages, matching the existing per-page load convention (`#19`/`#27`'s
+own text explicitly defers registering it in the `bg.js` loader to a
+separate, later step — not done here).
+
+**Verification plan:** `node --check` n/a (no new `.js` file); headless
+render of both pages signed in, confirming the new mount shows a real
+`<svg>`/`.trend` badge (or stays correctly `hidden` for a member with
+under 2 days of data — both are valid, honest outcomes); `python3
+scripts/audit.py` (0 new critical findings); `./scripts/ci-local.sh`.
+
+**Wave 1 — SHIPPED.** Both mounts built exactly as blueprinted above.
+Verified in a headless render, driving the real interaction rather than
+calling the render function directly:
+
+- `gratitude.html`: `#grat-spark` only populates when the member actually
+  opens the JAR tab (`renderJarStats()` is called from `activateTab`, not
+  on page load — pre-existing lazy-render behaviour, not something this
+  change alters). Seeded `localStorage`'s real `omega_gratitude_log` key
+  with a 10-day, gap-including log *before* navigation, clicked `#t-jar`,
+  and confirmed a real `<svg>` with a genuinely varying series
+  (`[0,0,0,0,0,1,4,0,2,1,0,3,2,0]`) and a correct accessible summary
+  ("14 readings, low 0, high 4, latest 0"). Checking on load alone (no
+  click) correctly showed the mount still empty — proof the lazy-render
+  behaviour is real, not a bug this change introduced or missed.
+- `dashboard.html`: `#dash-tasks-spark` renders on load with the test
+  harness's stub data (`{data:[]}` for every table by design — see
+  `sbstub.js`), which correctly produces a flat 14-zero series with a
+  real `<svg>` — 14 finite values is still enough for the module to draw,
+  it just draws flat. Additionally called the page's own
+  `window.OmegaSpark.render()` on the live mount with a synthetic varying
+  series to prove the wiring handles real variation end-to-end beyond
+  what the flat stub alone can exercise (aria-label: "MY TASKS/DAY, LAST
+  14 DAYS: 14 readings, low 0, high 7, latest 5").
+- Zero page errors, zero console errors, no horizontal overflow on
+  either page. `./scripts/ci-local.sh`: ALL 24 BLOCKING CHECKS PASSED.
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that

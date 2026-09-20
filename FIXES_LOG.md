@@ -19727,3 +19727,115 @@ data to judge against -- neither is a repo bug. Every other named check in
 `i18n-contract.py`, `omega-registry.py --check`, `capability-audit.py
 --check`, `release-gate.py`, `resilience-audit.py`, `module-contract.py`,
 `commerce-contract.py`, `brand-glyph-check.py`) ran clean.
+
+## Live Signal Pulse shipped — a real, event-driven ambient status indicator (FEATURE_IDEAS.md #29)
+
+A fresh `web-trend-scout` pass (2026 dashboard/status-indicator trends)
+produced one proposal grounded in code that already exists rather than an
+invented mechanism: `bg.js`'s own data-fetch recorder (top of the file)
+already wraps `window.fetch`, watches for `.supabase.co/`, `/rest/v1/`,
+`/auth/v1/`, `/functions/v1/` requests, and dispatches a real
+`document.dispatchEvent(new CustomEvent('omega:fetch-settled',
+{detail:{ok,status}}))` on every settlement. `omega-dataguard.js` is the
+only current consumer, and by its own documented design only reacts to
+*failure* ("no alarm for an empty result set" — empty is a valid answer).
+Nothing on the platform answered the different, positive question "is
+something happening right now" — a gap, not a decoration to invent data
+for.
+
+Built a second, independent consumer of the same real event as a new
+self-contained IIFE in `bg.js` ("OMEGA LIVE PULSE"), following this file's
+own established convention (own guard flag, own injected `<style>`, own
+DOM logic, never touching `omega-dataguard.js`'s logic or DOM): a small
+dot mounted as a normal in-flow child of `.topbar`/`.mission-bar`
+(166 + 1 pages respectively), never `position:fixed` — deliberately, to
+avoid this repo's own repeated fixed-chrome collision history (`#om-open`'s
+top-left gutter problem, the bottom-chrome stacking bugs `bg.js`'s
+`--omega-chrome-bottom` was built to fix). An ordinary flex child cannot
+collide with anything fixed. It sits dim by default and flashes gold once,
+via a CSS keyframe restarted through a forced reflow (`void
+dot.offsetWidth`) rather than a queued timeout, on every event carrying
+`detail.ok === true` — so two real requests settling in quick succession
+each register their own ping instead of the second being silently dropped.
+`prefers-reduced-motion` gets the dot with no animation, matching every
+other motion owner in this file.
+
+A per-ring mount (`omega-ring.js`) was considered and rejected first: its
+`mountOne(el)` frequently receives a bare `<canvas>` with no wrapper
+element to attach a sibling dot to without restructuring markup on every
+call site — read in full before deciding against it, not assumed.
+
+Verified in a real headless render, not reasoned from the diff:
+
+- Idle state on `dashboard.html`/`treasury.html`/`health.html`: dot
+  present, dim, no `.ping` class.
+- A real `omega:fetch-settled` event (`{detail:{ok:true,status:200}}`)
+  dispatched the same way `bg.js`'s own recorder does it — not a call
+  into internal render logic — applies `.ping` immediately on all three.
+- `page.emulateMedia({reducedMotion:'reduce'})` then the same event:
+  `getComputedStyle(dot).animationName === 'none'`.
+- Zero horizontal overflow, zero page errors, on all three pages.
+- Screenshots (idle vs. ping) confirm correct, unobtrusive placement
+  beside existing topbar content with no layout shift.
+
+```
+node --check bg.js                         OK
+python3 scripts/check-inline-js.py         OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                   0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (204 pages, full sweep)     0/204
+```
+
+## Trend-sparkline pass Wave 5 shipped — contributions.html's gift log gets a real sparkline; the signal-sweep motif stays at 3 surfaces (FEATURE_IDEAS.md #27, #28)
+
+Two follow-ups, both closing questions this file's own prior waves left
+open rather than opening new scope.
+
+**#28's signal sweep — a 4th candidate considered, closed with no
+change.** `command.html`'s `.topbar` ("DAILY COMMAND BRIEF... STRATEGY ·
+OPERATIONS") has no `data-omega-sculpture` mount and reads as
+command/control-room identity at least as directly as the three pages the
+motif already shipped on. But `#28`'s own blueprint states the restraint
+explicitly — three surfaces, matching `#19`'s "one motif, three surfaces"
+precedent, specifically to avoid the "busy" platform-wide sweep the
+proposal rejected outright. A 4th page meeting the same picking criteria
+isn't new evidence against that reasoning; it's the exact situation the
+cap exists to hold the line on, since a real sweep is never short of
+one-at-a-time qualifiers. `command.html` keeps its plain `.topbar`.
+
+**Sparkline audit widened past both prior grep patterns.** Waves 2 and 4
+found real per-day logs by matching `localStorage.setItem('omega_...'`
+and, after correcting Wave 2's own methodology bug, `_KEY='omega_...'`.
+Wave 5 widened further to any `push`/`unshift` of an object literal
+carrying a `date`/`day`/`ts`/`at` field, across every page not already
+covered, filtered to pages whose only `<canvas>` (or none) isn't a real
+chart — 13 candidates surfaced this way. Read every one of their real
+logs before deciding:
+
+- **`contributions.html`'s `gifts` (`{org,amount,date}`) — real, and a
+  genuine gap**: a numeric, dated, member-logged series shown only as
+  totals and a text list, the same shape as Wave 4's `wealth.html` net-worth
+  spark. Added `#gift-amount-spark` to the GIVING LEDGER tab, fed the last
+  14 real gift amounts from `renderGifts()`, loaded `omega-sparkline.js` on
+  the page (it isn't `bg.js`-injected — every adopting page loads it
+  itself, same as `wealth.html`/`affirmations.html`).
+- `achievements.html`'s unlock log, `passport.html`'s stamps — real but
+  one-time-per-item events, the same low-cadence shape already excluded
+  in Wave 4. `charter.html`, `kings.html`, `governance.html`,
+  `heritage.html`, `notifications.html`, `publications.html` — real logs
+  with no numeric field at all (audit trails, notes, tasks) — nothing to
+  plot. `horoscope.html`/`oracle.html` — computed arrays, not member logs.
+  `payments.html`'s reward-ledger push formula (`(i+1)*91.717`) reads as
+  synthetic rather than real transaction data — noted in `FEATURE_IDEAS.md`
+  as a separate, out-of-scope concern for a future pass, not fixed here.
+
+Verified `contributions.html` in a real headless render: clicked the real
+GIVING LEDGER tab, logged three gifts through the actual `addGift()`
+button handler (not a direct render call), confirmed the mount un-hid and
+drew a real SVG polyline from `[50,120,30]`, zero overflow, zero console
+errors. Screenshot confirms correct placement with no layout shift.
+
+```
+scan.js errors / overflow (contributions.html)   0/1 each
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```

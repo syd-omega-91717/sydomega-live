@@ -2186,6 +2186,56 @@ setTimeout(function(){
   }catch(e){}
 })();
 
+/* ===== OMEGA LIVE PULSE -- FEATURE_IDEAS.md #29, an ambient "the platform
+   is alive" indicator ==========================================
+   Real, not decorative: driven entirely by this file's own data-fetch
+   recorder at the top of bg.js, which already emits omega:fetch-settled
+   on every real request to this platform's backend (Supabase REST/Auth/
+   Functions only -- see watched() above). omega-dataguard.js is the only
+   existing consumer today and, by design, only reacts to failure ("no
+   alarm for an empty result set"). This is a second, independent
+   consumer answering a different question -- "is something happening"
+   rather than "is something wrong" -- and never touches dataguard's own
+   logic or DOM.
+
+   Appended as a normal in-flow child of .topbar/.mission-bar, never
+   position:fixed -- an ordinary flex child cannot collide with the fixed
+   top-left/bottom chrome this file's own history has broken before
+   (CLAUDE.md 4). One ping per settled success, restarted via a forced
+   reflow rather than queued timers, so rapid consecutive requests each
+   register instead of only the first. */
+(function(){
+  if(window.__omegaLivePulse)return; window.__omegaLivePulse=1;
+  var st=document.createElement('style');
+  st.textContent=[
+    '.omega-live-pulse{width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,.35);margin-left:10px;flex-shrink:0;transition:background .3s ease}',
+    '.omega-live-pulse.ping{background:#C9A84C;box-shadow:0 0 8px 1px rgba(201,168,76,.8);animation:omega-pulse-ping .65s ease-out}',
+    '@keyframes omega-pulse-ping{0%{transform:scale(1)}35%{transform:scale(1.8)}100%{transform:scale(1)}}',
+    '@media(prefers-reduced-motion:reduce){.omega-live-pulse.ping{animation:none}}'
+  ].join('');
+  (document.head||document.documentElement).appendChild(st);
+
+  function mount(){
+    document.querySelectorAll('.topbar,.mission-bar').forEach(function(host){
+      if(host.querySelector('.omega-live-pulse'))return;
+      var dot=document.createElement('span');
+      dot.className='omega-live-pulse';
+      dot.setAttribute('aria-hidden','true');
+      host.appendChild(dot);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+
+  document.addEventListener('omega:fetch-settled',function(e){
+    if(!(e.detail&&e.detail.ok))return;
+    document.querySelectorAll('.omega-live-pulse').forEach(function(dot){
+      dot.classList.remove('ping');
+      void dot.offsetWidth; /* forces a reflow so a rapid second event restarts the animation */
+      dot.classList.add('ping');
+    });
+  });
+})();
+
 /* ===== OMEGA LOADING -- top progress bar + skeleton shimmer ===== */
 (function(){
   if(window.__omegaLoad)return; window.__omegaLoad=1;

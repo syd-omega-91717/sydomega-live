@@ -98,6 +98,7 @@
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="g-annual">$0</div><div class="kpi-l">THIS YEAR</div></div>
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="g-pct">0%</div><div class="kpi-l">OF INCOME</div></div>
         </div>
+        <div data-omega-spark id="gift-amount-spark" data-spark-label="GIVING, LAST 14 GIFTS" data-spark-trend="off" hidden style="margin-bottom:14px;justify-content:center;display:flex"></div>
         <div style="margin-bottom:10px">
           <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">GIVING TARGET (% of income)</div>
           <div style="display:flex;gap:8px;align-items:center">
@@ -142,6 +143,7 @@
 .sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
+<script src="/omega-sparkline.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
@@ -197,6 +199,14 @@ function renderGifts(){
   document.getElementById('g-total').textContent=fmt(total);
   document.getElementById('g-annual').textContent=fmt(annual);
   document.getElementById('g-pct').textContent=pct+(pct!=='--'?'%':'');
+  /* FEATURE_IDEAS.md #27 Wave 5: real member-logged gift amounts, chronological,
+     same "LAST N entries" framing as wealth.html's net-worth spark -- gifts are
+     an irregular manual action, not a daily event. */
+  var sparkEl=document.getElementById('gift-amount-spark');
+  if(sparkEl){
+    var series=gifts.slice(-14).map(function(g){return Number(g.amount||0);});
+    sparkEl.setAttribute('data-spark-values',JSON.stringify(series));
+  }
   document.getElementById('g-target').value=givingTarget.pct||10;
   document.getElementById('g-income').value=givingTarget.income||'';
   if(!gifts.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO GIFTS LOGGED</div>';return;}

@@ -1581,6 +1581,79 @@ overflow`: 0/2. `python3 scripts/check-inline-js.py`: clean. `python3
 scripts/audit.py`: 0 critical / 6 warnings (baseline). `python3
 scripts/repository_integrity_audit.py`: PASS.
 
+**`journal.html`/`physiology.html` — consolidation decision closed: no
+change.** Deferred in Waves 1 and 2 as "a decision, not this pass's scope."
+Read both real implementations before deciding: `journal.html`'s
+`drawWCChart()`/`drawMoodChart()` and `physiology.html`'s `drawTrend()`
+(one instance per metric: RHR, HRV, BP, weight) are full-width, 30-day
+canvas line/bar charts with Y-axis gridlines and numeric min/max labels,
+rendered inside a dedicated INSIGHTS/TRENDS section built for exactly
+this purpose. `omega-sparkline.js` is a 120×28px compact glance-badge
+meant to sit beside a KPI number, not a substitute analytical view.
+Swapping either page onto the shared module would trade a more detailed,
+purpose-built chart for a smaller, less informative one — a downgrade
+presented as a consolidation. Closed with no code change: both pages keep
+their existing charts.
+
+**Wave 5 — a widened audit beyond `localStorage`-key patterns, to check
+whether Waves 1-4 had exhausted the real candidates.** Broadened the grep
+past both prior patterns (`localStorage.(setItem|getItem)('omega_...`
+and `_KEY = 'omega_...`) to any `push`/`unshift` of an object literal
+carrying a `date`/`day`/`ts`/`at` field, across every page not already
+covered or already decided, then filtered to pages with **zero** existing
+`<canvas>` chart of their own (`achievements.html`, `charter.html`,
+`passport.html`, `projects.html`) plus pages whose only canvas is the
+shared, unrelated authority-ring widget (`contributions.html`,
+`governance.html`, `heritage.html`, `horoscope.html`, `kings.html`,
+`notifications.html`, `oracle.html`, `payments.html`, `publications.html`
+— all `<canvas data-omega-ring>`, not a chart).
+
+Read each real log before deciding, same discipline as every prior wave:
+
+- **`contributions.html`'s `gifts` array (`{org,amount,date}`) is a real
+  find** — structurally identical to Wave 4's `wealth.html` net-worth
+  snapshots: a member-initiated, dated, *numeric* log, shown only as a
+  totals row (`g-total`/`g-annual`/`g-pct`) and a text list, no chart.
+  Added `#gift-amount-spark` inside the GIVING LEDGER tab's KPI block,
+  fed the last 14 real gift amounts in `renderGifts()`, labelled "GIVING,
+  LAST 14 GIFTS" (not "...DAYS" — gifts are irregular, same framing as
+  `wealth.html`'s snapshot spark).
+- `achievements.html`'s `unlockLog`, `passport.html`'s `stamps` — real
+  dated logs, but each entry is a one-time, non-repeating unlock/stamp
+  per achievement/trip, the same low-cadence shape Wave 4 already
+  excluded `library.html`/`targets.html`/`reading.html` for. Correctly
+  excluded, same reason.
+- `charter.html`'s `history`, `kings.html`'s `studyNotes`,
+  `governance.html`'s `risks`/`policies`/`decisions`,
+  `heritage.html`'s `stories`, `notifications.html`'s `reminders`,
+  `publications.html`'s `pubs` — real logs, but **no numeric field at
+  all**: each entry is an edit-audit trail, a qualitative note, or a task,
+  not a measurement. A sparkline plots a number over time; there is
+  nothing here to plot. Different data shape than the sparkline module
+  was built for, not a missed candidate.
+- `horoscope.html`'s `candidates` and `oracle.html`'s `rows` are
+  internally computed arrays (season dates, generated affirmation text),
+  never a member log at all.
+- `payments.html`'s `rows` push formula (`(i+1)*91.717`) reads as a
+  synthetic/computed reward ledger rather than real transaction data —
+  flagged here as a candidate for a future, separate look under
+  `CLAUDE.md` §8.1 class 9 (fabricated data rendered as fact); out of
+  scope for this sparkline pass and not touched.
+
+Verified `contributions.html` in a real headless render: clicked the real
+GIVING LEDGER tab, logged three real gifts through `window.addGift()` (the
+actual button handler, not a direct render call), confirmed the mount
+un-hid, rendered a real SVG polyline from the actual `[50,120,30]` series,
+zero horizontal overflow, zero console errors. Screenshot confirms correct
+placement between the KPI row and the giving-target form with no layout
+shift.
+
+```
+scan.js errors / overflow (contributions.html)   0/1 each
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline)
+```
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that
@@ -1731,3 +1804,81 @@ proposal itself.
    3-surface opt-in motif by design, matching `#19`'s own precedent; a
    platform-wide `.topbar` sweep would be the "busy" outcome the proposal
    explicitly rejects.
+
+**A 4th surface — considered, closed with no code change.**
+`command.html`'s `.topbar` (`<div class="t">DAILY COMMAND BRIEF<small>
+STRATEGY · OPERATIONS · SYD OMEGA 91717</small></div>`) reads, if anything,
+*more* directly as command/control-room identity than `treasury.html` or
+`intelligence.html` — no `data-omega-sculpture` mount, real `.topbar`,
+genuinely a candidate on the same criteria used to pick the original three.
+But this proposal's own blueprint step 4 above states the restraint
+explicitly: three surfaces, matching `#19`'s "one motif, three surfaces"
+precedent, specifically to avoid "the busy outcome this platform's own
+brief already warned against." A 4th page meeting the same criteria is not
+new evidence against that reasoning — it is exactly the situation the
+3-surface cap was written to hold the line against, since a genuine
+platform-wide sweep is never short of qualifying pages one at a time.
+Overriding a documented restraint decision needs a reason the decision
+didn't already anticipate; this isn't one. Closed: `command.html` keeps
+its plain `.topbar`, no `omega-signal-sweep` class added.
+
+## 29. Live signal pulse — a real, ambient "the platform is alive" indicator (visual design system)
+
+**Feature name & concept:** a small pulsing dot, restrained and always
+present (not just on error), that flashes once on every real successful
+request to this platform's own backend — a native-CSS "heartbeat" living
+beside the existing authority ring / topbar chrome, giving members a
+constant, honest signal that the page is actively syncing rather than
+frozen. Not a status message, not text, not a toast — a single glanceable
+dot, the visual equivalent of a hard-drive activity light.
+
+**Grounded in:** `bg.js:1-47`'s data-fetch recorder — already installed,
+inline, on every gated page, wrapping `window.fetch` for every request to
+this platform's own backend (`.supabase.co/`, `/rest/v1/`, `/auth/v1/`,
+`/functions/v1/` — `watched()`, line 25-29) and emitting a real
+`document.dispatchEvent(new CustomEvent('omega:fetch-settled',{detail:{ok,
+status}}))` on every settlement (line 31, fired at lines 43 and 45). Today
+exactly one consumer exists: `omega-dataguard.js`, which listens for this
+event but by design only ever *reacts to failure* — its own header states
+the deliberate scope: "no alarm for an empty result set... the network is
+the only source of truth." A `{ok:true}` settlement — the overwhelming
+majority of real events on a healthy page — is currently observed by
+nothing and shown nowhere. This proposal is a second, independent
+consumer of the same real event stream, not a change to `omega-dataguard.js`
+or a duplicate of its job: dataguard answers "is something wrong,"
+this answers "is something happening" — a different question. Zero new
+Supabase call, zero new column, zero new table.
+
+**User benefit:** every free/approved member, on every gated page — pure
+visual/ambient identity, no tier gate. Matches the platform's own
+`omega-cinematic-system` skill's "Signal pulse — status indicator tied to
+actual system state" pattern (an already-documented interaction category
+in this repo's own design brief) that has not yet been built against a
+real, always-on signal, only against page-specific one-off states.
+
+**Nav placement:** none — a `bg.js`-level ambient chrome addition, not a
+new page. Candidate mount point: beside the existing `data-omega-ring`
+authority-ring canvas already present in most topbars (e.g.
+`treasury.html:19`, `social.html:46`, `health.html:44`), since that is
+already the platform's established "live, per-member status" real estate.
+
+**Data needs:** none — reads the existing `omega:fetch-settled` event
+`bg.js` already emits from real requests already being made. No new
+fetch, table, RPC, or column.
+
+**Source inspiration:** the 2026 dashboard-design consensus on "real-time
+compliance pulses" as a defining feature of modern dark-mode dashboards
+(Lucky Graphics' "UI Design Trends 2026: Glassmorphism Evolution, AI
+Interfaces, and Dark Mode Excellence"; Muzli's "50 Best Dashboard Design
+Examples for 2026" on frosted-glass dashboards built around real-time
+status/workflow indicators); the general "activity LED" pattern from
+system-status UIs (Vercel's/Linear's own small live-status dots being the
+closest real-world analogue, though neither was scraped directly — the
+pattern is described consistently enough across the 2026 dashboard-trend
+sources above to ground the concept, not any one product's exact pixels).
+
+**Explicitly not proposed:** replacing or modifying `omega-dataguard.js`,
+which stays exactly as scoped (failure-only, no false alarms on a healthy
+empty result). Nor a persistent always-visible "ONLINE" text label — the
+research is consistent that the dot/pulse itself, not a text state, is
+what reads as ambient rather than alarming.

@@ -364,6 +364,24 @@ body:has(> aside#omega-side){display:flex;min-height:100vh}
 @media (prefers-reduced-motion: reduce){.omega-spin-slow{animation:none}}
 .animate-in{animation:fade-in .35s ease both}
 
+/* Signature HUD motif #2: a restrained conic "signal sweep" for hub headers
+   with no data-omega-sculpture mount. Opt-in class, not a platform sweep --
+   FEATURE_IDEAS.md #28. Sized to inset:0 so it never exceeds its own box:
+   no overflow:hidden needed, which would otherwise clip .topbar's own
+   drop shadow (omega-visual-evolution.css). ::before is free on .topbar
+   (::after is its existing seam) and on .mission-bar (unclaimed). */
+.omega-signal-sweep{position:relative;isolation:isolate}
+.omega-signal-sweep::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:conic-gradient(from 200deg at 12% 50%,
+    transparent 0deg, rgba(0,229,255,.12) 22deg, transparent 55deg,
+    transparent 305deg, rgba(201,168,76,.12) 338deg, transparent 360deg);
+  opacity:.8;
+  animation:omega-signal-sweep-rotate 34s linear infinite;
+}
+@keyframes omega-signal-sweep-rotate{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.omega-signal-sweep::before{animation:none}}
+
 /* ── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────────── */
 @media(max-width:1200px){
   .card-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}

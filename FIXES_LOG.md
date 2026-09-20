@@ -19441,3 +19441,54 @@ node --check bg.js                   OK
 >>>>>>> origin/claude/visual-inspiration-proposals
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+## Glass-HUD signal accent shipped — dashboard.html, treasury.html, intelligence.html (FEATURE_IDEAS.md #28)
+
+Built the second signature HUD motif proposed in `#28`: a restrained conic
+"signal sweep" for the three hub pages that mount no
+`data-omega-sculpture` 3-D layer (grep-verified 0 hits on all three before
+starting), giving them a native-CSS echo of the sculpture pages' identity
+instead of nothing.
+
+Defined once in `css/omega-system.css` (never `bg.js`, per `CLAUDE.md`
+§4's token-ownership table), directly beside `.omega-spin-slow` and
+following its exact precedent: a shared opt-in class, applied via an
+explicit class attribute on exactly three elements, not a platform sweep.
+
+The collision check this lived or died on: `.topbar` already owns
+`::after` (`omega-visual-evolution.css`'s travelling seam,
+`omega-seam 7s`) — confirmed by reading the file, not assumed. `::before`
+was unclaimed on both `.topbar` and `dashboard.html`'s page-local
+`.mission-bar` (grepped `css/omega-system.css`, `omega-visual-evolution.css`,
+`bg.js`, `theme.js` — 0 hits on either selector). Both elements already
+carry `position:sticky`, a valid containing block, so no new
+`position:relative` was needed on the base rule, and critically **no
+`overflow:hidden`** was added anywhere — `.topbar` carries its own drop
+shadow (`0 8px 35px`, extending past its own box) that `overflow:hidden`
+would have silently clipped, exactly the class of bug `CLAUDE.md` §4 warns
+this file's history is full of.
+
+Verified in a real render, not reasoned from the diff:
+- All three bars: the `::before` pseudo carries the conic-gradient,
+  `animation-name:omega-signal-sweep-rotate`, `position:absolute`,
+  `inset:0` — applied correctly on all three target pages, no 4th page
+  touched.
+- `page.emulateMedia({reducedMotion:'reduce'})` (called directly, not via
+  `S.launch({reducedMotion})` — that option is not actually wired, per this
+  session's earlier finding) drops `animation-name` to `none`.
+- `.topbar::after`'s seam (`animation-name:omega-seam`) and the bar's own
+  `box-shadow` (`...0.12) 0px 1px 0px 0px, ...0.28) 0px 8px 35px 0px`) are
+  both fully intact on `treasury.html`/`intelligence.html` post-change —
+  proves no clipping regression from the new rule.
+- `overflow:visible` confirmed on all three bars (no `overflow:hidden`
+  was introduced).
+- Screenshots of all three bars at rest: a faint gold/cyan glow bleeding
+  in from the left edge, text and nav fully legible, seam line intact —
+  restrained, not the "busy" outcome the proposal explicitly rejected.
+
+```
+python3 scripts/audit.py                          0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py                OK -- every inline <script> block parses cleanly
+scan.js overflow (dashboard/treasury/intelligence) 0/3
+scan.js errors (dashboard/treasury/intelligence)   0/3 pages with uncaught errors
+```

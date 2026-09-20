@@ -19655,3 +19655,75 @@ python3 scripts/check-inline-js.py    OK -- every inline <script> block parses c
 python3 scripts/audit.py              0 critical / 6 warnings (baseline)
 python3 scripts/repository_integrity_audit.py   PASS
 ```
+
+## Whole-repo sweep: a stale exemption and a real missing sidebar, both found and fixed
+
+Ran the full verification surface -- `./scripts/ci-local.sh` (24 blocking
+checks), every named script in `CLAUDE.md` §8.3's baseline table, GitHub
+Actions on `main`'s current tip, Vercel's last 3 production deployments,
+and Supabase's advisors for the live project (`ydqhzvvoyufiiqvzcjns`) --
+rather than assuming green. Two real, non-blocking findings surfaced and
+were fixed; everything else was already clean.
+
+**1. A stale exemption for a page that no longer exists.**
+`scripts/reachability-contract.py` (advisory, not blocking) reported
+`STALE EXEMPTION -- omega-visual-home`. `git mv omega-visual-home.html
+index.html` happened in an earlier, already-documented fix (this file,
+search "The fix, and why it is a rename rather than a second page") --
+`omega-visual-home.html` has not existed as a file since. `vercel.json`
+keeps two permanent redirects from the old path to `/`, which Vercel's
+edge intercepts before any request ever reaches `bg.js`, so the three
+exemption entries naming it (`bg.js`'s `PUBLIC` array and both `EX`
+guard objects, kept in lockstep per this file's own class-8 note) were
+dead code that could never fire again. Removed all three, plus corrected
+two more stale claims in the same `reachability-contract.py` comment
+block found while fixing it: `'enter'` was documented as "the site root
+(vercel.json rewrites / to /enter)" and `'index'` as "no such file" --
+both false today (`index.html` is the real root file, no such rewrite
+exists in the current `vercel.json`, confirmed by reading it directly
+rather than trusting the comment).
+
+**2. A real, live gap: a navigable page with no sidebar.**
+The same advisory run then surfaced a different, genuine finding:
+`design-showcase.html` -- registered in `nav.js`, linked from the GOVERN
+section, reachable and real -- has no `<aside id="omega-side">` mount at
+all, unlike its sibling `design-system.html`. `nav.js` returns immediately
+without one, so any member landing on this page directly gets zero
+sidebar: no way back to dashboard, no persistent nav chrome every other
+page has. Fixed per the documented "page-shell" legacy layout
+(`css/omega-system.css`: `body:has(> aside#omega-side){display:flex}` +
+`.page-shell{flex:1;...}`) rather than restructuring the page's existing
+`.container#app` into the heavier `.shell`/`.side`/`.main` pattern:
+added the `<aside>` as a direct `<body>` child and the `.page-shell`
+class alongside the page's own `.container`.
+
+Verified in a real headless render, not just the two advisory scripts:
+sidebar renders with all 254 nav links at its correct 80px width, page
+content sits flush beside it, zero horizontal overflow, zero console
+errors, and a screenshot confirms the hero/palette content is visually
+unaffected.
+
+```
+python3 scripts/reachability-contract.py   OK -- 0 stale exemptions, 0 unreachable (was 1 stale exemption)
+python3 scripts/check-inline-js.py         OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                   0 critical / 6 warnings (baseline)
+node --check bg.js                         OK
+scan.js errors (design-showcase.html)      0/1
+scan.js overflow (design-showcase.html)    0/1
+./scripts/ci-local.sh                      ALL 24 BLOCKING CHECKS PASSED
+```
+
+**Everything else checked and already clean, not just assumed:**
+GitHub Actions on `main`'s current tip (`010d54bd`) -- all 10 required
+workflows `success`. Vercel -- last 3 production deployments all `READY`,
+latest matching `main`'s tip exactly. Supabase (`ydqhzvvoyufiiqvzcjns`,
+`ACTIVE_HEALTHY`) -- security advisor: 1 `WARN`, leaked-password-protection
+disabled, an Auth dashboard toggle with no code-side fix, owner action
+needed; performance advisor: 260 `INFO`-level unused-index notices, routine
+for a 225-table schema this young and not actionable without real traffic
+data to judge against -- neither is a repo bug. Every other named check in
+`CLAUDE.md` §8.3's baseline table (`schema-dictionary.py`,
+`upsert-conflict-check.py`, `rls-auditor.py`, `silent-failure-detector.py`,
+`i18n-contract.py`, `omega-registry.py --check`, `capability-audit.py
+--check`, `release-gate.py`, `resilience-audit.py`, `module-contract.py`,
+`commerce-contract.py`, `brand-glyph-check.py`) ran clean.

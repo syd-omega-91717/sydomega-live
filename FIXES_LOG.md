@@ -19576,3 +19576,33 @@ scan.js overflow (5 pages)           0/5 pages scrolling horizontally
 python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
 python3 scripts/audit.py             0 critical / 6 warnings (baseline)
 ```
+
+## Trend-sparkline pass Wave 3 shipped — social.html gets a real KPI tile (FEATURE_IDEAS.md #27)
+
+Wave 2 found real data on `social.html` (`social_broadcasts`, Supabase,
+RLS-scoped, `created_at`) but no existing KPI/stat tile to attach a
+sparkline to, and deferred it rather than invent one on the spot. Built
+the tile for real this pass: one `.kpi-row`/`.kpi` — the platform's
+actual shared classes (`bg.js`'s injected stylesheet), not new page-local
+CSS — added to the FEED tab, showing `BROADCASTS THIS WEEK` and a 14-day
+`#social-broadcast-spark`, both computed from `storedBroadcasts`, the
+same fetch (`limit(30)`) the page already makes. Zero new query, zero
+invented numbers: "THIS WEEK" only undercounts (never fabricates) in the
+edge case a member exceeds 30 broadcasts in 7 days.
+
+Verified in a real headless render: the harness's empty-array Supabase
+stub correctly produces a real, honest flat 14-zero line (14 finite
+values, matching `dashboard.html`'s established Wave 1 behavior) rather
+than a hidden mount or a fabricated non-zero number; `soc-week-count`
+correctly reads "0" under the same stub. A synthetic
+`window.OmegaSpark.render()` call then proved the render path handles
+real variation. Confirmed the new KPI row does not break tab switching
+(FEED tab still shows/hides correctly).
+
+```
+scan.js errors (social.html)         0/1
+scan.js overflow (social.html)       0/1
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/repository_integrity_audit.py   PASS
+```

@@ -1581,6 +1581,20 @@ overflow`: 0/2. `python3 scripts/check-inline-js.py`: clean. `python3
 scripts/audit.py`: 0 critical / 6 warnings (baseline). `python3
 scripts/repository_integrity_audit.py`: PASS.
 
+**`journal.html`/`physiology.html` — consolidation decision closed: no
+change.** Deferred in Waves 1 and 2 as "a decision, not this pass's scope."
+Read both real implementations before deciding: `journal.html`'s
+`drawWCChart()`/`drawMoodChart()` and `physiology.html`'s `drawTrend()`
+(one instance per metric: RHR, HRV, BP, weight) are full-width, 30-day
+canvas line/bar charts with Y-axis gridlines and numeric min/max labels,
+rendered inside a dedicated INSIGHTS/TRENDS section built for exactly
+this purpose. `omega-sparkline.js` is a 120×28px compact glance-badge
+meant to sit beside a KPI number, not a substitute analytical view.
+Swapping either page onto the shared module would trade a more detailed,
+purpose-built chart for a smaller, less informative one — a downgrade
+presented as a consolidation. Closed with no code change: both pages keep
+their existing charts.
+
 **Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
 + percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
 Trust Through Clarity"); the 2026 dashboard-design consensus that
@@ -1731,3 +1745,64 @@ proposal itself.
    3-surface opt-in motif by design, matching `#19`'s own precedent; a
    platform-wide `.topbar` sweep would be the "busy" outcome the proposal
    explicitly rejects.
+
+## 29. Live signal pulse — a real, ambient "the platform is alive" indicator (visual design system)
+
+**Feature name & concept:** a small pulsing dot, restrained and always
+present (not just on error), that flashes once on every real successful
+request to this platform's own backend — a native-CSS "heartbeat" living
+beside the existing authority ring / topbar chrome, giving members a
+constant, honest signal that the page is actively syncing rather than
+frozen. Not a status message, not text, not a toast — a single glanceable
+dot, the visual equivalent of a hard-drive activity light.
+
+**Grounded in:** `bg.js:1-47`'s data-fetch recorder — already installed,
+inline, on every gated page, wrapping `window.fetch` for every request to
+this platform's own backend (`.supabase.co/`, `/rest/v1/`, `/auth/v1/`,
+`/functions/v1/` — `watched()`, line 25-29) and emitting a real
+`document.dispatchEvent(new CustomEvent('omega:fetch-settled',{detail:{ok,
+status}}))` on every settlement (line 31, fired at lines 43 and 45). Today
+exactly one consumer exists: `omega-dataguard.js`, which listens for this
+event but by design only ever *reacts to failure* — its own header states
+the deliberate scope: "no alarm for an empty result set... the network is
+the only source of truth." A `{ok:true}` settlement — the overwhelming
+majority of real events on a healthy page — is currently observed by
+nothing and shown nowhere. This proposal is a second, independent
+consumer of the same real event stream, not a change to `omega-dataguard.js`
+or a duplicate of its job: dataguard answers "is something wrong,"
+this answers "is something happening" — a different question. Zero new
+Supabase call, zero new column, zero new table.
+
+**User benefit:** every free/approved member, on every gated page — pure
+visual/ambient identity, no tier gate. Matches the platform's own
+`omega-cinematic-system` skill's "Signal pulse — status indicator tied to
+actual system state" pattern (an already-documented interaction category
+in this repo's own design brief) that has not yet been built against a
+real, always-on signal, only against page-specific one-off states.
+
+**Nav placement:** none — a `bg.js`-level ambient chrome addition, not a
+new page. Candidate mount point: beside the existing `data-omega-ring`
+authority-ring canvas already present in most topbars (e.g.
+`treasury.html:19`, `social.html:46`, `health.html:44`), since that is
+already the platform's established "live, per-member status" real estate.
+
+**Data needs:** none — reads the existing `omega:fetch-settled` event
+`bg.js` already emits from real requests already being made. No new
+fetch, table, RPC, or column.
+
+**Source inspiration:** the 2026 dashboard-design consensus on "real-time
+compliance pulses" as a defining feature of modern dark-mode dashboards
+(Lucky Graphics' "UI Design Trends 2026: Glassmorphism Evolution, AI
+Interfaces, and Dark Mode Excellence"; Muzli's "50 Best Dashboard Design
+Examples for 2026" on frosted-glass dashboards built around real-time
+status/workflow indicators); the general "activity LED" pattern from
+system-status UIs (Vercel's/Linear's own small live-status dots being the
+closest real-world analogue, though neither was scraped directly — the
+pattern is described consistently enough across the 2026 dashboard-trend
+sources above to ground the concept, not any one product's exact pixels).
+
+**Explicitly not proposed:** replacing or modifying `omega-dataguard.js`,
+which stays exactly as scoped (failure-only, no false alarms on a healthy
+empty result). Nor a persistent always-visible "ONLINE" text label — the
+research is consistent that the dot/pulse itself, not a text state, is
+what reads as ambient rather than alarming.

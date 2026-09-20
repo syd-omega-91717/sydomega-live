@@ -19727,3 +19727,60 @@ data to judge against -- neither is a repo bug. Every other named check in
 `i18n-contract.py`, `omega-registry.py --check`, `capability-audit.py
 --check`, `release-gate.py`, `resilience-audit.py`, `module-contract.py`,
 `commerce-contract.py`, `brand-glyph-check.py`) ran clean.
+
+## Live Signal Pulse shipped — a real, event-driven ambient status indicator (FEATURE_IDEAS.md #29)
+
+A fresh `web-trend-scout` pass (2026 dashboard/status-indicator trends)
+produced one proposal grounded in code that already exists rather than an
+invented mechanism: `bg.js`'s own data-fetch recorder (top of the file)
+already wraps `window.fetch`, watches for `.supabase.co/`, `/rest/v1/`,
+`/auth/v1/`, `/functions/v1/` requests, and dispatches a real
+`document.dispatchEvent(new CustomEvent('omega:fetch-settled',
+{detail:{ok,status}}))` on every settlement. `omega-dataguard.js` is the
+only current consumer, and by its own documented design only reacts to
+*failure* ("no alarm for an empty result set" — empty is a valid answer).
+Nothing on the platform answered the different, positive question "is
+something happening right now" — a gap, not a decoration to invent data
+for.
+
+Built a second, independent consumer of the same real event as a new
+self-contained IIFE in `bg.js` ("OMEGA LIVE PULSE"), following this file's
+own established convention (own guard flag, own injected `<style>`, own
+DOM logic, never touching `omega-dataguard.js`'s logic or DOM): a small
+dot mounted as a normal in-flow child of `.topbar`/`.mission-bar`
+(166 + 1 pages respectively), never `position:fixed` — deliberately, to
+avoid this repo's own repeated fixed-chrome collision history (`#om-open`'s
+top-left gutter problem, the bottom-chrome stacking bugs `bg.js`'s
+`--omega-chrome-bottom` was built to fix). An ordinary flex child cannot
+collide with anything fixed. It sits dim by default and flashes gold once,
+via a CSS keyframe restarted through a forced reflow (`void
+dot.offsetWidth`) rather than a queued timeout, on every event carrying
+`detail.ok === true` — so two real requests settling in quick succession
+each register their own ping instead of the second being silently dropped.
+`prefers-reduced-motion` gets the dot with no animation, matching every
+other motion owner in this file.
+
+A per-ring mount (`omega-ring.js`) was considered and rejected first: its
+`mountOne(el)` frequently receives a bare `<canvas>` with no wrapper
+element to attach a sibling dot to without restructuring markup on every
+call site — read in full before deciding against it, not assumed.
+
+Verified in a real headless render, not reasoned from the diff:
+
+- Idle state on `dashboard.html`/`treasury.html`/`health.html`: dot
+  present, dim, no `.ping` class.
+- A real `omega:fetch-settled` event (`{detail:{ok:true,status:200}}`)
+  dispatched the same way `bg.js`'s own recorder does it — not a call
+  into internal render logic — applies `.ping` immediately on all three.
+- `page.emulateMedia({reducedMotion:'reduce'})` then the same event:
+  `getComputedStyle(dot).animationName === 'none'`.
+- Zero horizontal overflow, zero page errors, on all three pages.
+- Screenshots (idle vs. ping) confirm correct, unobtrusive placement
+  beside existing topbar content with no layout shift.
+
+```
+node --check bg.js                         OK
+python3 scripts/check-inline-js.py         OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                   0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (204 pages, full sweep)     0/204
+```

@@ -19839,3 +19839,77 @@ scan.js errors / overflow (contributions.html)   0/1 each
 python3 scripts/check-inline-js.py               OK
 python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## Cross-document View Transitions added as a safe, additive layer — activation could not be confirmed, so the pre-existing fallback stays unconditional (FEATURE_IDEAS.md #30)
+
+Investigated a real path to a "unified, one-continuous-space" feel across
+this repo's 204 separate static pages without the single-page-app rewrite
+that would require the build step/framework `CLAUDE.md` §1/§9 explicitly
+forbid: the Cross-Document View Transitions API
+(`@view-transition{navigation:auto}`), which needs only a CSS rule present
+in every page's stylesheet — already true here, since `bg.js` injects one
+shared stylesheet everywhere. Added the rule plus themed
+`::view-transition-old/new(root)` keyframes to the "OMEGA UX LAYER" IIFE in
+`bg.js`, alongside the pre-existing manual `#omega-veil` black-fade
+transition that IIFE's header comment already named as its scope.
+
+**A real bug caught before it shipped, not after.** First reduced-motion
+pass gated only `::view-transition-group(root)`, but the browser's own
+default crossfade animation lives on `::view-transition-old`/`-new`, not
+`-group` — verified directly (`hasOldNewOverride: false` on a real page with
+`emulateMedia({reducedMotion:'reduce'})`) before fixing it to cover all
+three pseudo levels, per the same pattern Chrome's own accessibility
+guidance documents. Re-verified `hasOldNewOverride: true` after the fix.
+
+**Then a second, more consequential finding, from real testing rather than
+assumption.** The plan was to feature-detect `'startViewTransition' in
+document` and, where true, turn OFF the pre-existing manual veil (to avoid
+literally two transitions layered on one navigation). Verified the CSS rule
+itself is present and parses correctly as a real `CSSViewTransitionRule` on
+live pages. But direct testing — real trusted clicks, synthetic clicks, and
+direct `location.href` assignment, across three different real page pairs,
+with a `pagereveal` listener reading the native `viewTransition` property —
+never once showed the transition actually activating on this repo's real
+pages, while the identical CSS on a from-scratch two-file reproduction on
+the same Chromium 141 binary activated it every time. Spent real
+investigation time ruling out specific causes rather than guessing:
+`beforeunload` listeners present in several `omega-*.js` modules
+(reproduced one in isolation — no effect on the minimal repro), a service
+worker registration attempt (disabled directly — no effect), a second
+conflicting `@view-transition` rule (grepped all live stylesheets — none),
+network activity at navigation time (`networkidle` plus 3s settle — no
+effect), response headers (identical between the working and non-working
+test servers), and the one real `location.replace` redirect path in
+`bg.js` (gated behind trial/approval checks not reached on this
+navigation). Bisecting `bg.js`'s own content narrowed the cause to
+something in the file beyond the CSS/markup, without finding the specific
+line before further investigation stopped being worth its cost.
+
+**The decision this forced.** `'startViewTransition' in document` proves
+the browser API exists; it does not prove a given navigation will actually
+use it, and this repo's real pages demonstrated exactly that gap between
+capability and activation. Shipping the originally-planned
+capability-gated version would have been a silent regression on any
+browser reporting `supportsVT: true` without actually activating the
+transition here: those visitors would get neither the native crossfade nor
+the fallback veil. Restored the manual veil to run **unconditionally**,
+identical to its pre-change behavior, and kept the CSS rule as a pure
+additive layer with no downside: the veil already fades the outgoing frame
+to opaque black before `location.href` fires, so a navigation where the
+native transition does activate just crossfades from that black frame into
+the new page underneath the veil's own removal — complementary rather than
+a doubled, conflicting effect.
+
+This is deliberately not marked "shipped and working" — see FEATURE_IDEAS.md
+#30's standing todo. The CSS is real, present, harmless, and worth keeping;
+whether it ever actually fires on this platform is unverified and stays
+that way until a real (non-headless) browser or production confirms it
+either way.
+
+```
+node --check bg.js                                 OK
+python3 scripts/check-inline-js.py                  OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (204 pages, full sweep)               0/204
+manual #omega-veil                                   confirmed present, unconditional, unchanged behavior
+```

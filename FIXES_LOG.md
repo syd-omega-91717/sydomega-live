@@ -20006,3 +20006,28 @@ python3 scripts/module-contract.py                        0 broken, 127 contract
 python3 scripts/reachability-contract.py                  OK -- every destination linked
 python3 scripts/omega_fabric_audit.py                      VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
 ```
+
+## 3-D sculpture layer extended to agents.html and pantheons.html; matrix.html excluded for a real reason (FEATURE_IDEAS.md #32)
+
+`omega-sculpture.js`'s real three.js layer had two fully-built scene types --  `agents` (12-spoke
+wheel, cyan/gold cube nodes) and `matrix` (9x9x9 grid) -- demoed on `sculpture.html` but never
+mounted on the real pages their names describe. Mounted `agents` on `agents.html`'s COUNCIL tab
+(above the existing constellation ring -- real-time centrepiece and navigable map, not duplicates)
+and on `pantheons.html`'s Olympians tab, reusing the shared `.osc-stage` class from
+`css/omega-system.css` (already injected everywhere, no new CSS). `matrix.html` was checked and
+excluded, not skipped: it already has a real `#matrix-canvas` "3D Matrix Projection" panel labelled
+"729 inner nodes" -- the identical concept the sculpture's `matrix` scene renders, so mounting it
+there would compete with an existing feature rather than fill a gap.
+
+Verified in a real render, not assumed: both new mounts produce a canvas with a non-zero drawing
+buffer (`scan.js canvas`), drew each onto a fresh 2-D canvas via `drawImage` and sampled 292/244
+distinct colours (real painted geometry, not a blank frame), screenshots confirm the expected
+glossy PBR signet-and-cubes render, zero overflow and zero console errors on both pages.
+
+```
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-nothing
+distinct sampled colours (agents / pantheons)       292 / 244
+overflow / console errors                           false/false, 0/0
+```

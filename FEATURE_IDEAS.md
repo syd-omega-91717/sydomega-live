@@ -2053,3 +2053,43 @@ python3 scripts/module-contract.py                        0 broken, 127 contract
 python3 scripts/reachability-contract.py                  OK -- every destination linked
 python3 scripts/omega_fabric_audit.py                     VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
 ```
+
+## 32. Real 3-D sculpture coverage extended to agents.html and pantheons.html — matrix.html considered and correctly excluded
+
+**Grounded in:** `omega-sculpture.js`'s real three.js layer (CLAUDE.md §4) mounts on only 5 of 204
+pages (`ascension`, `elements`, `gates`, `index`, `sculpture`), and two of its six built-in scene
+types — `agents` (a 12-spoke wheel around the Ω, alternating cyan/gold cube nodes) and `matrix`
+(a 9×9×9 dot grid) — are fully implemented and already demoed on `sculpture.html`, but were never
+actually mounted on the real pages their names describe. bg.js injects the 670KB module only where
+a `[data-omega-sculpture]` mount exists, so extending coverage costs nothing on any other page.
+
+**Shipped:** the `agents` scene mounted on `agents.html`'s COUNCIL tab (above the existing
+`omega-constellation.js` ring — the sculpture is the real-time 3-D centrepiece, the ring stays the
+navigable map, neither duplicates the other) and on `pantheons.html`'s Olympians tab (a genuinely
+real second use for the same scene: pantheons.html's own header comment already documents that a
+second *ring* was considered and rejected as duplicating cosmos/houses's existing wheels — the
+sculpture is a different visual register, not a second ring, so it does not hit that same
+objection). Both use the shared `.osc-stage` class already defined once in `css/omega-system.css`
+and injected on every page — no new CSS.
+
+**`matrix.html` considered and excluded, not just skipped.** It already has a real, working
+`#matrix-canvas` — a "3D Matrix Projection" panel labelled "9×9×9 = 729 inner nodes", the identical
+concept the sculpture's `matrix` scene renders. Mounting the sculpture there would be two
+competing visualisations of the same 729-node idea on one page, not a genuine addition — the same
+"read from the one thing that already covers this" discipline this file has applied to
+`journal.html`/`physiology.html` (Wave 1) and `time.html` (Wave 4).
+
+Verified in a real headless render, not assumed from the diff: both new mounts produce a real
+canvas with a non-zero drawing buffer (`scan.js canvas`: 0 zero-buffer, 0 painting-nothing);
+drew each canvas onto a fresh 2-D canvas via `drawImage` and sampled 292 / 244 distinct colours
+respectively — real geometry, not a blank frame; screenshots confirm the same glossy, PBR-lit
+signet-and-orbiting-cubes render already proven on `sculpture.html`; zero horizontal overflow,
+zero console errors on both pages.
+
+```
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-nothing
+distinct sampled colours (agents / pantheons)       292 / 244 -- real geometry, not blank
+overflow / console errors (agents, pantheons)       false/false, 0/0
+```

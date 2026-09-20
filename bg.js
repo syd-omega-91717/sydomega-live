@@ -2102,6 +2102,35 @@ setTimeout(function(){
 (function(){
   if(window.__omegaUX)return; window.__omegaUX=1;
   var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Chromium 126+ supports cross-document View Transitions -- a native
+     mechanism for animating BETWEEN two full page loads, not a
+     same-document router trick. The single declarative
+     `@view-transition{navigation:auto}` rule below, present in every page's
+     stylesheet because bg.js injects it everywhere, is the entire
+     requirement on paper: no JS, no per-page markup, no framework. Pure
+     upside where it activates -- unsupported browsers (Safari/Firefox
+     today) simply ignore the unknown at-rule and navigate exactly as
+     before.
+     IMPORTANT, and the reason the manual #omega-veil transition below stays
+     UNCONDITIONAL rather than being feature-detected off: this session
+     verified the rule is present and parses correctly (CSSViewTransitionRule)
+     on real pages in this repo's own headless harness (Chromium 141), and
+     confirmed zero errors/regressions from adding it -- but could NOT get a
+     positive `pagereveal` viewTransition signal on an actual real-page
+     navigation here despite it firing correctly on a from-scratch minimal
+     reproduction on the identical binary. `'startViewTransition' in document`
+     proves the API exists, not that a given navigation will actually use it,
+     and this repo's own real pages showed the gap between those two things.
+     So: never gate a real, tested fallback off the strength of a capability
+     check alone when the capability's actual activation couldn't be
+     confirmed -- that is exactly how a change looks correct in the diff
+     while quietly deleting the one thing users could rely on (CLAUDE.md
+     §8.4's "a rule that reached the file but not the cascade" class). Both
+     mechanisms run together unconditionally: the veil already opacity-fades
+     the outgoing frame to black *before* navigation fires, so if the native
+     transition also activates on a given navigation it just crossfades
+     from-black into the new page underneath the veil's own fade-out --
+     complementary, not a doubled or clashing effect. */
   var st=document.createElement('style');
   st.textContent=[
     '#omega-toasts{position:fixed;right:18px;bottom:80px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}',
@@ -2119,7 +2148,12 @@ setTimeout(function(){
     '#omega-genesis .gt{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:6px;color:#85837b;margin-top:30px;opacity:0;animation:gt-fd 1s ease 1.3s forwards}',
     '@keyframes gx-ig{0%{opacity:0;transform:scale(.55) rotate(-10deg)}55%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}',
     '@keyframes gr-ex{0%{opacity:0;transform:scale(.3)}40%{opacity:.6}100%{opacity:0;transform:scale(1.25)}}',
-    '@keyframes gt-fd{to{opacity:1}}'
+    '@keyframes gt-fd{to{opacity:1}}',
+    '@view-transition{navigation:auto}',
+    '@media(prefers-reduced-motion:no-preference){::view-transition-old(root){animation:omega-warp-out .38s cubic-bezier(.4,0,.2,1) both}::view-transition-new(root){animation:omega-warp-in .5s cubic-bezier(.16,1,.3,1) both}}',
+    '@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}',
+    '@keyframes omega-warp-out{to{opacity:0;transform:scale(1.035);filter:blur(5px)}}',
+    '@keyframes omega-warp-in{from{opacity:0;transform:scale(.975);filter:blur(3px)}}'
   ].join('');
   (document.head||document.documentElement).appendChild(st);
 
@@ -2143,7 +2177,9 @@ setTimeout(function(){
     }
   },true);
 
-  /* ---- PAGE TRANSITIONS ---- */
+  /* ---- PAGE TRANSITIONS ----
+     Unconditional -- see the long comment above the injected CSS for why
+     this never got feature-detected off. */
   var veil=document.createElement('div');veil.id='omega-veil';
   (function add(){if(document.body){document.body.appendChild(veil);}else requestAnimationFrame(add);})();
 

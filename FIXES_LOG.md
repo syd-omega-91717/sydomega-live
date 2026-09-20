@@ -19491,3 +19491,34 @@ python3 scripts/check-inline-js.py                OK -- every inline <script> bl
 scan.js overflow (dashboard/treasury/intelligence) 0/3
 scan.js errors (dashboard/treasury/intelligence)   0/3 pages with uncaught errors
 ```
+
+## Unresolved merge-conflict markers in this file, fixed twice for two different reasons
+
+`scripts/repository_integrity_audit.py`'s `merge_conflict_marker` check failed
+on `main` with a literal `<<<<<<< HEAD` / `=======` / `>>>>>>>
+origin/claude/visual-inspiration-proposals` block sitting in this file
+(the two entries directly above this one, "Signature cinematic tier, Phase
+2" and "Trend-sparkline pass Wave 1" — both real, both meant to land, just
+never actually merged cleanly by whichever earlier session's stash/rebase
+touched them).
+
+First fix landed on PR #438 (commit `e6ba85e`) alongside that PR's own
+unrelated change (`#28`'s signal-sweep motif) — then never reached `main`:
+the PR was marked ready-for-review and merged within ~10 seconds, at its
+*prior* head (`5501aaf6`), before the fix push had registered. Confirmed
+directly rather than assumed: `git merge-base --is-ancestor e6ba85ec
+origin/main` → `NO`, and `git show origin/main:FIXES_LOG.md` hashed
+identical to the pre-fix commit. This is the exact "head is frozen at
+merge time" race `CLAUDE.md` §8.2 already documents for force-pushes;
+here it happened on an ordinary sequential push, which the existing
+warning doesn't cover.
+
+Second attempt (this entry): the identical fix cherry-picked onto a fresh
+branch off the *current* `main`, per §8.2's own stated remedy for this
+race — a new commit, a new PR, never stacked on the merged history.
+
+```
+python3 scripts/repository_integrity_audit.py   PASS (was FAIL merge_conflict_marker=FIXES_LOG.md)
+python3 scripts/check-inline-js.py              OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                        0 critical / 6 warnings (baseline)
+```

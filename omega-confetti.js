@@ -329,7 +329,7 @@
       shape: 'circle'
     });
     _showBanner(
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#00E5FF">TASK COMPLETED</div>' +
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:#00E5FF">TASK COMPLETED</div>' +
       '<div style="font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#e9e6dc">progress recorded</div>',
       '#00E5FF', cfg.duration
     );
@@ -350,7 +350,7 @@
       shape: 'star'
     });
     _showBanner(
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:#3fb27f">STREAK MILESTONE</div>' +
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:#3fb27f">STREAK MILESTONE</div>' +
       '<div style="font-family:\'Cinzel Decorative\',serif;font-size:16px;color:#e9e6dc">' + streak + ' DAYS</div>',
       '#3fb27f', cfg.duration
     );
@@ -379,7 +379,7 @@
     });
     var typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
     _showBanner(
-      '<div style="font-family:\'Courier Prime\',monospace;font-size:11px;letter-spacing:2px;color:' + accent + '">' + typeLabel.toUpperCase() + '</div>' +
+      '<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:' + accent + '">' + typeLabel.toUpperCase() + '</div>' +
       '<div style="font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#e9e6dc">social impact</div>',
       accent, cfg.duration
     );

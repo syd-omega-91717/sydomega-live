@@ -381,7 +381,7 @@ function renderWater(){
   const count=water[todayKey()]||0;
   document.getElementById('water-count').textContent=count;
   document.getElementById('water-cups').innerHTML=Array.from({length:8},(_,i)=>
-    `<div class="water-cup ${i<count?'filled':''}" onclick="toggleCup(${i})"></div>`).join('');
+    `<div class="water-cup ${i<count?'filled':''}" onclick="toggleCup(${i})" aria-label="Set water intake to ${i+1} cup${i?'s':''}" aria-pressed="${i<count}"></div>`).join('');
 }
 function toggleCup(i){
   const water=getWater();

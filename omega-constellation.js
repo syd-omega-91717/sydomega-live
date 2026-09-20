@@ -71,18 +71,18 @@
      Names, signs and gods only: nothing here is a metric, so an offline
      render shows the real roster or nothing, never an invented number. */
   var FALLBACK_AGENTS = [
-    { name: 'Sentinel', sign: 'Aries', element: 'Fire', god: 'Ares' },
-    { name: 'Merchant', sign: 'Taurus', element: 'Metal', god: 'Aphrodite' },
-    { name: 'Scout', sign: 'Gemini', element: 'Wind', god: 'Hermes' },
-    { name: 'Warden', sign: 'Cancer', element: 'Water', god: 'Artemis' },
-    { name: 'Sovereign', sign: 'Leo', element: 'Fire', god: 'Apollo' },
-    { name: 'Auditor', sign: 'Virgo', element: 'Sand', god: 'Athena' },
-    { name: 'Proxy', sign: 'Libra', element: 'Wind', god: 'Hera' },
-    { name: 'Oracle', sign: 'Scorpio', element: 'Water', god: 'Demeter' },
-    { name: 'Beacon', sign: 'Sagittarius', element: 'Fire', god: 'Zeus' },
-    { name: 'Analyst', sign: 'Capricorn', element: 'Metal', god: 'Hestia' },
-    { name: 'Tutor', sign: 'Aquarius', element: 'Wind', god: 'Hephaestus' },
-    { name: 'Historian', sign: 'Pisces', element: 'Water', god: 'Poseidon' }
+    { name: 'Sentinel', sign: 'Aries', element: 'Fire', god: 'Ares', href: '/privacy.html' },
+    { name: 'Merchant', sign: 'Taurus', element: 'Metal', god: 'Aphrodite', href: '/vault.html#reserve' },
+    { name: 'Scout', sign: 'Gemini', element: 'Wind', god: 'Hermes', href: '/search.html' },
+    { name: 'Warden', sign: 'Cancer', element: 'Water', god: 'Artemis', href: '/family.html' },
+    { name: 'Sovereign', sign: 'Leo', element: 'Fire', god: 'Apollo', href: '/command.html' },
+    { name: 'Auditor', sign: 'Virgo', element: 'Sand', god: 'Athena', href: '/compliance.html' },
+    { name: 'Proxy', sign: 'Libra', element: 'Wind', god: 'Hera', href: '/contracts.html' },
+    { name: 'Oracle', sign: 'Scorpio', element: 'Water', god: 'Demeter', href: '/prediction.html' },
+    { name: 'Beacon', sign: 'Sagittarius', element: 'Fire', god: 'Zeus', href: '/vision.html' },
+    { name: 'Analyst', sign: 'Capricorn', element: 'Metal', god: 'Hestia', href: '/intelligence.html' },
+    { name: 'Tutor', sign: 'Aquarius', element: 'Wind', god: 'Hephaestus', href: '/academy.html' },
+    { name: 'Historian', sign: 'Pisces', element: 'Water', god: 'Poseidon', href: '/family.html#heritage' }
   ];
 
   /* ── STYLE ──────────────────────────────────────────────────────────────
@@ -206,7 +206,14 @@
              label instead, so the fact survives for assistive tech. */
           label: [a.name, a.sign, a.element, a.god].filter(Boolean).join(', '),
           sign: a.sign,
-          href: '/agents.html'
+          /* FEATURE_IDEAS.md #31: each agent's real destination page, added to
+             omega-agents.json itself (a per-agent property, not a second copy
+             of nav.js's routing table -- CLAUDE.md 8.1 class 8) so this ring
+             becomes an actual navigable map of the platform instead of 12
+             emblems that all pointed at the same page. Falls back to
+             /agents.html for a roster entry with no href (the hardcoded
+             FALLBACK_AGENTS below, and any future agent added without one). */
+          href: a.href || '/agents.html'
         };
       });
     });

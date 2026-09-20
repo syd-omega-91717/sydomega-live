@@ -57,7 +57,7 @@
   function initConstellationOrbits() {
     if (prefersReduced) return;
 
-    const orbits = document.querySelectorAll('.ocn-orbit');
+    const orbits = document.querySelectorAll('.ocnbg-orbit');
 
     orbits.forEach((orbit, idx) => {
       /* Set orbital speed based on index (vary speeds for visual interest) */
@@ -70,7 +70,7 @@
 
   /* Update constellation node timing for staggered pulse */
   function updateConstellationNodes() {
-    const nodes = document.querySelectorAll('.ocn-node');
+    const nodes = document.querySelectorAll('.ocnbg-node');
 
     nodes.forEach((node, idx) => {
       const delays = [0, 1.5, 0.8, 1.3, 0.5, 1.1];
@@ -175,7 +175,7 @@
               /* Re-initialize if new parallax or constellation elements added */
               if (node.dataset && (
                 node.dataset.parallax !== undefined ||
-                node.classList.contains('ocn-node') ||
+                node.classList.contains('ocnbg-node') ||
                 node.classList.contains('omega-depth-card')
               )) {
                 initParallaxIntersectionObserver();

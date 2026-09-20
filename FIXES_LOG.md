@@ -19955,3 +19955,54 @@ headed vs headless, 4 real page pairs, stubbed        false / false (identical)
 route().abort() on unreachable domains, both modes    false / false (identical)
 python3 scripts/audit.py                              0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## The constellation ring becomes a real navigable map; a real `.ocn-node` collision found and fixed on the way (FEATURE_IDEAS.md #31)
+
+`omega-constellation.js`'s ring (live on `agents.html`/`pantheons.html`) had every one of its 12
+agent nodes hard-coded to `href:'/agents.html'` — 12 decorative dead ends, not a map. Resolved a
+real destination for each agent mechanically: matched each agent's own `domains` array (already in
+`omega-agents.json`) as literal substrings against `nav.js`'s real `SECTIONS` sub-link slugs/labels,
+no manual judgment calls. All 12 resolved cleanly (Sentinel→`/privacy.html`, Oracle→
+`/prediction.html`, Historian→`/family.html#heritage`, etc. — full table in FEATURE_IDEAS.md #31).
+Added as an `href` field on each agent in `omega-agents.json` (a property of the agent, not a
+second copy of nav.js's table — CLAUDE.md §8.1 class 8); `omega-constellation.js` now reads
+`a.href` per node. Mounted the same ring on `dashboard.html`, replacing a hand-rolled
+`#agent-quick` grid that had the identical bug (`onclick="location.href='/agents.html'"` on all
+12 cards) — one canonical, fixed component instead of two independently-broken ones.
+
+**A second real bug, found by verifying the render rather than trusting the diff.** The new
+dashboard mount showed 6 of 12 nodes gold, 6 dimmed — reproducible, identical across repeated runs
+and settle times (ruling out a load race). Traced with a rule-matching script (walk every
+stylesheet, test `element.matches(selector)` against the two nodes) rather than guessed at:
+`css/omega-cinematic-animations-phase2.css` already owned `.ocn-node`/`.ocn-orbit` for a wholly
+unrelated, **dead** decorative "constellation backdrop" effect — grepped all 204 pages, zero ever
+create its `.omega-constellation-backdrop` container — and its JS
+(`omega-cinematic-animations-phase2.js`'s `updateConstellationNodes()`) calls
+`document.querySelectorAll('.ocn-node')` with no scoping to that container, plus a
+`MutationObserver` that re-fires the same query on every DOM insertion. The instant
+`omega-constellation.js` mounted real ring nodes, this dead module's CSS and staggered
+per-index `animationDelay` values silently painted over them. This had been live and corrupting
+`agents.html`/`pantheons.html`'s existing rings the whole time too — masked there because the
+purple page-accent tint read as plausibly intentional rather than an obvious bug. Another instance
+of CLAUDE.md §8.1 class 5 (a class name is a module's identity, not a feature area's).
+
+Fixed by renaming the dead, never-mounted intruder — never the real, working module — across all
+four of its files: `.ocn-node`/`.ocn-orbit`/`.ocn-link`/`.ocn-focal` →
+`.ocnbg-node`/`.ocnbg-orbit`/`.ocnbg-link`/`.ocnbg-focal`. Verified in a real render: `agents.html`
+COUNCIL tab now shows correct per-sign emblem colours (fire/water/wind/metal/sand) instead of a
+flat purple box on every node; the new dashboard mount shows the same correct colours with zero
+alternation; 12 distinct real hrefs confirmed via DOM query; zero overflow and zero console errors
+on `dashboard.html`/`agents.html`/`pantheons.html`.
+
+```
+node --check (constellation.js, phase2.js, phase3.js)   OK
+python3 scripts/check-inline-js.py                       OK
+python3 scripts/audit.py                                 0 critical / 6 warnings (baseline, unchanged)
+dashboard.html: 12 nodes, 12 unique hrefs                confirmed via DOM query
+dashboard/agents/pantheons: overflow / console errors    false/false/false, 0/0/0
+scan.js errors (204 pages, full sweep)                    0/204
+python3 scripts/omega-registry.py --check                 OK (regenerated for module byte-size drift)
+python3 scripts/module-contract.py                        0 broken, 127 contracts
+python3 scripts/reachability-contract.py                  OK -- every destination linked
+python3 scripts/omega_fabric_audit.py                      VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
+```

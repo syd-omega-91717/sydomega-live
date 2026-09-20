@@ -2007,3 +2007,49 @@ prefers-reduced-motion coverage                     confirmed: group + old + new
 manual #omega-veil fallback                         confirmed present and unconditional, unchanged behavior
 headed-browser re-test (xvfb-run, 4 real page pairs) false in both headed and headless under valid (stubbed, non-redirecting) conditions
 ```
+
+## 31. The constellation ring becomes a real navigable universe map — plus a real cross-module class collision found and fixed along the way
+
+**Grounded in:** `omega-constellation.js` (CLAUDE.md §4.1) already draws a real, well-built ring of the 12 agent emblems on `agents.html` and `pantheons.html` — but every one of its 12 nodes hard-coded `href:'/agents.html'`, so all 12 were decorative dead ends pointing at the same page rather than a real map of anything. `omega-agents.json` already carries each agent's real `domains` array (e.g. Sentinel: `security, access, protection, threats, privacy`); nav.js's own `SECTIONS` array is the platform's real routing table, with real per-page sub-links (`PRIVACY` → `/privacy.html`, `ORACLE PREDICT` → `/prediction.html`, etc.).
+
+**What shipped:** a mechanical, non-subjective matching pass — every agent's own `domains` keywords searched as literal substrings against every real `SECTIONS` sub-link's slug/label across the whole nav — resolved all 12 agents to a genuinely real, existing page with no manual judgment calls needed:
+
+| agent | resolved via | destination |
+|---|---|---|
+| Sentinel | `privacy` | `/privacy.html` |
+| Merchant | `treasury` | `/vault.html#reserve` |
+| Scout | `search` | `/search.html` |
+| Warden | `family` | `/family.html` |
+| Sovereign | `command` | `/command.html` |
+| Auditor | `compliance` | `/compliance.html` |
+| Proxy | `contracts` | `/contracts.html` |
+| Oracle | `prediction` | `/prediction.html` |
+| Beacon | `vision` | `/vision.html` |
+| Analyst | `intelligence` | `/intelligence.html` |
+| Tutor | `academy` | `/academy.html` |
+| Historian | `heritage` | `/family.html#heritage` |
+
+Added as an `href` field directly on each agent in `omega-agents.json` — a property of the agent itself, not a second copy of nav.js's routing table (CLAUDE.md §8.1 class 8) — with `omega-constellation.js`'s `nodesFor('agents')` reading `a.href` per-node instead of the old hardcoded single destination, falling back to `/agents.html` for any future roster entry with none. The module's own `FALLBACK_AGENTS` (used only if the JSON fetch fails) got the same hrefs, kept in sync by hand since it is a small, static array.
+
+Mounted the same ring on `dashboard.html` — the platform's actual, highest-traffic front door — replacing a hand-rolled `#agent-quick` grid whose 12 cards had the *exact same* bug (`onclick="location.href='/agents.html'"` on every card). One canonical, now-fixed component instead of two independently-broken ones.
+
+**A real, previously-invisible bug found while verifying, not assumed.** Rendering the new dashboard mount showed 6 of the 12 nodes with a solid gold background and 6 dimmed — reproducibly, identically, across repeated runs, at every settle time tried (ruling out a load-timing race). Traced with a real rule-matching script (walk every stylesheet, test `element.matches(selector)`) rather than guessing: `css/omega-cinematic-animations-phase2.css` already owned `.ocn-node`/`.ocn-orbit` for a *completely unrelated* decorative "constellation backdrop" star-field effect (`.omega-constellation-backdrop`, dead code — grepped all 204 pages, zero create that container), and `omega-cinematic-animations-phase2.js`'s `updateConstellationNodes()` calls `document.querySelectorAll('.ocn-node')` with **no scoping to its own backdrop container**, plus a `MutationObserver` that re-fires the same unscoped query on every DOM insertion. So the moment `omega-constellation.js` mounted real ring nodes, this dead module's CSS (`background:var(--page-accent)`, a `constellation-pulse` animation) and JS (staggered `animationDelay` values cycling `[0,1.5,0.8,1.3,0.5,1.1]`) silently painted over them — a second, textbook case of CLAUDE.md §8.1 class 5 ("a guard/class name is the module's identity, not the feature area's"), and one that had been live and corrupting `agents.html`'s and `pantheons.html`'s *existing* rings the whole time, just masked there by the purple page-accent tint reading as a plausible "themed" look rather than an obvious bug.
+
+Fixed by renaming the dead, never-mounted intruder — `.ocn-node`/`.ocn-orbit`/`.ocn-link`/`.ocn-focal` → `.ocnbg-node`/`.ocnbg-orbit`/`.ocnbg-link`/`.ocnbg-focal` across `css/omega-cinematic-animations-phase2.css`, `omega-cinematic-animations-phase2.js`, `css/omega-cinematic-animations-phase3.css`, `omega-cinematic-animations-phase3.js` — never the real, working, meaningfully-used module. Zero risk: confirmed by grep that no page ever creates the backdrop's own container, so nothing depended on the old names for their intended effect.
+
+Verified in a real headless render, not just the diff: `agents.html`'s COUNCIL tab now shows each node in its own correct per-sign emblem colour (fire/water/wind/metal/sand) instead of a flat purple box on every node; the new `dashboard.html` mount shows the same correct colours with zero alternation; all 12 dashboard nodes resolved to 12 *distinct* real hrefs (checked via DOM query, not assumed); zero horizontal overflow on `dashboard.html`/`agents.html`/`pantheons.html`; zero console errors across all three.
+
+```
+node --check (constellation.js, phase2.js, phase3.js)   OK
+python3 scripts/check-inline-js.py                       OK
+python3 scripts/audit.py                                 0 critical / 6 warnings (baseline, unchanged)
+dashboard.html: 12 nodes, 12 unique hrefs                confirmed via DOM query
+dashboard/agents/pantheons: overflow                     false / false / false
+dashboard/agents/pantheons: console errors               0 / 0 / 0
+.ocn-node collision (rule-matching script, before/after)  identical colliding rule found, then gone
+scan.js errors (204 pages, full sweep)                    0/204
+python3 scripts/omega-registry.py --check                 OK (regenerated for byte-size drift)
+python3 scripts/module-contract.py                        0 broken, 127 contracts
+python3 scripts/reachability-contract.py                  OK -- every destination linked
+python3 scripts/omega_fabric_audit.py                     VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
+```

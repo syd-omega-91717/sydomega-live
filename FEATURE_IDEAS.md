@@ -925,7 +925,22 @@ engineering momentum.
 
 ## Ω-PALETTE — a complete command palette the platform already owns
 
-**Status: proposal. Do not switch on as-is — see the blocker.**
+**Status: VOID — the files this entire entry describes no longer exist.**
+Found while researching command-palette design (2026-09-20, `web-trend-scout`):
+`git show --stat c7ca3569` ("Clean up 33 orphaned modules never loaded by
+platform") deletes all seven files this section's table names —
+`omega-command-catalog.js`, `omega-command-palette.js`,
+`omega-command-router.js`, `omega-command-adapter.js`,
+`omega-command-history.js`, `omega-command-palette.test.js`, and
+`omega-command-palette.css` — along with `omega-cinematic-engine.js`
+(also referenced elsewhere in this file, `#19`). None of the eight are
+present on disk today. The "blocker" and "recommended order" below describe
+work against files that no longer exist; they are left in place, unedited,
+purely as a record of what this platform once had, not as an active
+proposal. Building a command palette again from here is new work, not a
+wiring fix — a fresh proposal, not a resurrection of this one.
+
+**Status (original, now moot): proposal. Do not switch on as-is — see the blocker.**
 
 Found 2026-09-06 by `audit.py` check 2's orphan list (`FIXES_LOG.md` 110). Seven
 files, one of them a test, that **nothing loads**:
@@ -1236,3 +1251,109 @@ synchronize with particle pulse cycles from Phase 3.
 - [Balenciaga WebGL fashion lookbook](https://www.balenciaga.com/)
 - [Apple scroll-driven 3D transforms](https://www.apple.com/vision-pro/)
 - [WebGPU standards proposal](https://www.w3.org/TR/webgpu/)
+
+## 27. Trend-sparkline completeness pass — Stripe/Linear-style "number + direction + shape" (design system, cross-cutting)
+
+**Grounded in:** `omega-sparkline.js` (9,016 bytes, exists, well-reasoned —
+its own header explains it renders `.sparkline`/`.trend.up/.down/.flat`
+from a real numeric series specifically to avoid `CLAUDE.md` §8.1 class 9
+(fabricated data: `hercules.html`'s `Math.random()` progress,
+`ad-network.html`'s invented revenue). It refuses to render a trend
+direction from fewer than 2 real values, never invents a percentage from a
+zero baseline, and watches `data-spark-values` via `MutationObserver` so
+either load order works. But it is loaded by an explicit `<script>` tag on
+exactly **6 pages** (`expenses.html`, `fasting.html`, `mirror.html`,
+`missions.html`, `rituals.html`, `water.html`) — not through `bg.js`. A
+repo-wide grep for `.kpi`/`.kpi-card`/`.trend` markup (the shared classes a
+sparkline would attach to) finds **74 pages** — meaning the module most of
+this platform's own KPI tiles could use is adopted on about 8% of them.
+
+**Idea (design-system scope, no new module, no schema):** every 2026
+dashboard research source converged on the same pattern — Stripe's own
+cards show "a number, a trend indicator, and a sparkline" per metric, and
+the researched 2026 dashboard consensus (Linear/Stripe/Grafana/Vercel) lists
+this as one of the "unglamorous" shared decisions across all of them, not a
+novel effect. This platform already built the exact mechanism these
+products are praised for; it's just under-adopted. Two options, from
+narrowest to widest:
+1. Audit the 74 `.kpi`/`.kpi-card` pages for which already track a real
+   time-series value a sparkline could read (many are static single-value
+   tiles with nothing to trend — a sparkline needs genuine history, not an
+   excuse to add one), and wire `data-omega-spark` on the ones that qualify.
+2. Register `omega-sparkline.js` in the `bg.js` loader (guarded, matching
+   every other module there) so it's available platform-wide without a
+   per-page `<script>` tag — additive, but touches the loader, so per
+   `CLAUDE.md` §8.2's `omega:user-loaded` caution this is its own reviewed
+   step, not bundled into option 1.
+
+**User benefit:** every free/approved member — this reads existing data
+more legibly, no tier gate. The platform's own KPI tiles start reading like
+the dashboard products members already use elsewhere, using infrastructure
+this repo already built and tested against the exact fabrication bug this
+platform's own history warns about most.
+
+**Nav placement:** none — shared design-system module adoption, not a new
+page or section.
+
+**Data needs:** none. Each page's own already-queried columns supply the
+series; `omega-sparkline.js` takes numbers via `data-spark-values`, no new
+table or RPC.
+
+**Source inspiration:** Stripe dashboard card pattern (metric + trend arrow
++ percentage + sparkline; 925 Studios' "Stripe Dashboard Design Breakdown:
+Trust Through Clarity"); the 2026 dashboard-design consensus that
+Linear/Stripe/Grafana/Vercel all converge on structured tables + sparkline
+summaries over chart-heavy layouts (Improvado's Stripe analytics guide;
+Muzli's "50 Best Dashboard Design Examples for 2026").
+
+## 28. Glass-HUD signal accent — a second, restrained motif for hub pages without a 3D mount (visual design system)
+
+**Grounded in:** `omega-sculpture.js` (73,363 bytes, live, 5 pages mount it
+via `data-omega-sculpture`) already carries this platform's sci-fi/HUD
+visual identity — PBR metal emblems, a procedural `PMREMGenerator`
+environment, per-mount 2-D-canvas bloom (`CLAUDE.md` §4, 35 bloom/env
+references in the file). But `bg.js` deliberately injects the 670KB
+three.js-backed module "only where a mount exists" — meaning the other
+~199 pages get none of this platform's signature sci-fi identity at all,
+not even a lighter echo of it. The Ω-GVP layer's `.glass`/`.card` shimmer
+(`bg.js`, hover-only cursor-reactive light) is the closest thing those
+pages have, and it only activates on `:hover`.
+
+**Idea (visual design system, CSS-only, no new heavy module):** a single
+restrained accent — a slow, low-opacity conic-gradient "signal sweep" drawn
+as a `::before`/`::after` pseudo-element on `.glass`/`.card-edge` surfaces,
+GPU-composited (`transform`/`opacity` only, matching this platform's own
+motion rules), applied to exactly the handful of hero/header surfaces on
+pages that have *no* `data-omega-sculpture` mount — giving those pages a
+cheap, native-CSS echo of the sculpture pages' HUD identity instead of
+nothing. This is deliberately **not** proposed as a platform-wide sweep:
+the same restraint principle that shipped `.omega-spin-slow` as "one motif,
+three surfaces" (`#19`, Phase 1/2) applies here — a card-edge glow strip on
+every `.card` platform-wide would be exactly the "busy" outcome this
+platform's own brief already warned against, and Ω-GVP's existing
+hover-only shimmer already owns ambient card motion. Candidate surfaces:
+`dashboard.html`'s mission-bar, `treasury.html`'s hero, `intelligence.html`'s
+header — three high-traffic hub pages, matching `#19`'s own three-surface
+precedent, picked because they read as the platform's control-room/command
+identity most directly.
+
+**User benefit:** every free/approved member visiting these three
+high-traffic hubs — no tier gate, pure visual identity.
+
+**Nav placement:** none — visual design system only, no new page.
+
+**Data needs:** none. Pure CSS on existing markup; no new fetch, table, or
+RPC.
+
+**Source inspiration:** the 2026 sci-fi/command-center HUD consensus that
+these effects are now built with native CSS rather than pre-rendered video
+— "holographic radar grids... rendered natively using repeating
+conic-gradient()... atmospheric energy glows and translucent glass shields
+leverage backdrop-filter: blur()... rotating elements run on GPU compositor
+layers to protect Interaction to Next Paint" (aggregated 2026 CSS sci-fi/HUD
+search results, freefrontend.com's "3 CSS Sci-Fi Style Examples", HUD
+pattern surveys at scifiinterfaces.com); Bloomberg-terminal-style dark,
+dense, monospace-numeral command surfaces (OpenTerminal and
+bloomberg-terminal open-source projects, both explicitly "dark, dense,
+keyboard-driven" builds) as the tonal reference for which three pages
+should get this treatment first.

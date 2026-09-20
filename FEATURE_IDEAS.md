@@ -1482,12 +1482,18 @@ trusting a grep hit alone:
   logs are irregular, not daily; the module's own `nums()` filter (only
   finite values are plotted) means an entry-based series is honest here
   where a calendar-day series with invented zero-scores would not be.
-- **`social.html` — real data, explicitly not touched.** `social_broadcasts`
-  (Supabase, `created_at`) is fetched and real, but the page has no
-  existing KPI/stat tile of any kind to attach a mount to — adding one
-  would mean designing new tile layout, a different (and larger) decision
-  than wiring the shared module onto an existing tile. Left for a
-  dedicated pass.
+- **`social.html` — Wave 3, built.** The gap Wave 2 deferred: no existing
+  KPI tile to attach a mount to. Rather than leave it or invent numbers to
+  fill a tile, built the real tile — one `.kpi-row`/`.kpi` (the platform's
+  actual shared classes, not page-local CSS) added to the FEED tab, showing
+  `BROADCASTS THIS WEEK` and a 14-day sparkline, both computed from
+  `storedBroadcasts` (the same `social_broadcasts` fetch the page already
+  makes, `limit(30)`, RLS-scoped, no new query). "THIS WEEK" only
+  undercounts, never fabricates, in the edge case a member exceeds 30
+  broadcasts in 7 days. A day with zero broadcasts is a true 0 — the
+  stub-baseline render correctly shows a flat 14-zero line (14 finite
+  values, all real zeros, same behavior as `dashboard.html` in Wave 1),
+  not a hidden mount and not an invented number.
 - **Re-confirmed exclusions:** `achievements.html` (`unlockLog` exists but
   achievements unlock rarely, not daily — a 14-day window would sit below
   the module's own 2-finite-value floor for most members, correctly

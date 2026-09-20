@@ -19354,6 +19354,7 @@ python3 scripts/check-inline-js.py                 OK -- every inline <script> b
 ./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
 ```
 
+<<<<<<< HEAD
 ## Trend-sparkline pass Wave 1 shipped — gratitude.html + dashboard.html (FEATURE_IDEAS.md #27)
 
 Built the narrower of #27's two options: audited the ~25 pages (of 74
@@ -19392,5 +19393,51 @@ handles real variation end-to-end.
 
 ```
 python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+=======
+## Signature cinematic tier, Phase 2 shipped — dashboard.html + cosmos.html sigil mounts (FEATURE_IDEAS.md #19)
+
+Continued the design-system-scoped proposal whose Phase 1 shipped earlier (the
+`.omega-spin-slow` shared class + `profile.html`'s `#ph-sigil`). Read the actual
+target code before applying the class, rather than trusting the proposal's own
+description of what existed — this changed the plan for one of the two targets:
+
+- `dashboard.html`: mounted a real per-member `OmegaSigil` (`#dash-sigil`) in
+  the mission-bar next to the authority ring, using `pr.element`/`axis_a/b/c`/
+  `display_name` and the `auth`/`reached` values the boot flow already
+  computes — no extra fetch. `.omega-spin-slow` applies automatically via
+  `bg.js`'s existing generic `[class*="sigil"]` selector.
+- `cosmos.html`: the proposal named "the existing emblem ring" as this page's
+  target, meaning `#hero-wheel`. Reading `drawHeroWheel()` first showed it
+  already runs its own continuous per-frame rotation of the 12-sign ring via
+  `requestAnimationFrame` — applying `.omega-spin-slow` on top would have
+  stacked a second, unsynced CSS rotation on the same element, the "two
+  motion systems, one element" class this repo's motion rules exist to
+  prevent. Mounted a real sigil beside the wheel instead (`#cosmos-sigil`),
+  extending the `select()` this page's `boot()` already runs to include
+  `element,display_name` (2 more columns, same query) and computing gate via
+  this page's own local `GATES` threshold table (matching what `buildGates()`
+  already uses here) rather than importing `profile.html`'s numbers, which
+  already diverge from this page's — a separate, pre-existing issue, not
+  introduced or fixed here.
+- **Phase 3 turned out to already be shipped**, contradicting this
+  proposal's own text: `git log -S"data-omega-page-emblem" -- bg.js` shows
+  `omega-page-emblem.js` was registered in the `bg.js` loader on **2026-07-20**,
+  two months before the proposal was written claiming it as undone. Corrected
+  in `FEATURE_IDEAS.md` directly rather than re-shipping already-shipped work.
+
+Verified in a headless render (signed-in stub): real `<svg>` in both new
+mounts, `animation-name:spin-slow`/`60s` under normal motion, `none` under
+`prefers-reduced-motion:reduce` (control-checked against `profile.html`'s
+known-working `#ph-sigil`, since the harness's `S.launch({reducedMotion})`
+option isn't actually wired up in `session.js` — `page.emulateMedia()` is the
+one that works with this harness; noted here so the next session doesn't
+lose time on the same false negative). `#hero-wheel` confirmed to carry no
+spin class and keep its own independent animation. Zero page errors, zero
+console errors, no horizontal overflow on either page.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+node --check bg.js                   OK
+>>>>>>> origin/claude/visual-inspiration-proposals
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```

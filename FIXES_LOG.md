@@ -20064,3 +20064,44 @@ scan.js errors / overflow (intelligence.html)      0/1 each
 python3 scripts/check-inline-js.py                 OK
 python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## Interface-guidelines audit run for real, two genuine icon-only-control findings fixed; a third (map.html) checked and correctly excluded
+
+Ran `node .claude/skills/verify-in-browser/harness/scan.js guidelines` across all 204 pages per
+`.claude/skills/interface-guidelines/SKILL.md` (194 pages rendered; the rest redirect/dedupe by
+`location.pathname`, the skill's own documented gotcha). Two real, distinct findings, both fixed:
+
+- **`agent-network.html`**: the agent-detail panel's close button (`<button class="close-panel"
+  onclick="closePanel()">✕</button>`) had no accessible name — a bare "✕" glyph announces as
+  nothing or a generic glyph name to a screen reader. Added `aria-label="Close agent panel"`.
+- **`nutrition.html`**: all 8 water-cup toggles (`<div class="water-cup" onclick="toggleCup(i)">`,
+  a star-rating-style "set intake to N cups" control, confirmed by reading `toggleCup()`) rendered
+  with empty text and no accessible name. Added a dynamic `aria-label="Set water intake to N
+  cup(s)"` plus `aria-pressed` reflecting the real filled state, generated in the same template
+  string that already computes `filled` — no new state to keep in sync. Left `role`/`tabindex` to
+  `omega-a11y-controls.js`, which already adds them to any `[onclick]` div platform-wide and checks
+  `!el.getAttribute('aria-label')` first, so it won't clobber the new label — confirmed by reading
+  its source rather than assuming, and verified redundant if added in the template.
+
+**`map.html`'s finding checked and correctly excluded, not fixed.** Its "images without
+width/height" are Leaflet's own dynamically-created `.leaflet-tile` `<img>` elements (vendored,
+third-party). Each already gets an inline `style="width:256px;height:256px"` set synchronously by
+Leaflet at element creation, before the image loads — the actual CLS mechanism the guideline
+targets (an unsized image reflowing on load) cannot occur here regardless of the HTML attribute's
+presence. Patching vendored Leaflet internals to add the attribute for a guideline whose real
+failure mode is already absent would be editing third-party code for no measurable benefit.
+
+Verified in a real render: re-ran the guidelines scan on both fixed pages — the icon-only-control
+finding is gone on each, only the platform-wide, already-documented `transition:.2s` shorthand
+debt remains (deliberately not swept, per the skill's own note). Drove a real click on the nutrition
+water cups through Playwright's actual click (not a direct function call) and confirmed
+`aria-label`/`aria-pressed`/the visual `filled` class all update together correctly. Zero errors,
+zero overflow on both pages.
+
+```
+scan.js guidelines (agent-network.html, nutrition.html)   icon-only-control finding: gone
+real click test (nutrition water cups)                    aria-label/aria-pressed/filled stay in sync
+scan.js errors / overflow (both pages)                    0/2, 0/2
+python3 scripts/check-inline-js.py                        OK
+python3 scripts/audit.py                                  0 critical / 6 warnings (baseline, unchanged)
+```

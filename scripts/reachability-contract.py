@@ -61,21 +61,20 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SYSTEM_PAGES = {
     '404':                 'error state, reached by a bad URL not a link',
     'account':             'sign-in / sign-up, for signed-out visitors',
-    'enter':               'the site root (vercel.json rewrites / to /enter)',
+    'enter':               'the VAULT GATEWAY sign-in page, for signed-out visitors',
     'offline':             'service-worker fallback when the network is gone',
     'pending':             'holding page for an unapproved member',
     'reset':               'password reset, reached from an emailed link',
     'terms':               'terms acceptance, forced by bg.js before any page',
-    'index':               'no such file; / is rewritten to /enter',
+    # index.html IS the site root (a real file, no rewrite involved) --
+    # formerly omega-visual-home.html, renamed here in a prior fix
+    # (git mv omega-visual-home.html index.html, FIXES_LOG.md). That old
+    # path is now only a permanent redirect (vercel.json) to '/', which
+    # Vercel's edge intercepts before any page ever loads -- so it can
+    # never be a real reachability finding and does not belong in this set.
+    'index':               'the site root, a real file served at /',
     'verify-deployment':   'owner deployment diagnostic, not member navigation',
     'verify-modules':      'owner module-load diagnostic, not member navigation',
-    # Merged in 627de839 as a standalone visual gateway. It is a landing page
-    # like `enter`, not a destination inside the app: it links OUT to the realms
-    # (dashboard, cosmos, intelligence, media, marketplace, creator) and back to
-    # /enter.html, and nothing links in. Exempt on the same grounds as `enter`.
-    # Whether it should replace or sit beside /enter as the site root is a
-    # product decision, not a gate finding.
-    'omega-visual-home':   'standalone visual gateway, a landing page like enter',
     # Phase 5 autonomous systems dashboards — pending feature launch, not yet
     # wired into primary navigation; part of autonomous-insights suite
     'analytics-dashboard': 'Phase 5 autonomous analytics, pending nav wiring',

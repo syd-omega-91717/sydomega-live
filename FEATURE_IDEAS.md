@@ -1087,7 +1087,7 @@ Greek/zodiac/Olympian brand system (`CLAUDE.md` §4/§6) into two competing
 mythologies for the same underlying mechanic academy.html's certificates
 already cover. Not a "forgotten idea," a brand conflict.
 
-## 22. Seasonal & Elemental Theming Integration (IDENTITY / cross-cutting) — proposal
+## 22. Seasonal & Elemental Theming Integration (IDENTITY / cross-cutting) — SHIPPED
 
 **Concept:** Tie the platform's visual theme dynamically to the member's zodiac
 sign and element affiliation, with automatic color palette cycling tied to

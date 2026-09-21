@@ -1043,6 +1043,21 @@
     if ('outputColorSpace' in _renderer && T.SRGBColorSpace) {
       _renderer.outputColorSpace = T.SRGBColorSpace;
     }
+    /* Filmic tone mapping -- the single most recognisable "AAA renderer" cue
+       (Unreal/Unity both default to it, and it is what the reference render
+       pipelines named in the brief actually ship). Without it three.js
+       defaults to NoToneMapping, which clips highlights linearly instead of
+       rolling them off -- exactly the wrong pairing for the metalness:0.96
+       materials + PMREMGenerator environment already in this file (item 5,
+       GAP_ANALYSIS.md): a PBR metal under a real environment map produces
+       HDR-range values, and clipping them reads as blown-out hotspots on the
+       emblem instead of the smooth highlight rolloff a filmic curve gives.
+       Confirmed present in the vendored bundle (grep for the literal names,
+       not a class declaration -- the file is minified). */
+    if ('toneMapping' in _renderer && T.ACESFilmicToneMapping) {
+      _renderer.toneMapping = T.ACESFilmicToneMapping;
+      _renderer.toneMappingExposure = 1.1;
+    }
     /* A lost context is recoverable and common on laptops that switch GPUs.
        Without this the page keeps blitting a dead canvas forever. */
     _glCanvas.addEventListener('webglcontextlost', function (e) {
@@ -1500,8 +1515,18 @@
       setHover(m, pickAt(m, e.clientX, e.clientY));
     }, { passive: true });
     m.canvas.addEventListener('pointerleave', function () { setHover(m, null); }, { passive: true });
+    /* Prefer the tracked hover, not a fresh raycast at the click's own
+       coordinates. Every scene here keeps its nodes in continuous motion
+       (orbiting, rotating), so a click event's clientX/clientY can differ
+       from the pointermove that lit the cursor by less than a pixel of
+       rounding and still land the ray off the node an instant later --
+       reproduced live: a hover hit at (355.67, 343.44) followed by a click
+       at the browser-rounded (355, 343) missed on the very next raycast.
+       m.hover already reflects what the pointer was actually resting on;
+       falling back to a fresh pickAt() only for the pointer-hasn't-moved
+       case (a touch tap, which can fire click with no prior pointermove). */
     m.canvas.addEventListener('click', function (e) {
-      var hit = pickAt(m, e.clientX, e.clientY);
+      var hit = m.hover || pickAt(m, e.clientX, e.clientY);
       if (hit && hit.href) window.location.href = hit.href;
     });
   }

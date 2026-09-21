@@ -128,7 +128,7 @@
         const response = await functionFetch('/functions/v1/graphify-ai-query', { query_type: 'anomalies' });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
-        const html = `<div class="card" style="background: rgba(139, 0, 0, 0.1); border-left: 3px solid var(--crim);"><div class="card-title">Anomalies Detected</div><div style="margin: 1rem 0;"><p>${esc(result.insights || '')}</p><pre style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.75rem;">${esc(JSON.stringify(result, null, 2))}</pre></div></div>`;
+        const html = `<div class="card card-edge" style="background: rgba(139, 0, 0, 0.1); --card-accent: var(--crim);"><div class="card-title">Anomalies Detected</div><div style="margin: 1rem 0;"><p>${esc(result.insights || '')}</p><pre style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.75rem;">${esc(JSON.stringify(result, null, 2))}</pre></div></div>`;
         document.getElementById('anomaly-results').innerHTML = html;
       } catch (err) { console.error('Anomaly detection error:', err); alert(err.message); }
     };

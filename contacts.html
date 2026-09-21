@@ -68,7 +68,7 @@ canvas{display:block;width:100%;max-width:500px;margin:0 auto}
       <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL CONTACTS</div></div>
       <div class="stat"><div class="stat-val" id="st-vip">0</div><div class="stat-lbl">VIP / CLOSE</div></div>
       <div class="stat"><div class="stat-val" id="st-overdue" style="color:var(--red)">0</div><div class="stat-lbl">OVERDUE TOUCHES</div></div>
-      <div class="stat"><div class="stat-val" id="st-this-month">0</div><div class="stat-lbl">CONTACTED THIS MONTH</div></div>
+      <div class="stat"><div class="stat-val" id="st-this-month">0</div><div class="stat-lbl">CONTACTED THIS MONTH</div><div data-omega-spark id="contacts-touch-spark" data-spark-label="TOUCHES LOGGED/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div>
     </div>
 
     <div class="tab-row">
@@ -383,11 +383,27 @@ function updateStats(){
   document.getElementById('st-overdue').textContent=contacts.filter(function(c){return isDue(c);}).length;
   var mo=new Date().toISOString().slice(0,7);
   document.getElementById('st-this-month').textContent=new Set(interactions.filter(function(i){return i.date.startsWith(mo);}).map(function(i){return i.contactId;})).size;
+  /* FEATURE_IDEAS.md #27 Wave 2: total interactions logged per day, last 14
+     days -- same `interactions` array already loaded, no new query. A
+     different cut than st-this-month (event count, not unique contacts),
+     but both real; a day with no logged touch is a true 0. */
+  var spEl=document.getElementById('contacts-touch-spark');
+  if(spEl){
+    var series=[];
+    var base=new Date();
+    for(var i=13;i>=0;i--){
+      var dd=new Date(base);dd.setDate(base.getDate()-i);
+      var key=dd.toISOString().slice(0,10);
+      series.push(interactions.filter(function(x){return x.date===key;}).length);
+    }
+    spEl.setAttribute('data-spark-values', JSON.stringify(series));
+  }
 }
 
 updateStats();
 renderContacts();
 </script>
+<script src="/omega-sparkline.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

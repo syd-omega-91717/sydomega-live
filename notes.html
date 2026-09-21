@@ -226,7 +226,11 @@
 <div data-page-emblem="notes" style="margin:20px auto 0"></div>
 </div>
 
-<script>
+<script type="module">
+import{createClient}from'/vendor/supabase-js.js';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+var UID=null;
+
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -245,9 +249,16 @@ var activeCatFilter='all';
 var CAT_COLORS={insight:'#00E5FF',idea:'#9B6BF0',reference:'#FFD700',strategy:'#FF4444',
   reflection:'#4CAF50',summary:'#FF9800',quote:'#E91E63',system:'#00BCD4',research:'#8BC34A',other:'#666'};
 
-function load(){try{notes=JSON.parse(localStorage.getItem('omega_notes')||'[]');}catch(e){notes=[];}}
-function save(){localStorage.setItem('omega_notes',JSON.stringify(notes));}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function toast(msg){window.omegaToast?window.omegaToast(msg,'error'):alert(msg);}
+
+async function loadAll(){
+  var{data,error}=await sb.from('knowledge_documents').select('*').order('updated_at',{ascending:false});
+  if(error){toast('Could not load notes ('+error.message+')');notes=[];return;}
+  notes=(data||[]).map(function(n){
+    return{id:n.id,title:n.title,body:n.body||'',cat:n.category||'other',tags:n.tags||[],
+      pinned:!!n.pinned,created:n.created_at,updated:n.updated_at};
+  });
+}
 
 function addTag(){
   var v=document.getElementById('tag-input').value.trim().toLowerCase().replace(/\s+/g,'-');
@@ -270,21 +281,30 @@ function ins(before,after){
   ta.focus();ta.selectionStart=s+before.length;ta.selectionEnd=s+before.length+sel.length;
 }
 
-function saveNote(){
+async function saveNote(){
   var title=document.getElementById('note-title').value.trim();
   var body=document.getElementById('note-body').value.trim();
   var cat=document.getElementById('note-cat').value;
   if(!title){alert('Add a title.');return;}
   if(!body){alert('Write something.');return;}
+  var tags=[...currentTags];
   if(editingId){
+    var{error}=await sb.from('knowledge_documents').update({
+      title:title,body:body,category:cat,tags:tags,updated_at:new Date().toISOString()
+    }).eq('id',editingId);
+    if(error){toast('Could not save note ('+error.message+')');return;}
     var n=notes.find(function(x){return x.id===editingId;});
-    if(n){n.title=title;n.body=body;n.cat=cat;n.tags=[...currentTags];n.updated=new Date().toISOString();}
+    if(n){n.title=title;n.body=body;n.cat=cat;n.tags=tags;n.updated=new Date().toISOString();}
     editingId=null;
   } else {
-    notes.unshift({id:uid(),title:title,body:body,cat:cat,tags:[...currentTags],pinned:false,
-      created:new Date().toISOString(),updated:new Date().toISOString()});
+    var{data:inserted,error:insErr}=await sb.from('knowledge_documents').insert({
+      author_id:UID,title:title,body:body,category:cat,tags:tags,pinned:false,status:'draft'
+    }).select().maybeSingle();
+    if(insErr||!inserted){toast('Could not save note ('+(insErr?insErr.message:'unknown error')+')');return;}
+    notes.unshift({id:inserted.id,title:title,body:body,cat:cat,tags:tags,pinned:false,
+      created:inserted.created_at,updated:inserted.updated_at});
   }
-  save();clearForm();
+  clearForm();
   document.getElementById('write-msg').textContent='NOTE SAVED · '+new Date().toLocaleTimeString();
   setTimeout(function(){document.getElementById('write-msg').textContent='';},2500);
 }
@@ -299,7 +319,6 @@ function clearForm(){
 function wordCount(t){return t.trim().split(/\s+/).filter(Boolean).length;}
 
 function renderStats(){
-  load();
   var pinned=notes.filter(function(n){return n.pinned;}).length;
   var allTags=new Set(notes.flatMap(function(n){return n.tags;}));
   var words=notes.reduce(function(s,n){return s+wordCount(n.body);},0);
@@ -354,8 +373,21 @@ function noteCard(n){
     +'</div></div>';
 }
 
-function togglePin(e,id){e.stopPropagation();var n=notes.find(function(x){return x.id===id;});if(n){n.pinned=!n.pinned;save();renderNotes();}}
-function delNote(e,id){e.stopPropagation();if(!confirm('Delete this note?'))return;notes=notes.filter(function(x){return x.id!==id;});save();renderNotes();document.getElementById('view-area').innerHTML='';}
+async function togglePin(e,id){
+  e.stopPropagation();
+  var n=notes.find(function(x){return x.id===id;});if(!n)return;
+  var next=!n.pinned;
+  var{error}=await sb.from('knowledge_documents').update({pinned:next}).eq('id',id);
+  if(error){toast('Could not update pin ('+error.message+')');return;}
+  n.pinned=next;renderNotes();
+}
+async function delNote(e,id){
+  e.stopPropagation();if(!confirm('Delete this note?'))return;
+  var{error}=await sb.from('knowledge_documents').delete().eq('id',id);
+  if(error){toast('Could not delete note ('+error.message+')');return;}
+  notes=notes.filter(function(x){return x.id!==id;});
+  renderNotes();document.getElementById('view-area').innerHTML='';
+}
 
 function viewNote(id){
   var n=notes.find(function(x){return x.id===id;});if(!n)return;
@@ -435,8 +467,32 @@ function inline(s){
   return s;
 }
 
-load();
-renderNotes();
+(async function boot(){
+  var{data:sessData}=await sb.auth.getSession();
+  var session=sessData&&sessData.session;
+  if(!session){window.location.href='/account.html';return;}
+  UID=session.user.id;
+  var{data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+  var profile=pr||{};
+  if(!profile.is_owner&&!profile.access_approved){window.location.href='/pending.html';return;}
+  if(window.__omegaPopulate)window.__omegaPopulate(profile,session.user);
+  await loadAll();
+  renderNotes();
+})();
+
+window.switchTab=switchTab;
+window.ins=ins;
+window.addTag=addTag;
+window.removeTag=removeTag;
+window.saveNote=saveNote;
+window.clearForm=clearForm;
+window.runSearch=runSearch;
+window.setCatFilter=setCatFilter;
+window.viewNote=viewNote;
+window.delNote=delNote;
+window.togglePin=togglePin;
+window.filterByTag=filterByTag;
+window.editNote=editNote;
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

@@ -156,6 +156,12 @@ a{color:inherit;text-decoration:none}
       <div class="t">COSMOS HUB<small>AI AGENTS . HOROSCOPE . 9 ELEMENTS . 12 GATES . PANTHEONS <span data-canon-lattice="twelve"></span></small> &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div>
       <canvas id="cos-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
+
+    <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COSMOS") -->
+    <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
+         data-sculpt-accent="#9B6BF0" data-sculpt-bloom="off"
+         data-sculpt-label="The Omega signet, tinted to the Cosmos realm"></div>
+
     <!-- TAB NAVIGATION -->
     <div class="tab-nav" id="tab-nav">
       <div class="tab-btn active" data-tab="agents"><div class="tb-icon" style="color:#00E5FF">&#x25C9;</div><div class="tb-label" data-i18n="cosmos_tab_agents">&#9670; AGENTS</div></div>
@@ -185,8 +191,9 @@ a{color:inherit;text-decoration:none}
         <div class="ht-desc" id="ht-desc">The cosmos has been tracking your matrix coordinates since before you drew your first breath. Every planetary position at your moment of birth locked a code into your sovereign cosmology. That code is evolving with you, right now.</div>
         <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:monospace;font-size:12px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
       </div>
-      <div class="hero-canvas-wrap">
+      <div class="hero-canvas-wrap" style="display:flex;flex-direction:column;align-items:center;gap:8px">
         <canvas id="hero-wheel" width="320" height="320" style="width:160px;height:160px"></canvas>
+        <div id="cosmos-sigil" class="sigil-mount" data-sigil-mount style="width:36px;height:36px" role="img" aria-label="Sovereign sigil — procedurally generated from your element, axis values, and gate"></div>
       </div>
     </div>
 
@@ -593,10 +600,31 @@ function fillSignEmblem(el, sign){
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
-  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c,element,display_name').eq('id',sess.user.id).maybeSingle();
   const sign=pr.data?.sign||'Virgo';
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
   const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+  /* Signature cinematic tier Phase 2 (FEATURE_IDEAS.md #19): same sigil as
+     profile.html/dashboard.html, mounted directly using data already loaded
+     above, no extra fetch. Gate uses this page's own local GATES threshold
+     table (buildGates' own convention) rather than importing profile.html's
+     numbers, since the two already diverge and reconciling them is a
+     separate, pre-existing issue -- not introduced or fixed here.
+     .omega-spin-slow applies automatically via bg.js's generic
+     [class*="sigil"] selector. Deliberately NOT applied to #hero-wheel: that
+     canvas already runs its own continuous per-frame rotation of the 12-sign
+     ring (see drawHeroWheel), and stacking a second, unsynced CSS rotation
+     on top of it would fight the existing motion rather than enhance it. */
+  (function mountCosmosSigil(){
+    const el=document.getElementById('cosmos-sigil');
+    if(!el) return;
+    if(!window.OmegaSigil){setTimeout(mountCosmosSigil,300);return;}
+    const gate=GATES.filter(g=>auth>=g.auth).length||1;
+    window.OmegaSigil.mount(el,{
+      auth:auth,elem:pr.data?.element||'Void',axisA:a,axisB:b,axisC:c,
+      gate:gate,name:pr.data?.display_name||'Sovereign',size:36
+    });
+  })();
   window.__memberSign=sign.toUpperCase();
   window.__agentSignMap={SENTINEL:'Aries',MERCHANT:'Taurus',SCOUT:'Gemini',WARDEN:'Cancer',SOVEREIGN:'Leo',AUDITOR:'Virgo',PROXY:'Libra',ORACLE:'Scorpio',BEACON:'Sagittarius',ANALYST:'Capricorn',TUTOR:'Aquarius',HISTORIAN:'Pisces'};
   const SIGN_TO_AGENT={Aries:'SENTINEL',Taurus:'MERCHANT',Gemini:'SCOUT',Cancer:'WARDEN',Leo:'SOVEREIGN',Virgo:'AUDITOR',Libra:'PROXY',Scorpio:'ORACLE',Sagittarius:'BEACON',Capricorn:'ANALYST',Aquarius:'TUTOR',Pisces:'HISTORIAN'};

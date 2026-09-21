@@ -160,7 +160,7 @@ document.getElementById('p-go').addEventListener('click',async function(){
   if(ins.error){btn.disabled=false;showMsg(false,'Could not commit ('+(ins.error.code||ins.error.message||'')+').');return;}
   var axisMsg='';
   try{var rpc=await sb.rpc('complete_task',{p_task_name:'first-publication',p_task_type:'contribution',p_axis_type:'c',p_description:'First Publication',p_points:0.25});if(rpc.data&&rpc.data.applied)axisMsg=' Your Contribution axis advanced +0.25.';}catch(e){}
-  if(window.OmegaCelebrate){var pr=(await sb.from('profiles').select('membership_tier').eq('id',userId).maybeSingle()).data||{};var tier=pr.membership_tier||1;document.dispatchEvent(new CustomEvent('omega:social-milestone',{detail:{type:'publish',tier:tier,metadata:{kind:kind,title_length:title.length,file_attached:!!filePath}}});}
+  if(window.OmegaCelebrate){var pr=(await sb.from('profiles').select('membership_tier').eq('id',userId).maybeSingle()).data||{};var tier=pr.membership_tier||1;document.dispatchEvent(new CustomEvent('omega:social-milestone',{detail:{type:'publish',tier:tier,metadata:{kind:kind,title_length:title.length,file_attached:!!filePath}}}));}
   btn.disabled=false;showMsg(true,'Committed to your archive.'+axisMsg);
   document.getElementById('p-title').value='';document.getElementById('p-body').value='';if(fEl)fEl.value='';
   await loadArchive();setTab('archive');

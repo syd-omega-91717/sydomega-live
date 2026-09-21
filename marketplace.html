@@ -15,6 +15,9 @@
 .mkt-price{font-family:var(--D);font-size:18px;color:var(--gold)}
 .mkt-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
 .mkt-mine{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);border:1px solid rgba(0,229,255,.3);padding:2px 6px}
+.mkt-fav{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--line);color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:4px 7px;border-radius:2px}
+.mkt-fav:hover{border-color:var(--gold);color:var(--gold)}
+.mkt-fav.on{color:var(--gold);border-color:var(--gold)}
 .form-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
 .form-input{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
@@ -35,12 +38,18 @@
   <button class="tab-btn active" onclick="setTab('listings')">LISTINGS</button>
   <button class="tab-btn" onclick="setTab('sell')">SELL</button>
   <button class="tab-btn" onclick="setTab('mine')">MY LISTINGS</button>
+  <button class="tab-btn" onclick="setTab('favorites')">FAVORITES</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
 <div class="tab-panel active" id="tab-listings">
   <div class="sechead">OPEN LISTINGS &middot; <span id="count" style="color:var(--muted)"></span></div>
   <div class="mkt-grid" id="grid" data-loading></div>
+</div>
+
+<div class="tab-panel" id="tab-favorites">
+  <div class="sechead">MY FAVORITES</div>
+  <div class="mkt-grid" id="fav-grid" data-loading></div>
 </div>
 
 <div class="tab-panel" id="tab-sell">
@@ -93,21 +102,54 @@ var uid=null;
 
 window.setTab=setTab;
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['listings','sell','mine','science'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['listings','sell','mine','favorites','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='favorites')loadFavorites();
 }
 function esc(s){return(s||'').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});}
 
+var favSet=new Set();
+
 function cardHtml(it,mine){
-  return '<div class="mkt-card card">'
-    +(mine?'<div class="mkt-mine">MINE</div>':'')
+  var faved=favSet.has(it.id);
+  return '<div class="mkt-card card" data-listing-id="'+esc(it.id)+'">'
+    +(mine?'<div class="mkt-mine">MINE</div>'
+      :'<button class="mkt-fav'+(faved?' on':'')+'" data-fav-btn aria-label="'+(faved?'Remove from favorites':'Add to favorites')+'" onclick="toggleFavorite(\''+it.id+'\',this)">'+(faved?'★':'☆')+'</button>')
     +'<div class="mkt-kind">'+esc(it.kind||'OTHER')+'</div>'
     +'<div class="mkt-title">'+esc(it.title)+'</div>'
     +'<div class="mkt-desc">'+esc((it.description||'').substr(0,120))+'</div>'
     +'<div class="mkt-price">'+(it.price_omega?'&#937;'+fmt(it.price_omega):'FREE')+'</div>'
     +'<div class="mkt-meta">'+new Date(it.created_at).toLocaleDateString()+'</div>'
     +'</div>';
+}
+
+async function loadFavoriteIds(){
+  var r=await sb.from('marketplace_favorites').select('listing_id').eq('profile_id',uid);
+  favSet=new Set((r.data||[]).map(function(f){return f.listing_id;}));
+}
+
+window.toggleFavorite=toggleFavorite;
+async function toggleFavorite(listingId,btn){
+  var isOn=favSet.has(listingId);
+  if(isOn){
+    var{error}=await sb.from('marketplace_favorites').delete().eq('listing_id',listingId).eq('profile_id',uid);
+    if(error){window.omegaToast&&window.omegaToast('Could not remove favorite ('+error.message+')','error');return;}
+    favSet.delete(listingId);
+  }else{
+    var{error:insErr}=await sb.from('marketplace_favorites').insert({listing_id:listingId,profile_id:uid});
+    if(insErr){window.omegaToast&&window.omegaToast('Could not favorite ('+insErr.message+')','error');return;}
+    favSet.add(listingId);
+  }
+  document.querySelectorAll('[data-fav-btn]').forEach(function(b){
+    var card=b.closest('[data-listing-id]');
+    if(!card)return;
+    var on=favSet.has(card.getAttribute('data-listing-id'));
+    b.classList.toggle('on',on);
+    b.textContent=on?'★':'☆';
+    b.setAttribute('aria-label',on?'Remove from favorites':'Add to favorites');
+  });
+  if(document.getElementById('tab-favorites').classList.contains('active'))loadFavorites();
 }
 
 async function load(){
@@ -125,6 +167,15 @@ async function loadMine(){
   var rows=r.data||[];
   if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.</div>';return;}
   grid.innerHTML=rows.map(function(it){return cardHtml(it,true);}).join('');
+}
+
+async function loadFavorites(){
+  var grid=document.getElementById('fav-grid');
+  var r=await sb.from('marketplace_favorites').select('marketplace_listings(*)').eq('profile_id',uid).order('created_at',{ascending:false});
+  if(r.error){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">COULD NOT LOAD FAVORITES ('+esc(r.error.message)+')</div>';return;}
+  var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);
+  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.</div>';return;}
+  grid.innerHTML=rows.map(function(it){return cardHtml(it,it.seller_id===uid);}).join('');
 }
 
 document.getElementById('btn-pub').addEventListener('click',async function(){
@@ -159,6 +210,7 @@ async function boot(){
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  await loadFavoriteIds();
   await load();loadMine();
 }
 boot();

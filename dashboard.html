@@ -106,8 +106,8 @@
   <main class="main" role="main" id="main-content">
 
     <!-- MISSION BAR -->
-    <div class="mission-bar">
-      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+    <div class="mission-bar omega-signal-sweep">
+      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div id="dash-sigil" class="sigil-mount" data-sigil-mount style="width:36px;height:36px;flex-shrink:0" role="img" aria-label="Sovereign sigil — procedurally generated from your element, axis values, and gate"></div></div>
       <div class="mb-meta">
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
@@ -116,6 +116,11 @@
         <div class="mb-item">PMI <span style="color:rgba(63,178,127,.5)" id="mb-pmi">87</span></div>
       </div>
     </div>
+
+    <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COMMAND") -->
+    <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
+         data-sculpt-accent="#C9A84C" data-sculpt-bloom="off"
+         data-sculpt-label="The Omega signet, tinted to the Command realm"></div>
 
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
@@ -146,7 +151,7 @@
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
-          <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='/evolution.html';}" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
+          <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='/evolution.html';}" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div><div data-omega-spark id="dash-tasks-spark" data-spark-label="MY TASKS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-members" data-live-members data-countup>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">♓︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-online" data-countup>--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.4s">♈︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-tasks" data-countup>--</div><div class="kpi-l" data-i18n="tasks_today">TASKS TODAY</div><div class="kpi-sub" data-i18n="axis_increments">AXIS INCREMENTS</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.6s">♎︎</div></div></div>
@@ -266,7 +271,9 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 204 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 205 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
+        <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
         <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1s">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
@@ -318,7 +325,7 @@
           <div class="cmd-card card card-edge" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.6s">⊕</span><span data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS</span></span> <span class="sechead-action" onclick="location.href='/sovereign-ai.html'" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
-        <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
+        <div data-omega-constellation="agents" data-cn-title="THE TWELVE" data-cn-sub="AGENT NETWORK" style="margin-bottom:16px"></div>
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:2.2s">⌘</span><span data-i18n="dash_admin_actions">ADMIN ACTIONS</span></span> &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
           <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
@@ -377,7 +384,7 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 204 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 205 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
@@ -404,7 +411,7 @@ function setTab(name){
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
   if(name==='personal'){renderPersonalOS();mountDashRealm();}
-  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);loadAILayer();},100);}
+  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);},100);}
 }
 
 /* ── SYSTEM GALAXY CANVAS ─────────────────────────────────── */
@@ -624,24 +631,6 @@ async function askAI(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('ai-query'))askAI();});
 
-function loadAILayer(){
-  /* Load agent quick grid */
-  var qg=document.getElementById('agent-quick');
-  if(!qg||qg.dataset.loaded) return;
-  qg.dataset.loaded='1';
-  fetch('/omega-agents.json').then(function(r){return r.json();}).then(function(data){
-    var agents=data.agents||[];
-    var EL={'fire':'#E25800','water':'#0088FF','wind':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'metal':(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'),'sand':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
-    qg.innerHTML=agents.map(function(ag){
-      var col=EL[(ag.element||'fire').toLowerCase()]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
-      return '<div style="border:1px solid rgba(201,168,76,.15);padding:10px;border-radius:2px;cursor:pointer;border-left:2px solid '+col+';transition:.15s" onclick="location.href=\'/agents.html\'" onmouseover="this.style.background=\'rgba(201,168,76,.04)\'" onmouseout="this.style.background=\'none\'">'
-        +'<div style="font-family:var(--D);font-size:12px;color:'+col+'">'+ag.name+'</div>'
-        +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
-        +'</div>';
-    }).join('');
-  }).catch(function(){qg.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">Load agents.html to view all 12 agents.</div>';});
-}
-
 /* ── PERSONAL OS RENDERER ───────────────────────────────────── */
 function today(){ return new Date().toISOString().slice(0,10); }
 function daysSince(d){ if(!d) return 999; return Math.round((Date.now()-new Date(d).getTime())/864e5); }
@@ -839,20 +828,88 @@ function renderPlatformSections(){
       {n:'Automation',u:'/automation.html'},{n:'Queue',u:'/queue.html'},{n:'Architect',u:'/architect.html'},
       {n:'Ops',u:'/ops.html'},{n:'Lab',u:'/lab.html'},{n:'Research',u:'/research.html'}]},
   ];
-  el.innerHTML=SECTIONS.map(function(sec){
-    return '<div style="margin-bottom:20px">'
-      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:'+sec.col+';padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px">'+sec.name+'</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+  /* Collapse state is per-member, real personalization: which of the 15
+     sections stay open is remembered across visits rather than always
+     showing all 133 chips at once. Defaults to open (unchanged behavior)
+     for anyone with no stored preference yet. */
+  var COLLAPSE_KEY='omega_platform_sections_collapsed';
+  function getCollapsed(){try{return JSON.parse(localStorage.getItem(COLLAPSE_KEY)||'{}');}catch(e){return {};}}
+  function setCollapsed(map){try{localStorage.setItem(COLLAPSE_KEY,JSON.stringify(map));}catch(e){}}
+  var collapsed=getCollapsed();
+
+  el.innerHTML=SECTIONS.map(function(sec,si){
+    var isCollapsed=!!collapsed[sec.name];
+    return '<div class="pf-section" data-sec="'+si+'" style="margin-bottom:14px">'
+      +'<button type="button" class="pf-sechead" data-sec="'+si+'" onclick="togglePlatformSection('+si+')" '
+        +'aria-expanded="'+(!isCollapsed)+'" '
+        +'style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;border-bottom:1px solid var(--line);'
+        +'padding:0 0 6px;margin-bottom:8px;cursor:pointer;text-align:left;font-family:var(--M);font-size:12px;letter-spacing:3px;color:'+sec.col+'">'
+        +'<span class="pf-caret" style="display:inline-block;transition:transform .15s;transform:rotate('+(isCollapsed?'-90':'0')+'deg)">&#9662;</span>'
+        +'<span>'+sec.name+'</span>'
+        +'<span style="margin-left:auto;color:var(--muted);letter-spacing:1px">'+sec.pages.length+'</span>'
+        +'</button>'
+      +'<div class="pf-body" data-sec="'+si+'" style="display:'+(isCollapsed?'none':'flex')+';flex-wrap:wrap;gap:6px">'
       +sec.pages.map(function(p){
-        return '<a href="'+p.u+'" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
+        return '<a href="'+p.u+'" class="pf-chip" data-name="'+p.n.toLowerCase()+'" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=\''+sec.col+'\';this.style.borderColor=\''+sec.col+'\'" onmouseout="this.style.color=\'var(--muted)\';this.style.borderColor=\'var(--line)\'">'+p.n+'</a>';
       }).join('')
       +'</div></div>';
   }).join('');
+
+  window.togglePlatformSection=function(si){
+    var map=getCollapsed();
+    var body=el.querySelector('.pf-body[data-sec="'+si+'"]');
+    var btn=el.querySelector('.pf-sechead[data-sec="'+si+'"]');
+    var caret=btn.querySelector('.pf-caret');
+    var nowCollapsed=body.style.display!=='none';
+    body.style.display=nowCollapsed?'none':'flex';
+    caret.style.transform='rotate('+(nowCollapsed?'-90':'0')+'deg)';
+    btn.setAttribute('aria-expanded',String(!nowCollapsed));
+    map[SECTIONS[si].name]=nowCollapsed;
+    setCollapsed(map);
+  };
+
+  /* Real-time filter, not a fake placeholder: hides non-matching chips and
+     whole sections with zero matches, and force-expands sections that DO
+     match (a member's chosen collapse state resumes once the search is
+     cleared, restored from the same localStorage map rather than lost). */
+  window.filterPlatformSections=function(q){
+    q=(q||'').trim().toLowerCase();
+    var anyVisible=false;
+    var map=getCollapsed();
+    el.querySelectorAll('.pf-section').forEach(function(secEl){
+      var si=secEl.getAttribute('data-sec');
+      var body=secEl.querySelector('.pf-body');
+      var btn=secEl.querySelector('.pf-sechead');
+      var caret=btn.querySelector('.pf-caret');
+      var chips=secEl.querySelectorAll('.pf-chip');
+      var matches=0;
+      chips.forEach(function(chip){
+        var hit=!q||chip.getAttribute('data-name').indexOf(q)!==-1;
+        chip.style.display=hit?'':'none';
+        if(hit)matches++;
+      });
+      var show=!q||matches>0;
+      secEl.style.display=show?'':'none';
+      if(show)anyVisible=true;
+      if(q){
+        body.style.display=matches>0?'flex':'none';
+        caret.style.transform='rotate('+(matches>0?'0':'-90')+'deg)';
+      } else {
+        var wasCollapsed=!!map[SECTIONS[si].name];
+        body.style.display=wasCollapsed?'none':'flex';
+        caret.style.transform='rotate('+(wasCollapsed?'-90':'0')+'deg)';
+      }
+    });
+    var empty=document.getElementById('platform-search-empty');
+    if(empty)empty.style.display=(q&&!anyVisible)?'block':'none';
+  };
 }
 
 window.setTab=setTab;
 window.askAI=askAI;
 </script>
+<script src="/omega-sparkline.js" defer></script>
+<script src="/omega-constellation.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
@@ -934,6 +991,21 @@ function sid(id,v){
     var reached=GATES.filter(function(g){return auth>=g;}).length;
     sid('k-gates',reached+'/12');
 
+    /* Signature cinematic tier Phase 2 (FEATURE_IDEAS.md #19): same sigil as
+       profile.html's #ph-sigil, mounted directly (not via omega:user-loaded --
+       see FEATURE_IDEAS.md #10) using data already loaded above, no extra fetch.
+       .omega-spin-slow applies automatically via bg.js's generic
+       [class*="sigil"] selector -- no class needed here. */
+    (function mountDashSigil(){
+      var el=document.getElementById('dash-sigil');
+      if(!el) return;
+      if(!window.OmegaSigil){setTimeout(mountDashSigil,300);return;}
+      window.OmegaSigil.mount(el,{
+        auth:auth,elem:pr.element||'Void',axisA:a,axisB:b,axisC:c,
+        gate:Math.max(1,reached),name:pr.display_name||'Sovereign',size:36
+      });
+    })();
+
     /* RANK / XP HUD -- same auth/gi/GATES data as above, no separate fetch */
     sid('hud-rank-name',gateName);
     sid('hud-gates-reached',reached);
@@ -973,6 +1045,20 @@ function sid(id,v){
       var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
       var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
       renderContributionHeatmap(hm.data||[]);
+      /* FEATURE_IDEAS.md #27 Wave 1: same fetch, no second query. Real
+         per-day counts from this member's own completions, last 14 days;
+         a day with none is a true 0. */
+      var tsEl=document.getElementById('dash-tasks-spark');
+      if(tsEl){
+        var byDay={};
+        (hm.data||[]).forEach(function(r){var d=(r.completed_at||'').slice(0,10);if(d)byDay[d]=(byDay[d]||0)+1;});
+        var series=[];
+        for(var i=13;i>=0;i--){
+          var dd=new Date(Date.now()-i*864e5).toISOString().slice(0,10);
+          series.push(byDay[dd]||0);
+        }
+        tsEl.setAttribute('data-spark-values',JSON.stringify(series));
+      }
     }catch(e){}
     try{
       var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));

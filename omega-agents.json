@@ -14,7 +14,8 @@
     "protection",
     "threats",
     "privacy"
-   ]
+   ],
+   "href": "/privacy.html"
   },
   {
    "name": "Merchant",
@@ -30,7 +31,8 @@
     "value",
     "trade",
     "marketplace"
-   ]
+   ],
+   "href": "/vault.html#reserve"
   },
   {
    "name": "Scout",
@@ -46,7 +48,8 @@
     "exploration",
     "news",
     "signals"
-   ]
+   ],
+   "href": "/search.html"
   },
   {
    "name": "Warden",
@@ -62,7 +65,8 @@
     "heritage",
     "bloodline",
     "safety"
-   ]
+   ],
+   "href": "/family.html"
   },
   {
    "name": "Sovereign",
@@ -78,7 +82,8 @@
     "governance",
     "overview",
     "decisions"
-   ]
+   ],
+   "href": "/command.html"
   },
   {
    "name": "Auditor",
@@ -94,7 +99,8 @@
     "records",
     "accuracy",
     "audit"
-   ]
+   ],
+   "href": "/compliance.html"
   },
   {
    "name": "Proxy",
@@ -110,7 +116,8 @@
     "contracts",
     "balance",
     "protocols"
-   ]
+   ],
+   "href": "/contracts.html"
   },
   {
    "name": "Oracle",
@@ -126,7 +133,8 @@
     "transformation",
     "depth",
     "foresight"
-   ]
+   ],
+   "href": "/prediction.html"
   },
   {
    "name": "Beacon",
@@ -142,7 +150,8 @@
     "welcome",
     "vision",
     "scaling"
-   ]
+   ],
+   "href": "/vision.html"
   },
   {
    "name": "Analyst",
@@ -158,7 +167,8 @@
     "intelligence",
     "data",
     "investment"
-   ]
+   ],
+   "href": "/intelligence.html"
   },
   {
    "name": "Tutor",
@@ -174,7 +184,8 @@
     "learning",
     "knowledge",
     "craft"
-   ]
+   ],
+   "href": "/academy.html"
   },
   {
    "name": "Historian",
@@ -190,7 +201,8 @@
     "lore",
     "heritage",
     "history"
-   ]
+   ],
+   "href": "/family.html#heritage"
   }
  ],
  "by_sign": {

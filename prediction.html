@@ -46,7 +46,10 @@
 <div class="tab-panel" id="tab-oracle">
   <div class="sechead">ORACLE QUERY ENGINE &mdash; ASK THE FUTURE</div>
   <div class="oracle-box">
-    <p style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px">The Oracle processes your query using your sovereign standing as context. It operates through the server-side edge function and does not expose any API key in client code. Queries are answered in the context of your sign, authority score, and tier.</p>
+    <div data-omega-more>
+      <p class="omi-lead" style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:0">The Oracle answers using your sovereign standing as context &mdash; no API key is ever exposed in client code.</p>
+      <div class="omi-full" hidden style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px">The Oracle processes your query using your sovereign standing as context. It operates through the server-side edge function and does not expose any API key in client code. Queries are answered in the context of your sign, authority score, and tier.</div>
+    </div>
     <textarea id="pred-query" style="width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid rgba(155,107,240,.3);padding:10px;outline:none;resize:vertical;min-height:80px;margin-bottom:12px" placeholder="Ask the Oracle anything about the platform, your trajectory, the Order's future, or your sovereign probability space…"></textarea>
     <button id="btn-predict" class="btn-gold">QUERY THE ORACLE</button>
     <div id="pred-result" class="oracle-result"></div>

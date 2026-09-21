@@ -36,15 +36,15 @@ This scanner reads the repository. It has no database connection, so:
 
 | class | pages |
 |---|---:|
-| `BUILT` | 95 |
-| `PARTIAL` | 27 |
-| `LOCAL_ONLY` | 45 |
-| `STATIC` | 18 |
+| `BUILT` | 99 |
+| `PARTIAL` | 28 |
+| `LOCAL_ONLY` | 43 |
+| `STATIC` | 20 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 2 |
-| **total** | **189** |
+| `UNREACHABLE` | 13 |
+| **total** | **205** |
 
-## BUILT (95)
+## BUILT (99)
 
 | page | evidence |
 |---|---|
@@ -55,6 +55,7 @@ This scanner reads the repository. It has no database connection, so:
 | `analytics.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
 | `approvals.html` | reads/writes 1 table, 6 rpc; 1 auth call |
 | `automation.html` | reads/writes 3 tables; 1 auth call |
+| `autonomous-insights.html` | reads/writes 3 tables |
 | `awards.html` | reads/writes 1 table; 1 auth call |
 | `beacon.html` | reads/writes 2 tables; 1 auth call |
 | `blockchain.html` | reads/writes 1 table, 1 rpc; 1 auth call |
@@ -68,8 +69,8 @@ This scanner reads the repository. It has no database connection, so:
 | `consultancy.html` | reads/writes 2 tables; 1 auth call |
 | `contracts.html` | reads/writes 2 tables; 1 auth call |
 | `cosmos.html` | reads/writes 1 table, 2 edge fn; 3 auth calls |
+| `courses.html` | reads/writes 8 tables, 1 rpc; 1 auth call |
 | `credentials.html` | reads/writes 1 table; 1 auth call |
-| `dashboard.html` | reads/writes 12 tables, 1 rpc; 1 auth call |
 | `design-system.html` | reads/writes 1 table; 1 auth call |
 | `dna.html` | reads/writes 1 table; 1 auth call |
 | `ecosystem.html` | reads/writes 1 table; 1 auth call |
@@ -106,11 +107,13 @@ This scanner reads the repository. It has no database connection, so:
 | `maintenance.html` | reads/writes 1 table; 1 auth call |
 | `map.html` | reads/writes 1 table; 1 auth call |
 | `marketing.html` | reads/writes 2 tables; 1 auth call |
-| `marketplace.html` | reads/writes 2 tables; 1 auth call |
+| `marketplace.html` | reads/writes 3 tables; 1 auth call |
 | `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
+| `movies.html` | reads/writes 1 table; 1 auth call |
 | `news.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
 | `nexus.html` | reads/writes 1 table; 1 auth call |
+| `notes.html` | reads/writes 2 tables; 1 auth call |
 | `observatory.html` | reads/writes 7 tables; 1 auth call |
 | `oracle.html` | reads/writes 1 table; 1 auth call |
 | `payments.html` | reads/writes 2 tables; 1 auth call |
@@ -120,6 +123,7 @@ This scanner reads the repository. It has no database connection, so:
 | `prediction.html` | reads/writes 1 table, 1 edge fn; 2 auth calls |
 | `privacy.html` | reads/writes 2 tables, 2 rpc; 2 auth calls |
 | `profile.html` | reads/writes 3 tables, 4 rpc; 7 auth calls |
+| `projects.html` | reads/writes 4 tables; 1 auth call |
 | `publishing.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
 | `pulse.html` | reads/writes 1 edge fn |
 | `queue.html` | reads/writes 2 tables; 1 auth call |
@@ -132,7 +136,7 @@ This scanner reads the repository. It has no database connection, so:
 | `sigil.html` | reads/writes 1 table; 1 auth call |
 | `sigma.html` | reads/writes 1 table; 1 auth call |
 | `signal.html` | reads/writes 1 table; 1 auth call |
-| `social.html` | reads/writes 3 tables; 1 auth call |
+| `social.html` | reads/writes 3 tables; 2 auth calls |
 | `sovereign-ai.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
 | `sovereign-covenant.html` | reads/writes 1 table; 1 auth call |
 | `sovereigns.html` | reads/writes 1 table; 1 auth call |
@@ -144,7 +148,7 @@ This scanner reads the repository. It has no database connection, so:
 | `tribe.html` | reads/writes 1 table; 1 auth call |
 | `universe.html` | reads/writes 1 table; 1 auth call |
 
-## PARTIAL (27)
+## PARTIAL (28)
 
 | page | evidence |
 |---|---|
@@ -152,11 +156,12 @@ This scanner reads the repository. It has no database connection, so:
 | `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes |
 | `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `dashboard.html` | reads/writes 12 tables, 1 rpc; 1 auth call; also 1 localStorage write |
 | `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `gates.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `habits.html` | reads/writes 1 table; 2 auth calls; also 9 localStorage writes |
+| `habits.html` | reads/writes 2 tables; 2 auth calls; also 9 localStorage writes |
 | `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
 | `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `intelligence.html` | reads/writes 3 tables, 1 edge fn; 1 auth call; also 2 localStorage writes |
@@ -176,7 +181,7 @@ This scanner reads the repository. It has no database connection, so:
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (45)
+## LOCAL_ONLY (43)
 
 | page | evidence |
 |---|---|
@@ -204,13 +209,11 @@ This scanner reads the repository. It has no database connection, so:
 | `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `network.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `notes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `nutrition.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `physiology.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `projects.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `revenue.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
@@ -226,7 +229,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (18)
+## STATIC (20)
 
 | page | evidence |
 |---|---|
@@ -235,6 +238,7 @@ This scanner reads the repository. It has no database connection, so:
 | `agent-network.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
 | `architecture.html` | no backend call, no stored state |
+| `characters.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
 | `creator.html` | no backend call, no stored state |
@@ -247,6 +251,7 @@ This scanner reads the repository. It has no database connection, so:
 | `ops.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
+| `sculpture.html` | no backend call, no stored state |
 | `world-shell.html` | no backend call, no stored state |
 
 ## BROKEN (2)
@@ -256,10 +261,21 @@ This scanner reads the repository. It has no database connection, so:
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
 
-## UNREACHABLE (2)
+## UNREACHABLE (13)
 
 | page | evidence |
 |---|---|
+| `agent.html` | not referenced by nav.js and not a public page |
+| `analytics-dashboard.html` | not referenced by nav.js and not a public page |
+| `cohorts-dashboard.html` | not referenced by nav.js and not a public page |
+| `healthz.html` | not referenced by nav.js and not a public page |
+| `investor-dashboard.html` | not referenced by nav.js and not a public page |
+| `investor-gate.html` | not referenced by nav.js and not a public page |
+| `monitoring-dashboard.html` | not referenced by nav.js and not a public page |
+| `omega-visual-command.html` | not referenced by nav.js and not a public page |
+| `predictions-dashboard.html` | not referenced by nav.js and not a public page |
+| `segmentation-dashboard.html` | not referenced by nav.js and not a public page |
+| `venture-pipeline.html` | not referenced by nav.js and not a public page |
 | `verify-deployment.html` | not referenced by nav.js and not a public page |
 | `verify-modules.html` | not referenced by nav.js and not a public page |
 
@@ -269,11 +285,14 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|---|
 | `checkout` | `UNWIRED` | deployed source, but nothing in this repo calls it |
 | `concierge` | `WIRED` | invoked from client code |
+| `concierge-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
 | `graphify-ai-ingest` | `WIRED` | invoked from client code |
 | `graphify-ai-query` | `WIRED` | invoked from client code |
+| `growth-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
 | `intel-feed` | `WIRED` | invoked from client code |
 | `market-price` | `WIRED` | invoked from client code |
 | `notify-access` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
+| `product-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
 | `rankings` | `WIRED` | invoked from client code |
 | `snapshot-leaderboard` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
 | `stripe-webhook` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
@@ -283,8 +302,8 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 120 |
-| functions declared in `supabase/` | 130 |
+| tables + views declared in `supabase/` | 152 |
+| functions declared in `supabase/` | 133 |
 | tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
@@ -353,13 +372,13 @@ it?** A relation the SQL bag declares but the database never received
 answers every query with `{data:null,error}` — an empty page, no
 exception, no console error (CLAUDE.md §8.1 class 2).
 
-Source: `supabase/live-schema.json`, captured **2026-09-05**. A dated
+Source: `supabase/live-schema.json`, captured **2026-09-21**. A dated
 snapshot, not a connection. Regenerate it whenever schema is applied
 live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 120 | 0 | 0 |
+| 152 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

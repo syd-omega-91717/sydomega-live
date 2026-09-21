@@ -128,6 +128,7 @@
       <div class="jar-meta" id="jar-meta"></div>
       <button class="jar-btn" id="jar-draw">DRAW FROM THE JAR</button>
       <div class="jar-stats" id="jar-stats" data-stagger data-stagger-gap="70"></div>
+      <div data-omega-spark id="grat-spark" data-spark-label="ENTRIES PER DAY, LAST 14 DAYS" hidden style="margin-top:10px;justify-content:center"></div>
     </div>
   </div>
 
@@ -209,6 +210,7 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-sparkline.js" defer></script>
 <script type="module">
 
 const LOG_KEY = 'omega_gratitude_log';
@@ -370,6 +372,22 @@ function renderJarStats() {
     [freq.PEOPLE||0, 'PEOPLE'],
     [freq.GROWTH||0, 'GROWTH'],
   ].map(([v,l])=>`<div class="kpi" data-reveal="fade-up"><div class="kpi-v" data-countup>${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+
+  /* FEATURE_IDEAS.md #27 Wave 1: entries/day over the real _log, last 14
+     calendar days. A day with no entry is a true 0, not a fabricated one --
+     omega-sparkline.js itself hides the mount below 2 finite values. */
+  const spark = document.getElementById('grat-spark');
+  if (spark) {
+    const byDate = {};
+    _log.forEach(e => { byDate[e.date] = (byDate[e.date]||0) + (e.items ? e.items.length : 0); });
+    const series = [];
+    const d = new Date();
+    for (let i = 13; i >= 0; i--) {
+      const dd = new Date(d); dd.setDate(d.getDate()-i);
+      series.push(byDate[dd.toISOString().slice(0,10)] || 0);
+    }
+    spark.setAttribute('data-spark-values', JSON.stringify(series));
+  }
   document.dispatchEvent(new CustomEvent('omega:populated'));
 }
 

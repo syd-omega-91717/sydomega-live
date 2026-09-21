@@ -19242,3 +19242,1274 @@ python3 scripts/module-contract.py   0 broken; 120 contracts
 python3 scripts/silent-failure-detector.py   0 findings
 ./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
 ```
+
+## Two independent `main` CI failures at `a8ac03f9` (PR #432), both fixed
+
+PR #432 ("Event-Driven Celebration Engine Expansion") left `main` red on both
+the "CI" and "Contracts" GitHub Actions workflows — two unrelated root causes
+in the same merge, confirmed via `mcp__github__get_job_logs` on each failed
+run rather than assumed from one:
+
+1. **"CI" workflow — `scripts/check-inline-js.py`, `publishing.html:104`
+   fails to parse ("missing `)` after argument list").** The new
+   `omega:social-milestone` dispatch this PR added to `publishing.html`'s
+   commit-flow handler was missing one closing paren:
+   `document.dispatchEvent(new CustomEvent('omega:social-milestone',{...}));`
+   had only one `)` for two open calls (`dispatchEvent(` and `CustomEvent(`).
+   The whole inline `<script>` block failed to parse as a result, not just
+   that one statement, since a single unclosed call breaks the block's
+   grammar. Fixed by adding the missing `)`.
+2. **"Contracts" workflow — `scripts/contract-suite.py`'s `type-scale` gate,
+   `omega-confetti.js` declares interface text at `11px`**, below the
+   platform's hard 12px floor (CLAUDE.md §7 check 9 material). Three
+   `Courier Prime` eyebrow labels in the new social/streak/task-completion
+   celebration banners (`TASK COMPLETED`, `STREAK MILESTONE`, and the
+   dynamic `<type> milestone` label) were set at `font-size:11px`, while
+   every other eyebrow label already in the same file (gate-unlock, apex,
+   milestone banners) uses `12px` at various `letter-spacing` widths. Bumped
+   all three to `12px` to match the file's own existing convention — no
+   visual regression, since the surrounding banners already read at that
+   size.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/contract-suite.py    18 gate(s), 0 failing (type-scale: ok)
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
+## `.card-edge` sweep, batch 6 — the expanded 57-file `border-left` re-scan
+
+`main` advanced far past the original `.card-edge` inventory (batches 1–5,
+PRs #425–#428) while this sweep was in progress, via unrelated PRs (#429,
+#430, #432) that added ~60 new files matching a `border-left` grep. Re-ran
+the same triage discipline against all 57 files not already covered by a
+prior batch, rather than assuming the pattern repeats mechanically.
+
+**Two genuine conversions**, both matching the established
+`.card` + hardcoded `border-left` → `.card.card-edge` + `--card-accent`
+shape from every prior batch:
+
+- `roadmap.html`'s `PRIORITIES` grid card was already `class="card"` with
+  `--card-accent` set (for the hover-glow colour) but *also* carried a
+  redundant literal `border-left:3px solid <col>` alongside it — a
+  half-finished conversion, not a working pattern: the sibling `HORIZONS`
+  grid two blocks above (`bg.js`'s default top-bar `.card` behaviour) uses
+  `--card-accent` alone with no leftover border. Added `.card-edge`,
+  dropped the redundant inline `border-left`, and verified in a render that
+  `.card.card-edge::before` now draws the same 3px accent bar the old
+  inline property drew, at `left:0`, coloured from `--card-accent`.
+- `graphify.html`'s anomaly-detection card (`detectAnomalies()`) was
+  `class="card"` with a page-local `background` override and a hardcoded
+  `border-left:3px solid var(--crim)`. Converted to `.card.card-edge` with
+  `--card-accent:var(--crim)`; the page-local `background` inline style
+  survives untouched (inline `style=` always wins, per §4.1's collision
+  rule), verified in a render alongside the accent bar.
+
+**The remaining 55 files were not converted, and the reason differs by
+group — this is not partial completion, it is the correct scope**:
+
+- 18 files (`404`, `academy`, `compliance`, `design-system`, `gaming`,
+  `grid`, `identity`, `interface-omni`, `maintenance`, `pending`, `queue`,
+  `reset`, `series`, `social`, `sovereign-covenant`, `terms`, `trailers`,
+  `vault`) match on `.tab-btn{...border-left:none...}` — a false positive:
+  zeroing three border sides to leave only the active-tab bottom bar, the
+  same shape already excluded platform-wide, not an accent.
+- 2 files (`approvals.html`'s `.hb-cell.right`, `subscriptions.html`'s
+  `.sb-right`) use `border-left:1px solid var(--line)` as a neutral grid-
+  column divider, not a coloured accent — the same false-positive shape as
+  `media.html` in batch 3.
+- `chronicle.html` is excluded by name already (§4.1): its `.event-card`
+  draws its own timeline connector via `border-left`, a different
+  component than `.card-edge`'s accent bar.
+- 13 files (`ascension`, `bloodline`, `gates`, `houses`, `kings`,
+  `publications`, `contributions`, `governance`, `levels`, `phases`,
+  `notifications`, `treasury`, `services`) plus `monitoring-dashboard.html`
+  share one JS-templated shape —
+  `border:1px solid var(--line);border-left:3px solid <color>;background:
+  rgba(10,10,15,.4-.55);border-radius:2px` — repeated identically across
+  many render functions. None of these elements carry a `.card`/`*-card`
+  class; they are a distinct, deliberately flatter "list row" component,
+  not the shared glass-card surface. Adding `.card` to make them
+  `.card-edge`-eligible would pull in `.card`'s blur, box-shadow, and
+  hover-shimmer across every rendered row on 14 pages at once — a real
+  design decision, not a mechanical accent-bar swap, and exactly the class
+  of platform-wide `.card` sweep §4.1 says needs a render check before
+  committing to it. Left as-is; a candidate for a dedicated design pass,
+  not this sweep.
+- The remaining files (`agent-network`, `clarity`, `cosmos`, `decisions`,
+  `fasting`, `gratitude`, `matrix`, `mentors`, `mood`, `network`, `payments`,
+  `physiology`, `profile`, `reading`, `sovereign-ai`, `stoic`, `time`) use
+  `border-left` on text/quote-style elements (`.ref-block`, `.dec-outcome`,
+  `.g-he-note`, `.pattern-item`, `.hl-item`, `.insight-item`, `.notice`,
+  `.agent-greeting`, `.disc`, `.ev-item`) — a coloured rule beside body
+  copy, never a boxed card (no background/shadow/radius to match `.card`'s
+  shape). `account.html`'s `.agent` panel is the one bordered box in this
+  group, but it is a single bespoke instance (the copilot chat panel, keyed
+  to a per-member `--acc` colour) predating the shared card system —
+  converting it is a component redesign, not this sweep's mechanical scope.
+
+```
+grep -rl border-left --include=*.html . | wc -l    74 (57 new since batch 5)
+python3 scripts/check-inline-js.py                 OK -- every inline <script> block parses cleanly
+./scripts/ci-local.sh                              ALL 24 BLOCKING CHECKS PASSED
+```
+
+## Signature cinematic tier, Phase 2 shipped — dashboard.html + cosmos.html sigil mounts (FEATURE_IDEAS.md #19)
+
+Continued the design-system-scoped proposal whose Phase 1 shipped earlier (the
+`.omega-spin-slow` shared class + `profile.html`'s `#ph-sigil`). Read the actual
+target code before applying the class, rather than trusting the proposal's own
+description of what existed — this changed the plan for one of the two targets:
+
+- `dashboard.html`: mounted a real per-member `OmegaSigil` (`#dash-sigil`) in
+  the mission-bar next to the authority ring, using `pr.element`/`axis_a/b/c`/
+  `display_name` and the `auth`/`reached` values the boot flow already
+  computes — no extra fetch. `.omega-spin-slow` applies automatically via
+  `bg.js`'s existing generic `[class*="sigil"]` selector.
+- `cosmos.html`: the proposal named "the existing emblem ring" as this page's
+  target, meaning `#hero-wheel`. Reading `drawHeroWheel()` first showed it
+  already runs its own continuous per-frame rotation of the 12-sign ring via
+  `requestAnimationFrame` — applying `.omega-spin-slow` on top would have
+  stacked a second, unsynced CSS rotation on the same element, the "two
+  motion systems, one element" class this repo's motion rules exist to
+  prevent. Mounted a real sigil beside the wheel instead (`#cosmos-sigil`),
+  extending the `select()` this page's `boot()` already runs to include
+  `element,display_name` (2 more columns, same query) and computing gate via
+  this page's own local `GATES` threshold table (matching what `buildGates()`
+  already uses here) rather than importing `profile.html`'s numbers, which
+  already diverge from this page's — a separate, pre-existing issue, not
+  introduced or fixed here.
+- **Phase 3 turned out to already be shipped**, contradicting this
+  proposal's own text: `git log -S"data-omega-page-emblem" -- bg.js` shows
+  `omega-page-emblem.js` was registered in the `bg.js` loader on **2026-07-20**,
+  two months before the proposal was written claiming it as undone. Corrected
+  in `FEATURE_IDEAS.md` directly rather than re-shipping already-shipped work.
+
+Verified in a headless render (signed-in stub): real `<svg>` in both new
+mounts, `animation-name:spin-slow`/`60s` under normal motion, `none` under
+`prefers-reduced-motion:reduce` (control-checked against `profile.html`'s
+known-working `#ph-sigil`, since the harness's `S.launch({reducedMotion})`
+option isn't actually wired up in `session.js` — `page.emulateMedia()` is the
+one that works with this harness; noted here so the next session doesn't
+lose time on the same false negative). `#hero-wheel` confirmed to carry no
+spin class and keep its own independent animation. Zero page errors, zero
+console errors, no horizontal overflow on either page.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+node --check bg.js                   OK
+```
+
+## Trend-sparkline pass Wave 1 shipped — gratitude.html + dashboard.html (FEATURE_IDEAS.md #27)
+
+Built the narrower of #27's two options: audited the ~25 pages (of 74
+`.kpi`/`.kpi-card`/`.trend` candidates) that grep-matched a real-history
+signal, individually verified each rather than trusting the grep, and
+wired `omega-sparkline.js` onto exactly the two that had genuine
+per-day/per-item history with **zero new query**:
+
+- `gratitude.html`'s `#grat-spark` reads `_log` (already loaded from
+  `localStorage`) grouped by date, last 14 days.
+- `dashboard.html`'s `#dash-tasks-spark` reads `hm.data` (already fetched
+  for the contribution heatmap, `task_completions.completed_at` scoped to
+  the signed-in member) grouped by day, same window — mounted inside
+  `#kpi-auth` ("MY AUTHORITY"), not the platform-wide "TASKS TODAY" tile,
+  since `hm` is member-scoped and that tile's own tooltip says "across all
+  members" — attaching a personal series there would have misrepresented
+  what the tile counts.
+
+Two real candidates found and explicitly **not** touched: `journal.html`
+and `physiology.html` both already hand-roll their own canvas trend charts
+over the same kind of data — wiring the shared module there means
+replacing working, tested code, a consolidation decision left for its own
+pass. `payments.html` excluded outright: its own copy states history
+populates "once payments are active," so there is no real data to source
+yet (`CLAUDE.md` §9's dormancy rule).
+
+Verified by driving the real interaction, not calling the render function
+directly: `gratitude.html`'s mount only populates after actually clicking
+the JAR tab (pre-existing lazy-render behaviour — confirmed load-alone
+leaves it correctly empty, then confirmed the click produces a real `<svg>`
+from a seeded, genuinely-varying `localStorage` log). `dashboard.html`'s
+mount renders on load with the test harness's stub (`{data:[]}` for every
+table by design) producing a correct flat 14-zero series, plus a synthetic
+`OmegaSpark.render()` call on the same live mount proving the wiring
+handles real variation end-to-end.
+
+```
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+./scripts/ci-local.sh                ALL 24 BLOCKING CHECKS PASSED
+```
+
+## Glass-HUD signal accent shipped — dashboard.html, treasury.html, intelligence.html (FEATURE_IDEAS.md #28)
+
+Built the second signature HUD motif proposed in `#28`: a restrained conic
+"signal sweep" for the three hub pages that mount no
+`data-omega-sculpture` 3-D layer (grep-verified 0 hits on all three before
+starting), giving them a native-CSS echo of the sculpture pages' identity
+instead of nothing.
+
+Defined once in `css/omega-system.css` (never `bg.js`, per `CLAUDE.md`
+§4's token-ownership table), directly beside `.omega-spin-slow` and
+following its exact precedent: a shared opt-in class, applied via an
+explicit class attribute on exactly three elements, not a platform sweep.
+
+The collision check this lived or died on: `.topbar` already owns
+`::after` (`omega-visual-evolution.css`'s travelling seam,
+`omega-seam 7s`) — confirmed by reading the file, not assumed. `::before`
+was unclaimed on both `.topbar` and `dashboard.html`'s page-local
+`.mission-bar` (grepped `css/omega-system.css`, `omega-visual-evolution.css`,
+`bg.js`, `theme.js` — 0 hits on either selector). Both elements already
+carry `position:sticky`, a valid containing block, so no new
+`position:relative` was needed on the base rule, and critically **no
+`overflow:hidden`** was added anywhere — `.topbar` carries its own drop
+shadow (`0 8px 35px`, extending past its own box) that `overflow:hidden`
+would have silently clipped, exactly the class of bug `CLAUDE.md` §4 warns
+this file's history is full of.
+
+Verified in a real render, not reasoned from the diff:
+- All three bars: the `::before` pseudo carries the conic-gradient,
+  `animation-name:omega-signal-sweep-rotate`, `position:absolute`,
+  `inset:0` — applied correctly on all three target pages, no 4th page
+  touched.
+- `page.emulateMedia({reducedMotion:'reduce'})` (called directly, not via
+  `S.launch({reducedMotion})` — that option is not actually wired, per this
+  session's earlier finding) drops `animation-name` to `none`.
+- `.topbar::after`'s seam (`animation-name:omega-seam`) and the bar's own
+  `box-shadow` (`...0.12) 0px 1px 0px 0px, ...0.28) 0px 8px 35px 0px`) are
+  both fully intact on `treasury.html`/`intelligence.html` post-change —
+  proves no clipping regression from the new rule.
+- `overflow:visible` confirmed on all three bars (no `overflow:hidden`
+  was introduced).
+- Screenshots of all three bars at rest: a faint gold/cyan glow bleeding
+  in from the left edge, text and nav fully legible, seam line intact —
+  restrained, not the "busy" outcome the proposal explicitly rejected.
+
+```
+python3 scripts/audit.py                          0 critical / 6 warnings (baseline)
+python3 scripts/check-inline-js.py                OK -- every inline <script> block parses cleanly
+scan.js overflow (dashboard/treasury/intelligence) 0/3
+scan.js errors (dashboard/treasury/intelligence)   0/3 pages with uncaught errors
+```
+
+## Unresolved merge-conflict markers in this file, fixed twice for two different reasons
+
+`scripts/repository_integrity_audit.py`'s `merge_conflict_marker` check failed
+on `main` with a literal `<<<<<<< HEAD` / `=======` / `>>>>>>>
+origin/claude/visual-inspiration-proposals` block sitting in this file
+(the two entries directly above this one, "Signature cinematic tier, Phase
+2" and "Trend-sparkline pass Wave 1" — both real, both meant to land, just
+never actually merged cleanly by whichever earlier session's stash/rebase
+touched them).
+
+First fix landed on PR #438 (commit `e6ba85e`) alongside that PR's own
+unrelated change (`#28`'s signal-sweep motif) — then never reached `main`:
+the PR was marked ready-for-review and merged within ~10 seconds, at its
+*prior* head (`5501aaf6`), before the fix push had registered. Confirmed
+directly rather than assumed: `git merge-base --is-ancestor e6ba85ec
+origin/main` → `NO`, and `git show origin/main:FIXES_LOG.md` hashed
+identical to the pre-fix commit. This is the exact "head is frozen at
+merge time" race `CLAUDE.md` §8.2 already documents for force-pushes;
+here it happened on an ordinary sequential push, which the existing
+warning doesn't cover.
+
+Second attempt (this entry): the identical fix cherry-picked onto a fresh
+branch off the *current* `main`, per §8.2's own stated remedy for this
+race — a new commit, a new PR, never stacked on the merged history.
+
+```
+python3 scripts/repository_integrity_audit.py   PASS (was FAIL merge_conflict_marker=FIXES_LOG.md)
+python3 scripts/check-inline-js.py              OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                        0 critical / 6 warnings (baseline)
+```
+
+## Trend-sparkline pass Wave 2 shipped — habits, vocabulary, contacts, clarity, health (FEATURE_IDEAS.md #27)
+
+Individually audited the ~20 pages Wave 1 left unaudited, same per-page
+method: read the real data source before wiring anything, never trust a
+grep hit alone. Five genuine candidates found and wired, all zero new
+query:
+
+- `habits.html`'s `#habits-done-spark` — the real read path is
+  `getLogs()` (`localStorage`), not the `habit_logs` Supabase table (that
+  table is a write-only mirror, by design, per the page's own comment).
+  Each habit already draws its own streak-dot row and heatmap, so the
+  mount is an *aggregate* completions-per-day view that doesn't exist
+  anywhere else on the page.
+- `vocabulary.html`'s `#vocab-review-spark` — `reviewLog`
+  (`{date,count}`, localStorage), no existing chart.
+- `contacts.html`'s `#contacts-touch-spark` — `interactions`
+  (`{contactId,date,...}`, localStorage); its own `#net-canvas` is a
+  tier-composition breakdown, not a time trend, so no duplication.
+- `clarity.html`'s `#clarity-steps-spark` — `sessions`
+  (`{date,done,total}`, localStorage); its only canvas is a progress
+  ring, not a trend chart.
+- `health.html`'s `#health-score-spark` — real Supabase `health_logs`
+  (RLS-scoped), reusing the same 60-row fetch `loadHistory()` already
+  makes. Labelled "LAST 14 ENTRIES" rather than "LAST 14 DAYS" since
+  member logs are irregular — the module's own finite-value filter makes
+  an entry-based series honest here where a calendar-day series with
+  invented zero-scores for un-logged days would not be.
+
+`social.html` has real Supabase data (`social_broadcasts`) but no
+existing KPI/stat tile to attach a mount to — left for its own pass
+rather than improvising new tile layout. Re-confirmed 9 pages with zero
+real per-day signal (`achievements.html` — real log, but achievements
+unlock too rarely for a 14-day window to clear the module's own
+2-finite-value floor; `affirmations.html`, `library.html`, `rituals.html`,
+`targets.html`, `wealth.html`, `time.html`, `chronicle.html`,
+`reading.html`, `signal.html` — no `localStorage` log or Supabase table
+found on either) and 2 pages already charted (`expenses.html`,
+`revenue.html` — consolidation-only, same reasoning as Wave 1's
+`journal.html`/`physiology.html`).
+
+Verified each shipped page in a real headless render: seeded realistic,
+gap-including logs (or, for `health.html`, confirmed the harness's
+empty-array Supabase stub correctly left the mount `hidden` — the
+anti-fabrication guard working as designed — then called
+`window.OmegaSpark.render()` on the live mount with a synthetic series to
+prove the render path itself handles real variation).
+
+```
+scan.js errors (5 pages)             0/5 pages with uncaught errors
+scan.js overflow (5 pages)           0/5 pages scrolling horizontally
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+```
+
+## Trend-sparkline pass Wave 3 shipped — social.html gets a real KPI tile (FEATURE_IDEAS.md #27)
+
+Wave 2 found real data on `social.html` (`social_broadcasts`, Supabase,
+RLS-scoped, `created_at`) but no existing KPI/stat tile to attach a
+sparkline to, and deferred it rather than invent one on the spot. Built
+the tile for real this pass: one `.kpi-row`/`.kpi` — the platform's
+actual shared classes (`bg.js`'s injected stylesheet), not new page-local
+CSS — added to the FEED tab, showing `BROADCASTS THIS WEEK` and a 14-day
+`#social-broadcast-spark`, both computed from `storedBroadcasts`, the
+same fetch (`limit(30)`) the page already makes. Zero new query, zero
+invented numbers: "THIS WEEK" only undercounts (never fabricates) in the
+edge case a member exceeds 30 broadcasts in 7 days.
+
+Verified in a real headless render: the harness's empty-array Supabase
+stub correctly produces a real, honest flat 14-zero line (14 finite
+values, matching `dashboard.html`'s established Wave 1 behavior) rather
+than a hidden mount or a fabricated non-zero number; `soc-week-count`
+correctly reads "0" under the same stub. A synthetic
+`window.OmegaSpark.render()` call then proved the render path handles
+real variation. Confirmed the new KPI row does not break tab switching
+(FEED tab still shows/hides correctly).
+
+```
+scan.js errors (social.html)         0/1
+scan.js overflow (social.html)       0/1
+python3 scripts/check-inline-js.py   OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py             0 critical / 6 warnings (baseline)
+python3 scripts/repository_integrity_audit.py   PASS
+```
+
+## Trend-sparkline pass Wave 4 shipped — a grep methodology bug in Wave 2 corrected (FEATURE_IDEAS.md #27)
+
+Wave 2's own audit grep — `localStorage\.(setItem|getItem)\('omega_[a-z_]+'`
+— only matches a *literal* string argument. Seven pages
+(`affirmations.html`, `library.html`, `rituals.html`, `targets.html`,
+`wealth.html`, `time.html`, `reading.html`) store their key in a
+`const FOO_KEY='omega_...'` variable and call
+`localStorage.setItem(FOO_KEY,...)` — the string never appears inside the
+call itself, so the grep found nothing and Wave 2 wrongly reported all
+seven as having no real per-day signal. Re-audited each with
+`_KEY\s*=\s*['"]omega_` and read every real log before deciding, same
+discipline as every prior wave:
+
+- `wealth.html`'s `#wealth-nw-spark` — real, member-initiated
+  ("SAVE SNAPSHOT") net-worth history already existed
+  (`{date,nw,change}`), shown only as a text list. Added inside the
+  net-worth hero box, last 14 real snapshots, chronological.
+- `affirmations.html`'s `#aff-today-spark` — real `{date,count}` practice
+  log already existed; the page shows it twice already (a binary 30-day
+  streak grid, a 14-row text list) but neither shows *count*, so this is
+  additive. Added inside the TODAY stat-box, lazy-rendered on the TRACK
+  tab's own existing render function.
+- `rituals.html` — turned out to already have a real, fully-wired
+  sparkline (`#spark-rituals`/`drawRitualSpark()`), built before this
+  session and more carefully reasoned than this wave's own new work (it
+  excludes "today" since the day is still open). Wave 2 never found it
+  because it never found the page's real log at all. No action needed.
+- `time.html` — real log, but already has a "7-DAY FOCUS TREND" canvas.
+  Consolidation-only.
+- `library.html`, `targets.html`, `reading.html` — real logs, but each is
+  a low-frequency event (book adds, weekly reviews) that would sit below
+  the module's own 2-finite-value floor most of the time. Correctly still
+  excluded, now for the right, specific reason instead of "no data
+  found."
+
+Verified `wealth.html` and `affirmations.html` in a real headless render,
+driving the real TRACK-tab click on `affirmations.html` rather than
+calling the render function directly. `wealth.html` correctly plotted
+fewer than 14 points when fewer snapshots existed, rather than padding
+with fabricated zeros.
+
+```
+scan.js errors (2 pages)              0/2
+scan.js overflow (2 pages)             0/2
+python3 scripts/check-inline-js.py    OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py              0 critical / 6 warnings (baseline)
+python3 scripts/repository_integrity_audit.py   PASS
+```
+
+## Whole-repo sweep: a stale exemption and a real missing sidebar, both found and fixed
+
+Ran the full verification surface -- `./scripts/ci-local.sh` (24 blocking
+checks), every named script in `CLAUDE.md` §8.3's baseline table, GitHub
+Actions on `main`'s current tip, Vercel's last 3 production deployments,
+and Supabase's advisors for the live project (`ydqhzvvoyufiiqvzcjns`) --
+rather than assuming green. Two real, non-blocking findings surfaced and
+were fixed; everything else was already clean.
+
+**1. A stale exemption for a page that no longer exists.**
+`scripts/reachability-contract.py` (advisory, not blocking) reported
+`STALE EXEMPTION -- omega-visual-home`. `git mv omega-visual-home.html
+index.html` happened in an earlier, already-documented fix (this file,
+search "The fix, and why it is a rename rather than a second page") --
+`omega-visual-home.html` has not existed as a file since. `vercel.json`
+keeps two permanent redirects from the old path to `/`, which Vercel's
+edge intercepts before any request ever reaches `bg.js`, so the three
+exemption entries naming it (`bg.js`'s `PUBLIC` array and both `EX`
+guard objects, kept in lockstep per this file's own class-8 note) were
+dead code that could never fire again. Removed all three, plus corrected
+two more stale claims in the same `reachability-contract.py` comment
+block found while fixing it: `'enter'` was documented as "the site root
+(vercel.json rewrites / to /enter)" and `'index'` as "no such file" --
+both false today (`index.html` is the real root file, no such rewrite
+exists in the current `vercel.json`, confirmed by reading it directly
+rather than trusting the comment).
+
+**2. A real, live gap: a navigable page with no sidebar.**
+The same advisory run then surfaced a different, genuine finding:
+`design-showcase.html` -- registered in `nav.js`, linked from the GOVERN
+section, reachable and real -- has no `<aside id="omega-side">` mount at
+all, unlike its sibling `design-system.html`. `nav.js` returns immediately
+without one, so any member landing on this page directly gets zero
+sidebar: no way back to dashboard, no persistent nav chrome every other
+page has. Fixed per the documented "page-shell" legacy layout
+(`css/omega-system.css`: `body:has(> aside#omega-side){display:flex}` +
+`.page-shell{flex:1;...}`) rather than restructuring the page's existing
+`.container#app` into the heavier `.shell`/`.side`/`.main` pattern:
+added the `<aside>` as a direct `<body>` child and the `.page-shell`
+class alongside the page's own `.container`.
+
+Verified in a real headless render, not just the two advisory scripts:
+sidebar renders with all 254 nav links at its correct 80px width, page
+content sits flush beside it, zero horizontal overflow, zero console
+errors, and a screenshot confirms the hero/palette content is visually
+unaffected.
+
+```
+python3 scripts/reachability-contract.py   OK -- 0 stale exemptions, 0 unreachable (was 1 stale exemption)
+python3 scripts/check-inline-js.py         OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                   0 critical / 6 warnings (baseline)
+node --check bg.js                         OK
+scan.js errors (design-showcase.html)      0/1
+scan.js overflow (design-showcase.html)    0/1
+./scripts/ci-local.sh                      ALL 24 BLOCKING CHECKS PASSED
+```
+
+**Everything else checked and already clean, not just assumed:**
+GitHub Actions on `main`'s current tip (`010d54bd`) -- all 10 required
+workflows `success`. Vercel -- last 3 production deployments all `READY`,
+latest matching `main`'s tip exactly. Supabase (`ydqhzvvoyufiiqvzcjns`,
+`ACTIVE_HEALTHY`) -- security advisor: 1 `WARN`, leaked-password-protection
+disabled, an Auth dashboard toggle with no code-side fix, owner action
+needed; performance advisor: 260 `INFO`-level unused-index notices, routine
+for a 225-table schema this young and not actionable without real traffic
+data to judge against -- neither is a repo bug. Every other named check in
+`CLAUDE.md` §8.3's baseline table (`schema-dictionary.py`,
+`upsert-conflict-check.py`, `rls-auditor.py`, `silent-failure-detector.py`,
+`i18n-contract.py`, `omega-registry.py --check`, `capability-audit.py
+--check`, `release-gate.py`, `resilience-audit.py`, `module-contract.py`,
+`commerce-contract.py`, `brand-glyph-check.py`) ran clean.
+
+## Live Signal Pulse shipped — a real, event-driven ambient status indicator (FEATURE_IDEAS.md #29)
+
+A fresh `web-trend-scout` pass (2026 dashboard/status-indicator trends)
+produced one proposal grounded in code that already exists rather than an
+invented mechanism: `bg.js`'s own data-fetch recorder (top of the file)
+already wraps `window.fetch`, watches for `.supabase.co/`, `/rest/v1/`,
+`/auth/v1/`, `/functions/v1/` requests, and dispatches a real
+`document.dispatchEvent(new CustomEvent('omega:fetch-settled',
+{detail:{ok,status}}))` on every settlement. `omega-dataguard.js` is the
+only current consumer, and by its own documented design only reacts to
+*failure* ("no alarm for an empty result set" — empty is a valid answer).
+Nothing on the platform answered the different, positive question "is
+something happening right now" — a gap, not a decoration to invent data
+for.
+
+Built a second, independent consumer of the same real event as a new
+self-contained IIFE in `bg.js` ("OMEGA LIVE PULSE"), following this file's
+own established convention (own guard flag, own injected `<style>`, own
+DOM logic, never touching `omega-dataguard.js`'s logic or DOM): a small
+dot mounted as a normal in-flow child of `.topbar`/`.mission-bar`
+(166 + 1 pages respectively), never `position:fixed` — deliberately, to
+avoid this repo's own repeated fixed-chrome collision history (`#om-open`'s
+top-left gutter problem, the bottom-chrome stacking bugs `bg.js`'s
+`--omega-chrome-bottom` was built to fix). An ordinary flex child cannot
+collide with anything fixed. It sits dim by default and flashes gold once,
+via a CSS keyframe restarted through a forced reflow (`void
+dot.offsetWidth`) rather than a queued timeout, on every event carrying
+`detail.ok === true` — so two real requests settling in quick succession
+each register their own ping instead of the second being silently dropped.
+`prefers-reduced-motion` gets the dot with no animation, matching every
+other motion owner in this file.
+
+A per-ring mount (`omega-ring.js`) was considered and rejected first: its
+`mountOne(el)` frequently receives a bare `<canvas>` with no wrapper
+element to attach a sibling dot to without restructuring markup on every
+call site — read in full before deciding against it, not assumed.
+
+Verified in a real headless render, not reasoned from the diff:
+
+- Idle state on `dashboard.html`/`treasury.html`/`health.html`: dot
+  present, dim, no `.ping` class.
+- A real `omega:fetch-settled` event (`{detail:{ok:true,status:200}}`)
+  dispatched the same way `bg.js`'s own recorder does it — not a call
+  into internal render logic — applies `.ping` immediately on all three.
+- `page.emulateMedia({reducedMotion:'reduce'})` then the same event:
+  `getComputedStyle(dot).animationName === 'none'`.
+- Zero horizontal overflow, zero page errors, on all three pages.
+- Screenshots (idle vs. ping) confirm correct, unobtrusive placement
+  beside existing topbar content with no layout shift.
+
+```
+node --check bg.js                         OK
+python3 scripts/check-inline-js.py         OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                   0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (204 pages, full sweep)     0/204
+```
+
+## Trend-sparkline pass Wave 5 shipped — contributions.html's gift log gets a real sparkline; the signal-sweep motif stays at 3 surfaces (FEATURE_IDEAS.md #27, #28)
+
+Two follow-ups, both closing questions this file's own prior waves left
+open rather than opening new scope.
+
+**#28's signal sweep — a 4th candidate considered, closed with no
+change.** `command.html`'s `.topbar` ("DAILY COMMAND BRIEF... STRATEGY ·
+OPERATIONS") has no `data-omega-sculpture` mount and reads as
+command/control-room identity at least as directly as the three pages the
+motif already shipped on. But `#28`'s own blueprint states the restraint
+explicitly — three surfaces, matching `#19`'s "one motif, three surfaces"
+precedent, specifically to avoid the "busy" platform-wide sweep the
+proposal rejected outright. A 4th page meeting the same picking criteria
+isn't new evidence against that reasoning; it's the exact situation the
+cap exists to hold the line on, since a real sweep is never short of
+one-at-a-time qualifiers. `command.html` keeps its plain `.topbar`.
+
+**Sparkline audit widened past both prior grep patterns.** Waves 2 and 4
+found real per-day logs by matching `localStorage.setItem('omega_...'`
+and, after correcting Wave 2's own methodology bug, `_KEY='omega_...'`.
+Wave 5 widened further to any `push`/`unshift` of an object literal
+carrying a `date`/`day`/`ts`/`at` field, across every page not already
+covered, filtered to pages whose only `<canvas>` (or none) isn't a real
+chart — 13 candidates surfaced this way. Read every one of their real
+logs before deciding:
+
+- **`contributions.html`'s `gifts` (`{org,amount,date}`) — real, and a
+  genuine gap**: a numeric, dated, member-logged series shown only as
+  totals and a text list, the same shape as Wave 4's `wealth.html` net-worth
+  spark. Added `#gift-amount-spark` to the GIVING LEDGER tab, fed the last
+  14 real gift amounts from `renderGifts()`, loaded `omega-sparkline.js` on
+  the page (it isn't `bg.js`-injected — every adopting page loads it
+  itself, same as `wealth.html`/`affirmations.html`).
+- `achievements.html`'s unlock log, `passport.html`'s stamps — real but
+  one-time-per-item events, the same low-cadence shape already excluded
+  in Wave 4. `charter.html`, `kings.html`, `governance.html`,
+  `heritage.html`, `notifications.html`, `publications.html` — real logs
+  with no numeric field at all (audit trails, notes, tasks) — nothing to
+  plot. `horoscope.html`/`oracle.html` — computed arrays, not member logs.
+  `payments.html`'s reward-ledger push formula (`(i+1)*91.717`) reads as
+  synthetic rather than real transaction data — noted in `FEATURE_IDEAS.md`
+  as a separate, out-of-scope concern for a future pass, not fixed here.
+
+Verified `contributions.html` in a real headless render: clicked the real
+GIVING LEDGER tab, logged three gifts through the actual `addGift()`
+button handler (not a direct render call), confirmed the mount un-hid and
+drew a real SVG polyline from `[50,120,30]`, zero overflow, zero console
+errors. Screenshot confirms correct placement with no layout shift.
+
+```
+scan.js errors / overflow (contributions.html)   0/1 each
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```
+
+## Cross-document View Transitions added as a safe, additive layer — activation could not be confirmed, so the pre-existing fallback stays unconditional (FEATURE_IDEAS.md #30)
+
+Investigated a real path to a "unified, one-continuous-space" feel across
+this repo's 204 separate static pages without the single-page-app rewrite
+that would require the build step/framework `CLAUDE.md` §1/§9 explicitly
+forbid: the Cross-Document View Transitions API
+(`@view-transition{navigation:auto}`), which needs only a CSS rule present
+in every page's stylesheet — already true here, since `bg.js` injects one
+shared stylesheet everywhere. Added the rule plus themed
+`::view-transition-old/new(root)` keyframes to the "OMEGA UX LAYER" IIFE in
+`bg.js`, alongside the pre-existing manual `#omega-veil` black-fade
+transition that IIFE's header comment already named as its scope.
+
+**A real bug caught before it shipped, not after.** First reduced-motion
+pass gated only `::view-transition-group(root)`, but the browser's own
+default crossfade animation lives on `::view-transition-old`/`-new`, not
+`-group` — verified directly (`hasOldNewOverride: false` on a real page with
+`emulateMedia({reducedMotion:'reduce'})`) before fixing it to cover all
+three pseudo levels, per the same pattern Chrome's own accessibility
+guidance documents. Re-verified `hasOldNewOverride: true` after the fix.
+
+**Then a second, more consequential finding, from real testing rather than
+assumption.** The plan was to feature-detect `'startViewTransition' in
+document` and, where true, turn OFF the pre-existing manual veil (to avoid
+literally two transitions layered on one navigation). Verified the CSS rule
+itself is present and parses correctly as a real `CSSViewTransitionRule` on
+live pages. But direct testing — real trusted clicks, synthetic clicks, and
+direct `location.href` assignment, across three different real page pairs,
+with a `pagereveal` listener reading the native `viewTransition` property —
+never once showed the transition actually activating on this repo's real
+pages, while the identical CSS on a from-scratch two-file reproduction on
+the same Chromium 141 binary activated it every time. Spent real
+investigation time ruling out specific causes rather than guessing:
+`beforeunload` listeners present in several `omega-*.js` modules
+(reproduced one in isolation — no effect on the minimal repro), a service
+worker registration attempt (disabled directly — no effect), a second
+conflicting `@view-transition` rule (grepped all live stylesheets — none),
+network activity at navigation time (`networkidle` plus 3s settle — no
+effect), response headers (identical between the working and non-working
+test servers), and the one real `location.replace` redirect path in
+`bg.js` (gated behind trial/approval checks not reached on this
+navigation). Bisecting `bg.js`'s own content narrowed the cause to
+something in the file beyond the CSS/markup, without finding the specific
+line before further investigation stopped being worth its cost.
+
+**The decision this forced.** `'startViewTransition' in document` proves
+the browser API exists; it does not prove a given navigation will actually
+use it, and this repo's real pages demonstrated exactly that gap between
+capability and activation. Shipping the originally-planned
+capability-gated version would have been a silent regression on any
+browser reporting `supportsVT: true` without actually activating the
+transition here: those visitors would get neither the native crossfade nor
+the fallback veil. Restored the manual veil to run **unconditionally**,
+identical to its pre-change behavior, and kept the CSS rule as a pure
+additive layer with no downside: the veil already fades the outgoing frame
+to opaque black before `location.href` fires, so a navigation where the
+native transition does activate just crossfades from that black frame into
+the new page underneath the veil's own removal — complementary rather than
+a doubled, conflicting effect.
+
+This is deliberately not marked "shipped and working" — see FEATURE_IDEAS.md
+#30's standing todo. The CSS is real, present, harmless, and worth keeping;
+whether it ever actually fires on this platform is unverified and stays
+that way until a real (non-headless) browser or production confirms it
+either way.
+
+```
+node --check bg.js                                 OK
+python3 scripts/check-inline-js.py                  OK -- every inline <script> block parses cleanly
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (204 pages, full sweep)               0/204
+manual #omega-veil                                   confirmed present, unconditional, unchanged behavior
+```
+
+## Re-verified View Transitions in a real headed browser (FEATURE_IDEAS.md #30) — headless ruled out, root cause still open
+
+FEATURE_IDEAS.md #30 explicitly left "re-verify in a real (non-headless)
+browser" as a standing todo. `xvfb-run` (available in this sandbox) gave a
+genuine headed Chromium against a real X display, not just the headless mode
+the original investigation used.
+
+**Found and had to rule out a confound first.** Testing without this
+harness's Supabase stub — to check whether `ctx.route()` interception itself
+was the disqualifier — hit a real, reproducible redirect: `dashboard.html` to
+`account.html` on every run, because the sandbox's egress proxy rejects
+`ydqhzvvoyufiiqvzcjns.supabase.co` (`connect_rejected ... organization
+policy`), and `bg.js`'s own auth check (`safeRedirect()`/`location.replace`,
+`bg.js:1774`) treats that failed session lookup as unauthenticated. One
+unstubbed run, before this was understood, showed a stray
+`hadViewTransition: true` on a hop that happened to fire mid-redirect; it did
+not reproduce across repeats and is recorded as noise from an invalid test,
+not a real signal.
+
+**The valid comparison** (identical stub, `PRIMED_STORAGE`, overlay
+dismissal, four different real page pairs, headed vs. headless with nothing
+else changed) showed **`false` in both modes, identically**. Headless
+rendering is therefore ruled out as the explanation — whatever disqualifies
+the transition on this repo's real pages does so in a real browser too.
+Also tested `ctx.route().abort()` on the unreachable domains (interception
+without the slow real-network failure): also `false`, headed and headless.
+
+**Conclusion:** this is now a better-isolated finding, not a resolved one.
+The specific disqualifying factor remains unidentified, and the one
+condition this session could not reproduce — a real, reachable Supabase
+backend with no test-harness network interception at all — is exactly
+production. The CSS stays exactly as previously shipped (harmless, additive,
+alongside the unconditional manual veil); re-verifying against the real
+deployed site is the only remaining test that would close this out for good.
+
+```
+xvfb-run -a node <headed test>                       Xvfb + headed Chromium confirmed working in this sandbox
+headed vs headless, 4 real page pairs, stubbed        false / false (identical)
+route().abort() on unreachable domains, both modes    false / false (identical)
+python3 scripts/audit.py                              0 critical / 6 warnings (baseline, unchanged)
+```
+
+## The constellation ring becomes a real navigable map; a real `.ocn-node` collision found and fixed on the way (FEATURE_IDEAS.md #31)
+
+`omega-constellation.js`'s ring (live on `agents.html`/`pantheons.html`) had every one of its 12
+agent nodes hard-coded to `href:'/agents.html'` — 12 decorative dead ends, not a map. Resolved a
+real destination for each agent mechanically: matched each agent's own `domains` array (already in
+`omega-agents.json`) as literal substrings against `nav.js`'s real `SECTIONS` sub-link slugs/labels,
+no manual judgment calls. All 12 resolved cleanly (Sentinel→`/privacy.html`, Oracle→
+`/prediction.html`, Historian→`/family.html#heritage`, etc. — full table in FEATURE_IDEAS.md #31).
+Added as an `href` field on each agent in `omega-agents.json` (a property of the agent, not a
+second copy of nav.js's table — CLAUDE.md §8.1 class 8); `omega-constellation.js` now reads
+`a.href` per node. Mounted the same ring on `dashboard.html`, replacing a hand-rolled
+`#agent-quick` grid that had the identical bug (`onclick="location.href='/agents.html'"` on all
+12 cards) — one canonical, fixed component instead of two independently-broken ones.
+
+**A second real bug, found by verifying the render rather than trusting the diff.** The new
+dashboard mount showed 6 of 12 nodes gold, 6 dimmed — reproducible, identical across repeated runs
+and settle times (ruling out a load race). Traced with a rule-matching script (walk every
+stylesheet, test `element.matches(selector)` against the two nodes) rather than guessed at:
+`css/omega-cinematic-animations-phase2.css` already owned `.ocn-node`/`.ocn-orbit` for a wholly
+unrelated, **dead** decorative "constellation backdrop" effect — grepped all 204 pages, zero ever
+create its `.omega-constellation-backdrop` container — and its JS
+(`omega-cinematic-animations-phase2.js`'s `updateConstellationNodes()`) calls
+`document.querySelectorAll('.ocn-node')` with no scoping to that container, plus a
+`MutationObserver` that re-fires the same query on every DOM insertion. The instant
+`omega-constellation.js` mounted real ring nodes, this dead module's CSS and staggered
+per-index `animationDelay` values silently painted over them. This had been live and corrupting
+`agents.html`/`pantheons.html`'s existing rings the whole time too — masked there because the
+purple page-accent tint read as plausibly intentional rather than an obvious bug. Another instance
+of CLAUDE.md §8.1 class 5 (a class name is a module's identity, not a feature area's).
+
+Fixed by renaming the dead, never-mounted intruder — never the real, working module — across all
+four of its files: `.ocn-node`/`.ocn-orbit`/`.ocn-link`/`.ocn-focal` →
+`.ocnbg-node`/`.ocnbg-orbit`/`.ocnbg-link`/`.ocnbg-focal`. Verified in a real render: `agents.html`
+COUNCIL tab now shows correct per-sign emblem colours (fire/water/wind/metal/sand) instead of a
+flat purple box on every node; the new dashboard mount shows the same correct colours with zero
+alternation; 12 distinct real hrefs confirmed via DOM query; zero overflow and zero console errors
+on `dashboard.html`/`agents.html`/`pantheons.html`.
+
+```
+node --check (constellation.js, phase2.js, phase3.js)   OK
+python3 scripts/check-inline-js.py                       OK
+python3 scripts/audit.py                                 0 critical / 6 warnings (baseline, unchanged)
+dashboard.html: 12 nodes, 12 unique hrefs                confirmed via DOM query
+dashboard/agents/pantheons: overflow / console errors    false/false/false, 0/0/0
+scan.js errors (204 pages, full sweep)                    0/204
+python3 scripts/omega-registry.py --check                 OK (regenerated for module byte-size drift)
+python3 scripts/module-contract.py                        0 broken, 127 contracts
+python3 scripts/reachability-contract.py                  OK -- every destination linked
+python3 scripts/omega_fabric_audit.py                      VERIFIED=8 UNVERIFIED=1 (baseline), 12 agents still bind correctly
+```
+
+## 3-D sculpture layer extended to agents.html and pantheons.html; matrix.html excluded for a real reason (FEATURE_IDEAS.md #32)
+
+`omega-sculpture.js`'s real three.js layer had two fully-built scene types --  `agents` (12-spoke
+wheel, cyan/gold cube nodes) and `matrix` (9x9x9 grid) -- demoed on `sculpture.html` but never
+mounted on the real pages their names describe. Mounted `agents` on `agents.html`'s COUNCIL tab
+(above the existing constellation ring -- real-time centrepiece and navigable map, not duplicates)
+and on `pantheons.html`'s Olympians tab, reusing the shared `.osc-stage` class from
+`css/omega-system.css` (already injected everywhere, no new CSS). `matrix.html` was checked and
+excluded, not skipped: it already has a real `#matrix-canvas` "3D Matrix Projection" panel labelled
+"729 inner nodes" -- the identical concept the sculpture's `matrix` scene renders, so mounting it
+there would compete with an existing feature rather than fill a gap.
+
+Verified in a real render, not assumed: both new mounts produce a canvas with a non-zero drawing
+buffer (`scan.js canvas`), drew each onto a fresh 2-D canvas via `drawImage` and sampled 292/244
+distinct colours (real painted geometry, not a blank frame), screenshots confirm the expected
+glossy PBR signet-and-cubes render, zero overflow and zero console errors on both pages.
+
+```
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                            0 critical / 6 warnings (baseline, unchanged)
+scan.js canvas (agents.html, pantheons.html)        0 zero-buffer, 0 painting-nothing
+distinct sampled colours (agents / pantheons)       292 / 244
+overflow / console errors                           false/false, 0/0
+scan.js errors (204 pages, full sweep)              0/204
+```
+
+## Sparkline Wave 6 — intelligence.html's graph-events log gets a real sparkline from data it already fetches (FEATURE_IDEAS.md #33)
+
+Extended the sparkline audit from `localStorage`-based logs (Waves 1-5) to Supabase-backed ones:
+grepped every page for `.order('created_at'/'occurred_at', ...)` outside pages already covered,
+filtered to those with no existing chart, and read all 12 candidates' real queries before deciding.
+
+`intelligence.html`'s GRAPHIFY tab already fetches the member's last 20 `graph_events` rows
+(real `occurred_at` timestamps) to build its "RECENT GRAPH EVENTS" feed, right beside a flat
+`EVENTS LOGGED` count with no chart. Bucketed the already-fetched rows by calendar day (no new
+query) into `#graph-events-spark`, labelled "GRAPH EVENTS PER DAY, RECENT ACTIVITY" since only
+days actually present in the 20-row window are counted, never padded with invented zeros.
+
+The other 11 candidates were read and correctly excluded: `approvals`/`profile` query `profiles`
+for a signup/admin list, not a personal metric; `consultancy`/`enterprise` query business entities
+with no numeric field; `events`/`family`/`news`/`queue`/`travel` fetch real but qualitative
+records (title/body/category/notes) with nothing to plot; `feed.html`'s `member_posts` has real
+`likes_count`/`comments_count` but for a shared feed, not the visiting member's own trend;
+`observatory.html` has genuinely numeric SRE data but every query is `.limit(1).maybeSingle()` —
+latest value only, no history fetched, so a sparkline there needs a real query change rather than
+wiring an existing fetch.
+
+Verified in a real render: clicked the actual GRAPHIFY tab (real `loadGraphStats()` call against
+the stub, correctly stayed hidden with zero real events); separately confirmed the shipped
+bucketing algorithm against a realistic fixture (3/1/2 events across 3 real days) produces the
+correct series and the sparkline module renders it once fed real data.
+
+```
+scan.js errors / overflow (intelligence.html)      0/1 each
+python3 scripts/check-inline-js.py                 OK
+python3 scripts/audit.py                           0 critical / 6 warnings (baseline, unchanged)
+```
+
+## Interface-guidelines audit run for real, two genuine icon-only-control findings fixed; a third (map.html) checked and correctly excluded
+
+Ran `node .claude/skills/verify-in-browser/harness/scan.js guidelines` across all 204 pages per
+`.claude/skills/interface-guidelines/SKILL.md` (194 pages rendered; the rest redirect/dedupe by
+`location.pathname`, the skill's own documented gotcha). Two real, distinct findings, both fixed:
+
+- **`agent-network.html`**: the agent-detail panel's close button (`<button class="close-panel"
+  onclick="closePanel()">✕</button>`) had no accessible name — a bare "✕" glyph announces as
+  nothing or a generic glyph name to a screen reader. Added `aria-label="Close agent panel"`.
+- **`nutrition.html`**: all 8 water-cup toggles (`<div class="water-cup" onclick="toggleCup(i)">`,
+  a star-rating-style "set intake to N cups" control, confirmed by reading `toggleCup()`) rendered
+  with empty text and no accessible name. Added a dynamic `aria-label="Set water intake to N
+  cup(s)"` plus `aria-pressed` reflecting the real filled state, generated in the same template
+  string that already computes `filled` — no new state to keep in sync. Left `role`/`tabindex` to
+  `omega-a11y-controls.js`, which already adds them to any `[onclick]` div platform-wide and checks
+  `!el.getAttribute('aria-label')` first, so it won't clobber the new label — confirmed by reading
+  its source rather than assuming, and verified redundant if added in the template.
+
+**`map.html`'s finding checked and correctly excluded, not fixed.** Its "images without
+width/height" are Leaflet's own dynamically-created `.leaflet-tile` `<img>` elements (vendored,
+third-party). Each already gets an inline `style="width:256px;height:256px"` set synchronously by
+Leaflet at element creation, before the image loads — the actual CLS mechanism the guideline
+targets (an unsized image reflowing on load) cannot occur here regardless of the HTML attribute's
+presence. Patching vendored Leaflet internals to add the attribute for a guideline whose real
+failure mode is already absent would be editing third-party code for no measurable benefit.
+
+Verified in a real render: re-ran the guidelines scan on both fixed pages — the icon-only-control
+finding is gone on each, only the platform-wide, already-documented `transition:.2s` shorthand
+debt remains (deliberately not swept, per the skill's own note). Drove a real click on the nutrition
+water cups through Playwright's actual click (not a direct function call) and confirmed
+`aria-label`/`aria-pressed`/the visual `filled` class all update together correctly. Zero errors,
+zero overflow on both pages.
+
+```
+scan.js guidelines (agent-network.html, nutrition.html)   icon-only-control finding: gone
+real click test (nutrition water cups)                    aria-label/aria-pressed/filled stay in sync
+scan.js errors / overflow (both pages)                    0/2, 0/2
+python3 scripts/check-inline-js.py                        OK
+python3 scripts/audit.py                                  0 critical / 6 warnings (baseline, unchanged)
+```
+
+## Dashboard's 133-chip "all pages" wall becomes searchable and collapsible (FEATURE_IDEAS.md #34)
+
+`dashboard.html`'s "PLATFORM COMMAND INDEX" (`renderPlatformSections()`) read `nav.js`'s real
+`SECTIONS` table and rendered it flat: 133 page-link chips across 15 always-open sections, all
+visible at once, no filter. This is the one surface where the platform's real page count reaches a
+member unmediated — everywhere else, `nav.js`'s own 15-section grouping already does the
+organizing. Explicitly decided **not** to reduce the actual page count (that would mean rewriting
+`nav.js`'s routing table to solve a problem that does not exist for a member navigating the
+sidebar) and instead fixed the one place scale becomes noise: this flat grid.
+
+Added a real-time search input (`#platform-search`, `oninput="filterPlatformSections(this.value)"`)
+and an honest empty state (`#platform-search-empty`, "NO PAGES MATCH") directly under the sechead.
+Rewrote the render tail to emit collapsible sections — each with a real `<button>` header,
+`aria-expanded`, a page-count badge, and a chip list — wired to `window.togglePlatformSection` and
+persisted via `localStorage['omega_platform_sections_collapsed']` (a per-viewer UI-state
+convenience, not data — same pattern as this repo's other `localStorage`-only preferences).
+`window.filterPlatformSections` does substring matching per chip, hides non-matching chips and
+whole empty sections, force-expands any section with a match regardless of its stored collapsed
+state, and restores each section's actual prior collapsed state when the query is cleared (not a
+blanket re-expand-all).
+
+Verified with real Playwright interactions, not read-throughs of the code:
+
+- Initial render: 15 sections, 133 chips, matching the pre-existing count.
+- A real `page.click()` on a section header collapses it and flips `aria-expanded="false"`.
+- A real page reload preserves that one section's collapsed state via localStorage — confirms the
+  persistence round-trip, not just that the write call was made.
+- A real `fill()` search for "journal" narrows to 1 matching chip in 1 section, hiding the rest.
+- Clearing the search restores all 15 sections **and** the specific section collapsed earlier —
+  proving the "restore prior state" path, not a naive expand-all.
+- A nonsense query renders the empty state; zero chips remain in the DOM as visible.
+- Zero horizontal overflow, zero console errors, throughout every interaction above.
+
+```
+scan.js errors / overflow (dashboard.html)   0/1 each
+python3 scripts/check-inline-js.py           OK
+python3 scripts/audit.py                     0 critical / 6 warnings (baseline, unchanged)
+scan.js errors (all 204 pages)               0 pages with uncaught errors or rejections
+```
+
+## Live re-verification: RLS-grant reachability, RPC divergence, and search_path hardening — all confirmed clean, nothing new found
+
+Before adding new code, ran a fresh live audit across the three risk classes this repo tracks most
+carefully, using this session's live Supabase MCP access against project `ydqhzvvoyufiiqvzcjns`
+(worked despite an initial "requires authentication" banner — per §8.2's standing note, tried the
+call before reporting it blocked).
+
+1. **130 tables with RLS and no GRANT** (`GAP_ANALYSIS.md` §S, re-counted at 130 live via a direct
+   `pg_tables`/`pg_policies`/`information_schema.role_table_grants` query — matches the documented
+   count exactly). Cross-referenced every one against a real `grep -rlE "\.from\(['\"]<table>['\"]\)"`
+   across every `.html`/`.js` file: **0 of 130 are reachable from any client code.** No repeat of
+   the `agent_experiments` class of bug (a real, live `42501` on a reachable-but-locked table,
+   fixed in #179) — the documented "safe locked state" still holds exactly.
+2. **Diverging client-called RPC definitions** (`scripts/audit.py` check 8 still flags
+   `check_trial_status`, `order_stats`, `public_leaderboard`, `recall_ai_context` as having
+   non-identical bodies across `supabase/*.sql`). Checked each against what's actually live and
+   against its real call site: `check_trial_status`'s live signature is
+   `p_uid uuid DEFAULT auth.uid()` — `omega-chronometer.js:295`'s no-arg call is correct by design,
+   not a bug. `order_stats()`/`public_leaderboard(p_limit)` both return `jsonb`; `hall.html`'s
+   reads (`d.members`/`d.certificates`/`d.elements`, `board.map(...)` guarded by
+   `!board||!board.length`) match the live shape and are already error-handled
+   (`if(error){...return}` / `if(berr||!board...)`). All four confirmed non-issues — the audit
+   warning is entirely stale-duplicate-file noise, exactly as `CLAUDE.md` §8.3 predicted.
+3. **RPC `search_path` hardening** (`GAP_ANALYSIS.md` §3.1 named `order_stats`, `approve_member`,
+   `grant_permanent_access`, `sync_platform_owner` as missing it — "harmless... a hardening
+   inconsistency worth closing"). A full live sweep (every `public` function, not just the four
+   named) found **zero** functions missing `search_path` — `select ... where not exists (select 1
+   from unnest(proconfig) c where c like 'search_path=%')` returned an empty set — and
+   `get_advisors(type: security)` shows no `function_search_path_mutable` finding. The gap was
+   already closed live; the GAP_ANALYSIS note was describing stale copies in the docs-only SQL bag,
+   not anything actually deployed.
+
+No code changed for any of the three — confirming a "known debt" item is still accurately
+triaged is itself the useful result, and manufacturing a fix for something not actually broken
+would be exactly the class of fabricated finding §8.1 class 9 warns against.
+
+## Scene-per-realm 3-D backdrops shipped: the 9 realm hub pages get their own tinted signet (GAP_ANALYSIS.md item (2) under "four scenes is where it stops")
+
+Full grounding, decision, and verification recorded in `GAP_ANALYSIS.md`'s updated item (2) rather
+than duplicated here. Summary: `dashboard.html`, `profile.html`, `honors.html`, `cosmos.html`,
+`media.html`, `vault.html`, `family.html`, `services.html`, `intelligence.html` — the 9 pages
+`index.html`'s own realm strip links to — each got one `.osc-stage[data-omega-sculpture="signet"]`
+mount with `data-sculpt-accent` set to that page's own realm hex (the same hexes already rendered
+on `index.html`'s realm strip, not an invented palette) and `data-sculpt-bloom="off"` (9 new
+mounts on already content-heavy pages; the documented ~22%-per-mount bloom cost was skipped by
+default rather than absorbed on every one). `signet` was the only one of the 6 scene builders that
+actually honours a custom accent (`buildSignet(T, opt.accent || p.gold)`) — the other five
+hardcode their palette, a scoping finding now recorded so a future session doesn't assume it
+applies platform-wide.
+
+Verified in a real headless render across all 9, not read-throughs:
+
+```
+scan.js errors / overflow (9 realm pages)       0/9 errors, 0/9 overflow
+canvas drawing buffer vs. live box size          matches on all 9 (no §8.1 class 3 zero-buffer repeat)
+vault.html CSP violations                        0 (checked specifically — it runs the platform's
+                                                    one stricter meta CSP, GAP_ANALYSIS.md)
+data-sculpt-accent read back correctly            all 9, distinct hex per page
+rendered mesh colour actually differs per page   confirmed via screenshot on 4 of 9
+                                                  (dashboard gold, vault gold, services green,
+                                                  cosmos purple — visibly distinct, not just DOM attrs)
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```
+
+## Navigable 3-D scenes: GAP_ANALYSIS.md's item (3) was stale (the feature already shipped) — and checking it live found a real flaky-click bug, now fixed
+
+Asked to build "navigable 3-D scenes" (raycasting the `agents`/`matrix` nodes into real links), per
+`GAP_ANALYSIS.md`'s standing item (3). Reading `omega-sculpture.js` before writing anything found
+the feature already fully implemented — a "NAVIGATION" section (`pickAt`/`setHover`/`wireNavigation`/
+`linkList`) already wires real raycasting, hover feedback, click-to-navigate, and a parallel real
+`<a href>` list per link on every one of the 6 scene builders. The GAP_ANALYSIS entry claiming this
+was unbuilt was simply wrong — evidently a doc that never got updated after the feature shipped.
+
+**Verified live rather than trusted from the diff, because it looked broken at first.** A scripted
+click on a raycast-confirmed node (cursor genuinely `pointer`) failed to navigate on 5 of 6 mounts
+(`agents.html`, `pantheons.html`, `gates.html`, `elements.html`, `ascension.html`). Investigated
+with debug instrumentation (a route-intercepted copy of `omega-sculpture.js` with `console.log` in
+`pickAt()` and the click handler) rather than guessing:
+
+- **Not a real bug, an insufficient test wait.** For those 5 pages the destination is the same page
+  the scene is mounted on (in-file comment: `agents.html` "carries no per-agent anchor" so all 12
+  nodes share `/agents.html`), and a same-URL reload plus this environment's load conditions take
+  longer than 500ms to register as a `framenavigated` event. A plain, unrelated `<a href>` click
+  test (nothing to do with `omega-sculpture.js`) showed the identical symptom at 500ms and
+  succeeded at 2000ms — confirming the delay is environmental, not a defect. Re-tested with a 2.5s
+  wait: all 5 navigate correctly, both before and after the fix below.
+- **A real, reproduced bug, found and fixed.** `wireNavigation()`'s click listener called
+  `pickAt(m, e.clientX, e.clientY)` fresh at click time instead of reusing the hover state
+  `pointermove` had already computed. Every one of these scenes keeps its nodes in continuous
+  rotation, so a click event's coordinates can differ from the `pointermove` that lit the cursor by
+  sub-pixel rounding alone. Reproduced on `gates.html` with the debug build: hovering logged
+  `hits: 1` at `(355.67, 343.44)`; the click a moment later, at the browser-rounded `(355, 343)`,
+  logged `hits: 0` — `window.location.href` was never set, silently. Fixed in `omega-sculpture.js`:
+  the click handler now reads `var hit = m.hover || pickAt(m, e.clientX, e.clientY);` — the tracked
+  hover (what the user actually saw highlighted) first, a fresh raycast only as a fallback for the
+  no-prior-`pointermove` case (a touch tap). Re-verified with the same debug build after the fix:
+  the identical `gates.html` reproduction now logs `m.hover? true` and `hit /gates.html`, and a real
+  `framenavigated` event fires.
+
+Final verification, real (non-debug) `omega-sculpture.js`, all 6 mount points, real raycast-confirmed
+click, adequate wait:
+
+```
+agents.html (agents)          navigates -> /agents.html
+pantheons.html (agents)       navigates -> /agents.html
+gates.html (gates)            navigates -> /gates.html
+elements.html (elements)      navigates -> /elements.html
+ascension.html (ascension)    navigates -> /ascension.html
+sculpture.html (matrix)       navigates -> /matrix.html
+node --check omega-sculpture.js                OK
+python3 scripts/check-inline-js.py             OK
+python3 scripts/audit.py                       0 critical / 6 warnings (baseline, unchanged)
+```
+
+## First real slice of the dormant academy_* course scaffold activated: real course, real RLS, real member flow — dormant by default, plus a real gap in this repo's own schema source control found and closed
+
+Owner-directed: the ~130-table dormant SaaS scaffold (`GAP_ANALYSIS.md`) is a real retirement-income project, and the LMS/courses vertical was chosen after weighing it against project-management, marketplace, and knowledge-base directions — courses fit because the platform's existing Academy/Ascension/Gates content is already thematically educational, and it needs no multi-tenant pivot (individual members buy directly, not other businesses).
+
+**Before writing any code**, checked the live schema rather than assuming the scaffold's shape: `academy_categories`/`academy_courses`/`academy_modules`/`academy_lessons`/`academy_enrollments` all carried `omega_deny_by_default` (`ALL, qual: false`) and no grant — genuinely dormant, confirmed via `pg_policies`. Two *other* academy tables, `academy_access` and `academy_progress`, already had real, correct RLS and grants live — confirmed via `information_schema.role_table_grants` — but were referenced by zero client code anywhere in the repo (a repo-wide grep). `academy.html` turned out to be a completely separate, already-working feature (a knowledge-quiz tracker on `task_completions`), not the course scaffold — so there was no existing UI to wire up.
+
+**A real gap found and closed along the way:** `scripts/audit.py` check 7 flagged `academy_courses`/`academy_modules`/`academy_enrollments` as "never CREATE TABLE'd anywhere in `supabase/`" — these ~83 scaffold tables (`GAP_ANALYSIS.md`'s own standing note) have never had a `CREATE TABLE` statement in *any* file in this repo, only existing live. Tolerable while unused; not tolerable now that real code depends on them — a fresh database restore from this repo's own history would be missing the table. Added `supabase/migrations/20260921005900_academy_schema_capture.sql`, pure `CREATE TABLE IF NOT EXISTS` DDL with every column/type/default/FK copied from a live `information_schema.columns` + `pg_constraint` query, not guessed. Re-ran `scripts/audit.py` after: the warning dropped from 5 to 2 (the 2 remaining are the pre-existing, already-documented `transactions`/`wallet_balances` dormancy warnings, untouched).
+
+**Two real upsert-conflict bugs (CLAUDE.md §8.1 class 7) caught before they shipped, not after:**
+- `academy_enrollments` already carried the exact unique constraint needed (`academy_enrollments_course_id_profile_id_key` on `(course_id, profile_id)`, confirmed via `information_schema.table_constraints`) — so a second index was *not* added; the client upsert targets the existing constraint's columns.
+- `academy_modules`/`academy_lessons` had no unique key beyond their own `id` — meaning the seed's original `ON CONFLICT DO NOTHING` would have silently duplicated rows on every migration re-run. Added real `(course_id, sort_order)` / `(module_id, sort_order)` unique constraints (correct data modelling in its own right) before seeding, guarded with a hand-written existence check since Postgres has no `ADD CONSTRAINT IF NOT EXISTS`.
+- `academy_progress`'s only unique constraint was `(user_id, node_id)` — a different key shape from what the lesson-progress flow actually needs. Rather than force-fit `node_id`, added the real `(enrollment_id, lesson_id)` constraint the client's upsert targets.
+
+**RLS verified live, not assumed from the policy text**, using real impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, per this repo's own documented gotcha that `set_config('role',...)` alone does not engage RLS):
+- A non-owner member sees exactly the 1 published course / 2 modules / 4 lessons seeded.
+- A member can enroll (insert their own `profile_id`) and see their own enrollment.
+- A member's attempt to `UPDATE academy_courses` (owner-only) is silently blocked — title unchanged.
+- A second member attempting to insert an enrollment row for a *different* `profile_id` gets a real `42501` — cross-user isolation confirmed, not merely assumed from the policy text.
+- Full enroll → mark-lesson-complete → read-own-progress flow verified end to end with the client's exact query shapes.
+- Migration re-run once in full to prove idempotency: course/module/lesson counts unchanged, and the real seeded article content was *not* overwritten by the idempotency-test's placeholder text — `ON CONFLICT DO NOTHING` correctly no-op'd.
+
+**Seed content is real, not filler**, matching an already-established platform theme rather than an invented topic: "Financial Foundations: Building Your Wealth Plan" (2 modules, 4 lessons — net worth, savings rate, the 50/30/20 framework, a written wealth plan) mirrors `gates.html`'s own "Gate of Finance" domain description verbatim.
+
+**`courses.html` built new** (nav.js: added under ASCEND next to `academy`, both `SECTIONS` and the `PS` page→section map) — catalog → course detail → lesson view, all wrapped in `data-omega-flag="courses_enabled"` (the existing `omega-flags.js` mechanism, no new plumbing) so the entire feature is dormant behind `platform_settings.courses_enabled = false` until the owner turns it on, per CLAUDE.md §9's rule for a new monetizable feature. Lesson articles render through the vendored `marked.min.js`. Verified end to end in a real browser with a custom route-intercepted stub carrying realistic data (the shared harness's default stub is table-agnostic and cannot exercise a real catalog/enroll/lesson flow): catalog renders the real course, course detail shows correct module/lesson counts with lessons locked pre-enrollment, enrolling unlocks them and shows a real progress bar, opening a lesson renders its markdown (bold text confirmed as real `<strong>`), marking it complete updates the button state and the progress bar (0/4 → 1/4, 25%) on return to the course view — zero console/page errors through the whole flow.
+
+**One advisory false positive, checked rather than dismissed or blindly fixed:** `scripts/upsert-conflict-check.py` flags the `academy_progress` upsert as matching no unique key — because that script only scans `supabase/*.sql` (the docs-only bag), not `supabase/migrations/`, where the real `academy_progress_enrollment_lesson_uk` constraint was actually added. Verified against the live schema per the tool's own advisory note ("verify a finding against the live schema before changing code") rather than either ignored or acted on blindly.
+
+```
+RLS impersonation (visibility/enroll/owner-write-blocked/cross-user-isolation)   all pass
+Migration re-run (idempotency)                                                  counts unchanged, real content preserved
+Full browser flow (catalog->enroll->lesson->complete->progress)                 0 errors, all assertions pass
+scripts/audit.py check 7 (never-created tables)                                 5 -> 2 (only pre-existing transactions/wallet_balances left)
+scripts/schema-dictionary.py                                                    OK — all client calls reference existing columns
+scripts/silent-failure-detector.py                                             OK — every write checks .error
+scripts/upsert-conflict-check.py                                                1 finding, verified false positive (scans supabase/*.sql only)
+python3 scripts/check-inline-js.py                                             OK
+python3 scripts/audit.py                                                       0 critical / 6 warnings (baseline, unchanged)
+python3 scripts/reachability-contract.py                                       OK — 205 pages, every destination linked
+node scripts/verify-in-browser (full sweep)                                    205 pages, 0 uncaught errors
+platform_settings.courses_enabled                                              false (dormant; owner turns it on when ready)
+```
+
+## Exam/quiz layer added to the academy_* course scaffold — a member-supplied answer key would have been the actual bug, caught before it shipped
+
+The previous entry (courses launch) deliberately left `academy_exams`/`academy_questions`/`academy_exam_results` deny-by-default as a flagged follow-up rather than scope creep into the first slice. This entry is that follow-up, same `platform_settings.courses_enabled` flag, no new plumbing.
+
+**Confirmed the real starting state before writing anything**, not assumed from the prior entry's note: `information_schema.role_table_grants` showed RLS enabled and zero grants to any role on all three tables (CLAUDE.md §8.1 class 6c) — genuinely dormant. `information_schema.columns` gave the real column shapes (`academy_exams.pass_score integer default 70`, `academy_questions.correct_answer text`, `academy_exam_results.score numeric`), and `pg_constraint` confirmed no unique key existed on `academy_exam_results` beyond `id` — so retakes are additional rows, not an upsert, and no upsert-conflict bug (class 7) was possible to introduce here.
+
+**The real design risk was not a missing constraint — it was the SELECT itself.** A member-visible course needs `academy_questions` readable by that member to render the quiz. A plain `for select using (course published)` policy — the same shape already used for `academy_modules`/`academy_lessons` — would let any member read `correct_answer` through the identical query the UI uses to render the options, defeating the exam before it ships. Fixed with a Postgres column-level `GRANT SELECT (id, exam_id, question, option_a, option_b, option_c, option_d, points)` that deliberately omits `correct_answer`, and a new `submit_exam_attempt(p_exam_id, p_answers)` `SECURITY DEFINER` RPC that reads `correct_answer` with the function-owner's privileges (bypassing the column grant by design), computes the score server-side, and is the only writer of `academy_exam_results` — no INSERT grant to `authenticated` exists on that table at all, so a member cannot forge their own passing score by writing the row directly.
+
+**Both halves verified live, not read from the policy/grant text:**
+- `information_schema.column_privileges` after applying: `authenticated` holds `SELECT` on 8 columns of `academy_questions`; `correct_answer` is not one of them (it does carry `INSERT`/`UPDATE`, from the blanket content-management grant the owner-only RLS policies gate — no admin UI reads it, matching the existing courses tables' owner-managed-via-migration pattern).
+- Real RLS impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, this repo's own documented gotcha that `set_config('role',...)` alone does not engage RLS): `select correct_answer from academy_questions` as a non-owner member returns a real `42501`; `insert into academy_exam_results (...) values (..., true)` as the same member also returns `42501`.
+- `submit_exam_attempt` called as that same member with 3 correct answers and 1 wrong one scored `75.0` against `pass_score=70` → `passed=true`, and a real row landed in `academy_exam_results` with the correct `profile_id` — the RPC path works end to end, not just in isolation from the denial tests above.
+
+**Seed content is real, not filler**, grounded by reading the actual lesson articles rather than inventing questions: the existing "Financial Foundations" course's four lessons (net worth formula, savings rate formula, the 50/30/20 bucket split, the three things a written goal needs) each became one exam question, options included, drawn from the lesson text itself.
+
+**`courses.html` extended, not a new page**: an exam card appears on the course-detail view once every lesson is complete (mirroring the platform's existing "no fabricated completion" rule — the button does not appear until real per-lesson progress says so), showing the best-of-attempts score and PASSED/NOT YET PASSED; a new exam view renders the 4 questions as radio groups and calls the RPC on submit, showing score/pass/correct-count. Verified with a full interactive browser test using a custom route-intercepted stub carrying a real answer key (the shared harness's default stub is table-agnostic): enroll → complete all 4 lessons → exam card appears → open exam → 4 questions / 16 options render → submit 3 correct + 1 wrong → result shows "75% · PASSED · 3 OF 4 CORRECT" → back to course view shows "BEST SCORE 75% · PASSED" and a RETAKE EXAM button — zero console/page errors through the whole flow.
+
+**A genuinely `CREATE TABLE`'d-nowhere gap closed on the way**, same class as the courses migration: `academy_exams`/`academy_questions`/`academy_exam_results` had never had a `CREATE TABLE` statement in any file in this repo, only existing live. Backfilled as pure `CREATE TABLE IF NOT EXISTS` DDL with every column/type/default/FK copied from a live query, in its own schema-capture migration ahead of the RLS/grant/RPC migration.
+
+```
+information_schema.role_table_grants (before)                                  RLS on, zero grants to any role — confirmed dormant
+information_schema.column_privileges (after)                                   authenticated SELECT excludes correct_answer (8 of 9 columns)
+RLS impersonation: select correct_answer directly as member                    42501, as designed
+RLS impersonation: insert into academy_exam_results directly as member         42501, as designed
+submit_exam_attempt(3 correct, 1 wrong) as real member session                 score=75.0, passed=true, real result row written
+Full browser flow (enroll->4 lessons->exam unlock->answer->submit->best-score) 0 errors, all assertions pass
+scripts/audit.py                                                               0 critical / 6 warnings (baseline, unchanged)
+scripts/schema-dictionary.py                                                   OK
+scripts/upsert-conflict-check.py                                               0 findings (no upsert used — additional-attempt rows, not upserts)
+scripts/migration-drift.py                                                     PASS, 196 versions, local and remote agree
+scripts/omega-registry.py --check                                             OK
+./scripts/ci-local.sh                                                          24/24 blocking checks pass
+platform_settings.courses_enabled                                              false (dormant; owner turns it on when ready)
+```
+
+## Sigil-as-entry-point navigation on three hub surfaces; filmic tone mapping added to the 3-D renderer
+
+Owner-directed: "make each sigil the entry for its related page" and "use what game studios use for high-resolution rendering, where it fits."
+
+**Grounded the sigil ask before touching markup.** Every page already carries its own decorative hero sigil (`omega-identity.js`'s `sigil(slug, colour)`, procedural, hash-seeded) — but that sigil is the CURRENT page's own face, not a link, since you are already on that page. Making it clickable would mean linking a page to itself. The real gap was on hub surfaces that show OTHER pages as icons: `world-shell.html`'s 13-archetype "Character Framework" grid had emblem+text cards with **no `href` at all** (pure documentation), and `index.html`'s realm strip already had real `<a href>` tiles but rendered a flat Unicode glyph instead of the platform's own sigil generator. `agents.html`'s roster was checked and deliberately left alone: its `data-omega-constellation="agents"` ring already does real per-agent navigation via `omega-constellation.js`, and its `.agent-card` grid below is a *different*, intentional feature (picking which agent answers the concierge chat on the same page) — converting those cards to links would have broken agent selection to "fix" something that already worked.
+
+**`world-shell.html`**: the 13 characters (`command`/`identity`/`intelligence`/.../`sovereign`) had no per-character destination anywhere — they are a *classification* the page's own `omega-world-shell.js` derives from a slug via regex, not a lookup table with a canonical page. Rather than invent a mapping, ran the file's own real `classify()` regex (extracted, not paraphrased) against 13 candidate slugs in Node and kept only the ones that actually classify back to their own key: `command`→`dashboard`, `identity`→`profile`, `intelligence`→`intelligence`, `knowledge`→`academy`, `gaming`→`gaming`, `media`→`media`, `commerce`→`marketplace`, `creation`→`forge`, `community`→`social`, `governance`→`governance`, `finance`→`vault`, `system`→`ops`, `sovereign`→`index` (the un-matched fallback — confirmed `classify('index')` hits no earlier regex and falls through, which is honestly what the "Architect/Sovereign" archetype should point at). All 13 target files confirmed to exist before wiring. Each card became a real `<a href>` whose icon is `OmegaIdentity.sigil(destinationSlug, colour)` — the exact function every page's own hero already calls, reused rather than re-implemented (CLAUDE.md 8.1 class 8), so the mark a member clicks is pixel-identical to the mark they land on.
+
+**`index.html`**'s realm strip needed no new links (it already had 9 real `<a href>` tiles, one per `nav.js` SECTIONS entry) — only its glyph swapped from a flat Unicode character to that destination's own `OmegaIdentity.sigil()`, derived from the `href` itself (`/dashboard.html` → `dashboard`) so there is no second hand-kept slug list to drift. Guarded with a fallback to the original glyph if `OmegaIdentity` is somehow absent — never a blank tile.
+
+**Verified live in a real render, both surfaces**: `world-shell.html` — 13/13 `.char-card` elements are real `<a>` tags with a resolved `href`, 13/13 carry a real `svg.oid-sigil`, 0 console errors. `index.html` — 9/9 `.ohz-tile` elements are real links (unchanged from before), 9/9 now carry a real `svg.oid-sigil` in place of the flat glyph, 0 console errors.
+
+**Renderer quality**: checked what AAA engines (Unreal, Unity, and by extension what a PUBG-class title runs on) actually do differently from a bare WebGL scene, cross-referenced against what `omega-sculpture.js` already had. Three techniques were **already shipped** here, confirmed by reading the file rather than assumed: `antialias:true` on the `WebGLRenderer`, a real `PMREMGenerator`-baked environment map for image-based lighting on the `metalness:0.96` materials (GAP_ANALYSIS item 5), and one `InstancedMesh` for the matrix scene's 729 nodes instead of 729 draw calls. **One real, standard technique was missing**: tone mapping. `_renderer.toneMapping` was never set, so three.js defaults to `NoToneMapping` — every AAA engine's default is a filmic curve (ACES or a house equivalent) specifically because it rolls highlights off smoothly instead of clipping them, and clipping is the wrong pairing for HDR-range values coming out of a real environment map on a near-mirror material. Added `T.ACESFilmicToneMapping` + `toneMappingExposure = 1.1`, confirmed present in the vendored bundle by grepping the literal exported names (the file is minified, so a class-declaration grep proves nothing).
+
+**Verified with a real before/after render**, pinning the pre-change file via `git show HEAD` rather than `git stash` (nothing to stash — this was a working-tree edit) against the current one, both against `sculpture.html`'s 11 live mounts: 0 console errors in both, all 11 canvases render at their real size before and after, mean luminance shifted 164.2→162.3 and lit% 82.8→79.2 — a small, directionally-correct highlight rolloff, not a no-op and not a blowout. (CLAUDE.md's own method note applies: same-build repeat runs of this engine swing ±40% on light energy from the random per-scene phase offset, so a single before/after pair is suggestive, not proof on its own — combined with 0 errors and sane non-degenerate luminance on every mount, this is sufficient for an additive, reversible tone-curve change.)
+
+```
+world-shell.html: 13/13 cards are real <a href>, all resolved targets exist   confirmed
+world-shell.html: 13/13 cards carry a real svg.oid-sigil                     confirmed
+index.html: 9/9 realm tiles carry a real svg.oid-sigil (links unchanged)     confirmed
+agents.html                                                                   left as-is, real reason recorded above
+sculpture.html before/after (11 mounts, ACES tone mapping)                    0 errors both, luminance 164.2->162.3, lit% 82.8->79.2
+python3 scripts/check-inline-js.py                                           OK
+python3 scripts/audit.py                                                      0 critical / 6 warnings (baseline unchanged)
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```
+
+## "Short lead, click for more" disclosure component built and proven on 3 real pages — most candidate long-text blocks turned out to be the wrong target
+
+Owner-directed: "find a smart way to hide the explanative text in each page to be more short and targeted, and for more info a click info for user they can go to it."
+
+**Grepped for the actual verbose-text pattern before writing a component for it** (`color:var(--muted);line-height:1.[68]`), which hit 20+ pages. Reading the actual matches found two shapes that are NOT good candidates for hiding behind a click, and building the component around them would have been the wrong deliverable even though the grep pattern matched:
+
+1. **Card-grid bodies** (`ecosystem.html`, `marketplace.html`, `grid.html`, most of the 20+ hits): each card already has a short `.card-title` acting as its own summary, and the "long" text is one of 3-4 *parallel* facts a member scans side by side — collapsing each into its own click would cost 4 clicks to read what is currently one glance, which is worse UX, not better.
+2. **Live/dormant trust disclosures** (`compliance.html`'s Platform Constitution notice, `marketplace.html`'s Ω-economy dormancy notice): these exist specifically so a member sees "not yet implemented" at a glance, matching this repo's own anti-fabrication culture (CLAUDE.md §9). Hiding that behind a click would make the page *less* honest on first read, not more scannable — the opposite of the ask.
+
+**What the mechanism actually targets**: a genuinely standalone explanatory paragraph sitting *before* the actionable content of a page, with no existing summary anywhere else. Three real, verified fits: `world-shell.html`'s own developer-facing intro blurb, `factions.html`'s "Twelve Factions divide the Order" panel, `awards.html`'s "External Award Registry" panel — all flavour/context text, none of it a trust disclosure or a parallel-fact grid.
+
+**Built `omega-more-info.js`** (new module, bg.js-injected like every other shared module, own `data-omega-more-info` guard attribute): scans `[data-omega-more]` containers for a `.omi-lead` (always visible) and `.omi-full` (collapsed by default, `max-height`/`opacity` transition, `prefers-reduced-motion` respected), injects one real `<button>` toggle with `aria-expanded`/`aria-controls` wired correctly, re-measures `scrollHeight` on window resize so an open panel does not clip after a viewport change. Deliberately a **separate** reveal mechanism from `omega-content.js`'s `.oc-hidden` and `omega-animated.js`'s `.oa-reveal` — those are scroll-entrance triggers that fire once and never re-hide; this is a click-triggered toggle that opens and closes on demand. Documented in the module's own header not to apply either existing reveal class to an `.omi-full`/`.omi-lead` element, since CLAUDE.md's Ω-GVP notes already record a real bug from exactly that kind of stacking (an animation's keyframe silently overriding this module's own hidden state).
+
+**A real measurement mistake caught before it was reported as a result**: the first verification pass on `factions.html`/`awards.html` showed the toggle's `aria-expanded` flipping to `true` on click but `max-height` staying at `0px` — looked like a broken component. It was not: both panels sit inside a `.tab-panel` that is not the page's default-active tab (`display:none` at load), so `full.scrollHeight` genuinely read 0 at click time — CLAUDE.md 8.1 class 10's sibling problem (`display:none` panels reading as populated) hitting the opposite direction (a real component read as broken because its container was hidden). Re-tested calling each page's own real `setTab()` first to make the panel visible, matching the harness's own documented gotcha ("force the panels visible before measuring, or report honestly that you measured N of M") — all three pages then show a correct `0px → <real height>` expansion, `aria-expanded` and the button label flipping correctly, 0 console errors.
+
+**Explicitly not swept across the estate.** The grep surfaced dozens more candidate blocks; each one needs the same by-hand judgment call this entry just made (parallel-fact grid vs. trust disclosure vs. genuine standalone lede) before it is wrapped — a blind regex-driven sweep would misfire on exactly the two shapes identified above. Three pages ship as real, verified proof of the mechanism; the rest is open, scoped work, not silently claimed done.
+
+```
+world-shell.html   toggle: 0px -> 65px on click, aria-expanded true, label LESS INFO, 0 errors
+factions.html      toggle: 0px -> 43px on click (after real setTab('all')), 0 errors
+awards.html        toggle: 0px -> 65px on click (after real setTab('honours')), 0 errors
+python3 scripts/check-inline-js.py                                            OK
+python3 scripts/omega-registry.py --check                                     OK (142 omega-*.js modules, 150 root .js files)
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```
+
+## Second SaaS-scaffold vertical shipped: project management — a migration of a real, already-working local-only page, not a fresh build
+
+Owner-directed ("all of them" against the four remaining scaffold verticals). Investigated live schema before assuming this would look like the courses build: `projects`/`project_members`/`project_files`/`project_activity`/`tasks`/`task_comments`/`task_attachments`/`task_labels`/`task_label_map` — 9 real tables, RLS-on, zero grants, confirmed via `information_schema.role_table_grants`, unreferenced by any client `.from(...)` call anywhere in the repo.
+
+**The real finding that changed the shape of this work**: `projects.html` was not a page to build — it already exists, complete and working, running entirely on `localStorage` (`omega_projects`/`omega_proj_tasks`). It has real tabs (Active/New Project/Tasks/Science), stats, status filters, per-project milestones, per-project tasks, edit/delete/cycle-status — a genuinely good UX with one problem: nothing persists past a cleared browser or syncs across devices. This is a migration task, not a build task, and the bar is different: preserve every existing feature exactly, or it is a regression dressed as an upgrade.
+
+**Schema reconciliation, decided before writing any client code**: the local page's UX depends on `category` (10 values) and `priority` (4 values) on a project, and a `milestones` array — none of which the live `projects` table had (it only carried `status`/`visibility`). Added `category`/`priority` as real columns on `projects` (an additive `ALTER TABLE`, not a workaround). Milestones got their own `project_milestones` child table rather than a JSONB blob on `projects` — matching the relational shape every other child table in this same scaffold already uses (`project_activity`, `project_files` are both per-project child tables), not inventing a second pattern.
+
+**Scoped to a v1 slice, same reasoning as `academy_exams`**: only `projects`, `tasks`, and the new `project_milestones` got real RLS and grants. `project_members`/`project_files`/`project_activity`/`task_comments`/`task_attachments`/`task_labels`/`task_label_map` stay deny-by-default — real collaboration features (comments, attachments, shared labels, multi-member projects) are a separate, later decision, not implied by "migrate the existing page." RLS is single-owner (`owner_id = auth.uid()`) for v1, matching the owner's own individual-member framing from the courses migration — no organization/team layer, and `projects.organization_id` (a real column, FK to the still-untouched `organizations` scaffold table) stays null and unused.
+
+**RLS verified live with two real member sessions**, not read from the policy text: member A creates a project, a task on it, and a milestone on it; member B's session sees `0` rows querying any of the three tables directly by the project's id, and an `UPDATE` attempt against member A's project as member B silently affects 0 rows. Test data cleaned up via cascade delete afterward.
+
+**A stale generated file caught and fixed before it caused false CI failures**: `supabase/live-schema.json` was dated 2026-09-17 — five real migrations behind, including this session's own earlier `academy_exams`/`academy_questions`/`academy_exam_results` work. `scripts/schema-dictionary.py` folds that snapshot in additively to avoid false positives on live-vs-bag drift (`CLAUDE.md` §8.1 class 2), so a stale snapshot flagged the brand-new `category`/`priority` columns as "does not exist." Regenerated from the exact query in `supabase/live-schema.README.md` (225 → also verified per the README's own advice: planted a real nonsense column in `projects.html`, confirmed the gate reported it with a file:line, then reverted — a checker that reports nothing looks identical to a checker that never ran).
+
+**A member-facing copy claim went stale as a direct consequence of this migration**: `settings.html`'s "45 pages keep what you enter in this browser only" was accurate until `projects.html` moved off `localStorage` — this is the exact drift CLAUDE.md's own method notes warn about ("your own fix can stale" a page-count claim). `scripts/page-count-claims.py` caught it; corrected to 44, matching `evidence-audit.py`'s real device-local count (5 with an export path + 39 with none) after regenerating `EVIDENCE_MATRIX.md` in the same change.
+
+**`courses.html`'s pattern of `type="module"` + explicit `window.fn=` assignments reused deliberately**: `projects.html`'s markup calls 14 functions from inline `onclick`/`onchange`/`onkeydown` attributes across the existing HTML (switchTab, setFilter, saveProject, editProject, cycleStatus, deleteProject, toggleMs, addMilestone, removeMilestone, addTask, toggleTask, deleteTask, clearProjectForm, renderTasks) — converting the script to a module without exporting every one of them to `window` would have silently broken all inline-handler UI on the page (CLAUDE.md 8.1 class 4a). All 14 are explicitly assigned.
+
+**Full interactive browser flow verified** against a custom stub matching the real query shapes (embedded `project_milestones(...)` select, plain `tasks` select relying on RLS rather than an explicit filter, matching the live RLS-scoping semantics): create a project with a milestone → renders with the right badge/milestone count/stat → cycle status → add a task in the Tasks tab → toggle it done; then separately, edit an existing project (form pre-fills correctly) → save → still one project, renamed → delete → empty state returns. 0 console errors across both runs.
+
+```
+information_schema.role_table_grants (before)                                  RLS on, zero grants to any role — confirmed dormant, 9 tables
+RLS impersonation: member B selects/updates member A's project directly        0 rows visible, 0 rows affected
+RLS impersonation: member B selects member A's tasks/milestones directly      0 rows visible, both tables
+Full browser flow (create+milestone->status cycle->add task->toggle done)     0 errors, all assertions pass
+Full browser flow (edit pre-fill->save->still 1 project renamed->delete)      0 errors, all assertions pass
+scripts/schema-dictionary.py negative control (planted nonsense column)       caught with file:line, then reverted -- gate confirmed live
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+scripts/migration-drift.py                                                    PASS, 198 versions, local and remote agree
+scripts/page-count-claims.py                                                  PASS (45->44 on settings.html, matching evidence-audit.py)
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```
+
+## Third SaaS-scaffold vertical: marketplace favorites — the page was already live, only four sibling tables were dormant
+
+Owner-directed (continuing "all four" verticals). Checked live schema before assuming this would look like courses or project-management: `marketplace.html` was **already wired to a real, working table**, not localStorage and not a stub — `marketplace_listings` has 4 real RLS policies and a real `authenticated` grant, confirmed via `pg_policies`/`information_schema.role_table_grants`, and the page's own SCIENCE tab already documents honestly what is real vs. planned ("EARN ON SALE — PLANNED... no buy step, no payment processing... today"). This is exactly the anti-fabrication discipline CLAUDE.md asks for, already done, by an earlier session.
+
+**What was actually dormant**: `marketplace_favorites`/`marketplace_categories`/`marketplace_orders`/`marketplace_reviews` — four tables, RLS-on, zero grants, never `CREATE TABLE`'d anywhere in this repo (`marketplace_listings` itself has several competing declarations in the flat bag; these four have none). Schema-captured all four.
+
+**Scoped to activate only `marketplace_favorites`, with each of the other three's dormancy given a real, separate reason rather than left unexplained:**
+- `marketplace_categories` needs a `category_id` column added to `marketplace_listings` (does not exist today) plus an actual taxonomy decision — not this slice's to invent.
+- `marketplace_orders` is the purchase/payment side of the same Ω-token economy the page's own SCIENCE tab already documents as dormant behind `platform_settings.tokens_enabled` — activating it would silently reverse the token-economy dormancy decision already made earlier this session ("still dormant").
+- `marketplace_reviews` has no verified-buyer signal to gate a review on without an orders flow — a trust-model decision (open reviews vs. verified-purchase reviews), not a default to pick silently.
+
+**RLS verified live with two real member sessions**: created a real test listing as member A, favorited it as member B (succeeds — favoriting isn't ownership-scoped, by design), then confirmed member A cannot see member B's favorite row when querying `marketplace_favorites` directly (own-row privacy, no public favorite-count leak). Un-favorite (delete own row) verified separately. Test data cleaned up.
+
+**UI added to the existing page, not a new page**: a heart/star toggle on every listing card (browse, my-listings, and the new favorites grid alike — skipped only on a member's own listings, consistent with the existing "MINE" badge logic), and a new FAVORITES tab loading via one embedded-select query (`marketplace_favorites.select('marketplace_listings(*)')`) rather than a second round trip per favorite.
+
+**The same stale-`live-schema.json` class caught again**: still dated 2026-09-17 from before this session's own earlier academy/project-management work reached it (each vertical this session has independently regenerated it — a real, recurring cost of shipping several schema changes in one session that each need the same snapshot refreshed). Regenerated in the same change; `schema-dictionary.py` confirmed clean afterward.
+
+**Full interactive browser flow verified** against a custom stub carrying two real seeded listings: click the star on a listing → turns filled, `aria-label` flips → switch to the FAVORITES tab → the favorited listing renders there → un-favorite from that same tab → empty state returns. 0 console errors throughout.
+
+```
+pg_policies / role_table_grants (marketplace_listings)                        4 real policies, authenticated granted -- confirmed already live, not dormant
+information_schema.role_table_grants (favorites/categories/orders/reviews)    RLS on, zero grants -- confirmed dormant, 4 tables
+RLS impersonation: member B favorites member A's listing                      succeeds (not ownership-scoped, by design)
+RLS impersonation: member A selects member B's favorite row directly          0 rows visible
+Full browser flow (favorite->appears in FAVORITES tab->unfavorite->empty)     0 errors, all assertions pass
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+scripts/migration-drift.py                                                    PASS, 200 versions, local and remote agree
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```
+
+## Fourth SaaS-scaffold vertical: knowledge base (personal notes) — same migration shape as project management
+
+Owner-directed ("all of them"), completing the fourth of four verticals picked earlier this session. `notes.html` was, like `projects.html`, already a complete and working page — title/body/category/tags/pin-to-top/markdown rendering/search/filter across four tabs (Notes/Write/Search/Science) — running entirely on `localStorage` (`omega_notes`). Same bar as the projects migration: preserve every existing feature exactly.
+
+**Schema investigation before any code**: the live scaffold's knowledge-base surface is ten tables — `ai_documents`, `ai_workspace_documents`, `ai_workspace_members`, `ai_workspaces`, `knowledge_attachments`, `knowledge_documents`, `knowledge_edges`, `knowledge_nodes`, `knowledge_spaces`, `omega_knowledge_chunks`, `omega_knowledge_sources`. Checked which had ever been `CREATE TABLE`'d in this repo before assuming a schema-capture migration was needed for all of them: `knowledge_nodes`/`knowledge_edges` already were, in `0056_entreprise_schema_v2.sql` (a generic graph, unrelated to notes) — only `knowledge_spaces`/`knowledge_documents`/`knowledge_attachments` were the real gap.
+
+**Scoped to activate only `knowledge_documents`, with the other two given real, separate dormancy reasons**: `knowledge_spaces` (folders/notebooks) stays dormant because `notes.html` has no folder concept and `space_id` is nullable, so a spaceless note is a correct row, not a workaround pending a folder feature. `knowledge_attachments` stays dormant because there is no file-attachment feature in `notes.html` to migrate. Every `ai_workspace_*`/`ai_documents`/`omega_knowledge_*` table is untouched — an actual AI/RAG workspace is a materially larger, separate feature and decision, not implied by migrating a notes page.
+
+**Same column gap as `projects`**: the live `knowledge_documents` table carried `id`/`space_id`/`author_id`/`title`/`slug`/`summary`/`body`/`version`/`status`/`created_at`/`updated_at` but nothing for `category`, `tags` (an array — the page has a tag cloud and per-note multi-tag), or `pinned` (pin-to-top). Added all three as real columns via an additive `ALTER TABLE`, not invented client-side state that would silently not persist.
+
+**RLS verified live with two real member sessions — and specifically covering UPDATE and DELETE this time**, not just INSERT/SELECT as the courses/project-management verticals needed: `notes.html`'s pin and delete actions are the first client calls in this session's four verticals to need `.update()`/`.delete()` as their *primary* operation rather than an incidental one, so both were impersonation-tested directly. Inserted a real test note as member A; as member B, an `UPDATE ... RETURNING id` and a `DELETE ... RETURNING id` against that note's id each returned 0 rows (RLS correctly hid it from member B's write path, not merely from a later SELECT); as member A, the same `UPDATE` affected 1 row. Test row deleted afterward, confirmed 0 remaining.
+
+**The same stale-`live-schema.json` class, caught a third time this session**: still dated 2026-09-21 from earlier in this same session's work, one vertical behind by the time this one landed. `schema-dictionary.py` flagged `category`/`tags`/`pinned` as nonexistent columns on the first run; regenerated the `knowledge_documents` entry from a live `information_schema`/`pg_attribute` query (additive, not a full snapshot rebuild) and re-verified clean. Also re-ran the README's own negative control: planted a bogus column name in the insert call, confirmed the gate caught it with an exact file:line, then reverted.
+
+**The same `type="module"` + `window.fn=` conversion as `courses.html`/`projects.html`**: `notes.html`'s markup calls 13 functions from inline `onclick`/`onchange`/`onkeydown`/`oninput` attributes (switchTab, ins, addTag, removeTag, saveNote, clearForm, runSearch, setCatFilter, viewNote, delNote, togglePin, filterByTag, editNote) — all 13 explicitly assigned to `window` after the module conversion, closing the CLAUDE.md §8.1 class 4a gap a straight `type="module"` swap would otherwise open.
+
+**A member-facing copy claim went stale as a direct consequence, again**: `settings.html`'s "44 pages keep what you enter in this browser only" (itself corrected from 45 earlier this session by the `projects.html` migration) went stale the moment `notes.html` also moved off `localStorage`. Corrected to 43, matching `evidence-audit.py`'s device-local count (5 with an export path + 38 without) after regenerating `EVIDENCE_MATRIX.md`.
+
+**Full interactive browser flow verified** against a custom stub matching the real query shapes (`knowledge_documents.select('*').order('updated_at')`, insert-then-`.select().maybeSingle()`, per-field `.update()`, `.delete()`): write a note with a title/body/category/tag → save → confirmation message appears → note renders in the Notes tab list → click to open the full markdown-rendered view → pin (star fills, no throw) → delete with the confirm dialog accepted → card removed, view pane cleared. 0 console errors across both runs.
+
+```
+information_schema.columns (knowledge_documents, before)                      11 columns, no category/tags/pinned -- confirmed live gap
+RLS impersonation: member B updates member A's note directly                  0 rows affected (RETURNING-counted, not inferred from a later SELECT)
+RLS impersonation: member B deletes member A's note directly                  0 rows affected (RETURNING-counted)
+RLS impersonation: member A (true owner) updates their own note directly      1 row affected
+scripts/schema-dictionary.py negative control (planted bogus column)          caught with file:line, then reverted -- gate confirmed live
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+Full browser flow (write->save->list->view->pin->delete)                      0 errors, all assertions pass
+scripts/migration-drift.py                                                    PASS, 202 versions, local and remote agree
+scripts/page-count-claims.py                                                  PASS (44->43 on settings.html, matching evidence-audit.py)
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```
+
+## Second sigil-entry-point pass: a dedicated "click to enter" mark (OmegaIdentity.dial), plus a real display:flex layout bug found and fixed on world-shell.html
+
+Owner-directed, with two reference screenshots of a specific visual: a tick-marked ring, an 8-ray spoke field crossing the centre, and a right-pointing triangle housing a glowing diamond core. The prior sigil-as-entry-point work (above) reused `OmegaIdentity.sigil()` — the same mark as each destination page's own hero — deliberately, for visual continuity. The new reference is a materially different design built for one job, "activate this to enter," not a page's static crest, so it did not belong inside `sigil()` (which still runs on all 202 page heroes and was not touched). Added `OmegaIdentity.dial(slug, colour)` instead, in `omega-identity.js`, alongside `sigil()`: same seeded-hash/mulberry32-rng machinery (a per-call `':dial'` suffix on the hash so a page's dial and its hero sigil never coincidentally share a seed), same viewBox/scaling contract, its own geometry. `world-shell.html`'s 13 character cards and `index.html`'s realm-strip tiles were switched from `.sigil()` to `.dial()` — the only two call sites, so no other page's rendering changed.
+
+**A real, previously-undiscovered layout bug was found verifying it, not caused by it.** `world-shell.html`'s `.char-card` (`<a class="char-card" href="...">`, meant to lay out icon/name/meta stacked vertically) rendered squished and overlapping in a real headless render: name and meta text sitting side-by-side instead of stacked, the emblem cropped to 16×27px instead of its declared 28×28px. `document.styleSheets` iteration (matching every rule against the live element, not a source grep) found the cause: `omega-accessibility-audit.css`'s `a[href]{display:inline-flex;...}` — a genuine, deliberate touch-target-sizing rule — has specificity `(0,1,1)` (one attribute selector + one type selector), which beats `.char-card`'s own `(0,1,0)` regardless of which stylesheet loads later. This is the same file CLAUDE.md already records one platform-wide visual bug from (the `aria-hidden` → `display:none` sweep); this is a second, distinct bug in it, previously unnoticed because nothing before now used `.char-card` for anything visually complex enough to make the squish obvious. Fixed by raising `.char-card`'s own selector to `#char-grid a.char-card` (`(1,1,1)`, unconditionally higher) rather than reaching for `!important`. Confirmed via computed style before/after: `display` went from the wrongly-inherited `flex` to the intended `block`, and the emblem's rendered box went from 16.65×26.80 (non-square, clipped) to 28.46×28.46 (correct, matching the CSS declaration). Not swept to other pages — this session's scope was the two entry surfaces; other `[class*="card"]`/anchor combinations elsewhere may carry the same collision and are open, unaudited work.
+
+**Verified live in a real render**: `world-shell.html` — 13/13 cards carry a real `svg.oid-dial` (not `oid-sigil`), 0 console errors, one enlarged sample visually confirmed against the reference screenshots (ring + ticks + node dots + one thicker highlight arc + 8-ray spoke crossing + triangle-housed glowing diamond, all present). `index.html` — 9/9 realm tiles carry a real `svg.oid-dial`, 0 console errors.
+
+**Gaming-engine research, honestly scoped**: re-checked what AAA battle-royale-scale engines (Unreal, the class PUBG ships on) do beyond what the prior pass already covered (PBR materials, IBL environment map, ACES tone mapping — all shipped already). The remaining real techniques — aggressive MIP/texture streaming, master-material-plus-instance shader reuse — assume a baked-asset import pipeline this repo does not have and should not add (no build step is load-bearing, CLAUDE.md §9); this platform's actual analogue (one shared WebGL context blitted per mount, one `InstancedMesh` for the matrix scene) already solves the same "don't duplicate GPU state" problem in the form that fits a no-build static site. Nanite/Lumen-class techniques have no meaningful analogue for a handful of procedural low-poly signet meshes. Nothing further was shipped from this research pass; recorded in `GAP_ANALYSIS.md` so a future session does not re-research the same question.
+
+**Three more pages added to the `omega-more-info.js` short-lead pattern**, following the same by-hand discipline as the first three (`world-shell.html`/`factions.html`/`awards.html`): `characters.html` (a clean standalone intro paragraph under the h1), `prediction.html` (the Oracle explainer — the lead sentence deliberately keeps the "no API key exposed in client code" trust fact visible, only the elaboration on sign/authority/tier context collapses), `vocabulary.html` (a section preamble ahead of a citation stack, not a repeated grid item). Full original text preserved verbatim in every `.omi-full`; only a fresh one-sentence lead was written per page. Two of the three sit in a non-default-active tab panel or behind a `.oc-hidden`/`.oa-reveal` scroll-reveal — verified by activating the real tab (`window.setTab('oracle')`, `window.switchTab('science')`) and the real reveal classes before clicking, per this repo's own documented "hidden tab panel"/"scroll-reveal" test gotchas, not by weakening the check.
+
+```
+document.styleSheets rule match (a[href], omega-accessibility-audit.css)     display:inline-flex, specificity (0,1,1) -- confirmed root cause, not source-order
+.char-emblem svg computed box, before fix                                    16.65 x 26.80px (non-square, clipped)
+.char-emblem svg computed box, after fix (#char-grid a.char-card)            28.46 x 28.46px (matches declared 28x28)
+world-shell.html: 13/13 cards carry a real svg.oid-dial                      confirmed, 0 console errors
+index.html: 9/9 realm tiles carry a real svg.oid-dial                        confirmed, 0 console errors
+omega-more-info.js toggle (characters.html, prediction.html, vocabulary.html) all 3: aria-expanded flips, max-height goes 0 -> real scrollHeight, 0 errors
+python3 scripts/check-inline-js.py                                           OK
+python3 scripts/omega-registry.py --check (after regeneration)               OK
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```

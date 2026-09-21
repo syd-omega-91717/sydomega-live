@@ -186,6 +186,117 @@ input,select,textarea{font-size:16px;line-height:1.45}\
     return svg;
   }
 
+  /* ── THE DIAL ─────────────────────────────────────────────────────────
+     A second, distinct mark from the same seed/axis machinery above --
+     never a copy of it. Built for one job: a clickable hub tile (a hub-grid
+     "character" card, a realm-strip tile) that should read as an instrument
+     you activate, not a static per-page crest. Same deterministic seed as
+     sigil() (so a given slug's dial never changes shape between visits),
+     same viewBox contract (0 0 100 100, scales with its container, no
+     asset/network/CSP cost), but its own geometry: a tick-marked ring, an
+     8-ray spoke field crossing the centre, and a right-pointing triangle
+     housing a glowing diamond core -- the "activate this instrument to
+     enter" reading the sigil's Ω-and-polygon crest was never meant to carry.
+     Not wired into build()'s page hero: that stays sigil()'s job on all 202
+     pages. dial() is opt-in, for the surfaces that call it directly. */
+  var _dialSeq = 0;
+
+  function dial(sl, col) {
+    var r = rng(hash(sl + ':dial'));
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.setAttribute('class', 'oid-dial');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+
+    function el(name, attrs, parent) {
+      var n = document.createElementNS(NS, name);
+      for (var k in attrs) if (attrs.hasOwnProperty(k)) n.setAttribute(k, attrs[k]);
+      (parent || svg).appendChild(n);
+      return n;
+    }
+    function pt(cx, cy, rad, ang) {
+      return [cx + rad * Math.cos(ang), cy + rad * Math.sin(ang)];
+    }
+
+    var uid = 'oid-dial-' + (++_dialSeq);
+    var GLOW = uid + '-glow', GRAD = uid + '-grad';
+    var defs = el('defs', {});
+    var filt = el('filter', { id: GLOW, x: '-60%', y: '-60%', width: '220%', height: '220%' }, defs);
+    el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: 2.2, result: 'blur' }, filt);
+    var merge = el('feMerge', {}, filt);
+    el('feMergeNode', { in: 'blur' }, merge);
+    el('feMergeNode', { in: 'SourceGraphic' }, merge);
+    var grad = el('radialGradient', { id: GRAD, cx: '50%', cy: '50%', r: '50%' }, defs);
+    el('stop', { offset: '0%', 'stop-color': '#ffffff', 'stop-opacity': 0.95 }, grad);
+    el('stop', { offset: '55%', 'stop-color': col, 'stop-opacity': 0.9 }, grad);
+    el('stop', { offset: '100%', 'stop-color': col, 'stop-opacity': 0.35 }, grad);
+
+    var cx = 50, cy = 50;
+
+    /* outer ring */
+    el('circle', { cx: cx, cy: cy, r: 42, fill: 'none', stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.4 });
+
+    /* one thicker highlight arc, seeded position/span -- the reference's
+       single brighter segment breaking the ring's uniformity */
+    var arcSpan = (0.5 + r() * 0.5) * Math.PI * 0.5;
+    var arcStart = r() * Math.PI * 2;
+    var arcEnd = arcStart + arcSpan;
+    var a0 = pt(cx, cy, 42, arcStart), a1 = pt(cx, cy, 42, arcEnd);
+    var largeArc = arcSpan > Math.PI ? 1 : 0;
+    el('path', {
+      d: 'M' + a0[0].toFixed(2) + ' ' + a0[1].toFixed(2) +
+         'A42 42 0 ' + largeArc + ' 1 ' + a1[0].toFixed(2) + ' ' + a1[1].toFixed(2),
+      fill: 'none', stroke: col, 'stroke-width': 2.4, 'stroke-opacity': 0.85, 'stroke-linecap': 'round'
+    });
+
+    /* 8 ticks + 8 nodes, interleaved every 22.5deg */
+    var tickOffset = r() * (Math.PI / 4);
+    for (var i = 0; i < 8; i++) {
+      var ang = tickOffset + i * (Math.PI / 4);
+      var isNode = i % 2 === 0;
+      if (isNode) {
+        var np = pt(cx, cy, 42, ang);
+        el('circle', { cx: np[0].toFixed(2), cy: np[1].toFixed(2), r: 2.2, fill: col, 'fill-opacity': 0.85 });
+      } else {
+        var t0 = pt(cx, cy, 40, ang), t1 = pt(cx, cy, 46, ang);
+        el('line', {
+          x1: t0[0].toFixed(2), y1: t0[1].toFixed(2), x2: t1[0].toFixed(2), y2: t1[1].toFixed(2),
+          stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.55
+        });
+      }
+    }
+
+    /* 8-ray spoke field crossing the centre (4 diameters), seeded rotation */
+    var spokeOffset = r() * (Math.PI / 4);
+    for (var j = 0; j < 4; j++) {
+      var sa = spokeOffset + j * (Math.PI / 4);
+      var s0 = pt(cx, cy, 34, sa), s1 = pt(cx, cy, 34, sa + Math.PI);
+      el('line', {
+        x1: s0[0].toFixed(2), y1: s0[1].toFixed(2), x2: s1[0].toFixed(2), y2: s1[1].toFixed(2),
+        stroke: col, 'stroke-width': 0.7, 'stroke-opacity': 0.3
+      });
+    }
+
+    /* centre: a right-pointing triangle (the "enter" affordance stays
+       fixed-orientation across every dial -- only the ring/spokes vary by
+       seed, so the click affordance always reads the same way) housing a
+       glowing diamond core */
+    el('path', {
+      d: 'M42 40 L42 60 L60 50 Z',
+      fill: 'none', stroke: col, 'stroke-width': 1.2, 'stroke-opacity': 0.7, 'stroke-linejoin': 'round'
+    });
+    var dSize = 6.5 + r() * 2;
+    var dCx = 48, dCy = 50;
+    var dPts = [
+      [dCx, dCy - dSize], [dCx + dSize, dCy], [dCx, dCy + dSize], [dCx - dSize, dCy]
+    ].map(function (p) { return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' ');
+    el('polygon', { points: dPts, fill: 'url(#' + GRAD + ')', filter: 'url(#' + GLOW + ')' });
+
+    return svg;
+  }
+
   function prettify(sl) {
     return sl.replace(/[-_]+/g, ' ')
              .replace(/\b\w/g, function (c) { return c.toUpperCase(); })
@@ -300,6 +411,7 @@ input,select,textarea{font-size:16px;line-height:1.45}\
     slug: slug,
     axis: function () { return axis(slug()); },
     sigil: sigil,
+    dial: dial,
     status: function () {
       var root = document.documentElement;
       return {

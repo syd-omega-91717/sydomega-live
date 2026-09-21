@@ -204,7 +204,7 @@ body.omega-particles-intense .particles-bloom {
 }
 
 /* Link becomes visible when constellation is active */
-.ocn-node.node-active ~ .constellation-particle-link,
+.ocnbg-node.node-active ~ .constellation-particle-link,
 [data-constellation-active] .constellation-particle-link {
   opacity: 0.6;
   animation: constellation-link-glow 2s ease-in-out infinite;
@@ -278,7 +278,7 @@ body.omega-particles-active .particle-cluster {
   animation: node-line-pulse 3s ease-in-out infinite;
 }
 
-.ocn-node.node-active ~ .particle-node-line,
+.ocnbg-node.node-active ~ .particle-node-line,
 [data-constellation-active] .particle-node-line {
   opacity: 0.5;
 }

@@ -77,6 +77,7 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
+  if(!document.querySelector('script[data-omega-more-info]')){var mi=document.createElement('script');mi.src='/omega-more-info.js';mi.setAttribute('data-omega-more-info','1');mi.defer=true;__omegaAppend(mi);}
   /* AI copilot on every page */
   if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;__omegaAppend(os_data_omega_copilot);}
   /* Zero Trust threat detection */
@@ -567,7 +568,7 @@ function __omegaAppend(el){
        governance text sitting beside terms in that same EX list, so the two are
        reconciled in this direction. Changing either list means changing both.
        CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/omega-visual-home'];
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
@@ -1756,7 +1757,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
   if(EX[pg])return;
   /* pending.html independently redirects back here whenever it reads
      is_trial+trial_expires_at as still active, racing this file's own
@@ -1858,7 +1859,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* TOPBAR HOME+BACK + MOBILE BOTTOM NAV */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'omega-visual-home':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
   if(EX[pg])return;
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
@@ -2106,6 +2107,35 @@ setTimeout(function(){
 (function(){
   if(window.__omegaUX)return; window.__omegaUX=1;
   var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Chromium 126+ supports cross-document View Transitions -- a native
+     mechanism for animating BETWEEN two full page loads, not a
+     same-document router trick. The single declarative
+     `@view-transition{navigation:auto}` rule below, present in every page's
+     stylesheet because bg.js injects it everywhere, is the entire
+     requirement on paper: no JS, no per-page markup, no framework. Pure
+     upside where it activates -- unsupported browsers (Safari/Firefox
+     today) simply ignore the unknown at-rule and navigate exactly as
+     before.
+     IMPORTANT, and the reason the manual #omega-veil transition below stays
+     UNCONDITIONAL rather than being feature-detected off: this session
+     verified the rule is present and parses correctly (CSSViewTransitionRule)
+     on real pages in this repo's own headless harness (Chromium 141), and
+     confirmed zero errors/regressions from adding it -- but could NOT get a
+     positive `pagereveal` viewTransition signal on an actual real-page
+     navigation here despite it firing correctly on a from-scratch minimal
+     reproduction on the identical binary. `'startViewTransition' in document`
+     proves the API exists, not that a given navigation will actually use it,
+     and this repo's own real pages showed the gap between those two things.
+     So: never gate a real, tested fallback off the strength of a capability
+     check alone when the capability's actual activation couldn't be
+     confirmed -- that is exactly how a change looks correct in the diff
+     while quietly deleting the one thing users could rely on (CLAUDE.md
+     §8.4's "a rule that reached the file but not the cascade" class). Both
+     mechanisms run together unconditionally: the veil already opacity-fades
+     the outgoing frame to black *before* navigation fires, so if the native
+     transition also activates on a given navigation it just crossfades
+     from-black into the new page underneath the veil's own fade-out --
+     complementary, not a doubled or clashing effect. */
   var st=document.createElement('style');
   st.textContent=[
     '#omega-toasts{position:fixed;right:18px;bottom:80px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}',
@@ -2123,7 +2153,12 @@ setTimeout(function(){
     '#omega-genesis .gt{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:6px;color:#85837b;margin-top:30px;opacity:0;animation:gt-fd 1s ease 1.3s forwards}',
     '@keyframes gx-ig{0%{opacity:0;transform:scale(.55) rotate(-10deg)}55%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}',
     '@keyframes gr-ex{0%{opacity:0;transform:scale(.3)}40%{opacity:.6}100%{opacity:0;transform:scale(1.25)}}',
-    '@keyframes gt-fd{to{opacity:1}}'
+    '@keyframes gt-fd{to{opacity:1}}',
+    '@view-transition{navigation:auto}',
+    '@media(prefers-reduced-motion:no-preference){::view-transition-old(root){animation:omega-warp-out .38s cubic-bezier(.4,0,.2,1) both}::view-transition-new(root){animation:omega-warp-in .5s cubic-bezier(.16,1,.3,1) both}}',
+    '@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}',
+    '@keyframes omega-warp-out{to{opacity:0;transform:scale(1.035);filter:blur(5px)}}',
+    '@keyframes omega-warp-in{from{opacity:0;transform:scale(.975);filter:blur(3px)}}'
   ].join('');
   (document.head||document.documentElement).appendChild(st);
 
@@ -2147,7 +2182,9 @@ setTimeout(function(){
     }
   },true);
 
-  /* ---- PAGE TRANSITIONS ---- */
+  /* ---- PAGE TRANSITIONS ----
+     Unconditional -- see the long comment above the injected CSS for why
+     this never got feature-detected off. */
   var veil=document.createElement('div');veil.id='omega-veil';
   (function add(){if(document.body){document.body.appendChild(veil);}else requestAnimationFrame(add);})();
 
@@ -2188,6 +2225,56 @@ setTimeout(function(){
       })();
     }
   }catch(e){}
+})();
+
+/* ===== OMEGA LIVE PULSE -- FEATURE_IDEAS.md #29, an ambient "the platform
+   is alive" indicator ==========================================
+   Real, not decorative: driven entirely by this file's own data-fetch
+   recorder at the top of bg.js, which already emits omega:fetch-settled
+   on every real request to this platform's backend (Supabase REST/Auth/
+   Functions only -- see watched() above). omega-dataguard.js is the only
+   existing consumer today and, by design, only reacts to failure ("no
+   alarm for an empty result set"). This is a second, independent
+   consumer answering a different question -- "is something happening"
+   rather than "is something wrong" -- and never touches dataguard's own
+   logic or DOM.
+
+   Appended as a normal in-flow child of .topbar/.mission-bar, never
+   position:fixed -- an ordinary flex child cannot collide with the fixed
+   top-left/bottom chrome this file's own history has broken before
+   (CLAUDE.md 4). One ping per settled success, restarted via a forced
+   reflow rather than queued timers, so rapid consecutive requests each
+   register instead of only the first. */
+(function(){
+  if(window.__omegaLivePulse)return; window.__omegaLivePulse=1;
+  var st=document.createElement('style');
+  st.textContent=[
+    '.omega-live-pulse{width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,.35);margin-left:10px;flex-shrink:0;transition:background .3s ease}',
+    '.omega-live-pulse.ping{background:#C9A84C;box-shadow:0 0 8px 1px rgba(201,168,76,.8);animation:omega-pulse-ping .65s ease-out}',
+    '@keyframes omega-pulse-ping{0%{transform:scale(1)}35%{transform:scale(1.8)}100%{transform:scale(1)}}',
+    '@media(prefers-reduced-motion:reduce){.omega-live-pulse.ping{animation:none}}'
+  ].join('');
+  (document.head||document.documentElement).appendChild(st);
+
+  function mount(){
+    document.querySelectorAll('.topbar,.mission-bar').forEach(function(host){
+      if(host.querySelector('.omega-live-pulse'))return;
+      var dot=document.createElement('span');
+      dot.className='omega-live-pulse';
+      dot.setAttribute('aria-hidden','true');
+      host.appendChild(dot);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+
+  document.addEventListener('omega:fetch-settled',function(e){
+    if(!(e.detail&&e.detail.ok))return;
+    document.querySelectorAll('.omega-live-pulse').forEach(function(dot){
+      dot.classList.remove('ping');
+      void dot.offsetWidth; /* forces a reflow so a rapid second event restarts the animation */
+      dot.classList.add('ping');
+    });
+  });
 })();
 
 /* ===== OMEGA LOADING -- top progress bar + skeleton shimmer ===== */

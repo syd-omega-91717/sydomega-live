@@ -36,25 +36,31 @@ open, recorded in `FIXES_LOG.md`:
   `omega-elements.json` and `'The All'` in `ELEM_PALETTE`; and three different
   twelve-gate name sets exist (see the entry above).
 
-- **Two divergent sets of twelve gate names** (opened 2026-09-13; `FIXES_LOG.md`
-  139). The count is settled and agreed everywhere — **twelve** (`omega-canon.json`
-  `tracks[].gate`, `gate_names` and `gate_thresholds` are each 12; `nav.js` says
-  `12 GATES`; `gates.html` says "12 gates"). The **names** are not:
-  | source | names |
-  |---|---|
-  | `omega-canon.json` `tracks[].gate` | Gate of Ignition · Abundance · Discourse · the Hearth · Radiance · Precision · Balance · Transmutation · Vision · Sovereignty · Innovation · Dreams |
-  | `omega-canon.json` `gate_names` | INITIATE · ACOLYTE · SCHOLAR · KEEPER · GUARDIAN · ARCHITECT · SOVEREIGN · VANGUARD · HERALD · ORACLE · PRIME · APEX |
-  | `gates.html` | Gate of Awareness · Knowledge · Discipline · Creation · Contribution · Finance · Leadership · Legacy · Apex … |
-  Three vocabularies for one twelve-fold: `tracks[].gate` reads as the
-  zodiac-track gates, `gate_names` as rank titles, and `gates.html`'s as an
-  authority ladder (nav calls that page **AUTHORITY GATES**, a different label
-  again). They may be three real systems that merely share a word, or §8.1
-  class 8 — a canonical table that drifted. **Open rather than fixed because
-  deciding which is authoritative is an owner's call about the platform's own
-  canon, not a rendering decision.** `omega-sculpture.js` reads
-  `window.OmegaCanon` — the single source of truth `CLAUDE.md` names and
-  `omega-canon.js` publishes — so it cannot be the copy that drifts; if the
-  owner settles this, the scene follows the canon automatically.
+- ~~**Two divergent sets of twelve gate names**~~ **CLOSED 2026-09-21 — resolved as
+  two real, coexisting systems, not one that drifted.** Owner asked directly:
+  `tracks[].gate` (Gate of Ignition · Abundance · Discourse · …) confirmed as the
+  canonical name for the **zodiac-track** gate, one per sign. Investigating
+  before touching anything found this was already the live, consistent reality
+  — `omega-canon.js`'s `api.gate(n)` reads `tracks[n-1].gate` directly, and
+  `omega-sculpture.js`'s `gates` scene reads it through that one API — so
+  nothing needed to change there.
+
+  `gates.html` ("AUTHORITY GATES" in `nav.js`) is a **different, real feature**,
+  not a second name for the same thing: a sequential authority-threshold
+  achievement ladder (Awareness → Discipline → Knowledge → … → Apex), each with
+  its own `domain` (MIND/BODY/WEALTH/…) and progression copy, and its `auth`
+  values are already the canonical `gate_thresholds` array verbatim (`0, 2.32,
+  4.64, … 27.84`). Renaming its titles to the zodiac names would have discarded
+  that real domain/threshold/description content to force a label match onto a
+  page that isn't describing the same thing — asked, and explicitly declined.
+  **Left as-is, both sources unchanged**, this entry closed as "two systems,
+  not a conflict."
+
+  One genuinely dead vocabulary found along the way, not fixed because there is
+  nothing to fix: `omega-canon.json`'s `gate_names` (INITIATE · ACOLYTE · … ·
+  APEX) is referenced nowhere in any `.js`/`.html` file except a single code
+  comment in `omega-sculpture.js` — orphaned data, not a third competing name in
+  active use.
 
 - **The 3-D layer exists but four scenes is where it stops** (opened 2026-09-13;
   `FIXES_LOG.md` 138). `omega-sculpture.js` gives the platform real-time geometry
@@ -68,13 +74,72 @@ open, recorded in `FIXES_LOG.md`:
   technical one — a forced intro on every load is hostile, so it wants
   first-visit-only, skippable, off under reduced motion, and remembered. Not
   shipped without that call being made.
-  **(2) Scene-per-realm.** Nine realms, nine backdrops; today every page that
-  mounts the sculpture layer gets the same four. The element/realm palettes already exist
-  in `omega-realm.js`'s `ELEM_PALETTE`.
-  **(3) Navigable scenes.** The nodes in `agents` and `matrix` are geometry, not
-  links. `omega-constellation.js` already proves the pattern in 2-D — each mark
-  IS the door into its page — and raycasting would give the 3-D scenes the same
-  property, turning a diagram into a map you travel.
+  **(2) Scene-per-realm — SHIPPED 2026-09-20.** Nine realms, nine backdrops. The
+  original note here ("palettes already exist in `omega-realm.js`'s `ELEM_PALETTE`")
+  was wrong on the file — `ELEM_PALETTE` lives in `omega-sigil-gen.js`/`omega-emblems.js`
+  and is keyed by zodiac element, a different axis from realm. The real per-realm
+  accents were already rendered on `index.html`'s own realm strip (one hex per
+  `nav.js` SECTIONS entry), so those are what got used, not an invented palette.
+  Of the 6 scene builders in `omega-sculpture.js`, only `signet` actually honours
+  `opt.accent` (`buildSignet(T, opt.accent || p.gold)`); `elements`/`ascension`/
+  `agents`/`matrix`/`gates` hardcode `p.gold`/`p.solar`/`p.cyan` — a real, useful
+  scoping finding, not a bug, since `signet` is exactly the generic branded mark
+  the 9 realm hub pages needed. Added one `.osc-stage[data-omega-sculpture=signet]`
+  mount with `data-sculpt-accent` set to that page's own realm hex, `data-sculpt-bloom="off"`
+  (these are 9 new mounts on already content-heavy pages, so the ~22%-per-mount
+  bloom cost noted in item (4) below was skipped by default), to `dashboard.html`,
+  `profile.html`, `honors.html`, `cosmos.html`, `media.html`, `vault.html`,
+  `family.html`, `services.html`, `intelligence.html` — the 9 pages `index.html`'s
+  own realm strip links to, none of which had any sculpture mount before. Verified
+  in a real headless render on all 9: 0 uncaught errors, 0 horizontal overflow,
+  drawing buffer matches the live box size on every mount (no §8.1 class 3 zero-buffer
+  repeat), and — checked specifically since `vault.html` runs the platform's one
+  stricter meta CSP (`GAP_ANALYSIS.md`, "`vault.html` runs a second, stricter CSP")
+  — **0 CSP violations** there either. Screenshots of 4 of the 9 (`dashboard`,
+  `vault`, `services`, `cosmos`) confirm visibly distinct accent colours actually
+  reach the rendered mesh, not just the DOM attribute.
+  **(3) Navigable scenes — WAS ALREADY SHIPPED, this note was stale, and a real
+  bug was found and fixed checking it (2026-09-21).** This item claimed "the
+  nodes in `agents` and `matrix` are geometry, not links" — false. Reading
+  `omega-sculpture.js` end to end (not just the scene builders) found a
+  complete, already-built "NAVIGATION" section: every one of the 6 scene
+  builders (`elements`, `ascension`, `agents`, `matrix`, `gates`, and by
+  extension any future one) returns `{scene, camera, links, update}`, where
+  `links` is `[{object, href, label}]`; `wireNavigation()` wires real raycasting
+  (`pickAt()`), hover feedback (`setHover()` scales and lights the node,
+  changes the cursor, shows a caption), click-to-navigate, AND a parallel real
+  `<a href>` list per link (`linkList()`) — off-screen until focused, in the DOM
+  whether or not WebGL ever starts — exactly matching `omega-constellation.js`'s
+  "each mark is a real link" rule for the 2-D ring. This was evidently built in
+  an earlier session and never reflected here.
+
+  Verified live rather than trusted from the diff, because a first pass looked
+  broken: clicking a raycast-confirmed node (cursor visibly `pointer`) did not
+  navigate on 5 of 6 mounts (`agents.html`, `pantheons.html`, `gates.html`,
+  `elements.html`, `ascension.html`) in a scripted test. Two causes, one real
+  and one not:
+  - **Not a bug:** the destination for every node in `agents`/`gates`/`elements`/
+    `ascension` is the *same page the scene is already mounted on* (documented
+    in-file: `agents.html` "carries no per-agent anchor" so all 12 nodes point
+    to `/agents.html`), and this environment's page loads run slower than a
+    500ms test wait — a `framenavigated` event for the reload genuinely fires,
+    just later. Re-tested with a 2.5s wait: all 5 navigate correctly.
+  - **A real bug, found and fixed:** the click handler re-ran `pickAt()` fresh
+    at the click event's own `clientX`/`clientY` instead of reusing the hover
+    state `pointermove` had already computed. Every scene here keeps its nodes
+    in continuous motion, so a click's coordinates can differ from the
+    triggering `pointermove`'s by sub-pixel rounding alone — reproduced live on
+    `gates.html` with debug instrumentation: a hover hit at `(355.67, 343.44)`
+    followed immediately by a click at the browser-rounded `(355, 343)` missed
+    the same node on the very next raycast (`hits: 1` → `hits: 0`), so
+    `window.location.href` was never set. Fixed in `omega-sculpture.js`'s
+    `wireNavigation()`: the click handler now uses `m.hover || pickAt(...)` —
+    the tracked hover first (what the user actually saw as clickable), falling
+    back to a fresh raycast only when there is no tracked hover (a touch tap
+    with no prior `pointermove`). Re-verified after the fix: all 6 mounts
+    (`agents.html`, `pantheons.html`, `gates.html`, `elements.html`,
+    `ascension.html`, `sculpture.html`'s `matrix`) navigate correctly on a real
+    raycast-confirmed click, evidence in `FIXES_LOG.md`.
   **(4) Post-processing — SHIPPED, and not with `EffectComposer`**
   (2026-09-13; `FIXES_LOG.md` 143). That class was rejected on structure, not
   convenience: it owns render targets sized to the renderer, while this engine
@@ -97,6 +162,36 @@ open, recorded in `FIXES_LOG.md`:
   binary asset and no CSP question. **Still open:** the room is one fixed
   three-panel studio shared by every scene — pairing it with (2) so each realm
   reflects its own palette is the next real step.
+  **(6) Filmic tone mapping — SHIPPED 2026-09-21.** `_renderer.toneMapping` was
+  never set (defaulting to `NoToneMapping`), the wrong pairing for the HDR-range
+  values (5)'s environment map produces on a `metalness:0.96` material — every
+  AAA engine (Unreal, Unity) defaults to a filmic curve for exactly this reason.
+  Added `T.ACESFilmicToneMapping` + `toneMappingExposure:1.1`; confirmed present
+  in the vendored bundle by grepping the literal exported name, not a class
+  declaration. Verified with a real `git show HEAD` before/after render on
+  `sculpture.html`'s 11 live mounts: 0 errors both, luminance 164.2→162.3, lit%
+  82.8→79.2 (a real, directionally-correct highlight rolloff — `FIXES_LOG.md`).
+  Antialiasing and one `InstancedMesh` (the matrix scene's 729 nodes) were
+  already present, confirmed by reading the file rather than assumed.
+  **(7) What AAA battle-royale-scale engines (Unreal, the class PUBG ships on)
+  actually do, checked against what this stack can use — researched
+  2026-09-21, nothing further shipped.** The real techniques are PBR
+  materials (already the whole `metalness:0.96` approach here), image-based
+  lighting via a pre-filtered environment map (item 5, shipped), a filmic
+  tone-mapping curve (item 6, shipped), aggressive MIP/texture streaming
+  prioritising on-screen "hero" assets, and master-material-plus-instance
+  reuse to cut shader recompiles. The streaming and instancing techniques
+  assume a baked-asset pipeline (imported meshes/textures, a build step, a
+  runtime asset loader) this repo does not have and should not add (§9 — no
+  build step is load-bearing); the platform's actual analogue already exists
+  in a different, correct-for-this-stack form: ONE shared WebGL context
+  blitted per mount (never per-scene contexts) and one `InstancedMesh` for
+  the matrix scene's 729 nodes are the same "reuse, don't duplicate GPU
+  state" idea a build-based engine solves with material instancing. Nanite/
+  Lumen-class techniques (virtualized geometry, real-time GI) have no
+  meaningful analogue for a handful of procedural low-poly signet meshes and
+  were not pursued. No further 3-D work follows from this pass; it exists so
+  a future session does not re-research the same question.
 
 - **RETRACTED 2026-09-13, the same day it was opened: the sidebar labels do NOT
   overlap.** This entry claimed 107 overlapping label pairs on every page. That
@@ -332,7 +427,8 @@ open, recorded in `FIXES_LOG.md`:
   `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
   infrastructure is dormant pending legal review, per §9's gating rule.
   `subscriptions.html`'s own copy already says so. The user was asked directly
-  and chose to keep it dormant.
+  and chose to keep it dormant. **Reconfirmed 2026-09-21** — asked again
+  directly rather than assumed stale; still dormant, no change.
 - **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
   were a decision, not a default: sensitive data, hard to walk back once it
   lives server-side, mitigated with `omega-local-backup.js` export/import.
@@ -361,6 +457,26 @@ open, recorded in `FIXES_LOG.md`:
 - **Member location is not collected** (live 2026-08-29): `profiles.country`
   exists; `lat`/`lon`/`gate` do not (`map.html`'s reads removed in `3f8a17d7`).
   Adding it is a privacy decision, not a bug fix.
+- **`omega-more-info.js` (short lead + click-to-expand) is built and proven on
+  3 pages, not swept estate-wide** (shipped 2026-09-21; `FIXES_LOG.md`). A grep
+  for the platform's verbose-explanatory-text pattern hit 20+ pages, but most
+  turned out to be the wrong target: card-grid bodies where the title already
+  summarises (collapsing would cost clicks, not save them) or live/dormant
+  trust disclosures (`compliance.html`, `marketplace.html`) that need to stay
+  visible at a glance per this repo's own anti-fabrication rule. `world-shell.html`,
+  `factions.html`, `awards.html` were the first three verified fits; **three more
+  shipped 2026-09-21**: `characters.html` (a clean standalone intro paragraph
+  under the h1), `prediction.html` (the Oracle explainer — the lead sentence
+  keeps the "no API key exposed in client code" trust fact visible, only the
+  elaboration collapses), `vocabulary.html` (a section preamble ahead of a
+  research-citation stack, not a repeated grid item). Same discipline as the
+  first three: full original text preserved verbatim in `.omi-full`, only a
+  fresh one-sentence lead written. A further ~5 candidates were surveyed and
+  are genuine fits but sit inside single-item `--cols:1` "about this feature"
+  cards (`codex.html`, `tribe.html`, `elements.html`, `automation.html`) —
+  structurally different from the multi-item card-grid bodies already ruled
+  out, but deferred pending a judgment call on whether a `--cols:1` card
+  counts as "the title already summarises." Open, scoped work.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —
@@ -374,7 +490,137 @@ open, recorded in `FIXES_LOG.md`:
 - **~83 tables live that this repo's SQL never created** — a generic
   multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars). RLS on, no
   policies — the *safe* state — and empty. Inventing policies for schema of
-  unknown purpose fabricates behaviour. Needs a human decision.
+  unknown purpose fabricates behaviour. **Decision made 2026-09-21: the owner
+  named this scaffold a real income project.** LMS/courses picked as the
+  first vertical (over project-management, marketplace, and knowledge-base/
+  AI-workspace directions — see `FEATURE_IDEAS.md` #37 for the reasoning),
+  with individual members buying directly rather than a multi-tenant pivot.
+  The `academy_categories`/`courses`/`modules`/`lessons`/`enrollments` slice
+  of the scaffold is real-RLS'd, schema-captured into `supabase/migrations/`,
+  and shipped — but dormant behind `platform_settings.courses_enabled=false`
+  until the owner turns it on (`FIXES_LOG.md`). **Follow-up shipped
+  2026-09-21, same flag:** the exam/quiz layer the first slice deliberately
+  left dormant — `academy_exams`/`academy_questions`/`academy_exam_results`
+  — is now real-RLS'd, schema-captured, and seeded with one real exam on
+  the existing Financial Foundations course (4 questions, one per lesson,
+  not invented trivia). One deliberate design choice beyond the courses
+  pattern: `academy_questions.correct_answer` is excluded from the
+  `authenticated` SELECT grant at the column level (Postgres column-level
+  GRANT, confirmed live via `information_schema.column_privileges`) — a
+  bare RLS policy would let a member read the answer key through the same
+  query that renders the quiz. Grading happens inside a new
+  `submit_exam_attempt(exam_id, answers)` SECURITY DEFINER RPC, which reads
+  `correct_answer` with the function owner's privileges and returns only
+  the score; members get no INSERT grant on `academy_exam_results` at all,
+  so the RPC is the only path to a result row. Verified live: a member
+  session gets `42501` selecting `correct_answer` directly and `42501`
+  inserting a result row directly; a real mixed-answer RPC call scored
+  3/4 correct as 75% and passed against `pass_score=70`. Full interactive
+  browser flow (enroll → complete all 4 lessons → exam unlocks → answer →
+  submit → best-score card) verified with 0 console errors. **Second vertical
+  shipped 2026-09-21: project management.** Owner-directed ("all of them") —
+  this one turned out to be a migration, not a fresh build: `projects.html`
+  already existed as a complete, real, working page, running entirely on
+  `localStorage` (`omega_projects`/`omega_proj_tasks`). The dormant backend
+  for it already existed too (`projects`/`project_members`/`project_files`/
+  `project_activity`/`tasks`/`task_comments`/`task_attachments`/
+  `task_labels`/`task_label_map`, 9 tables, RLS-on/no-grants, unreferenced by
+  any client code) — schema-captured, then a v1 slice launched on
+  `projects`+`tasks`+a new `project_milestones` child table (the live
+  scaffold had no milestones concept; matched the relational shape every
+  other child table here already uses rather than a JSONB blob).
+  `category`/`priority` columns added to `projects` — real columns the live
+  scaffold lacked but the existing page's UX depends on. Individual-owner
+  RLS (`owner_id = auth.uid()`), no team/organization layer for v1 —
+  `project_members`/`project_files`/`project_activity`/`task_comments`/
+  `task_attachments`/`task_labels`/`task_label_map` stay deny-by-default,
+  a real, separate collaboration-features follow-up. Verified live: two-
+  member RLS impersonation confirms full row isolation on all three tables
+  (projects, tasks, project_milestones) — a second member sees 0 rows and
+  cannot update or read another owner's data. Full browser flow (create with
+  a milestone, cycle status, add/toggle a task, edit with pre-filled form,
+  delete) verified against a custom stub matching the real query shapes, 0
+  console errors. `supabase/live-schema.json` was stale since 2026-09-17 (five
+  real migrations behind) — regenerated in the same change, closing false
+  positives `scripts/schema-dictionary.py` would otherwise have reported on
+  the new `category`/`priority` columns; verified the gate still bites with a
+  real negative control (a planted nonsense column, caught, then reverted).
+  `settings.html`'s "45 pages keep what you enter in this browser only" went
+  stale the moment `projects.html` moved off `localStorage` — corrected to 44,
+  matching `evidence-audit.py`'s own device-local count. **Third vertical
+  shipped 2026-09-21: marketplace favorites.** A real finding changed this
+  slice's scope before any code was written: `marketplace.html` was **not**
+  dormant — it already runs a real, live `marketplace_listings` flow (browse,
+  list, my-listings), RLS'd with 4 real policies and granted to
+  `authenticated`. What was genuinely dormant were four sibling tables never
+  `CREATE TABLE`'d anywhere in this repo: `marketplace_favorites` (activated,
+  own-row save-for-later), and three left deliberately dormant because each
+  needs its own decision first — `marketplace_categories` (needs a
+  `category_id` column added to `marketplace_listings` plus a taxonomy
+  design), `marketplace_orders` (the purchase/payment side of the same
+  dormant Ω-token economy `marketplace.html`'s own SCIENCE tab already
+  documents as off behind `platform_settings.tokens_enabled` — activating it
+  would be the token-economy decision already made this session to stay
+  dormant), `marketplace_reviews` (no verified-buyer signal exists without an
+  orders flow, a trust-model decision). Verified live: a second member can
+  favorite any listing and the owning member cannot see that favorite row
+  (own-row isolation, no public "N people favorited this" counter for v1).
+  Full browser flow verified: favorite → appears in a new FAVORITES tab →
+  unfavorite → empty state returns, 0 console errors. **Fourth vertical shipped
+  2026-09-21: knowledge base (personal notes).** Same shape as project
+  management: `notes.html` already existed as a complete, working page
+  (title/body/category/tags/pin/markdown render/search) running entirely on
+  `localStorage` (`omega_notes`). The dormant backend was a 10-table
+  knowledge-base/AI-workspace scaffold (`ai_documents`, `ai_workspace_*`,
+  `knowledge_attachments`, `knowledge_documents`, `knowledge_edges`,
+  `knowledge_nodes`, `knowledge_spaces`, `omega_knowledge_*`) — of which only
+  `knowledge_documents`/`knowledge_spaces`/`knowledge_attachments` had never
+  been `CREATE TABLE`'d in this repo (`knowledge_nodes`/`knowledge_edges` were
+  already declared, in `0056_entreprise_schema_v2.sql`). Only
+  `knowledge_documents` was activated for v1, plus `category`/`tags`/`pinned`
+  columns the live table lacked but the page's UX depends on (the same gap
+  shape as `projects`' `category`/`priority`). `knowledge_spaces` stays
+  dormant — notes.html has no folder/notebook concept, and `space_id` is
+  nullable, so a spaceless personal note is a correct row, not a workaround.
+  `knowledge_attachments` stays dormant — no file-attachment feature exists to
+  migrate. Every `ai_workspace_*`/`ai_documents`/`omega_knowledge_*` table is
+  untouched — an actual AI/RAG workspace is a materially larger, separate
+  decision, not implied by migrating a notes page. Individual-owner RLS
+  (`author_id = auth.uid()`), matching the `projects`/`marketplace_favorites`
+  pattern. Verified live: two-member RLS impersonation on both UPDATE and
+  DELETE (not just INSERT/SELECT, since `notes.html` needed both) — a second
+  member's update and delete each affect 0 rows against another member's note,
+  while the true owner's update affects 1 row; test row cleaned up after.
+  Full browser flow verified against a custom stub: write → save → appears in
+  NOTES tab → open (view) → pin → delete (with confirm), 0 console errors.
+  `settings.html`'s "44 pages keep what you enter in this browser only" went
+  stale the moment `notes.html` moved off `localStorage` too — corrected to
+  43, matching `evidence-audit.py`'s device-local count (5 with an export path
+  + 38 without). **Fifth "vertical" (billing/subscriptions) investigated
+  2026-09-21 and deliberately left dormant — not built.** Unlike the first
+  four, it has no matching real, working local-only page to migrate:
+  `payments.html`/`subscriptions.html` are already live, wired to the real
+  Stripe-backed flow (`checkout`/`stripe-webhook` Edge Functions →
+  `apply_subscription_event()` RPC → `profiles`/`stripe_webhook_events`, plus
+  `transactions`/`task_completions` reads) — nothing there is mocked or
+  waiting on a backend. The dormant scaffold tables in this area
+  (`billing_plans`/`billing_plan_features`/`billing_features`/
+  `billing_invoices`, a *separate* generic `organizations`/
+  `organization_members`/`wallet_accounts`/`subscriptions`/`payments` set,
+  none ever `CREATE TABLE`'d in this repo) are a multi-tenant B2B
+  plans/seats/invoicing system — a materially different shape from this
+  platform's real one (a single owner, individual members subscribing
+  directly, no organizations signing up their own teams). Put to the owner
+  directly: build a generic B2B scaffold with no driving use case, define a
+  concrete billing capability first, or leave it dormant. **Decision: leave
+  it dormant** — CLAUDE.md §9 already rules out shipping a monetizable
+  feature without real grounding, and inventing multi-tenant billing
+  architecture for a single-owner platform is exactly the "designing for
+  hypothetical future requirements" this repo's own working rules warn
+  against. The tables remain exactly as found: RLS-on, zero grants, safe and
+  inert. Revisit only if a concrete billing/subscription capability is named
+  — then run it through `web-trend-scout` → `grill-me-codex` (HIGH-RISK gate,
+  real money) before any schema work, per `CLAUDE.md` §10.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
@@ -384,14 +630,15 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **130 tables have RLS policies and no grant** (re-counted live 2026-09-17,
-  `FIXES_LOG.md` #179 — up from 39 on 2026-08-29 as the scaffold grew). Left
-  locked out — the safe state. All 130 cross-referenced against client
-  `.from(...)` calls: **129 unreachable from any page**, do not "fix" by
-  granting without deciding the feature is wanted. **One was reachable and
-  broken** — `agent_experiments` (`autonomous-insights.html`) hit a real,
-  live `42501` on every read; granted and verified in #179, not a case of
-  this rule.
+- **127 tables have RLS policies and no grant** (down from 130 on
+  2026-09-17 — `academy_exams`/`academy_questions`/`academy_exam_results`
+  granted 2026-09-21 as the exam-layer follow-up above, `academy_questions`
+  column-restricted rather than a full table grant). Left locked out — the
+  safe state for the rest. Cross-referenced against client `.from(...)`
+  calls: unreachable from any page, do not "fix" by granting without
+  deciding the feature is wanted. **One was reachable and broken** —
+  `agent_experiments` (`autonomous-insights.html`) hit a real, live `42501`
+  on every read; granted and verified in #179, not a case of this rule.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

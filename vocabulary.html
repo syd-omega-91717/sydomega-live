@@ -83,7 +83,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
       <div class="stat kpi"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL WORDS</div></div>
       <div class="stat kpi"><div class="stat-val" id="st-mastered" style="color:#27ae60">0</div><div class="stat-lbl">MASTERED</div></div>
       <div class="stat kpi"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
-      <div class="stat kpi"><div class="stat-val" id="st-reviewed">0</div><div class="stat-lbl">TODAY'S REVIEWS</div></div>
+      <div class="stat kpi"><div class="stat-val" id="st-reviewed">0</div><div class="stat-lbl">TODAY'S REVIEWS</div><div data-omega-spark id="vocab-review-spark" data-spark-label="REVIEWS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div>
     </div>
 
     <div class="tab-row">
@@ -218,7 +218,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
       </div>
       <div class="card" data-reveal="fade-up">
         <div class="card-title">THE SCIENCE OF VOCABULARY ACQUISITION</div>
-        <p style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</p>
+        <div data-omega-more>
+          <p class="omi-lead" style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:0">Language is the operating system of thought — a larger lexicon means a higher-resolution mind.</p>
+          <div class="omi-full" hidden style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</div>
+        </div>
         <div class="source-block">
           <div class="source-title">SPACED REPETITION SYSTEM — Ebbinghaus (1885) &amp; Leitner (1970)</div>
           <div class="source-detail">Ebbinghaus's Forgetting Curve: memory retention decays exponentially without review. Spaced repetition exploits the Spacing Effect — reviewing material at increasing intervals (1→4→8→14→30 days) achieves 2-3× better retention with the same study time. The SM-2 algorithm (Supermemo, 1987) formalizes optimal review intervals based on recall quality. This system uses SM-2 intervals.</div>
@@ -499,6 +502,21 @@ function updateStats(){
     else break;
   }
   document.getElementById('st-streak').textContent=streak;
+  /* FEATURE_IDEAS.md #27 Wave 2: reviewLog is already {date,count} per real
+     drill session -- no aggregation needed, just the last 14 calendar days,
+     a missing day being a true 0. */
+  const spEl=document.getElementById('vocab-review-spark');
+  if(spEl){
+    const series=[];
+    const base=new Date();
+    for(let i=13;i>=0;i--){
+      const dd=new Date(base);dd.setDate(base.getDate()-i);
+      const key=dd.toISOString().slice(0,10);
+      const r=reviewLog.find(function(x){return x.date===key;});
+      series.push(r?r.count:0);
+    }
+    spEl.setAttribute('data-spark-values', JSON.stringify(series));
+  }
 }
 
 function renderWOTD(){
@@ -520,6 +538,7 @@ function renderWOTD(){
 updateStats();
 renderWOTD();
 </script>
+<script src="/omega-sparkline.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

@@ -20145,3 +20145,68 @@ python3 scripts/check-inline-js.py           OK
 python3 scripts/audit.py                     0 critical / 6 warnings (baseline, unchanged)
 scan.js errors (all 204 pages)               0 pages with uncaught errors or rejections
 ```
+
+## Live re-verification: RLS-grant reachability, RPC divergence, and search_path hardening — all confirmed clean, nothing new found
+
+Before adding new code, ran a fresh live audit across the three risk classes this repo tracks most
+carefully, using this session's live Supabase MCP access against project `ydqhzvvoyufiiqvzcjns`
+(worked despite an initial "requires authentication" banner — per §8.2's standing note, tried the
+call before reporting it blocked).
+
+1. **130 tables with RLS and no GRANT** (`GAP_ANALYSIS.md` §S, re-counted at 130 live via a direct
+   `pg_tables`/`pg_policies`/`information_schema.role_table_grants` query — matches the documented
+   count exactly). Cross-referenced every one against a real `grep -rlE "\.from\(['\"]<table>['\"]\)"`
+   across every `.html`/`.js` file: **0 of 130 are reachable from any client code.** No repeat of
+   the `agent_experiments` class of bug (a real, live `42501` on a reachable-but-locked table,
+   fixed in #179) — the documented "safe locked state" still holds exactly.
+2. **Diverging client-called RPC definitions** (`scripts/audit.py` check 8 still flags
+   `check_trial_status`, `order_stats`, `public_leaderboard`, `recall_ai_context` as having
+   non-identical bodies across `supabase/*.sql`). Checked each against what's actually live and
+   against its real call site: `check_trial_status`'s live signature is
+   `p_uid uuid DEFAULT auth.uid()` — `omega-chronometer.js:295`'s no-arg call is correct by design,
+   not a bug. `order_stats()`/`public_leaderboard(p_limit)` both return `jsonb`; `hall.html`'s
+   reads (`d.members`/`d.certificates`/`d.elements`, `board.map(...)` guarded by
+   `!board||!board.length`) match the live shape and are already error-handled
+   (`if(error){...return}` / `if(berr||!board...)`). All four confirmed non-issues — the audit
+   warning is entirely stale-duplicate-file noise, exactly as `CLAUDE.md` §8.3 predicted.
+3. **RPC `search_path` hardening** (`GAP_ANALYSIS.md` §3.1 named `order_stats`, `approve_member`,
+   `grant_permanent_access`, `sync_platform_owner` as missing it — "harmless... a hardening
+   inconsistency worth closing"). A full live sweep (every `public` function, not just the four
+   named) found **zero** functions missing `search_path` — `select ... where not exists (select 1
+   from unnest(proconfig) c where c like 'search_path=%')` returned an empty set — and
+   `get_advisors(type: security)` shows no `function_search_path_mutable` finding. The gap was
+   already closed live; the GAP_ANALYSIS note was describing stale copies in the docs-only SQL bag,
+   not anything actually deployed.
+
+No code changed for any of the three — confirming a "known debt" item is still accurately
+triaged is itself the useful result, and manufacturing a fix for something not actually broken
+would be exactly the class of fabricated finding §8.1 class 9 warns against.
+
+## Scene-per-realm 3-D backdrops shipped: the 9 realm hub pages get their own tinted signet (GAP_ANALYSIS.md item (2) under "four scenes is where it stops")
+
+Full grounding, decision, and verification recorded in `GAP_ANALYSIS.md`'s updated item (2) rather
+than duplicated here. Summary: `dashboard.html`, `profile.html`, `honors.html`, `cosmos.html`,
+`media.html`, `vault.html`, `family.html`, `services.html`, `intelligence.html` — the 9 pages
+`index.html`'s own realm strip links to — each got one `.osc-stage[data-omega-sculpture="signet"]`
+mount with `data-sculpt-accent` set to that page's own realm hex (the same hexes already rendered
+on `index.html`'s realm strip, not an invented palette) and `data-sculpt-bloom="off"` (9 new
+mounts on already content-heavy pages; the documented ~22%-per-mount bloom cost was skipped by
+default rather than absorbed on every one). `signet` was the only one of the 6 scene builders that
+actually honours a custom accent (`buildSignet(T, opt.accent || p.gold)`) — the other five
+hardcode their palette, a scoping finding now recorded so a future session doesn't assume it
+applies platform-wide.
+
+Verified in a real headless render across all 9, not read-throughs:
+
+```
+scan.js errors / overflow (9 realm pages)       0/9 errors, 0/9 overflow
+canvas drawing buffer vs. live box size          matches on all 9 (no §8.1 class 3 zero-buffer repeat)
+vault.html CSP violations                        0 (checked specifically — it runs the platform's
+                                                    one stricter meta CSP, GAP_ANALYSIS.md)
+data-sculpt-accent read back correctly            all 9, distinct hex per page
+rendered mesh colour actually differs per page   confirmed via screenshot on 4 of 9
+                                                  (dashboard gold, vault gold, services green,
+                                                  cosmos purple — visibly distinct, not just DOM attrs)
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```

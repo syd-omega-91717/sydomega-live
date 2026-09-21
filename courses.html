@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — COURSES · real courses, real progress">
+<title>&#937; SYD OMEGA 91717 &mdash; COURSES</title>
+
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<style>
+.crs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:14px}
+.crs-card{cursor:pointer;transition:.15s}
+.crs-card:hover{transform:translateY(-2px)}
+.crs-badge{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:2px 8px;border-radius:2px;margin-bottom:8px}
+.crs-title{font-family:var(--D);font-size:18px;color:var(--ink);margin-bottom:6px}
+.crs-desc{font-family:var(--R);font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.crs-meta{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px;display:flex;gap:14px}
+.crs-back{cursor:pointer;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:16px;display:inline-block}
+.crs-back:hover{text-decoration:underline}
+.crs-module{margin-bottom:18px}
+.crs-module-title{font-family:var(--D);font-size:15px;color:var(--gold);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.crs-lesson-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);margin-bottom:6px;cursor:pointer;transition:.12s}
+.crs-lesson-row:hover{border-color:rgba(201,168,76,.35)}
+.crs-lesson-row.locked{cursor:not-allowed;opacity:.55}
+.crs-lesson-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.crs-lesson-dot.done{background:var(--green)}
+.crs-lesson-title{font-family:var(--R);font-size:13px;color:var(--ink);flex:1}
+.crs-lesson-xp{font-family:var(--M);font-size:12px;color:var(--gold)}
+.crs-progress-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:10px 0}
+.crs-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));transition:width .4s ease}
+.crs-article{font-family:var(--R);font-size:14px;line-height:1.75;color:var(--ink)}
+.crs-article p{margin:0 0 14px}
+.crs-article strong{color:var(--gold)}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="courses" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">COURSES<small>REAL COURSES &middot; REAL PROGRESS &middot; NO FABRICATED COMPLETION</small></div>
+      <canvas id="crs-ring" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+    </div>
+
+    <div data-omega-flag="courses_enabled" data-sechead="COURSE CATALOG">
+      <div class="sechead" data-i18n="courses_heading">COURSE CATALOG</div>
+
+      <!-- CATALOG VIEW -->
+      <div id="crs-view-catalog">
+        <div id="crs-catalog-status" style="font-family:var(--M);font-size:12px;color:var(--muted);padding:8px 0">Loading courses&hellip;</div>
+        <div class="crs-grid" id="crs-catalog-grid"></div>
+      </div>
+
+      <!-- COURSE DETAIL VIEW -->
+      <div id="crs-view-course" style="display:none">
+        <span class="crs-back" id="crs-back-to-catalog">&larr; ALL COURSES</span>
+        <div class="card" id="crs-course-head" style="margin-bottom:18px"></div>
+        <div id="crs-modules"></div>
+      </div>
+
+      <!-- LESSON VIEW -->
+      <div id="crs-view-lesson" style="display:none">
+        <span class="crs-back" id="crs-back-to-course">&larr; BACK TO COURSE</span>
+        <div class="sechead" id="crs-lesson-title"></div>
+        <div class="crs-article" id="crs-lesson-article"></div>
+        <div style="margin-top:20px">
+          <button class="btn btn-fill" id="crs-mark-complete">MARK LESSON COMPLETE</button>
+        </div>
+      </div>
+    </div>
+    <div data-page-emblem="courses" style="margin:20px auto 0"></div>
+  </main>
+</div>
+
+<script src="/vendor/marked.min.js" defer></script>
+<script type="module">
+import{createClient}from'/vendor/supabase-js.js';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
+
+var STATE={ uid:null, course:null, modules:[], enrollment:null, progressByLesson:{}, lesson:null };
+
+function showView(name){
+  ['catalog','course','lesson'].forEach(function(v){
+    document.getElementById('crs-view-'+v).style.display=(v===name?'':'none');
+  });
+}
+
+function renderMarkdown(text){
+  try{
+    if(window.marked && typeof window.marked.parse==='function')return window.marked.parse(text||'');
+  }catch(e){}
+  /* Fallback: escape and turn our own **bold** + blank-line-paragraph
+     convention into real markup, so the lesson is still readable if the
+     vendored marked.js failed to load for any reason. */
+  var safe=esc(text||'');
+  safe=safe.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  return safe.split(/\n\n+/).map(function(p){return '<p>'+p+'</p>';}).join('');
+}
+
+async function loadCatalog(){
+  var status=document.getElementById('crs-catalog-status');
+  var grid=document.getElementById('crs-catalog-grid');
+  var{data,error}=await sb.from('academy_courses')
+    .select('id,title,slug,description,difficulty,duration_minutes,xp_reward,academy_categories(name,icon,color)')
+    .eq('published',true)
+    .order('created_at',{ascending:true});
+  if(error){status.textContent='Could not load the catalog ('+error.message+').';return;}
+  var courses=data||[];
+  if(!courses.length){status.textContent='No courses published yet.';return;}
+  status.style.display='none';
+  grid.innerHTML=courses.map(function(c){
+    var cat=c.academy_categories||{};
+    return '<div class="card crs-card" data-course-id="'+esc(c.id)+'">'
+      +(cat.name?'<div class="crs-badge">'+esc(cat.icon||'')+' '+esc(cat.name.toUpperCase())+'</div>':'')
+      +'<div class="crs-title">'+esc(c.title)+'</div>'
+      +'<div class="crs-desc">'+esc(c.description||'')+'</div>'
+      +'<div class="crs-meta"><span>'+esc(c.difficulty||'')+'</span><span>'+Number(c.duration_minutes||0)+' MIN</span><span>+'+Number(c.xp_reward||0)+' XP</span></div>'
+      +'</div>';
+  }).join('');
+  grid.querySelectorAll('.crs-card').forEach(function(el){
+    el.addEventListener('click',function(){openCourse(el.getAttribute('data-course-id'));});
+  });
+}
+
+async function openCourse(courseId){
+  var{data:course,error:cErr}=await sb.from('academy_courses').select('*').eq('id',courseId).maybeSingle();
+  if(cErr||!course)return;
+  var{data:modules}=await sb.from('academy_modules').select('*, academy_lessons(*)').eq('course_id',courseId).order('sort_order',{ascending:true});
+  STATE.course=course;
+  STATE.modules=(modules||[]).map(function(m){
+    m.academy_lessons=(m.academy_lessons||[]).slice().sort(function(a,b){return (a.sort_order||0)-(b.sort_order||0);});
+    return m;
+  });
+
+  var{data:enr}=await sb.from('academy_enrollments').select('*').eq('course_id',courseId).eq('profile_id',STATE.uid).maybeSingle();
+  STATE.enrollment=enr||null;
+
+  STATE.progressByLesson={};
+  if(STATE.enrollment){
+    var{data:prog}=await sb.from('academy_progress').select('lesson_id,completed').eq('enrollment_id',STATE.enrollment.id);
+    (prog||[]).forEach(function(p){if(p.completed)STATE.progressByLesson[p.lesson_id]=true;});
+  }
+
+  renderCourse();
+  showView('course');
+}
+
+function renderCourse(){
+  var c=STATE.course;
+  var totalLessons=STATE.modules.reduce(function(n,m){return n+m.academy_lessons.length;},0);
+  var doneLessons=Object.keys(STATE.progressByLesson).length;
+  var pct=totalLessons?Math.round((doneLessons/totalLessons)*100):0;
+
+  document.getElementById('crs-course-head').innerHTML=
+    '<div class="crs-title">'+esc(c.title)+'</div>'
+    +'<div class="crs-desc">'+esc(c.description||'')+'</div>'
+    +(STATE.enrollment
+      ? ('<div class="crs-progress-track"><div class="crs-progress-fill" style="width:'+pct+'%"></div></div>'
+         +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+doneLessons+' OF '+totalLessons+' LESSONS COMPLETE ('+pct+'%)</div>')
+      : '<button class="btn btn-fill" id="crs-enroll-btn">ENROLL</button>');
+
+  var enrollBtn=document.getElementById('crs-enroll-btn');
+  if(enrollBtn)enrollBtn.addEventListener('click',enroll);
+
+  document.getElementById('crs-modules').innerHTML=STATE.modules.map(function(m){
+    return '<div class="crs-module"><div class="crs-module-title">'+esc(m.title)+'</div>'
+      +m.academy_lessons.map(function(l){
+        var done=!!STATE.progressByLesson[l.id];
+        var locked=!STATE.enrollment;
+        return '<div class="crs-lesson-row'+(locked?' locked':'')+'" data-lesson-id="'+esc(l.id)+'" data-module-id="'+esc(m.id)+'">'
+          +'<div class="crs-lesson-dot'+(done?' done':'')+'"></div>'
+          +'<div class="crs-lesson-title">'+esc(l.title)+'</div>'
+          +'<div class="crs-lesson-xp">+'+Number(l.xp_reward||0)+' XP</div>'
+          +'</div>';
+      }).join('')
+      +'</div>';
+  }).join('');
+
+  document.querySelectorAll('.crs-lesson-row:not(.locked)').forEach(function(el){
+    el.addEventListener('click',function(){openLesson(el.getAttribute('data-lesson-id'));});
+  });
+}
+
+async function enroll(){
+  if(!STATE.uid||!STATE.course)return;
+  var{data,error}=await sb.from('academy_enrollments')
+    .upsert({course_id:STATE.course.id,profile_id:STATE.uid},{onConflict:'course_id,profile_id'})
+    .select().maybeSingle();
+  if(error){window.omegaToast&&window.omegaToast('Could not enroll ('+error.message+')','error');return;}
+  STATE.enrollment=data;
+  renderCourse();
+}
+
+function openLesson(lessonId){
+  var lesson=null;
+  STATE.modules.forEach(function(m){m.academy_lessons.forEach(function(l){if(l.id===lessonId)lesson=l;});});
+  if(!lesson)return;
+  STATE.lesson=lesson;
+  document.getElementById('crs-lesson-title').textContent=lesson.title;
+  document.getElementById('crs-lesson-article').innerHTML=renderMarkdown(lesson.article);
+  var btn=document.getElementById('crs-mark-complete');
+  var done=!!STATE.progressByLesson[lesson.id];
+  btn.textContent=done?'LESSON COMPLETE ✓':'MARK LESSON COMPLETE';
+  btn.disabled=done;
+  showView('lesson');
+}
+
+async function markComplete(){
+  if(!STATE.lesson||!STATE.enrollment||!STATE.uid)return;
+  var lesson=STATE.lesson;
+  var{error}=await sb.from('academy_progress').upsert({
+    enrollment_id:STATE.enrollment.id,
+    lesson_id:lesson.id,
+    user_id:STATE.uid,
+    completed:true,
+    completed_at:new Date().toISOString(),
+    xp_awarded:Number(lesson.xp_reward||0)
+  },{onConflict:'enrollment_id,lesson_id'}).select().maybeSingle();
+  if(error){window.omegaToast&&window.omegaToast('Could not save progress ('+error.message+')','error');return;}
+  STATE.progressByLesson[lesson.id]=true;
+  document.getElementById('crs-mark-complete').textContent='LESSON COMPLETE ✓';
+  document.getElementById('crs-mark-complete').disabled=true;
+}
+
+document.getElementById('crs-back-to-catalog').addEventListener('click',function(){showView('catalog');});
+document.getElementById('crs-back-to-course').addEventListener('click',function(){renderCourse();showView('course');});
+document.getElementById('crs-mark-complete').addEventListener('click',markComplete);
+
+(async function boot(){
+  var{data:sessData}=await sb.auth.getSession();
+  var session=sessData&&sessData.session;
+  if(!session){window.location.href='/account.html';return;}
+  STATE.uid=session.user.id;
+  var{data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+  var profile=pr||{};
+  if(!profile.is_owner&&!profile.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(profile,session.user);
+  loadCatalog();
+})();
+</script>
+</body>
+</html>

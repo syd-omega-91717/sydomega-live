@@ -20260,3 +20260,45 @@ node --check omega-sculpture.js                OK
 python3 scripts/check-inline-js.py             OK
 python3 scripts/audit.py                       0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## First real slice of the dormant academy_* course scaffold activated: real course, real RLS, real member flow — dormant by default, plus a real gap in this repo's own schema source control found and closed
+
+Owner-directed: the ~130-table dormant SaaS scaffold (`GAP_ANALYSIS.md`) is a real retirement-income project, and the LMS/courses vertical was chosen after weighing it against project-management, marketplace, and knowledge-base directions — courses fit because the platform's existing Academy/Ascension/Gates content is already thematically educational, and it needs no multi-tenant pivot (individual members buy directly, not other businesses).
+
+**Before writing any code**, checked the live schema rather than assuming the scaffold's shape: `academy_categories`/`academy_courses`/`academy_modules`/`academy_lessons`/`academy_enrollments` all carried `omega_deny_by_default` (`ALL, qual: false`) and no grant — genuinely dormant, confirmed via `pg_policies`. Two *other* academy tables, `academy_access` and `academy_progress`, already had real, correct RLS and grants live — confirmed via `information_schema.role_table_grants` — but were referenced by zero client code anywhere in the repo (a repo-wide grep). `academy.html` turned out to be a completely separate, already-working feature (a knowledge-quiz tracker on `task_completions`), not the course scaffold — so there was no existing UI to wire up.
+
+**A real gap found and closed along the way:** `scripts/audit.py` check 7 flagged `academy_courses`/`academy_modules`/`academy_enrollments` as "never CREATE TABLE'd anywhere in `supabase/`" — these ~83 scaffold tables (`GAP_ANALYSIS.md`'s own standing note) have never had a `CREATE TABLE` statement in *any* file in this repo, only existing live. Tolerable while unused; not tolerable now that real code depends on them — a fresh database restore from this repo's own history would be missing the table. Added `supabase/migrations/20260921005900_academy_schema_capture.sql`, pure `CREATE TABLE IF NOT EXISTS` DDL with every column/type/default/FK copied from a live `information_schema.columns` + `pg_constraint` query, not guessed. Re-ran `scripts/audit.py` after: the warning dropped from 5 to 2 (the 2 remaining are the pre-existing, already-documented `transactions`/`wallet_balances` dormancy warnings, untouched).
+
+**Two real upsert-conflict bugs (CLAUDE.md §8.1 class 7) caught before they shipped, not after:**
+- `academy_enrollments` already carried the exact unique constraint needed (`academy_enrollments_course_id_profile_id_key` on `(course_id, profile_id)`, confirmed via `information_schema.table_constraints`) — so a second index was *not* added; the client upsert targets the existing constraint's columns.
+- `academy_modules`/`academy_lessons` had no unique key beyond their own `id` — meaning the seed's original `ON CONFLICT DO NOTHING` would have silently duplicated rows on every migration re-run. Added real `(course_id, sort_order)` / `(module_id, sort_order)` unique constraints (correct data modelling in its own right) before seeding, guarded with a hand-written existence check since Postgres has no `ADD CONSTRAINT IF NOT EXISTS`.
+- `academy_progress`'s only unique constraint was `(user_id, node_id)` — a different key shape from what the lesson-progress flow actually needs. Rather than force-fit `node_id`, added the real `(enrollment_id, lesson_id)` constraint the client's upsert targets.
+
+**RLS verified live, not assumed from the policy text**, using real impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, per this repo's own documented gotcha that `set_config('role',...)` alone does not engage RLS):
+- A non-owner member sees exactly the 1 published course / 2 modules / 4 lessons seeded.
+- A member can enroll (insert their own `profile_id`) and see their own enrollment.
+- A member's attempt to `UPDATE academy_courses` (owner-only) is silently blocked — title unchanged.
+- A second member attempting to insert an enrollment row for a *different* `profile_id` gets a real `42501` — cross-user isolation confirmed, not merely assumed from the policy text.
+- Full enroll → mark-lesson-complete → read-own-progress flow verified end to end with the client's exact query shapes.
+- Migration re-run once in full to prove idempotency: course/module/lesson counts unchanged, and the real seeded article content was *not* overwritten by the idempotency-test's placeholder text — `ON CONFLICT DO NOTHING` correctly no-op'd.
+
+**Seed content is real, not filler**, matching an already-established platform theme rather than an invented topic: "Financial Foundations: Building Your Wealth Plan" (2 modules, 4 lessons — net worth, savings rate, the 50/30/20 framework, a written wealth plan) mirrors `gates.html`'s own "Gate of Finance" domain description verbatim.
+
+**`courses.html` built new** (nav.js: added under ASCEND next to `academy`, both `SECTIONS` and the `PS` page→section map) — catalog → course detail → lesson view, all wrapped in `data-omega-flag="courses_enabled"` (the existing `omega-flags.js` mechanism, no new plumbing) so the entire feature is dormant behind `platform_settings.courses_enabled = false` until the owner turns it on, per CLAUDE.md §9's rule for a new monetizable feature. Lesson articles render through the vendored `marked.min.js`. Verified end to end in a real browser with a custom route-intercepted stub carrying realistic data (the shared harness's default stub is table-agnostic and cannot exercise a real catalog/enroll/lesson flow): catalog renders the real course, course detail shows correct module/lesson counts with lessons locked pre-enrollment, enrolling unlocks them and shows a real progress bar, opening a lesson renders its markdown (bold text confirmed as real `<strong>`), marking it complete updates the button state and the progress bar (0/4 → 1/4, 25%) on return to the course view — zero console/page errors through the whole flow.
+
+**One advisory false positive, checked rather than dismissed or blindly fixed:** `scripts/upsert-conflict-check.py` flags the `academy_progress` upsert as matching no unique key — because that script only scans `supabase/*.sql` (the docs-only bag), not `supabase/migrations/`, where the real `academy_progress_enrollment_lesson_uk` constraint was actually added. Verified against the live schema per the tool's own advisory note ("verify a finding against the live schema before changing code") rather than either ignored or acted on blindly.
+
+```
+RLS impersonation (visibility/enroll/owner-write-blocked/cross-user-isolation)   all pass
+Migration re-run (idempotency)                                                  counts unchanged, real content preserved
+Full browser flow (catalog->enroll->lesson->complete->progress)                 0 errors, all assertions pass
+scripts/audit.py check 7 (never-created tables)                                 5 -> 2 (only pre-existing transactions/wallet_balances left)
+scripts/schema-dictionary.py                                                    OK — all client calls reference existing columns
+scripts/silent-failure-detector.py                                             OK — every write checks .error
+scripts/upsert-conflict-check.py                                                1 finding, verified false positive (scans supabase/*.sql only)
+python3 scripts/check-inline-js.py                                             OK
+python3 scripts/audit.py                                                       0 critical / 6 warnings (baseline, unchanged)
+python3 scripts/reachability-contract.py                                       OK — 205 pages, every destination linked
+node scripts/verify-in-browser (full sweep)                                    205 pages, 0 uncaught errors
+platform_settings.courses_enabled                                              false (dormant; owner turns it on when ready)
+```

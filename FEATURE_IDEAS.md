@@ -2286,3 +2286,28 @@ node --check omega-sculpture.js             OK
 python3 scripts/check-inline-js.py          OK
 python3 scripts/audit.py                    0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## 37. LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant
+
+**Grounded in:** the project owner named the ~130-table dormant SaaS scaffold (`GAP_ANALYSIS.md`) as a real retirement-income project. Weighed against the scaffold's four other viable verticals (project management, marketplace, knowledge base + AI workspace, billing/multi-tenant orgs) before picking one: LMS courses needs no multi-tenant pivot (members buy directly, not other businesses signing up their own teams), already fits the platform's existing Academy/Ascension/Gates educational theming, and doesn't require competing head-on against mature, well-funded incumbents (Linear/Asana, Etsy) the way the other verticals would.
+
+**Decision, checked rather than assumed:** `academy.html` looked like an obvious place to wire this in — it is not. It is a separate, already-working knowledge-quiz feature built on `task_completions`, unrelated to the `academy_courses`/`modules`/`lessons` scaffold. Built `courses.html` new instead of overloading it.
+
+**A real, pre-existing gap found and closed on the way:** the ~83-table scaffold has never had a `CREATE TABLE` statement in any file in this repo — only living in the database directly (confirmed via `scripts/audit.py` check 7). Tolerable while unused; not tolerable the moment real code depends on it, so `supabase/migrations/20260921005900_academy_schema_capture.sql` backfills the real live schema (every column/type/FK copied from a live query, not guessed) before the feature migration runs.
+
+**Two real upsert-conflict bugs caught before shipping** (CLAUDE.md §8.1 class 7 — the single most-cited recurring bug class in this repo): `academy_modules`/`academy_lessons` had no unique key at all, meaning the seed's `ON CONFLICT DO NOTHING` would have silently duplicated rows on every re-run; and `academy_progress`'s existing unique constraint was `(user_id, node_id)`, not the `(enrollment_id, lesson_id)` shape the actual lesson-progress flow needs. Both fixed with real constraints before the seed ran, verified via a second, full re-run of the migration (counts unchanged, real content preserved — not overwritten by the idempotency test's placeholder text).
+
+**What shipped:** `supabase/migrations/20260921010000_academy_courses_launch.sql` (real per-command RLS mirroring the existing `governance_policies` shared-content pattern, one real course seeded — "Financial Foundations," matching `gates.html`'s own "Gate of Finance" description rather than an invented topic) and `courses.html` (catalog → course detail → lesson view, `nav.js`-wired under ASCEND). The whole feature sits behind `data-omega-flag="courses_enabled"` — dormant by default (`platform_settings.courses_enabled = false`), the existing `omega-flags.js` mechanism, no new plumbing, per CLAUDE.md §9's rule for a new monetizable feature. The owner turns it on when ready.
+
+**Verified, not asserted:** live RLS impersonation for visibility/enrollment/owner-only-writes/cross-user-isolation (including confirming a member cannot insert an enrollment row for someone else's `profile_id` — a real `42501`, not merely a policy read); a full real-browser interaction test via a custom stub carrying realistic data (the shared harness's default stub is table-agnostic and can't exercise a real catalog/enroll/lesson flow) — catalog → enroll → lesson → mark-complete → progress bar update (0/4 → 1/4, 25%), zero console errors; a full 205-page site-wide error sweep.
+
+```
+RLS impersonation (visibility/enroll/write-blocked/isolation)   all pass, incl. a real 42501 on cross-user insert
+Migration idempotency (full re-run)                             counts unchanged, real content preserved
+Full browser flow (catalog->enroll->lesson->complete)           0 errors, every assertion pass
+scripts/audit.py check 7 (tables never CREATE TABLE'd)           5 -> 2 (only the pre-existing dormant payment tables left)
+scripts/schema-dictionary.py / silent-failure-detector.py        both OK
+scripts/upsert-conflict-check.py                                 1 finding, verified false positive (see FIXES_LOG.md)
+Full site sweep                                                  205 pages, 0 uncaught errors
+platform_settings.courses_enabled                                false (dormant; owner's call to activate)
+```

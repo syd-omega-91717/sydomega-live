@@ -14,9 +14,9 @@
     "Query:",
     "  select version from supabase_migrations.schema_migrations order by version;"
   ],
-  "_captured": "2026-09-17",
+  "_captured": "2026-09-21",
   "_project": "ydqhzvvoyufiiqvzcjns",
-  "_count": 190,
+  "_count": 194,
   "versions": [
     "0001",
     "0002",
@@ -207,6 +207,10 @@
     "20260915215205",
     "20260916204000",
     "20260916210000",
-    "20260917115719"
+    "20260917115719",
+    "20260921010158",
+    "20260921010337",
+    "20260921010709",
+    "20260921010951"
   ]
 }

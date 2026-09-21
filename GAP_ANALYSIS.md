@@ -567,10 +567,31 @@ open, recorded in `FIXES_LOG.md`:
   `settings.html`'s "44 pages keep what you enter in this browser only" went
   stale the moment `notes.html` moved off `localStorage` too — corrected to
   43, matching `evidence-audit.py`'s device-local count (5 with an export path
-  + 38 without). The one remaining vertical (billing/subscriptions) is
-  HIGH-RISK per `CLAUDE.md` §10 (real money) and has not been started — it
-  requires the `grill-me-codex` threat-model gate before any schema/architecture
-  work, not the same-session build pattern used for the first four.
+  + 38 without). **Fifth "vertical" (billing/subscriptions) investigated
+  2026-09-21 and deliberately left dormant — not built.** Unlike the first
+  four, it has no matching real, working local-only page to migrate:
+  `payments.html`/`subscriptions.html` are already live, wired to the real
+  Stripe-backed flow (`checkout`/`stripe-webhook` Edge Functions →
+  `apply_subscription_event()` RPC → `profiles`/`stripe_webhook_events`, plus
+  `transactions`/`task_completions` reads) — nothing there is mocked or
+  waiting on a backend. The dormant scaffold tables in this area
+  (`billing_plans`/`billing_plan_features`/`billing_features`/
+  `billing_invoices`, a *separate* generic `organizations`/
+  `organization_members`/`wallet_accounts`/`subscriptions`/`payments` set,
+  none ever `CREATE TABLE`'d in this repo) are a multi-tenant B2B
+  plans/seats/invoicing system — a materially different shape from this
+  platform's real one (a single owner, individual members subscribing
+  directly, no organizations signing up their own teams). Put to the owner
+  directly: build a generic B2B scaffold with no driving use case, define a
+  concrete billing capability first, or leave it dormant. **Decision: leave
+  it dormant** — CLAUDE.md §9 already rules out shipping a monetizable
+  feature without real grounding, and inventing multi-tenant billing
+  architecture for a single-owner platform is exactly the "designing for
+  hypothetical future requirements" this repo's own working rules warn
+  against. The tables remain exactly as found: RLS-on, zero grants, safe and
+  inert. Revisit only if a concrete billing/subscription capability is named
+  — then run it through `web-trend-scout` → `grill-me-codex` (HIGH-RISK gate,
+  real money) before any schema work, per `CLAUDE.md` §10.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

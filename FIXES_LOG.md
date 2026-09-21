@@ -20210,3 +20210,53 @@ rendered mesh colour actually differs per page   confirmed via screenshot on 4 o
 python3 scripts/check-inline-js.py               OK
 python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## Navigable 3-D scenes: GAP_ANALYSIS.md's item (3) was stale (the feature already shipped) — and checking it live found a real flaky-click bug, now fixed
+
+Asked to build "navigable 3-D scenes" (raycasting the `agents`/`matrix` nodes into real links), per
+`GAP_ANALYSIS.md`'s standing item (3). Reading `omega-sculpture.js` before writing anything found
+the feature already fully implemented — a "NAVIGATION" section (`pickAt`/`setHover`/`wireNavigation`/
+`linkList`) already wires real raycasting, hover feedback, click-to-navigate, and a parallel real
+`<a href>` list per link on every one of the 6 scene builders. The GAP_ANALYSIS entry claiming this
+was unbuilt was simply wrong — evidently a doc that never got updated after the feature shipped.
+
+**Verified live rather than trusted from the diff, because it looked broken at first.** A scripted
+click on a raycast-confirmed node (cursor genuinely `pointer`) failed to navigate on 5 of 6 mounts
+(`agents.html`, `pantheons.html`, `gates.html`, `elements.html`, `ascension.html`). Investigated
+with debug instrumentation (a route-intercepted copy of `omega-sculpture.js` with `console.log` in
+`pickAt()` and the click handler) rather than guessing:
+
+- **Not a real bug, an insufficient test wait.** For those 5 pages the destination is the same page
+  the scene is mounted on (in-file comment: `agents.html` "carries no per-agent anchor" so all 12
+  nodes share `/agents.html`), and a same-URL reload plus this environment's load conditions take
+  longer than 500ms to register as a `framenavigated` event. A plain, unrelated `<a href>` click
+  test (nothing to do with `omega-sculpture.js`) showed the identical symptom at 500ms and
+  succeeded at 2000ms — confirming the delay is environmental, not a defect. Re-tested with a 2.5s
+  wait: all 5 navigate correctly, both before and after the fix below.
+- **A real, reproduced bug, found and fixed.** `wireNavigation()`'s click listener called
+  `pickAt(m, e.clientX, e.clientY)` fresh at click time instead of reusing the hover state
+  `pointermove` had already computed. Every one of these scenes keeps its nodes in continuous
+  rotation, so a click event's coordinates can differ from the `pointermove` that lit the cursor by
+  sub-pixel rounding alone. Reproduced on `gates.html` with the debug build: hovering logged
+  `hits: 1` at `(355.67, 343.44)`; the click a moment later, at the browser-rounded `(355, 343)`,
+  logged `hits: 0` — `window.location.href` was never set, silently. Fixed in `omega-sculpture.js`:
+  the click handler now reads `var hit = m.hover || pickAt(m, e.clientX, e.clientY);` — the tracked
+  hover (what the user actually saw highlighted) first, a fresh raycast only as a fallback for the
+  no-prior-`pointermove` case (a touch tap). Re-verified with the same debug build after the fix:
+  the identical `gates.html` reproduction now logs `m.hover? true` and `hit /gates.html`, and a real
+  `framenavigated` event fires.
+
+Final verification, real (non-debug) `omega-sculpture.js`, all 6 mount points, real raycast-confirmed
+click, adequate wait:
+
+```
+agents.html (agents)          navigates -> /agents.html
+pantheons.html (agents)       navigates -> /agents.html
+gates.html (gates)            navigates -> /gates.html
+elements.html (elements)      navigates -> /elements.html
+ascension.html (ascension)    navigates -> /ascension.html
+sculpture.html (matrix)       navigates -> /matrix.html
+node --check omega-sculpture.js                OK
+python3 scripts/check-inline-js.py             OK
+python3 scripts/audit.py                       0 critical / 6 warnings (baseline, unchanged)
+```

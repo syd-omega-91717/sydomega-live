@@ -2239,3 +2239,50 @@ rendered mesh colour differs per page            confirmed via screenshot (4 of 
 python3 scripts/check-inline-js.py               OK
 python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
 ```
+
+## 36. Navigable 3-D scenes — already shipped; verifying it live found and fixed a real flaky-click bug
+
+**Grounded in:** `GAP_ANALYSIS.md`'s item (3), "Navigable scenes," which read: "The nodes in
+`agents` and `matrix` are geometry, not links... raycasting would give the 3-D scenes the same
+property." Asked to build this.
+
+**What was actually found, before writing any code:** the feature already exists, completely.
+`omega-sculpture.js` has a full "NAVIGATION" section — every one of its 6 scene builders
+(`elements`/`ascension`/`agents`/`matrix`/`gates`, and any future one) returns a `links` array;
+`wireNavigation()` wires real raycasting, hover feedback, click-to-navigate, and a parallel real
+`<a href>` list per link (a keyboard-reachable, screen-reader-visible skip-link pattern, off-screen
+until focused) — mirroring `omega-constellation.js`'s "each mark is a real link" rule for the 2-D
+ring exactly. `GAP_ANALYSIS.md`'s claim was stale, most likely written before this shipped and
+never revisited.
+
+**Decision:** don't rebuild a feature that already exists — verify it, live, and fix whatever it
+actually finds. A first scripted test looked like it proved the feature broken (clicks on a
+raycast-confirmed node failing to navigate on 5 of 6 mounts); debug-instrumenting the real module
+(a route-intercepted copy with `console.log` added to `pickAt()` and the click handler, not
+guessing from source) separated a real bug from a test artifact:
+
+- 5 of the 6 false negatives were the test's own fault — those pages' nodes all point back to the
+  same page they're mounted on, and this environment needs more than 500ms for a same-URL reload to
+  register; a plain, unrelated `<a href>` click showed the identical symptom, ruling out
+  `omega-sculpture.js` as the cause.
+- The 6th finding was real: the click handler re-ran the raycast fresh at the click's own
+  coordinates instead of reusing the hover state `pointermove` had already computed, and every one
+  of these scenes keeps its nodes in continuous rotation — reproduced live on `gates.html`: a hover
+  hit at `(355.67, 343.44)` followed by a click at the browser-rounded `(355, 343)` missed the same
+  node on the very next raycast. Fixed with a one-line change: the click handler now prefers
+  `m.hover` (what the user actually saw highlighted) over a fresh `pickAt()` call, falling back to
+  the raycast only when there's no tracked hover (a touch tap with no prior `pointermove`).
+
+Full grounding and the debug-instrumentation evidence are in `GAP_ANALYSIS.md`'s updated item (3);
+the fix and its before/after reproduction are in `FIXES_LOG.md`.
+
+```
+agents.html / pantheons.html (agents)      navigates to /agents.html
+gates.html (gates)                          navigates to /gates.html
+elements.html (elements)                    navigates to /elements.html
+ascension.html (ascension)                  navigates to /ascension.html
+sculpture.html (matrix)                     navigates to /matrix.html
+node --check omega-sculpture.js             OK
+python3 scripts/check-inline-js.py          OK
+python3 scripts/audit.py                    0 critical / 6 warnings (baseline, unchanged)
+```

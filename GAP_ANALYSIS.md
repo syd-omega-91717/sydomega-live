@@ -92,10 +92,48 @@ open, recorded in `FIXES_LOG.md`:
   — **0 CSP violations** there either. Screenshots of 4 of the 9 (`dashboard`,
   `vault`, `services`, `cosmos`) confirm visibly distinct accent colours actually
   reach the rendered mesh, not just the DOM attribute.
-  **(3) Navigable scenes.** The nodes in `agents` and `matrix` are geometry, not
-  links. `omega-constellation.js` already proves the pattern in 2-D — each mark
-  IS the door into its page — and raycasting would give the 3-D scenes the same
-  property, turning a diagram into a map you travel.
+  **(3) Navigable scenes — WAS ALREADY SHIPPED, this note was stale, and a real
+  bug was found and fixed checking it (2026-09-21).** This item claimed "the
+  nodes in `agents` and `matrix` are geometry, not links" — false. Reading
+  `omega-sculpture.js` end to end (not just the scene builders) found a
+  complete, already-built "NAVIGATION" section: every one of the 6 scene
+  builders (`elements`, `ascension`, `agents`, `matrix`, `gates`, and by
+  extension any future one) returns `{scene, camera, links, update}`, where
+  `links` is `[{object, href, label}]`; `wireNavigation()` wires real raycasting
+  (`pickAt()`), hover feedback (`setHover()` scales and lights the node,
+  changes the cursor, shows a caption), click-to-navigate, AND a parallel real
+  `<a href>` list per link (`linkList()`) — off-screen until focused, in the DOM
+  whether or not WebGL ever starts — exactly matching `omega-constellation.js`'s
+  "each mark is a real link" rule for the 2-D ring. This was evidently built in
+  an earlier session and never reflected here.
+
+  Verified live rather than trusted from the diff, because a first pass looked
+  broken: clicking a raycast-confirmed node (cursor visibly `pointer`) did not
+  navigate on 5 of 6 mounts (`agents.html`, `pantheons.html`, `gates.html`,
+  `elements.html`, `ascension.html`) in a scripted test. Two causes, one real
+  and one not:
+  - **Not a bug:** the destination for every node in `agents`/`gates`/`elements`/
+    `ascension` is the *same page the scene is already mounted on* (documented
+    in-file: `agents.html` "carries no per-agent anchor" so all 12 nodes point
+    to `/agents.html`), and this environment's page loads run slower than a
+    500ms test wait — a `framenavigated` event for the reload genuinely fires,
+    just later. Re-tested with a 2.5s wait: all 5 navigate correctly.
+  - **A real bug, found and fixed:** the click handler re-ran `pickAt()` fresh
+    at the click event's own `clientX`/`clientY` instead of reusing the hover
+    state `pointermove` had already computed. Every scene here keeps its nodes
+    in continuous motion, so a click's coordinates can differ from the
+    triggering `pointermove`'s by sub-pixel rounding alone — reproduced live on
+    `gates.html` with debug instrumentation: a hover hit at `(355.67, 343.44)`
+    followed immediately by a click at the browser-rounded `(355, 343)` missed
+    the same node on the very next raycast (`hits: 1` → `hits: 0`), so
+    `window.location.href` was never set. Fixed in `omega-sculpture.js`'s
+    `wireNavigation()`: the click handler now uses `m.hover || pickAt(...)` —
+    the tracked hover first (what the user actually saw as clickable), falling
+    back to a fresh raycast only when there is no tracked hover (a touch tap
+    with no prior `pointermove`). Re-verified after the fix: all 6 mounts
+    (`agents.html`, `pantheons.html`, `gates.html`, `elements.html`,
+    `ascension.html`, `sculpture.html`'s `matrix`) navigate correctly on a real
+    raycast-confirmed click, evidence in `FIXES_LOG.md`.
   **(4) Post-processing — SHIPPED, and not with `EffectComposer`**
   (2026-09-13; `FIXES_LOG.md` 143). That class was rejected on structure, not
   convenience: it owns render targets sized to the renderer, while this engine

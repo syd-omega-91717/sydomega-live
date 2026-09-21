@@ -476,6 +476,11 @@
   font-size: 21px;
   line-height: 1;
 }
+.ohz-tile-glyph svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
 .ohz-tile-t {
   display: block;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);

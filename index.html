@@ -330,6 +330,30 @@
 <script src="/bg.js" defer></script>
 <script src="/omega-visual-runtime.js" defer></script>
 <script src="/omega-cinematic-system.js" defer></script>
+<script>
+/* Realm strip: each tile already links to its real destination (see the
+   comment above the strip in markup). This swaps the flat Unicode glyph for
+   that destination's own procedural sigil (OmegaIdentity.sigil(), the one
+   generator every page's hero already uses) so the icon a member clicks IS
+   the mark they will see again once inside -- not a copy, the same call,
+   keyed by the destination's own slug. Falls back to the original glyph if
+   OmegaIdentity has not attached for any reason -- never a blank tile. */
+function omegaWireRealmStripSigils(){
+  var tiles=document.querySelectorAll('#realms .ohz-tile');
+  if(!tiles.length||!window.OmegaIdentity||typeof window.OmegaIdentity.sigil!=='function')return;
+  tiles.forEach(function(tile){
+    var glyph=tile.querySelector('.ohz-tile-glyph');
+    var href=tile.getAttribute('href');
+    if(!glyph||!href)return;
+    var slug=href.replace(/^\//,'').replace(/\.html$/,'').split('#')[0].split('?')[0]||'index';
+    var col=getComputedStyle(tile).getPropertyValue('--ohz-accent').trim()||'#C9A84C';
+    glyph.innerHTML='';
+    glyph.appendChild(window.OmegaIdentity.sigil(slug,col));
+  });
+}
+if(document.readyState==='complete')omegaWireRealmStripSigils();
+else window.addEventListener('load',omegaWireRealmStripSigils);
+</script>
 <script type="module" src="/omega-analytics-init.js"></script>
 <script type="module" src="/omega-speed-insights-init.js"></script>
 </body>

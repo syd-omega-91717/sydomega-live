@@ -77,6 +77,7 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
+  if(!document.querySelector('script[data-omega-more-info]')){var mi=document.createElement('script');mi.src='/omega-more-info.js';mi.setAttribute('data-omega-more-info','1');mi.defer=true;__omegaAppend(mi);}
   /* AI copilot on every page */
   if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;__omegaAppend(os_data_omega_copilot);}
   /* Zero Trust threat detection */

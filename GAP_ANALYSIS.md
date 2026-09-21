@@ -537,9 +537,61 @@ open, recorded in `FIXES_LOG.md`:
   favorite any listing and the owning member cannot see that favorite row
   (own-row isolation, no public "N people favorited this" counter for v1).
   Full browser flow verified: favorite → appears in a new FAVORITES tab →
-  unfavorite → empty state returns, 0 console errors. The remaining two
-  verticals (billing, knowledge base/AI workspace) remain exactly as before:
-  RLS-locked, empty, needing their own build.
+  unfavorite → empty state returns, 0 console errors. **Fourth vertical shipped
+  2026-09-21: knowledge base (personal notes).** Same shape as project
+  management: `notes.html` already existed as a complete, working page
+  (title/body/category/tags/pin/markdown render/search) running entirely on
+  `localStorage` (`omega_notes`). The dormant backend was a 10-table
+  knowledge-base/AI-workspace scaffold (`ai_documents`, `ai_workspace_*`,
+  `knowledge_attachments`, `knowledge_documents`, `knowledge_edges`,
+  `knowledge_nodes`, `knowledge_spaces`, `omega_knowledge_*`) — of which only
+  `knowledge_documents`/`knowledge_spaces`/`knowledge_attachments` had never
+  been `CREATE TABLE`'d in this repo (`knowledge_nodes`/`knowledge_edges` were
+  already declared, in `0056_entreprise_schema_v2.sql`). Only
+  `knowledge_documents` was activated for v1, plus `category`/`tags`/`pinned`
+  columns the live table lacked but the page's UX depends on (the same gap
+  shape as `projects`' `category`/`priority`). `knowledge_spaces` stays
+  dormant — notes.html has no folder/notebook concept, and `space_id` is
+  nullable, so a spaceless personal note is a correct row, not a workaround.
+  `knowledge_attachments` stays dormant — no file-attachment feature exists to
+  migrate. Every `ai_workspace_*`/`ai_documents`/`omega_knowledge_*` table is
+  untouched — an actual AI/RAG workspace is a materially larger, separate
+  decision, not implied by migrating a notes page. Individual-owner RLS
+  (`author_id = auth.uid()`), matching the `projects`/`marketplace_favorites`
+  pattern. Verified live: two-member RLS impersonation on both UPDATE and
+  DELETE (not just INSERT/SELECT, since `notes.html` needed both) — a second
+  member's update and delete each affect 0 rows against another member's note,
+  while the true owner's update affects 1 row; test row cleaned up after.
+  Full browser flow verified against a custom stub: write → save → appears in
+  NOTES tab → open (view) → pin → delete (with confirm), 0 console errors.
+  `settings.html`'s "44 pages keep what you enter in this browser only" went
+  stale the moment `notes.html` moved off `localStorage` too — corrected to
+  43, matching `evidence-audit.py`'s device-local count (5 with an export path
+  + 38 without). **Fifth "vertical" (billing/subscriptions) investigated
+  2026-09-21 and deliberately left dormant — not built.** Unlike the first
+  four, it has no matching real, working local-only page to migrate:
+  `payments.html`/`subscriptions.html` are already live, wired to the real
+  Stripe-backed flow (`checkout`/`stripe-webhook` Edge Functions →
+  `apply_subscription_event()` RPC → `profiles`/`stripe_webhook_events`, plus
+  `transactions`/`task_completions` reads) — nothing there is mocked or
+  waiting on a backend. The dormant scaffold tables in this area
+  (`billing_plans`/`billing_plan_features`/`billing_features`/
+  `billing_invoices`, a *separate* generic `organizations`/
+  `organization_members`/`wallet_accounts`/`subscriptions`/`payments` set,
+  none ever `CREATE TABLE`'d in this repo) are a multi-tenant B2B
+  plans/seats/invoicing system — a materially different shape from this
+  platform's real one (a single owner, individual members subscribing
+  directly, no organizations signing up their own teams). Put to the owner
+  directly: build a generic B2B scaffold with no driving use case, define a
+  concrete billing capability first, or leave it dormant. **Decision: leave
+  it dormant** — CLAUDE.md §9 already rules out shipping a monetizable
+  feature without real grounding, and inventing multi-tenant billing
+  architecture for a single-owner platform is exactly the "designing for
+  hypothetical future requirements" this repo's own working rules warn
+  against. The tables remain exactly as found: RLS-on, zero grants, safe and
+  inert. Revisit only if a concrete billing/subscription capability is named
+  — then run it through `web-trend-scout` → `grill-me-codex` (HIGH-RISK gate,
+  real money) before any schema work, per `CLAUDE.md` §10.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

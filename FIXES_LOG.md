@@ -20455,3 +20455,37 @@ scripts/migration-drift.py                                                    PA
 scripts/omega-registry.py --check                                            OK
 ./scripts/ci-local.sh                                                         24/24 blocking checks pass
 ```
+
+## Fourth SaaS-scaffold vertical: knowledge base (personal notes) — same migration shape as project management
+
+Owner-directed ("all of them"), completing the fourth of four verticals picked earlier this session. `notes.html` was, like `projects.html`, already a complete and working page — title/body/category/tags/pin-to-top/markdown rendering/search/filter across four tabs (Notes/Write/Search/Science) — running entirely on `localStorage` (`omega_notes`). Same bar as the projects migration: preserve every existing feature exactly.
+
+**Schema investigation before any code**: the live scaffold's knowledge-base surface is ten tables — `ai_documents`, `ai_workspace_documents`, `ai_workspace_members`, `ai_workspaces`, `knowledge_attachments`, `knowledge_documents`, `knowledge_edges`, `knowledge_nodes`, `knowledge_spaces`, `omega_knowledge_chunks`, `omega_knowledge_sources`. Checked which had ever been `CREATE TABLE`'d in this repo before assuming a schema-capture migration was needed for all of them: `knowledge_nodes`/`knowledge_edges` already were, in `0056_entreprise_schema_v2.sql` (a generic graph, unrelated to notes) — only `knowledge_spaces`/`knowledge_documents`/`knowledge_attachments` were the real gap.
+
+**Scoped to activate only `knowledge_documents`, with the other two given real, separate dormancy reasons**: `knowledge_spaces` (folders/notebooks) stays dormant because `notes.html` has no folder concept and `space_id` is nullable, so a spaceless note is a correct row, not a workaround pending a folder feature. `knowledge_attachments` stays dormant because there is no file-attachment feature in `notes.html` to migrate. Every `ai_workspace_*`/`ai_documents`/`omega_knowledge_*` table is untouched — an actual AI/RAG workspace is a materially larger, separate feature and decision, not implied by migrating a notes page.
+
+**Same column gap as `projects`**: the live `knowledge_documents` table carried `id`/`space_id`/`author_id`/`title`/`slug`/`summary`/`body`/`version`/`status`/`created_at`/`updated_at` but nothing for `category`, `tags` (an array — the page has a tag cloud and per-note multi-tag), or `pinned` (pin-to-top). Added all three as real columns via an additive `ALTER TABLE`, not invented client-side state that would silently not persist.
+
+**RLS verified live with two real member sessions — and specifically covering UPDATE and DELETE this time**, not just INSERT/SELECT as the courses/project-management verticals needed: `notes.html`'s pin and delete actions are the first client calls in this session's four verticals to need `.update()`/`.delete()` as their *primary* operation rather than an incidental one, so both were impersonation-tested directly. Inserted a real test note as member A; as member B, an `UPDATE ... RETURNING id` and a `DELETE ... RETURNING id` against that note's id each returned 0 rows (RLS correctly hid it from member B's write path, not merely from a later SELECT); as member A, the same `UPDATE` affected 1 row. Test row deleted afterward, confirmed 0 remaining.
+
+**The same stale-`live-schema.json` class, caught a third time this session**: still dated 2026-09-21 from earlier in this same session's work, one vertical behind by the time this one landed. `schema-dictionary.py` flagged `category`/`tags`/`pinned` as nonexistent columns on the first run; regenerated the `knowledge_documents` entry from a live `information_schema`/`pg_attribute` query (additive, not a full snapshot rebuild) and re-verified clean. Also re-ran the README's own negative control: planted a bogus column name in the insert call, confirmed the gate caught it with an exact file:line, then reverted.
+
+**The same `type="module"` + `window.fn=` conversion as `courses.html`/`projects.html`**: `notes.html`'s markup calls 13 functions from inline `onclick`/`onchange`/`onkeydown`/`oninput` attributes (switchTab, ins, addTag, removeTag, saveNote, clearForm, runSearch, setCatFilter, viewNote, delNote, togglePin, filterByTag, editNote) — all 13 explicitly assigned to `window` after the module conversion, closing the CLAUDE.md §8.1 class 4a gap a straight `type="module"` swap would otherwise open.
+
+**A member-facing copy claim went stale as a direct consequence, again**: `settings.html`'s "44 pages keep what you enter in this browser only" (itself corrected from 45 earlier this session by the `projects.html` migration) went stale the moment `notes.html` also moved off `localStorage`. Corrected to 43, matching `evidence-audit.py`'s device-local count (5 with an export path + 38 without) after regenerating `EVIDENCE_MATRIX.md`.
+
+**Full interactive browser flow verified** against a custom stub matching the real query shapes (`knowledge_documents.select('*').order('updated_at')`, insert-then-`.select().maybeSingle()`, per-field `.update()`, `.delete()`): write a note with a title/body/category/tag → save → confirmation message appears → note renders in the Notes tab list → click to open the full markdown-rendered view → pin (star fills, no throw) → delete with the confirm dialog accepted → card removed, view pane cleared. 0 console errors across both runs.
+
+```
+information_schema.columns (knowledge_documents, before)                      11 columns, no category/tags/pinned -- confirmed live gap
+RLS impersonation: member B updates member A's note directly                  0 rows affected (RETURNING-counted, not inferred from a later SELECT)
+RLS impersonation: member B deletes member A's note directly                  0 rows affected (RETURNING-counted)
+RLS impersonation: member A (true owner) updates their own note directly      1 row affected
+scripts/schema-dictionary.py negative control (planted bogus column)          caught with file:line, then reverted -- gate confirmed live
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+Full browser flow (write->save->list->view->pin->delete)                      0 errors, all assertions pass
+scripts/migration-drift.py                                                    PASS, 202 versions, local and remote agree
+scripts/page-count-claims.py                                                  PASS (44->43 on settings.html, matching evidence-audit.py)
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```

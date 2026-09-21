@@ -45,6 +45,8 @@
 :root{
   --omega-glow-gold:rgba(201,168,76,.18);
   --omega-glow-cyan:rgba(0,229,255,.14);
+  --omega-glow-primary:rgba(201,168,76,.18);
+  --omega-glow-secondary:rgba(0,229,255,.14);
   --omega-grid:rgba(201,168,76,.035);
   --omega-grid-fine:rgba(201,168,76,.016);
   --omega-glass:rgba(10,10,15,.68);
@@ -131,29 +133,30 @@ body::after{
 }
 
 /* ── NAVIGATION AS AN INSTRUMENT COLUMN ───────────────────────────────────
-   Gold at the top, cyan at the foot: the same two-accent grammar the rest
-   of the platform uses, applied to the one element on every single page. */
+   Primary accent at the top, secondary accent at the foot: the same two-accent
+   grammar the rest of the platform uses, applied to the one element on every
+   single page. Personalizes via theme tokens. */
 .side,#omega-side{
   background:
-    linear-gradient(180deg,rgba(201,168,76,.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,.06) 100%),
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-primary,#d97706) 9%,transparent) 0%,rgba(0,0,0,0) 42%,color-mix(in srgb,var(--theme-secondary,#0891b2) 6%,transparent) 100%),
     linear-gradient(180deg,rgba(2,2,6,.98),rgba(8,8,14,.94));
   box-shadow:
-    inset -1px 0 0 rgba(201,168,76,.16),
+    inset -1px 0 0 color-mix(in srgb,var(--theme-primary,#d97706) 16%,transparent),
     8px 0 40px rgba(0,0,0,.25),
-    22px 0 48px -34px rgba(0,229,255,.5);
+    22px 0 48px -34px color-mix(in srgb,var(--theme-secondary,#0891b2) 50%,transparent);
 }
 .side a,#omega-side a{transition:transform .18s ease,filter .18s ease,background .18s ease}
-.side a:hover,#omega-side a:hover{transform:translateX(2px);filter:drop-shadow(0 0 7px rgba(201,168,76,.3))}
+.side a:hover,#omega-side a:hover{transform:translateX(2px);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--theme-primary,#d97706) 30%,transparent))}
 
 .topbar{
   background:linear-gradient(90deg,rgba(2,2,6,.97),rgba(10,10,15,.92),rgba(2,2,6,.97));
-  box-shadow:0 1px 0 rgba(201,168,76,.12),0 8px 35px rgba(0,0,0,.28);
+  box-shadow:0 1px 0 color-mix(in srgb,var(--theme-primary,#d97706) 12%,transparent),0 8px 35px rgba(0,0,0,.28);
 }
 .topbar::after{
   content:"";
   position:absolute;
   left:0;right:0;bottom:-1px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--theme-primary,var(--gold)),var(--theme-secondary,var(--cyan)),var(--theme-primary,var(--gold)),transparent);
   opacity:.55;
 }
 
@@ -162,9 +165,9 @@ body::after{
 .tbl-wrap{box-shadow:var(--omega-rim),0 10px 26px -20px rgba(0,0,0,.9)}
 
 /* ── TYPOGRAPHY ───────────────────────────────────────────────────────────
-   Preserve the existing font system; make primary information read as lit. */
-h1,h2,h3{ text-shadow:0 0 22px rgba(201,168,76,.09) }
-.sechead{ text-shadow:0 0 18px rgba(0,229,255,.4) }
+   Preserve the existing font system; make primary information read as lit via theme. */
+h1,h2,h3{ text-shadow:0 0 22px color-mix(in srgb,var(--theme-primary,#d97706) 9%,transparent) }
+.sechead{ text-shadow:0 0 18px color-mix(in srgb,var(--theme-secondary,#0891b2) 40%,transparent) }
 
 /* Focus states are visible and intentional. */
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{

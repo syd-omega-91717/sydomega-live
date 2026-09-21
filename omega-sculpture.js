@@ -399,10 +399,15 @@
 
     return { scene: scene, camera: cam, update: function (t, px, py) {
       /* state-specific behaviour, applied before the shared sway */
+      var taskPulse = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) {
+        taskPulse = window.OmegaSculptureDataViz.getActiveTaskCount();
+      }
       if (state === 'pulse') {
-        var b = 1 + Math.sin(t * 2.4) * 0.055;
+        var pulseAmp = 0.055 + taskPulse * 0.035;
+        var b = 1 + Math.sin(t * 2.4) * pulseAmp;
         mark.scale.setScalar(b);
-        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * 0.06;
+        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * (0.06 + taskPulse * 0.04);
       } else if (state === 'reactor') {
         orbit.rotation.z = t * 1.6;
         orbit.rotation.x = Math.PI * 0.42 + Math.sin(t * 0.8) * 0.35;
@@ -506,12 +511,19 @@
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
       grp.rotation.y = t * 0.16 + px * 0.5;
+      var masteries = {};
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getAllElementMasteries) {
+        masteries = window.OmegaSculptureDataViz.getAllElementMasteries();
+      }
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
+        var el = ELEMENT_FALLBACK[i];
+        var mastery = (el && masteries[el.key]) ? masteries[el.key] : 0;
         n.mesh.rotation.y = t * 0.6 + n.phase;
         n.mesh.rotation.x = t * 0.35;
         if (!n.mesh.userData.omegaHovered) {
-          n.mesh.scale.setScalar(1 + Math.sin(t * 1.3 + n.phase) * 0.10);
+          var base = 1 + Math.sin(t * 1.3 + n.phase) * 0.10;
+          n.mesh.scale.setScalar(base + mastery * 0.18);
         }
       }
       cam.position.y = 1.7 - py * 0.7;
@@ -578,17 +590,22 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
-      tower.rotation.y = t * 0.22 + px * 0.55;
+      var tierProgress = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getTierProgress) {
+        tierProgress = window.OmegaSculptureDataViz.getTierProgress() / 100;
+      }
+      tower.rotation.y = (tierProgress * Math.PI * 2) + t * 0.22 + px * 0.55;
       for (var i = 0; i < rings.length; i++) {
         var r = rings[i];
         /* a slow rise of light up the tower -- a climb, expressed as motion */
         var wave = Math.sin(t * 0.9 - r.i * 0.42);
-        r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16;
-        if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018);
+        var ringProgress = tierProgress * N;
+        r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16 + (ringProgress > r.i ? 0.18 : 0);
+        if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018 + (ringProgress > r.i ? 0.08 : 0));
       }
-      apex.rotation.y = t * 1.0;
+      apex.rotation.y = t * 1.0 + (tierProgress * 3.14);
       apex.rotation.x = t * 0.6;
-      apex.material.emissiveIntensity = 0.85 + Math.sin(t * 2.2) * 0.28;
+      apex.material.emissiveIntensity = tierProgress > 0.98 ? 1.0 : (0.85 + Math.sin(t * 2.2) * 0.28);
       cam.position.y = 0.5 - py * 0.9;
       cam.lookAt(0, 0.45, 0);
     }};
@@ -657,8 +674,12 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
+      var taskPulse = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) {
+        taskPulse = window.OmegaSculptureDataViz.getActiveTaskCount();
+      }
       ring.rotation.y = t * 0.20 + px * 0.5;
-      core.rotation.y = Math.sin(t * 0.42) * 0.62;   /* sway, per the signet note above */
+      core.rotation.y = Math.sin(t * 0.42) * 0.62 + taskPulse * 0.18;
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
         n.mesh.rotation.x = t * 0.8 + n.phase;
@@ -668,9 +689,11 @@
            an effect. The flag lives on the mesh because the update closure
            cannot see the mount. */
         if (!n.mesh.userData.omegaHovered) {
-          n.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + n.phase * 2) * 0.16);
+          var pulseAmp = 0.16 + taskPulse * 0.12;
+          n.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + n.phase * 2) * pulseAmp);
         }
-        n.mesh.material.emissiveIntensity = 0.34 + Math.sin(t * 1.6 + n.phase * 2) * 0.20;
+        var emAmp = 0.20 + taskPulse * 0.15;
+        n.mesh.material.emissiveIntensity = 0.34 + Math.sin(t * 1.6 + n.phase * 2) * emAmp;
       }
       cam.position.y = 2.45 - py * 0.8;
       cam.lookAt(0, 0, 0);

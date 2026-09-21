@@ -4,90 +4,30 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Gateway</title>
+<link rel="stylesheet" href="/omega-sigil-system.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--dim:rgba(138,134,118,.55)}
-
-/* ── HEAD ─────────────────────────────────────────────────────────────── */
 .gw-head{text-align:center;margin-bottom:26px}
 .gw-kicker{font-family:var(--M);font-size:12px;letter-spacing:5px;color:var(--dim);margin-bottom:10px}
 .gw-title{font-family:"Cinzel Decorative",serif;font-size:26px;letter-spacing:4px;color:var(--gold)}
-
-/* ── FILTER ───────────────────────────────────────────────────────────── */
 .gw-bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:30px}
 .gw-bar label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--dim)}
-#gw-filter{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);
-  background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.18);padding:10px 14px;
-  min-width:220px;min-height:40px;transition:border-color .15s,box-shadow .15s}
+#gw-filter{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.18);padding:10px 14px;min-width:220px;min-height:40px;transition:border-color .15s,box-shadow .15s}
 #gw-filter:focus{outline:none;border-color:rgba(201,168,76,.5);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
 #gw-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);min-height:10px}
-
-/* ── AXIS ─────────────────────────────────────────────────────────────── */
-.gw-axis{margin-bottom:34px}
-.gw-axis-hd{font-family:var(--M);font-size:12px;font-weight:400;letter-spacing:5px;
-  padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid rgba(201,168,76,.1);
-  display:flex;align-items:baseline;gap:10px}
-.gw-count{font-size:12px;letter-spacing:2px;color:var(--dim)}
-
-/* ── TILES ────────────────────────────────────────────────────────────── */
-.gw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:8px}
-.gw-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  gap:6px;padding:14px 6px 12px;text-decoration:none;border:1px solid rgba(201,168,76,.08);
-  background:rgba(0,0,0,.22);transition:border-color .18s,background .18s,transform .18s}
-.gw-tile:hover,.gw-tile:focus-visible{border-color:rgba(201,168,76,.34);
-  background:rgba(201,168,76,.05);transform:translateY(-2px)}
-.gw-tile:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-/* An author `display:flex` beats the UA stylesheet's [hidden]{display:none},
-   so the filter set the attribute correctly and every tile stayed on screen.
-   Caught only by looking at the render -- the DOM property read as hidden. */
-.gw-tile[hidden],.gw-axis[hidden]{display:none!important}
-.gw-mark{display:block;line-height:0}
-/* The mark is drawn once, statically. The rotation lives here so only the
-   hovered tile moves, and it stops the moment the pointer leaves. */
-.gw-mark canvas{transition:transform .8s cubic-bezier(.22,.61,.36,1)}
-.gw-tile:hover .gw-mark canvas,
-.gw-tile:focus-visible .gw-mark canvas{transform:rotate(180deg)}
-.gw-name{font-family:var(--M);font-size:12px;letter-spacing:1.6px;color:var(--dim);
-  text-align:center;line-height:1.5;word-break:break-word;transition:color .18s}
-.gw-tile:hover .gw-name,.gw-tile:focus-visible .gw-name{color:var(--gold)}
-/* omega-page-emblem appends its own "12-FOLD" caption under each mark. On a
-   single-emblem page that reads as detail; on a grid of 165 it is noise, and
-   this page exists to remove text, not add it. */
-.gw-mark>div{display:none!important}
-
-@media(prefers-reduced-motion:reduce){
-  .gw-tile,.gw-mark canvas{transition:none}
-  .gw-tile:hover .gw-mark canvas,
-  .gw-tile:focus-visible .gw-mark canvas{transform:none}
-}
-@media(max-width:700px){
-  .gw-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
-  .gw-title{font-size:20px;letter-spacing:2px}
-}
+.gw-axis{margin-bottom:34px}.gw-axis-hd{font-family:var(--M);font-size:12px;font-weight:400;letter-spacing:5px;padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid rgba(201,168,76,.1);display:flex;align-items:baseline;gap:10px}.gw-count{font-size:12px;letter-spacing:2px;color:var(--dim)}
+.gw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:8px}.gw-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:14px 6px 12px;text-decoration:none;border:1px solid rgba(201,168,76,.08);background:rgba(0,0,0,.22);transition:border-color .18s,background .18s,transform .18s}.gw-tile:hover,.gw-tile:focus-visible{border-color:rgba(201,168,76,.34);background:rgba(201,168,76,.05);transform:translateY(-2px)}.gw-tile:focus-visible{outline:2px solid var(--gold);outline-offset:2px}.gw-tile[hidden],.gw-axis[hidden]{display:none!important}.gw-mark{display:block;line-height:0}.gw-mark canvas{transition:transform .8s cubic-bezier(.22,.61,.36,1)}.gw-tile:hover .gw-mark canvas,.gw-tile:focus-visible .gw-mark canvas{transform:rotate(180deg)}.gw-name{font-family:var(--M);font-size:12px;letter-spacing:1.6px;color:var(--dim);text-align:center;line-height:1.5;word-break:break-word;transition:color .18s}.gw-tile:hover .gw-name,.gw-tile:focus-visible .gw-name{color:var(--gold)}.gw-mark>div{display:none!important}
+.gw-realms-link{display:inline-flex;margin:0 auto 28px;padding:11px 18px;border:1px solid rgba(0,229,255,.35);color:var(--cyan,#00e5ff);text-decoration:none;font-family:var(--M);letter-spacing:2px;font-size:12px}.gw-realms-link:hover,.gw-realms-link:focus-visible{border-color:var(--gold);color:var(--gold)}
+@media(prefers-reduced-motion:reduce){.gw-tile,.gw-mark canvas{transition:none}.gw-tile:hover .gw-mark canvas,.gw-tile:focus-visible .gw-mark canvas{transform:none}}@media(max-width:700px){.gw-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}.gw-title{font-size:20px;letter-spacing:2px}}
 </style>
 <script src="/bg.js" defer></script>
 </head>
 <body>
-<div class="shell">
-<aside class="side" id="omega-side" data-page="gateway"></aside>
-<main class="main">
-
-  <div class="gw-head">
-    <div class="gw-kicker">EVERY MARK IS A DOOR</div>
-    <h1 class="gw-title">GATEWAY</h1>
-  </div>
-
-  <div class="gw-bar">
-    <label for="gw-filter">FIND</label>
-    <input id="gw-filter" type="search" autocomplete="off" spellcheck="false" placeholder="name"/>
-    <span id="gw-status" role="status" aria-live="polite"></span>
-  </div>
-
-  <div id="gw-root" data-omega-orbital="gateway"></div>
-
-<div data-page-emblem="gateway" style="margin:20px auto 0"></div>
-</main>
-</div>
-<script src="/omega-gateway.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+<div class="shell"><aside class="side" id="omega-side" data-page="gateway"></aside><main class="main">
+<div class="gw-head"><div class="gw-kicker">EVERY MARK IS A DOOR</div><h1 class="gw-title">GATEWAY</h1><a class="gw-realms-link" href="/realms.html">OPEN THE 18 REALMS SIGIL LAUNCHER →</a></div>
+<div class="gw-bar"><label for="gw-filter">FIND</label><input id="gw-filter" type="search" autocomplete="off" spellcheck="false" placeholder="name"/><span id="gw-status" role="status" aria-live="polite"></span></div>
+<div id="gw-root" data-omega-orbital="gateway"></div><div data-page-emblem="gateway" style="margin:20px auto 0"></div>
+</main></div>
+<script src="/omega-gateway.js" defer></script><script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

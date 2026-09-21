@@ -1477,8 +1477,18 @@
       setHover(m, pickAt(m, e.clientX, e.clientY));
     }, { passive: true });
     m.canvas.addEventListener('pointerleave', function () { setHover(m, null); }, { passive: true });
+    /* Prefer the tracked hover, not a fresh raycast at the click's own
+       coordinates. Every scene here keeps its nodes in continuous motion
+       (orbiting, rotating), so a click event's clientX/clientY can differ
+       from the pointermove that lit the cursor by less than a pixel of
+       rounding and still land the ray off the node an instant later --
+       reproduced live: a hover hit at (355.67, 343.44) followed by a click
+       at the browser-rounded (355, 343) missed on the very next raycast.
+       m.hover already reflects what the pointer was actually resting on;
+       falling back to a fresh pickAt() only for the pointer-hasn't-moved
+       case (a touch tap, which can fire click with no prior pointermove). */
     m.canvas.addEventListener('click', function (e) {
-      var hit = pickAt(m, e.clientX, e.clientY);
+      var hit = m.hover || pickAt(m, e.clientX, e.clientY);
       if (hit && hit.href) window.location.href = hit.href;
     });
   }

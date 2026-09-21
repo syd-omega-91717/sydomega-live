@@ -94,10 +94,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 205 |
-| pages loading `bg.js` | 205 of 205 |
-| `omega-*.js` modules | 145 (1363 KB) |
-| root `.js` files | 153 |
+| `.html` pages | 206 |
+| pages loading `bg.js` | 206 of 206 |
+| `omega-*.js` modules | 146 (1367 KB) |
+| root `.js` files | 154 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 202 (106 numbered `NNNN_`, 96 timestamped) |
 | Edge Functions | 14 |
@@ -127,7 +127,7 @@ end-to-end for the first time"*. The 108 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 202. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 205 pages.** It is a hard single point of
+**`bg.js` is loaded by all 206 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

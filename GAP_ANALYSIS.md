@@ -518,9 +518,28 @@ open, recorded in `FIXES_LOG.md`:
   real negative control (a planted nonsense column, caught, then reverted).
   `settings.html`'s "45 pages keep what you enter in this browser only" went
   stale the moment `projects.html` moved off `localStorage` — corrected to 44,
-  matching `evidence-audit.py`'s own device-local count. The other three
-  verticals (billing, marketplace, knowledge base/AI workspace) remain
-  exactly as before: RLS-locked, empty, needing their own build.
+  matching `evidence-audit.py`'s own device-local count. **Third vertical
+  shipped 2026-09-21: marketplace favorites.** A real finding changed this
+  slice's scope before any code was written: `marketplace.html` was **not**
+  dormant — it already runs a real, live `marketplace_listings` flow (browse,
+  list, my-listings), RLS'd with 4 real policies and granted to
+  `authenticated`. What was genuinely dormant were four sibling tables never
+  `CREATE TABLE`'d anywhere in this repo: `marketplace_favorites` (activated,
+  own-row save-for-later), and three left deliberately dormant because each
+  needs its own decision first — `marketplace_categories` (needs a
+  `category_id` column added to `marketplace_listings` plus a taxonomy
+  design), `marketplace_orders` (the purchase/payment side of the same
+  dormant Ω-token economy `marketplace.html`'s own SCIENCE tab already
+  documents as off behind `platform_settings.tokens_enabled` — activating it
+  would be the token-economy decision already made this session to stay
+  dormant), `marketplace_reviews` (no verified-buyer signal exists without an
+  orders flow, a trust-model decision). Verified live: a second member can
+  favorite any listing and the owning member cannot see that favorite row
+  (own-row isolation, no public "N people favorited this" counter for v1).
+  Full browser flow verified: favorite → appears in a new FAVORITES tab →
+  unfavorite → empty state returns, 0 console errors. The remaining two
+  verticals (billing, knowledge base/AI workspace) remain exactly as before:
+  RLS-locked, empty, needing their own build.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

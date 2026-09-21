@@ -20424,3 +20424,34 @@ scripts/page-count-claims.py                                                  PA
 scripts/omega-registry.py --check                                            OK
 ./scripts/ci-local.sh                                                         24/24 blocking checks pass
 ```
+
+## Third SaaS-scaffold vertical: marketplace favorites — the page was already live, only four sibling tables were dormant
+
+Owner-directed (continuing "all four" verticals). Checked live schema before assuming this would look like courses or project-management: `marketplace.html` was **already wired to a real, working table**, not localStorage and not a stub — `marketplace_listings` has 4 real RLS policies and a real `authenticated` grant, confirmed via `pg_policies`/`information_schema.role_table_grants`, and the page's own SCIENCE tab already documents honestly what is real vs. planned ("EARN ON SALE — PLANNED... no buy step, no payment processing... today"). This is exactly the anti-fabrication discipline CLAUDE.md asks for, already done, by an earlier session.
+
+**What was actually dormant**: `marketplace_favorites`/`marketplace_categories`/`marketplace_orders`/`marketplace_reviews` — four tables, RLS-on, zero grants, never `CREATE TABLE`'d anywhere in this repo (`marketplace_listings` itself has several competing declarations in the flat bag; these four have none). Schema-captured all four.
+
+**Scoped to activate only `marketplace_favorites`, with each of the other three's dormancy given a real, separate reason rather than left unexplained:**
+- `marketplace_categories` needs a `category_id` column added to `marketplace_listings` (does not exist today) plus an actual taxonomy decision — not this slice's to invent.
+- `marketplace_orders` is the purchase/payment side of the same Ω-token economy the page's own SCIENCE tab already documents as dormant behind `platform_settings.tokens_enabled` — activating it would silently reverse the token-economy dormancy decision already made earlier this session ("still dormant").
+- `marketplace_reviews` has no verified-buyer signal to gate a review on without an orders flow — a trust-model decision (open reviews vs. verified-purchase reviews), not a default to pick silently.
+
+**RLS verified live with two real member sessions**: created a real test listing as member A, favorited it as member B (succeeds — favoriting isn't ownership-scoped, by design), then confirmed member A cannot see member B's favorite row when querying `marketplace_favorites` directly (own-row privacy, no public favorite-count leak). Un-favorite (delete own row) verified separately. Test data cleaned up.
+
+**UI added to the existing page, not a new page**: a heart/star toggle on every listing card (browse, my-listings, and the new favorites grid alike — skipped only on a member's own listings, consistent with the existing "MINE" badge logic), and a new FAVORITES tab loading via one embedded-select query (`marketplace_favorites.select('marketplace_listings(*)')`) rather than a second round trip per favorite.
+
+**The same stale-`live-schema.json` class caught again**: still dated 2026-09-17 from before this session's own earlier academy/project-management work reached it (each vertical this session has independently regenerated it — a real, recurring cost of shipping several schema changes in one session that each need the same snapshot refreshed). Regenerated in the same change; `schema-dictionary.py` confirmed clean afterward.
+
+**Full interactive browser flow verified** against a custom stub carrying two real seeded listings: click the star on a listing → turns filled, `aria-label` flips → switch to the FAVORITES tab → the favorited listing renders there → un-favorite from that same tab → empty state returns. 0 console errors throughout.
+
+```
+pg_policies / role_table_grants (marketplace_listings)                        4 real policies, authenticated granted -- confirmed already live, not dormant
+information_schema.role_table_grants (favorites/categories/orders/reviews)    RLS on, zero grants -- confirmed dormant, 4 tables
+RLS impersonation: member B favorites member A's listing                      succeeds (not ownership-scoped, by design)
+RLS impersonation: member A selects member B's favorite row directly          0 rows visible
+Full browser flow (favorite->appears in FAVORITES tab->unfavorite->empty)     0 errors, all assertions pass
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+scripts/migration-drift.py                                                    PASS, 200 versions, local and remote agree
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```

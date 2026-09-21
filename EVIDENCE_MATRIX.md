@@ -36,15 +36,15 @@ This scanner reads the repository. It has no database connection, so:
 
 | class | pages |
 |---|---:|
-| `BUILT` | 98 |
+| `BUILT` | 99 |
 | `PARTIAL` | 28 |
-| `LOCAL_ONLY` | 44 |
+| `LOCAL_ONLY` | 43 |
 | `STATIC` | 20 |
 | `BROKEN` | 2 |
 | `UNREACHABLE` | 13 |
 | **total** | **205** |
 
-## BUILT (98)
+## BUILT (99)
 
 | page | evidence |
 |---|---|
@@ -113,6 +113,7 @@ This scanner reads the repository. It has no database connection, so:
 | `movies.html` | reads/writes 1 table; 1 auth call |
 | `news.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
 | `nexus.html` | reads/writes 1 table; 1 auth call |
+| `notes.html` | reads/writes 2 tables; 1 auth call |
 | `observatory.html` | reads/writes 7 tables; 1 auth call |
 | `oracle.html` | reads/writes 1 table; 1 auth call |
 | `payments.html` | reads/writes 2 tables; 1 auth call |
@@ -180,7 +181,7 @@ This scanner reads the repository. It has no database connection, so:
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (44)
+## LOCAL_ONLY (43)
 
 | page | evidence |
 |---|---|
@@ -208,7 +209,6 @@ This scanner reads the repository. It has no database connection, so:
 | `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `network.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `notes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `nutrition.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
@@ -302,7 +302,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 149 |
+| tables + views declared in `supabase/` | 152 |
 | functions declared in `supabase/` | 133 |
 | tables defined in more than one root SQL file | 46 |
 
@@ -378,7 +378,7 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 149 | 0 | 0 |
+| 152 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

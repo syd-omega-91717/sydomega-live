@@ -1143,7 +1143,10 @@
    "version",
    "status",
    "created_at",
-   "updated_at"
+   "updated_at",
+   "category",
+   "tags",
+   "pinned"
   ],
   "knowledge_edges": [
    "id",

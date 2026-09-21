@@ -537,9 +537,40 @@ open, recorded in `FIXES_LOG.md`:
   favorite any listing and the owning member cannot see that favorite row
   (own-row isolation, no public "N people favorited this" counter for v1).
   Full browser flow verified: favorite → appears in a new FAVORITES tab →
-  unfavorite → empty state returns, 0 console errors. The remaining two
-  verticals (billing, knowledge base/AI workspace) remain exactly as before:
-  RLS-locked, empty, needing their own build.
+  unfavorite → empty state returns, 0 console errors. **Fourth vertical shipped
+  2026-09-21: knowledge base (personal notes).** Same shape as project
+  management: `notes.html` already existed as a complete, working page
+  (title/body/category/tags/pin/markdown render/search) running entirely on
+  `localStorage` (`omega_notes`). The dormant backend was a 10-table
+  knowledge-base/AI-workspace scaffold (`ai_documents`, `ai_workspace_*`,
+  `knowledge_attachments`, `knowledge_documents`, `knowledge_edges`,
+  `knowledge_nodes`, `knowledge_spaces`, `omega_knowledge_*`) — of which only
+  `knowledge_documents`/`knowledge_spaces`/`knowledge_attachments` had never
+  been `CREATE TABLE`'d in this repo (`knowledge_nodes`/`knowledge_edges` were
+  already declared, in `0056_entreprise_schema_v2.sql`). Only
+  `knowledge_documents` was activated for v1, plus `category`/`tags`/`pinned`
+  columns the live table lacked but the page's UX depends on (the same gap
+  shape as `projects`' `category`/`priority`). `knowledge_spaces` stays
+  dormant — notes.html has no folder/notebook concept, and `space_id` is
+  nullable, so a spaceless personal note is a correct row, not a workaround.
+  `knowledge_attachments` stays dormant — no file-attachment feature exists to
+  migrate. Every `ai_workspace_*`/`ai_documents`/`omega_knowledge_*` table is
+  untouched — an actual AI/RAG workspace is a materially larger, separate
+  decision, not implied by migrating a notes page. Individual-owner RLS
+  (`author_id = auth.uid()`), matching the `projects`/`marketplace_favorites`
+  pattern. Verified live: two-member RLS impersonation on both UPDATE and
+  DELETE (not just INSERT/SELECT, since `notes.html` needed both) — a second
+  member's update and delete each affect 0 rows against another member's note,
+  while the true owner's update affects 1 row; test row cleaned up after.
+  Full browser flow verified against a custom stub: write → save → appears in
+  NOTES tab → open (view) → pin → delete (with confirm), 0 console errors.
+  `settings.html`'s "44 pages keep what you enter in this browser only" went
+  stale the moment `notes.html` moved off `localStorage` too — corrected to
+  43, matching `evidence-audit.py`'s device-local count (5 with an export path
+  + 38 without). The one remaining vertical (billing/subscriptions) is
+  HIGH-RISK per `CLAUDE.md` §10 (real money) and has not been started — it
+  requires the `grill-me-codex` threat-model gate before any schema/architecture
+  work, not the same-session build pattern used for the first four.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

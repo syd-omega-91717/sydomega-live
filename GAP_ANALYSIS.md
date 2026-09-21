@@ -448,10 +448,29 @@ open, recorded in `FIXES_LOG.md`:
   The `academy_categories`/`courses`/`modules`/`lessons`/`enrollments` slice
   of the scaffold is real-RLS'd, schema-captured into `supabase/migrations/`,
   and shipped — but dormant behind `platform_settings.courses_enabled=false`
-  until the owner turns it on (`FIXES_LOG.md`). The other four verticals
-  (billing, project management, marketplace, knowledge base/AI workspace)
-  remain exactly as before: RLS-locked, empty, needing their own human
-  decision before any of them gets the same treatment.
+  until the owner turns it on (`FIXES_LOG.md`). **Follow-up shipped
+  2026-09-21, same flag:** the exam/quiz layer the first slice deliberately
+  left dormant — `academy_exams`/`academy_questions`/`academy_exam_results`
+  — is now real-RLS'd, schema-captured, and seeded with one real exam on
+  the existing Financial Foundations course (4 questions, one per lesson,
+  not invented trivia). One deliberate design choice beyond the courses
+  pattern: `academy_questions.correct_answer` is excluded from the
+  `authenticated` SELECT grant at the column level (Postgres column-level
+  GRANT, confirmed live via `information_schema.column_privileges`) — a
+  bare RLS policy would let a member read the answer key through the same
+  query that renders the quiz. Grading happens inside a new
+  `submit_exam_attempt(exam_id, answers)` SECURITY DEFINER RPC, which reads
+  `correct_answer` with the function owner's privileges and returns only
+  the score; members get no INSERT grant on `academy_exam_results` at all,
+  so the RPC is the only path to a result row. Verified live: a member
+  session gets `42501` selecting `correct_answer` directly and `42501`
+  inserting a result row directly; a real mixed-answer RPC call scored
+  3/4 correct as 75% and passed against `pass_score=70`. Full interactive
+  browser flow (enroll → complete all 4 lessons → exam unlocks → answer →
+  submit → best-score card) verified with 0 console errors. The other four
+  verticals (billing, project management, marketplace, knowledge base/AI
+  workspace) remain exactly as before: RLS-locked, empty, needing their own
+  human decision before any of them gets the same treatment.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is
@@ -461,14 +480,15 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **130 tables have RLS policies and no grant** (re-counted live 2026-09-17,
-  `FIXES_LOG.md` #179 — up from 39 on 2026-08-29 as the scaffold grew). Left
-  locked out — the safe state. All 130 cross-referenced against client
-  `.from(...)` calls: **129 unreachable from any page**, do not "fix" by
-  granting without deciding the feature is wanted. **One was reachable and
-  broken** — `agent_experiments` (`autonomous-insights.html`) hit a real,
-  live `42501` on every read; granted and verified in #179, not a case of
-  this rule.
+- **127 tables have RLS policies and no grant** (down from 130 on
+  2026-09-17 — `academy_exams`/`academy_questions`/`academy_exam_results`
+  granted 2026-09-21 as the exam-layer follow-up above, `academy_questions`
+  column-restricted rather than a full table grant). Left locked out — the
+  safe state for the rest. Cross-referenced against client `.from(...)`
+  calls: unreachable from any page, do not "fix" by granting without
+  deciding the feature is wanted. **One was reachable and broken** —
+  `agent_experiments` (`autonomous-insights.html`) hit a real, live `42501`
+  on every read; granted and verified in #179, not a case of this rule.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

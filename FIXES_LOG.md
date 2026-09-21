@@ -20302,3 +20302,38 @@ python3 scripts/reachability-contract.py                                       O
 node scripts/verify-in-browser (full sweep)                                    205 pages, 0 uncaught errors
 platform_settings.courses_enabled                                              false (dormant; owner turns it on when ready)
 ```
+
+## Exam/quiz layer added to the academy_* course scaffold — a member-supplied answer key would have been the actual bug, caught before it shipped
+
+The previous entry (courses launch) deliberately left `academy_exams`/`academy_questions`/`academy_exam_results` deny-by-default as a flagged follow-up rather than scope creep into the first slice. This entry is that follow-up, same `platform_settings.courses_enabled` flag, no new plumbing.
+
+**Confirmed the real starting state before writing anything**, not assumed from the prior entry's note: `information_schema.role_table_grants` showed RLS enabled and zero grants to any role on all three tables (CLAUDE.md §8.1 class 6c) — genuinely dormant. `information_schema.columns` gave the real column shapes (`academy_exams.pass_score integer default 70`, `academy_questions.correct_answer text`, `academy_exam_results.score numeric`), and `pg_constraint` confirmed no unique key existed on `academy_exam_results` beyond `id` — so retakes are additional rows, not an upsert, and no upsert-conflict bug (class 7) was possible to introduce here.
+
+**The real design risk was not a missing constraint — it was the SELECT itself.** A member-visible course needs `academy_questions` readable by that member to render the quiz. A plain `for select using (course published)` policy — the same shape already used for `academy_modules`/`academy_lessons` — would let any member read `correct_answer` through the identical query the UI uses to render the options, defeating the exam before it ships. Fixed with a Postgres column-level `GRANT SELECT (id, exam_id, question, option_a, option_b, option_c, option_d, points)` that deliberately omits `correct_answer`, and a new `submit_exam_attempt(p_exam_id, p_answers)` `SECURITY DEFINER` RPC that reads `correct_answer` with the function-owner's privileges (bypassing the column grant by design), computes the score server-side, and is the only writer of `academy_exam_results` — no INSERT grant to `authenticated` exists on that table at all, so a member cannot forge their own passing score by writing the row directly.
+
+**Both halves verified live, not read from the policy/grant text:**
+- `information_schema.column_privileges` after applying: `authenticated` holds `SELECT` on 8 columns of `academy_questions`; `correct_answer` is not one of them (it does carry `INSERT`/`UPDATE`, from the blanket content-management grant the owner-only RLS policies gate — no admin UI reads it, matching the existing courses tables' owner-managed-via-migration pattern).
+- Real RLS impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, this repo's own documented gotcha that `set_config('role',...)` alone does not engage RLS): `select correct_answer from academy_questions` as a non-owner member returns a real `42501`; `insert into academy_exam_results (...) values (..., true)` as the same member also returns `42501`.
+- `submit_exam_attempt` called as that same member with 3 correct answers and 1 wrong one scored `75.0` against `pass_score=70` → `passed=true`, and a real row landed in `academy_exam_results` with the correct `profile_id` — the RPC path works end to end, not just in isolation from the denial tests above.
+
+**Seed content is real, not filler**, grounded by reading the actual lesson articles rather than inventing questions: the existing "Financial Foundations" course's four lessons (net worth formula, savings rate formula, the 50/30/20 bucket split, the three things a written goal needs) each became one exam question, options included, drawn from the lesson text itself.
+
+**`courses.html` extended, not a new page**: an exam card appears on the course-detail view once every lesson is complete (mirroring the platform's existing "no fabricated completion" rule — the button does not appear until real per-lesson progress says so), showing the best-of-attempts score and PASSED/NOT YET PASSED; a new exam view renders the 4 questions as radio groups and calls the RPC on submit, showing score/pass/correct-count. Verified with a full interactive browser test using a custom route-intercepted stub carrying a real answer key (the shared harness's default stub is table-agnostic): enroll → complete all 4 lessons → exam card appears → open exam → 4 questions / 16 options render → submit 3 correct + 1 wrong → result shows "75% · PASSED · 3 OF 4 CORRECT" → back to course view shows "BEST SCORE 75% · PASSED" and a RETAKE EXAM button — zero console/page errors through the whole flow.
+
+**A genuinely `CREATE TABLE`'d-nowhere gap closed on the way**, same class as the courses migration: `academy_exams`/`academy_questions`/`academy_exam_results` had never had a `CREATE TABLE` statement in any file in this repo, only existing live. Backfilled as pure `CREATE TABLE IF NOT EXISTS` DDL with every column/type/default/FK copied from a live query, in its own schema-capture migration ahead of the RLS/grant/RPC migration.
+
+```
+information_schema.role_table_grants (before)                                  RLS on, zero grants to any role — confirmed dormant
+information_schema.column_privileges (after)                                   authenticated SELECT excludes correct_answer (8 of 9 columns)
+RLS impersonation: select correct_answer directly as member                    42501, as designed
+RLS impersonation: insert into academy_exam_results directly as member         42501, as designed
+submit_exam_attempt(3 correct, 1 wrong) as real member session                 score=75.0, passed=true, real result row written
+Full browser flow (enroll->4 lessons->exam unlock->answer->submit->best-score) 0 errors, all assertions pass
+scripts/audit.py                                                               0 critical / 6 warnings (baseline, unchanged)
+scripts/schema-dictionary.py                                                   OK
+scripts/upsert-conflict-check.py                                               0 findings (no upsert used — additional-attempt rows, not upserts)
+scripts/migration-drift.py                                                     PASS, 196 versions, local and remote agree
+scripts/omega-registry.py --check                                             OK
+./scripts/ci-local.sh                                                          24/24 blocking checks pass
+platform_settings.courses_enabled                                              false (dormant; owner turns it on when ready)
+```

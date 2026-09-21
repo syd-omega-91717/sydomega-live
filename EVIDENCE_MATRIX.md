@@ -107,7 +107,7 @@ This scanner reads the repository. It has no database connection, so:
 | `maintenance.html` | reads/writes 1 table; 1 auth call |
 | `map.html` | reads/writes 1 table; 1 auth call |
 | `marketing.html` | reads/writes 2 tables; 1 auth call |
-| `marketplace.html` | reads/writes 2 tables; 1 auth call |
+| `marketplace.html` | reads/writes 3 tables; 1 auth call |
 | `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
 | `movies.html` | reads/writes 1 table; 1 auth call |
@@ -302,7 +302,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 145 |
+| tables + views declared in `supabase/` | 149 |
 | functions declared in `supabase/` | 133 |
 | tables defined in more than one root SQL file | 46 |
 
@@ -378,7 +378,7 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 145 | 0 | 0 |
+| 149 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

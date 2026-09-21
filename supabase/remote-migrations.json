@@ -1,22 +1,5 @@
 {
-  "_comment": [
-    "GENERATED snapshot of supabase_migrations.schema_migrations on the live project.",
-    "",
-    "WHY THIS FILE EXISTS. `supabase db push` refuses to run with",
-    "\"Remote migration versions not found in local migrations directory\" whenever",
-    "the remote history contains a version that the local migration directory does not.",
-    "",
-    "scripts/migration-drift.py compares supabase/migrations/ against this file and",
-    "fails on either direction. A live migration applied through MCP/dashboard must",
-    "be materialised in the repository and reflected in this snapshot in the same",
-    "change.",
-    "",
-    "Query:",
-    "  select version from supabase_migrations.schema_migrations order by version;"
-  ],
   "_captured": "2026-09-21",
-  "_project": "ydqhzvvoyufiiqvzcjns",
-  "_count": 194,
   "versions": [
     "0001",
     "0002",
@@ -211,6 +194,8 @@
     "20260921010158",
     "20260921010337",
     "20260921010709",
-    "20260921010951"
+    "20260921010951",
+    "20260921052732",
+    "20260921052807"
   ]
 }

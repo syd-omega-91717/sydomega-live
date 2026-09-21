@@ -32,6 +32,21 @@
 .crs-article{font-family:var(--R);font-size:14px;line-height:1.75;color:var(--ink)}
 .crs-article p{margin:0 0 14px}
 .crs-article strong{color:var(--gold)}
+.crs-exam-card{margin-top:18px}
+.crs-exam-card .crs-title{margin-bottom:6px}
+.crs-exam-best{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.crs-exam-best.pass{color:var(--green)}
+.crs-exam-best.fail{color:var(--crim)}
+.crs-q{margin-bottom:20px}
+.crs-q-text{font-family:var(--R);font-size:14px;color:var(--ink);margin-bottom:10px}
+.crs-opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);margin-bottom:6px;cursor:pointer;transition:.12s}
+.crs-opt:hover{border-color:rgba(201,168,76,.35)}
+.crs-opt input{margin:0}
+.crs-opt-text{font-family:var(--R);font-size:13px;color:var(--ink)}
+.crs-exam-result{margin-top:16px;padding:16px;border:1px solid var(--line)}
+.crs-exam-result .score{font-family:var(--D);font-size:28px;color:var(--gold)}
+.crs-exam-result.pass{border-color:rgba(46,204,113,.4)}
+.crs-exam-result.fail{border-color:rgba(220,80,80,.4)}
 </style>
 </head>
 <body>
@@ -59,6 +74,7 @@
         <span class="crs-back" id="crs-back-to-catalog">&larr; ALL COURSES</span>
         <div class="card" id="crs-course-head" style="margin-bottom:18px"></div>
         <div id="crs-modules"></div>
+        <div class="card crs-exam-card" id="crs-exam-card" style="display:none"></div>
       </div>
 
       <!-- LESSON VIEW -->
@@ -69,6 +85,15 @@
         <div style="margin-top:20px">
           <button class="btn btn-fill" id="crs-mark-complete">MARK LESSON COMPLETE</button>
         </div>
+      </div>
+
+      <!-- EXAM VIEW -->
+      <div id="crs-view-exam" style="display:none">
+        <span class="crs-back" id="crs-back-to-course-from-exam">&larr; BACK TO COURSE</span>
+        <div class="sechead" id="crs-exam-title"></div>
+        <div id="crs-exam-questions"></div>
+        <button class="btn btn-fill" id="crs-exam-submit">SUBMIT EXAM</button>
+        <div id="crs-exam-result" style="display:none"></div>
       </div>
     </div>
     <div data-page-emblem="courses" style="margin:20px auto 0"></div>
@@ -82,10 +107,10 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
 function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
 
-var STATE={ uid:null, course:null, modules:[], enrollment:null, progressByLesson:{}, lesson:null };
+var STATE={ uid:null, course:null, modules:[], enrollment:null, progressByLesson:{}, lesson:null, exam:null, questions:[] };
 
 function showView(name){
-  ['catalog','course','lesson'].forEach(function(v){
+  ['catalog','course','lesson','exam'].forEach(function(v){
     document.getElementById('crs-view-'+v).style.display=(v===name?'':'none');
   });
 }
@@ -184,6 +209,68 @@ function renderCourse(){
   document.querySelectorAll('.crs-lesson-row:not(.locked)').forEach(function(el){
     el.addEventListener('click',function(){openLesson(el.getAttribute('data-lesson-id'));});
   });
+
+  var allDone=totalLessons>0 && doneLessons===totalLessons;
+  var examCard=document.getElementById('crs-exam-card');
+  if(STATE.enrollment && allDone){
+    loadExamCard();
+  }else{
+    examCard.style.display='none';
+  }
+}
+
+async function loadExamCard(){
+  var card=document.getElementById('crs-exam-card');
+  var{data:exam}=await sb.from('academy_exams').select('id,title,pass_score,duration_minutes').eq('course_id',STATE.course.id).maybeSingle();
+  if(!exam){card.style.display='none';return;}
+  STATE.exam=exam;
+  var{data:results}=await sb.from('academy_exam_results').select('score,passed,completed_at').eq('exam_id',exam.id).eq('profile_id',STATE.uid).order('score',{ascending:false}).limit(1);
+  var best=(results&&results[0])||null;
+  card.style.display='';
+  card.innerHTML='<div class="crs-title">'+esc(exam.title)+'</div>'
+    +(best
+      ? '<div class="crs-exam-best '+(best.passed?'pass':'fail')+'">BEST SCORE '+Number(best.score)+'% &middot; '+(best.passed?'PASSED':'NOT YET PASSED')+'</div>'
+      : '<div class="crs-exam-best">NOT YET ATTEMPTED</div>')
+    +'<button class="btn btn-fill" id="crs-exam-start">'+(best&&best.passed?'RETAKE EXAM':'TAKE THE FINAL EXAM')+'</button>';
+  document.getElementById('crs-exam-start').addEventListener('click',openExam);
+}
+
+async function openExam(){
+  if(!STATE.exam)return;
+  var{data:questions,error}=await sb.from('academy_questions').select('id,question,option_a,option_b,option_c,option_d').eq('exam_id',STATE.exam.id).order('id',{ascending:true});
+  if(error||!questions||!questions.length){window.omegaToast&&window.omegaToast('Could not load the exam ('+(error?error.message:'no questions')+')','error');return;}
+  STATE.questions=questions;
+  document.getElementById('crs-exam-title').textContent=STATE.exam.title;
+  document.getElementById('crs-exam-result').style.display='none';
+  document.getElementById('crs-exam-submit').style.display='';
+  document.getElementById('crs-exam-questions').innerHTML=questions.map(function(q,i){
+    var opts=[['a',q.option_a],['b',q.option_b],['c',q.option_c],['d',q.option_d]];
+    return '<div class="crs-q"><div class="crs-q-text">'+(i+1)+'. '+esc(q.question)+'</div>'
+      +opts.filter(function(o){return o[1];}).map(function(o){
+        return '<label class="crs-opt"><input type="radio" name="q-'+esc(q.id)+'" value="'+o[0]+'"><span class="crs-opt-text">'+esc(o[1])+'</span></label>';
+      }).join('')
+      +'</div>';
+  }).join('');
+  showView('exam');
+}
+
+async function submitExam(){
+  if(!STATE.exam||!STATE.questions.length)return;
+  var answers={};
+  STATE.questions.forEach(function(q){
+    var chosen=document.querySelector('input[name="q-'+q.id+'"]:checked');
+    if(chosen)answers[q.id]=chosen.value;
+  });
+  var{data,error}=await sb.rpc('submit_exam_attempt',{p_exam_id:STATE.exam.id,p_answers:answers});
+  if(error){window.omegaToast&&window.omegaToast('Could not submit the exam ('+error.message+')','error');return;}
+  var result=(data&&data[0])||null;
+  if(!result)return;
+  var box=document.getElementById('crs-exam-result');
+  box.className='crs-exam-result '+(result.passed?'pass':'fail');
+  box.style.display='';
+  box.innerHTML='<div class="score">'+Number(result.score)+'%</div>'
+    +'<div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:'+(result.passed?'var(--green)':'var(--crim)')+'">'+(result.passed?'PASSED':'NOT PASSED')+' &middot; '+result.correct_count+' OF '+result.total_count+' CORRECT</div>';
+  document.getElementById('crs-exam-submit').style.display='none';
 }
 
 async function enroll(){
@@ -229,7 +316,9 @@ async function markComplete(){
 
 document.getElementById('crs-back-to-catalog').addEventListener('click',function(){showView('catalog');});
 document.getElementById('crs-back-to-course').addEventListener('click',function(){renderCourse();showView('course');});
+document.getElementById('crs-back-to-course-from-exam').addEventListener('click',function(){renderCourse();showView('course');});
 document.getElementById('crs-mark-complete').addEventListener('click',markComplete);
+document.getElementById('crs-exam-submit').addEventListener('click',submitExam);
 
 (async function boot(){
   var{data:sessData}=await sb.auth.getSession();

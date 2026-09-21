@@ -2190,3 +2190,52 @@ real search: "journal"                                 133 chips -> 1 chip, 15 s
 real search clear: restores prior collapse state        confirmed per-section, not a blanket reset
 scan.js errors / overflow / taps (dashboard.html)       0/1, 0/1, 0 undersized controls
 ```
+
+## 35. Scene-per-realm 3-D backdrops — the 9 realm hub pages get their own tinted signet
+
+**Grounded in:** `GAP_ANALYSIS.md`'s standing item "The 3-D layer exists but four scenes is where
+it stops," item (2) "Scene-per-realm": "Nine realms, nine backdrops; today every page that mounts
+the sculpture layer gets the same four." Verified before building: `index.html`'s own realm strip
+already links 9 destinations (`dashboard.html`, `profile.html`, `honors.html`, `cosmos.html`,
+`media.html`, `vault.html`, `family.html`, `services.html`, `intelligence.html`), each with its own
+accent hex, and a repo-wide grep confirmed none of the 9 had any `data-omega-sculpture` mount.
+
+**Decision:** the original GAP_ANALYSIS note pointed at `omega-realm.js`'s `ELEM_PALETTE` as the
+palette source — checked and wrong, that file has no such export and `ELEM_PALETTE` (in
+`omega-sigil-gen.js`/`omega-emblems.js`) is keyed by zodiac element, a different axis from realm.
+Used the realm hexes already live on `index.html` instead of inventing a new palette. Also checked
+which of `omega-sculpture.js`'s 6 scene builders actually honour a custom colour before picking
+one: only `signet` does (`buildSignet(T, opt.accent || p.gold)`); `elements`/`ascension`/`agents`/
+`matrix`/`gates` hardcode their palette. `signet` is also the right scene semantically — it's
+already the generic branded hero used on `index.html`, not tied to a specific dataset the way
+`agents`/`gates`/`elements` are.
+
+**What shipped:** one `.osc-stage[data-omega-sculpture="signet"]` mount per realm hub page, each
+with `data-sculpt-accent` set to that page's own hex (`dashboard` `#C9A84C`, `profile` `#00E5FF`,
+`honors` `#E86A3A`, `cosmos` `#9B6BF0`, `media` `#C4453C`, `vault` `#C9A84C`, `family` `#D9B86A`,
+`services` `#3fb27f`, `intelligence` `#9B6BF0`) and `data-sculpt-bloom="off"` — a deliberate choice
+since these are 9 *new* mounts landing on pages that are already content-heavy, and the sculpture
+module's own header documents ~22% frame-rate cost per mount under bloom on this harness's software
+rasteriser. Placed at each page's natural top-of-content break (after the mission-bar/topbar/hero,
+before the tab row), inside the content column, never inside `.shell` (CLAUDE.md 4's "`.shell` is a
+flex row" trap). `profile.html` specifically got its mount placed *after* the existing bespoke
+`.profile-hero`/`#ph-canvas` closes, not stacked inside it, to avoid competing with that page's own
+already-rendered hero visual.
+
+Verified in a real headless render across all 9 pages, not asserted from the diff: `scan.js errors`
+and `overflow` both 0/9; a direct `page.evaluate()` read back the live canvas's drawing-buffer size
+against its CSS box on every mount (all matched — no repeat of the §8.1 class 3 zero-buffer bug);
+`vault.html` specifically checked for CSP violations via a `console` listener since it runs the
+platform's one stricter meta CSP (`GAP_ANALYSIS.md`) — 0 violations; screenshots of 4 of the 9
+(`dashboard`/`vault` both gold, `services` green, `cosmos` purple) confirm the accent actually
+reaches the rendered mesh's material colour, not just the DOM attribute.
+
+```
+scan.js errors / overflow (9 realm pages)        0/9, 0/9
+canvas buffer size vs. live CSS box              matches on all 9
+vault.html CSP violations                        0
+data-sculpt-accent read back                     correct, distinct hex on all 9
+rendered mesh colour differs per page            confirmed via screenshot (4 of 9 checked)
+python3 scripts/check-inline-js.py               OK
+python3 scripts/audit.py                         0 critical / 6 warnings (baseline, unchanged)
+```

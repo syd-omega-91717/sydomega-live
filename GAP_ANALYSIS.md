@@ -68,9 +68,30 @@ open, recorded in `FIXES_LOG.md`:
   technical one — a forced intro on every load is hostile, so it wants
   first-visit-only, skippable, off under reduced motion, and remembered. Not
   shipped without that call being made.
-  **(2) Scene-per-realm.** Nine realms, nine backdrops; today every page that
-  mounts the sculpture layer gets the same four. The element/realm palettes already exist
-  in `omega-realm.js`'s `ELEM_PALETTE`.
+  **(2) Scene-per-realm — SHIPPED 2026-09-20.** Nine realms, nine backdrops. The
+  original note here ("palettes already exist in `omega-realm.js`'s `ELEM_PALETTE`")
+  was wrong on the file — `ELEM_PALETTE` lives in `omega-sigil-gen.js`/`omega-emblems.js`
+  and is keyed by zodiac element, a different axis from realm. The real per-realm
+  accents were already rendered on `index.html`'s own realm strip (one hex per
+  `nav.js` SECTIONS entry), so those are what got used, not an invented palette.
+  Of the 6 scene builders in `omega-sculpture.js`, only `signet` actually honours
+  `opt.accent` (`buildSignet(T, opt.accent || p.gold)`); `elements`/`ascension`/
+  `agents`/`matrix`/`gates` hardcode `p.gold`/`p.solar`/`p.cyan` — a real, useful
+  scoping finding, not a bug, since `signet` is exactly the generic branded mark
+  the 9 realm hub pages needed. Added one `.osc-stage[data-omega-sculpture=signet]`
+  mount with `data-sculpt-accent` set to that page's own realm hex, `data-sculpt-bloom="off"`
+  (these are 9 new mounts on already content-heavy pages, so the ~22%-per-mount
+  bloom cost noted in item (4) below was skipped by default), to `dashboard.html`,
+  `profile.html`, `honors.html`, `cosmos.html`, `media.html`, `vault.html`,
+  `family.html`, `services.html`, `intelligence.html` — the 9 pages `index.html`'s
+  own realm strip links to, none of which had any sculpture mount before. Verified
+  in a real headless render on all 9: 0 uncaught errors, 0 horizontal overflow,
+  drawing buffer matches the live box size on every mount (no §8.1 class 3 zero-buffer
+  repeat), and — checked specifically since `vault.html` runs the platform's one
+  stricter meta CSP (`GAP_ANALYSIS.md`, "`vault.html` runs a second, stricter CSP")
+  — **0 CSP violations** there either. Screenshots of 4 of the 9 (`dashboard`,
+  `vault`, `services`, `cosmos`) confirm visibly distinct accent colours actually
+  reach the rendered mesh, not just the DOM attribute.
   **(3) Navigable scenes.** The nodes in `agents` and `matrix` are geometry, not
   links. `omega-constellation.js` already proves the pattern in 2-D — each mark
   IS the door into its page — and raycasting would give the 3-D scenes the same

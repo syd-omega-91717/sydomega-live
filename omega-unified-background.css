@@ -1,0 +1,42 @@
+/* Ω SYD OMEGA 91717 — UNIFIED BACKGROUND
+   One restrained ambient field for every page.
+   The content, cards, sigils and navigation remain the visual focus.
+*/
+:root{
+  --omega-unified-void:#020206;
+  --omega-unified-ink:#0a0a0f;
+  --omega-unified-gold:rgba(201,168,76,.095);
+  --omega-unified-cyan:rgba(0,229,255,.055);
+  --omega-unified-grid:rgba(201,168,76,.028);
+}
+html{background:var(--omega-unified-void)!important}
+body{
+  background:var(--omega-unified-ink)!important;
+  background-image:none!important;
+  position:relative;
+  isolation:isolate;
+}
+/* Single source of truth for the atmosphere: one layer, one composition. */
+body::before{
+  content:""!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:-2!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(900px 650px at 50% 12%,var(--omega-unified-gold),transparent 70%),
+    radial-gradient(780px 560px at 100% 100%,var(--omega-unified-cyan),transparent 72%),
+    linear-gradient(var(--omega-unified-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--omega-unified-grid) 1px,transparent 1px),
+    var(--omega-unified-ink)!important;
+  background-size:auto,auto,48px 48px,48px 48px,auto!important;
+  background-position:center,center,0 0,0 0,center!important;
+  background-repeat:no-repeat,no-repeat,repeat,repeat,no-repeat!important;
+  animation:none!important;
+}
+/* Retire competing scanline and page-specific ambient overlays. */
+body::after{opacity:0!important;background:none!important;animation:none!important}
+/* Keep the visual system stable and readable. */
+#omega-atmosphere,#omega-particles-canvas,[data-omega-particles-canvas]{opacity:.18;pointer-events:none}
+@media(prefers-reduced-motion:reduce){body::before{animation:none!important}}

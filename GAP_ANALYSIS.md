@@ -438,6 +438,16 @@ open, recorded in `FIXES_LOG.md`:
 - **Member location is not collected** (live 2026-08-29): `profiles.country`
   exists; `lat`/`lon`/`gate` do not (`map.html`'s reads removed in `3f8a17d7`).
   Adding it is a privacy decision, not a bug fix.
+- **`omega-more-info.js` (short lead + click-to-expand) is built and proven on
+  3 pages, not swept estate-wide** (shipped 2026-09-21; `FIXES_LOG.md`). A grep
+  for the platform's verbose-explanatory-text pattern hit 20+ pages, but most
+  turned out to be the wrong target: card-grid bodies where the title already
+  summarises (collapsing would cost clicks, not save them) or live/dormant
+  trust disclosures (`compliance.html`, `marketplace.html`) that need to stay
+  visible at a glance per this repo's own anti-fabrication rule. `world-shell.html`,
+  `factions.html`, `awards.html` are the three real, verified fits so far. The
+  rest of the 20+ candidates need the same by-hand judgment call before wrapping —
+  open, scoped work.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —

@@ -20364,3 +20364,29 @@ python3 scripts/check-inline-js.py                                           OK
 python3 scripts/audit.py                                                      0 critical / 6 warnings (baseline unchanged)
 ./scripts/ci-local.sh                                                        24/24 blocking checks pass
 ```
+
+## "Short lead, click for more" disclosure component built and proven on 3 real pages — most candidate long-text blocks turned out to be the wrong target
+
+Owner-directed: "find a smart way to hide the explanative text in each page to be more short and targeted, and for more info a click info for user they can go to it."
+
+**Grepped for the actual verbose-text pattern before writing a component for it** (`color:var(--muted);line-height:1.[68]`), which hit 20+ pages. Reading the actual matches found two shapes that are NOT good candidates for hiding behind a click, and building the component around them would have been the wrong deliverable even though the grep pattern matched:
+
+1. **Card-grid bodies** (`ecosystem.html`, `marketplace.html`, `grid.html`, most of the 20+ hits): each card already has a short `.card-title` acting as its own summary, and the "long" text is one of 3-4 *parallel* facts a member scans side by side — collapsing each into its own click would cost 4 clicks to read what is currently one glance, which is worse UX, not better.
+2. **Live/dormant trust disclosures** (`compliance.html`'s Platform Constitution notice, `marketplace.html`'s Ω-economy dormancy notice): these exist specifically so a member sees "not yet implemented" at a glance, matching this repo's own anti-fabrication culture (CLAUDE.md §9). Hiding that behind a click would make the page *less* honest on first read, not more scannable — the opposite of the ask.
+
+**What the mechanism actually targets**: a genuinely standalone explanatory paragraph sitting *before* the actionable content of a page, with no existing summary anywhere else. Three real, verified fits: `world-shell.html`'s own developer-facing intro blurb, `factions.html`'s "Twelve Factions divide the Order" panel, `awards.html`'s "External Award Registry" panel — all flavour/context text, none of it a trust disclosure or a parallel-fact grid.
+
+**Built `omega-more-info.js`** (new module, bg.js-injected like every other shared module, own `data-omega-more-info` guard attribute): scans `[data-omega-more]` containers for a `.omi-lead` (always visible) and `.omi-full` (collapsed by default, `max-height`/`opacity` transition, `prefers-reduced-motion` respected), injects one real `<button>` toggle with `aria-expanded`/`aria-controls` wired correctly, re-measures `scrollHeight` on window resize so an open panel does not clip after a viewport change. Deliberately a **separate** reveal mechanism from `omega-content.js`'s `.oc-hidden` and `omega-animated.js`'s `.oa-reveal` — those are scroll-entrance triggers that fire once and never re-hide; this is a click-triggered toggle that opens and closes on demand. Documented in the module's own header not to apply either existing reveal class to an `.omi-full`/`.omi-lead` element, since CLAUDE.md's Ω-GVP notes already record a real bug from exactly that kind of stacking (an animation's keyframe silently overriding this module's own hidden state).
+
+**A real measurement mistake caught before it was reported as a result**: the first verification pass on `factions.html`/`awards.html` showed the toggle's `aria-expanded` flipping to `true` on click but `max-height` staying at `0px` — looked like a broken component. It was not: both panels sit inside a `.tab-panel` that is not the page's default-active tab (`display:none` at load), so `full.scrollHeight` genuinely read 0 at click time — CLAUDE.md 8.1 class 10's sibling problem (`display:none` panels reading as populated) hitting the opposite direction (a real component read as broken because its container was hidden). Re-tested calling each page's own real `setTab()` first to make the panel visible, matching the harness's own documented gotcha ("force the panels visible before measuring, or report honestly that you measured N of M") — all three pages then show a correct `0px → <real height>` expansion, `aria-expanded` and the button label flipping correctly, 0 console errors.
+
+**Explicitly not swept across the estate.** The grep surfaced dozens more candidate blocks; each one needs the same by-hand judgment call this entry just made (parallel-fact grid vs. trust disclosure vs. genuine standalone lede) before it is wrapped — a blind regex-driven sweep would misfire on exactly the two shapes identified above. Three pages ship as real, verified proof of the mechanism; the rest is open, scoped work, not silently claimed done.
+
+```
+world-shell.html   toggle: 0px -> 65px on click, aria-expanded true, label LESS INFO, 0 errors
+factions.html      toggle: 0px -> 43px on click (after real setTab('all')), 0 errors
+awards.html        toggle: 0px -> 65px on click (after real setTab('honours')), 0 errors
+python3 scripts/check-inline-js.py                                            OK
+python3 scripts/omega-registry.py --check                                     OK (142 omega-*.js modules, 150 root .js files)
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```

@@ -237,7 +237,10 @@
 <div data-page-emblem="projects" style="margin:20px auto 0"></div>
 </div>
 
-<script>
+<script type="module">
+import{createClient}from'/vendor/supabase-js.js';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -248,6 +251,7 @@ function switchTab(id,btn){
   if(id==='tasks'){populateTaskSelect();renderTasks();}
 }
 
+var UID=null;
 var projects=[];
 var tasks={};
 var newMilestones=[];
@@ -259,16 +263,36 @@ var CAT_COLORS={business:'#00E5FF',product:'#9B6BF0',creative:'#FF9800',learning
   health:'#E91E63',finance:'#FFD700',infrastructure:'#607D8B',research:'#8BC34A',
   personal:'#00BCD4',mission:'#FF4444'};
 
-function load(){
-  try{projects=JSON.parse(localStorage.getItem('omega_projects')||'[]');}catch(e){projects=[];}
-  try{tasks=JSON.parse(localStorage.getItem('omega_proj_tasks')||'{}');}catch(e){tasks={};}
-}
-function save(){
-  localStorage.setItem('omega_projects',JSON.stringify(projects));
-  localStorage.setItem('omega_proj_tasks',JSON.stringify(tasks));
-}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function slugify(s){return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,40)||'project';}
+function toast(msg){window.omegaToast?window.omegaToast(msg,'error'):alert(msg);}
+
+/* Loads every project this member owns, with its milestones embedded via
+   the real project_milestones -> projects foreign key (one query, no
+   N+1), then every task across those projects in a second query -- RLS
+   already scopes both to this member's own rows, so no explicit
+   project_id filter is needed on either. */
+async function loadAll(){
+  var{data:projRows,error:pErr}=await sb.from('projects')
+    .select('*, project_milestones(id,text,due_date,done,sort_order)')
+    .order('created_at',{ascending:false});
+  if(pErr){toast('Could not load projects ('+pErr.message+')');projects=[];return;}
+  projects=(projRows||[]).map(function(p){
+    var ms=(p.project_milestones||[]).slice().sort(function(a,b){return (a.sort_order||0)-(b.sort_order||0);});
+    return{id:p.id,name:p.name,desc:p.description||'',cat:p.category||'business',
+      priority:p.priority||'medium',status:p.status||'active',due:p.due_date||'',
+      created:p.created_at,updated:p.updated_at,
+      milestones:ms.map(function(m){return{id:m.id,text:m.text,date:m.due_date||'',done:!!m.done};})};
+  });
+
+  var{data:taskRows,error:tErr}=await sb.from('tasks').select('*').order('created_at',{ascending:true});
+  tasks={};
+  if(tErr){toast('Could not load tasks ('+tErr.message+')');return;}
+  (taskRows||[]).forEach(function(t){
+    if(!tasks[t.project_id])tasks[t.project_id]=[];
+    tasks[t.project_id].push({id:t.id,text:t.title,done:t.status==='done',created:t.created_at});
+  });
+}
 
 function setFilter(s,el){
   filterStatus=s;
@@ -355,27 +379,35 @@ function renderMilestones(p){
     }).join('')+'</div>';
 }
 
-function toggleMs(pid,idx){
+async function toggleMs(pid,idx){
   var p=projects.find(function(x){return x.id===pid;});
-  if(p&&p.milestones&&p.milestones[idx]){p.milestones[idx].done=!p.milestones[idx].done;save();renderProjects();}
+  var m=p&&p.milestones&&p.milestones[idx];
+  if(!m)return;
+  var next=!m.done;
+  var{error}=await sb.from('project_milestones').update({done:next}).eq('id',m.id);
+  if(error){toast('Could not update milestone ('+error.message+')');return;}
+  m.done=next;renderProjects();
 }
 
-function cycleStatus(pid,e){
+async function cycleStatus(pid,e){
   e.stopPropagation();
   var order=['planning','active','blocked','paused','complete'];
   var p=projects.find(function(x){return x.id===pid;});
   if(!p)return;
-  var i=order.indexOf(p.status);
-  p.status=order[(i+1)%order.length];
-  save();renderProjects();
+  var next=order[(order.indexOf(p.status)+1)%order.length];
+  var{error}=await sb.from('projects').update({status:next,updated_at:new Date().toISOString()}).eq('id',pid);
+  if(error){toast('Could not update status ('+error.message+')');return;}
+  p.status=next;renderProjects();
 }
 
-function deleteProject(pid,e){
+async function deleteProject(pid,e){
   e.stopPropagation();
   if(!confirm('Delete this project?'))return;
+  var{error}=await sb.from('projects').delete().eq('id',pid);
+  if(error){toast('Could not delete project ('+error.message+')');return;}
   projects=projects.filter(function(x){return x.id!==pid;});
   delete tasks[pid];
-  save();renderProjects();
+  renderProjects();
 }
 
 function editProject(pid,e){
@@ -389,7 +421,7 @@ function editProject(pid,e){
     document.getElementById('p-priority').value=p.priority;
     document.getElementById('p-status').value=p.status;
     document.getElementById('p-due').value=p.due||'';
-    newMilestones=[...(p.milestones||[])];
+    newMilestones=(p.milestones||[]).map(function(m){return{text:m.text,date:m.date,done:m.done};});
     editingPid=pid;
     renderNewMilestones();
   },50);
@@ -418,7 +450,7 @@ function renderNewMilestones(){
   }).join('');
 }
 
-function saveProject(){
+async function saveProject(){
   var name=document.getElementById('p-name').value.trim();
   var desc=document.getElementById('p-desc').value.trim();
   var cat=document.getElementById('p-cat').value;
@@ -426,15 +458,38 @@ function saveProject(){
   var status=document.getElementById('p-status').value;
   var due=document.getElementById('p-due').value;
   if(!name){alert('Name the project.');return;}
-  if(editingPid){
-    var p=projects.find(function(x){return x.id===editingPid;});
-    if(p){Object.assign(p,{name:name,desc:desc,cat:cat,priority:priority,status:status,due:due,milestones:[...newMilestones],updated:new Date().toISOString()});}
-    editingPid=null;
+
+  var pid=editingPid;
+  if(pid){
+    var{error:upErr}=await sb.from('projects').update({
+      name:name,description:desc,category:cat,priority:priority,status:status,
+      due_date:due||null,updated_at:new Date().toISOString()
+    }).eq('id',pid);
+    if(upErr){toast('Could not save project ('+upErr.message+')');return;}
   } else {
-    projects.unshift({id:uid(),name:name,desc:desc,cat:cat,priority:priority,status:status,due:due,
-      milestones:[...newMilestones],created:new Date().toISOString()});
+    var slug=slugify(name)+'-'+Date.now().toString(36);
+    var{data:inserted,error:insErr}=await sb.from('projects').insert({
+      owner_id:UID,name:name,description:desc,category:cat,priority:priority,
+      status:status,due_date:due||null,slug:slug
+    }).select().maybeSingle();
+    if(insErr||!inserted){toast('Could not create project ('+(insErr?insErr.message:'unknown error')+')');return;}
+    pid=inserted.id;
   }
-  save();clearProjectForm();
+
+  /* Milestones are replaced wholesale on save, matching the page's own
+     original semantics (the draft array always overwrote p.milestones
+     entirely) -- delete-then-insert is the relational equivalent. */
+  var{error:delErr}=await sb.from('project_milestones').delete().eq('project_id',pid);
+  if(delErr){toast('Could not save milestones ('+delErr.message+')');return;}
+  if(newMilestones.length){
+    var rows=newMilestones.map(function(m,i){return{project_id:pid,text:m.text,due_date:m.date||null,done:!!m.done,sort_order:i+1};});
+    var{error:msErr}=await sb.from('project_milestones').insert(rows);
+    if(msErr){toast('Could not save milestones ('+msErr.message+')');return;}
+  }
+
+  editingPid=null;
+  await loadAll();
+  clearProjectForm();
   document.getElementById('new-msg').textContent='PROJECT INITIATED · '+name.toUpperCase();
   setTimeout(function(){document.getElementById('new-msg').textContent='';},2500);
 }
@@ -482,27 +537,62 @@ function taskItem(pid,t){
     +'</div>';
 }
 
-function addTask(pid){
+async function addTask(pid){
   var v=document.getElementById('task-input').value.trim();
   if(!v)return;
+  var{data:inserted,error}=await sb.from('tasks').insert({
+    project_id:pid,creator_id:UID,title:v,status:'todo'
+  }).select().maybeSingle();
+  if(error||!inserted){toast('Could not add task ('+(error?error.message:'unknown error')+')');return;}
   if(!tasks[pid])tasks[pid]=[];
-  tasks[pid].push({id:uid(),text:v,done:false,created:new Date().toISOString()});
-  save();renderTasks();
+  tasks[pid].push({id:inserted.id,text:v,done:false,created:inserted.created_at});
+  renderTasks();
 }
 
-function toggleTask(pid,tid){
+async function toggleTask(pid,tid){
   var t=(tasks[pid]||[]).find(function(x){return x.id===tid;});
-  if(t){t.done=!t.done;save();}
+  if(!t)return;
+  var next=!t.done;
+  var{error}=await sb.from('tasks').update({status:next?'done':'todo',completed_at:next?new Date().toISOString():null}).eq('id',tid);
+  if(error){toast('Could not update task ('+error.message+')');return;}
+  t.done=next;
 }
 
-function deleteTask(pid,tid){
+async function deleteTask(pid,tid){
   if(!tasks[pid])return;
+  var{error}=await sb.from('tasks').delete().eq('id',tid);
+  if(error){toast('Could not delete task ('+error.message+')');return;}
   tasks[pid]=tasks[pid].filter(function(x){return x.id!==tid;});
-  save();renderTasks();
+  renderTasks();
 }
 
-load();
-renderProjects();
+(async function boot(){
+  var{data:sessData}=await sb.auth.getSession();
+  var session=sessData&&sessData.session;
+  if(!session){window.location.href='/account.html';return;}
+  UID=session.user.id;
+  var{data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+  var profile=pr||{};
+  if(!profile.is_owner&&!profile.access_approved){window.location.href='/pending.html';return;}
+  if(window.__omegaPopulate)window.__omegaPopulate(profile,session.user);
+  await loadAll();
+  renderProjects();
+})();
+
+window.switchTab=switchTab;
+window.setFilter=setFilter;
+window.addMilestone=addMilestone;
+window.removeMilestone=removeMilestone;
+window.saveProject=saveProject;
+window.clearProjectForm=clearProjectForm;
+window.editProject=editProject;
+window.cycleStatus=cycleStatus;
+window.deleteProject=deleteProject;
+window.toggleMs=toggleMs;
+window.renderTasks=renderTasks;
+window.addTask=addTask;
+window.toggleTask=toggleTask;
+window.deleteTask=deleteTask;
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

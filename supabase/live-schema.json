@@ -14,10 +14,10 @@
   "are applied live: it is dated evidence, not a target. The query that",
   "produced it is in supabase/live-schema.README.md."
  ],
- "_captured": "2026-09-17",
+ "_captured": "2026-09-21",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
- "_table_count": 224,
+ "_table_count": 225,
  "tables": {
   "academy_access": [
    "user_id",
@@ -1786,6 +1786,15 @@
    "role",
    "joined_at"
   ],
+  "project_milestones": [
+   "id",
+   "project_id",
+   "text",
+   "due_date",
+   "done",
+   "sort_order",
+   "created_at"
+  ],
   "projects": [
    "id",
    "organization_id",
@@ -1801,7 +1810,9 @@
    "due_date",
    "completed_at",
    "created_at",
-   "updated_at"
+   "updated_at",
+   "category",
+   "priority"
   ],
   "publication_categories": [
    "id",

@@ -173,6 +173,25 @@ open, recorded in `FIXES_LOG.md`:
   82.8→79.2 (a real, directionally-correct highlight rolloff — `FIXES_LOG.md`).
   Antialiasing and one `InstancedMesh` (the matrix scene's 729 nodes) were
   already present, confirmed by reading the file rather than assumed.
+  **(7) What AAA battle-royale-scale engines (Unreal, the class PUBG ships on)
+  actually do, checked against what this stack can use — researched
+  2026-09-21, nothing further shipped.** The real techniques are PBR
+  materials (already the whole `metalness:0.96` approach here), image-based
+  lighting via a pre-filtered environment map (item 5, shipped), a filmic
+  tone-mapping curve (item 6, shipped), aggressive MIP/texture streaming
+  prioritising on-screen "hero" assets, and master-material-plus-instance
+  reuse to cut shader recompiles. The streaming and instancing techniques
+  assume a baked-asset pipeline (imported meshes/textures, a build step, a
+  runtime asset loader) this repo does not have and should not add (§9 — no
+  build step is load-bearing); the platform's actual analogue already exists
+  in a different, correct-for-this-stack form: ONE shared WebGL context
+  blitted per mount (never per-scene contexts) and one `InstancedMesh` for
+  the matrix scene's 729 nodes are the same "reuse, don't duplicate GPU
+  state" idea a build-based engine solves with material instancing. Nanite/
+  Lumen-class techniques (virtualized geometry, real-time GI) have no
+  meaningful analogue for a handful of procedural low-poly signet meshes and
+  were not pursued. No further 3-D work follows from this pass; it exists so
+  a future session does not re-research the same question.
 
 - **RETRACTED 2026-09-13, the same day it was opened: the sidebar labels do NOT
   overlap.** This entry claimed 107 overlapping label pairs on every page. That
@@ -445,9 +464,19 @@ open, recorded in `FIXES_LOG.md`:
   summarises (collapsing would cost clicks, not save them) or live/dormant
   trust disclosures (`compliance.html`, `marketplace.html`) that need to stay
   visible at a glance per this repo's own anti-fabrication rule. `world-shell.html`,
-  `factions.html`, `awards.html` are the three real, verified fits so far. The
-  rest of the 20+ candidates need the same by-hand judgment call before wrapping —
-  open, scoped work.
+  `factions.html`, `awards.html` were the first three verified fits; **three more
+  shipped 2026-09-21**: `characters.html` (a clean standalone intro paragraph
+  under the h1), `prediction.html` (the Oracle explainer — the lead sentence
+  keeps the "no API key exposed in client code" trust fact visible, only the
+  elaboration collapses), `vocabulary.html` (a section preamble ahead of a
+  research-citation stack, not a repeated grid item). Same discipline as the
+  first three: full original text preserved verbatim in `.omi-full`, only a
+  fresh one-sentence lead written. A further ~5 candidates were surveyed and
+  are genuine fits but sit inside single-item `--cols:1` "about this feature"
+  cards (`codex.html`, `tribe.html`, `elements.html`, `automation.html`) —
+  structurally different from the multi-item card-grid bodies already ruled
+  out, but deferred pending a judgment call on whether a `--cols:1` card
+  counts as "the title already summarises." Open, scoped work.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —

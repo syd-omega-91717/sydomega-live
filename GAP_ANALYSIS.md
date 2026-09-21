@@ -440,7 +440,18 @@ open, recorded in `FIXES_LOG.md`:
 - **~83 tables live that this repo's SQL never created** — a generic
   multi-tenant SaaS scaffold (LMS, billing, workspaces, calendars). RLS on, no
   policies — the *safe* state — and empty. Inventing policies for schema of
-  unknown purpose fabricates behaviour. Needs a human decision.
+  unknown purpose fabricates behaviour. **Decision made 2026-09-21: the owner
+  named this scaffold a real income project.** LMS/courses picked as the
+  first vertical (over project-management, marketplace, and knowledge-base/
+  AI-workspace directions — see `FEATURE_IDEAS.md` #37 for the reasoning),
+  with individual members buying directly rather than a multi-tenant pivot.
+  The `academy_categories`/`courses`/`modules`/`lessons`/`enrollments` slice
+  of the scaffold is real-RLS'd, schema-captured into `supabase/migrations/`,
+  and shipped — but dormant behind `platform_settings.courses_enabled=false`
+  until the owner turns it on (`FIXES_LOG.md`). The other four verticals
+  (billing, project management, marketplace, knowledge base/AI workspace)
+  remain exactly as before: RLS-locked, empty, needing their own human
+  decision before any of them gets the same treatment.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

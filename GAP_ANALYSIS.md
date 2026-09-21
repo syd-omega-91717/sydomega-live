@@ -488,10 +488,39 @@ open, recorded in `FIXES_LOG.md`:
   inserting a result row directly; a real mixed-answer RPC call scored
   3/4 correct as 75% and passed against `pass_score=70`. Full interactive
   browser flow (enroll → complete all 4 lessons → exam unlocks → answer →
-  submit → best-score card) verified with 0 console errors. The other four
-  verticals (billing, project management, marketplace, knowledge base/AI
-  workspace) remain exactly as before: RLS-locked, empty, needing their own
-  human decision before any of them gets the same treatment.
+  submit → best-score card) verified with 0 console errors. **Second vertical
+  shipped 2026-09-21: project management.** Owner-directed ("all of them") —
+  this one turned out to be a migration, not a fresh build: `projects.html`
+  already existed as a complete, real, working page, running entirely on
+  `localStorage` (`omega_projects`/`omega_proj_tasks`). The dormant backend
+  for it already existed too (`projects`/`project_members`/`project_files`/
+  `project_activity`/`tasks`/`task_comments`/`task_attachments`/
+  `task_labels`/`task_label_map`, 9 tables, RLS-on/no-grants, unreferenced by
+  any client code) — schema-captured, then a v1 slice launched on
+  `projects`+`tasks`+a new `project_milestones` child table (the live
+  scaffold had no milestones concept; matched the relational shape every
+  other child table here already uses rather than a JSONB blob).
+  `category`/`priority` columns added to `projects` — real columns the live
+  scaffold lacked but the existing page's UX depends on. Individual-owner
+  RLS (`owner_id = auth.uid()`), no team/organization layer for v1 —
+  `project_members`/`project_files`/`project_activity`/`task_comments`/
+  `task_attachments`/`task_labels`/`task_label_map` stay deny-by-default,
+  a real, separate collaboration-features follow-up. Verified live: two-
+  member RLS impersonation confirms full row isolation on all three tables
+  (projects, tasks, project_milestones) — a second member sees 0 rows and
+  cannot update or read another owner's data. Full browser flow (create with
+  a milestone, cycle status, add/toggle a task, edit with pre-filled form,
+  delete) verified against a custom stub matching the real query shapes, 0
+  console errors. `supabase/live-schema.json` was stale since 2026-09-17 (five
+  real migrations behind) — regenerated in the same change, closing false
+  positives `scripts/schema-dictionary.py` would otherwise have reported on
+  the new `category`/`priority` columns; verified the gate still bites with a
+  real negative control (a planted nonsense column, caught, then reverted).
+  `settings.html`'s "45 pages keep what you enter in this browser only" went
+  stale the moment `projects.html` moved off `localStorage` — corrected to 44,
+  matching `evidence-audit.py`'s own device-local count. The other three
+  verticals (billing, marketplace, knowledge base/AI workspace) remain
+  exactly as before: RLS-locked, empty, needing their own build.
 - **No `WITH CHECK(true)` spoofing gap** (live 2026-08-29; this entry used to
   claim one). `platform_events` is scoped to `auth.uid() = user_id`.
   `platform_metrics` has `WITH CHECK(true)` but no `user_id`, so there is

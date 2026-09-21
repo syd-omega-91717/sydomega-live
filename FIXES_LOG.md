@@ -20390,3 +20390,37 @@ python3 scripts/check-inline-js.py                                            OK
 python3 scripts/omega-registry.py --check                                     OK (142 omega-*.js modules, 150 root .js files)
 ./scripts/ci-local.sh                                                         24/24 blocking checks pass
 ```
+
+## Second SaaS-scaffold vertical shipped: project management — a migration of a real, already-working local-only page, not a fresh build
+
+Owner-directed ("all of them" against the four remaining scaffold verticals). Investigated live schema before assuming this would look like the courses build: `projects`/`project_members`/`project_files`/`project_activity`/`tasks`/`task_comments`/`task_attachments`/`task_labels`/`task_label_map` — 9 real tables, RLS-on, zero grants, confirmed via `information_schema.role_table_grants`, unreferenced by any client `.from(...)` call anywhere in the repo.
+
+**The real finding that changed the shape of this work**: `projects.html` was not a page to build — it already exists, complete and working, running entirely on `localStorage` (`omega_projects`/`omega_proj_tasks`). It has real tabs (Active/New Project/Tasks/Science), stats, status filters, per-project milestones, per-project tasks, edit/delete/cycle-status — a genuinely good UX with one problem: nothing persists past a cleared browser or syncs across devices. This is a migration task, not a build task, and the bar is different: preserve every existing feature exactly, or it is a regression dressed as an upgrade.
+
+**Schema reconciliation, decided before writing any client code**: the local page's UX depends on `category` (10 values) and `priority` (4 values) on a project, and a `milestones` array — none of which the live `projects` table had (it only carried `status`/`visibility`). Added `category`/`priority` as real columns on `projects` (an additive `ALTER TABLE`, not a workaround). Milestones got their own `project_milestones` child table rather than a JSONB blob on `projects` — matching the relational shape every other child table in this same scaffold already uses (`project_activity`, `project_files` are both per-project child tables), not inventing a second pattern.
+
+**Scoped to a v1 slice, same reasoning as `academy_exams`**: only `projects`, `tasks`, and the new `project_milestones` got real RLS and grants. `project_members`/`project_files`/`project_activity`/`task_comments`/`task_attachments`/`task_labels`/`task_label_map` stay deny-by-default — real collaboration features (comments, attachments, shared labels, multi-member projects) are a separate, later decision, not implied by "migrate the existing page." RLS is single-owner (`owner_id = auth.uid()`) for v1, matching the owner's own individual-member framing from the courses migration — no organization/team layer, and `projects.organization_id` (a real column, FK to the still-untouched `organizations` scaffold table) stays null and unused.
+
+**RLS verified live with two real member sessions**, not read from the policy text: member A creates a project, a task on it, and a milestone on it; member B's session sees `0` rows querying any of the three tables directly by the project's id, and an `UPDATE` attempt against member A's project as member B silently affects 0 rows. Test data cleaned up via cascade delete afterward.
+
+**A stale generated file caught and fixed before it caused false CI failures**: `supabase/live-schema.json` was dated 2026-09-17 — five real migrations behind, including this session's own earlier `academy_exams`/`academy_questions`/`academy_exam_results` work. `scripts/schema-dictionary.py` folds that snapshot in additively to avoid false positives on live-vs-bag drift (`CLAUDE.md` §8.1 class 2), so a stale snapshot flagged the brand-new `category`/`priority` columns as "does not exist." Regenerated from the exact query in `supabase/live-schema.README.md` (225 → also verified per the README's own advice: planted a real nonsense column in `projects.html`, confirmed the gate reported it with a file:line, then reverted — a checker that reports nothing looks identical to a checker that never ran).
+
+**A member-facing copy claim went stale as a direct consequence of this migration**: `settings.html`'s "45 pages keep what you enter in this browser only" was accurate until `projects.html` moved off `localStorage` — this is the exact drift CLAUDE.md's own method notes warn about ("your own fix can stale" a page-count claim). `scripts/page-count-claims.py` caught it; corrected to 44, matching `evidence-audit.py`'s real device-local count (5 with an export path + 39 with none) after regenerating `EVIDENCE_MATRIX.md` in the same change.
+
+**`courses.html`'s pattern of `type="module"` + explicit `window.fn=` assignments reused deliberately**: `projects.html`'s markup calls 14 functions from inline `onclick`/`onchange`/`onkeydown` attributes across the existing HTML (switchTab, setFilter, saveProject, editProject, cycleStatus, deleteProject, toggleMs, addMilestone, removeMilestone, addTask, toggleTask, deleteTask, clearProjectForm, renderTasks) — converting the script to a module without exporting every one of them to `window` would have silently broken all inline-handler UI on the page (CLAUDE.md 8.1 class 4a). All 14 are explicitly assigned.
+
+**Full interactive browser flow verified** against a custom stub matching the real query shapes (embedded `project_milestones(...)` select, plain `tasks` select relying on RLS rather than an explicit filter, matching the live RLS-scoping semantics): create a project with a milestone → renders with the right badge/milestone count/stat → cycle status → add a task in the Tasks tab → toggle it done; then separately, edit an existing project (form pre-fills correctly) → save → still one project, renamed → delete → empty state returns. 0 console errors across both runs.
+
+```
+information_schema.role_table_grants (before)                                  RLS on, zero grants to any role — confirmed dormant, 9 tables
+RLS impersonation: member B selects/updates member A's project directly        0 rows visible, 0 rows affected
+RLS impersonation: member B selects member A's tasks/milestones directly      0 rows visible, both tables
+Full browser flow (create+milestone->status cycle->add task->toggle done)     0 errors, all assertions pass
+Full browser flow (edit pre-fill->save->still 1 project renamed->delete)      0 errors, all assertions pass
+scripts/schema-dictionary.py negative control (planted nonsense column)       caught with file:line, then reverted -- gate confirmed live
+scripts/schema-dictionary.py (after live-schema.json regeneration)            OK — all client calls reference existing columns
+scripts/migration-drift.py                                                    PASS, 198 versions, local and remote agree
+scripts/page-count-claims.py                                                  PASS (45->44 on settings.html, matching evidence-audit.py)
+scripts/omega-registry.py --check                                            OK
+./scripts/ci-local.sh                                                         24/24 blocking checks pass
+```

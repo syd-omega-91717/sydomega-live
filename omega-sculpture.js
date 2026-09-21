@@ -1020,6 +1020,21 @@
     if ('outputColorSpace' in _renderer && T.SRGBColorSpace) {
       _renderer.outputColorSpace = T.SRGBColorSpace;
     }
+    /* Filmic tone mapping -- the single most recognisable "AAA renderer" cue
+       (Unreal/Unity both default to it, and it is what the reference render
+       pipelines named in the brief actually ship). Without it three.js
+       defaults to NoToneMapping, which clips highlights linearly instead of
+       rolling them off -- exactly the wrong pairing for the metalness:0.96
+       materials + PMREMGenerator environment already in this file (item 5,
+       GAP_ANALYSIS.md): a PBR metal under a real environment map produces
+       HDR-range values, and clipping them reads as blown-out hotspots on the
+       emblem instead of the smooth highlight rolloff a filmic curve gives.
+       Confirmed present in the vendored bundle (grep for the literal names,
+       not a class declaration -- the file is minified). */
+    if ('toneMapping' in _renderer && T.ACESFilmicToneMapping) {
+      _renderer.toneMapping = T.ACESFilmicToneMapping;
+      _renderer.toneMappingExposure = 1.1;
+    }
     /* A lost context is recoverable and common on laptops that switch GPUs.
        Without this the page keeps blitting a dead canvas forever. */
     _glCanvas.addEventListener('webglcontextlost', function (e) {

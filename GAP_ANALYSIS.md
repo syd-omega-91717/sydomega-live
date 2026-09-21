@@ -162,6 +162,17 @@ open, recorded in `FIXES_LOG.md`:
   binary asset and no CSP question. **Still open:** the room is one fixed
   three-panel studio shared by every scene — pairing it with (2) so each realm
   reflects its own palette is the next real step.
+  **(6) Filmic tone mapping — SHIPPED 2026-09-21.** `_renderer.toneMapping` was
+  never set (defaulting to `NoToneMapping`), the wrong pairing for the HDR-range
+  values (5)'s environment map produces on a `metalness:0.96` material — every
+  AAA engine (Unreal, Unity) defaults to a filmic curve for exactly this reason.
+  Added `T.ACESFilmicToneMapping` + `toneMappingExposure:1.1`; confirmed present
+  in the vendored bundle by grepping the literal exported name, not a class
+  declaration. Verified with a real `git show HEAD` before/after render on
+  `sculpture.html`'s 11 live mounts: 0 errors both, luminance 164.2→162.3, lit%
+  82.8→79.2 (a real, directionally-correct highlight rolloff — `FIXES_LOG.md`).
+  Antialiasing and one `InstancedMesh` (the matrix scene's 729 nodes) were
+  already present, confirmed by reading the file rather than assumed.
 
 - **RETRACTED 2026-09-13, the same day it was opened: the sidebar labels do NOT
   overlap.** This entry claimed 107 overlapping label pairs on every page. That

@@ -276,9 +276,98 @@
     document.body.appendChild(bar);
   }
 
+  /* --- SEASONAL & ELEMENTAL THEMING PUBLISHER ─────────────────────────────── */
+  /* Reads member's zodiac element from OmegaCanon, computes current season,
+     publishes dynamic CSS tokens to :root. Respects localStorage overrides. */
+  function initSeasonalTheme(){
+    var ELEMENT_COLORS={
+      'FIRE':{primary:'#D97706',bright:'#F97316'},
+      'WATER':{primary:'#0891B2',bright:'#06B6D4'},
+      'WIND':{primary:'#6366F1',bright:'#8B5CF6'},
+      'METAL':{primary:'#A16207',bright:'#ECAA59'},
+      'SAND':{primary:'#C9A84C',bright:'#E2C86D'}
+    };
+    var SEASONS=[
+      {name:'spring',bloom:1.2,vignette:0.08,glow:0.8},
+      {name:'summer',bloom:1.4,vignette:0.05,glow:1.1},
+      {name:'fall',bloom:0.9,vignette:0.12,glow:0.9},
+      {name:'winter',bloom:0.8,vignette:0.15,glow:1.2}
+    ];
+
+    function getSeasonIndex(){
+      var m=new Date().getMonth();
+      if(m<2) return 3; /* winter: jan-feb */
+      if(m<5) return 0; /* spring: mar-may */
+      if(m<8) return 1; /* summer: jun-aug */
+      if(m<11) return 2; /* fall: sep-nov */
+      return 3; /* winter: dec */
+    }
+
+    function hexToRgb(hex){
+      var result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result?parseInt(result[1],16)+','+parseInt(result[2],16)+','+parseInt(result[3],16):'201,168,76';
+    }
+
+    function publishTokens(elementName,seasonIdx){
+      var colors=ELEMENT_COLORS[elementName]||ELEMENT_COLORS['SAND'];
+      var season=SEASONS[seasonIdx]||SEASONS[0];
+      var r=document.documentElement;
+      r.style.setProperty('--element-accent',colors.primary);
+      r.style.setProperty('--element-accent-bright',colors.bright);
+      r.style.setProperty('--element-accent-rgb',hexToRgb(colors.primary));
+      r.style.setProperty('--season-bloom-saturation',String(season.bloom));
+      r.style.setProperty('--season-vignette-tint',String(season.vignette));
+      r.style.setProperty('--season-glow-intensity',String(season.glow));
+      /* store for reduced-motion fallback */
+      localStorage['omega_theme_element']=elementName;
+      localStorage['omega_theme_season']=season.name;
+    }
+
+    function publishDefault(){
+      publishTokens('SAND',getSeasonIndex());
+    }
+
+    function loadFromProfile(){
+      if(!window.OmegaCanon||!window.OmegaCanon.ready){
+        if(window.OmegaCanon) window.OmegaCanon.onReady(function(){loadFromProfile();});
+        return;
+      }
+      var override=localStorage['omega_theme_override'];
+      if(override){
+        var parts=override.split(':');
+        if(parts.length===2){
+          publishTokens(parts[0],parseInt(parts[1])||getSeasonIndex());
+          return;
+        }
+      }
+      try{
+        (window.OmegaSB?Promise.resolve(window.OmegaSB):import('/vendor/supabase-js.js').then(function(m){
+          return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');
+        })).then(function(sb){
+          sb.auth.getSession().then(function(r){
+            var ss=r&&r.data&&r.data.session;
+            if(!ss) return;
+            sb.from('profiles').select('sign').eq('id',ss.user.id).maybeSingle().then(function(res){
+              var d=res&&res.data;
+              if(!d||!d.sign) return;
+              var element=(window.OmegaCanon.elementFor(d.sign)||'SAND').toUpperCase();
+              publishTokens(element,getSeasonIndex());
+            }).catch(function(){});
+          }).catch(function(){});
+        }).catch(function(){publishDefault();});
+      }catch(e){
+        publishDefault();
+      }
+    }
+
+    publishDefault();
+    setTimeout(loadFromProfile,200);
+  }
+
   /* Boot sequence */
   function boot(){
     injectStyles();
+    initSeasonalTheme();
     setTimeout(function(){
       initScrollReveal();
       initRipple();

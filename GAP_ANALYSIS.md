@@ -36,25 +36,31 @@ open, recorded in `FIXES_LOG.md`:
   `omega-elements.json` and `'The All'` in `ELEM_PALETTE`; and three different
   twelve-gate name sets exist (see the entry above).
 
-- **Two divergent sets of twelve gate names** (opened 2026-09-13; `FIXES_LOG.md`
-  139). The count is settled and agreed everywhere — **twelve** (`omega-canon.json`
-  `tracks[].gate`, `gate_names` and `gate_thresholds` are each 12; `nav.js` says
-  `12 GATES`; `gates.html` says "12 gates"). The **names** are not:
-  | source | names |
-  |---|---|
-  | `omega-canon.json` `tracks[].gate` | Gate of Ignition · Abundance · Discourse · the Hearth · Radiance · Precision · Balance · Transmutation · Vision · Sovereignty · Innovation · Dreams |
-  | `omega-canon.json` `gate_names` | INITIATE · ACOLYTE · SCHOLAR · KEEPER · GUARDIAN · ARCHITECT · SOVEREIGN · VANGUARD · HERALD · ORACLE · PRIME · APEX |
-  | `gates.html` | Gate of Awareness · Knowledge · Discipline · Creation · Contribution · Finance · Leadership · Legacy · Apex … |
-  Three vocabularies for one twelve-fold: `tracks[].gate` reads as the
-  zodiac-track gates, `gate_names` as rank titles, and `gates.html`'s as an
-  authority ladder (nav calls that page **AUTHORITY GATES**, a different label
-  again). They may be three real systems that merely share a word, or §8.1
-  class 8 — a canonical table that drifted. **Open rather than fixed because
-  deciding which is authoritative is an owner's call about the platform's own
-  canon, not a rendering decision.** `omega-sculpture.js` reads
-  `window.OmegaCanon` — the single source of truth `CLAUDE.md` names and
-  `omega-canon.js` publishes — so it cannot be the copy that drifts; if the
-  owner settles this, the scene follows the canon automatically.
+- ~~**Two divergent sets of twelve gate names**~~ **CLOSED 2026-09-21 — resolved as
+  two real, coexisting systems, not one that drifted.** Owner asked directly:
+  `tracks[].gate` (Gate of Ignition · Abundance · Discourse · …) confirmed as the
+  canonical name for the **zodiac-track** gate, one per sign. Investigating
+  before touching anything found this was already the live, consistent reality
+  — `omega-canon.js`'s `api.gate(n)` reads `tracks[n-1].gate` directly, and
+  `omega-sculpture.js`'s `gates` scene reads it through that one API — so
+  nothing needed to change there.
+
+  `gates.html` ("AUTHORITY GATES" in `nav.js`) is a **different, real feature**,
+  not a second name for the same thing: a sequential authority-threshold
+  achievement ladder (Awareness → Discipline → Knowledge → … → Apex), each with
+  its own `domain` (MIND/BODY/WEALTH/…) and progression copy, and its `auth`
+  values are already the canonical `gate_thresholds` array verbatim (`0, 2.32,
+  4.64, … 27.84`). Renaming its titles to the zodiac names would have discarded
+  that real domain/threshold/description content to force a label match onto a
+  page that isn't describing the same thing — asked, and explicitly declined.
+  **Left as-is, both sources unchanged**, this entry closed as "two systems,
+  not a conflict."
+
+  One genuinely dead vocabulary found along the way, not fixed because there is
+  nothing to fix: `omega-canon.json`'s `gate_names` (INITIATE · ACOLYTE · … ·
+  APEX) is referenced nowhere in any `.js`/`.html` file except a single code
+  comment in `omega-sculpture.js` — orphaned data, not a third competing name in
+  active use.
 
 - **The 3-D layer exists but four scenes is where it stops** (opened 2026-09-13;
   `FIXES_LOG.md` 138). `omega-sculpture.js` gives the platform real-time geometry
@@ -391,7 +397,8 @@ open, recorded in `FIXES_LOG.md`:
   `subscriptions.html` / `vault.html`). Deliberate: payment and Ω-token
   infrastructure is dormant pending legal review, per §9's gating rule.
   `subscriptions.html`'s own copy already says so. The user was asked directly
-  and chose to keep it dormant.
+  and chose to keep it dormant. **Reconfirmed 2026-09-21** — asked again
+  directly rather than assumed stale; still dormant, no change.
 - **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
   were a decision, not a default: sensitive data, hard to walk back once it
   lives server-side, mitigated with `omega-local-backup.js` export/import.

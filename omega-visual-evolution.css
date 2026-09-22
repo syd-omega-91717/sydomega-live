@@ -443,3 +443,5 @@ hr,.divider,.sechead{
   .card,.kpi,.kpi-card,.panel,.module,.tile,.widget{backdrop-filter:none;-webkit-backdrop-filter:none}
   .card::after,.kpi::after,.kpi-card::after,.panel::after,.module::after,.tile::after,.widget::after{display:none}
 }
+
+/* Ω HD surface verification marker: visual contract remains additive and production-safe. */

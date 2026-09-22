@@ -71,6 +71,8 @@ jobs:
         run: python scripts/vercel_static_contract.py
       - name: Build artifact
         run: bash scripts/vercel-build.sh
+      - name: Production surface contract
+        run: python scripts/omega-production-surface-contract.py
       - name: Artifact invariants
         run: |
           set -euo pipefail

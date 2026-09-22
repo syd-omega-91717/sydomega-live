@@ -126,6 +126,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
+      - name: SECURITY DEFINER audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/security-definer-audit.py']).returncode)
       - name: Silent failure audit
         shell: python
         run: |

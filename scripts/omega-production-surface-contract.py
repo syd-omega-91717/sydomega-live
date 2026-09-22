@@ -53,7 +53,7 @@ def main():
         checks = [
             (r"<meta\s+[^>]*name=[\"']viewport[\"']", "viewport"),
             (r"<title\b[^>]*>\s*[^<]+\s*</title>", "title"),
-            (r"<main\b[^>]*>|\bid=["'](?:app|root|main)["']|\brole=["']main["']|class=["'][^"']*(?:page-shell|content|container|shell|wrap)[^"']*["']",
+            (r'<main\b[^>]*>|\bid=["\'](?:app|root|main)["\']|\brole=["\']main["\']|class=["\'][^"\']*(?:page-shell|content|container|shell|wrap)[^"\']*["\']',
              "content root"),
             (r"omega-unified-background\.css", "unified background"),
             (r"(?i)(?:src=[\"'][^\"']*/)?bg\.js", "global bg runtime"),
@@ -65,7 +65,7 @@ def main():
         # Navigation may be emitted by nav.js rather than literal <nav>.
         # Accept both canonical markup and the repository's runtime hooks.
         if page.name not in SYSTEM and not re.search(
-            r"<nav\b|omega-side|omega-nav|nav\.js|data-omega-nav|class=["'][^"']*(?:topbar|sidebar|navigation)[^"']*["']",
+            r'<nav\b|omega-side|omega-nav|nav\.js|data-omega-nav|class=["\'][^"\']*(?:topbar|sidebar|navigation)[^"\']*["\']',
             text, re.I
         ):
             failures.append(f"{rel}: missing navigation/runtime shell hook")

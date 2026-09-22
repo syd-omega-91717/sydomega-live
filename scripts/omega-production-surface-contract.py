@@ -68,7 +68,7 @@ def main():
         return 1
 
     print(f"OMEGA PRODUCTION SURFACE: PASS — {len(pages)} HTML pages verified")
-    print("shell=viewport,title,main,unified-background,bg-runtime,navigation")
+    print("shell=viewport,title,unified-background,bg-runtime")
     print("assets=" + ",".join(required_assets))
     return 0
 

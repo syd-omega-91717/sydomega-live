@@ -19,6 +19,7 @@ SYSTEM = {
     "root/dashboard/dashboard.html","root/portal.html",
     "web/templates/admin_console.html","web/templates/leaderboard.html",
     "web/templates/sovereign_health.html","web/templates/system_health.html",
+    "cohorts-dashboard.html","monitoring-dashboard.html","predictions-dashboard.html",
 }
 # Diagnostic, health, fallback, template and gateway artifacts are valid
 # production surfaces but do not share the member-page semantic shell. They

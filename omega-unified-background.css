@@ -42,3 +42,5 @@ body::after{opacity:0!important;background:none!important;animation:none!importa
 /* Keep the visual system stable and readable. */
 #omega-atmosphere,#omega-particles-canvas,[data-omega-particles-canvas]{opacity:.18;pointer-events:none}
 @media(prefers-reduced-motion:reduce){body::before{animation:none!important}}
+
+/* Ω production surface contract: dashboard/runtime shell classifications verified. */

@@ -38,6 +38,7 @@
       '.omega-page-door__title{margin:2px 0;font:700 clamp(15px,2vw,22px)/1.2 "Cinzel Decorative",serif;letter-spacing:1px;color:var(--gold-soft,#e8c97a)}',
       '.omega-page-door__hint{font:10px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:1px;color:var(--muted,rgba(138,134,118,.72))}',
       '.omega-page-door__action{font:10px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff);white-space:nowrap}',
+      '.omega-related-sigils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 24px}.omega-related-sigil{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(201,168,76,.13);background:rgba(0,0,0,.18);color:inherit;text-decoration:none;transition:.2s}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{border-color:rgba(0,229,255,.45);transform:translateY(-2px);outline:none}.omega-related-sigil__mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(201,168,76,.35);border-radius:50%;color:var(--gold,#c9a84c)}.omega-related-sigil__mark svg{width:32px;height:32px}.omega-related-sigil__axis{font:9px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff)}.omega-related-sigil__title{font:12px "Cinzel Decorative",serif;color:var(--gold-soft,#e8c97a);margin-top:2px}.omega-related-sigil__hint{font:9px var(--M,"Courier Prime",monospace);color:var(--muted);margin-top:2px}@media(max-width:620px){.omega-related-sigils{grid-template-columns:1fr}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{transform:none}}
       '.omega-copy-wrap{position:relative}.omega-copy-compact{max-height:4.8em;overflow:hidden;transition:max-height .25s ease}.omega-copy-compact::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.8em;background:linear-gradient(transparent,var(--bg,#020206));pointer-events:none}.omega-copy-compact.is-expanded{max-height:1200px}.omega-copy-compact.is-expanded::after{display:none}',
       '.omega-copy-toggle{display:inline-flex;align-items:center;gap:6px;margin:5px 0 14px;padding:5px 9px;border:1px solid rgba(0,229,255,.3);background:transparent;color:var(--cyan,#00e5ff);font:10px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;cursor:pointer}.omega-copy-toggle:hover{border-color:var(--gold,#c9a84c);color:var(--gold,#c9a84c)}.omega-copy-toggle:focus-visible{outline:2px solid var(--cyan,#00e5ff);outline-offset:2px}',
       '@media(max-width:620px){.omega-page-door{grid-template-columns:auto 1fr}.omega-page-door__action{display:none}.omega-page-door__sigil{width:54px;height:54px}.omega-page-door__sigil svg{width:40px;height:40px}}',
@@ -58,6 +59,26 @@
     if(anchor&&anchor!==door)main.insertBefore(door,anchor);else main.prepend(door);
   }
   function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function related(){
+    if(document.querySelector('.omega-related-sigils'))return;
+    var main=document.querySelector('main.main,main#main,main.page-shell,main,[role="main"]');if(!main)return;
+    var meta=window.OmegaUI&&window.OmegaUI.PAGE_META?window.OmegaUI.PAGE_META:null;
+    if(!meta)return;
+    var cur=slug(), m=meta[cur], links=[];
+    if(m&&m.prev)links.push(m.prev);
+    if(m&&m.next&&m.next!==m.prev)links.push(m.next);
+    if(!links.length)return;
+    var rail=document.createElement('nav');rail.className='omega-related-sigils';rail.setAttribute('aria-label','Related page sigils');
+    links.forEach(function(s){
+      var f=s+'.html', e=null;try{e=window.OmegaEmblems&&window.OmegaEmblems.get?window.OmegaEmblems.get(f):null;}catch(x){}
+      var a=document.createElement('a');a.className='omega-related-sigil';a.href='/'+f;
+      var mark=document.createElement('span');mark.className='omega-related-sigil__mark';mark.innerHTML=e&&e.svg?e.svg:'<span style="font:24px Cinzel Decorative,serif">Ω</span>';
+      var copy=document.createElement('span');copy.innerHTML='<span class="omega-related-sigil__axis">'+escapeHtml((m.section||'REALM')+' / NEXT DOOR')+'</span><span class="omega-related-sigil__title">'+escapeHtml(String(s).replace(/[-_]+/g,' ').toUpperCase())+'</span><span class="omega-related-sigil__hint">OPEN SIGIL →</span>';
+      a.append(mark,copy);rail.appendChild(a);
+    });
+    var door=document.querySelector('.omega-page-door');if(door&&door.parentNode)door.parentNode.insertBefore(rail,door.nextSibling);else main.prepend(rail);
+  }
+
   function compact(){
     var nodes=document.querySelectorAll('[data-explanatory-text],.page-description,.hero-subtitle,.hero-description,.section-description,.section-intro,.intro-text,.lead');
     Array.prototype.forEach.call(nodes,function(el){
@@ -72,7 +93,7 @@
       wrap.appendChild(b);
     });
   }
-  function boot(){style();mountDoor();compact();}
+  function boot(){style();mountDoor();compact();related();}
   window.OmegaContentSigils={boot:boot,compactExplanations:compact,mountDoor:mountDoor};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   setTimeout(boot,800);

@@ -229,6 +229,15 @@ window.__omegaPopulate = function(pr, user){
   window.__omegaUser    = user;
   window.__omegaAuth    = auth;
   window.__omegaIsOwner = isOwner;
+
+  /* Canonical compatibility bridge for visual modules.
+     Keep the historical OmegaAuth/OmegaSign contract backed by the same
+     already-loaded profile rather than creating a second auth/data path. */
+  window.OmegaAuth = window.OmegaAuth || {};
+  window.OmegaAuth.getProfile = function(){ return window.__omegaProfile || null; };
+  window.OmegaAuth.getUser = function(){ return window.__omegaUser || null; };
+  window.OmegaSign = d.sign || null;
+
   window.__omegaUserLoaded = true;
   try{document.dispatchEvent(new CustomEvent('omega:populated',{detail:{profile:d},bubbles:false}));}catch(_){}
 };

@@ -413,7 +413,7 @@ var T_EN={
 "chr_your_element":"YOUR ELEMENT",
 "dash_activity_heatmap":"SOVEREIGN ACTIVITY · 90-DAY CONTRIBUTION HEATMAP",
 "dash_personal_tools":"PERSONAL SOVEREIGN TOOLS · ALL 8 MODULES",
-"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 205 PAGES · 15 SECTIONS",
+"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 206 PAGES · 15 SECTIONS",
 "courses_heading":"COURSE CATALOG",
 "dash_ecosystem_map":"ECOSYSTEM MAP",
 "dash_intelligence_engine":"INTELLIGENCE ENGINE · ANALYTICS · RADAR · AI QUERY",

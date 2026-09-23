@@ -73,3 +73,506 @@
      sub:[['ascension','ASCENSION MAP','/honors.html#ascension'],['matrix','THE 729','/matrix.html'],
           ['achievements','MY RECORD','/honors.html#record'],
           ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['gaming','GAMING ARENA','/gaming.html'],
+          ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
+          ['exam','EXAM HALL','/gaming.html#exam'],['exam-hall','EXAM','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
+    {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
+     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
+          ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
+          ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/elements.html#gates'],['houses','HOUSES LATTICE','/houses.html'],
+          ['triads','12 TRIADS','/matrix.html#triads'],['kings','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],['graph','CONSTELLATION GRAPH','/graph.html'],['map','STAR MAP','/map.html'],['mirror','SOVEREIGN MIRROR','/mirror.html'],['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html'],['rune','RUNES','/rune.html'],['tribe','TRIBE','/tribe.html']]},
+    {key:'universe',icon:'\u25BA', label:'UNIVERSE', href:'/media.html',   col:'#D6534A',
+     sub:[['cinema','CINEMA & SAGA','/media.html'],['universe','CREATIVE UNIVERSE','/media.html'],
+          ['media','MEDIA HUB','/media.html'],['hall','SOVEREIGN HALL','/hall.html'],['city','THE CITY','/city.html'],['elements','THE ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html']]},
+    {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
+     sub:[['vault','SOVEREIGN VAULT','/vault.html'],['treasury','RESERVE','/vault.html#reserve'],
+          ['wallet','WALLET','/vault.html#wallet'],['blockchain','BLOCKCHAIN','/blockchain.html'],
+          ['payments','PAYMENTS','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
+          ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/profile.html#portfolio'],
+          ['income','INCOME','/income.html'],['payments','PAYMENTS','/payments.html'],['evolution','EVOLUTION','/evolution.html'],
+          ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
+    {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/family.html',   col:'#D9B86A',
+     sub:[['family','FAMILY','/family.html'],['bloodline','BLOODLINE','/family.html#bloodline'],
+          ['heritage','HERITAGE','/family.html#heritage'],['hall','HALL','/hall.html'],
+          ['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
+          ['city','OMEGA CITY','/city.html'],['beacon','BEACON','/beacon.html'],['chatbot','CONCIERGE AI','/chatbot.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','OMNI INTERFACE','/interface-omni.html']]},
+    {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
+     sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
+          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['creator','IDEA FORGE','/creator.html'],['project-studio','PROJECT STUDIO','/project-studio.html'],['marketing','MARKETING','/marketing.html'],
+          ['news','NEWS WIRE','/news.html'],['social','SOCIAL HUB','/social.html'],
+          ['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
+          ['health','HEALTH & WELLNESS','/health.html'],['marketplace','MARKETPLACE','/marketplace.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
+    {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#9B6BF0',
+     sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICT','/prediction.html'],
+          ['intelligence','INTELLIGENCE','/intelligence.html'],['automation','AUTOMATION','/automation.html'],
+          ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
+    /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */
+    {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#9B6BF0',
+     sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
+          ['agents','12 AGENTS','/agents.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
+          ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
+          ['research','RESEARCH','/research.html'],['queue','SOVEREIGN QUEUE','/queue.html']]},
+    {key:'govern', icon:'\u2736', label:'GOVERN',  href:'/governance.html',   col:'#3fb27f',
+     sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
+          ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],
+          ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
+          ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
+          ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],
+          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','CONTROL PLANE','/control-plane.html'],['world-shell','WORLD SHELL','/world-shell.html']]},
+    {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
+     sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],
+          ['revenue','REVENUE','/revenue.html'],['wallet','WALLET','/wallet.html'],
+          ['income','INCOME','/income.html'],['payments','PAYMENTS','/payments.html'],['treasury','TREASURY','/treasury.html'],
+          ['blockchain','BLOCKCHAIN','/blockchain.html'],['budget','BUDGET','/budget.html'],['expenses','EXPENSES','/expenses.html'],['wealth','WEALTH','/wealth.html']]},
+    {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achievements.html', col:'#C9A84C',
+     sub:[['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],
+          ['gates','AUTHORITY GATES','/gates.html'],['grades','GRADES','/grades.html'],
+          ['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
+          ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],
+          ['triads','TRIADS','/triads.html'],['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html']]},
+    {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/heritage.html',     col:'#3fb27f',
+     sub:[['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],
+          ['character','CHARACTER','/character.html'],['identity','IDENTITY','/identity.html'],
+          ['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html'],
+          ['credentials','CREDENTIALS','/credentials.html'],['charter','CHARTER','/charter.html'],
+          ['sigil','SIGIL','/sigil.html'],['membership','MEMBERSHIP','/membership.html']]},
+    {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/cinema.html',       col:'#9B6BF0',
+     sub:[['cinema','CINEMA','/cinema.html'],['movies','MOVIES','/movies.html'],['characters','CHARACTERS','/characters.html'],['series','SERIES','/series.html'],
+          ['trailers','TRAILERS','/trailers.html'],['universe','UNIVERSE','/universe.html'],
+          ['feed','ACTIVITY FEED','/feed.html'],['social','SOCIAL','/social.html'],
+          ['news','NEWS INTEL','/news.html'],['events','EVENTS','/events.html'],['publications','PUBLICATIONS','/publications.html']]},
+  ];
+
+  /* INJECT CSS */
+  if(!document.getElementById('omega-nav-css')){
+    var s=document.createElement('style'); s.id='omega-nav-css';
+    s.textContent=[
+      /* Immediate layout fix before JS runs. overflow was 'visible' -- with a
+         fixed height:100vh, items past the viewport had nowhere to go: not
+         clipped, not scrollable, just unreachable. Sidebar items below the
+         fold could never be scrolled to. Changed to overflow-y:auto so the
+         dock scrolls independently of the page. */
+      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:linear-gradient(180deg,rgba(201,168,76,0.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,0.06) 100%),linear-gradient(180deg,#08080F,#05050C)!important;box-shadow:inset -1px 0 0 rgba(201,168,76,0.16),22px 0 48px -34px rgba(0,229,255,0.5)!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
+      '.side{width:80px!important}',
+      /* Icon dock */
+      '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',
+      '.on-hb{display:flex;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
+      '.on-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
+      '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
+      '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0;text-decoration:none}',
+      '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
+      '.on-sections::-webkit-scrollbar{display:none}',
+      /* Each icon cell: icon + permanent label */
+      '.on-item{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}',
+      '.on-icon{width:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;cursor:pointer;transition:all .15s;position:relative;border-radius:8px;text-decoration:none;border:1px solid transparent}',
+      '.on-item:hover .on-icon,.on-icon.on-active{background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.25)}',
+      '.on-icon.on-active{box-shadow:0 0 10px rgba(201,168,76,0.15)}',
+      '.on-glyph{font-size:16px;line-height:1;transition:transform .2s}',
+      '.on-item:hover .on-glyph,.on-icon.on-active .on-glyph{transform:scale(1.15)}',
+      /* was #55534e -- 2.57:1 on --void, measured across 179 pages as the
+         widest-reaching contrast failure in the repo. var(--muted) is 5.41:1
+         and follows theme.js, so the dock stays dim without being unreadable. */
+      '.on-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);text-align:center;line-height:1;transition:color .15s}',
+      '.on-item:hover .on-lbl,.on-icon.on-active .on-lbl{color:var(--col,#C9A84C)}',
+      /* Fly-out tooltip */
+      /* position:FIXED, not absolute. .on-sections and #omega-side are both
+         overflow:auto and 79px wide, so an absolutely-positioned panel at
+         x=78..268 was clipped away entirely -- elementFromPoint inside its own
+         rect returned the page behind it, never the tooltip. No ancestor sets
+         transform/filter/backdrop-filter/contain/will-change (measured), so
+         fixed escapes both clips. max-height keeps a 23-link section (1044px)
+         inside a 700px viewport instead of running 469px off the bottom.
+         The bottom clamp reads --omega-chrome-bottom (omega-bottom-stack.js
+         publishes 94px) rather than a constant, per CLAUDE.md 4. It is not
+         cosmetic: #omega-side is `z-index:200 !important`, which makes it a
+         STACKING CONTEXT, so this panel's z-index:9990 is scoped inside it and
+         the whole sidebar competes at 200. #ofb-btn (z-9000, x=12..116) and
+         #omega-ticker-strip (z-200) therefore paint OVER the panel's lower edge,
+         and 5 of 18 links were not clickable. Keeping the panel above the
+         published chrome line is what makes them reachable; raising the
+         sidebar's own z-index would fix the symptom and restack the estate. */
+      '.on-tip{position:fixed;left:78px;top:0;background:#0d0d18;border:1px solid rgba(201,168,76,0.25);min-width:180px;max-width:240px;max-height:calc(100vh - 16px - var(--omega-chrome-bottom, 0px));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:6px 6px 24px rgba(0,0,0,0.7)}',
+      '.on-tip::-webkit-scrollbar{width:6px}',
+      '.on-tip::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:3px}',
+      '.on-item:hover .on-tip,.on-item:focus-within .on-tip{opacity:1;pointer-events:all}',
+      '.tip-head{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.12)}',
+      /* `.on-tip .tip-a`, not `.tip-a`. omega-accessibility-audit.css sets
+         `button,[role=button],a[href],.clickable{display:inline-flex;...}` for the
+         44px touch target, and `a[href]` (0,1,1) outranks `.tip-a` (0,1,0) — so an
+         EARLIER sheet won and these links computed inline-flex. Inline-flex boxes
+         flow inline, so two SHORT labels shared a 240px line while long ones did
+         not: 33 links rendered on 29 rows (EVENTS/TRAVEL, HABITS/JOURNAL,
+         NUTRITION/OATH, RITUALS/SLEEP). Raising specificity here fixes the rows
+         without touching the estate-wide touch-target rule, which is correct:
+         ~354 of ~440 links per page ARE navigation, and 0 sit in running text.
+         `justify-content:flex-start` looks redundant -- it is flex's own default --
+         but that same a11y rule sets `center`, and nav.js never declared the
+         property, so every row centred itself in the panel and the list rendered
+         with a ragged left edge. Restoring it here is what gives the links one
+         shared margin. */
+      '.on-tip .tip-a{display:flex;align-items:center;justify-content:flex-start;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
+      '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
+      '.tip-a.tip-on{color:#C9A84C}',
+      '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
+      /* Logout */
+      '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted);padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
+      '.on-logout:hover{color:#C9A84C}',
+      /* Mobile bottom nav */
+      /* top/height/padding/border-bottom are declared DEFENSIVELY, not because
+         this bar needs them. #omega-mob is a real <nav> element, and three pages
+         (honors, matrix, media) carry a page-local BARE element rule:
+
+             nav{position:fixed;top:0;left:0;right:0;height:64px;...}
+
+         An id selector outranks `nav`, but specificity only decides a property
+         both rules declare. This rule never set `top`, so the page's `top:0`
+         applied unopposed -- and with `bottom:0` also in force the element became
+         over-constrained, where CSS resolves in favour of `top`. The bottom nav
+         rendered as a 64px bar across the TOP of the phone, on top of whatever
+         that page put there (measured: 38x34px over #om-open on media.html).
+         `height:64px` leaked the same way, which is why it measured 64 there and
+         49 everywhere else.
+
+         This is the bug class CLAUDE.md 4.1 already records for `body::before` --
+         a bare-selector page rule colliding with a shared injected element -- so
+         the same defence applies: declare the properties a bare `nav{}` can
+         reach, and let id specificity do its job. */
+      '#omega-mob{display:none;position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;',
+      'padding:0;border-bottom:0;z-index:9990;background:rgba(8,8,15,0.97);',
+      'border-top:1px solid rgba(201,168,76,0.15);backdrop-filter:blur(12px)}',
+      '#omega-mob ul{display:flex;list-style:none;margin:0;padding:0}',
+      '#omega-mob ul li{flex:1}',
+      '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
+      '#omega-mob ul li a .mi{font-size:18px;line-height:1;transition:all .15s;color:#353330}',
+      '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
+      '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
+      '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
+      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}aside.omega-side,aside.side{display:none!important}}',
+      '@media(min-width:761px){#omega-mob{display:none}}',
+      /* Top scan line */
+      '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
+      '@keyframes top-sc{0%{background-position:200% 0}100%{background-position:-200% 0}}',
+    ].join('');
+    (document.head||document.documentElement).appendChild(s);
+  }
+
+  var activeSection=PS[dp]||'command';
+
+  /* ── PUBLISH THE MAP ────────────────────────────────────────────────────
+     PS (page -> nav section) and SECTIONS (section -> label, icon, colour)
+     are the platform's single source of truth for which axis a page belongs
+     to, and they were private to this IIFE -- so anything else that wanted a
+     page's axis had to keep its own copy, which is CLAUDE.md 8.1 class 8, the
+     class that once assigned the wrong god and agent to 9 of 12 signs.
+     omega-identity.js reads this instead of duplicating it: change a page's
+     section HERE and its colour, eyebrow and hero follow with no other edit. */
+  /* Published as OmegaAxis, NOT OmegaNav. `window.OmegaNav` is already probed
+     by omega-emblems-catalog.js:578, which calls OmegaNav.updateEmblems() --
+     an API nothing has ever assigned, so that call has never run on any page
+     (CLAUDE.md 8.1 class 4b, a shared accessor nobody publishes). Publishing
+     OmegaNav here made its guard pass and the call throw on every page. The
+     dead path is recorded in GAP_ANALYSIS.md rather than papered over; this
+     object owns a different, honest name. */
+  window.OmegaAxis = window.OmegaAxis || {
+    sectionOf: function (slug) { return PS[String(slug || '').toLowerCase()] || 'command'; },
+    section: function (key) {
+      for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].key === key) return SECTIONS[i];
+      return null;
+    },
+    colourOf: function (slug) {
+      var sec = this.section(this.sectionOf(slug));
+      return sec ? sec.col : '#C9A84C';
+    },
+    labelOf: function (slug) {
+      var sec = this.section(this.sectionOf(slug));
+      return sec ? sec.label : 'COMMAND';
+    },
+    sections: function () { return SECTIONS.map(function (x) {
+      return { key: x.key, label: x.label, icon: x.icon, col: x.col, href: x.href }; }); },
+    slug: function () { return dp; }
+  };
+
+  /* BUILD SIDEBAR */
+  var h='';
+  h+='<div class="on-hb">';
+  h+='<a class="on-btn" href="/dashboard.html" title="Home">&#x2302;</a>';
+  h+='<div class="on-btn" id="on-back" title="Back">&#x2190;</div>';
+  h+='</div>';
+  /* A real <a>, not a div with onclick. This mark sits on EVERY page, so as a
+     div it was the one keyboard-inaccessible control on all of them (measured:
+     1 per page across the estate, 44 on dashboard where more are page-local).
+     A native link is focusable, Enter-activatable, and supports middle-click
+     and open-in-new-tab for free -- none of which a div+role can give back.
+     Its only child is a <canvas>, so it has no text to name it: aria-label
+     carries what the title attribute used to. */
+  h+='<a class="on-brand" href="/dashboard.html" title="SYD OMEGA 91717" aria-label="SYD OMEGA 91717 — Command Bridge"><canvas id="on-bcv" width="88" height="88" style="width:44px;height:44px"></canvas></a>';
+  h+='<div class="on-sections">';
+  SECTIONS.forEach(function(sec){
+    var isAct=sec.key===activeSection;
+    h+='<div class="on-item">';
+    h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
+    h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
+    h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
+    h+='</a>';
+    /* Tooltip -- a SIBLING of the icon, never a child. It contains .tip-a
+       anchors, and an <a> inside an <a> is invalid: the HTML parser's adoption
+       agency algorithm hoists .on-tip out of .on-icon and re-parents the icon
+       INSIDE the tooltip, so `.on-icon:hover .on-tip` matched 0 elements and
+       all 15 section tooltips were permanently invisible on all 202 pages. */
+    h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
+    sec.sub.forEach(function(sub){
+      var on=sub[0]===dp;
+      h+='<a class="tip-a'+(on?' tip-on':'')+'" href="'+sub[2]+'">';
+      h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
+      h+=sub[1]+'</a>';
+    });
+    h+='</div></div>';
+  });
+  h+='</div>';
+  h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
+
+  el.className='omega-side';
+  el.innerHTML=h;
+
+  /* Tooltip placement. .on-tip is position:fixed (see the CSS note above), so
+     nothing in CSS can keep it beside its own icon -- place it here, clamped
+     into the viewport. It is measured while still opacity:0, which is safe:
+     opacity does not affect layout, and max-height has already clamped the
+     height by the time offsetHeight is read. Placed 2px OVER the icon's right
+     edge on purpose: a gap is a dead zone that drops :hover as the pointer
+     crosses it, and the panel's links are only reachable while hover holds. */
+  function placeTip(item){
+    if(!item) return;
+    var tip=item.querySelector('.on-tip'); if(!tip) return;
+    var icon=item.querySelector('.on-icon')||item;
+    var ir=icon.getBoundingClientRect();
+    tip.style.left=Math.round(ir.right-2)+'px';
+    var h=tip.offsetHeight;
+    var top=Math.round(ir.top);
+    var chrome=parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--omega-chrome-bottom'))||0;
+    var lowest=window.innerHeight-8-chrome-h;
+    if(top>lowest) top=lowest;
+    if(top<8) top=8;
+    tip.style.top=top+'px';
+  }
+  var sections=el.querySelector('.on-sections');
+  if(sections){
+    sections.addEventListener('mouseover',function(e){
+      placeTip(e.target.closest?e.target.closest('.on-item'):null);
+    });
+    sections.addEventListener('focusin',function(e){
+      placeTip(e.target.closest?e.target.closest('.on-item'):null);
+    });
+    /* The dock scrolls and the panel does not follow a fixed element, so
+       re-place whatever is currently open rather than leaving it stranded. */
+    var reflow=function(){ placeTip(el.querySelector('.on-item:hover')||el.querySelector('.on-item:focus-within')); };
+    sections.addEventListener('scroll',reflow,{passive:true});
+    window.addEventListener('resize',reflow,{passive:true});
+  }
+
+  /* Back btn */
+  document.getElementById('on-back')?.addEventListener('click',function(){
+    window.history.length>1?window.history.back():location.href='/dashboard.html';
+  });
+
+  /* Logout */
+  document.getElementById('on-logout')?.addEventListener('click',function(){
+    /* Reuse the shared client so signOut acts on the SAME GoTrueClient that
+       holds the session. A fresh client here signs out a different instance
+       under the same storage key -- the exact concurrent-use case Supabase
+       warns about. Falls back to a one-off module if the singleton is absent. */
+    if(window.OmegaSB){
+      window.OmegaSB.get().then(function(sb){
+        return sb.auth.signOut();
+      }).then(function(){ location.href='/account.html'; })
+        .catch(function(){ location.href='/account.html'; });
+      return;
+    }
+    var sc=document.createElement('script');sc.type='module';
+    sc.textContent='import{createClient}from"/vendor/supabase-js.js";createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q").auth.signOut().then(()=>location.href="/account.html")';
+    document.body.appendChild(sc);
+  });
+
+  /* Rotating Omega brand */
+  (function(){
+    var cv=document.getElementById('on-bcv');if(!cv)return;
+    var ctx=cv.getContext('2d'),t=0;
+    function f(){
+      t+=.022;ctx.clearRect(0,0,88,88);
+      ctx.save();ctx.translate(44,44);
+      ctx.save();ctx.rotate(t*.5);ctx.beginPath();ctx.arc(0,0,38,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;ctx.stroke();ctx.restore();
+      ctx.save();ctx.rotate(-t*.8);ctx.beginPath();ctx.ellipse(0,0,36,13,0,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.12)';ctx.lineWidth=0.8;ctx.stroke();ctx.restore();
+      ctx.fillStyle='rgba(201,168,76,'+(0.7+0.28*Math.sin(t*1.5))+')';
+      ctx.shadowColor='rgba(201,168,76,0.7)';ctx.shadowBlur=12+4*Math.sin(t);
+      ctx.font='700 22px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',0,1);ctx.shadowBlur=0;
+      ctx.restore();requestAnimationFrame(f);
+    }
+    f();
+  })();
+
+  /* ===== MOBILE NAV -- ALL 9 SECTIONS ===== */
+  if(!document.getElementById('omega-mob')){
+    /* CSS for mobile nav + drawer */
+    var mcs=document.createElement('style');mcs.id='omega-mob-css';
+    mcs.textContent=[
+      '#omega-mob{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;background:rgba(8,8,15,.97);border-top:1px solid rgba(201,168,76,.15);backdrop-filter:blur(16px)}',
+      '#omega-mob-bar{display:flex;list-style:none;margin:0;padding:0}',
+      '.mob-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 12px;cursor:pointer;text-decoration:none;gap:3px;border:none;background:transparent}',
+      '.mob-item .mi{font-size:20px;line-height:1;color:#353330;transition:all .15s}',
+      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted);transition:all .15s}',
+      '.mob-item.m-on .mi,.mob-item:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,.6);transform:translateY(-2px)}',
+      '.mob-item.m-on .ml,.mob-item:hover .ml{color:#C9A84C}',
+      '.mob-item.mob-menu-btn .mi{color:#85837b}',
+      '.mob-item.mob-menu-btn.menu-open .mi{color:#C9A84C}',
+      /* DRAWER */
+      '#omega-drawer{position:fixed;bottom:-100%;left:0;right:0;z-index:9989;background:rgba(8,8,15,.99);border-top:1px solid rgba(201,168,76,.25);backdrop-filter:blur(20px);transition:bottom .3s cubic-bezier(.25,.46,.45,.94);max-height:75vh;overflow-y:auto;padding-bottom:80px}',
+      '#omega-drawer.drawer-open{bottom:66px}',
+      '.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.1)}',
+      '.dh-title{font-family:"Cinzel Decorative",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}',
+      '.dh-close{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b;cursor:pointer;padding:6px 12px;border:1px solid rgba(201,168,76,.2)}',
+      '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
+      '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
+      '.ds-section:nth-child(2n){border-right:none}',
+      /* padding here is what carries these to a real touch size: the drawer is
+         the ONLY navigation on a phone (the desktop aside is display:none
+         below 761px), and measured at 375px every one of its 82 links and 11
+         section heads came out 21px tall -- under the 24px WCAG 2.5.8 floor,
+         and far under 44px. The text size is left alone; only the hit area
+         grows. */
+      '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
+      '.dss-icon{font-size:18px;color:var(--muted)}',
+      '.dss-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b}',
+      '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
+      '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
+      '.ds-links{display:flex;flex-direction:column;gap:3px;padding-left:4px}',
+      '.ds-link{font-family:"Courier Prime",monospace;font-size:12px;color:var(--muted);text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
+      '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
+      '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
+      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',
+      /* ===== MOBILE HARDENING -- no sideways scroll, tables + media fit ===== */
+      '@media(max-width:760px){',
+        'html,body{overflow-x:hidden;max-width:100vw}',
+        '.main,.shell,.pad{max-width:100vw}',
+        'table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}',
+        'img,video,iframe{max-width:100%;height:auto}',
+        'canvas,svg{max-width:100%}',
+        'pre,code{max-width:100%;overflow-x:auto}',
+        '.topbar .t small{display:block;font-size:12px;line-height:1.5;margin-top:3px;white-space:normal}',
+      '}',
+    ].join('');
+    (document.head||document.documentElement).appendChild(mcs);
+
+    /* BOTTOM BAR - 5 items + menu */
+    var MOB5=[
+      {icon:'\u2302',label:'HOME',href:'/dashboard.html',key:'command'},
+      {icon:'\u25B2',label:'ASCEND',href:'/honors.html#ascension',key:'ascend'},
+      {icon:'\u03A9',label:'VAULT',href:'/vault.html',key:'vault'},
+      {icon:'\u2609',label:'COSMOS',href:'/cosmos.html',key:'cosmos'},
+      {icon:'\u2726',label:'MORE',key:'menu',isMenu:true},
+    ];
+
+    var mob=document.createElement('nav');mob.id='omega-mob';
+    var ul=document.createElement('ul');ul.id='omega-mob-bar';
+    MOB5.forEach(function(m){
+      var li=document.createElement('li');li.style.flex='1';
+      var a=document.createElement('a');
+      a.className='mob-item'+(m.isMenu?' mob-menu-btn':m.key===activeSection?' m-on':'');
+      if(!m.isMenu){a.href=m.href;}else{a.href='#';}
+      a.innerHTML='<span class="mi">'+m.icon+'</span><span class="ml">'+m.label+'</span>';
+      if(m.isMenu){
+        a.addEventListener('click',function(e){e.preventDefault();toggleDrawer();});
+      }
+      li.appendChild(a);ul.appendChild(li);
+    });
+    mob.appendChild(ul);document.body.appendChild(mob);
+
+    /* DRAWER -- ALL 9 SECTIONS */
+    var DRAWER_SECTIONS=[
+      {icon:'\u2316',label:'COMMAND',col:'#C9A84C',href:'/dashboard.html',key:'command',
+       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html'],['COMMAND BRIEF','/command.html']]},
+      {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/profile.html',key:'identity',
+       links:[['IDENTITY HUB','/profile.html'],['PROFILE','/profile.html'],['PASSPORT','/profile.html#passport'],['KYC','/profile.html#kyc'],['SETTINGS','/profile.html#settings']]},
+      {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/honors.html#ascension',key:'ascend',
+       links:[['ASCENSION','/honors.html#ascension'],['MATRIX 104,976','/matrix.html'],['MY RECORD','/honors.html#record'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
+      {icon:'\u2609',label:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',key:'cosmos',
+       links:[['COSMOS HUB','/cosmos.html'],['HOROSCOPE','/cosmos.html#horoscope'],['AI AGENTS','/agents.html'],['ELEMENTS','/elements.html'],['PANTHEONS','/pantheons.html']]},
+      {icon:'\u25BA',label:'UNIVERSE',col:'#D6534A',href:'/media.html',key:'universe',
+       links:[['CINEMA','/media.html'],['UNIVERSE','/media.html'],['MEDIA HUB','/media.html']]},
+      {icon:'\u03A9',label:'VAULT',col:'#C9A84C',href:'/vault.html',key:'vault',
+       links:[['SOVEREIGN VAULT','/vault.html'],['WALLET','/vault.html#wallet'],['SUBSCRIPTIONS','/subscriptions.html'],['BLOCKCHAIN','/blockchain.html'],['MARKETPLACE','/marketplace.html'],['PORTFOLIO','/profile.html#portfolio']]},
+      {icon:'\u22D4',label:'ORDER',col:'#D9B86A',href:'/family.html',key:'order',
+       links:[['FAMILY','/family.html'],['BLOODLINE','/family.html#bloodline'],['HERITAGE','/family.html#heritage'],['HALL','/hall.html'],['OMEGA CITY','/city.html']]},
+      {icon:'\u2726',label:'SERVICES',col:'#3fb27f',href:'/services.html',key:'services',
+       links:[['ALL SERVICES','/services.html'],['CONSULTANCY','/consultancy.html'],['PUBLISHING','/publishing.html'],['NEWS','/news.html'],['SOCIAL HUB','/social.html']]},
+      {icon:'\u25CF',label:'INTEL',col:'#9B6BF0',href:'/intelligence.html',key:'intel',
+       links:[['INTELLIGENCE','/intelligence.html'],['RESEARCH','/research.html'],['PREDICTION','/prediction.html'],['AUTOMATION','/automation.html'],['COMPLIANCE','/compliance.html']]},
+      {icon:'\u25CF',label:'ARENA',col:'#9B6BF0',href:'/sovereign-ai.html',key:'arena',
+       links:[['AI COMMAND','/sovereign-ai.html'],['ANALYTICS','/analytics.html'],['12 AGENTS','/agents.html'],['AUTOMATION','/automation.html'],['ORACLE PREDICT','/prediction.html'],['SOVEREIGN QUEUE','/queue.html']]},
+      {icon:'\u2736',label:'GOVERN',col:'#3fb27f',href:'/governance.html',key:'govern',
+       links:[['GOVERNANCE','/governance.html'],['OBSERVATORY','/observatory.html'],['COMPLIANCE','/compliance.html'],['PRIVACY','/privacy.html'],['ROADMAP','/roadmap.html'],['MAINTENANCE','/maintenance.html']]},
+      {icon:'\u25C6',label:'INVEST',col:'#E2C86D',href:'/investment.html',key:'invest',
+       links:[['INVESTMENT','/investment.html'],['PORTFOLIO','/portfolio.html'],['WEALTH','/wealth.html'],['BUDGET','/budget.html'],['WALLET','/wallet.html'],['TREASURY','/treasury.html']]},
+      {icon:'\u265A',label:'ACHIEVE',col:'#C9A84C',href:'/achievements.html',key:'achieve',
+       links:[['ACHIEVEMENTS','/achievements.html'],['LEADERBOARD','/leaderboard.html'],['AWARDS','/awards.html'],['GATES','/gates.html'],['LEVELS','/levels.html'],['TRIADS','/triads.html']]},
+      {icon:'\u2735',label:'ARCHIVE',col:'#3fb27f',href:'/heritage.html',key:'archive',
+       links:[['HERITAGE','/heritage.html'],['BLOODLINE','/bloodline.html'],['CHARACTER','/character.html'],['PASSPORT','/passport.html'],['CREDENTIALS','/credentials.html'],['MEMBERSHIP','/membership.html']]},
+      {icon:'\u25B6',label:'MEDIA',col:'#9B6BF0',href:'/cinema.html',key:'media',
+       links:[['CINEMA','/cinema.html'],['SERIES','/series.html'],['TRAILERS','/trailers.html'],['ACTIVITY FEED','/feed.html'],['NEWS INTEL','/news.html'],['PUBLICATIONS','/publications.html']]},
+    ];
+
+    var drawer=document.createElement('div');drawer.id='omega-drawer';
+    var dh=document.createElement('div');dh.className='drawer-header';
+    dh.innerHTML='<div class="dh-title">&#937; SYD OMEGA 91717</div><div class="dh-close" id="drawer-close">CLOSE &#x2715;</div>';
+    drawer.appendChild(dh);
+    var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
+    DRAWER_SECTIONS.forEach(function(sec){
+      var ds=document.createElement('div');ds.className='ds-section';
+      var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
+      var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
+      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      ds.appendChild(head);
+      var links=document.createElement('div');links.className='ds-links';
+      sec.links.forEach(function(lk){
+        var a=document.createElement('a');a.className='ds-link';a.href=lk[1];a.textContent=lk[0];
+        links.appendChild(a);
+      });
+      ds.appendChild(links);dsgrid.appendChild(ds);
+    });
+    drawer.appendChild(dsgrid);document.body.appendChild(drawer);
+
+    document.getElementById('drawer-close').addEventListener('click',function(){closeDrawer();});
+    drawer.addEventListener('click',function(e){if(e.target===drawer) closeDrawer();});
+
+    function toggleDrawer(){
+      var d=document.getElementById('omega-drawer');
+      var btn=document.querySelector('.mob-menu-btn');
+      if(d.classList.contains('drawer-open')){closeDrawer();}
+      else{d.classList.add('drawer-open');if(btn)btn.classList.add('menu-open');}
+    }
+    function closeDrawer(){
+      var d=document.getElementById('omega-drawer');
+      var btn=document.querySelector('.mob-menu-btn');
+      d.classList.remove('drawer-open');if(btn)btn.classList.remove('menu-open');
+    }
+    window.__closeOmegaDrawer=closeDrawer;
+    /* Close drawer on navigation */
+    document.querySelectorAll('.ds-link,.dss-head').forEach(function(a){
+      a.addEventListener('click',function(){setTimeout(closeDrawer,100);});
+    });
+  }
+
+  /* ── ELEMENTAL THEMING DISPATCHER (Phase 4) ────────────────────────────
+     Listen for nav section changes and emit theme-update events. */
+  var currentAxis = PS[dp] || 'command';
+  window.addEventListener('omega-axis-change', function(e) {
+    var detail = e.detail || {};
+    currentAxis = detail.axis || currentAxis;
+    /* Theme module subscribes to this event and handles tier gating */
+    document.dispatchEvent(new CustomEvent('omega-theme-update', { detail: detail }));
+  });
+
+  /* Top scan bar */
+  if(!document.getElementById('omega-top')){
+    var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);
+  }
+})();

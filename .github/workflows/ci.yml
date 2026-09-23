@@ -24,15 +24,15 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1e60f620b9541dca5e1d1c4a0b7f5f4a3f1f1a9e # v6.0.0
         with:
           node-version-file: .nvmrc
       - name: Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v6.0.0
         with:
           python-version: '3.12'
       - name: Runner diagnostics

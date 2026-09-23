@@ -144,6 +144,7 @@ function labProgress(l){
   return Math.min(100,Math.round((MEMBER_PROGRESS[l.axisKey]||0.001)/9*100));
 }
 var DISCOVERIES=[];
+var DISCOVERY_SOURCE_CONNECTED=false;
 var TWIN_NODES=[
   {name:'IDENTITY TWIN',val:'DEFINED'},
   {name:'ECONOMIC TWIN',val:'DEFINED'},
@@ -221,7 +222,7 @@ async function boot(){
     var{count}=await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
     var k=document.getElementById('kpi-hyp');if(k)k.textContent=count||'0';
   }catch(e){}
-  var d=document.getElementById('kpi-discoveries');if(d)d.textContent='—';
+  var d=document.getElementById('kpi-discoveries');if(d)d.textContent=DISCOVERY_SOURCE_CONNECTED?'0':'—';
   document.getElementById('btn-submit').addEventListener('click',async function(){
     var domain=document.getElementById('h-domain').value;
     var title=document.getElementById('h-title').value.trim();

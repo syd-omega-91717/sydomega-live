@@ -42,8 +42,8 @@ REQUIRED = {
         r"scripts/omega-registry\.py['\"]?,?\s*['\"]?--check",
     ],
     "production-contract.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@(?:v4|[0-9a-f]{40})",
+        r"actions/setup-python@(?:v5|[0-9a-f]{40})",
         r"scripts/production-contract\.py",
     ],
     "capability-evidence.yml": [

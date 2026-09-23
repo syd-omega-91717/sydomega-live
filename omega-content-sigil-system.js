@@ -12,7 +12,7 @@
     command:'COMMAND',identity:'IDENTITY',ascend:'ASCEND',cosmos:'COSMOS',
     universe:'UNIVERSE',vault:'VAULT',order:'ORDER',services:'SERVICES',
     intel:'INTEL',arena:'ARENA',govern:'GOVERN',invest:'INVEST',achieve:'ACHIEVE',
-    archive:'ARCHIVE',media:'MEDIA',archive:'ARCHIVE'
+    archive:'ARCHIVE',media:'MEDIA'
   };
 
   function file(){return (location.pathname.split('/').pop()||'index.html').toLowerCase();}

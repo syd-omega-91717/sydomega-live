@@ -81,12 +81,12 @@
   }
 
   function compact(){
-    var nodes=document.querySelectorAll('[data-explanatory-text],.page-description,.hero-subtitle,.hero-description,.section-description,.section-intro,.intro-text,.lead');
+    var nodes=document.querySelectorAll('[data-omega-long-copy],[data-explanatory-text],.page-description,.hero-subtitle,.hero-description,.section-description,.section-intro,.intro-text,.lead');
     var seen=new WeakMap();
     Array.prototype.forEach.call(nodes,function(el){
       if(el.dataset.omegaCompacted==='true'||el.closest(EXCLUDE)||el.closest('.omega-page-door')||el.closest('.omega-related-sigils'))return;
       var text=(el.textContent||'').replace(/\\s+/g,' ').trim();
-      if(text.length<140)return;
+      if(text.length<180)return;
 
       var owner=el.closest('section,article,.card,.panel,.module,.tile,.widget,main')||el.parentElement;
       var count=seen.get(owner)||0;

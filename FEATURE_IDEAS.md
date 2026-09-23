@@ -45,9 +45,7 @@ platform with a small membership, not an engineering one.
 ## 3. `omega-guardian.js` gate() — either wire it or retire the badge
 
 **Grounded in:** verified directly in this repo — `omega-guardian.js` exports a `gate` function
-(`gate:gate` in its returned API, line 147) but a repo-wide grep for `OmegaGuardian.gate(` across
-every `.html`/`.js` file returns zero call sites. The topbar risk-score badge implies active
-protection that isn't happening, same finding as the sibling repo.
+(`gate:gate` in its returned API, line 147) but a repo-wide inspection now finds the shipped gate callers in `approvals.html`. The topbar risk-score badge accompanies actual gating of the highest-privilege approval actions; additional coverage remains future scope.
 
 **Idea (needs an explicit decision, not a code fix):** pick a short list of genuinely
 higher-stakes actions already in the codebase — e.g. `approvals.html`'s

@@ -86,6 +86,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/production-contract.py']).returncode)
+      - name: Security headers contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/security-headers-contract.py']).returncode)
       - name: Workflow contract
         shell: python
         run: |

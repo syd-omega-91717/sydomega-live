@@ -39,9 +39,9 @@
       '.omega-page-door__hint{font:10px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:1px;color:var(--muted,rgba(138,134,118,.72))}',
       '.omega-page-door__action{font:10px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff);white-space:nowrap}',
       '.omega-related-sigils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 24px}.omega-related-sigil{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(201,168,76,.13);background:rgba(0,0,0,.18);color:inherit;text-decoration:none;transition:.2s}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{border-color:rgba(0,229,255,.45);transform:translateY(-2px);outline:none}.omega-related-sigil__mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(201,168,76,.35);border-radius:50%;color:var(--gold,#c9a84c)}.omega-related-sigil__mark svg{width:32px;height:32px}.omega-related-sigil__axis{font:9px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff)}.omega-related-sigil__title{font:12px "Cinzel Decorative",serif;color:var(--gold-soft,#e8c97a);margin-top:2px}.omega-related-sigil__hint{font:9px var(--M,"Courier Prime",monospace);color:var(--muted);margin-top:2px}@media(max-width:620px){.omega-related-sigils{grid-template-columns:1fr}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{transform:none}}',
-      '.omega-copy-wrap{position:relative}.omega-copy-compact{max-height:4.8em;overflow:hidden;transition:max-height .25s ease}.omega-copy-compact::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.8em;background:linear-gradient(transparent,var(--bg,#020206));pointer-events:none}.omega-copy-compact.is-expanded{max-height:1200px}.omega-copy-compact.is-expanded::after{display:none}',
-      '.omega-copy-toggle{display:inline-flex;align-items:center;gap:6px;margin:5px 0 14px;padding:5px 9px;border:1px solid rgba(0,229,255,.3);background:transparent;color:var(--cyan,#00e5ff);font:10px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;cursor:pointer}.omega-copy-toggle:hover{border-color:var(--gold,#c9a84c);color:var(--gold,#c9a84c)}.omega-copy-toggle:focus-visible{outline:2px solid var(--cyan,#00e5ff);outline-offset:2px}',
-      '@media(max-width:620px){.omega-page-door{grid-template-columns:auto 1fr}.omega-page-door__action{display:none}.omega-page-door__sigil{width:54px;height:54px}.omega-page-door__sigil svg{width:40px;height:40px}}',
+      '.omega-copy-wrap{position:relative}.omega-copy-compact{margin:0;max-width:68ch;line-height:1.55}',
+      '',
+      '@media(max-width:620px){.omega-page-door{grid-template-columns:auto 1fr}.omega-page-door__action{display:none}.omega-page-door__sigil{width:54px;height:54px}.omega-page-door__sigil svg{width:40px;height:40px}.omega-copy-compact{font-size:13px;line-height:1.5}}',
       '@media(prefers-reduced-motion:reduce){.omega-page-door__sigil,.omega-copy-compact{transition:none}}'
     ].join('');
     (document.head||document.documentElement).appendChild(s);
@@ -82,16 +82,36 @@
 
   function compact(){
     var nodes=document.querySelectorAll('[data-explanatory-text],.page-description,.hero-subtitle,.hero-description,.section-description,.section-intro,.intro-text,.lead');
+    var seen=new WeakMap();
     Array.prototype.forEach.call(nodes,function(el){
-      if(el.dataset.omegaCompacted==='true'||el.closest(EXCLUDE)||el.closest('.omega-page-door'))return;
-      var text=(el.textContent||'').replace(/\s+/g,' ').trim();
-      if(text.length<220)return;
+      if(el.dataset.omegaCompacted==='true'||el.closest(EXCLUDE)||el.closest('.omega-page-door')||el.closest('.omega-related-sigils'))return;
+      var text=(el.textContent||'').replace(/\\s+/g,' ').trim();
+      if(text.length<140)return;
+
+      var owner=el.closest('section,article,.card,.panel,.module,.tile,.widget,main')||el.parentElement;
+      var count=seen.get(owner)||0;
+      seen.set(owner,count+1);
       el.dataset.omegaCompacted='true';
-      var wrap=document.createElement('span');wrap.className='omega-copy-wrap';
-      el.parentNode.insertBefore(wrap,el);wrap.appendChild(el);el.classList.add('omega-copy-compact');
-      var b=document.createElement('button');b.type='button';b.className='omega-copy-toggle';b.textContent='MORE INFO +';b.setAttribute('aria-expanded','false');
-      b.addEventListener('click',function(){var open=el.classList.toggle('is-expanded');b.textContent=open?'LESS INFO −':'MORE INFO +';b.setAttribute('aria-expanded',String(open));});
-      wrap.appendChild(b);
+
+      var full=el.cloneNode(true);
+      full.removeAttribute('data-omega-compacted');
+      full.classList.add('omega-copy-full');
+      var wrap=document.createElement('span');
+      wrap.className='omega-copy-wrap';
+      el.parentNode.insertBefore(wrap,el);
+
+      var short=text.length>155?text.slice(0,155).replace(/\\s+\\S*$/,'')+'…':text;
+      el.textContent=short;
+      el.classList.add('omega-copy-compact');
+
+      var details=document.createElement('details');
+      details.className='omega-copy-details';
+      var summary=document.createElement('summary');
+      summary.textContent=count===0?'MORE INFO +':'DETAILS +';
+      details.appendChild(summary);
+      details.appendChild(full);
+      wrap.appendChild(el);
+      wrap.appendChild(details);
     });
   }
   function boot(){style();mountDoor();compact();related();}

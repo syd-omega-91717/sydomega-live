@@ -646,7 +646,7 @@ var T_EN={
 "ana_algo_formula_title":"FORMULA DERIVATION · COMPLETE MATHEMATICAL PROOF",
 "ana_data_title":"DATA SCIENCE · PYTHON · ML · POSTGRESQL",
 "ana_data_postgresql_title":"POSTGRESQL · PGBOUNCER",
-"ana_data_postgresql_sub":"42 TABLES · 64 RPCS · CONNECTION POOLING",
+"ana_data_postgresql_sub":"LIVE PUBLIC SCHEMA · RLS VERIFIED · CONNECTION POOLING",
 "ana_data_postgresql_body":"The platform runs on PostgreSQL with RLS on every table. PgBouncer-style connection pooling via Supabase pooler handles burst traffic. All queries use parameterized RPC calls. No raw SQL from the client.",
 "ana_data_python_title":"PYTHON DATA PIPELINE",
 "ana_data_python_sub":"ETL · ANALYTICS · FEATURE ENGINEERING",

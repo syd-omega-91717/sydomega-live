@@ -45,6 +45,8 @@
     if(!grid)return;
     var cards=grid.querySelectorAll('.district-card');
     Array.prototype.forEach.call(cards,function(card,index){
+      if(card.dataset.omegaSimulationBound==='true')return;
+      card.dataset.omegaSimulationBound='true';
       card.setAttribute('role','button');
       card.setAttribute('tabindex','0');
       card.setAttribute('aria-label','Focus District '+(index+1));
@@ -80,6 +82,8 @@
     var buttons=document.querySelectorAll('.tab-bar .tab-btn');
     if(!buttons.length)return;
     Array.prototype.forEach.call(buttons,function(btn,i){
+      if(btn.dataset.omegaSimulationTabBound==='true')return;
+      btn.dataset.omegaSimulationTabBound='true';
       btn.setAttribute('role','tab');
       btn.setAttribute('tabindex',i===0?'0':'-1');
       btn.setAttribute('aria-selected',btn.classList.contains('active')?'true':'false');

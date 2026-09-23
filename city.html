@@ -8,6 +8,12 @@
 .city-overlay{position:absolute;bottom:10px;left:10px;right:10px;display:flex;gap:6px;flex-wrap:wrap}
 .city-stat{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;background:rgba(7,7,11,.8)}
 .city-stat b{color:var(--gold)}
+.sim-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;padding:9px 11px;border:1px solid var(--line);background:rgba(10,10,15,.6);font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:var(--muted)}
+.sim-controls button{font:inherit;letter-spacing:inherit;color:var(--cyan);background:transparent;border:1px solid rgba(0,229,255,.25);padding:5px 9px;cursor:pointer}
+.sim-controls button:hover,.sim-controls button:focus-visible{border-color:var(--cyan)}
+.sim-controls label{display:flex;align-items:center;gap:6px}
+.sim-controls input{width:90px;accent-color:var(--gold)}
+#city-state{margin-left:auto;color:var(--green)}
 .district-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .district-card{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:16px}
 .d-zone{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
@@ -57,7 +63,7 @@
       <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--gold)">9,999</div><div class="kpi-label">CITIZEN THRESHOLD</div></div>
     </div>
     <div class="city-canvas-wrap">
-      <canvas id="city-canvas"></canvas>
+      <canvas id="city-canvas" aria-label="Live Ω City simulation"></canvas>
       <div class="city-overlay">
         <div class="city-stat">DISTRICTS: <b>9</b></div>
         <div class="city-stat">NODES: <b>729</b></div>
@@ -73,7 +79,7 @@
       <div style="color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:8px">CITIZENSHIP REQUIREMENTS</div>
       Only members who have reached <span style="color:var(--gold)">Tier 6 — SOVEREIGN (Carbon)</span> or above are eligible for &#937; City citizenship. Citizenship grants: physical district access, governance voting rights, resource allocation priorities, and the <span style="color:var(--gold)">City Genesis NFT</span>.<br><br>
       Physical realisation begins when Order membership reaches the <span style="color:var(--gold)">9,999 sovereign threshold</span>.
-    </div>
+      </details>
   </div>
 </div>
 
@@ -218,14 +224,14 @@ function drawCity(){
   var W=cv.offsetWidth||600,H=cv.offsetHeight||280;
   cv.width=W*2;cv.height=H*2;
   var ctx=cv.getContext('2d');ctx.scale(2,2);
-  var t=0,buildings=[];
+  var t=0,paused=false,speed=1,frameId=0,buildings=[];
   for(var i=0;i<60;i++){
     buildings.push({x:Math.random()*W,h:20+Math.random()*120,w:6+Math.random()*22,
       col:Math.random()>0.7?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):Math.random()>0.5?(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'):'rgba(201,168,76,0.3)',
       speed:0.0005+Math.random()*0.001});
   }
   function frame(){
-    t+=0.005;ctx.clearRect(0,0,W,H);
+    if(!paused)t+=0.005*speed;ctx.clearRect(0,0,W,H);
     var sky=ctx.createLinearGradient(0,0,0,H);
     sky.addColorStop(0,'rgba(7,7,11,1)');sky.addColorStop(1,'rgba(13,10,20,1)');
     ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
@@ -260,9 +266,25 @@ function drawCity(){
     ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=0.5;
     for(var gx=0;gx<W;gx+=36){ctx.beginPath();ctx.moveTo(gx,H*0.7);ctx.lineTo(gx+(H-H*0.7)*0.3,H);ctx.stroke();}
     for(var gy=H*0.7;gy<H;gy+=18){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
-    requestAnimationFrame(frame);
+    frameId=requestAnimationFrame(frame);
   }
   frame();
+  var play=document.getElementById('city-play');
+  var speedControl=document.getElementById('city-speed');
+  var reset=document.getElementById('city-reset');
+  var state=document.getElementById('city-state');
+  if(play)play.addEventListener('click',function(){
+    paused=!paused;play.textContent=paused?'PLAY':'PAUSE';play.setAttribute('aria-pressed',String(!paused));
+    if(state)state.textContent=paused?'SIMULATION PAUSED':'LIVE SIMULATION';
+  });
+  if(speedControl)speedControl.addEventListener('input',function(){
+    speed=Number(speedControl.value)||1;
+  });
+  if(reset)reset.addEventListener('click',function(){
+    t=0;
+    if(paused){paused=false;if(play){play.textContent='PAUSE';play.setAttribute('aria-pressed','true');}}
+    if(state)state.textContent='LIVE SIMULATION';
+  });
 }
 
 renderDistricts();

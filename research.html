@@ -1,82 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Research &amp; Discovery</title>
-<meta name="description" content="Sovereign research — 9 active laboratories, hypothesis engine, and discovery feed."/>
-<meta name="theme-color" content="#C9A84C"/>
-<style>
-.labs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
-.lab-card{border:1px solid var(--line);border-top:2px solid var(--lc,var(--gold));background:var(--surface);padding:18px;position:relative}
-.lc-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
-.lc-title{font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:4px}
-.lc-domain{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px}
-.lc-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px}
-.lc-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.lab-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
-.lb-active{color:var(--green);border-color:rgba(63,178,127,.5)}
-.lb-dev{color:var(--solar);border-color:rgba(226,200,109,.4)}
-.lb-concept{color:var(--muted);border-color:rgba(138,134,118,.3)}
-.lb-quantum{color:var(--purple);border-color:rgba(155,107,240,.4)}
-.lc-bar{flex:1;height:3px;background:rgba(201,168,76,.1);overflow:hidden;min-width:60px}
-.lc-bar-fill{height:100%;transition:width 1.2s ease}
-.lc-pct{font-family:var(--M);font-size:12px;color:var(--muted)}
-.hyp-form{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
-.hyp-row{display:flex;gap:12px;flex-wrap:wrap}
-.hyp-field{flex:1;min-width:200px}
-.hf-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);display:block;margin-bottom:5px}
-.hf-input,.hf-select,.hf-textarea{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:9px 11px;outline:none}
-.hf-textarea{min-height:80px;resize:vertical}
-.hf-input:focus,.hf-select:focus,.hf-textarea:focus{border-color:rgba(201,168,76,.4)}
-.hyp-result{font-family:var(--M);font-size:12px;line-height:1.7;border:1px solid rgba(63,178,127,.3);padding:12px;background:rgba(63,178,127,.05);color:var(--green);display:none}
-.disc-entry{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed rgba(201,168,76,.08)}
-.disc-entry:last-child{border-bottom:none}
-.disc-icon{font-size:18px;flex-shrink:0;margin-top:2px}
-.disc-title{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--solar);margin-bottom:4px}
-.disc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:4px}
-.disc-meta{font-family:var(--M);font-size:12px;color:var(--muted)}
-.twin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:14px}
-.twin-cell{border:1px solid rgba(155,107,240,.2);background:rgba(155,107,240,.03);padding:12px;text-align:center}
-.tc-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:4px}
-.tc-val{font-family:var(--D);font-size:16px;color:var(--solar)}
-</style>
-</head>
-<body>
-<aside id="omega-side" data-page="research"></aside>
-<div class="page-shell" id="app" style="display:none">
-<header class="topbar">
-  <div class="topbar-title">RESEARCH &amp; DISCOVERY<span class="topbar-sub">PILLAR 12 &middot; SCIENTIFIC ENGINE &middot; CIVILIZATIONAL BREAKTHROUGHS</span></div>
-  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
-</header>
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('labs')">LABS</button>
-  <button class="tab-btn" onclick="setTab('hypothesis')">HYPOTHESIS</button>
-  <button class="tab-btn" onclick="setTab('discoveries')">DISCOVERIES</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
-</div>
-
-<div class="tab-panel active" id="tab-labs">
-  <div class="sechead">SOVEREIGN RESEARCH LABORATORIES</div>
-  <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div>
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">9</div><div class="kpi-label">ACTIVE LABS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-hyp">—</div><div class="kpi-label">HYPOTHESES</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">17</div><div class="kpi-label">BREAKTHROUGHS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">104,976</div><div class="kpi-label">TWIN NODES</div></div>
-  </div>
-  <div class="labs-grid" id="labs-grid"></div>
-</div>
-
-<div class="tab-panel" id="tab-hypothesis">
-  <div class="sechead">HYPOTHESIS ENGINE &mdash; SUBMIT A DISCOVERY</div>
-  <div class="glass" style="margin-bottom:16px">
-    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">STATE A HYPOTHESIS. THE ORACLE AGENT VALIDATES. CONFIRMED DISCOVERIES ADVANCE YOUR KNOWLEDGE AXIS.</div>
-    <div class="hyp-form" id="hyp-form">
-      <div class="hyp-row">
-        <div class="hyp-field"><label class="hf-label">RESEARCH DOMAIN</label>
-          <select class="hf-select" id="h-domain">
-            <option>AI &amp; Machine Intelligence</option>
             <option>Quantum Systems</option>
             <option>Biology &amp; Health Science</option>
             <option>Energy &amp; Infrastructure</option>
@@ -150,12 +71,12 @@ var DISCOVERIES=[
   {icon:'&#38773;',title:'NINTH ELEMENT CORRELATION',desc:'The 10 domains of the Ninth Element show statistically significant positive correlation with matrix progression rates in members who log all 10 weekly.',meta:'LAB 03 &middot; BIO-SENTINEL &middot; +50 XP'}
 ];
 var TWIN_NODES=[
-  {name:'IDENTITY TWIN',val:'9.9M'},
-  {name:'ECONOMIC TWIN',val:'$917B'},
-  {name:'HEALTH TWIN',val:'99.7%'},
-  {name:'SOCIAL TWIN',val:'12 FACTIONS'},
-  {name:'MEDIA TWIN',val:'9 FILMS'},
-  {name:'RESEARCH TWIN',val:'729 NODES'}
+  {name:'IDENTITY TWIN',val:'READY'},
+  {name:'ECONOMIC TWIN',val:'READY'},
+  {name:'HEALTH TWIN',val:'READY'},
+  {name:'SOCIAL TWIN',val:'READY'},
+  {name:'MEDIA TWIN',val:'READY'},
+  {name:'RESEARCH TWIN',val:'READY'}
 ];
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['labs','hypothesis','discoveries','science'][i]===name);});
@@ -226,6 +147,12 @@ async function boot(){
     var{count}=await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
     var k=document.getElementById('kpi-hyp');if(k)k.textContent=count||'0';
   }catch(e){}
+  try{
+    var{count:dc}=await sb.from('research_discoveries').select('id',{count:'exact',head:true});
+    var d=document.getElementById('kpi-discoveries');if(d)d.textContent=dc||'0';
+  }catch(e){
+    var d2=document.getElementById('kpi-discoveries');if(d2)d2.textContent='—';
+  }
   document.getElementById('btn-submit').addEventListener('click',async function(){
     var domain=document.getElementById('h-domain').value;
     var title=document.getElementById('h-title').value.trim();

@@ -58,9 +58,9 @@
 
 <div class="tab-panel active" id="tab-labs">
   <div class="sechead">SOVEREIGN RESEARCH LABORATORIES</div>
-  <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div>
+  <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div><div style="font-size:11px;color:var(--muted);line-height:1.6;margin:-4px 0 12px;max-width:640px">Catalog status describes the research program; it does not claim a live laboratory feed.</div>
   <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">9</div><div class="kpi-label">ACTIVE LABS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">9</div><div class="kpi-label">RESEARCH LABS</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-hyp">—</div><div class="kpi-label">HYPOTHESES</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-discoveries">—</div><div class="kpi-label">DISCOVERY RECORDS</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">TWIN STATUS</div></div>
@@ -145,12 +145,12 @@ function labProgress(l){
 }
 var DISCOVERIES=[];
 var TWIN_NODES=[
-  {name:'IDENTITY TWIN',val:'READY'},
-  {name:'ECONOMIC TWIN',val:'READY'},
-  {name:'HEALTH TWIN',val:'READY'},
-  {name:'SOCIAL TWIN',val:'READY'},
-  {name:'MEDIA TWIN',val:'READY'},
-  {name:'RESEARCH TWIN',val:'READY'}
+  {name:'IDENTITY TWIN',val:'DEFINED'},
+  {name:'ECONOMIC TWIN',val:'DEFINED'},
+  {name:'HEALTH TWIN',val:'DEFINED'},
+  {name:'SOCIAL TWIN',val:'DEFINED'},
+  {name:'MEDIA TWIN',val:'DEFINED'},
+  {name:'RESEARCH TWIN',val:'DEFINED'}
 ];
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['labs','hypothesis','discoveries','science'][i]===name);});
@@ -165,7 +165,7 @@ function renderLabs(){
   var g=document.getElementById('labs-grid');if(!g)return;
   g.innerHTML=LABS.map(function(l){
     var bk=l.status==='active'?'lb-active':l.status==='quantum'?'lb-quantum':l.status==='dev'?'lb-dev':'lb-concept';
-    var bl=l.status==='active'?'ACTIVE':l.status==='quantum'?'QUANTUM OPS':l.status==='dev'?'DEVELOPMENT':'CONCEPT';
+    var bl=l.status==='active'?'DECLARED ACTIVE':l.status==='quantum'?'QUANTUM OPS':l.status==='dev'?'DEVELOPMENT':'CONCEPT';
     var pct=labProgress(l);
     return'<div class="lab-card card" style="--lc:'+l.col+'">'
       +'<div class="lc-num">'+l.n+'</div>'

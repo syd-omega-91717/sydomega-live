@@ -1247,7 +1247,7 @@ itself. Both client call sites assumed the latter:
 - `vault.html`'s `loadAuditLog()` did `(r.data||[]).slice(0,60)` — since `r.data` is the
   `{ok,rows}` object, not an array, `.slice` doesn't exist on it and the call threw on every
   invocation, silently caught and replaced with 5 hardcoded `DEMO` entries
-  (`"OWNER APEX LOCKED..."`, `"RLS ENABLED ON ALL 42 DATABASE TABLES"`, etc.) presented as if
+  (`"OWNER APEX LOCKED..."`, `"RLS ENABLED ON ALL 42 DATABASE TABLES" (legacy 2026-07-27 baseline; current live schema is tracked separately)`, etc.) presented as if
   they were the real audit trail. This happened for every caller, including the owner —
   the feature has never shown real data to anyone.
 - `approvals.html`'s `loadAudit()` did `r.data||[]` then checked `!rows.length` — on the

@@ -12,7 +12,7 @@ The global emblem integration now owns the page-entry layer for project and cont
 
 ## Supported content selectors
 
-`.page-description`, `.hero-subtitle`, `.hero-description`, `.lead`, `.intro`, `.intro-text`, `.section-description`, `.section-intro`, `[data-page-description]`, and `[data-explanatory-text]`.
+`[data-omega-long-copy]`, `.page-description`, `.hero-subtitle`, `.hero-description`, `.lead`, `.intro`, `.intro-text`, `.section-description`, `.section-intro`, `[data-page-description]`, and `[data-explanatory-text]`.
 
 For new pages, prefer explicit attributes over broad classes:
 

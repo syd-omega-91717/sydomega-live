@@ -114,7 +114,11 @@
       wrap.appendChild(details);
     });
   }
-  function boot(){style();mountDoor();compact();related();}
+  function loadSimulationExperience(){
+    if(document.querySelector('script[data-omega-simulation-experience]'))return;
+    var s=document.createElement('script');s.src='/omega-simulation-experience.js';s.defer=true;s.setAttribute('data-omega-simulation-experience','1');document.head.appendChild(s);
+  }
+  function boot(){style();mountDoor();compact();related();loadSimulationExperience();}
   window.OmegaContentSigils={boot:boot,compactExplanations:compact,mountDoor:mountDoor};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   setTimeout(boot,800);

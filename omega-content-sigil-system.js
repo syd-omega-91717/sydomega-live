@@ -52,7 +52,7 @@
     var e=emblem(), door=document.createElement('section');door.className='omega-page-door';door.setAttribute('aria-label','Page sigil entry');
     var a=document.createElement('a');a.className='omega-page-door__sigil';a.href=location.pathname||'/';a.setAttribute('aria-label','Open '+label()+' page sigil');a.innerHTML=e&&e.svg?e.svg:'<span style="font:34px Cinzel Decorative,serif">Ω</span>';
     var meta=document.createElement('div');meta.className='omega-page-door__meta';
-    meta.innerHTML='<div class="omega-page-door__axis">'+escapeHtml(axis())+' / SIGIL ENTRY</div><div class="omega-page-door__title">'+escapeHtml(label().toUpperCase())+'</div><div class="omega-page-door__hint">The sigil is the door · detailed context opens only when requested</div>';
+    meta.innerHTML='<div class="omega-page-door__axis">'+escapeHtml(axis())+' / SIGIL ENTRY</div><div class="omega-page-door__title">'+escapeHtml(label().toUpperCase())+'</div><div class="omega-page-door__hint">Open the experience</div>';
     var action=document.createElement('div');action.className='omega-page-door__action';action.textContent='ENTER →';
     door.append(a,meta,action);
     var anchor=main.querySelector('.hero,.page-header,header')||main.firstElementChild;
@@ -68,12 +68,13 @@
     if(m&&m.prev)links.push(m.prev);
     if(m&&m.next&&m.next!==m.prev)links.push(m.next);
     if(!links.length)return;
+    links=links.slice(0,1);
     var rail=document.createElement('nav');rail.className='omega-related-sigils';rail.setAttribute('aria-label','Related page sigils');
     links.forEach(function(s){
       var f=s+'.html', e=null;try{e=window.OmegaEmblems&&window.OmegaEmblems.get?window.OmegaEmblems.get(f):null;}catch(x){}
       var a=document.createElement('a');a.className='omega-related-sigil';a.href='/'+f;
       var mark=document.createElement('span');mark.className='omega-related-sigil__mark';mark.innerHTML=e&&e.svg?e.svg:'<span style="font:24px Cinzel Decorative,serif">Ω</span>';
-      var copy=document.createElement('span');copy.innerHTML='<span class="omega-related-sigil__axis">'+escapeHtml((m.section||'REALM')+' / NEXT DOOR')+'</span><span class="omega-related-sigil__title">'+escapeHtml(String(s).replace(/[-_]+/g,' ').toUpperCase())+'</span><span class="omega-related-sigil__hint">OPEN SIGIL →</span>';
+      var copy=document.createElement('span');copy.innerHTML='<span class="omega-related-sigil__axis">'+escapeHtml((m.section||'REALM')+' / NEXT')+'</span><span class="omega-related-sigil__title">'+escapeHtml(String(s).replace(/[-_]+/g,' ').toUpperCase())+'</span><span class="omega-related-sigil__hint">OPEN →</span>';
       a.append(mark,copy);rail.appendChild(a);
     });
     var door=document.querySelector('.omega-page-door');if(door&&door.parentNode)door.parentNode.insertBefore(rail,door.nextSibling);else main.prepend(rail);

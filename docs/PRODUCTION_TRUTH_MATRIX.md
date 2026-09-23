@@ -31,13 +31,13 @@
 |---|---|---|
 | Production project | Active production project established | Keep canonical project ID documented |
 | PostgreSQL | Live; direct SQL verification completed 2026-09-15 | Continue schema verification |
-| Public tables | **218** at live verification 2026-09-15 | Re-run inventory before each release |
+| Public tables | **220** at live verification 2026-09-23 | Re-run inventory before each release |
 | Public functions | **128** at live verification 2026-09-15 | Re-run privilege/function audit |
-| RLS | **218/218** public tables have RLS enabled at live verification 2026-09-15 | Complete policy-semantic regression and member/owner access tests |
-| Tables without policies | **0** at live verification 2026-09-15 | Preserve this invariant |
+| RLS | **220/220** public tables have RLS enabled at live verification 2026-09-23 | Complete policy-semantic regression and member/owner access tests |
+| Tables without policies | **0** at live verification 2026-09-23 | Preserve this invariant |
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
-| Migration history | **177 applied** at live verification 2026-09-15; latest migration `20260915100009` | Check schema drift before each release |
+| Migration history | Live migration history verified through `20260923140718` on 2026-09-23 | Check schema drift before each release |
 | Storage | Present in architecture | Audit buckets/policies and exercise upload/download |
 | Edge Functions | Present | Verify deployed versions and secrets without exposing them |
 
@@ -61,9 +61,9 @@
 |---|---|---|
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
-| Vercel production deployment | Current main SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567` has a successful Vercel status | Keep production propagation/smoke gates mandatory |
+| Vercel production deployment | Current main SHA `0b5c001802cf95fe11a7f9ec204966fbfe454e7e` has a successful Vercel status | Keep production propagation/smoke gates mandatory |
 | GitHub workflows | Current main verification set is green; no failed/cancelled runs reported for the 12 workflows triggered by this SHA | Preserve concurrency policy and investigate any new failure at root cause |
-| Production smoke checks | Implemented and successful for current release SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567` | Require successful execution as release evidence |
+| Production smoke checks | Implemented and successful for the prior release evidence set; current main deployment has a successful Vercel status, but production smoke evidence for the latest SHA is not independently re-exercised in this session | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
 ## Payments / financial integrity
@@ -137,6 +137,7 @@ A production release should not be declared complete until all P0/P1 items below
 - [ ] Critical user journeys pass on mobile-sized and desktop viewports.
 - [ ] Accessibility and performance gates pass for representative pages.
 - [ ] Backup/restore procedure has been exercised.
-- [x] Current release evidence records Git SHA, workflow/deployment evidence, production smoke results and Supabase transport reachability.
+- [x] Current release evidence records Git SHA, deployment evidence and Supabase transport reachability.
+- [ ] Latest main SHA has fresh production smoke evidence for all critical journeys.
 
 **This matrix intentionally does not invent completion. It is updated only when evidence changes.**

@@ -130,7 +130,7 @@ A production release should not be declared complete until all P0/P1 items below
 - [x] Production smoke tests pass for current release SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567`.
 - [x] GitHub verification workflows execute successfully for current main verification set.
 - [ ] Supabase Security Advisor has zero unresolved findings. **Open provider-level item: leaked-password protection is disabled on the current Free plan.**
-- [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 218/218 RLS-enabled and 0 tables without policies.
+- [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 220/220 RLS-enabled and 0 tables without policies (live inventory verified 2026-09-23).
 - [ ] Auth/MFA/RBAC E2E flow passes.
 - [ ] Stripe checkout/webhook/entitlement flow passes in the intended environment.
 - [x] No privileged browser credentials were found by the release-contract audit.

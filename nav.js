@@ -86,7 +86,7 @@
     {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
      sub:[['vault','SOVEREIGN VAULT','/vault.html'],['treasury','RESERVE','/vault.html#reserve'],
           ['wallet','WALLET','/vault.html#wallet'],['blockchain','BLOCKCHAIN','/blockchain.html'],
-          ['payments','PAYMENTS','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
+          ['payments','BILLING','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/profile.html#portfolio'],
           ['income','INCOME','/income.html'],['payments','PAYMENTS','/payments.html'],['evolution','EVOLUTION','/evolution.html'],
           ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft'],['settings','SETTINGS','/settings.html'],['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},

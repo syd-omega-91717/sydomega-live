@@ -1,0 +1,14 @@
+/* Ω SIMPLE UI — default product surface
+   Keeps the Omega identity while removing ornamental complexity.
+   Functional charts, data, controls and navigation remain untouched. */
+:root{--omega-simple-radius:8px;--omega-simple-shadow:none}
+body.omega-simple .osc-stage,body.omega-simple [data-omega-sculpture],body.omega-simple .omega-particles,body.omega-simple #omega-particles,body.omega-simple .ambient-background,body.omega-simple .starfield,body.omega-simple .constellation-background,body.omega-simple [data-omega-ambient-visual]{display:none!important}
+body.omega-simple *{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+body.omega-simple .kpi,body.omega-simple .cmd-card,body.omega-simple .card,body.omega-simple .panel,body.omega-simple .glass,body.omega-simple .glass-card{border-radius:var(--omega-simple-radius)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important}
+body.omega-simple .kpi:hover,body.omega-simple .cmd-card:hover,body.omega-simple .card:hover{transform:none!important;box-shadow:none!important}
+body.omega-simple .emblem-orb{display:none!important}
+body.omega-simple .sechead{letter-spacing:2px!important;margin-bottom:12px!important}
+body.omega-simple .kpi-l,body.omega-simple .kpi-label,body.omega-simple .ss-label,body.omega-simple .cc-status,body.omega-simple .cc-desc{letter-spacing:1px!important}
+body.omega-simple .status-indicator,body.omega-simple .mb-dot{animation:none!important}
+@media(max-width:700px){body.omega-simple .mission-bar{gap:8px!important}body.omega-simple .status-strip{display:none!important}body.omega-simple .layer-tabs{position:sticky;top:44px}body.omega-simple .layer-tabs .ltab{padding:10px 12px!important}}
+body.omega-showcase .osc-stage,body.omega-showcase [data-omega-sculpture]{display:block!important}

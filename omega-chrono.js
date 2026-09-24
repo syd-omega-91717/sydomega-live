@@ -228,7 +228,8 @@
   });
   window.addEventListener('blur',function(){dedStop();});
   window.addEventListener('focus',function(){dedStart();});
-  window.addEventListener('beforeunload',function(){dedStop();});
+  /* visibilitychange/pagehide cover lifecycle transitions without blocking bfcache. */
+  window.addEventListener('pagehide',function(){dedStop();});
 
   /* ── AUTO-CHECK on every page load ─────────────────────────────────── */
   function autoCheck(){

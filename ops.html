@@ -448,7 +448,9 @@ function refresh(){
   /* Status dot */
   var dot=document.getElementById('sys-dot');
   var stat=document.getElementById('sys-status');
-  if(totalDlq>10||parseFloat(errRate)>5){
+  if(!window.OmegaWorkers || workers.length===0){
+    dot.className='status-dot';if(stat){stat.style.color='var(--muted)';stat.textContent='WAITING FOR TELEMETRY';}
+  } else if(totalDlq>10||parseFloat(errRate)>5){
     dot.className='status-dot red';if(stat){stat.style.color='var(--red)';stat.textContent='DEGRADED';}
   } else if(totalDlq>0||parseFloat(errRate)>1){
     dot.className='status-dot amber';if(stat){stat.style.color='var(--amber)';stat.textContent='WARNING';}

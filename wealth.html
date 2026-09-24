@@ -385,8 +385,10 @@ const MILESTONES = [
   {val:1000000000,label:'BILLIONAIRE',name:'$1B Legend'},
 ];
 
-function getAssets(){ try{return JSON.parse(localStorage.getItem(ASSETS_KEY)||'{}');}catch{return{};} }
-function getSnapshots(){ try{return JSON.parse(localStorage.getItem(SNAPSHOT_KEY)||'[]');}catch{return[];} }
+function getAssets(){ try{const v=JSON.parse(localStorage.getItem(ASSETS_KEY)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch{return{};} }
+function getSnapshots(){ try{const v=JSON.parse(localStorage.getItem(SNAPSHOT_KEY)||'[]');return Array.isArray(v)?v.filter(s=>s&&typeof s==='object'):[];}catch{return[];} }
+function escHtml(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function safeNum(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
 
 function fmt(n){
   if(Math.abs(n)>=1e9) return '$'+(n/1e9).toFixed(2)+'B';
@@ -400,7 +402,7 @@ function calcNetWorth(){
   let total=0;
   CLASSES.forEach(cls=>{
     const items=assets[cls]||[];
-    const sum=items.reduce((a,i)=>a+i.value,0);
+    const sum=items.reduce((a,i)=>a+safeNum(i?.value),0);
     if(cls==='liabilities') total-=sum;
     else total+=sum;
   });
@@ -419,13 +421,18 @@ function renderAssets(){
     const items=assets[cls]||[];
     const total=items.reduce((a,i)=>a+i.value,0);
     document.getElementById('tot-'+cls).textContent=(cls==='liabilities'?'-':'')+fmt(total);
-    document.getElementById('list-'+cls).innerHTML=items.map((item,idx)=>`
-      <div class="asset-row">
-        <span class="ar-name" contenteditable="true" onblur="renameAsset('${cls}',${idx},this.textContent)">${item.name}</span>
-        <input class="asset-input" type="number" value="${item.value}" onchange="updateAsset('${cls}',${idx},this.value)" placeholder="0">
-        <button onclick="removeAsset('${cls}',${idx})" style="background:none;border:none;color:rgba(200,60,60,.5);cursor:pointer;font-size:12px;padding:0 4px">✕</button>
-      </div>`).join('');
-  });
+    const list=document.getElementById('list-'+cls);
+    if(!list) return;
+    list.replaceChildren();
+    items.forEach((item,idx)=>{
+      const row=document.createElement('div'); row.className='asset-row';
+      const name=document.createElement('span'); name.className='ar-name'; name.contentEditable='true'; name.textContent=String(item?.name??'Item').slice(0,120);
+      name.addEventListener('blur',()=>renameAsset(cls,idx,name.textContent));
+      const input=document.createElement('input'); input.className='asset-input'; input.type='number'; input.value=String(safeNum(item?.value)); input.placeholder='0';
+      input.addEventListener('change',()=>updateAsset(cls,idx,input.value));
+      const remove=document.createElement('button'); remove.textContent='✕'; remove.type='button'; remove.style.cssText='background:none;border:none;color:rgba(200,60,60,.5);cursor:pointer;font-size:12px;padding:0 4px'; remove.addEventListener('click',()=>removeAsset(cls,idx));
+      row.append(name,input,remove); list.appendChild(row);
+    })  });
   renderAllocation();
   renderMilestones();
 }
@@ -462,7 +469,7 @@ function renderAllocation(){
   const totals={};
   let grandTotal=0;
   CLASSES.filter(c=>c!=='liabilities').forEach(cls=>{
-    const sum=(assets[cls]||[]).reduce((a,i)=>a+i.value,0);
+    const sum=(assets[cls]||[]).reduce((a,i)=>a+safeNum(i?.value),0);
     totals[cls]=sum;
     grandTotal+=sum;
   });
@@ -510,12 +517,14 @@ function renderMilestones(){
   const nw=Math.max(0,calcNetWorth());
   const row=document.getElementById('milestone-row');
   if(!row) return;
-  row.innerHTML=MILESTONES.map(m=>`
-    <div class="milestone ${nw>=m.val?'reached':''}">
-      <div class="mv">${nw>=m.val?'✓':''}</div>
-      <div class="ml">${m.label}</div>
-      <div class="mn">${m.name}</div>
-    </div>`).join('');
+  row.replaceChildren();
+  MILESTONES.forEach(m=>{
+    const el=document.createElement('div'); el.className='milestone'+(nw>=m.val?' reached':'');
+    const mv=document.createElement('div'); mv.className='mv'; mv.textContent=nw>=m.val?'✓':'';
+    const ml=document.createElement('div'); ml.className='ml'; ml.textContent=m.label;
+    const mn=document.createElement('div'); mn.className='mn'; mn.textContent=m.name;
+    el.append(mv,ml,mn); row.appendChild(el);
+  });
   const next=MILESTONES.find(m=>nw<m.val);
   const nm=document.getElementById('next-milestone');
   if(nm&&next){
@@ -543,7 +552,8 @@ function calcCompound(){
   const r=parseFloat(document.getElementById('ci-rate').value)/100/12||0;
   const n=parseInt(document.getElementById('ci-years').value)||10;
   const months=n*12;
-  const future=P*Math.pow(1+r,months)+M*(Math.pow(1+r,months)-1)/r;
+  const growth=Math.pow(1+r,months);
+  const future=r===0 ? P+M*months : P*growth+M*(growth-1)/r;
   const invested=P+M*months;
   document.getElementById('ci-result').textContent=fmt(future);
   document.getElementById('ci-detail').textContent=`Invested: ${fmt(invested)} · Interest earned: ${fmt(future-invested)}`;
@@ -608,7 +618,8 @@ function calcNWP(){
   const r=parseFloat(document.getElementById('nwp-rate').value)/100/12||0;
   [5,10,20].forEach(yrs=>{
     const m=yrs*12;
-    const v=cur*Math.pow(1+r,m)+save*(Math.pow(1+r,m)-1)/r;
+    const growth=Math.pow(1+r,m);
+    const v=r===0 ? cur+save*m : cur*growth+save*(growth-1)/r;
     document.getElementById('nwp-'+yrs).textContent=fmt(v);
   });
 }
@@ -628,7 +639,7 @@ window.saveSnapshot=saveSnapshot;
 
 function renderHistory(){
   const snaps=getSnapshots().slice().reverse();
-  const maxNW=Math.max(...snaps.map(s=>s.nw),1);
+  const maxNW=Math.max(...snaps.map(s=>Math.max(0,safeNum(s.nw))),1);
   /* FEATURE_IDEAS.md #27 Wave 4: same getSnapshots() this function already
      reads, chronological order, no new query. Snapshots are a manual,
      irregular member action ("SAVE SNAPSHOT"), not a daily event -- labelled
@@ -639,19 +650,26 @@ function renderHistory(){
     const series=getSnapshots().slice(-14).map(s=>s.nw);
     sparkEl.setAttribute('data-spark-values',JSON.stringify(series));
   }
-  document.getElementById('snapshot-list').innerHTML=snaps.map(s=>{
-    const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-    const chg=s.change;
+  const target=document.getElementById('snapshot-list');
+  if(!target) return;
+  target.replaceChildren();
+  snaps.forEach(s=>{
+    const nw=safeNum(s.nw), chg=safeNum(s.change);
+    const dt=new Date(s.date);
+    const dateLabel=Number.isNaN(dt.getTime())?'Unknown date':dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     const chgStr=(chg>0?'+':'')+fmt(chg);
     const color=chg>0?'rgba(80,200,120,.7)':chg<0?'rgba(200,60,60,.7)':'rgba(138,134,118,.5)';
-    return `<div class="snapshot-item">
-      <div class="si-date">${dt}</div>
-      <div><div class="si-bar"><div class="si-fill" style="width:${s.nw/maxNW*100}%"></div></div></div>
-      <div class="si-val">${fmt(s.nw)}</div>
-      <div class="si-chg" style="color:${color}">${chgStr}</div>
-    </div>`;
-  }).join('')||'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:20px 0">NO SNAPSHOTS YET — CLICK SAVE SNAPSHOT TO BEGIN TRACKING</div>';
-}
+    const item=document.createElement('div'); item.className='snapshot-item';
+    const date=document.createElement('div'); date.className='si-date'; date.textContent=dateLabel;
+    const barWrap=document.createElement('div'); const bar=document.createElement('div'); bar.className='si-bar';
+    const fill=document.createElement('div'); fill.className='si-fill'; fill.style.width=Math.max(0,Math.min(100,nw/maxNW*100))+'%'; bar.appendChild(fill); barWrap.appendChild(bar);
+    const val=document.createElement('div'); val.className='si-val'; val.textContent=fmt(nw);
+    const change=document.createElement('div'); change.className='si-chg'; change.style.color=color; change.textContent=chgStr;
+    item.append(date,barWrap,val,change); target.appendChild(item);
+  });
+  if(!snaps.length){
+    const empty=document.createElement('div'); empty.style.cssText='font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:20px 0'; empty.textContent='NO SNAPSHOTS YET — CLICK SAVE SNAPSHOT TO BEGIN TRACKING'; target.appendChild(empty);
+  }
 
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));

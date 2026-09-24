@@ -127,7 +127,7 @@
   }
 
   /* ── REPORT COST ON SESSION END ───────────────────────────────── */
-  window.addEventListener('beforeunload',function(){
+  function reportSessionCost(){
     var summary=getSummary();
     if(summary.total_usd>0&&window.OmegaTelemetry){
       window.OmegaTelemetry.track('session_cost',{

@@ -487,38 +487,13 @@
     mob.appendChild(ul);document.body.appendChild(mob);
 
     /* DRAWER -- ALL 9 SECTIONS */
-    var DRAWER_SECTIONS=[
-      {icon:'\u2316',label:'COMMAND',col:'#C9A84C',href:'/dashboard.html',key:'command',
-       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html'],['COMMAND BRIEF','/command.html']]},
-      {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/profile.html',key:'identity',
-       links:[['IDENTITY HUB','/profile.html'],['PROFILE','/profile.html'],['PASSPORT','/profile.html#passport'],['KYC','/profile.html#kyc'],['SETTINGS','/profile.html#settings']]},
-      {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/honors.html#ascension',key:'ascend',
-       links:[['ASCENSION','/honors.html#ascension'],['MATRIX 104,976','/matrix.html'],['MY RECORD','/honors.html#record'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
-      {icon:'\u2609',label:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',key:'cosmos',
-       links:[['COSMOS HUB','/cosmos.html'],['HOROSCOPE','/cosmos.html#horoscope'],['AI AGENTS','/agents.html'],['ELEMENTS','/elements.html'],['PANTHEONS','/pantheons.html']]},
-      {icon:'\u25BA',label:'UNIVERSE',col:'#D6534A',href:'/media.html',key:'universe',
-       links:[['CINEMA','/media.html'],['UNIVERSE','/media.html'],['MEDIA HUB','/media.html']]},
-      {icon:'\u03A9',label:'VAULT',col:'#C9A84C',href:'/vault.html',key:'vault',
-       links:[['SOVEREIGN VAULT','/vault.html'],['WALLET','/vault.html#wallet'],['SUBSCRIPTIONS','/subscriptions.html'],['BLOCKCHAIN','/blockchain.html'],['MARKETPLACE','/marketplace.html'],['PORTFOLIO','/profile.html#portfolio']]},
-      {icon:'\u22D4',label:'ORDER',col:'#D9B86A',href:'/family.html',key:'order',
-       links:[['FAMILY','/family.html'],['BLOODLINE','/family.html#bloodline'],['HERITAGE','/family.html#heritage'],['HALL','/hall.html'],['OMEGA CITY','/city.html']]},
-      {icon:'\u2726',label:'SERVICES',col:'#3fb27f',href:'/services.html',key:'services',
-       links:[['ALL SERVICES','/services.html'],['CONSULTANCY','/consultancy.html'],['PUBLISHING','/publishing.html'],['NEWS','/news.html'],['SOCIAL HUB','/social.html']]},
-      {icon:'\u25CF',label:'INTEL',col:'#9B6BF0',href:'/intelligence.html',key:'intel',
-       links:[['INTELLIGENCE','/intelligence.html'],['RESEARCH','/research.html'],['PREDICTION','/prediction.html'],['AUTOMATION','/automation.html'],['COMPLIANCE','/compliance.html']]},
-      {icon:'\u25CF',label:'ARENA',col:'#9B6BF0',href:'/sovereign-ai.html',key:'arena',
-       links:[['AI COMMAND','/sovereign-ai.html'],['ANALYTICS','/analytics.html'],['12 AGENTS','/agents.html'],['AUTOMATION','/automation.html'],['ORACLE PREDICT','/prediction.html'],['SOVEREIGN QUEUE','/queue.html']]},
-      {icon:'\u2736',label:'GOVERN',col:'#3fb27f',href:'/governance.html',key:'govern',
-       links:[['GOVERNANCE','/governance.html'],['OBSERVATORY','/observatory.html'],['COMPLIANCE','/compliance.html'],['PRIVACY','/privacy.html'],['ROADMAP','/roadmap.html'],['MAINTENANCE','/maintenance.html']]},
-      {icon:'\u25C6',label:'INVEST',col:'#E2C86D',href:'/investment.html',key:'invest',
-       links:[['INVESTMENT','/investment.html'],['PORTFOLIO','/portfolio.html'],['WEALTH','/wealth.html'],['BUDGET','/budget.html'],['WALLET','/wallet.html'],['TREASURY','/treasury.html']]},
-      {icon:'\u265A',label:'ACHIEVE',col:'#C9A84C',href:'/achievements.html',key:'achieve',
-       links:[['ACHIEVEMENTS','/achievements.html'],['LEADERBOARD','/leaderboard.html'],['AWARDS','/awards.html'],['GATES','/gates.html'],['LEVELS','/levels.html'],['TRIADS','/triads.html']]},
-      {icon:'\u2735',label:'ARCHIVE',col:'#3fb27f',href:'/heritage.html',key:'archive',
-       links:[['HERITAGE','/heritage.html'],['BLOODLINE','/bloodline.html'],['CHARACTER','/character.html'],['PASSPORT','/passport.html'],['CREDENTIALS','/credentials.html'],['MEMBERSHIP','/membership.html']]},
-      {icon:'\u25B6',label:'MEDIA',col:'#9B6BF0',href:'/cinema.html',key:'media',
-       links:[['CINEMA','/cinema.html'],['SERIES','/series.html'],['TRAILERS','/trailers.html'],['ACTIVITY FEED','/feed.html'],['NEWS INTEL','/news.html'],['PUBLICATIONS','/publications.html']]},
-    ];
+    /* DRAWER — derived from SECTIONS so mobile and desktop cannot drift. */
+    var DRAWER_SECTIONS=SECTIONS.map(function(sec){
+      return {
+        icon:sec.icon,label:sec.label,col:sec.col,href:sec.href,key:sec.key,
+        links:sec.sub.map(function(sub){return [sub[1],sub[2]];})
+      };
+    });
 
     var drawer=document.createElement('div');drawer.id='omega-drawer';
     var dh=document.createElement('div');dh.className='drawer-header';
@@ -571,6 +546,21 @@
     document.dispatchEvent(new CustomEvent('omega-theme-update', { detail: detail }));
   });
 
+  /* ── LOCAL NAVIGATION MEMORY ────────────────────────────────────────
+     Device-local only: not server truth, account state, telemetry, or audit data. */
+  (function(){
+    try{
+      var key='omega:recent-pages';
+      var now=location.pathname+(location.hash||'');
+      var label=document.title||((location.pathname.split('/').pop()||'dashboard').replace('.html','').replace(/[-_]/g,' ').toUpperCase());
+      var list=JSON.parse(localStorage.getItem(key)||'[]');
+      if(!Array.isArray(list))list=[];
+      list=list.filter(function(x){return x&&x.href&&x.href!==now;}).slice(0,7);
+      list.unshift({href:now,label:label});
+      localStorage.setItem(key,JSON.stringify(list.slice(0,8)));
+    }catch(e){}
+  })();
+
   /* ── UNIVERSAL COMMAND PALETTE ───────────────────────────────────────
      Inspired by the command-first navigation used by Vercel and modern
      operator dashboards: one keyboard shortcut exposes the whole platform
@@ -579,21 +569,44 @@
   (function(){
     if(document.getElementById('omega-command-palette')) return;
 
-    var all=[];
-    for(var si=0;si<SECTIONS.length;si++){
-      var sec=SECTIONS[si];
-      all.push({key:sec.key,label:sec.label,href:sec.href,section:sec.label,icon:sec.icon,col:sec.col});
-      for(var sj=0;sj<sec.sub.length;sj++){
-        var item=sec.sub[sj];
-        all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
+    function buildNavIndex(){
+      var all=[];
+      for(var si=0;si<SECTIONS.length;si++){
+        var sec=SECTIONS[si];
+        all.push({key:sec.key,label:sec.label,href:sec.href,section:sec.label,icon:sec.icon,col:sec.col});
+        for(var sj=0;sj<sec.sub.length;sj++){
+          var item=sec.sub[sj];
+          all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
+        }
       }
+      var seen={};
+      all=all.filter(function(x){
+        if(seen[x.href]) return false;
+        seen[x.href]=true;
+        return true;
+      });
+      var recent=[],pinned=[];
+      try{
+        var r=JSON.parse(localStorage.getItem('omega:recent-pages')||'[]');
+        if(Array.isArray(r))r.forEach(function(p){
+          var hit=all.filter(function(x){return x.href===p.href;})[0];
+          if(hit && !recent.some(function(x){return x.href===hit.href;}))
+            recent.push({key:hit.key,label:'RECENT · '+hit.label,href:hit.href,section:hit.section,icon:'↺',col:'#00E5FF'});
+        });
+      }catch(e){}
+      try{
+        for(var li=0;li<localStorage.length;li++){
+          var k=localStorage.key(li)||'';
+          if(k.indexOf('omega:pinned:')!==0||localStorage.getItem(k)!=='1')continue;
+          var href=k.slice('omega:pinned:'.length);
+          var hit2=all.filter(function(x){return x.href===href;})[0];
+          if(hit2)pinned.push({key:hit2.key,label:'PINNED · '+hit2.label,href:hit2.href,section:hit2.section,icon:'★',col:'#C9A84C'});
+        }
+      }catch(e){}
+      return {all:all,recent:recent.slice(0,8),pinned:pinned.slice(0,8)};
     }
-    var seen={};
-    all=all.filter(function(x){
-      if(seen[x.href]) return false;
-      seen[x.href]=true;
-      return true;
-    });
+    var navIndex=buildNavIndex();
+    var all=navIndex.all;
 
     var wrap=document.createElement('div');
     wrap.id='omega-command-palette';
@@ -629,7 +642,7 @@
 
     var foot=document.createElement('div');
     foot.style.cssText='padding:9px 14px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.42);font:10px "Courier Prime",monospace;letter-spacing:1px';
-    foot.textContent='↑ ↓ NAVIGATE   ENTER OPEN   ESC CLOSE   ·   ⌘/CTRL K';
+    foot.textContent='↑ ↓ NAVIGATE   ENTER OPEN   ESC CLOSE   ·   ⌘/CTRL K   ·   PINS/RECENTS LOCAL';
 
     panel.appendChild(head);panel.appendChild(list);panel.appendChild(foot);wrap.appendChild(panel);document.body.appendChild(wrap);
 
@@ -643,9 +656,17 @@
       render('');setTimeout(function(){input.focus();},0);
     }
     function render(q){
+      navIndex=buildNavIndex();all=navIndex.all;
       var needle=String(q||'').trim().toLowerCase();
-      filtered=all.filter(function(x){
+      var special=needle?[]:navIndex.pinned.concat(navIndex.recent);
+      var normal=all.filter(function(x){
         return !needle || (x.label+' '+x.section+' '+x.href).toLowerCase().indexOf(needle)>=0;
+      });
+      var renderSeen={};
+      filtered=special.concat(normal).filter(function(x){
+        if(renderSeen[x.href])return false;
+        renderSeen[x.href]=true;
+        return true;
       }).slice(0,80);
       if(active>=filtered.length) active=filtered.length-1;
       list.innerHTML='';

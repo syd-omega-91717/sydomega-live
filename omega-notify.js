@@ -110,7 +110,7 @@
           });
         });
       }
-    }).catch(function(){});
+    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
     /* Close on outside click */
     setTimeout(function(){
       document.addEventListener('click',function handler(e){
@@ -135,7 +135,7 @@
         _count=n;updateBadge(n);
         if(n>prev){showToast('You have '+n+' new notification'+(n>1?'s':''),'info');}
       }
-    }).catch(function(){});
+    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
   }
 
   /* Start polling after user loads */

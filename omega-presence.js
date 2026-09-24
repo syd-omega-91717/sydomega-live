@@ -23,8 +23,8 @@
         last_seen:new Date().toISOString(),
         session_started_at:online?session_started:null,
         client_info:{ua:navigator.userAgent.slice(0,60),tz:Intl.DateTimeFormat().resolvedOptions().timeZone}
-      }).catch(function(){});
-    }).catch(function(){});
+      }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
+    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
   }
 
   /* Sync on load and every 30s while active */

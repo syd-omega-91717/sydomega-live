@@ -252,7 +252,14 @@ function boot(){
   WORKERS.forEach(function(w){w._registerSubs();});
   /* Emit worker started events */
   WORKERS.forEach(function(w){
-    window.OmegaBus.emit('platform.worker.started',{worker:w.name,pid:Math.random().toString(36).slice(2,8)});
+    var pid;
+    try{
+      var bytes=new Uint8Array(4); crypto.getRandomValues(bytes);
+      pid=Array.from(bytes).map(function(b){return b.toString(16).padStart(2,'0');}).join('').slice(0,6);
+    }catch(e){
+      pid=w.name.slice(0,6).replace(/[^a-z0-9]/gi,'').toLowerCase();
+    }
+    window.OmegaBus.emit('platform.worker.started',{worker:w.name,pid:pid});
   });
   /* Periodic health probe every 60 seconds */
   setInterval(function(){

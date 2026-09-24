@@ -155,7 +155,7 @@ window.sendChatMessage=async function(){
     }});
     if(r.error) throw r.error;
     reply=(r.data&&r.data.reply)||'';
-  }catch(e){}
+  }catch(e){console.warn('[Omega Chatbot] concierge request failed:',e);}
   if(!reply) reply='The Concierge is temporarily unavailable. Please try again shortly.';
   if(typingEl)typingEl.remove();
   _history.push({role:'assistant',content:reply});addMsg('ai',reply);

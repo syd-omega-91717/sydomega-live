@@ -53,9 +53,10 @@
       crypto.getRandomValues(bytes);
       return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
     }catch(e){
-      return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+      return Date.now().toString(36)+'-'+String(++cryptoRandomId.counter).toString(36);
     }
   }
+  cryptoRandomId.counter=0;
 
   // Secure local storage with prefix
   const securePrefix = 'secure_' + new Date().getFullYear();

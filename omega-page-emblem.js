@@ -363,7 +363,7 @@
       var hub = cfg[1] === 'a' ? '/intelligence.html'
               : cfg[1] === 'b' ? '/dashboard.html'
               : '/services.html';
-      var pathKey = (location.pathname.replace(/^\\//, '').replace(/\\.html$/, '') || 'dashboard');
+      var pathKey = (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
       if (pathKey === 'gateway' || pathKey === 'index' || pathKey === 'enter') hub = '/enter.html';
 
       var link = document.createElement('a');
@@ -371,7 +371,11 @@
       link.className = 'omega-page-emblem-link';
       link.setAttribute('aria-label', 'Open the ' + (cfg[1] === 'a' ? 'Intelligence' : cfg[1] === 'b' ? 'Command' : 'Services') + ' hub');
       link.title = 'Open hub';
-      link.style.cssText = 'display:block;width:max-content;margin:0 auto;border-radius:50%;text-decoration:none;outline:none;cursor:pointer';
+      link.style.cssText = 'display:block;width:max-content;margin:0 auto;border-radius:50%;text-decoration:none;cursor:pointer;transition:filter .18s ease,transform .18s ease';
+      link.addEventListener('focus', function(){ link.style.filter='drop-shadow(0 0 10px rgba(201,168,76,.55))'; });
+      link.addEventListener('blur', function(){ link.style.filter=''; });
+      link.addEventListener('pointerenter', function(){ link.style.transform='scale(1.025)'; });
+      link.addEventListener('pointerleave', function(){ link.style.transform=''; });
       link.addEventListener('click', function(){ link.setAttribute('data-emblem-opening','1'); });
       host.appendChild(link);
 

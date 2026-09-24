@@ -413,13 +413,13 @@ function renderAssets(){
   const assets=getAssets();
   const nw=calcNetWorth();
   document.getElementById('net-worth-val').textContent=fmt(nw);
-  const positive=CLASSES.filter(c=>c!=='liabilities').reduce((a,c)=>a+(assets[c]||[]).reduce((s,i)=>s+i.value,0),0);
-  const negative=(assets['liabilities']||[]).reduce((s,i)=>s+i.value,0);
+  const positive=CLASSES.filter(c=>c!=='liabilities').reduce((a,c)=>a+(assets[c]||[]).reduce((s,i)=>s+safeNum(i?.value),0),0);
+  const negative=(assets['liabilities']||[]).reduce((s,i)=>s+safeNum(i?.value),0);
   document.getElementById('net-worth-sub').textContent=`ASSETS ${fmt(positive)} — LIABILITIES ${fmt(negative)}`;
 
   CLASSES.forEach(cls=>{
     const items=assets[cls]||[];
-    const total=items.reduce((a,i)=>a+i.value,0);
+    const total=items.reduce((a,i)=>a+safeNum(i?.value),0);
     document.getElementById('tot-'+cls).textContent=(cls==='liabilities'?'-':'')+fmt(total);
     const list=document.getElementById('list-'+cls);
     if(!list) return;
@@ -475,20 +475,35 @@ function renderAllocation(){
   });
   const bars=document.getElementById('alloc-bars');
   if(bars){
-    bars.innerHTML=Object.entries(totals).map(([cls,val])=>{
-      const pct=grandTotal?Math.round(val/grandTotal*100):0;
-      return `<div class="alloc-bar">
-        <div class="ab-row"><span class="ab-name">${CLASS_NAMES[cls]}</span><span class="ab-pct">${pct}%</span></div>
-        <div class="ab-track"><div class="ab-fill" style="width:${pct}%;background:${CLASS_COLORS[cls]}"></div></div>
-      </div>`;
-    }).join('');
+    bars.replaceChildren();
+    Object.entries(totals).forEach(([cls,val])=>{
+      const pct=grandTotal?Math.max(0,Math.min(100,Math.round(val/grandTotal*100))):0;
+      const wrap=document.createElement('div'); wrap.className='alloc-bar';
+      const row=document.createElement('div'); row.className='ab-row';
+      const name=document.createElement('span'); name.className='ab-name'; name.textContent=CLASS_NAMES[cls]||cls;
+      const p=document.createElement('span'); p.className='ab-pct'; p.textContent=pct+'%';
+      row.append(name,p);
+      const track=document.createElement('div'); track.className='ab-track';
+      const fill=document.createElement('div'); fill.className='ab-fill';
+      fill.style.width=pct+'%'; fill.style.background=CLASS_COLORS[cls]||'transparent';
+      track.appendChild(fill); wrap.append(row,track); bars.appendChild(wrap);
+    });
   }
   const target=document.getElementById('target-alloc');
   if(target){
-    target.innerHTML=TARGET_ALLOC.map(t=>`<div class="alloc-bar">
-      <div class="ab-row"><span class="ab-name">${t.name}</span><span class="ab-pct">${t.pct}%</span></div>
-      <div class="ab-track"><div class="ab-fill" style="width:${t.pct}%;background:${t.color}"></div></div>
-    </div>`).join('');
+    target.replaceChildren();
+    TARGET_ALLOC.forEach(t=>{
+      const pct=Math.max(0,Math.min(100,safeNum(t.pct)));
+      const wrap=document.createElement('div'); wrap.className='alloc-bar';
+      const row=document.createElement('div'); row.className='ab-row';
+      const name=document.createElement('span'); name.className='ab-name'; name.textContent=String(t.name||'Target');
+      const p=document.createElement('span'); p.className='ab-pct'; p.textContent=pct+'%';
+      row.append(name,p);
+      const track=document.createElement('div'); track.className='ab-track';
+      const fill=document.createElement('div'); fill.className='ab-fill';
+      fill.style.width=pct+'%'; fill.style.background=String(t.color||'transparent');
+      track.appendChild(fill); wrap.append(row,track); target.appendChild(wrap);
+    });
   }
   // Draw donut
   const c=document.getElementById('alloc-canvas');
@@ -527,21 +542,24 @@ function renderMilestones(){
   });
   const next=MILESTONES.find(m=>nw<m.val);
   const nm=document.getElementById('next-milestone');
-  if(nm&&next){
-    const pct=Math.min(100,nw/next.val*100);
-    nm.innerHTML=`<div style="border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:16px">
-      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:6px">
-        <span>${next.name}</span><span>${fmt(nw)} / ${fmt(next.val)}</span>
-      </div>
-      <div style="height:6px;background:rgba(201,168,76,.08);border-radius:3px">
-        <div style="height:6px;width:${pct}%;background:rgba(201,168,76,.5);border-radius:3px;transition:width .3s"></div>
-      </div>
-      <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:8px">
-        ${fmt(next.val-nw)} remaining · ${pct.toFixed(1)}% of the way there
-      </div>
-    </div>`;
-  } else if(nm){
-    nm.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--gold);padding:16px 0">ALL MILESTONES REACHED — SOVEREIGN STATUS ACHIEVED</div>';
+  if(nm){
+    nm.replaceChildren();
+    if(next){
+      const pct=Math.max(0,Math.min(100,nw/Math.max(1,safeNum(next.val))*100));
+      const card=document.createElement('div'); card.style.cssText='border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:16px';
+      const head=document.createElement('div'); head.style.cssText='display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:6px';
+      const n=document.createElement('span'); n.textContent=String(next.name||'Next milestone');
+      const amount=document.createElement('span'); amount.textContent=fmt(nw)+' / '+fmt(safeNum(next.val));
+      head.append(n,amount);
+      const track=document.createElement('div'); track.style.cssText='height:6px;background:rgba(201,168,76,.08);border-radius:3px';
+      const fill=document.createElement('div'); fill.style.cssText='height:6px;width:'+pct+'%;background:rgba(201,168,76,.5);border-radius:3px;transition:width .3s';
+      track.appendChild(fill);
+      const remain=document.createElement('div'); remain.style.cssText='font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:8px';
+      remain.textContent=fmt(Math.max(0,safeNum(next.val)-nw))+' remaining · '+pct.toFixed(1)+'% of the way there';
+      card.append(head,track,remain); nm.appendChild(card);
+    }else{
+      const done=document.createElement('div'); done.style.cssText='font-family:var(--M);font-size:12px;color:var(--gold);padding:16px 0'; done.textContent='ALL MILESTONES REACHED — SOVEREIGN STATUS ACHIEVED'; nm.appendChild(done);
+    }
   }
 }
 

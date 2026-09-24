@@ -210,12 +210,43 @@ let _goalFilter = 'all';
 
 /* ── STORAGE ─────────────────────────────────────────────────────────── */
 
+function normalizeScore(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(0, Math.min(10, Math.round(n))) : fallback;
+}
+
+function normalizeGoal(goal) {
+  if (!goal || typeof goal !== 'object') return null;
+  const text = typeof goal.text === 'string' ? goal.text.slice(0,80) : '';
+  if (!text) return null;
+  return {text, done: goal.done === true, ts: Number.isFinite(Number(goal.ts)) ? Number(goal.ts) : Date.now()};
+}
+
 function load() {
-  try { _areas    = JSON.parse(localStorage.getItem(AREAS_KEY)) || {}; } catch { _areas = {}; }
-  try { _manifest = JSON.parse(localStorage.getItem(MF_KEY))    || {mission:'',values:[],affirmations:[]}; } catch {}
+  try { _areas = JSON.parse(localStorage.getItem(AREAS_KEY)) || {}; } catch { _areas = {}; }
+  try { _manifest = JSON.parse(localStorage.getItem(MF_KEY)) || {mission:'',values:[],affirmations:[]}; } catch { _manifest = {mission:'',values:[],affirmations:[]}; }
+  if (!_areas || typeof _areas !== 'object' || Array.isArray(_areas)) _areas = {};
+  if (!_manifest || typeof _manifest !== 'object' || Array.isArray(_manifest)) _manifest = {mission:'',values:[],affirmations:[]};
+
   AREAS.forEach(a => {
-    if (!_areas[a.id]) _areas[a.id] = {score:5, target:8, goals:[]};
+    const raw = _areas[a.id];
+    const goals = raw && Array.isArray(raw.goals)
+      ? raw.goals.map(normalizeGoal).filter(Boolean).slice(0,200)
+      : [];
+    _areas[a.id] = {
+      score: normalizeScore(raw?.score, 5),
+      target: normalizeScore(raw?.target, 8),
+      goals
+    };
   });
+
+  _manifest.mission = typeof _manifest.mission === 'string' ? _manifest.mission.slice(0,5000) : '';
+  _manifest.values = Array.isArray(_manifest.values)
+    ? _manifest.values.filter(v => typeof v === 'string' && CORE_VALUES.includes(v)).slice(0,10)
+    : [];
+  _manifest.affirmations = Array.isArray(_manifest.affirmations)
+    ? _manifest.affirmations.filter(v => typeof v === 'string' && v.trim()).map(v => v.slice(0,160)).slice(0,200)
+    : [];
 }
 
 function saveAreas()    { localStorage.setItem(AREAS_KEY, JSON.stringify(_areas)); }
@@ -273,8 +304,10 @@ function goalRow(aid, g, i) {
 }
 
 window.setScore = (aid, key, val) => {
-  _areas[aid][key] = +val;
-  document.getElementById((key==='score'?'sv-':'tv-')+aid).textContent = val;
+  if (!_areas[aid] || (key !== 'score' && key !== 'target')) return;
+  const safe = normalizeScore(val, _areas[aid][key] ?? 0);
+  _areas[aid][key] = safe;
+  document.getElementById((key==='score'?'sv-':'tv-')+aid).textContent = String(safe);
   saveAreas();
   updateTopScore();
 };
@@ -295,8 +328,11 @@ window.delGoal = (aid, i) => {
 
 window.addGoal = (aid) => {
   const inp = document.getElementById('ai-'+aid);
-  const txt = inp.value.trim();
+  if (!_areas[aid] || !inp) return;
+  const txt = inp.value.trim().slice(0,80);
   if (!txt) return;
+  _areas[aid].goals = Array.isArray(_areas[aid].goals) ? _areas[aid].goals : [];
+  if (_areas[aid].goals.length >= 200) return;
   _areas[aid].goals.push({text:txt, done:false, ts:Date.now()});
   saveAreas();
   inp.value = '';
@@ -520,7 +556,7 @@ window.setFilter = f => { _goalFilter = f; renderAllGoals(); };
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
 function esc(t) {
-  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(t ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */

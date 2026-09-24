@@ -221,7 +221,7 @@ async function boot(){
   try{
     var{count}=await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
     var k=document.getElementById('kpi-hyp');if(k)k.textContent=count||'0';
-  }catch(e){}
+  }catch(e){var k=document.getElementById('kpi-hyp');if(k)k.textContent='—';console.warn('[Omega Research] hypothesis count unavailable:',e);}
   var d=document.getElementById('kpi-discoveries');if(d)d.textContent=DISCOVERY_SOURCE_CONNECTED?'0':'—';
   document.getElementById('btn-submit').addEventListener('click',async function(){
     var domain=document.getElementById('h-domain').value;

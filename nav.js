@@ -794,6 +794,14 @@
     }
   })();
 
+  /* Accessibility/performance guardrails: honor reduced motion and keep interactive targets usable. */
+  (function(){
+    if(document.getElementById('omega-a11y-nav-guard'))return;
+    var s=document.createElement('style');s.id='omega-a11y-nav-guard';
+    s.textContent='@media (prefers-reduced-motion:reduce){#omega-command-palette *,#omega-context-rail *,#omega-mobile-bar *{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}#omega-command-palette a[role="option"]{min-height:44px;box-sizing:border-box}#omega-context-rail a,#omega-context-rail button{min-height:32px}';
+    document.head.appendChild(s);
+  })();
+
   /* Top scan bar */
   if(!document.getElementById('omega-top')){
     var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);

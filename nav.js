@@ -660,12 +660,13 @@
     var list=document.createElement('div');
     list.setAttribute('role','listbox');
     list.style.cssText='padding:8px;overflow:auto;max-height:58vh';
+    var live=document.createElement('div');live.setAttribute('role','status');live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');live.style.cssText='position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0';live.textContent='Quick navigation ready';
 
     var foot=document.createElement('div');
     foot.style.cssText='padding:9px 14px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.42);font:10px "Courier Prime",monospace;letter-spacing:1px';
     foot.textContent='↑ ↓ NAVIGATE   ENTER OPEN   ESC CLOSE   ·   ⌘/CTRL K   ·   PINS/RECENTS LOCAL';
 
-    panel.appendChild(head);panel.appendChild(list);panel.appendChild(foot);wrap.appendChild(panel);document.body.appendChild(wrap);
+    panel.appendChild(head);panel.appendChild(list);panel.appendChild(live);panel.appendChild(foot);wrap.appendChild(panel);document.body.appendChild(wrap);
 
     var active=-1, filtered=[],restoreFocus=null;
     function close(){
@@ -693,7 +694,8 @@
       }).slice(0,80);
       if(active>=filtered.length) active=filtered.length-1;
       list.innerHTML='';
-      if(!filtered.length){
+      live.textContent=filtered.length ? (filtered.length+' navigation results available') : 'No navigation matches';
+       if(!filtered.length){
         var empty=document.createElement('div');
         empty.textContent='NO MATCHES';
         empty.style.cssText='padding:28px;text-align:center;color:rgba(255,255,255,.42);font:12px "Courier Prime",monospace;letter-spacing:2px';

@@ -124,9 +124,14 @@
   });
 
   /* ── SESSION END ──────────────────────────────────────────────── */
-  window.addEventListener('beforeunload',function(){
+  var sessionEnded=false;
+  function endSession(){
+    if(sessionEnded)return;
+    sessionEnded=true;
     track('session_end',{duration_s:Math.round((Date.now()-performance.timing.navigationStart)/1000)});
-  });
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')endSession();});
+  window.addEventListener('pagehide',endSession);
 
   /* ── PUBLIC API ───────────────────────────────────────────────── */
   window.OmegaTelemetry = {

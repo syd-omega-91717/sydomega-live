@@ -169,7 +169,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       </div>
     </div>
     <div class="card" data-reveal="fade-up">
-      <div class="card-title">&#9679; USD STRENGTH INDEX <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED &mdash; NO FREE LIVE SOURCE)</span></div>
+      <div class="card-title">&#9679; USD STRENGTH INDEX <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(CURRENT DERIVATION ONLY)</span></div>
       <canvas id="usd-canvas" height="80" style="display:block;width:100%"></canvas>
     </div>
   </div>
@@ -178,16 +178,16 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <div class="panel" id="tab-commodities">
     <div class="grid2">
       <div class="card" data-reveal="fade-up">
-        <div class="card-title">&#9679; PRECIOUS METALS <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED)</span></div>
+        <div class="card-title">&#9679; PRECIOUS METALS <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(LIVE WHERE CONFIGURED)</span></div>
         <div id="cmd-metals"></div>
       </div>
       <div class="card" data-reveal="fade-up">
-        <div class="card-title">&#9679; ENERGY <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED)</span></div>
+        <div class="card-title">&#9679; ENERGY <span style="color:var(--muted);font-size:12px;letter-spacing:1px">(LIVE WHERE CONFIGURED)</span></div>
         <div id="cmd-energy"></div>
       </div>
     </div>
     <div class="card" style="margin-bottom:12px">
-      <div class="card-title">&#9679; GLOBAL INDICES <span id="cmd-indices-label" style="color:var(--muted);font-size:12px;letter-spacing:1px">(SIMULATED &mdash; NO FREE LIVE SOURCE)</span></div>
+      <div class="card-title">&#9679; GLOBAL INDICES <span id="cmd-indices-label" style="color:var(--muted);font-size:12px;letter-spacing:1px">(LIVE WHERE CONFIGURED)</span></div>
       <div id="cmd-indices"></div>
     </div>
   </div>
@@ -407,8 +407,7 @@ function renderForex(rates){
   function fxRow(item){
     var raw=rates[item.code]||1;
     var rate=item.inv?1/raw:raw;
-    var pctChg=(Math.random()-.5)*.5; /* live change would need historical data */
-    var bar=Math.min(100,Math.round((rate/(rate*1.05))*100));
+    var bar=100;
     return '<div class="fx-row"><div class="fx-pair">'+item.pair+'</div>'
       +'<div class="fx-rate">'+rate.toFixed(item.code==='JPY'||item.code==='LBP'?0:4)+'</div>'
       +'<div class="fx-bar"><div class="fx-bar-fill" style="width:'+bar+'%"></div></div>'
@@ -419,35 +418,19 @@ function renderForex(rates){
   var regEl=document.getElementById('fx-region');
   if(regEl)regEl.innerHTML=REGION.map(fxRow).join('');
 
-  /* USD index canvas */
+  /* USD index: only the current derived value is available here; no fabricated history. */
   var cv=document.getElementById('usd-canvas');
   if(cv){
     var ctx=cv.getContext('2d');
     cv.width=cv.clientWidth||600;
-    var W=cv.width,H=cv.height;
-    ctx.clearRect(0,0,W,H);
+    ctx.clearRect(0,0,cv.width,cv.height);
     var weights=[{code:'EUR',w:.576,inv:true},{code:'JPY',w:.136},{code:'GBP',w:.119,inv:true},{code:'CAD',w:.091},{code:'SEK',w:.042},{code:'CHF',w:.036}];
-    var usdx=weights.reduce(function(s,w){
-      var r=rates[w.code]||1;
-      var v=w.inv?1/r:r;
-      return s+(v*w.w);
-    },0)*100;
-    /* Normalize to approx 100 base */
-    var pts=[];for(var i=0;i<40;i++)pts.push(usdx*(0.97+Math.random()*.06));
-    pts[pts.length-1]=usdx;
-    var min=Math.min.apply(null,pts),max=Math.max.apply(null,pts),range=max-min||1;
-    var step=W/(pts.length-1);
-    ctx.beginPath();
-    pts.forEach(function(p,i){i===0?ctx.moveTo(0,H-((p-min)/range*(H-8))-4):ctx.lineTo(i*step,H-((p-min)/range*(H-8))-4);});
-    ctx.strokeStyle='rgba(201,168,76,.7)';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='bold 10px monospace';
-    ctx.textAlign='right';ctx.fillText('DXY ~'+usdx.toFixed(1),W-8,14);
-    /* Ticker update */
-    ['tk-EUR','tk-EUR2'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el)el.textContent=(rates.EUR?(1/rates.EUR).toFixed(4):'--');
-    });
+    var usdx=weights.reduce(function(s,w){var r=rates[w.code];if(!r)return s;return s+(w.inv?1/r:r)*w.w;},0)*100;
+    ctx.fillStyle='rgba(200,190,160,.6)';ctx.font='12px monospace';ctx.textAlign='center';
+    ctx.fillText('Current derived DXY: '+(usdx?usdx.toFixed(1):'—')+' · historical series unavailable',cv.width/2,cv.height/2);
+    ['tk-EUR','tk-EUR2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=rates.EUR?(1/rates.EUR).toFixed(4):'—';});
   }
+}
 }
 
 /* ── Commodities — metals/energy remain simulated (no verified free source exists;

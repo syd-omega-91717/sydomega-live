@@ -96,7 +96,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
 <div class="shell">
 <aside class="side" id="omega-side" data-page="ops"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">OPS<small>SOVEREIGN SRE COMMAND &middot; SYD OMEGA 91717</small></div><div class="status-dot" id="sys-dot" style="margin-left:auto"></div><span id="sys-status" style="font-size:12px;letter-spacing:1.5px;color:var(--green);margin-left:4px">NOMINAL</span><span id="uptime-label" style="font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-left:8px">UPTIME: <span id="uptime-val">—</span></span></div>
+  <div class="topbar"><div class="t">OPS<small>SOVEREIGN SRE COMMAND &middot; SYD OMEGA 91717</small></div><div class="status-dot" id="sys-dot" style="margin-left:auto"></div><span id="sys-status" style="font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-left:4px">WAITING FOR TELEMETRY</span><span id="uptime-label" style="font-size:12px;letter-spacing:1.5px;color:var(--dim);margin-left:8px">SESSION AGE: <span id="uptime-val">—</span></span></div>
   <div style="padding:20px var(--pad,20px)">
 
   <!-- Top KPIs -->
@@ -395,16 +395,16 @@ function drawLatencyChart(){
 
 /* ── Probe list ── */
 var probes=[
-  {service:'auth',status:'ok',lat:0,ts:'—'},
-  {service:'event-bus',status:'ok',lat:0,ts:'—'},
-  {service:'database',status:'ok',lat:0,ts:'—'},
-  {service:'realtime',status:'ok',lat:0,ts:'—'},
-  {service:'storage',status:'ok',lat:0,ts:'—'},
+  {service:'auth',status:'unknown',lat:0,ts:'—'},
+  {service:'event-bus',status:'unknown',lat:0,ts:'—'},
+  {service:'database',status:'unknown',lat:0,ts:'—'},
+  {service:'realtime',status:'unknown',lat:0,ts:'—'},
+  {service:'storage',status:'unknown',lat:0,ts:'—'},
 ];
 function renderProbes(){
   var el=document.getElementById('probe-list');if(!el)return;
   el.innerHTML=probes.map(function(p){
-    var col=p.status==='ok'?'var(--green)':p.status==='warn'?'var(--amber)':'var(--red)';
+    var col=p.status==='ok'?'var(--green)':p.status==='warn'?'var(--amber)':p.status==='unknown'?'var(--dim)':'var(--red)';
     return '<div class="probe-item">'
       +'<div class="probe-dot" style="background:'+col+';box-shadow:0 0 5px '+col+'"></div>'
       +'<div class="probe-service">'+p.service.toUpperCase()+'</div>'

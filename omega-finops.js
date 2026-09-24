@@ -144,7 +144,9 @@
     if(summary.total_usd>0.001&&window.OmegaTelemetry&&window.OmegaTelemetry.track){
       window.OmegaTelemetry.track('session_cost',summary);
     }
-  });
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')reportSessionCost();});
+  window.addEventListener('pagehide',reportSessionCost);
 
   window.OmegaFinOps={
     record:record,

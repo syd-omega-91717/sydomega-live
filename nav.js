@@ -571,6 +571,130 @@
     document.dispatchEvent(new CustomEvent('omega-theme-update', { detail: detail }));
   });
 
+  /* ── UNIVERSAL COMMAND PALETTE ───────────────────────────────────────
+     Inspired by the command-first navigation used by Vercel and modern
+     operator dashboards: one keyboard shortcut exposes the whole platform
+     without forcing visitors to learn the sidebar hierarchy.
+     Ctrl/Cmd+K opens it; Escape closes it; arrows move; Enter opens. */
+  (function(){
+    if(document.getElementById('omega-command-palette')) return;
+
+    var all=[];
+    for(var si=0;si<SECTIONS.length;si++){
+      var sec=SECTIONS[si];
+      all.push({key:sec.key,label:sec.label,href:sec.href,section:sec.label,icon:sec.icon,col:sec.col});
+      for(var sj=0;sj<sec.sub.length;sj++){
+        var item=sec.sub[sj];
+        all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
+      }
+    }
+    var seen={};
+    all=all.filter(function(x){
+      if(seen[x.href]) return false;
+      seen[x.href]=true;
+      return true;
+    });
+
+    var wrap=document.createElement('div');
+    wrap.id='omega-command-palette';
+    wrap.setAttribute('aria-hidden','true');
+    wrap.style.cssText='display:none;position:fixed;inset:0;z-index:2147483000;background:rgba(2,2,6,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:flex-start;justify-content:center;padding:11vh 18px 24px;box-sizing:border-box';
+
+    var panel=document.createElement('div');
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-modal','true');
+    panel.setAttribute('aria-label','Omega quick navigation');
+    panel.style.cssText='width:min(720px,100%);max-height:min(72vh,680px);overflow:hidden;background:#0A0A0F;border:1px solid rgba(201,168,76,.28);box-shadow:0 30px 100px rgba(0,0,0,.65),0 0 40px rgba(0,229,255,.08);border-radius:16px';
+
+    var head=document.createElement('div');
+    head.style.cssText='display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)';
+    var glyph=document.createElement('span');
+    glyph.textContent='Ω';
+    glyph.style.cssText='font:700 22px Cinzel Decorative,serif;color:#C9A84C;min-width:26px;text-align:center';
+    var input=document.createElement('input');
+    input.type='search';
+    input.autocomplete='off';
+    input.spellcheck=false;
+    input.placeholder='Search pages, hubs, tools…';
+    input.setAttribute('aria-label','Search pages and hubs');
+    input.style.cssText='flex:1;min-width:0;background:transparent;border:0;outline:0;color:#E8C97A;font:16px "Courier Prime",monospace;letter-spacing:.3px';
+    var esc=document.createElement('kbd');
+    esc.textContent='ESC';
+    esc.style.cssText='padding:4px 7px;border:1px solid rgba(255,255,255,.14);border-radius:5px;color:rgba(232,201,122,.65);font:10px "Courier Prime",monospace';
+    head.appendChild(glyph);head.appendChild(input);head.appendChild(esc);
+
+    var list=document.createElement('div');
+    list.setAttribute('role','listbox');
+    list.style.cssText='padding:8px;overflow:auto;max-height:58vh';
+
+    var foot=document.createElement('div');
+    foot.style.cssText='padding:9px 14px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.42);font:10px "Courier Prime",monospace;letter-spacing:1px';
+    foot.textContent='↑ ↓ NAVIGATE   ENTER OPEN   ESC CLOSE   ·   ⌘/CTRL K';
+
+    panel.appendChild(head);panel.appendChild(list);panel.appendChild(foot);wrap.appendChild(panel);document.body.appendChild(wrap);
+
+    var active=-1, filtered=[];
+    function close(){
+      wrap.style.display='none';wrap.setAttribute('aria-hidden','true');active=-1;input.value='';
+      document.body.style.overflow='';
+    }
+    function open(){
+      wrap.style.display='flex';wrap.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+      render('');setTimeout(function(){input.focus();},0);
+    }
+    function render(q){
+      var needle=String(q||'').trim().toLowerCase();
+      filtered=all.filter(function(x){
+        return !needle || (x.label+' '+x.section+' '+x.href).toLowerCase().indexOf(needle)>=0;
+      }).slice(0,80);
+      if(active>=filtered.length) active=filtered.length-1;
+      list.innerHTML='';
+      if(!filtered.length){
+        var empty=document.createElement('div');
+        empty.textContent='NO MATCHES';
+        empty.style.cssText='padding:28px;text-align:center;color:rgba(255,255,255,.42);font:12px "Courier Prime",monospace;letter-spacing:2px';
+        list.appendChild(empty);return;
+      }
+      filtered.forEach(function(x,i){
+        var row=document.createElement('a');
+        row.href=x.href;
+        row.setAttribute('role','option');
+        row.setAttribute('aria-selected',String(i===active));
+        row.style.cssText='display:flex;align-items:center;gap:12px;padding:11px 12px;margin:2px 0;border-radius:9px;color:#E8E8EE;text-decoration:none;cursor:pointer;background:'+(i===active?'rgba(201,168,76,.12)':'transparent');
+        var ico=document.createElement('span');
+        ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:17px';
+        var body=document.createElement('span');body.style.cssText='min-width:0;flex:1';
+        var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 13px Rajdhani,sans-serif;letter-spacing:.8px';
+        var meta=document.createElement('span');meta.textContent=x.section+' · '+x.href;meta.style.cssText='display:block;margin-top:2px;color:rgba(255,255,255,.4);font:10px "Courier Prime",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+        body.appendChild(name);body.appendChild(meta);row.appendChild(ico);row.appendChild(body);list.appendChild(row);
+        row.addEventListener('mouseenter',function(){active=i;render(input.value);});
+      });
+    }
+    function move(delta){
+      if(!filtered.length)return;
+      active=(active+delta+filtered.length)%filtered.length;
+      render(input.value);
+      var opt=list.children[active];if(opt&&opt.scrollIntoView)opt.scrollIntoView({block:'nearest'});
+    }
+    function choose(){
+      if(filtered[active]) location.href=filtered[active].href;
+      else if(filtered[0]) location.href=filtered[0].href;
+    }
+    input.addEventListener('input',function(){active=0;render(input.value);});
+    input.addEventListener('keydown',function(e){
+      if(e.key==='ArrowDown'){e.preventDefault();move(1);}
+      else if(e.key==='ArrowUp'){e.preventDefault();move(-1);}
+      else if(e.key==='Enter'){e.preventDefault();choose();}
+      else if(e.key==='Escape'){e.preventDefault();close();}
+    });
+    wrap.addEventListener('click',function(e){if(e.target===wrap)close();});
+    document.addEventListener('keydown',function(e){
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open();}
+      if(e.key==='Escape'&&wrap.style.display!=='none')close();
+    });
+    window.OmegaCommandPalette={open:open,close:close,search:render};
+  })();
+
   /* Top scan bar */
   if(!document.getElementById('omega-top')){
     var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);

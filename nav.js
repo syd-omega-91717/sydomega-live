@@ -516,6 +516,7 @@
     drawer.appendChild(dsgrid);document.body.appendChild(drawer);
 
     document.getElementById('drawer-close').addEventListener('click',function(){closeDrawer();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'){var d=document.getElementById('omega-drawer');if(d&&d.classList.contains('drawer-open'))closeDrawer();}});
     drawer.addEventListener('click',function(e){if(e.target===drawer) closeDrawer();});
 
     function toggleDrawer(){
@@ -558,6 +559,26 @@
       list=list.filter(function(x){return x&&x.href&&x.href!==now;}).slice(0,7);
       list.unshift({href:now,label:label});
       localStorage.setItem(key,JSON.stringify(list.slice(0,8)));
+    }catch(e){}
+  })();
+
+  /* ── UNIVERSAL KEYBOARD ACCESS ─────────────────────────────────────
+     Every nav-managed page gets one deterministic skip target. Existing page
+     accessibility modules remain authoritative when already present. */
+  (function(){
+    try{
+      var main=document.querySelector('main')||document.querySelector('[role="main"]')||document.querySelector('.main')||document.getElementById('app');
+      if(!main)return;
+      if(!main.id)main.id='omega-main-content';
+      if(!document.querySelector('.skip-link,#omega-skip')){
+        var skip=document.createElement('a');
+        skip.className='skip-link';skip.id='omega-skip';skip.href='#'+main.id;
+        skip.textContent='SKIP TO CONTENT';
+        skip.style.cssText='position:fixed;left:8px;top:-60px;z-index:2147483647;padding:10px 14px;background:#C9A84C;color:#020206;text-decoration:none;font:700 12px "Courier Prime",monospace;letter-spacing:1px;border-radius:5px;transition:top .12s ease';
+        skip.addEventListener('focus',function(){skip.style.top='8px';});
+        skip.addEventListener('blur',function(){skip.style.top='-60px';});
+        document.body.insertBefore(skip,document.body.firstChild);
+      }
     }catch(e){}
   })();
 
@@ -646,12 +667,14 @@
 
     panel.appendChild(head);panel.appendChild(list);panel.appendChild(foot);wrap.appendChild(panel);document.body.appendChild(wrap);
 
-    var active=-1, filtered=[];
+    var active=-1, filtered=[],restoreFocus=null;
     function close(){
       wrap.style.display='none';wrap.setAttribute('aria-hidden','true');active=-1;input.value='';
       document.body.style.overflow='';
+      if(restoreFocus&&typeof restoreFocus.focus==='function'){try{restoreFocus.focus();}catch(e){}}restoreFocus=null;
     }
     function open(){
+      restoreFocus=document.activeElement;
       wrap.style.display='flex';wrap.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
       render('');setTimeout(function(){input.focus();},0);
     }
@@ -702,6 +725,15 @@
       else if(filtered[0]) location.href=filtered[0].href;
     }
     input.addEventListener('input',function(){active=0;render(input.value);});
+    panel.addEventListener('keydown',function(e){
+      if(e.key!=='Tab')return;
+      var focusables=panel.querySelectorAll('input,button,a[href],[tabindex]:not([tabindex="-1"])');
+      if(!focusables.length){e.preventDefault();return;}
+      var first=focusables[0],last=focusables[focusables.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    });
+
     input.addEventListener('keydown',function(e){
       if(e.key==='ArrowDown'){e.preventDefault();move(1);}
       else if(e.key==='ArrowUp'){e.preventDefault();move(-1);}
@@ -737,9 +769,9 @@
     }
 
     var rail=document.createElement('nav');rail.id='omega-context-rail';rail.className='omega-context-rail';rail.setAttribute('aria-label','Current location');
-    var parent=document.createElement('a');parent.href=sec.href;parent.textContent=sec.label;
+    var parent=document.createElement('a');parent.href=sec.href;parent.textContent=sec.label;parent.setAttribute('aria-label','Open '+sec.label+' hub');
     var sep=document.createElement('span');sep.className='omega-context-sep';sep.textContent='›';
-    var here=document.createElement('span');here.className='omega-context-current';here.textContent=current[1];
+    var here=document.createElement('span');here.className='omega-context-current';here.textContent=current[1];here.setAttribute('aria-current','page');
     var actions=document.createElement('span');actions.className='omega-context-actions';
     var back=document.createElement('a');back.className='omega-context-btn';back.href=sec.href;back.textContent='HUB';back.setAttribute('aria-label','Open '+sec.label+' hub');
     var fav=document.createElement('button');fav.type='button';fav.className='omega-context-btn';fav.innerHTML='<span class="omega-context-fav-label">PIN </span>☆';fav.setAttribute('aria-pressed','false');fav.setAttribute('aria-label','Pin this page on this device');

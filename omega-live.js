@@ -35,9 +35,34 @@
       var format = el.dataset.liveFormat||'';
       var refresh = parseInt(el.dataset.liveRefresh||'0');
       fetchLive(el, spec, format);
-      if(refresh>0) setInterval(function(){ fetchLive(el,spec,format); }, refresh*1000);
+      if(refresh>0) el.__omegaLiveRefreshId = setInterval(function(){
+        if(document.visibilityState==='visible') fetchLive(el,spec,format);
+      }, refresh*1000);
     });
   }
+
+  function stopLiveRefreshTimers(){
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      if(el.__omegaLiveRefreshId){ clearInterval(el.__omegaLiveRefreshId); el.__omegaLiveRefreshId=null; }
+    });
+  }
+
+  function resumeLiveRefreshTimers(){
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      if(el.__omegaLiveRefreshId) return;
+      var refresh=parseInt(el.dataset.liveRefresh||'0');
+      if(refresh>0) el.__omegaLiveRefreshId=setInterval(function(){
+        if(document.visibilityState==='visible') fetchLive(el,el.dataset.live,el.dataset.liveFormat||'');
+      },refresh*1000);
+    });
+  }
+
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden') stopLiveRefreshTimers();
+    else resumeLiveRefreshTimers();
+  });
+  window.addEventListener('pagehide',stopLiveRefreshTimers);
+  window.addEventListener('pageshow',resumeLiveRefreshTimers);
 
   function fetchLive(el, spec, format){
     if(!window.__omegaSb||!_uid) return;
@@ -175,7 +200,13 @@
                 +'&#9670; '+esc(String(item.title||'').slice(0,60))+'</span>';
             });
           }
-          next();setInterval(next,4000);
+          var timerId=null;
+          function stop(){if(timerId){clearInterval(timerId);timerId=null;}}
+          function start(){if(timerId||document.visibilityState!=='visible')return;timerId=setInterval(next,4000);}
+          next();start();
+          document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')stop();else start();});
+          window.addEventListener('pagehide',stop);
+          window.addEventListener('pageshow',start);
         });
       }).catch(function(){ tickers.forEach(function(ticker){ ticker.textContent='—'; }); });
   }

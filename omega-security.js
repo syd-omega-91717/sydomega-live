@@ -47,6 +47,16 @@
     }
   });
 
+  function cryptoRandomId(){
+    try{
+      const bytes=new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){
+      return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+    }
+  }
+
   // Secure local storage with prefix
   const securePrefix = 'secure_' + new Date().getFullYear();
   window.OmegaSecureStorage = {
@@ -55,7 +65,7 @@
         localStorage.setItem(`${securePrefix}:${key}`, JSON.stringify({
           value,
           timestamp: Date.now(),
-          nonce: Math.random().toString(36).substring(7)
+          nonce: cryptoRandomId()
         }));
       } catch(e) {}
     },
@@ -78,7 +88,7 @@
   window.OmegaRequestSigner = {
     sign: (method, path, body = '') => {
       const timestamp = Math.floor(Date.now() / 1000);
-      const nonce = Math.random().toString(36).substring(7);
+      const nonce = cryptoRandomId();
       const message = `${method}${path}${body}${timestamp}${nonce}`;
       return {timestamp, nonce, message};
     }

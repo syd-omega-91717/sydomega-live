@@ -43,7 +43,7 @@
   });
   window.addEventListener('blur',stopSync);
   window.addEventListener('focus',startSync);
-  window.addEventListener('beforeunload',function(){syncPresence(false);});
+  /* Presence already stops on visibility changes; avoid beforeunload so pages remain bfcache-friendly. */
 
   /* Start after omega-user populates */
   document.addEventListener('omega:populated',function(){

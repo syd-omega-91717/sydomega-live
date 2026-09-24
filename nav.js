@@ -695,6 +695,52 @@
     window.OmegaCommandPalette={open:open,close:close,search:render};
   })();
 
+  /* ── CONTEXT RAIL + MOBILE COMMAND BAR ───────────────────────────────
+     Progressive disclosure keeps the complete navigation available while
+     surfacing current location, parent hub, and a few high-value actions.
+     Device-local pins are preferences only; they are never server truth. */
+  (function(){
+    var sec=null,current=null;
+    for(var i=0;i<SECTIONS.length;i++){if(SECTIONS[i].key===currentAxis){sec=SECTIONS[i];break;}}
+    if(!sec)sec=SECTIONS[0];
+    for(var j=0;j<sec.sub.length;j++){
+      var h=sec.sub[j][2], base=h.split('#')[0];
+      if(h===location.pathname||base===location.pathname){current=sec.sub[j];break;}
+    }
+    if(!current)current=[dp,(dp||'CURRENT').replace(/[-_]/g,' ').toUpperCase(),location.pathname];
+
+    if(!document.getElementById('omega-context-rail')){
+      var style=document.createElement('style');style.id='omega-context-rail';
+      style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:11px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:10px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:10px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:17px;line-height:16px}.omega-mobile-label{font-size:9px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:10px}}';
+      document.head.appendChild(style);
+    }
+
+    var rail=document.createElement('nav');rail.id='omega-context-rail';rail.className='omega-context-rail';rail.setAttribute('aria-label','Current location');
+    var parent=document.createElement('a');parent.href=sec.href;parent.textContent=sec.label;
+    var sep=document.createElement('span');sep.className='omega-context-sep';sep.textContent='›';
+    var here=document.createElement('span');here.className='omega-context-current';here.textContent=current[1];
+    var actions=document.createElement('span');actions.className='omega-context-actions';
+    var back=document.createElement('a');back.className='omega-context-btn';back.href=sec.href;back.textContent='HUB';back.setAttribute('aria-label','Open '+sec.label+' hub');
+    var fav=document.createElement('button');fav.type='button';fav.className='omega-context-btn';fav.innerHTML='<span class="omega-context-fav-label">PIN </span>☆';fav.setAttribute('aria-pressed','false');fav.setAttribute('aria-label','Pin this page on this device');
+    actions.appendChild(back);actions.appendChild(fav);rail.appendChild(parent);rail.appendChild(sep);rail.appendChild(here);rail.appendChild(actions);
+    var target=document.querySelector('main')||document.querySelector('.main')||document.querySelector('[role="main"]');
+    if(target&&target.parentNode)target.parentNode.insertBefore(rail,target);else document.body.insertBefore(rail,document.body.firstChild);
+
+    var pinKey='omega:pinned:'+location.pathname;
+    try{
+      var pinned=window.localStorage.getItem(pinKey)==='1';
+      fav.setAttribute('aria-pressed',String(pinned));fav.lastChild.textContent=pinned?'★':'☆';fav.title=pinned?'Unpin on this device':'Pin on this device';
+      fav.addEventListener('click',function(){var next=fav.getAttribute('aria-pressed')!=='true';fav.setAttribute('aria-pressed',String(next));fav.lastChild.textContent=next?'★':'☆';fav.title=next?'Unpin on this device':'Pin on this device';try{window.localStorage.setItem(pinKey,next?'1':'0');}catch(e){}});
+    }catch(e){fav.disabled=true;fav.title='Device pinning unavailable';}
+
+    if(!document.getElementById('omega-mobile-bar')){
+      var mb=document.createElement('nav');mb.id='omega-mobile-bar';mb.className='omega-mobile-bar';mb.setAttribute('aria-label','Mobile navigation');
+      var mobileItems=[[sec.href,sec.icon||'Ω',sec.label],[ '/dashboard.html','⌘','COMMAND'],['/search.html','⌕','SEARCH'],['/chatbot.html','✦','AI']];
+      mobileItems.forEach(function(it){var a=document.createElement('a');a.href=it[0];a.innerHTML='<span class="omega-mobile-glyph">'+it[1]+'</span><span class="omega-mobile-label">'+it[2]+'</span>';if(it[0].split('#')[0]===location.pathname)a.setAttribute('aria-current','page');mb.appendChild(a);});
+      var more=document.createElement('button');more.type='button';more.innerHTML='<span class="omega-mobile-glyph">Ω</span><span class="omega-mobile-label">MORE</span>';more.addEventListener('click',function(){if(window.OmegaCommandPalette)window.OmegaCommandPalette.open();});mb.appendChild(more);document.body.appendChild(mb);
+    }
+  })();
+
   /* Top scan bar */
   if(!document.getElementById('omega-top')){
     var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);

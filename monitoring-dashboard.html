@@ -325,7 +325,7 @@
         </div>
 
         <div class="controls">
-          <span style="color: var(--muted); font-size: 12px;">Live monitoring active</span>
+          <span id="monitor-status" style="color: var(--muted); font-size: 12px;">Collecting browser metrics…</span>
           <div class="controls-right">
             <button class="refresh-button" onclick="refreshDashboard()">↻ Refresh Now</button>
           </div>
@@ -335,49 +335,49 @@
         <div class="metrics-grid" data-stagger data-stagger-gap="60">
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Largest Contentful Paint (LCP)</div>
-            <div class="metric-value" id="lcp-value">2.4s</div>
+            <div class="metric-value" id="lcp-value">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Good</span> - Under 2.5s target
+              <span id="lcp-state" class="status-warning">Awaiting measurement</span>
             </div>
           </div>
 
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Cumulative Layout Shift (CLS)</div>
-            <div class="metric-value" id="cls-value">0.08</div>
+            <div class="metric-value" id="cls-value">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Good</span> - Under 0.1 target
+              <span id="cls-state" class="status-warning">Awaiting measurement</span>
             </div>
           </div>
 
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">First Input Delay (FID)</div>
-            <div class="metric-value" id="fid-value">45ms</div>
+            <div class="metric-value" id="fid-value">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Good</span> - Under 100ms target
+              <span id="fid-state" class="status-warning">Awaiting measurement</span>
             </div>
           </div>
 
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Time to First Byte (TTFB)</div>
-            <div class="metric-value" id="ttfb-value">180ms</div>
+            <div class="metric-value" id="ttfb-value">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Excellent</span> - Server response time
+              <span id="ttfb-state" class="status-warning">Awaiting measurement</span>
             </div>
           </div>
 
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Page Load Time</div>
-            <div class="metric-value" id="page-load-value">3.2s</div>
+            <div class="metric-value" id="page-load-value">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Good</span> - Full page rendered
+              <span id="page-load-state" class="status-warning">Awaiting measurement</span>
             </div>
           </div>
 
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">API Success Rate</div>
-            <div class="metric-value" id="success-rate">98.5%</div>
+            <div class="metric-value" id="success-rate">—</div>
             <div class="metric-detail">
-              <span class="status-good">✓ Excellent</span> - Resilience working
+              <span id="success-state" class="status-warning">Not measured on this page</span>
             </div>
           </div>
         </div>
@@ -385,7 +385,7 @@
         <!-- API Performance Chart -->
         <div class="chart-container">
           <div class="chart-title">API Response Times (Last 10 Calls)</div>
-          <div class="bar-chart" id="api-chart">
+          <div class="bar-chart" id="api-chart"><div style="width:100%;text-align:center;color:var(--muted);padding-top:70px;">No API timing series is instrumented on this page.</div></div><!--
             <div class="bar" style="height: 65%;">
               <div class="bar-value">145ms</div>
               <div class="bar-label">#1</div>
@@ -442,33 +442,33 @@
           </div>
           <div class="table-row">
             <div class="endpoint-name">/rest/v1/profiles</div>
-            <div class="duration">142ms</div>
-            <div><span class="status-badge status-200">200</span></div>
-            <div style="font-size: 12px; color: var(--muted);">2s ago</div>
+            <div class="duration">—</div>
+            <div><span class="status-badge status-400">UNAVAILABLE</span></div>
+            <div style="font-size: 12px; color: var(--muted);">No runtime series</div>
           </div>
           <div class="table-row">
             <div class="endpoint-name">/rest/v1/activities</div>
-            <div class="duration">98ms</div>
-            <div><span class="status-badge status-200">200</span></div>
-            <div style="font-size: 12px; color: var(--muted);">5s ago</div>
+            <div class="duration">—</div>
+            <div><span class="status-badge status-400">UNAVAILABLE</span></div>
+            <div style="font-size: 12px; color: var(--muted);">No runtime series</div>
           </div>
           <div class="table-row">
             <div class="endpoint-name">/functions/v1/concierge</div>
-            <div class="duration">156ms</div>
-            <div><span class="status-badge status-200">200</span></div>
-            <div style="font-size: 12px; color: var(--muted);">12s ago</div>
+            <div class="duration">—</div>
+            <div><span class="status-badge status-400">UNAVAILABLE</span></div>
+            <div style="font-size: 12px; color: var(--muted);">No runtime series</div>
           </div>
           <div class="table-row">
             <div class="endpoint-name">/rest/v1/content</div>
-            <div class="duration">87ms</div>
-            <div><span class="status-badge status-200">200</span></div>
-            <div style="font-size: 12px; color: var(--muted);">18s ago</div>
+            <div class="duration">—</div>
+            <div><span class="status-badge status-400">UNAVAILABLE</span></div>
+            <div style="font-size: 12px; color: var(--muted);">No runtime series</div>
           </div>
           <div class="table-row">
             <div class="endpoint-name">/storage/v1/object</div>
-            <div class="duration">205ms</div>
-            <div><span class="status-badge status-200">200</span></div>
-            <div style="font-size: 12px; color: var(--muted);">24s ago</div>
+            <div class="duration">—</div>
+            <div><span class="status-badge status-400">UNAVAILABLE</span></div>
+            <div style="font-size: 12px; color: var(--muted);">No runtime series</div>
           </div>
         </div>
 
@@ -477,13 +477,13 @@
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Cache Hit Rate</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 68%;"><span class="gauge-val">68%</span></div>
+              <div class="gauge-circle" style="--gauge-percent: 0%;"><span class="gauge-val">—</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
-                  <strong style="color: var(--gold);">68% improved</strong> over baseline
+                  <strong style="color: var(--gold);">—</strong> No runtime cache series
                 </div>
                 <div style="font-size: 12px; color: var(--muted);">
-                  Cache optimizer reducing database load
+                  No cache telemetry is exposed to this page.
                 </div>
               </div>
             </div>
@@ -492,13 +492,13 @@
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Error Rate</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 1.5%;"><span class="gauge-val">1.5%</span></div>
+              <div class="gauge-circle" style="--gauge-percent: 0%;"><span class="gauge-val">—</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
-                  <strong style="color: var(--gold);">99.5% success</strong> with resilience
+                  <strong style="color: var(--gold);">—</strong> No runtime error series
                 </div>
                 <div style="font-size: 12px; color: var(--muted);">
-                  Retry logic and circuit breaker active
+                  No runtime resilience telemetry is exposed to this page.
                 </div>
               </div>
             </div>
@@ -507,13 +507,13 @@
           <div class="metric-card" data-reveal="depth-in">
             <div class="metric-label">Optimization Impact</div>
             <div class="gauge">
-              <div class="gauge-circle" style="--gauge-percent: 92%;"><span class="gauge-val">92%</span></div>
+              <div class="gauge-circle" style="--gauge-percent: 0%;"><span class="gauge-val">—</span></div>
               <div class="gauge-info">
                 <div style="margin-bottom: 8px;">
-                  <strong style="color: var(--gold);">92% better</strong> performance
+                  <strong style="color: var(--gold);">—</strong> No measured comparison
                 </div>
                 <div style="font-size: 12px; color: var(--muted);">
-                  All 10 modules deployed and active
+                  No baseline dataset is exposed to this page.
                 </div>
               </div>
             </div>
@@ -526,27 +526,27 @@
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;" data-stagger data-stagger-gap="50">
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Production</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ OPERATIONAL</div>
+              <div id="prod-state" style="color: var(--muted); font-weight: 700;">— UNVERIFIED</div>
             </div>
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">CI Pipeline</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ PASSING</div>
+              <div style="color: var(--muted); font-weight: 700;">— NOT MEASURED</div>
             </div>
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Database</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ HEALTHY</div>
+              <div id="db-state" style="color: var(--muted); font-weight: 700;">— NOT CHECKED</div>
             </div>
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Cache</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ ACTIVE</div>
+              <div style="color: var(--muted); font-weight: 700;">— NOT MEASURED</div>
             </div>
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Security</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ SECURED</div>
+              <div style="color: var(--muted); font-weight: 700;">— NOT VERIFIED HERE</div>
             </div>
             <div style="padding: 12px; background: rgba(63,178,127,0.1); border-left: 3px solid #3fb27f; border-radius: 4px;" data-reveal="depth-in">
               <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Uptime</div>
-              <div style="color: #3fb27f; font-weight: 700;">✓ 99.9%</div>
+              <div style="color: var(--muted); font-weight: 700;">— NOT MEASURED</div>
             </div>
           </div>
         </div>
@@ -555,43 +555,32 @@
   </div>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      // Display metrics from OmegaMetrics if available
-      if(window.OmegaMetrics) {
-        updateMetrics();
-        setInterval(updateMetrics, 5000); // Update every 5 seconds
+    function setMetric(id,value,stateId,state,good){
+      var v=document.getElementById(id),s=document.getElementById(stateId);
+      if(v)v.textContent=value;
+      if(s){s.textContent=state;s.className=good?'status-good':'status-warning';}
+    }
+    function updateMetrics(){
+      var m=window.OmegaMetrics&&window.OmegaMetrics.getMetrics?window.OmegaMetrics.getMetrics():null;
+      var nav=performance.getEntriesByType('navigation')[0];
+      if(m){
+        setMetric('lcp-value',m.lcp_ms?((m.lcp_ms/1000).toFixed(2)+'s'):'—','lcp-state',m.lcp_ms?(m.lcp_pass?'PASS':'NEEDS ATTENTION'):'Not measured',!!m.lcp_ms&&m.lcp_pass);
+        setMetric('cls-value',Number.isFinite(m.cls)?m.cls.toFixed(3):'—','cls-state',Number.isFinite(m.cls)?(m.cls_pass?'PASS':'NEEDS ATTENTION'):'Not measured',Number.isFinite(m.cls)&&m.cls_pass);
+        setMetric('fid-value',m.inp_ms?m.inp_ms+'ms':'—','fid-state',m.inp_ms?(m.inp_ms<=200?'PASS':'NEEDS ATTENTION'):'Not measured',!!m.inp_ms&&m.inp_ms<=200);
+        setMetric('ttfb-value',m.ttfb_ms?m.ttfb_ms+'ms':'—','ttfb-state',m.ttfb_ms?(m.ttfb_ms<=800?'PASS':'NEEDS ATTENTION'):'Not measured',!!m.ttfb_ms&&m.ttfb_ms<=800);
+      }else{
+        setMetric('lcp-value','—','lcp-state','Not measured yet',false);
+        setMetric('cls-value','—','cls-state','Not measured yet',false);
+        setMetric('fid-value','—','fid-state','Not measured yet',false);
+        if(nav&&nav.responseStart)setMetric('ttfb-value',Math.round(nav.responseStart)+'ms','ttfb-state','Measured in this browser',nav.responseStart<=800);
       }
-    });
-
-    function updateMetrics() {
-      if(!window.OmegaMetrics) return;
-
-      const metrics = window.OmegaMetrics.report();
-
-      // Update Core Web Vitals
-      const lcp = Math.round(metrics.lcp) || 2400;
-      const cls = (metrics.cls).toFixed(2) || 0.08;
-      const fid = Math.round(metrics.fid) || 45;
-      const ttfb = Math.round(metrics.ttfb) || 180;
-      const pageLoad = Math.round(metrics.pageLoadTime) || 3200;
-      const successRate = metrics.errorRate ? (100 - metrics.errorRate).toFixed(1) : 98.5;
-
-      document.getElementById('lcp-value').textContent = (lcp / 1000).toFixed(1) + 's';
-      document.getElementById('cls-value').textContent = cls;
-      document.getElementById('fid-value').textContent = fid + 'ms';
-      document.getElementById('ttfb-value').textContent = ttfb + 'ms';
-      document.getElementById('page-load-value').textContent = (pageLoad / 1000).toFixed(1) + 's';
-      document.getElementById('success-rate').textContent = successRate + '%';
+      if(nav&&nav.loadEventEnd)setMetric('page-load-value',(nav.loadEventEnd/1000).toFixed(2)+'s','page-load-state','Measured in this browser',nav.loadEventEnd<=2500);
+      var mon=document.getElementById('monitor-status');if(mon)mon.textContent=m?'Browser metrics measured from this page':'Collecting browser metrics…';
     }
-
-    function refreshDashboard() {
-      const btn = event.target;
-      btn.classList.add('updating');
-      setTimeout(() => {
-        btn.classList.remove('updating');
-        updateMetrics();
-      }, 500);
+    function refreshDashboard(){
+      var btn=document.querySelector('.refresh-button');if(btn)btn.classList.add('updating');
+      updateMetrics();setTimeout(function(){if(btn)btn.classList.remove('updating');},500);
     }
-  </script>
-</body>
+    window.addEventListener('DOMContentLoaded',function(){updateMetrics();setInterval(updateMetrics,5000);});
+  </script>body>
 </html>

@@ -12,7 +12,7 @@
  *
  * Element selectors:
  * - data-bind-query: Bind to Supabase table/RPC
- * - data-bind-to: Target property (innerHTML, textContent, dataset.*, style.*)
+ * - data-bind-to: Target property (textContent, innerHTML when explicitly trusted, dataset.*, style.*)
  * - data-bind-template: Handle arrays (repeat element, set data attributes)
  * - data-bind-format: Apply formatter function to value
  */
@@ -23,19 +23,30 @@
   var bindings = {};
   var subscriptions = [];
 
+  function secureBindingId(){
+    try{
+      var bytes=new Uint8Array(12);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    }catch(e){
+      return String(Date.now())+'-'+String(++secureBindingId.counter);
+    }
+  }
+  secureBindingId.counter=0;
+
   var API = window.OmegaDataBinding = {
     /**
      * Create a data binding from element attributes
      */
     bind: function(element, config){
       config = config || {};
-      var bindId = 'bind_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      var bindId = 'bind_' + Date.now() + '_' + secureBindingId();
 
       var binding = {
         id: bindId,
         element: element,
         query: config.query || element.getAttribute('data-bind-query'),
-        target: config.target || element.getAttribute('data-bind-to') || 'innerHTML',
+        target: config.target || element.getAttribute('data-bind-to') || 'textContent',
         template: config.template || element.getAttribute('data-bind-template'),
         formatter: config.formatter || getFormatter(element.getAttribute('data-bind-format')),
         mode: config.mode || 'static',

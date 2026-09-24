@@ -226,6 +226,23 @@
       .replace(/"/g, '&quot;');
   }
 
+  /* Navigation targets are data, not code. Constellation links are intended
+     to stay inside the SYD OMEGA platform; reject javascript:/data:/vbscript:
+     and protocol-relative targets before they ever reach an href attribute. */
+  function safeHref(value) {
+    var raw = String(value == null ? '' : value).trim();
+    if (!raw) return '';
+    if (raw.charAt(0) === '#' || raw.charAt(0) === '/') {
+      return raw.indexOf('//') === 1 ? '' : raw;
+    }
+    try {
+      var u = new URL(raw, window.location.origin);
+      return u.origin === window.location.origin && (u.protocol === 'http:' || u.protocol === 'https:')
+        ? u.pathname + u.search + u.hash
+        : '';
+    } catch (e) { return ''; }
+  }
+
   /* Orbit radius as a fraction of the box WIDTH (not half-width): a node
      centre sits at 50% +/- R*100%. At .345 the outer edge of a 17% node reaches
      43% -- inside the box -- and the inner edge clears the 26%-wide core. */
@@ -259,9 +276,10 @@
 
   function nodeHtml(node, i, n) {
     var p = point(i, n);
-    var tag = node.href ? 'a' : 'div';
+    var href = safeHref(node.href);
+    var tag = href ? 'a' : 'div';
     var attrs = 'class="ocn-node" style="left:' + p.x.toFixed(2) + '%;top:' + p.y.toFixed(2) + '%"';
-    if (node.href) attrs += ' href="' + esc(node.href) + '"';
+    if (href) attrs += ' href="' + esc(href) + '"';
     if (node.label) attrs += ' aria-label="' + esc(node.label) + '"';
     /* The emblem is filled by omega-emblems.js, which owns the artwork. It is
        decoration: the name beside it carries the meaning, so it is hidden

@@ -461,59 +461,43 @@ async function fetchIndexPrice(sym){
     var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(sym));
     var data=await r.json();
     if(data&&data.configured&&data.price!=null)return data.price;
-  }catch(e){}
+  }catch(e){console.warn('[Omega Pulse] market quote unavailable for '+sym+':',e);}
   return null;
 }
 async function fetchCommodities(){
-  var METALS=[
-    {name:'GOLD (XAU)',sym:'XAU',unit:'/oz',base:2300+Math.random()*200},
-    {name:'SILVER (XAG)',sym:'XAG',unit:'/oz',base:27+Math.random()*3},
-    {name:'PLATINUM (XPT)',sym:'XPT',unit:'/oz',base:950+Math.random()*50},
-    {name:'PALLADIUM',sym:'XPD',unit:'/oz',base:1000+Math.random()*100},
+  var ITEMS=[
+    {name:'GOLD (XAU)',sym:'XAU',unit:'/oz',group:'metals'},
+    {name:'SILVER (XAG)',sym:'XAG',unit:'/oz',group:'metals'},
+    {name:'PLATINUM (XPT)',sym:'XPT',unit:'/oz',group:'metals'},
+    {name:'PALLADIUM',sym:'XPD',unit:'/oz',group:'metals'},
+    {name:'CRUDE OIL (WTI)',sym:'WTI',unit:'/bbl',group:'energy'},
+    {name:'BRENT CRUDE',sym:'BRENT',unit:'/bbl',group:'energy'},
+    {name:'NATURAL GAS',sym:'NG',unit:'/MMBtu',group:'energy'},
+    {name:'HEATING OIL',sym:'HO',unit:'/gal',group:'energy'},
+    {name:'S&P 500',sym:'SPX',unit:'',group:'indices'},
+    {name:'NASDAQ',sym:'NDX',unit:'',group:'indices'},
+    {name:'DOW JONES',sym:'DJI',unit:'',group:'indices'},
+    {name:'FTSE 100',sym:'FTSE',unit:'',group:'indices'},
+    {name:'DAX',sym:'DAX',unit:'',group:'indices'},
+    {name:'NIKKEI 225',sym:'N225',unit:'',group:'indices'}
   ];
-  var ENERGY=[
-    {name:'CRUDE OIL (WTI)',sym:'WTI',unit:'/bbl',base:75+Math.random()*10},
-    {name:'BRENT CRUDE',sym:'BRENT',unit:'/bbl',base:79+Math.random()*10},
-    {name:'NATURAL GAS',sym:'NG',unit:'/MMBtu',base:2.8+Math.random()*.5},
-    {name:'HEATING OIL',sym:'HO',unit:'/gal',base:2.4+Math.random()*.2},
-  ];
-  var INDICES=[
-    {name:'S&P 500',sym:'SPX',unit:'',base:5400+Math.random()*200},
-    {name:'NASDAQ',sym:'NDX',unit:'',base:18900+Math.random()*500},
-    {name:'DOW JONES',sym:'DJI',unit:'',base:39000+Math.random()*1000},
-    {name:'FTSE 100',sym:'FTSE',unit:'',base:8300+Math.random()*200},
-    {name:'DAX',sym:'DAX',unit:'',base:18500+Math.random()*300},
-    {name:'NIKKEI 225',sym:'N225',unit:'',base:38000+Math.random()*1000},
-  ];
+  var prices=await Promise.all(ITEMS.map(function(item){return fetchIndexPrice(item.sym);}));
+  ITEMS.forEach(function(item,i){item.base=prices[i];item.live=prices[i]!=null;});
   function row(item){
-    var chg=(Math.random()-.45)*2;
-    var liveTag=item.live?' <span style="color:var(--green);font-size:12px">LIVE</span>':'';
-    return '<div class="cmd-row"><div class="cmd-name">'+item.name+liveTag+'</div>'
-      +'<div class="cmd-price">'+item.base.toLocaleString('en',{maximumFractionDigits:2})+(item.unit||'')+'</div>'
-      +'<div class="cmd-chg '+chgClass(chg)+'">'+pct(chg)+'</div></div>';
+    var price=item.live?item.base.toLocaleString('en',{maximumFractionDigits:2})+(item.unit||''):'—';
+    var tag=item.live?' <span style="color:var(--green);font-size:12px">LIVE</span>':' <span style="color:var(--dim);font-size:12px">UNAVAILABLE</span>';
+    return '<div class="cmd-row"><div class="cmd-name">'+item.name+tag+'</div><div class="cmd-price">'+price+'</div><div class="cmd-chg">—</div></div>';
   }
-  var mel=document.getElementById('cmd-metals');
-  if(mel)mel.innerHTML=METALS.map(row).join('');
-  var eel=document.getElementById('cmd-energy');
-  if(eel)eel.innerHTML=ENERGY.map(row).join('');
-  var indexPrices=await Promise.all(INDICES.map(function(idx){return fetchIndexPrice(idx.sym);}));
-  var anyLive=false;
-  INDICES.forEach(function(idx,i){if(indexPrices[i]!=null){idx.base=indexPrices[i];idx.live=true;anyLive=true;}});
-  var iel=document.getElementById('cmd-indices');
-  if(iel)iel.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px">'+INDICES.map(row).join('')+'</div>';
+  ['metals','energy','indices'].forEach(function(group){
+    var el=document.getElementById('cmd-'+group);
+    if(el)el.innerHTML=ITEMS.filter(function(x){return x.group===group;}).map(row).join('');
+  });
+  var liveCount=ITEMS.filter(function(x){return x.live;}).length;
   var iTitle=document.getElementById('cmd-indices-label');
-  if(iTitle)iTitle.textContent=anyLive?'(LIVE WHERE CONFIGURED, SIMULATED OTHERWISE)':'(SIMULATED — set TWELVE_DATA_API_KEY for live quotes)';
-  /* Ticker gold */
-  var goldPrice=(2300+Math.random()*200).toFixed(0);
-  ['tk-GOLD','tk-GOLD2'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el)el.textContent='$'+goldPrice;
-  });
-  var oilPrice=(75+Math.random()*10).toFixed(1);
-  ['tk-OIL','tk-OIL2'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el)el.textContent='$'+oilPrice;
-  });
+  if(iTitle)iTitle.textContent=liveCount+' / '+ITEMS.length+' market quotes available from the configured provider';
+  var gold=ITEMS.find(function(x){return x.sym==='XAU'}), oil=ITEMS.find(function(x){return x.sym==='WTI'});
+  ['tk-GOLD','tk-GOLD2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=gold&&gold.live?'$'+gold.base.toLocaleString('en',{maximumFractionDigits:0}):'—';});
+  ['tk-OIL','tk-OIL2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=oil&&oil.live?'$'+oil.base.toLocaleString('en',{maximumFractionDigits:1}):'—';});
 }
 
 /* ── Weather — Open-Meteo free API ── */

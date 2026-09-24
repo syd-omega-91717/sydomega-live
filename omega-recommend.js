@@ -43,12 +43,14 @@
   });
 
   /* Record 'skip' on rapid navigate-away (< 5 seconds) */
-  window.addEventListener('beforeunload',function(){
+  function finalizeRecommendationSignals(){
     clearInterval(_watchCheck);
     var elapsed=(Date.now()-_entered)/1000;
     if(elapsed<5) signal('skip',PAGE,'page',null,0.5);
     else if(elapsed>=30&&!_recordedEntry) signal('watch',PAGE,'page',null,1.0);
-  });
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')finalizeRecommendationSignals();});
+  window.addEventListener('pagehide',finalizeRecommendationSignals);
 
   /* Expose for manual signal recording */
   window.OmegaRecommend={signal:signal};

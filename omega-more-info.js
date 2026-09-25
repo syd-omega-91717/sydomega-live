@@ -67,10 +67,12 @@
     btn.type = 'button';
     btn.className = 'omi-toggle';
     btn.setAttribute('aria-expanded', 'false');
-    var fullId = full.id || ('omi-full-' + Math.random().toString(36).slice(2, 9));
+    var fullId = full.id || ('omi-full-' + (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)));
     full.id = fullId;
     btn.setAttribute('aria-controls', fullId);
-    btn.innerHTML = '<span class="omi-toggle-label">MORE INFO</span><span class="omi-toggle-arrow" aria-hidden="true">▾</span>';
+    var label = document.createElement('span'); label.className = 'omi-toggle-label'; label.textContent = 'MORE INFO';
+    var arrow = document.createElement('span'); arrow.className = 'omi-toggle-arrow'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '▾';
+    btn.appendChild(label); btn.appendChild(arrow);
     lead.parentNode.insertBefore(btn, full);
 
     var open = false;

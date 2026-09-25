@@ -131,8 +131,15 @@ function addTyping(){
 
 function renderSessionLog(){
   var box=document.getElementById('session-log');if(!box)return;
-  if(!_history.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No messages yet in this session.</div>';return;}
-  box.innerHTML='';
+  if(!_history.length){
+    box.replaceChildren();
+    var empty=document.createElement('div');
+    empty.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';
+    empty.textContent='No messages yet in this session.';
+    box.appendChild(empty);
+    return;
+  }
+  box.replaceChildren();
   _history.forEach(function(h){
     var d=document.createElement('div');
     d.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:.5px;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.08);color:'+(h.role==='user'?'var(--cyan)':'var(--ink)');
@@ -176,7 +183,7 @@ window.sendChatMessage=async function(){
     addMsg('ai','Welcome, '+name+'. I am the Concierge of SYD OMEGA 91717. How may I serve you?');
     var chipsEl=document.getElementById('chips');
     if(chipsEl){
-      chipsEl.innerHTML='';
+      chipsEl.replaceChildren();
       CHIPS.forEach(function(c){
         var chip=document.createElement('div');chip.className='chip';chip.textContent=c;
         chip.addEventListener('click',function(){var inp=document.getElementById('chat-msg');if(inp)inp.value=c;window.sendChatMessage();});

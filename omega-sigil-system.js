@@ -16,13 +16,23 @@
     root.dataset.omegaSigilMounted='true';
     var grid=document.createElement('div');grid.className='omega-realms';
     var info=document.createElement('section');info.className='omega-info';info.setAttribute('aria-live','polite');
-    function close(){info.classList.remove('is-open');info.innerHTML='';}
+    function close(){info.classList.remove('is-open');info.replaceChildren();}
     realms.forEach(function(r){
       var card=document.createElement('article');card.className='omega-realm';card.setAttribute('tabindex','0');card.setAttribute('role','button');card.setAttribute('aria-label','Open '+r[1]+' details');
-      card.innerHTML='<div class="omega-sigil" aria-hidden="true"><span class="omega-sigil-core"></span><span class="omega-glyph">'+esc(r[4])+'</span></div><div class="omega-realm-label">'+esc(r[1])+'</div><div class="omega-realm-caption">SIGIL / ENTER</div>';
+      var sigil=document.createElement('div');sigil.className='omega-sigil';sigil.setAttribute('aria-hidden','true');
+      var core=document.createElement('span');core.className='omega-sigil-core';
+      var glyph=document.createElement('span');glyph.className='omega-glyph';glyph.textContent=r[4];
+      var label=document.createElement('div');label.className='omega-realm-label';label.textContent=r[1];
+      var caption=document.createElement('div');caption.className='omega-realm-caption';caption.textContent='SIGIL / ENTER';
+      sigil.appendChild(core);sigil.appendChild(glyph);card.appendChild(sigil);card.appendChild(label);card.appendChild(caption);
       function activate(){
-        info.innerHTML='<button type="button" class="omega-info-close" aria-label="Close details">×</button><h2>'+esc(r[1])+'</h2><p>'+esc(r[2])+'</p><a href="'+esc(r[3])+'">ENTER '+esc(r[1])+' →</a>';
-        info.classList.add('is-open');info.querySelector('button').addEventListener('click',close);info.scrollIntoView({behavior:window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
+        info.replaceChildren();
+        var closeButton=document.createElement('button');closeButton.type='button';closeButton.className='omega-info-close';closeButton.setAttribute('aria-label','Close details');closeButton.textContent='×';
+        var heading=document.createElement('h2');heading.textContent=r[1];
+        var description=document.createElement('p');description.textContent=r[2];
+        var link=document.createElement('a');link.href=r[3];link.textContent='ENTER '+r[1]+' →';
+        info.appendChild(closeButton);info.appendChild(heading);info.appendChild(description);info.appendChild(link);
+        info.classList.add('is-open');closeButton.addEventListener('click',close);info.scrollIntoView({behavior:window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
       }
       card.addEventListener('click',activate);card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
       grid.appendChild(card);

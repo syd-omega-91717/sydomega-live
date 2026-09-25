@@ -263,7 +263,7 @@ var CAT_COLORS={business:'#00E5FF',product:'#9B6BF0',creative:'#FF9800',learning
   health:'#E91E63',finance:'#FFD700',infrastructure:'#607D8B',research:'#8BC34A',
   personal:'#00BCD4',mission:'#FF4444'};
 
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function slugify(s){return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,40)||'project';}
 function toast(msg){window.omegaToast?window.omegaToast(msg,'error'):alert(msg);}
 

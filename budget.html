@@ -530,7 +530,7 @@ function drawSavingsChart() {
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
-function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */
 

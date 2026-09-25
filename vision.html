@@ -556,7 +556,7 @@ window.setFilter = f => { _goalFilter = f; renderAllGoals(); };
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
 function esc(t) {
-  return String(t ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
 }
 
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */

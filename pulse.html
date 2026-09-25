@@ -235,7 +235,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 /* ── Data cache ── */
 var cache={crypto:{},forex:{},weather:{},fng:null,lastFetch:0};
 var REFRESH_MS=60000;
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 /* ── Tab switching ── */
 document.querySelectorAll('.tab').forEach(function(t){
@@ -430,7 +430,6 @@ function renderForex(rates){
     ctx.fillText('Current derived DXY: '+(usdx?usdx.toFixed(1):'—')+' · historical series unavailable',cv.width/2,cv.height/2);
     ['tk-EUR','tk-EUR2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=rates.EUR?(1/rates.EUR).toFixed(4):'—';});
   }
-}
 }
 
 /* ── Commodities — metals/energy remain simulated (no verified free source exists;

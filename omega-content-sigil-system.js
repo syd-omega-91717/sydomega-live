@@ -58,7 +58,7 @@
     var anchor=main.querySelector('.hero,.page-header,header')||main.firstElementChild;
     if(anchor&&anchor!==door)main.insertBefore(door,anchor);else main.prepend(door);
   }
-  function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function related(){
     if(document.querySelector('.omega-related-sigils'))return;
     var main=document.querySelector('main.main,main#main,main.page-shell,main,[role="main"]');if(!main)return;

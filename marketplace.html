@@ -107,7 +107,7 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
   if(name==='favorites')loadFavorites();
 }
-function esc(s){return(s||'').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});}
 
 var favSet=new Set();

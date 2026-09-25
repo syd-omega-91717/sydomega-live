@@ -276,7 +276,7 @@ function save(){
   localStorage.setItem('omega_ach_log',JSON.stringify(unlockLog));
 }
 function uid(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function totalXP(){return achievements.filter(function(a){return a.unlocked;}).reduce(function(s,a){return s+XP_MAP[a.rarity];},0);}
 function getRank(xp){

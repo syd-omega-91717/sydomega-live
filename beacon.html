@@ -134,13 +134,16 @@ function drawRing(pct){
 
 function buildMap(){
   var el=document.getElementById('map');
-  el.innerHTML='';
+  el.replaceChildren();
   MAP.forEach(function(m){
-    var div=document.createElement('div');
-    div.className='mc';
-    div.style.setProperty('--mc',m[1]);
-    div.innerHTML='<div class="mc-head">'+m[0]+'</div><div class="mc-desc">'+m[2]+'</div><div class="mc-links">'+m[3].map(function(l){return '<a href="'+l[1]+'">'+l[0]+'</a>';}).join('')+'</div>';
-    el.appendChild(div);
+    var div=document.createElement('div'); div.className='mc'; div.style.setProperty('--mc',m[1]);
+    var head=document.createElement('div'); head.className='mc-head'; head.textContent=m[0];
+    var desc=document.createElement('div'); desc.className='mc-desc'; desc.textContent=m[2];
+    var links=document.createElement('div'); links.className='mc-links';
+    m[3].forEach(function(l){
+      var a=document.createElement('a'); a.href=l[1]; a.textContent=l[0]; links.appendChild(a);
+    });
+    div.append(head,desc,links); el.appendChild(div);
   });
 }
 
@@ -154,7 +157,10 @@ async function boot(){
 
   var sign=pr.sign||'Unknown';
   var name=esc(pr.display_name||'Sovereign');
-  document.getElementById('h-sub').innerHTML='Welcome, <b>'+name+'</b>. You are '+(GLY[sign]||'')+'&nbsp;<b>'+esc(sign)+'</b>, of the <b>'+esc(pr.element||'Unknown')+'</b> element. The path is simple: raise three axes &mdash; Knowledge, Mastery, Contribution &mdash; and the gates, ranks, and honours open as you climb.';
+  var hSub=document.getElementById('h-sub'); hSub.replaceChildren();
+  hSub.append(document.createTextNode('Welcome, '));
+  var hName=document.createElement('b'); hName.textContent=pr.display_name||'Sovereign'; hSub.appendChild(hName);
+  hSub.append(document.createTextNode('. You are '+(GLY[sign]||'')+' '+sign+', of the '+(pr.element||'Unknown')+' element. The path is simple: raise three axes — Knowledge, Mastery, Contribution — and the gates, ranks, and honours open as you climb.'));
 
   var kinds={academy:false,gaming:false,contribution:false};
   try{var tc=await sb.from('task_completions').select('kind').eq('user_id',sess.user.id);(tc.data||[]).forEach(function(r){if(r.kind in kinds)kinds[r.kind]=true;});}catch(e){}
@@ -169,34 +175,49 @@ async function boot(){
     ['Find your place in the cosmos','Meet your Faction, your Pantheon name, and the Twelve Triads.','/pantheons.html',false]
   ];
   var doneCount=steps.filter(function(s){return s[3];}).length;
-  var box=document.getElementById('steps');box.innerHTML='';
+  var box=document.getElementById('steps'); box.replaceChildren();
   steps.forEach(function(s){
-    var el=document.createElement('a');
-    el.className='step'+(s[3]?' done':'');
-    el.href=s[2];
-    el.innerHTML='<div class="step-mk">'+(s[3]?'&#x2713;':'&#x25CB;')+'</div><div class="step-body"><div class="step-title">'+s[0]+'</div><div class="step-desc">'+s[1]+'</div></div><div class="step-go">'+(s[3]?'DONE':'GO &#x2192;')+'</div>';
-    box.appendChild(el);
+    var el=document.createElement('a'); el.className='step'+(s[3]?' done':''); el.href=s[2];
+    var mk=document.createElement('div'); mk.className='step-mk'; mk.textContent=s[3]?'✓':'○';
+    var body=document.createElement('div'); body.className='step-body';
+    var title=document.createElement('div'); title.className='step-title'; title.textContent=s[0];
+    var desc=document.createElement('div'); desc.className='step-desc'; desc.textContent=s[1];
+    body.append(title,desc);
+    var go=document.createElement('div'); go.className='step-go'; go.textContent=s[3]?'DONE':'GO →';
+    el.append(mk,body,go); box.appendChild(el);
   });
   document.getElementById('ring-t').textContent=doneCount+'/6';
-  document.getElementById('prog-text').innerHTML='You have begun <b>'+doneCount+'</b> of <b>6</b> first steps. Each one moves a real axis in your 729 &mdash; there is no rush, only the climb.';
+  var prog=document.getElementById('prog-text'); prog.replaceChildren();
+  prog.append(document.createTextNode('You have begun '));
+  var done=document.createElement('b'); done.textContent=doneCount; prog.appendChild(done);
+  prog.append(document.createTextNode(' of '));
+  var total=document.createElement('b'); total.textContent='6'; prog.appendChild(total);
+  prog.append(document.createTextNode(' first steps. Each one moves a real axis in your 729 — there is no rush, only the climb.'));
   drawRing(doneCount/6);
 
   buildMap();
 
-  var cosm=document.getElementById('cosmos-panel');
-  cosm.innerHTML=[
+  var cosm=document.getElementById('cosmos-panel'); cosm.replaceChildren();
+  [
     {label:'ZODIAC SIGN',val:(GLY[sign]||'')+' '+sign,col:'var(--gold)'},
     {label:'ELEMENT',val:pr.element||'--',col:'var(--cyan)'},
     {label:'OLYMPIAN',val:SIGN_GOD[sign]||'--',col:'var(--solar)'},
     {label:'KYC STATUS',val:(pr.kyc_status||'pending').toUpperCase(),col:'var(--green)'},
     {label:'SUBSCRIPTION',val:(pr.subscription_tier||'free').toUpperCase(),col:'var(--purple)'},
     {label:'MEMBER SINCE',val:pr.created_at?new Date(pr.created_at).toLocaleDateString():'--',col:'var(--muted)'}
-  ].map(function(item){
-    return '<div class="cosmos-item" style="--ci:'+item.col+'"><div class="ci-label">'+item.label+'</div><div class="ci-val" style="color:'+item.col+'">'+item.val+'</div></div>';
-  }).join('');
+  ].forEach(function(item){
+    var card=document.createElement('div'); card.className='cosmos-item'; card.style.setProperty('--ci',item.col);
+    var label=document.createElement('div'); label.className='ci-label'; label.textContent=item.label;
+    var val=document.createElement('div'); val.className='ci-val'; val.style.color=item.col; val.textContent=String(item.val);
+    card.append(label,val); cosm.appendChild(card);
+  });
 
   var olymp=SIGN_GOD[sign];
-  document.getElementById('olympian-panel').innerHTML='<div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:8px">YOUR OLYMPIAN</div><div style="font-family:var(--D);font-size:28px;color:var(--solar);margin-bottom:8px">'+(olymp||'--')+'</div><div style="font-size:12px;color:var(--muted);line-height:1.7">As a '+(GLY[sign]||'')+' '+sign+', you are governed by '+( olymp||'the Olympians')+'. Visit the Pantheons module to explore your full cross-tradition mapping: Greek, Roman, Egyptian, and Hindu.</div>';
+  var olympPanel=document.getElementById('olympian-panel'); olympPanel.replaceChildren();
+  var ol=document.createElement('div'); ol.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:8px'; ol.textContent='YOUR OLYMPIAN';
+  var og=document.createElement('div'); og.style.cssText='font-family:var(--D);font-size:28px;color:var(--solar);margin-bottom:8px'; og.textContent=olymp||'--';
+  var od=document.createElement('div'); od.style.cssText='font-size:12px;color:var(--muted);line-height:1.7'; od.textContent='As a '+(GLY[sign]||'')+' '+sign+', you are governed by '+(olymp||'the Olympians')+'. Visit the Pantheons module to explore your full cross-tradition mapping: Greek, Roman, Egyptian, and Hindu.';
+  olympPanel.append(ol,og,od);
 }
 boot();
 </script>

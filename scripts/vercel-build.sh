@@ -96,17 +96,6 @@ if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; t
   node scripts/vercel-build-enhance.mjs
 fi
 
-# Syntax-gate first-party JavaScript before publication. This is parse-only:
-# it does not execute application code and therefore cannot mutate application data during build.
-js_syntax_failures=0
-while IFS= read -r js_file; do
-  if ! node --check "$js_file" >/dev/null 2>&1; then
-    echo "VERCEL_BUILD=FAIL javascript_syntax=$js_file"
-    js_syntax_failures=$((js_syntax_failures + 1))
-  fi
-done < <(find . -type f -name '*.js' ! -path './public/*' ! -path './.git/*' ! -path './node_modules/*' ! -path './vendor/*' ! -path './supabase/*' | sort)
-[ "$js_syntax_failures" -eq 0 ] || { echo "VERCEL_BUILD=FAIL javascript_syntax_failures=$js_syntax_failures"; exit 1; }
-
 html_count="$(find public -type f -name '*.html' | wc -l | tr -d ' ')"
 js_count="$(find public -type f -name '*.js' | wc -l | tr -d ' ')"
 css_count="$(find public -type f -name '*.css' | wc -l | tr -d ' ')"

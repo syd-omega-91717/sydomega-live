@@ -170,78 +170,28 @@ function renderList(){
 }
 
 async function showEntity(eid){
-  selectedId=eid;
-  var e=entities.find(function(x){return x.id===eid;});
-  if(!e)return;
-
-  var [evRes]=await Promise.all([
-    sb.from('graph_evidence').select('*').eq('graph_entity_id',eid).limit(10)
-  ]);
-  var evidence=evRes.data||[];
-
-  var html='<div class="detail-title">'+esc(e.display_name||e.canonical_name)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">TYPE</div><div class="meta-value">'+esc(e.entity_type)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">CONFIDENCE</div><div class="meta-value">'+Math.round((e.confidence_score||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">FIRST SEEN</div><div class="meta-value">'+new Date(e.created_at).toLocaleDateString()+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">SOURCES</div><div class="meta-value">'+evidence.length+'</div></div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">DESCRIPTION</div>'
-    +'<div class="evidence-card">'+esc(e.description||'[No description]')+'</div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">EVIDENCE ('+evidence.length+')</div>'
-    +(evidence.length?evidence.map(function(ev){return '<div class="evidence-card">'+esc(ev.evidence_text)+'</div>';}).join(''):'<div class="empty-state">NO EVIDENCE</div>')
-    +'</div>'
-    +'<div class="action-row">'
-    +'<button class="btn-primary" onclick="verifyEntity(\''+e.id+'\')">✓ VERIFY</button>'
-    +'<button class="btn-secondary" onclick="duplicateEntity(\''+e.id+'\')">⟳ MERGE DUPLICATE</button>'
-    +'<button class="btn-danger" onclick="deleteEntity(\''+e.id+'\')">✕ DELETE</button>'
-    +'</div>';
-  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
+  selectedId=eid;var e=entities.find(function(x){return x.id===eid;});if(!e)return;
+  var evRes=await sb.from('graph_evidence').select('*').eq('graph_entity_id',eid).limit(10),evidence=evRes.data||[],p=document.getElementById('detail-panel');p.replaceChildren();
+  var title=textEl('div','detail-title',e.display_name||e.canonical_name),meta=textEl('div','detail-meta','');
+  [['TYPE',e.entity_type],['CONFIDENCE',Math.round(safeNum(e.confidence_score)*100)+'%'],['FIRST SEEN',new Date(e.created_at).toLocaleDateString()],['SOURCES',evidence.length]].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});
+  var desc=textEl('div','evidence-section','');desc.append(textEl('div','section-label','DESCRIPTION'),textEl('div','evidence-card',e.description||'[No description]'));
+  var evs=textEl('div','evidence-section','');evs.appendChild(textEl('div','section-label','EVIDENCE ('+evidence.length+')'));evidence.forEach(function(ev){evs.appendChild(textEl('div','evidence-card',ev.evidence_text||''));});if(!evidence.length)evs.appendChild(textEl('div','empty-state','NO EVIDENCE'));
+  var actions=textEl('div','action-row',''),v=textEl('button','btn-primary','✓ VERIFY'),mrg=textEl('button','btn-secondary','⟳ MERGE DUPLICATE'),del=textEl('button','btn-danger','✕ DELETE');v.addEventListener('click',function(){verifyEntity(e.id);});mrg.addEventListener('click',function(){duplicateEntity(e.id);});del.addEventListener('click',function(){deleteEntity(e.id);});actions.append(v,mrg,del);p.append(title,meta,desc,evs,actions);
 }
 
 async function showRelationship(rid){
-  selectedId=rid;
-  var r=relationships.find(function(x){return x.id===rid;});
-  if(!r)return;
-
-  var [evRes]=await Promise.all([
-    sb.from('graph_evidence').select('*').eq('graph_relationship_id',rid).limit(10)
-  ]);
-  var evidence=evRes.data||[];
-
-  var html='<div class="detail-title">'+esc(r.source_entity_name)+' → '+esc(r.target_entity_name)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">TYPE</div><div class="meta-value">'+esc(r.relationship_type)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">CONFIDENCE</div><div class="meta-value">'+Math.round((r.confidence||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">STRENGTH</div><div class="meta-value">'+Math.round((r.strength||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">FIRST SEEN</div><div class="meta-value">'+new Date(r.created_at).toLocaleDateString()+'</div></div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">EVIDENCE ('+evidence.length+')</div>'
-    +(evidence.length?evidence.map(function(ev){return '<div class="evidence-card">'+esc(ev.evidence_text)+'</div>';}).join(''):'<div class="empty-state">NO EVIDENCE</div>')
-    +'</div>'
-    +'<div class="action-row">'
-    +'<button class="btn-primary" onclick="verifyRelationship(\''+r.id+'\')">✓ VERIFY</button>'
-    +'<button class="btn-danger" onclick="deleteRelationship(\''+r.id+'\')">✕ DELETE</button>'
-    +'</div>';
-  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
+  selectedId=rid;var r=relationships.find(function(x){return x.id===rid;});if(!r)return;
+  var evRes=await sb.from('graph_evidence').select('*').eq('graph_relationship_id',rid).limit(10),evidence=evRes.data||[],p=document.getElementById('detail-panel');p.replaceChildren();
+  var title=textEl('div','detail-title',String(r.source_entity_name||'')+' → '+String(r.target_entity_name||'')),meta=textEl('div','detail-meta','');
+  [['TYPE',r.relationship_type],['CONFIDENCE',Math.round(safeNum(r.confidence)*100)+'%'],['STRENGTH',Math.round(safeNum(r.strength)*100)+'%'],['FIRST SEEN',new Date(r.created_at).toLocaleDateString()]].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});
+  var evs=textEl('div','evidence-section','');evs.appendChild(textEl('div','section-label','EVIDENCE ('+evidence.length+')'));evidence.forEach(function(ev){evs.appendChild(textEl('div','evidence-card',ev.evidence_text||''));});if(!evidence.length)evs.appendChild(textEl('div','empty-state','NO EVIDENCE'));
+  var actions=textEl('div','action-row',''),v=textEl('button','btn-primary','✓ VERIFY'),del=textEl('button','btn-danger','✕ DELETE');v.addEventListener('click',function(){verifyRelationship(r.id);});del.addEventListener('click',function(){deleteRelationship(r.id);});actions.append(v,del);p.append(title,meta,evs,actions);
 }
 
 async function showAuditEvent(eid){
-  selectedId=eid;
-  var e=auditLog.find(function(x){return x.id===eid;});
-  if(!e)return;
-
-  var html='<div class="detail-title">'+esc(e.event_type)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">ENTITY</div><div class="meta-value">'+esc(e.entity_name)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">TIMESTAMP</div><div class="meta-value">'+new Date(e.created_at).toLocaleString()+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">DETAILS</div><div class="meta-value">'+esc(e.details||'[No details]')+'</div></div>'
-    +'</div>';
-  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
+  selectedId=eid;var e=auditLog.find(function(x){return x.id===eid;});if(!e)return;
+  var p=document.getElementById('detail-panel');p.replaceChildren(),title=textEl('div','detail-title',e.event_type),meta=textEl('div','detail-meta','');
+  [['ENTITY',e.entity_name],['TIMESTAMP',new Date(e.created_at).toLocaleString()],['DETAILS',e.details||'[No details]']].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});p.append(title,meta);
 }
 
 async function verifyEntity(eid){

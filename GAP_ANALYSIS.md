@@ -471,12 +471,37 @@ open, recorded in `FIXES_LOG.md`:
   elaboration collapses), `vocabulary.html` (a section preamble ahead of a
   research-citation stack, not a repeated grid item). Same discipline as the
   first three: full original text preserved verbatim in `.omi-full`, only a
-  fresh one-sentence lead written. A further ~5 candidates were surveyed and
-  are genuine fits but sit inside single-item `--cols:1` "about this feature"
-  cards (`codex.html`, `tribe.html`, `elements.html`, `automation.html`) —
-  structurally different from the multi-item card-grid bodies already ruled
-  out, but deferred pending a judgment call on whether a `--cols:1` card
-  counts as "the title already summarises." Open, scoped work.
+  fresh one-sentence lead written. **Four more shipped 2026-09-21**:
+  `codex.html`, `tribe.html`, `elements.html`, `automation.html` — the
+  judgment call on the single-item `--cols:1` "about this feature" cards was
+  resolved in favor of collapsing them: the card title (e.g. "HOW THE ENGINE
+  WORKS") names the *topic*, it does not summarise the two paragraphs of
+  prose beneath it the way a multi-item grid's title stands in for its whole
+  entry, so the same short-lead treatment applies. Total now 7 pages.
+- **Sigil-as-entry-point coverage is now complete for every genuine candidate
+  found by two independent surveys — `world-shell.html`, `index.html`,
+  `characters.html`.** A full reconnaissance of every emblem-rendering module
+  found no fourth: `agents.html`'s roster switches the in-page chat agent
+  (not navigation), `cosmos.html`/`honors.html`/`elements.html`'s preview
+  cards intentionally use `OmegaEmblemPanel`'s richer preview-then-modal
+  pattern, and `elements.html`/`houses.html`/`gates.html`/`pantheons.html`/
+  `factions.html`/`family.html`'s grids all render the *viewing member's own*
+  data, not links elsewhere. `dashboard.html`'s quick-actions list is a real
+  candidate (real links, flat glyphs) left open on a design call, not a
+  coded exclusion: it's a dense single-line list, not a card, and `dial()`'s
+  full geometry read as too heavy at that scale in a quick check.
+- **The `a[href]{display:inline-flex}` CSS-specificity bug
+  (`omega-accessibility-audit.css`) has now been found and fixed on 3
+  separate anchor-based card layouts** (`world-shell.html`'s `.char-card`,
+  `characters.html`'s `.archetype-card`, plus the one already documented in
+  `FIXES_LOG.md`) — each time by accident, while verifying unrelated work,
+  never by a deliberate sweep. **Two attempts at a full 205-page automated
+  scan for this exact bug class both ran past this session's command time
+  budget and did not complete.** This is recorded as genuinely open, not
+  audited-and-clean: a real possibility that other anchor-based multi-child
+  layouts elsewhere in the 205 pages carry the same silent squish, undetected
+  because nothing has looked. A future session with a longer-running or
+  chunked scan is the correct way to close this, not another accidental find.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —

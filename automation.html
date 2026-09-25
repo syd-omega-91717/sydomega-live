@@ -168,8 +168,13 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
     <div class="card">
       <div class="card-title">HOW THE ENGINE WORKS</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
-        <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
-        <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+        <div data-omega-more>
+          <p class="omi-lead">A rule interpreter that watches platform events and fires actions silently — no manual step needed.</p>
+          <div class="omi-full" hidden>
+            <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
+            <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

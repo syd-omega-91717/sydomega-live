@@ -20513,3 +20513,38 @@ python3 scripts/check-inline-js.py                                           OK
 python3 scripts/omega-registry.py --check (after regeneration)               OK
 ./scripts/ci-local.sh                                                        24/24 blocking checks pass
 ```
+
+## Four more pages resolved off the deferred more-info list: the --cols:1 "about this feature" card judgment call
+
+The prior entry left `codex.html`/`tribe.html`/`elements.html`/`automation.html` deferred pending a judgment call: each has a single `--cols:1` card ("HOW THE ENGINE WORKS", "WHY OPEN SOURCES", etc.) with two paragraphs of prose, structurally different from the multi-item card-grid bodies already ruled out (where the title stands in for the whole entry). Resolved in favor of applying the pattern: a `--cols:1` card's title names the topic, it does not summarise the prose the way a grid item's title does, so collapsing behind a short lead is a genuine improvement, not a click tax. Same discipline as every prior application: full original text (both `<p>` tags, unchanged) preserved verbatim in `.omi-full`, a fresh one-sentence lead written per page.
+
+**Verified live**: all four pages' explanatory card sits inside a `SCIENCE` tab, not the default-active one — activated via each page's real `setTab('science')` before clicking, per this repo's own "hidden tab panel" test gotcha. All four toggles fire correctly (`aria-expanded` flips, `max-height` goes from 0 to the real `scrollHeight` — 401/429/374/374px respectively), 0 console errors across all four.
+
+```
+codex.html omi-toggle click        aria-expanded true, max-height 401px, 0 errors
+tribe.html omi-toggle click        aria-expanded true, max-height 429px, 0 errors
+elements.html omi-toggle click     aria-expanded true, max-height 374px, 0 errors
+automation.html omi-toggle click   aria-expanded true, max-height 374px, 0 errors
+python3 scripts/check-inline-js.py                                           OK
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```
+
+## Third sigil-entry-point surface found and shipped (characters.html); the a[href] display-collision bug recurs a third time
+
+Owner-directed ("all similar design in the project... must follow"): asked to sweep the whole platform for every emblem/sigil-like element that could become a click-to-enter mark, not just the two surfaces already done. Rather than guess at scope, delegated a full reconnaissance pass first: every emblem-rendering module (`omega-sigil-gen.js`, `omega-emblems.js`/`omega-emblems-catalog.js`, `omega-emblem-panel.js`, `omega-page-emblem.js`, `omega-constellation.js`, `omega-sculpture.js`'s five non-signet mounts) and every candidate hub-grid page were checked against their real, live behavior — not assumed from naming.
+
+**Result: only one genuine untouched candidate existed** — `characters.html`'s `.archetype-grid` (4 cards, each already a real `<a href>` to a distinct real page: `/character.html`, `/gaming.html`, `/identity.html`, `/bloodline.html`), which carried **no icon at all**, only a decorative CSS `::before` ring. Wired `OmegaIdentity.dial()` into each, keyed by the destination slug and the card's own `--accent` custom property (same derivation pattern as `index.html`'s realm strip). Everything else surveyed was either already correct (`omega-constellation.js`'s nodes are already real links; `omega-sculpture.js`'s 5 non-signet mounts already carry working `links:[]` overlays) or intentionally different and correctly left alone: `agents.html`'s roster switches the in-page chat agent, not navigation; `cosmos.html`/`honors.html`/`elements.html`'s preview cards use `OmegaEmblemPanel`'s richer "preview → modal → optional deep link" pattern, which converting to direct navigation would have deleted; `elements.html`'s 9-element grid, `houses.html`, `gates.html`, `pantheons.html`, `factions.html`, `family.html` all render the *viewing member's own* progression/cosmology/genealogy data, not links to other pages (`pantheons.html` documents this in its own source: "the gods have no destination pages"). `dashboard.html`'s quick-actions list is a real-link candidate too, but structurally a dense single-line list rather than a card — `dial()`'s full ring/spoke/triangle geometry read as too heavy at that scale in a quick check; left alone rather than forcing a bad fit, an open design call rather than a coded exclusion.
+
+**The `a[href]{display:inline-flex}` accessibility-CSS collision (first found and fixed on `world-shell.html`'s `.char-card` in the prior entry) recurred a third time, on `.archetype-card`.** This instance was actually worse: `.archetype-card` had never declared its own `display` at all, so the accessibility rule wasn't just outranking a competing declaration — it was the *only* rule setting `display`, and won by default. Same diagnosis method (`document.styleSheets` matching against the live element), same fix shape: `.archetype-grid .archetype-card{display:block}` raises the selector's specificity via two classes `(0,2,0)`, comfortably ahead of `a[href]`'s `(0,1,1)`, with no `!important`. **A full 205-page automated sweep for this bug class was attempted and abandoned**: two scan scripts (one waiting for `load`, one for `domcontentloaded` with a hard per-page timeout) both ran past this harness's command budget without finishing, for reasons unrelated to the fix itself (page-load variance across 205 real pages, not a scanner bug). Rather than claim a false completeness, this is recorded honestly as **not exhaustively audited** — three confirmed instances, fixed on sight each time, and a real, open possibility that more exist elsewhere. A dedicated future pass with a longer budget (or a batched/chunked scan) is the correct way to close this out, not a claim this entry doesn't have the evidence for.
+
+**Verified live**: `characters.html` — 4/4 cards carry a real `svg.oid-dial` with the correct resolved stroke colour (confirmed `#00E5FF` on the cyan card, not the literal string `"var(--cg-cyan)"` — the two-level custom-property chain resolves correctly through `getComputedStyle`), 0 console errors. `.archetype-card` computed `display` confirmed `block` (was `flex`) after the fix, verified with a real before/after render matching the exact method used on `world-shell.html`.
+
+```
+document.styleSheets rule match (a[href], omega-accessibility-audit.css)     display:inline-flex, specificity (0,1,1) -- same root cause as world-shell.html
+.archetype-card computed display, before fix                                 flex (no competing page-local rule existed at all)
+.archetype-card computed display, after fix (.archetype-grid .archetype-card) block
+characters.html: 4/4 archetype cards carry a real svg.oid-dial               confirmed, stroke #00E5FF resolved correctly, 0 console errors
+Full 205-page automated scan for the same a[href] collision class            attempted twice, both runs exceeded the command time budget -- NOT completed, recorded as open rather than claimed clean
+python3 scripts/check-inline-js.py                                           OK
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```

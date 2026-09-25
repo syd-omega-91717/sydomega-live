@@ -36,6 +36,11 @@ LOCAL_REF_RE = re.compile(r"(?<![\w-])(?:src|href)=[\"']([^\"'#?]+)", re.I)
 CSS_URL_RE = re.compile(r"url\(\s*[\"']?([^\"')?#]+)", re.I)
 ID_RE = re.compile(r"\bid\s*=\s*[\"']([^\"']+)[\"']", re.I)
 LIGHT_MODE_RE = re.compile(r"(?:prefers-color-scheme\s*:\s*light|\blight-mode\b|\btheme-light\b)", re.I)
+INLINE_HANDLER_RE = re.compile(r"\bon[a-z][a-z0-9_-]*\s*=\s*[\"']", re.I)
+DANGEROUS_SINK_RE = re.compile(r"\b(?:eval|Function|setTimeout|setInterval)\s*\(", re.I)
+HTML_SINK_RE = re.compile(r"\.(?:innerHTML|outerHTML)\s*=|\.insertAdjacentHTML\s*\(", re.I)
+DOCUMENT_WRITE_RE = re.compile(r"\bdocument\.write(?:ln)?\s*\(", re.I)
+MATH_RANDOM_RE = re.compile(r"\bMath\.random\s*\(", re.I)
 
 
 def files(root: Path, suffixes: tuple[str, ...]):
@@ -101,6 +106,19 @@ def main() -> int:
                 errors.append(f"broken asset URL in {source.relative_to(root)}: {ref}")
         if source.suffix.lower() == ".css" and LIGHT_MODE_RE.search(text):
             warnings.append(f"light-mode declaration found in {source.relative_to(root)}; verify it is not an active theme")
+
+        rel = source.relative_to(root)
+        if source.suffix.lower() in {".html", ".htm"} and INLINE_HANDLER_RE.search(text):
+            warnings.append(f"inline event handler found in {rel}; migrate to addEventListener for CSP compatibility")
+        if source.suffix.lower() in {".js", ".mjs"}:
+            if DANGEROUS_SINK_RE.search(text):
+                warnings.append(f"dynamic JavaScript execution API found in {rel}; verify no string evaluation is used")
+            if HTML_SINK_RE.search(text):
+                warnings.append(f"HTML injection sink found in {rel}; verify every value is trusted or sanitized")
+            if DOCUMENT_WRITE_RE.search(text):
+                warnings.append(f"document.write found in {rel}; migrate to DOM construction")
+            if MATH_RANDOM_RE.search(text):
+                warnings.append(f"Math.random found in {rel}; verify it is not used for security, identity, or fabricated telemetry")
 
     print(f"OMEGA INTEGRITY CONTRACT — {root}")
     print(f"ERRORS: {len(errors)}")

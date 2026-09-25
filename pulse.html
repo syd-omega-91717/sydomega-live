@@ -431,7 +431,6 @@ function renderForex(rates){
     ['tk-EUR','tk-EUR2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=rates.EUR?(1/rates.EUR).toFixed(4):'—';});
   }
 }
-}
 
 /* ── Commodities — metals/energy remain simulated (no verified free source exists;
    honestly labelled as such in the markup, not silently faked). Indices now attempt a

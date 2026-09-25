@@ -2,6 +2,7 @@
 """Validate the production security-header contract in vercel.json."""
 from __future__ import annotations
 import json
+import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "vercel.json"
@@ -48,4 +49,7 @@ def main() -> int:
     print("SECURITY HEADERS CONTRACT PASSED")
     return 0
 if __name__ == "__main__":
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__)
+        raise SystemExit(0)
     raise SystemExit(main())

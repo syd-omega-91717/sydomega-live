@@ -9,7 +9,7 @@
   /* Map every page to a section */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
-    command:'command',gateway:'command',
+    command:'command',gateway:'command',realms:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
@@ -61,7 +61,7 @@
 
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
-     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','DASHBOARD','/dashboard.html'],['beacon','BEACON','/beacon.html'],
+     sub:[['gateway','GATEWAY','/gateway.html'],['realms','REALMS','/realms.html'],['dashboard','DASHBOARD','/dashboard.html'],['beacon','BEACON','/beacon.html'],
           ['search','SEARCH','/search.html'],['notifications','ALERTS','/notifications.html'],
           ['chatbot','CONCIERGE AI','/chatbot.html'],['matrix','THE MATRIX','/matrix.html'],['points','SOVEREIGN POINTS','/points.html'],
           ['command','COMMAND BRIEF','/command.html'],['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],['network','NETWORK','/network.html'],['notes','NOTES','/notes.html'],['projects','PROJECTS','/projects.html'],['quotes','QUOTES','/quotes.html'],['time','TIME TRACKER','/time.html'],['vision','VISION BOARD','/vision.html']]},

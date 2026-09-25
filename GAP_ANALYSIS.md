@@ -502,6 +502,29 @@ open, recorded in `FIXES_LOG.md`:
   layouts elsewhere in the 205 pages carry the same silent squish, undetected
   because nothing has looked. A future session with a longer-running or
   chunked scan is the correct way to close this, not another accidental find.
+- **Two independent, non-colliding but functionally-duplicate "sigil entry
+  point" / "progressive disclosure" systems now exist platform-wide,
+  from separate, unrelated efforts.** This session's own `OmegaIdentity.dial()`
+  + hand-curated `omega-more-info.js` (`[data-omega-more]`, opt-in, ~9 pages)
+  ships alongside a newer, more automatic pair merged in from elsewhere:
+  `omega-content-sigil-system.js` (a self-referential `.omega-page-door` on
+  every non-system page, wired via `omega-emblem-integration.js` from `bg.js`)
+  and a heuristic-selector auto-compactor (`.hero-subtitle`/`.lead`/`.intro`/
+  etc., 180-char threshold). The selectors genuinely don't overlap today, so
+  nothing double-processes — but two systems solving the same UX problem
+  independently is exactly the kind of divergence CLAUDE.md 8.1 class 8 warns
+  about for canonical data; the same risk applies to canonical *components*.
+  **A real, live bug exists in the newer system, found but not fixed** (not
+  this session's system to redesign unilaterally): `.omega-page-door`'s link
+  points at `location.pathname` — the page's own URL — so it renders a
+  "click to enter" affordance on the page a member is already viewing, a
+  dead-end self-link. Confirmed live on `dashboard.html`/`codex.html`
+  (door present, `href` equals the page's own path) and `characters.html`
+  (both `.omega-page-door` and `omega-identity.js`'s own `.oid-hero` render
+  stacked at the top of `main`, redundant). Deciding whether the fix is "make
+  the door link elsewhere," "suppress it where a hero already exists," or
+  "converge the two more-info systems into one" needs a real decision, not a
+  silent patch from whichever session notices it next.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —

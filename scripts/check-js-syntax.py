@@ -12,6 +12,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {".git", "node_modules", "dist", "build", "public", "vendor"}
 checked = 0

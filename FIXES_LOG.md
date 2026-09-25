@@ -20558,4 +20558,6 @@ verify-runtime.js (default 13 entrypoints), after           PASS
 verify-runtime.js --pages <49 touched pages>, after         0 uncaught errors on any page (wealth.html threw "Unexpected end of input" on main)
 ```
 
+**Full-estate sweep** (`verify-runtime.js --all`, 206 pages): 202 pass. Three of the four failures were one bug — `omega-content-sigil-system.js:58` did `main.insertBefore(door, main.querySelector('.hero,.page-header,header'))`, but `querySelector` returns a *descendant*, so any nested hero threw `NotFoundError` (`honors.html`, `maintenance.html`, `matrix.html`; identical on pristine `main`). It now climbs to `main`'s direct child first; the 3 pages pass. `reset.html`'s horizontal overflow is pre-existing and left open.
+
 Still open (not done in this pass): `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites. Most render the member's own data to themselves (self-XSS) or static constants; this pass prioritised the class where one member's data reaches *another* session. Remaining inline `onclick=` handlers also block a strict `script-src` CSP.

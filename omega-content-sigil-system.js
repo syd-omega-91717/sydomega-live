@@ -56,6 +56,9 @@
     var action=document.createElement('div');action.className='omega-page-door__action';action.textContent='ENTER →';
     door.append(a,meta,action);
     var anchor=main.querySelector('.hero,.page-header,header')||main.firstElementChild;
+    /* querySelector finds a descendant; insertBefore needs a direct child of
+       main. A nested hero threw NotFoundError on honors/maintenance/matrix. */
+    while(anchor&&anchor.parentNode!==main)anchor=anchor.parentNode;
     if(anchor&&anchor!==door)main.insertBefore(door,anchor);else main.prepend(door);
   }
   function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}

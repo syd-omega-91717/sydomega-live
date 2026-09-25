@@ -112,16 +112,11 @@ function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigit
 var favSet=new Set();
 
 function cardHtml(it,mine){
-  var faved=favSet.has(it.id);
-  return '<div class="mkt-card card" data-listing-id="'+esc(it.id)+'">'
-    +(mine?'<div class="mkt-mine">MINE</div>'
-      :'<button class="mkt-fav'+(faved?' on':'')+'" data-fav-btn aria-label="'+(faved?'Remove from favorites':'Add to favorites')+'" onclick="toggleFavorite(\''+it.id+'\',this)">'+(faved?'★':'☆')+'</button>')
-    +'<div class="mkt-kind">'+esc(it.kind||'OTHER')+'</div>'
-    +'<div class="mkt-title">'+esc(it.title)+'</div>'
-    +'<div class="mkt-desc">'+esc((it.description||'').substr(0,120))+'</div>'
-    +'<div class="mkt-price">'+(it.price_omega?'&#937;'+fmt(it.price_omega):'FREE')+'</div>'
-    +'<div class="mkt-meta">'+new Date(it.created_at).toLocaleDateString()+'</div>'
-    +'</div>';
+  var card=document.createElement('div');card.className='mkt-card card';card.dataset.listingId=String(it.id||'');
+  if(mine){var m=document.createElement('div');m.className='mkt-mine';m.textContent='MINE';card.appendChild(m);}
+  else{var f=document.createElement('button');f.type='button';f.className='mkt-fav'+(favSet.has(it.id)?' on':'');f.setAttribute('data-fav-btn','');f.setAttribute('aria-label',favSet.has(it.id)?'Remove from favorites':'Add to favorites');f.textContent=favSet.has(it.id)?'★':'☆';f.addEventListener('click',function(e){e.stopPropagation();toggleFavorite(it.id,f);});card.appendChild(f);}
+  [['mkt-kind',it.kind||'OTHER'],['mkt-title',it.title||'Untitled'],['mkt-desc',String(it.description||'').slice(0,120)],['mkt-price',it.price_omega?'Ω'+fmt(it.price_omega):'FREE'],['mkt-meta',it.created_at?new Date(it.created_at).toLocaleDateString():'']].forEach(function(x){var n=document.createElement('div');n.className=x[0];n.textContent=String(x[1]);card.appendChild(n);});
+  return card;
 }
 
 async function loadFavoriteIds(){

@@ -212,7 +212,7 @@ window.__omegaPopulate = function(pr, user){
         if(el) el.innerHTML=(pending>0?'<span style="color:var(--crim,#C4453C)">\u25b2 '+pending+' PENDING</span>':'\u2713 NO PENDING')+' \u00b7 '+trial+' TRIAL \u00b7 '+perm+' PERMANENT';
         var el2=document.getElementById('owner-trial-count');
         if(el2) el2.textContent=members.length+' TOTAL MEMBERS IN THE ORDER';
-      }).catch(function(){});
+      }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
     }
   }
 
@@ -229,6 +229,15 @@ window.__omegaPopulate = function(pr, user){
   window.__omegaUser    = user;
   window.__omegaAuth    = auth;
   window.__omegaIsOwner = isOwner;
+
+  /* Canonical compatibility bridge for visual modules.
+     Keep the historical OmegaAuth/OmegaSign contract backed by the same
+     already-loaded profile rather than creating a second auth/data path. */
+  window.OmegaAuth = window.OmegaAuth || {};
+  window.OmegaAuth.getProfile = function(){ return window.__omegaProfile || null; };
+  window.OmegaAuth.getUser = function(){ return window.__omegaUser || null; };
+  window.OmegaSign = d.sign || null;
+
   window.__omegaUserLoaded = true;
   try{document.dispatchEvent(new CustomEvent('omega:populated',{detail:{profile:d},bubbles:false}));}catch(_){}
 };
@@ -248,7 +257,7 @@ function tryPopulate(){
         window.__omegaUserLoaded = true;
         window.__omegaPopulate(pr, sess.user);
       });
-  }).catch(function(){});
+  }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
 }
 
 /* Run after Supabase is ready */

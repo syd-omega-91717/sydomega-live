@@ -1553,7 +1553,7 @@ async function buildMembershipCard(){
   if(!card) return;
   const lang=(localStorage.getItem('omega_lang')||'en');
   let sub={tier:'none',status:'none',period_end:null,payments_enabled:false};
-  try{ const r=await sb.rpc('my_subscription'); if(r.data) sub=r.data; }catch(e){}
+  try{ const r=await sb.rpc('my_subscription'); if(r.data) sub=r.data; else if(r.error) console.warn('[Omega Profile] subscription lookup failed:',r.error); }catch(e){console.warn('[Omega Profile] subscription lookup failed:',e);}
   const tier=(sub.tier||'none');
   const status=(sub.status||'none');
   const active = status==='active' || status==='trialing';

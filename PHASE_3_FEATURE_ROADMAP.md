@@ -82,7 +82,7 @@ Both flow through existing `record_notification(user_id, type, message, content)
 - **Module:** `omega-guardian.js` loaded platform-wide (window.OmegaGuardian available)
 - **Score System:** Tracks idle time (30-min timer), computes risk score 0–100
 - **UI:** Badge always visible in topbar showing current score
-- **What's Missing:** Nothing actually gates actions based on the score — `OmegaGuardian.gate()` function exists but is never called
+- **What's Missing:** The baseline gate is already wired to the three highest-privilege approval actions. Additional action coverage remains a deliberate product/security decision.
 
 ### Proposed Scope (Phase 3b - Depends on decision)
 Define which privileged actions require a minimum score before proceeding:

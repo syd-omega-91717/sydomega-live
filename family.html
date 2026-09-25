@@ -720,7 +720,7 @@ async function buildTimeline(){
   try{
     var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true});
     stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
-  }catch(e){}
+  }catch(e){console.warn('[Omega Family] heritage records unavailable:',e);}
 
   var byEra={};
   ERAS.forEach(function(e){byEra[e.key]=[];});

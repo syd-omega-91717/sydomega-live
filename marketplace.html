@@ -35,11 +35,11 @@
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('listings')">LISTINGS</button>
-  <button class="tab-btn" onclick="setTab('sell')">SELL</button>
-  <button class="tab-btn" onclick="setTab('mine')">MY LISTINGS</button>
-  <button class="tab-btn" onclick="setTab('favorites')">FAVORITES</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="listings" type="button">LISTINGS</button>
+  <button class="tab-btn" data-tab="sell" type="button">SELL</button>
+  <button class="tab-btn" data-tab="mine" type="button">MY LISTINGS</button>
+  <button class="tab-btn" data-tab="favorites" type="button">FAVORITES</button>
+  <button class="tab-btn" data-tab="science" type="button">SCIENCE</button>
 </div>
 
 <div class="tab-panel active" id="tab-listings">
@@ -101,6 +101,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var uid=null;
 
 window.setTab=setTab;
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['listings','sell','mine','favorites','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
@@ -112,16 +113,11 @@ function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigit
 var favSet=new Set();
 
 function cardHtml(it,mine){
-  var faved=favSet.has(it.id);
-  return '<div class="mkt-card card" data-listing-id="'+esc(it.id)+'">'
-    +(mine?'<div class="mkt-mine">MINE</div>'
-      :'<button class="mkt-fav'+(faved?' on':'')+'" data-fav-btn aria-label="'+(faved?'Remove from favorites':'Add to favorites')+'" onclick="toggleFavorite(\''+it.id+'\',this)">'+(faved?'★':'☆')+'</button>')
-    +'<div class="mkt-kind">'+esc(it.kind||'OTHER')+'</div>'
-    +'<div class="mkt-title">'+esc(it.title)+'</div>'
-    +'<div class="mkt-desc">'+esc((it.description||'').substr(0,120))+'</div>'
-    +'<div class="mkt-price">'+(it.price_omega?'&#937;'+fmt(it.price_omega):'FREE')+'</div>'
-    +'<div class="mkt-meta">'+new Date(it.created_at).toLocaleDateString()+'</div>'
-    +'</div>';
+  var card=document.createElement('div');card.className='mkt-card card';card.dataset.listingId=String(it.id||'');
+  if(mine){var m=document.createElement('div');m.className='mkt-mine';m.textContent='MINE';card.appendChild(m);}
+  else{var f=document.createElement('button');f.type='button';f.className='mkt-fav'+(favSet.has(it.id)?' on':'');f.setAttribute('data-fav-btn','');f.setAttribute('aria-label',favSet.has(it.id)?'Remove from favorites':'Add to favorites');f.textContent=favSet.has(it.id)?'★':'☆';f.addEventListener('click',function(e){e.stopPropagation();toggleFavorite(it.id,f);});card.appendChild(f);}
+  [['mkt-kind',it.kind||'OTHER'],['mkt-title',it.title||'Untitled'],['mkt-desc',String(it.description||'').slice(0,120)],['mkt-price',it.price_omega?'Ω'+fmt(it.price_omega):'FREE'],['mkt-meta',it.created_at?new Date(it.created_at).toLocaleDateString():'']].forEach(function(x){var n=document.createElement('div');n.className=x[0];n.textContent=String(x[1]);card.appendChild(n);});
+  return card;
 }
 
 async function loadFavoriteIds(){
@@ -157,25 +153,20 @@ async function load(){
   var r=await sb.from('marketplace_listings').select('*').eq('status','active').order('created_at',{ascending:false}).limit(60);
   var rows=r.data||[];
   document.getElementById('count').textContent=rows.length+' ACTIVE';
-  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.</div>';return;}
-  grid.innerHTML=rows.map(function(it){return cardHtml(it,it.seller_id===uid);}).join('');
+  grid.replaceChildren();if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
 }
 
 async function loadMine(){
   var grid=document.getElementById('my-grid');
   var r=await sb.from('marketplace_listings').select('*').eq('seller_id',uid).order('created_at',{ascending:false}).limit(30);
   var rows=r.data||[];
-  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.</div>';return;}
-  grid.innerHTML=rows.map(function(it){return cardHtml(it,true);}).join('');
+  grid.replaceChildren();if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,true));});
 }
 
 async function loadFavorites(){
   var grid=document.getElementById('fav-grid');
   var r=await sb.from('marketplace_favorites').select('marketplace_listings(*)').eq('profile_id',uid).order('created_at',{ascending:false});
-  if(r.error){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">COULD NOT LOAD FAVORITES ('+esc(r.error.message)+')</div>';return;}
-  var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);
-  if(!rows.length){grid.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1">NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.</div>';return;}
-  grid.innerHTML=rows.map(function(it){return cardHtml(it,it.seller_id===uid);}).join('');
+  grid.replaceChildren();if(r.error){var e=document.createElement('div');e.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';e.textContent='COULD NOT LOAD FAVORITES ('+String(r.error.message||'unknown error')+')';grid.appendChild(e);return;}var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
 }
 
 document.getElementById('btn-pub').addEventListener('click',async function(){

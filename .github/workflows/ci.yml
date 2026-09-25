@@ -24,15 +24,15 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
       - name: Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
       - name: Runner diagnostics
@@ -46,15 +46,8 @@ jobs:
       - name: JavaScript syntax
         shell: python
         run: |
-          import pathlib, subprocess, sys
-          bad = [str(p) for p in sorted(pathlib.Path(".").rglob("*.js"))
-                 if ".git" not in p.parts and "node_modules" not in p.parts
-                 and "dist" not in p.parts and "build" not in p.parts
-                 and subprocess.run(["node", "--check", str(p)]).returncode != 0]
-          if bad:
-              print("::error::syntax error in: " + ", ".join(bad))
-              sys.exit(1)
-          print("node --check clean")
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/check-js-syntax.py']).returncode)
       - name: Inline JavaScript syntax
         shell: python
         run: |
@@ -86,6 +79,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/production-contract.py']).returncode)
+      - name: Security headers contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/security-headers-contract.py']).returncode)
       - name: Workflow contract
         shell: python
         run: |
@@ -126,6 +124,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/rls-auditor.py']).returncode)
+      - name: SECURITY DEFINER audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/security-definer-audit.py']).returncode)
       - name: Silent failure audit
         shell: python
         run: |

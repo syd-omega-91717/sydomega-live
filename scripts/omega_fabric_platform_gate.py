@@ -15,6 +15,7 @@ fires).
 from __future__ import annotations
 
 import sys
+import re
 
 # CLAUDE.md 8.4: every scripts/*.py answers --help with its docstring and exits
 # 0, before doing any work. This file shipped without the guard and ran its
@@ -65,7 +66,7 @@ def parse_python(paths: tuple[str, ...]) -> None:
 def inspect_workflows() -> None:
     for rel in REQUIRED_WORKFLOWS:
         text = (ROOT / rel).read_text(encoding="utf-8")
-        if "name:" not in text or "jobs:" not in text or "uses: actions/checkout@v4" not in text:
+        if "name:" not in text or "jobs:" not in text or not re.search(r"uses:\s*actions/checkout@(?:v4|[0-9a-f]{40})", text):
             raise SystemExit(f"FABRIC_PLATFORM_GATE=FAIL workflow_contract={rel}")
 
 

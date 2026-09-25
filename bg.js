@@ -120,6 +120,10 @@ function __omegaAppend(el){
      particle cluster linkage, data load indicators. Integrates with omega-particles.js;
      synchronizes orbit timing with Phase 2. Safe global; respects prefers-reduced-motion. */
   if(!document.querySelector('script[data-omega-cinematic-animations-phase3]')){var os_data_omega_cinematic_animations_phase3=document.createElement('script');os_data_omega_cinematic_animations_phase3.src='/omega-cinematic-animations-phase3.js';os_data_omega_cinematic_animations_phase3.setAttribute('data-omega-cinematic-animations-phase3','1');os_data_omega_cinematic_animations_phase3.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase3);}
+  /* Voice-Responsive Animations -- Synchronize particle emission, constellation glow, and bloom
+     to copilot stream speed and voice energy. Listens to omega:copilot-* events; Web Audio API
+     for optional voice detection. Respects prefers-reduced-motion. Grounded in: proposal #25. */
+  if(!document.querySelector('script[data-omega-voice-responsive]')){var os_data_omega_voice_responsive=document.createElement('script');os_data_omega_voice_responsive.src='/omega-voice-responsive.js';os_data_omega_voice_responsive.setAttribute('data-omega-voice-responsive','1');os_data_omega_voice_responsive.defer=true;__omegaAppend(os_data_omega_voice_responsive);}
   /* Phase 4: Elemental Theming -- Seasonal/elemental color cycling synchronized with nav axis.
      Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
      persists to localStorage with 24h expiry. Grounded in: proposal #22. */
@@ -140,6 +144,19 @@ function __omegaAppend(el){
 (function(){
 
 /* Inject shared class definitions + load external stylesheet */
+(function(){
+  /* Simple UI is the default product surface. Showcase pages can opt out with
+     body.omega-showcase when a visual presentation is intentionally required. */
+  if(!document.getElementById('omega-simple-ui-css')){
+    var simple=document.createElement('link');
+    simple.id='omega-simple-ui-css'; simple.rel='stylesheet';
+    simple.href='/css/omega-simple-ui.css'; simple.type='text/css';
+    (document.head||document.documentElement).appendChild(simple);
+  }
+  if(document.body) document.body.classList.add('omega-simple');
+  else document.addEventListener('DOMContentLoaded',function(){document.body&&document.body.classList.add('omega-simple');},{once:true});
+})();
+
 (function(){
   if(document.getElementById('omega-global-css')) return;
   var sharedCSS='.tab-bar,.tab-nav{overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none}.tab-row{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,25vw,280px),1fr));gap:12px;margin-bottom:16px}.card-title{position:relative;padding-left:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}.card-body{font-size:13px;color:var(--muted);line-height:1.6}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px;align-items:start}.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.btn-gold{background:none;color:var(--gold);border-color:rgba(201,168,76,.3)}.btn-gold:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}.btn-cyan{background:none;color:var(--cyan);border-color:rgba(0,229,255,.2)}.btn-cyan:hover{background:rgba(0,229,255,.06);border-color:var(--cyan)}.btn-crim{background:none;color:var(--crim);border-color:rgba(139,0,0,.3)}.btn-crim:hover{background:rgba(139,0,0,.08);border-color:var(--crim)}.tbl-head{display:grid;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.08)}.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}.tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}.tbl-row:hover{background:rgba(201,168,76,.02)}.tbl-row:last-child{border-bottom:none}.bar-track{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}.chip{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:3px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:inline-block}.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card.card-edge.card-edge::before{top:0;bottom:0;left:0;right:auto;width:var(--card-edge-w,3px);height:auto}';
@@ -2532,6 +2549,21 @@ setTimeout(function(){
   if(document.querySelector('[data-omega-sculpture]') && !document.querySelector('script[data-omega-sculpture-js]')){
     var _osc=document.createElement('script');_osc.src='/omega-sculpture.js';
     _osc.setAttribute('data-omega-sculpture-js','1');_osc.defer=true;__omegaAppend(_osc);
+  }
+
+  /* Sculpture data binding — real-time member data synchronization for WebGL transforms */
+  if(!document.querySelector('script[data-omega-sculpture-dataviz]')){
+    var _osdv=document.createElement('script');_osdv.src='/omega-sculpture-dataviz.js';
+    _osdv.setAttribute('data-omega-sculpture-dataviz','1');_osdv.defer=true;__omegaAppend(_osdv);
+  }
+
+  /* Seasonal & elemental theme personalization — member's zodiac element + calendar season
+     modulate platform palette via CSS tokens. Reads profile.sign, maps to element, detects
+     current season, applies saturation/brightness adjustments, publishes to :root. Respects
+     prefers-reduced-motion. */
+  if(!document.querySelector('script[data-omega-theme-personalization]')){
+    var _otheme=document.createElement('script');_otheme.src='/omega-theme-personalization.js';
+    _otheme.setAttribute('data-omega-theme-personalization','1');_otheme.defer=true;__omegaAppend(_otheme);
   }
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */

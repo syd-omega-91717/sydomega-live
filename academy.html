@@ -910,7 +910,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('ex-auth',auth.toFixed(4)); sid('ex-certs',Number(pr.certificates_earned||0));
-    try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id).eq('task_type','knowledge');sid('ex-passed',tc.count||0);}catch(e){sid('ex-passed','0');}
+    try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id).eq('task_type','knowledge');sid('ex-passed',tc.count||0);}catch(e){sid('ex-passed','—');console.warn('[Omega Academy] exam count unavailable:',e);}
     /* wire exam cards */
     /* A completed exam looked untouched on every load: only the click handler
        ever marked one, while the exam log below already read the same table.
@@ -955,10 +955,10 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
           head.appendChild(sp);
         });
       }
-    }catch(e){}
+    }catch(e){console.warn('[Omega Academy] completion history unavailable:',e);}
     document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){markDone(card);}}};});
     /* exam log */
-    try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px"><span style="font-family:var(--M);font-size:12px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){}
+    try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);if(gl.error)throw gl.error;var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px"><span style="font-family:var(--M);font-size:12px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){var ge=document.getElementById('exam-log');if(ge)ge.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--amber);padding:16px">EXAM HISTORY UNAVAILABLE</div>';console.warn('[Omega Academy] exam history unavailable:',e);}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

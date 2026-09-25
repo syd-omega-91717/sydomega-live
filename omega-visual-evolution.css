@@ -45,6 +45,8 @@
 :root{
   --omega-glow-gold:rgba(201,168,76,.18);
   --omega-glow-cyan:rgba(0,229,255,.14);
+  --omega-glow-primary:rgba(201,168,76,.18);
+  --omega-glow-secondary:rgba(0,229,255,.14);
   --omega-grid:rgba(201,168,76,.035);
   --omega-grid-fine:rgba(201,168,76,.016);
   --omega-glass:rgba(10,10,15,.68);
@@ -131,29 +133,30 @@ body::after{
 }
 
 /* ── NAVIGATION AS AN INSTRUMENT COLUMN ───────────────────────────────────
-   Gold at the top, cyan at the foot: the same two-accent grammar the rest
-   of the platform uses, applied to the one element on every single page. */
+   Primary accent at the top, secondary accent at the foot: the same two-accent
+   grammar the rest of the platform uses, applied to the one element on every
+   single page. Personalizes via theme tokens. */
 .side,#omega-side{
   background:
-    linear-gradient(180deg,rgba(201,168,76,.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,.06) 100%),
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-primary,#d97706) 9%,transparent) 0%,rgba(0,0,0,0) 42%,color-mix(in srgb,var(--theme-secondary,#0891b2) 6%,transparent) 100%),
     linear-gradient(180deg,rgba(2,2,6,.98),rgba(8,8,14,.94));
   box-shadow:
-    inset -1px 0 0 rgba(201,168,76,.16),
+    inset -1px 0 0 color-mix(in srgb,var(--theme-primary,#d97706) 16%,transparent),
     8px 0 40px rgba(0,0,0,.25),
-    22px 0 48px -34px rgba(0,229,255,.5);
+    22px 0 48px -34px color-mix(in srgb,var(--theme-secondary,#0891b2) 50%,transparent);
 }
 .side a,#omega-side a{transition:transform .18s ease,filter .18s ease,background .18s ease}
-.side a:hover,#omega-side a:hover{transform:translateX(2px);filter:drop-shadow(0 0 7px rgba(201,168,76,.3))}
+.side a:hover,#omega-side a:hover{transform:translateX(2px);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--theme-primary,#d97706) 30%,transparent))}
 
 .topbar{
   background:linear-gradient(90deg,rgba(2,2,6,.97),rgba(10,10,15,.92),rgba(2,2,6,.97));
-  box-shadow:0 1px 0 rgba(201,168,76,.12),0 8px 35px rgba(0,0,0,.28);
+  box-shadow:0 1px 0 color-mix(in srgb,var(--theme-primary,#d97706) 12%,transparent),0 8px 35px rgba(0,0,0,.28);
 }
 .topbar::after{
   content:"";
   position:absolute;
   left:0;right:0;bottom:-1px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--theme-primary,var(--gold)),var(--theme-secondary,var(--cyan)),var(--theme-primary,var(--gold)),transparent);
   opacity:.55;
 }
 
@@ -162,9 +165,9 @@ body::after{
 .tbl-wrap{box-shadow:var(--omega-rim),0 10px 26px -20px rgba(0,0,0,.9)}
 
 /* ── TYPOGRAPHY ───────────────────────────────────────────────────────────
-   Preserve the existing font system; make primary information read as lit. */
-h1,h2,h3{ text-shadow:0 0 22px rgba(201,168,76,.09) }
-.sechead{ text-shadow:0 0 18px rgba(0,229,255,.4) }
+   Preserve the existing font system; make primary information read as lit via theme. */
+h1,h2,h3{ text-shadow:0 0 22px color-mix(in srgb,var(--theme-primary,#d97706) 9%,transparent) }
+.sechead{ text-shadow:0 0 18px color-mix(in srgb,var(--theme-secondary,#0891b2) 40%,transparent) }
 
 /* Focus states are visible and intentional. */
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{
@@ -268,3 +271,177 @@ body::before{animation:omega-field-drift 62s ease-in-out infinite}
   body::before,body::after,.omega-visual-rail{display:none}
   .card,.kpi,.kpi-card,.panel,.module,.tile,.widget{border:1px solid CanvasText}
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Ω VISUAL EVOLUTION v4 — HIGH-DEFINITION SOVEREIGN SURFACE
+   Principle: the interface should feel like a living instrument, not a skin.
+   No layout geometry is changed. Effects are additive, data-safe, and
+   disabled/reduced automatically when motion or transparency is constrained.
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Optical depth tokens */
+:root{
+  --omega-hd-gold:rgba(201,168,76,.72);
+  --omega-hd-cyan:rgba(0,229,255,.58);
+  --omega-hd-white:rgba(255,255,255,.11);
+  --omega-hd-shadow:rgba(0,0,0,.72);
+  --omega-hd-glass:rgba(8,10,17,.58);
+  --omega-hd-line:rgba(232,201,122,.22);
+}
+
+/* A restrained volumetric field: three depth planes, one visual language. */
+body::before{
+  background-image:
+    radial-gradient(900px 520px at 50% 8%,rgba(201,168,76,.12),transparent 68%),
+    radial-gradient(720px 500px at 92% 68%,rgba(0,229,255,.075),transparent 70%),
+    radial-gradient(560px 420px at 8% 82%,rgba(139,0,0,.045),transparent 72%),
+    linear-gradient(115deg,transparent 0 38%,rgba(255,255,255,.018) 48%,transparent 58%),
+    linear-gradient(var(--omega-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--omega-grid) 1px,transparent 1px),
+    var(--omega-unified-ink,#0a0a0f);
+  background-size:auto,auto,auto,auto,44px 44px,44px 44px,auto;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,repeat,repeat,no-repeat;
+}
+
+/* Shared optical glass: bevel + inner illumination + atmospheric depth. */
+.card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer{
+  background-color:var(--omega-hd-glass);
+  border:1px solid var(--omega-hd-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 -1px 0 rgba(0,0,0,.46),
+    inset 0 0 34px rgba(0,229,255,.018),
+    0 18px 48px -28px var(--omega-hd-shadow),
+    0 2px 10px rgba(0,0,0,.34);
+  -webkit-backdrop-filter:blur(16px) saturate(1.16);
+  backdrop-filter:blur(16px) saturate(1.16);
+}
+
+/* Machined corner light. Pure paint; no geometry movement. */
+.card,.kpi,.kpi-card,.panel,.module,.tile,.widget{
+  position:relative;
+  overflow:hidden;
+}
+.card::after,.kpi::after,.kpi-card::after,.panel::after,.module::after,.tile::after,.widget::after{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.055),transparent 22%),
+    radial-gradient(420px 90px at 50% 0,rgba(201,168,76,.07),transparent 72%);
+  opacity:.72;
+  pointer-events:none;
+}
+
+/* Focused content gets a subtle cinematic key light. */
+.card:hover,.kpi:hover,.kpi-card:hover,.panel:hover,.module:hover,.tile:hover,.widget:hover{
+  border-color:rgba(232,201,122,.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.11),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 22px 58px -28px rgba(0,0,0,.9),
+    0 0 34px rgba(201,168,76,.10),
+    0 0 70px -42px rgba(0,229,255,.30);
+}
+
+/* Interactive controls feel engineered rather than generic browser UI. */
+button,.btn,[role="button"],.tab,.nav-item{
+  -webkit-tap-highlight-color:transparent;
+}
+button:hover,.btn:hover,[role="button"]:hover{
+  filter:brightness(1.08) saturate(1.08);
+}
+button:active,.btn:active,[role="button"]:active{
+  filter:brightness(.96);
+}
+
+/* Data visualisation polish without changing values or chart libraries. */
+table{
+  border-collapse:separate;
+  border-spacing:0;
+}
+th{
+  background:linear-gradient(180deg,rgba(201,168,76,.075),rgba(201,168,76,.018));
+  text-shadow:0 0 12px rgba(201,168,76,.18);
+}
+td{
+  border-color:rgba(232,201,122,.09)!important;
+}
+tr:hover td{
+  background:rgba(0,229,255,.025);
+}
+
+/* Images/media become dimensional windows rather than flat rectangles. */
+img:not([class*="icon"]):not([width="1"]){
+  filter:saturate(1.04) contrast(1.025);
+}
+video,canvas,iframe{
+  border-radius:inherit;
+  filter:contrast(1.02) saturate(1.04);
+}
+
+/* Sigils/emblems are now visual anchors. */
+.omega-page-door,.omega-page-door__sigil,.omega-emblem,.omega-emblem-icon,
+[data-omega-emblem]{
+  filter:drop-shadow(0 0 8px rgba(201,168,76,.18));
+}
+.omega-page-door__sigil:hover,.omega-emblem:hover,.omega-emblem-icon:hover,
+[data-omega-emblem]:hover{
+  filter:drop-shadow(0 0 12px rgba(201,168,76,.38)) drop-shadow(0 0 24px rgba(0,229,255,.12));
+}
+
+/* Intelligent hierarchy: readable first, cinematic second. */
+h1{letter-spacing:.015em;text-wrap:balance}
+h2,h3{text-wrap:balance}
+p,li{line-height:1.62}
+.muted,.secondary,.eyebrow{opacity:.86}
+
+/* HUD separators create depth without adding noise. */
+hr,.divider,.sechead{
+  border-color:rgba(232,201,122,.13);
+}
+.sechead{
+  position:relative;
+}
+.sechead::after{
+  content:"";
+  display:block;
+  height:1px;
+  margin-top:8px;
+  background:linear-gradient(90deg,var(--omega-hd-gold),rgba(0,229,255,.18),transparent);
+  opacity:.62;
+}
+
+/* The platform should feel alive when data changes, not constantly animated. */
+[data-omega-state="loading"],[aria-busy="true"]{
+  position:relative;
+}
+[data-omega-state="loading"]::before,[aria-busy="true"]::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.06) 48%,transparent 56%);
+  background-size:240% 100%;
+  animation:omega-data-scan 1.8s ease-in-out infinite;
+}
+@keyframes omega-data-scan{
+  from{background-position:120% 0}
+  to{background-position:-40% 0}
+}
+
+/* Mobile: retain the HD look without expensive blur everywhere. */
+@media(max-width:700px){
+  .card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer{
+    -webkit-backdrop-filter:blur(10px) saturate(1.08);
+    backdrop-filter:blur(10px) saturate(1.08);
+  }
+  .sechead::after{margin-top:6px}
+}
+@media(prefers-reduced-motion:reduce){
+  [data-omega-state="loading"]::before,[aria-busy="true"]::before{animation:none}
+}
+@media(forced-colors:active){
+  .card,.kpi,.kpi-card,.panel,.module,.tile,.widget{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .card::after,.kpi::after,.kpi-card::after,.panel::after,.module::after,.tile::after,.widget::after{display:none}
+}
+
+/* Ω HD surface verification marker: visual contract remains additive and production-safe. */

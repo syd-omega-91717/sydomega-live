@@ -1,0 +1,573 @@
+/* omega-chromatic-aberration.css
+   Proposal #24: Chromatic Aberration & Color-Separation Effects
+
+   Implements subtle chromatic aberration on state transitions (loading → success/error),
+   error feedback with red/cyan color-separation (0.5–2px offset), and button interactions.
+   Enhances perceived responsiveness and technical polish across all pages.
+
+   Grounded in:
+   - bg.js Ω-GVP extension layer (lines 240–310): .card hover effects
+   - --card-accent token system (omega-visual-evolution.css lines 42–88)
+   - omega-cinematic-animations-phase3.css sections E, T, R: state-driven animations
+   - Existing .data-load-indicator, [data-particle-state] infrastructure
+
+   All effects respect prefers-reduced-motion and maintain GPU safety.
+   Dependencies: omega-cinematic-animations-phase3.css (required, loaded first)
+   Scope: Global, safe on all 202 pages; loading states + error feedback + buttons
+*/
+
+/* ===== SECTION A: CHROMATIC ABERRATION BASE SYSTEM =====================
+   Defines the foundational chromatic aberration filter structure with
+   RGB channel separation via drop-shadow stacking.
+*/
+
+/* Base chromatic aberration mixin pattern via drop-shadow stacking */
+.chromatic-aberration {
+  transition: filter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: filter;
+}
+
+/* Subtle aberration (0.5px offset) for loading states */
+.chromatic-aberration.loading {
+  animation: aberration-loading-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes aberration-loading-pulse {
+  0% {
+    filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.3))
+            drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(-0.8px 0 0 rgba(255, 100, 100, 0.5))
+            drop-shadow(0.8px 0 0 rgba(100, 200, 255, 0.5));
+  }
+  100% {
+    filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.3))
+            drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3));
+  }
+}
+
+/* Intense aberration (2px offset, red/cyan split) for error states */
+.chromatic-aberration.error {
+  animation: aberration-error-split 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes aberration-error-split {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(255, 68, 68, 0));
+  }
+  50% {
+    filter: drop-shadow(-1.5px 0 0 rgba(255, 68, 68, 0.7))
+            drop-shadow(1.5px 0 0 rgba(0, 255, 255, 0.5));
+  }
+  100% {
+    filter: drop-shadow(-2px 0 0 rgba(255, 68, 68, 0.9))
+            drop-shadow(2px 0 0 rgba(0, 255, 255, 0.7));
+  }
+}
+
+/* Success state: green glow fade-out */
+.chromatic-aberration.success {
+  animation: aberration-success-glow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes aberration-success-glow {
+  0% {
+    filter: drop-shadow(-0.5px 0 0 rgba(74, 222, 128, 0.6))
+            drop-shadow(0.5px 0 0 rgba(74, 222, 128, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 rgba(74, 222, 128, 0));
+  }
+}
+
+/* ===== SECTION B: STATE-INTEGRATED ABERRATION ==========================
+   Integrate chromatic aberration with existing state classes from
+   omega-cinematic-animations-phase3.css.
+*/
+
+/* Apply to loading indicators */
+.data-load-indicator {
+  position: relative;
+}
+
+body.omega-data-loading .data-load-indicator {
+  filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.4))
+          drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.4));
+  animation: load-indicator-pulse 1s ease-in-out infinite,
+             aberration-indicator-shift 0.4s ease-in-out infinite;
+}
+
+@keyframes aberration-indicator-shift {
+  0%, 100% {
+    filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.3))
+            drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(-0.7px 0 0 rgba(255, 100, 100, 0.5))
+            drop-shadow(0.7px 0 0 rgba(100, 200, 255, 0.5));
+  }
+}
+
+/* Apply to particle state transitions */
+[data-particle-state="error"] {
+  filter: drop-shadow(-2px 0 0 rgba(255, 68, 68, 0.8))
+          drop-shadow(2px 0 0 rgba(0, 255, 255, 0.6));
+}
+
+[data-particle-state="loading"] {
+  filter: drop-shadow(-0.6px 0 0 rgba(255, 100, 100, 0.4))
+          drop-shadow(0.6px 0 0 rgba(100, 200, 255, 0.4));
+}
+
+[data-particle-state="success"] {
+  filter: drop-shadow(-0.4px 0 0 rgba(74, 222, 128, 0.5))
+          drop-shadow(0.4px 0 0 rgba(74, 222, 128, 0.3));
+}
+
+/* ===== SECTION C: BUTTON & INTERACTION FEEDBACK =======================
+   Layer chromatic aberration on button hover/active states and form
+   interactions to enhance perceived responsiveness.
+*/
+
+/* Hover state aberration on buttons */
+.btn:hover,
+button:hover,
+[role="button"]:hover {
+  filter: drop-shadow(-0.3px 0 0 rgba(184, 145, 42, 0.3))
+          drop-shadow(0.3px 0 0 rgba(100, 200, 255, 0.2));
+  transition: filter 0.2s ease-out;
+}
+
+/* Active/pressed state: more intense aberration */
+.btn:active,
+button:active,
+[role="button"]:active {
+  filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.4))
+          drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.4));
+  transition: filter 0.1s ease-out;
+}
+
+/* Focus state: subtle cyan shift for accessibility */
+.btn:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  filter: drop-shadow(-0.2px 0 0 rgba(100, 200, 255, 0.5))
+          drop-shadow(0.2px 0 0 rgba(100, 200, 255, 0.3));
+  outline-offset: 2px;
+}
+
+/* Form input focus with aberration */
+input:focus,
+textarea:focus,
+select:focus {
+  filter: drop-shadow(0 0 0.5px rgba(100, 200, 255, 0.4));
+  transition: filter 0.2s ease-out;
+}
+
+/* Error state on form inputs */
+input.error,
+textarea.error,
+select.error,
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  filter: drop-shadow(-1px 0 0 rgba(255, 68, 68, 0.6))
+          drop-shadow(1px 0 0 rgba(0, 255, 255, 0.4));
+  border-color: rgba(255, 68, 68, 0.7);
+}
+
+/* ===== SECTION D: CARD & SURFACE ABERRATION ===========================
+   Apply chromatic effects to cards, panels, and glass surfaces during
+   state transitions (data load, interactive focus).
+*/
+
+/* Card hover enhancement */
+.card:hover,
+.kpi:hover {
+  filter: drop-shadow(0 0 1px rgba(184, 145, 42, 0.3))
+          drop-shadow(0 0 2px rgba(100, 200, 255, 0.2));
+}
+
+/* Card data-loading state */
+.card[data-loading],
+.kpi[data-loading] {
+  filter: drop-shadow(-0.4px 0 0 rgba(255, 150, 100, 0.3))
+          drop-shadow(0.4px 0 0 rgba(100, 200, 255, 0.3));
+  animation: card-aberration-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes card-aberration-pulse {
+  0%, 100% {
+    filter: drop-shadow(-0.4px 0 0 rgba(255, 150, 100, 0.2))
+            drop-shadow(0.4px 0 0 rgba(100, 200, 255, 0.2));
+  }
+  50% {
+    filter: drop-shadow(-0.6px 0 0 rgba(255, 150, 100, 0.4))
+            drop-shadow(0.6px 0 0 rgba(100, 200, 255, 0.4));
+  }
+}
+
+/* Card error state */
+.card.error,
+.kpi.error {
+  filter: drop-shadow(-1.5px 0 0 rgba(255, 68, 68, 0.7))
+          drop-shadow(1.5px 0 0 rgba(0, 255, 255, 0.5));
+  animation: card-aberration-error 0.5s ease-out forwards;
+}
+
+@keyframes card-aberration-error {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Card success state */
+.card.success,
+.kpi.success {
+  filter: drop-shadow(-0.3px 0 0 rgba(74, 222, 128, 0.5))
+          drop-shadow(0.3px 0 0 rgba(74, 222, 128, 0.3));
+  animation: card-aberration-success 0.6s ease-out forwards;
+}
+
+@keyframes card-aberration-success {
+  from {
+    filter: drop-shadow(-0.3px 0 0 rgba(74, 222, 128, 0.5))
+            drop-shadow(0.3px 0 0 rgba(74, 222, 128, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 0 rgba(74, 222, 128, 0));
+  }
+}
+
+/* ===== SECTION E: TOAST & OVERLAY ABERRATION ===========================
+   Apply chromatic aberration to toast notifications, modals, and
+   error/success overlays for clear feedback.
+*/
+
+/* Error toast */
+.toast.error,
+[role="alert"][data-type="error"] {
+  filter: drop-shadow(-1px 0 0 rgba(255, 68, 68, 0.7))
+          drop-shadow(1px 0 0 rgba(0, 255, 255, 0.5))
+          drop-shadow(0 2px 8px rgba(255, 68, 68, 0.3));
+  border-left: 4px solid rgba(255, 68, 68, 0.9);
+}
+
+/* Success toast */
+.toast.success,
+[role="alert"][data-type="success"] {
+  filter: drop-shadow(-0.3px 0 0 rgba(74, 222, 128, 0.5))
+          drop-shadow(0.3px 0 0 rgba(74, 222, 128, 0.3))
+          drop-shadow(0 2px 8px rgba(74, 222, 128, 0.2));
+  border-left: 4px solid rgba(74, 222, 128, 0.8);
+}
+
+/* Warning toast */
+.toast.warning,
+[role="alert"][data-type="warning"] {
+  filter: drop-shadow(-0.5px 0 0 rgba(249, 115, 22, 0.5))
+          drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3))
+          drop-shadow(0 2px 8px rgba(249, 115, 22, 0.2));
+  border-left: 4px solid rgba(249, 115, 22, 0.8);
+}
+
+/* Loading toast */
+.toast.loading,
+[role="alert"][data-type="loading"] {
+  filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.3))
+          drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3))
+          drop-shadow(0 2px 8px rgba(184, 145, 42, 0.15));
+  animation: toast-aberration-pulse 1s ease-in-out infinite;
+}
+
+@keyframes toast-aberration-pulse {
+  0%, 100% {
+    filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.2))
+            drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.2));
+  }
+  50% {
+    filter: drop-shadow(-0.8px 0 0 rgba(255, 100, 100, 0.4))
+            drop-shadow(0.8px 0 0 rgba(100, 200, 255, 0.4));
+  }
+}
+
+/* ===== SECTION F: MODAL & OVERLAY ABERRATION ==========================
+   Enhanced aberration for modals, dialogs, and full-screen feedback overlays.
+*/
+
+/* Modal dialog during content load */
+dialog[open],
+[role="dialog"][data-loading] {
+  filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.3))
+          drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.15))
+          drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.15));
+}
+
+/* Error modal (intense aberration) */
+dialog[data-state="error"],
+[role="dialog"][data-state="error"] {
+  animation: modal-aberration-shake 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 10px 40px rgba(255, 68, 68, 0.2))
+          drop-shadow(-1.5px 0 0 rgba(255, 68, 68, 0.6))
+          drop-shadow(1.5px 0 0 rgba(0, 255, 255, 0.4));
+}
+
+@keyframes modal-aberration-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-4px);
+  }
+  40%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+/* Success modal (gentle aberration fade) */
+dialog[data-state="success"],
+[role="dialog"][data-state="success"] {
+  animation: modal-aberration-settle 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  filter: drop-shadow(0 10px 40px rgba(74, 222, 128, 0.1))
+          drop-shadow(-0.3px 0 0 rgba(74, 222, 128, 0.4))
+          drop-shadow(0.3px 0 0 rgba(74, 222, 128, 0.2));
+}
+
+@keyframes modal-aberration-settle {
+  from {
+    filter: drop-shadow(0 10px 40px rgba(74, 222, 128, 0.1))
+            drop-shadow(-0.3px 0 0 rgba(74, 222, 128, 0.4))
+            drop-shadow(0.3px 0 0 rgba(74, 222, 128, 0.2));
+  }
+  to {
+    filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.15))
+            drop-shadow(0 0 0 rgba(74, 222, 128, 0));
+  }
+}
+
+/* ===== SECTION G: TIER-GATED INTENSITY CUSTOMIZATION ==================
+   Placeholder for future Tier 3+ aberration intensity slider.
+   Currently all users get standard intensity; T3+ will have .aberration-intensity-* classes.
+*/
+
+/* Future: Tier 3+ customizable intensity */
+body[data-aberration-intensity="low"] .chromatic-aberration {
+  opacity: 0.5; /* Reduce visible effect */
+}
+
+body[data-aberration-intensity="high"] .chromatic-aberration {
+  opacity: 1.2; /* Increase saturation (via filter opacity/brightness) */
+}
+
+/* ===== SECTION H: ACCESSIBILITY & REDUCED MOTION ======================
+   Disable all chromatic aberration under prefers-reduced-motion to ensure
+   accessibility compliance.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  .chromatic-aberration,
+  .chromatic-aberration.loading,
+  .chromatic-aberration.error,
+  .chromatic-aberration.success,
+  .data-load-indicator,
+  [data-particle-state],
+  .btn:hover,
+  button:hover,
+  [role="button"]:hover,
+  .btn:active,
+  button:active,
+  [role="button"]:active,
+  .btn:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  .card:hover,
+  .kpi:hover,
+  .card[data-loading],
+  .kpi[data-loading],
+  .card.error,
+  .kpi.error,
+  .card.success,
+  .kpi.success,
+  .toast,
+  [role="alert"],
+  dialog[open],
+  [role="dialog"] {
+    animation: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== SECTION I: HIGH-CONTRAST MODE ===================================
+   Enhance aberration visibility in high-contrast preference.
+*/
+
+@media (prefers-contrast: more) {
+  .chromatic-aberration.error,
+  .data-load-indicator.error,
+  [data-particle-state="error"],
+  .card.error,
+  .kpi.error,
+  .toast.error,
+  [role="alert"][data-type="error"],
+  dialog[data-state="error"],
+  [role="dialog"][data-state="error"] {
+    filter: drop-shadow(-2.5px 0 0 rgba(255, 0, 0, 1))
+            drop-shadow(2.5px 0 0 rgba(0, 255, 255, 1)) !important;
+  }
+}
+
+/* ===== SECTION J: PERFORMANCE OPTIMIZATION ============================
+   GPU acceleration and paint reduction via transform/will-change.
+*/
+
+.chromatic-aberration,
+.data-load-indicator,
+[data-particle-state],
+.btn,
+button,
+[role="button"],
+.card,
+.kpi,
+.toast,
+[role="alert"],
+dialog,
+[role="dialog"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Selective will-change for high-frequency animations */
+body.omega-data-loading .data-load-indicator,
+[data-particle-state="loading"],
+[data-particle-state="processing"],
+.chromatic-aberration.loading {
+  will-change: filter;
+}
+
+/* ===== SECTION K: INTEGRATION WITH EXISTING SYSTEMS ====================
+   Ensure chromatic aberration works alongside Phase 1-3 effects without
+   conflicting or creating double-animations.
+*/
+
+/* Aberration on top of glow effects (no conflict) */
+.card::before,
+.kpi::before {
+  /* Existing glow/accent bar remains; aberration applies to container */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Aberration + glass shimmer (Phase 1 / Ω-GVP) */
+.glass:hover {
+  filter: drop-shadow(-0.3px 0 0 rgba(184, 145, 42, 0.3))
+          drop-shadow(0.3px 0 0 rgba(100, 200, 255, 0.2));
+}
+
+/* Aberration + particle emission (Phase 3) */
+.particle-cluster {
+  /* Particles unaffected; aberration applied separately to container */
+  z-index: 2;
+}
+
+/* Aberration + constellation link glow (Phase 3) */
+.constellation-particle-link {
+  /* Link glow preserved; aberration on parent element */
+  z-index: 1;
+}
+
+/* ===== SECTION L: FALLBACK STYLING ====================================
+   For browsers without full filter support or CSS variable CSS calc().
+*/
+
+@supports not (filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0))) {
+  .chromatic-aberration,
+  .data-load-indicator,
+  [data-particle-state],
+  .btn:hover,
+  .card:hover,
+  .kpi:hover {
+    /* Fallback: subtle box-shadow instead */
+    box-shadow: 0 0 8px rgba(184, 145, 42, 0.3);
+  }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS =========================================
+   Scale chromatic aberration intensity for mobile/tablet screens.
+*/
+
+@media (max-width: 700px) {
+  /* Reduce offset on mobile to prevent visual clutter */
+  .chromatic-aberration.loading,
+  [data-particle-state="loading"],
+  body.omega-data-loading .data-load-indicator {
+    filter: drop-shadow(-0.3px 0 0 rgba(255, 100, 100, 0.2))
+            drop-shadow(0.3px 0 0 rgba(100, 200, 255, 0.2)) !important;
+  }
+
+  /* Error state: slightly less intense on mobile */
+  .chromatic-aberration.error,
+  [data-particle-state="error"],
+  .card.error,
+  .kpi.error {
+    filter: drop-shadow(-1px 0 0 rgba(255, 68, 68, 0.6))
+            drop-shadow(1px 0 0 rgba(0, 255, 255, 0.4)) !important;
+  }
+
+  /* Button aberration: minimal on touch devices */
+  .btn:hover,
+  button:hover,
+  [role="button"]:hover {
+    filter: drop-shadow(-0.2px 0 0 rgba(184, 145, 42, 0.2))
+            drop-shadow(0.2px 0 0 rgba(100, 200, 255, 0.15)) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Tablet: moderate reduction */
+  .chromatic-aberration.error,
+  [data-particle-state="error"] {
+    filter: drop-shadow(-1.2px 0 0 rgba(255, 68, 68, 0.65))
+            drop-shadow(1.2px 0 0 rgba(0, 255, 255, 0.45)) !important;
+  }
+}
+
+/* ===== ANIMATION TIMING SYNC ==========================================
+   Synchronize chromatic aberration animations with existing Phase 3 timings:
+   - Loading pulse: 1.5s (matches Phase 3 load-indicator-pulse)
+   - Error shake: 0.6s (matches Phase 3 error scatter timings)
+   - Success settle: 0.8s (matches Phase 3 success settle)
+   - Idle drift: 2s (matches constellation link cycles)
+*/
+
+/* Sync with Phase 3 cluster-orbit (60s) — aberration stays fast for feedback */
+@keyframes aberration-indicator-shift {
+  0%, 100% { filter: drop-shadow(-0.5px 0 0 rgba(255, 100, 100, 0.3)) drop-shadow(0.5px 0 0 rgba(100, 200, 255, 0.3)); }
+  50% { filter: drop-shadow(-0.7px 0 0 rgba(255, 100, 100, 0.5)) drop-shadow(0.7px 0 0 rgba(100, 200, 255, 0.5)); }
+  /* Duration: 0.4s — fast feedback loop, no sync required */
+}
+
+/* Sync with Phase 3 state-success-settle (1.5s) */
+@keyframes aberration-success-glow {
+  0% { filter: drop-shadow(-0.5px 0 0 rgba(74, 222, 128, 0.6)) drop-shadow(0.5px 0 0 rgba(74, 222, 128, 0.4)); }
+  100% { filter: drop-shadow(0 0 0 rgba(74, 222, 128, 0)); }
+  /* Duration: 0.8s — completes before particle settle */
+}
+
+/* Duration reference for external sync */
+:root {
+  --aberration-loading-duration: 1.5s;
+  --aberration-error-duration: 0.6s;
+  --aberration-success-duration: 0.8s;
+  --aberration-shift-duration: 0.4s;
+}

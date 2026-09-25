@@ -12,6 +12,13 @@
 .nsc-l{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 .nexus-feed-strip{position:absolute;bottom:10px;left:10px;right:10px;z-index:10;background:rgba(10,10,15,.9);border:1px solid rgba(0,229,255,.12);border-radius:6px;padding:8px 10px;max-height:90px;overflow:hidden;backdrop-filter:blur(12px)}
 .feed-log{font-family:var(--M);font-size:12px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
+.nexus-empty{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 40px));padding:28px 24px;text-align:center;background:rgba(10,10,15,.9);border:1px solid rgba(0,229,255,.18);border-radius:10px;backdrop-filter:blur(14px);z-index:15}
+.nexus-empty-mark{font-family:var(--G);font-size:38px;line-height:1;color:var(--gold);text-shadow:0 0 22px rgba(201,168,76,.28);margin-bottom:12px}
+.nexus-empty-title{font-family:var(--G);font-size:14px;letter-spacing:2px;color:var(--gold);line-height:1.5}
+.nexus-empty-copy{max-width:440px;margin:12px auto 18px;font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)}
+.nexus-empty-link{display:inline-block;padding:9px 14px;border:1px solid rgba(201,168,76,.28);font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);text-decoration:none}
+.nexus-empty-link:hover{background:rgba(201,168,76,.06)}
+@media(max-width:600px){.nexus-empty{padding:22px 16px}.nexus-empty-title{font-size:12px}.nexus-empty-copy{font-size:12px}}
 #node-tip{position:absolute;background:rgba(10,10,15,.95);border:1px solid rgba(0,229,255,.3);border-radius:6px;padding:8px 12px;font-family:var(--M);font-size:12px;color:var(--cyan);pointer-events:none;z-index:20;display:none;backdrop-filter:blur(8px)}
 .nexus-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000005;z-index:30;font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted)}
 #member-table .tbl-row{color:var(--ink);font-family:var(--M);font-size:12px}
@@ -44,6 +51,12 @@
       <div class="nsc"><div class="nsc-n" id="nx-count">—</div><div class="nsc-l">SOVEREIGNS</div></div>
       <div class="nsc"><div class="nsc-n" id="nx-edges">—</div><div class="nsc-l">CONNECTIONS</div></div>
       <div class="nsc"><div class="nsc-n" id="nx-density">—</div><div class="nsc-l">DENSITY</div></div>
+    </div>
+    <div class="nexus-empty" id="nexus-empty" hidden>
+      <div class="nexus-empty-mark" aria-hidden="true">&#937;</div>
+      <div class="nexus-empty-title">NEXUS AWAITS ITS FIRST CONNECTION</div>
+      <div class="nexus-empty-copy">The Nexus is the live authority network of approved sovereigns. When approved member profiles are available, their authority, gate and elemental alignment become nodes and connections here.</div>
+      <a class="nexus-empty-link" href="/profile.html">OPEN IDENTITY</a>
     </div>
     <div class="nexus-feed-strip"><div class="feed-log" id="nx-feed"></div></div>
     <div id="node-tip"></div>
@@ -125,6 +138,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
   var {data:all}=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,is_owner,sign,access_approved').eq('access_approved',true);
   var members=all||[];
+
+  var emptyEl=document.getElementById('nexus-empty');
+  if(emptyEl)emptyEl.hidden=members.length>0;
 
   var nodes=members.map(function(p){
     var a=Number(p.axis_a||0),b=Number(p.axis_b||0),c=Number(p.axis_c||0);

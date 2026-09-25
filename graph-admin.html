@@ -78,6 +78,9 @@ var entities=[],relationships=[],auditLog=[];
 var selectedId=null;
 var sb=null;
 var uid=null;
+function textEl(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;el.textContent=String(text==null?'':text);return el;}
+function setDetailEmpty(){var p=document.getElementById('detail-panel');p.replaceChildren(textEl('div','empty-state','SELECT AN ITEM TO VIEW DETAILS'));}
+function safeNum(v){var n=Number(v);return Number.isFinite(n)?n:0;}
 
 async function init(){
   if(!window.OmegaSupabase){setTimeout(init,100);return;}
@@ -94,7 +97,7 @@ async function switchView(v,el){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('act');});
   el.classList.add('act');
   selectedId=null;
-  document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+  setDetailEmpty();
   if(v==='entities'){
     document.getElementById('list-title').textContent='ENTITIES';
     await loadEntities();
@@ -133,112 +136,62 @@ function renderList(){
   var list=document.getElementById('item-list');
   var search=(document.getElementById('search-box').value||'').toLowerCase();
   var items=currentView==='entities'?entities:(currentView==='relationships'?relationships:auditLog);
-
+  list.replaceChildren();
   if(currentView==='entities'){
-    var filtered=items.filter(function(e){return (e.display_name||'').toLowerCase().includes(search);});
-    if(!filtered.length){list.innerHTML='<div class="empty-state">NO ENTITIES</div>';return;}
-    list.innerHTML=filtered.map(function(e){
-      var conf=e.confidence_score||0;
-      var badge=conf>=0.8?'conf-high':(conf>=0.5?'conf-med':'conf-low');
-      return '<div class="entity-item" onclick="showEntity(\''+e.id+'\')">'
-        +'<div><div class="entity-name">'+esc(e.display_name||e.canonical_name)+'</div>'
-        +'<div class="entity-meta">'+esc(e.entity_type)+' · <span class="conf-badge '+badge+'">'+Math.round(conf*100)+'%</span></div></div>'
-        +'<button class="btn-icon" onclick="deleteEntity(\''+e.id+'\',event)">✕</button></div>';
-    }).join('');
+    var filtered=items.filter(function(e){return String(e.display_name||'').toLowerCase().includes(search);});
+    if(!filtered.length){list.appendChild(textEl('div','empty-state','NO ENTITIES'));return;}
+    filtered.forEach(function(e){
+      var conf=Math.max(0,Math.min(1,safeNum(e.confidence_score))),badge=conf>=.8?'conf-high':conf>=.5?'conf-med':'conf-low';
+      var item=textEl('div','entity-item','');item.addEventListener('click',function(){showEntity(e.id);});
+      var left=textEl('div','');left.append(textEl('div','entity-name',e.display_name||e.canonical_name));
+      var meta=textEl('div','entity-meta',String(e.entity_type||'')+' · ');meta.appendChild(textEl('span','conf-badge '+badge,Math.round(conf*100)+'%'));left.appendChild(meta);
+      var del=textEl('button','btn-icon','✕');del.type='button';del.setAttribute('aria-label','Delete entity');del.addEventListener('click',function(ev){deleteEntity(e.id,ev);});
+      item.append(left,del);list.appendChild(item);
+    });
   }else if(currentView==='relationships'){
-    var filtered=items.filter(function(r){return (r.relationship_type||'').toLowerCase().includes(search)||(r.source_entity_name||'').toLowerCase().includes(search)||(r.target_entity_name||'').toLowerCase().includes(search);});
-    if(!filtered.length){list.innerHTML='<div class="empty-state">NO RELATIONSHIPS</div>';return;}
-    list.innerHTML=filtered.map(function(r){
-      var conf=r.confidence||0;
-      var badge=conf>=0.8?'conf-high':(conf>=0.5?'conf-med':'conf-low');
-      return '<div class="rel-item" onclick="showRelationship(\''+r.id+'\')">'
-        +'<div><div class="rel-name">'+esc(r.source_entity_name)+' → '+esc(r.target_entity_name)+'</div>'
-        +'<div class="rel-meta">'+esc(r.relationship_type)+' · <span class="conf-badge '+badge+'">'+Math.round(conf*100)+'%</span></div></div>'
-        +'<button class="btn-icon" onclick="deleteRelationship(\''+r.id+'\',event)">✕</button></div>';
-    }).join('');
+    var filtered=items.filter(function(r){var q=String(r.relationship_type||'')+' '+String(r.source_entity_name||'')+' '+String(r.target_entity_name||'');return q.toLowerCase().includes(search);});
+    if(!filtered.length){list.appendChild(textEl('div','empty-state','NO RELATIONSHIPS'));return;}
+    filtered.forEach(function(r){
+      var conf=Math.max(0,Math.min(1,safeNum(r.confidence))),badge=conf>=.8?'conf-high':conf>=.5?'conf-med':'conf-low';
+      var item=textEl('div','rel-item','');item.addEventListener('click',function(){showRelationship(r.id);});
+      var left=textEl('div','');left.appendChild(textEl('div','rel-name',String(r.source_entity_name||'')+' → '+String(r.target_entity_name||'')));
+      var meta=textEl('div','rel-meta',String(r.relationship_type||'')+' · ');meta.appendChild(textEl('span','conf-badge '+badge,Math.round(conf*100)+'%'));left.appendChild(meta);
+      var del=textEl('button','btn-icon','✕');del.type='button';del.setAttribute('aria-label','Delete relationship');del.addEventListener('click',function(ev){deleteRelationship(r.id,ev);});
+      item.append(left,del);list.appendChild(item);
+    });
   }else{
-    if(!items.length){list.innerHTML='<div class="empty-state">NO AUDIT LOG</div>';return;}
-    list.innerHTML=items.map(function(a){
-      return '<div class="rel-item" onclick="showAuditEvent(\''+a.id+'\')">'
-        +'<div><div class="rel-name">'+esc(a.event_type)+' — '+esc(a.entity_name)+'</div>'
-        +'<div class="rel-meta">'+new Date(a.created_at).toLocaleDateString()+'</div></div></div>';
-    }).join('');
+    if(!items.length){list.appendChild(textEl('div','empty-state','NO AUDIT LOG'));return;}
+    items.forEach(function(a){
+      var item=textEl('div','rel-item','');item.addEventListener('click',function(){showAuditEvent(a.id);});
+      var left=textEl('div','');left.appendChild(textEl('div','rel-name',String(a.event_type||'')+' — '+String(a.entity_name||'')));
+      left.appendChild(textEl('div','rel-meta',new Date(a.created_at).toLocaleDateString()));item.appendChild(left);list.appendChild(item);
+    });
   }
 }
 
 async function showEntity(eid){
-  selectedId=eid;
-  var e=entities.find(function(x){return x.id===eid;});
-  if(!e)return;
-
-  var [evRes]=await Promise.all([
-    sb.from('graph_evidence').select('*').eq('graph_entity_id',eid).limit(10)
-  ]);
-  var evidence=evRes.data||[];
-
-  var html='<div class="detail-title">'+esc(e.display_name||e.canonical_name)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">TYPE</div><div class="meta-value">'+esc(e.entity_type)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">CONFIDENCE</div><div class="meta-value">'+Math.round((e.confidence_score||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">FIRST SEEN</div><div class="meta-value">'+new Date(e.created_at).toLocaleDateString()+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">SOURCES</div><div class="meta-value">'+evidence.length+'</div></div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">DESCRIPTION</div>'
-    +'<div class="evidence-card">'+esc(e.description||'[No description]')+'</div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">EVIDENCE ('+evidence.length+')</div>'
-    +(evidence.length?evidence.map(function(ev){return '<div class="evidence-card">'+esc(ev.evidence_text)+'</div>';}).join(''):'<div class="empty-state">NO EVIDENCE</div>')
-    +'</div>'
-    +'<div class="action-row">'
-    +'<button class="btn-primary" onclick="verifyEntity(\''+e.id+'\')">✓ VERIFY</button>'
-    +'<button class="btn-secondary" onclick="duplicateEntity(\''+e.id+'\')">⟳ MERGE DUPLICATE</button>'
-    +'<button class="btn-danger" onclick="deleteEntity(\''+e.id+'\')">✕ DELETE</button>'
-    +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  selectedId=eid;var e=entities.find(function(x){return x.id===eid;});if(!e)return;
+  var evRes=await sb.from('graph_evidence').select('*').eq('graph_entity_id',eid).limit(10),evidence=evRes.data||[],p=document.getElementById('detail-panel');p.replaceChildren();
+  var title=textEl('div','detail-title',e.display_name||e.canonical_name),meta=textEl('div','detail-meta','');
+  [['TYPE',e.entity_type],['CONFIDENCE',Math.round(safeNum(e.confidence_score)*100)+'%'],['FIRST SEEN',new Date(e.created_at).toLocaleDateString()],['SOURCES',evidence.length]].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});
+  var desc=textEl('div','evidence-section','');desc.append(textEl('div','section-label','DESCRIPTION'),textEl('div','evidence-card',e.description||'[No description]'));
+  var evs=textEl('div','evidence-section','');evs.appendChild(textEl('div','section-label','EVIDENCE ('+evidence.length+')'));evidence.forEach(function(ev){evs.appendChild(textEl('div','evidence-card',ev.evidence_text||''));});if(!evidence.length)evs.appendChild(textEl('div','empty-state','NO EVIDENCE'));
+  var actions=textEl('div','action-row',''),v=textEl('button','btn-primary','✓ VERIFY'),mrg=textEl('button','btn-secondary','⟳ MERGE DUPLICATE'),del=textEl('button','btn-danger','✕ DELETE');v.addEventListener('click',function(){verifyEntity(e.id);});mrg.addEventListener('click',function(){duplicateEntity(e.id);});del.addEventListener('click',function(){deleteEntity(e.id);});actions.append(v,mrg,del);p.append(title,meta,desc,evs,actions);
 }
 
 async function showRelationship(rid){
-  selectedId=rid;
-  var r=relationships.find(function(x){return x.id===rid;});
-  if(!r)return;
-
-  var [evRes]=await Promise.all([
-    sb.from('graph_evidence').select('*').eq('graph_relationship_id',rid).limit(10)
-  ]);
-  var evidence=evRes.data||[];
-
-  var html='<div class="detail-title">'+esc(r.source_entity_name)+' → '+esc(r.target_entity_name)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">TYPE</div><div class="meta-value">'+esc(r.relationship_type)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">CONFIDENCE</div><div class="meta-value">'+Math.round((r.confidence||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">STRENGTH</div><div class="meta-value">'+Math.round((r.strength||0)*100)+'%</div></div>'
-    +'<div class="meta-item"><div class="meta-label">FIRST SEEN</div><div class="meta-value">'+new Date(r.created_at).toLocaleDateString()+'</div></div>'
-    +'</div>'
-    +'<div class="evidence-section">'
-    +'<div class="section-label">EVIDENCE ('+evidence.length+')</div>'
-    +(evidence.length?evidence.map(function(ev){return '<div class="evidence-card">'+esc(ev.evidence_text)+'</div>';}).join(''):'<div class="empty-state">NO EVIDENCE</div>')
-    +'</div>'
-    +'<div class="action-row">'
-    +'<button class="btn-primary" onclick="verifyRelationship(\''+r.id+'\')">✓ VERIFY</button>'
-    +'<button class="btn-danger" onclick="deleteRelationship(\''+r.id+'\')">✕ DELETE</button>'
-    +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  selectedId=rid;var r=relationships.find(function(x){return x.id===rid;});if(!r)return;
+  var evRes=await sb.from('graph_evidence').select('*').eq('graph_relationship_id',rid).limit(10),evidence=evRes.data||[],p=document.getElementById('detail-panel');p.replaceChildren();
+  var title=textEl('div','detail-title',String(r.source_entity_name||'')+' → '+String(r.target_entity_name||'')),meta=textEl('div','detail-meta','');
+  [['TYPE',r.relationship_type],['CONFIDENCE',Math.round(safeNum(r.confidence)*100)+'%'],['STRENGTH',Math.round(safeNum(r.strength)*100)+'%'],['FIRST SEEN',new Date(r.created_at).toLocaleDateString()]].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});
+  var evs=textEl('div','evidence-section','');evs.appendChild(textEl('div','section-label','EVIDENCE ('+evidence.length+')'));evidence.forEach(function(ev){evs.appendChild(textEl('div','evidence-card',ev.evidence_text||''));});if(!evidence.length)evs.appendChild(textEl('div','empty-state','NO EVIDENCE'));
+  var actions=textEl('div','action-row',''),v=textEl('button','btn-primary','✓ VERIFY'),del=textEl('button','btn-danger','✕ DELETE');v.addEventListener('click',function(){verifyRelationship(r.id);});del.addEventListener('click',function(){deleteRelationship(r.id);});actions.append(v,del);p.append(title,meta,evs,actions);
 }
 
 async function showAuditEvent(eid){
-  selectedId=eid;
-  var e=auditLog.find(function(x){return x.id===eid;});
-  if(!e)return;
-
-  var html='<div class="detail-title">'+esc(e.event_type)+'</div>'
-    +'<div class="detail-meta">'
-    +'<div class="meta-item"><div class="meta-label">ENTITY</div><div class="meta-value">'+esc(e.entity_name)+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">TIMESTAMP</div><div class="meta-value">'+new Date(e.created_at).toLocaleString()+'</div></div>'
-    +'<div class="meta-item"><div class="meta-label">DETAILS</div><div class="meta-value">'+esc(e.details||'[No details]')+'</div></div>'
-    +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  selectedId=eid;var e=auditLog.find(function(x){return x.id===eid;});if(!e)return;
+  var p=document.getElementById('detail-panel');p.replaceChildren(),title=textEl('div','detail-title',e.event_type),meta=textEl('div','detail-meta','');
+  [['ENTITY',e.entity_name],['TIMESTAMP',new Date(e.created_at).toLocaleString()],['DETAILS',e.details||'[No details]']].forEach(function(x){var m=textEl('div','meta-item','');m.append(textEl('div','meta-label',x[0]),textEl('div','meta-value',x[1]));meta.appendChild(m);});p.append(title,meta);
 }
 
 async function verifyEntity(eid){
@@ -281,7 +234,7 @@ async function deleteEntity(eid,ev){
     await loadEntities();
     selectedId=null;
     renderList();
-    document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+    setDetailEmpty();
   }catch(e){alert('Error: '+e.message);}
 }
 
@@ -294,7 +247,7 @@ async function deleteRelationship(rid,ev){
     await loadRelationships();
     selectedId=null;
     renderList();
-    document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+    setDetailEmpty();
   }catch(e){alert('Error: '+e.message);}
 }
 

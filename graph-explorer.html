@@ -325,7 +325,27 @@
   <script>
     let sb = window.OmegaSupabase?.sb || null;
     if (!sb) {
-      document.getElementById('entityList').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
+      setEmptyState(document.getElementById('entityList'),'SUPABASE NOT READY');
+    }
+
+    function setEmptyState(el,message){
+      el.replaceChildren();
+      const node=document.createElement('div'); node.className='empty-state'; node.textContent=String(message);
+      el.appendChild(node);
+    }
+
+    function renderSvgEmptyState(svg,message){
+      svg.querySelector('#edges')?.replaceChildren();
+      svg.querySelector('#nodes')?.replaceChildren();
+      let textNode=svg.querySelector('[data-empty-state]');
+      if(!textNode){
+        textNode=document.createElementNS('http://www.w3.org/2000/svg','text');
+        textNode.setAttribute('data-empty-state','true');
+        textNode.setAttribute('x','50%'); textNode.setAttribute('y','50%'); textNode.setAttribute('text-anchor','middle');
+        textNode.setAttribute('fill','rgba(224,213,183,0.5)');
+        svg.appendChild(textNode);
+      }
+      textNode.textContent=String(message);
     }
 
     let allEntities = [];
@@ -372,7 +392,7 @@
 
     function renderEntityList() {
       if (!allEntities.length) {
-        document.getElementById('entityList').innerHTML = '<div class="empty-state">NO ENTITIES FOUND</div>';
+        setEmptyState(document.getElementById('entityList'),'NO ENTITIES FOUND');
         return;
       }
 
@@ -382,14 +402,21 @@
         (e.display_name && e.display_name.toLowerCase().includes(searchTerm))
       );
 
-      const html = filtered.map(e => `
-        <div class="entity-item ${selectedEntity?.id === e.id ? 'active' : ''}" onclick="selectEntity(${JSON.stringify(e).replace(/"/g, '&quot;')})">
-          <div class="entity-name">${e.display_name || e.canonical_name}</div>
-          <div class="entity-type">${e.entity_type}</div>
-        </div>
-      `).join('');
-
-      document.getElementById('entityList').innerHTML = html || '<div class="empty-state">NO MATCHES</div>';
+      const list=document.getElementById('entityList');
+      list.replaceChildren();
+      if(!filtered.length){setEmptyState(list,'NO MATCHES');return;}
+      filtered.forEach(function(e){
+        const item=document.createElement('div');
+        item.className='entity-item'+(selectedEntity?.id===e.id?' active':'');
+        item.tabIndex=0;
+        item.setAttribute('role','button');
+        const name=document.createElement('div'); name.className='entity-name'; name.textContent=String(e.display_name||e.canonical_name||'Unnamed');
+        const type=document.createElement('div'); type.className='entity-type'; type.textContent=String(e.entity_type||'UNKNOWN');
+        item.append(name,type);
+        item.addEventListener('click',function(){selectEntity(e);});
+        item.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();selectEntity(e);}});
+        list.appendChild(item);
+      });
     }
 
     function selectEntity(entity) {
@@ -402,7 +429,7 @@
 
     function renderRelationshipGraph() {
       if (!selectedEntity) {
-        document.getElementById('graphSvg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="rgba(224,213,183,0.5)">SELECT AN ENTITY</text>';
+        renderSvgEmptyState(document.getElementById('graphSvg'),'SELECT AN ENTITY');
         return;
       }
 
@@ -414,8 +441,9 @@
       const edgesGroup = svg.getElementById('edges');
       const nodesGroup = svg.getElementById('nodes');
 
-      edgesGroup.innerHTML = '';
-      nodesGroup.innerHTML = '';
+      edgesGroup.replaceChildren();
+      nodesGroup.replaceChildren();
+      svg.querySelector('[data-empty-state]')?.remove();
 
       const width = svg.clientWidth;
       const height = svg.clientHeight;
@@ -517,7 +545,7 @@
 
     function renderRelationshipDetails() {
       if (!selectedEntity) {
-        document.getElementById('relationshipList').innerHTML = '<div class="empty-state">SELECT AN ENTITY</div>';
+        setEmptyState(document.getElementById('relationshipList'),'SELECT AN ENTITY');
         return;
       }
 
@@ -526,26 +554,24 @@
       );
 
       if (!rels.length) {
-        document.getElementById('relationshipList').innerHTML = '<div class="empty-state">NO RELATIONSHIPS</div>';
+        setEmptyState(document.getElementById('relationshipList'),'NO RELATIONSHIPS');
         return;
       }
 
-      const html = rels.map(r => {
-        const isSource = r.source_entity_id === selectedEntity.id;
-        const otherEntityName = isSource
-          ? allEntities.find(e => e.canonical_name === r.target_entity_id)?.display_name || r.target_entity_id
-          : allEntities.find(e => e.canonical_name === r.source_entity_id)?.display_name || r.source_entity_id;
-
-        return `
-          <div class="rel-item">
-            <div class="rel-type">${isSource ? '→' : '←'} ${r.relationship_type}</div>
-            <div>${otherEntityName}</div>
-            <div class="rel-strength">Strength: ${(r.strength_score * 100).toFixed(0)}% | Confidence: ${(r.confidence_score * 100).toFixed(0)}%</div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('relationshipList').innerHTML = html;
+      const list=document.getElementById('relationshipList');
+      list.replaceChildren();
+      rels.forEach(function(r){
+        const isSource=r.source_entity_id===selectedEntity.id;
+        const otherId=isSource?r.target_entity_id:r.source_entity_id;
+        const other=allEntities.find(function(e){return e.canonical_name===otherId||e.id===otherId;});
+        const row=document.createElement('div'); row.className='rel-item';
+        const type=document.createElement('div'); type.className='rel-type'; type.textContent=(isSource?'→ ':'← ')+String(r.relationship_type||'RELATIONSHIP');
+        const name=document.createElement('div'); name.textContent=String(other?.display_name||other?.canonical_name||otherId||'Unknown entity');
+        const strength=document.createElement('div'); strength.className='rel-strength';
+        const s=Number(r.strength_score); const conf=Number(r.confidence_score);
+        strength.textContent='Strength: '+(Number.isFinite(s)?(s*100).toFixed(0):'0')+'% | Confidence: '+(Number.isFinite(conf)?(conf*100).toFixed(0):'0')+'%';
+        row.append(type,name,strength); list.appendChild(row);
+      });
     }
 
     function resetExplorer() {
@@ -557,8 +583,8 @@
       document.getElementById('totalEdges').textContent = '0';
       document.getElementById('avgStrength').textContent = '0';
       renderEntityList();
-      document.getElementById('relationshipList').innerHTML = '<div class="empty-state">SELECT AN ENTITY</div>';
-      document.getElementById('graphSvg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="rgba(224,213,183,0.5)">SELECT AN ENTITY</text>';
+      setEmptyState(document.getElementById('relationshipList'),'SELECT AN ENTITY');
+      renderSvgEmptyState(document.getElementById('graphSvg'),'SELECT AN ENTITY');
     }
 
     document.getElementById('entitySearch').addEventListener('input', renderEntityList);

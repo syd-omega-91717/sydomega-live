@@ -304,8 +304,9 @@ async function loadOaths(){
       if(filterCat) q=q.eq('category',filterCat);
       if(filterMine==='mine'&&currentUser) q=q.eq('user_id',currentUser.id);
       var res=await q;
+      if(res.error)throw res.error;
       dbOaths=res.data||[];
-    }catch(e){}
+    }catch(e){console.warn('[Omega Oath] remote oath history unavailable:',e);dbOaths=[];}
   }
   var localOaths=JSON.parse(localStorage.getItem('omega_oaths')||'[]');
   allOaths=dbOaths.concat(localOaths.filter(function(o){return o.local&&!dbOaths.find(function(d){return d.hash_sha256===o.hash_sha256;});}));

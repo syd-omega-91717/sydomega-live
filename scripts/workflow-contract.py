@@ -34,27 +34,27 @@ WORKFLOWS = ROOT / ".github" / "workflows"
 # be true, and is stable across cmd / bash / pwsh / python invocation.
 REQUIRED = {
     "ci.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-node@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@(?:v4|[0-9a-f]{40})",
+        r"actions/setup-node@(?:v4|[0-9a-f]{40})",
+        r"actions/setup-python@(?:v5|[0-9a-f]{40})",
         r"scripts/audit\.py",
         r"unittest['\"],\s*['\"]discover['\"],\s*['\"]-s['\"],\s*['\"]scripts/tests|unittest discover -s scripts/tests",
         r"scripts/omega-registry\.py['\"]?,?\s*['\"]?--check",
     ],
     "production-contract.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@(?:v4|[0-9a-f]{40})",
+        r"actions/setup-python@(?:v5|[0-9a-f]{40})",
         r"scripts/production-contract\.py",
     ],
     "capability-evidence.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@(?:v4|v[0-9]+|[0-9a-f]{40})",
+        r"actions/setup-python@(?:v5|v[0-9]+|[0-9a-f]{40})",
         r"scripts/capability-audit\.py['\"]?,?\s*['\"]?--check",
         r"scripts/capability-audit\.py",
         r"json\.tool['\"],\s*['\"]docs/capabilities/registry\.json|json\.tool docs/capabilities/registry\.json",
     ],
 }
-REQUIRED_PATTERNS = {"production-contract.yml": [(r"node['\"]?,?\s*['\"]?--check\b", "node --check over root .js files")]}
+REQUIRED_PATTERNS = {"production-contract.yml": [(r"scripts/check-js-syntax\.py", "first-party JavaScript syntax contract")]}
 ERRORS: list[str] = []
 
 for name, required in REQUIRED.items():

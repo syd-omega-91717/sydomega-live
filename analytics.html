@@ -132,7 +132,7 @@ i² = -1 ⟹ complex gate damping at each threshold crossing
     <div class="algo-grid">
       <div class="algo-card" style="border-top-color:var(--cyan)">
         <div class="algo-title" style="color:var(--cyan)" data-i18n="ana_data_postgresql_title">POSTGRESQL · PGBOUNCER</div>
-        <div class="algo-sub" data-i18n="ana_data_postgresql_sub">42 TABLES · 64 RPCs · CONNECTION POOLING</div>
+        <div class="algo-sub" data-i18n="ana_data_postgresql_sub">LIVE PUBLIC SCHEMA · RLS VERIFIED · CONNECTION POOLING</div>
         <div class="algo-body" data-i18n="ana_data_postgresql_body">The platform runs on PostgreSQL with RLS on every table. PgBouncer-style connection pooling via Supabase pooler handles burst traffic. All queries use parameterized RPC calls. No raw SQL from the client.</div>
         <div class="code-block">-- Supabase RLS pattern<br>POLICY "member sees own data"<br>USING (user_id = auth.uid())</div>
       </div>
@@ -297,14 +297,30 @@ var PHI=1.6180339887,EU=2.7182818285;
     });
   }
   try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id);sid('an-tasks',tc.count||0);}catch(e){sid('an-tasks','0');}
+  try{
+    var sm=await sb.rpc('get_public_schema_metrics');
+    var smd=sm&&sm.data;
+    var smErr=sm&&sm.error;
+    if(smErr||!smd||!smd.public_tables){
+      var unavailable=document.querySelector('#live-metrics .metric-item[data-metric="database-tables"] .metric-val');
+      if(unavailable)unavailable.textContent='LIVE COUNT UNAVAILABLE';
+    }else{
+      var schemaValue=Number(smd.public_tables).toLocaleString()+' PUBLIC TABLES · '+Number(smd.rls_enabled).toLocaleString()+'/'+Number(smd.public_tables).toLocaleString()+' RLS';
+      var liveMetric=document.querySelector('#live-metrics .metric-item[data-metric="database-tables"] .metric-val');
+      if(liveMetric)liveMetric.textContent=schemaValue;
+    }
+  }catch(e){
+    var failedMetric=document.querySelector('#live-metrics .metric-item[data-metric="database-tables"] .metric-val');
+    if(failedMetric)failedMetric.textContent='LIVE COUNT UNAVAILABLE';
+  }
   var METRICS=[
     {label:'PLATFORM IDENTITY',value:'Ω-91717-SYD-001 · OMEGA PRIME · LEVEL 9.9.9',c:'var(--gold)'},
-    {label:'DATABASE TABLES',value:'42 TABLES · RLS ON ALL',c:'var(--cyan)'},
+    {label:'DATABASE TABLES',value:'LOADING LIVE COUNT…',c:'var(--cyan)'},
     {label:'AUTH FORMULA',value:'sqrt(A³+B³+C³)×φ/e · APEX=27.8367',c:'var(--solar)'},
     {label:'TRIAL DURATION',value:'9 HOURS · 17 MINUTES · 17 SECONDS = 33,437 SECONDS',c:'var(--green)'},
   ];
   var lm=document.getElementById('live-metrics');
-  if(lm){METRICS.forEach(function(m){var card=document.createElement('div');card.className='metric-item';var lb=document.createElement('div');lb.className='metric-label';lb.textContent=m.label;var vl=document.createElement('div');vl.className='metric-val';vl.style.color=m.c;vl.textContent=m.value;card.appendChild(lb);card.appendChild(vl);lm.appendChild(card);});}
+  if(lm){METRICS.forEach(function(m){var card=document.createElement('div');card.className='metric-item';if(m.label==='DATABASE TABLES')card.dataset.metric='database-tables';var lb=document.createElement('div');lb.className='metric-label';lb.textContent=m.label;var vl=document.createElement('div');vl.className='metric-val';vl.style.color=m.c;vl.textContent=m.value;card.appendChild(lb);card.appendChild(vl);lm.appendChild(card);});}
   (function tryCharts(){
     if(!window.OmegaChart){setTimeout(tryCharts,400);return;}
     var uid=s&&s.user&&s.user.id;if(!uid)return;

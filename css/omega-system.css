@@ -953,3 +953,227 @@ button:not([class]):hover{
   .osc-cap{ padding:10px 12px; }
   .osc-cap span{ font-size:11px; letter-spacing:.12em; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Ω-CHROMATIC — Chromatic Aberration & Color-Separation Effects
+   
+   Purpose: Enhance perceived responsiveness and technical polish via CSS
+   filters on state transitions (loading → success/error). Error states
+   intensify to red/cyan split as a visual urgency cue.
+   
+   Grounded in: Proposal #24 — Chromatic Aberration & Color-Separation Effects
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── SVG FILTER DEFINITIONS (for browser-native chromatic effects) ────────── */
+svg#omega-filters{display:none}
+
+/* ── CHROMATIC EFFECT STATES ─────────────────────────────────────────────── */
+
+/* Loading state: subtle color-channel offset (0.5px) to indicate activity */
+.omega-loading{
+  animation:omega-chromatic-loading .8s ease-in-out infinite;
+}
+
+@keyframes omega-chromatic-loading{
+  0%,100%{filter:drop-shadow(-0.25px 0 0 rgba(201,168,76,.4)) drop-shadow(0.25px 0 0 rgba(0,229,255,.3))}
+  50%{filter:drop-shadow(-0.5px 0 0 rgba(201,168,76,.5)) drop-shadow(0.5px 0 0 rgba(0,229,255,.4))}
+}
+
+/* Error state: intense red/cyan split (1.5–2px) signals urgency */
+.omega-error{
+  animation:omega-chromatic-error .6s ease-in-out;
+  filter:drop-shadow(-1px 0 0 #C4453C) drop-shadow(1px 0 0 #00E5FF);
+}
+
+@keyframes omega-chromatic-error{
+  0%{filter:drop-shadow(-2px 0 0 #C4453C) drop-shadow(2px 0 0 #00E5FF) brightness(1.1)}
+  50%{filter:drop-shadow(-1.5px 0 0 #C4453C) drop-shadow(1.5px 0 0 #00E5FF) brightness(1)}
+  100%{filter:drop-shadow(-1px 0 0 #C4453C) drop-shadow(1px 0 0 #00E5FF) brightness(1)}
+}
+
+/* Success state: gentle green/gold shimmer (0.5px) affirms completion */
+.omega-success{
+  animation:omega-chromatic-success 1.2s cubic-bezier(.34,1.4,.64,1);
+}
+
+@keyframes omega-chromatic-success{
+  0%{filter:drop-shadow(-0.5px 0 0 #3fb27f) drop-shadow(0.5px 0 0 #C9A84C) brightness(.95)}
+  50%{filter:drop-shadow(-0.25px 0 0 #3fb27f) drop-shadow(0.25px 0 0 #C9A84C) brightness(1.05)}
+  100%{filter:none}
+}
+
+/* ── INTENSITY VARIANTS (Tier 3+ control via settings) ────────────────────── */
+
+/* Subtle: minimal aberration (0.25–0.5px) — default for all tiers */
+.omega-chromatic-subtle{
+  --chromatic-offset:0.25px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.3)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.2))
+}
+
+/* Moderate: balanced aberration (0.75–1.5px) — Tier 3+ preferred */
+.omega-chromatic-moderate{
+  --chromatic-offset:0.75px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.4)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.3))
+}
+
+/* Intense: strong aberration (1.5–2px) — Tier 5+ power users */
+.omega-chromatic-intense{
+  --chromatic-offset:1.5px;
+  filter:drop-shadow(calc(var(--chromatic-offset) * -1) 0 0 rgba(201,168,76,.5)) drop-shadow(var(--chromatic-offset) 0 0 rgba(0,229,255,.4))
+}
+
+/* ── BUTTON & CONTROL INTERACTIONS ───────────────────────────────────────── */
+
+/* Apply chromatic shimmer on button press (rapid offset pulse) */
+.btn-gold.omega-press, .btn-cyan.omega-press, .btn-crim.omega-press,
+button:not([class*='omega-']).omega-press{
+  animation:omega-chromatic-press .4s cubic-bezier(.34,1.4,.64,1);
+}
+
+@keyframes omega-chromatic-press{
+  0%{filter:drop-shadow(-1px 0 0 rgba(201,168,76,.6)) drop-shadow(1px 0 0 rgba(0,229,255,.5)) scale(0.98)}
+  50%{filter:drop-shadow(-0.5px 0 0 rgba(201,168,76,.4)) drop-shadow(0.5px 0 0 rgba(0,229,255,.3)) scale(1)}
+  100%{filter:none;scale(1)}
+}
+
+/* ── ACCESSIBILITY: REDUCED MOTION ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion:reduce){
+  .omega-loading, .omega-error, .omega-success,
+  .omega-chromatic-subtle, .omega-chromatic-moderate, .omega-chromatic-intense,
+  .btn-gold.omega-press, .btn-cyan.omega-press, .btn-crim.omega-press,
+  button:not([class*='omega-']).omega-press{
+    animation:none !important;
+    filter:none !important;
+  }
+  
+  .omega-error{
+    border-color:var(--crim);
+    background-color:rgba(196,69,60,.08);
+  }
+  
+  .omega-success{
+    border-color:var(--green);
+    background-color:rgba(63,178,127,.08);
+  }
+}
+
+/* ── STATE TRANSITION HELPERS (page-level integration) ─────────────────────── */
+
+/* Pages using omega-dataguard.js inject these classes on data state changes */
+.omega-data-wait{cursor:wait}
+.omega-data-hold{pointer-events:none;opacity:.7}
+
+/* ── Ω-SEASONAL: Elemental & Seasonal Theming Integration ───────────────── */
+/* Dynamic color palette shifts based on member zodiac element and calendar season.
+   Published by theme.js token publisher; reads profiles.sign via OmegaCanon.
+   Falls back gracefully with standard tokens. Respects localStorage overrides:
+   omega_theme_element, omega_theme_season. Prefers-reduced-motion: static opacity. */
+
+:root {
+  /* ELEMENT PALETTES (fallback: all to gold) */
+  --element-fire: #D97706;
+  --element-fire-bright: #F97316;
+  --element-water: #0891B2;
+  --element-water-bright: #06B6D4;
+  --element-wind: #6366F1;
+  --element-wind-bright: #8B5CF6;
+  --element-metal: #A16207;
+  --element-metal-bright: #ECAA59;
+  --element-sand: #C9A84C;
+  --element-sand-bright: #E2C86D;
+
+  /* SEASONAL OVERLAY TOKENS (applied via theme.js) */
+  --season-bloom-saturation: 1;     /* spring=1.2, summer=1.4, fall=0.9, winter=0.8 */
+  --season-vignette-tint: 0;        /* spring=0.08, summer=0.05, fall=0.12, winter=0.15 */
+  --season-glow-intensity: 1;       /* spring=0.8, summer=1.1, fall=0.9, winter=1.2 */
+
+  /* ELEMENT-DRIVEN ACCENT (published by theme.js from member's sign element) */
+  --element-accent: var(--gold);    /* Recomputed by theme.js, reads OmegaCanon.elementFor() */
+  --element-accent-bright: var(--solar);
+
+  /* Fallback to standard tokens if seasonal publisher hasn't run yet */
+  --page-accent-elemental: var(--element-accent);
+  --page-glow-elemental: rgba(201, 168, 76, calc(0.18 * var(--season-glow-intensity)));
+}
+
+/* SEASONAL BLOOM EFFECT: glow intensifies per season */
+.card, .kpi, .kpi-card, .glass, .glass-cyan {
+  --card-glow-opacity: calc(0.12 * var(--season-glow-intensity));
+  filter: drop-shadow(0 0 12px rgba(var(--card-glow-rgb, 201, 168, 76), var(--card-glow-opacity)));
+}
+
+/* VIGNETTE TINT: subtle color overlay at page edges, varies by season */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, var(--season-vignette-tint)) 100%);
+  z-index: -1;
+}
+
+/* ELEMENT ACCENT PROPAGATION: card edges and focus states use element color */
+.card {
+  --card-accent: var(--element-accent);
+  border-top-color: var(--element-accent);
+}
+
+.kpi {
+  --kc: var(--element-accent);
+  border-left-color: var(--element-accent);
+}
+
+.card:hover, .kpi:hover {
+  box-shadow: 0 0 16px rgba(var(--element-accent-rgb, 201, 168, 76), calc(0.25 * var(--season-glow-intensity)));
+}
+
+/* BUTTON ACCENTS: primary action buttons inherit element color */
+.btn-gold {
+  background-color: var(--element-accent);
+  color: var(--void);
+}
+
+.btn-gold:hover {
+  background-color: var(--element-accent-bright);
+  box-shadow: 0 0 20px rgba(var(--element-accent-rgb, 201, 168, 76), 0.4);
+}
+
+/* TEXT ACCENTS: headlines and metadata use element color when available */
+.sechead {
+  color: var(--element-accent);
+}
+
+/* LINK ACCENTS: navigation uses element color to hint section identity */
+a[href]:not(.on):not(.nav-home):not(.nav-back) {
+  color: var(--element-accent);
+  transition: color 0.15s ease, text-shadow 0.15s ease;
+}
+
+a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+  text-shadow: 0 0 8px var(--element-accent);
+}
+
+/* REDUCED MOTION: static seasonal colors, no animation bloom or vignette fade */
+@media (prefers-reduced-motion: reduce) {
+  html::before {
+    animation: none;
+    opacity: var(--season-vignette-tint);
+  }
+
+  .card, .kpi, .kpi-card, .glass, .glass-cyan {
+    filter: none;
+  }
+
+  .card:hover, .kpi:hover {
+    box-shadow: none;
+  }
+
+  .btn-gold:hover {
+    box-shadow: none;
+  }
+
+  a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+    text-shadow: none;
+  }
+}

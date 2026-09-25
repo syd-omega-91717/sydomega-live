@@ -59,6 +59,19 @@ for (const file of files) {
     html = html.replace(/<head(\s[^>]*)?>/i, match => `${match}\n<link rel="manifest" href="/manifest.json">`);
   }
 
+
+  // Universal visual/content contract: every shipped content page receives the
+  // same restrained background and the shared platform runtime. Existing page
+  // scripts remain in place; bg.js is internally guarded against duplication.
+  if (!/omega-unified-background\.css/i.test(html)) {
+    html = html.replace(/<head(\s[^>]*)?>/i, match => `${match}
+<link rel="stylesheet" href="/omega-unified-background.css" data-omega-unified-background="1">`);
+  }
+  if (!/data-omega-global-bg="1"/i.test(html) && !/<script[^>]+src=["'][^"']*\/bg\.js/i.test(html)) {
+    html = html.replace(/<body(\s[^>]*)?>/i, match => `${match}
+<script src="/bg.js" defer data-omega-global-bg="1"></script>`);
+  }
+
   const scripts = [];
   if (engine && !/omega-visual-engine\.js/i.test(html)) scripts.push(`<script src="${engine}" defer></script>`);
   if (observability && !/omega-runtime-observability\.js/i.test(html)) scripts.push(`<script src="${observability}" defer></script>`);

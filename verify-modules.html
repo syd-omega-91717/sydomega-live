@@ -24,13 +24,13 @@
         pass: function(msg) {
           var el = document.createElement('div');
           el.className = 'status pass';
-          el.innerHTML = '✓ ' + name + ': ' + msg;
+          el.textContent = '✓ ' + name + ': ' + msg;
           results.appendChild(el);
         },
         fail: function(msg) {
           var el = document.createElement('div');
           el.className = 'status fail';
-          el.innerHTML = '✗ ' + name + ': ' + msg;
+          el.textContent = '✗ ' + name + ': ' + msg;
           results.appendChild(el);
         }
       };

@@ -45,9 +45,7 @@ platform with a small membership, not an engineering one.
 ## 3. `omega-guardian.js` gate() — either wire it or retire the badge
 
 **Grounded in:** verified directly in this repo — `omega-guardian.js` exports a `gate` function
-(`gate:gate` in its returned API, line 147) but a repo-wide grep for `OmegaGuardian.gate(` across
-every `.html`/`.js` file returns zero call sites. The topbar risk-score badge implies active
-protection that isn't happening, same finding as the sibling repo.
+(`gate:gate` in its returned API, line 147) but a repo-wide inspection now finds the shipped gate callers in `approvals.html`. The topbar risk-score badge accompanies actual gating of the highest-privilege approval actions; additional coverage remains future scope.
 
 **Idea (needs an explicit decision, not a code fix):** pick a short list of genuinely
 higher-stakes actions already in the codebase — e.g. `approvals.html`'s
@@ -1122,7 +1120,7 @@ Greek/zodiac/Olympian brand system (`CLAUDE.md` §4/§6) into two competing
 mythologies for the same underlying mechanic academy.html's certificates
 already cover. Not a "forgotten idea," a brand conflict.
 
-## 22. Seasonal & Elemental Theming Integration (IDENTITY / cross-cutting) — proposal
+## 22. Seasonal & Elemental Theming Integration (IDENTITY / cross-cutting) — SHIPPED
 
 **Concept:** Tie the platform's visual theme dynamically to the member's zodiac
 sign and element affiliation, with automatic color palette cycling tied to
@@ -1181,7 +1179,11 @@ in use.
 - [Habitica level-up animations](https://habitica.com/features)
 - [Strava personal record notifications](https://blog.strava.com/strava-pr-notifications/)
 
-## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — proposal
+## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — SHIPPED
+
+**Shipped** (commit pending; CSS-only implementation via `css/omega-system.css` Ω-CHROMATIC section) — pure CSS filter-based approach implemented exactly as proposed. Four animation states: `.omega-loading` (0.5px gold/cyan offset, 0.8s loop indicating activity), `.omega-error` (1.5–2px red/cyan split, 0.6s urgency cue), `.omega-success` (0.5px green/gold shimmer, 1.2s affirmation, clears to no filter), `.omega-press` (button press ripple effect, 0.4s decay). Three intensity variants (`.omega-chromatic-subtle/moderate/intense`, 0.25–1.5px offset range) available via `--chromatic-offset` CSS variable for Tier 3+ settings panel. Reduced-motion compliance: all animations disabled, visual feedback via border color + background tint instead on `.omega-error` and `.omega-success` states.
+
+**Implementation:** CSS-only (no JavaScript module), injected platform-wide via existing `css/omega-system.css` shared stylesheet (loaded by every page). Grounded in existing state-tracking infrastructure (`omega-dataguard.js` class injection pattern) and animation discipline (matching Ω-HORIZON transition easing + reduced-motion guard pattern). No new HTML, no new RLS surface, no `platform_settings` flag required — pure visual enhancement on existing infrastructure.
 
 **Concept:** Layer subtle chromatic aberration on state transitions (data loading
 → success/error), error feedback, and page navigations to enhance perceived
@@ -1197,7 +1199,7 @@ cue, respecting `prefers-reduced-motion`.
 
 **User benefit:**
 - All tiers: Enhanced perceived responsiveness and technical sophistication
-- Tier 3+: Adjustable aberration intensity slider in settings
+- Tier 3+: Adjustable aberration intensity slider in settings (via `--chromatic-offset` variable)
 
 **Nav placement:** Global effect affecting error/loading states across COMMAND, VAULT, INTEL, ASCEND via CSS `filter` on `.omega-loading`, `.omega-error`, `.omega-success` classes injected by data-guard layer
 

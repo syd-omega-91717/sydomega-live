@@ -594,23 +594,18 @@ window.loadAuditLog=async function(){
       list.appendChild(r2);
     });
   }catch(e){
-    if(cnt)cnt.textContent='5+';
-    var DEMO=[
-      {ts:'2026-07-27',evt:'11 ARTICLES DRAFTED &mdash; GENESIS BLOCK HASH-CHAIN PLANNED',typ:'COVENANT',st:'PLANNED'},
-      {ts:'2026-07-27',evt:'OWNER APEX LOCKED: AUTH=27.8367 = sqrt(A³+B³+C³)×φ/e',typ:'APEX',st:'CONFIRMED'},
-      {ts:'2026-07-27',evt:'TRIAL SYSTEM ACTIVE: 9 MIN 17 SEC = 557 SECONDS',typ:'ACCESS',st:'CONFIRMED'},
-      {ts:'2026-07-27',evt:'DEDICATION TARGET: 9H 17M 17S = 33,437 SECONDS',typ:'SYSTEM',st:'CONFIRMED'},
-      {ts:'2026-07-27',evt:'RLS ENABLED ON ALL 42 DATABASE TABLES',typ:'SECURITY',st:'CONFIRMED'}
-    ];
+    if(cnt)cnt.textContent='—';
     if(list){
       list.innerHTML='';
-      DEMO.forEach(function(r){
-        var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';
-        var row=document.createElement('div');row.className='tbl-row audit-row';
-        row.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:12px;color:'+col+'">'+r.st+'</span>';
-        list.appendChild(row);
-      });
+      var row=document.createElement('div');
+      row.className='tbl-row audit-row';
+      row.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">—</span>'
+        +'<span style="color:var(--muted)">LIVE AUDIT DATA UNAVAILABLE</span>'
+        +'<span style="font-family:var(--M);font-size:12px;color:var(--cyan)">SOURCE</span>'
+        +'<span style="font-family:var(--M);font-size:12px;color:var(--gold)">UNAVAILABLE</span>';
+      list.appendChild(row);
     }
+    console.warn('vault audit log unavailable:',e);
   }
 };
 </script>

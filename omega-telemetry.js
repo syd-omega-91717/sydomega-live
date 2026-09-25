@@ -58,7 +58,7 @@
           session_id:_session,
           properties:evt.properties
         })
-        .catch(function(){});
+        .catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
     } else {
       _queue.push(evt);
     }
@@ -72,7 +72,7 @@
     if(!q.length) return;
     window.__omegaSb.from('telemetry_events')
       .insert(q.map(function(e){ return {user_id:_uid,event_type:e.event_type,page:_page,session_id:_session,properties:e.properties}; }))
-      .catch(function(){});
+      .catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
   }
 
   /* ── AUTO TRACK PAGE VIEW ─────────────────────────────────────── */
@@ -124,9 +124,14 @@
   });
 
   /* ── SESSION END ──────────────────────────────────────────────── */
-  window.addEventListener('beforeunload',function(){
+  var sessionEnded=false;
+  function endSession(){
+    if(sessionEnded)return;
+    sessionEnded=true;
     track('session_end',{duration_s:Math.round((Date.now()-performance.timing.navigationStart)/1000)});
-  });
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')endSession();});
+  window.addEventListener('pagehide',endSession);
 
   /* ── PUBLIC API ───────────────────────────────────────────────── */
   window.OmegaTelemetry = {

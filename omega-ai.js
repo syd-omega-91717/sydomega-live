@@ -72,7 +72,7 @@
            ANTHROPIC_API_KEY is unset (its index.ts:45) -- dormant, not broken. */
         if(r.data&&r.data.enabled===false)
           return 'The intelligence engine is not switched on for this platform yet.';
-      }catch(e){}
+      }catch(e){console.warn('[Omega AI] concierge request failed:',e);}
     }
     return 'The intelligence engine is unreachable right now — please try again shortly.';
   }

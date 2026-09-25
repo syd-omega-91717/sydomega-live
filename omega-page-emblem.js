@@ -354,11 +354,36 @@
       var cfg = PAGES[key] || [12, 'b', '\u03A9'];
       host.setAttribute('data-emblem-done', '1');
       reseat(host);
-      draw(host, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
+
+      /* The emblem is no longer decorative dead space. It is the universal
+         "open my hub" control: one predictable click gives the visitor a
+         short route back into the platform without requiring them to learn
+         the full navigation tree. Axis maps to the platform's three primary
+         working hubs; the gateway/index use the actual entry gate. */
+      var hub = cfg[1] === 'a' ? '/intelligence.html'
+              : cfg[1] === 'b' ? '/dashboard.html'
+              : '/services.html';
+      var pathKey = (location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'dashboard');
+      if (pathKey === 'gateway' || pathKey === 'index' || pathKey === 'enter') hub = '/enter.html';
+
+      var link = document.createElement('a');
+      link.href = hub;
+      link.className = 'omega-page-emblem-link';
+      link.setAttribute('aria-label', 'Open the ' + (cfg[1] === 'a' ? 'Intelligence' : cfg[1] === 'b' ? 'Command' : 'Services') + ' hub');
+      link.title = 'Open hub';
+      link.style.cssText = 'display:block;width:max-content;margin:0 auto;border-radius:50%;text-decoration:none;cursor:pointer;transition:filter .18s ease,transform .18s ease';
+      link.addEventListener('focus', function(){ link.style.filter='drop-shadow(0 0 10px rgba(201,168,76,.55))'; });
+      link.addEventListener('blur', function(){ link.style.filter=''; });
+      link.addEventListener('pointerenter', function(){ link.style.transform='scale(1.025)'; });
+      link.addEventListener('pointerleave', function(){ link.style.transform=''; });
+      link.addEventListener('click', function(){ link.setAttribute('data-emblem-opening','1'); });
+      host.appendChild(link);
+
+      draw(link, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
       var cap = document.createElement('div');
       cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
-      cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span>';
-      host.appendChild(cap);
+      cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span><br><span style="font-size:12px;letter-spacing:1px;color:rgba(232,201,122,.72)">CLICK TO OPEN HUB</span>';
+      link.appendChild(cap);
     }
   }
 

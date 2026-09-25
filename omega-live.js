@@ -21,6 +21,7 @@
   var _uid = null;
   var _profile = null;
   var _retries = {};
+  var _pulseStatus = 'checking';
   function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
   /* ── A. DECLARATIVE DATA BINDING ──────────────────────────────── */
@@ -34,9 +35,34 @@
       var format = el.dataset.liveFormat||'';
       var refresh = parseInt(el.dataset.liveRefresh||'0');
       fetchLive(el, spec, format);
-      if(refresh>0) setInterval(function(){ fetchLive(el,spec,format); }, refresh*1000);
+      if(refresh>0) el.__omegaLiveRefreshId = setInterval(function(){
+        if(document.visibilityState==='visible') fetchLive(el,spec,format);
+      }, refresh*1000);
     });
   }
+
+  function stopLiveRefreshTimers(){
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      if(el.__omegaLiveRefreshId){ clearInterval(el.__omegaLiveRefreshId); el.__omegaLiveRefreshId=null; }
+    });
+  }
+
+  function resumeLiveRefreshTimers(){
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      if(el.__omegaLiveRefreshId) return;
+      var refresh=parseInt(el.dataset.liveRefresh||'0');
+      if(refresh>0) el.__omegaLiveRefreshId=setInterval(function(){
+        if(document.visibilityState==='visible') fetchLive(el,el.dataset.live,el.dataset.liveFormat||'');
+      },refresh*1000);
+    });
+  }
+
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden') stopLiveRefreshTimers();
+    else resumeLiveRefreshTimers();
+  });
+  window.addEventListener('pagehide',stopLiveRefreshTimers);
+  window.addEventListener('pageshow',resumeLiveRefreshTimers);
 
   function fetchLive(el, spec, format){
     if(!window.__omegaSb||!_uid) return;
@@ -51,9 +77,16 @@
       var filter = el.dataset.liveFilter;
       var q = sb.from(target).select('id',{count:'exact',head:true});
       if(filter){var kv=filter.split(':');q=q.eq(kv[0],kv[1]==='true'?true:kv[1]);}
-      q.then(function(r){ renderValue(el,r.count,format); }).catch(function(){});
+      q.then(function(r){
+        if(r&&r.error){ el.textContent='—'; return; }
+        renderValue(el,r&&r.count,format);
+      }).catch(function(){ el.textContent='—'; });
     } else if(type==='rpc'){
-      sb.rpc(target).then(function(r){ if(r.data!=null) renderValue(el,r.data,format); }).catch(function(){});
+      sb.rpc(target).then(function(r){
+        if(r&&r.error){ el.textContent='—'; return; }
+        if(r&&r.data!=null) renderValue(el,r.data,format);
+        else el.textContent='—';
+      }).catch(function(){ el.textContent='—'; });
     } else if(type==='auth'){
       var PHI=1.6180339887,EU=2.7182818285;
       if(_profile){
@@ -85,23 +118,51 @@
     }
   }
 
-  /* ── B. PLATFORM PULSE (real-time health status) ──────────────── */
+  /* ── B. PLATFORM PULSE (real-time data connection status) ─────── */
   function createPulseIndicator(){
-    /* Inject a tiny status dot into topbar */
     var topbar = document.querySelector('.topbar');
     if(!topbar||document.getElementById('omega-pulse')) return;
+
     var dot = document.createElement('div');
     dot.id='omega-pulse';
-    dot.title='Platform Status';
-    dot.setAttribute('aria-label','Platform status: operational');
-    dot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--green,#3fb27f);flex-shrink:0;animation:oa-pulse 2s ease-in-out infinite;cursor:pointer';
+    dot.title='Live data status';
+    dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
+    dot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--muted,#666);flex-shrink:0;animation:oa-pulse 2s ease-in-out infinite;cursor:pointer';
     dot.addEventListener('click',function(){
-      if(window.OmegaNotify)window.OmegaNotify.showToast('Platform operational. AUTH=27.8367 systems normal.','success');
+      var msg=_pulseStatus==='connected'
+        ? 'Live data connection verified.'
+        : _pulseStatus==='unavailable'
+          ? 'Live data connection is currently unavailable.'
+          : 'Live data connection is being checked.';
+      if(window.OmegaNotify)window.OmegaNotify.showToast(msg,_pulseStatus==='connected'?'success':'info');
     });
     var style=document.createElement('style');
     style.textContent='@keyframes oa-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}';
     document.head.appendChild(style);
     topbar.appendChild(dot);
+    verifyPulse(dot);
+  }
+
+  function verifyPulse(dot){
+    if(!window.__omegaSb){
+      _pulseStatus='unavailable';
+      dot.style.background='var(--red,#8B0000)';
+      dot.setAttribute('aria-label','Live data status: unavailable');
+      return;
+    }
+    window.__omegaSb.from('profiles').select('id',{count:'exact',head:true}).limit(1)
+      .then(function(r){
+        _pulseStatus=(r&&r.error)?'unavailable':'connected';
+        dot.style.background=_pulseStatus==='connected'?'var(--green,#3fb27f)':'var(--red,#8B0000)';
+        dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
+        dot.title='Live data status: '+_pulseStatus;
+      })
+      .catch(function(){
+        _pulseStatus='unavailable';
+        dot.style.background='var(--red,#8B0000)';
+        dot.setAttribute('aria-label','Live data status: unavailable');
+        dot.title='Live data status: unavailable';
+      });
   }
 
   /* ── C. LIVE MEMBER COUNT ─────────────────────────────────────── */
@@ -110,7 +171,7 @@
     window.__omegaSb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true)
       .then(function(r){
         document.querySelectorAll('[data-live-members]').forEach(function(el){
-          el.textContent=r.count||'--';
+          el.textContent=(r&&r.error)?'—':(r.count==null?'--':r.count);
         });
       }).catch(function(){});
   }
@@ -125,6 +186,7 @@
       .order('created_at',{ascending:false})
       .limit(5)
       .then(function(r){
+        if(r&&r.error){ tickers.forEach(function(ticker){ ticker.textContent='—'; }); return; }
         if(!r.data||!r.data.length) return;
         tickers.forEach(function(ticker){
           var items = r.data;
@@ -138,9 +200,15 @@
                 +'&#9670; '+esc(String(item.title||'').slice(0,60))+'</span>';
             });
           }
-          next();setInterval(next,4000);
+          var timerId=null;
+          function stop(){if(timerId){clearInterval(timerId);timerId=null;}}
+          function start(){if(timerId||document.visibilityState!=='visible')return;timerId=setInterval(next,4000);}
+          next();start();
+          document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')stop();else start();});
+          window.addEventListener('pagehide',stop);
+          window.addEventListener('pageshow',start);
         });
-      }).catch(function(){});
+      }).catch(function(){ tickers.forEach(function(ticker){ ticker.textContent='—'; }); });
   }
 
   /* ── E. DATA-AUTO elements (pull data into [data-auto="table:col"]) ── */

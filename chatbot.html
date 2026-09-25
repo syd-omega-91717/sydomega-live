@@ -99,7 +99,10 @@ function setTab(name){
 var g=document.getElementById('agent-grid');
 AGENTS.forEach(function(a){
   var d=document.createElement('div');d.className='agent-card card card-edge';d.style.setProperty('--ac',a.col);
-  d.innerHTML='<div class="agent-sign">'+a.sign.toUpperCase()+'</div><div class="agent-name">'+a.name+'</div><div class="agent-domain">'+a.domain+'</div>';
+  var sign=document.createElement('div'); sign.className='agent-sign'; sign.textContent=a.sign.toUpperCase();
+  var name=document.createElement('div'); name.className='agent-name'; name.textContent=a.name;
+  var domain=document.createElement('div'); domain.className='agent-domain'; domain.textContent=a.domain;
+  d.appendChild(sign); d.appendChild(name); d.appendChild(domain);
   g.appendChild(d);
 });
 </script>

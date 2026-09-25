@@ -78,6 +78,9 @@ var entities=[],relationships=[],auditLog=[];
 var selectedId=null;
 var sb=null;
 var uid=null;
+function textEl(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;el.textContent=String(text==null?'':text);return el;}
+function setDetailEmpty(){var p=document.getElementById('detail-panel');p.replaceChildren(textEl('div','empty-state','SELECT AN ITEM TO VIEW DETAILS'));}
+function safeNum(v){var n=Number(v);return Number.isFinite(n)?n:0;}
 
 async function init(){
   if(!window.OmegaSupabase){setTimeout(init,100);return;}
@@ -94,7 +97,7 @@ async function switchView(v,el){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('act');});
   el.classList.add('act');
   selectedId=null;
-  document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+  setDetailEmpty();
   if(v==='entities'){
     document.getElementById('list-title').textContent='ENTITIES';
     await loadEntities();
@@ -133,36 +136,36 @@ function renderList(){
   var list=document.getElementById('item-list');
   var search=(document.getElementById('search-box').value||'').toLowerCase();
   var items=currentView==='entities'?entities:(currentView==='relationships'?relationships:auditLog);
-
+  list.replaceChildren();
   if(currentView==='entities'){
-    var filtered=items.filter(function(e){return (e.display_name||'').toLowerCase().includes(search);});
-    if(!filtered.length){list.innerHTML='<div class="empty-state">NO ENTITIES</div>';return;}
-    list.innerHTML=filtered.map(function(e){
-      var conf=e.confidence_score||0;
-      var badge=conf>=0.8?'conf-high':(conf>=0.5?'conf-med':'conf-low');
-      return '<div class="entity-item" onclick="showEntity(\''+e.id+'\')">'
-        +'<div><div class="entity-name">'+esc(e.display_name||e.canonical_name)+'</div>'
-        +'<div class="entity-meta">'+esc(e.entity_type)+' · <span class="conf-badge '+badge+'">'+Math.round(conf*100)+'%</span></div></div>'
-        +'<button class="btn-icon" onclick="deleteEntity(\''+e.id+'\',event)">✕</button></div>';
-    }).join('');
+    var filtered=items.filter(function(e){return String(e.display_name||'').toLowerCase().includes(search);});
+    if(!filtered.length){list.appendChild(textEl('div','empty-state','NO ENTITIES'));return;}
+    filtered.forEach(function(e){
+      var conf=Math.max(0,Math.min(1,safeNum(e.confidence_score))),badge=conf>=.8?'conf-high':conf>=.5?'conf-med':'conf-low';
+      var item=textEl('div','entity-item','');item.addEventListener('click',function(){showEntity(e.id);});
+      var left=textEl('div','');left.append(textEl('div','entity-name',e.display_name||e.canonical_name));
+      var meta=textEl('div','entity-meta',String(e.entity_type||'')+' · ');meta.appendChild(textEl('span','conf-badge '+badge,Math.round(conf*100)+'%'));left.appendChild(meta);
+      var del=textEl('button','btn-icon','✕');del.type='button';del.setAttribute('aria-label','Delete entity');del.addEventListener('click',function(ev){deleteEntity(e.id,ev);});
+      item.append(left,del);list.appendChild(item);
+    });
   }else if(currentView==='relationships'){
-    var filtered=items.filter(function(r){return (r.relationship_type||'').toLowerCase().includes(search)||(r.source_entity_name||'').toLowerCase().includes(search)||(r.target_entity_name||'').toLowerCase().includes(search);});
-    if(!filtered.length){list.innerHTML='<div class="empty-state">NO RELATIONSHIPS</div>';return;}
-    list.innerHTML=filtered.map(function(r){
-      var conf=r.confidence||0;
-      var badge=conf>=0.8?'conf-high':(conf>=0.5?'conf-med':'conf-low');
-      return '<div class="rel-item" onclick="showRelationship(\''+r.id+'\')">'
-        +'<div><div class="rel-name">'+esc(r.source_entity_name)+' → '+esc(r.target_entity_name)+'</div>'
-        +'<div class="rel-meta">'+esc(r.relationship_type)+' · <span class="conf-badge '+badge+'">'+Math.round(conf*100)+'%</span></div></div>'
-        +'<button class="btn-icon" onclick="deleteRelationship(\''+r.id+'\',event)">✕</button></div>';
-    }).join('');
+    var filtered=items.filter(function(r){var q=String(r.relationship_type||'')+' '+String(r.source_entity_name||'')+' '+String(r.target_entity_name||'');return q.toLowerCase().includes(search);});
+    if(!filtered.length){list.appendChild(textEl('div','empty-state','NO RELATIONSHIPS'));return;}
+    filtered.forEach(function(r){
+      var conf=Math.max(0,Math.min(1,safeNum(r.confidence))),badge=conf>=.8?'conf-high':conf>=.5?'conf-med':'conf-low';
+      var item=textEl('div','rel-item','');item.addEventListener('click',function(){showRelationship(r.id);});
+      var left=textEl('div','');left.appendChild(textEl('div','rel-name',String(r.source_entity_name||'')+' → '+String(r.target_entity_name||'')));
+      var meta=textEl('div','rel-meta',String(r.relationship_type||'')+' · ');meta.appendChild(textEl('span','conf-badge '+badge,Math.round(conf*100)+'%'));left.appendChild(meta);
+      var del=textEl('button','btn-icon','✕');del.type='button';del.setAttribute('aria-label','Delete relationship');del.addEventListener('click',function(ev){deleteRelationship(r.id,ev);});
+      item.append(left,del);list.appendChild(item);
+    });
   }else{
-    if(!items.length){list.innerHTML='<div class="empty-state">NO AUDIT LOG</div>';return;}
-    list.innerHTML=items.map(function(a){
-      return '<div class="rel-item" onclick="showAuditEvent(\''+a.id+'\')">'
-        +'<div><div class="rel-name">'+esc(a.event_type)+' — '+esc(a.entity_name)+'</div>'
-        +'<div class="rel-meta">'+new Date(a.created_at).toLocaleDateString()+'</div></div></div>';
-    }).join('');
+    if(!items.length){list.appendChild(textEl('div','empty-state','NO AUDIT LOG'));return;}
+    items.forEach(function(a){
+      var item=textEl('div','rel-item','');item.addEventListener('click',function(){showAuditEvent(a.id);});
+      var left=textEl('div','');left.appendChild(textEl('div','rel-name',String(a.event_type||'')+' — '+String(a.entity_name||'')));
+      left.appendChild(textEl('div','rel-meta',new Date(a.created_at).toLocaleDateString()));item.appendChild(left);list.appendChild(item);
+    });
   }
 }
 
@@ -196,7 +199,7 @@ async function showEntity(eid){
     +'<button class="btn-secondary" onclick="duplicateEntity(\''+e.id+'\')">⟳ MERGE DUPLICATE</button>'
     +'<button class="btn-danger" onclick="deleteEntity(\''+e.id+'\')">✕ DELETE</button>'
     +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
 }
 
 async function showRelationship(rid){
@@ -224,7 +227,7 @@ async function showRelationship(rid){
     +'<button class="btn-primary" onclick="verifyRelationship(\''+r.id+'\')">✓ VERIFY</button>'
     +'<button class="btn-danger" onclick="deleteRelationship(\''+r.id+'\')">✕ DELETE</button>'
     +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
 }
 
 async function showAuditEvent(eid){
@@ -238,7 +241,7 @@ async function showAuditEvent(eid){
     +'<div class="meta-item"><div class="meta-label">TIMESTAMP</div><div class="meta-value">'+new Date(e.created_at).toLocaleString()+'</div></div>'
     +'<div class="meta-item"><div class="meta-label">DETAILS</div><div class="meta-value">'+esc(e.details||'[No details]')+'</div></div>'
     +'</div>';
-  document.getElementById('detail-panel').innerHTML=html;
+  document.getElementById('detail-panel').replaceChildren();document.getElementById('detail-panel').appendChild(document.createRange().createContextualFragment(html));
 }
 
 async function verifyEntity(eid){

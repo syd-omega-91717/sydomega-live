@@ -61,10 +61,10 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('tribes')">TRIBES</button>
-  <button class="tab-btn" onclick="setTab('rankings')">RANKINGS</button>
-  <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="tribes" type="button">TRIBES</button>
+  <button class="tab-btn" data-tab="rankings" type="button">RANKINGS</button>
+  <button class="tab-btn" data-tab="matrix" type="button">MATRIX</button>
+  <button class="tab-btn" data-tab="science" type="button">SCIENCE</button>
 </div>
 
 <!-- TRIBES TAB -->
@@ -144,9 +144,10 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 <script>
 function setTab(name){
   var tabs=['tribes','rankings','matrix','science'];
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
 </script>
 
 <script type="module">
@@ -203,12 +204,6 @@ var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,2
 function gateForAuthority(auth){
   for(var i=0;i<GATES.length;i++){ if((auth||0)<GATES[i]) return i+1; }
   return 12;
-}
-
-function generateDemoProfiles(){
-  var names=['CORVUS','LYSANDER','MIRA','THERON','OPHELIA','CASPIAN','SELENE','DORIAN','ARIA','SAGE','ORION','NOVA','PHOENIX','ATLAS','LUNA'];
-  var elements=['fire','water','wind','metal','sand','soul','space','void','all'];
-  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority:(Math.random()*25+3).toFixed(2)*1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
 }
 
 function groupByElement(ps){
@@ -365,7 +360,7 @@ window.addEventListener('resize',drawDominanceChart);
       var auth=p.is_owner?27.8367:calcAuth(Number(p.axis_a||0.001),Number(p.axis_b||0.001),Number(p.axis_c||0.001));
       return Object.assign({},p,{authority:auth});
     }).sort(function(a,b){return b.authority-a.authority;});
-  }catch(e){profiles=generateDemoProfiles();}
+  }catch(e){profiles=[];var notice=document.createElement('div');notice.className='empty';notice.textContent='LIVE TRIBE DATA UNAVAILABLE — NO SYNTHETIC MEMBERS SHOWN';document.getElementById('elementGrid').replaceChildren(notice);document.getElementById('tribeRankGrid').replaceChildren(notice.cloneNode(true));console.warn('[Omega] tribe telemetry unavailable',e);}
 
   tribeData=groupByElement(profiles);
   renderGlobalStats();

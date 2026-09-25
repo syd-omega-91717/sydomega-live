@@ -234,7 +234,7 @@ async function deleteEntity(eid,ev){
     await loadEntities();
     selectedId=null;
     renderList();
-    document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+    setDetailEmpty();
   }catch(e){alert('Error: '+e.message);}
 }
 
@@ -247,7 +247,7 @@ async function deleteRelationship(rid,ev){
     await loadRelationships();
     selectedId=null;
     renderList();
-    document.getElementById('detail-panel').innerHTML='<div class="empty-state">SELECT AN ITEM TO VIEW DETAILS</div>';
+    setDetailEmpty();
   }catch(e){alert('Error: '+e.message);}
 }
 

@@ -382,7 +382,7 @@
       draw(link, cfg[0], AXIS_COL[cfg[1]] || '#C9A84C', cfg[2]);
       var cap = document.createElement('div');
       cap.style.cssText = 'text-align:center;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-top:6px';
-      cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span><br><span style="font-size:10px;letter-spacing:1px;color:rgba(232,201,122,.72)">CLICK TO OPEN HUB</span>';
+      cap.innerHTML = cfg[0] + '-FOLD &middot; <span data-canon-lattice="' + (cfg[0] === 9 ? 'nine' : 'twelve') + '"></span><br><span style="font-size:12px;letter-spacing:1px;color:rgba(232,201,122,.72)">CLICK TO OPEN HUB</span>';
       link.appendChild(cap);
     }
   }

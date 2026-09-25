@@ -62,7 +62,7 @@ function generateProject(type, data) {
 var gen = GENERATORS[type];
 if (!gen) return null;
 var project = {
-id: 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), type: type, name: gen.name, input: data, created: Date.now(), status: 'draft', steps: {}
+id: 'proj_' + Date.now() + '_' + (window.crypto && crypto.randomUUID ? crypto.randomUUID().replace(/-/g,'').slice(0,12) : Date.now().toString(36)), type: type, name: gen.name, input: data, created: Date.now(), status: 'draft', steps: {}
 };
 gen.steps.forEach(function(step) {
 if (STEP_TEMPLATES[step]) {
@@ -107,84 +107,42 @@ localStorage.setItem('omega:projects', JSON.stringify(projects));
 return projects;
 }, renderStudio: function(el) {
 if (!el) return;
-var typeOptions = Object.keys(GENERATORS).map(function(t) {
-var g = GENERATORS[t];
-return '<option value=' + t + '>' + g.name + '</option>';
-}).join('');
-el.innerHTML = '<div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px>OMEGA PROJECT STUDIO · AI-NATIVE CREATION</div>' + '<div style="display:grid;grid-template-columns:300px 1fr;gap:20px">' + '<div>' + '<div style=margin-bottom:12px><label style=display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px>PROJECT TYPE</label><select class=ops-type style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none">' + typeOptions + '</select></div>' + '<div id=ops-fields></div>' + '<button class=ops-generate style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;margin-top:12px">GENERATE PROJECT</button>' + '</div>' + '<div id=ops-preview></div>' + '</div>';
-var typeSelect = el.querySelector('.ops-type');
-var fieldsEl = el.querySelector('#ops-fields');
-var previewEl = el.querySelector('#ops-preview');
-function renderFields(type) {
-var gen = GENERATORS[type];
-if (!gen) return;
-fieldsEl.innerHTML = gen.fields.map(function(f) {
-return '<div style=margin-bottom:10px><label style=display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;text-transform:uppercase>' + f + '</label><input type=text class=ops-field data-field=' + f + ' placeholder="Enter ' + f + '…" style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none"></div>';
-}).join('');
-}
-renderFields(typeSelect.value);
-typeSelect.addEventListener('change', function() {
-renderFields(typeSelect.value);
-});
-el.querySelector('.ops-generate').addEventListener('click', function() {
-var inputs = fieldsEl.querySelectorAll('.ops-field');
-var data = {};
-inputs.forEach(function(inp) {
-data[inp.dataset.field] = inp.value;
-});
-var proj = generateProject(typeSelect.value, data);
-if (proj) {
-saveProject(proj);
-renderPreview(previewEl, proj);
-document.dispatchEvent(new CustomEvent('omega:project-generated', {
-detail: proj
-}));
-}
-});
+el.replaceChildren();
+function node(tag, text, css, attrs) { var n=document.createElement(tag); if(text!=null)n.textContent=text; if(css)n.style.cssText=css; if(attrs)Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);}); return n; }
+var title=node('div','OMEGA PROJECT STUDIO · AI-NATIVE CREATION',"font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px");
+var grid=node('div',null,"display:grid;grid-template-columns:300px 1fr;gap:20px"), left=node('div'), previewEl=node('div',null,null,{id:'ops-preview'});
+var typeWrap=node('div',null,"margin-bottom:12px"), label=node('label','PROJECT TYPE',"display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;text-transform:uppercase");
+var typeSelect=node('select',null,"width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none",{class:'ops-type'});
+Object.keys(GENERATORS).forEach(function(t){typeSelect.appendChild(node('option',GENERATORS[t].name,null,{value:t}));});
+typeWrap.appendChild(label);typeWrap.appendChild(typeSelect);
+var fieldsEl=node('div',null,null,{id:'ops-fields'});
+var generate=node('button','GENERATE PROJECT',"font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;margin-top:12px",{class:'ops-generate',type:'button'});
+left.appendChild(typeWrap);left.appendChild(fieldsEl);left.appendChild(generate);grid.appendChild(left);grid.appendChild(previewEl);el.appendChild(title);el.appendChild(grid);
+function renderFields(type){var gen=GENERATORS[type];if(!gen)return;fieldsEl.replaceChildren();gen.fields.forEach(function(f){var wrap=node('div',null,"margin-bottom:10px"),lab=node('label',f,"display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;text-transform:uppercase"),inp=node('input',null,"width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:8px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:12px;outline:none",{type:'text',class:'ops-field','data-field':f});inp.id='omega-field-'+f;lab.htmlFor=inp.id;inp.placeholder='Enter '+f+'…';wrap.appendChild(lab);wrap.appendChild(inp);fieldsEl.appendChild(wrap);});}
+renderFields(typeSelect.value);typeSelect.addEventListener('change',function(){renderFields(typeSelect.value);});
+generate.addEventListener('click',function(){var data={};fieldsEl.querySelectorAll('.ops-field').forEach(function(inp){data[inp.dataset.field]=String(inp.value||'').trim().slice(0,2000);});var proj=generateProject(typeSelect.value,data);if(proj){saveProject(proj);renderPreview(previewEl,proj);document.dispatchEvent(new CustomEvent('omega:project-generated',{detail:proj}));}});
 }, renderPreview: function(el, proj) {
-if (!el || !proj) return;
-var stepsHtml = Object.entries(proj.steps).map(function([key, val]) {
-var content = typeof val === 'object' ? '<pre style=font-family:var(--M);font-size:12px;color:var(--muted);overflow-x:auto>' + JSON.stringify(val, null, 2) + '</pre>' : '<div style=font-family:var(--M);font-size:12px;color:var(--ink)>' + val + '</div>';
-return '<div style="margin-bottom:12px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);border-radius:3px"><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;text-transform:uppercase>' + key + '</div>' + content + '</div>';
-}).join('');
-el.innerHTML = '<div class=glass style=padding:16px><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px>GENERATED SPECIFICATION</div><div style=font-family:var(--D);font-size:clamp(16px,2vw,22px);color:var(--gold);margin-bottom:12px>' + (proj.input.subject || proj.input.feature || proj.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:16px>TYPE: ' + proj.name + ' · ID: ' + proj.id + '</div>' + stepsHtml + '<div style=margin-top:12px;display:flex;gap:8px><button class=ops-save style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(63,178,127,.3);color:var(--green);border-radius:2px;cursor:pointer">SAVE TO PROJECTS</button><button class=ops-export style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer">EXPORT JSON</button></div></div>';
-el.querySelector('.ops-save').addEventListener('click', function() {
-saveProject(proj);
-alert('Project saved to local storage');
-});
-el.querySelector('.ops-export').addEventListener('click', function() {
-var blob = new Blob([JSON.stringify(proj, null, 2)], {
-type: 'application/json'
-});
-var url = URL.createObjectURL(blob);
-var a = document.createElement('a');
-a.href = url;
-a.download = proj.id + '.json';
-a.click();
-URL.revokeObjectURL(url);
-});
+if(!el||!proj)return;
+el.replaceChildren();
+function node(tag,text,css,attrs){var n=document.createElement(tag);if(text!=null)n.textContent=text;if(css)n.style.cssText=css;if(attrs)Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);});return n;}
+var glass=node('div');glass.className='glass';glass.style.cssText='padding:16px';
+glass.appendChild(node('div','GENERATED SPECIFICATION',"font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px"));
+var subject=proj.input&&(proj.input.subject||proj.input.feature||proj.input.product)||'Untitled';
+glass.appendChild(node('div',String(subject),"font-family:var(--D);font-size:clamp(16px,2vw,22px);color:var(--gold);margin-bottom:12px"));
+glass.appendChild(node('div','TYPE: '+String(proj.name||'Unknown')+' · ID: '+String(proj.id||'unknown'),"font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:16px"));
+Object.entries(proj.steps||{}).forEach(function(entry){var key=entry[0],val=entry[1],wrap=node('div',null,'margin-bottom:12px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);border-radius:3px');wrap.appendChild(node('div',String(key),"font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;text-transform:uppercase"));wrap.appendChild(node(val&&typeof val==='object'?'pre':'div',val&&typeof val==='object'?JSON.stringify(val,null,2):String(val==null?'':val),"font-family:var(--M);font-size:12px;color:var(--muted);overflow-x:auto;white-space:pre-wrap;word-break:break-word"));glass.appendChild(wrap);});
+var actions=node('div',null,'margin-top:12px;display:flex;gap:8px;flex-wrap:wrap'), save=node('button','SAVE TO PROJECTS',"font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(63,178,127,.3);color:var(--green);border-radius:2px;cursor:pointer",{class:'ops-save',type:'button'}), exp=node('button','EXPORT JSON',"font-family:var(--M);font-size:12px;letter-spacing:1px;padding:6px 12px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer",{class:'ops-export',type:'button'});actions.appendChild(save);actions.appendChild(exp);glass.appendChild(actions);el.appendChild(glass);
+save.addEventListener('click',function(){saveProject(proj);alert('Project saved to local storage');});exp.addEventListener('click',function(){var blob=new Blob([JSON.stringify(proj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=String(proj.id||'omega-project')+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},0);});
 }, renderProjectList: function(el) {
-if (!el) return;
-var projects = loadProjects();
-if (projects.length === 0) {
-el.innerHTML = '<div class=glass style=padding:20px;text-align:center><div style=font-family:var(--M);font-size:12px;color:var(--muted)>No projects yet. Use the studio to generate one.</div></div>';
-return;
+if(!el)return;
+el.replaceChildren();
+function node(tag,text,css,attrs){var n=document.createElement(tag);if(text!=null)n.textContent=text;if(css)n.style.cssText=css;if(attrs)Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);});return n;}
+var projects=loadProjects();
+if(!projects.length){var empty=node('div');empty.className='glass';empty.style.cssText='padding:20px;text-align:center';empty.appendChild(node('div','No projects yet. Use the studio to generate one.',"font-family:var(--M);font-size:12px;color:var(--muted)"));el.appendChild(empty);return;}
+var grid=node('div',null,'display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px');
+projects.forEach(function(p){var card=node('div');card.className='glass';card.style.cssText='padding:14px;cursor:pointer';card.dataset.projId=String(p.id||'');card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Open project '+String(p.name||'Project'));card.appendChild(node('div',String(p.name||'PROJECT').toUpperCase(),"font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px"));var subject=p.input&&(p.input.subject||p.input.feature||p.input.product)||'Untitled';card.appendChild(node('div',String(subject),"font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px"));card.appendChild(node('div',String(new Date(Number(p.created)||Date.now()).toLocaleDateString())+' · '+Object.keys(p.steps||{}).length+' steps',"font-family:var(--M);font-size:12px;color:var(--muted)"));function open(){var proj=loadProjects().find(function(x){return x.id===card.dataset.projId;}),target=document.querySelector('[data-omega-project-preview]');if(proj&&target&&window.OmegaProjectStudio.renderPreview)window.OmegaProjectStudio.renderPreview(target,proj);}card.addEventListener('click',open);card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});grid.appendChild(card);});
+el.appendChild(grid);
 }
-el.innerHTML = '<div style=display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px>' + projects.map(function(p) {
-return '<div class=glass style=padding:14px;cursor:pointer data-proj-id=' + p.id + '><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px>' + p.name.toUpperCase() + '</div><div style=font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:4px>' + (p.input.subject || p.input.feature || p.input.product || 'Untitled') + '</div><div style=font-family:var(--M);font-size:12px;color:var(--muted)>' + new Date(p.created).toLocaleDateString() + ' · ' + Object.keys(p.steps).length + ' steps</div></div>';
-}).join('') + '</div>';
-el.querySelectorAll('[data-proj-id]').forEach(function(card) {
-card.addEventListener('click', function() {
-var proj = loadProjects().find(function(p) {
-return p.id === card.dataset.projId;
-});
-if (proj && window.OmegaProjectStudio.renderPreview) {
-window.OmegaProjectStudio.renderPreview(document.querySelector('[data-omega-project-preview]'), proj);
-}
-});
-});
-}
-};
 document.addEventListener('DOMContentLoaded', function() {
 var studio = document.querySelector('[data-omega-project-studio]');
 if (studio) window.OmegaProjectStudio.renderStudio(studio);

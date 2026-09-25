@@ -82,13 +82,13 @@ def scan_page(html_file):
 
 def page_contract_issues(content, html_file):
     """Check the shared structural contract without rewriting page-specific UI."""
-    if re.search(r'data-omega-special-page\s*=\s*["']true["']', content, re.I):
+    if re.search(r"""data-omega-special-page\s*=\s*["']true["']""", content, re.I):
         return []
     checks = [
-        (r'<meta[^>]+name=["']viewport["']', "Page contract: missing viewport meta"),
+        (r"""<meta[^>]+name=["']viewport["']""", "Page contract: missing viewport meta"),
         (r'<title>[^<]+</title>', "Page contract: missing document title"),
         (r'<h1\b', "Page contract: missing primary h1"),
-        (r'<main\b|role=["']main["']', "Page contract: missing main landmark"),
+        (r"""<main\b|role=["']main["']""", "Page contract: missing main landmark"),
         (r'(?:skip-link|omega-skip)', "Page contract: missing skip navigation marker"),
         (r'nav\.js', "Page contract: missing canonical nav.js"),
     ]

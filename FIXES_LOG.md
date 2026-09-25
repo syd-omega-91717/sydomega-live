@@ -20547,4 +20547,15 @@ python3 -m unittest scripts/tests/test_escape_helpers.py      2 tests OK (first 
 ./scripts/ci-local.sh (after)                                 ALL 24 BLOCKING CHECKS PASSED; 318 + 23 tests
 ```
 
+**Two more `main` breaks found by rendering, not by any static gate:**
+
+- `nav.js` gave its injected `<style>` *and* the context-rail `<nav>` the same id, `omega-context-rail` — a duplicate id on **every** page (`verify-runtime.js` failed 49/49 touched pages on it, and pristine `main` too), and the style's `getElementById` guard could read the rail as itself. The style is now `omega-context-rail-style`.
+- `css/omega-system.css:1148` `a[href]:not(.on):not(.nav-home):not(.nav-back)` (0,4,1) set `color: var(--element-accent)` over `.skip-link` (0,1,0), whose own background is gold — so for a signed-in member with a gold accent the skip link rendered **gold on gold, 1:1**, on `roadmap.html` (a §10 capability entrypoint, so the blocking `capability-evidence` gate), `courses.html`, `architecture.html`. Same class `omega-accessibility-audit.css:171` already fixed for `:hover`. `:not(.skip-link)` added to both the rule and its `:hover` twins. Found with a live `cssRules` walk — the unauthenticated probe measured the link fine, because `--element-accent` only resolves once the signed-in stub has an element.
+
+```
+verify-runtime.js (default 13 entrypoints), pristine main   FAIL roadmap.html  1:1 A.skip-link
+verify-runtime.js (default 13 entrypoints), after           PASS
+verify-runtime.js --pages <49 touched pages>, after         0 uncaught errors on any page (wealth.html threw "Unexpected end of input" on main)
+```
+
 Still open (not done in this pass): `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites. Most render the member's own data to themselves (self-XSS) or static constants; this pass prioritised the class where one member's data reaches *another* session. Remaining inline `onclick=` handlers also block a strict `script-src` CSP.

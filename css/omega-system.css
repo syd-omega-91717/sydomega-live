@@ -1144,13 +1144,16 @@ html::before {
   color: var(--element-accent);
 }
 
-/* LINK ACCENTS: navigation uses element color to hint section identity */
-a[href]:not(.on):not(.nav-home):not(.nav-back) {
+/* LINK ACCENTS: navigation uses element color to hint section identity.
+   .skip-link is excluded: it paints its own gold background, and at (0,4,1)
+   this rule outranked its (0,1,0) colour, so a member whose element accent is
+   gold got gold-on-gold -- measured 1:1 by verify-runtime.js on roadmap.html. */
+a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
   color: var(--element-accent);
   transition: color 0.15s ease, text-shadow 0.15s ease;
 }
 
-a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
   text-shadow: 0 0 8px var(--element-accent);
 }
 
@@ -1173,7 +1176,7 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
     box-shadow: none;
   }
 
-  a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+  a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
     text-shadow: none;
   }
 }

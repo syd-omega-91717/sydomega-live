@@ -95,7 +95,8 @@
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return(s==null?'':String(s));}
+function textNode(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;el.textContent=String(text==null?'':text);return el;}
 
 var MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Diamond','Adamant','Aether','Omega Master'];
 var MAT_COL=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#78909C','#607D8B','#C9A84C','#E8D5B7','#9B6BF0','#E2C86D','#00E5FF','#C9A84C'];
@@ -112,43 +113,39 @@ function setTab(name){
 function matIdx(r){return Math.min(11,Math.max(0,Math.floor(Math.min(r.a,r.b,r.c))-1));}
 
 function renderLeaderboard(){
-  var lb=document.getElementById('lb-body');lb.innerHTML='';
-  if(!ranked.length){lb.innerHTML='<div class="tbl-row empty" style="display:block">No sovereigns ranked yet. Be the first to evolve.</div>';return;}
+  var lb=document.getElementById('lb-body');lb.replaceChildren();
+  if(!ranked.length){var empty=textNode('div','tbl-row empty','No sovereigns ranked yet. Be the first to evolve.');empty.style.display='block';lb.appendChild(empty);return;}
   var cols='grid-template-columns:70px 140px 110px 1fr 110px 160px';
   ranked.forEach(function(r,i){
-    var rank=i+1;
-    var rankCls=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
-    var label=r.isMe?'YOU':'SOVEREIGN #'+rank;
-    var labelCls=r.isMe?'sov-you':'sov-other';
-    var mi=matIdx(r);var matCol=MAT_COL[mi];
-    var authPct=Math.min(100,(r.auth/27.8367)*100);
+    var rank=i+1,rankCls=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
+    var label=r.isMe?'YOU':'SOVEREIGN #'+rank,labelCls=r.isMe?'sov-you':'sov-other',mi=matIdx(r),matCol=MAT_COL[mi];
+    var authPct=Math.max(0,Math.min(100,(r.auth/27.8367)*100));
     var rankCol=rank<=3?['#C9A84C','#C7CDD6','#D9B86A'][i]:'var(--ink)';
     var tr=document.createElement('div');tr.className='tbl-row';tr.style.cssText=cols;
     if(r.isMe)tr.style.background='rgba(0,229,255,.04)';
-    tr.innerHTML='<span><span class="rank-cell '+rankCls+'">#'+rank+'</span></span>'
-      +'<span><span class="'+labelCls+'">'+label+'</span></span>'
-      +'<span><span class="sign-badge">'+esc(r.sign)+'</span></span>'
-      +'<span><span class="auth-val" style="color:'+rankCol+'">'+r.auth.toFixed(2)+'</span><div class="tier-bar"><div class="tier-fill" style="width:'+authPct+'%;background:linear-gradient(90deg,'+matCol+',transparent)"></div></div></span>'
-      +'<span><span class="mat-badge" style="color:'+matCol+';border-color:'+matCol+'44">'+MATS[mi]+'</span></span>'
-      +'<span style="color:var(--muted)">('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')</span>';
-    lb.appendChild(tr);
+    var rankWrap=document.createElement('span');rankWrap.appendChild(textNode('span','rank-cell '+rankCls,'#'+rank));
+    var labelWrap=document.createElement('span');labelWrap.appendChild(textNode('span',labelCls,label));
+    var signWrap=document.createElement('span');signWrap.appendChild(textNode('span','sign-badge',r.sign));
+    var authWrap=document.createElement('span'),auth=textNode('span','auth-val',r.auth.toFixed(2));auth.style.color=rankCol;
+    var bar=document.createElement('div');bar.className='tier-bar';var fill=document.createElement('div');fill.className='tier-fill';fill.style.width=authPct+'%';fill.style.background='linear-gradient(90deg,'+matCol+',transparent)';bar.appendChild(fill);authWrap.append(auth,bar);
+    var matWrap=document.createElement('span'),badge=textNode('span','mat-badge',MATS[mi]);badge.style.color=matCol;badge.style.borderColor=matCol+'44';matWrap.appendChild(badge);
+    var matrix=textNode('span',null,'('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')');matrix.style.color='var(--muted)';
+    tr.append(rankWrap,labelWrap,signWrap,authWrap,matWrap,matrix);lb.appendChild(tr);
   });
 }
 
 function renderThrone(){
-  var tr=document.getElementById('throne-row');tr.innerHTML='';
-  if(!ranked.length){tr.innerHTML='<div class="empty">No data.</div>';return;}
+  var tr=document.getElementById('throne-row');tr.replaceChildren();
+  if(!ranked.length){tr.appendChild(textNode('div','empty','No data.'));return;}
   ranked.slice(0,3).forEach(function(r,i){
-    var cn=['t1','t2','t3'][i];var col=['#C9A84C','#C7CDD6','#D9B86A'][i];
-    var label=r.isMe?'YOU':'SOVEREIGN #'+(i+1);
-    var mi=matIdx(r);
+    var cn=['t1','t2','t3'][i],col=['#C9A84C','#C7CDD6','#D9B86A'][i],label=r.isMe?'YOU':'SOVEREIGN #'+(i+1),mi=matIdx(r);
     var d=document.createElement('div');d.className='throne-card card '+cn;
-    d.innerHTML='<div class="tc-rank" style="color:'+col+'">#'+(i+1)+'</div>'
-      +'<div class="tc-label" style="color:'+col+'">'+label+'</div>'
-      +'<div class="tc-auth">AUTHORITY '+r.auth.toFixed(2)+'</div>'
-      +'<div class="tc-sign">'+esc(r.sign)+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px">'+MATS[mi]+'</div>';
-    tr.appendChild(d);
+    var rank=textNode('div','tc-rank','#'+(i+1));rank.style.color=col;
+    var labelEl=textNode('div','tc-label',label);labelEl.style.color=col;
+    var auth=textNode('div','tc-auth','AUTHORITY '+r.auth.toFixed(2));
+    var sign=textNode('div','tc-sign',r.sign);
+    var mat=textNode('div',null,MATS[mi]);mat.style.cssText='font-family:var(--M);font-size:12px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px';
+    d.append(rank,labelEl,auth,sign,mat);tr.appendChild(d);
   });
 }
 

@@ -110,7 +110,6 @@ function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['rates','submit','campaigns','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){return Math.round(n).toLocaleString('en-US');}
 var DURATIONS=[['Hour',917],['Day',9170],['Week',45850],['Month',91700],['Year',917170]];
 var ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],['Codex Sponsor',1]];
@@ -118,9 +117,9 @@ function buildRateCard(){
   var b=document.getElementById('rate-body');
   ZONES.forEach(function(z){
     var tr=document.createElement('div');tr.className='tbl-row';tr.style.gridTemplateColumns='1.4fr 1fr 1fr 1fr 1fr 1fr';
-    var cells='<span class="zone-name">'+z[0]+'</span>';
-    DURATIONS.forEach(function(d){cells+='<span style="text-align:right">'+fmt(d[1]*z[1])+' &#937;</span>';});
-    tr.innerHTML=cells;b.appendChild(tr);
+    var zone=document.createElement('span');zone.className='zone-name';zone.textContent=z[0];tr.appendChild(zone);
+    DURATIONS.forEach(function(d){var cell=document.createElement('span');cell.style.textAlign='right';cell.textContent=fmt(d[1]*z[1])+' Ω';tr.appendChild(cell);});
+    b.appendChild(tr);
   });
   var zs=document.getElementById('m-zone');
   ZONES.forEach(function(z,i){var o=document.createElement('option');o.value=i;o.textContent=z[0];zs.appendChild(o);});
@@ -128,7 +127,7 @@ function buildRateCard(){
   DURATIONS.forEach(function(d,i){var o=document.createElement('option');o.value=i;o.textContent=d[0];ds.appendChild(o);});
 }
 function price(){var z=ZONES[+document.getElementById('m-zone').value],d=DURATIONS[+document.getElementById('m-dur').value];return Math.round(d[1]*z[1]);}
-function refreshQuote(){document.getElementById('m-price').innerHTML=fmt(price())+' <span>&#937;</span>';}
+function refreshQuote(){var el=document.getElementById('m-price');el.replaceChildren();el.appendChild(document.createTextNode(fmt(price())+' '));var omega=document.createElement('span');omega.textContent='Ω';el.appendChild(omega);}
 buildRateCard();refreshQuote();
 document.getElementById('m-zone').addEventListener('change',refreshQuote);
 document.getElementById('m-dur').addEventListener('change',refreshQuote);
@@ -147,30 +146,36 @@ async function loadList(){
   var box=document.getElementById('m-list');
   try{
     var r=await sb.from('media_reservations').select('zone,duration,title,message,price_omega,status,created_at').eq('user_id',_user.id).order('created_at',{ascending:false}).limit(30);
-    if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No campaigns yet &mdash; submit your first above.</div>';return;}
-    box.innerHTML='';
+    function notice(target,text){target.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent=text;target.appendChild(n);}
+    if(!r.data||!r.data.length){notice(box,'No campaigns yet — submit your first above.');return;}
+    box.replaceChildren();
     r.data.forEach(function(q){
       var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
-      var stt=(q.status||'submitted').toLowerCase();
+      var allowed=['submitted','approved','rejected','pending'];var stt=allowed.indexOf(String(q.status||'submitted').toLowerCase())>=0?String(q.status||'submitted').toLowerCase():'submitted';
       var d=document.createElement('div');d.className='camp';
-      d.innerHTML='<div class="top"><span>'+esc(q.title||'Untitled')+'</span><span class="badge '+stt+'">'+stt.toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+esc(q.zone)+'  &middot;  '+esc(q.duration)+'  &middot;  '+fmt(q.price_omega||0)+' &#937;  &middot;  '+dt+'</div>';
-      d.querySelector('.bd').textContent=q.message||'';
-      box.appendChild(d);
+      var top=document.createElement('div');top.className='top';var title=document.createElement('span');title.textContent=q.title||'Untitled';var badge=document.createElement('span');badge.className='badge '+stt;badge.textContent=stt.toUpperCase();top.appendChild(title);top.appendChild(badge);
+      var body=document.createElement('div');body.className='bd';body.textContent=q.message||'';
+      var meta=document.createElement('div');meta.className='dt';meta.textContent=String(q.zone||'')+' · '+String(q.duration||'')+' · '+fmt(q.price_omega||0)+' Ω · '+dt;
+      d.appendChild(top);d.appendChild(body);d.appendChild(meta);box.appendChild(d);
     });
-  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">Campaigns unavailable right now.</div>';}
+  }catch(e){box.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent='Campaigns unavailable right now.';box.appendChild(n);}
 }
 
 async function loadQueue(){
   if(!_isOwner)return;
   var box=document.getElementById('queue-box');
   var r=await sb.from('media_reservations').select('id,user_id,zone,duration,title,message,price_omega,status,created_at').eq('status','submitted').order('created_at',{ascending:true}).limit(60);
-  if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted)">No submissions awaiting approval.</div>';return;}
-  box.innerHTML='';
+  function notice(target,text){target.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent=text;target.appendChild(n);}
+  if(!r.data||!r.data.length){notice(box,'No submissions awaiting approval.');return;}
+  box.replaceChildren();
   r.data.forEach(function(q){
     var dt=q.created_at?new Date(q.created_at).toLocaleString():'';
     var d=document.createElement('div');d.className='qitem';
-    d.innerHTML='<div class="qt"><span>'+esc(q.title||'Untitled')+'</span><span>'+fmt(q.price_omega||0)+' &#937;</span></div><div class="qm"></div><div class="qmeta">'+esc(q.zone)+'  &middot;  '+esc(q.duration)+'  &middot;  MEMBER '+String(q.user_id).slice(0,8)+'  &middot;  '+dt+'</div><div class="qa"><button class="ap">APPROVE</button><button class="rj">REJECT</button></div>';
-    d.querySelector('.qm').textContent=q.message||'';
+    var top=document.createElement('div');top.className='qt';var title=document.createElement('span');title.textContent=q.title||'Untitled';var amount=document.createElement('span');amount.textContent=fmt(q.price_omega||0)+' Ω';top.appendChild(title);top.appendChild(amount);
+    var body=document.createElement('div');body.className='qm';body.textContent=q.message||'';
+    var meta=document.createElement('div');meta.className='qmeta';meta.textContent=String(q.zone||'')+' · '+String(q.duration||'')+' · MEMBER '+String(q.user_id||'').slice(0,8)+' · '+dt;
+    var actions=document.createElement('div');actions.className='qa';var approve=document.createElement('button');approve.className='ap';approve.type='button';approve.textContent='APPROVE';var reject=document.createElement('button');reject.className='rj';reject.type='button';reject.textContent='REJECT';actions.appendChild(approve);actions.appendChild(reject);
+    d.appendChild(top);d.appendChild(body);d.appendChild(meta);d.appendChild(actions);approve.addEventListener('click',function(){decide(q.id,'approved');});reject.addEventListener('click',function(){decide(q.id,'rejected');});
     d.querySelector('.ap').addEventListener('click',function(){decide(q.id,'approved');});
     d.querySelector('.rj').addEventListener('click',function(){decide(q.id,'rejected');});
     box.appendChild(d);

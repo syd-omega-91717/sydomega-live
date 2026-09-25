@@ -44,6 +44,8 @@ def scan_page(html_file):
     content = html_file.read_text()
     findings = {'file': html_file.name, 'issues': []}
 
+    findings['issues'].extend(page_contract_issues(content, html_file))
+
     # Check required loads
     for load_name, pattern in REQUIRED_LOADS.items():
         if load_name.startswith('bg.js') and 'index.html' not in html_file.name:
@@ -77,6 +79,20 @@ def scan_page(html_file):
             findings['issues'].append(f"Custom color definitions (use canonical tokens): {len(custom_colors)} found")
 
     return findings
+
+def page_contract_issues(content, html_file):
+    """Check the shared structural contract without rewriting page-specific UI."""
+    if re.search(r'data-omega-special-page\s*=\s*["']true["']', content, re.I):
+        return []
+    checks = [
+        (r'<meta[^>]+name=["']viewport["']', "Page contract: missing viewport meta"),
+        (r'<title>[^<]+</title>', "Page contract: missing document title"),
+        (r'<h1\b', "Page contract: missing primary h1"),
+        (r'<main\b|role=["']main["']', "Page contract: missing main landmark"),
+        (r'(?:skip-link|omega-skip)', "Page contract: missing skip navigation marker"),
+        (r'nav\.js', "Page contract: missing canonical nav.js"),
+    ]
+    return [message for pattern, message in checks if not re.search(pattern, content, re.I)]
 
 def main():
     print("Visual Design Consistency Audit")

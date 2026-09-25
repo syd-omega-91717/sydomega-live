@@ -34,7 +34,7 @@ core_loop: 'Player engages with content, earns points, unlocks next level.', pro
 return {
 modules: (data.modules || '5').split(',').map(function(s) {
 return s.trim();
-}), quiz_count: Math.floor(Math.random() * 5) + 3, difficulty_curve: 'Progressive — easy to challenging'
+}), quiz_count: 3 + (window.crypto && crypto.getRandomValues ? crypto.getRandomValues(new Uint32Array(1))[0] % 5 : Date.now() % 5), difficulty_curve: 'Progressive — easy to challenging'
 };
 }, quiz: function(data) {
 return {

@@ -129,49 +129,61 @@ function setTab(name){
 }
 
 window.loadDestInfo=function(i){
-  var d=DESTS[i];
-  var el=document.getElementById('dest-info-'+i);
-  el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING&hellip;</span>';
+  var d=DESTS[i],el=document.getElementById('dest-info-'+i);
+  if(!d||!el)return;
+  el.replaceChildren();
+  var loading=document.createElement('span');
+  loading.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';
+  loading.textContent='LOADING…';el.appendChild(loading);
   fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(d.wiki))
     .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
     .then(function(data){
-      var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(d.wiki));
-      el.innerHTML='<div style="font-size:12px;line-height:1.7;color:var(--muted)">'+extract+'</div>'
-        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+      var extract=String(data.extract||'No summary available.').slice(0,5000);
+      var rawLink=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(d.wiki));
+      var url;
+      try{url=new URL(rawLink);if(url.protocol!=='https:'||url.hostname!=='en.wikipedia.org')throw new Error('unsafe');}
+      catch(e){url=new URL('https://en.wikipedia.org/wiki/'+encodeURIComponent(d.wiki));}
+      el.replaceChildren();
+      var summary=document.createElement('div');summary.style.cssText='font-size:12px;line-height:1.7;color:var(--muted)';summary.textContent=extract;
+      var link=document.createElement('a');link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px';link.textContent='FULL ARTICLE →';
+      el.append(summary,link);
     })
     .catch(function(){
-      el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--crim)">Could not reach Wikipedia.</span> '
-        +'<button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:12px;color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;padding:2px 6px">RETRY</button>';
+      el.replaceChildren();
+      var msg=document.createElement('span');msg.style.cssText='font-family:var(--M);font-size:12px;color:var(--crim)';msg.textContent='Could not reach Wikipedia. ';
+      var retry=document.createElement('button');retry.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;padding:2px 6px';retry.textContent='RETRY';retry.addEventListener('click',function(){window.loadDestInfo(i);});
+      el.append(msg,retry);
     });
 };
 
+function nodeText(tag,cls,text){var el=document.createElement(tag);el.className=cls;el.textContent=String(text==null?'':text);return el;}
+
 function renderDests(){
   var grid=document.getElementById('dest-grid');
-  grid.innerHTML='';
+  grid.replaceChildren();
   DESTS.forEach(function(d,i){
-    var card=document.createElement('div');
-    card.className='dest-card card';
-    card.style.setProperty('--dc',d.col);
-    card.innerHTML=
-      (d.heritage?'<div class="hrt-badge">YOUR HERITAGE</div>':'')+
-      '<div class="region">'+d.region+'</div>'+
-      '<div class="dest-name">'+d.name+'</div>'+
-      '<div class="dest-desc">'+d.desc+'</div>'+
-      '<div class="tag-row">'+d.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</div>'+
-      '<div class="matrix-link">&#x25B6; '+d.link+'</div>'+
-      (d.wiki?'<div id="dest-info-'+i+'" style="margin-top:8px" onclick="event.stopPropagation()"><button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer">REAL PLACE INFO (WIKIPEDIA)</button></div>':'');
+    var card=document.createElement('div');card.className='dest-card card';card.style.setProperty('--dc',d.col);
+    if(d.heritage){var badge=document.createElement('div');badge.className='hrt-badge';badge.textContent='YOUR HERITAGE';card.appendChild(badge);}
+    card.appendChild(nodeText('div','region',d.region));
+    card.appendChild(nodeText('div','dest-name',d.name));
+    card.appendChild(nodeText('div','dest-desc',d.desc));
+    var tags=document.createElement('div');tags.className='tag-row';
+    d.tags.forEach(function(t){tags.appendChild(nodeText('span','tag',t));});card.appendChild(tags);
+    card.appendChild(nodeText('div','matrix-link','▶ '+d.link));
+    if(d.wiki){
+      var info=document.createElement('div');info.id='dest-info-'+i;info.style.marginTop='8px';info.addEventListener('click',function(e){e.stopPropagation();});
+      var btn=document.createElement('button');btn.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer';btn.textContent='REAL PLACE INFO (WIKIPEDIA)';btn.addEventListener('click',function(){window.loadDestInfo(i);});
+      info.appendChild(btn);card.appendChild(info);
+    }
     grid.appendChild(card);
   });
 }
 
 function renderExps(){
-  var grid=document.getElementById('exp-grid');
-  grid.innerHTML='';
+  var grid=document.getElementById('exp-grid');grid.replaceChildren();
   EXPS.forEach(function(e){
-    var card=document.createElement('div');
-    card.className='exp-card card';
-    card.innerHTML='<div class="e-icon">'+e.icon+'</div><div class="e-title">'+e.title+'</div><div class="e-desc">'+e.desc+'</div><div class="e-xp">'+e.xp+'</div>';
+    var card=document.createElement('div');card.className='exp-card card';
+    card.append(nodeText('div','e-icon',e.icon),nodeText('div','e-title',e.title),nodeText('div','e-desc',e.desc),nodeText('div','e-xp',e.xp));
     grid.appendChild(card);
   });
 }
@@ -181,13 +193,16 @@ async function loadJourneys(){
   var {data}=await sb.from('travel_journeys').select('destination,purpose,notes,created_at').order('created_at',{ascending:false}).limit(50);
   var stored=data||[];
   if(!stored.length)return;
-  feed.innerHTML='';
+  feed.replaceChildren();
   stored.forEach(function(j){
-    var entry=document.createElement('div');
-    entry.className='journey-entry';
-    entry.innerHTML='<div class="journey-date">'+new Date(j.created_at).toLocaleDateString()+'</div>'+
-      '<div><b style="color:var(--solar)">'+String(j.destination||'').replace(/</g,'&lt;')+'</b> &middot; '+String(j.purpose||'')+'<br><span style="font-size:12px;color:var(--muted)">'+String(j.notes||'').replace(/</g,'&lt;')+'</span></div>';
-    feed.appendChild(entry);
+    var entry=document.createElement('div');entry.className='journey-entry';
+    var date=document.createElement('div');date.className='journey-date';date.textContent=new Date(j.created_at).toLocaleDateString();
+    var body=document.createElement('div');
+    var dest=document.createElement('b');dest.style.color='var(--solar)';dest.textContent=String(j.destination||'').slice(0,160);
+    var purpose=String(j.purpose||'').slice(0,120),notes=String(j.notes||'').slice(0,2000);
+    body.append(dest,document.createTextNode(' · '+purpose),document.createElement('br'));
+    var note=document.createElement('span');note.style.cssText='font-size:12px;color:var(--muted)';note.textContent=notes;body.appendChild(note);
+    entry.append(date,body);feed.appendChild(entry);
   });
 }
 

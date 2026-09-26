@@ -102,6 +102,7 @@
       narrower, real residual scope, not the ~221-of-224 gap this item
       opened with.
 - [ ] Verify MFA, RBAC, audit logging, retention, deletion, incident response, and vendor records.
+      2026-09-26 live check: MFA enrollment/challenge/recovery remains unverified; live Edge Functions currently report 5 ACTIVE deployments while repository source contains additional functions, so deployment parity must be reconciled before claiming Edge Function coverage.
 
 ## Runtime verification
 
@@ -120,6 +121,7 @@ names are not yet covered by a pass.
 - [ ] Test authentication and session recovery.
 - [ ] Test navigation targets and duplicate navigation keys.
 - [ ] Test storage upload, download, and authorization boundaries.
+      2026-09-26: owner-scoped DELETE policies are live for `avatars` and `uploads`; the live buckets currently contain 0 objects, so physical upload/delete authorization remains unexercised.
 - [ ] Test database reads and writes with failure reporting.
 - [ ] Test Edge Functions with valid, invalid, unauthorized, and repeated requests.
 - [ ] Test responsive layout, readability, keyboard access, reduced motion, and accessible names.
@@ -130,6 +132,7 @@ names are not yet covered by a pass.
 - [ ] Map every documented module to an implementation path, test, and runtime evidence.
 - [ ] Mark aspirational or physically impossible claims as concepts rather than implemented capabilities.
 - [ ] Confirm whether each planned service is implemented, partially implemented, unverified, blocked, or not approved.
+      2026-09-26: live Edge Function inventory and repository source inventory are not yet reconciled; this is now an explicit release-control item.
 - [ ] Create a dependency and ownership map for frontend, Supabase, Vercel, payments, media, and AI integrations.
 - [ ] Define rollback, backup restoration, observability, and release approval procedures.
 

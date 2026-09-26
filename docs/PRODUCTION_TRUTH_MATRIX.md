@@ -38,8 +38,8 @@
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
 | Migration history | Live migration history verified through `20260923140718` on 2026-09-23 | Check schema drift before each release |
-| Storage | Present in architecture | Audit buckets/policies and exercise upload/download |
-| Edge Functions | Present | Verify deployed versions and secrets without exposing them |
+| Storage | Live buckets/policies verified 2026-09-26; `avatars`/`uploads` owner-scoped DELETE policies exist; live object count currently 0 | Exercise a real isolated authenticated upload/read/delete and cross-user denial test before marking lifecycle production-verified |
+| Edge Functions | **Source/live mismatch observed 2026-09-26**: repository contains more Edge Function source than the 5 ACTIVE functions currently returned by live Supabase | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
 
 ## Authentication
 
@@ -62,7 +62,7 @@
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
 | Vercel production deployment | Current main SHA `0b5c001802cf95fe11a7f9ec204966fbfe454e7e` has a successful Vercel status | Keep production propagation/smoke gates mandatory |
-| GitHub workflows | Current main verification set is green; no failed/cancelled runs reported for the 12 workflows triggered by this SHA | Preserve concurrency policy and investigate any new failure at root cause |
+| GitHub workflows | **PR #470 corrected-commit verification is green on 2026-09-26**: CI, CodeQL, Contracts, Supabase Runtime Contract, Supabase Migration Security Audit, Production Contract, Runtime Contract, Repository Integrity, Release Readiness, Capability Evidence, Intelligence Fabric and Workflow Contract all passed | Preserve concurrency policy and investigate any new failure at root cause |
 | Production smoke checks | Implemented and successful for the prior release evidence set; current main deployment has a successful Vercel status, but production smoke evidence for the latest SHA is not independently re-exercised in this session | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
@@ -131,7 +131,7 @@ A production release should not be declared complete until all P0/P1 items below
 - [x] GitHub verification workflows execute successfully for current main verification set.
 - [ ] Supabase Security Advisor has zero unresolved findings. **Open provider-level item: leaked-password protection is disabled on the current Free plan.**
 - [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 220/220 RLS-enabled and 0 tables without policies (live inventory verified 2026-09-23).
-- [ ] Auth/MFA/RBAC E2E flow passes.
+- [ ] Auth/MFA/RBAC E2E flow passes. **MFA enrollment/challenge/recovery remains unverified.**
 - [ ] Stripe checkout/webhook/entitlement flow passes in the intended environment.
 - [x] No privileged browser credentials were found by the release-contract audit.
 - [ ] Critical user journeys pass on mobile-sized and desktop viewports.

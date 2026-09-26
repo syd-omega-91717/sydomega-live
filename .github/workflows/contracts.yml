@@ -46,6 +46,8 @@ jobs:
         run: python scripts/contract-suite.py
       - name: Enforce all-roles module control
         run: python scripts/omega-all-roles-control.py
+      - name: Enforce Edge Function service-role authorization
+        run: python scripts/edge-service-role-auth-audit.py
       - name: Enforce information architecture audit
         if: always()
         run: python scripts/audit-information-architecture.py

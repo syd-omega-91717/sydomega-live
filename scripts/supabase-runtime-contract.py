@@ -120,6 +120,12 @@ OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
 POSTGREST_PROBE = "/rest/v1/platform_settings?select=key&limit=1"
 # Postgres insufficient_privilege: the key was accepted, the role lacks a grant.
 KEY_ACCEPTED_PG_CODES = ("42501",)
+# public.token_catalog is the right target instead: it is a deliberately public
+# catalog surface and the live project currently grants `anon` SELECT on it.
+# `platform_settings` must NOT be used here: the 2026-09-23 hardening migration
+# changed it to owner-only reads. This probe must follow the current security
+# boundary rather than weakening RLS to satisfy CI.
+POSTGREST_PROBE = "/rest/v1/token_catalog?select=*&limit=1"
 
 
 def bearer_for(key: str) -> dict[str, str]:

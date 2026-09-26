@@ -123,6 +123,9 @@ class PostgrestProbeTests(unittest.TestCase):
         20260925211957 closed it deliberately); a 42501 from Postgres is still
         proof the key was accepted -- see KeyAcceptanceTests."""
         self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/platform_settings"))
+    def test_the_probe_targets_a_table_anon_can_read(self):
+        """The probe follows the live public catalog boundary, not owner-only settings."""
+        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/token_catalog"))
 
 
 class KeyAcceptanceTests(unittest.TestCase):

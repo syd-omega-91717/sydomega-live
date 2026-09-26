@@ -60,13 +60,26 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
+      - name: Runner diagnostics
+        run: |
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "run=${GITHUB_RUN_ID}"
+      - name: Execution marker
+        run: |
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "VERCEL_PRODUCTION_VALIDATE_EXECUTED=true"
+          echo "VERCEL_PRODUCTION_VALIDATE_RUN_ID=${GITHUB_RUN_ID}"
+      - name: Static contract
       - name: Static contract
         run: python scripts/vercel_static_contract.py
       - name: Build artifact
@@ -136,9 +149,9 @@ jobs:
           echo 'Artifact validation passed; production promotion is waiting for VERCEL_TOKEN.'
           echo 'No provider mutation was attempted.'
           echo '::warning title=Production promotion pending::VERCEL_TOKEN is not configured. Artifact and deployment contracts are green, but this run cannot promote the production alias.'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.credentials.outputs.ready == 'true'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: needs.credentials.outputs.ready == 'true'
         with:
           node-version: '20'
@@ -155,4 +168,4 @@ jobs:
         if: >-
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
-        run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
+        run: npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"

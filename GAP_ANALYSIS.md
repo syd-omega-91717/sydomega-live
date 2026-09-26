@@ -350,17 +350,29 @@ open, recorded in `FIXES_LOG.md`:
   dispatch. The feed now returns only author-less rows, which only `post_dispatch()` (owner-only) writes.
   The same migration fixed `post_dispatch()` (22P02 for the owner: bigint id into a uuid) and
   `set_dispatch_published()` (uuid signature on a bigint id). See `FIXES_LOG.md`.
-- **No MFA, and no way to enrol** (2026-09-26). 0 verified `auth.mfa_factors`, owners included.
-  **In progress (dormant):**
-  - The `omega-mfa.js` enrol/verify/remove UI plus `stepUp()` ships in Settings behind
-    `mfa_enrolment_enabled`, which fails closed. The flag row does not exist yet.
+- **No MFA yet on either owner** (live 2026-09-26: 0 verified `auth.mfa_factors` for both
+  `platform_owners`). Enrolment is **on** (`mfa_enrolment_enabled = true`); what remains is each
+  owner scanning the QR on their own device. The Owner Deck's SECURITY chip lists each owner still
+  without a verified factor and clears from `auth.mfa_factors` itself (`owner_security_status()`,
+  `20260926223027`).
+  **Enforcement prerequisite, found 2026-09-26:** `OmegaMFA.stepUp()` has **no caller** — only
+  `settings.html` loads `omega-mfa.js`, and no sign-in path asks for the code. With
+  `owner_mfa_required` on, an owner's next sign-in is `aal1`, so `is_platform_owner()` returns false
+  and every owner power fails silently. A sign-in step-up must ship before that flag is set.
+  - The `omega-mfa.js` enrol/verify/remove UI ships in Settings (`/settings.html#two-factor`)
+    behind `mfa_enrolment_enabled`, which fails closed.
   - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
     **applied live and dormant** (`20260926102544`; both flags seeded `false`, verified unchanged results).
   - Decision record: `docs/decisions/owner-mfa/`.
   - Phase 2 is done (`20260926102450`). Of the 24 direct owner checks, the only caller-authority
     bypass was `private.omega_is_owner()`'s `profiles.is_owner` fallback, now removed. The other 23 are
-    row guards, statistics or triggers. What remains is owner action: turn on the enrolment UI, enrol
-    both owners on two devices, then set `owner_mfa_required`.
+    row guards, statistics or triggers. What remains: both owners enrol (two devices each), a
+    sign-in step-up ships, then `owner_mfa_required`.
+- **Third-party keys named in the supplied documents: rotation is owner action** (2026-09-26). The
+  repo and its full, unshallow history hold none (key-shape scan of `git log --all -p`: 0; the only
+  JWTs are `anon`), so nothing is left to purge here; no API in reach rotates provider keys. The
+  Owner Deck shows a ROTATE KEYS row with each provider's key page until the owner confirms
+  (`owner_confirm_secrets_rotated()`), and the row returns 180 days later.
 - **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
   exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
 - **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
@@ -780,8 +792,8 @@ open, recorded in `FIXES_LOG.md`:
   function, `REVOKE EXECUTE … FROM PUBLIC` in the same file** — Postgres grants
   it to PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its
   own; that is how 70 revoked functions became 23.
-- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
-  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
+- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03, re-checked
+  2026-09-26: `plan: free`, Pro-and-above; it is now the security advisor's **only** finding). An Auth *dashboard* toggle, no SQL reaches it.
   Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
   k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
   bypasses it — not resolved.** Fails open reporting `checked:false`; never

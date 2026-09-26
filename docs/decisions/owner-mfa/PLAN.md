@@ -4,6 +4,8 @@
 > - `mfa_enrolment_enabled` is **on** live, so the Settings → Account section renders for every signed-in account.
 > - Switching it on exposed a grant gap. Members could not run `private.get_platform_flag`, so no flag-gated section could ever appear; migration `20260926221057` fixes it.
 > - `owner_mfa_required` stays **off**. Next: both owners enrol (two devices each), then run success criterion 3's query (0 rows) before enforcement.
+>
+> **2026-09-26 — a missing step found before enforcement.** `stepUp()` has no caller: only `settings.html` loads `omega-mfa.js`, and no sign-in path asks for the code. With `owner_mfa_required` on, an owner's next session is `aal1`, `is_platform_owner()` returns false, and every owner power fails silently — the lock-out risk below, reached by a normal sign-in rather than a lost device. **A sign-in step-up (an owner at `aal1` with a verified factor is asked for the code) is now a precondition of enforcement**, alongside criterion 3. Enrolment progress shows in the Owner Deck (SECURITY chip, `owner_security_status()`); live at that time: 0 of 2 owners enrolled.
 
 # Plan: Two-factor sign-in (TOTP), owner enforcement dormant behind a flag
 

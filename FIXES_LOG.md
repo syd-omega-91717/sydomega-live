@@ -20876,3 +20876,55 @@ Verified live:
   - the helper-loaded module is reachable;
   - a module named only by a dead module is still reported dead.
 - Warnings went from 7 back to the baseline of 6.
+
+## Layout: the breadcrumb was a 315px empty column on every page; public pages were flex rows; invented analytics replaced with real data
+
+**The context rail rendered as a full-height empty column.** `nav.js` inserted `#omega-context-rail` (the "COMMAND › DASHBOARD" breadcrumb) in one of two places, and both are flex rows:
+- before `<main>`, which puts it inside `.shell`;
+- as the first child of `<body>`.
+
+Measured on `dashboard.html` at 1280px:
+- Before: the rail was **x=80 w=315 h=3485**, an empty dark column beside the sidebar that pushed every page's content right. The owner's production screenshot shows the effect.
+- After: the rail is inserted as the first child of the content column (`main`, `.main`, `[role=main]`, `.page-shell` or `#app`), skipping any candidate that contains `#omega-side`, since that is the shell (CLAUDE.md §4).
+- Now the rail is **w=1200 h=62** on `dashboard.html`, w=1084 on `settings.html`, and w=323 at 375px.
+
+**Public pages were flex rows.**
+- `css/omega-system.css` had `body:has(> aside#omega-side){display:flex}`. It also matched the hidden stub aside that `reset`, `terms`, `pending` and `404` carry, so the rail, the content column and the legal footer sat side by side.
+- `reset.html` measured scrollWidth **1679** in a 1280px viewport.
+- The rule now requires a visible aside. All four pages measure scrollWidth = viewport at both 375 and 1280.
+- `reset.html`'s `.wrap` also held the platform hero and page emblem as row siblings of the form, squeezing it to about 50px on a phone. It is a column now.
+
+**`analytics-dashboard.html` and `segmentation-dashboard.html` rendered invented figures (§8.1 class 9).** Both are owner analytics pages that navigation does not link to.
+- analytics: 487 active members, a 72.4 engagement score, 2.1% churn, and 142/189/89/67 segments. It carried a "SIMULATED DATA" banner, and its session chart never drew.
+- segmentation: personas 71/170/170/49/24, "LTV Estimate $1,200/$400/$150/$80/$0", k-means clusters and a 0.78 silhouette score.
+
+Real data now drives every figure that has a source:
+- analytics:
+  - `membership_report` gives approved, pending, rejected, on trial, expiring and the tier table;
+  - `engagement_report(day)` × 7 gives engaged minutes per day, today's count and 7-day distinct members;
+  - `top_pages` gives views, sessions and pages tracked.
+- segmentation (`get_all_members`):
+  - access segments;
+  - members by element;
+  - lifecycle by account age;
+  - 8 weekly signup cohorts.
+
+Panels with no data source (churn model, clusters, retention, recommendations, reports) say so instead of showing "Loading..." forever. The report schedule is now written in the future tense, since `weekly_digest_enabled` is off.
+
+Verified with stubbed owner responses:
+- values render correctly;
+- `<b>`/`<i>` in names are escaped (0 injected elements);
+- 0 page errors;
+- no `487`, `72.4`, `$1,200` or `Silhouette` remains.
+- Non-owners get "Owner-only report."
+
+**Three canvases were blurry (§8.1 class 3).** Each read its width before the approval guard revealed it:
+- `analytics-dashboard.html#chart-sessions`: never drawn, now 1094×200 buffer for a 1094×200 box.
+- `sigma.html#sigma-dist`: 112px buffer in a 325px box, now 493×180 for 493×180.
+- `pulse.html#dom-canvas`: 300px in 380–515px, now 515×100 for 515×100. Tested with a routed CoinGecko response.
+
+Each is sized from its own box times `devicePixelRatio` and redrawn by a `ResizeObserver`.
+
+**Accessibility advisories closed:**
+- `#ofb-msg` (feedback textarea) has an `aria-label`.
+- `verify-deployment.html` and `verify-modules.html` have a `<main>` landmark.

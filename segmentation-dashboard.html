@@ -23,6 +23,7 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 .kpi-label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);text-transform:uppercase}
 .kpi-value{font-family:var(--M);font-size:28px;font-weight:bold;color:var(--gold)}
 .kpi-pct{font-family:var(--M);font-size:12px;color:var(--green)}
+.empty-note{font-family:var(--M);font-size:12px;line-height:1.7;color:var(--muted);padding:6px 0}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
 .sechead{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(138,134,118,.5);margin:24px 0 12px;text-transform:uppercase}
 .chart-container{background:rgba(201,168,76,.02);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:20px;min-height:280px}
@@ -59,7 +60,7 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 <aside class="side" id="omega-side" data-page="segmentation-dashboard" aria-label="Navigation"></aside>
 <main class="main" role="main" id="main-content">
 <div class="topbar">
-<div class="t">MEMBER SEGMENTATION<small>BEHAVIORAL CLUSTERS · LIFECYCLE STAGES · PERSONA DISTRIBUTION</small></div>
+<div class="t">MEMBER SEGMENTATION<small>ACCESS SEGMENTS · LIFECYCLE STAGES · SIGNUP COHORTS</small></div>
 <span style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-left:auto" id="live-clock">--:--:--</span>
 </div>
 
@@ -74,169 +75,56 @@ body{background:#020206;color:rgba(220,210,180,.8);font-family:var(--R);line-hei
 <button class="tab-btn" data-tab="cohorts">COHORTS</button>
 </div>
 
-<!-- PERSONAS TAB -->
+<!-- PERSONAS TAB: real access segments (the invented personas, LTV and churn figures are gone) -->
 <div id="personas" class="tab-content active">
-<div class="sechead">MEMBER PERSONAS</div>
+<div class="sechead">ACCESS SEGMENTS</div>
 <div class="kpi-row" data-stagger data-stagger-gap="70" id="persona-kpis">
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Power Users</div><div class="kpi-value" id="persona-power">--</div><div class="kpi-pct">15%</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Regular Users</div><div class="kpi-value" id="persona-regular">--</div><div class="kpi-pct">35%</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Casual Users</div><div class="kpi-value" id="persona-casual">--</div><div class="kpi-pct">35%</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Explorers</div><div class="kpi-value" id="persona-explorer">--</div><div class="kpi-pct">10%</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">At-Risk</div><div class="kpi-value" id="persona-atrisk">--</div><div class="kpi-pct">5%</div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Approved</div><div class="kpi-value" id="seg-approved">--</div><div class="kpi-pct" id="seg-approved-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">On Trial</div><div class="kpi-value" id="seg-trial">--</div><div class="kpi-pct" id="seg-trial-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Pending</div><div class="kpi-value" id="seg-pending">--</div><div class="kpi-pct" id="seg-pending-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Rejected</div><div class="kpi-value" id="seg-rejected">--</div><div class="kpi-pct" id="seg-rejected-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Owners</div><div class="kpi-value" id="seg-owner">--</div><div class="kpi-pct" id="seg-owner-pct"></div></div>
 </div>
-
-<div class="sechead">PERSONA PROFILES</div>
-<div class="grid-2" id="persona-profiles">
-<div class="cluster-card">
-<div class="cluster-head">Power User</div>
-<div class="cluster-stat"><span>Features Used:</span><strong>8+</strong></div>
-<div class="cluster-stat"><span>Active Days (30d):</span><strong>25+</strong></div>
-<div class="cluster-stat"><span>Engagement:</span><strong>80%+</strong></div>
-<div class="cluster-stat"><span>LTV Estimate:</span><strong>$1,200</strong></div>
-<div class="cluster-stat"><span>Retention:</span><strong>95%</strong></div>
-<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--green)">2%</strong></div>
-</div>
-
-<div class="cluster-card">
-<div class="cluster-head">Regular User</div>
-<div class="cluster-stat"><span>Features Used:</span><strong>4-7</strong></div>
-<div class="cluster-stat"><span>Active Days (30d):</span><strong>12-24</strong></div>
-<div class="cluster-stat"><span>Engagement:</span><strong>50-80%</strong></div>
-<div class="cluster-stat"><span>LTV Estimate:</span><strong>$400</strong></div>
-<div class="cluster-stat"><span>Retention:</span><strong>75%</strong></div>
-<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--orange)">15%</strong></div>
-</div>
-
-<div class="cluster-card">
-<div class="cluster-head">Casual User</div>
-<div class="cluster-stat"><span>Features Used:</span><strong>1-3</strong></div>
-<div class="cluster-stat"><span>Active Days (30d):</span><strong>4-11</strong></div>
-<div class="cluster-stat"><span>Engagement:</span><strong>20-50%</strong></div>
-<div class="cluster-stat"><span>LTV Estimate:</span><strong>$80</strong></div>
-<div class="cluster-stat"><span>Retention:</span><strong>45%</strong></div>
-<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">45%</strong></div>
-</div>
-
-<div class="cluster-card">
-<div class="cluster-head">Explorer</div>
-<div class="cluster-stat"><span>Days Active:</span><strong>&lt;14</strong></div>
-<div class="cluster-stat"><span>Feature Exploration:</span><strong>Variable</strong></div>
-<div class="cluster-stat"><span>Engagement:</span><strong>Variable</strong></div>
-<div class="cluster-stat"><span>LTV Estimate:</span><strong>$150</strong></div>
-<div class="cluster-stat"><span>Retention:</span><strong>35%</strong></div>
-<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">60%</strong></div>
-</div>
-
-<div class="cluster-card">
-<div class="cluster-head">At-Risk Member</div>
-<div class="cluster-stat"><span>Last Login:</span><strong>14+ days</strong></div>
-<div class="cluster-stat"><span>Engagement Decline:</span><strong>50%+</strong></div>
-<div class="cluster-stat"><span>Current Engagement:</span><strong>&lt;30%</strong></div>
-<div class="cluster-stat"><span>LTV Estimate:</span><strong>$0</strong></div>
-<div class="cluster-stat"><span>Retention:</span><strong>20%</strong></div>
-<div class="cluster-stat"><span>Churn Risk:</span><strong style="color:var(--crim)">90%</strong></div>
-</div>
+<div class="sechead">MEMBERS BY ELEMENT</div>
+<div class="glass" style="padding:16px">
+<table class="metric-table"><thead><tr><th>Element</th><th>Members</th><th>Share</th></tr></thead>
+<tbody id="seg-elements"><tr><td colspan="3" class="loading">Loading…</td></tr></tbody></table>
 </div>
 </div>
 
-<!-- LIFECYCLE TAB -->
+<!-- LIFECYCLE TAB: stage = age of the account, from profiles.created_at -->
 <div id="lifecycle" class="tab-content">
-<div class="sechead">LIFECYCLE DISTRIBUTION</div>
+<div class="sechead">LIFECYCLE DISTRIBUTION (ACCOUNT AGE)</div>
 <div class="kpi-row" data-stagger data-stagger-gap="70">
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Onboarding (0-7d)</div><div class="kpi-value" id="lifecycle-onboard">--</div><div class="kpi-pct" id="lifecycle-onboard-pct">--</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Growth (8-60d)</div><div class="kpi-value" id="lifecycle-growth">--</div><div class="kpi-pct" id="lifecycle-growth-pct">--</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Maturity (61-365d)</div><div class="kpi-value" id="lifecycle-maturity">--</div><div class="kpi-pct" id="lifecycle-maturity-pct">--</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Loyal (365d+)</div><div class="kpi-value" id="lifecycle-loyal">--</div><div class="kpi-pct" id="lifecycle-loyal-pct">--</div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Onboarding (0-7d)</div><div class="kpi-value" id="lifecycle-onboard">--</div><div class="kpi-pct" id="lifecycle-onboard-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Growth (8-60d)</div><div class="kpi-value" id="lifecycle-growth">--</div><div class="kpi-pct" id="lifecycle-growth-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Maturity (61-365d)</div><div class="kpi-value" id="lifecycle-maturity">--</div><div class="kpi-pct" id="lifecycle-maturity-pct"></div></div>
+<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Loyal (365d+)</div><div class="kpi-value" id="lifecycle-loyal">--</div><div class="kpi-pct" id="lifecycle-loyal-pct"></div></div>
 </div>
-
 <div class="sechead">LIFECYCLE PROGRESSION</div>
 <div class="chart-container">
-<div class="chart-title">Member Flow Through Lifecycle Stages</div>
-<div style="margin-top:20px">
-<div style="margin-bottom:16px">
-<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">ONBOARDING (0-7 days)</div>
-<div class="lifecycle-track"><div class="lifecycle-bar" style="width:25%"></div></div>
-</div>
-<div style="margin-bottom:16px">
-<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">GROWTH (8-60 days)</div>
-<div class="lifecycle-track"><div class="lifecycle-bar" style="width:40%"></div></div>
-</div>
-<div style="margin-bottom:16px">
-<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">MATURITY (61-365 days)</div>
-<div class="lifecycle-track"><div class="lifecycle-bar" style="width:55%"></div></div>
-</div>
-<div>
-<div style="font-size:12px;color:rgba(138,134,118,.5);margin-bottom:4px">LOYAL (365+ days)</div>
-<div class="lifecycle-track"><div class="lifecycle-bar" style="width:70%"></div></div>
-</div>
-</div>
-</div>
-
-<div class="sechead">LIFECYCLE STAGE DETAILS</div>
-<div class="glass" style="padding:16px">
-<table class="metric-table">
-<thead>
-<tr><th>Stage</th><th>Duration</th><th>Avg Adoption</th><th>Retention</th><th>Primary Goal</th></tr>
-</thead>
-<tbody id="lifecycle-details">
-<tr><td colspan="5" class="loading">Loading lifecycle data...</td></tr>
-</tbody>
-</table>
+<div class="chart-title">Share of accounts in each stage</div>
+<div style="margin-top:20px" id="lifecycle-bars"></div>
 </div>
 </div>
 
 <!-- BEHAVIORAL TAB -->
 <div id="behavioral" class="tab-content">
 <div class="sechead">BEHAVIORAL CLUSTERING</div>
-<div class="kpi-row" data-stagger data-stagger-gap="70">
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Clusters Identified</div><div class="kpi-value">8</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Avg Cluster Size</div><div class="kpi-value" id="avg-cluster">--</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Silhouette Score</div><div class="kpi-value" id="silhouette">--</div></div>
-<div class="kpi" data-reveal="fade-up"><div class="kpi-label">Stability</div><div class="kpi-value" id="stability">--</div></div>
+<div class="glass empty-note" style="padding:16px">No clustering runs on this platform yet, so no member is assigned to a cluster. This panel stays empty rather than show invented clusters or scores.</div>
 </div>
 
-<div class="sechead">CLUSTER PROFILES</div>
-<div class="chart-container">
-<div class="chart-title">Behavioral Segmentation (k-means, k=8)</div>
-<div class="glass" style="padding:16px">
-<table class="metric-table">
-<thead>
-<tr><th>Cluster</th><th>Size</th><th>Days Active</th><th>Features</th><th>API Calls</th><th>Session Avg</th></tr>
-</thead>
-<tbody id="behavioral-clusters">
-<tr><td colspan="6" class="loading">Loading behavioral clusters...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-
-<!-- COHORTS TAB -->
+<!-- COHORTS TAB: signups per week, and where each week's signups stand now -->
 <div id="cohorts" class="tab-content">
-<div class="sechead">COHORT RETENTION ANALYSIS</div>
-<div class="chart-container">
-<div class="chart-title">Retention by Acquisition Week (D0, D7, D30, D90)</div>
+<div class="sechead">SIGNUP COHORTS (LAST 8 WEEKS)</div>
 <div class="glass" style="padding:16px;overflow-x:auto">
 <table class="metric-table">
-<thead>
-<tr><th>Cohort Week</th><th>D0</th><th>D7</th><th>D30</th><th>D90</th><th>Churn</th></tr>
-</thead>
-<tbody id="cohort-retention">
-<tr><td colspan="6" class="loading">Loading cohort data...</td></tr>
-</tbody>
+<thead><tr><th>Week starting</th><th>Signups</th><th>Approved now</th><th>On trial</th><th>Pending</th></tr></thead>
+<tbody id="cohort-retention"><tr><td colspan="5" class="loading">Loading…</td></tr></tbody>
 </table>
+<div class="empty-note">Retention (D7/D30/D90) needs per-day activity per member, which is not recorded yet.</div>
 </div>
 </div>
-
-<div class="sechead">FEATURE ADOPTION VELOCITY BY COHORT</div>
-<div class="chart-container">
-<div class="chart-title">Feature Discovery Timeline (Days to 8+ Features)</div>
-<div id="adoption-velocity" class="glass" style="padding:16px">
-<div class="loading">Loading adoption velocity data...</div>
-</div>
-</div>
-</div>
-
 </div>
 </main>
 </div>
@@ -256,82 +144,59 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   });
 });
 
-// Load segmentation data
-function loadSegmentationData(){
-  const personas={
-    power:71,
-    regular:170,
-    casual:170,
-    explorer:49,
-    atrisk:24
-  };
-
-  document.getElementById('persona-power').textContent=personas.power;
-  document.getElementById('persona-regular').textContent=personas.regular;
-  document.getElementById('persona-casual').textContent=personas.casual;
-  document.getElementById('persona-explorer').textContent=personas.explorer;
-  document.getElementById('persona-atrisk').textContent=personas.atrisk;
-
-  // Lifecycle
-  document.getElementById('lifecycle-onboard').textContent='47';
-  document.getElementById('lifecycle-onboard-pct').textContent='9.6%';
-  document.getElementById('lifecycle-growth').textContent='142';
-  document.getElementById('lifecycle-growth-pct').textContent='29.2%';
-  document.getElementById('lifecycle-maturity').textContent='214';
-  document.getElementById('lifecycle-maturity-pct').textContent='44%';
-  document.getElementById('lifecycle-loyal').textContent='81';
-  document.getElementById('lifecycle-loyal-pct').textContent='16.6%';
-
-  // Lifecycle details
-  const lifecycleDetails=[
-    {stage:'Onboarding',duration:'0-7 days',adoption:'2.1',retention:'65%',goal:'Initial feature discovery'},
-    {stage:'Growth',duration:'8-60 days',adoption:'5.3',retention:'78%',goal:'Rapid skill acquisition'},
-    {stage:'Maturity',duration:'61-365 days',adoption:'8.1',retention:'85%',goal:'Deep feature usage'},
-    {stage:'Loyal',duration:'365+ days',adoption:'9.2',retention:'94%',goal:'Retention & advocacy'}
-  ];
-
-  document.getElementById('lifecycle-details').innerHTML=lifecycleDetails.map(l=>
-    `<tr><td>${l.stage}</td><td>${l.duration}</td><td>${l.adoption}</td><td>${l.retention}</td><td>${l.goal}</td></tr>`
-  ).join('');
-
-  // Behavioral clusters
-  document.getElementById('avg-cluster').textContent='61';
-  document.getElementById('silhouette').textContent='0.78';
-  document.getElementById('stability').textContent='92%';
-
-  const clusters=[
-    {name:'Cluster A',size:87,days:245,features:9.1,api:4200,session:'18m'},
-    {name:'Cluster B',size:72,days:89,features:6.8,api:1800,session:'8m'},
-    {name:'Cluster C',size:95,days:31,features:3.2,api:620,session:'3m'},
-    {name:'Cluster D',size:54,days:14,features:1.9,api:180,session:'2m'},
-    {name:'Cluster E',size:81,days:156,features:7.9,api:3100,session:'14m'},
-    {name:'Cluster F',size:63,days:62,features:5.1,api:940,session:'5m'},
-    {name:'Cluster G',size:48,days:8,features:1.2,api:45,session:'1m'},
-    {name:'Cluster H',size:44,days:312,features:10,api:5800,session:'24m'}
-  ];
-
-  document.getElementById('behavioral-clusters').innerHTML=clusters.map(c=>
-    `<tr><td>${c.name}</td><td>${c.size}</td><td>${c.days}</td><td>${c.features}</td><td>${c.api}</td><td>${c.session}</td></tr>`
-  ).join('');
-
-  // Cohort retention
-  const cohorts=['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6','Week 7','Week 8'];
-  document.getElementById('cohort-retention').innerHTML=cohorts.map((w,i)=>
-    `<tr><td>${w}</td><td>100%</td><td>${(100-i*3).toFixed(0)}%</td><td>${(100-i*8).toFixed(0)}%</td><td>${(100-i*15).toFixed(0)}%</td><td>${(i*3).toFixed(0)}%</td></tr>`
-  ).join('');
-
-  document.getElementById('adoption-velocity').innerHTML=`
-    <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)">
-      <div style="margin-bottom:12px">Average cohort reaches 8+ features in <strong>62 days</strong></div>
-      <div style="margin-bottom:8px">Fastest adopters: <strong>24 days</strong> (top 10%)</div>
-      <div style="margin-bottom:8px">Slowest adopters: <strong>180 days</strong> (bottom 10%)</div>
-      <div>Median adoption velocity: <strong>68 days</strong></div>
-    </div>
-  `;
+/* Real owner data only (get_all_members). This page used to render invented
+   personas (71/170/170/49/24), "LTV Estimate $1,200", k-means clusters and a
+   silhouette score -- CLAUDE.md 8.1 class 9, on money too. What cannot be
+   measured now says so. */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function pct(n,t){return t?(Math.round(n*1000/t)/10)+'%':'';}
+function empty(msg){
+  ['seg-elements','cohort-retention'].forEach(function(id){var e=document.getElementById(id);if(e)e.innerHTML='<tr><td colspan=5 class=empty-note>'+esc(msg)+'</td></tr>';});
+  var b=document.getElementById('lifecycle-bars');if(b)b.innerHTML='<div class=empty-note>'+esc(msg)+'</div>';
 }
-
-loadSegmentationData();
-setInterval(loadSegmentationData,60000);
+async function loadSegmentationData(){
+  var sb=null;try{sb=window.OmegaSB&&await window.OmegaSB.get();}catch(e){}
+  if(!sb||typeof sb.rpc!=='function'){empty('Data service unavailable.');return;}
+  var r=await sb.rpc('get_all_members');
+  if(r.error){empty('Member list unavailable.');return;}
+  var all=Array.isArray(r.data)?r.data:[];
+  if(!all.length){empty('Owner-only report, or no members yet.');return;}
+  var members=all.filter(function(m){return !m.is_owner;}),T=all.length,N=members.length;
+  var c={approved:0,trial:0,pending:0,rejected:0,owner:T-N};
+  members.forEach(function(m){
+    if(m.is_rejected)c.rejected++;
+    else if(m.is_trial)c.trial++;
+    else if(m.access_approved)c.approved++;
+    else c.pending++;
+  });
+  ['approved','trial','pending','rejected','owner'].forEach(function(k){setText('seg-'+k,c[k]);setText('seg-'+k+'-pct',pct(c[k],T)+' of '+T);});
+  var el={};members.forEach(function(m){var k=m.element||'UNASSIGNED';el[k]=(el[k]||0)+1;});
+  var rows=Object.keys(el).sort(function(a,b){return el[b]-el[a];});
+  document.getElementById('seg-elements').innerHTML=rows.length?rows.map(function(k){return '<tr><td>'+esc(k)+'</td><td>'+el[k]+'</td><td>'+pct(el[k],N)+'</td></tr>';}).join(''):'<tr><td colspan=3 class=empty-note>No members yet.</td></tr>';
+  var now=Date.now(),st={onboard:0,growth:0,maturity:0,loyal:0},undated=0;
+  members.forEach(function(m){
+    if(!m.created_at){undated++;return;}
+    var d=(now-new Date(m.created_at).getTime())/86400000;
+    if(d<=7)st.onboard++;else if(d<=60)st.growth++;else if(d<=365)st.maturity++;else st.loyal++;
+  });
+  var dated=N-undated,labels={onboard:'ONBOARDING (0-7 days)',growth:'GROWTH (8-60 days)',maturity:'MATURITY (61-365 days)',loyal:'LOYAL (365+ days)'};
+  Object.keys(st).forEach(function(k){setText('lifecycle-'+k,st[k]);setText('lifecycle-'+k+'-pct',pct(st[k],dated));});
+  document.getElementById('lifecycle-bars').innerHTML=Object.keys(st).map(function(k){
+    var w=dated?Math.round(st[k]*100/dated):0;
+    return '<div style="margin-bottom:16px"><div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+labels[k]+' · '+st[k]+'</div><div class="lifecycle-track"><div class="lifecycle-bar" style="width:'+w+'%"></div></div></div>';
+  }).join('')+(undated?'<div class=empty-note>'+undated+' account(s) have no creation date.</div>':'');
+  var weeks=[];
+  for(var i=7;i>=0;i--){var start=new Date(now-(i*7+6)*86400000);start.setHours(0,0,0,0);weeks.push({start:start,end:new Date(start.getTime()+7*86400000),n:0,ap:0,tr:0,pe:0});}
+  members.forEach(function(m){
+    if(!m.created_at)return;var t=new Date(m.created_at);
+    weeks.forEach(function(w){if(t>=w.start&&t<w.end){w.n++;if(m.is_trial)w.tr++;else if(m.access_approved)w.ap++;else if(!m.is_rejected)w.pe++;}});
+  });
+  document.getElementById('cohort-retention').innerHTML=weeks.map(function(w){
+    return '<tr><td>'+esc(w.start.toISOString().slice(0,10))+'</td><td>'+w.n+'</td><td>'+w.ap+'</td><td>'+w.tr+'</td><td>'+w.pe+'</td></tr>';
+  }).join('');
+}
+document.addEventListener('DOMContentLoaded',function(){loadSegmentationData();setInterval(loadSegmentationData,300000);});
 </script>
 <script type="module" src="/omega-analytics-init.js" defer></script>
 </body>

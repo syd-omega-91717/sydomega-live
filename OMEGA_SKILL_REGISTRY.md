@@ -99,7 +99,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `omega-*.js` modules | 150 (1415 KB) |
 | root `.js` files | 160 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 222 (106 numbered `NNNN_`, 116 timestamped) |
+| `supabase/migrations/*.sql` | 224 (106 numbered `NNNN_`, 118 timestamped) |
 | Edge Functions | 14 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -113,19 +113,19 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 | Source | Keys |
 |---|---|
 | `T_EN` (English, inlined in `i18n.js`) | 1175 |
-| `i18n/ar.json` | 1167 — 8 short of `T_EN` |
-| `i18n/es.json` | 1167 — 8 short of `T_EN` |
-| `i18n/fr.json` | 1167 — 8 short of `T_EN` |
-| `i18n/hi.json` | 1167 — 8 short of `T_EN` |
-| `i18n/nl.json` | 1167 — 8 short of `T_EN` |
-| `i18n/zh.json` | 1167 — 8 short of `T_EN` |
+| `i18n/ar.json` | 1175 |
+| `i18n/es.json` | 1175 |
+| `i18n/fr.json` | 1175 |
+| `i18n/hi.json` | 1175 |
+| `i18n/nl.json` | 1175 |
+| `i18n/zh.json` | 1175 |
 
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 128 files added since (numbered and
+end-to-end for the first time"*. The 130 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 222. Treat the validated scope as `0001`–`0094` only.
+all 224. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 206 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

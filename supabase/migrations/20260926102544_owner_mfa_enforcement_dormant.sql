@@ -1,17 +1,15 @@
--- PROPOSED, NOT APPLIED. See PLAN.md in this directory.
---
 -- Owner authority requires AAL2 when, and only when, owner_mfa_required is on.
--- Both flags are seeded false, so applying this changes nothing observable:
--- is_platform_owner() returns exactly what it does today until a human sets
--- owner_mfa_required = true. Do that only after PLAN.md's success criterion 3
--- returns 0 rows and phase 2 (the 24 direct owner checks) has landed.
+-- APPLIED LIVE 2026-09-26, DORMANT: both flags are seeded false, so
+-- is_platform_owner() returns exactly what it did before (verified: owner t,
+-- member f). Decision record: docs/decisions/owner-mfa/PLAN.md.
+--
+-- Turn on only after every owner holds a verified factor (PLAN.md success
+-- criterion 3 returns 0 rows). omega_is_owner() already defers only to this
+-- function (20260926102450), so enforcement covers every owner path.
 --
 -- Break-glass: in the Supabase SQL editor,
 --   UPDATE public.platform_settings SET bool_value = false
 --    WHERE key = 'owner_mfa_required';
---
--- When applied, move it to supabase/migrations/<applied version>_owner_mfa_enforcement.sql
--- and append the version to supabase/remote-migrations.json.
 
 INSERT INTO public.platform_settings(key, bool_value)
 VALUES ('mfa_enrolment_enabled', false), ('owner_mfa_required', false)

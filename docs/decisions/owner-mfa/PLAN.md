@@ -5,7 +5,7 @@
 Decision record for `grill-me-codex` (Mode 1, `type=auth`). The audit trail is in
 `CODEX_REVIEW.md` next to this file. The owner approved starting this on 2026-09-26
 ("Do both"). Nothing in this plan turns enforcement on: both flags ship `false`, and
-the server-side migration is **proposed, not applied**.
+the server-side migration is **applied live but dormant** (`20260926102544`, both flags `false`).
 
 ## Goal
 
@@ -47,16 +47,29 @@ cannot lock the owner out of the platform.
 2. **`settings.html` → Account tab:** a *Two-factor sign-in* section wrapped in `data-omega-flag="mfa_enrolment_enabled"`.
    - `omega-flags.js` fails closed.
    - The flag row does not exist, so the section stays hidden and the module never mounts.
-3. **Proposed migration (`proposed_migration.sql`, NOT applied)**, owner enforcement at the database:
+3. **Migration `20260926102544` (applied live, dormant)**, owner enforcement at the database:
    - `private.is_platform_owner()` becomes: owner row exists **and** (`owner_mfa_required` is off **or** `auth.jwt()->>'aal' = 'aal2'`).
    - It seeds both flags `false`.
 
 **Phase 2 (before `owner_mfa_required` may be turned on):**
-4. Route the 24 functions that test `profiles.is_owner` / `platform_owners` directly through `is_platform_owner()`. Otherwise enforcement is partial. Measured live list:
-   - `private.`: complete_task, get_all_members, grant_trial_access, my_lattice, order_stats, public_leaderboard, deactivate_account, delete_account, evaluate_policy, has_active_access, membership_report, my_matrix, omega_is_owner, ratify_existing_permanent_access, reject_member, request_account_erasure, revoke_member, revoke_permanent_access
-   - `public.`: derive_cosmology, enforce_access_defaults, compute_leaderboard_snapshot, guard_profile_privileges, protect_owner_lifetime, sync_platform_owner
-
-   Several are triggers or "is this row the owner's" checks, not "is the caller the owner". Each needs reading, not a blanket rewrite.
+4. ~~Route the 24 direct owner checks through `is_platform_owner()`~~ **Done 2026-09-26**
+   (migration `20260926102450`). Each of the 24 was read individually, not rewritten in bulk.
+   - **22 are not caller authority**, so routing them would be wrong:
+     - protective target-row guards: `reject_member`, `revoke_member`, `revoke_permanent_access`,
+       `ratify_existing_permanent_access`, `grant_trial_access` ("never act on an owner row");
+     - self-guards: `deactivate_account`, `delete_account`, `request_account_erasure`;
+     - statistics and authority maths: `membership_report`, `order_stats`, `public_leaderboard`,
+       `compute_leaderboard_snapshot`, `get_all_members`, `my_lattice`, `my_matrix`;
+     - profile-row triggers: `derive_cosmology`, `enforce_access_defaults`, `guard_profile_privileges`,
+       `protect_owner_lifetime`, `sync_platform_owner`;
+     - `complete_task` / `has_active_access`: an owner is treated as approved; no owner power.
+   - **`evaluate_policy`** reports `is_owner` and has no callers, so it grants nothing.
+   - **`private.omega_is_owner()` was the real bypass.** It returned `is_platform_owner()` OR a fallback
+     read of `profiles.is_owner`. Nine owner functions and the `daily_engagement_self_read` policy call
+     it, so the fallback would have skipped the AAL2 rule. It now defers only to `is_platform_owner()`.
+   - Measured before the change: both owner sources hold the identical set (2 = 2, 0 in only one,
+     synced by `trg_sync_platform_owner`), so no result changed. After: owner `t`, member `f`,
+     anon `f`; ACL unchanged.
 5. `approvals.html` calls `OmegaMFA.stepUp()` before owner actions, so an AAL1 owner is asked for a code instead of seeing silent `owner_only` refusals.
 
 ## Key decisions
@@ -78,7 +91,7 @@ cannot lock the owner out of the platform.
 - **Stale claim.** Supabase re-issues the JWT on `verify`. If a tab keeps an older session, owner calls fail until refresh. `stepUp()` calls `refreshSession()` after verify.
 - **Unverified factor build-up.** Clicking enrol twice leaves an unverified factor. `mount()` removes this user's unverified TOTP factors before enrolling a new one.
 - **Performance.** `is_platform_owner()` gains a flag lookup, a single-row PK read. It is STABLE, and the policies already wrap it as an init-plan `(select ...)`.
-- **Phase 2 is real work.** 24 functions, each read individually. Until it lands, turning enforcement on protects the 161 policies and 33 functions, not everything.
+- **Phase 2 is done.** Every caller-authority path now reaches `is_platform_owner()`: 161 policies, 33 functions, and `omega_is_owner()` with its 9 callers and 1 policy.
 
 ## Out of scope
 

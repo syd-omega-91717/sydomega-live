@@ -89,6 +89,8 @@ PUBLIC_PAGES = {
     # vercel.json:20 rewrites "/" to it -- so reporting it UNREACHABLE was
     # reporting the homepage as orphaned.
     'charter', 'omega-visual-home',
+    # The platform guide: an applicant waiting on approval needs it most.
+    'guide',
 }
 
 # Edge Functions that are invoked by Stripe, pg_cron, or the Supabase

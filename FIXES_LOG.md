@@ -21145,3 +21145,34 @@ The full-site after figure is recorded on the PR.
 - Result: **13 → 0** unreachable; those pages are classified by their data (101 BUILT / 28 PARTIAL / 43 LOCAL_ONLY / 32 STATIC / 2 BROKEN).
 - Planted check: removing `healthz` from `EXTRA` makes the audit report 1 unreachable.
 - The two BROKEN pages (`subscriptions` → `transactions`, `vault` → `wallet_balances`) are dormant payment/token features, and both already render an honest "not available yet" state.
+
+## The Guide (public), trial copy that said hours, flag switches members could never read, two-factor enrolment on, page counts in every language
+
+**`guide.html` + `omega-guide.js`: the platform explained.** The owner asked for one place where anyone can get clarification about the platform. The page has 26 short answers in 7 topics (start, membership, progress, signs and lore, money and tokens, privacy, settings), a search box, and topic chips.
+- An unmatched search offers the Concierge.
+- A section map is read from `OmegaAxis`, and the twelve agents come from `omega-agents.json`.
+- **Every figure is read at runtime, not typed.** Gates with thresholds, the 12 tiers, the authority formula and range (0.001–27.8367) and the matrix (12 × 12 × 9 × 9 × 9 = 104,976) come from `omega-canon.json`; the elements by tier from `omega-elements.json`.
+- **Claims checked before writing.** Ctrl/⌘+K opens the palette (`nav.js:794`); deletion lives on privacy and settings; the trial length is from the database (below). "Nothing is sold or shared" was dropped: the page loads Vercel analytics, and `privacy.html` makes no such claim.
+- **Public**, because an applicant waiting on approval needs it most. `guide` is in all four `bg.js` public lists (the PUBLIC guard CSS, both ACCESS GUARD `EX` exemptions, and the not-approved redirect `pub`), `verify-runtime.js`, and `evidence-audit.py`. It is linked from `pending.html` and listed under COMMAND.
+- **New gate, `scripts/tests/test_public_pages.py`:** the four `bg.js` lists must hold the same pages, the two checkers must mirror them, and every public page must exist. This is the charter class-8 bug made a test. Planted: removing `guide` from PUBLIC alone fails it.
+- Rendered signed out (visitor), signed in, and at 390px: 26 answers, 12 agents, 27 cards; the canon figures are present; 0 page errors; no overflow. Search "token" → 1 answer; "zzzz" → the Concierge offer; PROGRESS → 5.
+
+**The trial was advertised as 9 hours.** `public.trial_duration()` returns `00:09:17` (557 s), matching `approvals.js:7`. The countdown starts when the member confirms (`private.start_trial_countdown`). `pending.html`, the page applicants read, said "9 hours 17 minutes 17 seconds" in three places, and `automation.html` once. 9 h 17 m 17 s is the separate daily *Dedication target* (`omega-chrono.js:19`), so all four are corrected, and the Guide now separates the two.
+
+**Members could never read a feature switch.** `public.get_platform_flag` (SECURITY INVOKER) calls `private.get_platform_flag` (SECURITY DEFINER), which `authenticated` could not execute.
+- Every member call failed with 42501, and `omega-flags.js` fails closed, so no `data-omega-flag` section could ever appear for anyone.
+- Found by turning `mfa_enrolment_enabled` on and probing as a real member: "permission denied for function get_platform_flag".
+- The earlier "40 of 40 RPCs member-callable" sweep checked only the public layer. The full chain was swept: 39 pairs, and this one is the only broken hand-off.
+- Migration `20260926221057` grants it to `authenticated` only. Probe after: mfa `t`, payments `f`.
+
+**Two-factor enrolment is on** (`mfa_enrolment_enabled = true`; D4 step 1 in `docs/decisions/owner-mfa/PLAN.md`). The owner delegated the rollout ("take the lead"). `owner_mfa_required` stays off until both owners have enrolled.
+
+**Settings offered 4 of the 7 languages.** Nederlands, 中文 and हिन्दी are added. This matters more now that Calm mode hides the language bar.
+
+**Page counts in every language.** Adding the Guide made six member-visible "206 pages" claims stale (`page-count-claims.py` failed them, as designed), and all are now 207. The gate scanned `*.html` only, so dictionary strings escaped it: `T_EN.dash_platform_index` said 206 while all six packs still said **205**, and `T_EN.platform_command_index` said **170** in all seven languages.
+- The gate now holds `T_EN` claims to the real counts, and every pack to its English value's number.
+- 3 new tests: a pack dropping the count fails, a matching pack passes, a stale dictionary claim fails.
+- Planted: fr.json back to 205 fails it.
+- 8/8 tests pass.
+
+**Contrast, the full-site after figure** for the previous entry: **99 → 48** (all 206 pages PASS). The capability entrypoints go from 6 advisories to 1.

@@ -1,5 +1,10 @@
 # Status: AWAITING-HUMAN-REVIEW
 
+> **2026-09-26 — step 1 of D4 done.** The owner delegated the remaining rollout ("take the lead").
+> - `mfa_enrolment_enabled` is **on** live, so the Settings → Account section renders for every signed-in account.
+> - Switching it on exposed a grant gap. Members could not run `private.get_platform_flag`, so no flag-gated section could ever appear; migration `20260926221057` fixes it.
+> - `owner_mfa_required` stays **off**. Next: both owners enrol (two devices each), then run success criterion 3's query (0 rows) before enforcement.
+
 # Plan: Two-factor sign-in (TOTP), owner enforcement dormant behind a flag
 
 Decision record for `grill-me-codex` (Mode 1, `type=auth`). The audit trail is in

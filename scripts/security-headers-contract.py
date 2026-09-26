@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Validate the production security-header contract in vercel.json."""
 from __future__ import annotations
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 import json
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]

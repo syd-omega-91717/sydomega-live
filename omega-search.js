@@ -331,15 +331,18 @@
   /* Results go through .innerHTML. The hardcoded INDEX above is static and
      safe, but addItems()/harvestNav() feed it text read out of the DOM, so
      escape before highlighting rather than trusting every future caller. */
-  function esc(s){
-    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function esc(s) {
+    return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
   }
   function highlight(t,q){
-    t=esc(t);
-    if(!q)return t;
-    var re2=new RegExp('('+esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
-    return t.replace(re2,'<mark style="background:rgba(201,168,76,.22);color:#E2C86D;border-radius:2px;padding:0 2px">$1</mark>');
+    t=String(t==null?'':t);
+    if(!q)return esc(t);
+    /* Match on the raw text and escape each piece, so a query can never
+       land inside an entity (a search for "3" used to split &#39;). */
+    var re2=new RegExp('('+String(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return t.split(re2).map(function(part,i){
+      return i%2?'<mark style="background:rgba(201,168,76,.22);color:#E2C86D;border-radius:2px;padding:0 2px">'+esc(part)+'</mark>':esc(part);
+    }).join('');
   }
   function refreshCount(){
     var c=document.getElementById('omega-s-count');

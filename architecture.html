@@ -80,7 +80,7 @@
       'security-identity':'SECURITY &amp; IDENTITY','ai-llm-gateway':'AI GATEWAY',
       'vector-search-rag':'VECTOR SEARCH &middot; RAG'};
 
-    function esc(s){var d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
     /* Built once, then patched in place. The probes in the runtime resolve
        over several seconds and each one emits, so rebuilding innerHTML per

@@ -8,6 +8,11 @@ node --check is not the right validator for.
 """
 from __future__ import annotations
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import subprocess
 import sys
 from pathlib import Path

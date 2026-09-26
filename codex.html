@@ -343,7 +343,7 @@ async function searchOpenLibrary(query,grid){
 }
 
 /* ── RENDER RESULTS ── */
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function renderResults(items,grid){
   if(!items.length){grid.innerHTML='<div class="empty">NO RESULTS</div>';return;}

@@ -389,7 +389,7 @@
 </div>
 
 <script>
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 /* ── YOUR ELEMENT SPHERE (lazy-mount, real element from window._dashProfile
    set in the async load block below -- not omega-realm.js's own
    omega:user-loaded auto-mount path, which derives element from zodiac

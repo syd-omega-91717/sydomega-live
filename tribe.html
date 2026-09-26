@@ -181,7 +181,7 @@ var AFFINITY={
   all:{fire:85,water:90,wind:80,metal:75,sand:70,soul:95,space:90,void:95,all:100}
 };
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function timeAgo(iso){
   if(!iso)return '';
   var diff=(Date.now()-new Date(iso).getTime())/1000;

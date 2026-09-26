@@ -11,7 +11,7 @@
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
     command:'command',gateway:'command',
     profile:'identity',settings:'identity',
-    ascension:'ascend',matrix:'ascend',sculpture:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
+    ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
     agents:'cosmos',pantheons:'cosmos',elements:'cosmos',chatbot:'cosmos',
     media:'universe',
@@ -76,7 +76,7 @@
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
           ['exam','EXAM HALL','/gaming.html#exam'],['exam-hall','EXAM','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
-     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
+     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
           ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/elements.html#gates'],['houses','HOUSES LATTICE','/houses.html'],
           ['triads','12 TRIADS','/matrix.html#triads'],['kings','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],['graph','CONSTELLATION GRAPH','/graph.html'],['map','STAR MAP','/map.html'],['mirror','SOVEREIGN MIRROR','/mirror.html'],['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html'],['rune','RUNES','/rune.html'],['tribe','TRIBE','/tribe.html']]},
@@ -764,8 +764,10 @@
     }
     if(!current)current=[dp,(dp||'CURRENT').replace(/[-_]/g,' ').toUpperCase(),location.pathname];
 
-    if(!document.getElementById('omega-context-rail')){
-      var style=document.createElement('style');style.id='omega-context-rail';
+    /* The <style> and the <nav> used to share id omega-context-rail: a duplicate
+       id on every page, and the style guard then read the rail as its own. */
+    if(!document.getElementById('omega-context-rail-style')){
+      var style=document.createElement('style');style.id='omega-context-rail-style';
       style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:11px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:10px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:10px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:17px;line-height:16px}.omega-mobile-label{font-size:12px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:12px}}';
       document.head.appendChild(style);
     }

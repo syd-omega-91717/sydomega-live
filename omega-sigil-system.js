@@ -10,7 +10,7 @@
     ['blockchain','BLOCKCHAIN','Ledger, ownership and verifiable assets','/blockchain.html','⬡'],['communication','COMMUNICATION','Messages, communities and network','/social.html','◌'],['horoscope','HOROSCOPE','Birth-sync and symbolic exploration','/horoscope.html','✶'],['news','NEWS','Curated intelligence and news wire','/news.html','▤'],['heritage','HERITAGE','History, lineage and cultural archive','/heritage.html','♆'],['progress','PROGRESS','Levels, phases and personal evolution','/evolution.html','↗'],
     ['passport','PASSPORT','Identity, verification and credentials','/profile.html#passport','▣'],['legal','LEGAL','Policies, compliance and agreements','/compliance.html','⚖'],['elements','ELEMENTS','Elemental systems and world mapping','/elements.html','✧'],['investment','INVESTMENT','Treasury, portfolio and allocations','/investment.html','₿'],['intelligence','INTELLIGENCE','Research, graphs and decision support','/intelligence.html','⌬'],['hierarchy','HIERARCHY','Roles, governance and authority','/governance.html','▱']
   ];
-  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function mount(root){
     if(!root||root.dataset.omegaSigilMounted==='true')return;
     root.dataset.omegaSigilMounted='true';

@@ -282,7 +282,7 @@ function save(){
   localStorage.setItem('omega_experiments',JSON.stringify(experiments));
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function renderStats(){
   ['adopt','trial','assess','hold'].forEach(r=>{

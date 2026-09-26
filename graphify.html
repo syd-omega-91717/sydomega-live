@@ -154,7 +154,7 @@
       const avgConf = entities?.length ? (entities.reduce((a, e) => a + e.confidence_score, 0) / entities.length).toFixed(2) : '—';
       document.getElementById('entity-count').textContent = entityCount || '0'; document.getElementById('relationship-count').textContent = relCount || '0'; document.getElementById('avg-confidence').textContent = avgConf;
     }
-    function esc(str) { const div = document.createElement('div'); div.textContent = String(str ?? ''); return div.innerHTML; }
+    function esc(str){return String(str==null?'':str).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     loadGraphStats();
   </script>
   <style>

@@ -353,7 +353,7 @@ function save(){
   localStorage.setItem('omega_swot',JSON.stringify(swot));
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function renderStats(){
   document.getElementById('stat-total').textContent=intel.length;
@@ -523,14 +523,14 @@ async function startGraphIngestion(){
     });
     var data=await res.json();
     if(data.error){
-      statusEl.textContent='ERROR: '+esc(data.error.message||'Ingestion failed');
+      statusEl.textContent='ERROR: '+(data.error.message||'Ingestion failed');
       return;
     }
     statusEl.textContent='INGESTED — '+data.entities_added+' entities, '+data.relationships_added+' relationships';
     setTimeout(function(){statusEl.textContent='';},3000);
     loadGraphStats();
   }catch(err){
-    document.getElementById('graph-status').textContent='ERROR: '+esc(err.message);
+    document.getElementById('graph-status').textContent='ERROR: '+(err&&err.message||'Unknown error');
   }
 }
 

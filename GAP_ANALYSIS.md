@@ -324,10 +324,13 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
-- **Dispatch moderation bypass** (2026-09-26, measured live). Members may INSERT `dispatches.is_published`
-  (column INSERT granted, insert check `user_id = auth.uid()` only, no trigger), so a member can publish
-  directly to every member's feed instead of submitting for the owner to publish. Fix: a BEFORE INSERT/UPDATE
-  guard forcing `is_published=false` unless `private.is_platform_owner()`. RLS-layer, so owner approval first.
+- ~~**Dispatch moderation bypass**~~ **CLOSED 2026-09-26** (migration `20260926095955`, applied live). The
+  earlier reading was wrong about the shape: member posts on the Wire are *meant* to be public
+  (`dispatches.is_published` defaults `true`), but `published_dispatches()` — the official "SOVEREIGN
+  DISPATCHES" feed — returned every published row, so any member post also rendered as an official
+  dispatch. The feed now returns only author-less rows, which only `post_dispatch()` (owner-only) writes.
+  The same migration fixed `post_dispatch()` (22P02 for the owner: bigint id into a uuid) and
+  `set_dispatch_published()` (uuid signature on a bigint id). See `FIXES_LOG.md`.
 - **No MFA, and no way to enrol** (2026-09-26). 0 verified `auth.mfa_factors`, owners included; no client code
   calls `auth.mfa.*`. Needs a TOTP enrol/verify screen plus an AAL2 requirement for owner-only surfaces
   (`approvals.html`) — auth change, so `grill-me-codex` first.

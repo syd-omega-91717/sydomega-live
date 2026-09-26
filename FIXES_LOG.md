@@ -20782,3 +20782,28 @@ after:  55 action refs, 55 SHA-pinned, 0 mutable
 - NEXT advances to "YOUR SOVEREIGN METRICS".
 - × removes the overlay, and `omega_tour_done_dashboard` reads `1`.
 - The three related-sigil labels render `display:block` at stacked `y` offsets.
+
+## Member posts rendered as official dispatches; owner could not post one (applied live, 20260926095955)
+
+Owner-approved ("Do both", 2026-09-26). The finding recorded above as a "moderation bypass" was measured again before fixing it, and its shape was different:
+
+- `dispatches.is_published` **defaults `true`**, and `news.html`'s Wire is described as "public to the Order". So member posts being visible to members is by design, and forcing `is_published=false` would have silently emptied the Wire.
+- The real gap is the **official** feed. `private.published_dispatches()` was `SELECT * ... WHERE is_published = true`. In a rolled-back probe, a member's Wire insert appeared in it: **1 row**, rendered under "SOVEREIGN DISPATCHES" as though the owner had issued it.
+- **The owner could not post an official dispatch at all.** `post_dispatch()` read `RETURNING id` (a `bigint` identity) into a `uuid` variable. Running as the owner it failed with `22P02 invalid input syntax for type uuid: "4"`, so `approvals.html` `sendDispatch()` could only ever show "DISPATCH FAILED".
+- `set_dispatch_published(uuid, boolean)` compared the `bigint` id to a `uuid`. It had no client caller.
+
+**Migration `20260926095955_official_dispatches_owner_only_feed`:**
+- The official feed now returns `is_published AND user_id IS NULL`, the rows `post_dispatch()` writes. A member cannot write an author-less row, because `dispatches_self_insert` requires `user_id = auth.uid()` or the owner.
+- `post_dispatch()` uses a `bigint` id and treats an empty category as `DISPATCH`.
+- `set_dispatch_published()` is recreated as `(bigint, boolean)` in both layers and returns `not_found` when no row matched. EXECUTE is revoked from `PUBLIC` and `anon` and granted to `authenticated`, the same ACL as before.
+
+**Verified live (single transaction, rolled back):**
+
+```
+owner_post={"id": 6, "ok": true}  owner_unpublish={"ok": true, "published": false}
+member_post_dispatch={"ok": false, "error": "owner_only"}  member_set_published={"ok": false, "error": "owner_only"}
+member_rows_in_official=0  official_rows_visible=1
+```
+
+- Afterwards: `dispatches` total=1, probe rows=0.
+- Security advisor: unchanged. Its only finding is leaked-password protection (#375, owner action).

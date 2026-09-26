@@ -3,6 +3,10 @@
 
 This is a governance gate, not a production claim. It prevents a module or
 cross-functional release control from silently disappearing from the audit.
+
+Usage:
+  python3 scripts/omega-all-roles-control.py
+  python3 scripts/omega-all-roles-control.py --help
 """
 from pathlib import Path
 import re
@@ -33,6 +37,10 @@ MODULES = [
 ]
 
 def main() -> int:
+    if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+        print(__doc__.strip())
+        return 0
+
     text = MATRIX.read_text(encoding="utf-8")
     failures = []
     if "SPECIFIED → IMPLEMENTED → CONNECTED → PERSISTED → SECURED → TESTED → DEPLOYED → LIVE-VERIFIED" not in text:

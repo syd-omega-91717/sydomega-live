@@ -2,12 +2,17 @@
 """Fail closed when service-role Edge Functions lack an explicit auth boundary."""
 from pathlib import Path
 import re
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FUNCTIONS = ROOT / "supabase" / "functions"
 ALLOWLIST = {"stripe-webhook", "weekly-digest"}
 
 def main() -> int:
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__.strip())
+        return 0
+
     failures = []
     checked = 0
     for path in sorted(FUNCTIONS.glob("*/index.ts")):

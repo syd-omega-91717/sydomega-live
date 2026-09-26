@@ -2,7 +2,9 @@
    Ω SYD OMEGA 91717 — SOVEREIGN TOUR ENGINE (omega-tour.js)
 
    Open-source: Shepherd.js v13 (MIT) — the world's most popular site tour library.
-   CDN: https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/js/shepherd.min.js
+   Vendored: /vendor/shepherd.mjs + /vendor/shepherd.css (official npm build).
+   The old CDN URL, .../shepherd.js@13.0.3/dist/js/shepherd.min.js, names a file
+   13.x does not ship (dist/ holds only esm/, cjs/, css/), so the tour never loaded.
 
    Architecture:
    - First-time members get a guided tour of the dashboard automatically.
@@ -26,8 +28,8 @@
   if(window.__omegaTourActive) return;
   window.__omegaTourActive = true;
 
-  var SHEPHERD_JS  = 'https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/js/shepherd.min.js';
-  var SHEPHERD_CSS = 'https://cdn.jsdelivr.net/npm/shepherd.js@13.0.3/dist/css/shepherd.css';
+  var SHEPHERD_JS  = '/vendor/shepherd.mjs';
+  var SHEPHERD_CSS = '/vendor/shepherd.css';
 
   var _tours = {};        /* registered page tours */
   var _loaded = false;
@@ -81,15 +83,14 @@
       document.head.appendChild(s);
     }
 
-    var js = document.createElement('script');
-    js.src = SHEPHERD_JS; js.async = true; js.crossOrigin = 'anonymous';
-    js.onload = function(){
+    /* 13.x ships no UMD build, only an ES module with no imports of its own;
+       dynamic import() works from this classic script. */
+    import(SHEPHERD_JS).then(function(mod){
+      window.Shepherd = mod.default || mod.Shepherd || mod;
       _loaded = true;
       _cbs.forEach(function(fn){ try{fn();}catch(e){} });
       _cbs=[];
-    };
-    js.onerror = function(){ console.warn('[OmegaTour] Shepherd.js failed to load'); };
-    document.head.appendChild(js);
+    }).catch(function(){ _cbs=[]; console.warn('[OmegaTour] Shepherd.js failed to load'); });
   }
 
   /* ── TOUR BUILDER ────────────────────────────────────────────────────── */

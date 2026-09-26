@@ -324,6 +324,16 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- **CSP: third-party code CDNs removed; `'unsafe-inline'` is the remaining gap** (2026-09-26;
+  `FIXES_LOG.md`, security-hardening pass 4). The last seven runtime CDN loads (lucide,
+  dayjs + relativeTime, highlight.js, qrcode-generator, Shepherd JS/CSS, Tone.js) are
+  vendored, so `vercel.json` and `vault.html`'s meta CSP now name no `esm.sh`/`unpkg.com`/
+  `cdn.jsdelivr.net`, and `form-action 'self'` is added. `security-headers-contract.py`
+  blocks any code CDN in script/style/font/default-src. **Still open:** `script-src
+  'unsafe-inline'` stays because 164 pages carry 1,355 inline `on*=` handlers and 354
+  inline `<script>` blocks. Removing it is a page-by-page migration (handlers →
+  `addEventListener`, blocks → files or hashes), best done behind
+  `Content-Security-Policy-Report-Only` first.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Validate the production security-header contract in vercel.json."""
+"""Validate the production security-header contract in vercel.json.
+
+Also holds the CSP host list narrow: script-src/style-src/font-src may not
+name a third-party code CDN (esm.sh, unpkg.com, cdn.jsdelivr.net), in the
+vercel.json header or in any page's <meta http-equiv> CSP. Every library is
+self-hosted in /vendor/, so a CDN host there is only ever attack surface --
+and a meta CSP is enforced alongside the header, so it must stay narrow too.
+"""
 from __future__ import annotations
 
 import sys as _sys
@@ -24,7 +31,28 @@ CSP_REQUIRED = (
     "base-uri 'self'",
     "frame-ancestors 'none'",
     "connect-src 'self'",
+    "form-action 'self'",
 )
+# Third-party code CDNs. Nothing loads from them since /vendor/ took over, so
+# allowing them only widens what an injected <script src> could pull in.
+FORBIDDEN_CODE_HOSTS = ("esm.sh", "unpkg.com", "cdn.jsdelivr.net")
+CODE_DIRECTIVES = ("script-src", "style-src", "font-src", "default-src")
+import re as _re
+# content= holds 'self' etc., so match up to the SAME quote that opened it.
+META_CSP_RE = _re.compile(
+    r'<meta[^>]+http-equiv=["\']Content-Security-Policy["\'][^>]*content=(["\'])(.*?)\1', _re.I | _re.S)
+
+
+def csp_host_errors(csp: str, where: str) -> list[str]:
+    errors = []
+    for part in csp.split(";"):
+        tokens = part.split()
+        if not tokens or tokens[0] not in CODE_DIRECTIVES:
+            continue
+        for host in FORBIDDEN_CODE_HOSTS:
+            if any(host in t for t in tokens[1:]):
+                errors.append(f"{where}: {tokens[0]} allows third-party CDN {host}")
+    return errors
 def main() -> int:
     if not CONFIG.exists():
         print("SECURITY HEADERS CONTRACT FAILED: vercel.json missing")
@@ -45,6 +73,10 @@ def main() -> int:
     for directive in CSP_REQUIRED:
         if directive not in csp:
             errors.append(f"CSP missing {directive}")
+    errors += csp_host_errors(csp, "vercel.json")
+    for page in sorted(ROOT.glob("*.html")):
+        for _q, meta in META_CSP_RE.findall(page.read_text(encoding="utf-8", errors="ignore")):
+            errors += csp_host_errors(meta, page.name)
     if errors:
         print("SECURITY HEADERS CONTRACT FAILED")
         for error in errors:

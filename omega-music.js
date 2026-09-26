@@ -1,6 +1,6 @@
 /* ==========================================================================
    Ω SYD OMEGA 91717 — SOVEREIGN MUSIC ENGINE (omega-music.js)
-   Tone.js v14 (MIT) via esm.sh — generative musical compositions per element.
+   Tone.js v14 (MIT), self-hosted at /vendor/tone.js — generative musical compositions per element.
    Each of the 9 sovereign elements has a unique scale, timbre, and rhythm.
    More sophisticated than omega-ambient.js (which uses raw Web Audio API).
    Public API: window.OmegaMusic = { play(elem), stop(), toggle(), isPlaying() }
@@ -83,13 +83,26 @@ function semitoneToNote(root,semis){
   return NOTE_NAMES[noteIdx]+(rootOct+octOffset);
 }
 
+/* Self-hosted UMD build (tone 14.9.17, MIT) -- it sets window.Tone, the same
+   namespace object the old esm.sh import resolved to. One in-flight promise,
+   so concurrent callers share a single <script>. */
+var _tonePromise=null;
 function loadTone(){
   if(_Tone) return Promise.resolve(_Tone);
-  return import('https://esm.sh/tone@14.9.17').then(function(mod){
-    _Tone=mod;
+  if(_tonePromise) return _tonePromise;
+  _tonePromise=new Promise(function(resolve,reject){
+    if(window.Tone){resolve(window.Tone);return;}
+    var s=document.createElement('script');
+    s.src='/vendor/tone.js';s.async=true;
+    s.onload=function(){window.Tone?resolve(window.Tone):reject(new Error('Tone global missing'));};
+    s.onerror=function(){reject(new Error('tone.js failed to load'));};
+    document.head.appendChild(s);
+  }).then(function(T){
+    _Tone=T;
     _loaded=true;
     return _Tone;
-  });
+  },function(err){_tonePromise=null;throw err;});
+  return _tonePromise;
 }
 
 function stopAll(){

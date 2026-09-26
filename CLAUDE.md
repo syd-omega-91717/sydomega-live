@@ -135,8 +135,8 @@ A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
 
-**Third-party bundles are self-hosted in `/vendor/`** — 8 files, official builds,
-no bundler, add with `npm pack`; `audit.py` tracks them apart from root modules.
+**Third-party bundles are self-hosted in `/vendor/`** — all of them, official builds,
+no bundler, add with `npm pack`; the CSP names no code CDN (`security-headers-contract.py`); `audit.py` tracks them apart from root modules.
 Never reintroduce a runtime CDN import: an unresolved one runs *none* of its
 module's code, so the particle engine, the realm sphere, Chart.js, tippy, marked
 and Fuse each read as silently dead until vendored (`FIXES_LOG.md` 128, 130-132,
@@ -557,7 +557,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **318** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **322** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

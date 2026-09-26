@@ -20561,3 +20561,35 @@ verify-runtime.js --pages <49 touched pages>, after         0 uncaught errors on
 **Full-estate sweep** (`verify-runtime.js --all`, 206 pages): 202 pass. Three of the four failures were one bug — `omega-content-sigil-system.js:58` did `main.insertBefore(door, main.querySelector('.hero,.page-header,header'))`, but `querySelector` returns a *descendant*, so any nested hero threw `NotFoundError` (`honors.html`, `maintenance.html`, `matrix.html`; identical on pristine `main`). It now climbs to `main`'s direct child first; the 3 pages pass. `reset.html`'s horizontal overflow is pre-existing and left open.
 
 Still open (not done in this pass): `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites. Most render the member's own data to themselves (self-XSS) or static constants; this pass prioritised the class where one member's data reaches *another* session. Remaining inline `onclick=` handlers also block a strict `script-src` CSP.
+
+## Security-hardening pass 4: last seven runtime CDN loads vendored, CSP narrowed to `'self'` for code, Shepherd tour was dead
+
+CLAUDE.md §4 says every third-party bundle is self-hosted, but the live CSP still allowed `esm.sh`, `unpkg.com` and `cdn.jsdelivr.net` in `script-src` (and jsdelivr in `style-src`/`font-src`) because seven loads still used them:
+
+```
+omega-oss.js     lucide 1.37.0 (unpkg), dayjs 1.11.23 + relativeTime (jsdelivr), highlight.js 11.12.0 (jsdelivr)
+omega-qr.js      qrcode-generator 1.5.2 (jsdelivr, auto-minified qrcode.min.js)
+omega-tour.js    shepherd.js 13.0.3 JS + CSS (jsdelivr)
+omega-music.js   tone 14.9.17 (esm.sh dynamic import)
+```
+
+All eight files (plus Tone's licence file) are now in `/vendor/`, copied **unmodified** from the official `npm pack` tarballs (licences: ISC, MIT ×4, BSD-3-Clause). SHA-256 (first 12 hex digits): lucide `970650887f49`, dayjs `0198dd0b1f76`, relativeTime `9aeaf25ce3c5`, highlight `8ab71eb09c51`, qrcode `18ae399f8118`, shepherd.mjs `201355df553c`, shepherd.css `487b5fd746dc`, tone `76fde2e44a0f`.
+
+**A dead feature found on the way:** `omega-tour.js` requested `shepherd.js@13.0.3/dist/js/shepherd.min.js`. The 13.0.3 package's `dist/` holds only `esm/`, `cjs/` and `css/`, so that file does not exist, and every guided tour failed at `js.onerror` with a console warning (the same shape as fuse 7.x, see the `omega-oss.js` header). 13.x ships no UMD build. The tour now `import()`s `/vendor/shepherd.mjs` (it has no imports of its own) and publishes `window.Shepherd = mod.default`. Tone moved from an ESM namespace import to its UMD build, which sets the same namespace as `window.Tone`; the loader now shares one in-flight promise and clears it on failure so a retry is possible.
+
+**CSP:** `vercel.json` is now `script-src 'self' 'unsafe-inline'`; `style-src` keeps only Google Fonts; `font-src` keeps only `fonts.gstatic.com`; and `form-action 'self'` is added (no `<form action=>` in the repo posts off-site). `vault.html`'s meta CSP loses `esm.sh` in `default-src`/`script-src`. Analytics and speed-insights load same-origin `/_vercel/*` in production; their `va.vercel-scripts.com` branch is development-only and was never allowed. `architect.html`'s ADR-004 ("esm.sh for all third-party libraries — ACCEPTED", member-visible) now records the `/vendor/` decision.
+
+**Gate:** `security-headers-contract.py` fails on any code CDN host in `script-src`/`style-src`/`font-src`/`default-src`, in the header **or** any page `<meta>` CSP. `test_security_headers_contract.py` covers it with planted violators. Its first meta regex stopped at the `'` in `'self'` and silently missed `vault.html` — the planted-violator test pins that.
+
+```
+node CSP server (exact vercel.json header) + Chromium, terms.html, each lib via its real API:
+  lucide.createIcons ✓  dayjs ✓  fromNow → "an hour ago" ✓  hljs.highlight ✓
+  OmegaQR.render 128x128, 6312 dark px ✓  OmegaTour.start → .shepherd-element + /vendor/shepherd.css ✓
+  OmegaMusic.play → window.Tone 14.9.17 ✓            securitypolicyviolation events: 0
+python3 scripts/security-headers-contract.py      PASSED (before the change: 6 errors, incl. vault.html)
+./scripts/ci-local.sh                             ALL 24 BLOCKING CHECKS PASSED; 322 + 23 tests
+node scripts/verify-runtime.js                    PASS (13 pages)
+python3 scripts/audit.py                          0 critical / 7 warnings — identical on origin/main (FIXES_LOG.md alone is now >1000 KB)
+```
+
+Still open: `'unsafe-inline'` (1,355 inline handlers on 164 pages, 354 inline `<script>` blocks) — see `GAP_ANALYSIS.md`.

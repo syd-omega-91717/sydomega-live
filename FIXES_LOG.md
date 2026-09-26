@@ -20657,3 +20657,41 @@ python3 scripts/audit.py                          0 critical / 7 warnings — id
 ```
 
 Still open: `'unsafe-inline'` (1,355 inline handlers on 164 pages, 354 inline `<script>` blocks) — see `GAP_ANALYSIS.md`.
+
+## CI root cause corrected, `main`'s one real red gate fixed, and the strict-CSP migration started (inline-code ratchet, 6 files clean)
+
+**GitHub Actions, re-diagnosed.** Two sessions (and CLAUDE.md §8.2) blamed billing for jobs dying in 1–5s with `runner_id: 0`. That was wrong: the repo is **public**, and on 2026-09-26 every `push` run on `main` got a runner and passed. Contracts `pull_request` history separates the cases exactly:
+
+```
+8f497c89  owner's "Merge branch 'main'" from the GitHub UI   success (runner assigned)
+f75d8878, 63852da1, 20cb3a5a, c8ae485e  pushed from Claude Code sessions   failure, runner_id 0, no steps
+Omega Registry Sync, event=push, on a Claude-pushed branch commit           failure, runner_id 0
+0b3aa986 etc. (2026-09-21, same Claude author)                             success
+workflow_dispatch of contracts.yml via the GitHub API (run 36205147451)     success, runner assigned
+```
+
+So a run whose trigger is a Claude Code session's `git push` never gets a runner, whatever its event. Commit authorship is not the cause (the same author passed on 09-21), and neither is the code. The dependable route is `workflow_dispatch` through the API after pushing. CLAUDE.md §8.2 now says so.
+
+**`Supabase Runtime Contract` was genuinely red on `main`** (`42501 permission denied for table platform_settings`, run 36204856814). The table was locked down **on purpose** — `20260923031224_harden_owner_only_and_platform_settings_reads` and `20260925211957_revoke_anon_select_from_private_tables` — and live, `anon` can SELECT exactly one public relation (`token_catalog`). Flags reach members through `get_platform_flag()` (authenticated only). Re-granting would have reversed hardening. Instead the contract now treats a Postgres `42501` as proof the key was accepted: PostgREST had to authenticate the key and switch to `anon` before Postgres could refuse the grant. A bad key is rejected by PostgREST itself with no Postgres code. Five new tests, including invalid-key, JWT-error and 500 cases that must still fail. Not runnable from this sandbox (egress proxy 403s Supabase); verified by a GitHub-hosted dispatch after push.
+
+**Strict-CSP migration, batch 1.** `scripts/csp-inline-ratchet.py` counts inline `on*=` handlers (markup and JS-built strings) and inline `<script>` blocks per root file against `scripts/csp-inline-baseline.json`. It runs in `contract-suite.py`, so it blocks locally and on GitHub. A file can never go up, and new files must start at 0.
+
+```
+origin/main   1,368 inline handlers   351 inline <script> blocks   205 files
+this branch   1,323                   348                          199 files (6 now clean, locked at 0)
+```
+
+- **Shared modules, loaded on every page, now clean:** `omega-copilot.js` (close/send), `omega-onboard.js` (card click + the `onmouseenter`/`onmouseleave` pair a click-only grep missed), `omega-notify.js` (close + row hover → `:hover` rule), `omega-search.js` (ESC + result hover; the no-results message also echoed the query into `innerHTML` unescaped and `item.u` into `href` — both escaped now), `omega-legal.js` (POLICY `onclick=window.open` → a real `<a href>`).
+- **`approvals.html` (owner console) is fully clean:** 20 markup handlers, 9 template handlers and 3 dead `onclick=""` REVIEW stubs, plus all 3 inline scripts, moved to `approvals-ui.js` (classic; a delegated `data-action` dispatcher over an explicit allow-list, never `window[name]`) and `approvals.js` (the module). One trap was fixed on the way: `filterClick` highlighted buttons with `.fb[onclick*="…"]`, a selector keyed on the very attribute being removed. It now uses `data-arg`.
+
+```
+approvals.html as OWNER under script-src 'self' (no 'unsafe-inline'), stubbed members incl. sign='<img onerror>':
+  app shown ✓  tabs ✓  stat-cell + filter-bar highlight ✓  XSS payload inert ✓  CSP violations 0  page errors 0
+  APPROVE via DOM click -> approve_member RPC, same as origin/main (a forced Playwright click hit an off-screen
+  button at y≈1160 on BOTH versions -- a probe artifact, checked before trusting either result)
+dashboard.html under the same strict policy, member without a sign:
+  onboarding hover/select/confirm ✓  copilot open/send/close ✓  search results/ESC/hover ✓ (query XSS inert)
+  notifications open/close ✓  consent POLICY is <a href=/privacy.html> ✓
+  CSP violations: only dashboard.html's own 3 inline <script> blocks (batch 2), none from shared modules
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED; 332 + 23 tests
+```

@@ -351,12 +351,12 @@
   function renderResults(results,q,el){
     if(!el)return;
     if(!results.length){
-      el.innerHTML='<div style="padding:20px;text-align:center;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">NO RESULTS FOR “'+q.toUpperCase()+'” · TRY A DIFFERENT TERM</div>';
+      el.innerHTML='<div style="padding:20px;text-align:center;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">NO RESULTS FOR “'+esc(String(q).toUpperCase())+'” · TRY A DIFFERENT TERM</div>';
       return;
     }
     el.innerHTML=results.map(function(item){
       var col=CAT_COLORS[item.c]||'var(--gold,#C9A84C)';
-      return '<a href="'+item.u+'" style="display:block;padding:11px 16px;text-decoration:none;border-bottom:1px solid rgba(201,168,76,.05);color:inherit;transition:background .12s" onmouseenter="this.style.background=\'rgba(201,168,76,.04)\'" onmouseleave="this.style.background=\'\'">'
+      return '<a href="'+esc(item.u)+'" style="display:block;padding:11px 16px;text-decoration:none;border-bottom:1px solid rgba(201,168,76,.05);color:inherit;transition:background .12s" class="omega-s-hit">'
         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
           +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:'+col+';border:1px solid;border-color:'+col+'33;padding:1px 7px;border-radius:10px;flex-shrink:0">'+item.c+'</span>'
           +'<span style="font-family:var(--R,\'Rajdhani\',sans-serif);font-size:13px;font-weight:600">'+highlight(item.t,q)+'</span>'
@@ -385,7 +385,7 @@
       +'<div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(201,168,76,.12)">'
         +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:18px;color:rgba(201,168,76,.5)">Ω</span>'
         +'<input id="omega-s-inp" type="search" placeholder="SEARCH THE SOVEREIGN PLATFORM…" autocomplete="off" spellcheck="false" style="flex:1;background:none;border:none;outline:none;font-family:var(--M,\'Courier Prime\',monospace);font-size:13px;color:#e9e6dc;letter-spacing:1.5px" aria-label="Search">'
-        +'<kbd onclick="closeSearch()" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.5);border:1px solid rgba(138,134,118,.2);padding:2px 6px;border-radius:2px;cursor:pointer">ESC</kbd>'
+        +'<kbd id="omega-s-esc" role="button" tabindex="0" aria-label="Close search" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.5);border:1px solid rgba(138,134,118,.2);padding:2px 6px;border-radius:2px;cursor:pointer">ESC</kbd>'
       +'</div>'
       +'<div id="omega-s-res" role="listbox" style="max-height:55vh;overflow-y:auto"></div>'
       +'<div style="padding:10px 16px;border-top:1px solid rgba(201,168,76,.07);display:flex;gap:8px;flex-wrap:wrap">'
@@ -394,6 +394,18 @@
       +'</div>'
     +'</div>';
     document.body.appendChild(_ov);
+    /* Listeners and a :hover rule, not inline on*= attributes (refused by a
+       script-src without 'unsafe-inline'). */
+    var escKey=document.getElementById('omega-s-esc');
+    if(escKey){
+      escKey.addEventListener('click',closeSearch);
+      escKey.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();closeSearch();}});
+    }
+    if(!document.getElementById('omega-s-hit-style')){
+      var hs=document.createElement('style');hs.id='omega-s-hit-style';
+      hs.textContent='#omega-s-res .omega-s-hit:hover{background:rgba(201,168,76,.04)}';
+      document.head.appendChild(hs);
+    }
     var inp=document.getElementById('omega-s-inp');
     var res=document.getElementById('omega-s-res');
     if(inp){

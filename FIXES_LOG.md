@@ -20753,3 +20753,32 @@ after:  55 action refs, 55 SHA-pinned, 0 mutable
 - **Dispatch moderation bypass.** `news.html` lets members submit dispatches without `is_published`; the feed reads `published_dispatches()`. But `authenticated` holds INSERT on `is_published`, the insert check is only `user_id = auth.uid()`, and no trigger guards the column, so a member can publish straight to every member's feed.
 - **No MFA anywhere.** 0 verified `auth.mfa_factors` project-wide, including both owner accounts, which hold schema-wide authority. There is also no enrolment UI: nothing in the client calls `auth.mfa.*`.
 - **`security-definer-audit.py` false positives** (recorded in the previous entry).
+
+## Dashboard tour stuck on screen: popover under its own overlay, stacked tours, pale strip, missing targets
+
+**Reported:** owner screenshot of `sydomega.com/dashboard` (2026-09-26 12:38 local) — the "SOVEREIGN COMMAND BAR" tour card with a pale strip down its right edge, the page behind it dimmed, and "COMMAND / NEXTANALYTICSOPEN →" run together above it.
+
+**Root causes, each measured in a headless render of `dashboard.html` at 1366×768:**
+- **Buttons unclickable.** `omega-tour.js` set `.shepherd-element{z-index:9994}` while Shepherd's modal overlay is `9997` with `pointer-events:all` on its path. `document.elementFromPoint` at the centre of NEXT returned the overlay `path`, not the button. There was no way to advance or close, so the page stayed dimmed.
+- **Tours stacked.** `omega:populated` fires more than once per page, and every firing armed `autoStart` again. After three firings the probe counted **3** `.shepherd-element`s, each with its own overlay. Playwright's click on the visible NEXT timed out (3000ms).
+- **Pale strip.** `vendor/shepherd.css` gives `.shepherd-element` `background:#fff; max-width:400px`, while the theme capped `.shepherd-content` at 320px. Measured: element 400px wide, `rgb(255,255,255)`, content 320px, leaving an 80px white band.
+- **Step pointed at nothing.** The dashboard has no `.topbar` and no `.side` (console: "The element for this Shepherd step was not found .topbar"). Shepherd centred that card while its copy said the bar was "always visible here". Across the nine registered tours, 14 of 30 targets are absent or unrendered.
+- **Run-together label.** `omega-content-sigil-system.js` builds the related-page card from three inline `<span>`s whose CSS only sets `margin-top`, so they sat on one line.
+
+**Fix:**
+- `omega-tour.js`:
+  - `.shepherd-element` now has `z-index:9999`, is 320px wide and has a transparent background.
+  - One tour runs at a time (`_running`), and `autoStart` arms once per page (`_scheduled`).
+  - Steps whose target is absent or zero-size are dropped; a target-less card stays.
+  - The nav step targets `#omega-side, .side`.
+  - Closing the tour now counts as seen, recorded in `localStorage`. It used to be `sessionStorage`, set only on completion, so a dismissed tour came back every session.
+- `omega-content-sigil-system.js`: the three label spans are `display:block`.
+- `.claude/skills/verify-in-browser/harness/serve.js` now serves `.mjs` as `text/javascript`. It had sent `application/octet-stream`, so the vendored Shepherd module failed to import under the harness and no local render could reproduce this report.
+
+**After (same render):**
+- One tour.
+- Element 320px, `rgba(0,0,0,0)`, `z-index:9999`.
+- The first card attaches to the sidebar (`data-popper-placement=right`).
+- NEXT advances to "YOUR SOVEREIGN METRICS".
+- × removes the overlay, and `omega_tour_done_dashboard` reads `1`.
+- The three related-sigil labels render `display:block` at stacked `y` offsets.

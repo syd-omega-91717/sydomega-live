@@ -2517,6 +2517,8 @@ setTimeout(function(){
      guard attribute — a guard is the module's identity, not the feature
      area's (CLAUDE.md 8.1 class 5b). */
   if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
+  /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
+  if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
   if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}

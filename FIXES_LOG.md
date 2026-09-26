@@ -21048,3 +21048,51 @@ Migration `20260926192038` grants read-only access:
 No DML was granted: the orchestrators' writes stay ungranted until the owner decides to turn them on. Both remaining steps are recorded in `GAP_ANALYSIS.md` §S, along with the missing `find_contradictions`.
 
 `concierge` runs as the member and `stripe-webhook` uses `apply_subscription_event` (already `service_role`-executable), so neither was affected.
+
+## Less text on member pages: long paragraphs fold to two lines (progressive disclosure)
+
+The owner asked for less explanatory text. Rather than deleting the platform's lore (chronicle, kings, pantheons and houses exist to present it), a new module, `omega-readmore.js` (injected by `bg.js`, guard `data-omega-readmore`), folds long running text to two lines behind a MORE / LESS toggle. Nothing is removed.
+
+**Measured first.** A rendered scan of all 206 pages, counting visible blocks with 90 or more characters of their own text, found **119 pages** with such blocks. The heaviest:
+
+| page | characters |
+|---|---|
+| chronicle | 6,423 |
+| kings | 2,868 |
+| pantheons | 2,313 |
+| media | 2,209 |
+| automation | 2,197 |
+| honors | 2,115 |
+| elements | 2,007 |
+
+The dashboard had **0** such blocks (376 visible words), so it was not the target.
+
+**Rules, each from a measurement:**
+- **Fold only at 4 or more rendered lines** (at least two lines hidden). The first version folded anything past two lines, and `media.html` grew 16px and `houses.html` 5px, because a paragraph barely over two lines hides less than the button adds.
+- **Character floor 100, not 160.** At 160, houses 1, 2 and 5 (about 150 characters over 4 lines) stayed whole while their neighbours folded, which made the grid uneven. At 100, all 12 house cards fold alike (checked in a screenshot).
+- **Measure only rendered blocks.** Unrendered blocks are retried on DOM additions and on `<body>` class changes, because the approval guard hides the column (§8.1 class 3). The observer watches class changes on `<body>` only; animated pages flip classes throughout the tree.
+- **Never fold:**
+  - `terms`, `privacy`, `sovereign-covenant`, `charter` (legal and consent text), `chatbot` (AI replies), and the owner deck;
+  - forms, tables, dialogs, code, editable areas, the nav and rail;
+  - any block containing a control or media element;
+  - anything marked `[data-no-clamp]`.
+
+  `scripts/tests/test_readmore.py` pins the exclusions, the single injection, and the labels.
+
+**Labels:** `ui_read_more` / `ui_read_less` are in `T_EN` and all six packs (ar, es, fr, hi, nl, zh). The i18n contract is clean.
+
+Before (`bg.js` pinned to `origin/main`) and after, 1366px, same harness:
+
+| page | height (px) | paragraphs folded |
+|---|---|---|
+| chronicle | 7,353 → 6,211 | 20 |
+| kings | 2,406 → 2,289 | 9 |
+| pantheons | 2,696 → 2,605 | 12 |
+| media | 3,922 → 3,852 | 12 |
+| research | 1,929 → 1,886 | 9 |
+| houses | 1,856 → 1,861 | 12, now uniform |
+| dashboard, automation, elements | unchanged | 0 |
+
+Page errors were 0 before and 0 after on every page, with no horizontal overflow. The toggle sets `aria-expanded` and `aria-controls`, and swaps the label to LESS (40px folded, 99px open).
+
+`terms` in that run measured the dashboard, because the signed-in stub is redirected off public pages (§8.4). It is excluded by `SKIP_PAGES` regardless.

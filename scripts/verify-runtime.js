@@ -102,7 +102,7 @@ const BENIGN = [
   /export\.arxiv\.org/, /wikipedia\.org/, /has been blocked by CORS/, /Access to fetch at/
 ];
 // Pages that legitimately render signed-out (bg.js public-page allowlist).
-const PUBLIC = /(^|\/)(account|enter|reset|terms|pending|index)\.html$/;
+const PUBLIC = /(^|\/)(account|enter|reset|terms|pending|index|guide)\.html$/;
 // Owner-only pages: the member stub (is_owner:false) SHOULD be kept out, so
 // "#app not visible" there is the gate working, not a bug.
 const OWNER_GATED = /(^|\/)(approvals)\.html$/;

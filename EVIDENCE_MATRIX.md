@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 101 |
 | `PARTIAL` | 28 |
 | `LOCAL_ONLY` | 43 |
-| `STATIC` | 32 |
+| `STATIC` | 33 |
 | `BROKEN` | 2 |
 | `UNREACHABLE` | 0 |
-| **total** | **206** |
+| **total** | **207** |
 
 ## BUILT (101)
 
@@ -231,7 +231,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (32)
+## STATIC (33)
 
 | page | evidence |
 |---|---|
@@ -250,6 +250,7 @@ This scanner reads the repository. It has no database connection, so:
 | `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
+| `guide.html` | no backend call, no stored state |
 | `healthz.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `index.html` | no backend call, no stored state |

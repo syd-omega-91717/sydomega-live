@@ -287,7 +287,7 @@ var SYSTEM_RULES=[
   {name:'TRIAL SESSION SENTINEL',icon:'&#x26A0;',kind:'sys',
    trigger:'IF trial_expires_at < now() AND is_trial = true',
    action:'THEN call expire_trial RPC, reset axes to genesis, redirect to pending',
-   desc:'The Sentinel watches every trial session. The moment the 9h-17m-17s window closes, progress resets and access revokes without any manual action required.',
+   desc:'The Sentinel watches every trial session. The moment the 9-minute-17-second trial closes, progress resets and access revokes without any manual action required.',
    default_on:true},
   {name:'AGENT DEPLOYMENT ON LEVEL',icon:'&#x25C9;',kind:'sys',
    trigger:'IF tier rank changes (floor of min axis)',

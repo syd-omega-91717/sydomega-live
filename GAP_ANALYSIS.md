@@ -31,6 +31,7 @@ open, recorded in `FIXES_LOG.md`:
   `graphify-ai-query`, grant each one the table operations it uses. A small script
   mapping `supabase/functions/*` `.from()` calls to table grants would make this a gate
   rather than a checklist.
+- **The Guide is English-only** (opened 2026-09-26). `omega-guide.js` holds its 26 answers as English strings, not `T_EN` keys, so the six packs do not reach it. Keying them means 26 × 7 entries through the i18n contract, which is worth doing once the wording settles.
 - **`find_contradictions` does not exist** (opened 2026-09-26).
   `graphify-ai-query/index.ts:252` calls it and only logs a warning when it fails, so the
   anomaly report's contradiction list is always empty. The function is not deployed, so

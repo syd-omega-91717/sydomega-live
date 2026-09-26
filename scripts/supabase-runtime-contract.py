@@ -104,28 +104,18 @@ OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
 # served to public keys, so the 401 was the platform behaving as designed and
 # said nothing about the key or about production.
 #
-# The probe targets public.platform_settings. It WAS anon-readable; migrations
-# 20260923031224 (owner-only SELECT) and 20260925211957 (revoke anon SELECT)
-# deliberately closed that, and the client reads flags through the
-# authenticated get_platform_flag() RPC instead. Measured live 2026-09-26:
-# anon can SELECT exactly one public relation, token_catalog.
-#
-# So a 42501 here is EXPECTED and is still the proof this gate exists for:
-# 42501 is a Postgres error, which means PostgREST accepted the key, switched
-# to the anon role and ran the query. A bad key never gets that far -- it is
-# rejected by PostgREST itself (PGRST3xx / "Invalid API key"), with no Postgres
-# code. Pinning a different anon-readable table instead would make this gate
-# fail again the next time a hardening pass narrows anon, which is exactly
-# what turned main red on 2026-09-25.
-POSTGREST_PROBE = "/rest/v1/platform_settings?select=key&limit=1"
-# Postgres insufficient_privilege: the key was accepted, the role lacks a grant.
-KEY_ACCEPTED_PG_CODES = ("42501",)
-# public.token_catalog is the right target instead: it is a deliberately public
-# catalog surface and the live project currently grants `anon` SELECT on it.
-# `platform_settings` must NOT be used here: the 2026-09-23 hardening migration
-# changed it to owner-only reads. This probe must follow the current security
-# boundary rather than weakening RLS to satisfy CI.
+# public.token_catalog is the target: a deliberately public catalog surface, and
+# measured live 2026-09-26 the ONLY public relation anon may SELECT.
+# platform_settings must NOT be used: 20260923031224 made it owner-only and
+# 20260925211957 revoked anon SELECT; members read flags via the authenticated
+# get_platform_flag() RPC. Follow the security boundary, never re-grant for CI.
 POSTGREST_PROBE = "/rest/v1/token_catalog?select=*&limit=1"
+# Backstop: if a later hardening pass closes token_catalog too, a Postgres 42501
+# is still proof this gate exists for -- PostgREST accepted the key and switched
+# to the anon role before Postgres refused the grant. A bad key never gets that
+# far (PostgREST rejects it with PGRST3xx / "Invalid API key", no Postgres code).
+# Without this, narrowing anon turned main red once already (2026-09-25).
+KEY_ACCEPTED_PG_CODES = ("42501",)
 
 
 def bearer_for(key: str) -> dict[str, str]:

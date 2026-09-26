@@ -118,11 +118,6 @@ class PostgrestProbeTests(unittest.TestCase):
         """VIOLATOR of the original design."""
         self.assertNotEqual(contract.POSTGREST_PROBE.split("?")[0], "/rest/v1/")
 
-    def test_the_probe_targets_platform_settings(self):
-        """anon no longer holds SELECT here (migrations 20260923031224 and
-        20260925211957 closed it deliberately); a 42501 from Postgres is still
-        proof the key was accepted -- see KeyAcceptanceTests."""
-        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/platform_settings"))
     def test_the_probe_targets_a_table_anon_can_read(self):
         """The probe follows the live public catalog boundary, not owner-only settings."""
         self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/token_catalog"))
@@ -154,7 +149,7 @@ class KeyAcceptanceTests(unittest.TestCase):
 
     def test_grant_denial_proves_the_key_was_accepted(self):
         body = ('{"code":"42501","details":null,"hint":"Grant the required privileges",'
-                '"message":"permission denied for table platform_settings"}')
+                '"message":"permission denied for table token_catalog"}')
         self.assertEqual(self._run((401, body)), 0)
 
     def test_an_invalid_key_still_fails(self):

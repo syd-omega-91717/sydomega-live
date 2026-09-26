@@ -64,9 +64,8 @@ async function callClaudeAPI(prompt: string, context: string): Promise<string> {
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      model: "claude-opus-4-100k",
-      max_tokens: 1024,
-      temperature: 0.3,
+      model: "claude-opus-5",
+      max_tokens: 16000,
       system: `You are the Ω Concierge Agent, an empathetic member success specialist. You provide support, guidance, and escalation decisions.
 
 Guidelines:
@@ -85,7 +84,15 @@ Guidelines:
   });
 
   const data = await response.json();
-  return data.content[0].text;
+  /* The API answers errors as JSON with no `content`; claude-opus-5 also runs
+     adaptive thinking, so the first block is a thinking block, not text. */
+  if (!response.ok) {
+    throw new Error(`Anthropic API ${response.status}: ${data?.error?.type ?? "error"}`);
+  }
+  if (data.stop_reason === "refusal") throw new Error("Anthropic API refusal");
+  const text = (data.content ?? []).find((b: { type: string }) => b.type === "text");
+  if (!text) throw new Error("Anthropic API returned no text block");
+  return text.text;
 }
 
 async function saveConciergeDecision(
@@ -103,8 +110,8 @@ async function saveConciergeDecision(
       reasoning: reasoning,
       decision_payload: decision,
       confidence_score: decision.confidence || 0.85,
-      model_used: "claude-opus-4-100k",
-      temperature: 0.3,
+      model_used: "claude-opus-5",
+      temperature: null,
       outcome_recorded: false,
     })
     .select("id")
@@ -191,6 +198,20 @@ Deno.serve(async (req: Request) => {
       return new Response("Method not allowed", { status: 405 });
     }
 
+    /* Dormant until the owner turns platform_settings.autonomous_agents_enabled
+       on (CLAUDE.md section 9). Fails closed: an unreadable flag is off. */
+    const { data: flag, error: flagError } = await supabase
+      .from("platform_settings")
+      .select("bool_value")
+      .eq("key", "autonomous_agents_enabled")
+      .maybeSingle();
+    if (flagError || flag?.bool_value !== true) {
+      return new Response(JSON.stringify({ error: "disabled" }), {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const caller = await requireCaller(req);
     if (caller instanceof Response) return caller;
 
@@ -218,7 +239,7 @@ Deno.serve(async (req: Request) => {
   } catch (error) {
     console.error("Error in concierge orchestrator:", error);
     return new Response(
-      JSON.stringify({ error: "Internal server error", details: error }),
+      JSON.stringify({ error: "Internal server error" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },

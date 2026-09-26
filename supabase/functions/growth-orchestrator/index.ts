@@ -6,6 +6,30 @@ const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+async function requireCaller(req: Request): Promise<{ userId: string } | Response> {
+  const authorization = req.headers.get("Authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  const token = match?.[1]?.trim();
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!token || !anonKey) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const callerClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await callerClient.auth.getUser();
+  if (error || !data.user) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  return { userId: data.user.id };
+}
+
 interface GrowthRequest {
   member_id: string;
   propensity_type: "upgrade" | "adoption" | "expansion";
@@ -184,11 +208,22 @@ Deno.serve(async (req: Request) => {
       return new Response("Method not allowed", { status: 405 });
     }
 
+    const caller = await requireCaller(req);
+    if (caller instanceof Response) return caller;
+
     const growthRequest: GrowthRequest = await req.json();
+
 
     // Validate input
     if (!growthRequest.member_id || !growthRequest.propensity_type) {
       return new Response("Missing required fields", { status: 400 });
+    }
+
+    if (growthRequest.member_id !== caller.userId) {
+      return new Response(JSON.stringify({ error: "forbidden" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const response = await processGrowthRequest(growthRequest);

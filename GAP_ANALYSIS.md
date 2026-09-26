@@ -324,6 +324,12 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
+  `profile.html` writes `kyc_status`/`kyc_doc_path`/`kyc_submitted_at` directly; members hold no
+  UPDATE on them, and must not (a member could set their own verdict). Needs a `submit_kyc(p_doc_path)`
+  SECURITY DEFINER RPC that sets only `kyc_status='submitted'` for `auth.uid()` — high-risk, so
+  `grill-me-codex` first. Separately, `security-definer-audit.py` reads the reference SQL bag and
+  reports owner-checked `private.*` functions as unguarded; it should read `migrations/`.
 - **CSP: third-party code CDNs removed; `'unsafe-inline'` is the remaining gap** (2026-09-26;
   `FIXES_LOG.md`, security-hardening pass 4). The last seven runtime CDN loads (lucide,
   dayjs + relativeTime, highlight.js, qrcode-generator, Shepherd JS/CSS, Tone.js) are

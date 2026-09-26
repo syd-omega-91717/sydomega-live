@@ -20695,3 +20695,34 @@ dashboard.html under the same strict policy, member without a sign:
   CSP violations: only dashboard.html's own 3 inline <script> blocks (batch 2), none from shared modules
 ./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED; 332 + 23 tests
 ```
+
+## New members could not accept terms or finish onboarding: profile UPDATE grants had drifted narrower than 0041 intended (applied live, 20260926091843)
+
+Found by an audit pass, not a report. Measured live on 2026-09-26: `authenticated` held column-level UPDATE on `public.profiles` for only `avatar_url, bio, demo_watched_at, display_name, dob, trial_started_at`. Migration `0041_omega_access_control.sql:171` grants `display_name, sign, birth_date, terms_accepted, updated_at, nationality, profession, bio, avatar_url`. Nothing in `supabase/migrations/` removes them, so the drift was applied live outside the repo.
+
+Every self-service write in the client that needs those columns failed with `42501 permission denied for table profiles`:
+
+```
+terms.html          terms_accepted, terms_accepted_at   -> a new member can never accept terms; bg.js
+                                                           sends a member without terms back to terms.html (locked out)
+omega-onboard.js    sign (+ element, god, agent, token) -> onboarding can never complete
+settings.html       bg_color                            -> theme colour never saves
+profile.html KYC    kyc_status, kyc_doc_path, ...       -> still fails; NOT granted on purpose (below)
+live: 4 of 7 non-owner members have no sign and no accepted terms; newest signup 2026-07-29
+```
+
+The one member tested had `terms_accepted_at = 2026-06-16`, so this path worked before the drift.
+
+**Fix (owner approved, applied live):** the migration re-grants `sign, birth_date, terms_accepted, terms_accepted_at, bg_color, nationality, profession, updated_at`. It deliberately does **not** grant `element/god/agent`: `derive_cosmology` computes them from `sign`, and `omega-onboard.js` now sends `sign` only (sending the derived columns made the whole write 42501). It also does **not** grant `kyc_*`, because a member must never write their own KYC verdict; that needs an owner-reviewed RPC. Privileged columns stay blocked twice, by the grants and by `guard_profile_privileges`.
+
+```
+BEFORE, as real non-owner member cfc4593f-… (rolled back):  update sign=… -> 42501 permission denied
+proof on production inside a rolled-back txn with the grant: sign='leo' -> Leo/FIRE/Apollo/Sovereign, terms + bg saved
+AFTER apply, same member (rolled back):   sign='virgo' -> Virgo/SAND/Athena/Auditor ✓   is_owner=true -> 42501 ✓
+                                          access_approved unchanged (false) ✓
+member row after every test: bg_color NULL, terms_accepted_at 2026-06-16 -> nothing persisted
+security advisor after apply: unchanged (only auth_leaked_password_protection, issue #375)
+supabase/remote-migrations.json + migration-drift.py: PASS (221 versions, local and remote agree)
+```
+
+**Also found in the same audit, a false positive and not a vulnerability:** `security-definer-audit.py` flags `approve_member`, `grant_permanent_access`, `check_trial_status`, etc. as mutating SECURITY DEFINER functions without an auth check. It reads the `supabase/*.sql` reference bag. Live, the `public.*` versions are SECURITY INVOKER one-liners (`SELECT private.approve_member($1)`), and the `private.*` DEFINER functions open with `IF NOT public.is_platform_owner() THEN RETURN … 'forbidden'`. No `public` SECURITY DEFINER function is executable by `anon` or `authenticated`.

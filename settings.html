@@ -76,6 +76,13 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
       <button class="btn-gold" id="ap-reset-app" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO DEFAULT</button>
     </div>
   </div>
+  <div class="settings-section">
+    <div class="settings-section-title">CALM MODE</div>
+    <p class="settings-hint">Hide the ambient extras on every page: ticker, banners, floating buttons. Navigation and visuals stay. Language stays here in Settings.</p>
+    <div class="langrow">
+      <button class="btn-gold" id="btn-calm" type="button" aria-pressed="false" style="font-size:12px;letter-spacing:2px;padding:10px 16px">CALM: OFF</button>
+    </div>
+  </div>
   <div class="sechead">LANGUAGE</div>
   <div class="settings-section">
     <div class="settings-section-title">PLATFORM LANGUAGE</div>
@@ -217,6 +224,12 @@ buildSwatches();
 document.querySelectorAll('[data-lang]').forEach(function(b){
   b.addEventListener('click',function(){try{localStorage.setItem('omega_lang',b.getAttribute('data-lang'));}catch(e){}location.reload();});
 });
+/* Calm mode lives in bg.js (window.OmegaCalm), which is deferred and so runs
+   after this block: read it at click time, and paint the state once the DOM
+   is ready (deferred scripts have run by then). */
+var calmBtn=document.getElementById('btn-calm');
+function paintCalm(){if(!calmBtn)return;var on=!!(window.OmegaCalm&&window.OmegaCalm.on());calmBtn.setAttribute('aria-pressed',on?'true':'false');calmBtn.textContent='CALM: '+(on?'ON':'OFF');}
+if(calmBtn){calmBtn.addEventListener('click',function(){if(!window.OmegaCalm)return;window.OmegaCalm.set(!window.OmegaCalm.on());paintCalm();});document.addEventListener('DOMContentLoaded',paintCalm);}
 var wdBtn=document.getElementById('btn-watch-demo');
 if(wdBtn)wdBtn.addEventListener('click',function(){if(window.OmegaDemo)window.OmegaDemo.replay();});
 var apApplyBtn=document.getElementById('ap-apply');

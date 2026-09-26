@@ -21096,3 +21096,15 @@ Before (`bg.js` pinned to `origin/main`) and after, 1366px, same harness:
 Page errors were 0 before and 0 after on every page, with no horizontal overflow. The toggle sets `aria-expanded` and `aria-controls`, and swaps the label to LESS (40px folded, 99px open).
 
 `terms` in that run measured the dashboard, because the signed-in stub is redirected off public pages (§8.4). It is excluded by `SKIP_PAGES` regardless.
+
+## Calm mode for every member (opt-in); the floating DEDICATION timer; contrast advisories now name their elements
+
+- **Members can choose Calm mode.** A CALM switch in `settings.html` (Preferences tab) toggles `window.OmegaCalm`, the same per-viewer switch as the owner deck. It stays off unless the member turns it on. Language stays reachable in Settings, so hiding the language dock loses nothing. Rendered as a member stub:
+  - OFF → ON: `#ofb-btn` goes from `flex` to `none`;
+  - survives a reload;
+  - ON → OFF: `flex` again;
+  - 0 page errors.
+
+  The wiring sits inside the page's existing inline block, so `csp-inline-ratchet` is unchanged (PASS).
+- **`#omega-ded-widget`** (`omega-chrono.js`, fixed bottom-right) covered card text (`houses.html` house 8, screenshot). It is ambient, so Calm mode now hides it. Its offsets are unchanged: it already clears the bottom chrome.
+- **`verify-runtime.js --contrast-detail`.** The sweep reported "text contrast 3–4.5:1: 99" as a bare count that named nothing to fix: 99 elements across 206 pages, not 99 pages. The new report-only flag prints one tab-separated `CONTRAST` line per element (page, ratio, colour, background, size, selector, text). The first lines already show the pattern: the `--crim` token `#C4453C` at 3.97:1 on near-black, and the `#9B6BF0` purple at 3.8–4.46:1 on its tinted chips.

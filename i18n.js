@@ -1240,7 +1240,9 @@ var T_EN={
 "prof_gate_gold_sovereignty":"GOLD SOVEREIGNTY",
 "prof_gate_platinum_legacy":"PLATINUM LEGACY",
 "prof_gate_omega_threshold":"OMEGA THRESHOLD",
-"prof_gate_omega_master":"OMEGA MASTER"
+"prof_gate_omega_master":"OMEGA MASTER",
+"ui_read_more":"MORE",
+"ui_read_less":"LESS"
 };
 
 /* T is the merged dictionary in the original {key:{lang:string}} shape, so

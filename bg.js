@@ -881,11 +881,13 @@ function __omegaAppend(el){
 (function(){try{var c=localStorage.getItem("omega_bg");if(c){document.documentElement.style.setProperty("--void",c);document.body&&(document.body.style.background=c);}}catch(e){} })();
 /* ===== CALM MODE -- per-viewer, reversible, off unless chosen =====
    One switch that hides ambient extras (door banner, ticker, PMI badge, the
-   language/music dock, feedback/share/voice buttons, rail HUB/PIN, and the
+   language/music dock, feedback/share/voice buttons, rail HUB/PIN, the
+   floating DEDICATION timer (it covers card text bottom-right), and the
    topbar HOME/BACK that duplicates the sidebar's on desktop). Navigation, the
    copilot, the menu and every visual layer stay. Nothing is removed from the
    DOM, so each module keeps working and a toggle restores it at once.
-   Set from the owner deck (omega-owner-deck.js); stored in localStorage only,
+   Set from the owner deck (omega-owner-deck.js) or Settings (settings.html,
+   any member); stored in localStorage only,
    because it is a viewing preference, not state anyone else needs. */
 (function(){
   var KEY='omega_calm', root=document.documentElement;
@@ -896,7 +898,7 @@ function __omegaAppend(el){
     st.textContent='html[data-omega-calm] .omega-page-door,html[data-omega-calm] #omega-ticker-strip,'+
       'html[data-omega-calm] #omega-pmi-badge,html[data-omega-calm] #omega-controls-dock,'+
       'html[data-omega-calm] #ofb-btn,html[data-omega-calm] #osh-btn,html[data-omega-calm] #omega-voice-btn,'+
-      'html[data-omega-calm] .omega-context-actions{display:none!important}'+
+      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget{display:none!important}'+
       '@media (min-width:901px){html[data-omega-calm] #omega-tb-nav{display:none!important}}';
     (document.head||root).appendChild(st);
   }

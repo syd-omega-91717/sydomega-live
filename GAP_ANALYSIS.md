@@ -324,6 +324,24 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- ~~**Dispatch moderation bypass**~~ **CLOSED 2026-09-26** (migration `20260926095955`, applied live). The
+  earlier reading was wrong about the shape: member posts on the Wire are *meant* to be public
+  (`dispatches.is_published` defaults `true`), but `published_dispatches()` — the official "SOVEREIGN
+  DISPATCHES" feed — returned every published row, so any member post also rendered as an official
+  dispatch. The feed now returns only author-less rows, which only `post_dispatch()` (owner-only) writes.
+  The same migration fixed `post_dispatch()` (22P02 for the owner: bigint id into a uuid) and
+  `set_dispatch_published()` (uuid signature on a bigint id). See `FIXES_LOG.md`.
+- **No MFA, and no way to enrol** (2026-09-26). 0 verified `auth.mfa_factors`, owners included.
+  **In progress (dormant):**
+  - The `omega-mfa.js` enrol/verify/remove UI plus `stepUp()` ships in Settings behind
+    `mfa_enrolment_enabled`, which fails closed. The flag row does not exist yet.
+  - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
+    **proposed, not applied**. It was exercised live in an aborted transaction.
+  - Decision record: `docs/decisions/owner-mfa/`.
+  - Still open: 24 functions check ownership without `is_platform_owner()` (listed in the plan). They
+    must be routed through it before enforcement is turned on.
+- **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
+  exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
 - **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
   `profile.html` writes `kyc_status`/`kyc_doc_path`/`kyc_submitted_at` directly; members hold no
   UPDATE on them, and must not (a member could set their own verdict). Needs a `submit_kyc(p_doc_path)`

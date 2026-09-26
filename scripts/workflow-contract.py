@@ -124,9 +124,12 @@ for name, required in REQUIRED.items():
             ERRORS.append(f"{name}: missing required contract: {description}")
 
 
-# Production workflows must not resolve mutable action or CLI references.
-for name in ("ci.yml", "contracts.yml", "production-contract.yml", "capability-evidence.yml", "vercel-production.yml"):
-    path = WORKFLOWS / name
+# No workflow may resolve a mutable action or CLI reference. This used to cover
+# only five production workflows while 17 others ran 31 tag refs (@v4/@v5),
+# including a third-party write-capable action; a job's token is scoped to
+# the repository, so a moved tag in ANY workflow is a supply-chain path.
+for path in sorted(WORKFLOWS.glob("*.yml")):
+    name = path.name
     if path.is_file():
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if "uses:" in line and "./" not in line:

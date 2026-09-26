@@ -20726,3 +20726,119 @@ supabase/remote-migrations.json + migration-drift.py: PASS (221 versions, local 
 ```
 
 **Also found in the same audit, a false positive and not a vulnerability:** `security-definer-audit.py` flags `approve_member`, `grant_permanent_access`, `check_trial_status`, etc. as mutating SECURITY DEFINER functions without an auth check. It reads the `supabase/*.sql` reference bag. Live, the `public.*` versions are SECURITY INVOKER one-liners (`SELECT private.approve_member($1)`), and the `private.*` DEFINER functions open with `IF NOT public.is_platform_owner() THEN RETURN … 'forbidden'`. No `public` SECURITY DEFINER function is executable by `anon` or `authenticated`.
+
+## Enterprise audit pass: CI supply chain fully pinned, cross-user RLS measured live, three trust gaps found
+
+An enterprise-scale audit report was checked against evidence before anything was acted on. Its CI claims held (the Contracts and Vercel Production workflows SHA-pinned, `vercel@59.6.0`), as did its registry figures (15 capabilities: 4 BUILT / 6 PARTIAL / 2 BROKEN / 1 LOCAL_ONLY / 2 TESTED, 0 `verified`). Its core framing is right too: the Master Build's React/Express/Prisma stack is a target specification, not what ships.
+
+**Supply chain (fixed).** Only five named workflows were held to immutable refs. The rest ran **31 mutable tags in 17 workflows**, including `stefanzweifel/git-auto-commit-action@v5`, a third-party action with repo write access, in `omega-update.yml`. That workflow was an unfinished placeholder (`echo "Update applied"` under "You would paste my code here"), had no `permissions:` block, had never run, and was referenced nowhere. It is removed. The other 30 refs now use the SHAs nine workflows already ran (checkout/setup-node/setup-python v7; v4 was on the deprecated Node 20 runtime). `workflow-contract.py` now checks **every** workflow, not five, proven with a planted `actions/checkout@v4` in `schema-tracking.yml` → `FAIL … mutable action reference`.
+
+```
+before: 57 action refs, 26 SHA-pinned, 31 mutable (17 workflows)
+after:  55 action refs, 55 SHA-pinned, 0 mutable
+```
+
+**Cross-user RLS, measured live (not aggregate counts).** For all 64 public tables with a `user_id uuid` column that `authenticated` can SELECT, each was counted as the database owner and again as a real non-owner member (`SET LOCAL ROLE authenticated` + JWT `sub`, one rolled-back transaction):
+
+```
+18 tables hold other users' rows -> 17 fully isolated (member sees 0):
+  client_errors 7629->0, platform_events 5283->0, session_heartbeats 1103->0, sovereign_points_ledger 69->0,
+  user_dedication 33->0, certificates/medals/trophies/token_balances 24->0, member_state 20->0,
+  evolution_events 20->0, lesson_completions 18->0, task_completions 10->0, ai_memory 8->0, ...
+  dispatches 1->1   (by design: SELECT is is_published OR owner OR own row)
+46 tables hold no foreign rows -> isolation NOT demonstrable by this test; needs seeded fixtures
+```
+
+**Trust gaps found (open, recorded in GAP_ANALYSIS.md):**
+- **Dispatch moderation bypass.** `news.html` lets members submit dispatches without `is_published`; the feed reads `published_dispatches()`. But `authenticated` holds INSERT on `is_published`, the insert check is only `user_id = auth.uid()`, and no trigger guards the column, so a member can publish straight to every member's feed.
+- **No MFA anywhere.** 0 verified `auth.mfa_factors` project-wide, including both owner accounts, which hold schema-wide authority. There is also no enrolment UI: nothing in the client calls `auth.mfa.*`.
+- **`security-definer-audit.py` false positives** (recorded in the previous entry).
+
+## Dashboard tour stuck on screen: popover under its own overlay, stacked tours, pale strip, missing targets
+
+**Reported:** owner screenshot of `sydomega.com/dashboard` (2026-09-26 12:38 local) — the "SOVEREIGN COMMAND BAR" tour card with a pale strip down its right edge, the page behind it dimmed, and "COMMAND / NEXTANALYTICSOPEN →" run together above it.
+
+**Root causes, each measured in a headless render of `dashboard.html` at 1366×768:**
+- **Buttons unclickable.** `omega-tour.js` set `.shepherd-element{z-index:9994}` while Shepherd's modal overlay is `9997` with `pointer-events:all` on its path. `document.elementFromPoint` at the centre of NEXT returned the overlay `path`, not the button. There was no way to advance or close, so the page stayed dimmed.
+- **Tours stacked.** `omega:populated` fires more than once per page, and every firing armed `autoStart` again. After three firings the probe counted **3** `.shepherd-element`s, each with its own overlay. Playwright's click on the visible NEXT timed out (3000ms).
+- **Pale strip.** `vendor/shepherd.css` gives `.shepherd-element` `background:#fff; max-width:400px`, while the theme capped `.shepherd-content` at 320px. Measured: element 400px wide, `rgb(255,255,255)`, content 320px, leaving an 80px white band.
+- **Step pointed at nothing.** The dashboard has no `.topbar` and no `.side` (console: "The element for this Shepherd step was not found .topbar"). Shepherd centred that card while its copy said the bar was "always visible here". Across the nine registered tours, 14 of 30 targets are absent or unrendered.
+- **Run-together label.** `omega-content-sigil-system.js` builds the related-page card from three inline `<span>`s whose CSS only sets `margin-top`, so they sat on one line.
+
+**Fix:**
+- `omega-tour.js`:
+  - `.shepherd-element` now has `z-index:9999`, is 320px wide and has a transparent background.
+  - One tour runs at a time (`_running`), and `autoStart` arms once per page (`_scheduled`).
+  - Steps whose target is absent or zero-size are dropped; a target-less card stays.
+  - The nav step targets `#omega-side, .side`.
+  - Closing the tour now counts as seen, recorded in `localStorage`. It used to be `sessionStorage`, set only on completion, so a dismissed tour came back every session.
+- `omega-content-sigil-system.js`: the three label spans are `display:block`.
+- `.claude/skills/verify-in-browser/harness/serve.js` now serves `.mjs` as `text/javascript`. It had sent `application/octet-stream`, so the vendored Shepherd module failed to import under the harness and no local render could reproduce this report.
+
+**After (same render):**
+- One tour.
+- Element 320px, `rgba(0,0,0,0)`, `z-index:9999`.
+- The first card attaches to the sidebar (`data-popper-placement=right`).
+- NEXT advances to "YOUR SOVEREIGN METRICS".
+- × removes the overlay, and `omega_tour_done_dashboard` reads `1`.
+- The three related-sigil labels render `display:block` at stacked `y` offsets.
+
+## Member posts rendered as official dispatches; owner could not post one (applied live, 20260926095955)
+
+Owner-approved ("Do both", 2026-09-26). The finding recorded above as a "moderation bypass" was measured again before fixing it, and its shape was different:
+
+- `dispatches.is_published` **defaults `true`**, and `news.html`'s Wire is described as "public to the Order". So member posts being visible to members is by design, and forcing `is_published=false` would have silently emptied the Wire.
+- The real gap is the **official** feed. `private.published_dispatches()` was `SELECT * ... WHERE is_published = true`. In a rolled-back probe, a member's Wire insert appeared in it: **1 row**, rendered under "SOVEREIGN DISPATCHES" as though the owner had issued it.
+- **The owner could not post an official dispatch at all.** `post_dispatch()` read `RETURNING id` (a `bigint` identity) into a `uuid` variable. Running as the owner it failed with `22P02 invalid input syntax for type uuid: "4"`, so `approvals.html` `sendDispatch()` could only ever show "DISPATCH FAILED".
+- `set_dispatch_published(uuid, boolean)` compared the `bigint` id to a `uuid`. It had no client caller.
+
+**Migration `20260926095955_official_dispatches_owner_only_feed`:**
+- The official feed now returns `is_published AND user_id IS NULL`, the rows `post_dispatch()` writes. A member cannot write an author-less row, because `dispatches_self_insert` requires `user_id = auth.uid()` or the owner.
+- `post_dispatch()` uses a `bigint` id and treats an empty category as `DISPATCH`.
+- `set_dispatch_published()` is recreated as `(bigint, boolean)` in both layers and returns `not_found` when no row matched. EXECUTE is revoked from `PUBLIC` and `anon` and granted to `authenticated`, the same ACL as before.
+
+**Verified live (single transaction, rolled back):**
+
+```
+owner_post={"id": 6, "ok": true}  owner_unpublish={"ok": true, "published": false}
+member_post_dispatch={"ok": false, "error": "owner_only"}  member_set_published={"ok": false, "error": "owner_only"}
+member_rows_in_official=0  official_rows_visible=1
+```
+
+- Afterwards: `dispatches` total=1, probe rows=0.
+- Security advisor: unchanged. Its only finding is leaked-password protection (#375, owner action).
+
+## Two-factor sign-in: threat model, dormant enrolment UI, owner enforcement proposed and exercised live
+
+Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is the reviewed, dormant first half. Decision record: `docs/decisions/owner-mfa/PLAN.md` (Status `AWAITING-HUMAN-REVIEW`) and `CODEX_REVIEW.md`.
+
+**Measured live:**
+- `auth.mfa_factors` has 0 rows.
+- 161 policies and 33 functions route owner authority through `private.is_platform_owner()`.
+- **24** functions test `profiles.is_owner` / `platform_owners` directly. The plan lists them, and enforcement must not be turned on until they are routed through the helper.
+
+**Shipped (dormant):**
+- **`omega-mfa.js`:** TOTP enrol (QR as `<img src>`, secret via `textContent`), verify, remove, and `stepUp()`.
+  - Every Auth call's `.error` is checked, and the status is re-read from the server after each change.
+  - Abandoned unverified factors are removed before a new enrol.
+- **`settings.html`:** mounts it in the Account tab inside `data-omega-flag="mfa_enrolment_enabled"`. The flag row does not exist, so the section is hidden and the module never mounts.
+- **Browser check (`settings.html`, harness):**
+  - Dormant: `visible:false`, `mounted:false`.
+  - With the flag attribute forced and the Auth API stubbed:
+    - a malformed code is refused client-side;
+    - a rejected code shows `Invalid TOTP code entered` and the status stays `TWO-FACTOR IS OFF`;
+    - an accepted code gives `TWO-FACTOR IS ON · 1 authenticator`;
+    - a factor named `<img src=x onerror=alert(1)>` renders as text, with 0 injected `<img>`;
+    - the stale unverified factor is unenrolled before `enroll`.
+
+**Proposed, not applied (`docs/decisions/owner-mfa/proposed_migration.sql`):**
+- Seed `mfa_enrolment_enabled` and `owner_mfa_required` false.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+- Exercised live inside one aborted transaction:
+
+  ```
+  before_owner=t  flag_off_owner_aal1=t  flag_off_member=f
+  flag_on_owner_aal1=f  flag_on_owner_aal2=t  flag_on_member_aal2=f
+  ```
+
+- Afterwards: the live function has no `aal` test, and 0 MFA flag rows exist.

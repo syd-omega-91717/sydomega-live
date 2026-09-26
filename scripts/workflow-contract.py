@@ -42,8 +42,8 @@ REQUIRED = {
         r"scripts/omega-registry\.py['\"]?,?\s*['\"]?--check",
     ],
     "production-contract.yml": [
-        r"actions/checkout@(?:v4|[0-9a-f]{40})",
-        r"actions/setup-python@(?:v5|[0-9a-f]{40})",
+        r"actions/checkout@[0-9a-f]{40}",
+        r"actions/setup-python@[0-9a-f]{40}",
         r"scripts/production-contract\.py",
     ],
     "capability-evidence.yml": [
@@ -59,14 +59,14 @@ REQUIRED["vercel-production.yml"] = [
     r"actions/checkout@[0-9a-f]{40}",
     r"actions/setup-node@[0-9a-f]{40}",
     r"actions/setup-python@[0-9a-f]{40}",
-    r"scripts/vercel_static_contract\\.py",
-    r"scripts/vercel-build\\.sh",
-    r"scripts/omega-production-surface-contract\\.py",
+    r"scripts/vercel_static_contract\.py",
+    r"scripts/vercel-build\.sh",
+    r"scripts/omega-production-surface-contract\.py",
 ]
 REQUIRED["contracts.yml"] = [
     r"actions/checkout@[0-9a-f]{40}",
     r"actions/setup-python@[0-9a-f]{40}",
-    r"scripts/contract-suite\\.py",
+    r"scripts/contract-suite\.py",
 ]
 
 REQUIRED_PATTERNS = {"production-contract.yml": [(r"scripts/check-js-syntax\.py", "first-party JavaScript syntax contract")]}

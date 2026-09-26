@@ -20928,3 +20928,42 @@ Each is sized from its own box times `devicePixelRatio` and redrawn by a `Resize
 **Accessibility advisories closed:**
 - `#ofb-msg` (feedback textarea) has an `aria-label`.
 - `verify-deployment.html` and `verify-modules.html` have a `<main>` landmark.
+
+## AI Edge Functions: three orchestrators broken, leaky and ungated; concierge live/source drift; four owner-rights views (applied live)
+
+**Orchestrators (`growth-`, `concierge-`, `product-orchestrator`), deployed live as v3.** Each had three faults:
+- It requested the model `claude-opus-4-100k`, which does not exist, so every call failed.
+- It returned the raw error object (`details: error`) in its 500 response.
+- It ignored `platform_settings.autonomous_agents_enabled` (`false`), so an authenticated caller could run autonomous work the owner had not turned on. No page calls any of the three.
+
+The fix:
+- They now read the flag first and fail closed (`503 {"error":"disabled"}`).
+- They use `claude-opus-5` without `temperature`, which that model rejects.
+- They read the first `type:"text"` block, since adaptive thinking puts a thinking block first.
+- They check `response.ok` and `stop_reason === "refusal"`, and no longer leak error bodies.
+
+Verified live from the database with `pg_net`: all three return `503 {"error":"disabled"}` (responses 3, 4, 5).
+
+**`concierge`: the live code existed nowhere in the repo.** Live v3 was a hardened rewrite: origin allow-list, bearer required, a governance classifier that refuses account-changing intent, and no error leakage. The repo still held the older open version (`Access-Control-Allow-Origin: *`, `String(e)` and the upstream error body returned to the client). The live version, in turn, had two defects of its own:
+- It **dropped `system_override`**. Five callers (`agents.html:234`, `sovereign-ai.html:200`, `weekly.html:452`, `omega-ai.js:66`, `omega-intelligence.js:148`) send a persona, and every one silently got the generic concierge voice.
+- Its `Access-Control-Allow-Headers` omitted **`x-client-info`**, which the vendored supabase-js sends on every request (`vendor/supabase-js.js`: `"X-Client-Info":"supabase-js/2.112.4; …"`). The browser preflight for every `functions.invoke('concierge')` therefore failed. Consistent with that, the 24h function logs held no member traffic.
+
+The repo's version had a third defect: its memory write omitted `ai_memory.memory` (`NOT NULL`, no default, no insert trigger). It never stored a row; live has **0** `conversation` rows out of 8.
+
+One canonical source is now in `supabase/functions/concierge/index.ts`, deployed as v4:
+- It keeps live's hardening.
+- It restores the persona, placed *below* the governed rules as untrusted guidance and bounded to 2000 characters.
+- It adds `x-client-info` to the allowed headers.
+- It reads the text block by type and handles refusals.
+- Memory stays read-only. Writing member chat content is a separate decision and stays off.
+
+Verified live without a paid model call:
+- `"please delete my account"` returns `403 approval_required`;
+- `system_override:123` returns `400 system_override_invalid`, a check that exists only in v4;
+- both responses carry `access-control-allow-origin: https://sydomega.com` and `allow-headers: authorization, content-type, apikey, x-client-info`.
+
+`stripe-webhook` live v1 matches the repo: timeout, API version, the constant-time compare and every error code agree.
+
+**Views (migration `20260926182800`).** `conversion_funnel`, `pending_access_requests`, `permanent_access_review` and `workflow_analytics` ran with owner rights (`postgres`, BYPASSRLS). None is readable by anon, authenticated, or even service_role, so nothing was exposed. A future `GRANT` would have exposed every row past RLS, though, so each is now `security_invoker = true`.
+
+The only consumer is `private.get_pending_requests()` (SECURITY DEFINER, owner `postgres`). Under owner impersonation it returned 9 before and 9 after, in a rolled-back probe. After the change, public views without `security_invoker`: **0**.

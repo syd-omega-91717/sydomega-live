@@ -82,6 +82,9 @@
       '.odk-chip:hover{color:var(--ink,#E8E4D8);border-color:var(--c)}',
       '.odk-chip[aria-pressed="true"]{color:#0a0a0a;background:var(--c);border-color:var(--c)}',
       '.odk-chip[aria-pressed="true"] i{background:#0a0a0a}',
+      '.odk .odk-wait{color:var(--c);border-color:var(--c);text-decoration:none;font-weight:700;border-radius:999px}',
+      '.odk-wait[hidden]{display:none}',
+      '.odk-wait:hover{background:var(--c);color:#0a0a0a}',
       '.odk-group{display:flex;flex-direction:column;gap:10px}',
       '.odk-gh{display:flex;align-items:center;gap:10px;font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--c)}',
       '.odk-gh::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--c),transparent);opacity:.35}',
@@ -178,6 +181,7 @@
     head.appendChild(sw);
     head.appendChild(count);
     head.appendChild(calmToggle());
+    head.appendChild(waitingChip());
     root.appendChild(head);
 
     var chips = mk('div', 'odk-chips');
@@ -304,6 +308,38 @@
     });
 
     render();
+  }
+
+  /* People waiting for the owner's decision, always visible here. bg.js only
+     flashes a 10-second toast, and on 2026-09-26 the oldest request had been
+     waiting since 16 June. Same definition as approvals.js: not approved, not
+     rejected. A failed count shows nothing rather than a false 0. */
+  function waitingChip() {
+    var a = mk('a', 'odk-chip odk-wait');
+    a.href = '/approvals.html';
+    a.hidden = true;
+    a.style.setProperty('--c', '#E0736B');
+    function paint(n) {
+      if (!(n > 0)) { a.hidden = true; return; }
+      a.textContent = '';
+      a.appendChild(mk('i'));
+      a.appendChild(document.createTextNode(n + ' WAITING'));
+      a.setAttribute('aria-label', n + (n === 1 ? ' person' : ' people') + ' waiting for access approval');
+      a.hidden = false;
+    }
+    var get = window.OmegaSB && typeof window.OmegaSB.get === 'function'
+      ? window.OmegaSB.get()
+      : import('/vendor/supabase-js.js').then(function (m) {
+          var cc = m.createClient || (m.default && m.default.createClient);
+          return cc ? cc('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q') : null;
+        });
+    Promise.resolve(get).then(function (sb) {
+      if (!sb) return;
+      return sb.from('profiles').select('id', { count: 'exact', head: true })
+        .eq('access_approved', false).eq('is_owner', false).not('is_rejected', 'is', true)
+        .then(function (r) { if (!r.error) paint(r.count || 0); });
+    }).catch(function () { /* no chip beats a wrong one */ });
+    return a;
   }
 
   /* Calm mode lives in bg.js (window.OmegaCalm) so it applies on every page.

@@ -21,8 +21,8 @@
      visible, and 77 of its uses are text `color`. Re-stepped to the
      deepest crimson that still clears 3:1 (validated with the dataviz
      palette checker; CVD separation unchanged at deutan dE 18.9). */
-  --crim:#C4453C;
-  --green:#3fb27f; --purple:#9B6BF0;
+  --crim:#CA5850;
+  --green:#3fb27f; --purple:#AB82F2;
   --muted:#8a8676; --ink:#e9e6dc;
   --line:rgba(201,168,76,.15);
   --line-cyan:rgba(0,229,255,.12);

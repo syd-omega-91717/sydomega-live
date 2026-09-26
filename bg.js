@@ -1975,7 +1975,10 @@ setTimeout(function(){
         if(ownerAccess.error) window.__omegaWriteFail('owner_lifetime_access',ownerAccess);
       }
       /* Check pending members and notify */
-      var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);
+      /* Pending means what approvals.js means: not approved AND not rejected.
+         Without the second filter a rejected applicant counted as "waiting"
+         forever (live 2026-09-26: 4 shown, 3 real). not.is.true keeps NULLs. */
+      var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false).not('is_rejected','is',true);
       var pendingCount=res.count||0;
       if(pendingCount>0){
         var el=document.createElement('a');

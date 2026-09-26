@@ -324,6 +324,32 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- ~~**Dispatch moderation bypass**~~ **CLOSED 2026-09-26** (migration `20260926095955`, applied live). The
+  earlier reading was wrong about the shape: member posts on the Wire are *meant* to be public
+  (`dispatches.is_published` defaults `true`), but `published_dispatches()` — the official "SOVEREIGN
+  DISPATCHES" feed — returned every published row, so any member post also rendered as an official
+  dispatch. The feed now returns only author-less rows, which only `post_dispatch()` (owner-only) writes.
+  The same migration fixed `post_dispatch()` (22P02 for the owner: bigint id into a uuid) and
+  `set_dispatch_published()` (uuid signature on a bigint id). See `FIXES_LOG.md`.
+- **No MFA, and no way to enrol** (2026-09-26). 0 verified `auth.mfa_factors`, owners included.
+  **In progress (dormant):**
+  - The `omega-mfa.js` enrol/verify/remove UI plus `stepUp()` ships in Settings behind
+    `mfa_enrolment_enabled`, which fails closed. The flag row does not exist yet.
+  - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
+    **applied live and dormant** (`20260926102544`; both flags seeded `false`, verified unchanged results).
+  - Decision record: `docs/decisions/owner-mfa/`.
+  - Phase 2 is done (`20260926102450`). Of the 24 direct owner checks, the only caller-authority
+    bypass was `private.omega_is_owner()`'s `profiles.is_owner` fallback, now removed. The other 23 are
+    row guards, statistics or triggers. What remains is owner action: turn on the enrolment UI, enrol
+    both owners on two devices, then set `owner_mfa_required`.
+- **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
+  exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
+- **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
+  `profile.html` writes `kyc_status`/`kyc_doc_path`/`kyc_submitted_at` directly; members hold no
+  UPDATE on them, and must not (a member could set their own verdict). Needs a `submit_kyc(p_doc_path)`
+  SECURITY DEFINER RPC that sets only `kyc_status='submitted'` for `auth.uid()` — high-risk, so
+  `grill-me-codex` first. Separately, `security-definer-audit.py` reads the reference SQL bag and
+  reports owner-checked `private.*` functions as unguarded; it should read `migrations/`.
 - **CSP: third-party code CDNs removed; `'unsafe-inline'` is the remaining gap** (2026-09-26;
   `FIXES_LOG.md`, security-hardening pass 4). The last seven runtime CDN loads (lucide,
   dayjs + relativeTime, highlight.js, qrcode-generator, Shepherd JS/CSS, Tone.js) are
@@ -334,6 +360,11 @@ open, recorded in `FIXES_LOG.md`:
   inline `<script>` blocks. Removing it is a page-by-page migration (handlers →
   `addEventListener`, blocks → files or hashes), best done behind
   `Content-Security-Policy-Report-Only` first.
+  **Progress (2026-09-26):** batch 1 done — `csp-inline-ratchet.py` (blocking, in the contract
+  suite) now holds every file at or below `scripts/csp-inline-baseline.json`; the 5 shared
+  modules that emitted handlers on every page, and `approvals.html`, are at 0 and verified
+  under a strict `script-src 'self'`. Remaining: 1,323 handlers / 348 blocks across 199 files;
+  `dashboard.html` (83 handlers, 3 blocks) is the largest single page.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

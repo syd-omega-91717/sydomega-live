@@ -104,12 +104,18 @@ OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
 # served to public keys, so the 401 was the platform behaving as designed and
 # said nothing about the key or about production.
 #
-# public.token_catalog is the right target instead: it is a deliberately public
-# catalog surface and the live project currently grants `anon` SELECT on it.
-# `platform_settings` must NOT be used here: the 2026-09-23 hardening migration
-# changed it to owner-only reads. This probe must follow the current security
-# boundary rather than weakening RLS to satisfy CI.
+# public.token_catalog is the target: a deliberately public catalog surface, and
+# measured live 2026-09-26 the ONLY public relation anon may SELECT.
+# platform_settings must NOT be used: 20260923031224 made it owner-only and
+# 20260925211957 revoked anon SELECT; members read flags via the authenticated
+# get_platform_flag() RPC. Follow the security boundary, never re-grant for CI.
 POSTGREST_PROBE = "/rest/v1/token_catalog?select=*&limit=1"
+# Backstop: if a later hardening pass closes token_catalog too, a Postgres 42501
+# is still proof this gate exists for -- PostgREST accepted the key and switched
+# to the anon role before Postgres refused the grant. A bad key never gets that
+# far (PostgREST rejects it with PGRST3xx / "Invalid API key", no Postgres code).
+# Without this, narrowing anon turned main red once already (2026-09-25).
+KEY_ACCEPTED_PG_CODES = ("42501",)
 
 
 def bearer_for(key: str) -> dict[str, str]:
@@ -163,6 +169,13 @@ def main() -> int:
                 detail = exc.read(300).decode("utf-8", "replace").strip().replace("\n", " ")
             except Exception:
                 pass
+            # The body is read truncated, so match the code field, not full JSON.
+            m = re.search(r'"code"\s*:\s*"([^"]*)"', detail)
+            pg_code = m.group(1) if m else ""
+            if name == "PostgREST" and exc.code in (401, 403) and pg_code in KEY_ACCEPTED_PG_CODES:
+                print(f"PostgREST accepted the key; anon is denied the probe table by grant "
+                      f"(Postgres {pg_code}), which is the intended hardened state.")
+                continue
             detail = f" -- {detail}" if detail else ""
             if exc.code in (401, 403):
                 return fail(f"Supabase {name} rejected the configured public key (HTTP {exc.code}){detail}")

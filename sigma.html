@@ -304,9 +304,13 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
   /* ── CHARTS ── */
   function drawDist(){
     var cv=document.getElementById('sigma-dist');if(!cv)return;
-    var ctx=cv.getContext('2d');
-    var W=cv.offsetWidth||400,H=180;
-    cv.width=W;cv.height=H;
+    /* Sized from its own box; a ResizeObserver redraws once the approval
+       guard reveals the column (a width read before that is 0 -- CLAUDE.md
+       8.1 class 3 -- and the chart was upsampled from a 112px buffer). */
+    if(!cv.__omegaRO&&window.ResizeObserver){cv.__omegaRO=new ResizeObserver(function(){drawDist();});cv.__omegaRO.observe(cv);}
+    var W=cv.clientWidth,H=180;if(!W)return;
+    var dpr=window.devicePixelRatio||1;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+    var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
     ctx.clearRect(0,0,W,H);
     if(!sortedAuths.length)return;
     var bins=20,maxV=30;

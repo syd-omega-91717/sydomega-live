@@ -24,6 +24,7 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 .kpi-value{font-family:var(--M);font-size:28px;font-weight:bold;color:var(--gold)}
 .kpi-change{font-family:var(--M);font-size:12px;color:var(--green)}
 .kpi-change.down{color:var(--crim)}
+.empty-note{font-family:var(--M);font-size:12px;line-height:1.7;color:var(--muted);padding:6px 0}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
 .sechead{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);margin:24px 0 12px;text-transform:uppercase}
 .chart-container{background:rgba(201,168,76,.02);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:20px;min-height:300px}
@@ -61,7 +62,7 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div style=font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px>INTELLIGENCE · INSIGHTS</div>
 <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">ANALYTICS DASHBOARD</h1>
 
-<div class=preview-banner>&#9888; PREVIEW &middot; SIMULATED DATA &mdash; this Phase 5 dashboard is not yet wired to live Supabase data. Every number below is a placeholder, not a real member metric.</div>
+<div class=preview-banner id=owner-note hidden>Owner-only: these figures come from owner reports and are not visible to members.</div>
 
 <div class=tab-container>
 <button class="tab-btn active" data-tab=overview>OVERVIEW</button>
@@ -75,24 +76,24 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div id=overview class="tab-content active">
 <div class=sechead>REAL-TIME METRICS</div>
 <div class=kpi-row id=kpi-overview data-stagger data-stagger-gap=70>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Active Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Engagement</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>30D Churn Rate</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change down id=metric-churn-change></div></div>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Feature Adoption</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Approved Members</div><div class=kpi-value id=metric-active>--</div><div class=kpi-change id=metric-active-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Pending Approval</div><div class=kpi-value id=metric-engagement>--</div><div class=kpi-change id=metric-engagement-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>On Trial</div><div class=kpi-value id=metric-churn>--</div><div class=kpi-change id=metric-churn-change></div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Engaged Today</div><div class=kpi-value id=metric-adoption>--</div><div class=kpi-change id=metric-adoption-change></div></div>
 </div>
 
-<div class=sechead>ENGAGEMENT TRENDS (7-DAY)</div>
+<div class=sechead>ENGAGED TIME (7-DAY)</div>
 <div class=chart-container>
-<div class=chart-title>Session Activity</div>
+<div class=chart-title>Minutes of member engagement per day</div>
 <canvas id=chart-sessions style=width:100%;height:200px></canvas>
-<div class=loading id=chart-sessions-loading>Loading...</div>
+<div class=loading id=chart-sessions-loading>Loading…</div>
 </div>
 
 <div class=sechead>MEMBER BREAKDOWN</div>
 <div class=glass style=padding:16px;margin-bottom:16px>
 <table class=metric-table>
 <thead>
-<tr><th>Segment</th><th>Count</th><th>Engagement</th><th>Status</th></tr>
+<tr><th>Tier</th><th>Members</th><th>Paid</th><th>On trial</th></tr>
 </thead>
 <tbody id=member-segments>
 <tr><td colspan=4 class=loading>Loading member segments...</td></tr>
@@ -105,17 +106,17 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div id=engagement class=tab-content>
 <div class=sechead>ENGAGEMENT METRICS</div>
 <div class=kpi-row data-stagger data-stagger-gap=70>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Session Time</div><div class=kpi-value id=metric-session-time>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Avg Engaged / Day (7D)</div><div class=kpi-value id=metric-session-time>--</div></div>
 <div class=kpi data-reveal=depth-in><div class=kpi-label>Pages / Session</div><div class=kpi-value id=metric-pages-session>--</div></div>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Return Rate</div><div class=kpi-value id=metric-return-rate>--</div></div>
-<div class=kpi data-reveal=depth-in><div class=kpi-label>Bounce Rate</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Page Views (all time)</div><div class=kpi-value id=metric-return-rate>--</div></div>
+<div class=kpi data-reveal=depth-in><div class=kpi-label>Pages Tracked</div><div class=kpi-value id=metric-bounce-rate>--</div></div>
 </div>
 
 <div class=sechead>TOP PAGES</div>
 <div class=glass style=padding:16px;margin-bottom:16px>
 <table class=metric-table>
 <thead>
-<tr><th>Page</th><th>Views</th><th>Avg Time</th><th>Bounce</th></tr>
+<tr><th>Page</th><th>Views</th><th>Sessions</th><th>Last viewed</th></tr>
 </thead>
 <tbody id=top-pages>
 <tr><td colspan=4 class=loading>Loading page data...</td></tr>
@@ -130,7 +131,7 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <div class=chart-container>
 <div class=chart-title>Members at High Risk (>70% probability)</div>
 <div id=churn-alerts style=max-height:400px;overflow-y:auto>
-<div class=loading>Loading churn predictions...</div>
+<div class=empty-note>No churn model runs on this platform yet, so no member is scored. This panel stays empty rather than show invented risk.</div>
 </div>
 </div>
 
@@ -141,15 +142,14 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <tr><th>Member</th><th>Recommended Feature</th><th>Adoption %</th><th>Confidence</th></tr>
 </thead>
 <tbody id=feature-recommendations>
-<tr><td colspan=4 class=loading>Loading recommendations...</td></tr>
+<tr><td colspan=4 class=empty-note>No recommendation model runs yet.</td></tr>
 </tbody>
 </table>
 </div>
 
 <div class=sechead>ENGAGEMENT SCORE DISTRIBUTION</div>
 <div class=chart-container>
-<canvas id=chart-engagement-dist style=width:100%;height:250px></canvas>
-<div class=loading id=chart-engagement-loading>Loading...</div>
+<div class=empty-note>Engagement scoring is not computed yet.</div>
 </div>
 </div>
 
@@ -162,42 +162,41 @@ body{background:#020206;color:var(--ink);font-family:var(--R);line-height:1.6}
 <tr><th>Cohort</th><th>Size</th><th>D0</th><th>D7</th><th>D30</th><th>D90</th></tr>
 </thead>
 <tbody id=cohort-retention>
-<tr><td colspan=6 class=loading>Loading cohort data...</td></tr>
+<tr><td colspan=6 class=empty-note>Retention cohorts are not computed yet.</td></tr>
 </tbody>
 </table>
 </div>
 
 <div class=sechead>FEATURE ADOPTION COHORTS</div>
 <div class=chart-container>
-<canvas id=chart-adoption-cohort style=width:100%;height:250px></canvas>
-<div class=loading id=chart-adoption-loading>Loading...</div>
+<div class=empty-note>Feature-adoption cohorts are not computed yet.</div>
 </div>
 </div>
 
 <!-- REPORTS TAB -->
 <div id=reports class=tab-content>
-<div class=sechead>AUTOMATED REPORTS</div>
+<div class=sechead>AUTOMATED REPORTS · PLANNED</div>
 <div class=glass style=padding:16px;margin-bottom:16px>
 <div style=margin-bottom:12px>
 <div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Weekly Performance Brief</div>
 <div style=font-size:12px;color:var(--muted)>Monday 06:00 UTC</div>
-<div style=font-size:12px;color:var(--muted);margin-top:4px>Engagement, churn, adoption, performance metrics delivered to email</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Will deliver engagement and membership figures by email once the weekly digest is switched on (weekly_digest_enabled is off)</div>
 </div>
 <div style=margin-bottom:12px;padding:12px 0;border-top:1px solid var(--dim)>
 <div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Member Insights Report</div>
 <div style=font-size:12px;color:var(--muted)>Thursday 08:00 UTC</div>
-<div style=font-size:12px;color:var(--muted);margin-top:4px>Top features, patterns, at-risk members, high engagement cohort analysis</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Planned; not scheduled</div>
 </div>
 <div style=padding:12px 0;border-top:1px solid var(--dim)>
 <div style=font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:8px>Product Analytics Deep Dive</div>
 <div style=font-size:12px;color:var(--muted)>Friday 09:00 UTC</div>
-<div style=font-size:12px;color:var(--muted);margin-top:4px>Feature penetration, funnels, retention cohorts, LTV analysis</div>
+<div style=font-size:12px;color:var(--muted);margin-top:4px>Planned; not scheduled</div>
 </div>
 </div>
 
 <div class=sechead>LAST REPORT SUMMARY</div>
 <div id=last-report class=glass style=padding:16px>
-<div class=loading>Generating last report...</div>
+<div class=empty-note>No report has been generated yet.</div>
 </div>
 </div>
 
@@ -225,48 +224,94 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   });
 });
 
-// Simulated analytics data (replace with real API calls)
-function loadAnalytics(){
-  const data={
-    active_members:487,
-    active_change:'+12 (2.5%)',
-    engagement_score:72.4,
-    engagement_change:'+3.2%',
-    churn_rate:'2.1%',
-    churn_change:'-0.5%',
-    adoption_rate:'68%',
-    adoption_change:'+5%'
-  };
-
-  document.getElementById('metric-active').textContent=data.active_members;
-  document.getElementById('metric-active-change').textContent=data.active_change;
-  document.getElementById('metric-engagement').textContent=(data.engagement_score).toFixed(1);
-  document.getElementById('metric-engagement-change').textContent=data.engagement_change;
-  document.getElementById('metric-churn').textContent=data.churn_rate;
-  document.getElementById('metric-churn-change').textContent=data.churn_change;
-  document.getElementById('metric-adoption').textContent=data.adoption_rate;
-  document.getElementById('metric-adoption-change').textContent=data.adoption_change;
-
-  // Member segments
-  const segments=[
-    {name:'High Engagement',count:142,engagement:91,status:'good'},
-    {name:'Active',count:189,engagement:68,status:'good'},
-    {name:'At Risk',count:89,engagement:34,status:'critical'},
-    {name:'Inactive',count:67,engagement:12,status:'warning'}
-  ];
-
-  document.getElementById('member-segments').innerHTML=segments.map(s=>
-    `<tr><td>${s.name}</td><td>${s.count}</td><td>${s.engagement}%</td><td><span class="status-badge status-${s.status}">${s.status.toUpperCase()}</span></td></tr>`
-  ).join('');
-  /* Telemetry sweep on analytics load */
-  if(window.omegaSweep){
-    var kpiContainer=document.getElementById('kpi-overview');
-    if(kpiContainer) window.omegaSweep.sweep(kpiContainer,350);
-  }
+/* Real owner data only. This used to render hard-coded figures ("487 active
+   members", a 72.4 engagement score, 142/189/89/67 segments) under a
+   "SIMULATED DATA" banner -- CLAUDE.md 8.1 class 9. Every value now comes
+   from an owner report; anything with no source says so. Supabase resolves to
+   {data,error} and does not throw, so each .error is read explicitly. */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function fmtMin(sec){var m=Math.round((sec||0)/60);return m<60?m+' min':(Math.floor(m/60)+'h '+(m%60)+'m');}
+var _days=[];
+function drawSessions(){
+  var cv=document.getElementById('chart-sessions');if(!cv||!_days.length)return;
+  /* Sized from its own box, redrawn by a ResizeObserver: at first paint the
+     approval guard still hides this column, so a width read then is 0
+     (CLAUDE.md 8.1 class 3) and the chart was upsampled from a 300px buffer. */
+  var w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;
+  var dpr=window.devicePixelRatio||1;cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  var max=Math.max.apply(null,_days.map(function(d){return d.sec;}))||1,pad=24,bw=(w-pad*2)/_days.length;
+  ctx.font='11px "Courier Prime",monospace';ctx.textAlign='center';
+  _days.forEach(function(d,i){
+    var bh=(h-48)*(d.sec/max),x=pad+i*bw+bw*.18,y=h-24-bh;
+    ctx.fillStyle='rgba(201,168,76,.75)';ctx.fillRect(x,y,bw*.64,bh);
+    ctx.fillStyle='rgba(233,230,220,.7)';ctx.fillText(d.label,x+bw*.32,h-8);
+    ctx.fillStyle='rgba(201,168,76,.95)';ctx.fillText(Math.round(d.sec/60)+'m',x+bw*.32,Math.max(12,y-5));
+  });
 }
+function denied(msg){
+  ['metric-active','metric-engagement','metric-churn','metric-adoption','metric-session-time','metric-pages-session','metric-return-rate','metric-bounce-rate'].forEach(function(id){setText(id,'—');});
+  setText('chart-sessions-loading',msg);
+  document.getElementById('member-segments').innerHTML='<tr><td colspan=4 class=empty-note>'+esc(msg)+'</td></tr>';
+  document.getElementById('top-pages').innerHTML='<tr><td colspan=4 class=empty-note>'+esc(msg)+'</td></tr>';
+}
+async function loadAnalytics(){
+  var sb=null;
+  try{sb=window.OmegaSB&&await window.OmegaSB.get();}catch(e){}
+  if(!sb||typeof sb.rpc!=='function'){denied('Data service unavailable.');return;}
+  var mr=await sb.rpc('membership_report',{p_prices:null});
+  if(mr.error||!mr.data||mr.data.ok===false){denied(mr.data&&mr.data.error==='forbidden'?'Owner-only report.':'Membership report unavailable.');return;}
+  var n=document.getElementById('owner-note');if(n)n.hidden=false;
+  var t=mr.data.totals||{};
+  setText('metric-active',t.approved!=null?t.approved:'—');
+  setText('metric-active-change',(t.members!=null?t.members:'?')+' accounts in total');
+  setText('metric-engagement',t.pending!=null?t.pending:'—');
+  setText('metric-engagement-change',(t.rejected||0)+' rejected');
+  setText('metric-churn',t.on_trial!=null?t.on_trial:'—');
+  setText('metric-churn-change',(t.trials_expiring||0)+' expiring within 24h');
+  var tiers=mr.data.by_tier||[];
+  document.getElementById('member-segments').innerHTML=tiers.length?tiers.map(function(r){
+    return '<tr><td>Tier '+esc(r.tier)+'</td><td>'+esc(r.members)+'</td><td>'+esc(r.paid)+'</td><td>'+esc(r.on_trial)+'</td></tr>';
+  }).join(''):'<tr><td colspan=4 class=empty-note>No members yet.</td></tr>';
 
-loadAnalytics();
-setInterval(loadAnalytics,300000);
+  /* Seven days of engagement, one owner report per day. */
+  var days=[],engaged=new Set(),today=null;
+  for(var k=6;k>=0;k--){
+    var d=new Date(Date.now()-k*86400000),iso=d.toISOString().slice(0,10);
+    var er=await sb.rpc('engagement_report',{p_day:iso});
+    var rows=(!er.error&&Array.isArray(er.data))?er.data:[];
+    var sec=rows.reduce(function(a,r){return a+(r.seconds_accumulated||0);},0);
+    rows.forEach(function(r){engaged.add(r.user_id);});
+    if(k===0)today=er.error?null:rows.length;
+    days.push({label:iso.slice(5),sec:sec,err:!!er.error});
+  }
+  _days=days;
+  var anyErr=days.some(function(d){return d.err;});
+  setText('metric-adoption',today==null?'—':today);
+  setText('metric-adoption-change',engaged.size+' members engaged in 7 days');
+  var total=days.reduce(function(a,d){return a+d.sec;},0);
+  setText('metric-session-time',fmtMin(total/7));
+  var ld=document.getElementById('chart-sessions-loading');
+  if(ld)ld.textContent=anyErr?'Some days could not be read.':(total?'':'No engagement recorded in the last 7 days.');
+  drawSessions();
+
+  var tp=await sb.from('top_pages').select('page,total_views,unique_sessions,last_viewed').limit(12);
+  if(tp.error||!Array.isArray(tp.data)){
+    document.getElementById('top-pages').innerHTML='<tr><td colspan=4 class=empty-note>Page telemetry unavailable.</td></tr>';
+  }else{
+    var views=tp.data.reduce(function(a,r){return a+(r.total_views||0);},0),sess=tp.data.reduce(function(a,r){return a+(r.unique_sessions||0);},0);
+    setText('metric-return-rate',views);
+    setText('metric-bounce-rate',tp.data.length);
+    setText('metric-pages-session',sess?(views/sess).toFixed(1):'—');
+    document.getElementById('top-pages').innerHTML=tp.data.length?tp.data.map(function(r){
+      return '<tr><td>'+esc(r.page)+'</td><td>'+esc(r.total_views)+'</td><td>'+esc(r.unique_sessions)+'</td><td>'+esc(r.last_viewed?new Date(r.last_viewed).toLocaleDateString():'')+'</td></tr>';
+    }).join(''):'<tr><td colspan=4 class=empty-note>No page views recorded yet.</td></tr>';
+  }
+  if(window.omegaSweep){var kc=document.getElementById('kpi-overview');if(kc)window.omegaSweep.sweep(kc,350);}
+}
+(function(){var cv=document.getElementById('chart-sessions');if(cv&&window.ResizeObserver)new ResizeObserver(drawSessions).observe(cv);})();
+document.addEventListener('DOMContentLoaded',function(){loadAnalytics();setInterval(loadAnalytics,300000);});
 </script>
 <script type="module" src="/omega-analytics-init.js" defer></script>
 </body>

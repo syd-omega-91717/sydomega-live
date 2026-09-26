@@ -18,7 +18,7 @@
 
    Auto-tour on first visit:
      A page sets the tour steps by calling OmegaTour.register('dashboard', steps)
-     The engine checks sessionStorage and runs once per session per page.
+     The engine runs a page's tour once per browser (localStorage).
 
    Step shape:
      { target: '#element-id', title: 'TITLE', text: 'Body copy.', placement: 'bottom' }
@@ -34,6 +34,8 @@
   var _tours = {};        /* registered page tours */
   var _loaded = false;
   var _cbs    = [];
+  var _running = false;   /* a tour is loading or showing */
+  var _scheduled = {};    /* autoStart already armed for this page tour */
   var REDUCE  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── LOADER ─────────────────────────────────────────────────────────── */
@@ -54,7 +56,13 @@
       var s=document.createElement('style');
       s.id='omega-tour-css';
       s.textContent=[
-        '.shepherd-element{z-index:9994!important}',
+        /* Above the modal overlay (shepherd.css: 9997). At 9994 the overlay's
+           click-catching <path> covered the popover, so NEXT and the close
+           icon were unclickable and the page stayed dimmed. The element's own
+           white background and 400px width showed as a pale strip beside the
+           320px themed content, so it is sized to the content and cleared. */
+        '.shepherd-element{z-index:9999!important;max-width:320px!important;',
+        'background:transparent!important;box-shadow:none!important}',
         '.shepherd-content{background:#0A0A0F!important;border:1px solid rgba(201,168,76,.3)!important;',
         'border-radius:4px!important;box-shadow:0 16px 48px rgba(0,0,0,.7)!important;',
         'font-family:"Courier Prime",monospace!important;color:#e9e6dc!important;',
@@ -90,7 +98,12 @@
       _loaded = true;
       _cbs.forEach(function(fn){ try{fn();}catch(e){} });
       _cbs=[];
-    }).catch(function(){ _cbs=[]; console.warn('[OmegaTour] Shepherd.js failed to load'); });
+    }).catch(function(){ _cbs=[]; _running=false; console.warn('[OmegaTour] Shepherd.js failed to load'); });
+  }
+
+  function markDone(name){
+    if(typeof name !== 'string') return;
+    try{ localStorage.setItem('omega_tour_done_'+name,'1'); }catch(e){}
   }
 
   /* ── TOUR BUILDER ────────────────────────────────────────────────────── */
@@ -104,6 +117,19 @@
         popperOptions: { modifiers: [{ name: 'offset', options: { offset: [0, 12] } }] },
       },
     });
+
+    /* A step whose target is absent or not rendered cannot point at
+       anything: Shepherd then centres it, captioned as if it described what
+       sits there (the dashboard has no .topbar). Drop those; a step with no
+       target at all is a deliberate centred card and stays. */
+    steps = steps.filter(function(step){
+      if(!step.target) return true;
+      var el = document.querySelector(step.target);
+      if(!el) return false;
+      var r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    });
+    if(!steps.length) return null;
 
     steps.forEach(function(step, idx){
       var isLast = idx === steps.length - 1;
@@ -164,12 +190,25 @@
       opts = opts || {};
       var steps = Array.isArray(nameOrSteps) ? nameOrSteps : _tours[nameOrSteps];
       if(!steps || !steps.length){ console.warn('[OmegaTour] No steps for: '+nameOrSteps); return; }
+      /* One tour at a time. omega:populated fires more than once per page,
+         and each firing used to start another tour: every one adds its own
+         modal overlay above the last tour's popover, so the visible NEXT and
+         close buttons sat under a click-catching layer and the page stayed
+         dimmed with no way out. */
+      if(_running) return;
+      _running = true;
       loadShepherd(function(){
-        if(typeof Shepherd==='undefined'){ console.warn('[OmegaTour] Shepherd not ready'); return; }
+        if(typeof Shepherd==='undefined'){ _running = false; console.warn('[OmegaTour] Shepherd not ready'); return; }
         var tour = buildTour(steps);
+        if(!tour){ _running = false; return; }
+        tour.on('complete', function(){ _running = false; });
+        tour.on('cancel', function(){ _running = false; });
+        /* Closing the tour counts as seen, not only finishing it: a dismissed
+           tour used to come back on the next page load of every session. */
+        tour.on('cancel', function(){ markDone(nameOrSteps); });
         if(!opts.silent){
           tour.on('complete', function(){
-            try{ sessionStorage.setItem('omega_tour_done_'+nameOrSteps,'1'); }catch(e){}
+            markDone(nameOrSteps);
             if(window.OmegaNotify && window.OmegaNotify.showToast){
               window.OmegaNotify.showToast('Tour complete. Press ? for keyboard shortcuts.','success');
             }
@@ -179,14 +218,20 @@
       });
     },
 
-    /* Check if tour was already done this session */
+    /* Seen once per browser, not per session (localStorage is a per-viewer
+       convenience here; an unreadable store reads as done, so a blocked
+       store never loops the tour). */
     isDone: function(name){
-      try{ return !!sessionStorage.getItem('omega_tour_done_'+name); }catch(e){ return true; }
+      try{
+        return !!(localStorage.getItem('omega_tour_done_'+name) ||
+                  sessionStorage.getItem('omega_tour_done_'+name));
+      }catch(e){ return true; }
     },
 
     /* Auto-start if not done and steps registered */
     autoStart: function(name, delayMs){
-      if(API.isDone(name)) return;
+      if(API.isDone(name) || _scheduled[name]) return;
+      _scheduled[name] = true;
       var delay = delayMs != null ? delayMs : 3000;
       setTimeout(function(){
         if(_tours[name] && _tours[name].length) API.start(name);
@@ -213,7 +258,7 @@
       placement: 'bottom'
     },
     {
-      target: '.side',
+      target: '#omega-side, .side',
       title: 'NAVIGATION SPINE',
       text: 'Click any icon to navigate. Or press <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g</kbd> then a letter — try <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g d</kbd> for Dashboard.',
       placement: 'right'

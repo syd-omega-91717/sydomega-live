@@ -20657,3 +20657,274 @@ python3 scripts/audit.py                          0 critical / 7 warnings — id
 ```
 
 Still open: `'unsafe-inline'` (1,355 inline handlers on 164 pages, 354 inline `<script>` blocks) — see `GAP_ANALYSIS.md`.
+
+## CI root cause corrected, `main`'s one real red gate fixed, and the strict-CSP migration started (inline-code ratchet, 6 files clean)
+
+**GitHub Actions, re-diagnosed.** Two sessions (and CLAUDE.md §8.2) blamed billing for jobs dying in 1–5s with `runner_id: 0`. That was wrong: the repo is **public**, and on 2026-09-26 every `push` run on `main` got a runner and passed. Contracts `pull_request` history separates the cases exactly:
+
+```
+8f497c89  owner's "Merge branch 'main'" from the GitHub UI   success (runner assigned)
+f75d8878, 63852da1, 20cb3a5a, c8ae485e  pushed from Claude Code sessions   failure, runner_id 0, no steps
+Omega Registry Sync, event=push, on a Claude-pushed branch commit           failure, runner_id 0
+0b3aa986 etc. (2026-09-21, same Claude author)                             success
+workflow_dispatch of contracts.yml via the GitHub API (run 36205147451)     success, runner assigned
+```
+
+So a run whose trigger is a Claude Code session's `git push` never gets a runner, whatever its event. Commit authorship is not the cause (the same author passed on 09-21), and neither is the code. The dependable route is `workflow_dispatch` through the API after pushing. CLAUDE.md §8.2 now says so.
+
+**`Supabase Runtime Contract` was genuinely red on `main`** (`42501 permission denied for table platform_settings`, run 36204856814). The table was locked down **on purpose** — `20260923031224_harden_owner_only_and_platform_settings_reads` and `20260925211957_revoke_anon_select_from_private_tables` — and live, `anon` can SELECT exactly one public relation (`token_catalog`). Flags reach members through `get_platform_flag()` (authenticated only). Re-granting would have reversed hardening. `main` independently fixed it in `b2315f2c` by probing `token_catalog` (the one anon-readable relation); on merging, that target was kept and this branch's change became the backstop: the contract treats a Postgres `42501` as proof the key was accepted, so the next hardening pass that narrows anon cannot turn `main` red again: PostgREST had to authenticate the key and switch to `anon` before Postgres could refuse the grant. A bad key is rejected by PostgREST itself with no Postgres code. Five new tests, including invalid-key, JWT-error and 500 cases that must still fail. Not runnable from this sandbox (egress proxy 403s Supabase); verified by a GitHub-hosted dispatch after push.
+
+**Strict-CSP migration, batch 1.** `scripts/csp-inline-ratchet.py` counts inline `on*=` handlers (markup and JS-built strings) and inline `<script>` blocks per root file against `scripts/csp-inline-baseline.json`. It runs in `contract-suite.py`, so it blocks locally and on GitHub. A file can never go up, and new files must start at 0.
+
+```
+origin/main   1,368 inline handlers   351 inline <script> blocks   205 files
+this branch   1,323                   348                          199 files (6 now clean, locked at 0)
+```
+
+- **Shared modules, loaded on every page, now clean:** `omega-copilot.js` (close/send), `omega-onboard.js` (card click + the `onmouseenter`/`onmouseleave` pair a click-only grep missed), `omega-notify.js` (close + row hover → `:hover` rule), `omega-search.js` (ESC + result hover; the no-results message also echoed the query into `innerHTML` unescaped and `item.u` into `href` — both escaped now), `omega-legal.js` (POLICY `onclick=window.open` → a real `<a href>`).
+- **`approvals.html` (owner console) is fully clean:** 20 markup handlers, 9 template handlers and 3 dead `onclick=""` REVIEW stubs, plus all 3 inline scripts, moved to `approvals-ui.js` (classic; a delegated `data-action` dispatcher over an explicit allow-list, never `window[name]`) and `approvals.js` (the module). One trap was fixed on the way: `filterClick` highlighted buttons with `.fb[onclick*="…"]`, a selector keyed on the very attribute being removed. It now uses `data-arg`.
+
+```
+approvals.html as OWNER under script-src 'self' (no 'unsafe-inline'), stubbed members incl. sign='<img onerror>':
+  app shown ✓  tabs ✓  stat-cell + filter-bar highlight ✓  XSS payload inert ✓  CSP violations 0  page errors 0
+  APPROVE via DOM click -> approve_member RPC, same as origin/main (a forced Playwright click hit an off-screen
+  button at y≈1160 on BOTH versions -- a probe artifact, checked before trusting either result)
+dashboard.html under the same strict policy, member without a sign:
+  onboarding hover/select/confirm ✓  copilot open/send/close ✓  search results/ESC/hover ✓ (query XSS inert)
+  notifications open/close ✓  consent POLICY is <a href=/privacy.html> ✓
+  CSP violations: only dashboard.html's own 3 inline <script> blocks (batch 2), none from shared modules
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED; 332 + 23 tests
+```
+
+## New members could not accept terms or finish onboarding: profile UPDATE grants had drifted narrower than 0041 intended (applied live, 20260926091843)
+
+Found by an audit pass, not a report. Measured live on 2026-09-26: `authenticated` held column-level UPDATE on `public.profiles` for only `avatar_url, bio, demo_watched_at, display_name, dob, trial_started_at`. Migration `0041_omega_access_control.sql:171` grants `display_name, sign, birth_date, terms_accepted, updated_at, nationality, profession, bio, avatar_url`. Nothing in `supabase/migrations/` removes them, so the drift was applied live outside the repo.
+
+Every self-service write in the client that needs those columns failed with `42501 permission denied for table profiles`:
+
+```
+terms.html          terms_accepted, terms_accepted_at   -> a new member can never accept terms; bg.js
+                                                           sends a member without terms back to terms.html (locked out)
+omega-onboard.js    sign (+ element, god, agent, token) -> onboarding can never complete
+settings.html       bg_color                            -> theme colour never saves
+profile.html KYC    kyc_status, kyc_doc_path, ...       -> still fails; NOT granted on purpose (below)
+live: 4 of 7 non-owner members have no sign and no accepted terms; newest signup 2026-07-29
+```
+
+The one member tested had `terms_accepted_at = 2026-06-16`, so this path worked before the drift.
+
+**Fix (owner approved, applied live):** the migration re-grants `sign, birth_date, terms_accepted, terms_accepted_at, bg_color, nationality, profession, updated_at`. It deliberately does **not** grant `element/god/agent`: `derive_cosmology` computes them from `sign`, and `omega-onboard.js` now sends `sign` only (sending the derived columns made the whole write 42501). It also does **not** grant `kyc_*`, because a member must never write their own KYC verdict; that needs an owner-reviewed RPC. Privileged columns stay blocked twice, by the grants and by `guard_profile_privileges`.
+
+```
+BEFORE, as real non-owner member cfc4593f-… (rolled back):  update sign=… -> 42501 permission denied
+proof on production inside a rolled-back txn with the grant: sign='leo' -> Leo/FIRE/Apollo/Sovereign, terms + bg saved
+AFTER apply, same member (rolled back):   sign='virgo' -> Virgo/SAND/Athena/Auditor ✓   is_owner=true -> 42501 ✓
+                                          access_approved unchanged (false) ✓
+member row after every test: bg_color NULL, terms_accepted_at 2026-06-16 -> nothing persisted
+security advisor after apply: unchanged (only auth_leaked_password_protection, issue #375)
+supabase/remote-migrations.json + migration-drift.py: PASS (221 versions, local and remote agree)
+```
+
+**Also found in the same audit, a false positive and not a vulnerability:** `security-definer-audit.py` flags `approve_member`, `grant_permanent_access`, `check_trial_status`, etc. as mutating SECURITY DEFINER functions without an auth check. It reads the `supabase/*.sql` reference bag. Live, the `public.*` versions are SECURITY INVOKER one-liners (`SELECT private.approve_member($1)`), and the `private.*` DEFINER functions open with `IF NOT public.is_platform_owner() THEN RETURN … 'forbidden'`. No `public` SECURITY DEFINER function is executable by `anon` or `authenticated`.
+
+## Enterprise audit pass: CI supply chain fully pinned, cross-user RLS measured live, three trust gaps found
+
+An enterprise-scale audit report was checked against evidence before anything was acted on. Its CI claims held (the Contracts and Vercel Production workflows SHA-pinned, `vercel@59.6.0`), as did its registry figures (15 capabilities: 4 BUILT / 6 PARTIAL / 2 BROKEN / 1 LOCAL_ONLY / 2 TESTED, 0 `verified`). Its core framing is right too: the Master Build's React/Express/Prisma stack is a target specification, not what ships.
+
+**Supply chain (fixed).** Only five named workflows were held to immutable refs. The rest ran **31 mutable tags in 17 workflows**, including `stefanzweifel/git-auto-commit-action@v5`, a third-party action with repo write access, in `omega-update.yml`. That workflow was an unfinished placeholder (`echo "Update applied"` under "You would paste my code here"), had no `permissions:` block, had never run, and was referenced nowhere. It is removed. The other 30 refs now use the SHAs nine workflows already ran (checkout/setup-node/setup-python v7; v4 was on the deprecated Node 20 runtime). `workflow-contract.py` now checks **every** workflow, not five, proven with a planted `actions/checkout@v4` in `schema-tracking.yml` → `FAIL … mutable action reference`.
+
+```
+before: 57 action refs, 26 SHA-pinned, 31 mutable (17 workflows)
+after:  55 action refs, 55 SHA-pinned, 0 mutable
+```
+
+**Cross-user RLS, measured live (not aggregate counts).** For all 64 public tables with a `user_id uuid` column that `authenticated` can SELECT, each was counted as the database owner and again as a real non-owner member (`SET LOCAL ROLE authenticated` + JWT `sub`, one rolled-back transaction):
+
+```
+18 tables hold other users' rows -> 17 fully isolated (member sees 0):
+  client_errors 7629->0, platform_events 5283->0, session_heartbeats 1103->0, sovereign_points_ledger 69->0,
+  user_dedication 33->0, certificates/medals/trophies/token_balances 24->0, member_state 20->0,
+  evolution_events 20->0, lesson_completions 18->0, task_completions 10->0, ai_memory 8->0, ...
+  dispatches 1->1   (by design: SELECT is is_published OR owner OR own row)
+46 tables hold no foreign rows -> isolation NOT demonstrable by this test; needs seeded fixtures
+```
+
+**Trust gaps found (open, recorded in GAP_ANALYSIS.md):**
+- **Dispatch moderation bypass.** `news.html` lets members submit dispatches without `is_published`; the feed reads `published_dispatches()`. But `authenticated` holds INSERT on `is_published`, the insert check is only `user_id = auth.uid()`, and no trigger guards the column, so a member can publish straight to every member's feed.
+- **No MFA anywhere.** 0 verified `auth.mfa_factors` project-wide, including both owner accounts, which hold schema-wide authority. There is also no enrolment UI: nothing in the client calls `auth.mfa.*`.
+- **`security-definer-audit.py` false positives** (recorded in the previous entry).
+
+## Dashboard tour stuck on screen: popover under its own overlay, stacked tours, pale strip, missing targets
+
+**Reported:** owner screenshot of `sydomega.com/dashboard` (2026-09-26 12:38 local) — the "SOVEREIGN COMMAND BAR" tour card with a pale strip down its right edge, the page behind it dimmed, and "COMMAND / NEXTANALYTICSOPEN →" run together above it.
+
+**Root causes, each measured in a headless render of `dashboard.html` at 1366×768:**
+- **Buttons unclickable.** `omega-tour.js` set `.shepherd-element{z-index:9994}` while Shepherd's modal overlay is `9997` with `pointer-events:all` on its path. `document.elementFromPoint` at the centre of NEXT returned the overlay `path`, not the button. There was no way to advance or close, so the page stayed dimmed.
+- **Tours stacked.** `omega:populated` fires more than once per page, and every firing armed `autoStart` again. After three firings the probe counted **3** `.shepherd-element`s, each with its own overlay. Playwright's click on the visible NEXT timed out (3000ms).
+- **Pale strip.** `vendor/shepherd.css` gives `.shepherd-element` `background:#fff; max-width:400px`, while the theme capped `.shepherd-content` at 320px. Measured: element 400px wide, `rgb(255,255,255)`, content 320px, leaving an 80px white band.
+- **Step pointed at nothing.** The dashboard has no `.topbar` and no `.side` (console: "The element for this Shepherd step was not found .topbar"). Shepherd centred that card while its copy said the bar was "always visible here". Across the nine registered tours, 14 of 30 targets are absent or unrendered.
+- **Run-together label.** `omega-content-sigil-system.js` builds the related-page card from three inline `<span>`s whose CSS only sets `margin-top`, so they sat on one line.
+
+**Fix:**
+- `omega-tour.js`:
+  - `.shepherd-element` now has `z-index:9999`, is 320px wide and has a transparent background.
+  - One tour runs at a time (`_running`), and `autoStart` arms once per page (`_scheduled`).
+  - Steps whose target is absent or zero-size are dropped; a target-less card stays.
+  - The nav step targets `#omega-side, .side`.
+  - Closing the tour now counts as seen, recorded in `localStorage`. It used to be `sessionStorage`, set only on completion, so a dismissed tour came back every session.
+- `omega-content-sigil-system.js`: the three label spans are `display:block`.
+- `.claude/skills/verify-in-browser/harness/serve.js` now serves `.mjs` as `text/javascript`. It had sent `application/octet-stream`, so the vendored Shepherd module failed to import under the harness and no local render could reproduce this report.
+
+**After (same render):**
+- One tour.
+- Element 320px, `rgba(0,0,0,0)`, `z-index:9999`.
+- The first card attaches to the sidebar (`data-popper-placement=right`).
+- NEXT advances to "YOUR SOVEREIGN METRICS".
+- × removes the overlay, and `omega_tour_done_dashboard` reads `1`.
+- The three related-sigil labels render `display:block` at stacked `y` offsets.
+
+## Member posts rendered as official dispatches; owner could not post one (applied live, 20260926095955)
+
+Owner-approved ("Do both", 2026-09-26). The finding recorded above as a "moderation bypass" was measured again before fixing it, and its shape was different:
+
+- `dispatches.is_published` **defaults `true`**, and `news.html`'s Wire is described as "public to the Order". So member posts being visible to members is by design, and forcing `is_published=false` would have silently emptied the Wire.
+- The real gap is the **official** feed. `private.published_dispatches()` was `SELECT * ... WHERE is_published = true`. In a rolled-back probe, a member's Wire insert appeared in it: **1 row**, rendered under "SOVEREIGN DISPATCHES" as though the owner had issued it.
+- **The owner could not post an official dispatch at all.** `post_dispatch()` read `RETURNING id` (a `bigint` identity) into a `uuid` variable. Running as the owner it failed with `22P02 invalid input syntax for type uuid: "4"`, so `approvals.html` `sendDispatch()` could only ever show "DISPATCH FAILED".
+- `set_dispatch_published(uuid, boolean)` compared the `bigint` id to a `uuid`. It had no client caller.
+
+**Migration `20260926095955_official_dispatches_owner_only_feed`:**
+- The official feed now returns `is_published AND user_id IS NULL`, the rows `post_dispatch()` writes. A member cannot write an author-less row, because `dispatches_self_insert` requires `user_id = auth.uid()` or the owner.
+- `post_dispatch()` uses a `bigint` id and treats an empty category as `DISPATCH`.
+- `set_dispatch_published()` is recreated as `(bigint, boolean)` in both layers and returns `not_found` when no row matched. EXECUTE is revoked from `PUBLIC` and `anon` and granted to `authenticated`, the same ACL as before.
+
+**Verified live (single transaction, rolled back):**
+
+```
+owner_post={"id": 6, "ok": true}  owner_unpublish={"ok": true, "published": false}
+member_post_dispatch={"ok": false, "error": "owner_only"}  member_set_published={"ok": false, "error": "owner_only"}
+member_rows_in_official=0  official_rows_visible=1
+```
+
+- Afterwards: `dispatches` total=1, probe rows=0.
+- Security advisor: unchanged. Its only finding is leaked-password protection (#375, owner action).
+
+## Two-factor sign-in: threat model, dormant enrolment UI, owner enforcement proposed and exercised live
+
+Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is the reviewed, dormant first half. Decision record: `docs/decisions/owner-mfa/PLAN.md` (Status `AWAITING-HUMAN-REVIEW`) and `CODEX_REVIEW.md`.
+
+**Measured live:**
+- `auth.mfa_factors` has 0 rows.
+- 161 policies and 33 functions route owner authority through `private.is_platform_owner()`.
+- **24** functions test `profiles.is_owner` / `platform_owners` directly. The plan lists them, and enforcement must not be turned on until they are routed through the helper.
+
+**Shipped (dormant):**
+- **`omega-mfa.js`:** TOTP enrol (QR as `<img src>`, secret via `textContent`), verify, remove, and `stepUp()`.
+  - Every Auth call's `.error` is checked, and the status is re-read from the server after each change.
+  - Abandoned unverified factors are removed before a new enrol.
+- **`settings.html`:** mounts it in the Account tab inside `data-omega-flag="mfa_enrolment_enabled"`. The flag row does not exist, so the section is hidden and the module never mounts.
+- **Browser check (`settings.html`, harness):**
+  - Dormant: `visible:false`, `mounted:false`.
+  - With the flag attribute forced and the Auth API stubbed:
+    - a malformed code is refused client-side;
+    - a rejected code shows `Invalid TOTP code entered` and the status stays `TWO-FACTOR IS OFF`;
+    - an accepted code gives `TWO-FACTOR IS ON · 1 authenticator`;
+    - a factor named `<img src=x onerror=alert(1)>` renders as text, with 0 injected `<img>`;
+    - the stale unverified factor is unenrolled before `enroll`.
+
+**Proposed, not applied (`supabase/migrations/20260926102544_owner_mfa_enforcement_dormant.sql`):**
+- Seed `mfa_enrolment_enabled` and `owner_mfa_required` false.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+- Exercised live inside one aborted transaction:
+
+  ```
+  before_owner=t  flag_off_owner_aal1=t  flag_off_member=f
+  flag_on_owner_aal1=f  flag_on_owner_aal2=t  flag_on_member_aal2=f
+  ```
+
+- Afterwards: the live function has no `aal` test, and 0 MFA flag rows exist.
+
+## Owner MFA phase 2: the one bypass closed, enforcement applied dormant; audit module-graph gap
+
+**`private.omega_is_owner()` bypassed any rule on `is_platform_owner()` (applied live, `20260926102450`).** Each of the 24 functions that test `profiles.is_owner` / `platform_owners` directly was read. 23 are row guards, statistics or profile triggers, not caller authority; the classification is in `docs/decisions/owner-mfa/PLAN.md`.
+
+The exception was `omega_is_owner()`. It returned `is_platform_owner()` **OR** a fallback read of `profiles.is_owner`. Nine owner functions and the `daily_engagement_self_read` policy call it:
+- expire_trial, grant_trial_access, get_pending_requests, revoke_permanent_access
+- ratify_existing_permanent_access, check_trial_status, engagement_report, get_engagement_status
+- guard_profile_privileges
+
+Before the change:
+- `profiles.is_owner` and `platform_owners` held the identical set: 2 = 2, 0 rows in only one, synced by `trg_sync_platform_owner`. The fallback therefore changed no result and only ever acted as a bypass.
+
+After the change:
+- It defers only to `is_platform_owner()`.
+- Probe: owner `t`, member `f`, anon `f`; ACL unchanged.
+
+**Owner AAL2 enforcement applied, dormant (`20260926102544`).**
+- It seeds `mfa_enrolment_enabled` and `owner_mfa_required` as `false`.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+
+Verified live:
+- Flag off: owner `t` through both gates, member `f`.
+- Flag on (rolled back): an owner at `aal1` gets `f` from `omega_is_owner()` too.
+- Both flags persist `false`.
+- Security advisor unchanged: only #375 remains.
+
+**`scripts/audit.py` reported a live module as dead.**
+- `omega-sovereign-os.js` loads `omega-content-progressive.js` through `loadScript('/…js', guard)`. The helper's own `s.src = url` is a variable, invisible to `SRC_ASSIGN_RE`.
+- The audit now counts calls to named loader helpers (`loadScript` / `injectScript` / `loadModule`) with a literal `.js` argument.
+- The new test `test_module_reached_through_a_loader_helper_call_is_reachable` checks two cases:
+  - the helper-loaded module is reachable;
+  - a module named only by a dead module is still reported dead.
+- Warnings went from 7 back to the baseline of 6.
+
+## Layout: the breadcrumb was a 315px empty column on every page; public pages were flex rows; invented analytics replaced with real data
+
+**The context rail rendered as a full-height empty column.** `nav.js` inserted `#omega-context-rail` (the "COMMAND › DASHBOARD" breadcrumb) in one of two places, and both are flex rows:
+- before `<main>`, which puts it inside `.shell`;
+- as the first child of `<body>`.
+
+Measured on `dashboard.html` at 1280px:
+- Before: the rail was **x=80 w=315 h=3485**, an empty dark column beside the sidebar that pushed every page's content right. The owner's production screenshot shows the effect.
+- After: the rail is inserted as the first child of the content column (`main`, `.main`, `[role=main]`, `.page-shell` or `#app`), skipping any candidate that contains `#omega-side`, since that is the shell (CLAUDE.md §4).
+- Now the rail is **w=1200 h=62** on `dashboard.html`, w=1084 on `settings.html`, and w=323 at 375px.
+
+**Public pages were flex rows.**
+- `css/omega-system.css` had `body:has(> aside#omega-side){display:flex}`. It also matched the hidden stub aside that `reset`, `terms`, `pending` and `404` carry, so the rail, the content column and the legal footer sat side by side.
+- `reset.html` measured scrollWidth **1679** in a 1280px viewport.
+- The rule now requires a visible aside. All four pages measure scrollWidth = viewport at both 375 and 1280.
+- `reset.html`'s `.wrap` also held the platform hero and page emblem as row siblings of the form, squeezing it to about 50px on a phone. It is a column now.
+
+**`analytics-dashboard.html` and `segmentation-dashboard.html` rendered invented figures (§8.1 class 9).** Both are owner analytics pages that navigation does not link to.
+- analytics: 487 active members, a 72.4 engagement score, 2.1% churn, and 142/189/89/67 segments. It carried a "SIMULATED DATA" banner, and its session chart never drew.
+- segmentation: personas 71/170/170/49/24, "LTV Estimate $1,200/$400/$150/$80/$0", k-means clusters and a 0.78 silhouette score.
+
+Real data now drives every figure that has a source:
+- analytics:
+  - `membership_report` gives approved, pending, rejected, on trial, expiring and the tier table;
+  - `engagement_report(day)` × 7 gives engaged minutes per day, today's count and 7-day distinct members;
+  - `top_pages` gives views, sessions and pages tracked.
+- segmentation (`get_all_members`):
+  - access segments;
+  - members by element;
+  - lifecycle by account age;
+  - 8 weekly signup cohorts.
+
+Panels with no data source (churn model, clusters, retention, recommendations, reports) say so instead of showing "Loading..." forever. The report schedule is now written in the future tense, since `weekly_digest_enabled` is off.
+
+Verified with stubbed owner responses:
+- values render correctly;
+- `<b>`/`<i>` in names are escaped (0 injected elements);
+- 0 page errors;
+- no `487`, `72.4`, `$1,200` or `Silhouette` remains.
+- Non-owners get "Owner-only report."
+
+**Three canvases were blurry (§8.1 class 3).** Each read its width before the approval guard revealed it:
+- `analytics-dashboard.html#chart-sessions`: never drawn, now 1094×200 buffer for a 1094×200 box.
+- `sigma.html#sigma-dist`: 112px buffer in a 325px box, now 493×180 for 493×180.
+- `pulse.html#dom-canvas`: 300px in 380–515px, now 515×100 for 515×100. Tested with a routed CoinGecko response.
+
+Each is sized from its own box times `devicePixelRatio` and redrawn by a `ResizeObserver`.
+
+**Accessibility advisories closed:**
+- `#ofb-msg` (feedback textarea) has an `aria-label`.
+- `verify-deployment.html` and `verify-modules.html` have a `<main>` landmark.

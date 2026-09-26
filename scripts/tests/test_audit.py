@@ -162,6 +162,22 @@ class ModuleGraphTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertNotIn("omega-lib.js", out)
 
+    def test_module_reached_through_a_loader_helper_call_is_reachable(self):
+        # omega-sovereign-os.js loads omega-content-progressive.js with
+        # loadScript('/x.js', guard); the helper's own `s.src = url` is a
+        # variable, so the edge was invisible and a live module read as dead.
+        self.fx.write("page.html", "<script src=/omega-os.js></script>")
+        self.fx.write("omega-os.js",
+                      "function loadScript(u,a){var s=document.createElement('script');s.src=u;}\n"
+                      "loadScript('/omega-progressive.js','data-x');\n")
+        self.fx.write("omega-progressive.js", "// loaded by helper\n")
+        self.fx.write("omega-dead.js", "loadScript('/omega-vouched.js','data-y');\n")
+        self.fx.write("omega-vouched.js", "// only a dead module names it\n")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertNotIn("omega-progressive.js", out)
+        self.assertIn("omega-vouched.js", out)
+
     def test_bare_and_dynamic_esm_imports_are_edges(self):
         self.fx.write("page.html", "<script type=module src=/omega-init.js></script>")
         self.fx.write("omega-init.js",

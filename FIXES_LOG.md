@@ -21010,3 +21010,41 @@ Rendered with the harness (owner stub `is_owner:true`, member stub `false`):
 - search "graph" returns the 8 graph pages; the INTEL chip returns 21; `/` focuses search; arrows move between tiles;
 - member: 0 tiles, gate text shown, diagnostics absent, OWNER dock and tooltip entry hidden;
 - the tile radius measured 4px at first because `a[href]` in `omega-accessibility-audit.css` outranks one class. The deck's rules are scoped under `.odk`, and it measures 14px.
+
+## Backend privileges: feedback and consent never saved; service-key flag gates could not read their flag (applied live)
+
+**Owners confirmed live (2026-09-26).** `s.y.dagher@gmail.com` and `slmndghr@gmail.com` are both in `platform_owners` and have `profiles.is_owner = true`. No other account is in either.
+
+**The 28 public SECURITY DEFINER functions.** Measured with `has_function_privilege`:
+- all 28 have EXECUTE revoked from `anon` and `authenticated`;
+- all 28 pin `search_path`.
+
+That exposure is correct. The reverse failure (§8.1 class 6c) was the real finding: live code calls four of them, and no role could run them.
+
+| function | caller | effect before |
+|---|---|---|
+| `submit_feedback` | `omega-feedback.js:81` (FEEDBACK button, every page) | always "Could not send." |
+| `update_consent` | `privacy.html:172` | consent toggles always reverted; no `consent_records` row |
+| `upsert_graph_entity`, `add_graph_relationship` | `graphify-ai-ingest` (service key) | not even `service_role` could execute them |
+
+Migration `20260926190934`:
+- The first two go to `authenticated` only. Both act on `auth.uid()` and refuse anonymous callers.
+- The graph pair goes to `service_role` only, since it takes `p_user_id`; the Edge Function derives it from the verified JWT (`requireCallerId`).
+
+Proven as a real non-owner member inside a rolled-back block:
+- `submit_feedback` returned `{"ok":true,"id":…}`;
+- `update_consent` returned `{"ok":true}`, and `consent_records` for that member went 0 → 1 (rolled back).
+
+Sweep of every RPC name any `.html`/`.js` calls: **40 of 40** are now executable by `authenticated`. The count query is cross-checked; the same query without its filter returns 40.
+
+**`service_role` could not read any public table.** Default privileges were revoked in `20260903015535`, and nothing re-granted what server code needs. Measured: 0 of the 11 tables the Edge Functions query had SELECT for `service_role`. Only 5 functions are deployed, so the live effect was narrower than that sounds:
+- The **three orchestrators** read `platform_settings` with the service key. The read failed, and the gate fails closed, so they answered `503 disabled` because the read failed, not because the switch was off. They would stay shut after the owner turned `autonomous_agents_enabled` on. This also means the 503s verified in the previous entry did not prove the flag was read.
+- **`checkout`** (not deployed) calls `get_platform_flag`, an invoker function over the same table. It returned `checkout_not_configured` instead of "Payments are not active yet", and would keep refusing with payments on.
+
+Migration `20260926192038` grants read-only access:
+- `platform_settings` SELECT and `get_platform_flag` EXECUTE to `service_role`;
+- verified `svc_sel = true`, `svc_upd = false`, `svc_flag = true`.
+
+No DML was granted: the orchestrators' writes stay ungranted until the owner decides to turn them on. Both remaining steps are recorded in `GAP_ANALYSIS.md` §S, along with the missing `find_contradictions`.
+
+`concierge` runs as the member and `stripe-webhook` uses `apply_subscription_event` (already `service_role`-executable), so neither was affected.

@@ -171,6 +171,20 @@ class ReachabilityContractTest(unittest.TestCase):
         r = self.fx.run()
         self.assertEqual(r.returncode, 0, r.stdout)
 
+    def test_flagged_entry_still_counts_as_reachable(self):
+        """['control-plane','OWNER DECK','/control-plane.html','owner'] is a nav
+        destination; the 4th field only flags it owner-only. Before the pattern
+        allowed it, the gate called control-plane.html unreachable."""
+        self.fx.page("dashboard")
+        self.fx.page("control-plane")
+        write(self.fx.path("nav.js"), NAV_TEMPLATE % {
+            "sub": "['dashboard','DASHBOARD','/dashboard.html'],"
+                   "['control-plane','OWNER DECK','/control-plane.html','owner']",
+            "ps": "    dashboard:'command','control-plane':'command',",
+        })
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout)
+
     def test_fragment_slug_does_not_make_a_page_reachable(self):
         """The href is what counts, not the entry's slug.
 

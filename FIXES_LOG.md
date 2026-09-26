@@ -20967,3 +20967,46 @@ Verified live without a paid model call:
 **Views (migration `20260926182800`).** `conversion_funnel`, `pending_access_requests`, `permanent_access_review` and `workflow_analytics` ran with owner rights (`postgres`, BYPASSRLS). None is readable by anon, authenticated, or even service_role, so nothing was exposed. A future `GRANT` would have exposed every row past RLS, though, so each is now `security_invoker = true`.
 
 The only consumer is `private.get_pending_requests()` (SECURITY DEFINER, owner `postgres`). Under owner impersonation it returned 9 before and 9 after, in a rolled-back probe. After the change, public views without `security_invoker`: **0**.
+
+## Owner deck: every page in one place, owner only; Calm mode; two ghost registry pages
+
+The owner asked for one place, reachable only by the owner, that reaches every page, with less text and less clutter.
+
+**`control-plane.html` is now the Owner Deck**, rendered by the new module `omega-owner-deck.js`:
+- Each page is a tile carrying its own sigil (`OmegaIdentity.sigil`, the mark its hero shows), a short name, and its section colour. There is no descriptive text.
+- Controls:
+  - search across every page (`/` focuses it; Enter opens the top match);
+  - section chips;
+  - a Recent row, kept in `localStorage` as a per-viewer convenience;
+  - arrow-key movement between tiles.
+- The deck holds no copy of the page list. It reads nav.js (new `OmegaAxis.pages()`), then the control-plane registry, then an `EXTRA` list of the 17 pages neither knows: owner dashboards, verification pages, and the public/system pages.
+- `scripts/tests/test_owner_deck.py` fails if any `*.html` falls outside all three. Verified by removing `healthz` from `EXTRA`: the test fails and names it.
+- The old inventory, realms, motion, duplicates and audit tabs are unchanged, folded into a collapsed owner-only DIAGNOSTICS panel.
+
+Owner-only in three places, all keyed on `bg.js`'s existing `body.omega-owner` (from `profiles.is_owner`):
+- The deck renders only for the owner. Anyone else gets "OWNER ONLY · RETURN HOME", and the diagnostics are removed from the DOM.
+- A new OWNER dock item in nav.js is hidden until the owner is confirmed. It uses an inline `display:none` because `.on-icon`/`.on-btn` set `display` themselves and would override a `hidden` attribute.
+- The nav entry is flagged `['control-plane','OWNER DECK','/control-plane.html','owner']`. The tooltip and the command palette hide it from members.
+
+This is presentation, not authorisation. The deck lists links only, and every page's data stays behind RLS. Live previews in frames were rejected: `vercel.json` sends `X-Frame-Options: DENY`, which blocks same-origin frames too, and that protection is kept.
+
+**Calm mode** is a new block in `bg.js` (`window.OmegaCalm`, `localStorage.omega_calm`, `html[data-omega-calm]`):
+- One reversible switch hides the ambient extras on every page:
+  - the door banner (`.omega-page-door`), ticker, PMI badge;
+  - the language/music dock, feedback, share and voice buttons;
+  - the rail HUB/PIN;
+  - the topbar HOME/BACK, on desktop only, where the sidebar has its own.
+- It keeps navigation, the copilot, the menu, and every visual layer. Nothing leaves the DOM, so each module keeps working.
+- It turns on the first time the owner opens the deck; the CALM chip reverses it.
+
+Measured in a render: 9 of 9 targets hidden, sidebar, rail, copilot and menu visible. After toggling off, `#osh-btn` is `display:flex` again and the stored value is `'0'`.
+
+**Two ghost pages in the registry.** `omega-control-plane.js` listed `security` and `upload`, and neither page exists, so the deck drew two tiles that would 404 (208 tiles for 206 files). Both entries are removed, and the new test asserts the registry names only real pages.
+
+**Gate fix.** `reachability-contract.py` matched only three-field nav entries, so the owner flag made `control-plane.html` read as unreachable. The pattern now accepts an optional flag. The new test `test_flagged_entry_still_counts_as_reachable` fails against the old pattern and passes against the new one.
+
+Rendered with the harness (owner stub `is_owner:true`, member stub `false`):
+- owner at 1366px and 390px: 206 tiles, 206 sigils, 206 unique hrefs, 18 chips, 0 page errors, no horizontal overflow;
+- search "graph" returns the 8 graph pages; the INTEL chip returns 21; `/` focuses search; arrows move between tiles;
+- member: 0 tiles, gate text shown, diagnostics absent, OWNER dock and tooltip entry hidden;
+- the tile radius measured 4px at first because `a[href]` in `omega-accessibility-audit.css` outranks one class. The deck's rules are scoped under `.odk`, and it measures 14px.

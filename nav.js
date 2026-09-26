@@ -117,7 +117,7 @@
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
           ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],
-          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','CONTROL PLANE','/control-plane.html'],['world-shell','WORLD SHELL','/world-shell.html']]},
+          ['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
      sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],
           ['revenue','REVENUE','/revenue.html'],['wallet','WALLET','/wallet.html'],
@@ -288,7 +288,22 @@
     },
     sections: function () { return SECTIONS.map(function (x) {
       return { key: x.key, label: x.label, icon: x.icon, col: x.col, href: x.href }; }); },
-    slug: function () { return dp; }
+    slug: function () { return dp; },
+    /* Every page the nav reaches, once each (first section wins), with its
+       section. Read by omega-owner-deck.js so the deck never keeps a copy. */
+    pages: function () {
+      var seen = {}, out = [];
+      SECTIONS.forEach(function (x) {
+        x.sub.forEach(function (it) {
+          var path = String(it[2]).split('#')[0];
+          if (seen[path]) return;
+          seen[path] = 1;
+          out.push({ key: it[0], label: it[1], href: path, section: x.key,
+                     sectionLabel: x.label, icon: x.icon, col: x.col, owner: it[3] === 'owner' });
+        });
+      });
+      return out;
+    }
   };
 
   /* BUILD SIDEBAR */
@@ -321,17 +336,37 @@
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
     sec.sub.forEach(function(sub){
       var on=sub[0]===dp;
-      h+='<a class="tip-a'+(on?' tip-on':'')+'" href="'+sub[2]+'">';
+      var own=sub[3]==='owner';
+      h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+sub[2]+'"'+(own?' style="display:none"':'')+'>';
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
     h+='</div></div>';
   });
   h+='</div>';
+  /* Owner-only: the one place that reaches every page. Hidden until bg.js
+     confirms is_owner (body.omega-owner). An inline display:none, not the
+     hidden attribute: .on-icon sets display itself and would override it.
+     The page gates itself too; this only keeps members' docks uncluttered. */
+  h+='<div class="on-item on-owner" style="display:none"><a class="on-icon'+(dp==='control-plane'?' on-active':'')+'" href="/control-plane.html" style="--col:#C9A84C" aria-label="Owner deck: every page">';
+  h+='<span class="on-glyph" style="color:#C9A84C">\u03A9</span><span class="on-lbl">OWNER</span></a></div>';
   h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
 
   el.className='omega-side';
   el.innerHTML=h;
+
+  /* Reveal owner-only entries once bg.js marks the owner. It adds the class
+     after an async profile read, so watch for it rather than check once. */
+  (function(){
+    function reveal(){
+      if(!(window.__omegaIsOwner||(document.body&&document.body.classList.contains('omega-owner')))) return false;
+      el.querySelectorAll('.on-owner,.tip-owner').forEach(function(n){n.style.display='';});
+      return true;
+    }
+    if(reveal()||!document.body||typeof MutationObserver!=='function') return;
+    var mo=new MutationObserver(function(){ if(reveal()) mo.disconnect(); });
+    mo.observe(document.body,{attributes:true,attributeFilter:['class']});
+  })();
 
   /* Tooltip placement. .on-tip is position:fixed (see the CSS note above), so
      nothing in CSS can keep it beside its own icon -- place it here, clamped
@@ -597,6 +632,7 @@
         all.push({key:sec.key,label:sec.label,href:sec.href,section:sec.label,icon:sec.icon,col:sec.col});
         for(var sj=0;sj<sec.sub.length;sj++){
           var item=sec.sub[sj];
+          if(item[3]==='owner'&&!window.__omegaIsOwner) continue;
           all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
         }
       }

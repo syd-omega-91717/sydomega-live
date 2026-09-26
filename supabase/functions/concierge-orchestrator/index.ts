@@ -6,6 +6,30 @@ const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+async function requireCaller(req: Request): Promise<{ userId: string } | Response> {
+  const authorization = req.headers.get("Authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  const token = match?.[1]?.trim();
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!token || !anonKey) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const callerClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await callerClient.auth.getUser();
+  if (error || !data.user) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  return { userId: data.user.id };
+}
+
 interface ConciergeRequest {
   member_id: string;
   issue_type: "support_query" | "onboarding" | "escalation_review";
@@ -167,11 +191,22 @@ Deno.serve(async (req: Request) => {
       return new Response("Method not allowed", { status: 405 });
     }
 
+    const caller = await requireCaller(req);
+    if (caller instanceof Response) return caller;
+
     const conciergeRequest: ConciergeRequest = await req.json();
+
 
     // Validate input
     if (!conciergeRequest.member_id || !conciergeRequest.input) {
       return new Response("Missing required fields", { status: 400 });
+    }
+
+    if (conciergeRequest.member_id !== caller.userId) {
+      return new Response(JSON.stringify({ error: "forbidden" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const response = await processConciergeRequest(conciergeRequest);

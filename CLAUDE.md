@@ -543,11 +543,11 @@ Only what changes what you do in the **first minutes** stays here:
   — `ci.yml` was `cancelled` 30 runs running on `main`, a job waiting ~53min while any push in
   that window cancelled it: **starvation, not deadlock**. Fixed, verified on `main`: 53m06s →
   **3s** (112). Measure `created_at` vs `started_at` on the **job**; the run's timestamps hide
-  the wait. Gated; a **fixed** group with `false` is correct and exempt. **Separately, Actions
-  cannot dispatch jobs at all right now** — every run dies in 1–5s with no `runner_id`, no
-  `runner_name` and no `steps`, on `main` too; six PRs (#347–#352). Read the JOB object, never
-  the logs (they 404 even for successful runs). Owner action: Settings → Billing, Settings →
-  Actions.
+  the wait. Gated; a **fixed** group with `false` is correct and exempt. **Separately, a run
+  triggered by a Claude Code session's `git push` gets no runner** — dies in 1–5s, `runner_id: 0`,
+  no steps (measured 2026-09-26; public repo, so not billing). Runs from the owner's pushes and
+  merges run normally, and so does a `workflow_dispatch` sent through the GitHub API — dispatch
+  the gates on the branch after pushing. Read the JOB object, not the run's conclusion.
 
 ### 8.3 Current verification baseline
 
@@ -557,7 +557,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **322** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **332** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

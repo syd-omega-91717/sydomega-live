@@ -118,9 +118,54 @@ class PostgrestProbeTests(unittest.TestCase):
         """VIOLATOR of the original design."""
         self.assertNotEqual(contract.POSTGREST_PROBE.split("?")[0], "/rest/v1/")
 
+    def test_the_probe_targets_platform_settings(self):
+        """anon no longer holds SELECT here (migrations 20260923031224 and
+        20260925211957 closed it deliberately); a 42501 from Postgres is still
+        proof the key was accepted -- see KeyAcceptanceTests."""
+        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/platform_settings"))
     def test_the_probe_targets_a_table_anon_can_read(self):
         """The probe follows the live public catalog boundary, not owner-only settings."""
         self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/token_catalog"))
+
+
+class KeyAcceptanceTests(unittest.TestCase):
+    """A Postgres 42501 means PostgREST accepted the key and ran the query as
+    anon; a bad key is refused by PostgREST before Postgres is reached. main
+    went red on 2026-09-25 because this gate read the first as the second."""
+
+    def _run(self, postgrest_error):
+        import io
+        import urllib.error
+        from unittest import mock
+
+        def fake_get(url, headers):
+            if "/rest/v1/" in url and postgrest_error:
+                code, body = postgrest_error
+                raise urllib.error.HTTPError(url, code, "x", {}, io.BytesIO(body.encode()))
+            return 200, b"{}"
+
+        env = {"SUPABASE_URL": "https://example.supabase.co", "SUPABASE_ANON_KEY": "sb_publishable_test"}
+        with mock.patch.object(contract, "get", fake_get), mock.patch.dict(os.environ, env), \
+                mock.patch("sys.stdout", new_callable=io.StringIO):
+            return contract.main()
+
+    def test_all_200_passes(self):
+        self.assertEqual(self._run(None), 0)
+
+    def test_grant_denial_proves_the_key_was_accepted(self):
+        body = ('{"code":"42501","details":null,"hint":"Grant the required privileges",'
+                '"message":"permission denied for table platform_settings"}')
+        self.assertEqual(self._run((401, body)), 0)
+
+    def test_an_invalid_key_still_fails(self):
+        body = '{"message":"Invalid API key","hint":"Double check your Supabase anon or service_role API key."}'
+        self.assertEqual(self._run((401, body)), 1)
+
+    def test_a_jwt_error_still_fails(self):
+        self.assertEqual(self._run((401, '{"code":"PGRST301","message":"JWSError"}')), 1)
+
+    def test_a_server_error_still_fails(self):
+        self.assertEqual(self._run((500, '{"code":"42501"}')), 1)
 
     def test_the_probe_is_bounded_and_read_only(self):
         """A contract must not pull a table down to prove reachability, and must

@@ -111,6 +111,10 @@ GATES = [
     ('brand-glyph',
      'no symbol renders as a colour emoji against the monochrome palette',
      ['scripts/brand-glyph-check.py']),
+    ('csp-inline-ratchet',
+     "no file gains inline on*= handlers or inline <script> blocks -- the "
+     "migration to a script-src without 'unsafe-inline' only moves one way",
+     ['scripts/csp-inline-ratchet.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

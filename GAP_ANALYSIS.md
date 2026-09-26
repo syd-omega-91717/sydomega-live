@@ -334,6 +334,11 @@ open, recorded in `FIXES_LOG.md`:
   inline `<script>` blocks. Removing it is a page-by-page migration (handlers →
   `addEventListener`, blocks → files or hashes), best done behind
   `Content-Security-Policy-Report-Only` first.
+  **Progress (2026-09-26):** batch 1 done — `csp-inline-ratchet.py` (blocking, in the contract
+  suite) now holds every file at or below `scripts/csp-inline-baseline.json`; the 5 shared
+  modules that emitted handlers on every page, and `approvals.html`, are at 0 and verified
+  under a strict `script-src 'self'`. Remaining: 1,323 handlers / 348 blocks across 199 files;
+  `dashboard.html` (83 handlers, 3 blocks) is the largest single page.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a

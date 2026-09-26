@@ -61,14 +61,14 @@
     p.style.cssText='position:fixed;top:50px;right:16px;z-index:4999;width:min(360px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.25);border-radius:4px;box-shadow:0 16px 48px rgba(0,0,0,.6);overflow:hidden';
     p.innerHTML='<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:space-between">'
       +'<span style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:12px;color:var(--gold,#C9A84C)">\u03A9 NOTIFICATIONS</span>'
-      +'<button onclick="document.getElementById(\'omega-notif-panel\').remove()" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer" aria-label="Close notifications">\u00d7 CLOSE</button>'
+      +'<button type="button" class="omega-notif-close" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer" aria-label="Close notifications">\u00d7 CLOSE</button>'
     +'</div>'
     +'<div style="max-height:50vh;overflow-y:auto">'
     +(!notifs.length?'<div style="padding:20px;text-align:center;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.4)">NO NOTIFICATIONS</div>'
     :notifs.map(function(n){
       var col={gate_unlock:'var(--gold,#C9A84C)',access_granted:'var(--green,#3fb27f)',trial_start:'var(--cyan,#00E5FF)',task_complete:'var(--purple,#9B6BF0)',system:'var(--muted,#8a8676)'}[n.notification_type]||'var(--gold,#C9A84C)';
       var ts=new Date(n.created_at||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
-      return '<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.05);'+(n.read_at?'opacity:.55':'')+'transition:.12s" onmouseenter="this.style.background=\'rgba(201,168,76,.03)\'" onmouseleave="this.style.background=\'\'">'
+      return '<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.05);'+(n.read_at?'opacity:.55':'')+'transition:.12s" class="omega-notif-row">'
         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
           +(n.read_at?'':'<span style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0"></span>')
           +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:'+col+'">'+esc(String(n.notification_type||'').toUpperCase().replace(/_/g,' '))+'</span>'
@@ -81,6 +81,15 @@
     +'<div style="padding:10px 16px;border-top:1px solid rgba(201,168,76,.08);text-align:center">'
       +'<a href="/notifications.html" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--cyan,#00E5FF);text-decoration:none">VIEW ALL NOTIFICATIONS \u2192</a>'
     +'</div>';
+    /* Listeners and a :hover rule instead of inline on*= attributes, which a
+       script-src without 'unsafe-inline' refuses. */
+    var close=p.querySelector('.omega-notif-close');
+    if(close)close.addEventListener('click',function(){p.remove();});
+    if(!document.getElementById('omega-notif-row-style')){
+      var st=document.createElement('style');st.id='omega-notif-row-style';
+      st.textContent='#omega-notif-panel .omega-notif-row:hover{background:rgba(201,168,76,.03)}';
+      document.head.appendChild(st);
+    }
     return p;
   }
 

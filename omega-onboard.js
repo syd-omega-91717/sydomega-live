@@ -43,9 +43,9 @@
       +ZODIAC_MAP.map(function(z){
         var col=EL_COLORS[z.el]||'#C9A84C';
         return '<div class="ob-card" data-sign="'+z.sign+'" data-el="'+z.el+'" data-god="'+z.god+'" data-agent="'+z.agent+'" data-token="'+z.token+'"'
-          +' onclick="window.__obSelect(this)"'
+          +' data-col="'+col+'"'
           +' style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;text-align:center;transition:all .18s;position:relative"'
-          +' onmouseenter="this.style.borderColor=\''+col+'\';this.style.background=\''+col+'11\'" onmouseleave="this.style.borderColor=this.dataset.selected?\''+col+'\':\'rgba(201,168,76,.15)\';this.style.background=this.dataset.selected?\''+col+'11\':\'rgba(10,10,15,.55)\'">'
+          +'>'
           +'<div style="font-size:28px;margin-bottom:6px">'+z.glyph+'</div>'
           +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C;margin-bottom:4px">'+z.sign.toUpperCase()+'</div>'
           +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;color:'+col+';margin-bottom:3px">'+z.el.toUpperCase()+'</div>'
@@ -55,10 +55,29 @@
       +'</div>'
       +'<div id="ob-detail" style="display:none;border:1px solid rgba(201,168,76,.25);padding:16px;border-radius:2px;background:rgba(201,168,76,.04);margin-bottom:16px;text-align:center"></div>'
       +'<div style="text-align:center">'
-        +'<button id="ob-confirm" onclick="window.__obConfirm()" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
+        +'<button id="ob-confirm" type="button" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
       +'</div>'
     +'</div>';
     document.body.appendChild(ov);
+    /* Listeners, not inline on*= attributes: script-src without 'unsafe-inline'
+       refuses every inline handler. Delegated on the grid; the handlers resolve
+       window.__obSelect/__obConfirm at event time, after they are defined below. */
+    var obGrid=ov.querySelector('#ob-grid');
+    if(obGrid){
+      obGrid.addEventListener('click',function(e){var c=e.target.closest('.ob-card');if(c)window.__obSelect(c);});
+      obGrid.addEventListener('mouseover',function(e){
+        var c=e.target.closest('.ob-card');if(!c||c.contains(e.relatedTarget))return;
+        c.style.borderColor=c.dataset.col;c.style.background=c.dataset.col+'11';
+      });
+      obGrid.addEventListener('mouseout',function(e){
+        var c=e.target.closest('.ob-card');if(!c||c.contains(e.relatedTarget))return;
+        var col=c.dataset.col;
+        c.style.borderColor=c.dataset.selected?col:'rgba(201,168,76,.15)';
+        c.style.background=c.dataset.selected?col+'11':'rgba(10,10,15,.55)';
+      });
+    }
+    var obBtn=ov.querySelector('#ob-confirm');
+    if(obBtn)obBtn.addEventListener('click',function(){window.__obConfirm();});
 
     window.__obSelect=function(card){
       document.querySelectorAll('.ob-card').forEach(function(c){

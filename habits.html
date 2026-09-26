@@ -376,13 +376,20 @@ async function mirrorLog(habit, key, on){
                   log_date: logDate, completed: true },
                 { onConflict: 'user_id,habit_id,log_date' });
       if(error){ console.warn('[habits] mirror upsert failed:', error.message); return; }
-      /* Dispatch task-complete celebration event */
+      /* Dispatch task-complete celebration event + streak milestone event */
       if(window.OmegaCelebrate) {
         const profile = await sb.from('profiles').select('membership_tier').eq('id', uid).maybeSingle();
         const tier = profile?.data?.membership_tier || 1;
         document.dispatchEvent(new CustomEvent('omega:task-complete', {
           detail: { tier, intensity: 'habit', metadata: { habit_name: habit.name } }
         }));
+        /* Check for streak milestone and emit omega:streak-record celebration */
+        const streak = getStreak(habit);
+        if(streak > 0 && (streak === 7 || streak === 14 || streak === 30 || streak === 60 || streak === 100 || streak === 365)) {
+          document.dispatchEvent(new CustomEvent('omega:streak-record', {
+            detail: { tier, streak, metadata: { habit_name: habit.name, milestone: true } }
+          }));
+        }
       }
     } else {
       const { error } = await sb.from('habit_logs')

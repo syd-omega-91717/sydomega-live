@@ -1179,6 +1179,110 @@ in use.
 - [Habitica level-up animations](https://habitica.com/features)
 - [Strava personal record notifications](https://blog.strava.com/strava-pr-notifications/)
 
+## Blueprint
+
+### Page & Nav Plan
+**No new pages.** Cross-cutting effect affecting four existing pages via event emissions:
+- **achievements.html** — Already has `omega:achievement` listeners in place; verify `window.dispatchEvent(new CustomEvent('omega:achievement', {...}))` fires on unlock
+- **habits.html** (lines 380–384) — Already emits `omega:task-complete` on habit tick; add `omega:streak-record` emission when streak milestone is reached
+- **analytics.html** — Verify dashboard analytics rolls emit `omega:task-complete` or `omega:streak-record` 
+- **dashboard.html** — Verify KPI tier-progress emits goal milestone celebration via `omega:achievement` with `detail.title` containing goal name
+
+No nav.js changes required; effect is invisible to navigation.
+
+### Module Plan
+
+**omega-confetti.js** (existing, in place via bg.js line 2473) — enhancements:
+- **Tier configuration already complete** (lines 45–55): 1–9 tiers with scaling particlesPerSec (2→35), duration (600→2600ms), maxParticles (30→450), audio gates (false for tiers 1–3, true for 4–9)
+- **Event handlers already in place** (lines 349–440):
+  - `omega:gate-unlock` (line 349) — gates.html
+  - `omega:achievement` (line 358) — achievements.html
+  - `omega:task-complete` (line 365) — habits.html **[ALREADY EMITTED line 382]**
+  - `omega:streak-record` (line 387) — **[NEEDS NEW EMISSIONS in habits.html, streaks.html]**
+  - `omega:social-milestone` (line 410) — social.html
+- **Prefers-reduced-motion compliance** (lines 30, 208, 183) — static pulse overlay instead of particles; fully implemented
+- **No changes needed to module itself.** All infrastructure exists; expand emissions on source pages only.
+
+### Data Plan
+**None.** Reads existing:
+- `profiles.membership_tier` (already queried in habits.html:380)
+- `public.task_completions` (implied by task-complete events)
+- `public.streaks` (implied by streak-record events)
+- `public.user_achievements` (implied by achievement events)
+
+### Integration Points & File Changes
+
+**habits.html**
+- Line 382–384 (existing): `omega:task-complete` emission on habit tick — ✓ already in place
+- **ADD (new)** after line 384: Emit `omega:streak-record` when streak milestone is reached. On successful habit completion, check if `streak` count hits a milestone (every 5 days, every 7 days, every 30 days). Pattern:
+  ```javascript
+  if (streak > 0 && (streak % 7 === 0 || streak % 30 === 0)) {
+    document.dispatchEvent(new CustomEvent('omega:streak-record', {
+      detail: { tier, streak, metadata: { habit_name: habit.name } }
+    }));
+  }
+  ```
+
+**goals.html** (if exists; check structure)
+- Add emission on goal milestone reached (at goal completion or tier progression):
+  ```javascript
+  document.dispatchEvent(new CustomEvent('omega:achievement', {
+    detail: { tier, title: `Goal: ${goal.name}`, intensity: 'goal-milestone' }
+  }));
+  ```
+
+**streaks.html** (if exists)
+- Add `omega:streak-record` emission on new streak record (existing streak > previous record):
+  ```javascript
+  if (newStreak > previousRecord) {
+    document.dispatchEvent(new CustomEvent('omega:streak-record', {
+      detail: { tier, streak: newStreak, metadata: { record: true } }
+    }));
+  }
+  ```
+
+**analytics.html**
+- Add `omega:achievement` emission on analytics milestone (e.g., total hours tracked reaches 100):
+  ```javascript
+  if (totalHours % 100 === 0 && totalHours > 0) {
+    document.dispatchEvent(new CustomEvent('omega:achievement', {
+      detail: { tier, title: `${totalHours} Hours Tracked`, intensity: 'milestone' }
+    }));
+  }
+  ```
+
+**dashboard.html**
+- Add `omega:achievement` emission on tier upgrade (profile.membership_tier increases):
+  ```javascript
+  if (newTier > oldTier) {
+    document.dispatchEvent(new CustomEvent('omega:achievement', {
+      detail: { tier: newTier, title: `TIER ${newTier} UNLOCKED`, intensity: 'tier-up' }
+    }));
+  }
+  ```
+
+### Verification Plan
+
+1. **Syntax check**: `node --check omega-confetti.js` (already passing; no changes to module)
+2. **Repo audit**: `python3 scripts/audit.py` — verify 0 CRITICAL, omega-confetti.js marked as injected (guarded by `data-omega-confetti`)
+3. **Browser verification**: 
+   - `/verify-in-browser pages=habits.html,goals.html,analytics.html,dashboard.html errors` — no uncaught throws from event emissions
+   - Manual: Tick a habit → celebrate (particle burst or static pulse if `prefers-reduced-motion`); reach streak milestone → second celebrate
+   - Manual on Tier 3+ account: Verify particle intensity scales (more particles, longer duration, audio enabled)
+   - Manual with `prefers-reduced-motion: reduce` → verify static color pulse, no animation
+4. **Event emission audit**: Grep for each emission pattern exists in source pages:
+   - `habits.html`: `omega:task-complete` ✓ (existing), `omega:streak-record` ✓ (added)
+   - `goals.html`: `omega:achievement` with goal context (added)
+   - `analytics.html`: `omega:achievement` on milestone (added)
+   - `dashboard.html`: `omega:achievement` on tier upgrade (added)
+   - `streaks.html`: `omega:streak-record` on record (added)
+
+### No Schema / No Platform Settings
+
+- Reuses `membership_tier` (1–9) already on `profiles`
+- No new RLS required
+- No `platform_settings` flag needed; celebrations enabled by default, disableable via `OmegaCelebrate.disable()` if needed
+
 ## 24. Chromatic Aberration & Color-Separation Effects (COMMAND / VAULT / INTEL / ASCEND) — SHIPPED
 
 **Shipped** (commit pending; CSS-only implementation via `css/omega-system.css` Ω-CHROMATIC section) — pure CSS filter-based approach implemented exactly as proposed. Four animation states: `.omega-loading` (0.5px gold/cyan offset, 0.8s loop indicating activity), `.omega-error` (1.5–2px red/cyan split, 0.6s urgency cue), `.omega-success` (0.5px green/gold shimmer, 1.2s affirmation, clears to no filter), `.omega-press` (button press ripple effect, 0.4s decay). Three intensity variants (`.omega-chromatic-subtle/moderate/intense`, 0.25–1.5px offset range) available via `--chromatic-offset` CSS variable for Tier 3+ settings panel. Reduced-motion compliance: all animations disabled, visual feedback via border color + background tint instead on `.omega-error` and `.omega-success` states.

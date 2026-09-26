@@ -104,13 +104,12 @@ OPAQUE_KEY_PREFIXES = ("sb_publishable_", "sb_secret_")
 # served to public keys, so the 401 was the platform behaving as designed and
 # said nothing about the key or about production.
 #
-# public.platform_settings is the right target instead: it is the feature-flag
-# store the client reads (CLAUDE.md 5), `anon` holds SELECT on it, and its
-# `platform_settings_select` policy is `qual = true`. Verified in-database by
-# impersonating the anon role (CLAUDE.md 8.4's method), which sees 13 rows -- so
-# a 200 here proves the real public data path end to end, not an introspection
-# endpoint that no longer exists.
-POSTGREST_PROBE = "/rest/v1/platform_settings?select=key&limit=1"
+# public.token_catalog is the right target instead: it is a deliberately public
+# catalog surface and the live project currently grants `anon` SELECT on it.
+# `platform_settings` must NOT be used here: the 2026-09-23 hardening migration
+# changed it to owner-only reads. This probe must follow the current security
+# boundary rather than weakening RLS to satisfy CI.
+POSTGREST_PROBE = "/rest/v1/token_catalog?select=*&limit=1"
 
 
 def bearer_for(key: str) -> dict[str, str]:

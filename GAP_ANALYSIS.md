@@ -18,6 +18,24 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **`service_role` holds only what deployed server code needs** (opened 2026-09-26,
+  `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
+  no default privilege on public tables. Granted since: `platform_settings` SELECT,
+  `get_platform_flag` EXECUTE, the two graph-ingest RPCs, and
+  `apply_subscription_event`. **Before turning `autonomous_agents_enabled` on**, grant
+  what the orchestrators write, or they fail at their first write:
+  - `autonomous_decisions` INSERT (all three);
+  - `member_feature_flags` INSERT, UPDATE (product-orchestrator upserts).
+
+  **Before deploying** `checkout`, `rankings`, `snapshot-leaderboard`, `weekly-digest` or
+  `graphify-ai-query`, grant each one the table operations it uses. A small script
+  mapping `supabase/functions/*` `.from()` calls to table grants would make this a gate
+  rather than a checklist.
+- **`find_contradictions` does not exist** (opened 2026-09-26).
+  `graphify-ai-query/index.ts:252` calls it and only logs a warning when it fails, so the
+  anomaly report's contradiction list is always empty. The function is not deployed, so
+  no member sees it yet.
+
 - **The concept art and the canon disagree in three places now** (opened
   2026-09-13; `FIXES_LOG.md` 139, 141). Not a bug — a **decision the owner has
   not made yet**, and every visual built from the art rather than the data

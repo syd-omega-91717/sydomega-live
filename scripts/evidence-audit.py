@@ -101,6 +101,9 @@ SERVER_INVOKED_FUNCTIONS = {
     'notify-access',         # called from the access-request flow / triggers
 }
 
+# Filled in main() from omega-owner-deck.js; see owner_deck_slugs().
+OWNER_DECK = set()
+
 CLASSES = [
     'BUILT', 'PARTIAL', 'LOCAL_ONLY', 'STATIC', 'BROKEN', 'UNREACHABLE',
 ]
@@ -330,6 +333,22 @@ def nav_slugs():
     return set(re.findall(r"['\"]([a-z0-9][a-z0-9-]{1,40})['\"]", text))
 
 
+def owner_deck_slugs():
+    """Pages the owner deck lists beyond nav.js (omega-owner-deck.js EXTRA).
+
+    control-plane.html renders every page for the owner; its EXTRA list names
+    the owner dashboards and verification pages nav.js does not link. Those
+    are reachable, for the owner, and reporting them UNREACHABLE contradicted
+    the deck. Read from the deck itself so the two cannot drift.
+    """
+    p = Path('omega-owner-deck.js')
+    if not p.exists():
+        return set()
+    text = p.read_text(encoding='utf-8', errors='replace')
+    m = re.search(r"var EXTRA = \[(.*?)\];", text, re.S)
+    return set(re.findall(r"\['([a-z0-9-]+)',", m.group(1))) if m else set()
+
+
 # ---------------------------------------------------------------------------
 # Classification
 # ---------------------------------------------------------------------------
@@ -354,8 +373,8 @@ def classify(page, info, rels, fns, nav, module_tables):
             bits.append('undefined rpc: ' + ', '.join(missing_f))
         return 'BROKEN', '; '.join(bits)
 
-    if slug not in nav and slug not in PUBLIC_PAGES:
-        return 'UNREACHABLE', 'not referenced by nav.js and not a public page'
+    if slug not in nav and slug not in PUBLIC_PAGES and slug not in OWNER_DECK:
+        return 'UNREACHABLE', 'not referenced by nav.js or the owner deck, and not a public page'
 
     # Classification runs on the DATA axis only -- does this page persist
     # anything to Postgres? Auth contact is reported as evidence but never
@@ -418,6 +437,7 @@ def main():
 
     rels, fns, defs = sql_surface()
     nav = nav_slugs()
+    OWNER_DECK.update(owner_deck_slugs())
 
     # Pages only. Edge Function *source* is scanned separately below for
     # wiring, not for schema references -- scripts/audit.py already covers
@@ -548,7 +568,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
-    w('| `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |')
+    w('| `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |')
     w('')
     w('## Summary')
     w('')

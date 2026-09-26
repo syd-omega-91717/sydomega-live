@@ -21108,3 +21108,40 @@ Page errors were 0 before and 0 after on every page, with no horizontal overflow
   The wiring sits inside the page's existing inline block, so `csp-inline-ratchet` is unchanged (PASS).
 - **`#omega-ded-widget`** (`omega-chrono.js`, fixed bottom-right) covered card text (`houses.html` house 8, screenshot). It is ambient, so Calm mode now hides it. Its offsets are unchanged: it already clears the bottom chrome.
 - **`verify-runtime.js --contrast-detail`.** The sweep reported "text contrast 3–4.5:1: 99" as a bare count that named nothing to fix: 99 elements across 206 pages, not 99 pages. The new report-only flag prints one tab-separated `CONTRAST` line per element (page, ratio, colour, background, size, selector, text). The first lines already show the pattern: the `--crim` token `#C4453C` at 3.97:1 on near-black, and the `#9B6BF0` purple at 3.8–4.46:1 on its tinted chips.
+
+## Text contrast: three colours caused most sub-AA text; owner deck shows who is waiting; phone drawer leaked the owner entry; pending count included a rejected applicant
+
+**Contrast, measured and traced.** `verify-runtime.js --contrast-detail`, from the previous entry, turned the advisory into a list. On the baseline (all 206 pages), 99 text elements sat between 3:1 and 4.5:1.
+
+In the first 76 traced, two colours accounted for 40:
+- **`--crim` `#C4453C`**, 23 elements at 3.96–4.2:1 on near-black: stat numbers, PAUSED / ENABLE / ACCESS DENIED;
+- **`#9B6BF0`**, 17 elements at 3.8–4.46:1: the "SYMBOLIC LORE" badge from `omega-canon-badge.js`, and the COSMOS / INTEL / ARENA / MEDIA sidebar colours in `nav.js`.
+
+Each was nudged brighter in the same hue (HLS lightness +0.05, computed against every background the sweep recorded):
+- `--crim` → **`#CA5850`**, set in both of its owners (`theme.js` and `css/omega-system.css`, §4). Worst case is 4.67:1, and dark text on crimson badges goes from 4.05 to 4.77.
+- `--purple` → **`#AB82F2`** (`css/omega-system.css`), plus the four `nav.js` section colours and the lore badge. Worst case is 4.76:1.
+- Fiction badge `#E86A3A` → **`#EB7B51`**: 4.19 → 4.78:1 on its measured background.
+- `emblem.js`: the three page labels coloured `#C4453C` (factions, cinema, settings) → `#CA5850`.
+
+**Not changed on purpose:** the other 38 literal `#C4453C` uses. Some are backgrounds behind white text, where brightening would *lower* contrast (white on `#CA5850` ≈ 4.4:1).
+
+**Same pages before and after** (a–forge, same harness): **39 → 10** elements below 4.5:1. The remaining 10 are page-specific literal colours:
+- `#7B00FF` VOID on `elements.html`, 3.0:1;
+- `rgba(200,50,50,.7)` on `forge.html`;
+- `enter.html`'s grey language buttons at 4.46:1.
+
+The full-site after figure is recorded on the PR.
+
+**The owner could not see who was waiting.** Live on 2026-09-26: 3 pending applicants, the oldest waiting since **2026-06-16**. The only signal was `bg.js`'s 10-second toast. The owner deck now shows a persistent **"N WAITING"** chip linking to `approvals.html`:
+- it uses the same definition as `approvals.js:161`: not approved, not rejected;
+- it is hidden at 0 and hidden on a failed count, never a false 0;
+- rendered with a 3-pending stub it shows "3 WAITING"; with 0, no chip; 0 page errors.
+
+**The toast over-counted.** It filtered `access_approved=false, is_owner=false` only, so the one rejected applicant counted as waiting forever. Live: 3 real, 4 shown. It now adds `.not('is_rejected','is',true)`, which keeps NULLs.
+
+**The phone drawer listed OWNER DECK to every member.** `nav.js`'s drawer is built from `SECTIONS`, including the owner-flagged entry, with no filter. Owner-flagged links now start hidden and share the sidebar's reveal (`window.__omegaRevealOwner`). Owners also get **Ω OWNER DECK · EVERY PAGE** first in the drawer, since there is no dock on a phone. Rendered at 390px: owner sees 2 entries, member sees 0, 0 errors.
+
+**Evidence audit.** It reported 13 pages UNREACHABLE: exactly the owner deck's `EXTRA` list (owner dashboards and verification pages). It now reads that list from `omega-owner-deck.js`, so the two cannot drift.
+- Result: **13 → 0** unreachable; those pages are classified by their data (101 BUILT / 28 PARTIAL / 43 LOCAL_ONLY / 32 STATIC / 2 BROKEN).
+- Planted check: removing `healthz` from `EXTRA` makes the audit report 1 unreachable.
+- The two BROKEN pages (`subscriptions` → `transactions`, `vault` → `wallet_balances`) are dormant payment/token features, and both already render an honest "not available yet" state.

@@ -75,7 +75,7 @@
           ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
           ['exam','EXAM HALL','/gaming.html#exam'],['exam-hall','EXAM','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html'],['evolution','EVOLUTION','/evolution.html'],['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],['focus','FOCUS','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
-    {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
+    {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
           ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/elements.html#gates'],['houses','HOUSES LATTICE','/houses.html'],
@@ -101,12 +101,12 @@
           ['news','NEWS WIRE','/news.html'],['social','SOCIAL HUB','/social.html'],
           ['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
           ['health','HEALTH & WELLNESS','/health.html'],['marketplace','MARKETPLACE','/marketplace.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
-    {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#9B6BF0',
+    {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#AB82F2',
      sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICT','/prediction.html'],
           ['intelligence','INTELLIGENCE','/intelligence.html'],['automation','AUTOMATION','/automation.html'],
           ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
     /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */
-    {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#9B6BF0',
+    {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#AB82F2',
      sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
           ['agents','12 AGENTS','/agents.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
@@ -135,7 +135,7 @@
           ['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html'],
           ['credentials','CREDENTIALS','/credentials.html'],['charter','CHARTER','/charter.html'],
           ['sigil','SIGIL','/sigil.html'],['membership','MEMBERSHIP','/membership.html']]},
-    {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/cinema.html',       col:'#9B6BF0',
+    {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/cinema.html',       col:'#AB82F2',
      sub:[['cinema','CINEMA','/cinema.html'],['movies','MOVIES','/movies.html'],['characters','CHARACTERS','/characters.html'],['series','SERIES','/series.html'],
           ['trailers','TRAILERS','/trailers.html'],['universe','UNIVERSE','/universe.html'],
           ['feed','ACTIVITY FEED','/feed.html'],['social','SOCIAL','/social.html'],
@@ -360,9 +360,11 @@
   (function(){
     function reveal(){
       if(!(window.__omegaIsOwner||(document.body&&document.body.classList.contains('omega-owner')))) return false;
-      el.querySelectorAll('.on-owner,.tip-owner').forEach(function(n){n.style.display='';});
+      document.querySelectorAll('.on-owner,.tip-owner,.ds-owner').forEach(function(n){n.style.display='';});
       return true;
     }
+    /* The phone drawer is built after this runs; it calls this again. */
+    window.__omegaRevealOwner=reveal;
     if(reveal()||!document.body||typeof MutationObserver!=='function') return;
     var mo=new MutationObserver(function(){ if(reveal()) mo.disconnect(); });
     mo.observe(document.body,{attributes:true,attributeFilter:['class']});
@@ -526,7 +528,7 @@
     var DRAWER_SECTIONS=SECTIONS.map(function(sec){
       return {
         icon:sec.icon,label:sec.label,col:sec.col,href:sec.href,key:sec.key,
-        links:sec.sub.map(function(sub){return [sub[1],sub[2]];})
+        links:sec.sub.map(function(sub){return [sub[1],sub[2],sub[3]==='owner'];})
       };
     });
 
@@ -534,6 +536,11 @@
     var dh=document.createElement('div');dh.className='drawer-header';
     dh.innerHTML='<div class="dh-title">&#937; SYD OMEGA 91717</div><div class="dh-close" id="drawer-close">CLOSE &#x2715;</div>';
     drawer.appendChild(dh);
+    /* The owner's one place, first in the phone menu (the desktop dock item
+       does not exist on a phone). Hidden until bg.js confirms is_owner. */
+    var dOwner=document.createElement('a');dOwner.className='dss-head ds-owner';dOwner.href='/control-plane.html';
+    dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
+    drawer.appendChild(dOwner);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
@@ -543,12 +550,16 @@
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){
-        var a=document.createElement('a');a.className='ds-link';a.href=lk[1];a.textContent=lk[0];
+        var a=document.createElement('a');a.className='ds-link'+(lk[2]?' ds-owner':'');a.href=lk[1];a.textContent=lk[0];
+        /* Owner-only entries stay hidden until the owner is confirmed; the
+           drawer used to list OWNER DECK for every member on a phone. */
+        if(lk[2])a.style.display='none';
         links.appendChild(a);
       });
       ds.appendChild(links);dsgrid.appendChild(ds);
     });
     drawer.appendChild(dsgrid);document.body.appendChild(drawer);
+    if(window.__omegaRevealOwner)window.__omegaRevealOwner();
 
     document.getElementById('drawer-close').addEventListener('click',function(){closeDrawer();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'){var d=document.getElementById('omega-drawer');if(d&&d.classList.contains('drawer-open'))closeDrawer();}});

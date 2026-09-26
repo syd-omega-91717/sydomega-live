@@ -36,7 +36,7 @@
          (#08080F) the old red is 1.99:1, under the 3:1 floor for any
          content, and it was painting real text on every page. #C4453C is
          4.05:1. Every other token in this palette clears 4.5:1. */
-      --crim:#C4453C;
+      --crim:#CA5850;
       --green:#3fb27f;
       /* Text neutrals, cooled to the design reference. Sampled from the
          reference by canvas getImageData in headless Chromium: its body,

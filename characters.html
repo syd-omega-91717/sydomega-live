@@ -19,10 +19,12 @@
 .character-orb:before,.character-orb:after{content:"";position:absolute;border:1px solid rgba(0,229,255,.22);border-radius:50%}.character-orb:before{inset:18px;transform:rotateX(68deg)}.character-orb:after{inset:34px;transform:rotateY(68deg)}
 .character-omega{font:56px Cinzel,serif;color:var(--cg-gold);text-shadow:0 0 24px rgba(201,168,76,.35)}
 .archetype-grid{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.archetype-card{min-height:230px;padding:18px;border:1px solid rgba(201,168,76,.16);background:linear-gradient(145deg,rgba(10,10,15,.9),rgba(2,2,6,.7));text-decoration:none;color:inherit;position:relative;overflow:hidden;transform:perspective(800px) rotateX(0) translateZ(0);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.archetype-grid .archetype-card{display:block;min-height:230px;padding:18px;border:1px solid rgba(201,168,76,.16);background:linear-gradient(145deg,rgba(10,10,15,.9),rgba(2,2,6,.7));text-decoration:none;color:inherit;position:relative;overflow:hidden;transform:perspective(800px) rotateX(0) translateZ(0);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .archetype-card:before{content:"";position:absolute;width:130px;height:130px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:50%;right:-48px;top:-48px;box-shadow:0 0 35px color-mix(in srgb,var(--accent) 12%,transparent)}
 .archetype-card:hover,.archetype-card:focus-visible{transform:perspective(800px) rotateX(3deg) translateY(-5px);border-color:var(--accent);box-shadow:0 16px 45px rgba(0,0,0,.3);outline:none}
 .archetype-card:focus-visible{box-shadow:0 0 0 2px rgba(0,229,255,.32),0 16px 45px rgba(0,0,0,.3)}
+.archetype-emblem{display:block;width:32px;height:32px;margin-bottom:10px;position:relative;z-index:1}
+.archetype-emblem svg{width:100%;height:100%;display:block}
 .archetype-index{font:10px var(--M,Courier Prime,monospace);letter-spacing:3px;color:var(--accent);display:block;margin-bottom:24px}
 .archetype-name{font:22px var(--D,Cinzel,serif);color:var(--ink);display:block;margin-bottom:8px}
 .archetype-role{font:12px var(--M,Courier Prime,monospace);letter-spacing:1.4px;color:var(--accent);display:block;margin-bottom:12px}
@@ -51,10 +53,10 @@
 <section aria-labelledby="archetype-title">
 <div class="character-kicker" id="archetype-title" style="margin-bottom:10px">PRIMARY ARCHETYPES · VISUAL CHARACTER LANGUAGE</div>
 <div class="archetype-grid" data-stagger data-stagger-gap="80">
-<a class="archetype-card" style="--accent:var(--cg-cyan)" href="/character.html" data-reveal="rotate-in"><span class="archetype-index">IDENTITY / 01</span><span class="archetype-name">Observatory</span><span class="archetype-role">OBSERVE · PROFILE · ANALYZE</span><span class="archetype-desc">Identity and character sheet surfaces where the member observes their current state, archetype and progression.</span></a>
-<a class="archetype-card" style="--accent:var(--cg-purple)" href="/gaming.html" data-reveal="rotate-in"><span class="archetype-index">ACTION / 02</span><span class="archetype-name">Arena</span><span class="archetype-role">PLAY · COMPETE · EVOLVE</span><span class="archetype-desc">Action-oriented character identity for games, challenges, missions and competitive progression.</span></a>
-<a class="archetype-card" style="--accent:var(--cg-gold)" href="/identity.html" data-reveal="rotate-in"><span class="archetype-index">CREATION / 03</span><span class="archetype-name">Studio</span><span class="archetype-role">CREATE · CUSTOMIZE · COMPOSE</span><span class="archetype-desc">Persona and identity customization surfaces where character expression becomes an authored artifact.</span></a>
-<a class="archetype-card" style="--accent:var(--cg-green)" href="/bloodline.html" data-reveal="rotate-in"><span class="archetype-index">LEGACY / 04</span><span class="archetype-name">Archive</span><span class="archetype-role">REMEMBER · TRACE · INHERIT</span><span class="archetype-desc">Genealogy and heritage surfaces connecting character identity to lineage, records and legacy.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-cyan)" href="/character.html" data-reveal="rotate-in"><span class="archetype-emblem" aria-hidden="true"></span><span class="archetype-index">IDENTITY / 01</span><span class="archetype-name">Observatory</span><span class="archetype-role">OBSERVE · PROFILE · ANALYZE</span><span class="archetype-desc">Identity and character sheet surfaces where the member observes their current state, archetype and progression.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-purple)" href="/gaming.html" data-reveal="rotate-in"><span class="archetype-emblem" aria-hidden="true"></span><span class="archetype-index">ACTION / 02</span><span class="archetype-name">Arena</span><span class="archetype-role">PLAY · COMPETE · EVOLVE</span><span class="archetype-desc">Action-oriented character identity for games, challenges, missions and competitive progression.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-gold)" href="/identity.html" data-reveal="rotate-in"><span class="archetype-emblem" aria-hidden="true"></span><span class="archetype-index">CREATION / 03</span><span class="archetype-name">Studio</span><span class="archetype-role">CREATE · CUSTOMIZE · COMPOSE</span><span class="archetype-desc">Persona and identity customization surfaces where character expression becomes an authored artifact.</span></a>
+<a class="archetype-card" style="--accent:var(--cg-green)" href="/bloodline.html" data-reveal="rotate-in"><span class="archetype-emblem" aria-hidden="true"></span><span class="archetype-index">LEGACY / 04</span><span class="archetype-name">Archive</span><span class="archetype-role">REMEMBER · TRACE · INHERIT</span><span class="archetype-desc">Genealogy and heritage surfaces connecting character identity to lineage, records and legacy.</span></a>
 </div>
 </section>
 <nav class="character-actions" aria-label="Character destinations">
@@ -64,5 +66,26 @@
 </nav>
 <footer class="character-foot"><span>Ω · 91717 · CHARACTER REALM</span><span>DATA SOURCES: PROFILE · CHARACTER DATA · BLOODLINE</span></footer>
 </main>
+<script>
+/* The 4 archetype cards already link to their real destinations; they just
+   carried no icon at all (only a decorative CSS ring). Same treatment as
+   world-shell.html/index.html: OmegaIdentity.dial(), keyed by the
+   destination's own slug so a click-to-enter card never drifts from that
+   page's colour, derived from the card's own --accent custom property. */
+function omegaWireArchetypeEmblems(){
+  var cards=document.querySelectorAll('.archetype-card');
+  if(!cards.length||!window.OmegaIdentity||typeof window.OmegaIdentity.dial!=='function')return;
+  cards.forEach(function(card){
+    var mount=card.querySelector('.archetype-emblem');
+    var href=card.getAttribute('href');
+    if(!mount||!href)return;
+    var slug=href.replace(/^\//,'').replace(/\.html$/,'').split('#')[0].split('?')[0]||'index';
+    var col=getComputedStyle(card).getPropertyValue('--accent').trim()||'#C9A84C';
+    mount.appendChild(window.OmegaIdentity.dial(slug,col));
+  });
+}
+if(document.readyState==='complete')omegaWireArchetypeEmblems();
+else window.addEventListener('load',omegaWireArchetypeEmblems);
+</script>
 </body>
 </html>

@@ -7,6 +7,7 @@ if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
     print(__doc__.strip())
     raise SystemExit(0)
 import json
+import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "vercel.json"

@@ -88,7 +88,7 @@ function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['dispatches','wire','intelligence','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var OFFICIAL=[
   {tag:'SYSTEM',date:'2026',ti:'THE ASCENSION ENGINE IS LIVE',bd:'Twelve phases, each a 729-node matrix — 8,748 sovereign states. Your authority is computed from Knowledge, Mastery, and Contribution. Nothing is given.'},
   {tag:'VAULT',date:'2026',ti:'THE SIGIL VAULT OPENS',bd:'Every earned crest — genesis, sign, element, rank, and the three Ascent thresholds — now mints as a sovereign medallion on your record.'},

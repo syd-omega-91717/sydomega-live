@@ -332,7 +332,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var TRIAL_SECS=557; /* 9 minutes 17 seconds — the approval window */
 var allMembers=[];
 var timers={};
@@ -426,21 +426,21 @@ function buildCard(m){
   var btnRenew=t('btn_renew_trial');
   var btnReconsider=t('btn_reconsider');
   if(isPending||isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; '+btnGrantTrial+'<br><small style="font-size:12px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
-    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
-    btns+='<button class="ac reject" data-uid="'+m.id+'" onclick="reject(this.dataset.uid)">&#10005; '+btnReject+'</button>';
+    btns+='<button class="ac approve" data-uid="'+esc(m.id)+'" onclick="approve(this.dataset.uid)">&#10003; '+btnGrantTrial+'<br><small style="font-size:12px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
+    btns+='<button class="ac permanent" data-uid="'+esc(m.id)+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
+    btns+='<button class="ac reject" data-uid="'+esc(m.id)+'" onclick="reject(this.dataset.uid)">&#10005; '+btnReject+'</button>';
   }
   if(isActive){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; '+btnExtend+'</button>';
-    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
-    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
+    btns+='<button class="ac extend" data-uid="'+esc(m.id)+'" onclick="extend(this.dataset.uid)">&#8635; '+btnExtend+'</button>';
+    btns+='<button class="ac permanent" data-uid="'+esc(m.id)+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
+    btns+='<button class="ac revoke" data-uid="'+esc(m.id)+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
   }
   if(isPermanent){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#8635; '+btnRenew+'</button>';
-    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
+    btns+='<button class="ac extend" data-uid="'+esc(m.id)+'" onclick="approve(this.dataset.uid)">&#8635; '+btnRenew+'</button>';
+    btns+='<button class="ac revoke" data-uid="'+esc(m.id)+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
   }
   if(isRejected&&!isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; '+btnReconsider+'</button>';
+    btns+='<button class="ac approve" data-uid="'+esc(m.id)+'" onclick="approve(this.dataset.uid)">&#10003; '+btnReconsider+'</button>';
   }
 
   var card=document.createElement('div');
@@ -451,20 +451,20 @@ function buildCard(m){
       +'<div class="mc-info">'
         +'<div class="mc-name" style="color:'+col+'">'+esc(name.toUpperCase())+'</div>'
         +'<div class="mc-email">'+esc(m.email||'--')+'</div>'
-        +'<div class="mc-uid">ID: '+(m.id||'').slice(0,20)+'...</div>'
+        +'<div class="mc-uid">ID: '+esc(String(m.id||'').slice(0,20))+'...</div>'
       +'</div>'
       +'<div class="mc-right">'
         +'<div class="mc-pill" style="border-color:'+col+';color:'+col+'">'+label+'</div>'
-        +(isActive?'<div class="mc-chrono" id="cd-'+m.id+'" style="color:'+col+'">--:--</div><div class="mc-chrono-lbl">'+t('label_remaining')+'</div>':'')
+        +(isActive?'<div class="mc-chrono" id="cd-'+esc(m.id)+'" style="color:'+col+'">--:--</div><div class="mc-chrono-lbl">'+t('label_remaining')+'</div>':'')
       +'</div>'
     +'</div>'
-    +(isActive?'<div class="mc-progress"><div class="mc-progress-fill" id="pb-'+m.id+'" style="width:100%"></div></div>':'')
+    +(isActive?'<div class="mc-progress"><div class="mc-progress-fill" id="pb-'+esc(m.id)+'" style="width:100%"></div></div>':'')
     +'<div class="mc-timeline">'
       +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_requested')+'</div><div class="tl-val">'+(m.access_requested_at?fmtDate(m.access_requested_at):'--')+'</div></div>'
       +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_trial_started')+'</div><div class="tl-val">'+(startISO&&isActive?fmtTime(startISO):'--')+'</div></div>'
       +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_trial_expires')+'</div><div class="tl-val" style="color:'+col+'">'+(expISO&&isActive?fmtTime(expISO):'--')+'</div></div>'
       +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_access_type')+'</div><div class="tl-val">'+label+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_sign_element')+'</div><div class="tl-val">'+((m.sign||'--')+'/'+(m.element||'--')).toUpperCase()+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_sign_element')+'</div><div class="tl-val">'+esc(((m.sign||'--')+'/'+(m.element||'--')).toUpperCase())+'</div></div>'
       +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_authority')+'</div><div class="tl-val" style="color:var(--gold)">'+Number(m.authority||m.axis_a||0).toFixed(4)+'</div></div>'
     +'</div>'
     +'<div class="mc-actions">'+btns+'</div>';

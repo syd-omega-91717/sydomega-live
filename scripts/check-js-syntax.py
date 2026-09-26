@@ -8,13 +8,14 @@ node --check is not the right validator for.
 """
 from __future__ import annotations
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import subprocess
 import sys
 from pathlib import Path
-
-if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
-    print(__doc__)
-    raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {".git", "node_modules", "dist", "build", "public", "vendor"}

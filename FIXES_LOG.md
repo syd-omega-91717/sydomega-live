@@ -20577,3 +20577,51 @@ python3 scripts/check-js-syntax.py                                           FIR
 .omega-page-door self-link + .oid-hero stacking                              confirmed live on dashboard.html/codex.html/characters.html -- NOT fixed, flagged as an open UX defect in a system this session does not own
 ./scripts/ci-local.sh                                                        24/24 blocking checks pass (was 5 failing)
 ```
+
+## Security-hardening pass 3: every page-local `esc()` made quote-safe and executed in a test; owner-facing stored-XSS in `approvals.html`; three syntax errors that had `main` red
+
+Continued from `5788c115` (which was also `origin/main`). A pristine `git archive HEAD` showed `main` itself failing `ci-local.sh`: **6 blocking checks**. Three were real outages, not tooling noise — a parse error runs *none* of a script block:
+
+- `omega-project-studio.js:145` — `renderProjectList` closed with `};` and no `}`, so the object literal never closed: `SyntaxError: Unexpected token ';'`. Regression from `5c7600c` ("Fix project studio object closure"). The whole studio module was dead on every page that loads it.
+- `pulse.html` inline module — a stray `}` after `renderForex` (`Unexpected token '}'`): the entire PULSE page script dead.
+- `wealth.html` inline script — `renderHistory()` lost its closing brace (`Unexpected end of input`): the entire wealth dashboard dead, including every calculator.
+
+The other three were pre-existing contract drift: `check-js-syntax.py`, `security-definer-audit.py` and `security-headers-contract.py` ran their job on `--help` (now answer from the docstring, the `audit.py` stanza); `realms.html` (added `9f027559`) was linked from nothing in `nav.js` (now `COSMOS → 18 REALMS`, PS `realms:'cosmos'`); and the census was stale (regenerated).
+
+**Owner-facing stored XSS, `approvals.html`.** The owner's member-review card rendered `((m.sign||'--')+'/'+(m.element||'--')).toUpperCase()` straight into `innerHTML`. Both are free-text `profiles` columns (`0001_omega_master_deploy.sql:1347-1348`, no CHECK) that a member updates on their own row via `profiles_update` — so any member could plant markup that executes in the *owner's* session. Now `esc()`-wrapped; `m.id` is escaped in `data-uid`/`id` attributes too (defence in depth; it is a uuid today).
+
+**The escape helpers themselves.** 53 page-local `esc`/`escHtml`/`escapeHtml` definitions had drifted into ~10 shapes. Measured by executing each in Node:
+
+```
+leave " and ' raw (attribute break-out wherever the result lands in value="…"/data-*="…")   most of them — e.g. decisions.html:406 value="${esc(opt)}"
+throw TypeError on any non-zero number  ((s||'').replace)                                  ~25
+identity function — escaped nothing (feed.html, sovereigns.html; both now dead code, removed)  2
+render null/undefined as the text "null"/"undefined" (omega-sigil-system.js, omega-content-sigil-system.js)  2
+```
+
+All now use one body — `String(s==null?'':s).replace(/[&<>"']/g, …)` — preserving `journal.html`'s `\n→<br>`. `omega-search.js`'s `highlight()` used to regex-match the *escaped* string, so a query of `3` split `&#39;` into `&#<mark>3</mark>9;`; it now splits the raw text and escapes each piece. `intelligence.html` double-escaped into `textContent` (an error showed `&lt;`), and `feed.html` wrote a literal `&mdash;` via `textContent` — both fixed.
+
+**Gate:** `scripts/tests/test_escape_helpers.py` extracts every helper and *executes* it against `<b a="1" b='2'>&</b>`, `42`, `null` and `undefined`, with a planted-violator case proving it catches the identity and `(s||'')` shapes. A grep cannot tell these apart; running them can.
+
+```
+git archive 5788c115 → ./scripts/ci-local.sh                  6 BLOCKING CHECK(S) FAILED (18 passed)
+node --check omega-project-studio.js (before / after)         SyntaxError: Unexpected token ';'  /  OK
+python3 scripts/check-inline-js.py (before / after)           2 broken (pulse.html:234, wealth.html:355)  /  OK
+python3 -m unittest scripts/tests/test_escape_helpers.py      2 tests OK (first run caught 2 more helpers → fixed)
+./scripts/ci-local.sh (after)                                 ALL 24 BLOCKING CHECKS PASSED; 318 + 23 tests
+```
+
+**Two more `main` breaks found by rendering, not by any static gate:**
+
+- `nav.js` gave its injected `<style>` *and* the context-rail `<nav>` the same id, `omega-context-rail` — a duplicate id on **every** page (`verify-runtime.js` failed 49/49 touched pages on it, and pristine `main` too), and the style's `getElementById` guard could read the rail as itself. The style is now `omega-context-rail-style`.
+- `css/omega-system.css:1148` `a[href]:not(.on):not(.nav-home):not(.nav-back)` (0,4,1) set `color: var(--element-accent)` over `.skip-link` (0,1,0), whose own background is gold — so for a signed-in member with a gold accent the skip link rendered **gold on gold, 1:1**, on `roadmap.html` (a §10 capability entrypoint, so the blocking `capability-evidence` gate), `courses.html`, `architecture.html`. Same class `omega-accessibility-audit.css:171` already fixed for `:hover`. `:not(.skip-link)` added to both the rule and its `:hover` twins. Found with a live `cssRules` walk — the unauthenticated probe measured the link fine, because `--element-accent` only resolves once the signed-in stub has an element.
+
+```
+verify-runtime.js (default 13 entrypoints), pristine main   FAIL roadmap.html  1:1 A.skip-link
+verify-runtime.js (default 13 entrypoints), after           PASS
+verify-runtime.js --pages <49 touched pages>, after         0 uncaught errors on any page (wealth.html threw "Unexpected end of input" on main)
+```
+
+**Full-estate sweep** (`verify-runtime.js --all`, 206 pages): 202 pass. Three of the four failures were one bug — `omega-content-sigil-system.js:58` did `main.insertBefore(door, main.querySelector('.hero,.page-header,header'))`, but `querySelector` returns a *descendant*, so any nested hero threw `NotFoundError` (`honors.html`, `maintenance.html`, `matrix.html`; identical on pristine `main`). It now climbs to `main`'s direct child first; the 3 pages pass. `reset.html`'s horizontal overflow is pre-existing and left open.
+
+Still open (not done in this pass): `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites. Most render the member's own data to themselves (self-XSS) or static constants; this pass prioritised the class where one member's data reaches *another* session. Remaining inline `onclick=` handlers also block a strict `script-src` CSP.

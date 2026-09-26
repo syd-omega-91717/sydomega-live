@@ -296,7 +296,7 @@ function updateStrip(){
   }
 }
 
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderHistory(){
   var tbody=document.getElementById('history-body');
   var cols='grid-template-columns:120px 100px 60px 60px 80px 60px 70px 60px 60px 70px';

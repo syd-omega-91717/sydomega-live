@@ -557,7 +557,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **312** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **318** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |

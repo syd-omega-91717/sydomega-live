@@ -135,7 +135,7 @@ document.getElementById('m-dur').addEventListener('change',refreshQuote);
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(n){return Math.round(n).toLocaleString('en-US');}
 var DURATIONS=[['Hour',917],['Day',9170],['Week',45850],['Month',91700],['Year',917170]];
 var ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],['Codex Sponsor',1]];

@@ -195,7 +195,7 @@ function load(){
 }
 function save(){localStorage.setItem('omega_revenue',JSON.stringify(streams));localStorage.setItem('omega_rev_goal',goal);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 
 function toMonthly(amount,freq){

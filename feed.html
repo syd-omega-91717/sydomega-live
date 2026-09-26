@@ -110,7 +110,6 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function esc(s){return(s==null?'':String(s));}
 function num(v,fallback){var n=Number(v);return Number.isFinite(n)?n:(fallback||0);}
 function node(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;if(text!=null)el.textContent=String(text);return el;}
 function emptyState(text,border){var el=node('div');el.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px'+(border?';border:1px solid var(--line)':'');el.textContent=text;return el;}
@@ -224,7 +223,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
       };
       st.textContent='POSTING...';st.style.color='var(--muted)';
       var res=await sb.from('member_posts').insert(payload);
-      if(res.error){st.textContent='POST FAILED &mdash; TRY AGAIN';st.style.color='var(--crim)';return;}
+      if(res.error){st.textContent='POST FAILED \u2014 TRY AGAIN';st.style.color='var(--crim)';return;}
       st.textContent='POSTED';st.style.color='var(--green)';
       document.getElementById('mp-title').value='';
       document.getElementById('mp-body').value='';

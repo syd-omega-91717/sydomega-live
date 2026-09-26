@@ -189,7 +189,7 @@ function timeAgo(ts){
   if(diff<86400) return Math.floor(diff/3600)+'H AGO';
   return Math.floor(diff/86400)+'D AGO';
 }
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmtNum(n){if(n>=1000) return (n/1000).toFixed(1)+'K';return String(n);}
 function now(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
 

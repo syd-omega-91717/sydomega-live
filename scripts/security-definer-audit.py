@@ -4,6 +4,11 @@
 The audit is intentionally conservative: it reports findings that require
 human/database verification rather than weakening contracts to make CI green.
 """
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 from pathlib import Path
 import re, sys
 
@@ -50,7 +55,4 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    if "--help" in sys.argv or "-h" in sys.argv:
-        print(__doc__)
-        raise SystemExit(0)
     raise SystemExit(main())

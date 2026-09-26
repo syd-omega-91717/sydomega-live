@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Validate the production security-header contract in vercel.json."""
 from __future__ import annotations
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 import json
 import sys
 from pathlib import Path
@@ -49,7 +54,4 @@ def main() -> int:
     print("SECURITY HEADERS CONTRACT PASSED")
     return 0
 if __name__ == "__main__":
-    if "--help" in sys.argv or "-h" in sys.argv:
-        print(__doc__)
-        raise SystemExit(0)
     raise SystemExit(main())

@@ -147,7 +147,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
     <div class="grid2">
       <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; BTC / ETH DOMINANCE</div>
-        <canvas id="dom-canvas" height="100" style="display:block;width:100%"></canvas>
+        <canvas id="dom-canvas" height="100" style="display:block;width:100%;height:100px"></canvas>
       </div>
       <div class="card" data-reveal="fade-up">
         <div class="card-title">&#9679; MARKET CAP LEADERS</div>
@@ -357,10 +357,14 @@ function renderCrypto(coins){
   var btcDom=btc?Math.round(btc.market_cap/totalCap*100):0;
   var ethDom=eth?Math.round(eth.market_cap/totalCap*100):0;
   var cv=document.getElementById('dom-canvas');
-  if(cv){
+  /* Redrawn at its real width once visible (CLAUDE.md 8.1 class 3: read at
+     first paint it was 0 and fell back to a 300px buffer in a 380px box). */
+  if(cv&&!cv.__omegaRO&&window.ResizeObserver){cv.__omegaRO=new ResizeObserver(function(){if(cv.__coins)renderCrypto(cv.__coins);});cv.__omegaRO.observe(cv);}
+  if(cv)cv.__coins=coins;
+  if(cv&&cv.clientWidth){
     var ctx=cv.getContext('2d');
-    cv.width=cv.clientWidth||300;
-    var W=cv.width,H=cv.height;
+    var W=cv.clientWidth,H=100,dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
     ctx.clearRect(0,0,W,H);
     var segs=[{pct:btcDom,col:'rgba(201,168,76,.8)',lbl:'BTC '+btcDom+'%'},{pct:ethDom,col:'rgba(96,165,250,.7)',lbl:'ETH '+ethDom+'%'},{pct:100-btcDom-ethDom,col:'rgba(138,134,118,.3)',lbl:'OTHER '+(100-btcDom-ethDom)+'%'}];
     var x=0;

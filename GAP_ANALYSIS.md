@@ -336,10 +336,12 @@ open, recorded in `FIXES_LOG.md`:
   - The `omega-mfa.js` enrol/verify/remove UI plus `stepUp()` ships in Settings behind
     `mfa_enrolment_enabled`, which fails closed. The flag row does not exist yet.
   - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
-    **proposed, not applied**. It was exercised live in an aborted transaction.
+    **applied live and dormant** (`20260926102544`; both flags seeded `false`, verified unchanged results).
   - Decision record: `docs/decisions/owner-mfa/`.
-  - Still open: 24 functions check ownership without `is_platform_owner()` (listed in the plan). They
-    must be routed through it before enforcement is turned on.
+  - Phase 2 is done (`20260926102450`). Of the 24 direct owner checks, the only caller-authority
+    bypass was `private.omega_is_owner()`'s `profiles.is_owner` fallback, now removed. The other 23 are
+    row guards, statistics or triggers. What remains is owner action: turn on the enrolment UI, enrol
+    both owners on two devices, then set `owner_mfa_required`.
 - **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
   exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
 - **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).

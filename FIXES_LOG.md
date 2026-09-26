@@ -20831,7 +20831,7 @@ Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is t
     - a factor named `<img src=x onerror=alert(1)>` renders as text, with 0 injected `<img>`;
     - the stale unverified factor is unenrolled before `enroll`.
 
-**Proposed, not applied (`docs/decisions/owner-mfa/proposed_migration.sql`):**
+**Proposed, not applied (`supabase/migrations/20260926102544_owner_mfa_enforcement_dormant.sql`):**
 - Seed `mfa_enrolment_enabled` and `owner_mfa_required` false.
 - `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
 - Exercised live inside one aborted transaction:
@@ -20842,3 +20842,89 @@ Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is t
   ```
 
 - Afterwards: the live function has no `aal` test, and 0 MFA flag rows exist.
+
+## Owner MFA phase 2: the one bypass closed, enforcement applied dormant; audit module-graph gap
+
+**`private.omega_is_owner()` bypassed any rule on `is_platform_owner()` (applied live, `20260926102450`).** Each of the 24 functions that test `profiles.is_owner` / `platform_owners` directly was read. 23 are row guards, statistics or profile triggers, not caller authority; the classification is in `docs/decisions/owner-mfa/PLAN.md`.
+
+The exception was `omega_is_owner()`. It returned `is_platform_owner()` **OR** a fallback read of `profiles.is_owner`. Nine owner functions and the `daily_engagement_self_read` policy call it:
+- expire_trial, grant_trial_access, get_pending_requests, revoke_permanent_access
+- ratify_existing_permanent_access, check_trial_status, engagement_report, get_engagement_status
+- guard_profile_privileges
+
+Before the change:
+- `profiles.is_owner` and `platform_owners` held the identical set: 2 = 2, 0 rows in only one, synced by `trg_sync_platform_owner`. The fallback therefore changed no result and only ever acted as a bypass.
+
+After the change:
+- It defers only to `is_platform_owner()`.
+- Probe: owner `t`, member `f`, anon `f`; ACL unchanged.
+
+**Owner AAL2 enforcement applied, dormant (`20260926102544`).**
+- It seeds `mfa_enrolment_enabled` and `owner_mfa_required` as `false`.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+
+Verified live:
+- Flag off: owner `t` through both gates, member `f`.
+- Flag on (rolled back): an owner at `aal1` gets `f` from `omega_is_owner()` too.
+- Both flags persist `false`.
+- Security advisor unchanged: only #375 remains.
+
+**`scripts/audit.py` reported a live module as dead.**
+- `omega-sovereign-os.js` loads `omega-content-progressive.js` through `loadScript('/…js', guard)`. The helper's own `s.src = url` is a variable, invisible to `SRC_ASSIGN_RE`.
+- The audit now counts calls to named loader helpers (`loadScript` / `injectScript` / `loadModule`) with a literal `.js` argument.
+- The new test `test_module_reached_through_a_loader_helper_call_is_reachable` checks two cases:
+  - the helper-loaded module is reachable;
+  - a module named only by a dead module is still reported dead.
+- Warnings went from 7 back to the baseline of 6.
+
+## Layout: the breadcrumb was a 315px empty column on every page; public pages were flex rows; invented analytics replaced with real data
+
+**The context rail rendered as a full-height empty column.** `nav.js` inserted `#omega-context-rail` (the "COMMAND › DASHBOARD" breadcrumb) in one of two places, and both are flex rows:
+- before `<main>`, which puts it inside `.shell`;
+- as the first child of `<body>`.
+
+Measured on `dashboard.html` at 1280px:
+- Before: the rail was **x=80 w=315 h=3485**, an empty dark column beside the sidebar that pushed every page's content right. The owner's production screenshot shows the effect.
+- After: the rail is inserted as the first child of the content column (`main`, `.main`, `[role=main]`, `.page-shell` or `#app`), skipping any candidate that contains `#omega-side`, since that is the shell (CLAUDE.md §4).
+- Now the rail is **w=1200 h=62** on `dashboard.html`, w=1084 on `settings.html`, and w=323 at 375px.
+
+**Public pages were flex rows.**
+- `css/omega-system.css` had `body:has(> aside#omega-side){display:flex}`. It also matched the hidden stub aside that `reset`, `terms`, `pending` and `404` carry, so the rail, the content column and the legal footer sat side by side.
+- `reset.html` measured scrollWidth **1679** in a 1280px viewport.
+- The rule now requires a visible aside. All four pages measure scrollWidth = viewport at both 375 and 1280.
+- `reset.html`'s `.wrap` also held the platform hero and page emblem as row siblings of the form, squeezing it to about 50px on a phone. It is a column now.
+
+**`analytics-dashboard.html` and `segmentation-dashboard.html` rendered invented figures (§8.1 class 9).** Both are owner analytics pages that navigation does not link to.
+- analytics: 487 active members, a 72.4 engagement score, 2.1% churn, and 142/189/89/67 segments. It carried a "SIMULATED DATA" banner, and its session chart never drew.
+- segmentation: personas 71/170/170/49/24, "LTV Estimate $1,200/$400/$150/$80/$0", k-means clusters and a 0.78 silhouette score.
+
+Real data now drives every figure that has a source:
+- analytics:
+  - `membership_report` gives approved, pending, rejected, on trial, expiring and the tier table;
+  - `engagement_report(day)` × 7 gives engaged minutes per day, today's count and 7-day distinct members;
+  - `top_pages` gives views, sessions and pages tracked.
+- segmentation (`get_all_members`):
+  - access segments;
+  - members by element;
+  - lifecycle by account age;
+  - 8 weekly signup cohorts.
+
+Panels with no data source (churn model, clusters, retention, recommendations, reports) say so instead of showing "Loading..." forever. The report schedule is now written in the future tense, since `weekly_digest_enabled` is off.
+
+Verified with stubbed owner responses:
+- values render correctly;
+- `<b>`/`<i>` in names are escaped (0 injected elements);
+- 0 page errors;
+- no `487`, `72.4`, `$1,200` or `Silhouette` remains.
+- Non-owners get "Owner-only report."
+
+**Three canvases were blurry (§8.1 class 3).** Each read its width before the approval guard revealed it:
+- `analytics-dashboard.html#chart-sessions`: never drawn, now 1094×200 buffer for a 1094×200 box.
+- `sigma.html#sigma-dist`: 112px buffer in a 325px box, now 493×180 for 493×180.
+- `pulse.html#dom-canvas`: 300px in 380–515px, now 515×100 for 515×100. Tested with a routed CoinGecko response.
+
+Each is sized from its own box times `devicePixelRatio` and redrawn by a `ResizeObserver`.
+
+**Accessibility advisories closed:**
+- `#ofb-msg` (feedback textarea) has an `aria-label`.
+- `verify-deployment.html` and `verify-modules.html` have a `<main>` landmark.

@@ -109,12 +109,11 @@
       try{
         var s=(await window.__omegaSb.auth.getSession()).data.session;
         if(!s)return;
+        /* sign only: derive_cosmology recomputes element/god/agent server-side,
+           and members hold UPDATE on sign but not on the derived columns
+           (migration 20260926091843) -- sending them made the whole write 42501. */
         var upd=await window.__omegaSb.from('profiles').update({
-          sign:selected.sign,
-          element:selected.el,
-          god:selected.god,
-          agent:selected.agent,
-          token:selected.token
+          sign:selected.sign
         }).eq('id',s.user.id);
         if(upd.error){
           if(btn){btn.textContent='Ω CONFIRM SOVEREIGN IDENTITY';btn.disabled=false;}

@@ -106,6 +106,12 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
       <button class="btn-gold" id="btn-logout" style="font-size:12px;letter-spacing:2px;padding:10px 16px">LOG OUT</button>
     </div>
   </div>
+  <div class="settings-section" data-omega-flag="mfa_enrolment_enabled">
+    <div class="settings-section-title">TWO-FACTOR SIGN-IN</div>
+    <p class="settings-hint">Ask for a 6-digit code from an authenticator app when you sign in, so a
+      stolen password alone cannot open your account.</p>
+    <div data-omega-mfa></div>
+  </div>
   <div class="settings-section">
     <div class="settings-section-title">YOUR DATA</div>
     <p class="settings-hint">43 pages keep what you enter in this browser only. Clearing your browser
@@ -301,5 +307,6 @@ refreshPrivacy();
 })();
 </script>
 <script src="/bg.js" defer></script>
+<script src="/omega-mfa.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

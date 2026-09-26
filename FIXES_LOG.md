@@ -20807,3 +20807,38 @@ member_rows_in_official=0  official_rows_visible=1
 
 - Afterwards: `dispatches` total=1, probe rows=0.
 - Security advisor: unchanged. Its only finding is leaked-password protection (#375, owner action).
+
+## Two-factor sign-in: threat model, dormant enrolment UI, owner enforcement proposed and exercised live
+
+Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is the reviewed, dormant first half. Decision record: `docs/decisions/owner-mfa/PLAN.md` (Status `AWAITING-HUMAN-REVIEW`) and `CODEX_REVIEW.md`.
+
+**Measured live:**
+- `auth.mfa_factors` has 0 rows.
+- 161 policies and 33 functions route owner authority through `private.is_platform_owner()`.
+- **24** functions test `profiles.is_owner` / `platform_owners` directly. The plan lists them, and enforcement must not be turned on until they are routed through the helper.
+
+**Shipped (dormant):**
+- **`omega-mfa.js`:** TOTP enrol (QR as `<img src>`, secret via `textContent`), verify, remove, and `stepUp()`.
+  - Every Auth call's `.error` is checked, and the status is re-read from the server after each change.
+  - Abandoned unverified factors are removed before a new enrol.
+- **`settings.html`:** mounts it in the Account tab inside `data-omega-flag="mfa_enrolment_enabled"`. The flag row does not exist, so the section is hidden and the module never mounts.
+- **Browser check (`settings.html`, harness):**
+  - Dormant: `visible:false`, `mounted:false`.
+  - With the flag attribute forced and the Auth API stubbed:
+    - a malformed code is refused client-side;
+    - a rejected code shows `Invalid TOTP code entered` and the status stays `TWO-FACTOR IS OFF`;
+    - an accepted code gives `TWO-FACTOR IS ON · 1 authenticator`;
+    - a factor named `<img src=x onerror=alert(1)>` renders as text, with 0 injected `<img>`;
+    - the stale unverified factor is unenrolled before `enroll`.
+
+**Proposed, not applied (`docs/decisions/owner-mfa/proposed_migration.sql`):**
+- Seed `mfa_enrolment_enabled` and `owner_mfa_required` false.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+- Exercised live inside one aborted transaction:
+
+  ```
+  before_owner=t  flag_off_owner_aal1=t  flag_off_member=f
+  flag_on_owner_aal1=f  flag_on_owner_aal2=t  flag_on_member_aal2=f
+  ```
+
+- Afterwards: the live function has no `aal` test, and 0 MFA flag rows exist.

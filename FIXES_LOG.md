@@ -20726,3 +20726,30 @@ supabase/remote-migrations.json + migration-drift.py: PASS (221 versions, local 
 ```
 
 **Also found in the same audit, a false positive and not a vulnerability:** `security-definer-audit.py` flags `approve_member`, `grant_permanent_access`, `check_trial_status`, etc. as mutating SECURITY DEFINER functions without an auth check. It reads the `supabase/*.sql` reference bag. Live, the `public.*` versions are SECURITY INVOKER one-liners (`SELECT private.approve_member($1)`), and the `private.*` DEFINER functions open with `IF NOT public.is_platform_owner() THEN RETURN … 'forbidden'`. No `public` SECURITY DEFINER function is executable by `anon` or `authenticated`.
+
+## Enterprise audit pass: CI supply chain fully pinned, cross-user RLS measured live, three trust gaps found
+
+An enterprise-scale audit report was checked against evidence before anything was acted on. Its CI claims held (the Contracts and Vercel Production workflows SHA-pinned, `vercel@59.6.0`), as did its registry figures (15 capabilities: 4 BUILT / 6 PARTIAL / 2 BROKEN / 1 LOCAL_ONLY / 2 TESTED, 0 `verified`). Its core framing is right too: the Master Build's React/Express/Prisma stack is a target specification, not what ships.
+
+**Supply chain (fixed).** Only five named workflows were held to immutable refs. The rest ran **31 mutable tags in 17 workflows**, including `stefanzweifel/git-auto-commit-action@v5`, a third-party action with repo write access, in `omega-update.yml`. That workflow was an unfinished placeholder (`echo "Update applied"` under "You would paste my code here"), had no `permissions:` block, had never run, and was referenced nowhere. It is removed. The other 30 refs now use the SHAs nine workflows already ran (checkout/setup-node/setup-python v7; v4 was on the deprecated Node 20 runtime). `workflow-contract.py` now checks **every** workflow, not five, proven with a planted `actions/checkout@v4` in `schema-tracking.yml` → `FAIL … mutable action reference`.
+
+```
+before: 57 action refs, 26 SHA-pinned, 31 mutable (17 workflows)
+after:  55 action refs, 55 SHA-pinned, 0 mutable
+```
+
+**Cross-user RLS, measured live (not aggregate counts).** For all 64 public tables with a `user_id uuid` column that `authenticated` can SELECT, each was counted as the database owner and again as a real non-owner member (`SET LOCAL ROLE authenticated` + JWT `sub`, one rolled-back transaction):
+
+```
+18 tables hold other users' rows -> 17 fully isolated (member sees 0):
+  client_errors 7629->0, platform_events 5283->0, session_heartbeats 1103->0, sovereign_points_ledger 69->0,
+  user_dedication 33->0, certificates/medals/trophies/token_balances 24->0, member_state 20->0,
+  evolution_events 20->0, lesson_completions 18->0, task_completions 10->0, ai_memory 8->0, ...
+  dispatches 1->1   (by design: SELECT is is_published OR owner OR own row)
+46 tables hold no foreign rows -> isolation NOT demonstrable by this test; needs seeded fixtures
+```
+
+**Trust gaps found (open, recorded in GAP_ANALYSIS.md):**
+- **Dispatch moderation bypass.** `news.html` lets members submit dispatches without `is_published`; the feed reads `published_dispatches()`. But `authenticated` holds INSERT on `is_published`, the insert check is only `user_id = auth.uid()`, and no trigger guards the column, so a member can publish straight to every member's feed.
+- **No MFA anywhere.** 0 verified `auth.mfa_factors` project-wide, including both owner accounts, which hold schema-wide authority. There is also no enrolment UI: nothing in the client calls `auth.mfa.*`.
+- **`security-definer-audit.py` false positives** (recorded in the previous entry).

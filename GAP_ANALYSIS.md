@@ -324,6 +324,15 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- **Dispatch moderation bypass** (2026-09-26, measured live). Members may INSERT `dispatches.is_published`
+  (column INSERT granted, insert check `user_id = auth.uid()` only, no trigger), so a member can publish
+  directly to every member's feed instead of submitting for the owner to publish. Fix: a BEFORE INSERT/UPDATE
+  guard forcing `is_published=false` unless `private.is_platform_owner()`. RLS-layer, so owner approval first.
+- **No MFA, and no way to enrol** (2026-09-26). 0 verified `auth.mfa_factors`, owners included; no client code
+  calls `auth.mfa.*`. Needs a TOTP enrol/verify screen plus an AAL2 requirement for owner-only surfaces
+  (`approvals.html`) — auth change, so `grill-me-codex` first.
+- **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
+  exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
 - **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
   `profile.html` writes `kyc_status`/`kyc_doc_path`/`kyc_submitted_at` directly; members hold no
   UPDATE on them, and must not (a member could set their own verdict). Needs a `submit_kyc(p_doc_path)`

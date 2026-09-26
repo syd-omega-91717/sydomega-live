@@ -279,7 +279,22 @@
     }
     window.OmegaFlags.when(FLAG, function () {
       Array.prototype.forEach.call(targets, mount);
+      jumpFromLink(targets[0]);
     });
+  }
+
+  /* The Owner Deck's security checklist links here as #two-factor. The
+     browser's own anchor jump fires before the approval guard reveals the page
+     and before this flag-gated section is shown, so it lands nowhere. Jump
+     once the section really has a box (CLAUDE.md 8.1 class 3). */
+  function jumpFromLink(node) {
+    if (location.hash !== '#two-factor' || !node) return;
+    var sec = document.getElementById('two-factor') || node;
+    var n = 0;
+    (function tryJump() {
+      if (sec.getBoundingClientRect().height > 0) { sec.scrollIntoView({ block: 'start' }); return; }
+      if (++n < 40) setTimeout(tryJump, 150);
+    })();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { boot(0); });

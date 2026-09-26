@@ -85,6 +85,20 @@
       '.odk .odk-wait{color:var(--c);border-color:var(--c);text-decoration:none;font-weight:700;border-radius:999px}',
       '.odk-wait[hidden]{display:none}',
       '.odk-wait:hover{background:var(--c);color:#0a0a0a}',
+      '.odk .odk-sec{color:var(--c);border-color:var(--c);font-weight:700}',
+      '.odk-sec[hidden],.odk-secp[hidden]{display:none}',
+      '.odk-sec[aria-expanded="true"]{background:var(--c);color:#0a0a0a}',
+      '.odk-sec[aria-expanded="true"] i{background:#0a0a0a}',
+      '.odk-secp{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid rgba(232,168,76,.35);border-radius:14px;background:rgba(232,168,76,.04)}',
+      '.odk-si{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:40px}',
+      '.odk-si>i{width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto}',
+      '.odk-sl{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--ink,#E8E4D8);margin-right:auto}',
+      '.odk-sl small{color:var(--muted,#8A8880);letter-spacing:1px;margin-left:8px;font-size:12px}',
+      '.odk-sn{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--muted,#8A8880)}',
+      '.odk .odk-sa{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--odk-line);border-radius:999px;background:none;color:var(--ink,#E8E4D8);font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;text-decoration:none;cursor:pointer}',
+      '.odk .odk-sa:hover,.odk .odk-sa:focus-visible{border-color:var(--gold,#C9A84C);color:var(--gold,#C9A84C)}',
+      '.odk .odk-sa.go{border-color:var(--c);color:var(--c)}',
+      '.odk-sok{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--green,#5FB88A);padding-top:6px;border-top:1px solid var(--odk-line)}',
       '.odk-group{display:flex;flex-direction:column;gap:10px}',
       '.odk-gh{display:flex;align-items:center;gap:10px;font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--c)}',
       '.odk-gh::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--c),transparent);opacity:.35}',
@@ -182,7 +196,10 @@
     head.appendChild(count);
     head.appendChild(calmToggle());
     head.appendChild(waitingChip());
+    var sec = securityChip();
+    head.appendChild(sec.chip);
     root.appendChild(head);
+    root.appendChild(sec.panel);
 
     var chips = mk('div', 'odk-chips');
     chips.setAttribute('role', 'toolbar');
@@ -310,6 +327,15 @@
     render();
   }
 
+  function client() {
+    return Promise.resolve(window.OmegaSB && typeof window.OmegaSB.get === 'function'
+      ? window.OmegaSB.get()
+      : import('/vendor/supabase-js.js').then(function (m) {
+          var cc = m.createClient || (m.default && m.default.createClient);
+          return cc ? cc('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q') : null;
+        }));
+  }
+
   /* People waiting for the owner's decision, always visible here. bg.js only
      flashes a 10-second toast, and on 2026-09-26 the oldest request had been
      waiting since 16 June. Same definition as approvals.js: not approved, not
@@ -327,19 +353,145 @@
       a.setAttribute('aria-label', n + (n === 1 ? ' person' : ' people') + ' waiting for access approval');
       a.hidden = false;
     }
-    var get = window.OmegaSB && typeof window.OmegaSB.get === 'function'
-      ? window.OmegaSB.get()
-      : import('/vendor/supabase-js.js').then(function (m) {
-          var cc = m.createClient || (m.default && m.default.createClient);
-          return cc ? cc('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q') : null;
-        });
-    Promise.resolve(get).then(function (sb) {
+    client().then(function (sb) {
       if (!sb) return;
       return sb.from('profiles').select('id', { count: 'exact', head: true })
         .eq('access_approved', false).eq('is_owner', false).not('is_rejected', 'is', true)
         .then(function (r) { if (!r.error) paint(r.count || 0); });
     }).catch(function () { /* no chip beats a wrong one */ });
     return a;
+  }
+
+  /* Security checklist: only what is still open, behind one chip, and every
+     item clears itself. Data: public.owner_security_status() (owner-only; it
+     returns {ok:false} to anyone else, and then nothing is drawn -- no chip
+     beats a wrong one).
+       - Two-factor: one row per owner with no VERIFIED factor. It clears when
+         auth.mfa_factors says so; there is no tick box to lie with.
+       - Keys: the owner rotates provider keys in each dashboard (no API here
+         reaches them), then confirms; the row returns ROTATE_DAYS later.
+     Breached passwords are not an open item: omega-password-guard.js already
+     checks HaveIBeenPwned at sign-up and reset. Supabase's server-side switch
+     needs the Pro plan (the org is on free), so the advisor keeps listing it. */
+  var ROTATE_DAYS = 180;
+  var KEY_LINKS = [
+    ['SUPABASE', 'https://supabase.com/dashboard/project/ydqhzvvoyufiiqvzcjns/settings/api-keys'],
+    ['DB PASSWORD', 'https://supabase.com/dashboard/project/ydqhzvvoyufiiqvzcjns/database/settings'],
+    ['FUNCTION SECRETS', 'https://supabase.com/dashboard/project/ydqhzvvoyufiiqvzcjns/functions/secrets'],
+    ['STRIPE', 'https://dashboard.stripe.com/apikeys'],
+    ['ANTHROPIC', 'https://console.anthropic.com/settings/keys'],
+    ['RESEND', 'https://resend.com/api-keys'],
+    ['VERCEL', 'https://vercel.com/account/tokens'],
+    ['GITHUB', 'https://github.com/settings/tokens']
+  ];
+
+  function openItems(st) {
+    var items = [];
+    (st.owners || []).forEach(function (o) {
+      if (Number(o.factors) > 0) return;
+      items.push({ kind: 'mfa', me: !!o.me, who: String(o.email || '').split('@')[0] });
+    });
+    var at = st.secrets_rotated_at ? Date.parse(st.secrets_rotated_at) : NaN;
+    if (!(at > 0) || Date.now() - at > ROTATE_DAYS * 864e5) items.push({ kind: 'keys' });
+    return items;
+  }
+
+  function securityChip() {
+    var chip = mk('button', 'odk-chip odk-sec');
+    chip.type = 'button';
+    chip.hidden = true;
+    chip.style.setProperty('--c', '#E8A84C');
+    chip.setAttribute('aria-expanded', 'false');
+    var panel = mk('div', 'odk-secp');
+    panel.id = 'odk-secp';
+    panel.hidden = true;
+    chip.setAttribute('aria-controls', panel.id);
+    chip.addEventListener('click', function () {
+      var open = chip.getAttribute('aria-expanded') !== 'true';
+      chip.setAttribute('aria-expanded', open ? 'true' : 'false');
+      panel.hidden = !open;
+    });
+
+    function paint(sb, items) {
+      panel.textContent = '';
+      if (!items.length) { chip.hidden = true; panel.hidden = true; chip.setAttribute('aria-expanded', 'false'); return; }
+      chip.textContent = '';
+      chip.appendChild(mk('i'));
+      chip.appendChild(document.createTextNode(items.length + ' SECURITY'));
+      chip.setAttribute('aria-label', items.length + ' open security ' + (items.length === 1 ? 'item' : 'items'));
+      chip.hidden = false;
+      items.forEach(function (it) { panel.appendChild(it.kind === 'mfa' ? mfaRow(it) : keysRow(sb, items)); });
+      var ok = mk('div', 'odk-sok', '\u2713 BREACHED PASSWORDS BLOCKED AT SIGN-UP AND RESET');
+      ok.title = 'Checked in the browser against HaveIBeenPwned. The server-side check needs the Supabase Pro plan.';
+      panel.appendChild(ok);
+    }
+
+    function row(label, sub) {
+      var r = mk('div', 'odk-si');
+      r.style.setProperty('--c', '#E8A84C');
+      r.appendChild(mk('i'));
+      var l = mk('span', 'odk-sl', label);
+      if (sub) l.appendChild(mk('small', null, sub));
+      r.appendChild(l);
+      return r;
+    }
+
+    function mfaRow(it) {
+      var r = row('TWO-FACTOR', it.who);
+      if (it.me) {
+        var a = mk('a', 'odk-sa go', 'SET UP');
+        a.href = '/settings.html#two-factor';
+        r.appendChild(a);
+      } else {
+        r.appendChild(mk('span', 'odk-sn', 'ON THEIR SIGN-IN'));
+      }
+      return r;
+    }
+
+    function keysRow(sb, items) {
+      var r = row('ROTATE KEYS');
+      KEY_LINKS.forEach(function (k) {
+        var a = mk('a', 'odk-sa', k[0]);
+        a.href = k[1];
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        r.appendChild(a);
+      });
+      var done = mk('button', 'odk-sa go', 'DONE');
+      done.type = 'button';
+      var armed = 0;
+      done.addEventListener('click', function () {
+        if (!armed) {
+          done.textContent = 'CONFIRM';
+          armed = setTimeout(function () { armed = 0; done.textContent = 'DONE'; }, 4000);
+          return;
+        }
+        clearTimeout(armed); armed = 0;
+        done.disabled = true;
+        done.textContent = '\u2026';
+        /* Supabase resolves {data,error}; it does not throw (CLAUDE.md 8.1
+           class 1). The row leaves only on a confirmed {ok:true}. */
+        sb.rpc('owner_confirm_secrets_rotated').then(function (res) {
+          if (res.error || !res.data || res.data.ok !== true) throw new Error('refused');
+          paint(sb, items.filter(function (x) { return x.kind !== 'keys'; }));
+        }).catch(function () {
+          done.disabled = false;
+          done.textContent = 'FAILED \u00B7 RETRY';
+        });
+      });
+      r.appendChild(done);
+      return r;
+    }
+
+    client().then(function (sb) {
+      if (!sb) return;
+      return sb.rpc('owner_security_status').then(function (res) {
+        if (res.error || !res.data || res.data.ok !== true) return;
+        paint(sb, openItems(res.data));
+      });
+    }).catch(function () { /* nothing drawn beats a wrong list */ });
+
+    return { chip: chip, panel: panel };
   }
 
   /* Calm mode lives in bg.js (window.OmegaCalm) so it applies on every page.
@@ -402,7 +554,7 @@
 
   function boot() { document.querySelectorAll('[data-omega-owner-deck]').forEach(mount); }
 
-  window.OmegaOwnerDeck = { mount: mount, pages: collect };
+  window.OmegaOwnerDeck = { mount: mount, pages: collect, securityItems: openItems };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

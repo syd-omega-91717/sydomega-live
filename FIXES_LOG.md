@@ -21176,3 +21176,47 @@ The full-site after figure is recorded on the PR.
 - 8/8 tests pass.
 
 **Contrast, the full-site after figure** for the previous entry: **99 → 48** (all 206 pages PASS). The capability entrypoints go from 6 advisories to 1.
+
+## Supabase security advisor: 3 warnings to 1; the owner's open security items in one chip that clears itself
+
+**Two `authenticated_security_definer_function_executable` warnings (lint 0029), fixed live.** `public.submit_feedback` and `public.update_consent` were SECURITY DEFINER in the exposed schema.
+- Migration `20260926222245` moves both bodies to `private` behind `public` SECURITY INVOKER wrappers with identical signatures and defaults. This is the pattern every other page-called RPC here already uses, so `omega-feedback.js` and `privacy.html` are unchanged.
+- Probe (rolled back): a non-owner approved member got `{"ok":true}` from both wrappers. `anon` holds EXECUTE on neither copy.
+- Advisor after: the 0029 findings are gone; one finding remains.
+
+**The remaining warning, `auth_leaked_password_protection`, is not reachable.**
+- `get_organization` returns `plan: free`, and the setting is Pro-and-above.
+- The threat is already closed at the only two places a password is set: `account.html` `signUp` and `reset.html` `updateUser` (grep: no other `signUp`/`updateUser(` call in the estate). `omega-password-guard.js` checks HaveIBeenPwned there.
+- A direct Auth API call still bypasses the in-app check, as `GAP_ANALYSIS.md` already records.
+
+**Owner Deck SECURITY chip** (`omega-owner-deck.js`, migration `20260926223027`). The owner asked for the dashboard-only reminders to stop recurring as prose. They now sit behind one chip that shows a count only while something is open:
+- **Two-factor:** one row per owner with no verified factor. It is read from `auth.mfa_factors` through the owner-only `owner_security_status()`, so it clears on evidence; there is no tick box.
+  - SET UP links to `/settings.html#two-factor`. `omega-mfa.js` now scrolls there once the flag-gated section actually has a box, because the browser's own anchor jump fires while the approval guard still hides it.
+  - Live: 0 of 2 owners enrolled.
+- **Rotate keys:** links to each provider's key page, then DONE → CONFIRM → `owner_confirm_secrets_rotated()`.
+  - The row leaves only on `{ok:true}`.
+  - It returns after 180 days.
+  - The timestamp lives in `platform_settings.text_value` with `bool_value=false`, so a member's `get_platform_flag()` reads false.
+- **Breached passwords** show as covered, not open.
+- Probe (rolled back):
+  - member: `forbidden` from both functions;
+  - owner: 2 owners, factors `[0,0]`, write ok;
+  - member flag read afterwards: `f`.
+- `anon` holds EXECUTE on none of the four functions. No new advisor finding.
+- Render (owner stub):
+  - the chip reads `3 SECURITY` and the panel is hidden at rest;
+  - the first DONE click arms (`CONFIRM`), the second clears the row, and the chip reads `2 SECURITY`;
+  - external links carry `noopener noreferrer`;
+  - no page errors, no horizontal overflow at 375px.
+
+**Found on the way: two-factor enforcement would lock both owners out at their next sign-in.** `OmegaMFA.stepUp()` has no caller. With `owner_mfa_required` on, an owner signs in at `aal1`, `is_platform_owner()` returns false, and every owner power fails silently. The enforcement button was therefore left out of the chip, and a sign-in step-up is recorded as a precondition in `docs/decisions/owner-mfa/PLAN.md` and `GAP_ANALYSIS.md`.
+
+**Secrets from the supplied documents.**
+- None are in the repo: a key-shape scan of the full, unshallow `git log --all -p` finds 0, and the only JWTs in history are `anon`.
+- `check-secrets.sh` could not list Edge Function secrets: no Supabase CLI login in this container.
+- Rotation stays with the owner, and the chip carries it.
+
+**Tests:** `test_owner_deck.py` +3.
+- The item logic runs from the shipped file in node: items clear on evidence, a stale or unparseable rotation date reopens the keys row, and the write checks `.error` and `ok`.
+- Both migrations keep `public` wrappers INVOKER and revoke `anon`. Planted: one wrapper switched to DEFINER fails the test.
+- 353 tests pass; `ci-local.sh` passes all 26 blocking checks.

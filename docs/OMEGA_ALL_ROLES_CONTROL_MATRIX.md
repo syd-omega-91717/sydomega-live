@@ -19,7 +19,7 @@ A page, SQL file, prompt, or successful static check is not by itself production
 | 3 | Gaming & Characters | game/character UX | game state | game records | ownership/entitlement | media/game services | state transition tests | PARTIAL | representative game lifecycle |
 | 4 | Achievements | progression UX | awards/standing | achievement records | anti-forgery rules | optional intelligence | progression regression | PARTIAL | production progression proof |
 | 5 | Family & Tree Links | lineage UX | family workflows | family/bloodline/heritage | own-row isolation | none required | cross-user RLS tests | PARTIAL | multi-user row isolation |
-| 6 | Media | library/player UX | publishing/media flows | media metadata/assets | storage authorization | external media providers | upload/playback tests | PARTIAL | storage + provider E2E |
+| 6 | Media | library/player UX | publishing/media flows | media metadata/assets | storage authorization | external media providers | upload/playback/delete tests | PARTIAL | physical storage object lifecycle E2E |
 | 7 | Blockchain / Crypto / NFT | vault/asset UX | asset workflows | asset/ledger model | legal + authorization | chain provider | transaction simulation/E2E | DECISION REQUIRED | legal/business decision before activation |
 | 8 | Communication & Security | messaging/settings | communication flows | notifications/security records | MFA/RBAC/audit | messaging providers | abuse + failure tests | PARTIAL | MFA/RBAC/audit journey |
 | 9 | Horoscope & Elements | Cosmos UX | profile-derived presentation | canonical profile fields | privacy boundary | optional provider | deterministic render tests | BUILT / PARTIAL | canon and runtime regression |

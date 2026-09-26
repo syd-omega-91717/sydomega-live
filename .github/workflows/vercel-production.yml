@@ -80,7 +80,6 @@ jobs:
           echo "VERCEL_PRODUCTION_VALIDATE_EXECUTED=true"
           echo "VERCEL_PRODUCTION_VALIDATE_RUN_ID=${GITHUB_RUN_ID}"
       - name: Static contract
-      - name: Static contract
         run: python scripts/vercel_static_contract.py
       - name: Build artifact
         run: bash scripts/vercel-build.sh

@@ -121,6 +121,7 @@ step "2l.  Resilience audit"                   python3 scripts/resilience-audit.
 step "2m.  Commerce contract"                  python3 scripts/commerce-contract.py
 step "2n.  Reachability contract"              python3 scripts/reachability-contract.py
 step "2o.  Module contracts"                   python3 scripts/module-contract.py
+step "2p.  All-roles control"                  python3 scripts/omega-all-roles-control.py
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan

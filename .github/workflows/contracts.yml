@@ -44,6 +44,8 @@ jobs:
           PY
       - name: Run contract suite
         run: python scripts/contract-suite.py
+      - name: Enforce all-roles module control
+        run: python scripts/omega-all-roles-control.py
       - name: Enforce information architecture audit
         if: always()
         run: python scripts/audit-information-architecture.py

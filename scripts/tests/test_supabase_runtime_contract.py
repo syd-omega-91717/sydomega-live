@@ -119,9 +119,8 @@ class PostgrestProbeTests(unittest.TestCase):
         self.assertNotEqual(contract.POSTGREST_PROBE.split("?")[0], "/rest/v1/")
 
     def test_the_probe_targets_a_table_anon_can_read(self):
-        """platform_settings: anon holds SELECT and platform_settings_select is
-        `qual = true`, verified in-database by impersonating the anon role."""
-        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/platform_settings"))
+        """The probe follows the live public catalog boundary, not owner-only settings."""
+        self.assertTrue(contract.POSTGREST_PROBE.startswith("/rest/v1/token_catalog"))
 
     def test_the_probe_is_bounded_and_read_only(self):
         """A contract must not pull a table down to prove reachability, and must

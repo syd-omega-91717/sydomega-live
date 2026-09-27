@@ -21309,3 +21309,35 @@ After: points, habits and guide show one visible title; vault and cosmos show on
 - Reduced motion still freezes it.
 
 **Tests:** `test_one_title.py`, 7 tests. A planted 300s orbit fails the orbit test. 370 tests pass; `ci-local.sh` passes 26/26; `verify-runtime.js` passes on 13 pages.
+
+## Why the platform looked solid: the default "Simple UI" stopped every animation (2026-09-27)
+
+`css/omega-simple-ui.css` (commit `a63f4dcf`, 2026-09-23) is loaded on every page, and bg.js adds `body.omega-simple` to every body. It held three things:
+- `body.omega-simple *{animation-duration:.01ms!important;animation-iteration-count:1!important}`, outside any reduced-motion query, so every CSS animation on the platform ran for one frame and stopped;
+- `display:none!important` on `[data-omega-sculpture]`, `.osc-stage`, `.constellation-background` and `.emblem-orb`, which hid the 3-D emblems, constellations and orbs;
+- `animation:none` on the status dots.
+
+This is why the owner kept seeing "solid pictures", and why `omega-alive.js`'s turning emblems (#485) had the class but did not move. My earlier render counts measured the classes being applied, not motion.
+
+Measured on dashboard.html by pinning the old file against the new one:
+
+| | long-running animations | nav glyph animation-duration | turning emblem's `rotate` over 1.5s | visible sculptures |
+|---|---|---|---|---|
+| before | 3 | `1e-05s` | `none` | 0 |
+| after | 67 | `5.6s` | 36.7° → 44.2° | 1 |
+
+points.html went from 2 long-running animations to 20.
+
+Simple UI keeps its decluttering: flatter cards, no heavy shadow or blur, and ambient particles and starfield hidden. It no longer freezes motion or hides emblems. Reduced motion is still honoured: bg.js, omega-visual-evolution.css and omega-accessibility-audit.css each carry a `prefers-reduced-motion` block, all checked scoped.
+
+**Still pictures that never changed.** A scan of all 205 pages found about 30 canvases and diagrams whose pixels were identical 2.5s apart: network maps, rings, radars and charts. `omega-alive.js` gains a measured pass:
+- each canvas is sampled into a 12x12 thumbnail twice, 2.5s apart;
+- only an identical pair gets a 7s breathing glow in the page accent, composed over the element's own filter, since `omega-visual-evolution.css` gives every canvas contrast/saturate;
+- canvases never turn, because they draw their own numbers and a turning chart cannot be read;
+- a square SVG emblem with no `<text>` turns; others glow.
+
+**Gate:** `test_one_title.py` adds:
+- no stylesheet may carry a catch-all animation-duration kill outside reduced motion (planted old file: fails);
+- Simple UI must not hide sculptures or orbs.
+
+373 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.

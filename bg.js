@@ -145,8 +145,8 @@ function __omegaAppend(el){
 
 /* Inject shared class definitions + load external stylesheet */
 (function(){
-  /* Simple UI is the default product surface. Showcase pages can opt out with
-     body.omega-showcase when a visual presentation is intentionally required. */
+  /* Simple UI is the default product surface: flatter cards and no ambient
+     particles. It no longer stops motion or hides emblems (see the file). */
   if(!document.getElementById('omega-simple-ui-css')){
     var simple=document.createElement('link');
     simple.id='omega-simple-ui-css'; simple.rel='stylesheet';

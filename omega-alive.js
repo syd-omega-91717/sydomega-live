@@ -63,8 +63,13 @@
       '.omega-alive-breathe{animation:omega-alive-breathe 5.6s ease-in-out infinite;' +
         'animation-delay:var(--alive-delay,0s);transition:rotate .9s cubic-bezier(.2,.8,.2,1)}' +
       ':hover>.omega-alive-breathe,.omega-alive-breathe:hover{rotate:360deg}' +
+      /* --alive-base carries the element's own filter so the glow adds to it:
+         omega-visual-evolution.css gives every canvas contrast/saturate. */
+      '@keyframes omega-alive-glow{0%,100%{filter:var(--alive-base) drop-shadow(0 0 0 transparent)}' +
+        '50%{filter:var(--alive-base) drop-shadow(0 0 14px var(--page-accent-glow,rgba(201,168,76,.4)))}}' +
+      '.omega-alive-glow{animation:omega-alive-glow 7s ease-in-out infinite;animation-delay:var(--alive-delay,0s)}' +
       '[data-alive-off]{animation-play-state:paused!important}' +
-      '@media (prefers-reduced-motion:reduce){.omega-alive-turn,.omega-alive-breathe{animation:none!important;transition:none!important}' +
+      '@media (prefers-reduced-motion:reduce){.omega-alive-turn,.omega-alive-breathe,.omega-alive-glow{animation:none!important;transition:none!important}' +
         ':hover>.omega-alive-breathe,.omega-alive-breathe:hover{rotate:none}}';
     (document.head || document.documentElement).appendChild(st);
   }
@@ -140,6 +145,71 @@
     }
   }
 
+  /* STILL PICTURES. A scan of all 205 pages (2026-09-27) found ~30 canvases
+     and SVG diagrams whose pixels never changed: network maps, rings, radars,
+     charts. They get a slow breathing glow in the page's accent colour. They
+     never turn: a canvas draws its own numbers and labels, and a turning
+     chart cannot be read. "Still" is measured, not guessed: each canvas is
+     sampled into a 12x12 thumbnail twice, 2.5s apart, and only an identical
+     pair counts, so a canvas that already animates itself is left alone.
+     An SVG diagram with no running animation and no text inside, roughly
+     square, turns as well (an emblem); one with text only glows. */
+  var probe = null;
+  function thumb(c) {
+    try {
+      probe = probe || document.createElement('canvas');
+      probe.width = probe.height = 12;
+      var p = probe.getContext('2d');
+      p.clearRect(0, 0, 12, 12);
+      p.drawImage(c, 0, 0, 12, 12);
+      return Array.prototype.join.call(p.getImageData(0, 0, 12, 12).data, ',');
+    } catch (e) { return null; }                 /* tainted or zero-size: skip */
+  }
+  function big(el) {
+    var r = el.getBoundingClientRect();
+    return r.width >= 90 && r.height >= 90 && r.width && r.height ? r : null;
+  }
+  function glow(el, i) {
+    if (el.hasAttribute('data-alive')) return;
+    var f = getComputedStyle(el).filter;
+    if (busy(el) || /drop-shadow/.test(f || '')) { el.setAttribute('data-alive', 'skip'); return; }
+    el.style.setProperty('--alive-base', f && f !== 'none' ? f : ' ');
+    el.setAttribute('data-alive', 'glow');
+    el.classList.add('omega-alive-glow');
+    el.style.setProperty('--alive-delay', '-' + ((i * 1.7) % 7).toFixed(1) + 's');
+    if (io) io.observe(el);
+    count++;
+  }
+  function stillPass() {
+    var cands = [];
+    document.querySelectorAll('canvas').forEach(function (c) {
+      if (c.hasAttribute('data-alive') || c.closest('script,#omega-side,[data-no-alive]') || !big(c)) return;
+      cands.push({ el: c, a: thumb(c) });
+    });
+    setTimeout(function () {
+      cands.forEach(function (x, i) {
+        if (x.a === null || count >= MAX) return;
+        if (thumb(x.el) === x.a) glow(x.el, i);
+      });
+    }, 2500);
+    var anim = typeof document.getAnimations === 'function' ? document.getAnimations() : [];
+    var targets = anim.map(function (a) { return a.effect && a.effect.target; }).filter(Boolean);
+    document.querySelectorAll('svg').forEach(function (svg, i) {
+      if (count >= MAX || svg.hasAttribute('data-alive') || svg.parentElement.closest('svg')) return;
+      if (svg.closest('#omega-side,.on-tip,button,[data-no-alive]')) return;
+      var r = big(svg); if (!r) return;
+      if (svg.querySelector('animate,animateTransform,animateMotion')) return;
+      for (var k = 0; k < targets.length; k++) {
+        var t = targets[k];
+        if (t === svg || svg.contains(t) || (t.contains && t.contains(svg))) return;
+      }
+      if (r.width > 1000 && r.height > 600) return;   /* full-screen overlays */
+      var square = r.width / r.height < 1.3 && r.height / r.width < 1.3;
+      if (square && r.width <= 260 && !svg.querySelector('text')) mark(svg, 'omega-alive-turn', i);
+      else glow(svg, i);
+    });
+  }
+
   var pending = 0;
   function schedule() {
     if (pending) return;
@@ -149,6 +219,10 @@
   function boot() {
     injectStyle();
     scan();
+    /* Pictures draw after data arrives; give them time, then look once more
+       later for anything rendered by a slow page. */
+    setTimeout(stillPass, 3000);
+    setTimeout(stillPass, 9000);
     if (typeof MutationObserver === 'function') {
       new MutationObserver(function (muts) {
         for (var i = 0; i < muts.length; i++) {

@@ -65,6 +65,31 @@ class NothingStill(unittest.TestCase):
         i = src.index("var omegaSigils = document.querySelectorAll(")
         self.assertIn("(el.textContent||'').trim().length > 2", src[i:i + 700])
 
+    def test_no_stylesheet_stops_all_motion_outside_reduced_motion(self):
+        # css/omega-simple-ui.css once held body.omega-simple *{animation-
+        # duration:.01ms!important} -- bg.js adds .omega-simple to every body,
+        # so every animation on the platform stopped after one frame. Measured
+        # on dashboard.html: 3 long-running animations with it, 67 without.
+        import glob
+        files = glob.glob(os.path.join(ROOT, "*.css")) + glob.glob(os.path.join(ROOT, "css", "*.css"))
+        offenders = []
+        for f in files:
+            css = open(f, encoding="utf-8").read()
+            css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+            # drop every reduced-motion block, then look for a catch-all kill
+            css = re.sub(r"@media\s*\(\s*prefers-reduced-motion[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}", "", css)
+            for m in re.finditer(r"([^{}]*\*[^{}]*)\{([^{}]*animation-duration\s*:\s*\.?0*\.?0*1?m?s[^{}]*!important[^{}]*)\}", css):
+                sel = m.group(1).strip()
+                if re.search(r"(^|[\s,>])\*(\s*,|\s*$|::)", sel):
+                    offenders.append("%s: %s" % (os.path.relpath(f, ROOT), sel[:80]))
+        self.assertEqual(offenders, [])
+
+    def test_simple_ui_keeps_emblems_visible(self):
+        css = read("css/omega-simple-ui.css")
+        css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+        for sel in ("[data-omega-sculpture]", ".osc-stage", ".emblem-orb"):
+            self.assertNotIn(sel, css)
+
     def test_ring_never_mounts_into_its_loader_script(self):
         src = read("omega-ring.js")
         self.assertIn("[data-omega-ring]:not(script)", src)

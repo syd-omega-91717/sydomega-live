@@ -21739,3 +21739,31 @@ Owner request: a retention rule and a privacy notice before intake opens. Decisi
 - `test_owner_mfa_gate.py` 10.
 
 **Owner action:** enrol each account, then ENFORCE. Enforcement is still off.
+
+## Key rotation is proved, not claimed: `secrets-health` (2026-09-27)
+
+Owner request: rotate the keys that appeared in earlier documents, and find a smart way to hide and
+rotate them. Before this, the Owner Deck's DONE recorded a timestamp on the owner's word. Nothing
+could tell a rotated key from the old one, or a new key that does not work.
+
+- **Hide:** the keys stay only in Supabase secrets. `secrets-health` (owner-only; the owner check
+  is `owner_security_status()` through the caller's JWT, so aal2 applies once enforced) returns,
+  per key, `set` / `live` / the provider's HTTP status / an 8-hex SHA-256 fingerprint / `changed`.
+  It never returns the key or a provider body, and it has no log line.
+- **Prove:** DONE calls `confirm`, which records the fingerprints with the service role inside the
+  function and refuses while any set key fails. The next VERIFY shows ROTATED or SAME KEY per
+  provider.
+- Runbook `docs/runbooks/key-rotation.md`; decision record `docs/decisions/secrets-health/`.
+
+**Verified:**
+- Deployed with `verify_jwt` on. Version 1's source matched the repo; version 2 adds `auth.getUser()` before any service-role use (`edge-service-role-auth-audit.py`) and server-side display labels, so the page names no secret (client credential scan).
+- Live through `pg_net`:
+  - no token → 401;
+  - a bearer that is not a user session → 403 `forbidden` on v1, and on v2 → 401 at the identity check, with no key names in either response;
+  - a refused `confirm` wrote nothing (`platform_settings` has no fingerprint row).
+- A real member session was not available from here. The member → `forbidden` path is the same `owner_security_status()` check measured live on 2026-09-26.
+- The owner path needs an owner JWT, which this session cannot mint. It was verified in the harness with the function stubbed: VERIFY → ROTATED / SAME KEY / WORKING / NOT SET; DONE with a failing key → "A KEY FAILS · FIX, RETRY" and the item stays; clean → item clears, calls `check, confirm, confirm`.
+- The owner's first VERIFY is the live test.
+- `test_owner_deck.py` +1.
+
+**Owner action:** rotate each key at its provider, set it in Supabase secrets, then VERIFY → DONE.

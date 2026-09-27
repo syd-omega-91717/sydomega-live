@@ -123,11 +123,33 @@ class SecurityChecklist(unittest.TestCase):
     def test_checklist_writes_check_the_result(self):
         # CLAUDE.md 8.1 class 1: the row may only leave on a confirmed ok.
         src = read("omega-owner-deck.js")
-        blk = src[src.index("sb.rpc('owner_confirm_secrets_rotated')"):]
+        # DONE is recorded by the secrets-health Edge Function (service role,
+        # docs/decisions/secrets-health/PLAN.md), not claimed by the page.
+        helper = src[src.index("function health(action)"):src.index("function showKeys(")]
+        self.assertIn("sb.functions.invoke('secrets-health'", helper)
+        self.assertIn("res.error", helper)
+        blk = src[src.index("health('confirm')"):]
         blk = blk[:blk.index("r.appendChild(done)")]
-        self.assertIn("res.error", blk)
-        self.assertIn("res.data.ok !== true", blk)
+        self.assertIn("d.ok !== true || d.recorded !== true", blk)
+        self.assertNotIn("owner_confirm_secrets_rotated", src)
         self.assertNotIn("innerHTML", src)
+
+    def test_secrets_health_never_returns_a_key(self):
+        fn = read("supabase/functions/secrets-health/index.ts")
+        # Only the owner, through the caller's own JWT (aal2 once enforced).
+        self.assertIn('asCaller.rpc("owner_security_status")', fn)
+        self.assertLess(fn.index('owner_security_status'), fn.index('Deno.env.get(name)'))
+        # Per key: flags, a status code and an 8-hex hash. Never the value,
+        # never a provider body.
+        self.assertIn("return { name, label, set: true, live: probe.live, status: probe.status, fp, changed:", fn)
+        self.assertLess(fn.index("auth.getUser("), fn.index("createClient(supabaseUrl, serviceKey"))
+        self.assertIn("slice(0, 4)", fn)
+        self.assertNotIn("console.", fn)
+        self.assertNotIn("res.text()", fn)
+        self.assertNotIn("?apikey=", fn)
+        # Recorded server-side, only on a clean write, only while keys work.
+        self.assertIn('if (!allLive) return json({ ...result, ok: false, error: "key_failing" }', fn)
+        self.assertIn('if (write.error) return json({ ...result, ok: false, error: "record_failed" }', fn)
 
 
 class SecurityRpcShape(unittest.TestCase):

@@ -1,6 +1,6 @@
 ---
 name: edge-functions
-description: Work on sydomega-live's Supabase Edge Functions — the 14 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
+description: Work on sydomega-live's Supabase Edge Functions — the 15 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge, secrets-health, concierge-orchestrator, growth-orchestrator, product-orchestrator, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
 ---
 
 # EDGE FUNCTIONS
@@ -28,6 +28,7 @@ elevation create their own `service_role` client from a Supabase secret —
 | `weekly-digest` | per-member weekly recap | `pg_cron` weekly |
 | `intel-feed`, `market-price` | external intelligence/market data | client / cron |
 | `graphify-ai-ingest`, `graphify-ai-query` | knowledge-graph AI ingest/query | client |
+| `secrets-health` | owner-only: is each provider key set, working, rotated? Returns flags + an 8-hex SHA-256 fingerprint, never a key; DONE records fingerprints server-side (`docs/decisions/secrets-health/`) | client (Owner Deck) |
 
 ## The "gated so deploying does nothing" convention
 

@@ -372,8 +372,13 @@ open, recorded in `FIXES_LOG.md`:
 - **Third-party keys named in the supplied documents: rotation is owner action** (2026-09-26). The
   repo and its full, unshallow history hold none (key-shape scan of `git log --all -p`: 0; the only
   JWTs are `anon`), so nothing is left to purge here; no API in reach rotates provider keys. The
-  Owner Deck shows a ROTATE KEYS row with each provider's key page until the owner confirms
-  (`owner_confirm_secrets_rotated()`), and the row returns 180 days later.
+  Owner Deck shows a ROTATE KEYS row with each provider's key page, and the row returns 180 days
+  later. **Since 2026-09-27 a rotation is proved, not claimed:** VERIFY calls the owner-only
+  `secrets-health` Edge Function. It reports each key as working, failing, not set, or rotated
+  vs. same key, using an 8-hex SHA-256 fingerprint and never the key. DONE is recorded by that
+  function and only while every key works (`docs/decisions/secrets-health/`, runbook
+  `docs/runbooks/key-rotation.md`). **Open, owner action:** rotate each key at its provider, then
+  VERIFY and DONE.
 - **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
   exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
 - ~~**Member KYC submission cannot save**~~ **Machinery fixed 2026-09-27; intake stays CLOSED

@@ -98,6 +98,9 @@
       '.odk .odk-sa{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--odk-line);border-radius:999px;background:none;color:var(--ink,#E8E4D8);font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;text-decoration:none;cursor:pointer}',
       '.odk .odk-sa:hover,.odk .odk-sa:focus-visible{border-color:var(--gold,#C9A84C);color:var(--gold,#C9A84C)}',
       '.odk .odk-sa.go{border-color:var(--c);color:var(--c)}',
+      '.odk-kv{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px}',
+      '.odk-kv:empty{display:none}',
+      '.odk-kv span{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:4px 10px;border-radius:999px;border:1px solid var(--k);color:var(--k)}',
       '.odk-sok{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--green,#5FB88A);padding-top:6px;border-top:1px solid var(--odk-line)}',
       '.odk-group{display:flex;flex-direction:column;gap:10px}',
       '.odk-gh{display:flex;align-items:center;gap:10px;font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--c)}',
@@ -504,6 +507,42 @@
         a.rel = 'noopener noreferrer';
         r.appendChild(a);
       });
+      /* VERIFY / DONE go through the secrets-health Edge Function
+         (docs/decisions/secrets-health/PLAN.md). It answers per key: set,
+         working, and whether its fingerprint changed since the last DONE --
+         never the key. DONE is recorded by the function itself, and only
+         while every set key works, so it proves a rotation rather than
+         taking the owner's word for it. */
+      var out = mk('div', 'odk-kv');
+      function health(action) {
+        return sb.functions.invoke('secrets-health', { body: { action: action } }).then(function (res) {
+          if (res.error || !res.data || !Array.isArray(res.data.keys)) throw new Error((res.data && res.data.error) || 'unavailable');
+          return res.data;
+        });
+      }
+      function showKeys(d) {
+        out.textContent = '';
+        d.keys.forEach(function (k) {
+          var st = !k.set ? ['NOT SET', 'var(--muted,#8A8880)']
+            : k.live === false ? ['FAILING', 'var(--crim,#E05A5A)']
+            : k.changed === true ? ['ROTATED', 'var(--green,#3FB27F)']
+            : k.changed === false ? ['SAME KEY', '#E8A84C']
+            : ['WORKING', 'var(--cyan,#5EC8C8)'];
+          var c = mk('span', null, String(k.label || k.name) + ' \u00B7 ' + st[0]);
+          c.style.setProperty('--k', st[1]);
+          if (k.fp) c.title = 'fingerprint ' + k.fp;
+          out.appendChild(c);
+        });
+      }
+      var verify = mk('button', 'odk-sa', 'VERIFY');
+      verify.type = 'button';
+      verify.addEventListener('click', function () {
+        verify.disabled = true; verify.textContent = '\u2026';
+        health('check').then(function (d) { showKeys(d); verify.textContent = 'VERIFY'; })
+          .catch(function (e) { verify.textContent = 'UNAVAILABLE \u00B7 RETRY'; verify.title = String(e && e.message || e); })
+          .then(function () { verify.disabled = false; });
+      });
+      r.appendChild(verify);
       var done = mk('button', 'odk-sa go', 'DONE');
       done.type = 'button';
       var armed = 0;
@@ -518,15 +557,17 @@
         done.textContent = '\u2026';
         /* Supabase resolves {data,error}; it does not throw (CLAUDE.md 8.1
            class 1). The row leaves only on a confirmed {ok:true}. */
-        sb.rpc('owner_confirm_secrets_rotated').then(function (res) {
-          if (res.error || !res.data || res.data.ok !== true) throw new Error('refused');
+        health('confirm').then(function (d) {
+          showKeys(d);
+          if (d.ok !== true || d.recorded !== true) throw new Error(d.error || 'refused');
           paint(sb, items.filter(function (x) { return x.kind !== 'keys'; }));
-        }).catch(function () {
+        }).catch(function (e) {
           done.disabled = false;
-          done.textContent = 'FAILED \u00B7 RETRY';
+          done.textContent = (e && e.message === 'key_failing') ? 'A KEY FAILS \u00B7 FIX, RETRY' : 'FAILED \u00B7 RETRY';
         });
       });
       r.appendChild(done);
+      r.appendChild(out);
       return r;
     }
 

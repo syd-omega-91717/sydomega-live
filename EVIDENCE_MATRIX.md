@@ -30,21 +30,21 @@ This scanner reads the repository. It has no database connection, so:
 | `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
 | `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |
 | `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |
-| `UNREACHABLE` | Deployed, but `nav.js` does not reference it and it is not a public page. |
+| `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |
 
 ## Summary
 
 | class | pages |
 |---|---:|
-| `BUILT` | 99 |
+| `BUILT` | 101 |
 | `PARTIAL` | 28 |
 | `LOCAL_ONLY` | 43 |
-| `STATIC` | 20 |
+| `STATIC` | 33 |
 | `BROKEN` | 2 |
-| `UNREACHABLE` | 13 |
-| **total** | **205** |
+| `UNREACHABLE` | 0 |
+| **total** | **207** |
 
-## BUILT (99)
+## BUILT (101)
 
 | page | evidence |
 |---|---|
@@ -52,8 +52,8 @@ This scanner reads the repository. It has no database connection, so:
 | `account.html` | reads/writes 1 table, 1 rpc; 4 auth calls |
 | `advertising.html` | reads/writes 2 tables; 2 auth calls |
 | `agents.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
-| `analytics.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
-| `approvals.html` | reads/writes 1 table, 6 rpc; 1 auth call |
+| `analytics-dashboard.html` | reads/writes 1 table, 2 rpc |
+| `analytics.html` | reads/writes 2 tables, 2 rpc; 1 auth call |
 | `automation.html` | reads/writes 3 tables; 1 auth call |
 | `autonomous-insights.html` | reads/writes 3 tables |
 | `awards.html` | reads/writes 1 table; 1 auth call |
@@ -110,6 +110,7 @@ This scanner reads the repository. It has no database connection, so:
 | `marketplace.html` | reads/writes 3 tables; 1 auth call |
 | `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
+| `monitoring-dashboard.html` | reads/writes 1 edge fn |
 | `movies.html` | reads/writes 1 table; 1 auth call |
 | `news.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
 | `nexus.html` | reads/writes 1 table; 1 auth call |
@@ -131,6 +132,7 @@ This scanner reads the repository. It has no database connection, so:
 | `research.html` | reads/writes 2 tables; 1 auth call |
 | `roadmap.html` | reads/writes 1 table; 1 auth call |
 | `rune.html` | reads/writes 1 table; 1 auth call |
+| `segmentation-dashboard.html` | reads/writes 1 rpc |
 | `series.html` | reads/writes 1 table; 1 auth call |
 | `services.html` | reads/writes 1 table; 1 auth call |
 | `sigil.html` | reads/writes 1 table; 1 auth call |
@@ -229,29 +231,42 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (20)
+## STATIC (33)
 
 | page | evidence |
 |---|---|
 | `404.html` | no backend call, no stored state |
 | `ad-network.html` | no backend call, no stored state |
 | `agent-network.html` | no backend call, no stored state |
+| `agent.html` | no backend call, no stored state |
+| `approvals.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
 | `architecture.html` | no backend call, no stored state |
 | `characters.html` | no backend call, no stored state |
+| `cohorts-dashboard.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
 | `creator.html` | no backend call, no stored state |
 | `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
+| `guide.html` | no backend call, no stored state |
+| `healthz.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `index.html` | no backend call, no stored state |
+| `investor-dashboard.html` | no backend call, no stored state |
+| `investor-gate.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
+| `omega-visual-command.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
+| `predictions-dashboard.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
+| `realms.html` | no backend call, no stored state |
 | `reset.html` | no persisted state; 3 auth calls only |
 | `sculpture.html` | no backend call, no stored state |
+| `venture-pipeline.html` | no backend call, no stored state |
+| `verify-deployment.html` | no backend call, no stored state |
+| `verify-modules.html` | no backend call, no stored state |
 | `world-shell.html` | no backend call, no stored state |
 
 ## BROKEN (2)
@@ -260,24 +275,6 @@ This scanner reads the repository. It has no database connection, so:
 |---|---|
 | `subscriptions.html` | undefined table/view: transactions |
 | `vault.html` | undefined table/view: wallet_balances |
-
-## UNREACHABLE (13)
-
-| page | evidence |
-|---|---|
-| `agent.html` | not referenced by nav.js and not a public page |
-| `analytics-dashboard.html` | not referenced by nav.js and not a public page |
-| `cohorts-dashboard.html` | not referenced by nav.js and not a public page |
-| `healthz.html` | not referenced by nav.js and not a public page |
-| `investor-dashboard.html` | not referenced by nav.js and not a public page |
-| `investor-gate.html` | not referenced by nav.js and not a public page |
-| `monitoring-dashboard.html` | not referenced by nav.js and not a public page |
-| `omega-visual-command.html` | not referenced by nav.js and not a public page |
-| `predictions-dashboard.html` | not referenced by nav.js and not a public page |
-| `segmentation-dashboard.html` | not referenced by nav.js and not a public page |
-| `venture-pipeline.html` | not referenced by nav.js and not a public page |
-| `verify-deployment.html` | not referenced by nav.js and not a public page |
-| `verify-modules.html` | not referenced by nav.js and not a public page |
 
 ## Edge Functions
 
@@ -303,7 +300,7 @@ This scanner reads the repository. It has no database connection, so:
 | | count |
 |---|---:|
 | tables + views declared in `supabase/` | 152 |
-| functions declared in `supabase/` | 133 |
+| functions declared in `supabase/` | 134 |
 | tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a

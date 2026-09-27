@@ -106,7 +106,9 @@ def nav_maps():
     # another page with a fragment (e.g. ['gates','12 GATES','/elements.html#gates']),
     # which makes elements.html reachable and gates.html no more reachable
     # than before. Keying on the slug would have called those pages linked.
-    hrefs = re.findall(r"\['[A-Za-z0-9_-]+','[^']*','(/[^']*)'\]", src)
+    # An optional 4th field flags an entry (e.g. 'owner' for owner-only);
+    # the page is still a nav destination.
+    hrefs = re.findall(r"\['[A-Za-z0-9_-]+','[^']*','(/[^']*)'(?:,'[a-z]+')?\]", src)
     linked = set()
     for h in hrefs:
         slug = h.split('#')[0].split('?')[0].lstrip('/')

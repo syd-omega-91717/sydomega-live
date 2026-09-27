@@ -72,6 +72,32 @@ class TestGate(Fixture):
         self.write('verify-modules.html', '<p>999 pages</p>')
         self.assertEqual(self.run_gate().returncode, 0)
 
+    def _dictionary(self, en, fr):
+        """Twelve pages, so a two-digit claim can be true; CLAIM needs 2-4 digits."""
+        for i in range(12):
+            self.write('p%02d.html' % i, '<p>x</p>')
+        self.write('i18n.js', 'var T_EN={\n"idx":"%s"\n};\n' % en)
+        (self.dir / 'i18n').mkdir(exist_ok=True)
+        (self.dir / 'i18n' / 'fr.json').write_text('{"idx": "%s"}' % fr, encoding='utf-8')
+
+    def test_a_translation_that_drops_the_english_count_fails(self):
+        """T_EN said ALL 206 PAGES while all six packs still said 205."""
+        self._dictionary('ALL 12 PAGES', 'LES 11 PAGES')
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn('drops the English count 12', r.stdout)
+
+    def test_a_matching_translation_passes(self):
+        self._dictionary('ALL 12 PAGES', 'LES 12 PAGES')
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_a_stale_dictionary_claim_fails(self):
+        self._dictionary('ALL 170 PAGES', 'LES 170 PAGES')
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn('T_EN.idx claims', r.stdout)
+
     def test_help_prints_docstring_and_does_not_scan(self):
         self.write('a.html', '<p>4321 pages</p>')
         r = self.run_gate('--help')

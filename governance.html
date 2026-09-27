@@ -200,60 +200,11 @@ function save(){localStorage.setItem(RK,JSON.stringify(risks));localStorage.setI
 
 var SEV_COLORS=['','#4CAF50','#8BC34A','#FFD700','#FF9800','#FF4444'];
 
-function renderRisks(){
-  var el=document.getElementById('risk-list');if(!el)return;
-  document.getElementById('k-risks').textContent=risks.filter(function(r){return r.status!=='closed';}).length;
-  var score=risks.reduce(function(s,r){return s+(parseInt(r.severity||1)*parseInt(r.likelihood||1));},0);
-  document.getElementById('k-risk-score').textContent=score||'--';
-  if(!risks.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO RISKS REGISTERED</div>';return;}
-  el.innerHTML=[].concat(risks).reverse().map(function(r){
-    var sc=parseInt(r.severity||1)*parseInt(r.likelihood||1);
-    var col=sc>=16?'#FF4444':sc>=9?'#FF9800':sc>=4?'#FFD700':'#4CAF50';
-    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
-      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">SCORE '+sc+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+r.domain+'</div>'
-      +'<div style="font-size:13px;font-weight:600;flex:1">'+r.title+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+r.date+'</div>'
-      +'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">S:'+r.severity+' × L:'+r.likelihood+' &nbsp; MITIGATION: <span style="color:var(--ink);opacity:.7">'+r.mitigation+'</span></div>'
-      +'</div>';
-  }).join('');
-}
-
-function renderPolicies(){
-  var el=document.getElementById('policy-list');if(!el)return;
-  document.getElementById('k-policies').textContent=policies.filter(function(p){return p.status==='active';}).length;
-  if(!policies.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO POLICIES DEFINED</div>';return;}
-  var STATUS_COL={active:'var(--green)',draft:'var(--gold)',retired:'var(--muted)'};
-  el.innerHTML=[].concat(policies).reverse().map(function(p){
-    return '<div style="border:1px solid var(--line);border-left:3px solid '+(STATUS_COL[p.status]||'var(--line)')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
-      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+(STATUS_COL[p.status]||'var(--muted)')+'">'+p.status.toUpperCase()+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+p.domain+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+p.date+'</div>'
-      +'</div>'
-      +'<div style="font-size:13px;line-height:1.5">'+p.text+'</div>'
-      +'</div>';
-  }).join('');
-}
-
-function renderDecisions(){
-  var el=document.getElementById('decision-list');if(!el)return;
-  document.getElementById('k-decisions').textContent=decisions.length;
-  if(!decisions.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO DECISIONS LOGGED</div>';return;}
-  el.innerHTML=[].concat(decisions).reverse().map(function(d){
-    return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
-      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">CONF '+d.confidence+'/10</div>'
-      +'<div style="font-size:13px;flex:1;font-weight:600">'+d.title+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+d.date+'</div>'
-      +'</div>'
-      +'<div style="font-size:12px;opacity:.75;margin-bottom:4px">'+d.rationale+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">EXPECTED: <span style="color:var(--ink);opacity:.7">'+d.expected+'</span></div>'
-      +'</div>';
-  }).join('');
-}
+function textNode(tag,text,style){var n=document.createElement(tag);n.textContent=String(text==null?'':text);if(style)n.style.cssText=style;return n;}
+function emptyState(text){return textNode('div',text,"font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px");}
+function renderRisks(){var el=document.getElementById('risk-list');if(!el)return;document.getElementById('k-risks').textContent=risks.filter(function(r){return r.status!=='closed';}).length;var score=risks.reduce(function(s,r){return s+(parseInt(r.severity||1)*parseInt(r.likelihood||1));},0);document.getElementById('k-risk-score').textContent=score||'--';el.replaceChildren();if(!risks.length){el.appendChild(emptyState('NO RISKS REGISTERED'));return;}[].concat(risks).reverse().forEach(function(r){var sc=Math.max(0,Math.min(25,parseInt(r.severity||1)*parseInt(r.likelihood||1))),col=sc>=16?'#FF4444':sc>=9?'#FF9800':sc>=4?'#FFD700':'#4CAF50',card=textNode('div',null,"border:1px solid var(--line);border-left:3px solid "+col+";background:rgba(10,10,15,.45);padding:12px;border-radius:2px"),row=textNode('div',null,"display:flex;gap:8px;align-items:center;margin-bottom:6px");row.appendChild(textNode('div','SCORE '+sc,"font-family:var(--M);font-size:12px;color:"+col+";border:1px solid "+col+";padding:1px 5px"));row.appendChild(textNode('div',r.domain,"font-family:var(--M);font-size:12px;color:var(--muted)"));row.appendChild(textNode('div',r.title,"font-size:13px;font-weight:600;flex:1"));row.appendChild(textNode('div',r.date,"font-family:var(--M);font-size:12px;color:var(--muted)"));card.appendChild(row);var detail=textNode('div','S:'+r.severity+' × L:'+r.likelihood+' · MITIGATION: ',"font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px");detail.appendChild(textNode('span',r.mitigation,"color:var(--ink);opacity:.7"));card.appendChild(detail);el.appendChild(card);});}
+function renderPolicies(){var el=document.getElementById('policy-list');if(!el)return;document.getElementById('k-policies').textContent=policies.filter(function(p){return p.status==='active';}).length;el.replaceChildren();if(!policies.length){el.appendChild(emptyState('NO POLICIES DEFINED'));return;}var sc={active:'var(--green)',draft:'var(--gold)',retired:'var(--muted)'};[].concat(policies).reverse().forEach(function(p){var col=sc[p.status]||'var(--line)',card=textNode('div',null,"border:1px solid var(--line);border-left:3px solid "+col+";background:rgba(10,10,15,.45);padding:12px;border-radius:2px"),row=textNode('div',null,"display:flex;gap:8px;align-items:center;margin-bottom:4px");row.appendChild(textNode('div',String(p.status||'').toUpperCase(),"font-family:var(--M);font-size:12px;color:"+col));row.appendChild(textNode('div',p.domain,"font-family:var(--M);font-size:12px;color:var(--muted)"));row.appendChild(textNode('div',p.date,"font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto"));card.appendChild(row);card.appendChild(textNode('div',p.text,"font-size:13px;line-height:1.5"));el.appendChild(card);});}
+function renderDecisions(){var el=document.getElementById('decision-list');if(!el)return;document.getElementById('k-decisions').textContent=decisions.length;el.replaceChildren();if(!decisions.length){el.appendChild(emptyState('NO DECISIONS LOGGED'));return;}[].concat(decisions).reverse().forEach(function(d){var card=textNode('div',null,"border:1px solid var(--line);background:rgba(10,10,15,.45);padding:12px;border-radius:2px"),row=textNode('div',null,"display:flex;gap:8px;align-items:center;margin-bottom:6px");row.appendChild(textNode('div','CONF '+String(d.confidence||0)+'/10',"font-family:var(--M);font-size:12px;color:var(--cyan)"));row.appendChild(textNode('div',d.title,"font-size:13px;flex:1;font-weight:600"));row.appendChild(textNode('div',d.date,"font-family:var(--M);font-size:12px;color:var(--muted)"));card.appendChild(row);card.appendChild(textNode('div',d.rationale,"font-size:12px;opacity:.75;margin-bottom:4px"));var ex=textNode('div','EXPECTED: ',"font-family:var(--M);font-size:12px;color:var(--muted)");ex.appendChild(textNode('span',d.expected,"color:var(--ink);opacity:.7"));card.appendChild(ex);el.appendChild(card);});}
 
 window.showAddRisk=function(){var f=document.getElementById('add-risk-form');f.style.display=f.style.display==='none'?'block':'none';};
 window.showAddPolicy=function(){var f=document.getElementById('add-policy-form');f.style.display=f.style.display==='none'?'block':'none';};

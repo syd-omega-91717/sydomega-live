@@ -224,6 +224,9 @@
 
   /* ── BACK TO DASHBOARD SHORTCUT ───────────────────────────────── */
   function injectDashLink(){
+    /* Not drawn: the sidebar's COMMAND entry and the page's own HOME/BACK
+       already lead back; "Omega CMD" was a fourth way to the same place. */
+    return;
     if(_slug==='dashboard'||document.getElementById('omega-dash-link')) return;
     var topbar=document.querySelector('.topbar');if(!topbar) return;
     var btn=document.createElement('a');

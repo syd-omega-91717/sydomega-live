@@ -12,8 +12,10 @@
   </style>
 </head>
 <body>
+<main>
   <h1>Module Verification Test</h1>
   <div id="results"></div>
+</main>
 
   <script src="/bg.js" defer></script>
   <script>
@@ -24,13 +26,13 @@
         pass: function(msg) {
           var el = document.createElement('div');
           el.className = 'status pass';
-          el.innerHTML = '✓ ' + name + ': ' + msg;
+          el.textContent = '✓ ' + name + ': ' + msg;
           results.appendChild(el);
         },
         fail: function(msg) {
           var el = document.createElement('div');
           el.className = 'status fail';
-          el.innerHTML = '✗ ' + name + ': ' + msg;
+          el.textContent = '✗ ' + name + ': ' + msg;
           results.appendChild(el);
         }
       };

@@ -274,12 +274,12 @@
     { n:6, name:'SOUL',      tier:'METAPHYSICAL',  key:'Soul'    },
     { n:7, name:'SPACE',     tier:'METAPHYSICAL',  key:'Space'   },
     { n:8, name:'VOID',      tier:'METAPHYSICAL',  key:'Void'    },
-    { n:9, name:'THE NINTH', tier:'TRANSCENDENT',  key:'The All' }
+    { n:9, name:'THE ALL',   tier:'TRANSCENDENT',  key:'The All' }
   ];
 
-  /* omega-elements.json names the ninth element "THE NINTH"; ELEM_PALETTE
-     keys it "The All". One thing, two names -- recorded, not silently
-     reconciled. The map below is the only place that seam is crossed. */
+  /* The ninth element is THE ALL everywhere now: omega-canon.json and
+     omega-elements.json once named it by its ordinal while ELEM_PALETTE and ~15
+     modules key it "The All" (reconciled 2026-09-27, canon-consistency.py). */
   function elementColour(key, fallbackHex) {
     try {
       var pal = window.OmegaRealm && window.OmegaRealm.palette;
@@ -1016,8 +1016,29 @@
                                                      specular line that reads as
                                                      a rim on a curved mark */
 
+      /* Capture the room into a SMALL cube first, then pre-filter that.
+         pm.fromScene() renders at a fixed 256px cube plus a sigma blur pass,
+         and on dashboard.html that one-off GPU job was the 2,432ms the first
+         frame's drawImage waited on (it is the flush point) -- measured, the
+         first frame fell to ~210ms with no environment at all. The room is
+         four soft panels and every material samples it through roughness, so
+         a 128px cube carries the same light: across 11 mounts x 3 runs on
+         sculpture.html every mount's mean luminance stayed inside the
+         run-to-run noise of the 256px original, while the page's longest task
+         fell 2,652ms -> 289ms. 64px was cheaper still but measurably dimmed
+         the brightest mount (~156 -> ~134), so 128 is the floor. Falls back to
+         fromScene where the cube path is unavailable. */
       var pm = new T.PMREMGenerator(_renderer);
-      var rt = pm.fromScene(room, 0.04);
+      var rt = null;
+      if (T.CubeCamera && T.WebGLCubeRenderTarget) {
+        var cubeRT = new T.WebGLCubeRenderTarget(128, { type: T.HalfFloatType });
+        var cubeCam = new T.CubeCamera(0.1, 100, cubeRT);
+        cubeCam.update(_renderer, room);
+        rt = pm.fromCubemap(cubeRT.texture);
+        junk.push(cubeRT);
+      } else {
+        rt = pm.fromScene(room, 0.04);
+      }
       _env = rt.texture;
       pm.dispose();
 
@@ -1251,7 +1272,7 @@
     var maxW = 1, maxH = 1, any = false;
     for (var i = 0; i < _mounts.length; i++) {
       var m = _mounts[i];
-      if (!m.visible || m.dead || !m.scene || !m.bw) continue;
+      if (!m.visible || m.dead || !m.scene || !m.bw || !m.ready) continue;
       any = true;
       if (m.bw > maxW) maxW = m.bw;
       if (m.bh > maxH) maxH = m.bh;
@@ -1264,7 +1285,7 @@
     }
     for (var j = 0; j < _mounts.length; j++) {
       var n = _mounts[j];
-      if (!n.visible || n.dead || !n.scene || !n.bw) continue;
+      if (!n.visible || n.dead || !n.scene || !n.bw || !n.ready) continue;
       try {
         n.scene.update(t + n.offset, _px, _py);
         /* WebGL's viewport origin is BOTTOM-left; a 2-D canvas reads from the
@@ -1381,7 +1402,22 @@
       if (envTex && m.scene && m.scene.scene) m.scene.scene.environment = envTex;
       sizeMount(m);
       wireNavigation(m);
-      if (REDUCED) { renderStill(m); return; }
+      if (REDUCED) { m.ready = true; renderStill(m); return; }
+      /* Compile the scene's shaders BEFORE its first frame. three.js otherwise
+         compiles them inside the first render(), synchronously. compileAsync
+         hands linking to the driver (KHR_parallel_shader_compile where
+         present, else one program per 10ms tick), and frame() skips a mount
+         until it is ready. Measured honestly: in headless software GL this
+         was NOT the 2.6s first-frame stall on dashboard.html -- that was the
+         environment map (see environment()). It is kept because on a real
+         GPU without the parallel-compile extension the first-render compile
+         is a stall of its own. Any failure falls through: render anyway. */
+      var go = function () { m.ready = true; };
+      try {
+        var sc = m.scene.scene, cam = m.scene.camera;
+        if (_renderer.compileAsync && sc && cam) _renderer.compileAsync(sc, cam).then(go, go);
+        else go();
+      } catch (e) { go(); }
       observe(m);
       startLoop();
     })['catch'](function () {

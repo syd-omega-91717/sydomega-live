@@ -67,9 +67,28 @@
    this file are deliberately left alone: they already retry rather than drop,
    and they are the only two that were written that way. */
 function __omegaAppend(el){
-  if(document.body){ document.body.appendChild(el); return; }
+  /* One file, one execution. Every guard above keys on a data-omega-* marker,
+     which a page's own <script src> tag never carries -- so a module a page
+     already loads (dashboard: omega-constellation.js; journal: omega-ui.js)
+     ran twice, and omega-controls.js ran twice everywhere because two blocks
+     below guard it under two different markers. A second run re-registers
+     every listener and re-injects every node. Checked here, at the moment of
+     insertion, so the page's static tags have been parsed by then. No caller
+     attaches onload/onerror to what it passes in (all 136 checked), so a
+     skipped element loses nothing. */
+  function dup(){
+    if(!el || el.tagName!=='SCRIPT' || !el.src) return false;
+    var want; try{ want=new URL(el.src, location.href).pathname; }catch(e){ return false; }
+    var all=document.getElementsByTagName('script');
+    for(var i=0;i<all.length;i++){
+      var s=all[i]; if(s===el || !s.src) continue;
+      try{ if(new URL(s.src, location.href).pathname===want) return true; }catch(e){}
+    }
+    return false;
+  }
+  if(document.body){ if(!dup()) document.body.appendChild(el); return; }
   document.addEventListener('DOMContentLoaded', function(){
-    var b = document.body; if(b) b.appendChild(el);
+    var b = document.body; if(b && !dup()) b.appendChild(el);
   });
 }
 /* Platform nervous system */
@@ -144,6 +163,19 @@ function __omegaAppend(el){
 (function(){
 
 /* Inject shared class definitions + load external stylesheet */
+(function(){
+  /* Simple UI is the default product surface: flatter cards and no ambient
+     particles. It no longer stops motion or hides emblems (see the file). */
+  if(!document.getElementById('omega-simple-ui-css')){
+    var simple=document.createElement('link');
+    simple.id='omega-simple-ui-css'; simple.rel='stylesheet';
+    simple.href='/css/omega-simple-ui.css'; simple.type='text/css';
+    (document.head||document.documentElement).appendChild(simple);
+  }
+  if(document.body) document.body.classList.add('omega-simple');
+  else document.addEventListener('DOMContentLoaded',function(){document.body&&document.body.classList.add('omega-simple');},{once:true});
+})();
+
 (function(){
   if(document.getElementById('omega-global-css')) return;
   var sharedCSS='.tab-bar,.tab-nav{overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none}.tab-row{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,25vw,280px),1fr));gap:12px;margin-bottom:16px}.card-title{position:relative;padding-left:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}.card-body{font-size:13px;color:var(--muted);line-height:1.6}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px;align-items:start}.kpi-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}.btn-gold{background:none;color:var(--gold);border-color:rgba(201,168,76,.3)}.btn-gold:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}.btn-cyan{background:none;color:var(--cyan);border-color:rgba(0,229,255,.2)}.btn-cyan:hover{background:rgba(0,229,255,.06);border-color:var(--cyan)}.btn-crim{background:none;color:var(--crim);border-color:rgba(139,0,0,.3)}.btn-crim:hover{background:rgba(139,0,0,.08);border-color:var(--crim)}.tbl-head{display:grid;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.08)}.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}.tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}.tbl-row:hover{background:rgba(201,168,76,.02)}.tbl-row:last-child{border-bottom:none}.bar-track{height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}.chip{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:3px 10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:inline-block}.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}.card.card-edge.card-edge::before{top:0;bottom:0;left:0;right:auto;width:var(--card-edge-w,3px);height:auto}';
@@ -478,6 +510,10 @@ function __omegaAppend(el){
     /* 8. EMBLEM ANIMATION ON PAGE (if Ω sigil exists, spin it) */
     var omegaSigils = document.querySelectorAll('[class*="sigil"], [class*="emblem-mark"], #ph-sigil');
     omegaSigils.forEach(function(el){
+      /* A mark, not a container: `[class*="sigil"]` also matched
+         .omega-related-sigils -- a nav card of text -- and set the whole card
+         turning. More than a two-character label is text, not a mark. */
+      if((el.textContent||'').trim().length > 2) return;
       if(!el.classList.contains('omega-spin-slow')){
         el.classList.add('omega-spin-slow');
       }
@@ -568,7 +604,7 @@ function __omegaAppend(el){
        governance text sitting beside terms in that same EX list, so the two are
        reconciled in this direction. Changing either list means changing both.
        CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter'];
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
@@ -866,6 +902,34 @@ function __omegaAppend(el){
 
 /* bg.js     SYD OMEGA 91717     aurora backdrop + access guard + trial engine + UI injections */
 (function(){try{var c=localStorage.getItem("omega_bg");if(c){document.documentElement.style.setProperty("--void",c);document.body&&(document.body.style.background=c);}}catch(e){} })();
+/* ===== CALM MODE -- per-viewer, reversible, off unless chosen =====
+   One switch that hides ambient extras (door banner, ticker, PMI badge, the
+   language/music dock, feedback/share/voice buttons, rail HUB/PIN, the
+   floating DEDICATION timer (it covers card text bottom-right), and the
+   topbar HOME/BACK that duplicates the sidebar's on desktop). Navigation, the
+   copilot, the menu and every visual layer stay. Nothing is removed from the
+   DOM, so each module keeps working and a toggle restores it at once.
+   Set from the owner deck (omega-owner-deck.js) or Settings (settings.html,
+   any member); stored in localStorage only,
+   because it is a viewing preference, not state anyone else needs. */
+(function(){
+  var KEY='omega_calm', root=document.documentElement;
+  function apply(on){ if(on) root.setAttribute('data-omega-calm',''); else root.removeAttribute('data-omega-calm'); }
+  try{ apply(localStorage.getItem(KEY)==='1'); }catch(e){}
+  if(!document.getElementById('omega-calm-style')){
+    var st=document.createElement('style'); st.id='omega-calm-style';
+    st.textContent='html[data-omega-calm] .omega-page-door,html[data-omega-calm] #omega-ticker-strip,'+
+      'html[data-omega-calm] #omega-pmi-badge,html[data-omega-calm] #omega-controls-dock,'+
+      'html[data-omega-calm] #ofb-btn,html[data-omega-calm] #osh-btn,html[data-omega-calm] #omega-voice-btn,'+
+      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget{display:none!important}'+
+      '@media (min-width:901px){html[data-omega-calm] #omega-tb-nav{display:none!important}}';
+    (document.head||root).appendChild(st);
+  }
+  window.OmegaCalm={
+    on:function(){ return root.hasAttribute('data-omega-calm'); },
+    set:function(on){ apply(!!on); try{ localStorage.setItem(KEY, on?'1':'0'); }catch(e){} return !!on; }
+  };
+})();
 (function(){
   if(document.getElementById('omega-bg'))return;
   var cv=document.createElement('canvas');cv.id='omega-bg';
@@ -921,6 +985,15 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_notify.setAttribute('data-omega-notify','1');
     _s_data_omega_notify.defer=true;
     __omegaAppend(_s_data_omega_notify);
+  }
+  /* Ritual reminders (FEATURE_IDEAS.md S4): opt-in, inert until the member
+     turns them on; loads omega-today.js itself only then. */
+  if(!document.querySelector('script[data-omega-reminders-mod]')){
+    var _s_data_omega_reminders=document.createElement('script');
+    _s_data_omega_reminders.src='/omega-reminders.js';
+    _s_data_omega_reminders.setAttribute('data-omega-reminders-mod','1');
+    _s_data_omega_reminders.defer=true;
+    __omegaAppend(_s_data_omega_reminders);
   }
   /* AI concierge GraphRAG bridge */
   if(!document.querySelector('script[data-omega-ai]')){
@@ -1190,6 +1263,12 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
        80 + 16 gutter. A z-index cannot fix this -- see the stacking-context
        note in nav.js -- so the geometry has to. */
     +'html #omega-voice-btn{left:96px!important}'
+    /* The same x-clear for #ofb-btn. omega-feedback.js puts it at left:12px,
+       inside the 80px sidebar, where it covered the rail's last entries
+       (OWNER / LOG OUT on dashboard at 1280x600; COSMOS in the owner's own
+       screenshot). The voice button already holds x 96..140 from bottom 90,
+       so FEEDBACK takes the rung under it: bottom 36..76, no overlap. */
+    +'html #ofb-btn{left:96px!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-desktop-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
@@ -1757,7 +1836,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1};
   if(EX[pg])return;
   /* pending.html independently redirects back here whenever it reads
      is_trial+trial_expires_at as still active, racing this file's own
@@ -1859,7 +1938,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* TOPBAR HOME+BACK + MOBILE BOTTOM NAV */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1};
   if(EX[pg])return;
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
@@ -1934,7 +2013,10 @@ setTimeout(function(){
         if(ownerAccess.error) window.__omegaWriteFail('owner_lifetime_access',ownerAccess);
       }
       /* Check pending members and notify */
-      var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);
+      /* Pending means what approvals.js means: not approved AND not rejected.
+         Without the second filter a rejected applicant counted as "waiting"
+         forever (live 2026-09-26: 4 shown, 3 real). not.is.true keeps NULLs. */
+      var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false).not('is_rejected','is',true);
       var pendingCount=res.count||0;
       if(pendingCount>0){
         var el=document.createElement('a');
@@ -2004,7 +2086,7 @@ setTimeout(function(){
       } else if(!pr.access_approved && !pr.is_trial){
         /* Not approved and not on trial -- send to pending */
         var path=window.location.pathname;
-        var pub=['/account.html','/enter.html','/reset.html','/terms.html','/charter.html','/pending.html','/'];
+        var pub=['/account.html','/enter.html','/reset.html','/terms.html','/charter.html','/pending.html','/guide.html','/'];
         if(!pub.some(function(p){return path.endsWith(p)||path===p;})){
           window.location.href='/pending.html';
         }
@@ -2478,6 +2560,9 @@ setTimeout(function(){
      guard attribute — a guard is the module's identity, not the feature
      area's (CLAUDE.md 8.1 class 5b). */
   if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
+  /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
+  if(!document.querySelector('script[data-omega-alive]')){var _oal=document.createElement('script');_oal.src='/omega-alive.js';_oal.setAttribute('data-omega-alive','1');_oal.defer=true;__omegaAppend(_oal);}
+  if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
   if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}

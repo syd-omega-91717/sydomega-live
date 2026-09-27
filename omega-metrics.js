@@ -16,21 +16,21 @@
       var entries=list.getEntries();
       if(entries.length){_lcp=entries[entries.length-1].startTime;}
     }).observe({type:'largest-contentful-paint',buffered:true});
-  }catch(e){}
+  }catch(e){console.warn('[OmegaMetrics] LCP observer unavailable:',e);}
 
   /* ── CLS (Cumulative Layout Shift) ──────────────────────────── */
   try{
     new PerformanceObserver(function(list){
       list.getEntries().forEach(function(e){if(!e.hadRecentInput)_cls+=e.value;});
     }).observe({type:'layout-shift',buffered:true});
-  }catch(e){}
+  }catch(e){console.warn('[OmegaMetrics] CLS observer unavailable:',e);}
 
   /* ── INP (Interaction to Next Paint) — fallback to FID ──────── */
   try{
     new PerformanceObserver(function(list){
       list.getEntries().forEach(function(e){_inp=Math.max(_inp,e.duration||0);});
     }).observe({type:'event',buffered:true,durationThreshold:40});
-  }catch(e){}
+  }catch(e){console.warn('[OmegaMetrics] INP observer unavailable:',e);}
 
   /* ── Report after page fully loads ──────────────────────────── */
   function report(){
@@ -50,9 +50,9 @@
       fcp_ms:Math.round(fcp),
       ttfb_ms:Math.round(ttfb),
       /* PASS/FAIL per Google thresholds */
-      lcp_pass:_lcp<=2500,
+      lcp_pass:_lcp>0&&_lcp<=2500,
       cls_pass:_cls<=0.1,
-      inp_pass:_inp<=200,
+      inp_pass:_inp>0&&_inp<=200,
       ts:new Date().toISOString()
     };
 

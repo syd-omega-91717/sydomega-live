@@ -80,7 +80,7 @@
       '#omega-consent .lc-btns{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}',
       '#omega-consent .lc-btn{font-family:"Courier Prime",monospace;font-size:12px;',
       'letter-spacing:2px;padding:7px 16px;border:1px solid;border-radius:2px;',
-      'cursor:pointer;background:none;transition:.18s;white-space:nowrap}',
+      'cursor:pointer;background:none;transition:.18s;white-space:nowrap;text-decoration:none;display:inline-block;line-height:normal}',
       '#omega-consent .lc-accept{color:#C9A84C;border-color:rgba(201,168,76,.4)}',
       '#omega-consent .lc-accept:hover{background:rgba(201,168,76,.1);border-color:#C9A84C}',
       '#omega-consent .lc-essential{color:rgba(138,134,118,.8);border-color:rgba(138,134,118,.25)}',
@@ -118,7 +118,7 @@
       +'<a href="/privacy.html">Privacy Policy</a> &middot; '
       +'<a href="/terms.html">Terms</a></div>'
       +'<div class="lc-btns">'
-      +'<button class="lc-btn lc-policy" onclick="window.open(\'/privacy.html\',\'_self\')" type="button">POLICY</button>'
+      +'<a class="lc-btn lc-policy" href="/privacy.html">POLICY</a>'
       +'<button class="lc-btn lc-essential" id="omega-consent-essential" type="button">ESSENTIAL ONLY</button>'
       +'<button class="lc-btn lc-accept" id="omega-consent-accept" type="button">ACCEPT ALL</button>'
       +'</div>';

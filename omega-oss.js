@@ -4,13 +4,14 @@
    Directive: "Identify opportunities to responsibly integrate mature
    open-source technologies where they provide clear value."
    
-   Libraries integrated (all MIT/Apache licensed, CDN-loaded on demand):
+   Libraries integrated (MIT/ISC/Apache/BSD), all self-hosted in /vendor/ and
+   loaded on demand -- no runtime CDN, so the CSP can name 'self' only:
    
    A. LUCIDE ICONS      — MIT. 1,400+ clean SVG icons. Replaces emoji/unicode.
-      CDN: https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js
+      Vendored: /vendor/lucide.min.js (lucide 1.37.0, ISC)
       
    B. CHART.JS 4.x      — MIT. Lightweight chart library. Auth/lattice graphs.
-      CDN: https://cdn.jsdelivr.net/npm/chart.js@4.5.1
+      Vendored: /vendor/chart.umd.min.js
       
    C. FUSE.JS 6.6.2     — Apache 2.0. Fuzzy search. Enhances omega-search.js.
       Vendored: /vendor/fuse.min.js. NOTE THE VERSION: this used to request
@@ -22,13 +23,13 @@
       written against, and it serves every API used here.
       
    D. DAYJS             — MIT. Tiny date/time library. Formats timestamps.
-      CDN: https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
+      Vendored: /vendor/dayjs.min.js + dayjs-relativeTime.min.js (1.11.23)
       
    E. MARKED.JS 12.0.2  — MIT. Markdown renderer for chatbot/agent responses.
       Vendored: /vendor/marked.min.js
       
    F. HIGHLIGHT.JS      — BSD. Code syntax highlighting. For lab/research pages.
-      CDN: https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js
+      Vendored: /vendor/highlight.min.js (@highlightjs/cdn-assets 11.12.0)
    
    WHY SOME ARE VENDORED: a <script src> to a third-party CDN fails silently
    here — load() handles s.onerror with console.warn only, so the callback
@@ -54,24 +55,33 @@
   function load(name, url, global, cb){
     if(_loaded[name]){ if(cb) cb(window[global]); return; }
     if(_loading[name]){ var old=_loading[name]; _loading[name]=function(){old&&old();if(cb)cb(window[global]);}; return; }
+    if(window[global]){ _loaded[name]=true; if(cb) cb(window[global]); return; }
     _loading[name]=cb||null;
-    var s=document.createElement('script');
-    s.src=url;s.async=true;s.crossOrigin='anonymous';
-    s.onload=function(){
+    /* omega-tooltip.js loads the same /vendor/ popper + tippy pair. Both start
+       at once, so neither sees the other's global yet and each added its own
+       tag -- measured on dashboard.html: two requests and two executions of
+       each file. Adopt a tag already on the page instead of adding a second. */
+    var prior=null, all=document.getElementsByTagName('script');
+    for(var i=0;i<all.length;i++){ if(all[i].getAttribute('src')===url){ prior=all[i]; break; } }
+    var s=prior||document.createElement('script');
+    if(!prior){ s.src=url;s.async=true;s.crossOrigin='anonymous'; }
+    var onload=function(){
       _loaded[name]=true;
       var fn=_loading[name];delete _loading[name];
       if(fn) fn(window[global]);
     };
-    s.onerror=function(){
+    var onerror=function(){
       console.warn('[OmegaOSS] Failed to load: '+name);
       delete _loading[name];
     };
-    document.head.appendChild(s);
+    s.addEventListener('load',onload);
+    s.addEventListener('error',onerror);
+    if(!prior) document.head.appendChild(s);
   }
 
   /* ── LIBRARY REGISTRY ─────────────────────────────────────────── */
   var LIBS = {
-    lucide:    {url:'https://unpkg.com/lucide@1.37.0/dist/umd/lucide.min.js',global:'lucide'},
+    lucide:    {url:'/vendor/lucide.min.js',global:'lucide'},
     /* SELF-HOSTED. This read
        https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js and
        silently produced nothing whenever that host was unreachable: load()
@@ -88,10 +98,10 @@
        a chart (dashboard, analytics, studio) ever fetch it. */
     chartjs:   {url:'/vendor/chart.umd.min.js',global:'Chart'},
     fuse:      {url:'/vendor/fuse.min.js',global:'Fuse'},
-    dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js',global:'dayjs'},
-    dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js',global:'dayjs'},
+    dayjs:        {url:'/vendor/dayjs.min.js',global:'dayjs'},
+    dayjsRelTime: {url:'/vendor/dayjs-relativeTime.min.js',global:'dayjs'},
     marked:    {url:'/vendor/marked.min.js',global:'marked'},
-    hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js',global:'hljs'},
+    hljs:      {url:'/vendor/highlight.min.js',global:'hljs'},
     /* Tippy.js — MIT. Lightweight tooltip/popover library.
        REQUIRES @popperjs/core, and not merely to position well: the UMD
        bundle's global branch is `(t=t||self).tippy=e(t.Popper)`, so with no
@@ -290,9 +300,9 @@
     if(_dayjsWarming) return;
     _dayjsWarming = true;
     OSS.require('dayjs', function(){
-    /* CDN plugin file sets window.dayjs_plugin_relativeTime */
+    /* The plugin file sets window.dayjs_plugin_relativeTime */
     var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1.11.23/plugin/relativeTime.min.js';
+    s.src = '/vendor/dayjs-relativeTime.min.js';
     s.async = true;
     s.onload = function(){
       try{

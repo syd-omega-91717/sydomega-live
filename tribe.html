@@ -61,10 +61,10 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('tribes')">TRIBES</button>
-  <button class="tab-btn" onclick="setTab('rankings')">RANKINGS</button>
-  <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="tribes" type="button">TRIBES</button>
+  <button class="tab-btn" data-tab="rankings" type="button">RANKINGS</button>
+  <button class="tab-btn" data-tab="matrix" type="button">MATRIX</button>
+  <button class="tab-btn" data-tab="science" type="button">SCIENCE</button>
 </div>
 
 <!-- TRIBES TAB -->
@@ -111,8 +111,13 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
     <div class="card">
       <div class="card-title">HOW TRIBES WORK</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
-        <p>Each sovereign is born into one of the nine elemental tribes based on their assigned element (determined by birth sign or authority unlock level). Tribes are not chosen — they are discovered. The platform tracks tribe membership, authority distribution, and inter-tribal resonance in real time.</p>
-        <p style="margin-top:12px">The Tribal Dominance Chart reflects the live count of members per tribe. The Affinity Matrix shows the conceptual resonance coefficient between any two elements — a measure of how naturally those elemental forces amplify or challenge each other.</p>
+        <div data-omega-more>
+          <p class="omi-lead">Tribes aren't chosen — they're discovered from your element, tracked live across the platform.</p>
+          <div class="omi-full" hidden>
+            <p>Each sovereign is born into one of the nine elemental tribes based on their assigned element (determined by birth sign or authority unlock level). Tribes are not chosen — they are discovered. The platform tracks tribe membership, authority distribution, and inter-tribal resonance in real time.</p>
+            <p style="margin-top:12px">The Tribal Dominance Chart reflects the live count of members per tribe. The Affinity Matrix shows the conceptual resonance coefficient between any two elements — a measure of how naturally those elemental forces amplify or challenge each other.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -144,9 +149,10 @@ table.affinity-matrix td{color:rgba(0,229,255,.6)}
 <script>
 function setTab(name){
   var tabs=['tribes','rankings','matrix','science'];
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
 </script>
 
 <script type="module">
@@ -157,14 +163,14 @@ var PHI=1.6180339887,EU=2.7182818285;
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
 
 var ELEMENTS=[
-  {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
+  {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',text:'#FF6E38',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
   {id:'water', name:'WATER', sigil:'☰',color:'#00BFFF',glow:'rgba(0,191,255,.25)', principle:'ADAPTIVE FLOW',    desc:'Strategic patience, fluid intelligence'},
   {id:'wind',  name:'WIND',  sigil:'☱',color:'#98E8C1',glow:'rgba(152,232,193,.2)',principle:'FREE THOUGHT',     desc:'Creative velocity, conceptual innovation'},
   {id:'metal', name:'METAL', sigil:'☳',color:'#B0C4DE',glow:'rgba(176,196,222,.2)',principle:'IRON PRECISION',   desc:'Disciplined execution, structural mastery'},
   {id:'sand',  name:'SAND',  sigil:'★', color:'#DEB887',glow:'rgba(222,184,135,.2)',principle:'ENDURING FORM',    desc:'Resilience, foundational patience'},
   {id:'soul',  name:'SOUL',  sigil:'✴',color:'#DA70D6',glow:'rgba(218,112,214,.2)',principle:'INNER AUTHORITY',  desc:'Intuitive wisdom, emotional sovereignty'},
-  {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
-  {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
+  {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',text:'#9384F1',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
+  {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',text:'#8A97A4',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
   {id:'all',   name:'THE ALL',sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
 ];
 
@@ -180,7 +186,7 @@ var AFFINITY={
   all:{fire:85,water:90,wind:80,metal:75,sand:70,soul:95,space:90,void:95,all:100}
 };
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function timeAgo(iso){
   if(!iso)return '';
   var diff=(Date.now()-new Date(iso).getTime())/1000;
@@ -203,12 +209,6 @@ var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,2
 function gateForAuthority(auth){
   for(var i=0;i<GATES.length;i++){ if((auth||0)<GATES[i]) return i+1; }
   return 12;
-}
-
-function generateDemoProfiles(){
-  var names=['CORVUS','LYSANDER','MIRA','THERON','OPHELIA','CASPIAN','SELENE','DORIAN','ARIA','SAGE','ORION','NOVA','PHOENIX','ATLAS','LUNA'];
-  var elements=['fire','water','wind','metal','sand','soul','space','void','all'];
-  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority:(Math.random()*25+3).toFixed(2)*1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
 }
 
 function groupByElement(ps){
@@ -245,7 +245,7 @@ function renderElementGrid(){
     card.style.background=el.glow;card.style.borderColor=el.color+'22';
     card.dataset.elem=el.id;
     card.innerHTML='<span class="elem-icon">'+el.sigil+'</span>'+
-      '<div class="elem-name" style="color:'+el.color+'">'+el.name+'</div>'+
+      '<div class="elem-name" style="color:'+(el.text||el.color)+'">'+el.name+'</div>'+
       '<div class="elem-principle">'+el.principle+'</div>'+
       '<div class="elem-count" style="color:'+el.color+'">'+members.length+'</div>'+
       '<div class="elem-count-label">MEMBERS · AVG AUTH '+avgAuth+'</div>'+
@@ -365,7 +365,7 @@ window.addEventListener('resize',drawDominanceChart);
       var auth=p.is_owner?27.8367:calcAuth(Number(p.axis_a||0.001),Number(p.axis_b||0.001),Number(p.axis_c||0.001));
       return Object.assign({},p,{authority:auth});
     }).sort(function(a,b){return b.authority-a.authority;});
-  }catch(e){profiles=generateDemoProfiles();}
+  }catch(e){profiles=[];var notice=document.createElement('div');notice.className='empty';notice.textContent='LIVE TRIBE DATA UNAVAILABLE — NO SYNTHETIC MEMBERS SHOWN';document.getElementById('elementGrid').replaceChildren(notice);document.getElementById('tribeRankGrid').replaceChildren(notice.cloneNode(true));console.warn('[Omega] tribe telemetry unavailable',e);}
 
   tribeData=groupByElement(profiles);
   renderGlobalStats();

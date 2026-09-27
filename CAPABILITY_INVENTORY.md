@@ -228,6 +228,14 @@ see `GAP_ANALYSIS.md` §4.7).
 Grouped by function, one line each, extracted from each file's own header comment (not
 invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 
+**Added 2026-09-27: `omega-today.js`** (loaded by `command.html` only, not injected by `bg.js`). This is the TODAY panel: it reads 9 modules' own `localStorage` stores (mirrored to `member_state`) and renders one due/done tile per ritual, plus START tiles for modules the member never used. It makes no Supabase call. `FEATURE_IDEAS.md` #38; `test_today.py`. Since S2/S3 it also renders READINESS on `command.html` (`data-omega-readiness`) and the auto-filled week on `weekly.html` (`data-omega-week`, which now loads it too).
+
+**Added 2026-09-27: `omega-reminders.js`** (injected by `bg.js` on every page, guard `data-omega-reminders-mod`; inert until the member opts in). Ritual reminders, FEATURE_IDEAS.md S4 Part A: reads `OmegaToday.status()`/`.habitStreak()` (loading `omega-today.js` on demand), learns the member's habit window from observed check-ins, sends at most two nudges a day through `sw.js` (new `notificationclick` handler, same-origin only) or an in-page card, and offers a recurring `.ics`. Settings mount `data-omega-reminders` on `notifications.html` (deep link `#reminders` from the TODAY panel). Tab-open only; closed-app Web Push is Part B, not built. `test_reminders.py`.
+
+**Added 2026-09-27: `omega-srs.js` and `omega-review.js`** (S5). `omega-srs.js` is the one SM-2 scheduler: `flashcard.html` and `vocabulary.html` load it and call `OmegaSRS.review`, so they no longer carry their own copies. `omega-review.js` (loaded by `command.html`) is the review queue. It shows due cards and due words interleaved in one overlay, opened from the TODAY panel's `▶ REVIEW n` chip or `/command.html#review`. It re-reads and writes each item by id. `test_review_queue.py`.
+
+**Added 2026-09-27: KYC intake RPCs** (migration `20260927110344`). `submit_kyc` (member), `review_kyc` and `kyc_queue` (owner). Each has a private SECURITY DEFINER body behind a public SECURITY INVOKER wrapper, and no EXECUTE for anon. `profile.html`'s Passport submit calls `submit_kyc` and removes any upload the server refuses. `approvals.html` → Operations → IDENTITY REVIEW lists submissions, opens each one through a 60 s signed URL, and records a verdict. **Dormant:** `kyc_intake_enabled = false`. `test_kyc_intake.py`.
+
 **Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
 has now been checked column-by-column against the live schema across this session and the one
 before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new

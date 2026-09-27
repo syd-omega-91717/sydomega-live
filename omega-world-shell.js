@@ -90,32 +90,43 @@ st.textContent = '.omega-shell{position:fixed;top:0;left:0;right:0;z-index:9000;
 (document.head || document.documentElement).appendChild(st);
 }
 function buildShell(key, char, realm) {
-var c = FRAMEWORK[char] || FRAMEWORK.sovereign;
-var r = REALMS[realm] || REALMS.command;
-var shell = document.createElement('div');
-shell.className = 'omega-shell';
-shell.id = 'omega-world-shell';
-shell.innerHTML = '<div class=shell-emblem-wrap>' + '<span class=shell-emblem style=color:' + c.color + '>' + c.emblem + '</span>' + '<span class=shell-ring-outer style=color:' + c.color + '></span>' + '<span class=shell-ring-inner style=color:' + c.color + '></span>' + '<span class=shell-particles></span>' + '</div>' + '<div style=min-width:0>' + '<div class=shell-title>' + key.toUpperCase() + '</div>' + '<div class=shell-sub>' + c.name + ' · ' + c.desc + '</div>' + '</div>' + '<span class=shell-realm>' + r.label + '</span>' + '<span class=shell-presence><span class=shell-presence-dot></span><span id=shell-presence-count>--</span> PRESENT</span>' + '<button class=shell-compass-btn id=shell-compass-toggle>◈ COMPASS</button>' + '<span class=shell-cmd-hint>Ctrl+K</span>';
+var c=FRAMEWORK[char]||FRAMEWORK.sovereign,r=REALMS[realm]||REALMS.command;
+var shell=document.createElement('div');shell.className='omega-shell';shell.id='omega-world-shell';
+function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+var wrap=el('div','shell-emblem-wrap'), emblem=el('span','shell-emblem',c.emblem), outer=el('span','shell-ring-outer'), inner=el('span','shell-ring-inner'), particles=el('span','shell-particles');
+emblem.style.color=c.color;outer.style.color=c.color;inner.style.color=c.color;wrap.appendChild(emblem);wrap.appendChild(outer);wrap.appendChild(inner);wrap.appendChild(particles);
+var identity=el('div');identity.style.minWidth='0';identity.appendChild(el('div','shell-title',key.toUpperCase()));identity.appendChild(el('div','shell-sub',c.name+' · '+c.desc));
+var realmEl=el('span','shell-realm',r.label);
+var presence=el('span','shell-presence');var dot=el('span','shell-presence-dot');var count=el('span',null,'—');count.id='shell-presence-count';presence.appendChild(dot);presence.appendChild(count);presence.appendChild(document.createTextNode(' PRESENT'));
+var compassBtn=el('button','shell-compass-btn','◈ COMPASS');compassBtn.type='button';compassBtn.id='shell-compass-toggle';
+shell.appendChild(wrap);shell.appendChild(identity);shell.appendChild(realmEl);shell.appendChild(presence);shell.appendChild(compassBtn);shell.appendChild(el('span','shell-cmd-hint','Ctrl+K'));
 return shell;
 }
-function buildCompass(currentKey, currentRealm) {
-var compass = document.createElement('div');
-compass.className = 'realm-compass';
-compass.id = 'realm-compass';
-var items = '';
-for (var r in REALMS) {
-var realm = REALMS[r];
-var isActive = r === currentRealm;
-items += '<div style=margin-bottom:8px><div style=font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px>' + realm.label + '</div><div class=realm-compass-grid>';
-realm.pages.forEach(function(p) {
-var pc = FRAMEWORK[classify(p)] || FRAMEWORK.sovereign;
-var isHere = p === currentKey;
-items += '<a href=/' + p + '.html class=realm-compass-item style=' + (isHere ? 'border-color:' + pc.color + ';background:' + pc.color + '11' : '') + '>' + '<span class=realm-compass-emblem style=color:' + pc.color + '>' + pc.emblem + '</span>' + '<span class=realm-compass-label>' + p.toUpperCase() + '</span>' + '</a>';
+function buildCompass(currentKey,currentRealm){
+var compass=document.createElement('div');compass.className='realm-compass';compass.id='realm-compass';
+for(var r in REALMS){
+var realm=REALMS[r],section=document.createElement('div');section.style.marginBottom='8px';
+var heading=document.createElement('div');heading.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px';heading.textContent=realm.label;section.appendChild(heading);
+var grid=document.createElement('div');grid.className='realm-compass-grid';
+realm.pages.forEach(function(p){
+var pc=FRAMEWORK[classify(p)]||FRAMEWORK.sovereign,isHere=p===currentKey;
+var link=document.createElement('a');link.href='/'+p+'.html';link.className='realm-compass-item';link.setAttribute('aria-current',isHere?'page':'false');
+if(isHere)link.style.cssText='border-color:'+pc.color+';background:'+pc.color+'11';
+var icon=document.createElement('span');icon.className='realm-compass-emblem';icon.style.color=pc.color;icon.textContent=pc.emblem;
+var label=document.createElement('span');label.className='realm-compass-label';label.textContent=p.toUpperCase();
+link.appendChild(icon);link.appendChild(label);grid.appendChild(link);
 });
-items += '</div></div>';
+section.appendChild(grid);compass.appendChild(section);
 }
-compass.innerHTML = items;
 return compass;
+}
+function refreshPresenceCount(){
+var el=document.getElementById('shell-presence-count');if(!el)return;
+if(!window.__omegaSb){el.textContent='—';el.title='Presence telemetry unavailable';return;}
+window.__omegaSb.from('member_presence').select('user_id',{count:'exact',head:true}).eq('is_online',true).then(function(r){
+if(r.error){el.textContent='—';el.title='Live presence requires verification';return;}
+el.textContent=String(r.count==null?'—':r.count);el.title='Live members currently reporting presence';
+}).catch(function(){el.textContent='—';el.title='Live presence requires verification';});
 }
 function init() {
 var key = (location.pathname.split('/').pop() || 'index').replace(new RegExp('^.*?(?:^|[^a-zA-Z0-9])',''), '').replace(new RegExp('[^a-zA-Z0-9].*$',''), '') || 'enter';
@@ -154,17 +165,13 @@ if (toggle) toggle.textContent = '◈ COMPASS';
 }
 });
 
-/* Simulate presence count */
- var presenceEl = document.getElementById('shell-presence-count');
-if (presenceEl) {
-var count = Math.floor(Math.random() * 12) + 1;
-presenceEl.textContent = count;
-setInterval(function() {
-count += Math.floor(Math.random() * 3) - 1;
-count = Math.max(1, Math.min(50, count));
-presenceEl.textContent = count;
-}, 15000);
-}
+/* Show only verified presence telemetry; never fabricate a member count. */
+refreshPresenceCount();
+var presenceTimer=null;
+function stopPresenceRefresh(){if(presenceTimer){clearInterval(presenceTimer);presenceTimer=null;}}
+function startPresenceRefresh(){refreshPresenceCount();if(!presenceTimer)presenceTimer=setInterval(refreshPresenceCount,30000);}
+document.addEventListener('visibilitychange',function(){if(document.hidden)stopPresenceRefresh();else startPresenceRefresh();});
+window.addEventListener('pagehide',stopPresenceRefresh,{once:true});
 
 /* Auto-wrap existing content into layered UI if not already wrapped */
  var main = document.querySelector('main') || document.querySelector('.main') || document.body;

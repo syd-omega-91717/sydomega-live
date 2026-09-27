@@ -92,7 +92,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
       <canvas id="ohb-cv" width="120" height="120" style="width:60px;height:60px;display:block"></canvas>
     </div>
     <div class="ohb-r">
-      <div class="ohb-val" id="ohb-status">NOMINAL</div>
+      <div class="ohb-val" id="ohb-status">CHECKING</div>
       <div class="ohb-sub">SYSTEM STATUS</div>
     </div>
   </div>
@@ -168,8 +168,13 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
     <div class="card">
       <div class="card-title">HOW THE ENGINE WORKS</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
-        <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
-        <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+        <div data-omega-more>
+          <p class="omi-lead">A rule interpreter that watches platform events and fires actions silently — no manual step needed.</p>
+          <div class="omi-full" hidden>
+            <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
+            <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -282,7 +287,7 @@ var SYSTEM_RULES=[
   {name:'TRIAL SESSION SENTINEL',icon:'&#x26A0;',kind:'sys',
    trigger:'IF trial_expires_at < now() AND is_trial = true',
    action:'THEN call expire_trial RPC, reset axes to genesis, redirect to pending',
-   desc:'The Sentinel watches every trial session. The moment the 9h-17m-17s window closes, progress resets and access revokes without any manual action required.',
+   desc:'The Sentinel watches every trial session. The moment the 9-minute-17-second trial closes, progress resets and access revokes without any manual action required.',
    default_on:true},
   {name:'AGENT DEPLOYMENT ON LEVEL',icon:'&#x25C9;',kind:'sys',
    trigger:'IF tier rank changes (floor of min axis)',

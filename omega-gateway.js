@@ -1,7 +1,7 @@
 /* ============================================================================
    SYD OMEGA 91717 -- GATEWAY
 
-   Navigation here was text and only text: a sidebar of 15 sections and 223
+   Navigation here was text and only text: a sidebar of 14 sections and 223
    written labels, with no page anywhere that shows the platform as a whole.
    Every page already draws its own mark -- omega-page-emblem.js gives each one
    a lattice (12-fold / 9-fold), an axis, and a glyph derived from what the

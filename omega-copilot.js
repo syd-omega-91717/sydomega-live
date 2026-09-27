@@ -148,12 +148,12 @@
       +'<div id="cp-drawer" role="dialog" aria-label="Sovereign Copilot" aria-modal="true" style="position:fixed;bottom:90px;right:24px;z-index:4500;width:min(360px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.3);border-radius:4px;display:none;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.7);overflow:hidden;animation:copilot-in .25s ease">'
         +'<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,.04)">'
           +'<div><div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C">\u03A9 SOVEREIGN COPILOT</div><div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);margin-top:3px">AUTH=sqrt(A\u00B3+B\u00B3+C\u00B3)\u00d7\u03c6/e &middot; APEX=27.8367</div></div>'
-          +'<button onclick="window.OmegaCopilot.close()" style="font-size:18px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
+          +'<button id="cp-close" type="button" style="font-size:18px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
         +'</div>'
         +'<div id="cp-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:200px;max-height:40vh;scrollbar-width:thin"></div>'
         +'<div style="padding:10px 12px;border-top:1px solid rgba(201,168,76,.1);display:flex;gap:8px">'
           +'<input id="cp-input" type="text" placeholder="Ask the Copilot\u2026" aria-label="Copilot question" autocomplete="off" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:#e9e6dc;font-family:\'Courier Prime\',monospace;font-size:12px;padding:8px 10px;border-radius:2px;outline:none">'
-          +'<button id="cp-send" onclick="window.OmegaCopilot.send()" aria-label="Send" style="font-family:\'Cinzel Decorative\',serif;font-size:12px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:#C9A84C;border-radius:2px;cursor:pointer;transition:.15s">\u2192</button>'
+          +'<button id="cp-send" type="button" aria-label="Send" style="font-family:\'Cinzel Decorative\',serif;font-size:12px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:#C9A84C;border-radius:2px;cursor:pointer;transition:.15s">\u2192</button>'
         +'</div>'
         +'<div id="cp-typing" style="display:none;padding:8px 16px;font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">COPILOT THINKING\u2026</div>'
       +'</div>';
@@ -161,6 +161,8 @@
     document.getElementById('cp-btn').addEventListener('click',function(){
       if(_open) window.OmegaCopilot.close(); else window.OmegaCopilot.open();
     });
+    document.getElementById('cp-close').addEventListener('click',function(){window.OmegaCopilot.close();});
+    document.getElementById('cp-send').addEventListener('click',function(){window.OmegaCopilot.send();});
     document.getElementById('cp-input').addEventListener('keydown',function(e){
       if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.OmegaCopilot.send();}
     });

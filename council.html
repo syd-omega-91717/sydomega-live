@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Decision Engine — SYD OMEGA</title>
+  <title>&#937; SYD OMEGA 91717 &mdash; Decision Engine</title>
   <script src="/bg.js" defer></script>
   <style>
     main.main {
@@ -630,9 +630,7 @@
     }
 
     function esc(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+      return String(str==null?'':str).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
     }
 
     document.addEventListener('DOMContentLoaded', initCouncil);

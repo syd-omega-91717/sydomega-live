@@ -138,13 +138,24 @@ ESM_IMPORT_RE = re.compile(
     r"""['"]([^'"]+\.js)['"]""")
 
 
+# A loader-helper call is an edge too. omega-sovereign-os.js reaches
+# omega-content-progressive.js only through `loadScript('/x.js', guard)`, whose
+# body assigns `s.src = url` -- a variable, invisible to SRC_ASSIGN_RE -- so a
+# live module was reported "on disk but never loaded". Matched by helper NAME
+# (loadScript / injectScript / loadModule) with a literal .js first argument,
+# not any call carrying a .js string, so a dead module still cannot vouch.
+LOADER_CALL_RE = re.compile(
+    r"""\b(?:loadScript|injectScript|loadModule)\s*\(\s*['"]([^'"]+\.js)['"]""")
+
+
 def js_injected_by(path):
-    """Same-origin .js filenames a module pulls in -- by `x.src = '/y.js'` or
-    by an ESM `import`. Both are edges; only one used to be counted."""
+    """Same-origin .js filenames a module pulls in -- by `x.src = '/y.js'`, by
+    an ESM `import`, or by a named loader helper. Each is an edge."""
     src = read(path)
     return {
         m.split("/")[-1].split("?")[0]
-        for m in SRC_ASSIGN_RE.findall(src) + ESM_IMPORT_RE.findall(src)
+        for m in (SRC_ASSIGN_RE.findall(src) + ESM_IMPORT_RE.findall(src)
+                  + LOADER_CALL_RE.findall(src))
         if not REMOTE_SRC_RE.match(m)
     }
 

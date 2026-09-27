@@ -24,9 +24,9 @@
   var DEFS = {
     mechanic: { label: 'PLATFORM MECHANIC', color: '#3fb27f', glow: 'rgba(63,178,127,.18)',
       title: 'Computed from your real account data. This actually affects your standing.' },
-    lore: { label: 'SYMBOLIC LORE', color: '#9B6BF0', glow: 'rgba(155,107,240,.18)',
+    lore: { label: 'SYMBOLIC LORE', color: '#AB82F2', glow: 'rgba(171,130,242,.18)',
       title: 'Real, consistent content on this platform -- but decorative. It does not gate or compute anything.' },
-    fiction: { label: 'CREATIVE FICTION', color: '#E86A3A', glow: 'rgba(232,106,58,.18)',
+    fiction: { label: 'CREATIVE FICTION', color: '#EB7B51', glow: 'rgba(235,123,81,.18)',
       title: 'Narrative worldbuilding. Not a representation of your account, the future, or anything factual.' }
   };
 

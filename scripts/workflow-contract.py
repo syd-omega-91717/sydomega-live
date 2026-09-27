@@ -34,27 +34,42 @@ WORKFLOWS = ROOT / ".github" / "workflows"
 # be true, and is stable across cmd / bash / pwsh / python invocation.
 REQUIRED = {
     "ci.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-node@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@[0-9a-f]{40}",
+        r"actions/setup-node@[0-9a-f]{40}",
+        r"actions/setup-python@[0-9a-f]{40}",
         r"scripts/audit\.py",
         r"unittest['\"],\s*['\"]discover['\"],\s*['\"]-s['\"],\s*['\"]scripts/tests|unittest discover -s scripts/tests",
         r"scripts/omega-registry\.py['\"]?,?\s*['\"]?--check",
     ],
     "production-contract.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@[0-9a-f]{40}",
+        r"actions/setup-python@[0-9a-f]{40}",
         r"scripts/production-contract\.py",
     ],
     "capability-evidence.yml": [
-        r"actions/checkout@v4",
-        r"actions/setup-python@v5",
+        r"actions/checkout@[0-9a-f]{40}",
+        r"actions/setup-python@[0-9a-f]{40}",
         r"scripts/capability-audit\.py['\"]?,?\s*['\"]?--check",
         r"scripts/capability-audit\.py",
         r"json\.tool['\"],\s*['\"]docs/capabilities/registry\.json|json\.tool docs/capabilities/registry\.json",
     ],
 }
-REQUIRED_PATTERNS = {"production-contract.yml": [(r"node['\"]?,?\s*['\"]?--check\b", "node --check over root .js files")]}
+
+REQUIRED["vercel-production.yml"] = [
+    r"actions/checkout@[0-9a-f]{40}",
+    r"actions/setup-node@[0-9a-f]{40}",
+    r"actions/setup-python@[0-9a-f]{40}",
+    r"scripts/vercel_static_contract\.py",
+    r"scripts/vercel-build\.sh",
+    r"scripts/omega-production-surface-contract\.py",
+]
+REQUIRED["contracts.yml"] = [
+    r"actions/checkout@[0-9a-f]{40}",
+    r"actions/setup-python@[0-9a-f]{40}",
+    r"scripts/contract-suite\.py",
+]
+
+REQUIRED_PATTERNS = {"production-contract.yml": [(r"scripts/check-js-syntax\.py", "first-party JavaScript syntax contract")]}
 ERRORS: list[str] = []
 
 for name, required in REQUIRED.items():
@@ -107,6 +122,22 @@ for name, required in REQUIRED.items():
     for pattern, description in REQUIRED_PATTERNS.get(name, []):
         if not re.search(pattern, text):
             ERRORS.append(f"{name}: missing required contract: {description}")
+
+
+# No workflow may resolve a mutable action or CLI reference. This used to cover
+# only five production workflows while 17 others ran 31 tag refs (@v4/@v5),
+# including a third-party write-capable action; a job's token is scoped to
+# the repository, so a moved tag in ANY workflow is a supply-chain path.
+for path in sorted(WORKFLOWS.glob("*.yml")):
+    name = path.name
+    if path.is_file():
+        for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "uses:" in line and "./" not in line:
+                ref = line.split("uses:", 1)[1].strip().split()[0]
+                if "@" in ref and not re.search(r"@[0-9a-f]{40}$", ref):
+                    ERRORS.append(f"{name}:{line_no}: mutable action reference: {ref}")
+            if "vercel@latest" in line:
+                ERRORS.append(f"{name}:{line_no}: mutable Vercel CLI reference: vercel@latest")
 
 for name in ("production-contract.yml", "capability-evidence.yml"):
     path = WORKFLOWS / name

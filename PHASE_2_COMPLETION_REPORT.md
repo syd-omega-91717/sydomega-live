@@ -123,13 +123,8 @@ These features are scoped, documented in `FEATURE_IDEAS.md`, but blocked on busi
 ---
 
 ### Feature #3: OmegaGuardian Security Gate
-**Current state:** `omega-guardian.js` exports a `gate()` function (risk-score gating); the risk badge renders in every topbar; but `gate()` has **zero call sites** (repo-wide grep confirms). Badge visually implies protection not actually happening.
-
-**Decision needed:** Either:
-- **Option A:** Wire `gate()` to sensitive actions (approvals.html's `grant_permanent_access`/`revoke_member`, profile.html's admin updates) at an agreed risk threshold, or
-- **Option B:** Remove the badge entirely (if staying unwired is acceptable)
-
-**Recommendation:** Option A — suggest threshold examples (score < 70 blocks member tier upgrades, < 50 blocks profile edits), but final thresholds are an architecture call.
+**Current state:** `omega-guardian.js` exports a `gate()` function (risk-score gating) and the risk badge renders in every topbar. The gate is now wired in `approvals.html` around the three high-privilege actions: grant permanent access, extend trial, and revoke member, with the backend `check_gate()` boundary. The earlier zero-call-site finding is obsolete.
+undefined
 
 ---
 

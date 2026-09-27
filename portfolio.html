@@ -113,64 +113,75 @@ function renderOverview(pr){
   document.getElementById('auth-val').textContent=auth.toFixed(2);
   document.getElementById('auth-pct').textContent=((auth/APEX)*100).toFixed(1)+'% OF APEX';
 
-  document.getElementById('overview-kpis').innerHTML=[
-    ['NODES',pr.nodes_earned||0],
-    ['TIER',pr.subscription_tier||'FREE'],
-    ['TOKEN',pr.token||'—']
-  ].map(function(k){return'<div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">'+k[1]+'</div><div class="kpi-label">'+k[0]+'</div></div>';}).join('');
+  var kpiRow=document.getElementById('overview-kpis');
+  kpiRow.replaceChildren();
+  [['NODES',pr.nodes_earned||0],['TIER',pr.subscription_tier||'FREE'],['TOKEN',pr.token||'—']].forEach(function(k){
+    var card=document.createElement('div'); card.className='kpi-card'; card.setAttribute('data-reveal','fade-up');
+    var val=document.createElement('div'); val.className='kpi-val'; val.textContent=String(k[1]);
+    var label=document.createElement('div'); label.className='kpi-label'; label.textContent=k[0];
+    card.append(val,label); kpiRow.appendChild(card);
+  });
 
-  document.getElementById('axis-bars').innerHTML=[
-    {label:'A — KNOWLEDGE',val:a,col:'var(--gold)'},
-    {label:'B — MASTERY',val:b,col:'var(--cyan)'},
-    {label:'C — CONTRIBUTION',val:c,col:'var(--green)'}
-  ].map(function(ax){
-    return'<div class="axis-bar-wrap">'
-      +'<div class="axis-label"><span>'+ax.label+'</span><span>'+ax.val+'/9</span></div>'
-      +'<div class="axis-track"><div class="axis-fill" style="width:'+((ax.val/9)*100)+'%;background:'+ax.col+'"></div></div>'
-      +'</div>';
-  }).join('');
+  var axisBars=document.getElementById('axis-bars'); axisBars.replaceChildren();
+  [{label:'A — KNOWLEDGE',val:a,token:'gold'},{label:'B — MASTERY',val:b,token:'cyan'},{label:'C — CONTRIBUTION',val:c,token:'green'}].forEach(function(ax){
+    var wrap=document.createElement('div'); wrap.className='axis-bar-wrap';
+    var label=document.createElement('div'); label.className='axis-label';
+    var name=document.createElement('span'); name.textContent=ax.label;
+    var score=document.createElement('span'); score.textContent=ax.val+'/9';
+    label.append(name,score);
+    var track=document.createElement('div'); track.className='axis-track';
+    var fill=document.createElement('div'); fill.className='axis-fill';
+    fill.style.width=(ax.val/9*100)+'%'; fill.style.background='var(--'+ax.token+')';
+    track.appendChild(fill); wrap.append(label,track); axisBars.appendChild(wrap);
+  });
 
-  document.getElementById('ach-row').innerHTML=[
-    ['TROPHIES',pr.trophies_earned||0],
-    ['MEDALS',pr.medals_earned||0],
-    ['CERTIFICATES',pr.certificates_earned||0]
-  ].map(function(k){return'<div class="ach-chip"><div class="ach-num">'+k[1]+'</div><div class="ach-lbl">'+k[0]+'</div></div>';}).join('');
+  var achRow=document.getElementById('ach-row'); achRow.replaceChildren();
+  [['TROPHIES',pr.trophies_earned||0],['MEDALS',pr.medals_earned||0],['CERTIFICATES',pr.certificates_earned||0]].forEach(function(k){
+    var chip=document.createElement('div'); chip.className='ach-chip';
+    var num=document.createElement('div'); num.className='ach-num'; num.textContent=String(k[1]);
+    var label=document.createElement('div'); label.className='ach-lbl'; label.textContent=k[0];
+    chip.append(num,label); achRow.appendChild(chip);
+  });
 
   document.getElementById('pub-toggle').checked=localStorage.getItem('omega_portfolio_public')==='1';
 }
 
 function renderMatrix(pr){
   var a=Number(pr.axis_a||0),b=Number(pr.axis_b||0),c=Number(pr.axis_c||0);
-  document.getElementById('matrix-cards').innerHTML=[
-    {t:'NODES EARNED',v:pr.nodes_earned||0},
-    {t:'A³ — KNOWLEDGE',v:Math.pow(a,3)},
-    {t:'B³ — MASTERY',v:Math.pow(b,3)},
-    {t:'C³ — CONTRIBUTION',v:Math.pow(c,3)}
-  ].map(function(x){return'<div class="card"><div class="card-title">'+x.t+'</div><div class="card-body" style="font-family:var(--D);font-size:22px;color:var(--solar)">'+x.v+'</div></div>';}).join('');
+  var matrix=document.getElementById('matrix-cards'); matrix.replaceChildren();
+  [{t:'NODES EARNED',v:pr.nodes_earned||0},{t:'A³ — KNOWLEDGE',v:Math.pow(a,3)},{t:'B³ — MASTERY',v:Math.pow(b,3)},{t:'C³ — CONTRIBUTION',v:Math.pow(c,3)}].forEach(function(x){
+    var card=document.createElement('div'); card.className='card';
+    var title=document.createElement('div'); title.className='card-title'; title.textContent=x.t;
+    var body=document.createElement('div'); body.className='card-body'; body.style.cssText='font-family:var(--D);font-size:22px;color:var(--solar)'; body.textContent=String(x.v);
+    card.append(title,body); matrix.appendChild(card);
+  });
 
-  document.getElementById('cosmo-cards').innerHTML=[
-    {t:'SIGN',v:pr.sign||'—'},
-    {t:'ELEMENT',v:pr.element||'—'},
-    {t:'OLYMPIAN',v:pr.god||'—'},
-    {t:'SOVEREIGN AGENT',v:pr.agent||'—'}
-  ].map(function(x){return'<div class="card"><div class="card-title">'+x.t+'</div><div class="card-body">'+x.v+'</div></div>';}).join('');
+  var cosmo=document.getElementById('cosmo-cards'); cosmo.replaceChildren();
+  [{t:'SIGN',v:pr.sign||'—'},{t:'ELEMENT',v:pr.element||'—'},{t:'OLYMPIAN',v:pr.god||'—'},{t:'SOVEREIGN AGENT',v:pr.agent||'—'}].forEach(function(x){
+    var card=document.createElement('div'); card.className='card';
+    var title=document.createElement('div'); title.className='card-title'; title.textContent=x.t;
+    var body=document.createElement('div'); body.className='card-body'; body.textContent=String(x.v);
+    card.append(title,body); cosmo.appendChild(card);
+  });
 }
 
 async function renderAssets(userId){
   var al=document.getElementById('assets-list');
   var{data:assets}=await sb.from('user_assets').select('*').eq('user_id',userId).order('created_at',{ascending:false});
   if(!assets||!assets.length){
-    al.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">No holdings on record.</div>';
+    al.replaceChildren();
+    var empty=document.createElement('div'); empty.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:12px'; empty.textContent='No holdings on record.'; al.appendChild(empty);
     return;
   }
-  al.innerHTML=assets.map(function(a){
-    return'<div class="asset-row">'
-      +'<div class="asset-name">'+a.name+'</div>'
-      +'<div style="display:flex;gap:12px">'
-      +'<div class="asset-qty">QTY '+a.quantity+'</div>'
-      +'<div class="asset-val">'+a.asset_type+'</div>'
-      +'</div></div>';
-  }).join('');
+  al.replaceChildren();
+  assets.forEach(function(a){
+    var row=document.createElement('div'); row.className='asset-row';
+    var name=document.createElement('div'); name.className='asset-name'; name.textContent=String(a.name||'Unnamed asset');
+    var meta=document.createElement('div'); meta.style.cssText='display:flex;gap:12px';
+    var qty=document.createElement('div'); qty.className='asset-qty'; qty.textContent='QTY '+String(a.quantity??0);
+    var type=document.createElement('div'); type.className='asset-val'; type.textContent=String(a.asset_type||'—');
+    meta.append(qty,type); row.append(name,meta); al.appendChild(row);
+  });
 }
 
 async function boot(){

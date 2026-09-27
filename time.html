@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Time &middot; SYD OMEGA 91717</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Time</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--dim:rgba(138,134,118,.5);--blue:#5C8FD6;--red:#EF5350;--teal:#26C6DA;
+:root{--dim:#939081;--blue:#5C8FD6;--red:#EF5350;--teal:#26C6DA;
 }
 
 
@@ -307,6 +307,10 @@ function setCustomDuration(mins){
 }
 
 function startTimer(){
+  /* Asked on START (a click), never on page load: browsers ignore or
+     permanently quiet a prompt that no gesture caused, and the only use of
+     the permission is the session-complete alert below. */
+  if(window.Notification&&Notification.permission==='default'){try{Notification.requestPermission();}catch(e){}}
   if(timerState==='running') return;
   var task=document.getElementById('task-input').value.trim();
   if(!task){alert('Enter a task / intention first.');return;}
@@ -604,10 +608,6 @@ function switchTab(btn,id){
   if(id==='t3') renderAudit();
 }
 
-/* Notification permission request */
-if(window.Notification&&Notification.permission==='default'){
-  Notification.requestPermission();
-}
 
 init();
 </script>

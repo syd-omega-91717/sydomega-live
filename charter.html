@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sovereign Charter · SYD OMEGA 91717</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Charter</title>
 <link rel="manifest" href="/manifest.json">
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -163,7 +163,7 @@ function load(){
 }
 function save(){localStorage.setItem('omega_charter_meta',JSON.stringify(meta));localStorage.setItem('omega_charter_articles',JSON.stringify(articles));localStorage.setItem('omega_charter_history',JSON.stringify(history));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderCharter(){
   var html='';
   if(meta.preamble)html+='<div class="charter-article"><div class="article-num">PREAMBLE</div><div class="article-text">'+esc(meta.preamble)+'</div></div>';

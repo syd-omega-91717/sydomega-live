@@ -1,0 +1,798 @@
+{
+ "404.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "academy.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "account.html": {
+  "handlers": 0,
+  "scripts": 2
+ },
+ "achievements.html": {
+  "handlers": 14,
+  "scripts": 1
+ },
+ "ad-network.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "advertising.html": {
+  "handlers": 7,
+  "scripts": 2
+ },
+ "affirmations.html": {
+  "handlers": 12,
+  "scripts": 1
+ },
+ "agent-network.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "agent.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "agents.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "analytics-dashboard.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "analytics.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "architect.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "architecture.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "ascension.html": {
+  "handlers": 1,
+  "scripts": 2
+ },
+ "atlas.html": {
+  "handlers": 17,
+  "scripts": 2
+ },
+ "automation.html": {
+  "handlers": 4,
+  "scripts": 3
+ },
+ "autonomous-insights.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "awards.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "beacon.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "blockchain.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "bloodline.html": {
+  "handlers": 3,
+  "scripts": 2
+ },
+ "body.html": {
+  "handlers": 14,
+  "scripts": 1
+ },
+ "breath.html": {
+  "handlers": 6,
+  "scripts": 1
+ },
+ "budget.html": {
+  "handlers": 5,
+  "scripts": 1
+ },
+ "character.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "characters.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "charter.html": {
+  "handlers": 12,
+  "scripts": 1
+ },
+ "chatbot.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "chronicle.html": {
+  "handlers": 9,
+  "scripts": 3
+ },
+ "cinema.html": {
+  "handlers": 7,
+  "scripts": 2
+ },
+ "cipher.html": {
+  "handlers": 12,
+  "scripts": 2
+ },
+ "city.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "clarity.html": {
+  "handlers": 12,
+  "scripts": 1
+ },
+ "codex.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "command.html": {
+  "handlers": 13,
+  "scripts": 1
+ },
+ "compliance.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "consultancy.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "contacts.html": {
+  "handlers": 14,
+  "scripts": 1
+ },
+ "contracts.html": {
+  "handlers": 10,
+  "scripts": 2
+ },
+ "contributions.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "control-plane.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "cosmos.html": {
+  "handlers": 1,
+  "scripts": 2
+ },
+ "council.html": {
+  "handlers": 3,
+  "scripts": 1
+ },
+ "courses.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "creator.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "credentials.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "dashboard.html": {
+  "handlers": 89,
+  "scripts": 3
+ },
+ "decisions.html": {
+  "handlers": 20,
+  "scripts": 1
+ },
+ "design-system.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "dna.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "ecosystem.html": {
+  "handlers": 6,
+  "scripts": 1
+ },
+ "elements.html": {
+  "handlers": 4,
+  "scripts": 4
+ },
+ "enter.html": {
+  "handlers": 3,
+  "scripts": 1
+ },
+ "enterprise.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "events.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "evolution.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "exam.html": {
+  "handlers": 22,
+  "scripts": 1
+ },
+ "expenses.html": {
+  "handlers": 15,
+  "scripts": 1
+ },
+ "factions.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "family.html": {
+  "handlers": 2,
+  "scripts": 5
+ },
+ "fasting.html": {
+  "handlers": 9,
+  "scripts": 1
+ },
+ "feed.html": {
+  "handlers": 6,
+  "scripts": 1
+ },
+ "flashcard.html": {
+  "handlers": 7,
+  "scripts": 1
+ },
+ "focus.html": {
+  "handlers": 15,
+  "scripts": 1
+ },
+ "forge.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "gaming.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "gates.html": {
+  "handlers": 3,
+  "scripts": 2
+ },
+ "governance.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "grades.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "graph-admin.html": {
+  "handlers": 3,
+  "scripts": 1
+ },
+ "graph-anomalies.html": {
+  "handlers": 2,
+  "scripts": 1
+ },
+ "graph-centrality.html": {
+  "handlers": 3,
+  "scripts": 1
+ },
+ "graph-evidence.html": {
+  "handlers": 2,
+  "scripts": 1
+ },
+ "graph-explorer.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "graph-timeline.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "graph.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "graphify.html": {
+  "handlers": 13,
+  "scripts": 2
+ },
+ "gratitude.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "grid.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "habits.html": {
+  "handlers": 11,
+  "scripts": 1
+ },
+ "hall.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "health.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "healthz.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "hercules.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "heritage.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "honors.html": {
+  "handlers": 8,
+  "scripts": 4
+ },
+ "horoscope.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "houses.html": {
+  "handlers": 1,
+  "scripts": 2
+ },
+ "identity.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "income.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "index.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "intelligence.html": {
+  "handlers": 36,
+  "scripts": 1
+ },
+ "interface-omni.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "investment.html": {
+  "handlers": 17,
+  "scripts": 1
+ },
+ "investor-dashboard.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "investor-gate.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "journal.html": {
+  "handlers": 3,
+  "scripts": 1
+ },
+ "kings.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "knowledge.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "kyc.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "lab.html": {
+  "handlers": 14,
+  "scripts": 1
+ },
+ "leaderboard.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "ledger.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "levels.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "library.html": {
+  "handlers": 18,
+  "scripts": 1
+ },
+ "maintenance.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "map.html": {
+  "handlers": 7,
+  "scripts": 2
+ },
+ "marketing.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "marketplace.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "matrix.html": {
+  "handlers": 1,
+  "scripts": 5
+ },
+ "media.html": {
+  "handlers": 9,
+  "scripts": 5
+ },
+ "meditate.html": {
+  "handlers": 7,
+  "scripts": 1
+ },
+ "membership.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "mentors.html": {
+  "handlers": 8,
+  "scripts": 1
+ },
+ "mindmap.html": {
+  "handlers": 23,
+  "scripts": 1
+ },
+ "mirror.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "missions.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "monitoring-dashboard.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "mood.html": {
+  "handlers": 9,
+  "scripts": 1
+ },
+ "movies.html": {
+  "handlers": 3,
+  "scripts": 2
+ },
+ "network.html": {
+  "handlers": 6,
+  "scripts": 1
+ },
+ "news.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "nexus.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "notes.html": {
+  "handlers": 35,
+  "scripts": 1
+ },
+ "notifications.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "nutrition.html": {
+  "handlers": 10,
+  "scripts": 1
+ },
+ "oath.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "observatory.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "offline.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "omega-visual-command.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "ops.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "oracle.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "pantheons.html": {
+  "handlers": 1,
+  "scripts": 2
+ },
+ "passport.html": {
+  "handlers": 7,
+  "scripts": 2
+ },
+ "payments.html": {
+  "handlers": 8,
+  "scripts": 2
+ },
+ "pending.html": {
+  "handlers": 4,
+  "scripts": 4
+ },
+ "phases.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "physiology.html": {
+  "handlers": 5,
+  "scripts": 1
+ },
+ "points.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "portfolio.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "prediction.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "principles.html": {
+  "handlers": 15,
+  "scripts": 1
+ },
+ "privacy.html": {
+  "handlers": 12,
+  "scripts": 1
+ },
+ "profile.html": {
+  "handlers": 10,
+  "scripts": 14
+ },
+ "project-studio.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "projects.html": {
+  "handlers": 24,
+  "scripts": 1
+ },
+ "publications.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "publishing.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "pulse.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "queue.html": {
+  "handlers": 7,
+  "scripts": 1
+ },
+ "quotes.html": {
+  "handlers": 11,
+  "scripts": 1
+ },
+ "reading.html": {
+  "handlers": 11,
+  "scripts": 1
+ },
+ "realm.html": {
+  "handlers": 13,
+  "scripts": 2
+ },
+ "research.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "reset.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "revenue.html": {
+  "handlers": 15,
+  "scripts": 2
+ },
+ "rituals.html": {
+  "handlers": 8,
+  "scripts": 1
+ },
+ "roadmap.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "rune.html": {
+  "handlers": 16,
+  "scripts": 2
+ },
+ "search.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "segmentation-dashboard.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "series.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "services.html": {
+  "handlers": 0,
+  "scripts": 3
+ },
+ "settings.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "sigil.html": {
+  "handlers": 5,
+  "scripts": 2
+ },
+ "sigma.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "signal.html": {
+  "handlers": 8,
+  "scripts": 2
+ },
+ "skills.html": {
+  "handlers": 21,
+  "scripts": 2
+ },
+ "sleep.html": {
+  "handlers": 8,
+  "scripts": 1
+ },
+ "social.html": {
+  "handlers": 8,
+  "scripts": 2
+ },
+ "sovereign-ai.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "sovereign-covenant.html": {
+  "handlers": 4,
+  "scripts": 4
+ },
+ "sovereigns.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "stoic.html": {
+  "handlers": 15,
+  "scripts": 1
+ },
+ "studio.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "subscriptions.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "targets.html": {
+  "handlers": 13,
+  "scripts": 1
+ },
+ "terms.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "time.html": {
+  "handlers": 10,
+  "scripts": 1
+ },
+ "trailers.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "travel.html": {
+  "handlers": 4,
+  "scripts": 1
+ },
+ "treasury.html": {
+  "handlers": 9,
+  "scripts": 2
+ },
+ "triads.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "tribe.html": {
+  "handlers": 0,
+  "scripts": 2
+ },
+ "trophies.html": {
+  "handlers": 6,
+  "scripts": 2
+ },
+ "universe.html": {
+  "handlers": 4,
+  "scripts": 2
+ },
+ "vault.html": {
+  "handlers": 5,
+  "scripts": 4
+ },
+ "venture-pipeline.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "verify-deployment.html": {
+  "handlers": 1,
+  "scripts": 1
+ },
+ "verify-modules.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "vision.html": {
+  "handlers": 10,
+  "scripts": 1
+ },
+ "vocabulary.html": {
+  "handlers": 23,
+  "scripts": 1
+ },
+ "wallet.html": {
+  "handlers": 10,
+  "scripts": 1
+ },
+ "water.html": {
+  "handlers": 8,
+  "scripts": 1
+ },
+ "wealth.html": {
+  "handlers": 30,
+  "scripts": 1
+ },
+ "weekly.html": {
+  "handlers": 10,
+  "scripts": 1
+ },
+ "workout.html": {
+  "handlers": 15,
+  "scripts": 1
+ },
+ "world-shell.html": {
+  "handlers": 0,
+  "scripts": 1
+ }
+}

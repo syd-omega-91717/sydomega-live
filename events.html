@@ -135,7 +135,7 @@ var joined=new Set();
 
 window.setTab=setTab;
 
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 async function renderMemberEvents(){
   var feed=document.getElementById('member-events-feed');

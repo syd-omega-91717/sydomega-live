@@ -57,8 +57,9 @@
   /* ── LIVE ACTIVITY FEED ──────────────────────────────────────────── */
   async function pollActivityFeed(){
     if(!window.__omegaSb) return;
+    var r=null;
     try{
-      var r=await window.__omegaSb.from('activity_feed').select('activity_type,title,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(10);
+      r=await window.__omegaSb.from('activity_feed').select('activity_type,title,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(10);
       if(r.data&&r.data.length){
         _tickerItems=r.data.map(function(e){
           var ago=timeAgo(new Date(e.created_at));
@@ -69,8 +70,16 @@
         if(window.OmegaOS)window.OmegaOS.events.emit('realtime:activity',{items:r.data});
         /* Inject into any [data-live-ticker] */
         startTicker();
+        return;
       }
     }catch(e){}
+    /* Empty or failed: say what is true. The strip used to keep "LOADING LIVE
+       FEED..." forever -- live activity_feed had 0 rows on 2026-09-26, so the
+       page claimed a load that could never finish. A realtime INSERT still
+       replaces this line the moment one arrives. */
+    if(_ticker&&!_tickerItems.length){
+      _ticker.textContent=r&&r.error?'LIVE FEED UNAVAILABLE':'QUIET \u00b7 NO PUBLIC ACTIVITY YET';
+    }
   }
 
   /* ── REALTIME SUPABASE CHANNEL ─────────────────────────────────── */

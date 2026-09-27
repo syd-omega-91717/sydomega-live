@@ -221,8 +221,10 @@
       if(window.matchMedia && !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
     }catch(e){ /* no matchMedia -- fall through and show it */ }
     try{
-      if(sessionStorage.getItem('omega_kb_hint_shown')) return;
-      sessionStorage.setItem('omega_kb_hint_shown','1');
+      /* Once per device, not per tab session: it appeared on every visit in
+         both of the owner's screenshots. */
+      if(localStorage.getItem('omega_kb_hint_shown')) return;
+      localStorage.setItem('omega_kb_hint_shown','1');
     }catch(e){ return; } /* privacy mode — skip hint */
     setTimeout(function(){
       var hint=document.createElement('div');

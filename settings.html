@@ -76,6 +76,13 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
       <button class="btn-gold" id="ap-reset-app" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--gold)">RESET TO DEFAULT</button>
     </div>
   </div>
+  <div class="settings-section">
+    <div class="settings-section-title">CALM MODE</div>
+    <p class="settings-hint">Hide the ambient extras on every page: ticker, banners, floating buttons. Navigation and visuals stay. Language stays here in Settings.</p>
+    <div class="langrow">
+      <button class="btn-gold" id="btn-calm" type="button" aria-pressed="false" style="font-size:12px;letter-spacing:2px;padding:10px 16px">CALM: OFF</button>
+    </div>
+  </div>
   <div class="sechead">LANGUAGE</div>
   <div class="settings-section">
     <div class="settings-section-title">PLATFORM LANGUAGE</div>
@@ -85,6 +92,9 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
       <button class="btn-gold" data-lang="ar" style="font-size:12px;letter-spacing:2px;padding:10px 16px">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</button>
       <button class="btn-gold" data-lang="fr" style="font-size:12px;letter-spacing:2px;padding:10px 16px">Fran&ccedil;ais</button>
       <button class="btn-gold" data-lang="es" style="font-size:12px;letter-spacing:2px;padding:10px 16px">Espa&ntilde;ol</button>
+      <button class="btn-gold" data-lang="nl" style="font-size:12px;letter-spacing:2px;padding:10px 16px">Nederlands</button>
+      <button class="btn-gold" data-lang="zh" style="font-size:12px;letter-spacing:2px;padding:10px 16px">&#20013;&#25991;</button>
+      <button class="btn-gold" data-lang="hi" style="font-size:12px;letter-spacing:2px;padding:10px 16px">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</button>
     </div>
   </div>
   <div class="sechead">PLATFORM TOUR</div>
@@ -105,6 +115,12 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
     <div class="acct-row">
       <button class="btn-gold" id="btn-logout" style="font-size:12px;letter-spacing:2px;padding:10px 16px">LOG OUT</button>
     </div>
+  </div>
+  <div class="settings-section" id="two-factor" data-omega-flag="mfa_enrolment_enabled">
+    <div class="settings-section-title">TWO-FACTOR SIGN-IN</div>
+    <p class="settings-hint">Ask for a 6-digit code from an authenticator app when you sign in, so a
+      stolen password alone cannot open your account.</p>
+    <div data-omega-mfa></div>
   </div>
   <div class="settings-section">
     <div class="settings-section-title">YOUR DATA</div>
@@ -211,6 +227,12 @@ buildSwatches();
 document.querySelectorAll('[data-lang]').forEach(function(b){
   b.addEventListener('click',function(){try{localStorage.setItem('omega_lang',b.getAttribute('data-lang'));}catch(e){}location.reload();});
 });
+/* Calm mode lives in bg.js (window.OmegaCalm), which is deferred and so runs
+   after this block: read it at click time, and paint the state once the DOM
+   is ready (deferred scripts have run by then). */
+var calmBtn=document.getElementById('btn-calm');
+function paintCalm(){if(!calmBtn)return;var on=!!(window.OmegaCalm&&window.OmegaCalm.on());calmBtn.setAttribute('aria-pressed',on?'true':'false');calmBtn.textContent='CALM: '+(on?'ON':'OFF');}
+if(calmBtn){calmBtn.addEventListener('click',function(){if(!window.OmegaCalm)return;window.OmegaCalm.set(!window.OmegaCalm.on());paintCalm();});document.addEventListener('DOMContentLoaded',paintCalm);}
 var wdBtn=document.getElementById('btn-watch-demo');
 if(wdBtn)wdBtn.addEventListener('click',function(){if(window.OmegaDemo)window.OmegaDemo.replay();});
 var apApplyBtn=document.getElementById('ap-apply');
@@ -301,5 +323,6 @@ refreshPrivacy();
 })();
 </script>
 <script src="/bg.js" defer></script>
+<script src="/omega-mfa.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

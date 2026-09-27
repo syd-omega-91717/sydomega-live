@@ -147,6 +147,17 @@ class UploadReturnsRatherThanThrows(unittest.TestCase):
             '{"error":"No storage bucket named."}',
         )
 
+    def test_remove_requires_a_bucket_and_path(self):
+        """The shared delete helper must fail closed before any network call."""
+        self.assertEqual(
+            self._run("console.log(JSON.stringify(await window.OmegaStorage.remove(null, 'x')));"),
+            '{"error":"No storage bucket named."}',
+        )
+        self.assertEqual(
+            self._run("console.log(JSON.stringify(await window.OmegaStorage.remove('uploads', null)));"),
+            '{"error":"No storage path."}',
+        )
+
     def test_over_limit_file_is_rejected_before_any_network_call(self):
         self.assertEqual(
             self._run(

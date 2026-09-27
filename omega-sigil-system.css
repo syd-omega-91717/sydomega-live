@@ -1,0 +1,26 @@
+:root{
+  --omega-bg:#020609;--omega-panel:rgba(6,20,25,.78);--omega-gold:#c9a84c;--omega-gold-soft:#e8c97a;
+  --omega-cyan:#00e5ff;--omega-red:#8b0000;--omega-ink:#b9c7c9;--omega-line:rgba(0,229,255,.25)
+}
+.omega-realms{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;max-width:1600px;margin:0 auto}
+.omega-realm{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;padding:10px 6px 14px;border:1px solid rgba(201,168,76,.13);background:linear-gradient(180deg,rgba(0,229,255,.035),rgba(0,0,0,.22));color:inherit;text-decoration:none;transition:transform .2s,border-color .2s,background .2s;isolation:isolate}
+.omega-realm::before{content:"";position:absolute;inset:6px;border:1px solid rgba(0,229,255,.08);pointer-events:none}
+.omega-realm:hover,.omega-realm:focus-visible{transform:translateY(-4px);border-color:rgba(201,168,76,.7);background:linear-gradient(180deg,rgba(0,229,255,.1),rgba(201,168,76,.045))}
+.omega-realm:focus-visible{outline:2px solid var(--omega-cyan);outline-offset:4px}
+.omega-sigil{width:100%;max-width:190px;aspect-ratio:1;position:relative;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,.1) 0 20%,transparent 21%),conic-gradient(from 0deg,transparent 0 9%,rgba(201,168,76,.85) 9% 10%,transparent 10% 24%,rgba(0,229,255,.65) 24% 25%,transparent 25% 49%,rgba(139,0,0,.85) 49% 50%,transparent 50% 74%,rgba(201,168,76,.8) 74% 75%,transparent 75%);border:2px solid rgba(201,168,76,.7);box-shadow:0 0 0 5px rgba(0,229,255,.07),0 0 25px rgba(0,229,255,.15),inset 0 0 30px rgba(0,229,255,.12)}
+.omega-sigil::before,.omega-sigil::after{content:"";position:absolute;inset:10%;border:1px solid rgba(0,229,255,.55);border-radius:50%;transform:rotate(45deg)}
+.omega-sigil::after{inset:22%;border-color:rgba(201,168,76,.55);transform:rotate(-30deg);border-radius:20%}
+.omega-glyph{font-family:"Cinzel Decorative",serif;font-size:clamp(30px,3.5vw,56px);color:var(--omega-gold-soft);text-shadow:0 0 14px rgba(201,168,76,.4);z-index:1}
+.omega-sigil-core{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--omega-cyan);box-shadow:0 0 16px var(--omega-cyan);top:8%;left:calc(50% - 4px)}
+.omega-realm-label{font-family:var(--M,"Share Tech Mono",monospace);font-size:12px;letter-spacing:1.7px;text-align:center;color:var(--omega-gold-soft);line-height:1.4}
+.omega-realm-caption{font-family:var(--M,"Share Tech Mono",monospace);font-size:10px;letter-spacing:1px;color:var(--omega-ink);text-align:center;opacity:.72}
+.omega-info{display:none;margin:18px auto 0;max-width:850px;padding:20px;border:1px solid rgba(201,168,76,.35);background:var(--omega-panel);box-shadow:0 0 40px rgba(0,0,0,.35)}
+.omega-info.is-open{display:block}
+.omega-info h2{margin:0 0 8px;color:var(--omega-gold-soft);font-family:"Cinzel Decorative",serif;font-size:clamp(18px,2vw,28px)}
+.omega-info p{margin:0 0 14px;color:var(--omega-ink);line-height:1.7}
+.omega-info a{color:var(--omega-cyan)}
+.omega-info-close{float:right;background:transparent;border:1px solid rgba(201,168,76,.35);color:var(--omega-gold-soft);padding:5px 9px;cursor:pointer}
+@media(max-width:1150px){.omega-realms{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:720px){.omega-realms{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.omega-realm{padding:6px 3px 10px}.omega-realm-caption{display:none}.omega-sigil{max-width:120px}.omega-realm-label{font-size:10px;letter-spacing:1px}}
+@media(max-width:460px){.omega-realms{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.omega-realm{transition:none}.omega-realm:hover,.omega-realm:focus-visible{transform:none}}

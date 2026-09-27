@@ -146,9 +146,13 @@
 
     var decimals = (m[2].split('.')[1] || '').length;
     var grouped = m[2].indexOf(',') > -1;
+    /* Respect reduced-motion and page lifecycle before starting a visual counter. */
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (document.visibilityState !== 'visible') return;
     var start = performance.now(), DUR = 900;
 
     function frame(now) {
+      if (document.visibilityState !== 'visible') { el.textContent = original; return; }
       var t = Math.min(1, (now - start) / DUR);
       /* expo-out, matching EASE, so the number settles like the surfaces do */
       var e = 1 - Math.pow(2, -10 * t);

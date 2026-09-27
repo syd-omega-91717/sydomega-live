@@ -63,6 +63,46 @@ def allowed_counts():
     return counts
 
 
+def i18n_findings(ok):
+    """Claims in the dictionary, and the translations of each one.
+
+    A data-i18n string is rendered from i18n.js's T_EN and the six packs, not
+    from the page's own markup, so scanning *.html alone missed them: on
+    2026-09-26 T_EN said "ALL 206 PAGES" and all six packs still said 205.
+    The pages word is translated, so a pack is held to the English value's
+    number instead: a key whose T_EN value claims N pages must carry N in every
+    pack.
+    """
+    out = []
+    if not (ROOT / 'i18n.js').exists():
+        return out          # no dictionary in this tree: nothing to hold
+    src = (ROOT / 'i18n.js').read_text(encoding='utf-8', errors='replace')
+    start = src.find('var T_EN={')
+    end = src.find('\n};', start)
+    if start < 0 or end < 0:
+        return ['i18n.js: T_EN block not found; the dictionary was not checked']
+    t_en = dict(re.findall(r'"([A-Za-z0-9_]+)":"((?:[^"\\]|\\.)*)"', src[start:end]))
+    import json
+    packs = {}
+    for pack in sorted((ROOT / 'i18n').glob('*.json')):
+        try:
+            packs[pack.name] = json.loads(pack.read_text(encoding='utf-8'))
+        except ValueError:
+            out.append('i18n/%s: does not parse' % pack.name)
+    for key, val in sorted(t_en.items()):
+        m = CLAIM.search(val)
+        if not m:
+            continue
+        n = int(m.group(1))
+        if n not in ok:
+            out.append('i18n.js T_EN.%s claims "%s" — no count in the repo supports it' % (key, m.group(0)))
+        for name, d in packs.items():
+            tv = d.get(key)
+            if tv is not None and not re.search(r'(?<!\d)%d(?!\d)' % n, tv):
+                out.append('i18n/%s %s drops the English count %d: "%s"' % (name, key, n, tv))
+    return out
+
+
 def main(argv):
     if '--help' in argv or '-h' in argv:
         print(__doc__)
@@ -83,6 +123,8 @@ def main(argv):
                             '(estate and evidence classes: %s)'
                             % (path.name, line, m.group(0).strip(),
                                ', '.join(str(c) for c in sorted(ok))))
+
+    findings.extend(i18n_findings(ok))
 
     if findings:
         print('PAGE COUNT CLAIMS: FAIL')

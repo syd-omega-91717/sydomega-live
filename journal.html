@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Journal &middot; SYD OMEGA 91717</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Journal</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0D0D0B;--dim:rgba(138,134,118,.5)}
@@ -386,7 +386,11 @@ function unlock_show() {
 
 /* ── UI INIT ──────────────────────────────────────────────────────────── */
 
-function today() { return new Date().toISOString().slice(0,10); }
+/* The member's own calendar day, as habits.html and omega-streak-freeze.js
+   key theirs; the UTC date filed a late-evening entry under tomorrow west of
+   Greenwich and an early-morning one under yesterday east of it. */
+function dayKey(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function today() { return dayKey(new Date()); }
 
 function initUI() {
   const d = today();
@@ -538,7 +542,7 @@ function renderInsights() {
 function last30() {
   return Array.from({length:30}, (_,i) => {
     const d = new Date(); d.setDate(d.getDate()-(29-i));
-    return d.toISOString().slice(0,10);
+    return dayKey(d);
   });
 }
 
@@ -662,7 +666,7 @@ async function importBackup(file) {
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
 function esc(t) {
-  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}).replace(/\n/g,'<br>');
 }
 
 function calcStreak() {
@@ -672,8 +676,8 @@ function calcStreak() {
     window.OmegaStreakFreeze.reconcile('journal', function(k){ return dates.has(k); });
   }
   let s = 0; const d = new Date();
-  while (dates.has(d.toISOString().slice(0,10)) ||
-         (window.OmegaStreakFreeze && window.OmegaStreakFreeze.isFrozen('journal', d.toISOString().slice(0,10)))) {
+  while (dates.has(dayKey(d)) ||
+         (window.OmegaStreakFreeze && window.OmegaStreakFreeze.isFrozen('journal', dayKey(d)))) {
     s++; d.setDate(d.getDate()-1);
   }
   return s;

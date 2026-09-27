@@ -13,6 +13,8 @@
    5. Dedications (chrono B logs)
    6. Activity feed (own entries)
    7. Leaderboard snapshots (own entries)
+   8. Tracker stores -- this browser's omega_* member data (habits, sleep,
+      water, mood, learning, ...), as omega-member-state.js defines it
 
    Public API: OmegaExport.request() → Promise<void>
    ========================================================================== */
@@ -66,6 +68,22 @@
       .select('snapshot_date,authority,axis_a,axis_b,axis_c,rank_global,element')
       .eq('user_id',userId).order('snapshot_date',{ascending:false}).limit(365);
     fetched.leaderboard_snapshots=lb.data||[];
+
+    /* 8. Tracker stores (FEATURE_IDEAS.md S6): habits, sleep, water, mood,
+       money, learning... every localStorage key omega-member-state.js treats
+       as member data. The definition is read from that module, never copied,
+       so this archive holds exactly what is mirrored (8.1 class 8). */
+    var MS=window.OmegaMemberState;
+    if(MS&&typeof MS.isMemberKey==='function'){
+      var stores={};
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i);
+        if(!MS.isMemberKey(k)||k.indexOf('omega_analytics_')===0)continue;
+        var v=localStorage.getItem(k);
+        try{stores[k]=JSON.parse(v);}catch(e){stores[k]=v;}
+      }
+      fetched.tracker_stores=stores;
+    }
 
     return fetched;
   }

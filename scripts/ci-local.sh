@@ -106,6 +106,16 @@ manifest_icons() {
 
 printf '\033[1mLocal CI — complete production verification\033[0m\n'
 
+# Mirrors vercel-production.yml's `validate` job step for step. It was the one
+# blocking GitHub job with no local twin: on 2026-09-27 a new page (world.html)
+# merged without a navigation shell and failed "Vercel Production" four times
+# on main while this script reported 26/26.
+vercel_artifact() {
+  python3 scripts/vercel_static_contract.py &&
+  bash scripts/vercel-build.sh >/dev/null &&
+  python3 scripts/omega-production-surface-contract.py &&
+  test -s public/index.html && test -f public/vendor/supabase-js.js
+}
 step "0.   Workflow contract"                  python3 scripts/workflow-contract.py
 step "0b.  Release completeness gate"          python3 scripts/release-gate.py
 step "1.   JavaScript syntax"                  js_syntax
@@ -129,6 +139,7 @@ step "5.   Service-role key scan"               service_role_scan
 step "7.   Service worker precache"             sw_precache
 step "8.   PWA manifest icons"                  manifest_icons
 step "9.   Production contract"                 python3 scripts/production-contract.py
+step "9b.  Vercel artifact + production surface" vercel_artifact
 step "10.  Capability evidence contract"       python3 scripts/capability-audit.py --check
 step "10b. Capability registry JSON"            python3 -m json.tool docs/capabilities/registry.json >/dev/null
 step "11.  Production JavaScript syntax"       js_syntax

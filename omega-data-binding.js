@@ -20,6 +20,11 @@
 (function(){
   if(window.OmegaDataBinding) return;
 
+  /* The shared client. This module read window.OmegaSB.sb, and bg.js publishes
+     OmegaSB as {get,url,key} -- there was never an .sb, so every binding threw
+     TypeError. No page uses it yet (0 data-bind-query), which is why nothing
+     visibly broke; the first adopter would have. */
+  function sbc(){ return window.__omegaSb || null; }
   var bindings = {};
   var subscriptions = [];
 
@@ -103,9 +108,9 @@
       // Initial fetch
       API.fetch(bindId).then(function(){
         // Set up real-time subscription if it's a table
-        if(window.OmegaSB && binding.query.indexOf('rpc') === -1){
+        if(sbc() && binding.query.indexOf('rpc') === -1){
           var table = binding.query;
-          var subscription = window.OmegaSB.sb
+          var subscription = sbc()
             .channel('public:' + table)
             .on('postgres_changes', { event: '*', schema: 'public', table: table }, function(payload){
               binding.cache = payload.new || payload.old;
@@ -188,7 +193,7 @@
    * Execute a query against Supabase
    */
   function executeQuery(binding){
-    if(!window.OmegaSB) return Promise.reject('Supabase not initialized');
+    if(!sbc()) return Promise.reject('Supabase not initialized');
 
     var query = binding.query;
     var parts = query.split('?');
@@ -198,13 +203,13 @@
     if(queryPart.indexOf('rpc:') === 0){
       // RPC call
       var rpcName = queryPart.replace('rpc:', '');
-      return window.OmegaSB.sb.rpc(rpcName, {}).then(function(response){
+      return sbc().rpc(rpcName, {}).then(function(response){
         if(response.error) throw response.error;
         return response.data;
       });
     } else {
       // Table query
-      var tableQuery = window.OmegaSB.sb.from(queryPart).select('*');
+      var tableQuery = sbc().from(queryPart).select('*');
 
       if(filterPart){
         // Parse filter: col1=val1&col2=val2&col1.gte=val3

@@ -12,7 +12,7 @@ function setTab(name){
   var tabs=['members','operations','audit','science'];
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-  if(name==='operations'){setTimeout(function(){if(window.loadContracts)loadContracts();if(window.loadReservations)loadReservations();},200);}
+  if(name==='operations'){setTimeout(function(){if(window.loadContracts)loadContracts();if(window.loadReservations)loadReservations();if(window.loadKyc)loadKyc();},200);}
   if(name==='audit'){setTimeout(function(){if(window.loadAudit)loadAudit();if(window.loadErrors)loadErrors();},200);}
 }
 window.setTab=setTab;
@@ -47,6 +47,10 @@ window.filterClick=function(cell,f){
     loadReservations:function(){if(window.loadReservations)window.loadReservations();},
     loadAudit:function(){if(window.loadAudit)window.loadAudit();},
     loadErrors:function(){if(window.loadErrors)window.loadErrors();},
+    loadKyc:function(){if(window.loadKyc)window.loadKyc();},
+    kycView:function(el){if(window.kycView)window.kycView(el.dataset.path);},
+    kycVerify:function(el){if(window.kycVerdict)window.kycVerdict(el.dataset.uid,'verified');},
+    kycReject:function(el){if(window.kycVerdict)window.kycVerdict(el.dataset.uid,'rejected');},
     sendDispatch:function(){if(window.sendDispatch)window.sendDispatch();},
     approve:function(el){if(window.approve)window.approve(el.dataset.uid);},
     grantPermanent:function(el){if(window.grantPermanent)window.grantPermanent(el.dataset.uid);},

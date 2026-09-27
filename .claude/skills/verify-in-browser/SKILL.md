@@ -88,6 +88,17 @@ const pin = S.gitShow('HEAD~1', ['bg.js', 'nav.js']);
 const before = await S.launch({ pin });
 ```
 
+Anything keyed by a calendar day needs a real time zone. The harness defaults to the container's zone, which is UTC, and in UTC a UTC-vs-local day-key bug cannot show:
+
+```js
+const { ctx } = await S.launch({ timezoneId: 'Asia/Beirut' });
+await ctx.clock.setFixedTime(new Date('2026-09-27T07:00:00Z'));   // Sun 10:00 local
+```
+
+Two things to know about this setup:
+- `habits.html` passed in UTC and failed in Beirut and New York (`FIXES_LOG.md`, day keys).
+- Under `setFixedTime`, page timers ran at about 40% of wall time. Wait on a condition (`waitForFunction`), never on a duration.
+
 ## The gotchas — read these before trusting any result
 
 **esm.sh is unreachable from the sandbox, and a failed module import runs

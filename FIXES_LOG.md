@@ -21663,3 +21663,29 @@ Verified live in a rolled-back impersonation block: 15 checks, all as designed (
   - a refusal removes the upload;
   - success removes the superseded document;
   - the owner list escapes names (0 `img`), and VERIFY sends `{p_member, p_verdict:'verified'}`.
+
+## Habit day keys were UTC on write and local on read (2026-09-27)
+
+**Found while fixing the freeze-aware streak; measured before changing anything.** The harness gained `launch({timezoneId})`, since the container runs in UTC and hides this class. One daily habit, one check-in through the real `toggleHabit`, previous version pinned:
+
+| zone | local time | stored key | streak | today's dot |
+|---|---|---|---|---|
+| Asia/Beirut | Sun 10:00 | 09-27 | **0d** | **dark** |
+| Asia/Beirut | Mon 01:30 | 09-27 (yesterday) | 1d | lit |
+| America/New_York | Sat 21:00 | **09-28** (tomorrow) | **0d** | **dark** |
+| UTC | Sun 12:00 | 09-27 | 1d | lit |
+
+**Cause:** `todayKey()` wrote `toISOString()`, the UTC date. Every reader (`getStreak`, the dots, rates, the heatmap) walked back from `setHours(0,0,0,0)` and then called `toISOString()`, which names the previous UTC day east of Greenwich. `omega-streak-freeze.js`'s `dateKey` and `journal.html` had the same pair. So did the habit half of `omega-today.js`, including `weekBounds`.
+
+**Fix:**
+- One local `dayKey()` for every write and read in the habit chain.
+- Weekly keys (`week-<local Sunday>`) had been a Saturday date east of Greenwich. `habits.html` re-keys any Saturday `week-` key to its Sunday once, merging rather than overwriting, guarded by `omega_habit_weekkeys_local`.
+- `omega-streak-freeze.js`'s `scope()` now fills missing fields. A partial stored state, found by a malformed test seed, had thrown inside the habits render loop.
+
+**Verified after:**
+- All four cases store the local day and show 1d / lit.
+- Beirut: `week-2026-09-26` → `week-2026-09-27`.
+- A check-in on `habits.html` shows done on the TODAY panel.
+- `test_day_keys.py` (6); 455 tests.
+
+**Still open**, with the reason, in `GAP_ANALYSIS.md` §S: the other trackers keep their self-consistent UTC keys.

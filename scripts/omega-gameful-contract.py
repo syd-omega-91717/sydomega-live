@@ -28,6 +28,8 @@ MODULES = {
     "Hierarchy": ("permissions and governance", "Faction/authority map"),
 }
 
+RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css"]
+
 REQUIRED = [
     "Why does it exist?",
     "Who uses it?",
@@ -60,6 +62,9 @@ def main() -> int:
         for item in REQUIRED:
             if item not in text:
                 failures.append(f"universal contract missing: {item}")
+    for path in RUNTIME_FILES:
+        if not Path(path).exists():
+            failures.append(f"runtime surface missing: {path}")
 
     if failures:
         print("OMEGA GAMEFUL CONTRACT: FAIL")
@@ -69,6 +74,7 @@ def main() -> int:
 
     print(f"OMEGA GAMEFUL CONTRACT: PASS ({len(MODULES)}/18 modules)")
     print(f"Universal feature questions: {len(REQUIRED)}/{len(REQUIRED)}")
+    print(f"Runtime world surface: {len(RUNTIME_FILES)}/{len(RUNTIME_FILES)} files present")
     return 0
 
 if __name__ == "__main__":

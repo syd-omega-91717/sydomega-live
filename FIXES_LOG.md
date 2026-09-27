@@ -21524,3 +21524,25 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 **Two findings while grounding it:**
 - `command.html`'s DAY SCORE is a self-rating, so a contributor-based readiness score (S3) is new work, not a duplicate.
 - `omega-export.js` already exports 7 Supabase datasets (GDPR Art. 20). S6 is therefore scoped as extending its `gather()` with the tracker stores, not as a new exporter.
+
+## S2 weekly review + S3 readiness (2026-09-27)
+
+**Owner request:** "Ok i agree / Continue correctly" — build S2 and S3 from the service roadmap.
+
+**Built, in `omega-today.js`:**
+- **READINESS** (`command.html`): a score from 7 contributors (sleep hours, sleep quality, mood, energy, stress, 7-day training load, 7-day habit %), each shown with its input. Bands: PRIMED ≥85, READY ≥70, RECOVER below. With fewer than 3 contributors logged the score is withheld ("— / N of 3 signals"), never estimated (§8.1 class 9).
+- **THIS WEEK** (`weekly.html`): habits %, training, sleep average, mood average, water-goal days, stillness minutes and priorities done/set, against last week. The week is Monday-start, matching `weekly.html`'s own `getWeekKey`. Unfinished priorities from earlier briefs this week carry over.
+
+**Honesty rules:**
+- A direction arrow is drawn only when both weeks have logged entries. The first render drew habits ▼ against a week with nothing logged.
+- Carry-over is the only member text rendered. It goes through `textContent`; an injected `<img onerror>` priority rendered as text, with 0 `img` elements.
+
+**Finding:** the platform rule `a[href]{display:inline-flex}` collapsed the readiness contributor rows (anchors) and their bars to 0px. `.ord a.ord-row{display:grid!important}` restores it; bar width measured 267.5px after.
+
+**Verified:**
+- Seeded render: readiness **73 READY** from 7 contributors, matching the hand-computed value.
+- A sleep-only member sees "2 of 3 signals".
+- The week view matches its seeds.
+- 0 page errors; no overflow at 375px or 1280px.
+- `verify-runtime --pages=command.html,weekly.html`: PASS.
+- 407 unit tests (+8 in `test_today.py`); `ci-local.sh` 27/27.

@@ -72,3 +72,53 @@ class Today(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Readiness(unittest.TestCase):
+    """S3: an Oura-style score from seven NAMED contributors. Render-verified
+    2026-09-27: sleep 7.25h q4, mood 8/energy 6/stress 3, 1 workout, 2/21
+    habits -> contributors 100,80,80,60,80,100,10 -> 73 READY; a member with
+    only a sleep entry (2 contributors) gets no score."""
+
+    def setUp(self):
+        self.src = read("omega-today.js")
+
+    def test_score_withheld_below_three_contributors(self):
+        self.assertIn("var MIN_CONTRIB = 3;", self.src)
+        self.assertIn("if (cs.length < MIN_CONTRIB) {", self.src)
+
+    def test_seven_named_contributors(self):
+        block = self.src[self.src.index("function contributors()"):self.src.index("function band(")]
+        for cid in ("sleep", "quality", "mood", "energy", "stress", "training", "habits"):
+            self.assertIn("id: '%s'" % cid, block)
+
+    def test_oura_bands(self):
+        self.assertIn("score >= 85 ? 'PRIMED' : (score >= 70 ? 'READY' : 'RECOVER')", self.src)
+
+    def test_rows_survive_the_global_anchor_rule(self):
+        # a[href]{display:inline-flex} collapsed each bar to 0px until this.
+        self.assertIn(".ord a.ord-row{display:grid!important", self.src)
+
+
+class Week(unittest.TestCase):
+    """S2: the weekly review's measured half, on weekly.html."""
+
+    def setUp(self):
+        self.src = read("omega-today.js")
+
+    def test_direction_needs_logged_entries_in_both_weeks(self):
+        self.assertIn("if (p && c.e && p.e && p.v !== c.v) {", self.src)
+
+    def test_monday_start_matches_weekly_page(self):
+        self.assertIn("monday.setDate(d.getDate()-(day===0?6:day-1))", read("weekly.html"))
+        self.assertIn("(dow === 0 ? 6 : dow - 1)", self.src)
+
+    def test_member_text_never_parsed_as_html(self):
+        # Carry-over renders the member's own priorities: textContent only.
+        self.assertNotIn("innerHTML", self.src)
+        self.assertIn("li.textContent = txt", self.src)
+
+    def test_mounted_on_weekly_and_command(self):
+        self.assertIn("<div data-omega-week></div>", read("weekly.html"))
+        self.assertIn('<script src="/omega-today.js" defer></script>', read("weekly.html"))
+        self.assertIn("<div data-omega-readiness></div>", read("command.html"))

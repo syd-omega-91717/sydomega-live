@@ -21415,3 +21415,13 @@ The 17 pages that timed out under a 4-way parallel run were re-run serially.
 - `content-uniqueness-contract.py`: PASS (215 pages).
 - `verify-runtime.js`: PASS (13 pages).
 - `ci-local.sh`: 26/26 blocking checks pass.
+
+## UNIVERSE rail section folded into MEDIA (2026-09-27)
+
+**Owner decision** (following #488): after the navigation dedupe, UNIVERSE held one link (Creative Universe → media.html). It now lives as the first entry of MEDIA. `PS.media` is `'media'`, and the rail has **14** sections.
+- Count claims updated to match: the dashboard "PLATFORM COMMAND INDEX · ALL 207 PAGES · 14 SECTIONS" in `dashboard.html`, both `i18n.js` keys, all six language packs, and the `omega-gateway.js` comment.
+- The link's key is `media`; the old key `cinema` collided with cinema.html's entry.
+- **Verified:**
+  - `OmegaAxis.sectionOf('media')` → `media`, and `sections().length` → 14 in a render.
+  - `reachability-contract.py` OK; `test_owner_deck.py` OK; `i18n-contract.py` 0 violations.
+  - 385 tests pass; `verify-runtime.js` PASS (13 pages); `ci-local.sh` 26/26 blocking checks pass.

@@ -20,7 +20,7 @@
 .ex-diff.easy{color:rgba(0,255,136,.6);border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
 .ex-diff.med{color:rgba(201,168,76,.7);border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.04)}
 .ex-diff.hard{color:rgba(255,102,0,.7);border-color:rgba(255,102,0,.2);background:rgba(255,102,0,.04)}
-.ex-diff.apex{color:rgba(200,50,50,.7);border-color:rgba(200,50,50,.25);background:rgba(200,50,50,.04)}
+.ex-diff.apex{color:#D65C5C;border-color:rgba(200,50,50,.25);background:rgba(200,50,50,.04)}
 .ex-xp{font-family:var(--D);font-size:12px;color:var(--gold)}
 .ex-time{font-family:var(--M);font-size:12px;color:var(--muted)}
 .ex-best{font-family:var(--M);font-size:12px;color:rgba(0,229,255,.5)}
@@ -172,7 +172,7 @@
           <div class="tbl-row" style="grid-template-columns:1fr 50px 1fr;padding:3px 0">
             <div style="color:rgba(255,255,255,.8)">Cipher Break</div>
             <div style="color:var(--muted)">200</div>
-            <div style="color:rgba(200,50,50,.7)">APEX</div>
+            <div style="color:#D65C5C">APEX</div>
           </div>
         </div>
       </div>
@@ -322,7 +322,7 @@ arithmetic:function(ex){
       var val=parseInt(document.getElementById('ansInput').value);
       var rb=document.getElementById('resultBox');
       if(val===p.a){correct++;rb.textContent='✓ CORRECT';rb.style.color='var(--green)';}
-      else{rb.textContent='✗ ANSWER WAS '+p.a;rb.style.color='rgba(200,50,50,.7)';}
+      else{rb.textContent='✗ ANSWER WAS '+p.a;rb.style.color='#D65C5C';}
       rb.classList.add('visible');
       setTimeout(function(){
         idx++;
@@ -373,7 +373,7 @@ sequence:function(ex){
       rb.style.color='var(--green)';rb.classList.add('visible');
       setTimeout(function(){endExercise(score,ex.xp,ex.id);},2000);
     } else {
-      rb.textContent='✗ INCORRECT — Try again';rb.style.color='rgba(200,50,50,.7)';rb.classList.add('visible');
+      rb.textContent='✗ INCORRECT — Try again';rb.style.color='#D65C5C';rb.classList.add('visible');
     }
   }
   document.getElementById('submitSeq').addEventListener('click',check);

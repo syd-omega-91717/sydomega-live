@@ -21462,3 +21462,30 @@ The 17 pages that timed out under a 4-way parallel run were re-run serially.
 These are headless software-GL numbers, so the absolute values overstate a real GPU. The direction and the mechanism are what they show.
 
 **Tests:** `test_load_cost.py` (5) holds the cube size, `fromCubemap`, compile-before-frame, the append dedupe on both paths, the no-load-handler invariant and both loaders' adoption.
+
+## Text contrast: 48 advisories to 0 on the 18 pages that carried them (2026-09-27)
+
+**Measured:** `verify-runtime.js --all --contrast-detail` found 48 text elements between 3:1 and 4.5:1. They were legible, but under WCAG AA for this platform's 12px type. CLAUDE.md 8.3 still said "6"; the baseline had drifted.
+
+**Root causes and fixes:**
+- **One token.** `--crim` #CA5850 was the only palette text colour under 4.5:1 on the card surfaces, at 4.19-4.69:1 on 6 pages. It is now **#CF6760**, the least lightening of the same hue that reaches 5.38:1 on #0C0B10. The change is in **both** owners, `theme.js` and `css/omega-system.css`.
+- **Accent colours used as small text,** each given a same-hue text tint while the identity colour is kept for borders, glyphs and backgrounds:
+  - mirror: `.ci-label` and `.ci-tag` → #A86EBF;
+  - media: `--crimson2-text` #D85D50 and `--wind-text` #A86EBF for poster phases, element labels and game tags; the 12 "12 SERIES // 12 SUB-GAMES" lines use solid tints;
+  - elements: void text → #AB5CFF via `el.txt`;
+  - houses: House of Mystery → `textColor:'#936CFF'`, a mechanism the page already had;
+  - tribe: `el.text` for fire, space and void;
+  - forge: apex → #D65C5C;
+  - honors: level tier → #D85D50;
+  - wealth: liabilities → #D26060;
+  - stoic: muted text → `var(--muted)`;
+  - time: `--dim` → #939081;
+  - chronicle: forthcoming badge → `var(--ink)`;
+  - index and omega-world-engine: media accent → #CF6760.
+- **An unstyled control.** On `enter.html`, the four layer tabs (GATEWAY/STATUS/PROTOCOL/SCIENCE) had **no CSS rule**, so they rendered as the browser's grey system buttons (rgb 107,107,107) on the public entry page. They now use the platform tab treatment.
+
+**Method note:** the scanner judges a colour at full opacity. Raising an `rgba` alpha changed nothing it measured, and two first attempts on media and time proved it. Fix the hue's lightness, not its alpha.
+
+**Verified:**
+- 18 affected pages re-measured: **0** contrast advisories; `RUNTIME VERIFICATION: PASS`.
+- `test_text_contrast.py` (4 tests): both token owners agree; every text token clears 4.5:1 on #0C0B10; the entry tabs stay styled; the tints stay in place.

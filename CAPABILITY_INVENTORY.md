@@ -228,6 +228,8 @@ see `GAP_ANALYSIS.md` §4.7).
 Grouped by function, one line each, extracted from each file's own header comment (not
 invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 
+**Added 2026-09-27: `omega-today.js`** (loaded by `command.html` only, not injected by `bg.js`). This is the TODAY panel: it reads 9 modules' own `localStorage` stores (mirrored to `member_state`) and renders one due/done tile per ritual, plus START tiles for modules the member never used. It makes no Supabase call. `FEATURE_IDEAS.md` #38; `test_today.py`.
+
 **Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
 has now been checked column-by-column against the live schema across this session and the one
 before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new

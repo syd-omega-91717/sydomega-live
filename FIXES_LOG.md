@@ -21508,3 +21508,19 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 - It is now step **9b** (`vercel_artifact`), so there are **27** blocking checks.
 - A planted run against the old `world.html` fails with the same finding as GitHub; the fixed file passes.
 - CLAUDE.md 8.3 already said "mirror every blocking gate, from every workflow". This one had been missed.
+
+## TODAY panel + service roadmap (2026-09-27)
+
+**Owner request:** find what remains, and what can be built as services members use, inspired by how established platforms package the same needs.
+
+**Built:** `omega-today.js` on `command.html`: one due/done tile per ritual across 9 modules' own stores. A module never used shows START, never a fabricated zero.
+- Render-verified with seeded stores: 3/6 done, each tile matching its seed, with out-of-range entries excluded.
+- Empty stores: 9 START tiles.
+- 0 errors; no overflow at 375px.
+- `test_today.py`: 5 tests, including that every key it reads is still the key its owning page writes.
+
+**Proposed:** `FEATURE_IDEAS.md`, "Service roadmap" with S1–S11, each grounded in files that exist here, and each with its risk tier.
+
+**Two findings while grounding it:**
+- `command.html`'s DAY SCORE is a self-rating, so a contributor-based readiness score (S3) is new work, not a duplicate.
+- `omega-export.js` already exports 7 Supabase datasets (GDPR Art. 20). S6 is therefore scoped as extending its `gather()` with the tracker stores, not as a new exporter.

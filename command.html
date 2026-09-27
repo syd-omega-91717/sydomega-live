@@ -59,6 +59,7 @@
 @media(max-width:600px){.cmd-hero{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.clock-time{font-size:36px}}
 </style>
   <script src="/bg.js" defer></script>
+  <script src="/omega-today.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -89,6 +90,7 @@
       </div>
     </div>
 
+    <div data-omega-today></div>
     <div class="kpi-row" data-stagger data-stagger-gap="70">
       <div class="kpi" data-reveal="fade-up"><div class="lv">DAY SCORE</div><div class="vv" id="kpiDay">—</div></div>
       <div class="kpi" data-reveal="fade-up"><div class="lv">PRIORITIES DONE</div><div class="vv" id="kpiPri">—</div></div>

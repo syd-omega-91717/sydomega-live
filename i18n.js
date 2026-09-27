@@ -6,7 +6,7 @@
 
    PAYLOAD SPLIT (see CLAUDE.md §8): this file previously inlined all seven
    languages for all 1013 keys in a single 297 KB script that bg.js loads
-   eagerly on every one of the ~250 pages — 24% of the platform's entire
+   eagerly on every one of the ~208 pages — 24% of the platform's entire
    1.25 MB JS payload, downloaded on every visit even though the default
    language is 'en' and the page markup is already written in English.
 
@@ -413,7 +413,7 @@ var T_EN={
 "chr_your_element":"YOUR ELEMENT",
 "dash_activity_heatmap":"SOVEREIGN ACTIVITY · 90-DAY CONTRIBUTION HEATMAP",
 "dash_personal_tools":"PERSONAL SOVEREIGN TOOLS · ALL 8 MODULES",
-"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 207 PAGES · 14 SECTIONS",
+"dash_platform_index":"PLATFORM COMMAND INDEX · ALL 208 PAGES · 14 SECTIONS",
 "courses_heading":"COURSE CATALOG",
 "dash_ecosystem_map":"ECOSYSTEM MAP",
 "dash_intelligence_engine":"INTELLIGENCE ENGINE · ANALYTICS · RADAR · AI QUERY",
@@ -803,7 +803,7 @@ var T_EN={
 "tool_network_intel":"NETWORK INTEL",
 "tool_flashcards":"FLASHCARDS",
 "tool_decision_journal":"DECISION JOURNAL",
-"platform_command_index":"PLATFORM COMMAND INDEX · ALL 207 PAGES · 14 SECTIONS",
+"platform_command_index":"PLATFORM COMMAND INDEX · ALL 208 PAGES · 14 SECTIONS",
 "ecosystem_map":"ECOSYSTEM MAP",
 "intelligence_engine":"INTELLIGENCE ENGINE · ANALYTICS · RADAR · AI QUERY",
 "kpi_events_7d":"EVENTS (7d)",

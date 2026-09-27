@@ -21220,3 +21220,63 @@ The full-site after figure is recorded on the PR.
 - The item logic runs from the shipped file in node: items clear on evidence, a stale or unparseable rotation date reopens the keys row, and the write checks `.error` and `ok`.
 - Both migrations keep `public` wrappers INVOKER and revoke `anon`. Planted: one wrapper switched to DEFINER fails the test.
 - 353 tests pass; `ci-local.sh` passes all 26 blocking checks.
+
+## The owner's dashboard screenshot (2026-09-26): stale priorities, a stuck ticker, a label over the stats, a button over the rail, doubled rail icons; and every emblem now alive
+
+Each item was reproduced by rendering `dashboard.html` as owner at 1280x600 (the photo's viewport), then re-measured after the fix.
+
+**Action Centre asserted finished work as CRITICAL/HIGH** (CLAUDE.md 8.1 class 9). The three owner items were string literals:
+- "apply pending schema": the migration ledger matches, `migration-drift` PASS;
+- "set ANTHROPIC_API_KEY and deploy concierge": `concierge` is ACTIVE, v4;
+- "enable pgvector": live `pg_extension` has `vector 0.8.2`.
+
+They are replaced by `ownerItems()`, which reads:
+- people waiting for approval (the same count as the deck's WAITING chip);
+- `owner_security_status()`: owners without a verified factor, and key rotation not yet confirmed or older than 180 days.
+
+A failed read adds nothing, and item text is escaped. Render: the three live items show.
+
+**Ticker stuck on "LOADING LIVE FEED…"**. Live `activity_feed` has **0 rows**; the SELECT grant and policy are fine. So the load could never finish, and the strip claimed it forever. Empty now reads `QUIET · NO PUBLIC ACTIVITY YET`, and an error reads `LIVE FEED UNAVAILABLE`. A realtime INSERT still replaces it.
+
+**`COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN` printed across the stats row.** `#omega-cap-badge` is fixed at `bottom:238px`, which is mid-page on any viewport under about 760px tall. It is engineering metadata with no action, so it now renders only with `localStorage.omega_diag = '1'`.
+
+**FEEDBACK covered the rail** (COSMOS in the photo; OWNER and LOG OUT at 1280x600). `omega-feedback.js` puts it at `left:12px`, inside the 80px sidebar. The desktop ladder now gives it the voice button's x-clear, `left:96px`, on the rung below it. Measured: x = 96.
+
+**Two icons per rail entry, some of the time.** `omega-emblem-integration.js` prepends an emblem to every sidebar link. When it ran after `nav.js`, the section icons got a generic mark above their own `.on-glyph`, the rail overflowed, and labels were clipped. It now skips nav-owned glyphs and the brand. Over 6 renders on 2 pages: 0 doubled; the hidden hover menus still receive emblems in 4 of 6.
+
+**`omega-alive.js` (new, injected by bg.js on every page).** It answers the owner's request, "make every solid image emblem and rotative and more alive". Motion had been applied once: bg.js step 8 spins only the sigils present at that instant, so anything drawn later stayed still.
+- A MutationObserver pass gives two kinds of motion:
+  - round marks (emblem and sigil SVGs, deck tile sigils, emblem images) make a 72–120s turn;
+  - single-glyph icons (nav rail, alert and tile glyphs) breathe on a staggered 5.6s cycle and make one turn on hover.
+- It animates `rotate`/`scale`, never `transform`. An animation beats a declaration, so a transform keyframe would erase `nav.js`'s hover scale and every tilt already on these marks.
+- It skips:
+  - anything already animated;
+  - controls, charts and canvases;
+  - multi-letter text;
+  - pictures over 260px or non-square;
+  - the nav's hidden hover menus (258 emblems before this exclusion).
+- Off-screen marks pause, and `prefers-reduced-motion` stops everything. It caps at 400 marks.
+- Render counts:
+
+| page | turn | breathe |
+|---|---|---|
+| dashboard | 18 | 22 |
+| cosmos | 18 | 1 |
+| control-plane | 18 | 185 |
+| hercules | 18 | 16 |
+
+  The galaxy core's ♎ already had its own animation (`oeGlyph`) and is left alone.
+
+**Tests:** `test_alive.py` (10 tests). They check:
+- the loader;
+- that no keyframe animates `transform` (planted `transform:rotate(360deg)`: fails);
+- reduced motion;
+- the skip rules;
+- no hardcoded owner backlog outside comments;
+- that live-state reads check `.error`;
+- escaping;
+- the ticker's empty state;
+- the rail guard;
+- that the badge is diagnostics-only.
+
+363 tests pass. `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 26/26 blocking.

@@ -936,34 +936,62 @@ function sid(id,v){
      owner's operational backlog is real work, but it is the owner's -- it is
      rendered only when pr.is_owner, matching the is_owner gating this page
      already uses for its analytics and risk sections. */
-  function renderActionCentre(pr){
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  /* The owner's items are read live, never typed here. Three were once
+     hardcoded ("apply pending schema", "set ANTHROPIC_API_KEY", "enable
+     pgvector") and outlived the work: on 2026-09-26 the migration ledger
+     matched, concierge was deployed and vector 0.8.2 was installed, yet the
+     panel still showed all three as CRITICAL/HIGH. Each item below clears the
+     moment its source says it is done. A failed read adds nothing, rather
+     than a guess. */
+  function ownerItems(){
+    var out=[];
+    var waiting=sb.from('profiles').select('id',{count:'exact',head:true})
+      .eq('access_approved',false).eq('is_owner',false).not('is_rejected','is',true)
+      .then(function(r){
+        if(!r.error&&r.count>0) out.push({c:'var(--crim)',i:'&#9650;',t:r.count+(r.count===1?' person is':' people are')+' waiting for your decision.',m:'OWNER &middot; ACCESS',href:'/approvals.html'});
+      },function(){});
+    var sec=sb.rpc('owner_security_status').then(function(r){
+      var d=r&&!r.error&&r.data;
+      if(!d||d.ok!==true) return;
+      (d.owners||[]).forEach(function(o){
+        if(Number(o.factors)>0) return;
+        var who=String(o.email||'').split('@')[0];
+        out.push(o.me
+          ?{c:'var(--solar)',i:'&#9888;',t:'Turn on two-factor sign-in for this account.',m:'OWNER &middot; SECURITY',href:'/settings.html#two-factor'}
+          :{c:'var(--solar)',i:'&#9888;',t:'Two-factor is not on yet for '+who+'.',m:'OWNER &middot; SECURITY &middot; ON THEIR SIGN-IN'});
+      });
+      var at=d.secrets_rotated_at?Date.parse(d.secrets_rotated_at):NaN;
+      if(!(at>0)||Date.now()-at>180*864e5) out.push({c:'var(--cyan)',i:'&#9670;',t:'Rotate the provider keys, then press DONE in the Owner Deck.',m:'OWNER &middot; SECURITY',href:'/control-plane.html'});
+    },function(){});
+    return Promise.all([waiting,sec]).then(function(){return out;});
+  }
+  function paintActionCentre(items){
     var host=document.getElementById('alert-list');
     if(!host) return;
-    var items=[];
-    if(pr.is_owner){
-      items.push({c:'var(--crim)',i:'&#9650;',t:'Apply pending schema to the live database — see supabase/migrations/README.md for which files are safe against production.',m:'OWNER &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP'});
-      items.push({c:'var(--solar)',i:'&#9888;',t:'Set ANTHROPIC_API_KEY in Supabase secrets, then deploy the concierge Edge Function. Until both are done the copilot answers that it is not switched on.',m:'OWNER &middot; PRIORITY: HIGH &middot; AI MODULE'});
-      items.push({c:'var(--cyan)',i:'&#9670;',t:'Enable the pgvector extension to activate semantic AI memory.',m:'OWNER &middot; PRIORITY: HIGH &middot; VECTOR SEARCH'});
-    }else{
-      /* No "complete your onboarding" item on purpose: onboarding is not a page,
-         it is an overlay bg.js loads via omega-onboard.js, whose needsOnboarding()
-         is (!pr.sign && !pr.element && !pr.is_owner) -- so it already presents
-         itself to exactly this member. An alert pointing at it would be a second
-         copy of a prompt already on screen, and the /onboarding.html it would
-         have linked to does not exist. */
-      if(pr.is_trial&&pr.trial_expires_at){
-        var daysLeft=Math.ceil((new Date(pr.trial_expires_at)-new Date())/864e5);
-        if(daysLeft>=0) items.push({c:daysLeft<=3?'var(--crim)':'var(--cyan)',i:'&#9670;',t:'Your trial ends in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.',m:'YOURS &middot; DOMAIN: ACCESS'});
-      }
-    }
     if(!items.length){
       host.innerHTML='<div class="alert-item card card-edge" style="--ac:var(--green)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Nothing needs your attention right now.</div><div class="alert-meta">NO PRIORITY ITEMS</div></div></div>';
       return;
     }
     host.innerHTML=items.map(function(x){
       var open=x.href?' onclick="location.href=\''+x.href+'\'" style="--ac:'+x.c+';cursor:pointer"':' style="--ac:'+x.c+'"';
-      return '<div class="alert-item card card-edge"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+x.t+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
+      return '<div class="alert-item card card-edge"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+esc(x.t)+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
     }).join('');
+  }
+  /* ACTION CENTRE. Every item must come from this member's real state; when
+     nothing applies the panel says so rather than inventing a priority. The
+     owner's operational backlog is rendered only when pr.is_owner. */
+  function renderActionCentre(pr){
+    if(pr.is_owner){ ownerItems().then(paintActionCentre); return; }
+    var items=[];
+    /* No "complete your onboarding" item on purpose: onboarding is an overlay
+       bg.js loads via omega-onboard.js, which already presents itself to
+       exactly this member. */
+    if(pr.is_trial&&pr.trial_expires_at){
+      var daysLeft=Math.ceil((new Date(pr.trial_expires_at)-new Date())/864e5);
+      if(daysLeft>=0) items.push({c:daysLeft<=3?'var(--crim)':'var(--cyan)',i:'&#9670;',t:'Your trial ends in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.',m:'YOURS &middot; DOMAIN: ACCESS'});
+    }
+    paintActionCentre(items);
   }
 
   try{

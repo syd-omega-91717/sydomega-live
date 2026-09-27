@@ -21491,3 +21491,20 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 - `test_text_contrast.py` (4 tests): both token owners agree; every text token clears 4.5:1 on #0C0B10; the entry tabs stay styled; the tints stay in place.
 
 **Follow-up (same day, after #493 merged):** a full `verify-runtime.js --all --contrast-detail` on the merged tree reports **1** advisory in 208 pages. The one left is `verify-deployment.html`'s red failure line, on a diagnostic page. So lightening `--crim` created no new finding on any crimson background. `ci-local.sh` on merged main: 26/26 blocking checks pass. CLAUDE.md 8.3 is updated: 394 tests; contrast advisory 1.
+
+## "Vercel Production" red on main 4 times: a new page with no navigation shell (2026-09-27)
+
+**Found by listing every workflow's latest run on main** (28 workflows). All were green except **Vercel Production**, which failed 4 times from 06:25 UTC. Its `validate` job logged `OMEGA PRODUCTION SURFACE: FAIL — world.html: missing navigation/runtime shell hook` (run 36304707516).
+
+**Cause.** `world.html` (commit 27b8cc63, "feat(world): add live 18-module world surface") rendered its own `.ow-shell` with no `#omega-side` mount. On the page itself the member had no rail, and the page sat outside the approval guard's `.shell`/`main.main`.
+
+**Fix:**
+- The page now has the platform shell, matching its sibling `world-shell.html`: `.shell` + `aside#omega-side[data-page=world]` + `main.main`.
+- `.ow-shell.shell .ow-main` takes the remaining width. Its `94vw` would otherwise overflow beside the 80px rail.
+- The legend's unavailable dot now uses the new crimson `#CF6760`.
+- Verified: `omega-production-surface-contract.py` PASS on 216 pages; `verify-runtime.js --pages=world.html` PASS, no overflow.
+
+**Why local CI said 26/26 while main was red.** `ci-local.sh` mirrored every blocking workflow except this one's `validate` job: static contract, build artifact, surface contract and artifact invariants.
+- It is now step **9b** (`vercel_artifact`), so there are **27** blocking checks.
+- A planted run against the old `world.html` fails with the same finding as GitHub; the fixed file passes.
+- CLAUDE.md 8.3 already said "mirror every blocking gate, from every workflow". This one had been missed.

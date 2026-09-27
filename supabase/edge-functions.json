@@ -11,6 +11,7 @@
     "notify-access",
     "product-orchestrator",
     "rankings",
+    "secrets-health",
     "snapshot-leaderboard",
     "stripe-webhook",
     "weekly-digest"

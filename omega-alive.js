@@ -203,7 +203,10 @@
         var t = targets[k];
         if (t === svg || svg.contains(t) || (t.contains && t.contains(svg))) return;
       }
-      if (r.width > 1000 && r.height > 600) return;   /* full-screen overlays */
+      /* Skip only true full-screen layers (tour overlays, backdrops); a big
+         diagram like graph.html's 1184x646 constellation is a picture. */
+      if (r.width >= innerWidth * 0.95 && r.height >= innerHeight * 0.9) return;
+      if (getComputedStyle(svg).position === 'fixed') return;
       var square = r.width / r.height < 1.3 && r.height / r.width < 1.3;
       if (square && r.width <= 260 && !svg.querySelector('text')) mark(svg, 'omega-alive-turn', i);
       else glow(svg, i);

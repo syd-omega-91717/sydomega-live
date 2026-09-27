@@ -21341,3 +21341,36 @@ Simple UI keeps its decluttering: flatter cards, no heavy shadow or blur, and am
 - Simple UI must not hide sculptures or orbs.
 
 373 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## Every page, measured: one title, nothing still, no text without a role (2026-09-27)
+
+The owner: "you forgot other pages ... do that to all pages and make sure everything is done." So this pass measured every page instead of sampling. A headless sweep of all 205 pages records:
+- every visible copy of the page's name outside the sidebar and footer, with its element path;
+- canvases whose pixels are identical 2.5s apart, and large SVGs or images with no running animation;
+- hidden emblems and sculptures;
+- the count of running animations.
+
+The 17 pages that timed out under a 4-way parallel run were re-run serially.
+
+**Result on main before this change** (#486 already merged):
+- Injected title copies: 0. Every remaining repeat came from the page's own markup.
+- Hidden emblems: 0.
+- Still visuals: 2. graph.html's 1184x646 diagram was excluded by a too-broad "overlay" size rule. The dashboard authority ring animates 0→value at load, so the 3s pass skips it and the 9s pass picks it up.
+
+**Fixed here:**
+- **The page heading repeated the title bar.**
+  - Pages: command.html ("DAILY COMMAND BRIEF" at 26px in the bar, then as an 18px h1), world-shell.html (three copies), elements.html (the 3-D stage caption).
+  - `omega-identity.js` `dedupeTitles()` compares each h1/h2/`.hero-title`/`.osc-cap b` against the bar's own words, ignoring its `<small>` subtitle; that was the first attempt's bug, which matched nothing. A repeat becomes `.omega-sr`, so it is visually hidden and still read by screen readers.
+  - Re-measured: one visible title on command, world-shell, elements, graph and realm.
+- **Text with no role, on every page with a topbar:**
+  - the "PMI 70" badge (a hand-typed score shown as measured: CLAUDE.md 8.1 class 9);
+  - the mission banner (the page name again);
+  - "Ω CMD" (a fourth way back);
+  - the "PRESS ? FOR KEYBOARD SHORTCUTS" hint, now once per device instead of once per tab session.
+- **graph.html's diagram** now glows; the overlay skip is viewport-relative and applies to fixed layers only.
+
+**Left as is, on purpose:**
+- A first tab named like its page (map, search, grades, nexus, dna, graph, city, oracle): it is a control with a job.
+- KPI labels such as "TOTAL CONTACTS" and document mastheads such as charter's: content.
+
+**Tests:** `test_one_title.py` +2. 375 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.

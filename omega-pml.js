@@ -31,7 +31,14 @@
   var PAGE_DATA = PAGE_SCORES[PAGE_SLUG]||{pmi:70,dimensions:{}};
 
   /* ── PMI BADGE in topbar ───────────────────────────────────────── */
+  /* Neither badge nor banner is drawn any more (owner, 2026-09-27: "if any
+     text has no role, do not show it"). The PMI figure is a hand-typed score
+     per page -- every unlisted page read "PMI 70" -- shown as if measured
+     (CLAUDE.md 8.1 class 9); the mission banner restated the page's name
+     under its own title. The scores stay in PAGE_SCORES for the owner's
+     tooling; OmegaPML's API is unchanged. */
   function injectPMIBadge(){
+    return;
     if(document.getElementById('omega-pmi-badge')) return;
     var topbar=document.querySelector('.topbar');
     if(!topbar) return;
@@ -73,6 +80,7 @@
 
   /* ── INJECT MISSION BANNER ─────────────────────────────────────── */
   function injectMissionBanner(){
+    return;
     if(document.getElementById('omega-mission-banner')) return;
     var mission=MISSIONS[PAGE_SLUG];
     if(!mission) return;

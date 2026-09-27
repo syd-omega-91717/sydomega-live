@@ -53,6 +53,24 @@ class OneTitle(unittest.TestCase):
         # clean URLs (/points, not /points.html) must still match
         self.assertIn(r"replace(/\.html$/,'')", src)
 
+    def test_page_heading_repeating_the_title_bar_is_visually_hidden(self):
+        src = read("omega-identity.js")
+        block = src[src.index("function dedupeTitles()"):src.index("function boot()")]
+        self.assertIn("omega-sr", block)                 # kept for screen readers
+        self.assertIn("SMALL", block)                    # compares the bar's own words
+        self.assertIn(".osc-cap b", block)
+
+    def test_text_with_no_role_is_not_drawn(self):
+        pml = read("omega-pml.js")
+        for fn in ("function injectPMIBadge(){", "function injectMissionBanner(){"):
+            body = pml[pml.index(fn):pml.index(fn) + 700]
+            self.assertRegex(body, r"\{\s*(/\*.*?\*/\s*)?return;", fn)
+        ui = read("omega-ui.js")
+        body = ui[ui.index("function injectDashLink(){"):ui.index("function injectDashLink(){") + 400]
+        self.assertIn("return;", body.split("if(_slug")[0])
+        kb = read("omega-keyboard.js")
+        self.assertIn("localStorage.getItem('omega_kb_hint_shown')", kb)
+
     def test_emblem_has_no_visible_label(self):
         src = read("emblem.js")
         self.assertNotIn("wrap.appendChild(lbl)", src)

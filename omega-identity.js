@@ -396,8 +396,50 @@ input,select,textarea{font-size:16px;line-height:1.45}\
     h.insertBefore(hero, h.firstChild);
   }
 
+  /* ONE TITLE. When a page's own heading repeats its title bar word for word
+     (command.html: "DAILY COMMAND BRIEF" at 26px in the bar and again as an
+     18px h1; world-shell.html three times), the repeat is hidden from sight
+     and kept for screen readers -- the page keeps its h1 for assistive tech,
+     the eye sees the name once. Prefixes the brand adds (SOVEREIGN, OMEGA,
+     glyphs) do not make two titles different. */
+  function normTitle(t) {
+    return String(t || '').toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ')
+      .replace(/\b(SOVEREIGN|OMEGA|THE)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function dedupeTitles() {
+    var bars = document.querySelectorAll('.topbar .t, .topbar-title');
+    var names = {};
+    Array.prototype.forEach.call(bars, function (b) {
+      /* The bar's own words only: many bars carry a <small> subtitle
+         ("STRATEGY . OPERATIONS . SYD OMEGA 91717") inside the same node. */
+      var own = '';
+      Array.prototype.forEach.call(b.childNodes, function (c) {
+        if (c.nodeType === 3) own += c.nodeValue;
+        else if (c.nodeType === 1 && !/^(SMALL|SUB|SUP)$/.test(c.tagName) && !c.classList.contains('sub')) own += ' ' + c.textContent;
+      });
+      var n = normTitle(own);
+      if (n && b.getBoundingClientRect().width) names[n] = b;
+    });
+    var firstSeen = {};
+    document.querySelectorAll('h1, h2, .hero-title, .page-title, .osc-cap b').forEach(function (h) {
+      if (h.closest('.topbar, #omega-side, .oid-hero, [data-no-dedupe]')) return;
+      if (h.classList.contains('omega-sr')) return;
+      var n = normTitle(h.textContent);
+      if (!n) return;
+      if (names[n] || firstSeen[n]) {
+        h.classList.add('omega-sr');
+        h.setAttribute('data-omega-dup-title', '1');
+      } else if (/^H1$/.test(h.tagName)) {
+        firstSeen[n] = h;
+      }
+    });
+  }
+
   function boot() {
     build();
+    /* After the page has drawn its own markup (some pages render late). */
+    setTimeout(dedupeTitles, 400);
+    setTimeout(dedupeTitles, 2500);
     if (_done) return;
     var tries = 0;
     var iv = setInterval(function () {
@@ -410,11 +452,19 @@ input,select,textarea{font-size:16px;line-height:1.45}\
     document.addEventListener('DOMContentLoaded', boot);
   } else { boot(); }
 
+  if (!document.getElementById('oid-sr-css')) {
+    var srs = document.createElement('style');
+    srs.id = 'oid-sr-css';
+    srs.textContent = '.omega-sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important}';
+    (document.head || document.documentElement).appendChild(srs);
+  }
+
   window.OmegaIdentity = {
     slug: slug,
     axis: function () { return axis(slug()); },
     sigil: sigil,
     dial: dial,
+    dedupeTitles: dedupeTitles,
     status: function () {
       var root = document.documentElement;
       return {

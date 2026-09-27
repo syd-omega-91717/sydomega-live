@@ -21280,3 +21280,64 @@ A failed read adds nothing, and item text is escaped. Render: the three live ite
 - that the badge is diagnostics-only.
 
 363 tests pass. `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## One page, one title; nothing still (owner screenshots, 2026-09-27)
+
+**points.html printed its name five times** before its own title bar. Measured in a render with a text walk over visible nodes, each copy tagged with its owner:
+1. `.omega-page-door` (omega-content-sigil-system.js): "SIGIL ENTRY / POINTS / Open the experience / ENTER →", a link to the page itself.
+2. `.oid-hero` (omega-identity.js): `hasHero()` did not count `.topbar-title`, `.topbar .t` or `h1` as the page's own title.
+3. `.omega-context-current` (nav.js): the breadcrumb's copy of the page name.
+4. `#omega-emblem-wrap span` (emblem.js): the name printed beside the emblem.
+
+Plus the page's own `.topbar-title`, which stays. The same stack held on vault, habits, cosmos and guide.
+
+The fix:
+- The door and the "SECTION / NEXT" card are now opt-in (`data-omega-page-door`, `data-omega-related`). The owner's rule: the badge is how you *enter* a page, so it belongs in listings, not on the page.
+- Identity counts the page's own title.
+- The crumb is screen-reader only. On a section hub, the parent link and HUB, both self-links, are dropped. The hub check normalises clean URLs, since production serves `/points`, not `/points.html`.
+- The emblem keeps the name only as its `aria-label`.
+
+After: points, habits and guide show one visible title; vault and cosmos show one plus the section link.
+
+**A text card was spinning.** bg.js step 8 added `.omega-spin-slow` to every `[class*="sigil"]`, including `nav.omega-related-sigils`, a card of text. Step 8 now skips anything with more than two characters of text.
+
+**omega-ring.js drew a ring into its own `<script>` on every page** (CLAUDE.md 8.1 class 5b). Its loader tag carries `data-omega-ring`, and the auto-mount selected `[data-omega-ring]`. It now selects `[data-omega-ring]:not(script)`. Found by a still-visual scan: a 100x100 canvas whose pixels did not change in 2.5s, parent `SCRIPT[src=/omega-ring.js]`.
+
+**The dashboard galaxy looked frozen.** Nodes advanced 0.0004 rad per *frame*, about 4.4 minutes per orbit, so it read as a still picture.
+- Orbits now run on seconds: inner 60s, outer 90s counter-rotating, each node trailing a short comet arc. The sweep and armillary are also time-based.
+- The centre Ω is brighter and breathes, via a new `data-alive-mark` / `data-alive-turn` hook in omega-alive.js.
+- Reduced motion still freezes it.
+
+**Tests:** `test_one_title.py`, 7 tests. A planted 300s orbit fails the orbit test. 370 tests pass; `ci-local.sh` passes 26/26; `verify-runtime.js` passes on 13 pages.
+
+## Why the platform looked solid: the default "Simple UI" stopped every animation (2026-09-27)
+
+`css/omega-simple-ui.css` (commit `a63f4dcf`, 2026-09-23) is loaded on every page, and bg.js adds `body.omega-simple` to every body. It held three things:
+- `body.omega-simple *{animation-duration:.01ms!important;animation-iteration-count:1!important}`, outside any reduced-motion query, so every CSS animation on the platform ran for one frame and stopped;
+- `display:none!important` on `[data-omega-sculpture]`, `.osc-stage`, `.constellation-background` and `.emblem-orb`, which hid the 3-D emblems, constellations and orbs;
+- `animation:none` on the status dots.
+
+This is why the owner kept seeing "solid pictures", and why `omega-alive.js`'s turning emblems (#485) had the class but did not move. My earlier render counts measured the classes being applied, not motion.
+
+Measured on dashboard.html by pinning the old file against the new one:
+
+| | long-running animations | nav glyph animation-duration | turning emblem's `rotate` over 1.5s | visible sculptures |
+|---|---|---|---|---|
+| before | 3 | `1e-05s` | `none` | 0 |
+| after | 67 | `5.6s` | 36.7° → 44.2° | 1 |
+
+points.html went from 2 long-running animations to 20.
+
+Simple UI keeps its decluttering: flatter cards, no heavy shadow or blur, and ambient particles and starfield hidden. It no longer freezes motion or hides emblems. Reduced motion is still honoured: bg.js, omega-visual-evolution.css and omega-accessibility-audit.css each carry a `prefers-reduced-motion` block, all checked scoped.
+
+**Still pictures that never changed.** A scan of all 205 pages found about 30 canvases and diagrams whose pixels were identical 2.5s apart: network maps, rings, radars and charts. `omega-alive.js` gains a measured pass:
+- each canvas is sampled into a 12x12 thumbnail twice, 2.5s apart;
+- only an identical pair gets a 7s breathing glow in the page accent, composed over the element's own filter, since `omega-visual-evolution.css` gives every canvas contrast/saturate;
+- canvases never turn, because they draw their own numbers and a turning chart cannot be read;
+- a square SVG emblem with no `<text>` turns; others glow.
+
+**Gate:** `test_one_title.py` adds:
+- no stylesheet may carry a catch-all animation-duration kill outside reduced motion (planted old file: fails);
+- Simple UI must not hide sculptures or orbs.
+
+373 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.

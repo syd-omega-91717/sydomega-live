@@ -94,7 +94,11 @@
   if (window.innerWidth >= 900) lbl.style.display = 'block';
 
   wrap.appendChild(cv);
-  wrap.appendChild(lbl);
+  /* No label: the topbar it joins already carries the page's title, so the
+     name printed beside the emblem was a duplicate. The name stays as the
+     emblem's accessible name. */
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('aria-label', label);
 
   /* --- inject into topbar --- */
   var tb = document.querySelector('.topbar');

@@ -45,7 +45,7 @@ class AliveLayer(unittest.TestCase):
         # breathe one is split across a JS string join, so slice, not regex.
         flat = self.code.replace("' +\n", "").replace("'+\n", "")
         starts = [m.start() for m in re.finditer(r"@keyframes\s+omega-alive-", flat)]
-        self.assertEqual(len(starts), 2, "expected the turn and breathe keyframes")
+        self.assertEqual(len(starts), 3, "expected the turn, breathe and glow keyframes")
         frames = [flat[s:flat.index("'", s)] for s in starts]
         for body in frames:
             self.assertNotIn("transform", body)
@@ -57,6 +57,15 @@ class AliveLayer(unittest.TestCase):
         self.assertIn(".omega-alive-turn", m.group(1))
         self.assertIn(".omega-alive-breathe", m.group(1))
         self.assertIn("animation:none", m.group(1))
+
+    def test_still_pictures_are_measured_and_never_turned_if_canvas(self):
+        # A canvas draws its own numbers; turning it makes a chart unreadable.
+        block = self.code[self.code.index("function stillPass()"):self.code.index("var pending = 0;")]
+        self.assertIn("thumb(x.el) === x.a", block)
+        canvas_part = block[:block.index("document.querySelectorAll('svg')")]
+        self.assertNotIn("omega-alive-turn", canvas_part)
+        self.assertIn("glow(x.el", canvas_part)
+        self.assertIn("querySelector('text')", block)
 
     def test_hidden_nav_menus_and_busy_marks_are_skipped(self):
         self.assertIn(".on-tip", self.code)

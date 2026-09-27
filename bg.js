@@ -145,8 +145,8 @@ function __omegaAppend(el){
 
 /* Inject shared class definitions + load external stylesheet */
 (function(){
-  /* Simple UI is the default product surface. Showcase pages can opt out with
-     body.omega-showcase when a visual presentation is intentionally required. */
+  /* Simple UI is the default product surface: flatter cards and no ambient
+     particles. It no longer stops motion or hides emblems (see the file). */
   if(!document.getElementById('omega-simple-ui-css')){
     var simple=document.createElement('link');
     simple.id='omega-simple-ui-css'; simple.rel='stylesheet';
@@ -491,6 +491,10 @@ function __omegaAppend(el){
     /* 8. EMBLEM ANIMATION ON PAGE (if Ω sigil exists, spin it) */
     var omegaSigils = document.querySelectorAll('[class*="sigil"], [class*="emblem-mark"], #ph-sigil');
     omegaSigils.forEach(function(el){
+      /* A mark, not a container: `[class*="sigil"]` also matched
+         .omega-related-sigils -- a nav card of text -- and set the whole card
+         turning. More than a two-character label is text, not a mark. */
+      if((el.textContent||'').trim().length > 2) return;
       if(!el.classList.contains('omega-spin-slow')){
         el.classList.add('omega-spin-slow');
       }

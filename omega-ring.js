@@ -207,7 +207,10 @@
   }
 
   function mountAll(){
-    document.querySelectorAll('[data-omega-ring]').forEach(mountOne);
+    /* :not(script) -- bg.js loads this file as <script data-omega-ring>, and
+       that loader tag matched its own mount selector, so every page drew a
+       100px ring into a <script> element (CLAUDE.md 8.1 class 5b). */
+    document.querySelectorAll('[data-omega-ring]:not(script)').forEach(mountOne);
     /* Auto-enhance #kpi-auth with a live authority ring if not already done */
     enhanceAuthKPI();
   }

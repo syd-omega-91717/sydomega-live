@@ -2417,3 +2417,65 @@ scripts/upsert-conflict-check.py                                 1 finding, veri
 Full site sweep                                                  205 pages, 0 uncaught errors
 platform_settings.courses_enabled                                false (dormant; owner's call to activate)
 ```
+
+## 38. TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED
+
+**Inspired by** Sunsama's "unified daily view" (tasks, mail and meetings in one column before planning; sunsama.com/daily-planning, read 2026-09-27) and Things/Todoist "Today".
+**Grounded in** `command.html`, which already runs the ritual (three priorities, time blocks, evening "seal the day") but could not see the rest of the member's day. Each of 9 modules kept its own store on its own page.
+
+**Shipped:**
+- `omega-today.js`, mounted on `command.html` via `<div data-omega-today>`.
+- It reads each owning page's **own** store: `omega_habits_v2`/`omega_habit_logs_v2`, `omega_fc_cards`, `omega_vocab`, `omega_water_log`/`_goal`, `omega_sleep_log`, `omega_mood_log`, `omega_gratitude_log`, `omega_meditate_log`, `omega_workout_log`.
+- It mirrors the owning pages' due/done rules (habits.html `shouldDoToday`, `isCompletedToday`, `weekKey`).
+- One tile per ritual, each a link into its page, plus a done/started ring.
+- A module never used renders **START**, never a zero (§8.1 class 9).
+- Re-reads after `omega-member-state.js` restores the stores from Postgres.
+
+**Verified:**
+- Seeded render: habits 2/3; cards due 2, with future and new cards excluded; water 1.3/2.5 L, with an old entry excluded; sleep 7.3 H; mood logged; training 1 in 7 days — **3/6** done.
+- Empty stores render 9 START tiles.
+- 0 page errors; no overflow at 375px.
+- `test_today.py` (5 tests).
+
+---
+
+## Service roadmap — from 200 pages to services a member returns to (2026-09-27)
+
+**The gap, stated plainly.** The platform has breadth: about 200 pages, and trackers for habits, sleep, water, mood, money, learning and training. It has little *service shape*. Products that people use daily package the same trackers as a **loop**, not a page:
+- **capture** in seconds;
+- a **ritual** that pulls it together (plan the day, review the week);
+- a **signal** that reaches you when you are not looking (a reminder);
+- an **insight** you could not see yourself;
+- **ownership** of your data (export, calendar, sync).
+
+Each service below names the product pattern it follows, what already exists here, what is missing, and its risk tier under §10. HIGH-RISK means schema, a new public function, or data leaving the platform; those go through `grill-me-codex` first.
+
+| # | Service | Pattern it follows | What exists here | What is missing | Tier |
+|---|---|---|---|---|---|
+| S1 | **Today** | Sunsama unified view | `command.html` ritual | — | **SHIPPED (#38)** |
+| S2 | **Weekly Review, auto-filled** | Sunsama/Todoist weekly review: review time spent, carry over, set next week's objectives | `weekly.html` (a manual form) | Pre-fill "what happened" from the same stores Today reads: habit completion %, workouts, sleep average, mood trend, OKR key-result movement (`targets.html` → `okr_key_results`). Carry unfinished priorities from `omega_command_briefs` into next week. | LOW |
+| S3 | **Readiness** | Oura: a score from seven named contributors, each shown, below 70 means rest | Nothing. `command.html`'s DAY SCORE is a self-rating | A score computed **only** from logged sleep hours/quality, mood, training load (7d) and habit consistency. Every contributor is shown with its input, and "not enough data" appears until 3+ contributors have entries (§8.1 class 9). Client-only, no schema. | LOW |
+| S4 | **Reminders that reach you** | Streaks/Todoist: per-habit reminder time, push to phone. Web Push works on iOS 16.4+ for installed PWAs (mobiloud.com, Feb 2026) | `sw.js` + manifest (the platform is installable); `Notification.requestPermission` on notifications.html and time.html, **tab-open only** | A `push_subscriptions` table (RLS: own rows); VAPID keys as a Supabase secret; an Edge Function run by `pg_cron` that sends due reminders; a reminder time on each habit. | **HIGH** — new table, new function, owner sets a secret |
+| S5 | **One review queue** | Anki/Duolingo: one "review" button, one session | SM-2 spaced repetition in **both** `flashcard.html` and `vocabulary.html`, run separately | One session that interleaves due cards and due words, reusing each page's own scheduler. Today already surfaces both due counts. | LOW |
+| S6 | **Your data, portable** | Google Takeout / GDPR Art. 20: "download everything" | **Half-built:** `omega-export.js` (GDPR Art. 20, mounted on `privacy.html`, `tribe.html`) already exports 7 Supabase datasets; `omega-local-backup.js` exports per page | Add the tracker stores to that same archive: every `omega_*` key that `omega-member-state.js` mirrors (habits, sleep, water, mood, money, learning), so one download holds everything. Extend `gather()` rather than building a second exporter (§8.1 class 8). | LOW |
+| S7 | **Your plan in your calendar** | Sunsama calendar sync | `command.html` time blocks | **Step 1:** an ".ics" download of today's blocks and habit times, pure client, no backend. **Step 2:** a subscribable feed URL (Edge Function + per-member token). | Step 1 LOW; Step 2 **HIGH** |
+| S8 | **Ask your own data** | Notion AI / Mem: answers grounded in *your* notes | `concierge` Edge Function (Anthropic server-side); copilot UI | An opt-in "context pack" of **counts and trends only** (never raw journal; the journal is encrypted client-side by design), behind a `platform_settings` flag **and** a per-member consent. | **HIGH** — member data leaves the platform |
+| S9 | **Accountability circles** | Strava clubs / Focusmate | `social.html`, `family.html`, proposal #21 (factions) | A small private circle that sees streaks only, not content. Needs product scoping with #21. | MED (RLS on new tables) |
+| S10 | **Money with rules** | YNAB's four rules: give every dollar a job | `budget.html`, `expenses.html`, `wallet.html` (local, mirrored) | Proposal #4 ("pick a lane") is still the gate: decide Postgres vs local first, then envelope rules. | decision first |
+| S11 | **Packaging into tiers** | Freemium: the loop free, depth paid | `membership_tier`, `OmegaCanon.tierUnlocks()`, Stripe (dormant) | A decision about which services are the free loop (S1–S3, S5) and which are depth (S4, S7-2, S8). Payments stay dormant until legal/ops sign-off (§9). | **owner decision** |
+
+**Recommended order:**
+1. S2 and S3 — no schema. They reuse Today's probes and turn the tracked data into insight.
+2. S5 and S6.
+3. S4 — the one change members feel most — through `grill-me-codex`.
+4. S8 last, and only with explicit consent design.
+
+**What is still open on the platform, from `GAP_ANALYSIS.md` §S** (the items a member or the owner would feel):
+- No MFA on either owner account (owner action).
+- Leaked-document keys need rotation (owner action).
+- Member KYC submission cannot save.
+- 127 tables have policies but no grant (latent `42501`).
+- CSP still allows `'unsafe-inline'`.
+- Payments/tokens are dormant.
+- The in-app Guide is English-only.
+- `OmegaGuardian`'s risk signals are not emitted.

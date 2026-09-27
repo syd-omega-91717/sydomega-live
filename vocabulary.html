@@ -196,6 +196,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
               <button class="btn btn-gold" onclick="startDrill('due')">DRILL DUE WORDS</button>
               <button class="btn btn-ghost" onclick="startDrill('all')">DRILL ALL WORDS</button>
               <button class="btn btn-ghost" onclick="startDrill('new')">NEW WORDS ONLY</button>
+              <a class="btn btn-ghost" href="/command.html#review" title="Every due card and word, in one session">REVIEW WITH FLASHCARDS ↗</a>
             </div>
           </div>
         </div>
@@ -253,6 +254,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 </main>
 <div data-page-emblem="vocabulary" style="margin:20px auto 0"></div>
 </div>
+<script src="/omega-srs.js"></script>
 <script>
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
@@ -267,6 +269,9 @@ const DOMAIN_COLORS={general:'#888',philosophy:'#c9a84c',science:'#3498db',busin
 const POS_LABELS={noun:'n.',verb:'v.',adjective:'adj.',adverb:'adv.',phrase:'phr.',idiom:'idm.',other:''};
 const DOMAIN_LABELS={general:'GENERAL',philosophy:'PHILOS',science:'SCIENCE',business:'BUSINESS',literature:'LIT',psychology:'PSYCH',law:'LAW',politics:'POL',art:'ART',tech:'TECH',finance:'FINANCE',medicine:'MED'};
 
+/* Member text (term, definition, example, etymology, synonyms) reaches three
+   innerHTML templates below; every one goes through esc(). */
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 let words=JSON.parse(localStorage.getItem('omega_vocab')||'[]');
 let reviewLog=JSON.parse(localStorage.getItem('omega_vocab_log')||'[]');
 let libFilter='all';
@@ -387,17 +392,17 @@ function renderLibrary(){
   if(libFilter==='new') data=data.filter(w=>w.status==='new');
   else if(libFilter==='learning') data=data.filter(w=>w.status==='learning');
   else if(libFilter==='mastered') data=data.filter(w=>w.status==='mastered');
-  else if(libFilter==='due') data=data.filter(w=>w.nextReview<=today&&w.status!=='mastered');
+  else if(libFilter==='due') data=data.filter(w=>OmegaSRS.isDue(w,'word',today));
   if(q) data=data.filter(w=>w.term.toLowerCase().includes(q)||w.def.toLowerCase().includes(q)||(w.synonyms||'').toLowerCase().includes(q));
   if(!data.length){grid.innerHTML='<div class="empty">NO WORDS MATCH</div>';return;}
   grid.innerHTML=data.map(w=>`<div class="word-card card card-edge ${w.status}">
-    <div class="word-head"><span class="word-term">${w.term}</span><span class="word-pos">${POS_LABELS[w.pos]||''} ${(DOMAIN_LABELS[w.domain]||w.domain).slice(0,8)}</span></div>
-    <div class="word-def">${w.def}</div>
-    ${w.example?`<div class="word-example">"${w.example}"</div>`:''}
+    <div class="word-head"><span class="word-term">${esc(w.term)}</span><span class="word-pos">${POS_LABELS[w.pos]||''} ${esc(DOMAIN_LABELS[w.domain]||w.domain).slice(0,8)}</span></div>
+    <div class="word-def">${esc(w.def)}</div>
+    ${w.example?`<div class="word-example">"${esc(w.example)}"</div>`:''}
     <div class="word-meta">
       <span class="badge badge-${w.status}">${w.status.toUpperCase()}</span>
-      ${w.etym?`<span title="${w.etym}">[etym]</span>`:''}
-      ${w.synonyms?`<span>~ ${w.synonyms.split(',').slice(0,2).join(', ')}</span>`:''}
+      ${w.etym?`<span title="${esc(w.etym)}">[etym]</span>`:''}
+      ${w.synonyms?`<span>~ ${esc(w.synonyms.split(',').slice(0,2).join(', '))}</span>`:''}
     </div>
     <div class="word-actions">
       ${w.status!=='mastered'?`<button class="btn btn-ghost" style="font-size:.55rem;padding:3px 8px" onclick="markMastered(${w.id})">MASTERED</button>`:''}
@@ -409,7 +414,9 @@ function renderLibrary(){
 function startDrill(mode){
   const today=new Date().toISOString().slice(0,10);
   let pool;
-  if(mode==='due') pool=words.filter(w=>w.nextReview<=today&&w.status!=='mastered');
+  /* A mastered word still comes due: its long interval IS the schedule.
+     Excluding it meant a mastered word could never be reviewed again. */
+  if(mode==='due') pool=words.filter(w=>OmegaSRS.isDue(w,'word',today));
   else if(mode==='new') pool=words.filter(w=>w.status==='new');
   else pool=words.filter(w=>w.status!=='mastered');
   pool=shuffle(pool).slice(0,20);
@@ -435,15 +442,15 @@ function renderDrillCard(){
   document.getElementById('drill-progress-bar').innerHTML=drillQueue.map((_,i)=>`<div class="drill-dot ${i<drillIndex?'done':i===drillIndex?'current':''}"></div>`).join('');
   document.getElementById('drill-area').innerHTML=`
     <div class="drill-front" onclick="revealDrill()">
-      <div class="drill-word">${w.term}</div>
+      <div class="drill-word">${esc(w.term)}</div>
       <div style="font-size:.65rem;color:var(--gold);margin-top:6px">${POS_LABELS[w.pos]||''}</div>
       <div class="drill-hint">TAP TO REVEAL DEFINITION</div>
     </div>
     <div id="drill-back" class="drill-back">
-      <div class="drill-def">${w.def}</div>
-      ${w.example?`<div class="drill-ex">"${w.example}"</div>`:''}
-      ${w.etym?`<div style="font-size:.6rem;color:#888;margin-bottom:8px">ETYMOLOGY: ${w.etym}</div>`:''}
-      ${w.synonyms?`<div style="font-size:.6rem;color:#888;margin-bottom:12px">SYNONYMS: ${w.synonyms}</div>`:''}
+      <div class="drill-def">${esc(w.def)}</div>
+      ${w.example?`<div class="drill-ex">"${esc(w.example)}"</div>`:''}
+      ${w.etym?`<div style="font-size:.6rem;color:#888;margin-bottom:8px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
+      ${w.synonyms?`<div style="font-size:.6rem;color:#888;margin-bottom:12px">SYNONYMS: ${esc(w.synonyms)}</div>`:''}
       <div class="drill-btns">
         <button class="drill-btn drill-fail" onclick="gradeWord(1)">MISS</button>
         <button class="drill-btn drill-hard" onclick="gradeWord(3)">HARD</button>
@@ -461,18 +468,9 @@ function gradeWord(q){
   const w=drillQueue[drillIndex];
   const word=words.find(x=>x.id===w.id);
   if(word){
-    if(q>=3){
-      word.easiness=Math.max(1.3,word.easiness+(0.1-(5-q)*(0.08+(5-q)*0.02)));
-      if(word.repetitions===0) word.interval=1;
-      else if(word.repetitions===1) word.interval=6;
-      else word.interval=Math.round(word.interval*word.easiness);
-      word.repetitions++;
-      word.status=word.interval>=21?'mastered':'learning';
-    } else {
-      word.repetitions=0;word.interval=1;
-    }
-    const next=new Date(); next.setDate(next.getDate()+word.interval);
-    word.nextReview=next.toISOString().slice(0,10);
+    /* omega-srs.js: the scheduler shared with flashcard.html and the review
+       queue. Grades stay 1 (MISS) / 3 (HARD) / 5 (EASY). */
+    OmegaSRS.review(word,q,'word');
     save();
   }
   drillIndex++;
@@ -527,11 +525,11 @@ function renderWOTD(){
   const idx=parseInt(seed)%words.length;
   const w=words[idx];
   container.innerHTML=`<div style="text-align:center;padding:16px">
-    <div style="font-size:1.6rem;color:#fff;letter-spacing:.1em;margin-bottom:6px">${w.term}</div>
-    <div style="font-size:.65rem;color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
-    <div style="font-size:.8rem;color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${w.def}</div>
-    ${w.example?`<div style="font-size:.7rem;color:var(--muted);font-style:italic;max-width:400px;margin:0 auto">"${w.example}"</div>`:''}
-    ${w.etym?`<div style="font-size:.6rem;color:#888;margin-top:10px">ETYMOLOGY: ${w.etym}</div>`:''}
+    <div style="font-size:1.6rem;color:#fff;letter-spacing:.1em;margin-bottom:6px">${esc(w.term)}</div>
+    <div style="font-size:.65rem;color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${esc(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
+    <div style="font-size:.8rem;color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${esc(w.def)}</div>
+    ${w.example?`<div style="font-size:.7rem;color:var(--muted);font-style:italic;max-width:400px;margin:0 auto">"${esc(w.example)}"</div>`:''}
+    ${w.etym?`<div style="font-size:.6rem;color:#888;margin-top:10px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
   </div>`;
 }
 

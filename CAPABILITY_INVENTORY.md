@@ -232,6 +232,8 @@ invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 
 **Added 2026-09-27: `omega-reminders.js`** (injected by `bg.js` on every page, guard `data-omega-reminders-mod`; inert until the member opts in). Ritual reminders, FEATURE_IDEAS.md S4 Part A: reads `OmegaToday.status()`/`.habitStreak()` (loading `omega-today.js` on demand), learns the member's habit window from observed check-ins, sends at most two nudges a day through `sw.js` (new `notificationclick` handler, same-origin only) or an in-page card, and offers a recurring `.ics`. Settings mount `data-omega-reminders` on `notifications.html` (deep link `#reminders` from the TODAY panel). Tab-open only; closed-app Web Push is Part B, not built. `test_reminders.py`.
 
+**Added 2026-09-27: `omega-srs.js` and `omega-review.js`** (S5). `omega-srs.js` is the one SM-2 scheduler: `flashcard.html` and `vocabulary.html` load it and call `OmegaSRS.review`, so they no longer carry their own copies. `omega-review.js` (loaded by `command.html`) is the review queue. It shows due cards and due words interleaved in one overlay, opened from the TODAY panel's `▶ REVIEW n` chip or `/command.html#review`. It re-reads and writes each item by id. `test_review_queue.py`.
+
 **Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
 has now been checked column-by-column against the live schema across this session and the one
 before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new

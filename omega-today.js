@@ -129,6 +129,7 @@
     s.textContent =
       '.otd{margin:0 0 18px}' +
       '.otd-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}' +
+      '.otd a.otd-rev{margin-left:auto;margin-right:-6px;background:rgba(201,168,76,.14)}.otd a.otd-rev+a.otd-rem{margin-left:0}' +
       '.otd a.otd-rem{margin-left:auto;font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);text-decoration:none;border:1px solid rgba(201,168,76,.35);border-radius:999px;padding:5px 12px}' +
       '.otd-ring{--p:0;width:54px;height:54px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;' +
         'background:conic-gradient(var(--gold,#C9A84C) calc(var(--p)*1turn),rgba(201,168,76,.12) 0);' +
@@ -223,6 +224,15 @@
     rl.setAttribute('data-omega-today-reminders', on ? 'on' : 'off');
     rl.textContent = on ? '◷ REMINDERS ON' : '◷ SET A REMINDER';
     head.appendChild(rl);
+    /* S5: one queue for every due card and word (omega-review.js). */
+    var due = 0;
+    results.forEach(function (x) { if ((x.p.id === 'cards' || x.p.id === 'words') && x.r && +x.r.value > 0) due += +x.r.value; });
+    if (due > 0) {
+      var rv = document.createElement('a'); rv.className = 'otd-rem otd-rev'; rv.href = '#review';
+      rv.setAttribute('data-omega-review-open', ''); rv.setAttribute('data-omega-today-due', String(due));
+      rv.textContent = '▶ REVIEW ' + due;
+      head.insertBefore(rv, rl);
+    }
     var grid = document.createElement('div'); grid.className = 'otd-grid';
     results.forEach(function (x) { grid.appendChild(tile(x.p, x.r)); });
     host.appendChild(head); host.appendChild(grid);

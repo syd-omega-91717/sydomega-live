@@ -21594,3 +21594,39 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 - Card buttons were uncovered (`elementFromPoint`) at 1280px and 375px.
 - 0 page errors.
 - Harness note: under `clock.setFixedTime`, page time ran at about 40% of wall time (`performance.now()` 2754 after about 7 s), so a timed boot looked like a missing send. Wait on a condition, not a duration.
+
+## S5 one review queue, and one SM-2 (2026-09-27)
+
+**Owner request:** continue "all related and new ones for improving". S5 was the next item on the roadmap.
+
+**Grounding found three bugs in the two copies of SM-2** (§8.1 class 8). Each was measured on the previous version pinned with `H.gitShow('HEAD', …)`:
+- **HARD reset a card like AGAIN.** `flashcard.html` mapped HARD to quality 2, below SM-2's pass mark of 3. A card at reps 2 / interval 6 went to reps 0 / interval 1 on HARD, and the button read `<1d`. The page's own explainer said HARD "increases the interval". GOOD was quality 3, which lowered the ease on every correct answer.
+- **A mastered word could never come back.** `vocabulary.html`'s due drill **and** its library "DUE" filter both excluded `status==='mastered'`. With a due mastered word seeded, the old drill held 1 word, not 2. `test_review_queue.py` found the second copy (the library filter) after the first was fixed.
+- **The two pages ordered the SM-2 step differently.** `vocabulary.html` updated the ease before computing the interval; `flashcard.html` and the original algorithm compute I(n) = I(n-1) × EF with the current EF, then adjust EF.
+
+**Built:**
+- `omega-srs.js`: the one scheduler, keeping each page's field names, so no stored data migrates. Grades are AGAIN/HARD/GOOD/EASY = 1/3/4/5. Both pages now call it, and the flashcard buttons come from `OmegaSRS.BUTTONS`.
+- `omega-review.js`: the review queue.
+  - Holds every due card and word, oldest first, interleaved, up to 40 at a time.
+  - Space reveals, 1–4 grades, Esc closes.
+  - Each grade re-reads the store and writes that one item by id; words also add to `omega_vocab_log`, so vocabulary's stats and streak count them.
+  - Entry points: `▶ REVIEW n` on the TODAY panel, and `/command.html#review` from both pages. The link opens only after the approval guard reveals the page.
+- `vocabulary.html` rendered term, definition, example and etymology unescaped in three templates. All four now go through `esc()`.
+
+**Verified in a render:**
+- Order: card, word, card, word, card.
+- GOOD on a new card → 1 d, EF 2.50.
+- HARD on a word at reps 2 / interval 6 → 15 d, ease 2.36.
+- AGAIN → 1 d, reps 0.
+- EASY on a mastered word at 30 d / 2.6 → 78 d / 2.70.
+- `omega_vocab_log` +2.
+- The chip disappears once nothing is due.
+- An `<img onerror>` front rendered as text, with 0 `img` elements.
+- On `flashcard.html`: 4 buttons, HARD shows `15d`.
+- The due drill now holds the mastered word.
+- Buttons uncovered and no overflow at 375 px and 1280 px.
+- 0 page errors.
+- `verify-runtime` passes on command, flashcard and vocabulary.
+- 435 tests pass; `ci-local.sh` 27/27.
+
+**Noted, not changed:** in original SM-2, HARD, GOOD and EASY give the same *next* interval and differ only in the ease they leave. That is correct, but it looks flat. FSRS is proposed as S15.

@@ -41,6 +41,11 @@
   function injectSidebarEmblems(){
     var sidebar=document.getElementById('omega-side')||document.querySelector('.side');if(!sidebar)return;
     sidebar.querySelectorAll('a[href],.nav-item').forEach(function(item){
+      /* nav.js owns the rail's marks. Its section icons already carry a
+         glyph (.on-glyph) and the brand its own mark; prepending an emblem
+         there stacked two icons per entry whenever this ran after nav.js,
+         pushed the rail past its height and clipped the labels. */
+      if(item.querySelector('.on-glyph')||item.classList.contains('on-brand'))return;
       var href=item.getAttribute('href')||'',page=href.split('/').pop()||'';
       if(/\.html(?:#.*)?$/.test(page))enhanceNavItem(item,page.split('#')[0]);
     });

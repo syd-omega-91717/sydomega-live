@@ -1231,6 +1231,12 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
        80 + 16 gutter. A z-index cannot fix this -- see the stacking-context
        note in nav.js -- so the geometry has to. */
     +'html #omega-voice-btn{left:96px!important}'
+    /* The same x-clear for #ofb-btn. omega-feedback.js puts it at left:12px,
+       inside the 80px sidebar, where it covered the rail's last entries
+       (OWNER / LOG OUT on dashboard at 1280x600; COSMOS in the owner's own
+       screenshot). The voice button already holds x 96..140 from bottom 90,
+       so FEEDBACK takes the rung under it: bottom 36..76, no overlap. */
+    +'html #ofb-btn{left:96px!important}'
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-desktop-ladder';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
@@ -2523,6 +2529,7 @@ setTimeout(function(){
      area's (CLAUDE.md 8.1 class 5b). */
   if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
   /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
+  if(!document.querySelector('script[data-omega-alive]')){var _oal=document.createElement('script');_oal.src='/omega-alive.js';_oal.setAttribute('data-omega-alive','1');_oal.defer=true;__omegaAppend(_oal);}
   if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */

@@ -10,17 +10,17 @@
 
   var ZODIAC_MAP=[
     {sign:'Aries',el:'fire',god:'Ares',agent:'Sentinel',token:'ARENITE',dates:'Mar 21 – Apr 19',glyph:'\u2648'},
-    {sign:'Taurus',el:'metal',god:'Aphrodite',agent:'Merchant',token:'TAURITE',dates:'Apr 20 – May 20',glyph:'\u2649'},
-    {sign:'Gemini',el:'wind',god:'Hermes',agent:'Scout',token:'GEMITE',dates:'May 21 – Jun 20',glyph:'\u264A'},
-    {sign:'Cancer',el:'water',god:'Artemis',agent:'Warden',token:'CANITE',dates:'Jun 21 – Jul 22',glyph:'\u264B'},
-    {sign:'Leo',el:'fire',god:'Apollo',agent:'Sovereign',token:'LEONITE',dates:'Jul 23 – Aug 22',glyph:'\u264C'},
-    {sign:'Virgo',el:'sand',god:'Athena',agent:'Auditor',token:'VIRGITE',dates:'Aug 23 – Sep 22',glyph:'\u264D'},
-    {sign:'Libra',el:'wind',god:'Hera',agent:'Proxy',token:'LIBRITE',dates:'Sep 23 – Oct 22',glyph:'\u264E'},
-    {sign:'Scorpio',el:'water',god:'Demeter',agent:'Oracle',token:'SCORITE',dates:'Oct 23 – Nov 21',glyph:'\u264F'},
-    {sign:'Sagittarius',el:'fire',god:'Zeus',agent:'Beacon',token:'SAGITE',dates:'Nov 22 – Dec 21',glyph:'\u2650'},
-    {sign:'Capricorn',el:'metal',god:'Hestia',agent:'Analyst',token:'CAPRITE',dates:'Dec 22 – Jan 19',glyph:'\u2651'},
-    {sign:'Aquarius',el:'wind',god:'Hephaestus',agent:'Tutor',token:'AQUITE',dates:'Jan 20 – Feb 18',glyph:'\u2652'},
-    {sign:'Pisces',el:'water',god:'Poseidon',agent:'Historian',token:'PISCITE',dates:'Feb 19 – Mar 20',glyph:'\u2653'},
+    {sign:'Taurus',el:'metal',god:'Aphrodite',agent:'Merchant',token:'AURUM',dates:'Apr 20 – May 20',glyph:'\u2649'},
+    {sign:'Gemini',el:'wind',god:'Hermes',agent:'Scout',token:'ZEPHYR',dates:'May 21 – Jun 20',glyph:'\u264A'},
+    {sign:'Cancer',el:'water',god:'Artemis',agent:'Warden',token:'NEREID',dates:'Jun 21 – Jul 22',glyph:'\u264B'},
+    {sign:'Leo',el:'fire',god:'Apollo',agent:'Sovereign',token:'SOLARI',dates:'Jul 23 – Aug 22',glyph:'\u264C'},
+    {sign:'Virgo',el:'sand',god:'Athena',agent:'Auditor',token:'SANDITE',dates:'Aug 23 – Sep 22',glyph:'\u264D'},
+    {sign:'Libra',el:'wind',god:'Hera',agent:'Proxy',token:'FORGEON',dates:'Sep 23 – Oct 22',glyph:'\u264E'},
+    {sign:'Scorpio',el:'water',god:'Demeter',agent:'Oracle',token:'STYX',dates:'Oct 23 – Nov 21',glyph:'\u264F'},
+    {sign:'Sagittarius',el:'fire',god:'Zeus',agent:'Beacon',token:'EMBER',dates:'Nov 22 – Dec 21',glyph:'\u2650'},
+    {sign:'Capricorn',el:'metal',god:'Hestia',agent:'Analyst',token:'FERRUM',dates:'Dec 22 – Jan 19',glyph:'\u2651'},
+    {sign:'Aquarius',el:'wind',god:'Hephaestus',agent:'Tutor',token:'AETHER',dates:'Jan 20 – Feb 18',glyph:'\u2652'},
+    {sign:'Pisces',el:'water',god:'Poseidon',agent:'Historian',token:'ABYSS',dates:'Feb 19 – Mar 20',glyph:'\u2653'},
   ];
   var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D'};
 

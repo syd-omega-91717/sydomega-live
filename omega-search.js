@@ -193,7 +193,7 @@
     {t:'ELEMENT SOUL',d:'Metaphysical — inner dimension of sovereign identity',u:'/elements.html',c:'ELEMENT'},
     {t:'ELEMENT SPACE',d:'Metaphysical — outer dimension expansion cosmos',u:'/cosmos.html',c:'ELEMENT'},
     {t:'ELEMENT VOID',d:'Metaphysical — the absence that contains everything',u:'/elements.html',c:'ELEMENT'},
-    {t:'ELEMENT THE NINTH',d:'Transcendent — activates at Stage 9 for all sovereign members',u:'/elements.html',c:'ELEMENT'},
+    {t:'ELEMENT THE ALL',d:'Transcendent — activates at Stage 9 for all sovereign members',u:'/elements.html',c:'ELEMENT'},
     /* ── OLYMPIANS ──────────────────────────────────────────────────────── */
     {t:'ARES ARIES',d:'God of war — sovereign founder Aries Fire ARENITE token',u:'/cosmos.html',c:'OLYMPIAN'},
     {t:'APHRODITE TAURUS',d:'Goddess of beauty — Taurus Metal element',u:'/cosmos.html',c:'OLYMPIAN'},

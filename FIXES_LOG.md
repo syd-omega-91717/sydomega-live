@@ -21374,3 +21374,44 @@ The 17 pages that timed out under a 4-way parallel run were re-run serially.
 - KPI labels such as "TOTAL CONTACTS" and document mastheads such as charter's: content.
 
 **Tests:** `test_one_title.py` +2. 375 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## One set of terms across the platform: canon, navigation, titles (2026-09-27)
+
+**Owner request:** "Make sure all the platform and pages and contents follow the same compatible terms."
+
+**Canon: one table, now gated.** `omega-canon.json` `tracks` pairs each sign with its god, element, agent and token. Pages that kept their own copies had drifted (CLAUDE.md 8.1 class 8):
+- `agents.html` fallback table: Merchant's god (→ Aphrodite), Oracle's god (→ Demeter), Capricorn's "Cronus" (→ Hestia), tokens SILITE → SANDITE and PRIMUS → AETHER.
+- `media.html`: 11 "Sign // Agent" card pairs set to the canon.
+- `blockchain.html`: SOLARII → SOLARI, Virgo ARENITE → SANDITE, PRIME → AETHER.
+- `omega-onboard.js`: the token assigned at onboarding now matches the canon for all twelve signs. Live `profiles` carry a null token, so there is no data to migrate.
+- `profile.html` archetypes, `missions.html` (elements MIND/COSMOS/ALL, which are not elements, → SAND/VOID/THE ALL), `horoscope.html` modes, `travel.html` ("Space is the seventh of the nine elements").
+- **The ninth element had two names.** "THE ALL" is the key read by about 15 modules; six pages printed a second name. Canon, `omega-elements.json`, cosmos, search, sculpture, knowledge and gaming now all say THE ALL. `elements.html` keeps its tier label as "TRANSCENDENT · NINTH ELEMENT", an ordinal and not a name.
+- **New gate: `scripts/canon-consistency.py`** (in `contract-suite.py`, so blocking). A record is a line, or one item of a long minified line, that names exactly one sign, or one agent in a `name`/`agent` field. Its god (full pantheon, so a god outside the twelve is caught), agent, token and element must be the canon's. Rows naming several signs are skipped. Uranus is excluded because pages cite it as Aquarius's ruling planet. Result: 396 files, PASS. A planted Cronus and a planted PRIMUS each FAIL. `test_canon_consistency.py` covers 10 cases.
+
+**Navigation: one page, one place, one name.** `nav.js` `SECTIONS`:
+- **37 duplicate entries removed.** Each page is kept only in its home section (`PS`), so no href appears twice.
+- **19 labels aligned** to the page's own name, for example DASHBOARD → COMMAND BRIDGE, THE 729 → THE MATRIX, GAMING ARENA → GAMES & EXAMS, HONORS → HALL OF HONORS, FOCUS → DEEP WORK.
+- **Two losses caught before commit** by diffing every href against the pre-change file:
+  - the transform dropped the one four-field entry (OWNER DECK, `'owner'`), and `reachability-contract.py` failed on `control-plane.html`;
+  - it dropped four hash-tab destinations (`matrix#triads/#grid/#charter`, `profile#portfolio`) whose keys had no `PS` home.
+  All five are restored in their page's section. After the fix, the diff shows 0 lost hrefs and 0 duplicates.
+
+**Titles and title bars:**
+- **Every `<title>` now reads `Ω SYD OMEGA 91717 — X`.** Before, 98 pages used seven different formats (`X · SYD OMEGA 91717`, `X | Ω…`, `Ω… -- X`, `Ω SYDOMEGA — X`, and some with no brand at all).
+- The repeated "Sovereign" prefix was dropped from 38 titles; the platform is sovereign everywhere, so on each title it was noise.
+- Titles now match the nav name: Hall of Honors, The Matrix, Creative Universe, Deep Work, Billing, Runes, Trophy Vault.
+- `content-uniqueness-contract.py` caught one collision (design-showcase and design-system), which was renamed to Design Showcase.
+- **Title bars that clashed with another page:**
+  - rune.html said SIGIL, which is sigil.html's name; it now says RUNES;
+  - subscriptions.html said MEMBERSHIP, which is membership.html's name; it now says BILLING;
+  - honors.html said THE ACHIEVEMENTS; it now says HALL OF HONORS;
+  - trophies.html said ACHIEVEMENT VAULT; it now says TROPHY VAULT.
+
+**Verification:**
+- `unittest`: 385 tests pass.
+- `canon-consistency.py`: PASS.
+- `reachability-contract.py`: OK.
+- `test_owner_deck.py`: OK.
+- `content-uniqueness-contract.py`: PASS (215 pages).
+- `verify-runtime.js`: PASS (13 pages).
+- `ci-local.sh`: 26/26 blocking checks pass.

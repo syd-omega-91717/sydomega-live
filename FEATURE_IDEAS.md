@@ -1150,6 +1150,33 @@ vignette tint).
 - [Figma dark/light mode personalization](https://www.figma.com/files?view=list&sort=saved)
 - [Luxury astrology branding (Element & Co.)](https://www.elementandco.com/)
 
+## Blueprint
+
+**Module Plan**
+- `omega-theme-personalization.js` (200 lines): Reads `profiles.sign`, computes element-based palette and current season, publishes CSS tokens to :root
+  - Guard attribute: `data-omega-theme-personalization`
+  - Injected in bg.js globally after theme.js loads
+  - Exports: `window.OmegaThemePersonalization = {setElement, setSeason, getCurrentTheme, clearOverrides}`
+
+**Integration Points & File Changes**
+1. `omega-theme-personalization.js` (IMPLEMENTED): Listens to OmegaCanon profile load, maps zodiac sign to element (fire/water/earth/air), publishes --element-primary/secondary/accent/glow/soft tokens plus seasonal modifiers (--season-bloom, --season-vignette, --season-glow-intensity)
+2. `bg.js`: Already injects omega-theme-personalization.js with guard pattern (verified line 2562+)
+3. `theme.js`: Already has fallback tokens defined (lines 20–24); omega-theme-personalization overrides at runtime
+4. `localStorage` patterns: omega_theme_element and omega_theme_season for member customization
+
+**Data Plan**
+- No new tables, RPCs, or platform_settings flags
+- Reads existing `profiles.sign` (populated via omega-agents.json zodiac mapping)
+- Computes season from `new Date().getMonth()`
+
+**Verification Plan**
+1. `node --check omega-theme-personalization.js` — syntax valid
+2. `python3 scripts/audit.py` — module injected correctly, guard unique
+3. `/verify-in-browser pages=profile.html,dashboard.html errors` — theme tokens applied, no throws
+4. Manual: Load member profile, observe card/glow colors shift to element affiliation; navigate through seasonal months (mock date if needed), verify seasonal modifiers apply
+
+**Respects prefers-reduced-motion:** Static palette applied, no transition animations triggered.
+
 ## 23. Event-Driven Celebration Engine Expansion (ASCEND / VAULT / INTEL / COMMAND) — proposal
 
 **Concept:** Extend `omega-confetti.js` beyond simple achievement unlocks to emit
@@ -1341,6 +1368,40 @@ drives animation on non-audio responses. Fully disabled under `prefers-reduced-m
 - [OpenAI ChatGPT streaming pulsing UI](https://openai.com/chatgpt/)
 - [Google Assistant voice energy meters](https://assistant.google.com/)
 - [Slack Huddles voice presence indicators](https://slack.com/features/huddles)
+
+## Blueprint
+
+**Page & Nav Plan**
+- No new page required; extends existing copilot streaming and particle system
+- No nav changes; copilot exists under COMMAND domain
+
+**Module Plan**
+- `omega-voice-sync.js` (~200 lines): Listens to copilot stream events, computes voice energy
+  - Guard attribute: `data-omega-voice-sync`
+  - Injected in bg.js after omega-confetti.js
+  - Exports: `window.OmegaVoiceSync = {init, cleanup, isActive, getTokenRate}`
+
+**Integration Points & File Changes**
+1. `omega-voice-sync.js` (NEW): Listen to `omega:copilot-stream-start`, `omega:copilot-token`, `omega:copilot-stream-end` from omega-copilot.js (lines 83–125). Compute token rate and voice energy, dispatch `omega:voice-energy` event with normalized emission rate. Respect `prefers-reduced-motion`.
+2. `bg.js` (MODIFY line 2560+): Inject omega-voice-sync.js after omega-confetti.js injection using guard pattern `data-omega-voice-sync='1'`, defer=true, __omegaAppend()
+3. `omega-cinematic-animations-phase3.js`: Already exports setParticleEmissionRate() at line 289; no change needed
+4. No chatbot.html modification required; omega-voice-sync.js is global and auto-wired
+
+**Data Plan**
+- No new tables, RPCs, or platform_settings flags
+- Reads existing copilot event stream
+- Binds to existing particle emission control via omega-cinematic-animations-phase3.js
+
+**Verification Plan**
+1. `node --check omega-voice-sync.js` — syntax valid
+2. `python3 scripts/audit.py` — 0 new CRITICAL, module not orphaned
+3. `/verify-in-browser pages=chatbot.html errors` — copilot page renders, no throws
+4. Manual: stream copilot response, observe particle emission responding to voice energy
+5. Verify `prefers-reduced-motion` compliance (Web Audio skipped, token-rate fallback active)
+
+**No New Schema, No Platform Settings**
+- Client-side only; uses existing infrastructure
+- No backend changes required
 
 ## 26. 3D Environment Integration & Real-Time Geometry Binding (COSMOS / ASCEND / IDENTITY) — proposal
 

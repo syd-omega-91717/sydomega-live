@@ -38,11 +38,11 @@
   var MAX = 400;
   var TURN_SEL = [
     '[data-omega-emblem] svg', '.emblem-icon > svg', '[data-page-emblem] svg',
-    '.omega-emblem', 'svg[class*="sigil"]', 'svg[class*="emblem"]',
+    '[data-alive-turn]', '.omega-emblem', 'svg[class*="sigil"]', 'svg[class*="emblem"]',
     '.odk-tile > svg', '.oid-mark svg', 'img[src*="emblem"]', 'img[src*="sigil"]', 'img[src*="crest"]', 'img[src*="seal"]'
   ].join(',');
   var GLYPH_SEL = [
-    '.on-glyph', '.alert-icon', '.odk-glyph', '.page-emblem',
+    '[data-alive-mark]', '.on-glyph', '.alert-icon', '.odk-glyph', '.page-emblem',
     '[class*="glyph"]', '[class*="-icon"]:not(svg)', '[class*="emblem-mark"]'
   ].join(',');
   var NEVER = 'button:not(.on-icon),input,select,textarea,canvas,[contenteditable],' +

@@ -491,6 +491,10 @@ function __omegaAppend(el){
     /* 8. EMBLEM ANIMATION ON PAGE (if Ω sigil exists, spin it) */
     var omegaSigils = document.querySelectorAll('[class*="sigil"], [class*="emblem-mark"], #ph-sigil');
     omegaSigils.forEach(function(el){
+      /* A mark, not a container: `[class*="sigil"]` also matched
+         .omega-related-sigils -- a nav card of text -- and set the whole card
+         turning. More than a two-character label is text, not a mark. */
+      if((el.textContent||'').trim().length > 2) return;
       if(!el.classList.contains('omega-spin-slow')){
         el.classList.add('omega-spin-slow');
       }

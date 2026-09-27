@@ -46,7 +46,14 @@
     ].join('');
     (document.head||document.documentElement).appendChild(s);
   }
+  /* A door is how you ENTER a page: its badge belongs where the page is
+     listed (the Owner Deck, the hubs), never on the page itself. Mounted on
+     every page it was a link to the page you were already on, and a third
+     copy of the page's name ("SIGIL ENTRY / POINTS / Open the experience /
+     ENTER ->") above the page's own title (owner screenshot, 2026-09-27).
+     A page that truly wants one opts in with <body data-omega-page-door>. */
   function mountDoor(){
+    if(!document.body||!document.body.hasAttribute('data-omega-page-door'))return;
     if(document.querySelector('.omega-page-door')||SYSTEM_PAGES[file()])return;
     var main=document.querySelector('main.main,main#main,main.page-shell,main,[role="main"]');if(!main)return;
     var e=emblem(), door=document.createElement('section');door.className='omega-page-door';door.setAttribute('aria-label','Page sigil entry');
@@ -62,7 +69,11 @@
     if(anchor&&anchor!==door)main.insertBefore(door,anchor);else main.prepend(door);
   }
   function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  /* The "SECTION / NEXT . PAGE . OPEN ->" card is opt-in too
+     (<body data-omega-related>): with the door gone it became the first thing
+     on every page, text whose job the sidebar and the hubs already do. */
   function related(){
+    if(!document.body||!document.body.hasAttribute('data-omega-related'))return;
     if(document.querySelector('.omega-related-sigils'))return;
     var main=document.querySelector('main.main,main#main,main.page-shell,main,[role="main"]');if(!main)return;
     var meta=window.OmegaUI&&window.OmegaUI.PAGE_META?window.OmegaUI.PAGE_META:null;

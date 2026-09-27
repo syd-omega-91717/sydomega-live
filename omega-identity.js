@@ -328,9 +328,12 @@ input,select,textarea{font-size:16px;line-height:1.45}\
   function hasHero(h) {
     if (document.querySelector('.oid-hero')) return true;
     if (!h) return false;
+    /* A page that already names itself (its own title bar or h1) gets no
+       second title: points.html showed "ACHIEVE / POINTS" here directly
+       above its own "SOVEREIGN POINTS" topbar. */
     return !!h.querySelector(
       '.page-hero,.ohz-hero,[data-omega-sculpture],[data-omega-constellation],' +
-      '[class*="hero"]');
+      '[class*="hero"],.topbar-title,.topbar .t,h1');
   }
 
   var _done = false;

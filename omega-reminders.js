@@ -156,7 +156,11 @@
     var plan = windowPlan();
     /* SAVE: only a real streak, only while today is not yet complete. */
     if (p.save && m >= SAVE_AT && ev.streak && ev.streak.days >= 1 && ev.streak.today === false && claim('save')) {
-      show('save', 'Your ' + ev.streak.days + '-day habit streak ends at midnight',
+      /* Honest urgency: when every open habit has a streak freeze in hand,
+         missing today is forgiven, so say that instead of "ends at midnight". */
+      if (ev.streak.covered) show('save', 'Your ' + ev.streak.days + '-day habit streak is protected tonight',
+           'A streak freeze will cover today if you miss it — or check in and keep the freeze.', '/habits.html');
+      else show('save', 'Your ' + ev.streak.days + '-day habit streak ends at midnight',
            'One check-in keeps it. Open Habits.', '/habits.html');
       return;
     }

@@ -89,16 +89,6 @@
           <div id="notif-status" style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:10px">Status: checking...</div>
           <button class="btn" id="notif-btn" onclick="requestNotifPermission()">REQUEST PERMISSION</button>
         </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:16px;border-radius:2px;margin-bottom:12px">
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">NOTIFICATION CATEGORIES</div>
-          <div style="display:grid;gap:8px" id="cat-settings">
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-daily" checked> <span style="font-family:var(--M);font-size:12px">Daily briefing notifications</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-reminders" checked> <span style="font-family:var(--M);font-size:12px">Reminder due alerts</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-system"> <span style="font-family:var(--M);font-size:12px">System notifications</span></label>
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ns-achieve"> <span style="font-family:var(--M);font-size:12px">Achievement unlocks</span></label>
-          </div>
-          <button class="btn" style="margin-top:12px" onclick="saveNotifSettings()">SAVE SETTINGS</button>
-        </div>
       </div>
     </div>
 
@@ -129,12 +119,11 @@
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-var NK='omega_notifications',RK2='omega_reminders',SK='omega_notif_settings';
+var NK='omega_notifications',RK2='omega_reminders';
 var notifs=JSON.parse(localStorage.getItem(NK)||'[]');
 var reminders=JSON.parse(localStorage.getItem(RK2)||'[]');
 /* valid-JSON fallback: unquoted keys threw at module top level on first
    visit, killing every handler defined below (see contributions.html). */
-var settings=JSON.parse(localStorage.getItem(SK)||'{"daily":true,"reminders":true,"system":false,"achieve":false}');
 
 function save(){localStorage.setItem(NK,JSON.stringify(notifs));localStorage.setItem(RK2,JSON.stringify(reminders));}
 
@@ -220,13 +209,9 @@ window.requestNotifPermission=function(){
     document.getElementById('notif-status').textContent='Status: '+p.toUpperCase();
   });
 };
-window.saveNotifSettings=function(){
-  settings.daily=document.getElementById('ns-daily').checked;
-  settings.reminders=document.getElementById('ns-reminders').checked;
-  settings.system=document.getElementById('ns-system').checked;
-  settings.achieve=document.getElementById('ns-achieve').checked;
-  localStorage.setItem(SK,JSON.stringify(settings));
-};
+/* The four 'notification category' toggles saved omega_notif_settings, which
+   no file reads (grep): controls that did nothing. Removed 2026-09-27; ritual
+   reminders (omega-reminders.js, REMINDERS tab) are the real setting now. */
 
 (async function(){
   try{
@@ -246,10 +231,6 @@ window.saveNotifSettings=function(){
     calcKPIs();renderNotifs();renderReminders();
     if('Notification' in window){document.getElementById('notif-status').textContent='Status: '+Notification.permission.toUpperCase();}
     else{document.getElementById('notif-status').textContent='Status: NOT SUPPORTED';}
-    document.getElementById('ns-daily').checked=settings.daily;
-    document.getElementById('ns-reminders').checked=settings.reminders;
-    document.getElementById('ns-system').checked=settings.system;
-    document.getElementById('ns-achieve').checked=settings.achieve;
     document.querySelectorAll('.tab').forEach(function(btn){
       btn.onclick=function(){
         document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});

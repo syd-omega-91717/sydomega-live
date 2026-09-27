@@ -21630,3 +21630,36 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 - 435 tests pass; `ci-local.sh` 27/27.
 
 **Noted, not changed:** in original SM-2, HARD, GOOD and EASY give the same *next* interval and differ only in the ease they leave. That is correct, but it looks flat. FSRS is proposed as S15.
+
+## KYC intake that saves (dormant), the Passport tab that never opened, freeze-aware streaks (2026-09-27)
+
+**Owner request:** "You take the right decision … make it stronger … a real asset, not a demo." Delegated decisions, taken as: fix what is broken or misleading before adding features.
+
+**KYC.** Measured live:
+- `authenticated` holds UPDATE on 14 `profiles` columns and none of them is `kyc_*`.
+- `profile.html` wrote those columns directly, **after** uploading the document, so every submission would fail with 42501 and leave an identity document orphaned. `uploads` held 0 objects, so none is orphaned today.
+- No owner review surface existed.
+
+Fix, under a Mode 1 decision record (`docs/decisions/kyc-intake/`):
+- Migration `20260927110344`: `submit_kyc`, `review_kyc` and `kyc_queue`, each a private definer body behind a public invoker wrapper, with EXECUTE revoked from public and anon.
+- `kyc_intake_enabled = false`, and the page reads it before uploading.
+- Any server refusal removes the upload.
+- `approvals.html` → IDENTITY REVIEW, opening documents through a 60 s signed URL.
+
+Verified live in a rolled-back impersonation block: 15 checks, all as designed (list in the migration header). Afterwards the flag was `false`, `kyc` was `none=9` and storage held 0 objects; the advisor was unchanged. The first apply's pattern `[^/]{1,280}` failed at call time with 2201B (Postgres caps repetition at 255), and was replaced in place with `{1,255}`.
+
+**The Passport tab had never worked.** `bootPassportExtra()` called `ppSb`, and no file or commit ever defined it (`git log -S "ppSb="`: nothing). On the pinned previous version it threw `ppSb is not defined`, so there was no passport and no KYC status. It is now `var ppSb=sb`. A sweep for other never-assigned client names found `omega-data-binding.js` reading `window.OmegaSB.sb`, while bg.js publishes `OmegaSB` as `{get,url,key}`. That is latent, because no page uses `data-bind-query`, and it now reads `window.__omegaSb`.
+
+**Dead controls removed.** `notifications.html`'s four "notification category" checkboxes saved `omega_notif_settings`, which no file reads.
+
+**S12 was already built.** `omega-streak-freeze.js` exists; the roadmap row saying otherwise was wrong and is corrected. The real bug: `OmegaToday.habitStreak()` ignored freezes. With days 1, 3 and 4 logged and day 2 frozen, the previous version returned 1; it now returns 4, matching `habits.html`. The 21:00 save nudge now says "protected tonight" when every open habit still has a freeze.
+
+**Found, opened:** day keys disagree across time zones in `habits.html` and `omega-streak-freeze.js`, which write the UTC date and read from local midnight. Entry in `GAP_ANALYSIS.md` §S; next PR.
+
+**Verified:**
+- 449 tests pass (+12 `test_kyc_intake.py`, +2 freeze).
+- Render: intake closed → button disabled with the reason.
+- With intake open:
+  - a refusal removes the upload;
+  - success removes the superseded document;
+  - the owner list escapes names (0 `img`), and VERIFY sends `{p_member, p_verdict:'verified'}`.

@@ -2093,6 +2093,11 @@ setTimeout(()=>{el.style.width=w},300);
 
 import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+/* The Passport code below always called ppSb, and nothing ever defined it, so
+   bootPassportExtra() threw ReferenceError the moment the tab opened: no
+   passport, no KYC status, no submit (measured on the previous version). It is
+   the page's one shared client. */
+var ppSb=sb;
 let ppUid=null;
 
 const PP_RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
@@ -2143,24 +2148,61 @@ async function bootPassportExtra(){
   document.getElementById('pp-id').textContent=sid;
   if(d.avatar_url){ var ph=document.getElementById('pp-photo'); if(ph){ph.style.backgroundImage='url('+d.avatar_url+')'; ph.textContent='';} }
   ppSetStatus(d.kyc_status||'none');
+  kycGate();
 }
 
+/* KYC intake (docs/decisions/kyc-intake/PLAN.md). Members hold no UPDATE on
+   kyc_*, correctly, so the old direct write failed with 42501 on every
+   submission AFTER the document had already been uploaded. The only write path
+   is now submit_kyc(), which checks the flag, the member's own folder and the
+   object on the server. Intake ships closed (kyc_intake_enabled = false) until
+   the owner settles retention and notice for identity documents. */
+var KYC_ERR={
+  intake_closed:'Identity document intake is not open yet. It opens once the platform’s compliance review is complete.',
+  signed_out:'Sign in again, then retry.',
+  not_approved:'Document intake opens once your membership is approved.',
+  bad_path:'The upload landed outside your private folder, so it was not recorded.',
+  no_document:'The upload could not be found in storage, so it was not recorded.',
+  already_verified:'Your identity is already verified.',
+  no_profile:'Your profile could not be found.'
+};
+async function kycIntakeOpen(){
+  try{ var r=await ppSb.rpc('get_platform_flag',{p_key:'kyc_intake_enabled'}); return !r.error && r.data===true; }
+  catch(e){ return false; }
+}
+async function kycGate(){
+  var btn=document.getElementById('kyc-submit'), fileEl=document.getElementById('kyc-file'), msg=document.getElementById('kyc-msg');
+  if(!btn) return;
+  var open=await kycIntakeOpen();
+  btn.disabled=!open; if(fileEl) fileEl.disabled=!open;
+  btn.setAttribute('data-kyc-intake', open?'open':'closed');
+  if(!open && msg){ msg.style.color='var(--muted)'; msg.textContent=KYC_ERR.intake_closed; }
+}
 async function submitKyc(){
   var msg=document.getElementById('kyc-msg');
   var fileEl=document.getElementById('kyc-file');
   if(!msg||!fileEl) return;
-  if(!fileEl.files || !fileEl.files[0]){ msg.style.color='var(--crim)'; msg.textContent='Choose a document to submit.'; return; }
-  if(!window.OmegaStorage){ msg.style.color='var(--crim)'; msg.textContent='Secure storage isn\u2019t available right now.'; return; }
-  msg.style.color='var(--muted)'; msg.textContent='Uploading securely\u2026';
+  function fail(t){ msg.style.color='var(--crim)'; msg.textContent=t; }
+  if(!(await kycIntakeOpen())){ fail(KYC_ERR.intake_closed); return; }
+  if(!fileEl.files || !fileEl.files[0]){ fail('Choose a document to submit.'); return; }
+  if(!window.OmegaStorage){ fail('Secure storage isn’t available right now.'); return; }
+  msg.style.color='var(--muted)'; msg.textContent='Uploading securely…';
   var path=null;
-  try{ var up=await window.OmegaStorage.upload('uploads',fileEl.files[0]); 
-       if(!up||up.error){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: '+((up&&up.error)||'no response from storage.'); return; }
-       path=up.path||up.fullPath||up.key||null;
-       if(!path){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: storage returned no path.'; return; } }
-  catch(e){ msg.style.color='var(--crim)'; msg.textContent='Upload failed: '+(e.message||e); return; }
-  var u=await ppSb.from('profiles').update({kyc_status:'submitted',kyc_doc_path:path,kyc_submitted_at:new Date().toISOString()}).eq('id',ppUid);
-  if(u.error){ msg.style.color='var(--crim)'; msg.textContent='Saved the file, but couldn\u2019t record status: '+u.error.message+' (run kyc.sql).'; return; }
-  msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending  --  it is not verified automatically.';
+  try{ var up=await window.OmegaStorage.upload('uploads',fileEl.files[0]);
+       if(!up||up.error){ fail('Upload failed: '+((up&&up.error)||'no response from storage.')); return; }
+       path=up.path||null;
+       if(!path){ fail('Upload failed: storage returned no path.'); return; } }
+  catch(e){ fail('Upload failed: '+(e.message||e)); return; }
+  var r=await ppSb.rpc('submit_kyc',{p_doc_path:path});
+  var res=r.data||{};
+  if(r.error || res.ok!==true){
+    /* Never leave an identity document in storage without a record. */
+    try{ await window.OmegaStorage.remove('uploads',path); }catch(e){}
+    fail(r.error ? 'Could not record the submission: '+r.error.message+' The upload was removed.' : (KYC_ERR[res.error]||('Not recorded ('+res.error+').'))+' The upload was removed.');
+    return;
+  }
+  if(res.replaced){ try{ await window.OmegaStorage.remove('uploads',res.replaced); }catch(e){} }
+  msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending — a person reviews it; nothing is verified automatically.';
   ppSetStatus('submitted');
   fileEl.value='';
 }

@@ -343,6 +343,50 @@ async function loadErrors(){
     el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+esc((row.message||'ERROR').slice(0,120))+'</div><div class="err-ctx">'+esc(row.page||'')+'  '+(row.hits?'×'+row.hits:'')+'</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_errors')+'</div>';}
 }
+/* ── IDENTITY REVIEW (docs/decisions/kyc-intake/PLAN.md) ──
+   kyc_queue() / review_kyc() are owner-only on the server; this list only
+   renders what they return. Names go through textContent. A document opens
+   through a 60-second signed URL -- the owner may read `uploads` under the
+   storage policy -- and a verdict applies only while the row is still
+   'submitted', so two owners cannot double-decide it. */
+async function loadKyc(){
+  var el=document.getElementById('kyc-queue');if(!el)return;
+  var r=await sb.rpc('kyc_queue');
+  el.removeAttribute('data-loading');el.textContent='';
+  var d=r.data||{};
+  if(r.error||d.ok!==true){var e=document.createElement('div');e.className='empty';e.textContent='Identity review unavailable: '+(r.error?r.error.message:(d.error||'no response'));el.appendChild(e);return;}
+  var note=document.createElement('div');note.className='empty';note.setAttribute('data-kyc-intake',d.intake_enabled?'open':'closed');
+  note.textContent=d.intake_enabled?'Intake is OPEN — members can submit identity documents.':'Intake is CLOSED (kyc_intake_enabled = false). Settle retention and a privacy notice before opening it.';
+  el.appendChild(note);
+  (d.rows||[]).forEach(function(row){
+    var q=document.createElement('div');q.className='q-row';q.setAttribute('data-kyc-row',row.id);
+    var id=document.createElement('div');id.className='q-id';id.textContent=fmtDate(row.submitted_at);
+    var lbl=document.createElement('div');lbl.className='q-lbl';lbl.textContent=String(row.display_name||'Member').toUpperCase();
+    q.appendChild(id);q.appendChild(lbl);
+    [['kycView','VIEW','data-path',row.doc_path],['kycVerify','VERIFY','data-uid',row.id],['kycReject','REJECT','data-uid',row.id]].forEach(function(b){
+      var btn=document.createElement('button');btn.type='button';btn.className='q-btn';btn.textContent=b[1];
+      btn.setAttribute('data-action',b[0]);btn.setAttribute(b[2],b[3]||'');q.appendChild(btn);
+    });
+    el.appendChild(q);
+  });
+  if(!(d.rows||[]).length){var e2=document.createElement('div');e2.className='empty';e2.textContent='No identity documents waiting.';el.appendChild(e2);}
+}
+async function kycView(path){
+  if(!path)return;
+  var r=await sb.storage.from('uploads').createSignedUrl(path,60);
+  if(r.error||!r.data||!r.data.signedUrl){toast('COULD NOT OPEN DOCUMENT — '+((r.error&&r.error.message)||'no URL'),'var(--crim)');return;}
+  window.open(r.data.signedUrl,'_blank','noopener');
+}
+async function kycVerdict(uid,verdict){
+  if(!uid)return;
+  if(!confirm((verdict==='verified'?'Mark this member VERIFIED':'REJECT this submission')+'? This is recorded and cannot be undone here.'))return;
+  var r=await sb.rpc('review_kyc',{p_member:uid,p_verdict:verdict});
+  var d=r.data||{};
+  if(r.error||d.ok!==true){toast('VERDICT NOT RECORDED — '+(r.error?r.error.message:(d.error||'no response')),'var(--crim)');loadKyc();return;}
+  toast(verdict==='verified'?'IDENTITY VERIFIED':'SUBMISSION REJECTED',verdict==='verified'?'var(--green)':'var(--crim)');
+  loadKyc();
+}
+
 async function sendDispatch(){
   var title=document.getElementById('disp-title');
   var cat=document.getElementById('disp-category');
@@ -372,6 +416,9 @@ window.loadContracts=loadContracts;
 window.loadReservations=loadReservations;
 window.loadAudit=loadAudit;
 window.loadErrors=loadErrors;
+window.loadKyc=loadKyc;
+window.kycView=kycView;
+window.kycVerdict=kycVerdict;
 
 /* ── BOOT: owner gate ── */
 (async function boot(){

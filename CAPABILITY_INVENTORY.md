@@ -234,6 +234,8 @@ invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 
 **Added 2026-09-27: `omega-srs.js` and `omega-review.js`** (S5). `omega-srs.js` is the one SM-2 scheduler: `flashcard.html` and `vocabulary.html` load it and call `OmegaSRS.review`, so they no longer carry their own copies. `omega-review.js` (loaded by `command.html`) is the review queue. It shows due cards and due words interleaved in one overlay, opened from the TODAY panel's `▶ REVIEW n` chip or `/command.html#review`. It re-reads and writes each item by id. `test_review_queue.py`.
 
+**Added 2026-09-27: KYC intake RPCs** (migration `20260927110344`). `submit_kyc` (member), `review_kyc` and `kyc_queue` (owner). Each has a private SECURITY DEFINER body behind a public SECURITY INVOKER wrapper, and no EXECUTE for anon. `profile.html`'s Passport submit calls `submit_kyc` and removes any upload the server refuses. `approvals.html` → Operations → IDENTITY REVIEW lists submissions, opens each one through a 60 s signed URL, and records a verdict. **Dormant:** `kyc_intake_enabled = false`. `test_kyc_intake.py`.
+
 **Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
 has now been checked column-by-column against the live schema across this session and the one
 before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new

@@ -501,9 +501,12 @@
     function complete(d) {
       var due = hs.filter(function (h) { return habitDueOn(h, d); });
       if (!due.length) return null;
+      /* A day omega-streak-freeze.js froze for a habit counts as kept, as it
+         does on habits.html -- otherwise this streak and the page's disagree. */
+      var F = window.OmegaStreakFreeze;
       return due.every(function (h) {
         var k = h.freq === 'weekly' ? weekKey(new Date(d + 'T12:00:00')) : d;
-        return !!(logs[k] && logs[k][h.id]);
+        return !!(logs[k] && logs[k][h.id]) || !!(F && F.isFrozen && F.isFrozen(h.id, k));
       });
     }
     var n = 0, t = Date.now();
@@ -512,7 +515,15 @@
       if (c === false) break;
       if (c === true) n++;
     }
-    return { days: n, today: complete(iso(new Date(t))) };
+    /* covered: every habit still open today has a freeze in hand, so missing
+       today would be forgiven tomorrow -- the streak is not actually at risk. */
+    var F2 = window.OmegaStreakFreeze, tk = iso(new Date(t));
+    var open = hs.filter(function (h) { return habitDueOn(h, tk); }).filter(function (h) {
+      var k = h.freq === 'weekly' ? weekKey(new Date(tk + 'T12:00:00')) : tk;
+      return !(logs[k] && logs[k][h.id]);
+    });
+    var covered = !!(F2 && F2.available && open.length && open.every(function (h) { return F2.available(h.id) > 0; }));
+    return { days: n, today: complete(tk), covered: covered };
   }
 
   window.OmegaToday = { render: renderAll, probes: PROBES.map(function (p) { return p.id; }), readiness: contributors, week: function () { return weekMetrics(weekBounds(0)); }, status: status, habitStreak: habitStreak };

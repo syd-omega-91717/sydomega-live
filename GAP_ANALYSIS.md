@@ -375,12 +375,27 @@ open, recorded in `FIXES_LOG.md`:
   (`owner_confirm_secrets_rotated()`), and the row returns 180 days later.
 - **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
   exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
-- **Member KYC submission cannot save** (2026-09-26; `FIXES_LOG.md`, profile-grant drift entry).
-  `profile.html` writes `kyc_status`/`kyc_doc_path`/`kyc_submitted_at` directly; members hold no
-  UPDATE on them, and must not (a member could set their own verdict). Needs a `submit_kyc(p_doc_path)`
-  SECURITY DEFINER RPC that sets only `kyc_status='submitted'` for `auth.uid()` — high-risk, so
-  `grill-me-codex` first. Separately, `security-definer-audit.py` reads the reference SQL bag and
+- ~~**Member KYC submission cannot save**~~ **Machinery fixed 2026-09-27; intake stays CLOSED
+  on purpose.** Migration `20260927110344`: `submit_kyc`, `review_kyc` and `kyc_queue`
+  (definer bodies, invoker wrappers). Decision record: `docs/decisions/kyc-intake/`. The
+  Passport tab had also never opened: `ppSb` was undefined.
+  **Still open, and an owner decision:** `kyc_intake_enabled` stays `false` until two
+  things are settled:
+  - identity-document **retention**. The owner cannot delete a member's object under the
+    current storage policy, and deleting `storage.objects` rows in SQL orphans the bytes;
+  - a **privacy notice** for collecting IDs. Separately, `security-definer-audit.py` reads the reference SQL bag and
   reports owner-checked `private.*` functions as unguarded; it should read `migrations/`.
+- **Day keys disagree across time zones** (opened 2026-09-27, not yet measured in a render).
+  - `habits.html` writes a log under `new Date().toISOString().slice(0,10)`, the UTC date.
+  - `getStreak()`, the dot row and `omega-streak-freeze.js` read from local midnight
+    (`setHours(0,0,0,0)` then `toISOString()`).
+  - In a UTC+ zone (Beirut, UTC+3) local midnight is the previous UTC day, so today's
+    check-in is likely read as yesterday's. In a UTC− zone an evening check-in is keyed to
+    tomorrow.
+  - `omega-today.js`, `weekly.html` and the other trackers use the UTC day.
+  - **Fix:** one local-date key helper for every read and write, verified with
+    `timezoneId` in the harness. Existing logs were written with UTC dates, which match
+    the local date except near midnight.
 - **CSP: third-party code CDNs removed; `'unsafe-inline'` is the remaining gap** (2026-09-26;
   `FIXES_LOG.md`, security-hardening pass 4). The last seven runtime CDN loads (lucide,
   dayjs + relativeTime, highlight.js, qrcode-generator, Shepherd JS/CSS, Tone.js) are

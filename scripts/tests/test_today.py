@@ -122,3 +122,20 @@ class Week(unittest.TestCase):
         self.assertIn("<div data-omega-week></div>", read("weekly.html"))
         self.assertIn('<script src="/omega-today.js" defer></script>', read("weekly.html"))
         self.assertIn("<div data-omega-readiness></div>", read("command.html"))
+
+
+class StreakFreeze(unittest.TestCase):
+    """habitStreak() honours omega-streak-freeze.js as habits.html does.
+    Measured 2026-09-27: logs on days 1, 3, 4 with day 2 frozen gave 1 on the
+    previous version and 4 now; the save nudge says 'protected' when every
+    open habit still has a freeze in hand."""
+
+    def test_frozen_day_counts(self):
+        src = read("omega-today.js")
+        self.assertIn("F.isFrozen(h.id, k)", src)
+        self.assertIn("covered: covered", src)
+
+    def test_save_nudge_is_honest_when_covered(self):
+        rem = read("omega-reminders.js")
+        self.assertIn("if (ev.streak.covered)", rem)
+        self.assertIn("is protected tonight", rem)

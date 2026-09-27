@@ -212,21 +212,26 @@
   }
 
   /* ── STEP-UP ─────────────────────────────────────────────────────────── */
-  function stepUp() {
+  /* opts.required (the sign-in gate, omega-mfa-gate.js): the only way out is a
+     valid code or SIGN OUT, which resolves 'signout'. Any failure BEFORE the
+     prompt (network, no factor) resolves null in that mode, so the gate never
+     signs anyone out over an outage -- the database is the authority anyway. */
+  function stepUp(opts) {
+    var required = !!(opts && opts.required);
     return client().then(function (sb) {
       return sb.auth.mfa.getAuthenticatorAssuranceLevel().then(ok).then(function (lvl) {
         if (!lvl || lvl.currentLevel === 'aal2') return true;
-        if (lvl.nextLevel !== 'aal2') return false; /* no verified factor to step up with */
+        if (lvl.nextLevel !== 'aal2') return required ? null : false; /* no verified factor */
         return sb.auth.mfa.listFactors().then(ok).then(function (d) {
           var f = ((d && d.totp) || []).filter(function (x) { return x.status === 'verified'; })[0];
-          if (!f) return false;
-          return prompt(sb, f.id);
+          if (!f) return required ? null : false;
+          return prompt(sb, f.id, required);
         });
       });
-    }).catch(function () { return false; });
+    }).catch(function () { return required ? null : false; });
   }
 
-  function prompt(sb, factorId) {
+  function prompt(sb, factorId, required) {
     injectStyle();
     return new Promise(function (resolve) {
       var wrap = el('div', 'omfa-dialog');
@@ -238,10 +243,12 @@
       var msg = el('div', 'omfa-msg');
       var row = el('div', 'omfa-row');
       var go = button('Confirm', true);
-      var cancel = button('Cancel');
+      var cancel = button(required ? 'Sign out' : 'Cancel');
       row.append(go, cancel);
-      card.append(el('b', '', 'Confirm it is you'),
-        el('p', '', 'Enter the 6-digit code from your authenticator app.'), input, msg, row);
+      card.append(el('b', '', required ? 'Two-factor sign-in' : 'Confirm it is you'),
+        el('p', '', required ? 'This account uses an authenticator app. Enter its 6-digit code to continue.'
+                             : 'Enter the 6-digit code from your authenticator app.'), input, msg, row);
+      if (required) wrap.setAttribute('data-omega-mfa-required', '');
       wrap.appendChild(card);
       document.body.appendChild(wrap);
       input.focus();
@@ -259,9 +266,9 @@
       go.addEventListener('click', submit);
       input.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') submit();
-        if (e.key === 'Escape') done(false);
+        if (e.key === 'Escape' && !required) done(false);
       });
-      cancel.addEventListener('click', function () { done(false); });
+      cancel.addEventListener('click', function () { done(required ? 'signout' : false); });
     });
   }
 

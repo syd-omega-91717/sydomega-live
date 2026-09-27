@@ -219,6 +219,7 @@ a{color:inherit;text-decoration:none}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dot.none{background:var(--muted)}
 .dot.submitted{background:var(--solar);box-shadow:0 0 6px var(--solar)}
+.dot.rejected{background:var(--crim)}
 .dot.verified{background:var(--green);box-shadow:0 0 6px var(--green)}
 
 .kyc{max-width:440px;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:1.2rem;margin-top:.5rem}
@@ -226,6 +227,11 @@ a{color:inherit;text-decoration:none}
 .kyc input[type="file"]{width:100%;font-size:.75rem;color:var(--ink);margin-bottom:.8rem}
 .kyc .sb{font-family:var(--M);font-size:.68rem;letter-spacing:.08em;padding:.6rem 1.2rem;background:var(--gold);color:var(--void);border:none;cursor:pointer;border-radius:2px;transition:all .2s}
 .kyc .sb:hover{background:var(--solar)}
+.kyc .kyc-consent{display:flex;gap:.5rem;align-items:flex-start;font-family:var(--R);font-size:.8rem;letter-spacing:0;color:var(--ink);margin-bottom:.8rem;line-height:1.5}
+.kyc .kyc-consent input{margin-top:.25rem;flex:none}
+.kyc .kyc-consent a{color:var(--gold)}
+.kyc .kyc-withdraw{background:none;color:var(--crim);border:1px solid var(--crim);margin-left:.5rem}
+.kyc .kyc-withdraw:hover{background:rgba(139,0,0,.15)}
 .kyc .msg{font-family:var(--M);font-size:.65rem;margin-top:.6rem;min-height:1em}
 
 .kyc-status-hero{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;margin-bottom:.5rem}
@@ -1144,14 +1150,16 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="pp-status"><span class="dot none" id="pp-dot"></span><span id="pp-stat">VERIFICATION: NOT SUBMITTED</span></div>
     </div>
 
-    <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
+    <div class="notice">Your Passport is yours immediately. An identity document is <b>optional</b>: a person reviews it, nothing is verified automatically, and it is <b>deleted as soon as a decision is recorded</b>. <a href="/privacy.html#identity-documents">How identity documents are handled</a></div>
 
     <div class="sechead" data-reveal="fade-up" data-i18n="prof_passport_submit_header">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
       <label data-i18n="prof_passport_file_label">GOVERNMENT ID OR PASSPORT (image or PDF)</label>
       <input id="kyc-file" type="file" accept="image/*,application/pdf" />
+      <label class="kyc-consent"><input id="kyc-consent" type="checkbox" /> <span>I agree to my document being stored only until it is reviewed, as described in the <a href="/privacy.html#identity-documents">identity documents notice</a>.</span></label>
       <button class="sb" id="kyc-submit" data-i18n="prof_passport_submit_btn">SUBMIT FOR VERIFICATION</button>
-      <div class="msg" id="kyc-msg"></div>
+      <button class="sb kyc-withdraw" id="kyc-withdraw" type="button" hidden>WITHDRAW AND DELETE</button>
+      <div class="msg" id="kyc-msg" role="status" aria-live="polite"></div>
     </div>
   
 </div>
@@ -2123,8 +2131,10 @@ function ppNotice(msg){
 function ppSetStatus(s){
   var dot=document.getElementById('pp-dot'), txt=document.getElementById('pp-stat');
   if(!dot||!txt) return;
-  dot.className='dot '+(s==='submitted'?'submitted':(s==='verified'?'verified':'none'));
-  txt.textContent='VERIFICATION: '+(s==='submitted'?'SUBMITTED  .  PENDING':(s==='verified'?'VERIFIED':'NOT SUBMITTED'));
+  var known={submitted:'SUBMITTED  .  PENDING',verified:'VERIFIED',rejected:'NOT ACCEPTED'};
+  dot.className='dot '+(known[s]?s:'none');
+  txt.textContent='VERIFICATION: '+(known[s]||'NOT SUBMITTED');
+  var wd=document.getElementById('kyc-withdraw'); if(wd) wd.hidden=(s!=='submitted');
 }
 
 async function bootPassportExtra(){
@@ -2164,7 +2174,11 @@ var KYC_ERR={
   bad_path:'The upload landed outside your private folder, so it was not recorded.',
   no_document:'The upload could not be found in storage, so it was not recorded.',
   already_verified:'Your identity is already verified.',
-  no_profile:'Your profile could not be found.'
+  no_profile:'Your profile could not be found.',
+  consent_required:'Tick the box to agree to how the document is stored before submitting.',
+  not_submitted:'There is no pending submission to withdraw.',
+  still_stored:'The document could not be deleted yet. Try again.',
+  document_delete_failed:'The document could not be deleted. Try again.'
 };
 async function kycIntakeOpen(){
   try{ var r=await ppSb.rpc('get_platform_flag',{p_key:'kyc_intake_enabled'}); return !r.error && r.data===true; }
@@ -2174,7 +2188,8 @@ async function kycGate(){
   var btn=document.getElementById('kyc-submit'), fileEl=document.getElementById('kyc-file'), msg=document.getElementById('kyc-msg');
   if(!btn) return;
   var open=await kycIntakeOpen();
-  btn.disabled=!open; if(fileEl) fileEl.disabled=!open;
+  var cEl=document.getElementById('kyc-consent');
+  btn.disabled=!open; if(fileEl) fileEl.disabled=!open; if(cEl) cEl.disabled=!open;
   btn.setAttribute('data-kyc-intake', open?'open':'closed');
   if(!open && msg){ msg.style.color='var(--muted)'; msg.textContent=KYC_ERR.intake_closed; }
 }
@@ -2185,6 +2200,8 @@ async function submitKyc(){
   function fail(t){ msg.style.color='var(--crim)'; msg.textContent=t; }
   if(!(await kycIntakeOpen())){ fail(KYC_ERR.intake_closed); return; }
   if(!fileEl.files || !fileEl.files[0]){ fail('Choose a document to submit.'); return; }
+  var consentEl=document.getElementById('kyc-consent');
+  if(!consentEl || !consentEl.checked){ fail(KYC_ERR.consent_required); return; }
   if(!window.OmegaStorage){ fail('Secure storage isn’t available right now.'); return; }
   msg.style.color='var(--muted)'; msg.textContent='Uploading securely…';
   var path=null;
@@ -2193,7 +2210,7 @@ async function submitKyc(){
        path=up.path||null;
        if(!path){ fail('Upload failed: storage returned no path.'); return; } }
   catch(e){ fail('Upload failed: '+(e.message||e)); return; }
-  var r=await ppSb.rpc('submit_kyc',{p_doc_path:path});
+  var r=await ppSb.rpc('submit_kyc',{p_doc_path:path,p_consent:true});
   var res=r.data||{};
   if(r.error || res.ok!==true){
     /* Never leave an identity document in storage without a record. */
@@ -2202,12 +2219,31 @@ async function submitKyc(){
     return;
   }
   if(res.replaced){ try{ await window.OmegaStorage.remove('uploads',res.replaced); }catch(e){} }
-  msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending — a person reviews it; nothing is verified automatically.';
+  msg.style.color='var(--green)'; msg.textContent='Document submitted. A person reviews it; it is deleted once a decision is recorded.';
   ppSetStatus('submitted');
-  fileEl.value='';
+  fileEl.value=''; consentEl.checked=false;
+}
+/* Withdraw: the server refuses while the document exists and returns its path;
+   clearIdentityDocThen deletes it through the Storage API and asks again, so
+   the status only changes once the file is really gone. */
+async function withdrawKyc(){
+  var msg=document.getElementById('kyc-msg'), btn=document.getElementById('kyc-withdraw');
+  if(!msg||!btn) return;
+  function fail(t){ msg.style.color='var(--crim)'; msg.textContent=t; }
+  if(!confirm('Withdraw your submission and delete the document now?')) return;
+  if(!window.OmegaStorage){ fail('Secure storage isn’t available right now.'); return; }
+  btn.disabled=true; msg.style.color='var(--muted)'; msg.textContent='Deleting…';
+  try{
+    var r=await window.OmegaStorage.clearIdentityDocThen(function(){ return ppSb.rpc('withdraw_kyc'); });
+    var res=(r&&r.data)||{};
+    if(!r || r.error || res.ok!==true){ fail(r&&r.error ? 'Could not withdraw: '+r.error.message : (KYC_ERR[res.error]||('Not withdrawn ('+res.error+').'))); return; }
+    msg.style.color='var(--green)'; msg.textContent='Withdrawn. Your document has been deleted.';
+    ppSetStatus('none');
+  } finally { btn.disabled=false; }
 }
 
 document.getElementById('kyc-submit')?.addEventListener('click',submitKyc);
+document.getElementById('kyc-withdraw')?.addEventListener('click',withdrawKyc);
 window.bootPassportExtra = bootPassportExtra;
 
 </script>

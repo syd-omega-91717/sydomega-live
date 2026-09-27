@@ -100,11 +100,12 @@ class SecurityChecklist(unittest.TestCase):
         a_ok, b_ok = dict(a, factors=1), dict(b, factors=2)
         got = run_open_items([
             {"owners": [a, b], "secrets_rotated_at": None},
-            {"owners": [a_ok, b_ok], "secrets_rotated_at": self.iso(10)},
+            {"owners": [a_ok, b_ok], "secrets_rotated_at": self.iso(10), "owner_mfa_required": True},
             {"owners": [a_ok, b], "secrets_rotated_at": self.iso(10)},
-            {"owners": [a_ok, b_ok], "secrets_rotated_at": self.iso(200)},
-            {"owners": [a_ok, b_ok], "secrets_rotated_at": "not a date"},
+            {"owners": [a_ok, b_ok], "secrets_rotated_at": self.iso(200), "owner_mfa_required": True},
+            {"owners": [a_ok, b_ok], "secrets_rotated_at": "not a date", "owner_mfa_required": True},
             {"owners": [], "secrets_rotated_at": self.iso(1)},
+            {"owners": [a_ok, b_ok], "secrets_rotated_at": self.iso(10), "owner_mfa_required": None},
         ])
         self.assertEqual([i["kind"] for i in got[0]], ["mfa", "mfa", "keys"])
         self.assertEqual([(i["who"], i["me"]) for i in got[0][:2]], [("a", True), ("b", False)])
@@ -113,6 +114,11 @@ class SecurityChecklist(unittest.TestCase):
         self.assertEqual([i["kind"] for i in got[3]], ["keys"], "a stale rotation must reopen")
         self.assertEqual([i["kind"] for i in got[4]], ["keys"], "an unreadable date must not read as done")
         self.assertEqual(got[5], [])
+        # Both enrolled, not yet enforced: ENFORCE is offered (the server
+        # re-checks both enrolments and aal2 before it switches anything on).
+        self.assertEqual(got[6], [{"kind": "enforce"}])
+        # ...and never while any owner account is unenrolled.
+        self.assertNotIn({"kind": "enforce"}, got[2])
 
     def test_checklist_writes_check_the_result(self):
         # CLAUDE.md 8.1 class 1: the row may only leave on a confirmed ok.

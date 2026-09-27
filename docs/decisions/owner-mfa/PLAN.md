@@ -6,6 +6,12 @@
 > - `owner_mfa_required` stays **off**. Next: both owners enrol (two devices each), then run success criterion 3's query (0 rows) before enforcement.
 >
 > **2026-09-26 — a missing step found before enforcement.** `stepUp()` has no caller: only `settings.html` loads `omega-mfa.js`, and no sign-in path asks for the code. With `owner_mfa_required` on, an owner's next session is `aal1`, `is_platform_owner()` returns false, and every owner power fails silently — the lock-out risk below, reached by a normal sign-in rather than a lost device. **A sign-in step-up (an owner at `aal1` with a verified factor is asked for the code) is now a precondition of enforcement**, alongside criterion 3. Enrolment progress shows in the Owner Deck (SECURITY chip, `owner_security_status()`); live at that time: 0 of 2 owners enrolled.
+>
+> **2026-09-27 — both preconditions built; enforcement is one owner click away.**
+> - **Sign-in step-up:** `omega-mfa-gate.js` (bg.js, every guarded page). A session with a verified factor that has not yet confirmed a code (`aal1` → `aal2`) must enter it; the only other way out is SIGN OUT. An outage never signs anyone out. Harness-verified; tests in `scripts/tests/test_owner_mfa_gate.py`.
+> - **Lockout-safe switch:** `owner_set_mfa_required(p_on)` (`20260927123649`). It refuses unless the caller is at `aal2` **and** both owner accounts hold a verified factor, so criterion 3 is enforced by the server, not by a hand-run query. The Owner Deck offers ENFORCE only once both accounts are enrolled.
+> - **Each account stands alone.** `s.y.dagher@gmail.com` and `slmndghr@gmail.com` each enrol their own factor and each sign in alone. Verified live: with enforcement on, the other owner account alone at `aal2` is owner. The same authenticator app can hold both entries; a second device per account is the backup (D5 break-glass stays the SQL editor).
+> - **Owner action left:** enrol on each account (Settings → Two-factor), then ENFORCE in the Owner Deck SECURITY chip. `owner_mfa_required` is still **off**.
 
 # Plan: Two-factor sign-in (TOTP), owner enforcement dormant behind a flag
 

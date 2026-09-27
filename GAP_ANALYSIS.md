@@ -355,10 +355,11 @@ open, recorded in `FIXES_LOG.md`:
   owner scanning the QR on their own device. The Owner Deck's SECURITY chip lists each owner still
   without a verified factor and clears from `auth.mfa_factors` itself (`owner_security_status()`,
   `20260926223027`).
-  **Enforcement prerequisite, found 2026-09-26:** `OmegaMFA.stepUp()` has **no caller** — only
-  `settings.html` loads `omega-mfa.js`, and no sign-in path asks for the code. With
-  `owner_mfa_required` on, an owner's next sign-in is `aal1`, so `is_platform_owner()` returns false
-  and every owner power fails silently. A sign-in step-up must ship before that flag is set.
+  ~~**Enforcement prerequisite:** `OmegaMFA.stepUp()` had no caller~~ **Built 2026-09-27:**
+  `omega-mfa-gate.js` asks for the code on every guarded page, and `owner_set_mfa_required()`
+  (`20260927123649`) refuses to enforce unless the caller is at aal2 and both owner accounts hold a
+  verified factor. The Owner Deck shows ENFORCE only then. **Open, owner action only:** enrol each
+  account, then press ENFORCE (`FIXES_LOG.md`).
   - The `omega-mfa.js` enrol/verify/remove UI ships in Settings (`/settings.html#two-factor`)
     behind `mfa_enrolment_enabled`, which fails closed.
   - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
@@ -379,12 +380,12 @@ open, recorded in `FIXES_LOG.md`:
   on purpose.** Migration `20260927110344`: `submit_kyc`, `review_kyc` and `kyc_queue`
   (definer bodies, invoker wrappers). Decision record: `docs/decisions/kyc-intake/`. The
   Passport tab had also never opened: `ppSb` was undefined.
-  **Still open, and an owner decision:** `kyc_intake_enabled` stays `false` until two
-  things are settled:
-  - identity-document **retention**. The owner cannot delete a member's object under the
-    current storage policy, and deleting `storage.objects` rows in SQL orphans the bytes;
-  - a **privacy notice** for collecting IDs. Separately, `security-definer-audit.py` reads the reference SQL bag and
-  reports owner-checked `private.*` functions as unguarded; it should read `migrations/`.
+  ~~Retention and a privacy notice~~ **built 2026-09-27** (`20260927124007`, `20260927142646`,
+  `privacy.html#identity-documents`, `FIXES_LOG.md`): a document is deleted once a verdict is recorded,
+  confirmed by the server; consent is required; members can withdraw; erasure and deletion cannot
+  strand one. **Open, owner decision only:** OPEN INTAKE on approvals.html. Separately,
+  `security-definer-audit.py` reads the reference SQL bag and reports owner-checked `private.*`
+  functions as unguarded; it should read `migrations/`.
 - **Day keys: the habit chain is fixed; other trackers are still on UTC** (opened and part-fixed
   2026-09-27, `FIXES_LOG.md`).
   - **Fixed:** `habits.html`, `journal.html`, `omega-streak-freeze.js` and the habit half of

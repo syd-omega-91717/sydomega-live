@@ -986,6 +986,16 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_notify.defer=true;
     __omegaAppend(_s_data_omega_notify);
   }
+  /* Two-factor sign-in gate: a session with a verified authenticator but no
+     code confirmed yet must enter it (docs/decisions/owner-mfa). Tiny; loads
+     omega-mfa.js only when a code is due. */
+  if(!document.querySelector('script[data-omega-mfa-gate]')){
+    var _s_data_omega_mfa_gate=document.createElement('script');
+    _s_data_omega_mfa_gate.src='/omega-mfa-gate.js';
+    _s_data_omega_mfa_gate.setAttribute('data-omega-mfa-gate','1');
+    _s_data_omega_mfa_gate.defer=true;
+    __omegaAppend(_s_data_omega_mfa_gate);
+  }
   /* Ritual reminders (FEATURE_IDEAS.md S4): opt-in, inert until the member
      turns them on; loads omega-today.js itself only then. */
   if(!document.querySelector('script[data-omega-reminders-mod]')){

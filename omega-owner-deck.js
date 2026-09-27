@@ -391,6 +391,10 @@
       if (Number(o.factors) > 0) return;
       items.push({ kind: 'mfa', me: !!o.me, who: String(o.email || '').split('@')[0] });
     });
+    /* Enforcement is offered only once EVERY owner account has a verified
+       factor -- and owner_set_mfa_required() re-checks that on the server, so
+       this row can never be the thing that locks an owner out. */
+    if (!items.length && (st.owners || []).length && st.owner_mfa_required !== true) items.push({ kind: 'enforce' });
     var at = st.secrets_rotated_at ? Date.parse(st.secrets_rotated_at) : NaN;
     if (!(at > 0) || Date.now() - at > ROTATE_DAYS * 864e5) items.push({ kind: 'keys' });
     return items;
@@ -420,7 +424,9 @@
       chip.appendChild(document.createTextNode(items.length + ' SECURITY'));
       chip.setAttribute('aria-label', items.length + ' open security ' + (items.length === 1 ? 'item' : 'items'));
       chip.hidden = false;
-      items.forEach(function (it) { panel.appendChild(it.kind === 'mfa' ? mfaRow(it) : keysRow(sb, items)); });
+      items.forEach(function (it) {
+        panel.appendChild(it.kind === 'mfa' ? mfaRow(it) : it.kind === 'enforce' ? enforceRow(sb, items) : keysRow(sb, items));
+      });
       var ok = mk('div', 'odk-sok', '\u2713 BREACHED PASSWORDS BLOCKED AT SIGN-UP AND RESET');
       ok.title = 'Checked in the browser against HaveIBeenPwned. The server-side check needs the Supabase Pro plan.';
       panel.appendChild(ok);
@@ -445,6 +451,47 @@
       } else {
         r.appendChild(mk('span', 'odk-sn', 'ON THEIR SIGN-IN'));
       }
+      return r;
+    }
+
+    function loadMfa() {
+      if (window.OmegaMFA) return Promise.resolve(window.OmegaMFA);
+      return new Promise(function (resolve) {
+        var s = document.createElement('script');
+        s.src = '/omega-mfa.js';
+        s.setAttribute('data-omega-mfa-mod', '1');
+        s.onload = function () { resolve(window.OmegaMFA || null); };
+        s.onerror = function () { resolve(null); };
+        document.head.appendChild(s);
+      });
+    }
+
+    /* Both owner accounts enrolled: switch on owner_mfa_required. The server
+       refuses unless this session confirmed a code (aal2) and every owner has a
+       verified factor; on step_up_first we ask for the code and retry once. */
+    function enforceRow(sb, items) {
+      var r = row('ENFORCE TWO-FACTOR', 'both accounts enrolled');
+      var go = mk('button', 'odk-sa go', 'ENFORCE');
+      go.type = 'button';
+      function call() { return sb.rpc('owner_set_mfa_required', { p_on: true }); }
+      go.addEventListener('click', function () {
+        go.disabled = true; go.textContent = '\u2026';
+        call().then(function (res) {
+          if (!res.error && res.data && res.data.error === 'step_up_first') {
+            return loadMfa().then(function (M) { return M ? M.stepUp() : false; })
+              .then(function (up) { if (!up) throw new Error('code not confirmed'); return call(); });
+          }
+          return res;
+        }).then(function (res) {
+          if (res.error || !res.data || res.data.ok !== true) throw new Error((res.data && res.data.error) || (res.error && res.error.message) || 'refused');
+          paint(sb, items.filter(function (x) { return x.kind !== 'enforce'; }));
+        }).catch(function (e) {
+          go.disabled = false;
+          go.textContent = 'NOT ENFORCED \u00B7 RETRY';
+          go.title = String(e && e.message || e);
+        });
+      });
+      r.appendChild(go);
       return r;
     }
 

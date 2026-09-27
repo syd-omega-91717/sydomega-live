@@ -1,5 +1,15 @@
 # Status: APPROVED-BY-CODEX
 
+> **Round 3 — 2026-09-27: retention rule, privacy notice, consent, withdrawal, owner switch.** Owner request: "a retention rule and a privacy notice for ID documents … do all the needs correctly."
+> - **Rule:** a document is kept only while it waits for review. A verdict hands its path back (`review_kyc` → `purge`), the owner page deletes it through the Storage API, and `kyc_document_purged()` clears the record only once `storage.objects` no longer holds it. `kyc_queue().purge` lists every verdict whose file still exists, with DELETE NOW. SQL cannot delete a Storage object (`storage.protect_delete`, measured), which is why the server confirms rather than deletes.
+> - **Consent:** `submit_kyc(p_doc_path, p_consent)`; the one-argument form is dropped; `kyc_consent_at` is recorded. The page has a required checkbox linking to the notice.
+> - **Withdraw:** the member deletes their own pending document (`withdraw_kyc`, refuses `still_stored` until the file is gone).
+> - **Notice:** `privacy.html#identity-documents` — what, why, who sees it, how long, withdrawal, rights. Same pass corrected the page's false "Supabase EU region" (the project is `ap-southeast-1`).
+> - **Erasure and deletion never strand a document** (`20260927142646`): both refuse while one exists and return its path; `OmegaStorage.clearIdentityDocThen` deletes it and retries.
+> - **Found and fixed on the way (live, measured):** `request_account_erasure` and `deactivate_account` failed for every member (guard trigger `text[] || 'x'` → 22P02), and **`approve_member` failed for every approval** (all 10 notification writers omit NOT NULL `title`/`type` → 23502; `notifications` had 0 rows ever). Migrations `20260927142829`, `20260927143525`, `20260927143903`.
+> - **Owner switch:** OPEN/CLOSE INTAKE on approvals.html (`owner_set_kyc_intake`). Intake is still **closed**; opening it is the owner's decision.
+> - Verified live in rolled-back blocks; tests `scripts/tests/test_kyc_intake.py` (29).
+
 # Plan: KYC document intake that actually saves, dormant behind a flag
 
 Decision record for `grill-me-codex` (Mode 1, `type=auth` + `type=schema`). The audit

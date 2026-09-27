@@ -163,14 +163,14 @@ var PHI=1.6180339887,EU=2.7182818285;
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
 
 var ELEMENTS=[
-  {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
+  {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',text:'#FF6E38',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
   {id:'water', name:'WATER', sigil:'☰',color:'#00BFFF',glow:'rgba(0,191,255,.25)', principle:'ADAPTIVE FLOW',    desc:'Strategic patience, fluid intelligence'},
   {id:'wind',  name:'WIND',  sigil:'☱',color:'#98E8C1',glow:'rgba(152,232,193,.2)',principle:'FREE THOUGHT',     desc:'Creative velocity, conceptual innovation'},
   {id:'metal', name:'METAL', sigil:'☳',color:'#B0C4DE',glow:'rgba(176,196,222,.2)',principle:'IRON PRECISION',   desc:'Disciplined execution, structural mastery'},
   {id:'sand',  name:'SAND',  sigil:'★', color:'#DEB887',glow:'rgba(222,184,135,.2)',principle:'ENDURING FORM',    desc:'Resilience, foundational patience'},
   {id:'soul',  name:'SOUL',  sigil:'✴',color:'#DA70D6',glow:'rgba(218,112,214,.2)',principle:'INNER AUTHORITY',  desc:'Intuitive wisdom, emotional sovereignty'},
-  {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
-  {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
+  {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',text:'#9384F1',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
+  {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',text:'#8A97A4',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
   {id:'all',   name:'THE ALL',sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
 ];
 
@@ -245,7 +245,7 @@ function renderElementGrid(){
     card.style.background=el.glow;card.style.borderColor=el.color+'22';
     card.dataset.elem=el.id;
     card.innerHTML='<span class="elem-icon">'+el.sigil+'</span>'+
-      '<div class="elem-name" style="color:'+el.color+'">'+el.name+'</div>'+
+      '<div class="elem-name" style="color:'+(el.text||el.color)+'">'+el.name+'</div>'+
       '<div class="elem-principle">'+el.principle+'</div>'+
       '<div class="elem-count" style="color:'+el.color+'">'+members.length+'</div>'+
       '<div class="elem-count-label">MEMBERS · AVG AUTH '+avgAuth+'</div>'+

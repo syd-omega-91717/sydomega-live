@@ -92,6 +92,13 @@
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+/* The four layer tabs had no rule at all, so they rendered as the browser's
+   default grey system buttons (rgb 107,107,107) -- measured at 4.46:1 and
+   visibly off-brand on the public entry page. Same tab treatment as the
+   rest of the platform (time.html .lt). */
+.layer-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover,.lt:focus-visible{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
 </style>
 </head>
 <body>

@@ -20,8 +20,10 @@
   /* was #8B0000 -- measured at 1.74:1 against this surface, i.e. barely
      visible, and 77 of its uses are text `color`. Re-stepped to the
      deepest crimson that still clears 3:1 (validated with the dataviz
-     palette checker; CVD separation unchanged at deutan dE 18.9). */
-  --crim:#CA5850;
+     palette checker; CVD separation unchanged at deutan dE 18.9).
+     2026-09-27: #CA5850 -> #CF6760, same hue, 4.19-4.69:1 -> 5.38:1 on the
+     card surfaces (AA for small text); theme.js holds the same value. */
+  --crim:#CF6760;
   --green:#3fb27f; --purple:#AB82F2;
   --muted:#8a8676; --ink:#e9e6dc;
   --line:rgba(201,168,76,.15);

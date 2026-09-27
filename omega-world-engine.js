@@ -7,7 +7,7 @@ var modules=[
 {id:'gaming',name:'GAMING',glyph:'△',href:'/gaming.html',accent:'#E86A3A',purpose:'Games, competition and interactive play.',role:'ARENA'},
 {id:'achievements',name:'ACHIEVEMENTS',glyph:'▲',href:'/achievements.html',accent:'#E8C97A',purpose:'Verified progress and earned recognition.',role:'ACHIEVEMENT TREE'},
 {id:'family',name:'FAMILY',glyph:'⋔',href:'/family.html',accent:'#D9B86A',purpose:'Heritage, lineage and family context.',role:'DYNASTY MAP'},
-{id:'media',name:'MEDIA',glyph:'▶',href:'/media.html',accent:'#C4453C',purpose:'Publishing and discovery of media.',role:'BROADCAST NETWORK'},
+{id:'media',name:'MEDIA',glyph:'▶',href:'/media.html',accent:'#CF6760',purpose:'Publishing and discovery of media.',role:'BROADCAST NETWORK'},
 {id:'blockchain',name:'BLOCKCHAIN / NFT',glyph:'⬡',href:'/blockchain.html',accent:'#C9A84C',purpose:'Digital ownership and asset concepts.',role:'ASSET VAULT'},
 {id:'communication',name:'COMMUNICATION',glyph:'⌁',href:'/chatbot.html',accent:'#00E5FF',purpose:'Member communication and assisted interaction.',role:'COMMS CHANNEL'},
 {id:'horoscope',name:'HOROSCOPE',glyph:'☉',href:'/horoscope.html',accent:'#9B6BF0',purpose:'Entertainment and personal reflection.',role:'COSMIC MAP'},

@@ -23,7 +23,7 @@
     SOUL:      [268, 34, 7],
     SPACE:     [230, 40, 7.5],
     VOID:      [0, 40, 6],
-    NINTH:     [46, 55, 8],     // THE NINTH -- transcendent radiant gold
+    NINTH:     [46, 55, 8],     // THE ALL -- transcendent radiant gold
     SOVEREIGN: [248, 20, 6.5]   // warm charcoal-indigo (default -- softer than #000)
   };
   var SIGN_ELEMENT = {

@@ -274,12 +274,12 @@
     { n:6, name:'SOUL',      tier:'METAPHYSICAL',  key:'Soul'    },
     { n:7, name:'SPACE',     tier:'METAPHYSICAL',  key:'Space'   },
     { n:8, name:'VOID',      tier:'METAPHYSICAL',  key:'Void'    },
-    { n:9, name:'THE NINTH', tier:'TRANSCENDENT',  key:'The All' }
+    { n:9, name:'THE ALL',   tier:'TRANSCENDENT',  key:'The All' }
   ];
 
-  /* omega-elements.json names the ninth element "THE NINTH"; ELEM_PALETTE
-     keys it "The All". One thing, two names -- recorded, not silently
-     reconciled. The map below is the only place that seam is crossed. */
+  /* The ninth element is THE ALL everywhere now: omega-canon.json and
+     omega-elements.json once named it by its ordinal while ELEM_PALETTE and ~15
+     modules key it "The All" (reconciled 2026-09-27, canon-consistency.py). */
   function elementColour(key, fallbackHex) {
     try {
       var pal = window.OmegaRealm && window.OmegaRealm.palette;

@@ -129,6 +129,7 @@
     s.textContent =
       '.otd{margin:0 0 18px}' +
       '.otd-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}' +
+      '.otd a.otd-rem{margin-left:auto;font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);text-decoration:none;border:1px solid rgba(201,168,76,.35);border-radius:999px;padding:5px 12px}' +
       '.otd-ring{--p:0;width:54px;height:54px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;' +
         'background:conic-gradient(var(--gold,#C9A84C) calc(var(--p)*1turn),rgba(201,168,76,.12) 0);' +
         '}' +
@@ -216,6 +217,12 @@
     ring.appendChild(rb);
     var t = document.createElement('div'); t.className = 'otd-title'; t.textContent = 'TODAY';
     head.appendChild(ring); head.appendChild(t);
+    /* The way into S4's reminder settings, from where the rituals are. */
+    var rp = read('omega_reminder_prefs'), on = !!(rp && rp.on);
+    var rl = document.createElement('a'); rl.className = 'otd-rem'; rl.href = '/notifications.html#reminders';
+    rl.setAttribute('data-omega-today-reminders', on ? 'on' : 'off');
+    rl.textContent = on ? '◷ REMINDERS ON' : '◷ SET A REMINDER';
+    head.appendChild(rl);
     var grid = document.createElement('div'); grid.className = 'otd-grid';
     results.forEach(function (x) { grid.appendChild(tile(x.p, x.r)); });
     host.appendChild(head); host.appendChild(grid);
@@ -464,7 +471,41 @@
     host.setAttribute('data-omega-week-shown', String(shown));
   }
 
-  window.OmegaToday = { render: renderAll, probes: PROBES.map(function (p) { return p.id; }), readiness: contributors, week: function () { return weekMetrics(weekBounds(0)); } };
+  /* For omega-reminders.js: each ritual's live state, re-dated first so a tab
+     left open past midnight probes the new day rather than the one it loaded
+     on. `state` is null for a module the member never used -- a reminder must
+     never nag about one. */
+  function status() {
+    TODAY = iso(new Date()); YESTERDAY = iso(new Date(Date.now() - 864e5));
+    return PROBES.map(function (p) {
+      var st = null; try { st = p.probe(); } catch (e) {}
+      return { id: p.id, label: p.label, href: p.href, state: st };
+    });
+  }
+  /* Consecutive days before today on which every due habit was logged. A day
+     with nothing due neither breaks nor extends it. `today` says whether
+     today is already complete -- the streak is at risk only when it is not. */
+  function habitStreak() {
+    var hs = read('omega_habits_v2'); if (!Array.isArray(hs) || !hs.length) return null;
+    var logs = read('omega_habit_logs_v2') || {};
+    function complete(d) {
+      var due = hs.filter(function (h) { return habitDueOn(h, d); });
+      if (!due.length) return null;
+      return due.every(function (h) {
+        var k = h.freq === 'weekly' ? weekKey(new Date(d + 'T12:00:00')) : d;
+        return !!(logs[k] && logs[k][h.id]);
+      });
+    }
+    var n = 0, t = Date.now();
+    for (var i = 1; i <= 366; i++) {
+      var c = complete(iso(new Date(t - i * 864e5)));
+      if (c === false) break;
+      if (c === true) n++;
+    }
+    return { days: n, today: complete(iso(new Date(t))) };
+  }
+
+  window.OmegaToday = { render: renderAll, probes: PROBES.map(function (p) { return p.id; }), readiness: contributors, week: function () { return weekMetrics(weekBounds(0)); }, status: status, habitStreak: habitStreak };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

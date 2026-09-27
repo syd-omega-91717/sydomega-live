@@ -144,6 +144,7 @@
         <input type="time" id="blockTime" aria-label="Time block start time" value="09:00">
         <input class="p-input" id="blockTask" style="flex:1;min-width:180px" placeholder="Block description…">
         <button class="btn-gold" onclick="addBlock()">+ ADD BLOCK</button>
+        <button class="btn-gold" id="blocksIcs" title="Download today's blocks as a calendar file">⤓ CALENDAR</button>
       </div>
       <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-top:16px">
         <div class="sec-title">TIME BLOCK PHILOSOPHY</div>
@@ -294,6 +295,35 @@ function addBlock(){
 }
 function deleteBlock(id){todayBrief.schedule=todayBrief.schedule.filter(function(b){return b.id!==id;});persistBrief();renderSchedule();}
 function updateBlock(id,val){var b=todayBrief.schedule.find(function(x){return x.id===id;});if(b)b.task=val;persistBrief();}
+/* FEATURE_IDEAS.md S7 step 1: today's blocks as an .ics file the member's own
+   calendar imports -- pure client, no feed, no token. Each block runs 90 min,
+   the same span renderSchedule() treats as NOW. Times are floating (no TZ):
+   the member typed them on their own clock. Block text is member text, so it
+   is escaped per RFC 5545 3.3.11 and never reaches HTML. */
+function icsEsc(t){return String(t==null?'':t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');}
+function downloadBlocksIcs(){
+  var blocks=(todayBrief.schedule||[]).filter(function(b){return /^\d{2}:\d{2}$/.test(b.time);});
+  if(!blocks.length){alert('Add a time block first.');return;}
+  var d=new Date(),p=function(n){return(n<10?'0':'')+n;},day=d.getFullYear()+p(d.getMonth()+1)+p(d.getDate());
+  var stamp=d.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SYD OMEGA 91717//Command//EN','CALSCALE:GREGORIAN'];
+  blocks.forEach(function(b,i){
+    var t=b.time.split(':').map(Number),s=t[0]*60+t[1],e=Math.min(s+90,24*60-1);
+    L.push('BEGIN:VEVENT','UID:omega-block-'+day+'-'+i+'-'+(+b.id||0)+'@sydomega','DTSTAMP:'+stamp,
+      'DTSTART:'+day+'T'+p(t[0])+p(t[1])+'00','DTEND:'+day+'T'+p(Math.floor(e/60))+p(e%60)+'00',
+      'SUMMARY:'+icsEsc(b.task||'Time block'),'END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  /* RFC 5545 3.1: lines over 75 octets fold with CRLF + space. Folding at
+     60 code units keeps a line of 3-byte characters under the limit, and
+     never splits a surrogate pair. */
+  var F=L.map(function(l){var o=[],c=Array.from(l);while(c.length>60){o.push(c.splice(0,60).join(''));}o.push(c.join(''));return o.join('\r\n ');});
+  var blob=new Blob([F.join('\r\n')+'\r\n'],{type:'text/calendar'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='omega-blocks-'+day+'.ics';
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+window.downloadBlocksIcs=downloadBlocksIcs;
+(function(){var b=document.getElementById('blocksIcs');if(b)b.addEventListener('click',downloadBlocksIcs);})();
 function renderSchedule(){
   var el=document.getElementById('scheduleGrid'),blocks=todayBrief.schedule||[];
   if(!blocks.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:8px 0">No time blocks yet.</div>';return;}

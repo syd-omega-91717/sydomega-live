@@ -175,3 +175,26 @@ self.addEventListener('message', function (e) {
     });
   }
 });
+
+/* ------------------------------------------------------ notification clicks */
+/* omega-reminders.js shows its nudges through registration.showNotification,
+   and without this handler a click on one did nothing at all. Focus a tab
+   already on the target page, else open it. Same-origin paths only: the url
+   comes from our own notification data, but a crafted one must never
+   navigate a member off-site. */
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  var raw = (e.notification.data && e.notification.data.url) || '/command.html';
+  var target;
+  try { target = new URL(raw, self.location.origin); } catch (err) { target = null; }
+  if (!target || target.origin !== self.location.origin) target = new URL('/command.html', self.location.origin);
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var c = list[i];
+        if (new URL(c.url).pathname === target.pathname && 'focus' in c) return c.focus();
+      }
+      return self.clients.openWindow ? self.clients.openWindow(target.href) : null;
+    })
+  );
+});

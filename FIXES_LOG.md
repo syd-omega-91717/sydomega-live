@@ -21546,3 +21546,51 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 - 0 page errors; no overflow at 375px or 1280px.
 - `verify-runtime --pages=command.html,weekly.html`: PASS.
 - 407 unit tests (+8 in `test_today.py`); `ci-local.sh` 27/27.
+
+## S4 ritual reminders, S6 full export, S7 calendar step 1 (2026-09-27)
+
+**Owner request:** "Do it and all related and new ones for improving. Get enhanced and inspired from as much as you can from the web."
+
+**Research:**
+- Duolingo's KDD 2020 bandit paper and two 2026 teardowns: two notification slots (routine in the member's revealed habit window, and save only when a streak is about to end), at most two a day, every push gated on a state trigger.
+- Streaks: per-task reminders and a fixed-time option.
+- A 2026 PWA-push note: web push on iOS needs an installed app.
+
+**Live check (Supabase, 2026-09-27):**
+- `push_subscriptions` does not exist.
+- `pg_cron` is available but not installed; `pg_net` is installed.
+- `notifications_enabled=true`.
+- Closed-app push therefore needs schema, a scheduler and an owner-set VAPID secret. It is S4 Part B (HIGH) and was not built.
+
+**Built:**
+- `omega-reminders.js` (bg.js, opt-in, off by default):
+  - reads each ritual through `OmegaToday.status()` and the habit streak through `OmegaToday.habitStreak()`, both new in `omega-today.js`;
+  - learns the window as the median observed check-in minus 30 min. A check-in counts only when this tab saw the ritual go from open to done, so a store restored from the server is never timed. Below 3 check-ins it says so and uses the member's own time;
+  - both slots are claimed in `omega_reminder_sent` before showing, so two tabs send once; the key is mirrored across devices;
+  - quiet hours 22:30–07:30;
+  - the first check runs 4.5 s after load, after the genesis splash;
+  - the card sits top-right. At the bottom it was measured under the mobile dock and across SHARE.
+- `sw.js`: new `notificationclick` handler (focus, else open; same-origin only). Before this, clicking a notification did nothing.
+- Settings on `notifications.html` (`data-omega-reminders`), with a `#reminders` deep link from the TODAY panel's new chip.
+- S6: `omega-export.js` now also packs `tracker_stores`, i.e. every key `OmegaMemberState.isMemberKey` accepts.
+- S7 step 1: `⤓ CALENDAR` on `command.html` downloads today's blocks as `.ics` (RFC 5545 escaping, lines folded at 60 code units). The reminder card offers a daily recurring `.ics` with an alarm, which reaches a closed app through the phone's calendar.
+
+**Found and fixed:**
+- `notifications.html` built reminder and notification rows with raw `r.text`, `r.cat`, `n.title` and `n.body` in `innerHTML`. They are now escaped: a seeded `<img onerror>` rendered as text, 0 `img`.
+- Its DONE button passed the index from a **sorted copy** into the unsorted array, so it marked the wrong reminder done. Measured: clicking DONE on the first row (id 1) now marks id 1; the pre-fix code would have marked id 2.
+- `time.html` requested notification permission on page load, with no user gesture. Browsers quiet or ignore such prompts. It now asks on START.
+
+**Found, left open:** `notifications.html`'s four "notification category" checkboxes save to `omega_notif_settings`, and no file reads that key (grep).
+
+**Verified:**
+- Render with a fixed clock:
+  - routine card at 18:05 with an 18:00 window; none at 17:55;
+  - none on reload (one per day);
+  - save card at 21:10 with save on; with save off, the routine nudge instead (it runs until quiet hours, so a member first seen at 21:10 is still reached);
+  - nothing at 23:00, and nothing with reminders off (where `omega-today.js` was not even loaded).
+- Learning: 2 samples plus one observed transition at 10:20 moved the window to 17:30, the median of 18:00, 18:20 and 10:20 minus 30.
+- `.ics` output inspected: `SUMMARY:Deep work\, draft\; review`; the long line folded.
+- The export contained `tracker_stores` including `omega_sleep_log`.
+- Card buttons were uncovered (`elementFromPoint`) at 1280px and 375px.
+- 0 page errors.
+- Harness note: under `clock.setFixedTime`, page time ran at about 40% of wall time (`performance.now()` 2754 after about 7 s), so a timed boot looked like a missing send. Wait on a condition, not a duration.

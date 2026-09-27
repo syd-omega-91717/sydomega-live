@@ -986,6 +986,15 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_notify.defer=true;
     __omegaAppend(_s_data_omega_notify);
   }
+  /* Ritual reminders (FEATURE_IDEAS.md S4): opt-in, inert until the member
+     turns them on; loads omega-today.js itself only then. */
+  if(!document.querySelector('script[data-omega-reminders-mod]')){
+    var _s_data_omega_reminders=document.createElement('script');
+    _s_data_omega_reminders.src='/omega-reminders.js';
+    _s_data_omega_reminders.setAttribute('data-omega-reminders-mod','1');
+    _s_data_omega_reminders.defer=true;
+    __omegaAppend(_s_data_omega_reminders);
+  }
   /* AI concierge GraphRAG bridge */
   if(!document.querySelector('script[data-omega-ai]')){
     var _s_data_omega_ai=document.createElement('script');

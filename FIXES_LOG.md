@@ -21689,3 +21689,81 @@ Verified live in a rolled-back impersonation block: 15 checks, all as designed (
 - `test_day_keys.py` (6); 455 tests.
 
 **Still open**, with the reason, in `GAP_ANALYSIS.md` §S: the other trackers keep their self-consistent UTC keys.
+
+## No member could be approved; erasure and deactivate failed for everyone (2026-09-27)
+
+**Found while verifying the ID-document erasure path, live, in rolled-back blocks.** Three separate write paths failed on every call, each surfacing only as an error the owner or member would read as "try again".
+
+| path | measured before | cause |
+|---|---|---|
+| `approve_member(p)` as owner at aal2 | **23502** `null value in column "title" of relation "notifications"` | all 10 notification writers (`approve/reject/revoke_member`, `extend_trial`, `grant_permanent_access`, five in `complete_task`, `notify_member`, three profile triggers) insert `(user_id, notification_type, message)`; `title` and `type` are NOT NULL with no default. `notifications` held **0 rows ever**. |
+| `request_account_erasure()`, `deactivate_account()` as a member | **22P02** `malformed array literal: "access_approved"` | `guard_profile_privileges()` appended untyped literals to a `text[]` (`changed \|\| 'access_approved'`), which Postgres parses as an array literal. |
+| `request_account_erasure()` after that fix | 23502 on `notifications` again | `_notify_owner_member_rejected` fires on approved→false. |
+
+**Fix** (migrations `20260927142829`, `20260927143525`, `20260927143903`):
+- One `BEFORE INSERT` trigger on `notifications` fills `type` from `notification_type` and `title` from `type`, covering every writer. The client (`omega-notify.js`) reads `notification_type` and `message`, which are unchanged.
+- Owner-awareness notices go to every `platform_owners` account, not one hard-coded address, inside an exception block so a notice can never block the approval that fired it.
+- The guard types its literals and lets a member **lower** their own privileges (access/trial to false; expiry cleared only when the trial ends with it). It still blocks every raise.
+
+**Verified after** (one rolled-back block):
+- A pending account setting `access_approved`, `is_trial`, `is_owner` or `trial_expires_at` → 42501 each.
+- A member on a live trial clearing its expiry → 42501.
+- `approve_member` → ok, with notices to the member and **both** owner accounts.
+- `deactivate_account` and `request_account_erasure` → ok.
+- Nobody was approved; everything rolled back.
+
+## Identity documents: retention rule, notice, consent, withdrawal (2026-09-27)
+
+Owner request: a retention rule and a privacy notice before intake opens. Decision record: `docs/decisions/kyc-intake/PLAN.md` (Round 3).
+
+- **Rule:** a document is kept only while pending. `review_kyc` returns its path, `approvals.js` deletes it through the Storage API, and `kyc_document_purged()` clears the record only once `storage.objects` no longer holds it. `kyc_queue().purge` keeps listing any verdict whose file survived, with DELETE NOW. SQL cannot do the delete: `storage.protect_delete` raised 42501 on the first live test.
+- **Consent:** `submit_kyc(p_doc_path, p_consent)`, with the one-argument form dropped, plus a required checkbox. `kyc_consent_at` is recorded.
+- **Withdrawal:** `withdraw_kyc()` refuses `still_stored` until the member's own delete has landed. `OmegaStorage.clearIdentityDocThen` (upload.js) deletes and retries once. A storage delete blocked by RLS returns an empty success, so the server's re-check is the authority.
+- **Erasure and account deletion** (`20260927142646`) refuse while a document exists and return its path. `delete_account()` removed the profile row and with it the only record of the path, so a pending document would have been orphaned with nothing pointing at it.
+- **Notice:** `privacy.html#identity-documents`. The same page claimed "processed within Supabase EU region"; the project is `ap-southeast-1` (`get_project`). Corrected.
+- **Owner switch:** OPEN/CLOSE INTAKE on approvals.html. Intake is still closed.
+
+**Verified:**
+- Live, rolled back: consent_required, no_document, forbidden ×2, withdraw ok/not_submitted, no_verdict, verdict → purge path, queue purge 1 → 0 after `kyc_document_purged`. A stored object blocks erasure, deletion and withdrawal (`identity_document_stored`/`still_stored`).
+- Harness: no consent → 0 uploads; consent → `{p_doc_path, p_consent:true}`; withdraw sequence `withdraw_kyc → remove → withdraw_kyc`; `#identity-documents` opens the rights tab, no overflow.
+- `test_kyc_intake.py` 29.
+
+## Owner two-factor: sign-in step-up and a switch that cannot lock the owner out (2026-09-27)
+
+- `omega-mfa-gate.js` (bg.js, guard `data-omega-mfa-gate`) asks for the code whenever a session holds a verified factor at aal1. The only other way out is SIGN OUT. An outage never signs anyone out.
+- `owner_set_mfa_required()` (`20260927123649`) refuses unless the caller is at aal2 **and** both owner accounts hold a verified factor. The Owner Deck offers ENFORCE only then.
+
+**Verified:**
+- Live, rolled back: the other owner account alone at aal2 is owner.
+- Harness: dialog `[Confirm, Sign out]`; Escape ignored; code → challenge, verify, refreshSession, `passed`; Sign out → `/account.html`; no factor or outage → no dialog; public pages carry no approval guard.
+- `test_owner_mfa_gate.py` 10.
+
+**Owner action:** enrol each account, then ENFORCE. Enforcement is still off.
+
+## Key rotation is proved, not claimed: `secrets-health` (2026-09-27)
+
+Owner request: rotate the keys that appeared in earlier documents, and find a smart way to hide and
+rotate them. Before this, the Owner Deck's DONE recorded a timestamp on the owner's word. Nothing
+could tell a rotated key from the old one, or a new key that does not work.
+
+- **Hide:** the keys stay only in Supabase secrets. `secrets-health` (owner-only; the owner check
+  is `owner_security_status()` through the caller's JWT, so aal2 applies once enforced) returns,
+  per key, `set` / `live` / the provider's HTTP status / an 8-hex SHA-256 fingerprint / `changed`.
+  It never returns the key or a provider body, and it has no log line.
+- **Prove:** DONE calls `confirm`, which records the fingerprints with the service role inside the
+  function and refuses while any set key fails. The next VERIFY shows ROTATED or SAME KEY per
+  provider.
+- Runbook `docs/runbooks/key-rotation.md`; decision record `docs/decisions/secrets-health/`.
+
+**Verified:**
+- Deployed with `verify_jwt` on. Version 1's source matched the repo; version 2 adds `auth.getUser()` before any service-role use (`edge-service-role-auth-audit.py`) and server-side display labels, so the page names no secret (client credential scan).
+- Live through `pg_net`:
+  - no token → 401;
+  - a bearer that is not a user session → 403 `forbidden` on v1, and on v2 → 401 at the identity check, with no key names in either response;
+  - a refused `confirm` wrote nothing (`platform_settings` has no fingerprint row).
+- A real member session was not available from here. The member → `forbidden` path is the same `owner_security_status()` check measured live on 2026-09-26.
+- The owner path needs an owner JWT, which this session cannot mint. It was verified in the harness with the function stubbed: VERIFY → ROTATED / SAME KEY / WORKING / NOT SET; DONE with a failing key → "A KEY FAILS · FIX, RETRY" and the item stays; clean → item clears, calls `check, confirm, confirm`.
+- The owner's first VERIFY is the live test.
+- `test_owner_deck.py` +1.
+
+**Owner action:** rotate each key at its provider, set it in Supabase secrets, then VERIFY → DONE.

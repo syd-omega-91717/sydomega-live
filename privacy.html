@@ -34,6 +34,12 @@
 .fw-card{border:1px solid var(--line);padding:12px;background:var(--surface)}
 .fw-label{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:4px}
 .fw-desc{font-size:12px;line-height:1.7;color:var(--muted)}
+.idoc{margin:0 0 16px;padding:16px}
+.idoc .sechead{margin:0 0 10px}
+.idoc-grid{display:grid;grid-template-columns:max-content 1fr;gap:8px 16px;margin:0}
+.idoc-grid dt{font-family:var(--M);font-size:12px;letter-spacing:.12em;color:var(--gold)}
+.idoc-grid dd{margin:0;font-size:13px;line-height:1.6;color:var(--ink)}
+@media(max-width:480px){.idoc-grid{grid-template-columns:1fr}.idoc-grid dd{margin-bottom:6px}}
 </style>
 </head>
 <body>
@@ -83,8 +89,19 @@
     LEGAL BASIS: Legitimate Interest (progression, security audit) + Consent (analytics, marketing).<br>
     DATA CONTROLLER: Major Sleiman Youssef Dagher &middot; Lebanese Order of Engineers No. 30875<br>
     RETENTION: Profile data until erasure request. Event log: 5 years. Consent records: 10 years.<br>
-    TRANSFERS: All data processed within Supabase EU region. No third-party data sales. Platform is ad-free.
+    TRANSFERS: Data is stored with Supabase in its Singapore region (ap-southeast-1). No third-party data sales. Platform is ad-free.
   </div>
+  <section id="identity-documents" class="card idoc" aria-labelledby="idoc-h">
+    <div class="sechead" id="idoc-h">IDENTITY DOCUMENTS</div>
+    <dl class="idoc-grid">
+      <dt>WHAT</dt><dd>One image or PDF of a government ID or passport, only if you choose to submit one from your Passport.</dd>
+      <dt>WHY</dt><dd>To confirm you are who your account says. Nothing is verified automatically: a person decides.</dd>
+      <dt>WHO SEES IT</dt><dd>You and the platform owner only, through a link that expires after 60 seconds. It is stored in your private folder and never shared, sold or sent to a third party.</dd>
+      <dt>HOW LONG</dt><dd>Only while it waits for review. When a decision is recorded the document is deleted; what stays is the decision and its dates, never the image. A deletion that fails stays on the owner&rsquo;s list until it succeeds.</dd>
+      <dt>WITHDRAW</dt><dd>While your submission is pending you can withdraw it from your Passport. That deletes the document at once.</dd>
+      <dt>YOUR RIGHTS</dt><dd>Access, correction and erasure apply as below. Erasing your account deletes any document still stored.</dd>
+    </dl>
+  </section>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
     <button class="action-btn btn-cyan" onclick="exportMyData()">&#9660; EXPORT MY DATA (ART. 20)</button>
     <button class="action-btn btn-gold" onclick="viewMyData()">&#9670; VIEW STORED DATA (ART. 15)</button>
@@ -130,6 +147,11 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var _uid=null;
 
 window.setTab=setTab;
+/* /privacy.html#identity-documents is linked from the Passport: open the tab
+   that holds it and bring it into view. */
+if(location.hash==='#identity-documents'){
+  setTimeout(function(){ setTab('rights'); var el=document.getElementById('identity-documents'); if(el) el.scrollIntoView({block:'start'}); },0);
+}
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['consent','rights','framework','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
@@ -212,7 +234,11 @@ window.confirmErasure=async function(){
   var inp=document.getElementById('erasure-input');
   if(!inp||inp.value.trim().toUpperCase()!=='CONFIRM'){showMsg('action-msg',false,'YOU MUST TYPE CONFIRM (UPPERCASE) TO PROCEED.');return;}
   try{
-    var r=await sb.rpc('request_account_erasure');
+    /* An identity document still in storage is deleted first (the server
+       refuses erasure while one exists), so erasure never strands it. */
+    var call=function(){ return sb.rpc('request_account_erasure'); };
+    var r=window.OmegaStorage ? await window.OmegaStorage.clearIdentityDocThen(call) : await call();
+    if(r.error){showMsg('action-msg',false,'ERASURE FAILED: '+r.error.message);return;}
     if(r.data&&r.data.ok){
       showMsg('action-msg',true,'ERASURE REQUEST SUBMITTED. DATA WILL BE DELETED WITHIN 30 DAYS. SIGNING OUT…');
       setTimeout(function(){sb.auth.signOut().then(function(){location.replace('/account.html');});},3000);
@@ -220,6 +246,6 @@ window.confirmErasure=async function(){
   }catch(e){showMsg('action-msg',false,'ERASURE REQUEST FAILED. CONTACT ADMINISTRATOR.');}
 };
 </script>
-<script src="/bg.js" defer></script>
+<script src="/bg.js" defer></script><script src="/upload.js"></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

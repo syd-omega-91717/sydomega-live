@@ -133,6 +133,7 @@ step "2n.  Reachability contract"              python3 scripts/reachability-cont
 step "2o.  Module contracts"                   python3 scripts/module-contract.py
 step "2p.  All-roles control"                  python3 scripts/omega-all-roles-control.py
 step "2q.  Edge service-role authorization"     python3 scripts/edge-service-role-auth-audit.py
+step "2r.  Edge Function census"               python3 scripts/edge-function-census.py
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan

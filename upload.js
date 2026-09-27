@@ -42,6 +42,22 @@
       if(r.error) return {error:r.error.message};
       return {path:path};
     },
+    /* An identity document is deleted through the Storage API, never SQL
+       (storage.protect_delete). Server calls that must not strand one --
+       withdraw_kyc, delete_account, request_account_erasure -- refuse with its
+       path while it exists; this deletes it and calls once more. The server
+       re-checks, so a delete that storage silently skipped (RLS returns an
+       empty success) comes back as the same refusal, never as a false ok. */
+    clearIdentityDocThen:async function(call){
+      var r=await call();
+      var d=r&&r.data;
+      if(r && !r.error && d && d.ok===false && (d.error==='identity_document_stored'||d.error==='still_stored') && d.doc_path){
+        var rm=await this.remove('uploads',d.doc_path);
+        if(rm.error) return {data:{ok:false,error:'document_delete_failed',detail:rm.error},error:null};
+        r=await call();
+      }
+      return r;
+    },
     publicUrl:async function(bucket,path){ var sb=await ready; return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl; },
     signedUrl:async function(bucket,path,sec){ var sb=await ready; var r=await sb.storage.from(bucket).createSignedUrl(path,sec||3600); return r.data?r.data.signedUrl:null; }
   };

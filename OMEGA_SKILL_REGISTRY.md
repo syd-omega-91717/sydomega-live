@@ -22,7 +22,7 @@ effectively invisible unless invoked by exact name.
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
-| `edge-functions` | yes | — | 1,445 | CLAUDE.md, README.md | 2026-09-15 |
+| `edge-functions` | yes | — | 1,445 | CLAUDE.md, README.md | 2026-09-27 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |

@@ -28,7 +28,7 @@ MODULES = {
     "Hierarchy": ("permissions and governance", "Faction/authority map"),
 }
 
-RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css", "omega-legacy-constellation.js"]
+RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css", "omega-legacy-constellation.js", "omega-world-progression.js"]
 
 REQUIRED = [
     "Why does it exist?",

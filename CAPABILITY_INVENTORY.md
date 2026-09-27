@@ -230,6 +230,8 @@ invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 
 **Added 2026-09-27: `omega-today.js`** (loaded by `command.html` only, not injected by `bg.js`). This is the TODAY panel: it reads 9 modules' own `localStorage` stores (mirrored to `member_state`) and renders one due/done tile per ritual, plus START tiles for modules the member never used. It makes no Supabase call. `FEATURE_IDEAS.md` #38; `test_today.py`. Since S2/S3 it also renders READINESS on `command.html` (`data-omega-readiness`) and the auto-filled week on `weekly.html` (`data-omega-week`, which now loads it too).
 
+**Added 2026-09-27: `omega-reminders.js`** (injected by `bg.js` on every page, guard `data-omega-reminders-mod`; inert until the member opts in). Ritual reminders, FEATURE_IDEAS.md S4 Part A: reads `OmegaToday.status()`/`.habitStreak()` (loading `omega-today.js` on demand), learns the member's habit window from observed check-ins, sends at most two nudges a day through `sw.js` (new `notificationclick` handler, same-origin only) or an in-page card, and offers a recurring `.ics`. Settings mount `data-omega-reminders` on `notifications.html` (deep link `#reminders` from the TODAY panel). Tab-open only; closed-app Web Push is Part B, not built. `test_reminders.py`.
+
 **Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
 has now been checked column-by-column against the live schema across this session and the one
 before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new

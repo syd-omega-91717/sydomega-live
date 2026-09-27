@@ -45,6 +45,7 @@
 
     <!-- REMINDERS TAB -->
     <div class="tab-panel pad" id="tab-reminders" style="display:none">
+      <div data-omega-reminders></div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <div class="sechead" style="border:none;padding:0;margin:0;flex:1">SOVEREIGN REMINDERS</div>
         <button class="btn" onclick="document.getElementById('add-reminder-form').style.display='block'">+ ADD REMINDER</button>
@@ -137,6 +138,7 @@ var settings=JSON.parse(localStorage.getItem(SK)||'{"daily":true,"reminders":tru
 
 function save(){localStorage.setItem(NK,JSON.stringify(notifs));localStorage.setItem(RK2,JSON.stringify(reminders));}
 
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var PRIO_COL={low:'var(--muted)',medium:'var(--gold)',high:'#FF9800',critical:'#FF4444'};
 var today=new Date().toISOString().slice(0,10);
 
@@ -169,10 +171,10 @@ function renderNotifs(){
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
       +(n.read?'':'<div style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0"></div>')
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+((n.type||'system').toUpperCase())+'</div>'
-      +'<div style="font-size:12px;font-weight:600;flex:1">'+n.title+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+n.date+'</div>'
+      +'<div style="font-size:12px;font-weight:600;flex:1">'+esc(n.title)+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(n.date)+'</div>'
       +'</div>'
-      +(n.body?'<div style="font-size:12px;opacity:.75;margin-left:14px">'+n.body+'</div>':'')
+      +(n.body?'<div style="font-size:12px;opacity:.75;margin-left:14px">'+esc(n.body)+'</div>':'')
       +'</div>';
   }).join('');
 }
@@ -187,15 +189,15 @@ function renderReminders(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(r.done?'var(--muted)':overdue?'#FF4444':due?'var(--gold)':col)+';background:rgba(10,10,15,'+(r.done?'.3':'.5')+');padding:12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="flex:1">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+r.priority.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+esc(String(r.priority||'').toUpperCase())+'</div>'
       +(overdue?'<div style="font-family:var(--M);font-size:12px;color:#FF4444">OVERDUE</div>':(due?'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">DUE TODAY</div>':''))
       +(r.done?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">&#10003; DONE</div>':'')
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+r.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+esc(r.date)+'</div>'
       +'</div>'
-      +'<div style="font-size:12px">'+r.text+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+r.cat+'</div>'
+      +'<div style="font-size:12px">'+esc(r.text)+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+esc(r.cat)+'</div>'
       +'</div>'
-      +(!r.done?'<button onclick="doneReminder('+i+')" style="background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px;flex-shrink:0">DONE</button>':'')
+      +(!r.done?'<button onclick="doneReminder('+(+r.id||0)+')" style="background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px;flex-shrink:0">DONE</button>':'')
       +'</div>';
   }).join('');
 }
@@ -211,7 +213,7 @@ window.addReminder=function(){
   document.getElementById('r-text').value='';
   calcKPIs();renderReminders();
 };
-window.doneReminder=function(idx){reminders[idx].done=true;localStorage.setItem(RK2,JSON.stringify(reminders));calcKPIs();renderReminders();};
+window.doneReminder=function(id){var r=reminders.find(function(x){return +x.id===+id;});if(!r)return;r.done=true;localStorage.setItem(RK2,JSON.stringify(reminders));calcKPIs();renderReminders();};
 window.requestNotifPermission=function(){
   if(!('Notification' in window)){document.getElementById('notif-status').textContent='Status: Not supported in this browser';return;}
   Notification.requestPermission().then(function(p){
@@ -257,6 +259,8 @@ window.saveNotifSettings=function(){
         if(panel){panel.style.display='';panel.classList.add('active');}
       };
     });
+    /* Deep link from the TODAY panel's reminder chip. */
+    if(location.hash==='#reminders'){var rb=document.querySelector('.tab[data-tab="reminders"]');if(rb)rb.click();}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

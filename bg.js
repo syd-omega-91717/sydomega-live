@@ -2559,6 +2559,9 @@ setTimeout(function(){
   /* Sovereign celebration engine — gate unlock bursts, milestone banners, apex sequence */
   if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;__omegaAppend(_ocnf);}
 
+  /* Voice-responsive animations — copilot stream particle sync via Web Audio API */
+  if(!document.querySelector('script[data-omega-voice-sync]')){var _ovsync=document.createElement('script');_ovsync.src='/omega-voice-sync.js';_ovsync.setAttribute('data-omega-voice-sync','1');_ovsync.defer=true;__omegaAppend(_ovsync);}
+
   /* Element particle backgrounds — tsParticles-slim@2 (MIT), fires on omega:user-loaded */
   if(!document.querySelector('script[data-omega-particles]')){var _opar=document.createElement('script');_opar.src='/omega-particles.js';_opar.setAttribute('data-omega-particles','1');_opar.defer=true;__omegaAppend(_opar);}
 

@@ -21489,3 +21489,5 @@ These are headless software-GL numbers, so the absolute values overstate a real 
 **Verified:**
 - 18 affected pages re-measured: **0** contrast advisories; `RUNTIME VERIFICATION: PASS`.
 - `test_text_contrast.py` (4 tests): both token owners agree; every text token clears 4.5:1 on #0C0B10; the entry tabs stay styled; the tints stay in place.
+
+**Follow-up (same day, after #493 merged):** a full `verify-runtime.js --all --contrast-detail` on the merged tree reports **1** advisory in 208 pages. The one left is `verify-deployment.html`'s red failure line, on a diagnostic page. So lightening `--crim` created no new finding on any crimson background. `ci-local.sh` on merged main: 26/26 blocking checks pass. CLAUDE.md 8.3 is updated: 394 tests; contrast advisory 1.

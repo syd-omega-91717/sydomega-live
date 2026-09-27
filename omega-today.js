@@ -42,15 +42,21 @@
   }
   function raw(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
   function iso(d) { return d.toISOString().slice(0, 10); }
+  /* The member's own calendar day. Habit logs are keyed by it (habits.html
+     dayKey()); a UTC key put a Beirut check-in at 10:00 on no day the page
+     read (streak 0, today's dot dark -- measured). */
+  function lday(d) { return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate(); }
+  function ldaysBack(n) { var d = new Date(); d.setDate(d.getDate() - n); return lday(d); }
   function day(ts) { return typeof ts === 'string' ? ts.slice(0, 10) : (typeof ts === 'number' ? iso(new Date(ts)) : ''); }
 
   /* Same date convention as the owning pages (UTC ISO day), so "today" here is
      the day those pages record against. */
   var TODAY = iso(new Date());
   var YESTERDAY = iso(new Date(Date.now() - 864e5));
+  var LTODAY = lday(new Date());
 
   /* habits.html:249 and :306-318, mirrored. */
-  function weekKey(d) { var t = new Date(d); t.setHours(0, 0, 0, 0); t.setDate(t.getDate() - t.getDay()); return 'week-' + iso(t); }
+  function weekKey(d) { var t = new Date(d); t.setHours(0, 0, 0, 0); t.setDate(t.getDate() - t.getDay()); return 'week-' + lday(t); }
   function habitDueToday(h) {
     var dow = new Date().getDay();
     if (h.freq === 'weekdays') return dow >= 1 && dow <= 5;
@@ -67,7 +73,7 @@
       var logs = read('omega_habit_logs_v2') || {};
       var due = hs.filter(habitDueToday), done = 0;
       due.forEach(function (h) {
-        var k = h.freq === 'weekly' ? weekKey(new Date()) : TODAY;
+        var k = h.freq === 'weekly' ? weekKey(new Date()) : LTODAY;
         if (logs[k] && logs[k][h.id]) done++;
       });
       return { value: done, of: due.length, done: due.length > 0 && done === due.length };
@@ -331,7 +337,7 @@
       out.push({ id: 'training', label: 'TRAINING BALANCE · 7D', href: '/workout.html', value: n + ' session' + (n === 1 ? '' : 's'),
         score: n === 0 ? 70 : (n <= 4 ? 100 : (n === 5 ? 85 : (n === 6 ? 70 : 55))) });
     }
-    var hr = habitRate(isoDaysBack(6), TODAY);
+    var hr = habitRate(ldaysBack(6), LTODAY);
     if (hr) out.push({ id: 'habits', label: 'HABIT CONSISTENCY · 7D', href: '/habits.html', value: hr.done + ' / ' + hr.due, score: hr.pct });
     return out;
   }
@@ -386,8 +392,8 @@
     var d = new Date(); var dow = d.getDay();
     var mon = new Date(d); mon.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1) - 7 * (offsetWeeks || 0));
     var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-    var to = offsetWeeks ? iso(sun) : TODAY;
-    return { from: iso(mon), to: to };
+    var to = offsetWeeks ? lday(sun) : LTODAY;
+    return { from: lday(mon), to: to };
   }
   function weekMetrics(b) {
     var m = {};
@@ -486,7 +492,7 @@
      on. `state` is null for a module the member never used -- a reminder must
      never nag about one. */
   function status() {
-    TODAY = iso(new Date()); YESTERDAY = iso(new Date(Date.now() - 864e5));
+    TODAY = iso(new Date()); YESTERDAY = iso(new Date(Date.now() - 864e5)); LTODAY = lday(new Date());
     return PROBES.map(function (p) {
       var st = null; try { st = p.probe(); } catch (e) {}
       return { id: p.id, label: p.label, href: p.href, state: st };
@@ -509,15 +515,15 @@
         return !!(logs[k] && logs[k][h.id]) || !!(F && F.isFrozen && F.isFrozen(h.id, k));
       });
     }
-    var n = 0, t = Date.now();
+    var n = 0;
     for (var i = 1; i <= 366; i++) {
-      var c = complete(iso(new Date(t - i * 864e5)));
+      var c = complete(ldaysBack(i));
       if (c === false) break;
       if (c === true) n++;
     }
     /* covered: every habit still open today has a freeze in hand, so missing
        today would be forgiven tomorrow -- the streak is not actually at risk. */
-    var F2 = window.OmegaStreakFreeze, tk = iso(new Date(t));
+    var F2 = window.OmegaStreakFreeze, tk = lday(new Date());
     var open = hs.filter(function (h) { return habitDueOn(h, tk); }).filter(function (h) {
       var k = h.freq === 'weekly' ? weekKey(new Date(tk + 'T12:00:00')) : tk;
       return !(logs[k] && logs[k][h.id]);

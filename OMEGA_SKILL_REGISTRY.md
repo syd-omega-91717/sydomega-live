@@ -38,11 +38,11 @@ effectively invisible unless invoked by exact name.
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-server` | yes | — | 5,094 | CLAUDE.md, README.md | 2026-08-30 |
-| `verify-in-browser` | yes | 4 | 2,310 | CLAUDE.md, README.md | 2026-09-18 |
+| `verify-in-browser` | yes | 4 | 2,457 | CLAUDE.md, README.md | 2026-09-27 |
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,643 tokens** if every SKILL.md were read in one
+**23 skills, ~38,790 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -96,7 +96,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 208 |
 | pages loading `bg.js` | 208 of 208 |
-| `omega-*.js` modules | 159 (1559 KB) |
+| `omega-*.js` modules | 159 (1560 KB) |
 | root `.js` files | 169 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 231 (106 numbered `NNNN_`, 125 timestamped) |

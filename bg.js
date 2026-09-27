@@ -67,9 +67,28 @@
    this file are deliberately left alone: they already retry rather than drop,
    and they are the only two that were written that way. */
 function __omegaAppend(el){
-  if(document.body){ document.body.appendChild(el); return; }
+  /* One file, one execution. Every guard above keys on a data-omega-* marker,
+     which a page's own <script src> tag never carries -- so a module a page
+     already loads (dashboard: omega-constellation.js; journal: omega-ui.js)
+     ran twice, and omega-controls.js ran twice everywhere because two blocks
+     below guard it under two different markers. A second run re-registers
+     every listener and re-injects every node. Checked here, at the moment of
+     insertion, so the page's static tags have been parsed by then. No caller
+     attaches onload/onerror to what it passes in (all 136 checked), so a
+     skipped element loses nothing. */
+  function dup(){
+    if(!el || el.tagName!=='SCRIPT' || !el.src) return false;
+    var want; try{ want=new URL(el.src, location.href).pathname; }catch(e){ return false; }
+    var all=document.getElementsByTagName('script');
+    for(var i=0;i<all.length;i++){
+      var s=all[i]; if(s===el || !s.src) continue;
+      try{ if(new URL(s.src, location.href).pathname===want) return true; }catch(e){}
+    }
+    return false;
+  }
+  if(document.body){ if(!dup()) document.body.appendChild(el); return; }
   document.addEventListener('DOMContentLoaded', function(){
-    var b = document.body; if(b) b.appendChild(el);
+    var b = document.body; if(b && !dup()) b.appendChild(el);
   });
 }
 /* Platform nervous system */

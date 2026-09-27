@@ -21425,3 +21425,40 @@ The 17 pages that timed out under a 4-way parallel run were re-run serially.
   - `OmegaAxis.sectionOf('media')` → `media`, and `sections().length` → 14 in a render.
   - `reachability-contract.py` OK; `test_owner_deck.py` OK; `i18n-contract.py` 0 violations.
   - 385 tests pass; `verify-runtime.js` PASS (13 pages); `ci-local.sh` 26/26 blocking checks pass.
+
+## Load cost: a 2.65s first-frame stall and four scripts that ran twice (2026-09-27)
+
+**Owner request:** "put more power on the platform — check, analyze, improve, enhance, evolve."
+
+**Measured first.**
+- `verify-runtime.js --all`: 208/208 pages PASS.
+- `evidence-audit.py`: the 43 LOCAL_ONLY pages are all mirrored to `member_state`. The four whose storage keys are built at runtime (body, command, sleep, stoic) were resolved by reading them: every key is `omega_`-prefixed. BROKEN (2) is the dormant payment surface.
+- The real gap was load cost. Every page requests ~150 scripts (~1.8MB), and dashboard/profile took **6+s** before content showed, against ~1.2s for other pages.
+
+**Root cause 1: one 2,652ms main-thread task.** A CPU profile put it at `omega-sculpture.js` `frame()`, line `c2.drawImage(_glCanvas…)`, the flush point for queued GPU work.
+- An experiment with the environment map disabled dropped that task to ~210ms. So the cost was `PMREMGenerator.fromScene(room, 0.04)`: a fixed 256px cube plus a sigma blur pass.
+- It is now captured with a `CubeCamera` into a **128px** `WebGLCubeRenderTarget` and pre-filtered with `fromCubemap`, falling back to `fromScene`.
+- Luminance across 11 mounts × 3 runs on sculpture.html stayed inside run-to-run noise. 64px was also measured and dimmed the brightest mount ~156 → ~134, so 128 is the floor.
+- Also added: `compileAsync` before a mount's first frame, and `frame()` skips a mount until `m.ready`. Honestly recorded: in headless software GL this was **not** the stall. It is kept for real GPUs without `KHR_parallel_shader_compile`.
+
+**Root cause 2: scripts executed twice** (`dashboard.html`: omega-constellation, omega-controls, popper, tippy; `journal.html`: omega-ui).
+- `bg.js` guarded omega-controls under two different markers, `data-omega-ctrl` and `data-omega-controls`.
+- Every `data-omega-*` guard misses a page's own `<script src>` tag.
+- `omega-oss.js` and `omega-tooltip.js` each checked the other's global before either had loaded.
+
+**The fix for root cause 2:**
+- `__omegaAppend` now skips a script whose pathname is already on the page, on both the immediate and the DOMContentLoaded path. All 136 callers were checked: none attaches onload/onerror, so a skipped element loses nothing.
+- Both library loaders adopt an existing tag, and `omega-tooltip.js` drains at once if the adopted tag already ran.
+- Result on dashboard/journal/points/habits: 0 duplicate requests, 0 duplicate tags. The rendered output is identical before and after: 11 tippy instances, 1 controls dock, 12 constellation nodes, 0 page errors.
+
+**A/B** (origin/main pinned vs working tree, 3 runs each; load / longest task / total blocking time):
+
+| page | before | after |
+|---|---|---|
+| dashboard | 3.1s / 1.55s / 1.95s | 1.7s / 0.30s / 0.66s |
+| profile | 3.1s / 1.57s / 1.83s | 1.8s / 0.34s / 0.70s |
+| sculpture | 3.2s / 1.81s / 2.51s | 1.5s / 0.28s / 0.95s |
+
+These are headless software-GL numbers, so the absolute values overstate a real GPU. The direction and the mechanism are what they show.
+
+**Tests:** `test_load_cost.py` (5) holds the cube size, `fromCubemap`, compile-before-frame, the append dedupe on both paths, the no-load-handler invariant and both loaders' adoption.

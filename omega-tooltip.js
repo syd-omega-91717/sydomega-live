@@ -71,6 +71,16 @@
   var _loaded = false, _queue = [];
 
   function _script(src, onload, onerror) {
+    /* omega-oss.js may already have added this exact file; adopt its tag
+       rather than download and execute the library a second time. */
+    var all = document.getElementsByTagName('script');
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute('src') === src) {
+        all[i].addEventListener('load', onload);
+        all[i].addEventListener('error', onerror);
+        return;
+      }
+    }
     var sc = document.createElement('script');
     sc.src = src;
     sc.onload = onload;
@@ -100,6 +110,7 @@
          window.tippy undefined — so degrade to native title= tooltips
          rather than queue callbacks that can never run. */
       if (!window.Popper) { _queue = []; return; }
+      if (window.tippy) { _drain(); return; }   /* adopted tag already ran */
       _script(TIPPY_SRC, _drain, function () { _queue = []; });
     }
 

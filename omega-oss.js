@@ -55,19 +55,28 @@
   function load(name, url, global, cb){
     if(_loaded[name]){ if(cb) cb(window[global]); return; }
     if(_loading[name]){ var old=_loading[name]; _loading[name]=function(){old&&old();if(cb)cb(window[global]);}; return; }
+    if(window[global]){ _loaded[name]=true; if(cb) cb(window[global]); return; }
     _loading[name]=cb||null;
-    var s=document.createElement('script');
-    s.src=url;s.async=true;s.crossOrigin='anonymous';
-    s.onload=function(){
+    /* omega-tooltip.js loads the same /vendor/ popper + tippy pair. Both start
+       at once, so neither sees the other's global yet and each added its own
+       tag -- measured on dashboard.html: two requests and two executions of
+       each file. Adopt a tag already on the page instead of adding a second. */
+    var prior=null, all=document.getElementsByTagName('script');
+    for(var i=0;i<all.length;i++){ if(all[i].getAttribute('src')===url){ prior=all[i]; break; } }
+    var s=prior||document.createElement('script');
+    if(!prior){ s.src=url;s.async=true;s.crossOrigin='anonymous'; }
+    var onload=function(){
       _loaded[name]=true;
       var fn=_loading[name];delete _loading[name];
       if(fn) fn(window[global]);
     };
-    s.onerror=function(){
+    var onerror=function(){
       console.warn('[OmegaOSS] Failed to load: '+name);
       delete _loading[name];
     };
-    document.head.appendChild(s);
+    s.addEventListener('load',onload);
+    s.addEventListener('error',onerror);
+    if(!prior) document.head.appendChild(s);
   }
 
   /* ── LIBRARY REGISTRY ─────────────────────────────────────────── */

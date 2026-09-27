@@ -1152,6 +1152,33 @@ vignette tint).
 - [Figma dark/light mode personalization](https://www.figma.com/files?view=list&sort=saved)
 - [Luxury astrology branding (Element & Co.)](https://www.elementandco.com/)
 
+## Blueprint
+
+**Module Plan**
+- `omega-theme-personalization.js` (200 lines): Reads `profiles.sign`, computes element-based palette and current season, publishes CSS tokens to :root
+  - Guard attribute: `data-omega-theme-personalization`
+  - Injected in bg.js globally after theme.js loads
+  - Exports: `window.OmegaThemePersonalization = {setElement, setSeason, getCurrentTheme, clearOverrides}`
+
+**Integration Points & File Changes**
+1. `omega-theme-personalization.js` (IMPLEMENTED): Listens to OmegaCanon profile load, maps zodiac sign to element (fire/water/earth/air), publishes --element-primary/secondary/accent/glow/soft tokens plus seasonal modifiers (--season-bloom, --season-vignette, --season-glow-intensity)
+2. `bg.js`: Already injects omega-theme-personalization.js with guard pattern (verified line 2562+)
+3. `theme.js`: Already has fallback tokens defined (lines 20–24); omega-theme-personalization overrides at runtime
+4. `localStorage` patterns: omega_theme_element and omega_theme_season for member customization
+
+**Data Plan**
+- No new tables, RPCs, or platform_settings flags
+- Reads existing `profiles.sign` (populated via omega-agents.json zodiac mapping)
+- Computes season from `new Date().getMonth()`
+
+**Verification Plan**
+1. `node --check omega-theme-personalization.js` — syntax valid
+2. `python3 scripts/audit.py` — module injected correctly, guard unique
+3. `/verify-in-browser pages=profile.html,dashboard.html errors` — theme tokens applied, no throws
+4. Manual: Load member profile, observe card/glow colors shift to element affiliation; navigate through seasonal months (mock date if needed), verify seasonal modifiers apply
+
+**Respects prefers-reduced-motion:** Static palette applied, no transition animations triggered.
+
 ## 23. Event-Driven Celebration Engine Expansion (ASCEND / VAULT / INTEL / COMMAND) — proposal
 
 **Concept:** Extend `omega-confetti.js` beyond simple achievement unlocks to emit

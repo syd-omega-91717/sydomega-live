@@ -41,4 +41,8 @@ def main():
     print("OMEGA MISSION STATE CONTRACT: PASS (SERVER-AUTHORITATIVE + EVIDENCE-BOUND)")
     
 if __name__ == "__main__":
+    import sys
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__ or "")
+        raise SystemExit(0)
     main()

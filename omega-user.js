@@ -101,6 +101,10 @@ window.__omegaPopulate = function(pr, user){
     }
   }
 
+  /* Owner/admin identity surfaces may show the legal full name; public identity uses S.Y.D. */
+  var officialName=document.getElementById('idf-fullname');
+  if(officialName) officialName.textContent=isOwner ? OWNER.full_name : name;
+
   /* ── TITLE / ROLE ── */
   var pht=document.getElementById('ph-title');
   if(pht) pht.textContent = isOwner ? OWNER.title : 'SOVEREIGN MEMBER';

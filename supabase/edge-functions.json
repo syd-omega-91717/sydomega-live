@@ -3,6 +3,7 @@
     "checkout",
     "concierge",
     "concierge-orchestrator",
+    "event-ingest",
     "graphify-ai-ingest",
     "graphify-ai-query",
     "growth-orchestrator",

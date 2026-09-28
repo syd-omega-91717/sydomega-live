@@ -87,7 +87,7 @@
   /* ── Console protection banner ──────────────────────────────────── */
   if(typeof console!=='undefined'&&console.log){
     console.log('%c\u03A9','color:#C9A84C;font-size:48px;font-weight:bold');
-    console.log('%c SYD OMEGA 91717 \u2014 SOVEREIGN SYSTEM\n All source code copyright Major Sleiman Youssef Dagher.\n Lebanese Order of Engineers No. 30875','color:#C9A84C;font-size:13px;font-family:serif');
+    console.log('%c SYD OMEGA 91717 \u2014 SOVEREIGN SYSTEM\n All source code copyright S.Y.D.\n Lebanese Order of Engineers No. 30875','color:#C9A84C;font-size:13px;font-family:serif');
     console.log('%c Unauthorized access, copying, or reproduction is a violation of sovereignty.','color:#8B0000;font-size:12px');
   }
 

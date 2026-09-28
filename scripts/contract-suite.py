@@ -119,6 +119,9 @@ GATES = [
      "no file gains inline on*= handlers or inline <script> blocks -- the "
      "migration to a script-src without 'unsafe-inline' only moves one way",
      ['scripts/csp-inline-ratchet.py']),
+    ('mission-state',
+     'mission and quest state remains server-authoritative and evidence-bound',
+     ['scripts/omega-mission-state-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

@@ -28,8 +28,7 @@ def main():
     for path in (*MIGRATIONS, DOC):
         if not path.exists():
             raise SystemExit(f"OMEGA MISSION STATE CONTRACT: FAIL missing {path}")
-    sql = "
-".join(path.read_text(encoding="utf-8").lower() for path in MIGRATIONS)
+    sql = "\\n".join(path.read_text(encoding="utf-8").lower() for path in MIGRATIONS)
     for marker in REQUIRED:
         if marker.lower() not in sql:
             raise SystemExit(f"OMEGA MISSION STATE CONTRACT: FAIL missing {marker}")

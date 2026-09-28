@@ -52,6 +52,16 @@ jobs:
         run: python scripts/omega-gameful-contract.py
       - name: Enforce Eternal Continuity contract
         run: python scripts/omega-eternity-contract.py
+      - name: Enforce capability provenance contract
+        run: python scripts/omega-capability-provenance-contract.py
+      - name: Enforce durable event fabric contract
+        run: python scripts/omega-event-fabric-contract.py
+      - name: Enforce source canon and conflict register
+        run: python scripts/omega-source-canon-contract.py
+      - name: Enforce agent tool governance
+        run: python scripts/omega-agent-tool-contract.py
+      - name: Enforce SEO foundations
+        run: python scripts/omega-seo-contract.py
       - name: Enforce information architecture audit
         if: always()
         run: python scripts/audit-information-architecture.py

@@ -21791,3 +21791,13 @@ could tell a rotated key from the old one, or a new key that does not work.
 - Intermediate author heads such as `a8c63fbb` got only the sync run: the issue's "no workflow runs".
 
 This broke CLAUDE.md §8.2's standing rule ("never auto-commit it in CI"). The workflow is now `workflow_dispatch` only. The registry stays gated by CI's "Skill and agent registry" step and by `ci-local.sh`.
+
+## Owner's collections: 12 broken zodiac images, Passport art, `Ω` shown as text (2026-09-28)
+
+- **Legacy Constellation zodiac cards: 12 of 12 broken images.** The code loaded `/Zodiac_signs/horoscope_sign_*.png.jpeg`, but those files live in `BlockChain_Market_Analysis_syd_omega_91717/horoscope_sign/`; `Zodiac_signs/` holds `WhatsApp Image …` files. The broken-asset gate reads markup and cannot see JS-built paths. The path is fixed, and `test_legacy_assets.py` resolves all 62 named files through the module itself. The test fails on the previous code.
+- **Passport:** the member's own sign art and stage medal, driven only by `profiles.sign` and the stage the card already derives (1..9, one medal per stage). The source art had a checkerboard baked into the JPEG. It was cut to real alpha in the harness Chromium (edge flood-fill of low-chroma pixels ≥210, 1px feather) and saved as 21 WebP files in `/assets/legacy/`, 19–55 KB each vs about 170 KB. Rendered: both images load, captioned "ARIES" / "STAGE 3".
+- **`<div class="seal">Ω</div>` and the photo placeholder** used a JS escape in HTML. A scan of every page's text and attributes outside `<script>`/`<style>` found only these 2 cases; both are now `&#937;`.
+- **`eternity.html`/`replay.html` declared `robots: index,follow`** against the platform-wide `X-Robots-Tag: noindex`; both now say `noindex, nofollow`.
+- **Open (owner decision):** the medal art names stages Initiate…Universal S.Y.D, while `PP_RANKS` names them Initiate…Omega, and 7 of 9 differ. `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` Round 3 has both lists.
+
+**Verified:** ci-local 28/28; 486 tests; `verify-runtime.js` passes on profile, world, eternity and replay.

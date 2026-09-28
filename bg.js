@@ -33,7 +33,7 @@
     var u=(input&&input.url)?input.url:input;
     if(!watched(u)) return real.apply(this,arguments);
     W.inflight++; if(!W.firstAt) W.firstAt=Date.now();
-    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; } }
+    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; if(W.inflight===0) W.firstAt=0; } }
     var p; try{ p=real.apply(this,arguments); }catch(e){ done(); throw e; }
     return p.then(function(res){
       done();
@@ -2439,6 +2439,50 @@ setTimeout(function(){
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applySkel);else applySkel();
   }
+})();
+
+/* ===== DATA-LOADING TIMEOUT ==============================================
+   [data-loading] is a visual state marker, not proof that a request is alive.
+   Older pages could leave the attribute behind after a rejected query or a
+   missing module, which made omega-components render a spinner forever.
+   Arm the spinner only while the region is pending; after 12s stop the
+   animation and expose a truthful retry state instead of fake downloading.
+   Dynamic regions are observed too. A successful renderer normally removes
+   data-loading before the timeout and is unaffected. */
+(function(){
+  if(window.__omegaLoadingTimeoutGuard)return; window.__omegaLoadingTimeoutGuard=1;
+  var TIMEOUT=12000;
+  function arm(el){
+    if(!el||el.nodeType!==1||!el.hasAttribute('data-loading')||el.__omegaLoadingTimer)return;
+    el.setAttribute('data-loading-pending','true');
+    el.__omegaLoadingTimer=setTimeout(function(){
+      el.__omegaLoadingTimer=null;
+      if(!el.hasAttribute('data-loading'))return;
+      el.removeAttribute('data-loading-pending');
+      if(!(el.textContent||'').trim() && !el.children.length){
+        var msg=document.createElement('span');
+        msg.className='omega-loading-timeout';
+        msg.textContent='DATA NOT LOADED — TRY AGAIN';
+        msg.style.cssText='display:inline-flex;align-items:center;gap:8px;color:var(--muted,#888);font:12px/1.5 var(--M,Courier,monospace);letter-spacing:1px;pointer-events:auto';
+        var btn=document.createElement('button');
+        btn.type='button'; btn.textContent='RETRY';
+        btn.style.cssText='font:inherit;letter-spacing:1px;background:transparent;color:inherit;border:1px solid currentColor;padding:3px 8px;cursor:pointer';
+        btn.addEventListener('click',function(){location.reload();});
+        msg.appendChild(btn); el.appendChild(msg);
+      }
+    },TIMEOUT);
+  }
+  function scan(root){
+    if(!root||root.nodeType!==1&&root.nodeType!==9)return;
+    if(root.nodeType===1&&root.matches&&root.matches('[data-loading]'))arm(root);
+    var list=root.querySelectorAll?root.querySelectorAll('[data-loading]'):[];
+    for(var i=0;i<list.length;i++)arm(list[i]);
+  }
+  function boot(){
+    scan(document);
+    try{new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){for(var j=0;j<ms[i].addedNodes.length;j++)scan(ms[i].addedNodes[j]);}}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 
 /* ===== PASSWORD REVEAL -- every password field across the platform gains a

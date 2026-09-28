@@ -209,7 +209,7 @@
     {t:'HEPHAESTUS AQUARIUS',d:'God of the forge — Aquarius Wind element',u:'/cosmos.html',c:'OLYMPIAN'},
     /* ── CANON ──────────────────────────────────────────────────────────── */
     {t:'AUTHORITY FORMULA',d:'AUTH=sqrt(A³+B³+C³)×φ/e Apex=27.8367 A=Knowledge B=Mastery C=Contribution',u:'/analytics.html',c:'CANON'},
-    {t:'ARENITE TOKEN',d:'Founder token Aries sign Major Sleiman Youssef Dagher',u:'/vault.html',c:'CANON'},
+    {t:'ARENITE TOKEN',d:'Founder token Aries sign S.Y.D.',u:'/vault.html',c:'CANON'},
     {t:'12×12×9×9×9 LATTICE',d:'104976 canonical nodes The Plane 12x12x9^3 sovereign matrix',u:'/points.html',c:'CANON'},
     {t:'TRIAL 9 MINUTES 17 SECONDS',d:'557 seconds trial period granted by owner only',u:'/approvals.html',c:'CANON'},
     {t:'DEDICATION 9H 17M 17S',d:'33437 seconds daily dedication target',u:'/dashboard.html',c:'CANON'},

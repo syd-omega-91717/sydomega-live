@@ -2452,12 +2452,42 @@ setTimeout(function(){
 (function(){
   if(window.__omegaLoadingTimeoutGuard)return; window.__omegaLoadingTimeoutGuard=1;
   var TIMEOUT=12000;
+  /* A region that has received real content is loaded. Most renderers write
+     textContent/innerHTML and never remove data-loading, and while it is
+     pending omega-components paints the text transparent under a spinner --
+     so the data arrived and stayed invisible (profile.html: name, stat subs,
+     character sign/role, membership card). Clear the marker on first content. */
+  function settle(el){
+    if(el.__omegaLoadingTimer){clearTimeout(el.__omegaLoadingTimer);el.__omegaLoadingTimer=null;}
+    if(el.__omegaLoadingObs){try{el.__omegaLoadingObs.disconnect();}catch(e){} el.__omegaLoadingObs=null;}
+    el.removeAttribute('data-loading-pending');
+    el.removeAttribute('data-loading');
+  }
+  function hasContent(el){
+    return !!(el.textContent||'').trim() || !!el.querySelector('img,svg,canvas,video,input,button,a');
+  }
   function arm(el){
     if(!el||el.nodeType!==1||!el.hasAttribute('data-loading')||el.__omegaLoadingTimer)return;
     el.setAttribute('data-loading-pending','true');
-    el.__omegaLoadingTimer=setTimeout(function(){
+    try{
+      el.__omegaLoadingObs=new MutationObserver(function(){
+        if(el.hasAttribute('data-loading')&&hasContent(el)&&!el.querySelector('.omega-loading-timeout'))settle(el);
+      });
+      el.__omegaLoadingObs.observe(el,{childList:true,characterData:true,subtree:true});
+    }catch(e){}
+    /* Module scripts run before DOMContentLoaded, so a fast renderer can fill
+       the region before this scan arms it -- no later mutation would ever
+       clear it. Already-filled means already loaded. */
+    if(hasContent(el)){settle(el);return;}
+    el.__omegaLoadingTimer=setTimeout(function expire(){
       el.__omegaLoadingTimer=null;
       if(!el.hasAttribute('data-loading'))return;
+      /* A region in a closed tab is not late -- its renderer runs when the tab
+         opens. Only a region the member can see can be declared failed. The
+         observer stays connected, so data arriving after a timeout still
+         replaces the retry notice and clears the marker. */
+      if(!el.isConnected)return;
+      if(!el.getClientRects().length){el.__omegaLoadingTimer=setTimeout(expire,TIMEOUT);return;}
       el.removeAttribute('data-loading-pending');
       if(!(el.textContent||'').trim() && !el.children.length){
         var msg=document.createElement('span');

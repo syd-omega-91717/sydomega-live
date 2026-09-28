@@ -21767,3 +21767,16 @@ could tell a rotated key from the old one, or a new key that does not work.
 - `test_owner_deck.py` +1.
 
 **Owner action:** rotate each key at its provider, set it in Supabase secrets, then VERIFY → DONE.
+
+## `main` red after the World merges: one page served as three documents (2026-09-28)
+
+`main` at `842d14e4` failed 6 of 28 blocking checks locally and 5 workflows on GitHub (CI, Contracts, Production Contract, Repository Integrity, Vercel Production).
+
+- **`world.html` was three complete HTML documents on three lines.** Three branches (#506 achievement chain, #507 provenance, #508 continuity) each rewrote the page as a single line, and the merges kept all three. The result: 22 duplicate ids, 3 H1s, 3 meta descriptions. It is now one document holding the union: map, provenance, progression, achievement chain, legacy constellation and continuity portals.
+- **`omega-achievement-evidence-chain.js` was loaded by no page.** Its section was mounted but its script never was (§8.1 class 4). It now loads, and renders in the harness ("ACHIEVEMENT EVIDENCE CHAIN · LIVE").
+- **`eternity.html` and `replay.html` had no `#omega-side` and were missing from `nav.js`.** Both are now in COMMAND beside OMEGA WORLD. A shallow read had called `replay.html` empty (`wc -l` 0); it is 1,156 bytes with no trailing newline.
+- **`event-ingest` was missing from `supabase/edge-functions.json`.** Added.
+- **Migration drift:** `20260928100000_omega_event_fabric_idempotency` *was* applied live (`schema_migrations` has it, and the index `omega_platform_events_member_idempotency_idx` exists). Only the snapshot lacked it; it is now registered (238 versions).
+- **Page counts** "208" → 210 on 5 pages, in `T_EN` and in all 6 packs. `ecosystem.html` also said "196-PAGE PLATFORM", which the gate did not catch.
+
+**Verified:** `./scripts/ci-local.sh` 28/28. `verify-runtime.js` passes on world, eternity, replay and dashboard; the harness shows a sidebar, 1 H1 and no overflow on each.

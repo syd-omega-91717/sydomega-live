@@ -219,10 +219,16 @@ def main(argv):
     print('  %d gate(s), %d failing' % (len(results), len(failed)))
 
     if failed:
-        # One annotation per failing gate, so the run summary names them all
-        # rather than only the step that happened to stop the job.
+        # Emit failing gate names into the Actions summary as well as annotations.
+        summary = os.environ.get('GITHUB_STEP_SUMMARY')
+        if summary:
+            with open(summary, 'a', encoding='utf-8') as fh:
+                fh.write('## Contract suite failures\\n\\n')
+                for gate_id, rc, elapsed in results:
+                    if rc:
+                        fh.write('- **%s** — exit %d\\n' % (gate_id, rc))
         for gate_id in failed:
-            print('::error::contract gate failed: %s' % gate_id)
+            print('::error title=Contract gate failed::%s' % gate_id)
         return 1
     return 0
 

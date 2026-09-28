@@ -21780,3 +21780,14 @@ could tell a rotated key from the old one, or a new key that does not work.
 - **Page counts** "208" → 210 on 5 pages, in `T_EN` and in all 6 packs. `ecosystem.html` also said "196-PAGE PLATFORM", which the gate did not catch.
 
 **Verified:** `./scripts/ci-local.sh` 28/28. `verify-runtime.js` passes on world, eternity, replay and dashboard; the harness shows a sidebar, 1 H1 and no overflow on each.
+
+## Registry auto-commits hid real PR failures behind zero-job runs (issue #509, 2026-09-28)
+
+`omega-registry-sync.yml` ran on every non-`main` push and committed `chore: synchronize generated omega registry` about 10 seconds later. Measured on PR #508:
+
+- The author's head `56d05952` ran the real CI job, which **failed** at "Audit tooling tests" (the deck-coverage test for `eternity`/`replay`).
+- The bot's commit `c2ad6f1b` then became the PR head. All 11 of its PR runs had **0 jobs** (`list_workflow_jobs` → `total_count: 0`) and were stamped `failure` at merge time.
+- The PR merged with the real failure buried under an empty head, which put `main` red.
+- Intermediate author heads such as `a8c63fbb` got only the sync run: the issue's "no workflow runs".
+
+This broke CLAUDE.md §8.2's standing rule ("never auto-commit it in CI"). The workflow is now `workflow_dispatch` only. The registry stays gated by CI's "Skill and agent registry" step and by `ci-local.sh`.

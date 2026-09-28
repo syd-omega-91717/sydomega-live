@@ -21860,3 +21860,12 @@ two squeezed columns. Each item was reproduced in the harness (owner stub,
   `evidence.html: missing navigation/runtime shell hook` (gate 9b). The
   `fk_indexes` migration file was renamed to its applied version `20260928151417`
   so migration-drift passes.
+
+## Privacy policy named no contact for the data controller (2026-09-28)
+
+`privacy.html` identified the controller (Sleiman Youssef Dagher — kept as the
+full legal name: GDPR Art. 13(1)(a) and Lebanon Law 81/2018 require the
+controller's identity, which initials do not give) but gave no contact details,
+which Art. 13(1)(a) also requires. Added `info@sydomega.com` (supplied by the
+owner, 2026-09-28) as the contact for privacy and data-rights requests, and
+pointed the erasure-failure message at it instead of "CONTACT ADMINISTRATOR".

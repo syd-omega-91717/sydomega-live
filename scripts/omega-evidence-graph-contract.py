@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""Validate the Evidence Graph bridge, its truth boundary, and browser safety.
+
+The contract verifies that the member-scoped read model requires authenticated
+identity, reads only its declared evidence sources, avoids privileged browser
+credentials and unsafe HTML sinks, and documents the persisted evidence chain.
+"""
 from pathlib import Path
 import sys
 

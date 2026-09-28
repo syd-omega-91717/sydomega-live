@@ -8,8 +8,8 @@
 
 /* ── CANONICAL OWNER DATA (absolute, locked) ─────────────────────────────── */
 var OWNER = {
-  display_name    : 'MAJOR SLEIMAN YOUSSEF DAGHER',
-  full_name       : 'Major Sleiman Youssef Dagher',
+  display_name    : 'S.Y.D',
+  full_name       : 'Sleiman Youssef Dagher',
   title           : 'ARCHITECT & SOVEREIGN FOUNDER',
   order_number    : 'LEBANESE ORDER OF ENGINEERS NO. 30875',
   sign            : 'Aries',

@@ -114,6 +114,7 @@
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],
           ['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],
           ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],
+          ['evidence','EVIDENCE GRAPH','/evidence.html'],
           ['horoscope','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],
           ['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],
           ['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},

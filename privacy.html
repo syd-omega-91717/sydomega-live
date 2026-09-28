@@ -88,6 +88,8 @@
   <div class="info-block">
     LEGAL BASIS: Legitimate Interest (progression, security audit) + Consent (analytics, marketing).<br>
     DATA CONTROLLER: S.Y.D &middot; Lebanese Order of Engineers No. 30875<br>
+    DATA CONTROLLER: Sleiman Youssef Dagher &middot; Lebanese Order of Engineers No. 30875<br>
+    CONTACT: <a href="mailto:info@sydomega.com" style="color:var(--cyan)">info@sydomega.com</a> &middot; privacy requests, data-rights requests and complaints<br>
     RETENTION: Profile data until erasure request. Event log: 5 years. Consent records: 10 years.<br>
     TRANSFERS: Data is stored with Supabase in its Singapore region (ap-southeast-1). No third-party data sales. Platform is ad-free.
   </div>
@@ -243,7 +245,7 @@ window.confirmErasure=async function(){
       showMsg('action-msg',true,'ERASURE REQUEST SUBMITTED. DATA WILL BE DELETED WITHIN 30 DAYS. SIGNING OUT…');
       setTimeout(function(){sb.auth.signOut().then(function(){location.replace('/account.html');});},3000);
     }else{showMsg('action-msg',false,(r.data&&r.data.error)||'ERASURE FAILED.');}
-  }catch(e){showMsg('action-msg',false,'ERASURE REQUEST FAILED. CONTACT ADMINISTRATOR.');}
+  }catch(e){showMsg('action-msg',false,'ERASURE REQUEST FAILED. CONTACT INFO@SYDOMEGA.COM.');}
 };
 </script>
 <script src="/bg.js" defer></script><script src="/upload.js"></script>

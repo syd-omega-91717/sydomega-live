@@ -50,6 +50,14 @@ jobs:
         run: python scripts/edge-service-role-auth-audit.py
       - name: Enforce gameful feature purpose contract
         run: python scripts/omega-gameful-contract.py
+      - name: Enforce capability provenance contract
+        run: python scripts/omega-capability-provenance-contract.py
+      - name: Enforce source canon and conflict register
+        run: python scripts/omega-source-canon-contract.py
+      - name: Enforce agent tool governance
+        run: python scripts/omega-agent-tool-contract.py
+      - name: Enforce SEO foundations
+        run: python scripts/omega-seo-contract.py
       - name: Enforce information architecture audit
         if: always()
         run: python scripts/audit-information-architecture.py

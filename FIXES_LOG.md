@@ -21801,3 +21801,62 @@ This broke CLAUDE.md §8.2's standing rule ("never auto-commit it in CI"). The w
 - **Open (owner decision):** the medal art names stages Initiate…Universal S.Y.D, while `PP_RANKS` names them Initiate…Omega, and 7 of 9 differ. `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` Round 3 has both lists.
 
 **Verified:** ci-local 28/28; 486 tests; `verify-runtime.js` passes on profile, world, eternity and replay.
+
+## Profile: owner name, dead boot, stuck spinners, split layout (2026-09-28)
+
+Reported from a photo of `sydomega.com/profile` (owner session): the character
+card read "MAJOR SLEIMAN YOUSSEF DAGHER", small loading circles never stopped,
+AUTHORITY / MATRIX COORD / MATERIAL TIER read `--`, and the page was split into
+two squeezed columns. Each item was reproduced in the harness (owner stub,
+1536px) before it was changed.
+
+- **Name.** Not in the page code: live `profiles.display_name` was
+  `Major Sleiman Youssef Dagher` on both owner rows (seeded by
+  `0039_lifetime_access.sql`). Migration
+  `20260928152818_owner_public_name_syd.sql` sets it to `S.Y.D`, applied live
+  and re-read (`select display_name from profiles where is_owner` → 2×`S.Y.D`).
+  Hardcoded copies removed from `omega-share-card.js` (×2), `omega-protect.js`,
+  `omega-canon.json`, the access-denied gate on `approvals.html` (seen by
+  non-owners) and `sovereign-covenant.html`. The full name
+  "Sleiman Youssef Dagher" stays only on owner/admin surfaces (`approvals.html`
+  owner badge, the owner's own Identity FULL NAME field). `privacy.html`
+  keeps the full name as the legal data controller, with "Major" dropped.
+- **Dead boot.** The 2026-07-26 upload (`60588625`) deleted `async function
+  boot(){` and its profile read; the body was left inside a
+  `buildAchievements(uid)` that nothing called, and a comment claimed "boot()
+  removed -- module self-initialises". So the stat bar, owner console, member
+  list and membership card never loaded for anyone. Restored `boot()` and the
+  deleted `buildConsole()`; moved `buildAchievementsGrid`/`buildCerts` into the
+  module that owns `ACHIEV` (they were in another module, where it is not in
+  scope); dropped a stray `buildTiers(realAuth)` that overwrote the KYC tier grid.
+  Harness, before → after: `sg-auth` `--` → `27.837`, `sg-coord` `(--,--,--)` →
+  `(9.000,9.000,9.000)`, `sg-member` `--` → `SOVEREIGN`, 0 page errors.
+- **Fabricated count (§8.1 class 9).** `buildAchievementsGrid()` marked all 36
+  achievements earned and printed 36 for every member. It now reads
+  `trophies_earned/medals_earned/certificates_earned`, which match the rows live
+  (owners 12/12/12, the other 7 members 0/0/0), and locks the rest.
+- **Unreachable apex.** OMEGA MASTER threshold was `27.83679`; the maximum
+  authority (9,9,9) is `27.83668…`, so no one could reach it — the owner read
+  PRIME. Threshold → `27.8366`. The tier label also raced `i18n.js` (empty when
+  `OmegaI18n` was not yet loaded); it now falls back to the key.
+- **Owner membership.** `my_subscription()` returns `status:'none'` for the owner
+  (lifetime, no Stripe row — verified impersonating the owner), which rendered
+  "NO ACTIVE MEMBERSHIP" on the founder's profile. Owner → SOVEREIGN · ∞ LIFETIME.
+- **Spinners (bg.js).** Renderers fill `[data-loading]` regions but never remove
+  the attribute, and while pending `omega-components.js` paints the text
+  transparent under a spinner — the data arrived and stayed invisible. The
+  loading guard now clears the marker when a region receives content (or
+  already has it when armed: module scripts run before `DOMContentLoaded`), and
+  never declares a hidden region (closed tab) failed. Harness: 12 stuck regions
+  → 0 on the visible tab; 0 false "DATA NOT LOADED" after 14s. `sw.js`
+  `CACHE_VERSION` v7 → v8 so the stale-while-revalidate cache drops the old bg.js.
+- **Layout (§4 `.shell` flex row).** A second `</main>` closed the content column
+  before `#tab-character`/`#tab-science`, so they became a third flex column and
+  squeezed everything to 739px. Removed; content column back to 1456px.
+  `.stat-grid` `auto-fill` → `auto-fit` so six tiles fill the row.
+- Members no longer see the owner-only Access Control panel (its list is only
+  loaded for the owner and could only spin).
+- Pre-existing, not from this change (fail identically on `origin/main`):
+  `evidence.html: missing navigation/runtime shell hook` (gate 9b). The
+  `fk_indexes` migration file was renamed to its applied version `20260928151417`
+  so migration-drift passes.

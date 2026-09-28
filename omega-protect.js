@@ -65,7 +65,7 @@
         var c=console.clear;
         if(c) c.call(console);
         console.log('%c\u03A9 SYD OMEGA 91717 \u2014 SOVEREIGN PROTECTED SYSTEM','color:#C9A84C;font-size:16px;font-weight:bold;font-family:serif');
-        console.log('%cAll source code is the exclusive intellectual property of Major Sleiman Youssef Dagher.\nUnauthorized inspection, copying, or reproduction is strictly prohibited.','color:#8a8676;font-size:12px');
+        console.log('%cAll source code is the exclusive intellectual property of S.Y.D.\nUnauthorized inspection, copying, or reproduction is strictly prohibited.','color:#8a8676;font-size:12px');
       }
     }
     if(!open) _devOpen=false;

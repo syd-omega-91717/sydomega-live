@@ -63,7 +63,7 @@
     var a     = pr.is_owner ? 9 : Number(pr.axis_a||0.001);
     var b     = pr.is_owner ? 9 : Number(pr.axis_b||0.001);
     var c     = pr.is_owner ? 9 : Number(pr.axis_c||0.001);
-    var name  = pr.is_owner ? 'MAJOR SLEIMAN YOUSSEF DAGHER' : (pr.display_name||'SOVEREIGN MEMBER').toUpperCase();
+    var name  = pr.is_owner ? 'S.Y.D' : (pr.display_name||'SOVEREIGN MEMBER').toUpperCase();
     var tier  = pr.is_owner ? 'SOVEREIGN ARCHITECT' : (pr.subscription_tier||'FREE').toUpperCase();
     var sign  = (pr.sign  || 'AWAITING ASSIGNMENT').toUpperCase();
     var elem  = (pr.element||'AWAITING ASSIGNMENT').toUpperCase();
@@ -337,7 +337,7 @@
   function share(pr, title, text){
     var cv=createCard(pr);
     var auth=calcAuth(pr);
-    var name=pr.is_owner?'MAJOR SLEIMAN YOUSSEF DAGHER':(pr.display_name||'SOVEREIGN MEMBER').toUpperCase();
+    var name=pr.is_owner?'S.Y.D':(pr.display_name||'SOVEREIGN MEMBER').toUpperCase();
     var t=title||('Ω SYD OMEGA 91717 — '+name+' · AUTH '+auth.toFixed(4));
     var tx=text||('Sovereign authority: '+auth.toFixed(4)+' ('+gateName(auth)+') · '+location.origin);
 

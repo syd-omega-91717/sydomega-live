@@ -1,0 +1,78 @@
+{
+  "schema": "omega.source-dna.v1",
+  "generated_from": "omega-legacy-constellation.js",
+  "source_count": 62,
+  "families": [
+    {
+      "id": "casual",
+      "label": "CASUAL USER",
+      "asset_count": 5,
+      "accent": "#A8A5A0",
+      "visual_role": "entry-state"
+    },
+    {
+      "id": "emerald",
+      "label": "EMERALD SOVEREIGN",
+      "asset_count": 5,
+      "accent": "#50C878",
+      "visual_role": "sovereign-state"
+    },
+    {
+      "id": "premium",
+      "label": "PREMIUM SUBSCRIBER",
+      "asset_count": 5,
+      "accent": "#E8C97A",
+      "visual_role": "premium-state"
+    },
+    {
+      "id": "verified",
+      "label": "VERIFIED MEMBER",
+      "asset_count": 5,
+      "accent": "#00E5FF",
+      "visual_role": "trust-state"
+    },
+    {
+      "id": "specialized",
+      "label": "SPECIALIZED",
+      "asset_count": 9,
+      "accent": "#9B6BF0",
+      "visual_role": "role-state"
+    },
+    {
+      "id": "ultimate",
+      "label": "OMEGA SINGULARITY",
+      "asset_count": 1,
+      "accent": "#FF6B3D",
+      "visual_role": "terminal-art"
+    }
+  ],
+  "artifact_types": {
+    "phase_art": 30,
+    "trophy_source": 20,
+    "zodiac_identity": 12
+  },
+  "stage_canon": [
+    "Initiate",
+    "Seeker",
+    "Strategist",
+    "Master",
+    "Omega Elite",
+    "Visionary",
+    "Architect",
+    "Sovereign",
+    "Universal S.Y.D"
+  ],
+  "truth_policy": {
+    "source_art_is_not_achievement": true,
+    "source_art_is_not_entitlement": true,
+    "source_art_is_not_identity_verification": true,
+    "source_art_is_not_nft_ownership": true
+  },
+  "design_inference": [
+    "Use family accents as restrained semantic highlights, not full-page fills.",
+    "Use phase art for progression storytelling, not permission enforcement.",
+    "Use trophy art as archival/cultural artifacts until evidence-backed achievement records exist.",
+    "Use zodiac art as identity/cosmology presentation while keeping authoritative profile fields separate.",
+    "Keep the Ω visual language dark, readable, layered and motion-capable without making motion mandatory for comprehension."
+  ]
+}

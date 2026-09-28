@@ -1,0 +1,11 @@
+{
+  "info":{"name":"Ω SYD OMEGA 91717 — Public Contracts","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "variable":[{"key":"baseUrl","value":"https://sydomega.com"}],
+  "item":[
+    {"name":"World","request":{"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/world.html","host":["{{baseUrl}}"],"path":["world.html"]}}},
+    {"name":"Dashboard","request":{"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/dashboard.html","host":["{{baseUrl}}"],"path":["dashboard.html"]}}},
+    {"name":"Evolution","request":{"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/evolution.html","host":["{{baseUrl}}"],"path":["evolution.html"]}}},
+    {"name":"Credentials","request":{"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/credentials.html","host":["{{baseUrl}}"],"path":["credentials.html"]}}},
+    {"name":"Terms","request":{"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/terms.html","host":["{{baseUrl}}"],"path":["terms.html"]}}}
+  ]
+}

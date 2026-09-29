@@ -101,7 +101,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 257 (106 numbered `NNNN_`, 151 timestamped) |
 | `omega-*.js` modules | 177 (1674 KB) |
-| root `.js` files | 185 |
+| root `.js` files | 187 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 258 (106 numbered `NNNN_`, 152 timestamped) |
 | Edge Functions | 17 |

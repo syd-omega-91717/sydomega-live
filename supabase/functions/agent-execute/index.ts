@@ -28,5 +28,5 @@ Deno.serve(async(req)=>{
    else return reply({error:"tool_not_implemented"},501,origin);
    const done=await record(admin,userId,agent,tool,intent,"EXECUTED","read_only_execution_completed",payload);if(done.error)return reply({error:"audit_finalize_failed"},503,origin);
    return reply({ok:true,reality:"LIVE",governance:{agent,tool,risk:"low",status:"EXECUTED",mutation:false},data},200,origin);
- }catch{await record(s,agent,tool,intent,"FAILED","read_only_execution_failed",payload);return reply({error:"tool_execution_failed",governance:{agent,tool,risk:"low",status:"FAILED"}},502,origin);}
+  }catch{await record(admin,userId,agent,tool,intent,"FAILED","read_only_execution_failed",payload);return reply({error:"tool_execution_failed",governance:{agent,tool,risk:"low",status:"FAILED"}},502,origin);}
 });

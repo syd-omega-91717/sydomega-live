@@ -12,7 +12,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey);
 
 async function requireAuthorizedCaller(req: Request): Promise<boolean> {
   const authorization = req.headers.get("Authorization") || "";
-  const match = authorization.match(/^Bearer\\s+(.+)$/i);
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
   const token = match?.[1]?.trim();
   if (!token) return false;
 

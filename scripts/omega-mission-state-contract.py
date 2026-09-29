@@ -46,7 +46,7 @@ def main():
     for marker in ('import "/omega-mission-board.js"',):
         if marker not in board:
             raise SystemExit(f"OMEGA MISSION STATE CONTRACT: FAIL board missing {marker}")
-    for forbidden in ("localstorage", "daily_missions", "weekly_missions", "legendary_missions", "totalxp", "streakcount"):
+    for forbidden in ("localStorage.", "daily_missions", "weekly_missions", "legendary_missions", "totalXp", "streakCount"):
         if forbidden in board or forbidden in runtime:
             raise SystemExit(f"OMEGA MISSION STATE CONTRACT: FAIL simulated mission state marker remains: {forbidden}")
     doc = DOC.read_text(encoding="utf-8")

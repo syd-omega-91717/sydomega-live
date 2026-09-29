@@ -1,3 +1,4 @@
+"""Validate the read-only Agent Operations gateway."""
 #!/usr/bin/env python3
 from pathlib import Path
 import json,sys

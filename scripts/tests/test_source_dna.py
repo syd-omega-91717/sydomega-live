@@ -7,6 +7,7 @@ import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MANIFEST = os.path.join(ROOT, "config", "omega-source-dna.json")
+COMPONENT_ROOT = os.path.join(ROOT, "BlockChain_Market_Analysis_syd_omega_91717", "components")
 LEGACY = os.path.join(ROOT, "omega-legacy-constellation.js")
 
 PROBE = r"""

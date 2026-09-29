@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Contract for the governed Ω visual atlas."""
+"""Contract for the governed Ω visual atlas.\n\nRun: python3 scripts/omega-visual-atlas-contract.py\n"""
 from pathlib import Path
 import re
 
-ROOT = Path(__file__).resolve().parents[1]
+import sys\n\nif "--help" in sys.argv or "-h" in sys.argv:\n    print(__doc__)\n    raise SystemExit(0)\n\nROOT = Path(__file__).resolve().parents[1]
 html = (ROOT / "visual-atlas.html").read_text(encoding="utf-8")
 js = (ROOT / "omega-visual-atlas.js").read_text(encoding="utf-8")
 css = (ROOT / "omega-visual-atlas.css").read_text(encoding="utf-8")

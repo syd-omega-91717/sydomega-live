@@ -2437,5 +2437,17 @@
   "input_snapshot",
   "result_snapshot",
   "created_at"
+ ],
+ "omega_agent_operations": [
+  "id",
+  "user_id",
+  "agent_name",
+  "tool_id",
+  "intent",
+  "risk",
+  "status",
+  "reason",
+  "payload_digest",
+  "created_at"
  ]
 }

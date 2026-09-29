@@ -14,7 +14,7 @@
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
     agents:'cosmos',pantheons:'cosmos',elements:'cosmos',
-    media:'media',
+    media:'media',visual-atlas:'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',
     sovereigns:'order',factions:'order',city:'order',
@@ -145,7 +145,7 @@
     {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/cinema.html',       col:'#AB82F2',
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html'],['movies','MOVIES','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html'],['trailers','TRAILERS','/trailers.html'],['universe','UNIVERSE','/universe.html'],
-          ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html']]},
+          ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html']]},
   ];
 
   /* INJECT CSS */

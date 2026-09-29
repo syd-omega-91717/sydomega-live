@@ -1,0 +1,395 @@
+{
+  "version": 1,
+  "world": "OMEGA CITY",
+  "frequency": "9.17 Hz",
+  "loop": [
+    "ENTER",
+    "CHOOSE",
+    "ACT",
+    "EARN",
+    "UNLOCK",
+    "COLLECT",
+    "BUILD",
+    "RETURN"
+  ],
+  "progression": {
+    "authoritySource": "profiles.axis_a/profiles.axis_b/profiles.axis_c",
+    "formula": "sqrt(A^3+B^3+C^3)*phi/e",
+    "gates": 12,
+    "levels": 12,
+    "rewards": [
+      "experience",
+      "authority",
+      "medals",
+      "trophies",
+      "certificates",
+      "cosmetic_unlocks",
+      "district_reputation"
+    ],
+    "rule": "Rewards are earned from verified actions; no fabricated progress."
+  },
+  "districts": [
+    {
+      "id": "genesis",
+      "zone": 1,
+      "name": "THE GENESIS QUARTER",
+      "archetype": "command",
+      "agent": "Sovereign",
+      "purpose": "Orient the citizen, define the current mission, and connect every major system.",
+      "pages": [
+        "dashboard",
+        "gateway",
+        "account",
+        "missions",
+        "targets",
+        "decisions"
+      ],
+      "actions": [
+        "accept mission",
+        "review standing",
+        "set target",
+        "enter district"
+      ],
+      "resources": [
+        "authority",
+        "mission reputation"
+      ],
+      "unlock": "member access"
+    },
+    {
+      "id": "intelligence",
+      "zone": 2,
+      "name": "THE INTELLIGENCE HUB",
+      "archetype": "intelligence",
+      "agent": "Scout",
+      "purpose": "Discover information, consult agents, inspect signals, and turn knowledge into decisions.",
+      "pages": [
+        "intelligence",
+        "research",
+        "analytics",
+        "oracle",
+        "agents",
+        "graph",
+        "search",
+        "observatory"
+      ],
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace",
+        "discover"
+      ],
+      "resources": [
+        "knowledge",
+        "intel reputation"
+      ],
+      "unlock": "authority >= 2.32"
+    },
+    {
+      "id": "academy",
+      "zone": 3,
+      "name": "THE ACADEMY CAMPUS",
+      "archetype": "knowledge",
+      "agent": "Tutor",
+      "purpose": "Learn, practice, pass examinations, and convert knowledge into permanent progression.",
+      "pages": [
+        "academy",
+        "exam",
+        "reading",
+        "library",
+        "flashcard",
+        "grades",
+        "skills",
+        "knowledge"
+      ],
+      "actions": [
+        "study",
+        "practice",
+        "submit exam",
+        "master discipline"
+      ],
+      "resources": [
+        "knowledge",
+        "certificates"
+      ],
+      "unlock": "authority >= 2.32"
+    },
+    {
+      "id": "citadel",
+      "zone": 4,
+      "name": "THE MEDIA CITADEL",
+      "archetype": "media",
+      "agent": "Beacon",
+      "purpose": "Experience the saga, create culture, publish works, and preserve the world's canon.",
+      "pages": [
+        "media",
+        "cinema",
+        "series",
+        "trailers",
+        "publications",
+        "hall",
+        "chronicle",
+        "heritage"
+      ],
+      "actions": [
+        "watch",
+        "create",
+        "publish",
+        "collect",
+        "curate"
+      ],
+      "resources": [
+        "culture",
+        "creator reputation"
+      ],
+      "unlock": "authority >= 4.64"
+    },
+    {
+      "id": "exchange",
+      "zone": 5,
+      "name": "THE SOVEREIGN EXCHANGE",
+      "archetype": "commerce",
+      "agent": "Merchant",
+      "purpose": "Buy, sell, commission, subscribe, and exchange legitimate digital goods and services.",
+      "pages": [
+        "marketplace",
+        "services",
+        "consultancy",
+        "contracts",
+        "subscriptions",
+        "payments",
+        "wallet",
+        "portfolio"
+      ],
+      "actions": [
+        "browse",
+        "buy",
+        "sell",
+        "commission",
+        "subscribe"
+      ],
+      "resources": [
+        "value",
+        "commerce reputation"
+      ],
+      "unlock": "verified member + eligible offer"
+    },
+    {
+      "id": "heritage",
+      "zone": 6,
+      "name": "THE HERITAGE ARCHIVE",
+      "archetype": "community",
+      "agent": "Historian",
+      "purpose": "Build lineage, preserve family memory, connect people, and carry legacy forward.",
+      "pages": [
+        "family",
+        "bloodline",
+        "heritage",
+        "tribe",
+        "factions",
+        "sovereigns",
+        "social",
+        "events"
+      ],
+      "actions": [
+        "connect",
+        "record lineage",
+        "join faction",
+        "preserve memory"
+      ],
+      "resources": [
+        "legacy",
+        "community reputation"
+      ],
+      "unlock": "authority >= 6.96"
+    },
+    {
+      "id": "wellness",
+      "zone": 7,
+      "name": "THE WELLNESS DISTRICT",
+      "archetype": "knowledge",
+      "agent": "Warden",
+      "purpose": "Track sustainable routines and convert consistent personal practice into progression.",
+      "pages": [
+        "health",
+        "workout",
+        "nutrition",
+        "sleep",
+        "mood",
+        "habits",
+        "affirmations",
+        "journal"
+      ],
+      "actions": [
+        "track",
+        "reflect",
+        "complete routine",
+        "build streak"
+      ],
+      "resources": [
+        "discipline",
+        "wellness reputation"
+      ],
+      "unlock": "member access"
+    },
+    {
+      "id": "arena",
+      "zone": 8,
+      "name": "THE GAME ARENA",
+      "archetype": "gaming",
+      "agent": "Sentinel",
+      "purpose": "Compete, master games, complete trials, climb leaderboards, and earn visible honors.",
+      "pages": [
+        "gaming",
+        "games",
+        "arena",
+        "leaderboard",
+        "achievements",
+        "awards",
+        "trophies",
+        "honors",
+        "challenges",
+        "trials"
+      ],
+      "actions": [
+        "play",
+        "compete",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "resources": [
+        "mastery",
+        "arena reputation"
+      ],
+      "unlock": "authority >= 2.32"
+    },
+    {
+      "id": "void",
+      "zone": 9,
+      "name": "THE VOID OBSERVATORY",
+      "archetype": "intelligence",
+      "agent": "Oracle",
+      "purpose": "Explore the deepest layer of the world: cosmos, maps, simulation, future scenarios, and unknown systems.",
+      "pages": [
+        "city",
+        "map",
+        "cosmos",
+        "universe",
+        "realm",
+        "prediction",
+        "simulation",
+        "matrix",
+        "gates",
+        "elements"
+      ],
+      "actions": [
+        "explore",
+        "simulate",
+        "predict",
+        "map",
+        "unlock node"
+      ],
+      "resources": [
+        "discovery",
+        "exploration reputation"
+      ],
+      "unlock": "authority >= 9.28"
+    }
+  ],
+  "archetypes": {
+    "command": {
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primary": "decide",
+      "success": "mission accepted"
+    },
+    "identity": {
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primary": "customize",
+      "success": "identity advanced"
+    },
+    "intelligence": {
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primary": "investigate",
+      "success": "insight recorded"
+    },
+    "knowledge": {
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primary": "learn",
+      "success": "knowledge verified"
+    },
+    "gaming": {
+      "role": "Champion",
+      "verb": "COMPETE",
+      "primary": "play",
+      "success": "mastery recorded"
+    },
+    "media": {
+      "role": "Creator",
+      "verb": "CREATE",
+      "primary": "watch/create",
+      "success": "culture expanded"
+    },
+    "commerce": {
+      "role": "Merchant",
+      "verb": "EXCHANGE",
+      "primary": "trade",
+      "success": "transaction completed"
+    },
+    "creation": {
+      "role": "Builder",
+      "verb": "BUILD",
+      "primary": "create",
+      "success": "artifact produced"
+    },
+    "community": {
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primary": "participate",
+      "success": "relationship advanced"
+    },
+    "governance": {
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primary": "review/decide",
+      "success": "governance action recorded"
+    },
+    "finance": {
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primary": "manage assets",
+      "success": "financial state updated"
+    },
+    "system": {
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primary": "verify",
+      "success": "system state verified"
+    }
+  },
+  "monetization": {
+    "principle": "Paid progression must expand expression, access, content, or convenience; never fabricate earned status.",
+    "candidates": [
+      "premium characters",
+      "cosmetic costumes",
+      "district residence themes",
+      "exclusive story chapters",
+      "creator tools",
+      "private arenas",
+      "expanded storage",
+      "premium agent personalities"
+    ],
+    "existingCommerce": [
+      "subscriptions",
+      "marketplace",
+      "services",
+      "payments"
+    ],
+    "implementation": "Use the existing subscription/checkout/webhook path; do not create a second payment system."
+  }
+}

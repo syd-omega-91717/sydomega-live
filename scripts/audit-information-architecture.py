@@ -69,10 +69,13 @@ def main() -> int:
     for page in orphan_pages:
         print(f"  - {page}")
 
-    # This gate intentionally reports findings but does not fail merely because
-    # overlap exists. The existing navigation is legacy data that must be
-    # measured before it can be safely consolidated. CI should therefore fail
-    # only on malformed/missing inputs, while preserving the audit report.
+    # Page keys are identifiers, not labels: duplicate keys can make two
+    # different destinations appear active simultaneously. Treat that as a
+    # contract violation now that the legacy duplicates have been removed.
+    if duplicate_keys:
+        fail("duplicate page keys remain")
+        return 1
+
     if not hrefs:
         fail("no navigation targets were detected")
         return 1

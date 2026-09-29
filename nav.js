@@ -120,7 +120,7 @@
     /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */
     {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#AB82F2',
      sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['analytics','ANALYTICS','/analytics.html'],
-          ['queue','SOVEREIGN QUEUE','/queue.html']]},
+          ['queue','SOVEREIGN QUEUE','/queue.html'],['simulation-arena','SIMULATION ARENA','/arena.html']]},
     {key:'govern', icon:'\u2736', label:'GOVERN',  href:'/governance.html',   col:'#3fb27f',
      sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],['enterprise','ENTERPRISE','/enterprise.html'],['privacy','PRIVACY','/privacy.html'],

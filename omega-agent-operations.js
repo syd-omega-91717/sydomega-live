@@ -1,3 +1,4 @@
+/* Ω AGENT OPERATIONS — proposal-only governance surface. No executor, secret, or privileged browser action is permitted here. */
 (function(){'use strict';
 var state={sb:null,user:null,owner:false,agents:[],tools:[],selectedTool:null};
 function el(tag,txt,cls){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=String(txt);return n;}

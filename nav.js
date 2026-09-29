@@ -13,7 +13,7 @@
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
-    agents:'cosmos',pantheons:'cosmos',elements:'cosmos',chatbot:'cosmos',
+    agents:'cosmos',pantheons:'cosmos',elements:'cosmos',
     media:'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',

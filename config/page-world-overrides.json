@@ -145,6 +145,9 @@
     "command": "genesis",
     "ecosystem": "genesis",
     "index": "genesis",
-    "omega-visual-command": "genesis"
+    "omega-visual-command": "genesis",
+    "evolution": "identity",
+    "governance": "governance",
+    "kyc": "system"
   }
 }

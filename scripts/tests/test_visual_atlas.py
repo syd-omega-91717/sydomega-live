@@ -9,7 +9,7 @@ ATLAS = (ROOT / "omega-visual-atlas.js").read_text(encoding="utf-8")
 MANIFEST = json.loads((ROOT / "config/omega-source-dna.json").read_text(encoding="utf-8"))
 
 def main():
-    paths = re.findall(r"p:'([^']+)'", ATLAS)
+    paths = [m[1] for m in re.findall(r"""p:([\"'])(.*?)\\1""", ATLAS)]
     assert len(paths) == 46, f"expected 46 curated atlas references, found {len(paths)}"
     assert len(set(paths)) == len(paths), "visual atlas contains duplicate source paths"
     assert "TOTAL_SOURCE_VISUALS=291" in ATLAS

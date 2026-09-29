@@ -1293,17 +1293,35 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       var log_r=await sb.from('task_completions').select('*').eq('user_id',s.user.id).order('completed_at',{ascending:false}).limit(20);
       var logs=log_r.data||[];
       var al=document.getElementById('activity-log');
-      if(al)al.innerHTML=logs.length?logs.map(function(t){
-        var isg=t.task_type==='mastery';
-        var col=isg?'var(--purple)':'var(--gold)';
-        var ts=new Date(t.completed_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
-        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px">'
-          +'<span style="font-family:var(--M);font-size:12px;color:var(--muted);width:90px;flex-shrink:0">'+ts+'</span>'
-          +'<span style="font-family:var(--M);font-size:12px;color:'+col+';width:50px;flex-shrink:0">'+(isg?'GAME':'EXAM')+'</span>'
-          +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
-          +'<span style="font-family:var(--D);font-size:12px;color:'+col+';margin-left:auto">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>'
-          +'</div>';
-      }).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO ACTIVITY YET. CLICK ANY GAME OR EXAM CARD TO BEGIN.</div>';
+      if(al){
+        al.textContent='';
+        if(!logs.length){
+          var empty=document.createElement('div');
+          empty.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:16px';
+          empty.textContent='NO ACTIVITY YET. CLICK ANY GAME OR EXAM CARD TO BEGIN.';
+          al.appendChild(empty);
+        }else{
+          logs.forEach(function(t){
+            var isg=t.task_type==='mastery';
+            var col=isg?'var(--purple)':'var(--gold)';
+            var row=document.createElement('div');
+            row.style.cssText='display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px';
+            var ts=document.createElement('span');
+            ts.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);width:90px;flex-shrink:0';
+            ts.textContent=new Date(t.completed_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
+            var kind=document.createElement('span');
+            kind.style.cssText='font-family:var(--M);font-size:12px;color:'+col+';width:50px;flex-shrink:0';
+            kind.textContent=isg?'GAME':'EXAM';
+            var name=document.createElement('span');
+            name.textContent=String(t.task_name||'').toUpperCase();
+            var pts=document.createElement('span');
+            pts.style.cssText='font-family:var(--D);font-size:12px;color:'+col+';margin-left:auto';
+            pts.textContent='+'+Number(t.points_earned||0.001).toFixed(3);
+            row.append(ts,kind,name,pts);
+            al.appendChild(row);
+          });
+        }
+      }
     }catch(e){}
     /* Completed cards looked unstarted on every load: the click handler below
        was the only thing that ever marked one, so a member who finished Chess

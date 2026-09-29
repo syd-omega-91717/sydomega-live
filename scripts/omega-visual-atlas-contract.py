@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""Contract for the governed Ω visual atlas."""
+"""Contract for the governed Ω visual atlas.
+
+Run: python3 scripts/omega-visual-atlas-contract.py
+"""
 from pathlib import Path
 import re
+import sys
+
+if "--help" in sys.argv or "-h" in sys.argv:
+    print(__doc__)
+    raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
 html = (ROOT / "visual-atlas.html").read_text(encoding="utf-8")

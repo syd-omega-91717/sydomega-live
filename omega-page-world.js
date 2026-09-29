@@ -110,6 +110,10 @@
         if(pr.ok)pageWorld=await pr.json();
       }catch(_pageWorld){}
       try{
+        var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
+        if(pr.ok)pageWorld=await pr.json();
+      }catch(_pageWorld){}
+      try{
         var wr=await fetch('/config/omega-world-manifest.json',{cache:'no-store'});
         if(wr.ok)world=await wr.json();
         var or=await fetch('/config/page-world-overrides.json',{cache:'no-store'});

@@ -128,6 +128,9 @@ GATES = [
     ('simulation-arena',
      'deterministic Simulation Arena remains versioned, safe and member-owned',
      ['scripts/omega-simulation-arena-contract.py']),
+    ('recovery-continuity',
+     'member recovery checkpoints remain server-generated, integrity-verifiable and non-authoritative',
+     ['scripts/omega-recovery-contract.py']),
     ('supabase-client-key',
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',

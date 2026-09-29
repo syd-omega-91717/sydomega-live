@@ -1435,7 +1435,7 @@
       "successOutcome": "mission accepted",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/platform.html",
+      "entry": "/frontend/platform/platform.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -3367,7 +3367,7 @@
       "successOutcome": "mission accepted",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/audit-report.html",
+      "entry": "/root/audit-report.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -3386,7 +3386,7 @@
       "successOutcome": "mission accepted",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/dashboard.html",
+      "entry": "/root/dashboard/dashboard.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -3405,7 +3405,7 @@
       "successOutcome": "mission accepted",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/portal.html",
+      "entry": "/root/portal.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -4178,7 +4178,7 @@
       "successOutcome": "system state verified",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/admin_console.html",
+      "entry": "/web/templates/admin_console.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -4198,7 +4198,7 @@
       "successOutcome": "mastery recorded",
       "district": "arena",
       "districtName": "THE GAME ARENA",
-      "entry": "/leaderboard.html",
+      "entry": "/web/templates/leaderboard.html",
       "mission": "/missions.html",
       "reward": "/trophies.html"
     },
@@ -4217,7 +4217,7 @@
       "successOutcome": "mission accepted",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/sovereign_health.html",
+      "entry": "/web/templates/sovereign_health.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -4237,7 +4237,7 @@
       "successOutcome": "system state verified",
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
-      "entry": "/system_health.html",
+      "entry": "/web/templates/system_health.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },

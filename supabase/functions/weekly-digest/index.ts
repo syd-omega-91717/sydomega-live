@@ -136,8 +136,7 @@ Deno.serve(async (req) => {
         throw new Error("email_delivery_contract_not_implemented");
 
         // Delivery is intentionally disabled until the approved provider contract exists.
-        // Throwing above records a truthful failure rather than creating false delivery evidence.
-        processed++;
+        // The throw above records a truthful failure rather than false delivery evidence.
 
       } catch (err) {
         console.error(`[Digest] Error processing ${item.id}:`, err);

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Verify that every root HTML page has exactly one canonical Omega City district."""
+"""Verify that every root HTML page has exactly one canonical Omega City district.
+
+Usage:
+  python3 scripts/page-world-contract.py
+  python3 scripts/page-world-contract.py --help
+"""
 
 import json
 import re

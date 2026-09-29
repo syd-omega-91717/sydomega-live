@@ -36,9 +36,7 @@ function validMetadata(value: unknown): Record<string, unknown> {
   const metadata = value as Record<string, unknown>;
   if (metadata.schema_version !== "1") throw new Error("unsupported_event_schema");
   const key = metadata.idempotency_key;
-  if (key !== undefined && (typeof key !== "string" || key.length < 8 || key.length > 160)) {
-    throw new Error("invalid_idempotency_key");
-  }
+  if (key !== undefined && (typeof key !== "string" || key.length < 8 || key.length > 160)) throw new Error("invalid_idempotency_key");
   return metadata;
 }
 
@@ -49,23 +47,26 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const eventType = body?.event_type;
+    if (!body || typeof body !== "object" || Array.isArray(body)) return json({ error: "invalid_body" }, 400);
+    const eventType = body.event_type;
     if (typeof eventType !== "string" || !EVENT_TYPES.has(eventType)) return json({ error: "unsupported_event_type" }, 400);
 
-    const route = validRoute(body?.route);
-    const metadata = validMetadata(body?.metadata);
+    const route = validRoute(body.route);
+    const metadata = validMetadata(body.metadata);
+    const idempotencyKey = metadata.idempotency_key;
 
-    const { data: existing, error: lookupError } = await admin
-      .from("omega_platform_events")
-      .select("id,event_type,created_at")
-      .eq("actor_user_id", actorUserId)
-      .eq("event_type", eventType)
-      .eq("metadata->>idempotency_key", metadata.idempotency_key as string)
-      .limit(1)
-      .maybeSingle();
-
-    if (lookupError) throw lookupError;
-    if (existing) return json({ accepted: true, duplicate: true, event_id: existing.id });
+    if (typeof idempotencyKey === "string") {
+      const { data: existing, error: lookupError } = await admin
+        .from("omega_platform_events")
+        .select("id,event_type,created_at")
+        .eq("actor_user_id", actorUserId)
+        .eq("event_type", eventType)
+        .eq("metadata->>idempotency_key", idempotencyKey)
+        .limit(1)
+        .maybeSingle();
+      if (lookupError) throw lookupError;
+      if (existing) return json({ accepted: true, duplicate: true, event_id: existing.id });
+    }
 
     const { data, error } = await admin
       .from("omega_platform_events")
@@ -73,11 +74,25 @@ Deno.serve(async (req: Request) => {
       .select("id,event_type,created_at")
       .single();
 
-    if (error) throw error;
-    return json({ accepted: true, duplicate: false, event: data }, 201);
+    if (!error) return json({ accepted: true, duplicate: false, event: data }, 201);
+
+    if (error.code === "23505" && typeof idempotencyKey === "string") {
+      const { data: existing, error: duplicateLookupError } = await admin
+        .from("omega_platform_events")
+        .select("id,event_type,created_at")
+        .eq("actor_user_id", actorUserId)
+        .eq("event_type", eventType)
+        .eq("metadata->>idempotency_key", idempotencyKey)
+        .limit(1)
+        .maybeSingle();
+      if (duplicateLookupError) throw duplicateLookupError;
+      if (existing) return json({ accepted: true, duplicate: true, event_id: existing.id });
+    }
+
+    throw error;
   } catch (error) {
     const message = error instanceof Error ? error.message : "event_ingest_failed";
-    const clientErrors = new Set(["invalid_route","invalid_metadata","metadata_too_large","unsupported_event_schema","invalid_idempotency_key"]);
+    const clientErrors = new Set(["invalid_body","invalid_route","invalid_metadata","metadata_too_large","unsupported_event_schema","invalid_idempotency_key"]);
     return json({ error: clientErrors.has(message) ? message : "event_ingest_failed" }, clientErrors.has(message) ? 400 : 500);
   }
 });

@@ -13,7 +13,7 @@ and the live bridge surfaces that consume them:
 - `omega-world-progression.js`
 - `profile.html`
 - `scripts/tests/test_legacy_assets.py`
-- the eight React source components under `BlockChain_Market_Analysis_syd_omega_91717/components/`.
+- the 16 React source files under `BlockChain_Market_Analysis_syd_omega_91717/components/` (8 component families, each present as `.jsx` and `.tsx`).
 
 ## Verified source inventory
 The live legacy bridge declares and tests 62 source visuals:
@@ -24,7 +24,7 @@ The live legacy bridge declares and tests 62 source visuals:
 The asset test derives the exact runtime paths from `omega-legacy-constellation.js` and asserts all 62 files exist. The Passport separately uses 12 zodiac cutouts + 9 stage cutouts under `assets/legacy/`.
 
 ## Architecture translation
-The React components are treated as **design/reference material**, not production runtime dependencies. This is intentional because the deployed platform is framework-free/no-build.
+The React component files are treated as **design/reference material**, not production runtime dependencies. The collection contains 16 files forming 8 paired families (`Navbar`, `StatCard`, `ZodiacCard`, `AssetManager`, `CertificateGallery`, `MedalGallery`, `ZodiacGallery`, `PhaseProgression`). This is intentional because the deployed platform is framework-free/no-build.
 
 ### Navbar
 Useful: sticky navigation, active-section tracking, responsive navigation.
@@ -109,3 +109,7 @@ The repository index, filenames, runtime references, component behavior, path in
 
 ## Result
 The strongest architecture is not to import the old React implementation. It is to extract its best interaction patterns into the existing no-build platform while keeping data, authorization, provenance and visual source material strictly separated.
+
+## Component-pair drift finding
+
+A direct `.jsx` versus `.tsx` comparison found that the paired files are not guaranteed byte-equivalent. Differences include source asset filenames, branding text, and icon fallbacks; the `.tsx` variants contain `HOMOGENIC`-named source references in places where `.jsx` uses the S.Y.D/Omega names. This is historical source drift, not a production runtime defect, because the deployed architecture does not compile or import these files. The pair inventory is now recorded in `config/omega-source-dna.json` with a reference-only policy so future work does not accidentally treat either variant as the canonical runtime implementation.

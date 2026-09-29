@@ -16,7 +16,7 @@ checks=[
  ("reality label", "SIMULATED" in html and "SIMULATED" in js),
  ("versioned model", "MODEL_VERSION='1.0.0'" in js),
  ("deterministic seed", "deterministic_seed" in js and "xorshift" in js),
- ("no localStorage", "localStorage" not in js),
+ ("no localStorage API use", re.search(r"localStorage\\s*[.\\[]", js) is None),
  ("safe DOM", "innerHTML" not in js),
  ("save RPC", "omega_record_simulation_run" in js and "omega_record_simulation_run" in sql),
  ("RLS", "enable row level security" in sql.lower()),

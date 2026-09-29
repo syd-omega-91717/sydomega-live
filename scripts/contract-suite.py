@@ -125,6 +125,9 @@ GATES = [
     ('world-realtime',
      'World presence remains ephemeral and privacy-preserving',
      ['scripts/omega-world-realtime-contract.py']),
+    ('simulation-arena',
+     'deterministic Simulation Arena remains versioned, safe and member-owned',
+     ['scripts/omega-simulation-arena-contract.py']),
     ('supabase-client-key',
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',

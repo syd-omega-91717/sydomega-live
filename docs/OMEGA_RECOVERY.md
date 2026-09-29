@@ -11,7 +11,9 @@ The omega_recovery_checkpoints table stores a server-generated summary for the a
 - Agent Operations audit count;
 - schema version and SHA-256 snapshot digest.
 
-The private checkpoint RPC derives member identity from auth.uid(). Browser input supplies only a bounded checkpoint key. Direct authenticated writes are revoked and RLS remains enabled.
+The private checkpoint RPC derives member identity from auth.uid().
+
+The server-governed RPC boundary is `private.omega_create_recovery_checkpoint(text)`; integrity verification is `private.omega_verify_recovery_checkpoint(uuid)`. These names are implementation evidence, not client-side authority claims. Browser input supplies only a bounded checkpoint key. Direct authenticated writes are revoked and RLS remains enabled.
 
 ## Integrity drill
 The private verification RPC recomputes the digest from the persisted JSON snapshot and returns a boolean. A successful result means the stored checkpoint has not changed relative to its recorded digest.

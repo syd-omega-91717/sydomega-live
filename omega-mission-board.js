@@ -11,9 +11,8 @@ const $ = (id) => document.getElementById(id);
 const state = { user:null, missions:[], quests:[], missionStates:[], questStates:[], events:[], transitions:[] };
 
 function esc(value){
-  const d=document.createElement('div');
-  d.textContent=String(value ?? '');
-  return d.innerHTML;
+  const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+  return String(value ?? '').replace(/[&<>"']/g,function(ch){return map[ch];});
 }
 function reality(label,note){
   return '<div class="oms" data-omega-mission-state>'+

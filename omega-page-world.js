@@ -64,11 +64,23 @@
       '<div class="opw-role">'+escapeHtml(a.worldRole||'Citizen')+'</div>'+
       '<div class="opw-verb">YOUR VERB · '+escapeHtml(a.worldVerb||'ACT')+' · OUTCOME · '+escapeHtml(a.successOutcome||'progress recorded')+'</div></div>'+
       '<div class="opw-actions"><a class="opw-mission" href="/missions.html">MISSION</a>'+
-      '<a href="'+escapeAttr(l.next)+'">'+escapeHtml(l.nextLabel)+'</a>'+
-      '<a href="'+escapeAttr(l.secondary)+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
+      '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
+      '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
     var main=document.querySelector('main')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
     document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    host.querySelectorAll('a[data-world-action]').forEach(function(link){
+      link.addEventListener('click',function(ev){
+        var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');
+        if(!d||!window.OmegaWorldAction)return;
+        var href=link.href;
+        ev.preventDefault();
+        var done=false;
+        var go=function(){if(done)return;done=true;location.href=href;};
+        window.OmegaWorldAction.record({district:d,action:act,route:location.pathname}).finally(go);
+        setTimeout(go,700);
+      });
+    });
   }
 
   function escapeHtml(v){return v==null?'':String(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}

@@ -2764,6 +2764,12 @@ setTimeout(function(){
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
 
+  /* Ω World Action Recorder — authenticated district actions only. */
+  if(!document.querySelector('script[data-omega-world-actions]')){
+    var _owa=document.createElement('script');_owa.src='/omega-world-actions.js';
+    _owa.setAttribute('data-omega-world-actions','1');_owa.defer=true;__omegaAppend(_owa);
+  }
+
   /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
      from config/page-character-manifest.json. The membrane is additive: it does not create
      authority, XP, rewards, payments, or duplicate navigation. */

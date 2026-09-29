@@ -104,6 +104,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | root `.js` files | 185 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 258 (106 numbered `NNNN_`, 152 timestamped) |
+| `omega-*.js` modules | 178 (1677 KB) |
+| root `.js` files | 188 |
+| `supabase/*.sql` (flat bag) | 127 |
+| `supabase/migrations/*.sql` | 260 (106 numbered `NNNN_`, 154 timestamped) |
 | Edge Functions | 17 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -127,9 +131,9 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 164 files added since (numbered and
+end-to-end for the first time"*. The 166 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 258. Treat the validated scope as `0001`–`0094` only.
+all 260. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 215 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

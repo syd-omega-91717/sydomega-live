@@ -115,10 +115,14 @@
       status.textContent=open?'ACCESS · OPEN':'LOCK · '+d.unlock;
 
       var actions=document.createElement('div');actions.className='district-actions';
-      var enter=document.createElement('a');enter.href=firstPage(d);enter.textContent='ENTER';
-      var mission=document.createElement('a');mission.href='/missions.html';mission.textContent='MISSION';
-      var rewards=document.createElement('a');rewards.href=rewardPage(d);rewards.textContent='REWARDS';
-      [enter,mission,rewards].forEach(function(a){if(!open)a.setAttribute('aria-disabled','true');actions.appendChild(a);});
+      function addAction(label,href){
+        if(open){
+          var a=document.createElement('a');a.href=href;a.textContent=label;actions.appendChild(a);
+        }else{
+          var lock=document.createElement('span');lock.textContent='LOCKED · '+label;lock.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:5px 8px';actions.appendChild(lock);
+        }
+      }
+      addAction('ENTER',firstPage(d));addAction('MISSION','/missions.html');addAction('REWARDS',rewardPage(d));
       card.appendChild(zone);card.appendChild(name);card.appendChild(desc);card.appendChild(role);
       card.appendChild(resources);card.appendChild(status);card.appendChild(actions);
       card.addEventListener('click',function(e){

@@ -8,7 +8,7 @@
   if(window.__omegaPageWorld)return;
   window.__omegaPageWorld=true;
 
-  var manifest=null, world=null, overrides=null, archetype=null, district=null, slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
+  var manifest=null, world=null, pageWorld=null, overrides=null, archetype=null, district=null, pagePath=((location.pathname||'/').replace(/^\/+/,'')), slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
   var labels={
     command:{title:'COMMAND',next:'/missions.html',nextLabel:'MISSIONS',secondary:'/decisions.html',secondaryLabel:'DECISIONS'},
     identity:{title:'IDENTITY',next:'/profile.html',nextLabel:'IDENTITY',secondary:'/character.html',secondaryLabel:'CHARACTER'},
@@ -41,6 +41,7 @@
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
     archetype=findArchetype();
+    if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
     if(district){
@@ -74,26 +75,13 @@
       '<div class="opw-mark" aria-hidden="true">&#937;</div>'+
       '<div class="opw-copy"><div class="opw-kicker">WORLD ROLE · '+escapeHtml(l.title)+'</div>'+
       '<div class="opw-role">'+escapeHtml(a.worldRole||'Citizen')+'</div>'+
-      '<div class="opw-verb">YOUR VERB · '+escapeHtml(a.worldVerb||'ACT')+' · OUTCOME · '+escapeHtml(a.successOutcome||'progress recorded')+'</div></div>'+
-      '<div class="opw-actions"><a class="opw-mission" href="/missions.html" data-world-mission="'+escapeAttr(district&&district.id||"")+'">MISSION</a>'+
+      '<div class="opw-verb">YOUR VERB · '+escapeHtml((pageWorld&&pageWorld.verb)||a.worldVerb||'ACT')+' · ACTION · '+escapeHtml((pageWorld&&pageWorld.primaryAction)||((a.primaryActions||[])[0])||'ACT')+' · OUTCOME · '+escapeHtml((pageWorld&&pageWorld.successOutcome)||a.successOutcome||'progress recorded')+'</div></div>'+
+      '<div class="opw-actions"><a class="opw-mission" href="/missions.html">MISSION</a>'+
       '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
     var main=document.querySelector('main')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
-    var missionLink=host.querySelector('a[data-world-mission]');
-    if(missionLink){
-      missionLink.addEventListener('click',function(ev){
-        var d=missionLink.getAttribute('data-world-mission');
-        if(!d||!window.OmegaWorldMission)return;
-        ev.preventDefault();
-        var href=missionLink.href;
-        var done=false;
-        var go=function(){if(done)return;done=true;location.href=href+'?district='+encodeURIComponent(d);};
-        window.OmegaWorldMission.start(d).finally(go);
-        setTimeout(go,900);
-      });
-    }
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');
@@ -118,6 +106,14 @@
       if(!r.ok)throw new Error('page manifest '+r.status);
       manifest=await r.json();
       try{
+        var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
+        if(pr.ok)pageWorld=await pr.json();
+      }catch(_pageWorld){}
+      try{
+        var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
+        if(pr.ok)pageWorld=await pr.json();
+      }catch(_pageWorld){}
+      try{
         var wr=await fetch('/config/omega-world-manifest.json',{cache:'no-store'});
         if(wr.ok)world=await wr.json();
         var or=await fetch('/config/page-world-overrides.json',{cache:'no-store'});
@@ -127,5 +123,5 @@
     }catch(e){console.warn('[Omega] page world membrane unavailable',e);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getManifest:function(){return manifest;},getOverrides:function(){return overrides;}};
+  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getPage:function(){return pageWorld;},getManifest:function(){return manifest;},getOverrides:function(){return overrides;}};
 })();

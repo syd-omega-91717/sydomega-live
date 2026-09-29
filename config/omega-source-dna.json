@@ -74,5 +74,27 @@
     "Use trophy art as archival/cultural artifacts until evidence-backed achievement records exist.",
     "Use zodiac art as identity/cosmology presentation while keeping authoritative profile fields separate.",
     "Keep the Ω visual language dark, readable, layered and motion-capable without making motion mandatory for comprehension."
-  ]
+  ],
+  "source_component_inventory": {
+    "file_count": 16,
+    "family_count": 8,
+    "policy": "reference_only",
+    "families": [
+      "Navbar",
+      "StatCard",
+      "ZodiacCard",
+      "AssetManager",
+      "CertificateGallery",
+      "MedalGallery",
+      "ZodiacGallery",
+      "PhaseProgression"
+    ],
+    "variants": [
+      ".jsx",
+      ".tsx"
+    ],
+    "drift_observed": true,
+    "production_imports_allowed": false,
+    "notes": "The paired source variants are historical design/reference material. They must not be treated as the deployed runtime or as interchangeable canonical implementations."
+  }
 }

@@ -101,8 +101,6 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 260 (106 numbered `NNNN_`, 154 timestamped) |
 | Edge Functions | 17 |
-| `supabase/migrations/*.sql` | 260 (106 numbered `NNNN_`, 154 timestamped) |
-| Edge Functions | 17 |
 | skills | 23 |
 | agent definitions | 2 |
 

@@ -1,5 +1,6 @@
 {
   "functions": [
+    "agent-execute",
     "checkout",
     "concierge",
     "concierge-orchestrator",

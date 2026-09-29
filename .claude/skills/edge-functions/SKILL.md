@@ -1,15 +1,15 @@
 ---
 name: edge-functions
-description: Work on sydomega-live's Supabase Edge Functions — the 16 Deno/TypeScript source functions under supabase/functions/ (checkout, stripe-webhook, concierge, secrets-health, concierge-orchestrator, growth-orchestrator, product-orchestrator, event-ingest, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
+description: Work on sydomega-live's Supabase Edge Functions — the 17 Deno/TypeScript source functions under supabase/functions/ (checkout, stripe-webhook, concierge, secrets-health, concierge-orchestrator, growth-orchestrator, product-orchestrator, event-ingest, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
 ---
 
 # EDGE FUNCTIONS
 
 ## What ships and how
 
-There are **16 source functions** in `supabase/functions/*/index.ts`. As of the
-2026-09-29 live audit, only **6 are deployed ACTIVE** in Supabase:
-`concierge`, `concierge-orchestrator`, `growth-orchestrator`,
+There are **17 source functions** in `supabase/functions/*/index.ts`. As of the
+2026-09-29 live audit, only **7 are deployed ACTIVE** in Supabase:
+`agent-execute`, `concierge`, `concierge-orchestrator`, `growth-orchestrator`,
 `product-orchestrator`, `stripe-webhook`, and `secrets-health`.
 
 The remaining **10 are source-only/dormant** and must not be described as live
@@ -26,6 +26,7 @@ runtime verification as three different states.
 ## Function inventory
 
 | function | purpose | trigger / state |
+| `agent-execute` | governed read-only agent operations | authenticated POST / ACTIVE — endpoint verification pending |
 |---|---|---|
 | `checkout` | Stripe Checkout session creation | client POST / dormant |
 | `stripe-webhook` | verified Stripe payment webhook | Stripe → HTTP / ACTIVE |

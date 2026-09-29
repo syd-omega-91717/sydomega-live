@@ -11,18 +11,18 @@ Live Supabase project: `ydqhzvvoyufiiqvzcjns`
 
 | State | Count | Functions |
 |---|---:|---|
-| Repository source | 16 | checkout, concierge, concierge-orchestrator, event-ingest, graphify-ai-ingest, graphify-ai-query, growth-orchestrator, intel-feed, market-price, notify-access, product-orchestrator, rankings, secrets-health, snapshot-leaderboard, stripe-webhook, weekly-digest |
-| Supabase ACTIVE | 6 | concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, secrets-health, stripe-webhook |
+| Repository source | 17 | agent-execute, checkout, concierge, concierge-orchestrator, event-ingest, graphify-ai-ingest, graphify-ai-query, growth-orchestrator, intel-feed, market-price, notify-access, product-orchestrator, rankings, secrets-health, snapshot-leaderboard, stripe-webhook, weekly-digest |
+| Supabase ACTIVE | 7 | agent-execute, concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, secrets-health, stripe-webhook |
 | Source-only / not live | 10 | checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, intel-feed, market-price, notify-access, rankings, snapshot-leaderboard, weekly-digest |
 
 **Important correction:** an earlier audit note said 15 source functions and
-9 source-only functions. The repository currently contains **16**, making the
+9 source-only functions. The repository currently contains **17**, making the
 correct source-only count **10**.
 
 ## Security disposition
 
 ### Active functions
-The six active functions were confirmed by the live Supabase Edge Function
+The seven active functions were confirmed by the live Supabase Edge Function
 inventory. Their deployment state is therefore real; successful behavior still
 requires endpoint-level testing.
 

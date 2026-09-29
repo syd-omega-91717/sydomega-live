@@ -75,7 +75,49 @@
 
 <!-- MISSIONS TAB (daily) -->
 <div class="tab-panel active" id="tab-missions">
-</div>\n\n</div><!-- end page-shell -->
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionActiveCount">0</div><div class="kpi-label">ACTIVE DEFINITIONS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionRunningCount">0</div><div class="kpi-label">RUNNING</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionCompletedCount">0</div><div class="kpi-label">COMPLETED</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionEvidenceCount">0</div><div class="kpi-label">EVIDENCE EVENTS</div></div>
+  </div>
+  <div class="day-progress">
+    <div class="dp-label"><div class="dp-title">&#9685; TODAY&rsquo;S PROGRESS</div><div class="dp-pct" id="dayPct">0%</div></div>
+    <div class="dp-bar-wrap"><div class="dp-bar" id="dayBar" style="width:0%"></div></div>
+    <div class="dp-xp" id="dayXp">0 / 0 XP TODAY</div>
+  </div>
+  <div class="oms" id="missionReality" data-omega-mission-state></div>
+  <div class="missions-list" id="dailyList"></div>
+</div>
+
+<!-- WEEKLY TAB -->
+<div class="tab-panel" id="tab-weekly">
+  <div class="missions-list" id="weeklyList"></div>
+  <div style="margin-top:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">&#9670; LEGENDARY QUESTS</div>
+  <div class="missions-list" id="legendaryList"></div>
+</div>
+
+<!-- PROGRESS TAB -->
+<div class="tab-panel" id="tab-progress">
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; MISSION HISTORY</div>
+  <div id="historyList"></div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin:16px 0 12px">&#9670; 90-DAY ACTIVITY MAP</div>
+  <div class="heatmap-wrap"><div class="heatmap" id="heatmapGrid"></div></div>
+</div>
+
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">MISSION SCIENCE — LIVE CONTRACT</div><div id="scienceLive"></div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">7</div><div class="kpi-label">DAILY QUESTS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">5</div><div class="kpi-label">WEEKLY QUESTS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">4</div><div class="kpi-label">LEGENDARY</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">365</div><div class="kpi-label">HISTORY LIMIT</div></div>
+  </div>
+  
+</div>
+
+</div><!-- end page-shell -->
 
 <script>
 function setTab(name){

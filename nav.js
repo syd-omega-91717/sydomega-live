@@ -14,7 +14,7 @@
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
     agents:'cosmos',pantheons:'cosmos',elements:'cosmos',
-    media:'media',visual-atlas:'media',
+    media:'media','visual-atlas':'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',
     sovereigns:'order',factions:'order',city:'order',

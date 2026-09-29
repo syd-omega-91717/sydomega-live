@@ -25,6 +25,7 @@
   };
 
   function findArchetype(){
+    if(district&&district.archetype)return district.archetype;
     if(!manifest||!manifest.rules)return 'command';
     var hit=manifest.rules.find(function(r){
       return String(r.match||'').split('|').some(function(token){
@@ -37,10 +38,20 @@
   function inject(){
     if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
-    archetype=findArchetype();
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
+    archetype=findArchetype();
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
+    if(district){
+      var pages=district.pages||[];
+      l={
+        title:String(district.name||l.title).replace(/^THE\s+/,''),
+        next:'/'+String(pages[0]||'dashboard').replace(/\.html$/,'')+'.html',
+        nextLabel:String((district.actions&&district.actions[0])||l.nextLabel).toUpperCase(),
+        secondary:'/'+String(pages[1]||pages[0]||'dashboard').replace(/\.html$/,'')+'.html',
+        secondaryLabel:String((district.actions&&district.actions[1])||l.secondaryLabel).toUpperCase()
+      };
+    }
     var host=document.createElement('section');
     host.id='omega-page-world';
     host.setAttribute('aria-label','Omega world role and next actions');

@@ -1,0 +1,1 @@
+grant select on public.omega_recovery_checkpoints to authenticated;

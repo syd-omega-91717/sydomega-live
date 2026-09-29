@@ -8,7 +8,7 @@
 
   /* Map every page to a section */
   var PS={
-    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command',eternity:'command',replay:'command',evidence:'command',
+    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command',gateway:'command',guide:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
@@ -64,7 +64,7 @@
      sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['beacon','BEACON','/beacon.html'],
           ['search','SEARCH','/search.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['eternity','CONTINUITY','/eternity.html'],['replay','REPLAY','/replay.html'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html'],['command','COMMAND BRIEF','/command.html'],
-          ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],
+          ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html'],
           ['network','NETWORK','/network.html'],['notes','NOTES','/notes.html'],['projects','PROJECTS','/projects.html'],
           ['quotes','WISDOM','/quotes.html'],['time','TIME TRACKER','/time.html'],['vision','VISION BOARD','/vision.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',

@@ -2770,6 +2770,8 @@ setTimeout(function(){
     _owa.setAttribute('data-omega-world-actions','1');_owa.defer=true;__omegaAppend(_owa);
   }
 
+  /* Ω District Mission Entry — starts only canonical server-defined district missions. */
+  if(!document.querySelector('script[data-omega-world-mission]')){var wm=document.createElement('script');wm.src='/omega-world-mission.js';wm.setAttribute('data-omega-world-mission','1');wm.defer=true;__omegaAppend(wm);}
   /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
      from config/page-character-manifest.json. The membrane is additive: it does not create
      authority, XP, rewards, payments, or duplicate navigation. */

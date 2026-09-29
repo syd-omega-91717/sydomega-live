@@ -75,7 +75,7 @@
       '<div class="opw-copy"><div class="opw-kicker">WORLD ROLE · '+escapeHtml(l.title)+'</div>'+
       '<div class="opw-role">'+escapeHtml(a.worldRole||'Citizen')+'</div>'+
       '<div class="opw-verb">YOUR VERB · '+escapeHtml(a.worldVerb||'ACT')+' · OUTCOME · '+escapeHtml(a.successOutcome||'progress recorded')+'</div></div>'+
-      '<div class="opw-actions"><a class="opw-mission" href="/missions.html" data-world-mission="'+'escapeAttr(district&&district.id||"")+'">MISSION</a>'+
+      '<div class="opw-actions"><a class="opw-mission" href="/missions.html" data-world-mission="'+escapeAttr(district&&district.id||"")+'">MISSION</a>'+
       '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
     var main=document.querySelector('main')||document.body;

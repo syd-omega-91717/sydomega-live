@@ -99,7 +99,7 @@
     <div class="card-grid" data-stagger data-stagger-gap="60">
       <div class="card" data-reveal="fade-up"><div class="card-title">FORCE-DIRECTED GRAPH</div><div class="card-body">The Nexus renders all approved sovereigns as nodes in a live force-directed graph. Repulsion keeps nodes separated; attraction links element-aligned members. The simulation runs on raw canvas — no external libraries. Physics settles after 200 frames.</div></div>
       <div class="card" data-reveal="fade-up"><div class="card-title">NODE SIZE & COLOUR</div><div class="card-body">Node radius scales with authority score (AUTH ÷ APEX × 16px). Colour maps to element alignment derived from zodiac sign. Your node is highlighted with a gold ring and pulse animation to always identify you in the graph.</div></div>
-      <div class="card" data-reveal="fade-up"><div class="card-title">EDGE FORMATION</div><div class="card-body">Edges form between nodes sharing the same element (35% probability) or adjacent gate levels (8% probability). This creates element clusters — Fire nodes cluster together, Void nodes cluster apart. Network density reflects community coherence.</div></div>
+      <div class="card" data-reveal="fade-up"><div class="card-title">EDGE FORMATION</div><div class="card-body">Connections are calculated from persisted profile attributes: members share an edge when they share an element or sit on adjacent authority gates. The graph is a calculated relationship view, not a claim of social interaction or personal connection.</div></div>
       <div class="card" data-reveal="fade-up"><div class="card-title">LIVE UPDATES</div><div class="card-body">A Supabase Realtime subscription listens to profile changes. When a sovereign's authority updates, the change appears in the live activity feed at the bottom of the graph. The graph structure updates on next page load.</div></div>
     </div>
   </div>
@@ -150,12 +150,20 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     return{id:p.id,name:p.display_name||'Sovereign',auth,elem,gate};
   });
 
+  /* Connections are calculated from persisted member attributes only.
+     They are not social claims: an edge means shared elemental alignment or
+     adjacent authority gate. No random sampling is used, so the graph is
+     reproducible and never invents relationships. */
   var edges=[];
   nodes.forEach(function(n,i){
     nodes.forEach(function(m,j){
       if(j<=i)return;
-      if(n.elem===m.elem&&Math.random()<0.35)edges.push({src:i,dst:j});
-      else if(Math.abs(n.gate.num-m.gate.num)<=1&&Math.random()<0.08)edges.push({src:i,dst:j});
+      var sameElement=n.elem===m.elem;
+      var adjacentGate=Math.abs(n.gate.num-m.gate.num)<=1;
+      if(sameElement||adjacentGate)edges.push({
+        src:i,dst:j,
+        reason:sameElement?'ELEMENT':'GATE'
+      });
     });
   });
 
@@ -216,10 +224,16 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
      KEEPS THE LAST GOOD SIZE and waits for the observer to fire again. */
   var W=0,H=0,seeded=false;
 
+  function stableUnit(id,salt){
+    var h=2166136261>>>0;
+    var s=String(id)+'|'+salt;
+    for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}
+    return (h>>>0)/4294967295;
+  }
   function seedNodes(){
     nodes.forEach(function(n){
-      n.x=W/2+(Math.random()-.5)*W*.8;
-      n.y=H/2+(Math.random()-.5)*H*.8;
+      n.x=W/2+(stableUnit(n.id,'x')-.5)*W*.8;
+      n.y=H/2+(stableUnit(n.id,'y')-.5)*H*.8;
       n.vx=0;n.vy=0;
     });
   }
@@ -352,31 +366,53 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     W=wrap.offsetWidth;H=wrap.offsetHeight;cv.width=W;cv.height=H;
   });
 
-  var EVENTS=['Sovereign joined the nexus','Gate threshold reached','Element alignment detected','Authority score updated','New connection forged','Axis recalibrated','Sovereign ascension detected'];
-  function addFeedEntry(){
-    if(!nodes.length)return;
-    var n=nodes[Math.floor(Math.random()*nodes.length)];
-    var evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  async function loadActivityFeed(){
     var feed=document.getElementById('nx-feed');
-    var line=document.createElement('div');
-    var ts=document.createElement('span');ts.textContent='['+new Date().toISOString().slice(11,19)+']';
-    ts.style.color='rgba(138,134,118,.4)';
-    var nameSpan=document.createElement('span');nameSpan.style.color=ELEM_COLORS[n.elem]||'#888';nameSpan.textContent=n.name;
-    line.appendChild(ts);line.appendChild(document.createTextNode(' '));
-    line.appendChild(nameSpan);line.appendChild(document.createTextNode(' — '+evt));
-    feed.appendChild(line);
-    while(feed.children.length>8)feed.removeChild(feed.lastChild);
+    if(!feed)return;
+    feed.textContent='';
+    var result=await sb.rpc('get_activity_feed',{p_limit:8,p_offset:0});
+    if(result.error){
+      var unavailable=document.createElement('div');
+      unavailable.textContent='LIVE ACTIVITY UNAVAILABLE';
+      unavailable.style.color='rgba(138,134,118,.5)';
+      feed.appendChild(unavailable);
+      return;
+    }
+    var rows=result.data||[];
+    if(!rows.length){
+      var empty=document.createElement('div');
+      empty.textContent='NO PERSISTED PUBLIC ACTIVITY';
+      empty.style.color='rgba(138,134,118,.5)';
+      feed.appendChild(empty);
+      return;
+    }
+    rows.slice(0,8).forEach(function(row){
+      var line=document.createElement('div');
+      var ts=document.createElement('span');
+      ts.textContent='['+new Date(row.created_at).toISOString().slice(11,19)+']';
+      ts.style.color='rgba(138,134,118,.4)';
+      var name=document.createElement('span');
+      name.textContent=row.display_name||'Sovereign';
+      name.style.color=ELEM_COLORS[row.element]||'#888';
+      var title=document.createElement('span');
+      title.textContent=' — '+(row.title||row.activity_type||'Activity');
+      line.appendChild(ts);
+      line.appendChild(document.createTextNode(' '));
+      line.appendChild(name);
+      line.appendChild(title);
+      feed.appendChild(line);
+    });
   }
-  addFeedEntry();
-  setInterval(addFeedEntry,4000);
-
-  sb.channel('nexus-profiles').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},function(payload){
-    var p=payload.new;
+  loadActivityFeed().catch(function(){
     var feed=document.getElementById('nx-feed');
-    var line=document.createElement('div');line.style.color='rgba(0,229,255,.5)';
-    line.textContent='[LIVE] Profile updated: '+(p.id||'').slice(0,8)+'…';
-    feed.appendChild(line);
-    while(feed.children.length>8)feed.removeChild(feed.lastChild);
+    if(feed){feed.textContent='LIVE ACTIVITY UNAVAILABLE';}
+  });
+
+  sb.channel('nexus-profiles').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},function(){
+    loadActivityFeed().catch(function(){});
+  }).subscribe();
+  sb.channel('nexus-activity').on('postgres_changes',{event:'INSERT',schema:'public',table:'activity_feed',filter:'is_public=eq.true'},function(){
+    loadActivityFeed().catch(function(){});
   }).subscribe();
 })();
 </script>

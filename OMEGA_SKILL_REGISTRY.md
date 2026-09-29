@@ -22,7 +22,7 @@ effectively invisible unless invoked by exact name.
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
-| `edge-functions` | yes | — | 1,172 | CLAUDE.md, README.md | 2026-09-29 |
+| `edge-functions` | yes | — | 1,207 | CLAUDE.md, README.md | 2026-09-29 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
@@ -42,7 +42,7 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,580 tokens** if every SKILL.md were read in one
+**23 skills, ~38,615 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -96,11 +96,11 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 214 |
 | pages loading `bg.js` | 214 of 214 |
-| `omega-*.js` modules | 174 (1647 KB) |
+| `omega-*.js` modules | 174 (1645 KB) |
 | root `.js` files | 184 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 253 (106 numbered `NNNN_`, 147 timestamped) |
-| Edge Functions | 16 |
+| Edge Functions | 17 |
 | skills | 23 |
 | agent definitions | 2 |
 

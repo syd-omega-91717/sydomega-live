@@ -20,7 +20,37 @@ L.phases.forEach(p => familyCounts[p[0]] = (familyCounts[p[0]] || 0) + 1);
 console.log(JSON.stringify({phase:L.phases.length,trophy:L.trophies.length,zodiac:L.zodiac.length,familyCounts}));
 """
 
+DEEP_COLLECTIONS = {
+    "Brand_Identity_Style_S.Y.D_Omega_91717": 17,
+    "Certificate_of_Appreciation_S.Y.D_Omega_91717": 9,
+    "Certificates_S.Y.D_Omega_91717": 14,
+    "Cinematic_game_syd_omega_91717": 11,
+    "Horoscope_Sign_S.Y.D_Omega_91717": 12,
+    "Logo_Main_Page_S.Y.D_Omega_91717": 4,
+    "Logo_Medal_Stage_1_to_9_S.Y.D_Omega_91717": 10,
+    "Logo_Phases_Levels_Grades_S.Y.D_Omega_91717": 28,
+    "Medals_S.Y.D_Omega_91717": 37,
+    "Mobile_app_Design_Passport_Credit-Cards_S.Y.D_Omega_91717": 11,
+    "NFT_HOMOGENIC_OMEGA_91717": 2,
+    "NFT_syd_omega_91717": 2,
+    "Omega_Crypto_Coin_token_HOMOGENIC_OMEGA_91717": 1,
+    "Omega_Crypto_Coin_token_syd_omega_91717": 1,
+    "Phases_HOMOGENIC_OMEGA_91717": 30,
+    "Phases_syd_omega_91717": 40,
+}
+
 class SourceDNA(unittest.TestCase):
+    def test_deep_visual_collection_inventory(self):
+        root = os.path.join(ROOT, "BlockChain_Market_Analysis_syd_omega_91717")
+        with open(MANIFEST, encoding="utf-8") as fh:
+            manifest = json.load(fh)
+        inv = manifest.get("deep_visual_source_inventory") or {}
+        self.assertEqual(inv.get("additional_visual_count"), 229)
+        for name, expected in DEEP_COLLECTIONS.items():
+            directory = os.path.join(root, name)
+            files = [p for p in os.listdir(directory) if os.path.isfile(os.path.join(directory, p))]
+            self.assertEqual(len(files), expected, name)
+
     def test_reference_component_inventory(self):
         with open(MANIFEST, encoding="utf-8") as fh:
             manifest = json.load(fh)

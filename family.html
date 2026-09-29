@@ -551,7 +551,7 @@ async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
   uid=sess.user.id;
-  const pr=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
+  const pr=await sb.from('profiles').select('*').eq('id',uid).maybeSingle(); if(pr.error)throw pr.error;
   const isOwner=pr.data?.is_owner||false;
   const name=pr.data?.display_name;
 
@@ -564,7 +564,7 @@ async function boot(){
     document.getElementById('ft-title').textContent=name?('WELCOME, '+name.toUpperCase()):'WELCOME';
   }
 
-  const {data:rows}=await sb.from('family_nodes').select('*').eq('user_id',uid).order('created_at',{ascending:true});
+  const familyRowsRes=await sb.from('family_nodes').select('*').eq('user_id',uid).order('created_at',{ascending:true}); if(familyRowsRes.error)throw familyRowsRes.error; const rows=familyRowsRes.data||[];
   members=rows||[];
   buildMemberCards(members);
   if(isOwner) requestAnimationFrame(()=>drawConstellation(members));
@@ -595,7 +595,7 @@ const SUCCESSION=[
 ];
 
 async function loadNodes(){
-  const { data, error } = await sb.from('bloodline_nodes').select('*').order('created_at',{ascending:true});
+  const bloodlineRes = await sb.from('bloodline_nodes').select('*').order('created_at',{ascending:true}); if(bloodlineRes.error)throw bloodlineRes.error; const data=bloodlineRes.data||[];
   const stored=(data||[]).map(n=>({name:n.name,rel:n.rel,birth:n.birth,notes:n.notes,ts:n.created_at}));
   const g=document.getElementById('node-grid'); g.innerHTML='';
   if(!stored.length){
@@ -718,7 +718,7 @@ async function buildTimeline(){
   tl.innerHTML='';
   var stored=[];
   try{
-    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true});
+    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true}); if(r.error)throw r.error;
     stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
   }catch(e){console.warn('[Omega Family] heritage records unavailable:',e);}
 

@@ -38,7 +38,7 @@
     if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
     archetype=findArchetype();
-    if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\\.html$/,'')===slug;});})||null; }
+    if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
     var host=document.createElement('section');

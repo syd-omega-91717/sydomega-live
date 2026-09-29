@@ -8,12 +8,12 @@
 
   /* Map every page to a section */
   var PS={
-    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command',eternity:'command',replay:'command',evidence:'command',
+    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command',gateway:'command',guide:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
-    agents:'cosmos',pantheons:'cosmos',elements:'cosmos',
+    agents:'cosmos','agent-operations':'govern',pantheons:'cosmos',elements:'cosmos',
     media:'media','visual-atlas':'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',
@@ -64,7 +64,7 @@
      sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['beacon','BEACON','/beacon.html'],
           ['search','SEARCH','/search.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['eternity','CONTINUITY','/eternity.html'],['replay','REPLAY','/replay.html'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html'],['command','COMMAND BRIEF','/command.html'],
-          ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],
+          ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html'],
           ['network','NETWORK','/network.html'],['notes','NOTES','/notes.html'],['projects','PROJECTS','/projects.html'],
           ['quotes','WISDOM','/quotes.html'],['time','TIME TRACKER','/time.html'],['vision','VISION BOARD','/vision.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
@@ -126,7 +126,7 @@
           ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],['enterprise','ENTERPRISE','/enterprise.html'],['privacy','PRIVACY','/privacy.html'],
           ['roadmap','ROADMAP','/roadmap.html'],['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
           ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],
-          ['maintenance','MAINTENANCE','/maintenance.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
+          ['maintenance','MAINTENANCE','/maintenance.html'],['agent-operations','AGENT OPERATIONS','/agent-operations.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
           ['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',
      sub:[['investment','INVESTMENT','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],['revenue','REVENUE','/revenue.html'],

@@ -233,5 +233,12 @@
       "Nine-stage visual language must map to the canonical stage model only when the corresponding progression record exists.",
       "Lazy-load large visual collections; never block core navigation or authenticated data rendering on decorative source art."
     ]
+  },
+  "visual_atlas": {
+    "curated_reference_count": 46,
+    "total_source_visual_count": 291,
+    "additional_collections_exposed": 16,
+    "policy": "reference_only",
+    "notes": "The atlas exposes a curated subset of the deeper repository collections. Curated references are not evidence of achievement, credential validity, identity, ownership, balance, authorization or entitlement."
   }
 }

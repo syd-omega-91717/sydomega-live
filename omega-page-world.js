@@ -8,7 +8,7 @@
   if(window.__omegaPageWorld)return;
   window.__omegaPageWorld=true;
 
-  var manifest=null, world=null, pageWorld=null, overrides=null, archetype=null, district=null, slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
+  var manifest=null, world=null, pageWorld=null, overrides=null, archetype=null, district=null, pagePath=((location.pathname||'/').replace(/^\/+/,'')), slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
   var labels={
     command:{title:'COMMAND',next:'/missions.html',nextLabel:'MISSIONS',secondary:'/decisions.html',secondaryLabel:'DECISIONS'},
     identity:{title:'IDENTITY',next:'/profile.html',nextLabel:'IDENTITY',secondary:'/character.html',secondaryLabel:'CHARACTER'},
@@ -41,7 +41,7 @@
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
     archetype=findArchetype();
-    if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
+    if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
     if(district){
@@ -81,7 +81,7 @@
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
     var main=document.querySelector('main')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');

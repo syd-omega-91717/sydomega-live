@@ -2,8 +2,8 @@
    Proposal #22: Seasonal & Elemental Theming Integration
 
    Dynamically applies color palettes based on member's zodiac element and season.
-   Synchronizes with nav.js OmegaAxis context, persists via localStorage with 24h expiry.
-   Tier-gated: T1–T2 get automatic sign-based scheme; T3+ future customization.
+   Uses the authenticated profile context as the authoritative personalization input and keeps localStorage only as a non-authoritative cache.
+   All tiers receive the same base theme; permissions and entitlements are never derived from theme state.
    Respects prefers-reduced-motion. All 12 zodiac signs → 4 elements → 4 seasons = 64 palettes. */
 
 (function(){
@@ -63,12 +63,17 @@
     return 'winter';
   }
 
-  // Retrieve member's sign from localStorage or window context
+  // Resolve the member's sign from authoritative runtime profile context.
+  // Cached localStorage sign values are intentionally not an identity source.
   function getSign() {
-    var stored = localStorage.getItem('omega_member_sign');
-    if(stored && ELEMENT_MAP[stored]) return stored;
+    try {
+      var profile = window.__omegaProfile ||
+        (window.OmegaAuth && window.OmegaAuth.getProfile && window.OmegaAuth.getProfile());
+      var sign = profile && (profile.sign || profile.horoscopeSign);
+      if(sign && ELEMENT_MAP[sign]) return sign;
+    } catch(e) {}
     if(window.OmegaSign && ELEMENT_MAP[window.OmegaSign]) return window.OmegaSign;
-    return 'Leo'; // Default to Sovereign/Fire
+    return null;
   }
 
   // Apply palette to CSS root
@@ -80,6 +85,11 @@
     root.style.setProperty('--page-accent', palette.accent);
     root.style.setProperty('--page-soft', palette.soft);
     root.style.setProperty('--page-glow', palette.glow);
+    /* Compatibility bridge for surfaces that consume the older personalization tokens. */
+    root.style.setProperty('--theme-primary', palette.primary);
+    root.style.setProperty('--theme-secondary', palette.soft);
+    root.style.setProperty('--theme-accent', palette.accent);
+    root.style.setProperty('--theme-glow', palette.glow);
 
     // Emit for downstream listeners (particles, emblems, etc.)
     try {
@@ -117,24 +127,23 @@
   // Listen for theme update events from nav context
   document.addEventListener('omega-theme-update', function(e) {
     var detail = e.detail || {};
-    var tier = detail.tier;
-    // All tiers get automatic theming; T3+ would get UI customization
-    var element = detail.element || ELEMENT_MAP[getSign()] || 'Fire';
+    var sign = detail.sign || getSign();
+    var element = detail.element || (sign && ELEMENT_MAP[sign]) || 'Fire';
     var season = getSeason();
     updateSeasonalTokens(element, season);
-    persistState(detail.sign || getSign(), element, season);
+    if(sign) persistState(sign, element, season);
   });
 
   // Initialize on load
   function init() {
     injectTransitionStyles();
-    if(!restoreFromLocalStorage()) {
-      var sign = getSign();
-      var element = ELEMENT_MAP[sign] || 'Fire';
-      var season = getSeason();
-      updateSeasonalTokens(element, season);
-      persistState(sign, element, season);
-    }
+    var sign = getSign();
+    var element = sign ? (ELEMENT_MAP[sign] || 'Fire') : 'Fire';
+    var season = getSeason();
+    /* Authoritative profile context wins on every initialization. The cache is
+       retained for diagnostics/continuity only and never selects identity. */
+    updateSeasonalTokens(element, season);
+    if(sign) persistState(sign, element, season);
     scheduleNextUpdate();
   }
 

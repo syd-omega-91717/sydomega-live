@@ -2713,14 +2713,7 @@ setTimeout(function(){
     _osdv.setAttribute('data-omega-sculpture-dataviz','1');_osdv.defer=true;__omegaAppend(_osdv);
   }
 
-  /* Seasonal & elemental theme personalization — member's zodiac element + calendar season
-     modulate platform palette via CSS tokens. Reads profile.sign, maps to element, detects
-     current season, applies saturation/brightness adjustments, publishes to :root. Respects
-     prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-theme-personalization]')){
-    var _otheme=document.createElement('script');_otheme.src='/omega-theme-personalization.js';
-    _otheme.setAttribute('data-omega-theme-personalization','1');_otheme.defer=true;__omegaAppend(_otheme);
-  }
+  /* Canonical elemental/seasonal theme engine is loaded once near the platform nervous system. */
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
   if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;__omegaAppend(_ott);}

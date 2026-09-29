@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guard the gaming activity feed against persisted-data HTML injection."""
+"""Guard the gaming activity feed against persisted-data HTML injection.\n\nRun: python3 scripts/gaming-activity-dom-contract.py\n"""
 from pathlib import Path
 import re
 p=Path(__file__).resolve().parents[1]/"gaming.html"

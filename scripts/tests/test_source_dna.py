@@ -21,6 +21,20 @@ console.log(JSON.stringify({phase:L.phases.length,trophy:L.trophies.length,zodia
 """
 
 class SourceDNA(unittest.TestCase):
+    def test_reference_component_inventory(self):
+        with open(MANIFEST, encoding="utf-8") as fh:
+            manifest = json.load(fh)
+        inv = manifest.get("source_component_inventory") or {}
+        self.assertEqual(inv.get("file_count"), 16)
+        self.assertEqual(inv.get("family_count"), 8)
+        self.assertFalse(inv.get("production_imports_allowed", True))
+        families = inv.get("families") or []
+        self.assertEqual(len(families), 8)
+        files = [name for name in os.listdir(COMPONENT_ROOT) if name.endswith((".jsx", ".tsx"))]
+        self.assertEqual(len(files), 16)
+        for family in families:
+            self.assertTrue(os.path.exists(os.path.join(COMPONENT_ROOT, family + ".jsx")))
+            self.assertTrue(os.path.exists(os.path.join(COMPONENT_ROOT, family + ".tsx")))
     def test_manifest_matches_runtime_source(self):
         with open(MANIFEST, encoding="utf-8") as fh:
             m = json.load(fh)

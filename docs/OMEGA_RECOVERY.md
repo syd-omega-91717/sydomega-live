@@ -18,6 +18,9 @@ The server-governed RPC boundary is `private.omega_create_recovery_checkpoint(te
 ## Integrity drill
 The private verification RPC recomputes the digest from the persisted JSON snapshot and returns a boolean. A successful result means the stored checkpoint has not changed relative to its recorded digest.
 
+## RTO / RPO boundary
+RTO (Recovery Time Objective) and RPO (Recovery Point Objective) are not measured by this member checkpoint feature. No value is claimed until a controlled provider-level restore drill produces measured evidence.
+
 ## Explicit non-claims
 This feature does not prove:
 - provider backup availability;

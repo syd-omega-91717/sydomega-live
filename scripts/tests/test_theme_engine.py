@@ -1,3 +1,16 @@
+for forbidden in ("permission", "entitlement"):
+    # Reject executable authority derivation, not documentation that states the boundary.
+    patterns = (
+        "window." + forbidden,
+        "get" + forbidden,
+        "set" + forbidden,
+        "if (" + forbidden,
+        "if(" + forbidden,
+    )
+    assert not any(token in engine.lower() for token in patterns), (
+        f"theme engine must not derive behavior from {forbidden} state"
+    )
+
 #!/usr/bin/env python3
 """Guard the Ω theme engine against duplicate palette writers and identity drift."""
 from pathlib import Path

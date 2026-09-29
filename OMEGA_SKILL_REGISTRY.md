@@ -123,7 +123,7 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 163 files added since (numbered and
+end-to-end for the first time"*. The 164 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 258. Treat the validated scope as `0001`–`0094` only.
 

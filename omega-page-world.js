@@ -71,7 +71,7 @@
     document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
   }
 
-  function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+  function escapeHtml(v){return v==null?'':String(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
   function escapeAttr(v){return String(v).replace(/[^a-zA-Z0-9_\-./#?=&]/g,'');}
 
   async function boot(){

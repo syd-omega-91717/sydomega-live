@@ -4317,5 +4317,6 @@
       "mission": "/missions.html",
       "reward": "/achievements.html"
     }
-  ]
+  ],
+  "$schema": "./page-world-actions.schema.json"
 }

@@ -26,6 +26,11 @@ def main():
         if marker not in js: fail(f"missing {marker}")
     if "innerHTML" in js or "innerHTML" in html: fail("unsafe HTML sink")
     if "service_role" in js: fail("privileged key exposed to browser")
+    if "createClient" in js or "sb_publishable_" in js:
+        fail("module builds its own Supabase client; use window.OmegaSB.get()")
+    if "OmegaSB" not in js: fail("missing shared client accessor window.OmegaSB")
+    for scope in ('"MEMBER"', '"PLATFORM"'):
+        if scope not in js: fail(f"missing {scope} scope label (platform vs member evidence)")
     if "EVENT → CAPABILITY EVIDENCE → TASK → GRAPH EVIDENCE → EXPERIENCE" not in doc:
         fail("evidence chain missing")
     print("OMEGA EVIDENCE GRAPH CONTRACT: PASS (MEMBER-SCOPED READ MODEL + TRUTH BOUNDARY)")

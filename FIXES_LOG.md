@@ -21869,3 +21869,53 @@ controller's identity, which initials do not give) but gave no contact details,
 which Art. 13(1)(a) also requires. Added `info@sydomega.com` (supplied by the
 owner, 2026-09-28) as the contact for privacy and data-rights requests, and
 pointed the erasure-failure message at it instead of "CONTACT ADMINISTRATOR".
+
+## `main` red after #522; Evidence Graph built a client with a key the project does not have; World zodiac rendered as white tiles (2026-09-29)
+
+`main` @ `5fde492` (merge of #522): **Contracts** and **CI** red.
+
+- **Contracts → `migration-drift`.** `20260929083000_omega_event_ingest_idempotency_unique`
+  was in `supabase/migrations/` and absent from `supabase/remote-migrations.json`.
+  `mcp__Supabase__list_migrations` (2026-09-29) lists it as **applied live**, last
+  entry after `20260928200648` — so the snapshot was stale, not the schema. Snapshot
+  refreshed (`_captured` 2026-09-29, 244 versions). `contract-suite.py`: 21/21 → 22/22.
+- **CI → `test_script_help_contract`.** `scripts/enable-supabase-hibp.py --help`
+  exited 2 (it required `SUPABASE_ACCESS_TOKEN` before reading argv). Now prints its
+  docstring and exits 0. 487 → 492 tests, all passing.
+- **Registry drift already on `main`.** `omega-registry.py --check` failed on
+  `origin/main` (edge-functions skill + two migrations without regeneration).
+  Regenerated.
+- **`evidence.html` (gate 9b, recorded as pre-existing in the entry above).** The only
+  member page outside `.shell` + `#omega-side`: no sidebar, no back link. Now matches
+  `replay.html`/`world.html`: `data-page="evidence"`, `omega-visual-universe.css`,
+  `noindex`. Surface contract: PASS, 219 pages.
+- **Evidence Graph never saw a signed-in member (§8.1 class 1/9).**
+  `omega-evidence-graph.js` built its own client with `sb_publishable_4L5Qy5vQ9pQm8hM0QmQ`.
+  `mcp__Supabase__get_publishable_keys` returns only `sb_publishable_9Klhhn…` (plus the
+  legacy anon JWT); the 314 other occurrences in the estate use that one. The module
+  runs before bg.js's shared client resolves, so the wrong key was the normal path:
+  `auth.getUser()` failed → "Sign in to view member-scoped evidence" for signed-in
+  members, and every read failed. Fixed: `window.OmegaSB.get()` only, never
+  `createClient`. Also: a failed source now renders `—`, not `0`; cards and rows are
+  scope-labelled **MEMBER** / **PLATFORM** (`omega_platform_evidence` has no `user_id`);
+  UNAVAILABLE `#8b0000` (~1.9:1 on the page ground) → `#cf6760`. Rendered via the
+  harness: signed-in LIVE, sidebar present, 0 page errors; signed-out UNAVAILABLE,
+  content behind the approval guard.
+- **New gate `supabase-client-key` (blocking, in `contract-suite.py`).**
+  `scripts/supabase-client-key-contract.py`: every shipped `.html/.js/.json` may name
+  only bg.js's project host and publishable key. Proven both ways: FAIL on the pre-fix
+  module (exactly 1 finding estate-wide), PASS after; 5 planted-violator tests in
+  `scripts/tests/test_supabase_client_key_contract.py`. The evidence contract now also
+  refuses `createClient`/`sb_publishable_` in the module and requires both scope labels.
+- **World → Legacy Constellation → ZODIAC: 12 white tiles.** It rendered
+  `horoscope_sign/*.png.jpeg`, whose "transparency" is a checkerboard baked into the
+  JPEG. The same art already existed cut to alpha in `/assets/legacy/sign-*.webp`
+  (Passport, entry above). The gallery now renders those (~45 KB vs ~170 KB each);
+  the source filename stays as provenance. Harness: 12/12 load, white tiles gone.
+  `test_legacy_assets.py` now asserts the 12 rendered cutouts too (62 → 74 paths).
+
+Open, owner's art (not fixable in code without re-authoring): Stage 8 medal reads
+"SOVERRIGN"; stages 1–4, 6, 7 carry a baked filename caption (`logo_stage.2.png` on
+the Stage 4 medal) whose residue shows under the Passport cutouts. `Zodiac_signs/`
+(unused) has 12 files for 11 signs — Aries twice, no Taurus. Full estate audit:
+`docs/OMEGA_VISUAL_ESTATE_AUDIT_20260929.md`.

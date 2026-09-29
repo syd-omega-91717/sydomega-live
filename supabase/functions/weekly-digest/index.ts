@@ -135,26 +135,10 @@ Deno.serve(async (req) => {
         // alone must never be treated as proof that delivery occurred.
         throw new Error("email_delivery_contract_not_implemented");
 
-        // Mark as sent
-        const { error: updateError } = await supabase
-          .from("weekly_digest_queue")
-          .update({
-            status: "sent",
-            processed_at: new Date().toISOString(),
-          })
-          .eq("id", item.id);
-
-        if (updateError) throw updateError;
-
-        // Update last_digest_sent_at in preferences
-        await supabase
-          .from("digest_preferences")
-          .update({
-            last_digest_sent_at: new Date().toISOString(),
-          })
-          .eq("user_id", item.user_id);
-
+        // Delivery is intentionally disabled until the approved provider contract exists.
+        // Throwing above records a truthful failure rather than creating false delivery evidence.
         processed++;
+
       } catch (err) {
         console.error(`[Digest] Error processing ${item.id}:`, err);
         await supabase

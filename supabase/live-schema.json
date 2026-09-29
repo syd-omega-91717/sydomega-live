@@ -14,7 +14,7 @@
   "are applied live: it is dated evidence, not a target. The query that",
   "produced it is in supabase/live-schema.README.md."
  ],
- "_captured": "2026-09-21",
+ "_captured": "2026-09-29",
  "_project": "ydqhzvvoyufiiqvzcjns",
  "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
  "_table_count": 225,
@@ -2427,5 +2427,15 @@
    "created_at",
    "updated_at"
   ]
- }
+ },
+ "omega_simulation_runs": [
+  "id",
+  "user_id",
+  "model_key",
+  "model_version",
+  "deterministic_seed",
+  "input_snapshot",
+  "result_snapshot",
+  "created_at"
+ ]
 }

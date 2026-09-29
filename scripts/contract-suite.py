@@ -122,6 +122,9 @@ GATES = [
     ('mission-state',
      'mission and quest state remains server-authoritative and evidence-bound',
      ['scripts/omega-mission-state-contract.py']),
+    ('world-realtime',
+     'World presence remains ephemeral and privacy-preserving',
+     ['scripts/omega-world-realtime-contract.py']),
     ('supabase-client-key',
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',

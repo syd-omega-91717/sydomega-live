@@ -27,8 +27,11 @@ const root = (src.match(/var ROOT='([^']+)'/) || [])[1];
 const out = [];
 L.phases.forEach(p => out.push(root + 'Phases_syd_omega_91717/' + p[2]));
 L.trophies.forEach(f => out.push('/Trophies_S.Y.D_Omega_91717/' + f));
-const zdir = (src.match(/assetUrl\(ROOT\+'([^']+)',z\[2\]\)/) || [])[1];
+const zdir = (src.match(/var ZODIAC_SRC_DIR='([^']+)'/) || [])[1];
+const zcut = (src.match(/var ZODIAC_CUTOUT='([^']+)'/) || [])[1];
 L.zodiac.forEach(z => out.push(root + zdir + z[2]));
+/* what the World gallery actually renders: the alpha cutouts */
+L.zodiac.forEach(z => out.push(zcut + z[1].toLowerCase() + '.webp'));
 console.log(JSON.stringify(out));
 """
 
@@ -38,7 +41,7 @@ class LegacyAssets(unittest.TestCase):
         res = subprocess.run(["node", "-e", PROBE, os.path.join(ROOT, "omega-legacy-constellation.js")],
                              capture_output=True, text=True, check=True)
         paths = json.loads(res.stdout)
-        self.assertEqual(len(paths), 62)
+        self.assertEqual(len(paths), 74)  # 62 source files + 12 rendered zodiac cutouts
         missing = [p for p in paths if not os.path.isfile(os.path.join(ROOT, p.lstrip("/")))]
         self.assertEqual(missing, [])
 

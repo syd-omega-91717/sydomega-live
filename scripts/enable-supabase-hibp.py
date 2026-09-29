@@ -35,7 +35,11 @@ def request(method, url, token, payload=None):
         raise RuntimeError(f"Supabase Management API returned HTTP {exc.code}: {detail}") from exc
 
 
-def main():
+def main(argv):
+    if "--help" in argv or "-h" in argv:
+        print(__doc__)
+        return 0
+
     token = os.environ.get("SUPABASE_ACCESS_TOKEN")
     if not token:
         print("ERROR: SUPABASE_ACCESS_TOKEN is not set.", file=sys.stderr)
@@ -59,4 +63,4 @@ def main():
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

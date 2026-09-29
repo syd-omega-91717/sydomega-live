@@ -22,14 +22,15 @@
     if (!host) return;
     host.replaceChildren();
     [
-      ["EVENTS", counts.events, "Persisted platform events"],
-      ["EVIDENCE", counts.evidence, "Capability evidence records"],
-      ["TASKS", counts.tasks, "Completed task records"],
-      ["GRAPH", counts.graph, "Graph evidence records"]
-    ].forEach(([label, value, detail]) => {
+      ["EVENTS", counts.events, "Your persisted platform events", "MEMBER"],
+      ["EVIDENCE", counts.evidence, "Platform-wide capability checks — not owned by you", "PLATFORM"],
+      ["TASKS", counts.tasks, "Your completed task records", "MEMBER"],
+      ["GRAPH", counts.graph, "Your graph evidence records", "MEMBER"]
+    ].forEach(([label, value, detail, scope]) => {
       const card = el("article");
       card.className = "omega-evidence-card";
-      card.append(el("strong", label), el("b", value), el("span", detail));
+      card.dataset.scope = scope;
+      card.append(el("em", scope), el("strong", label), el("b", value), el("span", detail));
       host.append(card);
     });
   }
@@ -54,23 +55,16 @@
     });
   }
 
+  /* One client per page: bg.js owns it (window.OmegaSB.get -> window.__omegaSb).
+     This module used to build its own with a publishable key that does not
+     exist on the project, so auth.getUser() failed and a signed-in member was
+     told to sign in, and every read failed. Never construct a client here. */
   async function getClient() {
     if (window.__omegaSb) return window.__omegaSb;
-    if (window.supabase?.createClient) {
-      return window.supabase.createClient(
-        "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-        "sb_publishable_4L5Qy5vQ9pQm8hM0QmQ"
-      );
-    }
     try {
-      const mod = await import("/vendor/supabase-js.js");
-      return mod.createClient(
-        "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-        "sb_publishable_4L5Qy5vQ9pQm8hM0QmQ"
-      );
-    } catch {
-      return null;
-    }
+      if (window.OmegaSB?.get) return await window.OmegaSB.get();
+    } catch {}
+    return null;
   }
 
   async function load() {
@@ -81,9 +75,14 @@
       return;
     }
 
-    const { data: auth } = await state.sb.auth.getUser();
+    const { data: auth, error: authError } = await state.sb.auth.getUser();
     state.userId = auth?.user?.id || null;
     if (!state.userId) {
+      if (authError && authError.name !== "AuthSessionMissingError") {
+        setStatus("UNAVAILABLE", "Identity could not be verified. Evidence is not shown.");
+        renderSummary({ events: "—", evidence: "—", tasks: "—", graph: "—" });
+        return;
+      }
       setStatus("UNAVAILABLE", "Sign in to view member-scoped evidence.");
       renderSummary({ events: "—", evidence: "—", tasks: "—", graph: "—" });
       return;
@@ -104,16 +103,19 @@
       setStatus("LIVE", "Member-scoped evidence graph is live.");
     }
 
+    /* A failed source is unknown, not zero: rendering 0 would assert an
+       empty record that was never read (CLAUDE.md 8.1 class 9). */
+    const count = (q) => (q.error ? "—" : (q.data?.length ?? 0));
     renderSummary({
-      events: events.data?.length ?? 0,
-      evidence: evidence.data?.length ?? 0,
-      tasks: tasks.data?.length ?? 0,
-      graph: graph.data?.length ?? 0
+      events: count(events),
+      evidence: count(evidence),
+      tasks: count(tasks),
+      graph: count(graph)
     });
 
     const rows = [
       ...(events.data || []).map((x) => ({ type: "EVENT", label: x.event_type, when: x.created_at })),
-      ...(evidence.data || []).map((x) => ({ type: "CAPABILITY EVIDENCE", label: x.capability_id + " · " + x.result, when: x.recorded_at })),
+      ...(evidence.data || []).map((x) => ({ type: "PLATFORM EVIDENCE", label: x.capability_id + " · " + x.result, when: x.recorded_at })),
       ...(tasks.data || []).map((x) => ({ type: "TASK", label: x.task_name || x.task, when: x.completed_at || x.created_at })),
       ...(graph.data || []).map((x) => ({ type: "GRAPH EVIDENCE", label: x.source_type + " · " + (x.source_table || "source"), when: x.extraction_timestamp }))
     ];

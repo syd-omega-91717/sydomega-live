@@ -122,6 +122,10 @@ GATES = [
     ('mission-state',
      'mission and quest state remains server-authoritative and evidence-bound',
      ['scripts/omega-mission-state-contract.py']),
+    ('supabase-client-key',
+     'every shipped file names only the Supabase project and publishable key '
+     'bg.js declares -- a wrong key fails exactly like a signed-out visitor',
+     ['scripts/supabase-client-key-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

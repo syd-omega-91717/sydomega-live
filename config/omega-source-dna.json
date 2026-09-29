@@ -96,5 +96,142 @@
     "drift_observed": true,
     "production_imports_allowed": false,
     "notes": "The paired source variants are historical design/reference material. They must not be treated as the deployed runtime or as interchangeable canonical implementations."
+  },
+  "deep_visual_source_inventory": {
+    "audit_date": "2026-09-29",
+    "policy": "reference_only",
+    "additional_visual_count": 229,
+    "collections": [
+      {
+        "name": "Brand_Identity_Style_S.Y.D_Omega_91717",
+        "count": 17,
+        "roles": [
+          "material language",
+          "brand surfaces",
+          "elemental identity"
+        ]
+      },
+      {
+        "name": "Certificate_of_Appreciation_S.Y.D_Omega_91717",
+        "count": 9,
+        "roles": [
+          "nine-stage ceremonial certificate language"
+        ]
+      },
+      {
+        "name": "Certificates_S.Y.D_Omega_91717",
+        "count": 14,
+        "roles": [
+          "credential/certificate visual language"
+        ]
+      },
+      {
+        "name": "Cinematic_game_syd_omega_91717",
+        "count": 11,
+        "roles": [
+          "cinematic gameplay framing",
+          "scene composition",
+          "character/world atmosphere"
+        ]
+      },
+      {
+        "name": "Horoscope_Sign_S.Y.D_Omega_91717",
+        "count": 12,
+        "roles": [
+          "zodiac identity presentation"
+        ]
+      },
+      {
+        "name": "Logo_Main_Page_S.Y.D_Omega_91717",
+        "count": 4,
+        "roles": [
+          "primary brand mark variants"
+        ]
+      },
+      {
+        "name": "Logo_Medal_Stage_1_to_9_S.Y.D_Omega_91717",
+        "count": 10,
+        "roles": [
+          "stage/medal progression language"
+        ]
+      },
+      {
+        "name": "Logo_Phases_Levels_Grades_S.Y.D_Omega_91717",
+        "count": 28,
+        "roles": [
+          "role/phase archetypes",
+          "symbolic hierarchy"
+        ]
+      },
+      {
+        "name": "Medals_S.Y.D_Omega_91717",
+        "count": 37,
+        "roles": [
+          "achievement artifact language"
+        ]
+      },
+      {
+        "name": "Mobile_app_Design_Passport_Credit-Cards_S.Y.D_Omega_91717",
+        "count": 11,
+        "roles": [
+          "mobile UI",
+          "passport/card",
+          "secure artifact presentation"
+        ]
+      },
+      {
+        "name": "NFT_HOMOGENIC_OMEGA_91717",
+        "count": 2,
+        "roles": [
+          "digital collectible visual language"
+        ]
+      },
+      {
+        "name": "NFT_syd_omega_91717",
+        "count": 2,
+        "roles": [
+          "digital collectible visual language"
+        ]
+      },
+      {
+        "name": "Omega_Crypto_Coin_token_HOMOGENIC_OMEGA_91717",
+        "count": 1,
+        "roles": [
+          "token/coin visual language"
+        ]
+      },
+      {
+        "name": "Omega_Crypto_Coin_token_syd_omega_91717",
+        "count": 1,
+        "roles": [
+          "token/coin visual language"
+        ]
+      },
+      {
+        "name": "Phases_HOMOGENIC_OMEGA_91717",
+        "count": 30,
+        "roles": [
+          "phase/role character language"
+        ]
+      },
+      {
+        "name": "Phases_syd_omega_91717",
+        "count": 40,
+        "roles": [
+          "phase/role character language",
+          "historical visual variants"
+        ]
+      }
+    ],
+    "rules": [
+      "Source artwork is not achievement evidence, entitlement, identity verification, NFT ownership, or financial state.",
+      "Material names are visual themes only; they must not become authorization or asset-accounting dimensions.",
+      "Certificate and medal artwork must remain archival until a persisted evidence-backed credential/achievement record exists.",
+      "Passport, credit-card, activation-key and safe concepts must not be represented as live credentials or secrets without a real security contract.",
+      "NFT and token artwork must not imply ownership, balances, minting, settlement, or market value without live ledger evidence.",
+      "Cinematic game frames may inform composition, realm presentation, character cards, camera staging and scene transitions; gameplay state remains server-authoritative.",
+      "Nine-stage visual language must map to the canonical stage model only when the corresponding progression record exists.",
+      "Lazy-load large visual collections; never block core navigation or authenticated data rendering on decorative source art."
+    ]
   }
 }

@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 # ============================================================================
 # SYD OMEGA 91717 — check-secrets.sh
-#
 # Verifies which Supabase Edge Function secrets are configured in the live
-# project before deploying. Run from the repository root:
-#
-#   ./scripts/check-secrets.sh
-#
-# Requires: supabase CLI logged in and project linked
-#           (supabase login && supabase link --project-ref ydqhzvvoyufiiqvzcjns)
+# project before deploying. Never prints a secret value.
 # ============================================================================
 case "${1:-}" in
   --help|-h)
@@ -17,8 +11,8 @@ Verify the Supabase Edge Function secrets are set before deploying.
 
 Usage: scripts/check-secrets.sh [--help]
 
-  Reads the expected secret names and reports which are missing.
-  Reports only -- it never sets, prints, or commits a secret value.
+Reads expected secret names and reports which are missing.
+It never sets, prints, or commits a secret value.
 OMEGA_HELP
     exit 0
     ;;
@@ -28,12 +22,11 @@ set -euo pipefail
 
 PROJECT_REF="ydqhzvvoyufiiqvzcjns"
 
-# --- required secrets per function ---
 declare -A REQUIRED
 REQUIRED["concierge"]="ANTHROPIC_API_KEY"
 REQUIRED["checkout"]="STRIPE_SECRET_KEY STRIPE_PRICE_MAP SITE_URL"
 REQUIRED["stripe-webhook"]="STRIPE_WEBHOOK_SECRET STRIPE_SECRET_KEY"
-REQUIRED["notify-access"]="RESEND_API_KEY"
+REQUIRED["notify-access"]="RESEND_API_KEY NOTIFY_ACCESS_WEBHOOK_SECRET"
 REQUIRED["market-price"]="TWELVE_DATA_API_KEY"
 # intel-feed uses only Hacker News public API — no secrets required
 
@@ -43,7 +36,6 @@ echo "Project: $PROJECT_REF"
 echo "=============================================================="
 echo
 
-# Get all configured secrets
 if ! configured=$(supabase secrets list --project-ref "$PROJECT_REF" 2>&1); then
   echo "  ERROR: could not list secrets. Make sure you are logged in:"
   echo "    supabase login"
@@ -72,12 +64,6 @@ echo "=============================================================="
 echo "  configured: $ok    missing: $missing"
 echo
 if [ "$missing" -gt 0 ]; then
-  echo "  Set missing secrets with:"
-  echo "    supabase secrets set KEY=value --project-ref $PROJECT_REF"
-  echo
-  echo "  Then deploy updated functions:"
-  echo "    supabase functions deploy --no-verify-jwt"
-  echo
-  echo "  See setup.md for RESEND_API_KEY instructions."
-  echo "  See supabase/functions/stripe-webhook/index.ts for STRIPE_WEBHOOK_SECRET."
+  echo "  Set missing secrets through the Supabase secret manager."
+  echo "  Never commit secret values to the repository."
 fi

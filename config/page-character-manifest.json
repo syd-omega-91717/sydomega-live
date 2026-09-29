@@ -10,31 +10,272 @@
     "emblem": "omega"
   },
   "archetypes": {
-    "command": {"visual":"command","motion":"cinematic","depth":"orbital","density":"clear","interaction":"direct","emblem":"command"},
-    "identity": {"visual":"identity","motion":"ceremonial","depth":"glass","density":"clear","interaction":"direct","emblem":"identity"},
-    "intelligence": {"visual":"intelligence","motion":"reactive","depth":"holographic","density":"data","interaction":"explore","emblem":"intelligence"},
-    "knowledge": {"visual":"knowledge","motion":"calm","depth":"glass","density":"readable","interaction":"learn","emblem":"knowledge"},
-    "gaming": {"visual":"arena","motion":"dynamic","depth":"3d","density":"visual","interaction":"play","emblem":"gaming"},
-    "media": {"visual":"cinema","motion":"cinematic","depth":"3d","density":"visual","interaction":"watch","emblem":"media"},
-    "commerce": {"visual":"exchange","motion":"dynamic","depth":"glass","density":"transactional","interaction":"buy","emblem":"marketplace"},
-    "creation": {"visual":"forge","motion":"reactive","depth":"3d","density":"workspace","interaction":"create","emblem":"forge"},
-    "community": {"visual":"constellation","motion":"organic","depth":"glass","density":"social","interaction":"connect","emblem":"social"},
-    "governance": {"visual":"council","motion":"ceremonial","depth":"holographic","density":"structured","interaction":"decide","emblem":"governance"},
-    "finance": {"visual":"treasury","motion":"precise","depth":"glass","density":"data","interaction":"manage","emblem":"treasury"},
-    "system": {"visual":"control","motion":"precise","depth":"holographic","density":"technical","interaction":"operate","emblem":"system"}
+    "command": {
+      "visual": "command",
+      "motion": "cinematic",
+      "depth": "orbital",
+      "density": "clear",
+      "interaction": "direct",
+      "emblem": "command",
+      "worldRole": "Navigator",
+      "worldVerb": "DIRECT",
+      "primaryActions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted"
+    },
+    "identity": {
+      "visual": "identity",
+      "motion": "ceremonial",
+      "depth": "glass",
+      "density": "clear",
+      "interaction": "direct",
+      "emblem": "identity",
+      "worldRole": "Avatar",
+      "worldVerb": "BECOME",
+      "primaryActions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced"
+    },
+    "intelligence": {
+      "visual": "intelligence",
+      "motion": "reactive",
+      "depth": "holographic",
+      "density": "data",
+      "interaction": "explore",
+      "emblem": "intelligence",
+      "worldRole": "Seeker",
+      "worldVerb": "DISCOVER",
+      "primaryActions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded"
+    },
+    "knowledge": {
+      "visual": "knowledge",
+      "motion": "calm",
+      "depth": "glass",
+      "density": "readable",
+      "interaction": "learn",
+      "emblem": "knowledge",
+      "worldRole": "Scholar",
+      "worldVerb": "MASTER",
+      "primaryActions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified"
+    },
+    "gaming": {
+      "visual": "arena",
+      "motion": "dynamic",
+      "depth": "3d",
+      "density": "visual",
+      "interaction": "play",
+      "emblem": "gaming",
+      "worldRole": "Champion",
+      "worldVerb": "COMPETE",
+      "primaryActions": [
+        "play",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "successOutcome": "mastery recorded"
+    },
+    "media": {
+      "visual": "cinema",
+      "motion": "cinematic",
+      "depth": "3d",
+      "density": "visual",
+      "interaction": "watch",
+      "emblem": "media",
+      "worldRole": "Creator",
+      "worldVerb": "CREATE",
+      "primaryActions": [
+        "watch",
+        "curate",
+        "publish",
+        "collect"
+      ],
+      "successOutcome": "culture expanded"
+    },
+    "commerce": {
+      "visual": "exchange",
+      "motion": "dynamic",
+      "depth": "glass",
+      "density": "transactional",
+      "interaction": "buy",
+      "emblem": "marketplace",
+      "worldRole": "Merchant",
+      "worldVerb": "EXCHANGE",
+      "primaryActions": [
+        "browse",
+        "buy",
+        "sell",
+        "commission"
+      ],
+      "successOutcome": "transaction completed"
+    },
+    "creation": {
+      "visual": "forge",
+      "motion": "reactive",
+      "depth": "3d",
+      "density": "workspace",
+      "interaction": "create",
+      "emblem": "forge",
+      "worldRole": "Builder",
+      "worldVerb": "BUILD",
+      "primaryActions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced"
+    },
+    "community": {
+      "visual": "constellation",
+      "motion": "organic",
+      "depth": "glass",
+      "density": "social",
+      "interaction": "connect",
+      "emblem": "social",
+      "worldRole": "Citizen",
+      "worldVerb": "CONNECT",
+      "primaryActions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced"
+    },
+    "governance": {
+      "visual": "council",
+      "motion": "ceremonial",
+      "depth": "holographic",
+      "density": "structured",
+      "interaction": "decide",
+      "emblem": "governance",
+      "worldRole": "Councillor",
+      "worldVerb": "GOVERN",
+      "primaryActions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded"
+    },
+    "finance": {
+      "visual": "treasury",
+      "motion": "precise",
+      "depth": "glass",
+      "density": "data",
+      "interaction": "manage",
+      "emblem": "treasury",
+      "worldRole": "Treasurer",
+      "worldVerb": "MANAGE",
+      "primaryActions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated"
+    },
+    "system": {
+      "visual": "control",
+      "motion": "precise",
+      "depth": "holographic",
+      "density": "technical",
+      "interaction": "operate",
+      "emblem": "system",
+      "worldRole": "Guardian",
+      "worldVerb": "PROTECT",
+      "primaryActions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified"
+    }
   },
   "rules": [
-    {"match":"command|dashboard|home","archetype":"command"},
-    {"match":"identity|profile|passport|character|account|membership","archetype":"identity"},
-    {"match":"intelligence|research|prediction|analytics|graph|search|oracle|agents|ai","archetype":"intelligence"},
-    {"match":"academy|knowledge|library|codex|exam|flashcard|grades|heritage|tutor","archetype":"knowledge"},
-    {"match":"gaming|game|arena|trophy|leaderboard","archetype":"gaming"},
-    {"match":"media|cinema|film|series|trailers|music|video","archetype":"media"},
-    {"match":"marketplace|commerce|merchant|store|shop|services","archetype":"commerce"},
-    {"match":"forge|creator|creation|publishing|contribution|lab|project","archetype":"creation"},
-    {"match":"social|family|contacts|feed|community|factions","archetype":"community"},
-    {"match":"governance|govern|compliance|approvals|charter|covenant|terms","archetype":"governance"},
-    {"match":"vault|treasury|wallet|income|payments|payment|investment|portfolio|ledger|budget|expenses","archetype":"finance"},
-    {"match":"settings|maintenance|system|admin|operator|enterprise|security|kyc","archetype":"system"}
-  ]
+    {
+      "match": "command|dashboard|home",
+      "archetype": "command"
+    },
+    {
+      "match": "identity|profile|passport|character|account|membership",
+      "archetype": "identity"
+    },
+    {
+      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai",
+      "archetype": "intelligence"
+    },
+    {
+      "match": "academy|knowledge|library|codex|exam|flashcard|grades|heritage|tutor",
+      "archetype": "knowledge"
+    },
+    {
+      "match": "gaming|game|arena|trophy|leaderboard",
+      "archetype": "gaming"
+    },
+    {
+      "match": "media|cinema|film|series|trailers|music|video",
+      "archetype": "media"
+    },
+    {
+      "match": "marketplace|commerce|merchant|store|shop|services",
+      "archetype": "commerce"
+    },
+    {
+      "match": "forge|creator|creation|publishing|contribution|lab|project",
+      "archetype": "creation"
+    },
+    {
+      "match": "social|family|contacts|feed|community|factions",
+      "archetype": "community"
+    },
+    {
+      "match": "governance|govern|compliance|approvals|charter|covenant|terms",
+      "archetype": "governance"
+    },
+    {
+      "match": "vault|treasury|wallet|income|payments|payment|investment|portfolio|ledger|budget|expenses",
+      "archetype": "finance"
+    },
+    {
+      "match": "settings|maintenance|system|admin|operator|enterprise|security|kyc",
+      "archetype": "system"
+    }
+  ],
+  "worldContract": {
+    "version": 1,
+    "purpose": "Every page is a place with a player role, a primary verb, concrete actions, and an observable outcome.",
+    "loop": [
+      "ENTER",
+      "UNDERSTAND",
+      "ACT",
+      "RECEIVE FEEDBACK",
+      "PROGRESS",
+      "RETURN"
+    ],
+    "sourceOfTruth": "archetype + existing page implementation + existing data source; this manifest does not invent backend state.",
+    "monetizationRule": "Paid features may expand expression, access, content, or convenience; earned status remains earned.",
+    "cityBridge": "config/omega-world-manifest.json"
+  }
 }

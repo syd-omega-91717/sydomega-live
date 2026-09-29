@@ -132,7 +132,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    var prRes=await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle(); if(prRes.error)throw prRes.error; var pr=prRes.data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
@@ -148,7 +148,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
       try{
         var fl=document.getElementById('feed-list');
         var res=await sb.from('task_completions').select('user_id,task,axis,created_at').order('created_at',{ascending:false}).limit(30);
-        var rows=res.data||[];
+        if(res.error)throw res.error; var rows=res.data||[];
         if(!rows.length){fl.replaceChildren(emptyState('NO ACTIVITY RECORDED YET'));return;}
         fl.replaceChildren();
         rows.forEach(function(r){
@@ -164,7 +164,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
       try{
         var ml=document.getElementById('my-list');
         var res=await sb.from('task_completions').select('task,axis,created_at').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
-        var rows=res.data||[];
+        if(res.error)throw res.error; var rows=res.data||[];
         if(!rows.length){ml.replaceChildren(emptyState('NO ACTIVITY YET — COMPLETE TASKS TO SEE YOUR RECORD'));return;}
         ml.replaceChildren();
         rows.forEach(function(r){
@@ -178,7 +178,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
       try{
         var pl=document.getElementById('posts-list');
         var res=await sb.from('publications').select('title,created_at,kind').order('created_at',{ascending:false}).limit(12);
-        var rows=res.data||[];
+        if(res.error)throw res.error; var rows=res.data||[];
         if(!rows.length){pl.replaceChildren(emptyState('NO PUBLICATIONS YET — BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK',true));return;}
         pl.replaceChildren();
         rows.forEach(function(r){
@@ -236,7 +236,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
         var tl=document.getElementById('trend-list');
         var since=new Date(Date.now()-7*24*3600*1000).toISOString();
         var res=await sb.from('task_completions').select('axis').gte('created_at',since);
-        var rows=res.data||[];
+        if(res.error)throw res.error; var rows=res.data||[];
         var counts={a:0,b:0,c:0};
         rows.forEach(function(r){if(r.axis&&counts[r.axis]!==undefined)counts[r.axis]++;});
         var total=rows.length||1;

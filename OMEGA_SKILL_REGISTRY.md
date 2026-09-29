@@ -22,7 +22,7 @@ effectively invisible unless invoked by exact name.
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
-| `edge-functions` | yes | — | 1,445 | CLAUDE.md, README.md | 2026-09-27 |
+| `edge-functions` | yes | — | 1,207 | CLAUDE.md, README.md | 2026-09-29 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
@@ -42,7 +42,7 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,853 tokens** if every SKILL.md were read in one
+**23 skills, ~38,615 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -54,7 +54,7 @@ session. They are loaded on demand, so that total is a ceiling, not a per-sessio
 - **`cinematic-media`** — Work on sydomega-live's video and "cinematic" motion surface — the welcome demo video and its wiring, the transition/2.5D/motion engines, and the…
 - **`context-budget`** — Keep this repo's per-session context cost down — measure what every agent session loads before it starts, decide where new documentation belongs so…
 - **`deploy-gate`** — Ship a change to sydomega-live's real deployment surface — the static Vercel site and, separately, the Supabase backend — without letting a green local…
-- **`edge-functions`** — Work on sydomega-live's Supabase Edge Functions — the 15 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge,…
+- **`edge-functions`** — Work on sydomega-live's Supabase Edge Functions — the 17 Deno/TypeScript source functions under supabase/functions/ (checkout, stripe-webhook, concierge,…
 - **`feature-architect`** — Turns a FEATURE_IDEAS.md proposal into an exact, file-by-file implementation blueprint for this repo's real static-HTML/Supabase architecture (no…
 - **`grill-me-codex`** — Safety gate for HIGH-RISK changes in this repo — auth, database schema, payments/Stripe, RLS policies, or any new public-callable function/RPC.
   - carries: `THREAT_MODEL.md`
@@ -94,13 +94,15 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 208 |
-| pages loading `bg.js` | 208 of 208 |
-| `omega-*.js` modules | 164 (1591 KB) |
-| root `.js` files | 174 |
+| `.html` pages | 215 |
+| pages loading `bg.js` | 215 of 215 |
+| `omega-*.js` modules | 179 (1682 KB) |
+| root `.js` files | 189 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 238 (106 numbered `NNNN_`, 132 timestamped) |
 | Edge Functions | 16 |
+| `supabase/migrations/*.sql` | 260 (106 numbered `NNNN_`, 154 timestamped) |
+| Edge Functions | 17 |
 | skills | 23 |
 | agent definitions | 2 |
 
@@ -126,8 +128,11 @@ fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 end-to-end for the first time"*. The 144 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 238. Treat the validated scope as `0001`–`0094` only.
+end-to-end for the first time"*. The 166 files added since (numbered and
+timestamped alike) were **not part of that validation**, and no run has covered
+all 260. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 208 pages.** It is a hard single point of
+**`bg.js` is loaded by all 215 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

@@ -119,6 +119,22 @@ GATES = [
      "no file gains inline on*= handlers or inline <script> blocks -- the "
      "migration to a script-src without 'unsafe-inline' only moves one way",
      ['scripts/csp-inline-ratchet.py']),
+    ('mission-state',
+     'mission and quest state remains server-authoritative and evidence-bound',
+     ['scripts/omega-mission-state-contract.py']),
+    ('world-realtime',
+     'World presence remains ephemeral and privacy-preserving',
+     ['scripts/omega-world-realtime-contract.py']),
+    ('simulation-arena',
+     'deterministic Simulation Arena remains versioned, safe and member-owned',
+     ['scripts/omega-simulation-arena-contract.py']),
+    ('recovery-continuity',
+     'member recovery checkpoints remain server-generated, integrity-verifiable and non-authoritative',
+     ['scripts/omega-recovery-contract.py']),
+    ('supabase-client-key',
+     'every shipped file names only the Supabase project and publishable key '
+     'bg.js declares -- a wrong key fails exactly like a signed-out visitor',
+     ['scripts/supabase-client-key-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'
@@ -219,10 +235,16 @@ def main(argv):
     print('  %d gate(s), %d failing' % (len(results), len(failed)))
 
     if failed:
-        # One annotation per failing gate, so the run summary names them all
-        # rather than only the step that happened to stop the job.
+        # Emit failing gate names into the Actions summary as well as annotations.
+        summary = os.environ.get('GITHUB_STEP_SUMMARY')
+        if summary:
+            with open(summary, 'a', encoding='utf-8') as fh:
+                fh.write('## Contract suite failures\\n\\n')
+                for gate_id, rc, elapsed in results:
+                    if rc:
+                        fh.write('- **%s** — exit %d\\n' % (gate_id, rc))
         for gate_id in failed:
-            print('::error::contract gate failed: %s' % gate_id)
+            print('::error title=Contract gate failed::%s' % gate_id)
         return 1
     return 0
 

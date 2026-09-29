@@ -33,7 +33,7 @@
     var u=(input&&input.url)?input.url:input;
     if(!watched(u)) return real.apply(this,arguments);
     W.inflight++; if(!W.firstAt) W.firstAt=Date.now();
-    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; } }
+    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; if(W.inflight===0) W.firstAt=0; } }
     var p; try{ p=real.apply(this,arguments); }catch(e){ done(); throw e; }
     return p.then(function(res){
       done();
@@ -2441,6 +2441,80 @@ setTimeout(function(){
   }
 })();
 
+/* ===== DATA-LOADING TIMEOUT ==============================================
+   [data-loading] is a visual state marker, not proof that a request is alive.
+   Older pages could leave the attribute behind after a rejected query or a
+   missing module, which made omega-components render a spinner forever.
+   Arm the spinner only while the region is pending; after 12s stop the
+   animation and expose a truthful retry state instead of fake downloading.
+   Dynamic regions are observed too. A successful renderer normally removes
+   data-loading before the timeout and is unaffected. */
+(function(){
+  if(window.__omegaLoadingTimeoutGuard)return; window.__omegaLoadingTimeoutGuard=1;
+  var TIMEOUT=12000;
+  /* A region that has received real content is loaded. Most renderers write
+     textContent/innerHTML and never remove data-loading, and while it is
+     pending omega-components paints the text transparent under a spinner --
+     so the data arrived and stayed invisible (profile.html: name, stat subs,
+     character sign/role, membership card). Clear the marker on first content. */
+  function settle(el){
+    if(el.__omegaLoadingTimer){clearTimeout(el.__omegaLoadingTimer);el.__omegaLoadingTimer=null;}
+    if(el.__omegaLoadingObs){try{el.__omegaLoadingObs.disconnect();}catch(e){} el.__omegaLoadingObs=null;}
+    el.removeAttribute('data-loading-pending');
+    el.removeAttribute('data-loading');
+  }
+  function hasContent(el){
+    return !!(el.textContent||'').trim() || !!el.querySelector('img,svg,canvas,video,input,button,a');
+  }
+  function arm(el){
+    if(!el||el.nodeType!==1||!el.hasAttribute('data-loading')||el.__omegaLoadingTimer)return;
+    el.setAttribute('data-loading-pending','true');
+    try{
+      el.__omegaLoadingObs=new MutationObserver(function(){
+        if(el.hasAttribute('data-loading')&&hasContent(el)&&!el.querySelector('.omega-loading-timeout'))settle(el);
+      });
+      el.__omegaLoadingObs.observe(el,{childList:true,characterData:true,subtree:true});
+    }catch(e){}
+    /* Module scripts run before DOMContentLoaded, so a fast renderer can fill
+       the region before this scan arms it -- no later mutation would ever
+       clear it. Already-filled means already loaded. */
+    if(hasContent(el)){settle(el);return;}
+    el.__omegaLoadingTimer=setTimeout(function expire(){
+      el.__omegaLoadingTimer=null;
+      if(!el.hasAttribute('data-loading'))return;
+      /* A region in a closed tab is not late -- its renderer runs when the tab
+         opens. Only a region the member can see can be declared failed. The
+         observer stays connected, so data arriving after a timeout still
+         replaces the retry notice and clears the marker. */
+      if(!el.isConnected)return;
+      if(!el.getClientRects().length){el.__omegaLoadingTimer=setTimeout(expire,TIMEOUT);return;}
+      el.removeAttribute('data-loading-pending');
+      if(!(el.textContent||'').trim() && !el.children.length){
+        var msg=document.createElement('span');
+        msg.className='omega-loading-timeout';
+        msg.textContent='DATA NOT LOADED — TRY AGAIN';
+        msg.style.cssText='display:inline-flex;align-items:center;gap:8px;color:var(--muted,#888);font:12px/1.5 var(--M,Courier,monospace);letter-spacing:1px;pointer-events:auto';
+        var btn=document.createElement('button');
+        btn.type='button'; btn.textContent='RETRY';
+        btn.style.cssText='font:inherit;letter-spacing:1px;background:transparent;color:inherit;border:1px solid currentColor;padding:3px 8px;cursor:pointer';
+        btn.addEventListener('click',function(){location.reload();});
+        msg.appendChild(btn); el.appendChild(msg);
+      }
+    },TIMEOUT);
+  }
+  function scan(root){
+    if(!root||root.nodeType!==1&&root.nodeType!==9)return;
+    if(root.nodeType===1&&root.matches&&root.matches('[data-loading]'))arm(root);
+    var list=root.querySelectorAll?root.querySelectorAll('[data-loading]'):[];
+    for(var i=0;i<list.length;i++)arm(list[i]);
+  }
+  function boot(){
+    scan(document);
+    try{new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){for(var j=0;j<ms[i].addedNodes.length;j++)scan(ms[i].addedNodes[j]);}}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+
 /* ===== PASSWORD REVEAL -- every password field across the platform gains a
    living emblem toggle to show or hide its value. One global implementation;
    pure SVG/ASCII emblem (no emoji); gold-to-cyan on activation; catches fields
@@ -2689,6 +2763,22 @@ setTimeout(function(){
      synchronously further up, because a dynamic script like this one is async and cannot be
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
+
+  /* Ω World Action Recorder — authenticated district actions only. */
+  if(!document.querySelector('script[data-omega-world-actions]')){
+    var _owa=document.createElement('script');_owa.src='/omega-world-actions.js';
+    _owa.setAttribute('data-omega-world-actions','1');_owa.defer=true;__omegaAppend(_owa);
+  }
+
+  /* Ω District Mission Entry — starts only canonical server-defined district missions. */
+  if(!document.querySelector('script[data-omega-world-mission]')){var wm=document.createElement('script');wm.src='/omega-world-mission.js';wm.setAttribute('data-omega-world-mission','1');wm.defer=true;__omegaAppend(wm);}
+  /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
+     from config/page-character-manifest.json. The membrane is additive: it does not create
+     authority, XP, rewards, payments, or duplicate navigation. */
+  if(!document.querySelector('script[data-omega-page-world]')){
+    var _opw=document.createElement('script');_opw.src='/omega-page-world.js';
+    _opw.setAttribute('data-omega-page-world','1');_opw.defer=true;__omegaAppend(_opw);
+  }
 
   /* Ω Cache Optimizer — aggressive static asset caching, IndexedDB support, prefetch */
   if(!document.querySelector('script[data-omega-cache]')){var _occh=document.createElement('script');_occh.src='/omega-cache-optimizer.js';_occh.setAttribute('data-omega-cache','1');_occh.defer=true;__omegaAppend(_occh);}

@@ -5,10 +5,37 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL") || "",
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""
-);
+const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+async function requireAuthorizedCaller(req: Request): Promise<boolean> {
+  const authorization = req.headers.get("Authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  const token = match?.[1]?.trim();
+  if (!token) return false;
+
+  // Scheduled invocations may authenticate directly with the service-role
+  // secret. Never log or return the token.
+  if (serviceRoleKey && token === serviceRoleKey) return true;
+
+  // Interactive owner invocations must present a real Supabase user session.
+  if (!anonKey || !supabaseUrl) return false;
+  const caller = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await caller.auth.getUser();
+  if (error || !data?.user) return false;
+
+  const { data: owner, error: ownerError } = await supabase
+    .from("profiles")
+    .select("is_owner")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  return !ownerError && owner?.is_owner === true;
+}
 
 Deno.serve(async (req) => {
   // CORS headers
@@ -28,6 +55,13 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Method not allowed" }),
         { status: 405, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!(await requireAuthorizedCaller(req))) {
+      return new Response(
+        JSON.stringify({ error: "unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -87,30 +121,23 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // TODO: Call email service (Resend, SendGrid, etc.) to send digest
-        // For now, just mark as sent
-        console.log(`[Digest] Queued for ${user.email}:`, item.digest_data);
+        // Never mark a digest as sent unless a real delivery provider exists.
+        // The previous implementation silently treated a stub as successful,
+        // creating false delivery evidence and advancing last_digest_sent_at.
+        const emailProviderConfigured = Boolean(Deno.env.get("RESEND_API_KEY"));
+        if (!emailProviderConfigured) {
+          throw new Error("email_delivery_not_configured");
+        }
 
-        // Mark as sent
-        const { error: updateError } = await supabase
-          .from("weekly_digest_queue")
-          .update({
-            status: "sent",
-            processed_at: new Date().toISOString(),
-          })
-          .eq("id", item.id);
+        // Delivery remains intentionally unimplemented until the digest email
+        // contract (template, sender identity, unsubscribe semantics, and
+        // provider integration) is explicitly approved. A configured secret
+        // alone must never be treated as proof that delivery occurred.
+        throw new Error("email_delivery_contract_not_implemented");
 
-        if (updateError) throw updateError;
+        // Delivery is intentionally disabled until the approved provider contract exists.
+        // The throw above records a truthful failure rather than false delivery evidence.
 
-        // Update last_digest_sent_at in preferences
-        await supabase
-          .from("digest_preferences")
-          .update({
-            last_digest_sent_at: new Date().toISOString(),
-          })
-          .eq("user_id", item.user_id);
-
-        processed++;
       } catch (err) {
         console.error(`[Digest] Error processing ${item.id}:`, err);
         await supabase

@@ -75,12 +75,25 @@
       '<div class="opw-copy"><div class="opw-kicker">WORLD ROLE · '+escapeHtml(l.title)+'</div>'+
       '<div class="opw-role">'+escapeHtml(a.worldRole||'Citizen')+'</div>'+
       '<div class="opw-verb">YOUR VERB · '+escapeHtml(a.worldVerb||'ACT')+' · OUTCOME · '+escapeHtml(a.successOutcome||'progress recorded')+'</div></div>'+
-      '<div class="opw-actions"><a class="opw-mission" href="/missions.html">MISSION</a>'+
+      '<div class="opw-actions"><a class="opw-mission" href="/missions.html" data-world-mission="'+'escapeAttr(district&&district.id||"")+'">MISSION</a>'+
       '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
     var main=document.querySelector('main')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
     document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    var missionLink=host.querySelector('a[data-world-mission]');
+    if(missionLink){
+      missionLink.addEventListener('click',function(ev){
+        var d=missionLink.getAttribute('data-world-mission');
+        if(!d||!window.OmegaWorldMission)return;
+        ev.preventDefault();
+        var href=missionLink.href;
+        var done=false;
+        var go=function(){if(done)return;done=true;location.href=href+'?district='+encodeURIComponent(d);};
+        window.OmegaWorldMission.start(d).finally(go);
+        setTimeout(go,900);
+      });
+    }
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');

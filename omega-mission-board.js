@@ -37,7 +37,12 @@ function requiredTypes(mission){
 function evidenceFor(mission){
   const required=requiredTypes(mission);
   if(!required.length) return [];
-  return required.map(type=>state.events.find(e=>e.event_type===type)).filter(Boolean);
+  const meta=mission?.completion_rule?.required_event_metadata||{};
+  return required.map(type=>state.events.find(e=>{
+    if(e.event_type!==type)return false;
+    if(!meta||typeof meta!=='object')return true;
+    return Object.keys(meta).every(k=>e.metadata&&e.metadata[k]===meta[k]);
+  })).filter(Boolean);
 }
 function missionState(id){
   return state.missionStates.find(s=>s.mission_id===id);

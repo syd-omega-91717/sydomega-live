@@ -220,34 +220,10 @@ function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){retur
       document.querySelectorAll('.tier-card').forEach(function(card){card.classList.remove('current');});
       var last=document.querySelector('.tier-card:last-child');if(last)last.classList.add('current');
     }
-    /* Payments */
+    /* Payment ledger is intentionally dormant until the existing legal/KYC gate is activated.
+       Do not query an undeclared relation. This is an explicit unavailable state, not an empty ledger. */
     var ph=document.getElementById('payments-list');
-    var txRes=await sb.from('transactions').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
-    /* `transactions` does not exist on the live database -- payment
-       infrastructure is deliberately dormant (CLAUDE.md §8.2). Supabase
-       resolves that to {data:null,error} rather than throwing (§8.1 class 1),
-       so the old `.data||[]` turned a failed query into "you have no records".
-       Those are different claims and only one of them is true here. */
-    var txns=txRes.data||[];
-    if(txRes.error){
-      ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">'
-        +'PAYMENT LEDGER NOT AVAILABLE YET. Payment infrastructure is dormant pending legal review — '
-        +'no ledger exists to read, so this is not a record of zero payments.</div>';
-    } else if(!txns.length){
-      ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">NO PAYMENT RECORDS YET. PAYMENT ACTIVATION PENDING LEGAL REVIEW.</div>';
-    } else {
-      ph.innerHTML='';
-      txns.forEach(function(tx){
-        var row=document.createElement('div');row.className='pay-row';
-        var pos=Number(tx.amount||0)>=0;
-        var dateEl=document.createElement('div');dateEl.className='pay-date';dateEl.textContent=fmt(tx.created_at);
-        var descEl=document.createElement('div');descEl.className='pay-desc';descEl.textContent=String(tx.description||tx.type||'TRANSACTION');
-        var amtEl=document.createElement('div');amtEl.className='pay-amt';amtEl.style.color=pos?'var(--green)':'var(--crim)';amtEl.textContent=(pos?'+':'')+Number(tx.amount||0).toFixed(2);
-        var stEl=document.createElement('div');stEl.className='pay-status';stEl.style.color='var(--gold)';stEl.style.borderColor='rgba(201,168,76,.3)';stEl.textContent=String(tx.status||'RECORDED').toUpperCase();
-        row.appendChild(dateEl);row.appendChild(descEl);row.appendChild(amtEl);row.appendChild(stEl);
-        ph.appendChild(row);
-      });
-    }
+    if(ph)ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">PAYMENT LEDGER NOT ACTIVATED. NO TRANSACTION DATA IS CLAIMED UNTIL THE GOVERNED PAYMENT PIPELINE IS DEPLOYED.</div>';
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

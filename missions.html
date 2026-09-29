@@ -75,60 +75,18 @@
 
 <!-- MISSIONS TAB (daily) -->
 <div class="tab-panel active" id="tab-missions">
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionActiveCount">0</div><div class="kpi-label">ACTIVE DEFINITIONS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionRunningCount">0</div><div class="kpi-label">RUNNING</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionCompletedCount">0</div><div class="kpi-label">COMPLETED</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionEvidenceCount">0</div><div class="kpi-label">EVIDENCE EVENTS</div></div>
-  </div>
-  <div class="day-progress" style="display:none"></div>
-  <div class="oms" id="missionReality" data-omega-mission-state></div>
-  <div class="missions-list" id="dailyList"></div>
-</div>
-
-<!-- WEEKLY TAB -->
-<div class="tab-panel" id="tab-weekly">
-  <div class="missions-list" id="weeklyList"></div>
-  <div style="margin-top:16px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">&#9670; LEGENDARY QUESTS</div>
-  <div class="missions-list" id="legendaryList"></div>
-</div>
-
-<!-- PROGRESS TAB -->
-<div class="tab-panel" id="tab-progress">
-  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; MISSION HISTORY</div>
-  <div id="historyList"></div>
-  <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin:16px 0 12px">&#9670; 90-DAY ACTIVITY MAP</div>
-  <div class="heatmap-wrap"><div class="heatmap" id="heatmapGrid"></div></div>
-</div>
-
-<!-- SCIENCE TAB -->
-<div class="tab-panel" id="tab-science">
-  <div class="sechead">MISSION SCIENCE — LIVE CONTRACT</div><div id="scienceLive"></div>
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">7</div><div class="kpi-label">DAILY QUESTS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">5</div><div class="kpi-label">WEEKLY QUESTS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">4</div><div class="kpi-label">LEGENDARY</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">365</div><div class="kpi-label">HISTORY LIMIT</div></div>
-  </div>
-  
-</div>
-
-</div><!-- end page-shell -->
-<div id="msn-toast"></div>
-<div class="xp-popup" id="xpPopup"><div data-page-emblem="missions" style="margin:20px auto 0"></div>
-</div>
+</div>\n\n</div><!-- end page-shell -->
 
 <script>
 function setTab(name){
   var tabs=['missions','weekly','progress','science'];
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-  if(name==='progress') renderHeatmap();
 }
 </script>
 
 <script type="module">import "/omega-mission-board.js";</script>
 <script src="/bg.js" defer></script>
 <script src="/omega-sparkline.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script><script src="/omega-mission-state.js" defer></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
 </body></html>

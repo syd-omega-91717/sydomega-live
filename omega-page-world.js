@@ -8,7 +8,7 @@
   if(window.__omegaPageWorld)return;
   window.__omegaPageWorld=true;
 
-  var manifest=null, world=null, archetype=null, district=null, slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
+  var manifest=null, world=null, overrides=null, archetype=null, district=null, slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
   var labels={
     command:{title:'COMMAND',next:'/missions.html',nextLabel:'MISSIONS',secondary:'/decisions.html',secondaryLabel:'DECISIONS'},
     identity:{title:'IDENTITY',next:'/profile.html',nextLabel:'IDENTITY',secondary:'/character.html',secondaryLabel:'CHARACTER'},
@@ -39,6 +39,7 @@
     if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
+    if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
     archetype=findArchetype();
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
@@ -106,10 +107,12 @@
       try{
         var wr=await fetch('/config/omega-world-manifest.json',{cache:'no-store'});
         if(wr.ok)world=await wr.json();
+        var or=await fetch('/config/page-world-overrides.json',{cache:'no-store'});
+        if(or.ok)overrides=await or.json();
       }catch(_){}
       inject();
     }catch(e){console.warn('[Omega] page world membrane unavailable',e);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getManifest:function(){return manifest;}};
+  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getManifest:function(){return manifest;},getOverrides:function(){return overrides;}};
 })();

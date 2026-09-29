@@ -1,16 +1,3 @@
-for forbidden in ("permission", "entitlement"):
-    # Reject executable authority derivation, not documentation that states the boundary.
-    patterns = (
-        "window." + forbidden,
-        "get" + forbidden,
-        "set" + forbidden,
-        "if (" + forbidden,
-        "if(" + forbidden,
-    )
-    assert not any(token in engine.lower() for token in patterns), (
-        f"theme engine must not derive behavior from {forbidden} state"
-    )
-
 #!/usr/bin/env python3
 """Guard the Ω theme engine against duplicate palette writers and identity drift."""
 from pathlib import Path
@@ -36,7 +23,17 @@ assert "OmegaAuth" in engine, "auth profile fallback not consulted"
 get_sign = engine[engine.index("function getSign()"):engine.index("function updateSeasonalTokens")]
 assert "localStorage.getItem('omega_member_sign')" not in get_sign, "cached sign is being used as identity authority"
 
-assert "permission" not in engine.lower()
-assert "entitlement" not in engine.lower()
+for forbidden in ("permission", "entitlement"):
+    # Reject executable authority derivation, not documentation that states the boundary.
+    patterns = (
+        "window." + forbidden,
+        "get" + forbidden,
+        "set" + forbidden,
+        "if (" + forbidden,
+        "if(" + forbidden,
+    )
+    assert not any(token in engine.lower() for token in patterns), (
+        f"theme engine must not derive behavior from {forbidden} state"
+    )
 
 print("OMEGA THEME ENGINE CONTRACT: PASS")

@@ -134,6 +134,9 @@ GATES = [
     ('theme-engine',
      'one canonical profile-driven theme writer remains globally active',
      ['scripts/tests/test_theme_engine.py']),
+    ('visual-atlas',
+     'the governed visual atlas remains aligned with its curated references',
+     ['scripts/omega-visual-atlas-contract.py']),
     ('supabase-client-key',
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',

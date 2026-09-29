@@ -1,0 +1,4321 @@
+{
+  "version": 1,
+  "generatedFrom": [
+    "config/page-character-manifest.json",
+    "config/omega-world-manifest.json",
+    "repository HTML tree"
+  ],
+  "purpose": "Canonical page-to-world action map. It assigns every deployed HTML page a role, purpose bridge, action set, outcome, district and existing navigation destinations without inventing backend state.",
+  "sourceOfTruth": "The page implementation remains authoritative for actual behavior; this registry is a navigation/gameplay contract only.",
+  "pageCount": 223,
+  "pages": [
+    {
+      "page": "404.html",
+      "slug": "404",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/404.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "academy.html",
+      "slug": "academy",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/academy.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "account.html",
+      "slug": "account",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/account.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "achievements.html",
+      "slug": "achievements",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/achievements.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "ad-network.html",
+      "slug": "ad-network",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/ad-network.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "advertising.html",
+      "slug": "advertising",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/advertising.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "affirmations.html",
+      "slug": "affirmations",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/affirmations.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "agent-network.html",
+      "slug": "agent-network",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/agent-network.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "agent-operations.html",
+      "slug": "agent-operations",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/agent-operations.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "agent.html",
+      "slug": "agent",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/agent.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "agents.html",
+      "slug": "agents",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/agents.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "analytics-dashboard.html",
+      "slug": "analytics-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/analytics-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "analytics.html",
+      "slug": "analytics",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/analytics.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "approvals.html",
+      "slug": "approvals",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/approvals.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "architect.html",
+      "slug": "architect",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/architect.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "architecture.html",
+      "slug": "architecture",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/architecture.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "arena.html",
+      "slug": "arena",
+      "archetype": "gaming",
+      "role": "Champion",
+      "verb": "COMPETE",
+      "primaryAction": "play",
+      "actions": [
+        "play",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "successOutcome": "mastery recorded",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/arena.html",
+      "mission": "/missions.html",
+      "reward": "/trophies.html"
+    },
+    {
+      "page": "ascension.html",
+      "slug": "ascension",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/ascension.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "atlas.html",
+      "slug": "atlas",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/atlas.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "automation.html",
+      "slug": "automation",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/automation.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "autonomous-insights.html",
+      "slug": "autonomous-insights",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/autonomous-insights.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "awards.html",
+      "slug": "awards",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/awards.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "beacon.html",
+      "slug": "beacon",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/beacon.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "blockchain.html",
+      "slug": "blockchain",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/blockchain.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "bloodline.html",
+      "slug": "bloodline",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/bloodline.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "body.html",
+      "slug": "body",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/body.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "breath.html",
+      "slug": "breath",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/breath.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "budget.html",
+      "slug": "budget",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/budget.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "character.html",
+      "slug": "character",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/character.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "characters.html",
+      "slug": "characters",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/characters.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "charter.html",
+      "slug": "charter",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/charter.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "chatbot.html",
+      "slug": "chatbot",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/chatbot.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "chronicle.html",
+      "slug": "chronicle",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/chronicle.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "cinema.html",
+      "slug": "cinema",
+      "archetype": "media",
+      "role": "Creator",
+      "verb": "CREATE",
+      "primaryAction": "watch",
+      "actions": [
+        "watch",
+        "curate",
+        "publish",
+        "collect"
+      ],
+      "successOutcome": "culture expanded",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/cinema.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "cipher.html",
+      "slug": "cipher",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/cipher.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "city.html",
+      "slug": "city",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/city.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "clarity.html",
+      "slug": "clarity",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/clarity.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "codex.html",
+      "slug": "codex",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/codex.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "cohorts-dashboard.html",
+      "slug": "cohorts-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/cohorts-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "command.html",
+      "slug": "command",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/command.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "compliance.html",
+      "slug": "compliance",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/compliance.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "consultancy.html",
+      "slug": "consultancy",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/consultancy.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "contacts.html",
+      "slug": "contacts",
+      "archetype": "community",
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primaryAction": "connect",
+      "actions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/contacts.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "contracts.html",
+      "slug": "contracts",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/contracts.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "contributions.html",
+      "slug": "contributions",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/contributions.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "control-plane.html",
+      "slug": "control-plane",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/control-plane.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "cosmos.html",
+      "slug": "cosmos",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/cosmos.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "council.html",
+      "slug": "council",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/council.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "courses.html",
+      "slug": "courses",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/courses.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "creator.html",
+      "slug": "creator",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/creator.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "credentials.html",
+      "slug": "credentials",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/credentials.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "dashboard.html",
+      "slug": "dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "decisions.html",
+      "slug": "decisions",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/decisions.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "design-showcase.html",
+      "slug": "design-showcase",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/design-showcase.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "design-system.html",
+      "slug": "design-system",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/design-system.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "dna.html",
+      "slug": "dna",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/dna.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "ecosystem.html",
+      "slug": "ecosystem",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/ecosystem.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "elements.html",
+      "slug": "elements",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/elements.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "enter.html",
+      "slug": "enter",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/enter.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "enterprise.html",
+      "slug": "enterprise",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/enterprise.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "eternity.html",
+      "slug": "eternity",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/eternity.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "events.html",
+      "slug": "events",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/events.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "evidence.html",
+      "slug": "evidence",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/evidence.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "evolution.html",
+      "slug": "evolution",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/evolution.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "exam.html",
+      "slug": "exam",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/exam.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "expenses.html",
+      "slug": "expenses",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/expenses.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "factions.html",
+      "slug": "factions",
+      "archetype": "community",
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primaryAction": "connect",
+      "actions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/factions.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "family.html",
+      "slug": "family",
+      "archetype": "community",
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primaryAction": "connect",
+      "actions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/family.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "fasting.html",
+      "slug": "fasting",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/fasting.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "feed.html",
+      "slug": "feed",
+      "archetype": "community",
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primaryAction": "connect",
+      "actions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/feed.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "flashcard.html",
+      "slug": "flashcard",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/flashcard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "focus.html",
+      "slug": "focus",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/focus.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "forge.html",
+      "slug": "forge",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/forge.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "frontend/platform/platform.html",
+      "slug": "platform",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/platform.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "gaming.html",
+      "slug": "gaming",
+      "archetype": "gaming",
+      "role": "Champion",
+      "verb": "COMPETE",
+      "primaryAction": "play",
+      "actions": [
+        "play",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "successOutcome": "mastery recorded",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/gaming.html",
+      "mission": "/missions.html",
+      "reward": "/trophies.html"
+    },
+    {
+      "page": "gates.html",
+      "slug": "gates",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/gates.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "gateway.html",
+      "slug": "gateway",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/gateway.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "governance.html",
+      "slug": "governance",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/governance.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "grades.html",
+      "slug": "grades",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/grades.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-admin.html",
+      "slug": "graph-admin",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-admin.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-anomalies.html",
+      "slug": "graph-anomalies",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-anomalies.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-centrality.html",
+      "slug": "graph-centrality",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-centrality.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-evidence.html",
+      "slug": "graph-evidence",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-evidence.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-explorer.html",
+      "slug": "graph-explorer",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-explorer.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph-timeline.html",
+      "slug": "graph-timeline",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph-timeline.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graph.html",
+      "slug": "graph",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graph.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "graphify.html",
+      "slug": "graphify",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/graphify.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "gratitude.html",
+      "slug": "gratitude",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/gratitude.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "grid.html",
+      "slug": "grid",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/grid.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "guide.html",
+      "slug": "guide",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/guide.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "habits.html",
+      "slug": "habits",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/habits.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "hall.html",
+      "slug": "hall",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/hall.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "health.html",
+      "slug": "health",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/health.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "healthz.html",
+      "slug": "healthz",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/healthz.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "hercules.html",
+      "slug": "hercules",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/hercules.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "heritage.html",
+      "slug": "heritage",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/heritage.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "honors.html",
+      "slug": "honors",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/honors.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "horoscope.html",
+      "slug": "horoscope",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/horoscope.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "houses.html",
+      "slug": "houses",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/houses.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "identity.html",
+      "slug": "identity",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/identity.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "income.html",
+      "slug": "income",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/income.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "index.html",
+      "slug": "index",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/index.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "intelligence.html",
+      "slug": "intelligence",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/intelligence.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "interface-omni.html",
+      "slug": "interface-omni",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/interface-omni.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "investment.html",
+      "slug": "investment",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/investment.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "investor-dashboard.html",
+      "slug": "investor-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/investor-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "investor-gate.html",
+      "slug": "investor-gate",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/investor-gate.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "journal.html",
+      "slug": "journal",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/journal.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "kings.html",
+      "slug": "kings",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/kings.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "knowledge.html",
+      "slug": "knowledge",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/knowledge.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "kyc.html",
+      "slug": "kyc",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/kyc.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "lab.html",
+      "slug": "lab",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/lab.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "leaderboard.html",
+      "slug": "leaderboard",
+      "archetype": "gaming",
+      "role": "Champion",
+      "verb": "COMPETE",
+      "primaryAction": "play",
+      "actions": [
+        "play",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "successOutcome": "mastery recorded",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/leaderboard.html",
+      "mission": "/missions.html",
+      "reward": "/trophies.html"
+    },
+    {
+      "page": "ledger.html",
+      "slug": "ledger",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/ledger.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "levels.html",
+      "slug": "levels",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/levels.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "library.html",
+      "slug": "library",
+      "archetype": "knowledge",
+      "role": "Scholar",
+      "verb": "MASTER",
+      "primaryAction": "learn",
+      "actions": [
+        "learn",
+        "practice",
+        "verify",
+        "certify"
+      ],
+      "successOutcome": "knowledge verified",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/library.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "maintenance.html",
+      "slug": "maintenance",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/maintenance.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "map.html",
+      "slug": "map",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/map.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "marketing.html",
+      "slug": "marketing",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/marketing.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "marketplace.html",
+      "slug": "marketplace",
+      "archetype": "commerce",
+      "role": "Merchant",
+      "verb": "EXCHANGE",
+      "primaryAction": "browse",
+      "actions": [
+        "browse",
+        "buy",
+        "sell",
+        "commission"
+      ],
+      "successOutcome": "transaction completed",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/marketplace.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "matrix.html",
+      "slug": "matrix",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/matrix.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "media.html",
+      "slug": "media",
+      "archetype": "media",
+      "role": "Creator",
+      "verb": "CREATE",
+      "primaryAction": "watch",
+      "actions": [
+        "watch",
+        "curate",
+        "publish",
+        "collect"
+      ],
+      "successOutcome": "culture expanded",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/media.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "meditate.html",
+      "slug": "meditate",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/meditate.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "membership.html",
+      "slug": "membership",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/membership.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "mentors.html",
+      "slug": "mentors",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/mentors.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "mindmap.html",
+      "slug": "mindmap",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/mindmap.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "mirror.html",
+      "slug": "mirror",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/mirror.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "missions.html",
+      "slug": "missions",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/missions.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "monitoring-dashboard.html",
+      "slug": "monitoring-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/monitoring-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "mood.html",
+      "slug": "mood",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/mood.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "movies.html",
+      "slug": "movies",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/movies.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "network.html",
+      "slug": "network",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/network.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "news.html",
+      "slug": "news",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/news.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "nexus.html",
+      "slug": "nexus",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/nexus.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "notes.html",
+      "slug": "notes",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/notes.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "notifications.html",
+      "slug": "notifications",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/notifications.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "nutrition.html",
+      "slug": "nutrition",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/nutrition.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "oath.html",
+      "slug": "oath",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/oath.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "observatory.html",
+      "slug": "observatory",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/observatory.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "offline.html",
+      "slug": "offline",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/offline.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "omega-visual-command.html",
+      "slug": "omega-visual-command",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/omega-visual-command.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "ops.html",
+      "slug": "ops",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/ops.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "oracle.html",
+      "slug": "oracle",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/oracle.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "pantheons.html",
+      "slug": "pantheons",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/pantheons.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "passport.html",
+      "slug": "passport",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/passport.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "payments.html",
+      "slug": "payments",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/payments.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "pending.html",
+      "slug": "pending",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/pending.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "phases.html",
+      "slug": "phases",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/phases.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "physiology.html",
+      "slug": "physiology",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/physiology.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "points.html",
+      "slug": "points",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/points.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "portfolio.html",
+      "slug": "portfolio",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/portfolio.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "prediction.html",
+      "slug": "prediction",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/prediction.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "predictions-dashboard.html",
+      "slug": "predictions-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/predictions-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "principles.html",
+      "slug": "principles",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/principles.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "privacy.html",
+      "slug": "privacy",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/privacy.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "profile.html",
+      "slug": "profile",
+      "archetype": "identity",
+      "role": "Avatar",
+      "verb": "BECOME",
+      "primaryAction": "customize",
+      "actions": [
+        "customize",
+        "equip",
+        "present"
+      ],
+      "successOutcome": "identity advanced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/profile.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "project-studio.html",
+      "slug": "project-studio",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/project-studio.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "projects.html",
+      "slug": "projects",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/projects.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "publications.html",
+      "slug": "publications",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/publications.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "publishing.html",
+      "slug": "publishing",
+      "archetype": "creation",
+      "role": "Builder",
+      "verb": "BUILD",
+      "primaryAction": "create",
+      "actions": [
+        "create",
+        "edit",
+        "publish",
+        "deploy"
+      ],
+      "successOutcome": "artifact produced",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/publishing.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "pulse.html",
+      "slug": "pulse",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/pulse.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "queue.html",
+      "slug": "queue",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/queue.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "quotes.html",
+      "slug": "quotes",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/quotes.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "reading.html",
+      "slug": "reading",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/reading.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "realm.html",
+      "slug": "realm",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/realm.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "realms.html",
+      "slug": "realms",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/realms.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "recovery.html",
+      "slug": "recovery",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/recovery.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "replay.html",
+      "slug": "replay",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/replay.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "research.html",
+      "slug": "research",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/research.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "reset.html",
+      "slug": "reset",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/reset.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "revenue.html",
+      "slug": "revenue",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/revenue.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "rituals.html",
+      "slug": "rituals",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/rituals.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "roadmap.html",
+      "slug": "roadmap",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/roadmap.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "root/audit-report.html",
+      "slug": "audit-report",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/audit-report.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "root/dashboard/dashboard.html",
+      "slug": "dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "root/portal.html",
+      "slug": "portal",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/portal.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "rune.html",
+      "slug": "rune",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/rune.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sculpture.html",
+      "slug": "sculpture",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/sculpture.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "search.html",
+      "slug": "search",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/search.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "segmentation-dashboard.html",
+      "slug": "segmentation-dashboard",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/segmentation-dashboard.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "series.html",
+      "slug": "series",
+      "archetype": "media",
+      "role": "Creator",
+      "verb": "CREATE",
+      "primaryAction": "watch",
+      "actions": [
+        "watch",
+        "curate",
+        "publish",
+        "collect"
+      ],
+      "successOutcome": "culture expanded",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/series.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "services.html",
+      "slug": "services",
+      "archetype": "commerce",
+      "role": "Merchant",
+      "verb": "EXCHANGE",
+      "primaryAction": "browse",
+      "actions": [
+        "browse",
+        "buy",
+        "sell",
+        "commission"
+      ],
+      "successOutcome": "transaction completed",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/services.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "settings.html",
+      "slug": "settings",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/settings.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sigil.html",
+      "slug": "sigil",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/sigil.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sigma.html",
+      "slug": "sigma",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/sigma.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "signal.html",
+      "slug": "signal",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/signal.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "skills.html",
+      "slug": "skills",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "academy",
+      "districtName": "THE ACADEMY CAMPUS",
+      "entry": "/skills.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sleep.html",
+      "slug": "sleep",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/sleep.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "social.html",
+      "slug": "social",
+      "archetype": "community",
+      "role": "Citizen",
+      "verb": "CONNECT",
+      "primaryAction": "connect",
+      "actions": [
+        "connect",
+        "participate",
+        "record",
+        "join"
+      ],
+      "successOutcome": "relationship advanced",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/social.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sovereign-ai.html",
+      "slug": "sovereign-ai",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "intelligence",
+      "districtName": "THE INTELLIGENCE HUB",
+      "entry": "/sovereign-ai.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sovereign-covenant.html",
+      "slug": "sovereign-covenant",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/sovereign-covenant.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "sovereigns.html",
+      "slug": "sovereigns",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/sovereigns.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "stoic.html",
+      "slug": "stoic",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/stoic.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "studio.html",
+      "slug": "studio",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/studio.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "subscriptions.html",
+      "slug": "subscriptions",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/subscriptions.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "targets.html",
+      "slug": "targets",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/targets.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "terms.html",
+      "slug": "terms",
+      "archetype": "governance",
+      "role": "Councillor",
+      "verb": "GOVERN",
+      "primaryAction": "review",
+      "actions": [
+        "review",
+        "approve",
+        "audit",
+        "decide"
+      ],
+      "successOutcome": "governance action recorded",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/terms.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "time.html",
+      "slug": "time",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/time.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "trailers.html",
+      "slug": "trailers",
+      "archetype": "intelligence",
+      "role": "Seeker",
+      "verb": "DISCOVER",
+      "primaryAction": "investigate",
+      "actions": [
+        "investigate",
+        "consult",
+        "compare",
+        "trace"
+      ],
+      "successOutcome": "insight recorded",
+      "district": "citadel",
+      "districtName": "THE MEDIA CITADEL",
+      "entry": "/trailers.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "travel.html",
+      "slug": "travel",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/travel.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "treasury.html",
+      "slug": "treasury",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/treasury.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "triads.html",
+      "slug": "triads",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/triads.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "tribe.html",
+      "slug": "tribe",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "heritage",
+      "districtName": "THE HERITAGE ARCHIVE",
+      "entry": "/tribe.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "trophies.html",
+      "slug": "trophies",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/trophies.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "universe.html",
+      "slug": "universe",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "void",
+      "districtName": "THE VOID OBSERVATORY",
+      "entry": "/universe.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "vault.html",
+      "slug": "vault",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/vault.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "venture-pipeline.html",
+      "slug": "venture-pipeline",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/venture-pipeline.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "verify-deployment.html",
+      "slug": "verify-deployment",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/verify-deployment.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "verify-modules.html",
+      "slug": "verify-modules",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/verify-modules.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "vision.html",
+      "slug": "vision",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/vision.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "visual-atlas.html",
+      "slug": "visual-atlas",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/visual-atlas.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "vocabulary.html",
+      "slug": "vocabulary",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/vocabulary.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "wallet.html",
+      "slug": "wallet",
+      "archetype": "finance",
+      "role": "Treasurer",
+      "verb": "MANAGE",
+      "primaryAction": "track",
+      "actions": [
+        "track",
+        "budget",
+        "pay",
+        "invest"
+      ],
+      "successOutcome": "financial state updated",
+      "district": "exchange",
+      "districtName": "THE SOVEREIGN EXCHANGE",
+      "entry": "/wallet.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "water.html",
+      "slug": "water",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/water.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "wealth.html",
+      "slug": "wealth",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/wealth.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "web/templates/admin_console.html",
+      "slug": "admin_console",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/admin_console.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "web/templates/leaderboard.html",
+      "slug": "leaderboard",
+      "archetype": "gaming",
+      "role": "Champion",
+      "verb": "COMPETE",
+      "primaryAction": "play",
+      "actions": [
+        "play",
+        "challenge",
+        "rank",
+        "claim reward"
+      ],
+      "successOutcome": "mastery recorded",
+      "district": "arena",
+      "districtName": "THE GAME ARENA",
+      "entry": "/leaderboard.html",
+      "mission": "/missions.html",
+      "reward": "/trophies.html"
+    },
+    {
+      "page": "web/templates/sovereign_health.html",
+      "slug": "sovereign_health",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/sovereign_health.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "web/templates/system_health.html",
+      "slug": "system_health",
+      "archetype": "system",
+      "role": "Guardian",
+      "verb": "PROTECT",
+      "primaryAction": "verify",
+      "actions": [
+        "verify",
+        "monitor",
+        "recover",
+        "operate"
+      ],
+      "successOutcome": "system state verified",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/system_health.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "weekly.html",
+      "slug": "weekly",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/weekly.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "workout.html",
+      "slug": "workout",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "wellness",
+      "districtName": "THE WELLNESS DISTRICT",
+      "entry": "/workout.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "world-shell.html",
+      "slug": "world-shell",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/world-shell.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    },
+    {
+      "page": "world.html",
+      "slug": "world",
+      "archetype": "command",
+      "role": "Navigator",
+      "verb": "DIRECT",
+      "primaryAction": "decide",
+      "actions": [
+        "decide",
+        "accept mission",
+        "review standing"
+      ],
+      "successOutcome": "mission accepted",
+      "district": "genesis",
+      "districtName": "THE GENESIS QUARTER",
+      "entry": "/world.html",
+      "mission": "/missions.html",
+      "reward": "/achievements.html"
+    }
+  ]
+}

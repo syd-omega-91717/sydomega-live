@@ -2764,6 +2764,14 @@ setTimeout(function(){
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
 
+  /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
+     from config/page-character-manifest.json. The membrane is additive: it does not create
+     authority, XP, rewards, payments, or duplicate navigation. */
+  if(!document.querySelector('script[data-omega-page-world]')){
+    var _opw=document.createElement('script');_opw.src='/omega-page-world.js';
+    _opw.setAttribute('data-omega-page-world','1');_opw.defer=true;__omegaAppend(_opw);
+  }
+
   /* Ω Cache Optimizer — aggressive static asset caching, IndexedDB support, prefetch */
   if(!document.querySelector('script[data-omega-cache]')){var _occh=document.createElement('script');_occh.src='/omega-cache-optimizer.js';_occh.setAttribute('data-omega-cache','1');_occh.defer=true;__omegaAppend(_occh);}
 

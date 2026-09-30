@@ -54,6 +54,12 @@ def main():
     if "main.insertBefore(host,main.firstElementChild||null);" not in world:
         return fail("page-world membrane is not inserted into its selected content host")
 
+    if "#omega-page-world.opw-compact .opw-kicker,#omega-page-world.opw-compact .opw-verb" not in world:
+        return fail("page-world membrane lacks the duplicate-identity compact mode")
+
+    if "document.querySelector('.oid-hero')" not in world:
+        return fail("page-world membrane does not reconcile against the canonical identity hero")
+
     if "fetch('/config/page-world-actions.json'" in world and world.count("fetch('/config/page-world-actions.json'") > 1:
         return fail("page-world actions manifest is fetched more than once")
 

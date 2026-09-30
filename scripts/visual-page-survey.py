@@ -71,7 +71,7 @@ def scan(path: Path) -> dict:
     cards = len(re.findall(r'class=["\'][^"\']*\b(?:card|kpi|tile|panel|module|widget|tier-card|pred-card|lab-card)\b', text, re.I))
     sections = len(re.findall(r'class=["\'][^"\']*\b(?:sechead|section-head|section-title|section-hd|sect-hd)\b', text, re.I))
     tabs = len(re.findall(r'class=["\'][^"\']*\b(?:tab-btn|tab-link)\b', text, re.I))
-    buttons = len(re.findall(r"<button\b|class=["'][^"']*\bbtn(?:-|\b)", text, re.I))
+    buttons = len(re.findall(r'<button\\b', text, re.I)) + len(re.findall(r'class=[\"\'][^\"\']*\\bbtn(?:-|\\b)[^\"\']*[\"\']', text, re.I))
     links = len(re.findall(r"<a\b", body, re.I))
     forms = len(re.findall(r"<(?:input|select|textarea)\b", body, re.I))
     images = len(re.findall(r"<img\b", body, re.I))

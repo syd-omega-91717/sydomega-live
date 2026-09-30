@@ -63,6 +63,18 @@ return [];
 function saveIdeas(ideas) {
 localStorage.setItem('omega:ideas', JSON.stringify(ideas));
 }
+async function getAuthenticatedMember() {
+if (window.OmegaSB && typeof window.OmegaSB.get === 'function') {
+var sb = await window.OmegaSB.get();
+var session = (await sb.auth.getSession()).data.session;
+return session && session.user ? session.user : null;
+}
+if (window.__omegaSb) {
+var session = (await window.__omegaSb.auth.getSession()).data.session;
+return session && session.user ? session.user : null;
+}
+return null;
+}
 
 /* ─── Create idea ─── */
  function createIdea(type, data) {
@@ -231,22 +243,44 @@ window.OmegaCreator.renderBoard(document.querySelector('[data-omega-creator-boar
 }
 var voteBtn = el.querySelector('.oc-vote');
 if (voteBtn) {
-voteBtn.addEventListener('click', function() {
-voteIdea(idea.id, 'user_' + Math.random().toString(36).slice(2, 8));
+voteBtn.addEventListener('click', async function() {
+try {
+var member = await getAuthenticatedMember();
+if (!member) {
+voteBtn.disabled = true;
+voteBtn.textContent = 'SIGN IN TO VOTE';
+return;
+}
+voteIdea(idea.id, member.id);
 window.OmegaCreator.renderDetail(el, loadIdeas().find(function(i) {
 return i.id === idea.id;
 }));
+} catch (e) {
+voteBtn.disabled = true;
+voteBtn.textContent = 'VOTING UNAVAILABLE';
+}
 });
 }
 var commentBtn = el.querySelector('.oc-comment-btn');
 var commentInput = el.querySelector('.oc-comment-input');
 if (commentBtn && commentInput) {
-commentBtn.addEventListener('click', function() {
+commentBtn.addEventListener('click', async function() {
 if (!commentInput.value.trim()) return;
-commentIdea(idea.id, 'user_' + Math.random().toString(36).slice(2, 8), commentInput.value.trim());
+try {
+var member = await getAuthenticatedMember();
+if (!member) {
+commentBtn.disabled = true;
+commentBtn.textContent = 'SIGN IN TO COMMENT';
+return;
+}
+commentIdea(idea.id, member.id, commentInput.value.trim());
 window.OmegaCreator.renderDetail(el, loadIdeas().find(function(i) {
 return i.id === idea.id;
 }));
+} catch (e) {
+commentBtn.disabled = true;
+commentBtn.textContent = 'COMMENTS UNAVAILABLE';
+}
 });
 }
 }, 

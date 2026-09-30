@@ -144,6 +144,9 @@ GATES = [
     ('creator-identity',
      'Creator member actions never invent a synthetic member identity',
      ['scripts/creator-identity-contract.py']),
+    ('world-connector',
+     'World actions and district missions use the canonical client and secure idempotency keys',
+     ['scripts/world-connector-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

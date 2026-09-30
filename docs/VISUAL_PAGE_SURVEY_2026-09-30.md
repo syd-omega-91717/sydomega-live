@@ -3,11 +3,11 @@
 
 ### Scope
 
-This survey covers the complete root HTML estate currently visible in sydomega-live.
+This survey covers the complete non-build HTML estate currently visible in sydomega-live.
 
 Verified repository inventory:
-- 223 root HTML pages in the current main tree.
-- 72 pages were identified through repository search as using the legacy aside#omega-side + .page-shell visual shell.
+- 223 HTML pages in the current main tree: 215 root pages plus 8 nested application surfaces.
+- 72 root pages were identified through repository search as using the legacy aside#omega-side + .page-shell visual shell.
 - 34 pages were identified as using both .page-shell and a semantic <main> in the searchable page estate.
 - The shared design system is responsible for the majority of visual behavior; shared-layer fixes are therefore preferred over page-by-page overrides.
 
@@ -80,7 +80,7 @@ Reason:
 
 #### 3. Regression survey
 
-scripts/visual-page-survey.py scans the complete root HTML estate and reports readability, flexibility, scalability and information-density findings without destroying legitimate specialist pages.
+scripts/visual-page-survey.py scans all non-build HTML surfaces, including the 8 nested application pages, and reports readability, flexibility, scalability and information-density findings without destroying legitimate specialist pages.
 
 It is included in scripts/contract-suite.py so normal contract runs measure the page estate.
 

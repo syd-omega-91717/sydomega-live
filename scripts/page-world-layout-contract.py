@@ -54,7 +54,7 @@ def main():
     if "main.insertBefore(host,main.firstElementChild||null);" not in world:
         return fail("page-world membrane is not inserted into its selected content host")
 
-    if ".opw-compact .opw-kicker,#omega-page-world.opw-compact .opw-verb" not in world:
+    if "#omega-page-world.opw-compact .opw-kicker,#omega-page-world.opw-compact .opw-verb" not in world:
         return fail("page-world membrane lacks the duplicate-identity compact mode")
 
     if "document.querySelector('.oid-hero')" not in world:

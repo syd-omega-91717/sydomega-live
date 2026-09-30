@@ -80,7 +80,7 @@ return null;
  function createIdea(type, data) {
 const ideas = loadIdeas();
 const idea = {
-id: 'idea_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), type, data, stage: 'idea', created: Date.now(), updated: Date.now(), votes: 0, votesBy: [], comments: [], status: 'draft'
+id: 'idea_' + ((window.crypto&&typeof window.crypto.randomUUID==='function') ? window.crypto.randomUUID() : Date.now()), type, data, stage: 'idea', created: Date.now(), updated: Date.now(), votes: 0, votesBy: [], comments: [], status: 'draft'
 };
 ideas.push(idea);
 saveIdeas(ideas);

@@ -141,6 +141,9 @@ GATES = [
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',
      ['scripts/supabase-client-key-contract.py']),
+    ('creator-identity',
+     'Creator member actions never invent a synthetic member identity',
+     ['scripts/creator-identity-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

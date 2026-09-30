@@ -113,3 +113,17 @@ Production browser verification also remains separate from source verification b
 - Reduced-motion remains respected.
 - Dense specialist pages remain dense only where the domain requires it.
 - No new global chrome unless it serves a platform-wide job that cannot be satisfied by existing navigation.
+
+### Shared chrome finding
+
+A repository-wide search also identified a large shared visual layer:
+- 83 occurrences of position:fixed across the searched HTML/CSS/JS estate;
+- 62 files with body.appendChild-style injection patterns in repository search;
+- 50 direct JavaScript hits for document.body.appendChild;
+- 38 files with very high z-index declarations (>=999 in repository search).
+
+These counts are **inventory signals, not defect counts**. Consent bars, navigation, dialogs, accessibility controls and owner gates legitimately use fixed/high-z chrome.
+
+The new scripts/global-chrome-inventory.py turns this into a repeatable source-level inventory. The review rule is that every persistent global surface must have a single job and must not duplicate page identity, navigation or a page-local action.
+
+The existing runtime evidence already records a narrower verified result: the coordinated bottom-chrome stack reached zero fixed-chrome occlusions at the tested 1280x800, 1024x600, 900x700 and 420x760 viewports across the 13 capability entrypoints. That evidence does not establish the same result for all 223 HTML pages, so the full-estate rendered sweep remains a separate verification task.

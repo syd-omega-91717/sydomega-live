@@ -6,7 +6,14 @@
   'use strict';
   if(window.OmegaWorldAction)return;
   var pending={};
-  function key(){return 'world-action-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);}
+  function key(){
+    if(window.crypto&&typeof window.crypto.randomUUID==='function') return 'world-action-'+window.crypto.randomUUID();
+    if(window.crypto&&typeof window.crypto.getRandomValues==='function'){
+      var bytes=new Uint8Array(16); window.crypto.getRandomValues(bytes);
+      return 'world-action-'+Array.from(bytes).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    }
+    throw new Error('secure idempotency key generator unavailable');
+  }
   async function client(){
     if(window.OmegaSB&&typeof window.OmegaSB.get==='function'){
       var c=window.OmegaSB.get(); return c&&typeof c.then==='function'?await c:c;

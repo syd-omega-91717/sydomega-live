@@ -8,14 +8,20 @@
 
   var pending={};
 
-  function key(){return 'district-mission-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);}
+  function key(){
+    if(window.crypto&&typeof window.crypto.randomUUID==='function') return 'district-mission-'+window.crypto.randomUUID();
+    if(window.crypto&&typeof window.crypto.getRandomValues==='function'){
+      var bytes=new Uint8Array(16); window.crypto.getRandomValues(bytes);
+      return 'district-mission-'+Array.from(bytes).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    }
+    throw new Error('secure idempotency key generator unavailable');
+  }
   async function client(){
     if(window.OmegaSB&&typeof window.OmegaSB.get==='function'){
       var c=window.OmegaSB.get(); return c&&typeof c.then==='function'?await c:c;
     }
     if(window.__omegaSb)return window.__omegaSb;
-    var mod=await import('/vendor/supabase-js.js');
-    return window.__omegaSb=mod.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');
+    throw new Error('supabase client unavailable');
   }
 
   async function start(district){

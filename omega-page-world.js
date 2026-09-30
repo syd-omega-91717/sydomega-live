@@ -79,7 +79,12 @@
       '<div class="opw-actions"><a class="opw-mission" href="/missions.html">MISSION</a>'+
       '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
-    var main=document.querySelector('main')||document.body;
+    /* The world membrane belongs INSIDE the page content column. Vault-sector pages
+       use `aside#omega-side + .page-shell` rather than a semantic <main>. The shared
+       stylesheet intentionally makes those body children a horizontal flex row; if
+       this membrane falls back to <body>, it becomes a third flex column and squeezes
+       the real page into the right-hand strip seen in the Vault screenshots. */
+    var main=document.querySelector('main, .main, .page-shell, #app, [role="main"]')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
     document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
@@ -105,10 +110,6 @@
       var r=await fetch('/config/page-character-manifest.json',{cache:'no-store'});
       if(!r.ok)throw new Error('page manifest '+r.status);
       manifest=await r.json();
-      try{
-        var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
-        if(pr.ok)pageWorld=await pr.json();
-      }catch(_pageWorld){}
       try{
         var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
         if(pr.ok)pageWorld=await pr.json();

@@ -26,7 +26,11 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML_FILES = sorted(ROOT.glob("*.html"))
+SKIP_DIRS = {"node_modules", ".git", ".next", "dist", "build", "public"}
+HTML_FILES = sorted(
+    p for p in ROOT.rglob("*.html")
+    if not any(part in SKIP_DIRS for part in p.relative_to(ROOT).parts)
+)
 
 TAG_RE = re.compile(r"<[^>]+>")
 TEXT_RE = re.compile(r"[A-Za-z0-9Ω][A-Za-z0-9Ω'’./:%#&+\-]{1,}")
@@ -159,7 +163,7 @@ def main() -> int:
     review = [r for r in rows if r["findings"]]
     severe = [r for r in rows if any(x.startswith("CONTRACT:") for x in r["findings"])]
 
-    print(f"VISUAL PAGE SURVEY: {len(rows)} root HTML pages scanned")
+    print(f"VISUAL PAGE SURVEY: {len(rows)} HTML pages scanned (root + nested application surfaces)")
     print(f"Pages requiring visual review: {len(review)}")
     print(f"Pages with structural contract findings: {len(severe)}")
     if rows:

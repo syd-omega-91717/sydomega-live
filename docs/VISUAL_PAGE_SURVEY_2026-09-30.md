@@ -1,115 +1,90 @@
 # Ω SYD OMEGA 91717 — Visual Page Survey
 ## 2026-09-30
 
-### Scope
+### Survey scope
+The visual audit covers the root HTML page estate of sydomega-live and shared runtime layers that inject navigation, world-role chrome, alerts, and responsive behavior.
 
-This survey covers the complete root HTML estate currently visible in sydomega-live.
+### Four dimensions
+1. Readability — type size, tracking, line pressure, title clarity and touch-target usability.
+2. Flexibility — narrow-screen behavior, fixed dimensions, viewport geometry, wrapping and horizontal-overflow risk.
+3. Scalability — repeated cards, sections, tabs and global chrome as page complexity grows.
+4. Information focus — whether the page contains what the user needs for its job, without duplicated navigation, identity or explanatory material.
 
-Verified repository inventory:
-- 223 root HTML pages in the current main tree.
-- 72 pages were identified through repository search as using the legacy aside#omega-side + .page-shell visual shell.
-- 34 pages were identified as using both .page-shell and a semantic <main> in the searchable page estate.
-- The shared design system is responsible for the majority of visual behavior; shared-layer fixes are therefore preferred over page-by-page overrides.
+### Page information rule
+Every page should answer: Where am I? What is this page for? What is the primary thing I can see or do here? What supporting information is necessary to complete that job?
 
-### Source requirements
+Anything that does not help answer or execute those questions belongs below the primary content, behind progressive disclosure, or in shared navigation.
 
-The project requirements explicitly call for responsive UX/UI, accessibility, design-system consistency, animation and performance discipline, visual hierarchy, scalability and maintainability, progressive information disclosure, and continuous improvement.
+This does not mean every page must be sparse. A ledger, graph, admin console, media library or analytics surface can legitimately be information-dense when that density serves its domain job.
 
-The design language defines the above-the-fold information budget as:
-1. page title;
-2. primary action or status;
-3. one key metric or headline;
-4. call to action.
+### Shared corrections
+- World Role membrane: when a canonical .oid-hero exists, keep the role and useful actions while hiding repeated kicker and long verb/action/outcome copy.
+- Desktop Home/Back topbar controls: mobile-only because desktop already has persistent navigation.
+- World Role membrane mount: insert into main, .main, .page-shell, #app or [role=main] before falling back to body.
+- Vault/page-shell: treat the Vault failure as a shared runtime boundary defect, not a page-specific cosmetic defect.
 
-Additional detail belongs progressively below the fold rather than competing with the primary task.
+### Survey measurements
+scripts/visual-page-survey.py scans every root HTML file and records:
+- title and level-1 heading;
+- visible word volume;
+- card/tile/panel density;
+- section-heading density;
+- tab density;
+- button/link/form/image counts;
+- declarations below the 12px readability floor;
+- dense letter-spacing;
+- fixed-width declarations;
+- viewport-width geometry;
+- nowrap pressure;
+- fixed-position declarations;
+- duplicate topbar/title identity;
+- information-focus score.
 
-### Readability baseline
+The survey is diagnostic rather than destructive. It identifies candidates for review without deleting legitimate specialist information.
 
-The repository already contains a type-scale gate with a 12px minimum interface floor. Its recorded estate measurement found:
-- 2,423 font-size declarations across 172 pages' own style blocks;
-- 972 declarations at <=8px;
-- 909 declarations at 9–11px;
-- 185 declarations at 12–13px;
-- 357 declarations at 14px+.
+### Review thresholds
+| Signal | Review trigger |
+|---|---:|
+| Font declarations below 12px | any |
+| Letter spacing >= 3px | any |
+| Fixed width >= 320px | any |
+| Nowrap declarations | 8+ |
+| Card-like surfaces | 50+ |
+| Section headings | 12+ |
+| Tabs | 12+ |
+| Visible body words | 2,200+ |
+| Duplicate topbar/title identity | any |
 
-The new visual survey adds measurements for small-font declarations, dense letter-spacing, fixed-width geometry, viewport-width geometry, nowrap pressure, card/section/tab density, visible-word volume, duplicate title surfaces, fixed-position declarations, and an information-focus score.
+These are review signals, not universal failures. Specialist pages may remain above a threshold when their domain requires the density and the layout remains readable/responsive.
 
-### Flexibility / responsive risk model
+### Scalability principles
+- Prefer shared components over page-specific CSS duplication.
+- Prefer wrapping/reflow over hard-coded widths.
+- Let tables/data grids scroll inside their own container.
+- Keep global chrome stable.
+- Keep page identity singular.
+- Keep primary actions visually dominant.
+- Use progressive disclosure for secondary detail.
+- Preserve reduced-motion behavior.
+- Do not use decorative animation to carry essential information.
+- Do not solve shared defects with dozens of page-specific patches.
 
-The survey flags, rather than blindly rewrites:
-- fixed widths large enough to resist narrow screens;
-- 100vw or viewport-sized geometry;
-- excessive white-space:nowrap;
-- unusually dense tabs;
-- large card collections.
+### Acceptance criteria
+A visual page is structurally healthy when:
+- its purpose is immediately identifiable;
+- one primary title is visually dominant;
+- primary action/status is easy to locate;
+- text remains readable without zooming;
+- controls wrap or reflow at narrow widths;
+- no unintended body-level flex child steals page width;
+- dense specialist content is contained in its own region;
+- decorative chrome does not compete with data;
+- mobile controls remain touch-usable;
+- repeated identity/navigation is removed;
+- secondary information is progressively disclosed;
+- no major content exists solely because another shared component injected it.
 
-These are review signals, not automatic failures. Specialist pages such as analytics, admin, graph and media surfaces can legitimately be information-dense.
+### Runtime boundary
+Source analysis establishes code structure and contract coverage; it cannot by itself prove rendered output at every viewport. A complete rendered survey should capture each page at 375, 390, 768, 1024, 1280 and 1440px.
 
-### Information-focus rule
-
-A page should not become a second navigation system.
-
-Shared chrome should provide orientation; page content should provide the job.
-
-The survey treats these as cognitive-load risks:
-- title repeated in topbar and primary heading;
-- multiple competing hero surfaces;
-- excessive global controls;
-- excessive cards before the primary task;
-- long explanatory copy before the action or data;
-- repeated labels that do not add new information.
-
-### Shared fixes applied in this cycle
-
-#### 1. World-role membrane
-
-omega-page-world.js is now quieter when the canonical identity hero exists:
-- the full world-role kicker and verbose verb/outcome line are hidden;
-- the page keeps the role plus useful action destinations;
-- the membrane uses tighter spacing;
-- pages without the canonical identity hero retain the full contextual membrane.
-
-#### 2. Desktop topbar controls
-
-Home/Back controls injected by bg.js are now mobile-only.
-
-Reason:
-- desktop already has the canonical sidebar/navigation;
-- repeating Home + Back in the topbar consumes horizontal space and competes with the page title;
-- mobile still needs explicit navigation controls where the sidebar becomes a bottom navigation pattern.
-
-#### 3. Regression survey
-
-scripts/visual-page-survey.py scans the complete root HTML estate and reports readability, flexibility, scalability and information-density findings without destroying legitimate specialist pages.
-
-It is included in scripts/contract-suite.py so normal contract runs measure the page estate.
-
-### Design decision
-
-The target is not minimum information.
-
-The target is: minimum information necessary to understand and operate the current page, with deeper information available progressively.
-
-A dashboard, graph explorer, financial ledger and legal document therefore should not have identical density. They should share the same readability and responsive contracts while exposing different amounts of domain information.
-
-### Remaining runtime verification
-
-The source-level survey is now enforced in the repository. A full screenshot sweep at 375/390/768/1024/1280/1440 widths still requires the browser review harness/runtime environment.
-
-Production browser verification also remains separate from source verification because the current Vercel check is rate-limited. No live-production visual state is declared verified from source inspection alone.
-
-### Acceptance criteria for future visual changes
-
-- One unmistakable primary page purpose.
-- One clear primary title.
-- Primary action/status visible without hunting.
-- Body copy at readable scale.
-- No unnecessary desktop duplicate navigation.
-- No fixed geometry that prevents narrow layouts unless the component is intentionally scrollable.
-- Tables/data grids may scroll horizontally rather than breaking the page.
-- Cards wrap/reflow rather than forcing viewport overflow.
-- Mobile controls remain usable at touch size.
-- Decorative motion never obscures data or interaction.
-- Reduced-motion remains respected.
-- Dense specialist pages remain dense only where the domain requires it.
-- No new global chrome unless it serves a platform-wide job that cannot be satisfied by existing navigation.
+Production deployment status must be verified from the actual Vercel deployment rather than inferred from repository state.

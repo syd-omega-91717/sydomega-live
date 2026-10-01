@@ -47,11 +47,12 @@
     {
       "type": "mission",
       "sources": [
-        "omega_platform_events"
+        "omega_missions"
       ],
       "identity": "id",
-      "label": "event_type",
-      "owner": "actor_user_id"
+      "label": "title",
+      "owner": null,
+      "truth": "LIVE"
     },
     {
       "type": "achievement",
@@ -343,6 +344,10 @@
     "missions": [
       "omega_missions",
       "omega_member_mission_state",
+      "omega_member_quest_state",
+      "omega_mission_transitions",
+      "omega_quest_missions",
+      "omega_quests",
       "omega_platform_events"
     ],
     "progression": [
@@ -357,7 +362,8 @@
     "Client normalization does not grant authorization.",
     "Relations must retain source and observedAt lineage.",
     "Writes must flow through OmegaAction and server authorization.",
-    "Graph visualization consumes this contract rather than inventing parallel state."
+    "Graph visualization consumes this contract rather than inventing parallel state.",
+    "Mission definitions are sourced from the live-verified omega_missions table; member mission state and transitions remain separate state/evidence sources."
   ],
   "evidencePolicy": {
     "$ref": "config/omega-schema-evidence-policy.json",

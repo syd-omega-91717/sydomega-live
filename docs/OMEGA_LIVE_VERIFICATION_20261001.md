@@ -44,3 +44,14 @@ The convergence branch commit `089e31bf92e0d7f8ea147e6bd177d3f48357fe78` current
 
 Interpretation: this is a Vercel account/platform build-rate-limit signal, not evidence of a source-code compilation failure. The branch therefore must not be described as production-deployed until the Vercel limit/integration is resolved and a fresh deployment succeeds.
 
+
+
+## Authoritative progression event bridge — 2026-10-01
+
+- Live Supabase `public.task_completions` now has the `task_completion_sovereign_event` AFTER INSERT trigger.
+- The trigger writes `sovereign.task.completed` records to `public.sovereign_events` with an idempotency key derived from the task-completion id.
+- `public.sovereign_events` is enabled in the `supabase_realtime` publication.
+- The browser `OmegaBus` now consumes these server-authored inserts through Supabase Realtime and maps them into the existing domain event catalog.
+- `omega-workers.js` no longer mints `sovereign.gate.unlocked` events from client-local profile calculations; its achievement worker is presentation-only.
+- A transactional probe inserted and rolled back a synthetic task completion and observed one corresponding sovereign event, verifying the trigger path without retaining test data.
+- Supabase Security Advisor remains WARN: leaked-password protection is disabled. This is not fixed by this change.

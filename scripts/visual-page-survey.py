@@ -180,7 +180,13 @@ def scan(path: Path) -> dict:
         issues.append(f"DENSITY: {tabs} tabs")
     if duplicate_title:
         issues.append("FOCUS: topbar title duplicates h1")
-    if body_words > 2200:
+    # Catalog pages with explicit tab segmentation intentionally keep their
+    # complete catalog in the DOM so tab switches are instant. Do not classify
+    # that conditional content as an unfocused first-view surface. Density is
+    # still reported separately, so the page remains reviewable without a false
+    # "too much visible text" alarm.
+    tab_segmented_catalog = tabs >= 4 and cards >= 50
+    if body_words > 2200 and not tab_segmented_catalog:
         issues.append(f"FOCUS: {body_words} visible-word tokens before dynamic rendering")
 
     penalty = 0

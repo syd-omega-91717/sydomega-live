@@ -1,6 +1,6 @@
 -- Ω SYD OMEGA 91717
 -- Live notification stream
--- Applied live on 2026-10-01.
+-- Repository migration record. Live application to target project nvgedlxlkdzvcelimbvq is NOT verified here.
 
 do $
 begin

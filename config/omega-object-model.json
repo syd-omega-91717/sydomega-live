@@ -1,0 +1,57 @@
+{
+  "$schema":"https://sydomega.com/schemas/omega-object-model.v1.json",
+  "schemaVersion":"1.0.0",
+  "contract":"OmegaObject",
+  "purpose":"Canonical object and relationship envelope for Command, Search, Activity, Graph, Missions, AI and 3-D surfaces.",
+  "identity":{"required":["id","type"],"idPolicy":"stable-source-id"},
+  "truth":{"required":["state","source","observedAt"],"allowedStates":["LIVE","VERIFIED","CALCULATED","SOURCE","SIMULATED","STALE","UNAVAILABLE","UNKNOWN"]},
+  "ownership":{"fields":["ownerId","organizationId"],"authorization":"server-authoritative"},
+  "objects":[
+    {"type":"member","sources":["profiles"],"identity":"id","label":"display_name","owner":"id"},
+    {"type":"mission","sources":["omega_platform_events","omega_member_quest_state"],"identity":"id","label":"event_type","owner":"user_id"},
+    {"type":"achievement","sources":["certificates","evolution_events"],"identity":"id","label":"title","owner":"user_id"},
+    {"type":"gate","sources":["gate_matrix","gate_evaluations"],"identity":"id","label":"gate_name","owner":"user_id"},
+    {"type":"holding","sources":["user_assets","wallet_transactions"],"identity":"id","label":"id","owner":"user_id"},
+    {"type":"transaction","sources":["wallet_transactions","billing_invoices"],"identity":"id","label":"id","owner":"user_id"},
+    {"type":"document","sources":["ai_documents","content_versions"],"identity":"id","label":"title","owner":"owner_id"},
+    {"type":"course","sources":["academy_courses"],"identity":"id","label":"title","owner":"instructor_id"},
+    {"type":"lesson","sources":["academy_lessons"],"identity":"id","label":"title","owner":"user_id"},
+    {"type":"post","sources":["activity_feed","dispatches"],"identity":"id","label":"title","owner":"user_id"},
+    {"type":"media","sources":["content_versions"],"identity":"id","label":"content","owner":"author_id"},
+    {"type":"agent","sources":["ai_agents"],"identity":"id","label":"name","owner":"owner_id"},
+    {"type":"conversation","sources":["ai_conversations","conversations","agent_threads"],"identity":"id","label":"title","owner":"owner_id"},
+    {"type":"project","sources":["projects","enterprise_accounts"],"identity":"id","label":"name","owner":"owner_id"},
+    {"type":"event","sources":["omega_platform_events","graph_events","calendar_events"],"identity":"id","label":"event_type","owner":"user_id"},
+    {"type":"credential","sources":["certificates"],"identity":"id","label":"title","owner":"user_id"},
+    {"type":"asset","sources":["user_assets"],"identity":"id","label":"name","owner":"user_id"},
+    {"type":"capability","sources":["capability_registry"],"identity":"id","label":"capability_name","owner":"owner_agent"}
+  ],
+  "relations":[
+    {"type":"OWNS","from":["member"],"to":["asset","document","project","conversation","agent","holding","credential"]},
+    {"type":"PARTICIPATES_IN","from":["member"],"to":["mission","event","course"]},
+    {"type":"ACHIEVES","from":["member"],"to":["achievement","gate","credential"]},
+    {"type":"TRIGGERS","from":["event"],"to":["mission","achievement","gate","capability"]},
+    {"type":"REFERENCES","from":["document","post","media"],"to":["member","event","asset","capability"]},
+    {"type":"DEPENDS_ON","from":["capability"],"to":["capability","asset","document"]},
+    {"type":"PRODUCES","from":["agent","capability"],"to":["document","event"]},
+    {"type":"EVIDENCED_BY","from":["document","post","media","event"],"to":["document","event"]},
+    {"type":"RELATED_TO","from":["*"],"to":["*"]}
+  ],
+  "sourceRegistry":{
+    "authoritativeEventStream":["omega_platform_events"],
+    "activity":["activity_feed","activity_logs"],
+    "graph":["graph_entities","graph_relationships","graph_events","graph_evidence"],
+    "lineage":["data_lineage","data_entities"],
+    "capabilities":["capability_registry","capability_kpi_log"],
+    "missions":["omega_member_quest_state","omega_platform_events"],
+    "progression":["gate_evaluations","evolution_events","profiles"]
+  },
+  "rules":[
+    "No object is created merely because a page exists.",
+    "Missing source data yields UNKNOWN or UNAVAILABLE, never a fabricated object.",
+    "Client normalization does not grant authorization.",
+    "Relations must retain source and observedAt lineage.",
+    "Writes must flow through OmegaAction and server authorization.",
+    "Graph visualization consumes this contract rather than inventing parallel state."
+  ]
+}

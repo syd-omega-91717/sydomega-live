@@ -7,21 +7,28 @@ import sys
 root=Path(__file__).resolve().parents[1]
 page=root/"control-center.html"
 nav=root/"nav.js"
+runtime=root/"control-center-runtime.js"
 
 errors=[]
 if not page.exists(): errors.append("control-center.html is missing")
 if not nav.exists(): errors.append("nav.js is missing")
+if not runtime.exists(): errors.append("control-center-runtime.js is missing")
 
 if page.exists():
     text=page.read_text(encoding="utf-8")
+    runtime_text=runtime.read_text(encoding="utf-8") if runtime.exists() else ""
     required=[
         'id="omega-side"','data-page="control-center"',
         '/bg.js','/verify-deployment.html','/verify-modules.html',
         'navigator.onLine','localStorage','serviceWorker',
         "fetch(path,{cache:'no-store'",
     ]
-    for token in required:
+    page_required=["id=\"omega-side\"","data-page=\"control-center\"","/bg.js","/verify-deployment.html","/verify-modules.html"]
+    runtime_required=["navigator.onLine","localStorage","serviceWorker","fetch(path,{cache:'no-store'"]
+    for token in page_required:
         if token not in text: errors.append(f"control-center.html missing contract: {token}")
+    for token in runtime_required:
+        if token not in runtime_text: errors.append(f"control-center-runtime.js missing contract: {token}")
     if re.search(r"<script[^>]+src=['\"]https?://", text, re.I):
         errors.append("control-center.html must not add a third-party script dependency")
     if 'document.write(' in text or 'eval(' in text:

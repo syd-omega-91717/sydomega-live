@@ -55,3 +55,6 @@ Interpretation: this is a Vercel account/platform build-rate-limit signal, not e
 - `omega-workers.js` no longer mints `sovereign.gate.unlocked` events from client-local profile calculations; its achievement worker is presentation-only.
 - A transactional probe inserted and rolled back a synthetic task completion and observed one corresponding sovereign event, verifying the trigger path without retaining test data.
 - Supabase Security Advisor remains WARN: leaked-password protection is disabled. This is not fixed by this change.
+
+- Live `public.notifications` is now included in `supabase_realtime`; RLS remains the delivery boundary and the browser subscribes only to the authenticated member's `user_id` rows.
+- The existing notification worker now consumes the durable server notification stream instead of relying only on local event-feed rendering.

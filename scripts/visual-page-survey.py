@@ -56,15 +56,15 @@ def visible_fragment(s: str) -> str:
     first, then strips remaining markup. It is intentionally conservative: it
     does not try to emulate arbitrary CSS selectors.
     """
-    s = re.sub(r"<(?:script|style|noscript|template)\\b[^>]*>.*?</(?:script|style|noscript|template)>", " ", s, flags=re.I | re.S)
-    s = re.sub(r"<[^>]+\\b(?:hidden|aria-hidden=[\"']true[\"'])[^>]*>.*?</[^>]+>", " ", s, flags=re.I | re.S)
-    s = re.sub(r"<(?:div|section|article|aside|nav|main|header|footer)\\b[^>]*class=[\"'][^\"']*\\btab-panel\\b[^\"']*[\"'][^>]*>.*?</(?:div|section|article|aside|nav|main|header|footer)>", " ", s, flags=re.I | re.S)
-    s = re.sub(r"<[^>]+\\bstyle=[\"'][^\"']*display\\s*:\\s*none[^\"']*[\"'][^>]*>.*?</[^>]+>", " ", s, flags=re.I | re.S)
+    s = re.sub(r"<(?:script|style|noscript|template)\b[^>]*>.*?</(?:script|style|noscript|template)>", " ", s, flags=re.I | re.S)
+    s = re.sub(r"<[^>]+\b(?:hidden|aria-hidden=[\"']true[\"'])[^>]*>.*?</[^>]+>", " ", s, flags=re.I | re.S)
+    s = re.sub(r"<(?:div|section|article|aside|nav|main|header|footer)\b[^>]*class=[\"'][^\"']*\btab-panel\b[^\"']*[\"'][^>]*>.*?</(?:div|section|article|aside|nav|main|header|footer)>", " ", s, flags=re.I | re.S)
+    s = re.sub(r"<[^>]+\bstyle=[\"'][^\"']*display\\s*:\\s*none[^\"']*[\"'][^>]*>.*?</[^>]+>", " ", s, flags=re.I | re.S)
     return s
 
 
 def clean(s: str) -> str:
-    return re.sub(r"\\s+", " ", TAG_RE.sub(" ", visible_fragment(s))).strip()
+    return re.sub(r"\s+", " ", TAG_RE.sub(" ", visible_fragment(s))).strip()
 
 
 def count_words(s: str) -> int:

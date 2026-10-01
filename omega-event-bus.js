@@ -30,6 +30,7 @@ var CATALOG={
   'sovereign.member.ascended':  {schema:{memberId:'string',gate:'number',elem:'string',auth:'number'},desc:'Member reached a major ascension milestone',axis:'all',consumers:['notifications','email','analytics','achievement-engine','ai-agent']},
   'sovereign.event.registered': {schema:{memberId:'string',eventRef:'string',xp:'number'},desc:'Member registered for a sovereign event',axis:'c',consumers:['analytics','xp-processor','calendar-sync']},
   'sovereign.task.completed':   {schema:{memberId:'string',taskId:'string',axis:'string',delta:'number'},desc:'Task or verified action completed',axis:'a|b|c',consumers:['analytics','progression-engine','leaderboard-updater']},
+  'sovereign.notification.created': {schema:{memberId:'string',notificationId:'string',type:'string',message:'string'},desc:'Server-authored member notification created',axis:'none',consumers:['notifications','analytics']},
   'sovereign.passport.generated':{schema:{memberId:'string',gate:'number',elem:'string'},desc:'Sovereign passport PDF downloaded',axis:'b',consumers:['analytics','audit']},
   'sovereign.element.shifted':  {schema:{memberId:'string',prev:'string',next:'string'},desc:'Member element changed (zodiac override)',axis:'none',consumers:['analytics','realm-engine','music-engine']},
   'sovereign.cipher.used':      {schema:{memberId:'string',elem:'string',mode:'string'},desc:'Sovereign cipher encode/decode invoked',axis:'b',consumers:['analytics']},
@@ -206,8 +207,23 @@ function subscribeAuthoritativeEvents(userId){
         }
         emit(row.event_type,payload,{id:String(row.event_id)});
       })
+      .on('postgres_changes',{
+        event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+userId
+      },function(change){
+        var row=change&&change.new||{};
+        if(!row.id||!row.user_id)return;
+        emit('sovereign.notification.created',{
+          memberId:row.user_id,
+          notificationId:String(row.id),
+          type:row.type||row.notification_type||'system',
+          title:row.title||'',
+          message:row.message||'',
+          content:row.content||null,
+          createdAt:row.created_at||new Date().toISOString()
+        },{id:'notification-'+String(row.id)});
+      })
       .subscribe(function(status){
-        try{window.dispatchEvent(new CustomEvent('omega:realtime-status',{detail:{service:'sovereign_events',status:status}}));}catch(e){}
+        try{window.dispatchEvent(new CustomEvent('omega:realtime-status',{detail:{service:'sovereign_events_notifications',status:status}}));}catch(e){}
       });
   }catch(e){
     try{window.dispatchEvent(new CustomEvent('omega:realtime-status',{detail:{service:'sovereign_events',status:'CHANNEL_ERROR',error:String(e)}}));}catch(x){}

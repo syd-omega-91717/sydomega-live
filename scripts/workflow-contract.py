@@ -101,11 +101,25 @@ for name, required in REQUIRED.items():
     if not runner:
         ERRORS.append(f"{name}: no runs-on declared")
     else:
-        label = runner.group(1).strip()
-        hosted = re.match(r"(ubuntu|windows|macos)-(latest|\d[\w.]*)$", label)
-        if "self-hosted" not in label and not hosted:
+        raw_label = runner.group(1).strip()
+        if raw_label.startswith("[") and raw_label.endswith("]"):
+            labels = [part.strip().strip("\'\"") for part in raw_label[1:-1].split(",") if part.strip()]
+        else:
+            labels = [raw_label.strip("\'\"")]
+
+        recognised = []
+        for label in labels:
+            if label == "self-hosted":
+                recognised.append(True)
+                continue
+            if re.match(r"(ubuntu|windows|macos)-(latest|\\d[\\w.]*)$", label):
+                recognised.append(True)
+                continue
+            recognised.append(False)
+
+        if not any(recognised):
             ERRORS.append(
-                f"{name}: runs-on {label!r} is neither self-hosted nor a recognised "
+                f"{name}: runs-on {raw_label!r} is neither self-hosted nor a recognised "
                 f"GitHub-hosted image (ubuntu-/windows-/macos-latest or a version)"
             )
     if not re.search(r"timeout-minutes:\s*\d+", text):

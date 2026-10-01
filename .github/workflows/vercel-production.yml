@@ -97,6 +97,8 @@ jobs:
         run: bash scripts/vercel-build.sh
       - name: Production surface contract
         run: python scripts/omega-production-surface-contract.py
+      - name: Responsive surface contract
+        run: python scripts/omega-responsive-surface-contract.py
       - name: Repository production proof contract
         run: python scripts/production-proof-contract.py
       - name: Architecture convergence audit

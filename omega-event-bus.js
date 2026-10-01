@@ -277,5 +277,6 @@ window.OmegaBus={
   catalog:function(){return Object.assign({},CATALOG);},
   metrics:metrics
 };
+try{window.dispatchEvent(new CustomEvent('omega:bus-ready',{detail:{version:1,catalog:Object.keys(CATALOG).length}}));}catch(e){}
 
 })();

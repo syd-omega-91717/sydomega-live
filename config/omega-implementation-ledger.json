@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-10-01",
+  "generatedAt": "2026-10-02",
   "purpose": "Evidence-bound implementation ledger for Ω SYD OMEGA 91717.",
   "lifecycle": [
     "SPECIFIED",
@@ -14,10 +14,12 @@
   ],
   "evidenceAsOf": {
     "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
-    "branch": "f28ec4ef00b252f096de2b7e9cfc6939a7fb63a7",
+    "branch": "codex/production-security-and-productization-20261002",
     "pullRequest": "#606",
     "supabaseProject": "nvgedlxlkdzvcelimbvq",
-    "liveSite": "https://sydomega.com"
+    "liveSite": "https://sydomega.com",
+    "supabaseSecurity": "2026-10-02",
+    "productCatalog": "config/omega-product-catalog.json"
   },
   "items": [
     {
@@ -105,15 +107,16 @@
         "Document.txt"
       ],
       "requirement": "RLS and function execution privileges must match actor and exposure boundary.",
-      "state": "BLOCKED",
+      "state": "TESTED",
       "repo": [
         "supabase/migrations",
         "scripts/supabase-migration-security-audit.py"
       ],
       "evidence": [
-        "SUPA-SEC-20261001"
+        "SUPA-SEC-20261002",
+        "Live SQL verification: anon_execute=0 for 80 public functions"
       ],
-      "blocker": "Live advisor reports 64 public SECURITY DEFINER functions executable by anon; classify and explicitly grant only intended callers."
+      "blocker": "68 SECURITY DEFINER functions remain executable by authenticated users; each requires explicit risk classification and least-privilege role policy."
     },
     {
       "id": "DB-001",
@@ -393,6 +396,58 @@
         "Supabase live list_edge_functions on 2026-10-01 returned zero deployed functions; repository census contains 18 functions."
       ],
       "blocker": "Live Supabase currently exposes no deployed Edge Functions. Deploy/reconcile each intended function, then record route, version, auth boundary and smoke-test evidence."
+    },
+    {
+      "id": "SEC-003",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "Privileged SECURITY DEFINER RPCs must have explicit least-privilege role grants and caller classification.",
+      "state": "BLOCKED",
+      "repo": [
+        "supabase/migrations",
+        "config/omega-product-catalog.json"
+      ],
+      "evidence": [
+        "SUPA-SEC-20261002"
+      ],
+      "blocker": "68 authenticated SECURITY DEFINER functions remain in the public schema; classify owner/admin/user/self-service/read-only/server-only functions before tightening grants."
+    },
+    {
+      "id": "PRODUCT-001",
+      "domain": "product",
+      "source": [
+        "All five source documents"
+      ],
+      "requirement": "The 18-module universe must have executable product families, lifecycle states, dependencies and production acceptance gates.",
+      "state": "BUILT",
+      "repo": [
+        "config/omega-product-catalog.json",
+        "scripts/omega-product-catalog-contract.py"
+      ],
+      "evidence": [
+        "Product catalog contract"
+      ],
+      "blocker": null
+    },
+    {
+      "id": "BLUEPRINT-001",
+      "domain": "governance",
+      "source": [
+        "999 Blueprint"
+      ],
+      "requirement": "Every numbered blueprint point must remain traceable to a productization decision rather than being treated as deployed reality.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-implementation-ledger.json",
+        "config/omega-product-catalog.json"
+      ],
+      "evidence": [
+        "Source inventory audit: 391 unique numbered point bullets were extracted from the 999-point blueprint."
+      ],
+      "blocker": "Complete point-by-point productization mapping remains outstanding."
     }
   ]
 }

@@ -34,6 +34,9 @@
     function rail(){if(document.querySelector('.omega-visual-rail'))return;var e=document.createElement('div');e.className='omega-visual-rail';e.setAttribute('aria-hidden','true');(document.body||document.documentElement).appendChild(e);}if(document.body)rail();else document.addEventListener('DOMContentLoaded',rail,{once:true});EventBus.emit('visual_layer_ready',{version:'4.0.0',page:_page});
   }
   mountVisualLayer();
+  /* Compact Command HUD: experience layer over existing OmegaOS state. */
+  if(!document.querySelector('link[data-omega-command-hud-css]')){var hudCss=document.createElement('link');hudCss.rel='stylesheet';hudCss.href='/omega-command-hud.css';hudCss.setAttribute('data-omega-command-hud-css','1');(document.head||document.documentElement).appendChild(hudCss);}
+  loadScript('/omega-command-hud.js','data-omega-command-hud');
   loadScript('/omega-content-progressive.js','data-omega-content-progressive');
   window.OmegaOS={version:OS_VERSION,session:SESSION_ID,events:EventBus,health:Health,circuit:CircuitBreaker,safeQuery:safeQuery,page:_page,PHI:PHI,EU:EU,APEX:27.8367,TRIAL:557,DEDICATION:33437,FORMULA:'sqrt(A³+B³+C³)×φ/e',visual:{version:'4.0.0',stylesheet:'/omega-visual-evolution.css',background:'/omega-unified-background.css'},auth:function(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}};
 })();

@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""Guard the Creator surface against synthetic member identities."""
+"""Guard the Creator surface against synthetic member identities.
+
+Usage:
+  python3 scripts/creator-identity-contract.py
+"""
 from pathlib import Path
 import sys
+
+if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
 path = ROOT / "omega-creator.js"

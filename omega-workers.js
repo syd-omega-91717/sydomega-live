@@ -61,13 +61,14 @@ function Worker(opts){
   this.active=true;
   this.lastActivity=null;
   this._retryTimer=null;
+  this._subscribed=false;
   this._registerSubs();
   this._startRetryLoop();
 }
 
 Worker.prototype._registerSubs=function(){
   var self=this;
-  if(!window.OmegaBus)return;
+  if(!window.OmegaBus||self._subscribed)return;
   self.events.forEach(function(evtName){
     window.OmegaBus.on(evtName,function(evt){self._receive(evt);});
   });
@@ -75,6 +76,7 @@ Worker.prototype._registerSubs=function(){
   if(self.events.indexOf('*')!==-1){
     window.OmegaBus.on('*',function(evt){self._receive(evt);});
   }
+  self._subscribed=true;
 };
 
 Worker.prototype._receive=function(evt){
@@ -136,7 +138,7 @@ var analyticsWorker=new Worker({
 /* ── Notification worker ── */
 var notifWorker=new Worker({
   name:'notification-worker',
-  events:['sovereign.gate.unlocked','sovereign.member.approved','sovereign.member.ascended','sovereign.member.approved'],
+  events:['sovereign.gate.unlocked','sovereign.member.approved','sovereign.member.ascended','sovereign.notification.created'],
   handler:function(evt){
     /* The gate-unlock celebration, which had never once fired. This guarded on
        window.OmegaCelebrate -- a name NOTHING has assigned in any commit in this
@@ -157,7 +159,10 @@ var notifWorker=new Worker({
     if(feed){
       var item=document.createElement('div');
       item.style.cssText='padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M,"Courier Prime",monospace);font-size:12px;color:rgba(226,200,109,.6)';
-      item.textContent='['+new Date().toTimeString().slice(0,8)+'] '+evt.name+' — '+(evt.payload.name||'');
+      if(evt.payload&&evt.payload.notificationId)item.setAttribute('data-omega-notification-id',evt.payload.notificationId);
+      var label=evt.name==='sovereign.notification.created' ? (evt.payload.title||evt.payload.type||'NOTIFICATION') : evt.name;
+      var detail=evt.name==='sovereign.notification.created' ? (evt.payload.message||'') : (evt.payload.name||'');
+      item.textContent='['+new Date().toTimeString().slice(0,8)+'] '+label+(detail?' — '+detail:'');
       feed.insertBefore(item,feed.firstChild);
       while(feed.children.length>20)feed.removeChild(feed.lastChild);
     }
@@ -165,26 +170,26 @@ var notifWorker=new Worker({
 });
 
 /* ── Achievement worker ── */
-var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+/*
+   Authority boundary:
+   - Supabase complete_task() owns progression and achievement writes.
+   - sovereign_events is the durable event authority.
+   - This browser worker is presentation-only: it never mints a gate,
+     certificate, trophy, medal, points balance, or progression state.
+*/
 var achievementWorker=new Worker({
   name:'achievement-worker',
-  events:['sovereign.axis.updated','sovereign.task.completed'],
+  events:['sovereign.task.completed'],
   handler:function(evt){
-    /* Check if profile crosses a gate threshold */
-    var profile=window.__omegaProfile;
-    if(!profile)return;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(profile.axis_a||0),b=Number(profile.axis_b||0),c=Number(profile.axis_c||0);
-    var auth=profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-    var gate=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)gate=i;});
-    var prevGate=parseInt(getKV('last_gate')||'0');
-    if(gate>prevGate){
-      setKV('last_gate',String(gate));
-      if(window.OmegaBus){
-        window.OmegaBus.emit('sovereign.gate.unlocked',{memberId:(window.__omegaUser||{}).id||'',gate:gate+1,name:GATE_NAMES[gate],auth:auth});
-      }
-    }
+    var payload=evt&&evt.payload||{};
+    /* Surface authoritative completion to pages without creating state. */
+    try{
+      window.dispatchEvent(new CustomEvent('omega:authoritative-task-completed',{detail:payload}));
+    }catch(e){}
+    /* Refresh visible achievement surfaces when they opt in. */
+    document.querySelectorAll('[data-omega-achievement-refresh]').forEach(function(el){
+      el.setAttribute('data-omega-achievement-refresh','pending');
+    });
   }
 });
 

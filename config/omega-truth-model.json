@@ -1,0 +1,28 @@
+{
+  "$schema": "https://sydomega.com/schemas/omega-truth-model.v1.json",
+  "schemaVersion": "1.0.0",
+  "states": {
+    "DESIGNED": "Documented target; not evidence of implementation.",
+    "IMPLEMENTED": "Code exists in the repository.",
+    "TESTED": "Automated or manual test evidence exists.",
+    "DEPLOYED": "Included in a deployment artifact.",
+    "LIVE": "Observed from the running production source.",
+    "VERIFIED": "LIVE evidence was checked against an authoritative source.",
+    "CALCULATED": "Deterministic derivation from authoritative state.",
+    "SOURCE": "Repository, documentation, or external source.",
+    "SIMULATED": "Controlled non-production result.",
+    "STALE": "Previously verified but freshness window expired.",
+    "UNAVAILABLE": "Required source cannot currently be reached.",
+    "UNKNOWN": "The platform deliberately refuses to infer the value."
+  },
+  "precedence": ["UNKNOWN","SOURCE","DESIGNED","IMPLEMENTED","TESTED","DEPLOYED","STALE","LIVE","VERIFIED"],
+  "rules": [
+    "A failed read is not zero.",
+    "An empty query is not proof of absence.",
+    "Documentation never upgrades runtime truth.",
+    "UI state never grants authorization.",
+    "Derived values retain lineage to their inputs.",
+    "Provider state must be independently verified.",
+    "Consequential AI output is not authoritative without evidence and authorization."
+  ]
+}

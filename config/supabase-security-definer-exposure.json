@@ -1,0 +1,395 @@
+{
+  "schemaVersion": "1.0.0",
+  "observedAt": "2026-10-01T18:39:55.370Z",
+  "projectId": "nvgedlxlkdzvcelimbvq",
+  "advisory": "anon_security_definer_function_executable",
+  "count": 64,
+  "policy": "OBSERVED_REVIEW_REQUIRED",
+  "note": "This manifest records Supabase advisory output. It is not a finding that every function is exploitable. Each function must be classified by intended caller and then hardened with SECURITY INVOKER or explicit EXECUTE grants/revokes as appropriate.",
+  "functions": [
+    {
+      "name": "academy_promote",
+      "arguments": "p_user uuid, p_stage integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "academy_subscribe",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "access_audit_log",
+      "arguments": "p_limit integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "advance_matrix",
+      "arguments": "p_track integer, p_axis text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "apply_subscription",
+      "arguments": "p_uid uuid, p_tier text, p_status text, p_period_end timestamp with time zone, p_customer text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "approve_member",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "award_token",
+      "arguments": "p_user uuid, p_token text, p_amount numeric",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "check_trial_status",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "claim_daily_points",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "complete_task",
+      "arguments": "p_task_name text, p_task_type text, p_axis_type text, p_description text, p_points numeric",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "compute_leaderboard_snapshot",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "deactivate_account",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "delete_account",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "error_summary",
+      "arguments": "p_hours integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "expire_trial",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "get_all_members",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "get_my_task_log",
+      "arguments": "p_limit integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "get_platform_flag",
+      "arguments": "p_key text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "has_academy_access",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "has_active_access",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "is_app_owner",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "is_platform_owner",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "log_access_decision",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "log_evolution",
+      "arguments": "p_axis text, p_note text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "membership_report",
+      "arguments": "p_prices jsonb",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_exam_results",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_feedback",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_interest_profile",
+      "arguments": "p_limit integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_lattice",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_matrix",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_points_balance",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_sovereign_summary",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_subscription",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_time_sovereign",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "my_token_balances",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "omega_is_owner",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "order_stats",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "ping_session",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "post_dispatch",
+      "arguments": "p_title text, p_body text, p_category text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "propose_sim_trade",
+      "arguments": "p_to uuid, p_amount integer, p_message text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "public_leaderboard",
+      "arguments": "p_limit integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "published_dispatches",
+      "arguments": "p_limit integer",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "purchase_perk",
+      "arguments": "p_perk_id text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "reactivate_account",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "record_interest_signal",
+      "arguments": "p_signal_type text, p_content_id text, p_content_type text, p_axis_type text, p_weight numeric",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "record_sovereign_event",
+      "arguments": "p_event_type text, p_event_data jsonb, p_axis_delta jsonb, p_idempotency text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "reject_member",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "report_client_error",
+      "arguments": "p_page text, p_message text, p_source text, p_line integer, p_col integer, p_stack text, p_kind text, p_ua text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "resolve_sim_trade",
+      "arguments": "p_trade_id uuid, p_accept boolean",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "review_contracts",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "review_reservations",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "revoke_member",
+      "arguments": "p_uid uuid",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_consult_status",
+      "arguments": "p_id uuid, p_status text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_contract_status",
+      "arguments": "p_id uuid, p_status text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_dispatch_published",
+      "arguments": "p_id uuid, p_pub boolean",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_platform_flag",
+      "arguments": "p_key text, p_val boolean",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_profile_visibility",
+      "arguments": "p_public boolean",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "set_reservation_status",
+      "arguments": "p_id uuid, p_status text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "submit_exam_result",
+      "arguments": "p_exam_id text, p_score integer, p_total integer, p_cert_name text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "submit_feedback",
+      "arguments": "p_message text, p_rating integer, p_page text",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "sync_platform_owner",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "trg_award_exam_points",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "trg_award_matrix_points",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    },
+    {
+      "name": "trg_award_task_points",
+      "arguments": "",
+      "expectedAction": "CLASSIFY_CALLER_AND_HARDEN",
+      "status": "OPEN"
+    }
+  ]
+}

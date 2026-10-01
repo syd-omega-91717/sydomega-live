@@ -103,6 +103,12 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-threat]')){var os_data_omega_threat=document.createElement('script');os_data_omega_threat.src='/omega-threat.js';os_data_omega_threat.setAttribute('data-omega-threat','1');os_data_omega_threat.defer=true;__omegaAppend(os_data_omega_threat);}
   /* Real-time knowledge graph integration engine */
   if(!document.querySelector('script[data-omega-graphify-integration]')){var os_data_omega_graphify_integration=document.createElement('script');os_data_omega_graphify_integration.src='/omega-graphify-integration.js';os_data_omega_graphify_integration.setAttribute('data-omega-graphify-integration','1');os_data_omega_graphify_integration.defer=true;__omegaAppend(os_data_omega_graphify_integration);}
+  /* Canonical object envelope + graph are platform-wide read-side primitives. 
+     Search, realtime, missions and control surfaces all consume these globals. 
+     Loading them from the shared shell prevents silent feature loss on pages 
+     that do not declare the graph runtime themselves. */
+  if(!document.querySelector('script[data-omega-object-runtime]')){var omega_object_runtime=document.createElement('script');omega_object_runtime.src='/omega-object-runtime.js';omega_object_runtime.setAttribute('data-omega-object-runtime','1');omega_object_runtime.defer=true;__omegaAppend(omega_object_runtime);}
+  if(!document.querySelector('script[data-omega-object-graph-runtime]')){var omega_object_graph_runtime=document.createElement('script');omega_object_graph_runtime.src='/omega-object-graph-runtime.js';omega_object_graph_runtime.setAttribute('data-omega-object-graph-runtime','1');omega_object_graph_runtime.defer=true;__omegaAppend(omega_object_graph_runtime);}
   /* Phase D.1: Page feature registry and capability discovery */
   if(!document.querySelector('script[data-omega-page-features]')){var os_data_omega_page_features=document.createElement('script');os_data_omega_page_features.src='/omega-page-features.js';os_data_omega_page_features.setAttribute('data-omega-page-features','1');os_data_omega_page_features.defer=true;__omegaAppend(os_data_omega_page_features);}
   /* Phase D.2: Data binding framework for reactive page updates */

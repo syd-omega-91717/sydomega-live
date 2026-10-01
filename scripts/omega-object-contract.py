@@ -19,8 +19,15 @@ def main() -> None:
     schema = json.loads(SCHEMA.read_text())
     object_schema = json.loads(OBJECT_SCHEMA.read_text())
 
-    tables = schema.get("tables", {})
-    assert isinstance(tables, dict) and tables
+    raw_tables = schema.get("tables", {})
+    assert isinstance(raw_tables, dict) and raw_tables
+    # The source model intentionally uses canonical unqualified table names,
+    # while live-schema evidence is emitted with explicit public.* keys.
+    # Preserve both forms so the contract compares names, not formatting.
+    tables = dict(raw_tables)
+    for qualified_name, columns in raw_tables.items():
+        if qualified_name.startswith("public."):
+            tables.setdefault(qualified_name.split(".", 1)[1], columns)
     assert model["contract"] == "OmegaObject"
 
     required_schema_fields = {"id", "type", "label", "truth", "state", "source", "observedAt"}

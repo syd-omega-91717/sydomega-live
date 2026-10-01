@@ -148,6 +148,8 @@
     "omega-visual-command": "genesis",
     "evolution": "genesis",
     "governance": "genesis",
-    "kyc": "genesis"
+    "kyc": "genesis",
+    "control-center": "genesis",
+    "platform-kernel": "genesis"
   }
 }

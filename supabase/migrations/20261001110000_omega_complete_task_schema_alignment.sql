@@ -1,6 +1,6 @@
 -- Ω SYD OMEGA 91717
 -- Complete-task live-schema alignment
--- Applied live on 2026-10-01 after transactional production-path verification.
+-- Prepared migration. Live application status is verified separately against the Supabase migration journal.
 
 create or replace function private.complete_task(
   p_task_name text,
@@ -12,7 +12,7 @@ create or replace function private.complete_task(
 returns jsonb
 language plpgsql
 security definer
-set search_path to 'public'
+set search_path = ''
 as $function$
 declare
   uid uuid := auth.uid();

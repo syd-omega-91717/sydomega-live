@@ -4,7 +4,6 @@
 This is deliberately a repository/artifact gate. It does not claim to replace
 real browser, accessibility, or performance testing against production.
 """
-"""Static release-quality contract for the framework-free SYD OMEGA web surface."""
 
 from __future__ import annotations
 
@@ -25,11 +24,21 @@ errors: list[str] = []
 warnings: list[str] = []
 checked = 0
 
+HTML_LANG_RE = re.compile(r"""<html\b[^>]*\blang\s*=\s*["'][^"']+["']""", re.I)
+VIEWPORT_RE = re.compile(r"""<meta\b[^>]*name\s*=\s*["']viewport["']""", re.I)
+TITLE_RE = re.compile(r"""<title\b[^>]*>\s*[^<]+\s*</title>""", re.I | re.S)
+ID_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""", re.I)
+CONTROL_RE = re.compile(r"""<(img|input|button|select|textarea)\b([^>]*)>""", re.I | re.S)
+BUTTON_RE = re.compile(r"""<button\b([^>]*)>(.*?)</button\s*>""", re.I | re.S)
+
+
 def html_files() -> list[Path]:
     return sorted(SOURCE.rglob("*.html"))
 
+
 def rel(path: Path) -> str:
     return str(path.relative_to(ROOT))
+
 
 def check_html(path: Path) -> None:
     global checked
@@ -41,26 +50,16 @@ def check_html(path: Path) -> None:
     if size > MAX_HTML_BYTES:
         errors.append(f"{label}: HTML exceeds {MAX_HTML_BYTES} bytes ({size})")
 
-    if not re.search(r"<html\b[^>]*\blang\s*=\s*["'][^"']+["']", data, re.I):
+    if not HTML_LANG_RE.search(data):
         errors.append(f"{label}: missing explicit <html lang=...>")
 
-    if not re.search(r"<meta\b[^>]*name\s*=\s*["']viewport["']", data, re.I):
+    if not VIEWPORT_RE.search(data):
         errors.append(f"{label}: missing viewport meta")
 
-    if not re.search(r"<title\b[^>]*>\s*[^<]+\s*</title>", data, re.I | re.S):
+    if not TITLE_RE.search(data):
         errors.append(f"{label}: missing non-empty <title>")
 
-    ids = re.findall(r"\bid\s*=\s*["']([^"']+)["']", data, re.I)
-    if not re.search(r'<html\b[^>]*\blang\s*=\s*["\'][^"\']+["\']', data, re.I):
-        errors.append(f"{label}: missing explicit <html lang=...>")
-
-    if not re.search(r'<meta\b[^>]*name\s*=\s*["\']viewport["\']', data, re.I):
-        errors.append(f"{label}: missing viewport meta")
-
-    if not re.search(r'<title\b[^>]*>\s*[^<]+\s*</title>', data, re.I | re.S):
-        errors.append(f"{label}: missing non-empty <title>")
-
-    ids = re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', data, re.I)
+    ids = ID_RE.findall(data)
     seen: set[str] = set()
     duplicates: set[str] = set()
     for value in ids:
@@ -70,44 +69,42 @@ def check_html(path: Path) -> None:
     if duplicates:
         errors.append(f"{label}: duplicate IDs: {', '.join(sorted(duplicates)[:12])}")
 
-    for tag, attrs in re.findall(r"<(img|input|button|select|textarea)\b([^>]*)>", data, re.I | re.S):
+    for tag, attrs in CONTROL_RE.findall(data):
         attrs_lower = attrs.lower()
-        if tag.lower() == "img" and not re.search(r"\balt\s*=", attrs, re.I):
+        tag_lower = tag.lower()
+        if tag_lower == "img" and not re.search(r"\balt\s*=", attrs, re.I):
             errors.append(f"{label}: <img> without alt attribute")
-        if tag.lower() in {"input", "select", "textarea"}:
+        if tag_lower in {"input", "select", "textarea"}:
             if not re.search(r"\baria-label\s*=|\bid\s*=|\bname\s*=", attrs_lower):
                 warnings.append(f"{label}: form control lacks id/name/aria-label")
-        if tag.lower() == "button" and not re.search(r"\baria-label\s*=|>[\s]*[^<\s][^<]*<", attrs + ">", re.I | re.S):
-            warnings.append(f"{label}: button may have no accessible name")
-    for tag, attrs in re.findall(r'<(img|input|select|textarea)\b([^>]*)>', data, re.I | re.S):
-        if tag.lower() == "img" and not re.search(r'\balt\s*=', attrs, re.I):
-            errors.append(f"{label}: <img> without alt attribute")
-        if tag.lower() in {"input", "select", "textarea"}:
-            if not re.search(r'\baria-label\s*=|\bid\s*=|\bname\s*=', attrs, re.I):
-                warnings.append(f"{label}: form control lacks id/name/aria-label")
 
-    for attrs, inner in re.findall(r'<button\b([^>]*)>(.*?)</button\s*>', data, re.I | re.S):
-        if not re.search(r'\baria-label\s*=|\btitle\s*=', attrs, re.I):
-            text = re.sub(r'<[^>]+>', '', inner).strip()
+    for attrs, inner in BUTTON_RE.findall(data):
+        if not re.search(r"\baria-label\s*=|\btitle\s*=", attrs, re.I):
+            text = re.sub(r"<[^>]+>", "", inner).strip()
             if not text:
                 warnings.append(f"{label}: button may have no accessible name")
+
 
 def check_assets() -> None:
     for ext, limit in (("*.js", MAX_JS_BYTES), ("*.css", MAX_CSS_BYTES)):
         for path in SOURCE.rglob(ext):
             if path.stat().st_size > limit:
-                errors.append(f"{rel(path)}: {ext[1:].upper()} asset exceeds {limit} bytes ({path.stat().st_size})")
+                errors.append(
+                    f"{rel(path)}: {ext[1:].upper()} asset exceeds {limit} bytes ({path.stat().st_size})"
+                )
+
 
 def main() -> int:
     files = html_files()
     if not files:
         errors.append("No HTML release surface found")
+
     for path in files:
         check_html(path)
     check_assets()
 
     result = {
-        "schemaVersion": "1.0.0",
+        "schemaVersion": "1.1.0",
         "contract": "omega-release-surface-quality",
         "sourceRoot": str(SOURCE.relative_to(ROOT)),
         "htmlFilesChecked": checked,
@@ -125,8 +122,10 @@ def main() -> int:
     if errors:
         print("\nRELEASE SURFACE QUALITY: FAIL", file=sys.stderr)
         return 1
+
     print("\nRELEASE SURFACE QUALITY: PASS")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

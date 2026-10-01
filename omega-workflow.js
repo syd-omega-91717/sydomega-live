@@ -101,7 +101,7 @@
       return {ok:true,logged:true};
     },
     record_event: async function(ctx){
-      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:false,error:'no_authenticated_client'};
       /* The try/catch below cannot observe this failing: Supabase resolves
          {data:null,error} rather than throwing, so the old code returned
          {ok:true} whether or not the event was recorded (CLAUDE.md 8.1
@@ -115,8 +115,11 @@
         });
         recErr=rr&&rr.error||null;
       }catch(e){recErr=e;}
-      if(recErr)console.warn('[OmegaWorkflow] record_sovereign_event failed:',recErr.message||recErr);
-      return {ok:true,recorded:!recErr};
+      if(recErr){
+        console.warn('[OmegaWorkflow] record_sovereign_event failed:',recErr.message||recErr);
+        return {ok:false,error:'record_sovereign_event_failed',message:recErr.message||String(recErr)};
+      }
+      return {ok:true,recorded:true};
     },
     /* task_complete workflow steps — these were referenced but not implemented */
     validate_task: async function(ctx){
@@ -125,7 +128,8 @@
       return {ok:true,validated:true};
     },
     increment_axis: async function(ctx){
-      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      if(!ctx.ok) return {ok:false,error:'validation_failed'};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var axis=String(ctx.axis||'a');
       var kind=String(ctx.kind||ctx._workflow||'workflow');
       var task=String(ctx.task||ctx._instance);

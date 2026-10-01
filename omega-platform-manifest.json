@@ -153,6 +153,13 @@
       "route": "/control-center.html",
       "state": "partial",
       "registry_id": "production-contract"
+    },
+    {
+      "id": "accessibility",
+      "domain": "experience",
+      "route": "/design-system.html",
+      "state": "partial",
+      "registry_id": "accessibility"
     }
   ],
   "proof_gates": [

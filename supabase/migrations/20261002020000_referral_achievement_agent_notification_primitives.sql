@@ -238,6 +238,12 @@ drop policy if exists omega_notifications_owner_update on public.omega_notificat
 create policy omega_notifications_owner_update on public.omega_notifications for update to authenticated
 using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 
+create policy omega_referral_clicks_deny_authenticated on public.omega_referral_clicks for all to authenticated using (false) with check (false);
+create policy omega_referral_conversions_deny_authenticated on public.omega_referral_conversions for all to authenticated using (false) with check (false);
+create policy omega_fraud_signals_deny_authenticated on public.omega_fraud_signals for all to authenticated using (false) with check (false);
+create policy omega_achievement_verifications_deny_authenticated on public.omega_achievement_verifications for all to authenticated using (false) with check (false);
+create policy omega_agent_tool_grants_deny_authenticated on public.omega_agent_tool_grants for all to authenticated using (false) with check (false);
+
 revoke all on public.omega_referral_codes, public.omega_referral_clicks, public.omega_referral_attributions, public.omega_referral_conversions, public.omega_referral_rewards, public.omega_fraud_signals from anon;
 revoke all on public.omega_achievement_definitions, public.omega_user_achievements, public.omega_achievement_verifications, public.omega_certificates from anon;
 revoke all on public.omega_agent_tasks, public.omega_agent_task_events, public.omega_agent_tool_grants from anon;

@@ -138,7 +138,7 @@ var analyticsWorker=new Worker({
 /* ── Notification worker ── */
 var notifWorker=new Worker({
   name:'notification-worker',
-  events:['sovereign.gate.unlocked','sovereign.member.approved','sovereign.member.ascended'],
+  events:['sovereign.gate.unlocked','sovereign.member.approved','sovereign.member.ascended','sovereign.notification.created'],
   handler:function(evt){
     /* The gate-unlock celebration, which had never once fired. This guarded on
        window.OmegaCelebrate -- a name NOTHING has assigned in any commit in this
@@ -159,7 +159,10 @@ var notifWorker=new Worker({
     if(feed){
       var item=document.createElement('div');
       item.style.cssText='padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M,"Courier Prime",monospace);font-size:12px;color:rgba(226,200,109,.6)';
-      item.textContent='['+new Date().toTimeString().slice(0,8)+'] '+evt.name+' — '+(evt.payload.name||'');
+      if(evt.payload&&evt.payload.notificationId)item.setAttribute('data-omega-notification-id',evt.payload.notificationId);
+      var label=evt.name==='sovereign.notification.created' ? (evt.payload.title||evt.payload.type||'NOTIFICATION') : evt.name;
+      var detail=evt.name==='sovereign.notification.created' ? (evt.payload.message||'') : (evt.payload.name||'');
+      item.textContent='['+new Date().toTimeString().slice(0,8)+'] '+label+(detail?' — '+detail:'');
       feed.insertBefore(item,feed.firstChild);
       while(feed.children.length>20)feed.removeChild(feed.lastChild);
     }

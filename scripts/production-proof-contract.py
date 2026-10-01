@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Machine-checkable production proof contract for Ω SYD OMEGA 91717.
+"""
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
+Machine-checkable production proof contract for Ω SYD OMEGA 91717.
 
 This contract proves repository-side release prerequisites only. Live provider
 claims must be supplied by the deployment/verification systems and recorded in

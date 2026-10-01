@@ -36,8 +36,14 @@ jobs:
       - name: Ω platform contract
         run: python scripts/omega-platform-contract.py
 
+      - name: Ω scale readiness
+        run: python scripts/omega-scale-readiness.py
+
       - name: Action runtime syntax
         run: node --check omega-action-runtime.js
+
+      - name: Data runtime syntax
+        run: node --check omega-data-runtime.js
 
       - name: Artifact build
         run: bash scripts/vercel-build.sh
@@ -58,6 +64,8 @@ jobs:
           test -s public/vendor/supabase-js.js
           test -s public/assets/js/omega-runtime-observability.js
           test -s public/omega-action-runtime.js
+          test -s public/omega-data-runtime.js
+          test -s public/config/omega-scale-policy.json
           test -s public/config/omega-runtime-manifest.json
           test -s public/config/omega-action-contract.json
           test -s public/config/omega-truth-model.json

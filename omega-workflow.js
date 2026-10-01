@@ -65,11 +65,16 @@
       return {ok:true,auth:auth,profile:pr};
     },
     compute_gate: async function(ctx){
-      var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
-      var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
-      var auth=ctx.auth||0;
-      var gi=GATES.findIndex(function(g){return auth<g;});
-      return {ok:true,gate_idx:gi<0?11:gi,gate_name:gi<0?'APEX':GNAMES[gi],threshold:gi<0?27.8367:GATES[gi]};
+      var auth=Number(ctx.auth||0);
+      var canon=window.OmegaCanon;
+      var structure=canon&&canon.structure||{};
+      var authority=canon&&canon.authority||{};
+      var gates=(structure.gate_thresholds||authority.gates||[]).map(Number).filter(function(v){return isFinite(v);});
+      var names=(authority.gate_names||[]).map(String);
+      if(!gates.length)return {ok:false,error:'canonical_gate_config_unavailable'};
+      var gi=gates.findIndex(function(g){return auth<g;});
+      var idx=gi<0?gates.length-1:gi;
+      return {ok:true,gate_idx:idx,gate_name:names[idx]||('GATE '+(idx+1)),threshold:gates[idx]};
     },
     show_celebration: async function(ctx){
       /* Gate ceremonies are driven by authoritative sovereign.gate.unlocked events.

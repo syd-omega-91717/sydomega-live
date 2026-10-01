@@ -78,9 +78,9 @@ for (const file of files) {
   if (engine && !/omega-visual-engine\.js/i.test(html)) scripts.push(`<script src="${engine}" defer></script>`);
   if (observability && !/omega-runtime-observability\.js/i.test(html)) scripts.push(`<script src="${observability}" defer></script>`);
   if (actionRuntime && !/omega-action-runtime\.js/i.test(html)) scripts.push(`<script src="${actionRuntime}" defer></script>`);
-  if (offlineExists && !/omega-service-worker-registration/i.test(html)) {
-    scripts.push(`<script id="omega-service-worker-registration">(function(){if(!('serviceWorker' in navigator))return;window.addEventListener('load',function(){navigator.serviceWorker.register('/service-worker.js',{scope:'/'}).catch(function(error){if(window.omegaRuntime&&typeof window.omegaRuntime.record==='function')window.omegaRuntime.record('service_worker_registration_error',{name:error&&error.name||'Error'});});});})();</script>`);
-  }
+  // Service-worker registration is owned by bg.js → omega-sw-register.js.
+  // Do not inject a second registration here: duplicate registrations and a
+  // wrong worker path can strand a stale cache across the entire origin.
   if (scripts.length && /<\/body>/i.test(html)) html = html.replace(/<\/body>/i, `\n${scripts.join('\n')}\n</body>`);
 
   if (html !== original) { await writeFile(file, html); changed++; }
@@ -90,4 +90,3 @@ console.log(`VERCEL_ARTIFACT_ENHANCE=PASS html=${files.length} changed=${changed
 if (engine === null) console.log('visual_engine=source-page-runtime-only');
 if (observability === null) console.log('observability=not-installed');
 if (actionRuntime === null) console.log('action_runtime=not-installed');
-if (offlineExists === null) console.log('offline_recovery=not-installed');

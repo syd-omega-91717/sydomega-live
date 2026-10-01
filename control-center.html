@@ -48,6 +48,16 @@ pre{white-space:pre-wrap;word-break:break-word;color:rgba(238,238,238,.65);font-
 <a class="row" href="/privacy.html"><span>Privacy Centre</span><span class="status">OPEN →</span></a>
 </div></section>
 </div>
+<section class="card" style="margin-top:14px" aria-labelledby="omega-graph-proof-title">
+<div class="eyebrow" id="omega-graph-proof-title">Ω OBJECT GRAPH</div>
+<div class="grid" style="margin:12px 0 0">
+<div class="card"><div class="metric" id="og-objects">--</div><div class="label">OBJECTS</div><div class="sub">Canonical read-side objects observed in this browser.</div></div>
+<div class="card"><div class="metric" id="og-relations">--</div><div class="label">RELATIONS</div><div class="sub">Source-linked relationships observed by the graph runtime.</div></div>
+<div class="card"><div class="metric" id="og-events">--</div><div class="label">EVENT OBJECTS</div><div class="sub">Durable or bus events normalized as graph objects.</div></div>
+<div class="card"><div class="metric" id="og-truth">UNKNOWN</div><div class="label">TRUTH</div><div class="sub">The graph never upgrades source truth to verified state.</div></div>
+</div>
+<pre id="omega-graph-status" style="margin-top:12px">Waiting for canonical object graph runtime…</pre>
+</section>
 <section class="card" style="margin-top:14px">
 <div class="eyebrow">PROOF LOG</div>
 <details open><summary>WHAT THIS PAGE CAN PROVE</summary><pre id="proof">Running...</pre></details>
@@ -62,6 +72,21 @@ pre{white-space:pre-wrap;word-break:break-word;color:rgba(238,238,238,.65);font-
 'use strict';
 var $=function(id){return document.getElementById(id)};
 var checks=[];
+function updateObjectGraph(){
+  var g=window.OmegaObjectGraph;
+  var status=document.getElementById('omega-graph-status');
+  if(!g||typeof g.snapshot!=='function'){if(status)status.textContent='OBJECT GRAPH UNAVAILABLE';return;}
+  var snap=g.snapshot(), objs=snap.objects||[];
+  var events=objs.filter(function(o){return o.type==='event';}).length;
+  var truth={}; objs.forEach(function(o){truth[o.truth]=(truth[o.truth]||0)+1;});
+  var states=Object.keys(truth).map(function(k){return k+': '+truth[k];}).join(' · ')||'NONE';
+  var $=function(id){return document.getElementById(id)};
+  if($('og-objects'))$('og-objects').textContent=String(snap.counts.objects);
+  if($('og-relations'))$('og-relations').textContent=String(snap.counts.relations);
+  if($('og-events'))$('og-events').textContent=String(events);
+  if($('og-truth'))$('og-truth').textContent=events?'SOURCE':'UNKNOWN';
+  if(status)status.textContent='OBSERVED '+snap.observedAt+' · '+states;
+}
 function add(name,state,detail){checks.push({name:name,state:state,detail:detail});}
 function paint(){
 $('checks').innerHTML=checks.map(function(x){
@@ -77,6 +102,7 @@ try{var r=await fetch(path,{cache:'no-store',credentials:'same-origin'});return 
 catch(e){return {ok:false,status:0};}
 }
 async function run(){
+updateObjectGraph();
 checks=[];$('refresh').disabled=true;$('refresh').textContent='CHECKING…';
 $('m-runtime').textContent='READY';$('s-runtime').textContent=(navigator.hardwareConcurrency||'?')+' CPU threads · '+(navigator.deviceMemory||'?')+' GB memory hint';
 add('Secure context',isSecureContext?'ok':'warn',location.protocol);

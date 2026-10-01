@@ -35,6 +35,9 @@ FUNCTION_RE = re.compile(r"\b(?:create|replace)\s+function\s+([a-zA-Z_][a-zA-Z0-
 TABLE_RE = re.compile(r"\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?([a-zA-Z_][a-zA-Z0-9_]*)", re.I)
 RPC_RE = re.compile(r"\b\.rpc\(\s*['\"]([^'\"]+)['\"]", re.I)
 FROM_RE = re.compile(r"\b\.from\(\s*['\"]([^'\"]+)['\"]", re.I)
+LOCAL_GATE_EMIT_RE = re.compile(r"OmegaBus\.emit\(\s*['\"]sovereign\.gate\.unlocked", re.I)
+LOCAL_GATE_STORAGE_RE = re.compile(r"omega_last_gate", re.I)
+HARDCODED_GATE_RE = re.compile(r"2\.3197\s*,\s*4\.6394\s*,\s*6\.9592\s*,\s*9\.2789", re.I)
 
 
 def read_text(path: pathlib.Path) -> str:
@@ -62,6 +65,9 @@ def main() -> int:
     tables = collections.defaultdict(list)
     client_rpcs = collections.defaultdict(list)
     client_tables = collections.defaultdict(list)
+    local_gate_emit = []
+    local_gate_storage = []
+    hardcoded_gate_thresholds = []
 
     for path in sql_files:
         text = read_text(path)
@@ -77,6 +83,12 @@ def main() -> int:
             client_rpcs[name].append(rel)
         for name in FROM_RE.findall(text):
             client_tables[name].append(rel)
+        if LOCAL_GATE_EMIT_RE.search(text):
+            local_gate_emit.append(rel)
+        if LOCAL_GATE_STORAGE_RE.search(text):
+            local_gate_storage.append(rel)
+        if HARDCODED_GATE_RE.search(text):
+            hardcoded_gate_thresholds.append(rel)
 
     duplicate_functions = {
         name: entries for name, entries in functions.items() if len(entries) > 1
@@ -112,10 +124,21 @@ def main() -> int:
         "duplicateTableDefinitions": duplicate_tables,
         "clientRpcWithoutSourceDefinition": missing_rpc_definitions,
         "clientTableWithoutSourceDefinition": missing_table_definitions,
+        "progressionAuthorityChecks": {
+            "localGateUnlockEmit": local_gate_emit,
+            "localGateUnlockStorage": local_gate_storage,
+            "hardcodedGateThresholds": hardcoded_gate_thresholds,
+            "authoritativeEventBridge": [
+                "supabase/migrations/20261001090000_omega_authoritative_progression_events.sql",
+                "omega-event-bus.js",
+                "omega-workers.js"
+            ],
+        },
         "interpretation": {
             "duplicateDefinitions": "review; some historical SQL files may be migration artifacts",
             "missingReferences": "review against live schema; source-only evidence is not proof of absence",
             "authorityPresence": "hardening check; absence of a canonical owner is a convergence blocker",
+            "progressionAuthority": "client gate emission/storage is a blocker; read-only gate formulas are review items until migrated to OmegaCanon",
         },
     }
 
@@ -132,6 +155,9 @@ def main() -> int:
         print(f"Duplicate SQL tables:    {len(duplicate_tables)}")
         print(f"Missing RPC definitions: {len(missing_rpc_definitions)}")
         print(f"Missing table refs:      {len(missing_table_definitions)}")
+        print(f"Local gate unlock emits: {len(local_gate_emit)}")
+        print(f"Local gate storage refs: {len(local_gate_storage)}")
+        print(f"Hardcoded gate tables:   {len(hardcoded_gate_thresholds)}")
         print("\nThis report is evidence for review, not proof of live production state.")
 
     return 0

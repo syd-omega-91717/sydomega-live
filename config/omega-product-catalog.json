@@ -1,0 +1,242 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-product-catalog",
+  "purpose": "Turns the SYD OMEGA product universe into executable product families with explicit state, ownership, data boundary, monetization, dependencies, and verification requirements.",
+  "productStates": [
+    "CONCEPT",
+    "SPECIFIED",
+    "DESIGNED",
+    "BUILT",
+    "INTEGRATED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "SIMULATION_ONLY",
+    "BLOCKED",
+    "DEPRECATED"
+  ],
+  "modules": [
+    {
+      "id": "CORE",
+      "name": "Core",
+      "products": [
+        "Identity & session",
+        "Omega command center",
+        "Event fabric",
+        "Global search"
+      ],
+      "state": "INTEGRATED"
+    },
+    {
+      "id": "CONSULTANCY",
+      "name": "Consultancy",
+      "products": [
+        "Consultation intake",
+        "Case workspace",
+        "Deliverables",
+        "Client billing"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "GAMING",
+      "name": "Gaming",
+      "products": [
+        "Missions",
+        "Progression",
+        "Simulation trades",
+        "Leaderboards"
+      ],
+      "state": "INTEGRATED"
+    },
+    {
+      "id": "ACHIEVEMENTS",
+      "name": "Achievements",
+      "products": [
+        "Achievement definitions",
+        "Evidence-backed awards",
+        "Certificates"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "FAMILY",
+      "name": "Family",
+      "products": [
+        "Family graph",
+        "Heritage records",
+        "Private legacy vault"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "MEDIA",
+      "name": "Media",
+      "products": [
+        "Media library",
+        "Video jobs",
+        "Creator workflows",
+        "Publishing"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "BLOCKCHAIN_NFT",
+      "name": "Blockchain/NFT",
+      "products": [
+        "Asset registry",
+        "Ownership proofs",
+        "Marketplace simulation",
+        "External-chain integration gateway"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "COMMUNICATION",
+      "name": "Communication",
+      "products": [
+        "Messaging",
+        "Notifications",
+        "Presence",
+        "Realtime events"
+      ],
+      "state": "INTEGRATED"
+    },
+    {
+      "id": "HOROSCOPE",
+      "name": "Horoscope",
+      "products": [
+        "Birth-data calculator",
+        "Interpretive readings",
+        "Oracle provenance"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "NEWS",
+      "name": "News",
+      "products": [
+        "Source ingestion",
+        "Topic feeds",
+        "Citation/provenance",
+        "Search"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "HERITAGE",
+      "name": "Heritage",
+      "products": [
+        "Legacy timeline",
+        "Documents",
+        "Media archive",
+        "Access controls"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "PROGRESS",
+      "name": "Progress",
+      "products": [
+        "729-node matrix",
+        "Tasks",
+        "Verification",
+        "Stage progression"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "CREDENTIALS",
+      "name": "Credentials",
+      "products": [
+        "Passport",
+        "Certificates",
+        "QR verification",
+        "Credential registry"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "LEGAL",
+      "name": "Legal",
+      "products": [
+        "Terms",
+        "Privacy",
+        "Consent records",
+        "Contract workflow"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "ELEMENTAL",
+      "name": "Elemental",
+      "products": [
+        "Cosmology explorer",
+        "Simulation rules",
+        "Interpretive content"
+      ],
+      "state": "SIMULATION_ONLY"
+    },
+    {
+      "id": "INVESTMENT",
+      "name": "Investment",
+      "products": [
+        "Watchlists",
+        "Research",
+        "Portfolio simulation",
+        "Risk analytics"
+      ],
+      "state": "DESIGNED"
+    },
+    {
+      "id": "INTELLIGENCE",
+      "name": "Intelligence",
+      "products": [
+        "Evidence graph",
+        "AI gateway",
+        "Agent orchestration",
+        "Knowledge retrieval"
+      ],
+      "state": "INTEGRATED"
+    },
+    {
+      "id": "HIERARCHY",
+      "name": "Hierarchy",
+      "products": [
+        "Role registry",
+        "Entitlements",
+        "Owner controls",
+        "Governance audit"
+      ],
+      "state": "DESIGNED"
+    }
+  ],
+  "productizationRules": {
+    "fictional_physical_claims": "SIMULATION_ONLY until an independently deployable physical integration, operator, safety case and evidence exists.",
+    "financial_actions": "Require server-authoritative authorization, idempotency, immutable ledger/reconciliation and provider evidence.",
+    "health_features": "Require explicit consent, data minimization, clinical safety boundaries and qualified external providers; no autonomous diagnosis or treatment.",
+    "surveillance_features": "No covert monitoring or biometric tracking; use explicit consent and auditable security telemetry.",
+    "competitive_intelligence": "Use public/licensed data and defensive benchmarking; no intrusion, credential abuse or proprietary cloning.",
+    "autonomous_agents": "Deny by default; explicit tools, scopes, budgets, rate limits, approvals and audit evidence.",
+    "blockchain": "Treat ownership/minting as external-chain state only after signed transaction confirmation; no client-authoritative ownership.",
+    "oracle_features": "Clearly label interpretive/divination content and never present it as verified prediction."
+  },
+  "acceptance": {
+    "minimum": [
+      "repo_artifact",
+      "data_contract",
+      "authorization_boundary",
+      "loading_empty_error_states",
+      "tests",
+      "observability",
+      "rollback"
+    ],
+    "production": [
+      "deployed_artifact",
+      "runtime_smoke",
+      "current_evidence",
+      "recovery_path"
+    ],
+    "verified": "All production-critical dependencies and user journeys have current evidence."
+  }
+}

@@ -566,6 +566,44 @@
         "Source audit identified 9^3=729 and 9^5=59,049 canonical claims plus twelve-agent/twelve-module structures."
       ],
       "blocker": "Create a formal canon registry mapping each dimensional system to its owning product/domain and prohibit accidental cross-mapping."
+    },
+    {
+      "id": "SERVICE-001",
+      "domain": "platform",
+      "source": [
+        "SYD OMEGA 91717.txt",
+        "Product Catalog"
+      ],
+      "requirement": "Turn modules and future concepts into governed executable services with lifecycle, authorization, data class, commercial model and rollback.",
+      "state": "INTEGRATED",
+      "repo": [
+        "public.omega_capabilities",
+        "public.omega_services",
+        "supabase/migrations/20261002014000_create_omega_capability_service_catalog.sql"
+      ],
+      "evidence": [
+        "Live Supabase verification: 24 capability records and 24 service records."
+      ],
+      "blocker": "Individual service runtimes, provider integrations, tests and production evidence remain to be attached before VERIFIED."
+    },
+    {
+      "id": "SERVICE-002",
+      "domain": "commerce",
+      "source": [
+        "999 Blueprint",
+        "Master Prompt"
+      ],
+      "requirement": "Service ordering must be idempotent and connect authorization, provider settlement, entitlement and delivery.",
+      "state": "DESIGNED",
+      "repo": [
+        "public.omega_service_orders",
+        "public.omega_entitlements",
+        "public.omega_payment_events"
+      ],
+      "evidence": [
+        "Service order schema includes unique idempotency_key and provider/entitlement references."
+      ],
+      "blocker": "Stripe/provider webhook integration and reconciliation remain outstanding."
     }
   ]
 }

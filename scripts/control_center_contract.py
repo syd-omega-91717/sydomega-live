@@ -4,6 +4,11 @@ from pathlib import Path
 import re
 import sys
 
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
+
 root = Path(__file__).resolve().parents[1]
 page = root / "control-center.html"
 nav = root / "nav.js"

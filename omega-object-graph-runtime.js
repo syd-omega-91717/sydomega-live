@@ -40,4 +40,16 @@
   window.OmegaObjectGraph={version:VERSION,put:put,putMany:putMany,link:link,ingest:ingest,get:get,find:find,snapshot:snapshot,subscribe:subscribe,clear:clear};
   document.addEventListener('omega:platform-event',function(e){ingest(e&&e.detail||{});});
   document.addEventListener('omega:action:succeeded',function(e){var d=e&&e.detail||{};if(d&&d.action)ingest({object:d.action,meta:{type:d.action.type||'event',source:'omega-action-runtime'}});});
+  function bindOmegaBus(){
+    if(!window.OmegaBus||typeof window.OmegaBus.on!=='function')return;
+    window.OmegaBus.on('*',function(evt){
+      if(!evt||!evt.id||!evt.name)return;
+      var payload=evt.payload&&typeof evt.payload==='object'?evt.payload:{};
+      put({id:String(evt.id),label:String(payload.title||payload.name||evt.name),metadata:{eventName:evt.name,payload:payload},createdAt:new Date(evt.ts||Date.now()).toISOString()},
+          {type:'event',source:'OmegaBus:'+evt.name,truth:'SOURCE',observedAt:new Date(evt.ts||Date.now()).toISOString()});
+      if(payload.memberId!=null)link({from:String(payload.memberId),to:String(evt.id),type:'TRIGGERS',source:'OmegaBus:'+evt.name});
+    });
+  }
+  bindOmegaBus();
+  window.addEventListener('omega:bus-ready',bindOmegaBus);
 })();

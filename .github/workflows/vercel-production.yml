@@ -101,6 +101,8 @@ jobs:
         run: python scripts/omega-responsive-surface-contract.py
       - name: Repository production proof contract
         run: python scripts/production-proof-contract.py
+      - name: Enterprise readiness contract
+        run: python scripts/omega-enterprise-readiness-contract.py
       - name: Architecture convergence audit
         run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants

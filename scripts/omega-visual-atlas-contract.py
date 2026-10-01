@@ -24,7 +24,7 @@ assert "REFERENCE ONLY" in html or "REFERENCE ONLY" in js, "truth boundary missi
 # The atlas intentionally uses both single-quoted and double-quoted
 # object literals. Match the canonical p: field directly instead of coupling
 # the contract to one formatting style.
-paths = re.findall(r"""\\bp\\s*:\\s*(['"])(.*?)\\1""", js)
+paths = re.findall(r"""\bp\s*:\s*(['"])(.*?)\1""", js)
 paths = [row[1] for row in paths]
 assert len(paths) == 46, f"expected 46 curated source references, found {len(paths)}"
 

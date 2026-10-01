@@ -61,43 +61,37 @@
       "id": "capability-registry",
       "domain": "platform",
       "route": "/control-center.html",
-      "state": "implemented",
-      "registry_id": "capability-registry"
+      "state": "implemented"
     },
     {
       "id": "object-graph",
       "domain": "platform",
       "route": "/graph-explorer.html",
-      "state": "implemented",
-      "registry_id": "object-graph"
+      "state": "implemented"
     },
     {
       "id": "evidence-graph",
       "domain": "intelligence",
       "route": "/evidence.html",
-      "state": "implemented",
-      "registry_id": "evidence-graph"
+      "state": "implemented"
     },
     {
       "id": "agent-runtime",
       "domain": "intelligence",
       "route": "/agent-operations.html",
-      "state": "implemented",
-      "registry_id": "agent-runtime"
+      "state": "implemented"
     },
     {
       "id": "commerce",
       "domain": "economy",
       "route": "/vault.html",
-      "state": "implemented",
-      "registry_id": "commerce"
+      "state": "implemented"
     },
     {
       "id": "governance",
       "domain": "trust",
       "route": "/governance.html",
-      "state": "implemented",
-      "registry_id": "governance"
+      "state": "implemented"
     },
     {
       "id": "reliability",
@@ -110,8 +104,7 @@
       "id": "developer-platform",
       "domain": "platform",
       "route": "/ecosystem.html",
-      "state": "partial",
-      "registry_id": "production-contract"
+      "state": "partial"
     },
     {
       "id": "universal-search",
@@ -131,8 +124,7 @@
       "id": "progression",
       "domain": "data",
       "route": "/ascension.html",
-      "state": "implemented",
-      "registry_id": "progression"
+      "state": "implemented"
     },
     {
       "id": "observability",

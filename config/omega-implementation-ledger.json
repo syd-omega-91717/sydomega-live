@@ -455,9 +455,9 @@
         "config/omega-product-catalog.json"
       ],
       "evidence": [
-        "Source inventory audit: 391 unique numbered point bullets were extracted from the 999-point blueprint."
+        "Source inventory audit: 399 numbered bullet occurrences were extracted; 391 unique point numbers; 608 point numbers in the nominal 1-999 range have no numbered bullet; eight numbers are duplicated (100-104,112-113,133)."
       ],
-      "blocker": "Complete point-by-point productization mapping remains outstanding."
+      "blocker": "The file is labeled a 999-point blueprint but the numbered bullet inventory is 399 occurrences/391 unique points. Every point occurrence must be reconciled to its section/source intent before implementation status can be assigned."
     },
     {
       "id": "DB-002",

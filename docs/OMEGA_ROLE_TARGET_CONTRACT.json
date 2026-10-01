@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "SYD OMEGA 91717",
+  "surfaces": {
+    "WORLD": "discovery and spatial context",
+    "COMMAND": "action and operational control",
+    "ASCEND": "progression and learning",
+    "COSMOS": "identity, canon and visual universe",
+    "VAULT": "commerce, assets and entitlements",
+    "ORDER": "relationships and governance",
+    "SERVICES": "professional, creator and media services",
+    "INTEL": "research, knowledge and AI"
+  },
+  "moduleCount": 18,
+  "executionOrder": [
+    "core-command",
+    "consultancy",
+    "gaming",
+    "achievements",
+    "family",
+    "media",
+    "blockchain-gated",
+    "communication-security",
+    "horoscope",
+    "news",
+    "heritage",
+    "progress",
+    "credentials",
+    "legal",
+    "canon",
+    "investment-gated",
+    "ai-intelligence",
+    "hierarchy"
+  ],
+  "definitionOfDone": [
+    "role",
+    "target",
+    "authority",
+    "data",
+    "security",
+    "failure",
+    "observability",
+    "verification",
+    "deploymentEvidence",
+    "decisionLog"
+  ]
+}

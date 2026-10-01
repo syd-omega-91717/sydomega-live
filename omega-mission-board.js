@@ -146,7 +146,7 @@ async function load(){
     sb.from('omega_quests').select('id,quest_key,version,title,description,status,updated_at').eq('status','active').order('updated_at',{ascending:false}),
     sb.from('omega_member_mission_state').select('id,mission_id,status,attempt_count,started_at,completed_at,last_transition_at').order('last_transition_at',{ascending:false}),
     sb.from('omega_member_quest_state').select('id,quest_id,status,current_mission_id,started_at,completed_at,last_transition_at').order('last_transition_at',{ascending:false}),
-    sb.from('omega_platform_events').select('id,event_type,route,created_at,metadata').eq('actor_user_id',session.user.id).order('created_at',{ascending:false}).limit(100),
+    sb.from('omega_platform_events').select('id,event_type,route,actor_user_id,created_at,metadata').eq('actor_user_id',session.user.id).order('created_at',{ascending:false}).limit(100),
     sb.from('omega_mission_transitions').select('id,member_mission_id,from_status,to_status,event_id,evidence_event_ids,graph_evidence_ids,idempotency_key,reason,created_at').order('created_at',{ascending:false}).limit(100)
   ]);
   const failed=results.find(r=>r.error);
@@ -160,6 +160,12 @@ async function load(){
   state.questStates=results[3].data||[];
   state.events=results[4].data||[];
   state.transitions=results[5].data||[];
+  /* Feed persisted mission state into the canonical read-side object graph. */
+  if(window.OmegaObjectGraph){
+    window.OmegaObjectGraph.putMany(state.missions,{type:'mission',source:'omega_missions',truth:'LIVE',observedAt:new Date().toISOString()});
+    window.OmegaObjectGraph.putMany(state.events.map(e=>({id:e.id,label:e.event_type||'platform event',metadata:e.metadata,createdAt:e.created_at})),{type:'event',source:'omega_platform_events',truth:'LIVE',observedAt:new Date().toISOString()});
+    state.events.forEach(e=>{if(e.actor_user_id)window.OmegaObjectGraph.link({from:String(e.actor_user_id),to:String(e.id),type:'TRIGGERS',source:'omega_platform_events'});});
+  }
   $('missionReality').innerHTML=reality('LIVE','Mission definitions, member state, evidence events and transitions are read from persisted Supabase state.');
   renderKpis();renderMissions();renderQuests();renderHistory();renderScience();
 }

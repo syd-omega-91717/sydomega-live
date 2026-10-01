@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
-"""Verify that every root HTML page has exactly one canonical Omega City district."""
+"""Verify that every root HTML page has exactly one canonical Omega City district.
+
+Usage:
+  python3 scripts/page-world-contract.py
+  python3 scripts/page-world-contract.py --help
+"""
 
 import json
 import re
 import sys
 from pathlib import Path
+
+if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 
 ROOT=Path(__file__).resolve().parents[1]
 WORLD=ROOT/"config/omega-world-manifest.json"

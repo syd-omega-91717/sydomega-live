@@ -9,7 +9,7 @@ from pathlib import Path
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-FILES=[ROOT/"omega-evidence-graph.js",ROOT/"omega-evidence-graph.css",ROOT/"evidence.html",ROOT/"docs/OMEGA_EVIDENCE_GRAPH.md"]
+FILES=[ROOT/"omega-evidence-graph.js",ROOT/"omega-evidence-graph.css",ROOT/"evidence.html",ROOT/"docs/OMEGA_EVIDENCE_GRAPH.md",ROOT/"supabase/functions/evidence-graph/index.ts"]
 
 def fail(msg):
     print("OMEGA EVIDENCE GRAPH CONTRACT: FAIL — "+msg); raise SystemExit(1)
@@ -22,6 +22,7 @@ def main():
     js=(ROOT/"omega-evidence-graph.js").read_text()
     doc=(ROOT/"docs/OMEGA_EVIDENCE_GRAPH.md").read_text()
     html=(ROOT/"evidence.html").read_text()
+    edge=(ROOT/"supabase/functions/evidence-graph/index.ts").read_text()
     for marker in ("auth.getUser()","omega_platform_events","omega_platform_evidence","task_completions","graph_evidence","actor_user_id"):
         if marker not in js: fail(f"missing {marker}")
     if "innerHTML" in js or "innerHTML" in html: fail("unsafe HTML sink")
@@ -29,6 +30,19 @@ def main():
     if "createClient" in js or "sb_publishable_" in js:
         fail("module builds its own Supabase client; use window.OmegaSB.get()")
     if "OmegaSB" not in js: fail("missing shared client accessor window.OmegaSB")
+    edge_markers = (
+        ('auth: "user"', "authenticated edge boundary"),
+        ("ctx.userClaims?.sub", "resolved caller identity"),
+        ('eq("actor_user_id", userId)', "member event scoping"),
+        ('eq("user_id", userId)', "member row scoping"),
+        ("ctx.supabaseAdmin", "server-only platform evidence access"),
+        ("omega_platform_evidence", "platform evidence source"),
+    )
+    for marker, label in edge_markers:
+        if marker not in edge: fail(f"server evidence boundary missing {label}: {marker}")
+    if 'auth: "none"' in edge: fail("server evidence endpoint must not be public")
+    if '"Cache-Control": "private' not in edge: fail("server evidence response must be private")
+
     for scope in ('"MEMBER"', '"PLATFORM"'):
         if scope not in js: fail(f"missing {scope} scope label (platform vs member evidence)")
     if "EVENT → CAPABILITY EVIDENCE → TASK → GRAPH EVIDENCE → EXPERIENCE" not in doc:

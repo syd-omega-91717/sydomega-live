@@ -66,6 +66,8 @@
           return e.title+' \u00b7 '+ago;
         });
         _eventFeed=r.data;
+        if(window.OmegaObjectGraph&&typeof window.OmegaObjectGraph.putMany==='function')
+          window.OmegaObjectGraph.putMany(r.data,{type:'post',source:'activity_feed',truth:'LIVE'});
         /* Emit */
         if(window.OmegaOS)window.OmegaOS.events.emit('realtime:activity',{items:r.data});
         /* Inject into any [data-live-ticker] */
@@ -99,6 +101,8 @@
         .on('postgres_changes',{event:'INSERT',schema:'public',table:'activity_feed'},function(payload){
           var item=payload.new;
           if(!item) return;
+          if(window.OmegaObjectGraph&&typeof window.OmegaObjectGraph.put==='function')
+            window.OmegaObjectGraph.put(item,{type:'post',source:'activity_feed',truth:'LIVE'});
           _tickerItems.unshift(item.title||'Sovereign event');
           if(_tickerItems.length>20) _tickerItems.pop();
           startTicker();

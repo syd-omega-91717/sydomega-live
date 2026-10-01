@@ -1,0 +1,27 @@
+/* Ω COMMAND HUD — additive, responsive and reduced-motion safe */
+.omega-command-hud{position:fixed;right:16px;bottom:42px;z-index:9997;font-family:var(--M,'Courier Prime',monospace)}
+.omega-command-hud__toggle{width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,168,76,.55);background:rgba(2,2,6,.86);color:#E8C97A;font:700 17px/1 Cinzel,serif;box-shadow:0 0 24px rgba(201,168,76,.12);backdrop-filter:blur(12px);cursor:pointer}
+.omega-command-hud__toggle:focus-visible{outline:2px solid #00E5FF;outline-offset:3px}
+.omega-command-hud.is-open .omega-command-hud__toggle{border-color:rgba(0,229,255,.7);box-shadow:0 0 28px rgba(0,229,255,.14)}
+.omega-command-hud__panel{position:absolute;right:0;bottom:56px;width:min(340px,calc(100vw - 28px));padding:15px;border:1px solid rgba(232,201,122,.22);border-radius:14px;background:rgba(6,7,12,.94);backdrop-filter:blur(18px) saturate(1.15);box-shadow:0 24px 70px rgba(0,0,0,.62),inset 0 1px rgba(255,255,255,.06)}
+.omega-command-hud__head{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#E8C97A;letter-spacing:1.5px;font-size:12px}
+.omega-command-hud__reality{font-size:9px;letter-spacing:1px;padding:4px 6px;border:1px solid rgba(201,168,76,.2);border-radius:999px;color:#8a8676}
+.omega-command-hud__reality[data-state="healthy"]{color:#00FF88;border-color:rgba(0,255,136,.35)}
+.omega-command-hud__reality[data-state="degraded"]{color:#E8C97A}
+.omega-command-hud__reality[data-state="failing"]{color:#CF6760;border-color:rgba(207,103,96,.35)}
+.omega-command-hud__context{margin:12px 0 10px;padding:9px 10px;border-left:2px solid rgba(0,229,255,.45);color:#b8b4a7;font-size:10px;line-height:1.5;letter-spacing:.5px}
+.omega-command-hud__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.omega-command-hud__grid a{display:block;padding:9px 5px;text-align:center;border:1px solid rgba(232,201,122,.13);border-radius:8px;color:#d7d2c5;text-decoration:none;font-size:9px;letter-spacing:.8px}
+.omega-command-hud__grid a:hover{border-color:rgba(0,229,255,.45);color:#fff;background:rgba(0,229,255,.045)}
+.omega-command-hud__health{margin-top:11px;color:#9e9a8d;font-size:9px;letter-spacing:.7px}
+.omega-command-hud__note{margin:9px 0 0;color:#777467;font-size:9px;line-height:1.45}
+@media(max-width:700px){
+ .omega-command-hud{right:12px;bottom:101px}
+ .omega-command-hud__panel{bottom:54px}
+}
+@media(prefers-reduced-motion:reduce){
+ .omega-command-hud__toggle,.omega-command-hud__panel{transition:none!important}
+}
+@media(forced-colors:active){
+ .omega-command-hud__toggle,.omega-command-hud__panel,.omega-command-hud__grid a{backdrop-filter:none;background:Canvas;color:CanvasText;border:1px solid CanvasText}
+}

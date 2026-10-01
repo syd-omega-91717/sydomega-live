@@ -8,7 +8,7 @@
   if(window.__omegaPageWorld)return;
   window.__omegaPageWorld=true;
 
-  var manifest=null, world=null, overrides=null, archetype=null, district=null, slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
+  var manifest=null, world=null, pageWorld=null, overrides=null, archetype=null, district=null, pagePath=((location.pathname||'/').replace(/^\/+/,'')), slug=((location.pathname.split('/').pop()||'dashboard').replace(/\.html$/,'')||'dashboard');
   var labels={
     command:{title:'COMMAND',next:'/missions.html',nextLabel:'MISSIONS',secondary:'/decisions.html',secondaryLabel:'DECISIONS'},
     identity:{title:'IDENTITY',next:'/profile.html',nextLabel:'IDENTITY',secondary:'/character.html',secondaryLabel:'CHARACTER'},
@@ -41,6 +41,7 @@
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
     archetype=findArchetype();
+    if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
     if(district){
@@ -58,29 +59,41 @@
     host.setAttribute('aria-label','Omega world role and next actions');
     host.innerHTML='<style>'+
       '#omega-page-world{margin:0 auto 14px;max-width:1600px;padding:0 14px}'+
-      '.opw-inner{border:1px solid rgba(201,168,76,.18);background:linear-gradient(90deg,rgba(10,10,15,.92),rgba(2,2,6,.78));padding:11px 13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}'+
+      '.opw-inner{border:1px solid rgba(201,168,76,.18);background:linear-gradient(90deg,rgba(10,10,15,.92),rgba(2,2,6,.78));padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}'+
       '.opw-mark{font-family:var(--D);font-size:18px;color:var(--gold);min-width:26px;text-align:center}'+
       '.opw-copy{min-width:190px;flex:1}'+
-      '.opw-kicker{font-family:var(--M);font-size:12px;letter-spacing:2.2px;color:var(--cyan)}'+
-      '.opw-role{font-family:var(--D);font-size:14px;color:var(--ink);margin-top:2px}'+
-      '.opw-verb{font-family:var(--M);font-size:12px;letter-spacing:1.4px;color:var(--muted);margin-top:2px}'+
+      '.opw-kicker{font-family:var(--M);font-size:12px;letter-spacing:1.8px;color:var(--cyan)}'+
+      '.opw-role{font-family:var(--D);font-size:13px;color:var(--ink);margin-top:1px}'+
+      '.opw-verb{font-family:var(--M);font-size:12px;letter-spacing:1.1px;color:var(--muted);margin-top:1px}'+
       '.opw-actions{display:flex;gap:6px;flex-wrap:wrap}'+
       '.opw-actions a{font-family:var(--M);font-size:12px;letter-spacing:1.2px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.25);padding:6px 9px}'+
       '.opw-actions a:hover,.opw-actions a:focus-visible{border-color:var(--gold);background:rgba(201,168,76,.06)}'+
       '.opw-actions a.opw-mission{color:var(--cyan);border-color:rgba(0,229,255,.22)}'+
+      '#omega-page-world.opw-compact .opw-kicker,#omega-page-world.opw-compact .opw-verb{display:none}'+
+      '#omega-page-world.opw-compact .opw-role{font-family:var(--M);font-size:12px;letter-spacing:1.6px;color:var(--ink);text-transform:uppercase}'+
       '@media(max-width:620px){#omega-page-world{padding:0 8px}.opw-copy{min-width:140px}.opw-actions{width:100%}.opw-actions a{flex:1;text-align:center}}'+
       '</style>'+
       '<div class="opw-inner">'+
       '<div class="opw-mark" aria-hidden="true">&#937;</div>'+
       '<div class="opw-copy"><div class="opw-kicker">WORLD ROLE · '+escapeHtml(l.title)+'</div>'+
       '<div class="opw-role">'+escapeHtml(a.worldRole||'Citizen')+'</div>'+
-      '<div class="opw-verb">YOUR VERB · '+escapeHtml(a.worldVerb||'ACT')+' · OUTCOME · '+escapeHtml(a.successOutcome||'progress recorded')+'</div></div>'+
+      '<div class="opw-verb">YOUR VERB · '+escapeHtml((pageWorld&&pageWorld.verb)||a.worldVerb||'ACT')+' · ACTION · '+escapeHtml((pageWorld&&pageWorld.primaryAction)||((a.primaryActions||[])[0])||'ACT')+' · OUTCOME · '+escapeHtml((pageWorld&&pageWorld.successOutcome)||a.successOutcome||'progress recorded')+'</div></div>'+
       '<div class="opw-actions"><a class="opw-mission" href="/missions.html">MISSION</a>'+
       '<a href="'+escapeAttr(l.next)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.nextLabel)+'</a>'+
       '<a href="'+escapeAttr(l.secondary)+'" data-world-action="'+escapeAttr(a.worldVerb||"ACT")+'" data-world-district="'+escapeAttr(district&&district.id||"")+'">'+escapeHtml(l.secondaryLabel)+'</a></div></div>';
-    var main=document.querySelector('main')||document.body;
+    /* The world membrane belongs INSIDE the page content column. Vault-sector pages
+       use `aside#omega-side + .page-shell` rather than a semantic <main>. The shared
+       stylesheet intentionally makes those body children a horizontal flex row; if
+       this membrane falls back to <body>, it becomes a third flex column and squeezes
+       the real page into the right-hand strip seen in the Vault screenshots. */
+    var main=document.querySelector('main, .main, .page-shell, #app, [role="main"]')||document.body;
     main.insertBefore(host,main.firstElementChild||null);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    function reconcileDensity(){
+      if(document.querySelector('.oid-hero')) host.classList.add('opw-compact');
+    }
+    reconcileDensity();
+    setTimeout(reconcileDensity,900);
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');
@@ -105,6 +118,10 @@
       if(!r.ok)throw new Error('page manifest '+r.status);
       manifest=await r.json();
       try{
+        var pr=await fetch('/config/page-world-actions.json',{cache:'no-store'});
+        if(pr.ok)pageWorld=await pr.json();
+      }catch(_pageWorld){}
+      try{
         var wr=await fetch('/config/omega-world-manifest.json',{cache:'no-store'});
         if(wr.ok)world=await wr.json();
         var or=await fetch('/config/page-world-overrides.json',{cache:'no-store'});
@@ -114,5 +131,5 @@
     }catch(e){console.warn('[Omega] page world membrane unavailable',e);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getManifest:function(){return manifest;},getOverrides:function(){return overrides;}};
+  window.OmegaPageWorld={boot:boot,getArchetype:function(){return archetype;},getDistrict:function(){return district;},getPage:function(){return pageWorld;},getManifest:function(){return manifest;},getOverrides:function(){return overrides;}};
 })();

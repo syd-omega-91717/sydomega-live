@@ -1953,7 +1953,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
     var s=document.createElement('style');s.id='omega-ui-css';
-    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:color .15s,border-color .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}@media(max-width:760px){.tnav-btn{min-height:26px;padding:6px 10px}}a[href],button,[role=button],label,summary,select,input[type=checkbox],input[type=radio]{touch-action:manipulation}input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}';
+    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:color .15s,border-color .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:none;align-items:center;gap:10px;margin-bottom:0;flex-wrap:wrap}@media(max-width:760px){.tnav-wrap{display:flex;margin-bottom:8px}.tnav-btn{min-height:40px;padding:6px 10px}}a[href],button,[role=button],label,summary,select,input[type=checkbox],input[type=radio]{touch-action:manipulation}input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}';
     (document.head||document.documentElement).appendChild(s);
   }
   /* Topbar back/home */
@@ -1986,9 +1986,14 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     'font-family:monospace;font-size:12px;font-weight:700;min-width:14px;height:14px;',
     'border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 2px;',
     'animation:badge-pulse 1.5s ease-in-out infinite;z-index:999}',
-    '.omega-alert{position:fixed;top:50px;right:18px;z-index:9998;background:rgba(13,13,24,.97);',
-    'border:1px solid rgba(139,0,0,.5);border-left:3px solid #8B0000;padding:14px 18px;',
-    'cursor:pointer;transition:all .2s;min-width:240px}',
+    '.omega-alert{position:fixed;top:76px;right:18px;z-index:9998;',
+    'display:flex;flex-direction:column;align-items:stretch;gap:3px;',
+    'box-sizing:border-box;width:min(560px,calc(100vw - 36px));min-width:0;max-width:calc(100vw - 36px);',
+    'max-height:calc(100vh - 94px);overflow:auto;text-decoration:none;',
+    'background:rgba(13,13,24,.97);border:1px solid rgba(139,0,0,.5);',
+    'border-left:3px solid #8B0000;padding:14px 18px;',
+    'cursor:pointer;transition:transform .2s,opacity .2s;}',
+    '@media(max-width:760px){.omega-alert{top:12px;right:10px;width:calc(100vw - 20px);max-width:calc(100vw - 20px);}}',
     '@keyframes badge-pulse{0%,100%{box-shadow:0 0 4px rgba(139,0,0,.6)}50%{box-shadow:0 0 14px rgba(139,0,0,.9)}}'
   ].join('');
   (document.head||document.documentElement).appendChild(s);
@@ -2713,14 +2718,7 @@ setTimeout(function(){
     _osdv.setAttribute('data-omega-sculpture-dataviz','1');_osdv.defer=true;__omegaAppend(_osdv);
   }
 
-  /* Seasonal & elemental theme personalization — member's zodiac element + calendar season
-     modulate platform palette via CSS tokens. Reads profile.sign, maps to element, detects
-     current season, applies saturation/brightness adjustments, publishes to :root. Respects
-     prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-theme-personalization]')){
-    var _otheme=document.createElement('script');_otheme.src='/omega-theme-personalization.js';
-    _otheme.setAttribute('data-omega-theme-personalization','1');_otheme.defer=true;__omegaAppend(_otheme);
-  }
+  /* Canonical elemental/seasonal theme engine is loaded once near the platform nervous system. */
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
   if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;__omegaAppend(_ott);}
@@ -2770,6 +2768,8 @@ setTimeout(function(){
     _owa.setAttribute('data-omega-world-actions','1');_owa.defer=true;__omegaAppend(_owa);
   }
 
+  /* Ω District Mission Entry — starts only canonical server-defined district missions. */
+  if(!document.querySelector('script[data-omega-world-mission]')){var wm=document.createElement('script');wm.src='/omega-world-mission.js';wm.setAttribute('data-omega-world-mission','1');wm.defer=true;__omegaAppend(wm);}
   /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
      from config/page-character-manifest.json. The membrane is additive: it does not create
      authority, XP, rewards, payments, or duplicate navigation. */

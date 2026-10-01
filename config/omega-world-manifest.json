@@ -54,7 +54,8 @@
         "authority",
         "mission reputation"
       ],
-      "unlock": "member access"
+      "unlock": "member access",
+      "missionKey": "city.genesis.enter"
     },
     {
       "id": "intelligence",
@@ -84,7 +85,8 @@
         "knowledge",
         "intel reputation"
       ],
-      "unlock": "authority >= 2.32"
+      "unlock": "authority >= 2.32",
+      "missionKey": "city.intelligence.investigate"
     },
     {
       "id": "academy",
@@ -113,7 +115,8 @@
         "knowledge",
         "certificates"
       ],
-      "unlock": "authority >= 2.32"
+      "unlock": "authority >= 2.32",
+      "missionKey": "city.academy.master"
     },
     {
       "id": "citadel",
@@ -129,8 +132,7 @@
         "trailers",
         "publications",
         "hall",
-        "chronicle",
-        "heritage"
+        "chronicle"
       ],
       "actions": [
         "watch",
@@ -143,7 +145,8 @@
         "culture",
         "creator reputation"
       ],
-      "unlock": "authority >= 4.64"
+      "unlock": "authority >= 4.64",
+      "missionKey": "city.citadel.create"
     },
     {
       "id": "exchange",
@@ -173,7 +176,8 @@
         "value",
         "commerce reputation"
       ],
-      "unlock": "verified member + eligible offer"
+      "unlock": "verified member + eligible offer",
+      "missionKey": "city.exchange.trade"
     },
     {
       "id": "heritage",
@@ -202,7 +206,8 @@
         "legacy",
         "community reputation"
       ],
-      "unlock": "authority >= 6.96"
+      "unlock": "authority >= 6.96",
+      "missionKey": "city.heritage.connect"
     },
     {
       "id": "wellness",
@@ -231,7 +236,8 @@
         "discipline",
         "wellness reputation"
       ],
-      "unlock": "member access"
+      "unlock": "member access",
+      "missionKey": "city.wellness.practice"
     },
     {
       "id": "arena",
@@ -263,7 +269,8 @@
         "mastery",
         "arena reputation"
       ],
-      "unlock": "authority >= 2.32"
+      "unlock": "authority >= 2.32",
+      "missionKey": "city.arena.compete"
     },
     {
       "id": "void",
@@ -295,7 +302,8 @@
         "discovery",
         "exploration reputation"
       ],
-      "unlock": "authority >= 9.28"
+      "unlock": "authority >= 9.28",
+      "missionKey": "city.void.explore"
     }
   ],
   "archetypes": {

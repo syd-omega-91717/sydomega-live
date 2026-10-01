@@ -1,0 +1,80 @@
+# Ω SYD OMEGA 91717 — Live Verification Snapshot — 2026-10-01
+
+## Verified through connected project tooling
+
+- GitHub repository: syd-omega-91717/sydomega-live.
+- Current main HEAD is updated through the live schema refresh and evidence-graph security convergence commits.
+- Enhancement branch is based directly on main and is currently 3 commits ahead, 0 behind.
+- Supabase project `sydomega` is ACTIVE_HEALTHY.
+- Supabase PostgreSQL version: 17.6.1.164.
+- The connected Supabase project is currently on the preview release channel.
+- The live database contains extensive domain coverage including profiles, progression, academy, payments, subscriptions, marketplace, publications, AI providers/agents/memory, workflows, telemetry, graph data, missions, simulations, recovery checkpoints and architecture/compliance catalogs.
+- All listed public tables returned by the connected table inventory report RLS enabled.
+- Active Edge Functions include concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph. The live `evidence-graph` function is now version 2, requires authenticated user context through `@supabase/server`, scopes member rows by caller identity, and keeps platform evidence access server-side.
+
+## Security finding requiring remediation
+
+Supabase Security Advisor currently reports one warning: leaked-password protection is disabled. This is an authentication configuration issue and is not being falsely marked as fixed by repository code.
+
+## Performance finding requiring engineering review
+
+Supabase Performance Advisor reports 257 unused-index findings. These are informational candidates, not permission to delete indexes in bulk. Any cleanup must be based on measured query workload, constraints and rollback safety.
+
+## Important deployment limitation
+
+Vercel live deployment state was not established through the connected Vercel API in this pass. The Vercel deployment URL previously associated with the project could not be resolved by the connected Vercel endpoint, and the public-domain fetch/search path did not provide reliable deployment evidence. Therefore production deployment health remains UNVERIFIED.
+
+## Latest live convergence — 2026-10-01
+
+- Live public schema was re-read from project `ydqhzvvoyufiiqvzcjns` and refreshed into `supabase/live-schema.json`: 229 public tables, captured 2026-10-01.
+- The live mission tables are now verified evidence: `omega_missions` contains 9 rows; `omega_quests`, member mission/quest state and mission transitions currently contain 0 rows. Migration-only status is no longer used to describe these mission tables as absent from live.
+- All 229 public tables currently report RLS enabled; live policy inventory reports 349 policies across those tables.
+- Security Advisor still reports exactly one external warning: leaked-password protection is disabled.
+- The previously live-only `evidence-graph` Edge Function was recovered into GitHub, its endpoint was hardened to authenticated/member-scoped access, and version 2 was deployed successfully. The live deployment reports `verify_jwt=false` because `@supabase/server` performs the declared user authentication boundary itself.
+
+## Next verification gates
+
+1. Resolve the Vercel account/project connection and obtain a current production deployment ID.
+2. Verify the production domain, deployment state, build output and runtime errors.
+3. Verify the Supabase production/preview relationship and migration state before any schema mutation.
+4. Remediate the leaked-password protection warning through the correct Supabase Auth configuration path.
+5. Reconcile repository SQL with the live migration inventory before adding any new database authority.
+6. Exercise Stripe checkout/webhook idempotency and entitlement paths end-to-end.
+7. Exercise AI/agent functions with authorization, rate limits, failure handling and audit evidence.
+
+## Evidence policy
+
+This snapshot deliberately distinguishes live evidence from repository intent. A feature remains UNVERIFIED until its production path is actually exercised.
+
+## 2026-10-01 branch deployment signal
+
+The convergence branch commit `089e31bf92e0d7f8ea147e6bd177d3f48357fe78` currently has a GitHub status named **Vercel** with state **failure** and a target indicating `upgradeToPro=build-rate-limit`.
+
+Interpretation: this is a Vercel account/platform build-rate-limit signal, not evidence of a source-code compilation failure. The branch therefore must not be described as production-deployed until the Vercel limit/integration is resolved and a fresh deployment succeeds.
+
+
+
+## Authoritative progression event bridge — 2026-10-01
+
+- Live Supabase `public.task_completions` now has the `task_completion_sovereign_event` AFTER INSERT trigger.
+- The trigger writes `sovereign.task.completed` records to `public.sovereign_events` with an idempotency key derived from the task-completion id.
+- `public.sovereign_events` is enabled in the `supabase_realtime` publication.
+- The browser `OmegaBus` now consumes these server-authored inserts through Supabase Realtime and maps them into the existing domain event catalog.
+- `omega-workers.js` no longer mints `sovereign.gate.unlocked` events from client-local profile calculations; its achievement worker is presentation-only.
+- A transactional probe inserted and rolled back a synthetic task completion and observed one corresponding sovereign event, verifying the trigger path without retaining test data.
+- Supabase Security Advisor remains WARN: leaked-password protection is disabled. This is not fixed by this change.
+
+- Live `public.notifications` is now included in `supabase_realtime`; RLS remains the delivery boundary and the browser subscribes only to the authenticated member's `user_id` rows.
+- The existing notification worker now consumes the durable server notification stream instead of relying only on local event-feed rendering.
+
+- Workflow hardening: `omega-workflow.js` now fails closed when `complete_task`/`record_sovereign_event` rejects or is unavailable; it also reads the RPC's `axis_a/axis_b/axis_c` fields correctly.
+- Progression configuration in `omega-sdt.js` and the workflow gate computation now resolves from `OmegaCanon` rather than maintaining a second hardcoded threshold table.
+- `scripts/omega-convergence-audit.py` now detects client-side gate-event emission, client gate state storage, and hardcoded threshold tables so future drift is visible.
+
+- Critical live-schema alignment fixed in `private.complete_task()`: it now supplies the mandatory `task_completions.kind`/`task` fields and reads `notifications_enabled` from the existing key/value `platform_settings` schema instead of a nonexistent column.
+- A real transactional owner-path probe now returns `ok=true` from `public.complete_task()` and produces a `sovereign.task.completed` row in `public.sovereign_events`; the probe transaction was rolled back, so no test record was retained.
+- The earlier non-owner probe correctly returned `access_denied`, confirming the server authorization boundary remains active.
+
+- Vercel blocker narrowed to provider authorization: the connected Vercel app returns HTTP 403 for the `syd-omega-91717s-projects` scope and exposes team `team_w0v6eD1jUUzfPjiDq3ztOfvp`; the repository's production workflow already has the corresponding project/team identifiers but requires `VERCEL_TOKEN`. Added `scripts/vercel-deployment-auth-check.sh` and a pre-deploy `whoami`/project-access gate so the next authorized run distinguishes token/scope failure from build failure.
+- Supabase security advisor remains at one external warning: leaked-password protection is disabled. No SQL mutation can safely enable that Auth-provider setting; it must be enabled in Supabase Auth password-security configuration. This remains explicitly unverified rather than marked fixed.
+- Migration ledger reconciled through three new live migration records: notification Realtime publication, complete-task schema alignment, and gate-semantics reconciliation.

@@ -96,6 +96,8 @@ try{_bc=new BroadcastChannel('omega-event-bus');}catch(e){}
 
 /* ── Subscriber registry ── */
 var _subs={};
+var _realtimeChannel=null;
+var _realtimeUserId=null;
 
 function getUUID(){
   return 'evt-'+(Date.now()).toString(36)+'-'+Math.random().toString(36).slice(2,8);
@@ -180,6 +182,38 @@ function metrics(){
   return result;
 }
 
+/* ── Authoritative Supabase event stream ── */
+function subscribeAuthoritativeEvents(userId){
+  if(!userId||!window.__omegaSb||typeof window.__omegaSb.channel!=='function')return;
+  if(_realtimeChannel&&_realtimeUserId===userId)return;
+  if(_realtimeChannel&&typeof window.__omegaSb.removeChannel==='function'){
+    try{window.__omegaSb.removeChannel(_realtimeChannel);}catch(e){}
+  }
+  _realtimeUserId=userId;
+  try{
+    _realtimeChannel=window.__omegaSb.channel('omega-sovereign-events-'+userId)
+      .on('postgres_changes',{
+        event:'INSERT',schema:'public',table:'sovereign_events',filter:'user_id=eq.'+userId
+      },function(change){
+        var row=change&&change.new||{};
+        if(!row.event_type||!row.event_id)return;
+        var payload=row.event_data&&typeof row.event_data==='object'?Object.assign({},row.event_data):{};
+        payload.memberId=payload.memberId||row.user_id||userId;
+        if(row.event_type==='sovereign.task.completed'){
+          payload.taskId=payload.taskId||payload.taskCompletionId||String(row.event_id);
+          payload.axis=payload.axis||payload.axisType||'a';
+          payload.delta=Number(payload.delta!=null?payload.delta:payload.points||0);
+        }
+        emit(row.event_type,payload,{id:String(row.event_id)});
+      })
+      .subscribe(function(status){
+        try{window.dispatchEvent(new CustomEvent('omega:realtime-status',{detail:{service:'sovereign_events',status:status}}));}catch(e){}
+      });
+  }catch(e){
+    try{window.dispatchEvent(new CustomEvent('omega:realtime-status',{detail:{service:'sovereign_events',status:'CHANNEL_ERROR',error:String(e)}}));}catch(x){}
+  }
+}
+
 /* ── Sovereign lifecycle events ── */
 window.addEventListener('omega:user-loaded',function(e){
   if(!e||!e.detail)return;
@@ -191,6 +225,9 @@ window.addEventListener('omega:user-loaded',function(e){
   var auth=profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
   var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
   var elem=SIGN_ELEM[profile.sign]||'Void';
+
+  /* Connect the browser to durable, server-authored domain events. */
+  subscribeAuthoritativeEvents(user.id);
 
   /* Emit session start event */
   emit('sovereign.realm.visited',{memberId:user.id,elem:elem,duration:0},{id:'session-'+user.id+'-'+Date.now().toString(36)});

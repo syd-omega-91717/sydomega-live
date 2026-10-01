@@ -30,15 +30,15 @@
     "architecture": "/omega-architecture-runtime.js"
   },
   "capabilities": [
-    {"id":"identity","version":"1.0.0","owner":"core","scope":"member","critical":true,"entry":["/omega-auth.js"],"dataSources":["profiles"],"permissions":["authenticated"]},
+    {"id":"identity","version":"1.0.0","owner":"core","scope":"member","critical":true,"entry":["/omega-user.js"],"dataSources":["profiles"],"permissions":["authenticated"]},
     {"id":"navigation","version":"1.0.0","owner":"core","scope":"platform","critical":true,"entry":["/nav.js"],"dataSources":["page metadata"],"permissions":["public"]},
     {"id":"activity","version":"1.0.0","owner":"core","scope":"member","critical":false,"entry":["/omega-realtime.js","/feed.html"],"dataSources":["activity_feed","omega_platform_events"],"permissions":["authenticated"]},
-    {"id":"progression","version":"1.0.0","owner":"ascend","scope":"member","critical":true,"entry":["/omega-progression-authority.js"],"dataSources":["profiles","gate_evaluations","evolution_events"],"permissions":["authenticated"]},
+    {"id":"progression","version":"1.0.0","owner":"ascend","scope":"member","critical":true,"entry":["/omega-sdt.js"],"dataSources":["profiles","gate_evaluations","evolution_events"],"permissions":["authenticated"]},
     {"id":"intelligence","version":"1.0.0","owner":"intel","scope":"member","critical":false,"entry":["/omega-intelligence.js"],"dataSources":["ai_jobs","ai_memory","ai_conversations"],"permissions":["authenticated"]},
     {"id":"graph","version":"1.0.0","owner":"intel","scope":"member","critical":false,"entry":["/nexus.html","/omega-sculpture-dataviz.js"],"dataSources":["graph_entities","graph_relationships","graph_events"],"permissions":["authenticated"]},
     {"id":"continuity","version":"1.0.0","owner":"core","scope":"member","critical":false,"entry":["/omega-eternity-engine.js"],"dataSources":["omega_platform_events","activity_feed","capability_registry"],"permissions":["authenticated"]},
     {"id":"observability","version":"1.0.0","owner":"core","scope":"platform","critical":true,"entry":["/assets/js/omega-runtime-observability.js"],"dataSources":["client_errors","analytics_events"],"permissions":["authenticated"]},
-    {"id":"offline","version":"1.0.0","owner":"core","scope":"platform","critical":false,"entry":["/service-worker.js"],"dataSources":["Cache API"],"permissions":["public"]},
+    {"id":"offline","version":"1.0.0","owner":"core","scope":"platform","critical":false,"entry":["/sw.js"],"dataSources":["Cache API"],"permissions":["public"]},
     {"id":"governance","version":"1.0.0","owner":"owner","scope":"platform","critical":true,"entry":["/approvals.html","/control-center.html"],"dataSources":["capability_registry","governance_policies","audit_logs"],"permissions":["owner"]}
   ],
   "objectTypes": [

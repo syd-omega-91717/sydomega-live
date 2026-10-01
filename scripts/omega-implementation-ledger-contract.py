@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the evidence-bound Omega implementation ledger."""
+"""
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+Validate the evidence-bound Omega implementation ledger."""
 from __future__ import annotations
 import json
 import sys

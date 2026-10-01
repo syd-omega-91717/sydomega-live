@@ -3,7 +3,7 @@
   "schemaVersion": "1.0.0",
   "contract": "OmegaAction",
   "required": ["id","actor","target","input","permission","startedAt","status"],
-  "statuses": ["REQUESTED","AUTHORIZED","RUNNING","SUCCEEDED","FAILED","DENIED","CANCELLED","UNKNOWN"],
+  "statuses": ["REQUESTED","CLIENT_VALIDATED","AUTHORIZED","RUNNING","SUCCEEDED","FAILED","DENIED","CANCELLED","UNKNOWN"],
   "truthStates": ["LIVE","CALCULATED","SIMULATED","UNAVAILABLE","UNKNOWN"],
   "idempotency": {
     "required": true,

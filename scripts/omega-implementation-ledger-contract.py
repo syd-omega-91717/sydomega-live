@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""
-if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
-    print(__doc__)
-    raise SystemExit(0)
-Validate the evidence-bound Omega implementation ledger."""
+"""Validate the evidence-bound Omega implementation ledger."""
 from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "config" / "omega-implementation-ledger.json"

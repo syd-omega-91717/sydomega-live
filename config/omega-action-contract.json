@@ -1,0 +1,29 @@
+{
+  "$schema": "https://sydomega.com/schemas/omega-action-contract.v1.json",
+  "schemaVersion": "1.0.0",
+  "contract": "OmegaAction",
+  "required": ["id","actor","target","input","permission","startedAt","status"],
+  "statuses": ["REQUESTED","AUTHORIZED","RUNNING","SUCCEEDED","FAILED","DENIED","CANCELLED","UNKNOWN"],
+  "truthStates": ["LIVE","CALCULATED","SIMULATED","UNAVAILABLE","UNKNOWN"],
+  "idempotency": {
+    "required": true,
+    "format": "omega-action:<action>:<actor>:<requestId>",
+    "duplicatePolicy": "return-existing-result"
+  },
+  "authorization": {
+    "default": "deny",
+    "clientIsNotAuthority": true,
+    "serverRevalidationRequired": true,
+    "ownerActionsRequireExplicitOwnerPermission": true
+  },
+  "audit": {
+    "requiredFor": ["WRITE","PAYMENT","ACCESS","PERMISSION","AI_EXECUTION","EXPORT","DELETE","GOVERNANCE"],
+    "fields": ["auditId","action","actor","target","result","timestamp"]
+  },
+  "events": {
+    "request": "omega:action:requested",
+    "success": "omega:action:succeeded",
+    "failure": "omega:action:failed",
+    "denied": "omega:action:denied"
+  }
+}

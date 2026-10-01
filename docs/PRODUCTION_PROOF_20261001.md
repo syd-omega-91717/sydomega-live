@@ -73,3 +73,9 @@ Run the convergence audit:
 `python3 scripts/omega-convergence-audit.py --json`
 
 Live provider evidence must be captured separately and appended to this ledger with its timestamp, release SHA, query/test, result, and failure evidence where applicable.
+
+
+## Live verification delta
+
+- Progression: 7 platform events and 16 evidence records are present live; member mission and quest state remain empty, so progression E2E is not closed.
+- Payments: subscriptions, webhook events, and billing invoices are empty live, so Stripe E2E is not closed.

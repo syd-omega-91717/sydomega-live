@@ -493,6 +493,24 @@
         "Live ledger schema and privilege verification"
       ],
       "blocker": "End-to-end provider settlement and reconciliation are not yet integrated."
+    },
+    {
+      "id": "SEC-004",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "All SECURITY DEFINER RPCs must have an explicit caller/risk policy before production authorization is considered hardened.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-rpc-security-policy.json",
+        "scripts/omega-rpc-security-policy-contract.py"
+      ],
+      "evidence": [
+        "Live census: 68 public SECURITY DEFINER functions; repository registry classifies all 68."
+      ],
+      "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
     }
   ]
 }

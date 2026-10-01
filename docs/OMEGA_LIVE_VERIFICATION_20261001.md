@@ -62,3 +62,7 @@ Interpretation: this is a Vercel account/platform build-rate-limit signal, not e
 - Workflow hardening: `omega-workflow.js` now fails closed when `complete_task`/`record_sovereign_event` rejects or is unavailable; it also reads the RPC's `axis_a/axis_b/axis_c` fields correctly.
 - Progression configuration in `omega-sdt.js` and the workflow gate computation now resolves from `OmegaCanon` rather than maintaining a second hardcoded threshold table.
 - `scripts/omega-convergence-audit.py` now detects client-side gate-event emission, client gate state storage, and hardcoded threshold tables so future drift is visible.
+
+- Critical live-schema alignment fixed in `private.complete_task()`: it now supplies the mandatory `task_completions.kind`/`task` fields and reads `notifications_enabled` from the existing key/value `platform_settings` schema instead of a nonexistent column.
+- A real transactional owner-path probe now returns `ok=true` from `public.complete_task()` and produces a `sovereign.task.completed` row in `public.sovereign_events`; the probe transaction was rolled back, so no test record was retained.
+- The earlier non-owner probe correctly returned `access_denied`, confirming the server authorization boundary remains active.

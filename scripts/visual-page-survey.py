@@ -62,6 +62,7 @@ class _VisibleParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.hidden_depth = 0
+        self._hidden_stack: list[bool] = []
         self.parts: list[str] = []
 
     @staticmethod
@@ -80,25 +81,22 @@ class _VisibleParser(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
-        if tag in self.SKIP_TAGS:
-            self.hidden_depth += 1
-            return
-        if self._hidden(attrs, self.hidden_depth > 0):
+        is_hidden = tag in self.SKIP_TAGS or self._hidden(attrs, self.hidden_depth > 0)
+        self._hidden_stack.append(is_hidden)
+        if is_hidden:
             self.hidden_depth += 1
 
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if self.hidden_depth == 0 and tag.lower() not in self.SKIP_TAGS:
+        tag = tag.lower()
+        if self.hidden_depth == 0 and tag not in self.SKIP_TAGS and not self._hidden(attrs, False):
             self.handle_data(" ")
 
     def handle_endtag(self, tag: str) -> None:
-        tag = tag.lower()
-        if tag in self.SKIP_TAGS:
-            self.hidden_depth = max(0, self.hidden_depth - 1)
+        if not self._hidden_stack:
             return
-        # A hidden subtree is represented by one stack level per hidden start.
-        # Normal visible elements do not alter hidden_depth.
-        if self.hidden_depth:
-            self.hidden_depth -= 1
+        is_hidden = self._hidden_stack.pop()
+        if is_hidden:
+            self.hidden_depth = max(0, self.hidden_depth - 1)
 
     def handle_data(self, data: str) -> None:
         if self.hidden_depth == 0:

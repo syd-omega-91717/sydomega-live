@@ -62,8 +62,8 @@
       emit('omega:action:denied',{action:a.action,actionId:a.id,action:a});
       return {ok:false,status:a.status,action:a,error:'permission-required'};
     }
-    a.status='AUTHORIZED';
-    emit('omega:action:authorized',{action:a.action,actionId:a.id,action:a});
+    a.status='CLIENT_VALIDATED';
+    emit('omega:action:client_validated',{action:a.action,actionId:a.id,action:a});
     try{
       if(typeof input.execute!=='function'){
         a.status='UNKNOWN';

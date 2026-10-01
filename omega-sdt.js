@@ -23,8 +23,18 @@
   window.__omegaSDTActive=true;
 
   var PHI=1.6180339887,EU=2.7182818285;
-  var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.5170,27.8367];
-  var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
+  var GATES=[];
+  var GATE_NAMES=[];
+  function applyCanonicalProgression(canon){
+    var authority=canon&&canon.authority||{};
+    GATES=(authority.gates||[]).map(Number).filter(function(v){return isFinite(v);});
+    GATE_NAMES=(authority.gate_names||[]).map(String);
+  }
+  if(window.OmegaCanon&&typeof window.OmegaCanon.onReady==='function'){
+    window.OmegaCanon.onReady(applyCanonicalProgression);
+  }else{
+    document.addEventListener('omega-canon-ready',function(e){applyCanonicalProgression(e.detail);});
+  }
 
   /* ── A. AUTONOMY: Track choice persistence ──────────────────────────── */
   /* Remember which track the member prefers — respect choice across sessions */
@@ -36,19 +46,11 @@
   };
 
   /* ── B. COMPETENCE: Gate detection + celebration ────────────────────── */
-  var _lastGate=-1;
   function getGateIdx(auth){
     for(var i=GATES.length-1;i>=0;i--){if(auth>=GATES[i])return i;}
     return -1;
   }
-  function checkGateUnlock(auth){
-    var gi=getGateIdx(auth);
-    var stored=parseInt(localStorage.getItem('omega_last_gate')||'-1');
-    if(gi>stored){
-      localStorage.setItem('omega_last_gate',gi);
-      celebrateGate(gi);
-    }
-  }
+  /* Gate index is display state only. Unlock celebrations require a server-authored event. */
   function celebrateGate(gi){
     if(gi<0||gi>=GATE_NAMES.length) return;
     /* Haptic feedback (mobile, Apple HIG pattern) */
@@ -71,11 +73,18 @@
     setTimeout(function(){if(overlay.parentNode)document.body.removeChild(overlay);},4500);
   }
 
+  /* Only durable server-authored gate events may trigger the full-screen celebration. */
+  if(window.OmegaBus&&typeof window.OmegaBus.on==='function'){
+    window.OmegaBus.on('sovereign.gate.unlocked',function(evt){
+      var gate=Number(evt&&evt.payload&&evt.payload.gate||0)-1;
+      if(gate>=0)celebrateGate(gate);
+    });
+  }
+
   /* ── C. RELATEDNESS: Positive feedback pulse ────────────────────────── */
   /* Nintendo principle: positive feedback every 30-90 seconds */
   /* Show micro-affirmations when member completes tasks */
   window.OmegaSDT.pulse=function(axis,delta,newAuth){
-    checkGateUnlock(newAuth);
     /* Micro-toast (bottom center, 3 seconds) */
     var toast=document.createElement('div');
     toast.className='omega-sdt-toast';
@@ -104,13 +113,12 @@
     }
   });
 
-  /* ── Init: check gate on page load ─────────────────────────────────── */
+  /* ── Init: calculate display state only; never mint or celebrate an unlock. */
   document.addEventListener('omega:populated',function(e){
     var pr=e.detail&&e.detail.profile;
-    if(!pr||pr.is_owner) return;
+    if(!pr) return;
     var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    checkGateUnlock(auth);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     window.OmegaSDT.currentAuth=auth;
     window.OmegaSDT.currentGate=getGateIdx(auth);
   });

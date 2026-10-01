@@ -163,6 +163,9 @@ jobs:
           cat > .vercel/project.json <<EOF
           {"orgId":"${VERCEL_ORG_ID}","projectId":"${VERCEL_PROJECT_ID}"}
           EOF
+      - name: Verify Vercel token and project authority
+        if: needs.credentials.outputs.ready == 'true'
+        run: bash scripts/vercel-deployment-auth-check.sh
       - name: Deploy to Vercel Production
         if: >-
           needs.credentials.outputs.ready == 'true' &&

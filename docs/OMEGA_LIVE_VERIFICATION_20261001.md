@@ -37,3 +37,36 @@ Vercel live deployment state was not established through the connected Vercel AP
 ## Evidence policy
 
 This snapshot deliberately distinguishes live evidence from repository intent. A feature remains UNVERIFIED until its production path is actually exercised.
+
+## 2026-10-01 branch deployment signal
+
+The convergence branch commit `089e31bf92e0d7f8ea147e6bd177d3f48357fe78` currently has a GitHub status named **Vercel** with state **failure** and a target indicating `upgradeToPro=build-rate-limit`.
+
+Interpretation: this is a Vercel account/platform build-rate-limit signal, not evidence of a source-code compilation failure. The branch therefore must not be described as production-deployed until the Vercel limit/integration is resolved and a fresh deployment succeeds.
+
+
+
+## Authoritative progression event bridge — 2026-10-01
+
+- Live Supabase `public.task_completions` now has the `task_completion_sovereign_event` AFTER INSERT trigger.
+- The trigger writes `sovereign.task.completed` records to `public.sovereign_events` with an idempotency key derived from the task-completion id.
+- `public.sovereign_events` is enabled in the `supabase_realtime` publication.
+- The browser `OmegaBus` now consumes these server-authored inserts through Supabase Realtime and maps them into the existing domain event catalog.
+- `omega-workers.js` no longer mints `sovereign.gate.unlocked` events from client-local profile calculations; its achievement worker is presentation-only.
+- A transactional probe inserted and rolled back a synthetic task completion and observed one corresponding sovereign event, verifying the trigger path without retaining test data.
+- Supabase Security Advisor remains WARN: leaked-password protection is disabled. This is not fixed by this change.
+
+- Live `public.notifications` is now included in `supabase_realtime`; RLS remains the delivery boundary and the browser subscribes only to the authenticated member's `user_id` rows.
+- The existing notification worker now consumes the durable server notification stream instead of relying only on local event-feed rendering.
+
+- Workflow hardening: `omega-workflow.js` now fails closed when `complete_task`/`record_sovereign_event` rejects or is unavailable; it also reads the RPC's `axis_a/axis_b/axis_c` fields correctly.
+- Progression configuration in `omega-sdt.js` and the workflow gate computation now resolves from `OmegaCanon` rather than maintaining a second hardcoded threshold table.
+- `scripts/omega-convergence-audit.py` now detects client-side gate-event emission, client gate state storage, and hardcoded threshold tables so future drift is visible.
+
+- Critical live-schema alignment fixed in `private.complete_task()`: it now supplies the mandatory `task_completions.kind`/`task` fields and reads `notifications_enabled` from the existing key/value `platform_settings` schema instead of a nonexistent column.
+- A real transactional owner-path probe now returns `ok=true` from `public.complete_task()` and produces a `sovereign.task.completed` row in `public.sovereign_events`; the probe transaction was rolled back, so no test record was retained.
+- The earlier non-owner probe correctly returned `access_denied`, confirming the server authorization boundary remains active.
+
+- Vercel blocker narrowed to provider authorization: the connected Vercel app returns HTTP 403 for the `syd-omega-91717s-projects` scope and exposes team `team_w0v6eD1jUUzfPjiDq3ztOfvp`; the repository's production workflow already has the corresponding project/team identifiers but requires `VERCEL_TOKEN`. Added `scripts/vercel-deployment-auth-check.sh` and a pre-deploy `whoami`/project-access gate so the next authorized run distinguishes token/scope failure from build failure.
+- Supabase security advisor remains at one external warning: leaked-password protection is disabled. No SQL mutation can safely enable that Auth-provider setting; it must be enabled in Supabase Auth password-security configuration. This remains explicitly unverified rather than marked fixed.
+- Migration ledger reconciled through three new live migration records: notification Realtime publication, complete-task schema alignment, and gate-semantics reconciliation.

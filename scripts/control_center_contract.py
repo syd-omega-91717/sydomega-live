@@ -18,11 +18,11 @@ if page.exists():
         'id="omega-side"','data-page="control-center"',
         '/bg.js','/verify-deployment.html','/verify-modules.html',
         'navigator.onLine','localStorage','serviceWorker',
-        'fetch(path,{cache:'no-store'',
+        "fetch(path,{cache:'no-store'"),
     ]
     for token in required:
         if token not in text: errors.append(f"control-center.html missing contract: {token}")
-    if re.search(r'<script[^>]+src=["']https?://', text, re.I):
+    if re.search(r"<script[^>]+src=['\"]https?://", text, re.I):
         errors.append("control-center.html must not add a third-party script dependency")
     if 'document.write(' in text or 'eval(' in text:
         errors.append("control-center.html contains a forbidden dynamic execution primitive")

@@ -13,9 +13,9 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
-    "branch": "codex/production-security-and-productization-20261002",
-    "pullRequest": "#606",
+    "main": "031ce933bbf46106e0a8678e70d36209657b695f",
+    "branch": "codex/referral-achievement-agent-notification-20261002",
+    "pullRequest": null,
     "supabaseProject": "nvgedlxlkdzvcelimbvq",
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02",
@@ -566,6 +566,77 @@
         "Source audit identified 9^3=729 and 9^5=59,049 canonical claims plus twelve-agent/twelve-module structures."
       ],
       "blocker": "Create a formal canon registry mapping each dimensional system to its owning product/domain and prohibit accidental cross-mapping."
+    },
+    {
+      "id": "REF-001",
+      "domain": "referrals",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Referral attribution, qualification, fraud signals and rewards are server-authoritative, one-attribution, idempotent and reversible.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-referral-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: referral primitive tables created with RLS and anon denied"
+      ],
+      "blocker": "Referral-code issuance, provider conversion events and ledger reward posting executor remain to be integrated."
+    },
+    {
+      "id": "ACH-001",
+      "domain": "achievements",
+      "source": [
+        "Master Prompt",
+        "Document.txt",
+        "999 Blueprint"
+      ],
+      "requirement": "Achievements and certificates require evidence-backed verification and support revocation.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-achievement-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: achievement definition, user achievement, verification and certificate primitives created"
+      ],
+      "blocker": "729-node semantic definitions and evidence-producing verification workflow remain to be populated."
+    },
+    {
+      "id": "AGENT-002",
+      "domain": "ai",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717.txt"
+      ],
+      "requirement": "Agent execution uses queued tasks, explicit tool grants, approval gates, idempotency and task audit events.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-agent-execution-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: task, task-event and tool-grant primitives created; default approval required"
+      ],
+      "blocker": "Model gateway, tool executor and server-side task router remain to be integrated."
+    },
+    {
+      "id": "NOTIFY-001",
+      "domain": "notifications",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Notification delivery is durable, user-scoped, idempotent and channel-aware.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql"
+      ],
+      "evidence": [
+        "Live SQL verification: notification queue/state table with owner RLS and idempotency key"
+      ],
+      "blocker": "Email/SMS/push providers and event-driven delivery worker remain to be integrated."
     }
   ]
 }

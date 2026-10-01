@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "SYD OMEGA 91717",
+  "contractPurpose": "Non-destructive convergence of existing runtime capabilities into explicit domain authorities.",
+  "domains": {
+    "navigation": {
+      "authority": "nav.js",
+      "status": "VERIFIED_WITH_REVIEW_ITEMS"
+    },
+    "visual3d": {
+      "authority": "omega-sculpture.js",
+      "status": "VERIFIED_WITH_REVIEW_ITEMS"
+    },
+    "canon": {
+      "authority": "omega-canon.js",
+      "status": "VERIFIED_WITH_REVIEW_ITEMS"
+    },
+    "auth_session": {
+      "authority": "Supabase Auth + existing guarded client path",
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    "authorization": {
+      "authority": "Supabase RLS + guardian/threat layers",
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    "progression": {
+      "authority": "existing task/RPC model",
+      "status": "PARTIAL"
+    },
+    "payments": {
+      "authority": "Stripe checkout + webhook",
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    "content": {
+      "authority": "existing media/publication/creator pipeline",
+      "status": "PARTIAL"
+    },
+    "ai": {
+      "authority": "provider gateway / Edge architecture as matured",
+      "status": "PARTIAL"
+    },
+    "notifications": {
+      "authority": "existing notification mechanisms",
+      "status": "PARTIAL"
+    },
+    "storage": {
+      "authority": "Supabase Storage + RLS policies",
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    "i18n": {
+      "authority": "i18n.js",
+      "status": "PARTIAL"
+    },
+    "analytics": {
+      "authority": "existing telemetry/analytics",
+      "status": "PARTIAL"
+    }
+  },
+  "conflictGuards": [
+    "Do not introduce a second auth/session authority.",
+    "Do not introduce a second Stripe/payment authority.",
+    "Do not introduce a second WebGL renderer/context.",
+    "Do not introduce client-authoritative financial/progression state.",
+    "Do not expose AI provider secrets to browser code.",
+    "Do not add a competing navigation registry.",
+    "Do not create a new database table when an existing canonical domain table can safely own the data."
+  ],
+  "requiredEvidence": [
+    "repository",
+    "tests",
+    "deployment",
+    "live_backend"
+  ]
+}

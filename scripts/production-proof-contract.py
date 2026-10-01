@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 """
-if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
-    print(__doc__)
-    raise SystemExit(0)
-
 Machine-checkable production proof contract for Ω SYD OMEGA 91717.
 
 This contract proves repository-side release prerequisites only. Live provider
@@ -17,6 +13,10 @@ from __future__ import annotations
 import json
 import pathlib
 import sys
+
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 

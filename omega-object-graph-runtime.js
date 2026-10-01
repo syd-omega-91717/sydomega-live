@@ -52,4 +52,5 @@
   }
   bindOmegaBus();
   window.addEventListener('omega:bus-ready',bindOmegaBus);
+  (function waitForBus(n){if(window.OmegaBus||n<=0)return;setTimeout(function(){bindOmegaBus();waitForBus(n-1);},250);})(20);
 })();

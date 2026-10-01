@@ -47,6 +47,15 @@ on:
       - 'scripts/vercel-build.sh'
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - '**/*.css'
+      - '**/*.js'
+      - '**/*.json'
+      - 'scripts/**'
+      - '.github/workflows/vercel-production.yml'
 
 permissions:
   contents: read

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Validate the canonical Ω Object contract against live-schema evidence."""
+"""
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
+Validate the canonical Ω Object contract against live-schema evidence."""
 from __future__ import annotations
 import json
 from pathlib import Path

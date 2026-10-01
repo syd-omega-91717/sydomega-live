@@ -47,12 +47,11 @@
     {
       "type": "mission",
       "sources": [
-        "omega_missions",
         "omega_platform_events"
       ],
       "identity": "id",
-      "label": "title",
-      "owner": null
+      "label": "event_type",
+      "owner": "actor_user_id"
     },
     {
       "type": "achievement",

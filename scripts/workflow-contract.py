@@ -112,7 +112,7 @@ for name, required in REQUIRED.items():
             if label == "self-hosted":
                 recognised.append(True)
                 continue
-            if re.match(r"(ubuntu|windows|macos)-(latest|\\d[\\w.]*)$", label):
+            if re.match(r"(ubuntu|windows|macos)-(latest|\d[\w.]*)$", label):
                 recognised.append(True)
                 continue
             recognised.append(False)

@@ -13,9 +13,9 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "d4c5729a5d57225167b7fabb0e60390493ae50fa",
-    "branch": "549962457b459d6977e1ab95345bd3520f036669",
-    "pullRequest": "#605",
+    "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
+    "branch": "f28ec4ef00b252f096de2b7e9cfc6939a7fb63a7",
+    "pullRequest": "#606",
     "supabaseProject": "nvgedlxlkdzvcelimbvq",
     "liveSite": "https://sydomega.com"
   },
@@ -374,6 +374,25 @@
         "Existing truth contracts"
       ],
       "blocker": "Full 999-point source-to-ledger mapping is not complete."
+    },
+    {
+      "id": "EDGE-001",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "Every repository-declared production Edge Function has an explicit live deployment state and verification record.",
+      "state": "BLOCKED",
+      "repo": [
+        "supabase/functions",
+        "supabase/edge-functions.json",
+        "config/supabase-edge-runtime-evidence.json"
+      ],
+      "evidence": [
+        "Supabase live list_edge_functions on 2026-10-01 returned zero deployed functions; repository census contains 18 functions."
+      ],
+      "blocker": "Live Supabase currently exposes no deployed Edge Functions. Deploy/reconcile each intended function, then record route, version, auth boundary and smoke-test evidence."
     }
   ]
 }

@@ -4,6 +4,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 MODEL = ROOT / "config/omega-object-model.json"
 SCHEMA = ROOT / "supabase/live-schema.json"

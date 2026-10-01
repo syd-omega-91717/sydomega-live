@@ -24,8 +24,8 @@ errors: list[str] = []
 warnings: list[str] = []
 checked = 0
 
-HTML_LANG_RE = re.compile(r"""<html\b[^>]*\blang\s*=\s*["'][^"']+["']""", re.I)
-VIEWPORT_RE = re.compile(r"""<meta\b[^>]*name\s*=\s*["']viewport["']""", re.I)
+HTML_LANG_RE = re.compile(r"""<html\b[^>]*\blang\s*=\s*(?:"[^"]+"|'[^']+'|[^\s>]+)""", re.I)
+VIEWPORT_RE = re.compile(r"""<meta\b[^>]*name\s*=\s*(?:"viewport"|'viewport'|viewport)""", re.I)
 TITLE_RE = re.compile(r"""<title\b[^>]*>\s*[^<]+\s*</title>""", re.I | re.S)
 ID_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""", re.I)
 CONTROL_RE = re.compile(r"""<(img|input|button|select|textarea)\b([^>]*)>""", re.I | re.S)

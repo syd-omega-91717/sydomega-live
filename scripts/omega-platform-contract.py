@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Machine-check the Ω runtime, action and truth contracts.
+"""
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+Machine-check the Ω runtime, action and truth contracts.
 
 This gate validates architecture declarations before they can drift into
 unverifiable prose. It intentionally checks repository evidence only; live
@@ -7,6 +11,10 @@ provider state remains a separate verification boundary.
 """
 from __future__ import annotations
 import json, pathlib, sys
+
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 CONFIG=ROOT/"config"

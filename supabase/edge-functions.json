@@ -5,6 +5,7 @@
     "concierge",
     "concierge-orchestrator",
     "event-ingest",
+    "evidence-graph",
     "graphify-ai-ingest",
     "graphify-ai-query",
     "growth-orchestrator",

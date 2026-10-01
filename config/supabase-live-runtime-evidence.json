@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "observedAt": "2026-10-01",
+  "projectId": "nvgedlxlkdzvcelimbvq",
+  "evidenceScope": "read-only production/runtime observations captured during the post-merge hardening pass",
+  "supabase": {
+    "edgeFunctions": {
+      "declaredInRepository": 18,
+      "deployedLive": 0,
+      "status": "BLOCKED"
+    },
+    "completeTask": {
+      "publicExists": true,
+      "privateExists": false,
+      "securityDefiner": true,
+      "searchPath": "public",
+      "intendedMigrationState": "private.complete_task with search_path = ''",
+      "status": "BLOCKED"
+    },
+    "taskCompletionEventBridge": {
+      "triggerPresent": false,
+      "realtimeSovereignEvents": false,
+      "status": "BLOCKED"
+    },
+    "notificationRealtime": {
+      "realtimeNotifications": false,
+      "status": "BLOCKED"
+    }
+  },
+  "repositoryMigrationLineage": {
+    "targetProjectId": "nvgedlxlkdzvcelimbvq",
+    "missingFromLiveMigrationJournal": [
+      "20261001090000",
+      "20261001100000",
+      "20261001110000",
+      "20261001120000"
+    ],
+    "status": "BLOCKED"
+  },
+  "security": {
+    "anonExecutableSecurityDefinerFunctions": 64,
+    "status": "BLOCKED"
+  },
+  "vercel": {
+    "githubCheck": "failure",
+    "observedReason": "upgradeToPro=build-rate-limit",
+    "connectorAuthorization": "403 scope not authorized",
+    "status": "BLOCKED"
+  },
+  "publicRuntime": {
+    "url": "https://sydomega.com",
+    "httpStatus": 200,
+    "browserMatrixVerified": false
+  },
+  "interpretation": "This file is an evidence snapshot, not a live monitor. Never upgrade an item to VERIFIED without a fresh runtime observation."
+}

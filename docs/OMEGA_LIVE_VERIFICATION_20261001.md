@@ -37,3 +37,10 @@ Vercel live deployment state was not established through the connected Vercel AP
 ## Evidence policy
 
 This snapshot deliberately distinguishes live evidence from repository intent. A feature remains UNVERIFIED until its production path is actually exercised.
+
+## 2026-10-01 branch deployment signal
+
+The convergence branch commit `089e31bf92e0d7f8ea147e6bd177d3f48357fe78` currently has a GitHub status named **Vercel** with state **failure** and a target indicating `upgradeToPro=build-rate-limit`.
+
+Interpretation: this is a Vercel account/platform build-rate-limit signal, not evidence of a source-code compilation failure. The branch therefore must not be described as production-deployed until the Vercel limit/integration is resolved and a fresh deployment succeeds.
+

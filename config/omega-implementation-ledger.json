@@ -223,15 +223,22 @@
         "Master Prompt"
       ],
       "requirement": "Balances, rewards, referrals and treasury movements use an append-only ledger and reconciliation path.",
-      "state": "DESIGNED",
+      "state": "INTEGRATED",
       "repo": [
-        "docs",
-        "supabase/migrations"
+        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql",
+        "public.omega_ledger_accounts",
+        "public.omega_ledger_transactions",
+        "public.omega_ledger_entries",
+        "public.omega_payment_events",
+        "public.omega_entitlements",
+        "omega_private.post_ledger_transaction"
       ],
       "evidence": [
-        "Source architecture audit"
+        "SUPA-LEDGER-20261002",
+        "Live privilege verification: anon=false, authenticated=false, service_role=true for posting function",
+        "Live table verification: zero fabricated accounts/transactions/entries"
       ],
-      "blocker": "Canonical ledger schema and live end-to-end reconciliation are not yet proven."
+      "blocker": "Stripe/provider webhook integration, account provisioning, reconciliation jobs, reversal workflow and production payment smoke tests remain."
     },
     {
       "id": "AGENT-001",
@@ -469,6 +476,23 @@
         "Live 729-node registry verification"
       ],
       "blocker": "Node semantics and user-progress integration remain incomplete."
+    },
+    {
+      "id": "ECON-001",
+      "domain": "economics",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Financial state must be server-authoritative, idempotent, double-entry and auditable.",
+      "state": "BUILT",
+      "repo": [
+        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql"
+      ],
+      "evidence": [
+        "Live ledger schema and privilege verification"
+      ],
+      "blocker": "End-to-end provider settlement and reconciliation are not yet integrated."
     }
   ]
 }

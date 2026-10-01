@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — live client control center for runtime health, capability reachability and recovery actions.">
+<title>Ω SYD OMEGA 91717 — Control Center</title>
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<style>
+:root{--pad:clamp(16px,3vw,40px)}
+*{box-sizing:border-box}html{background:#020206}body{margin:0;background:var(--void,#020206);color:var(--ink,#eee);font-family:var(--R,system-ui);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(64px,7vw,84px);flex:none}.main{min-width:0;flex:1;overflow:hidden}
+.wrap{padding:var(--pad);max-width:1500px;margin:auto}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:34px 0 22px;border-bottom:1px solid var(--line,rgba(255,255,255,.1))}
+.eyebrow,.mono{font-family:var(--M,monospace);letter-spacing:2px;font-size:12px;color:var(--cyan,#00e5ff)}h1{font-family:var(--D,serif);font-size:clamp(28px,4vw,52px);margin:8px 0}.lede{max-width:780px;color:rgba(238,238,238,.68);line-height:1.7;font-size:15px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.06);color:var(--gold,#c9a84c);padding:10px 13px;text-decoration:none;font-family:var(--M,monospace);font-size:12px;cursor:pointer}.btn:hover{background:rgba(201,168,76,.13)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}.card{border:1px solid var(--line,rgba(255,255,255,.1));background:rgba(10,10,15,.58);padding:16px;min-width:0}.metric{font-family:var(--D,serif);font-size:28px;color:var(--gold,#c9a84c)}.label{font-family:var(--M,monospace);font-size:11px;letter-spacing:1.6px;color:var(--muted,#888);margin-top:5px}.sub{font-size:12px;color:rgba(238,238,238,.55);margin-top:8px;line-height:1.5}
+.sections{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.list{display:grid;gap:7px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.07);padding:11px 12px;background:rgba(255,255,255,.015)}.status{font-family:var(--M,monospace);font-size:11px;letter-spacing:1px}.ok{color:var(--green,#00ff88)}.warn{color:var(--gold,#c9a84c)}.bad{color:#ff6b6b}
+.progress{height:5px;background:rgba(255,255,255,.06);margin-top:12px}.progress>i{display:block;height:100%;width:0;background:var(--cyan,#00e5ff);transition:width .35s}
+details{border-top:1px solid var(--line,rgba(255,255,255,.1));padding:12px 0}summary{cursor:pointer;font-family:var(--M,monospace);font-size:12px;letter-spacing:1.4px;color:var(--gold,#c9a84c)}
+pre{white-space:pre-wrap;word-break:break-word;color:rgba(238,238,238,.65);font-size:11px;line-height:1.55}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.sections{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="control-center" aria-label="Navigation"></aside>
+<main class="main">
+<div class="wrap">
+<header class="hero">
+<div><div class="eyebrow">OMEGA CONTROL PLANE / RUNTIME</div><h1>Control Center</h1><p class="lede">One compact surface for the things that are otherwise scattered across 170+ pages: runtime reachability, browser capabilities, deployment assets, storage state and recovery links. It reports what this browser can prove now; it never invents backend health.</p></div>
+<div class="actions"><button class="btn" id="refresh">RUN CHECK</button><a class="btn" href="/verify-deployment.html">DEPLOYMENT</a><a class="btn" href="/verify-modules.html">MODULES</a></div>
+</header>
+<section class="grid" aria-label="Runtime metrics">
+<div class="card"><div class="metric" id="m-runtime">--</div><div class="label">RUNTIME</div><div class="sub" id="s-runtime">Checking browser...</div></div>
+<div class="card"><div class="metric" id="m-network">--</div><div class="label">NETWORK</div><div class="sub" id="s-network">Checking...</div></div>
+<div class="card"><div class="metric" id="m-storage">--</div><div class="label">STORAGE</div><div class="sub" id="s-storage">Checking...</div></div>
+<div class="card"><div class="metric" id="m-sw">--</div><div class="label">SERVICE WORKER</div><div class="sub" id="s-sw">Checking...</div></div>
+</section>
+<div class="sections">
+<section class="card"><div class="eyebrow">LIVE CLIENT CHECKS</div><div class="progress"><i id="progress"></i></div><div class="list" id="checks" style="margin-top:12px"></div></section>
+<section class="card"><div class="eyebrow">RECOVERY ROUTES</div><div class="list" style="margin-top:12px">
+<a class="row" href="/recovery.html"><span>Recovery</span><span class="status">OPEN →</span></a>
+<a class="row" href="/observatory.html"><span>Observatory</span><span class="status">OPEN →</span></a>
+<a class="row" href="/evidence.html"><span>Evidence Graph</span><span class="status">OPEN →</span></a>
+<a class="row" href="/guide.html"><span>Guide</span><span class="status">OPEN →</span></a>
+<a class="row" href="/privacy.html"><span>Privacy Centre</span><span class="status">OPEN →</span></a>
+</div></section>
+</div>
+<section class="card" style="margin-top:14px">
+<div class="eyebrow">PROOF LOG</div>
+<details open><summary>WHAT THIS PAGE CAN PROVE</summary><pre id="proof">Running...</pre></details>
+<details><summary>LOCAL RUNTIME SNAPSHOT</summary><pre id="snapshot">--</pre></details>
+</section>
+<footer class="mono" style="padding:24px 0;opacity:.55">Ω SYD OMEGA 91717 · Control Center · browser evidence only · <span id="stamp">--</span></footer>
+</div>
+</main>
+</div>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var checks=[];
+function add(name,state,detail){checks.push({name:name,state:state,detail:detail});}
+function paint(){
+$('checks').innerHTML=checks.map(function(x){
+var c=x.state==='ok'?'ok':x.state==='warn'?'warn':'bad';
+return '<div class="row"><span>'+x.name+'</span><span class="status '+c+'">'+x.state.toUpperCase()+' · '+x.detail+'</span></div>';
+}).join('');
+$('progress').style.width=Math.round(checks.filter(function(x){return x.state==='ok'}).length/Math.max(1,checks.length)*100)+'%';
+$('proof').textContent=checks.map(function(x){return '['+x.state.toUpperCase()+'] '+x.name+' — '+x.detail}).join('\n');
+$('snapshot').textContent=JSON.stringify({href:location.href,origin:location.origin,protocol:location.protocol,online:navigator.onLine,viewport:innerWidth+'×'+innerHeight,dpr:devicePixelRatio,language:navigator.language,userAgent:navigator.userAgent,storageKeys:Object.keys(localStorage).length},null,2);
+}
+async function probe(path){
+try{var r=await fetch(path,{cache:'no-store',credentials:'same-origin'});return {ok:r.ok,status:r.status};}
+catch(e){return {ok:false,status:0};}
+}
+async function run(){
+checks=[];$('refresh').disabled=true;$('refresh').textContent='CHECKING…';
+$('m-runtime').textContent='READY';$('s-runtime').textContent=(navigator.hardwareConcurrency||'?')+' CPU threads · '+(navigator.deviceMemory||'?')+' GB memory hint';
+add('Secure context',isSecureContext?'ok':'warn',location.protocol);
+add('Browser online',navigator.onLine?'ok':'bad',navigator.onLine?'online':'offline');
+add('Local storage',function(){try{var k='__omega_probe__';localStorage.setItem(k,'1');localStorage.removeItem(k);return true}catch(e){return false}}()?'ok':'bad',localStorage.length+' keys');
+var assets=['/manifest.json','/nav.js','/bg.js','/verify-deployment.html'];
+var results=await Promise.all(assets.map(probe));
+results.forEach(function(r,i){add('Asset '+assets[i],r.ok?'ok':'bad',r.ok?'HTTP '+r.status:'HTTP '+(r.status||'error'))});
+var sw='serviceWorker' in navigator;
+$('m-sw').textContent=sw?'AVAILABLE':'NONE';$('s-sw').textContent=sw?'API exposed':'Browser does not expose service workers';
+add('Service worker API',sw?'ok':'warn',sw?'available':'unavailable');
+var conn=navigator.connection;
+$('m-network').textContent=navigator.onLine?'ONLINE':'OFFLINE';$('s-network').textContent=conn?(conn.effectiveType||'unknown')+' · '+(conn.saveData?'save-data':'normal'):'connection hints unavailable';
+var hasSupabase=!!window.supabase;
+add('Supabase client global',hasSupabase?'ok':'warn',hasSupabase?'available on this page':'not exposed globally');
+$('m-storage').textContent=localStorage.length;
+$('s-storage').textContent='localStorage keys visible to this origin';
+$('m-runtime').textContent=checks.filter(function(x){return x.state==='ok'}).length+'/'+checks.length;
+$('stamp').textContent=new Date().toISOString();
+paint();$('refresh').disabled=false;$('refresh').textContent='RUN CHECK';
+}
+$('refresh').addEventListener('click',run);window.addEventListener('online',run);window.addEventListener('offline',run);run();
+})();
+</script>
+</body>
+</html>

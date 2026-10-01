@@ -1,0 +1,28 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "$id":"https://sydomega.com/schemas/omega-object-contract.v1.json",
+  "title":"OmegaObject",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["id","type","label","truth","state","source","observedAt"],
+  "properties":{
+    "id":{"type":"string","minLength":1},
+    "type":{"type":"string","minLength":1},
+    "label":{"type":"string"},
+    "description":{"type":["string","null"]},
+    "state":{"type":"string","minLength":1},
+    "truth":{"enum":["LIVE","VERIFIED","CALCULATED","SOURCE","SIMULATED","STALE","UNAVAILABLE","UNKNOWN"]},
+    "source":{"type":"string","minLength":1},
+    "observedAt":{"type":"string","format":"date-time"},
+    "ownerId":{"type":["string","null"]},
+    "organizationId":{"type":["string","null"]},
+    "metadata":{"type":"object"},
+    "permissions":{"type":"array","items":{"type":"string"}},
+    "relations":{"type":"array","items":{"type":"object"}},
+    "actions":{"type":"array","items":{"type":"object"}},
+    "lineage":{"type":"array","items":{"type":"object"}},
+    "createdAt":{"type":["string","null"]},
+    "updatedAt":{"type":["string","null"]},
+    "runtimeVersion":{"type":"string"}
+  }
+}

@@ -260,15 +260,18 @@
         "Master Prompt"
       ],
       "requirement": "729-node progression is modeled with prerequisites, verification, completion and rewards.",
-      "state": "DESIGNED",
+      "state": "INTEGRATED",
       "repo": [
-        "supabase",
-        "config"
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_nodes",
+        "public.matrix_tracks",
+        "public.matrix_progress"
       ],
       "evidence": [
-        "Schema/source audit"
+        "SUPA-MATRIX-20261002",
+        "Live SQL verification: 729 nodes, 9 stages, indices 1-729"
       ],
-      "blocker": "Current audit does not yet prove all 729 nodes exist, are reachable and are live-progress aware."
+      "blocker": "Semantic objectives, prerequisite graph, verification evidence, completion rules and reward policies are still empty/default and must be populated from governed product content."
     },
     {
       "id": "ORACLE-001",
@@ -448,6 +451,24 @@
         "Source inventory audit: 391 unique numbered point bullets were extracted from the 999-point blueprint."
       ],
       "blocker": "Complete point-by-point productization mapping remains outstanding."
+    },
+    {
+      "id": "DB-002",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Canonical progression infrastructure must be represented as durable database state rather than visual-only coordinates.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_nodes"
+      ],
+      "evidence": [
+        "Live 729-node registry verification"
+      ],
+      "blocker": "Node semantics and user-progress integration remain incomplete."
     }
   ]
 }

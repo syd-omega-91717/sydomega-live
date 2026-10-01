@@ -163,8 +163,6 @@ async function load(){
   /* Feed persisted mission state into the canonical read-side object graph. */
   if(window.OmegaObjectGraph){
     window.OmegaObjectGraph.putMany(state.missions,{type:'mission',source:'omega_missions',truth:'LIVE',observedAt:new Date().toISOString()});
-    window.OmegaObjectGraph.putMany(state.missionStates,{type:'mission',source:'omega_member_mission_state',truth:'LIVE',observedAt:new Date().toISOString()});
-    window.OmegaObjectGraph.putMany(state.quests,{type:'mission',source:'omega_quests',truth:'LIVE',observedAt:new Date().toISOString()});
     window.OmegaObjectGraph.putMany(state.events.map(e=>({id:e.id,label:e.event_type||'platform event',metadata:e.metadata,createdAt:e.created_at})),{type:'event',source:'omega_platform_events',truth:'LIVE',observedAt:new Date().toISOString()});
     state.events.forEach(e=>{if(e.actor_user_id||state.user?.id)window.OmegaObjectGraph.link({from:String(e.actor_user_id||state.user.id),to:String(e.id),type:'TRIGGERS',source:'omega_platform_events'});});
   }

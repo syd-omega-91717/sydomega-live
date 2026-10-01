@@ -1,0 +1,398 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-01",
+  "purpose": "Evidence-bound implementation ledger for Ω SYD OMEGA 91717.",
+  "lifecycle": [
+    "SPECIFIED",
+    "DESIGNED",
+    "BUILT",
+    "INTEGRATED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "BLOCKED"
+  ],
+  "evidenceAsOf": {
+    "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
+    "branch": "f28ec4ef00b252f096de2b7e9cfc6939a7fb63a7",
+    "pullRequest": "#606",
+    "supabaseProject": "nvgedlxlkdzvcelimbvq",
+    "liveSite": "https://sydomega.com"
+  },
+  "items": [
+    {
+      "id": "GOV-001",
+      "domain": "governance",
+      "source": [
+        "999 Blueprint",
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "Maintain one canonical source-of-truth ledger; never equate narrative specification with shipped capability.",
+      "state": "BUILT",
+      "repo": [
+        "config/omega-implementation-ledger.json",
+        "docs/OMEGA_IMPLEMENTATION_LEDGER.md"
+      ],
+      "evidence": [
+        "PR-605"
+      ],
+      "blocker": null
+    },
+    {
+      "id": "WEB-001",
+      "domain": "web",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "Every HTML surface must be usable across laptop and mobile widths.",
+      "state": "TESTED",
+      "repo": [
+        "scripts/omega-responsive-surface-contract.py",
+        "docs/RESPONSIVE_PRODUCTION_STANDARD.md"
+      ],
+      "evidence": [
+        "PR-604"
+      ],
+      "blocker": "Live browser matrix still needs current production verification."
+    },
+    {
+      "id": "WEB-002",
+      "domain": "web",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Use one canonical page-estate count and remove stale contradictory counts.",
+      "state": "BUILT",
+      "repo": [
+        "control-center.html",
+        "dashboard.html",
+        "ecosystem.html",
+        "i18n.js",
+        "notifications.html",
+        "roadmap.html",
+        "world-shell.html"
+      ],
+      "evidence": [
+        "CI-page-count-contract"
+      ],
+      "blocker": "Live site currently advertises 216 surfaces while repo estate is 217 HTML files; terminology needs formalization."
+    },
+    {
+      "id": "SEC-001",
+      "domain": "security",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "No secrets in shipped source; exposed credentials are rotated/revoked and removed from tracked/history copies.",
+      "state": "BLOCKED",
+      "repo": [
+        "docs/SECURITY.md"
+      ],
+      "evidence": [
+        "Source-doc credential exposure audit"
+      ],
+      "blocker": "Attached source material contained actual-looking provider credentials; rotation/revocation and history purge remain required."
+    },
+    {
+      "id": "SEC-002",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "RLS and function execution privileges must match actor and exposure boundary.",
+      "state": "BLOCKED",
+      "repo": [
+        "supabase/migrations",
+        "scripts/supabase-migration-security-audit.py"
+      ],
+      "evidence": [
+        "SUPA-SEC-20261001"
+      ],
+      "blocker": "Live advisor reports 64 public SECURITY DEFINER functions executable by anon; classify and explicitly grant only intended callers."
+    },
+    {
+      "id": "DB-001",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "Repository migrations and live migration journal agree in both directions.",
+      "state": "BLOCKED",
+      "repo": [
+        "scripts/migration-drift.py",
+        "supabase/remote-migrations.json",
+        "supabase/migrations"
+      ],
+      "evidence": [
+        "SUPA-MIG-20261001"
+      ],
+      "blocker": "Live journal does not contain four 20261001 repository migrations; do not register them as applied without executing and validating them."
+    },
+    {
+      "id": "OBJ-001",
+      "domain": "runtime",
+      "source": [
+        "Document.txt",
+        "999 Blueprint"
+      ],
+      "requirement": "Canonical object envelope and graph are available to all runtime consumers.",
+      "state": "INTEGRATED",
+      "repo": [
+        "omega-object-runtime.js",
+        "omega-object-graph-runtime.js",
+        "bg.js"
+      ],
+      "evidence": [
+        "Omega Object Contract run 72",
+        "PR-605"
+      ],
+      "blocker": null
+    },
+    {
+      "id": "CSP-001",
+      "domain": "security",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Prevent inline script growth and ratchet legacy inline handlers downward.",
+      "state": "TESTED",
+      "repo": [
+        "scripts/csp-inline-ratchet.py",
+        "scripts/csp-inline-baseline.json",
+        "control-center-runtime.js",
+        "platform-kernel-runtime.js"
+      ],
+      "evidence": [
+        "PR-605"
+      ],
+      "blocker": "Legacy inline handlers remain across the estate; migration is incremental."
+    },
+    {
+      "id": "CI-001",
+      "domain": "ci",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "CI verifies syntax, contracts, supply-chain controls, release artifacts and runtime boundaries.",
+      "state": "TESTED",
+      "repo": [
+        ".github/workflows",
+        "scripts"
+      ],
+      "evidence": [
+        "Workflow Contract run 2089",
+        "Omega Object Contract run 72",
+        "Supabase Migration Security Audit run 273"
+      ],
+      "blocker": "Full release-readiness suite has not yet reached a clean run on the latest head."
+    },
+    {
+      "id": "PAY-001",
+      "domain": "payments",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Stripe payments are webhook-authoritative, idempotent and ledger-backed.",
+      "state": "DESIGNED",
+      "repo": [
+        "payments.html",
+        "subscriptions.html",
+        "supabase/migrations"
+      ],
+      "evidence": [
+        "Architecture audit"
+      ],
+      "blocker": "No fresh production checkout + signed webhook + entitlement reconciliation proof in this pass."
+    },
+    {
+      "id": "LEDGER-001",
+      "domain": "economics",
+      "source": [
+        "999 Blueprint",
+        "Master Prompt"
+      ],
+      "requirement": "Balances, rewards, referrals and treasury movements use an append-only ledger and reconciliation path.",
+      "state": "DESIGNED",
+      "repo": [
+        "docs",
+        "supabase/migrations"
+      ],
+      "evidence": [
+        "Source architecture audit"
+      ],
+      "blocker": "Canonical ledger schema and live end-to-end reconciliation are not yet proven."
+    },
+    {
+      "id": "AGENT-001",
+      "domain": "intelligence",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "12-agent system uses explicit registry, capabilities, tool permissions, approval policy and audit trail.",
+      "state": "TESTED",
+      "repo": [
+        "config",
+        "omega-agent-*",
+        "scripts/omega_fabric_platform_gate.py"
+      ],
+      "evidence": [
+        "Omega Intelligence Fabric evidence"
+      ],
+      "blocker": "Headless render evidence remains unverified for all 12 entrypoints."
+    },
+    {
+      "id": "MATRIX-001",
+      "domain": "progression",
+      "source": [
+        "999 Blueprint",
+        "Master Prompt"
+      ],
+      "requirement": "729-node progression is modeled with prerequisites, verification, completion and rewards.",
+      "state": "DESIGNED",
+      "repo": [
+        "supabase",
+        "config"
+      ],
+      "evidence": [
+        "Schema/source audit"
+      ],
+      "blocker": "Current audit does not yet prove all 729 nodes exist, are reachable and are live-progress aware."
+    },
+    {
+      "id": "ORACLE-001",
+      "domain": "oracle",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Oracle/horoscope features preserve a deterministic interpretive boundary and do not present divination as verified factual prediction.",
+      "state": "DESIGNED",
+      "repo": [
+        "horoscope.html",
+        "oracle.html"
+      ],
+      "evidence": [
+        "Astera methodology review"
+      ],
+      "blocker": "Shared provenance/disclaimer contract is not yet canonicalized."
+    },
+    {
+      "id": "VIDEO-001",
+      "domain": "video",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Presenter/video generation is provider-abstracted with consent, job state, storage and cost controls.",
+      "state": "DESIGNED",
+      "repo": [
+        "docs",
+        "media surfaces"
+      ],
+      "evidence": [
+        "HeyGen/Higgsfield capability review"
+      ],
+      "blocker": "Provider abstraction and operational guardrails are not yet canonicalized."
+    },
+    {
+      "id": "A11Y-001",
+      "domain": "accessibility",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "Controls remain keyboard/touch accessible with visible focus and minimum target sizing.",
+      "state": "DESIGNED",
+      "repo": [
+        "css/omega-accessibility-audit.css",
+        "scripts/omega-responsive-surface-contract.py"
+      ],
+      "evidence": [
+        "WCAG 2.2 reference",
+        "Static contracts"
+      ],
+      "blocker": "No full browser accessibility audit across all 217 surfaces."
+    },
+    {
+      "id": "PERF-001",
+      "domain": "performance",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Production experience is measured with performance budgets and browser/user evidence.",
+      "state": "DESIGNED",
+      "repo": [
+        "docs",
+        "scripts"
+      ],
+      "evidence": [
+        "Web performance research"
+      ],
+      "blocker": "No current measured LCP/INP/CLS dataset or bundle-budget report in this pass."
+    },
+    {
+      "id": "DEP-001",
+      "domain": "deployment",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "Vercel preview/production plus Supabase form a verified deployment path.",
+      "state": "BLOCKED",
+      "repo": [
+        ".github/workflows/vercel-production.yml"
+      ],
+      "evidence": [
+        "PR-605 Vercel check pending",
+        "Live site HTTP 200 observed"
+      ],
+      "blocker": "Latest Vercel check is pending; connector access previously returned 403."
+    },
+    {
+      "id": "TRUTH-001",
+      "domain": "truth",
+      "source": [
+        "All five source documents"
+      ],
+      "requirement": "Statements distinguish specified, built, tested, deployed, verified, planned and speculative capability.",
+      "state": "BUILT",
+      "repo": [
+        "config/omega-platform-manifest.json",
+        "config/omega-implementation-ledger.json",
+        "docs/OMEGA_IMPLEMENTATION_LEDGER.md"
+      ],
+      "evidence": [
+        "PR-605",
+        "Existing truth contracts"
+      ],
+      "blocker": "Full 999-point source-to-ledger mapping is not complete."
+    },
+    {
+      "id": "EDGE-001",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "requirement": "Every repository-declared production Edge Function has an explicit live deployment state and verification record.",
+      "state": "BLOCKED",
+      "repo": [
+        "supabase/functions",
+        "supabase/edge-functions.json",
+        "config/supabase-edge-runtime-evidence.json"
+      ],
+      "evidence": [
+        "Supabase live list_edge_functions on 2026-10-01 returned zero deployed functions; repository census contains 18 functions."
+      ],
+      "blocker": "Live Supabase currently exposes no deployed Edge Functions. Deploy/reconcile each intended function, then record route, version, auth boundary and smoke-test evidence."
+    }
+  ]
+}

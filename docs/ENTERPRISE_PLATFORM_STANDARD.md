@@ -23,6 +23,7 @@ Use these states without collapsing them:
 7. **VERIFIED** — live evidence confirms the expected behavior.
 
 A source file can never substitute for a runtime or production verification state.
+A source file can never substitute for runtime or production verification.
 
 ## Product surface contract
 
@@ -34,6 +35,8 @@ Every page/module should identify:
 - data it reads
 - data it writes
 - API or database contract
+- data it reads and writes
+- API/database contract
 - loading, empty, error, offline and retry states
 - responsive behavior at 375 / 768 / 1280
 - keyboard and reduced-motion behavior
@@ -49,6 +52,7 @@ Money, credits, rewards, referrals, subscriptions and entitlements must be
 event-driven and auditable.
 
 Canonical flow:
+event-driven and auditable:
 
 **intent → authorization → provider event → idempotency check → immutable ledger event → entitlement projection → notification → reconciliation.**
 
@@ -68,6 +72,9 @@ Each agent must have:
 - human approval policy
 - audit/evidence policy
 - failure and fallback behavior
+Each agent must have a stable identifier/version, capability allow-list,
+denied tools, data scope, model/provider, budget/rate limit, risk level,
+human-approval policy, audit/evidence policy, and failure/fallback behavior.
 
 Autonomy is an explicit permission, not an implicit consequence of model access.
 
@@ -83,6 +90,14 @@ server-side. Backups and restoration are treated as separate capabilities.
 ## Deployment contract
 
 A release is a chain, not a button:
+architecture decision changes it. Production database changes are
+migration-controlled. RLS and grants are tested semantically, not merely
+counted. Sensitive operations remain server-side. Backups and restoration are
+separate capabilities.
+
+## Deployment contract
+
+A release is a chain:
 
 **source → validation → build → artifact invariants → preview → runtime smoke → approval → production → post-deploy verification.**
 
@@ -130,6 +145,31 @@ Do not silently replace:
 - module ownership
 
 with an older prompt variant.
+must remain visible as deployment blockers rather than false success states.
+
+## Scale contract
+
+Prove the workload before adding infrastructure complexity. Prefer explicit
+boundaries, event contracts, queues/workers where asynchronous work is real,
+measured caching, observability, and controlled migration paths.
+
+Do not introduce microservices, Kubernetes, blockchain execution, or autonomous
+financial actions solely because the vision documents mention them.
+
+## Security contract
+
+Minimum controls include secret scanning/rotation, least privilege, MFA for
+privileged administration, server-only elevated credentials, RLS plus grants,
+input validation/output encoding, rate limiting, abuse controls, audit logs,
+dependency/supply-chain checks, security regression tests, and recovery
+procedures.
+
+## Canon and conflict control
+
+Historical source documents contain multiple architecture variants. Conflicts
+must be recorded and resolved explicitly. Do not silently replace the current
+repository vocabulary, database topology, pricing/entitlements, gate/element
+counts, or module ownership with an older prompt variant.
 
 The implementation ledger is the authority for what is actually built and
 verified; product/canon decisions remain explicitly versioned.
@@ -149,6 +189,11 @@ implementations. Useful patterns include:
 - YouTube/Netflix-style media lifecycle
 - Bloomberg/Palantir-style evidence-rich data exploration
 - modern AI-agent systems with explicit tools, budgets and approvals
+implementations. Useful patterns include event/idempotency discipline,
+database authorization, preview isolation, issue-to-delivery traceability,
+structured knowledge, asset workflows, realtime communication, media
+lifecycles, evidence-rich data exploration, and explicit AI tool/budget/approval
+boundaries.
 
 These are design references, not claims that SYD OMEGA currently implements
 their capabilities.
@@ -163,3 +208,4 @@ The production definition is:
 
 That definition is intentionally strict so growth does not create invisible
 operational debt.
+**100% production readiness = specified + built + integrated + tested + deployed + observed + recoverable + evidenced.**

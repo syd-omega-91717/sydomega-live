@@ -6,6 +6,7 @@ as production-capable. This is deliberately evidence-oriented: it never
 claims that Vercel, Supabase, Stripe, or a browser runtime is live merely
 because source files exist.
 """
+"""Repository-side enterprise readiness contract for Ω SYD OMEGA 91717."""
 
 from __future__ import annotations
 
@@ -52,6 +53,19 @@ def main() -> int:
     secret_hits = []
     for path in scan_files():
         if path.name in {".env", ".env.local", ".env.production", ".env.development"}:
+TEXT_SUFFIXES = {".js",".mjs",".ts",".tsx",".html",".css",".json",".yml",".yaml",".md",".sql",".sh",".py"}
+
+def scan_files():
+    for path in ROOT.rglob("*"):
+        if ".git" not in path.parts and path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
+            yield path
+
+def main() -> int:
+    missing = [k for k,p in REQUIRED.items() if not p.is_file()]
+    empty = [k for k,p in REQUIRED.items() if p.is_file() and p.stat().st_size == 0]
+    secret_hits = []
+    for path in scan_files():
+        if path.name in {".env",".env.local",".env.production",".env.development"}:
             continue
         try:
             content = path.read_text(encoding="utf-8", errors="ignore")
@@ -64,6 +78,10 @@ def main() -> int:
 
     html_files = list(ROOT.rglob("public/*.html")) + list(ROOT.rglob("public/**/*.html"))
     html_files = sorted(set(p for p in html_files if p.is_file()))
+        if any(pattern.search(content) for pattern in SECRET_PATTERNS):
+            secret_hits.append(str(path.relative_to(ROOT)))
+
+    html_files = sorted(set(p for p in ROOT.rglob("public/**/*.html") if p.is_file()))
     missing_viewport = []
     for path in html_files:
         content = path.read_text(encoding="utf-8", errors="ignore")
@@ -95,6 +113,20 @@ def main() -> int:
             "prove live provider state, authenticated journeys, payment settlement, "
             "database policy semantics, backup restoration, or browser runtime behavior."
         ),
+    contracts = ["omega-production-surface-contract.py","omega-responsive-surface-contract.py","production-proof-contract.py","omega-convergence-audit.py"]
+    workflow_missing = [name for name in contracts if name not in workflow]
+
+    result = {
+        "schemaVersion":"1.0.0",
+        "contract":"enterprise-readiness",
+        "missing":missing,
+        "empty":empty,
+        "secretPatternHits":sorted(set(secret_hits)),
+        "publicHtmlPages":len(html_files),
+        "publicHtmlMissingViewport":missing_viewport,
+        "workflowMissingContracts":workflow_missing,
+        "status":"PASS" if not (missing or empty or secret_hits or missing_viewport or workflow_missing) else "FAIL",
+        "interpretation":"Repository evidence only; does not prove live provider state, authenticated journeys, payment settlement, database policy semantics, backup restoration, or browser runtime behavior."
     }
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["status"] == "PASS" else 2

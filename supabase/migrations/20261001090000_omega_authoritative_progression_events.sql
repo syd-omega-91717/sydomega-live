@@ -1,7 +1,7 @@
 -- Ω SYD OMEGA 91717
 -- Authoritative progression event bridge
--- Applied live on 2026-10-01 to Supabase project ydqhzvvoyufiiqvzcjns.
--- Repository migration record for the already-verified live change.
+-- Repository migration record. Live application to target project nvgedlxlkdzvcelimbvq is NOT verified here.
+-- Historical comment referenced a different project; see config/supabase-migration-provenance.json.
 
 create or replace function private.record_task_sovereign_event()
 returns trigger

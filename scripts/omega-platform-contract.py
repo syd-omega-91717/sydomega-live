@@ -12,6 +12,10 @@ provider state remains a separate verification boundary.
 from __future__ import annotations
 import json, pathlib, sys
 
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 CONFIG=ROOT/"config"
 required=[

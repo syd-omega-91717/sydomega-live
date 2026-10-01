@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Deterministic contract for the Omega Platform Kernel and its evidence bridges."""
+"""
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
+Deterministic contract for the Omega Platform Kernel and its evidence bridges."""
 from __future__ import annotations
 import json
 from pathlib import Path

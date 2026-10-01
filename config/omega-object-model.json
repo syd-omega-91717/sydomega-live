@@ -8,7 +8,7 @@
   "ownership":{"fields":["ownerId","organizationId"],"authorization":"server-authoritative"},
   "objects":[
     {"type":"member","sources":["profiles"],"identity":"id","label":"display_name","owner":"id"},
-    {"type":"mission","sources":["omega_platform_events","omega_member_quest_state"],"identity":"id","label":"event_type","owner":"user_id"},
+    {"type":"mission","sources":["omega_missions","omega_platform_events","omega_member_quest_state"],"identity":"id","label":"event_type","owner":"user_id"},
     {"type":"achievement","sources":["certificates","evolution_events"],"identity":"id","label":"title","owner":"user_id"},
     {"type":"gate","sources":["gate_matrix","gate_evaluations"],"identity":"id","label":"gate_name","owner":"user_id"},
     {"type":"holding","sources":["user_assets","wallet_transactions"],"identity":"id","label":"id","owner":"user_id"},

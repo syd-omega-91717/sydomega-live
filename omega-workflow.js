@@ -72,14 +72,12 @@
       return {ok:true,gate_idx:gi<0?11:gi,gate_name:gi<0?'APEX':GNAMES[gi],threshold:gi<0?27.8367:GATES[gi]};
     },
     show_celebration: async function(ctx){
-      if(window.OmegaSDT&&window.OmegaSDT.pulse){
+      /* Gate ceremonies are driven by authoritative sovereign.gate.unlocked events.
+         This workflow may render ordinary task feedback only. */
+      if(window.OmegaSDT&&window.OmegaSDT.pulse&&ctx._workflow!=='gate_unlock'){
         window.OmegaSDT.pulse('c',0.009,ctx.auth||0);
       }
-      if(window.OmegaNotify){
-        var msg=ctx.gate_name?'GATE UNLOCKED: '+ctx.gate_name+' (AUTH='+Number(ctx.auth||0).toFixed(4)+')':'SOVEREIGN ACHIEVEMENT UNLOCKED';
-        window.OmegaNotify.showToast(msg,'success');
-      }
-      return {ok:true,shown:true};
+      return {ok:true,shown:ctx._workflow!=='gate_unlock'};
     },
     emit_events: async function(ctx){
       if(window.OmegaOS){
@@ -133,9 +131,10 @@
           p_task_type:kind, p_task_name:task, p_axis_type:axis, p_description:title, p_points:weight
         });
         if(r.error) throw r.error;
-        return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
+        if(!r.data||r.data.ok!==true)return {ok:false,error:'complete_task_rejected',axis_result:r.data||{}};
+        return {ok:true,applied:!!r.data.applied,axis_result:r.data};
       }catch(e){
-        return {ok:true,skipped:'rpc_error',error:e.message};
+        return {ok:false,error:'rpc_error',message:e.message||String(e)};
       }
     },
     recompute_auth: async function(ctx){
@@ -144,7 +143,7 @@
       if(!pr) return {ok:true};
       /* If axis was incremented, pull fresh values from server result */
       var ar=ctx.axis_result||{};
-      var a=Number(ar.a||pr.axis_a||0.001),b=Number(ar.b||pr.axis_b||0.001),c=Number(ar.c||pr.axis_c||0.001);
+      var a=Number(ar.axis_a!=null?ar.axis_a:pr.axis_a||0.001),b=Number(ar.axis_b!=null?ar.axis_b:pr.axis_b||0.001),c=Number(ar.axis_c!=null?ar.axis_c:pr.axis_c||0.001);
       var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
       return {ok:true,auth:auth,a:a,b:b,c:c};
     },

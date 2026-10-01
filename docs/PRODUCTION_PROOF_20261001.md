@@ -5,7 +5,7 @@ This ledger records only evidence that was actually exercised or observed. It do
 ## Current release anchor
 
 - Repository: `syd-omega-91717/sydomega-live`
-- Main release commit under verification: `52a32f14d7fbbfa61f442fac0e1e2d3c36b8d9e9`
+- Main release commit under verification: `8d9bbedebf9d89b5aeab2de96302ef52829126db`
 - Proof contract: `scripts/production-proof-contract.py`
 - Supabase project: `sydomega` / `ydqhzvvoyufiiqvzcjns`
 
@@ -15,6 +15,7 @@ This ledger records only evidence that was actually exercised or observed. It do
 |---|---|---|
 | Repository lineage | Current main contains the convergence hardening commit and required progression bridge files | PASS |
 | Repository proof machinery | Production proof contract added and designed to fail on missing proof infrastructure | PASS |
+| Release surface quality contract | Static HTML/accessibility/performance regression contract is wired into the Vercel validation job | PASS (artifact contract) |
 | Supabase database | 229 public base tables observed live | PASS |
 | Supabase RLS coverage | 229/229 public tables have RLS enabled | PASS |
 | Supabase policy coverage | 349 public RLS policies observed; no table without policy in the audited public inventory | PASS |
@@ -33,7 +34,7 @@ This ledger records only evidence that was actually exercised or observed. It do
 | Backup/restore | No current exercise evidence | UNPROVEN |
 | Critical browser journeys | No fresh full-journey evidence for this release SHA | UNPROVEN |
 | Accessibility/performance | No fresh representative-page release gate evidence | UNPROVEN |
-| Vercel provider inspection | Connected Vercel API currently returns 403 for the project/team scope, so deployment details/logs cannot be independently inspected from this session | OPEN |
+| Vercel provider inspection | Connected Vercel API currently returns 403 for the project/team scope; GitHub Vercel status is also currently failing with `upgradeToPro=build-rate-limit` | OPEN |
 
 ## Important interpretation
 

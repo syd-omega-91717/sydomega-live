@@ -12,6 +12,7 @@ const ROOT = join(process.cwd(), 'public');
 const ENGINE_CANDIDATES = ['omega-visual-engine.js','assets/js/omega-visual-engine.js','js/omega-visual-engine.js','assets/omega-visual-engine.js'];
 const OBSERVABILITY_CANDIDATES = ['omega-runtime-observability.js','assets/js/omega-runtime-observability.js','js/omega-runtime-observability.js'];
 const ACTION_RUNTIME_CANDIDATES = ['omega-action-runtime.js','assets/js/omega-action-runtime.js','js/omega-action-runtime.js'];
+const DATA_RUNTIME_CANDIDATES = ['omega-data-runtime.js','assets/js/omega-data-runtime.js','js/omega-data-runtime.js'];
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -41,6 +42,7 @@ const files = await walk(ROOT);
 const engine = await findAsset(ENGINE_CANDIDATES);
 const observability = await findAsset(OBSERVABILITY_CANDIDATES);
 const actionRuntime = await findAsset(ACTION_RUNTIME_CANDIDATES);
+const dataRuntime = await findAsset(DATA_RUNTIME_CANDIDATES);
 const manifestExists = await findAsset(['manifest.json']);
 const offlineExists = await findAsset(['offline.html']);
 let changed = 0;
@@ -78,6 +80,7 @@ for (const file of files) {
   if (engine && !/omega-visual-engine\.js/i.test(html)) scripts.push(`<script src="${engine}" defer></script>`);
   if (observability && !/omega-runtime-observability\.js/i.test(html)) scripts.push(`<script src="${observability}" defer></script>`);
   if (actionRuntime && !/omega-action-runtime\.js/i.test(html)) scripts.push(`<script src="${actionRuntime}" defer></script>`);
+  if (dataRuntime && !/omega-data-runtime\.js/i.test(html)) scripts.push(`<script src="${dataRuntime}" defer></script>`);
   // Service-worker registration is owned by bg.js → omega-sw-register.js.
   // Do not inject a second registration here: duplicate registrations and a
   // wrong worker path can strand a stale cache across the entire origin.
@@ -86,7 +89,8 @@ for (const file of files) {
   if (html !== original) { await writeFile(file, html); changed++; }
 }
 
-console.log(`VERCEL_ARTIFACT_ENHANCE=PASS html=${files.length} changed=${changed} engine=${engine ?? 'not-found'} observability=${observability ?? 'not-found'} actionRuntime=${actionRuntime ?? 'not-found'} manifest=${manifestExists ?? 'not-found'} offline=${offlineExists ?? 'not-found'}`);
+console.log(`VERCEL_ARTIFACT_ENHANCE=PASS html=${files.length} changed=${changed} engine=${engine ?? 'not-found'} observability=${observability ?? 'not-found'} actionRuntime=${actionRuntime ?? 'not-found'} dataRuntime=${dataRuntime ?? 'not-found'} manifest=${manifestExists ?? 'not-found'} offline=${offlineExists ?? 'not-found'}`);
 if (engine === null) console.log('visual_engine=source-page-runtime-only');
 if (observability === null) console.log('observability=not-installed');
 if (actionRuntime === null) console.log('action_runtime=not-installed');
+if (dataRuntime === null) console.log('data_runtime=not-installed');

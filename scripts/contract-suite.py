@@ -159,6 +159,9 @@ GATES = [
     ('world-connector',
      'World actions and district missions use the canonical client and secure idempotency keys',
      ['scripts/world-connector-contract.py']),
+    ('implementation-ledger',
+     'the source-to-production implementation ledger is structurally valid and evidence-bound',
+     ['scripts/omega-implementation-ledger-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

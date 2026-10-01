@@ -61,7 +61,7 @@
 |---|---|---|
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
-| Vercel production deployment | **UNVERIFIED** in the 2026-10-01 live snapshot; connected Vercel access returned a provider authorization/build-rate-limit signal | Resolve Vercel account/project authorization, obtain a current deployment ID, then verify production propagation/smoke |
+| Vercel production deployment | **INTEGRATION STATUS PASS** for release commit `52a32f14d7fbbfa61f442fac0e1e2d3c36b8d9e9`; GitHub combined status reports Vercel `success`. Direct connected-Vercel inspection remains blocked by a 403 scope authorization response. | Restore connected Vercel scope authorization and independently inspect deployment ID, production alias, logs and browser smoke |
 | GitHub workflows | **PR #470 corrected-commit verification is green on 2026-09-26**: CI, CodeQL, Contracts, Supabase Runtime Contract, Supabase Migration Security Audit, Production Contract, Runtime Contract, Repository Integrity, Release Readiness, Capability Evidence, Intelligence Fabric and Workflow Contract all passed | Preserve concurrency policy and investigate any new failure at root cause |
 | Production smoke checks | Implemented and successful for the prior release evidence set; current Vercel production deployment is not independently established in the 2026-10-01 snapshot | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
@@ -139,5 +139,6 @@ A production release should not be declared complete until all P0/P1 items below
 - [ ] Backup/restore procedure has been exercised.
 - [x] Current release evidence records Git SHA, deployment evidence and Supabase transport reachability.
 - [ ] Latest main SHA has fresh production smoke evidence for all critical journeys.
+- [x] Repository production-proof contract exists and is wired into the Vercel validation workflow.
 
 **This matrix intentionally does not invent completion. It is updated only when evidence changes.**

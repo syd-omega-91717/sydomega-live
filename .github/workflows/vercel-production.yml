@@ -104,6 +104,8 @@ jobs:
         run: python scripts/production-proof-contract.py
       - name: Enterprise readiness contract
         run: python scripts/omega-enterprise-readiness-contract.py
+      - name: Capability registry contract
+        run: python scripts/omega-capability-contract.py
       - name: Architecture convergence audit
         run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Enterprise readiness contract for Ω SYD OMEGA 91717.
 
-Checks repository-side invariants that must exist before a feature is treated
-as production-capable. This is deliberately evidence-oriented: it never
-claims that Vercel, Supabase, Stripe, or a browser runtime is live merely
-because source files exist.
+Repository-side gate only. It validates that the evidence, capability,
+deployment and security contracts exist and that tracked text does not contain
+common credential formats. It deliberately does not claim live provider state.
 """
-"""Repository-side enterprise readiness contract for Ω SYD OMEGA 91717."""
 
 from __future__ import annotations
 
@@ -24,6 +22,10 @@ REQUIRED = {
     "surface_contract": ROOT / "scripts/omega-production-surface-contract.py",
     "responsive_contract": ROOT / "scripts/omega-responsive-surface-contract.py",
     "convergence_audit": ROOT / "scripts/omega-convergence-audit.py",
+    "capability_catalog": ROOT / "config/omega-capability-catalog.json",
+    "capability_registry": ROOT / "config/omega-capabilities.json",
+    "capability_contract": ROOT / "scripts/omega-capability-contract.py",
+    "implementation_ledger": ROOT / "config/omega-implementation-ledger.json",
     "vercel_build": ROOT / "scripts/vercel-build.sh",
     "vercel_workflow": ROOT / ".github/workflows/vercel-production.yml",
     "vercel_config": ROOT / "vercel.json",
@@ -38,98 +40,123 @@ SECRET_PATTERNS = [
     re.compile(r"xox[baprs]-[A-Za-z0-9-]{20,}"),
 ]
 
-TEXT_SUFFIXES = {".js", ".mjs", ".ts", ".tsx", ".html", ".css", ".json", ".yml", ".yaml", ".md", ".sql", ".sh", ".py"}
+TEXT_SUFFIXES = {
+    ".js", ".mjs", ".ts", ".tsx", ".html", ".css", ".json", ".yml", ".yaml",
+    ".md", ".sql", ".sh", ".py",
+}
+SKIP_NAMES = {".env", ".env.local", ".env.production", ".env.development"}
+
 
 def scan_files():
     for path in ROOT.rglob("*"):
-        if ".git" in path.parts or not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+        if ".git" in path.parts or not path.is_file():
             continue
-        yield path
+        if path.suffix.lower() in TEXT_SUFFIXES:
+            yield path
+
+
+def load_json(path: pathlib.Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
 
 def main() -> int:
     missing = [name for name, path in REQUIRED.items() if not path.is_file()]
-    empty = [name for name, path in REQUIRED.items() if path.is_file() and path.stat().st_size == 0]
+    empty = [
+        name for name, path in REQUIRED.items()
+        if path.is_file() and path.stat().st_size == 0
+    ]
 
     secret_hits = []
     for path in scan_files():
-        if path.name in {".env", ".env.local", ".env.production", ".env.development"}:
-TEXT_SUFFIXES = {".js",".mjs",".ts",".tsx",".html",".css",".json",".yml",".yaml",".md",".sql",".sh",".py"}
-
-def scan_files():
-    for path in ROOT.rglob("*"):
-        if ".git" not in path.parts and path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
-            yield path
-
-def main() -> int:
-    missing = [k for k,p in REQUIRED.items() if not p.is_file()]
-    empty = [k for k,p in REQUIRED.items() if p.is_file() and p.stat().st_size == 0]
-    secret_hits = []
-    for path in scan_files():
-        if path.name in {".env",".env.local",".env.production",".env.development"}:
+        if path.name in SKIP_NAMES:
             continue
         try:
             content = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             continue
-        for pattern in SECRET_PATTERNS:
-            if pattern.search(content):
-                secret_hits.append(str(path.relative_to(ROOT)))
-                break
-
-    html_files = list(ROOT.rglob("public/*.html")) + list(ROOT.rglob("public/**/*.html"))
-    html_files = sorted(set(p for p in html_files if p.is_file()))
         if any(pattern.search(content) for pattern in SECRET_PATTERNS):
             secret_hits.append(str(path.relative_to(ROOT)))
 
-    html_files = sorted(set(p for p in ROOT.rglob("public/**/*.html") if p.is_file()))
-    missing_viewport = []
-    for path in html_files:
-        content = path.read_text(encoding="utf-8", errors="ignore")
-        if not re.search(r'<meta[^>]+name=["\']viewport["\'][^>]+>', content, re.I):
-            missing_viewport.append(str(path.relative_to(ROOT)))
+    registry = load_json(REQUIRED["capability_registry"])
+    registry_errors = []
+    capability_count = 0
+    if registry is not None:
+        if registry.get("schemaVersion") != "1.0.0":
+            registry_errors.append("capability registry schemaVersion must be 1.0.0")
+        capabilities = registry.get("capabilities")
+        if not isinstance(capabilities, list):
+            registry_errors.append("capabilities must be an array")
+        else:
+            capability_count = len(capabilities)
+            ids = set()
+            for index, item in enumerate(capabilities):
+                if not isinstance(item, dict):
+                    registry_errors.append(f"capability[{index}] must be an object")
+                    continue
+                cid = item.get("id")
+                if not cid:
+                    registry_errors.append(f"capability[{index}] missing id")
+                elif cid in ids:
+                    registry_errors.append(f"duplicate capability id: {cid}")
+                else:
+                    ids.add(cid)
+                for field in ("name", "type", "version", "status", "purpose", "owner", "route"):
+                    if not item.get(field):
+                        registry_errors.append(f"{cid or index} missing {field}")
+    elif "capability_registry" not in missing:
+        registry_errors.append("capability registry is not valid JSON")
 
-    workflow = REQUIRED["vercel_workflow"].read_text(encoding="utf-8", errors="ignore") if REQUIRED["vercel_workflow"].is_file() else ""
+    catalog = load_json(REQUIRED["capability_catalog"])
+    catalog_errors = []
+    if catalog is not None:
+        required_fields = set(catalog.get("requiredFields", []))
+        if not required_fields:
+            catalog_errors.append("capability catalog has no requiredFields")
+    elif "capability_catalog" not in missing:
+        catalog_errors.append("capability catalog is not valid JSON")
+
+    workflow = (
+        REQUIRED["vercel_workflow"].read_text(encoding="utf-8", errors="ignore")
+        if REQUIRED["vercel_workflow"].is_file() else ""
+    )
     required_workflow_contracts = [
         "omega-production-surface-contract.py",
         "omega-responsive-surface-contract.py",
         "production-proof-contract.py",
         "omega-convergence-audit.py",
+        "omega-enterprise-readiness-contract.py",
+        "omega-capability-contract.py",
     ]
-    missing_workflow_contracts = [name for name in required_workflow_contracts if name not in workflow]
+    workflow_missing = [
+        name for name in required_workflow_contracts if name not in workflow
+    ]
 
     result = {
         "schemaVersion": "1.0.0",
         "contract": "enterprise-readiness",
-        "requiredFiles": {name: str(path.relative_to(ROOT)) for name, path in REQUIRED.items()},
         "missing": missing,
         "empty": empty,
         "secretPatternHits": sorted(set(secret_hits)),
-        "publicHtmlPages": len(html_files),
-        "publicHtmlMissingViewport": missing_viewport,
-        "workflowMissingContracts": missing_workflow_contracts,
-        "status": "PASS" if not (missing or empty or secret_hits or missing_viewport or missing_workflow_contracts) else "FAIL",
+        "capabilityCount": capability_count,
+        "capabilityRegistryErrors": registry_errors,
+        "capabilityCatalogErrors": catalog_errors,
+        "workflowMissingContracts": workflow_missing,
+        "status": "PASS" if not (
+            missing or empty or secret_hits or registry_errors or
+            catalog_errors or workflow_missing
+        ) else "FAIL",
         "interpretation": (
-            "PASS means repository-side enterprise gates are present. It does not "
-            "prove live provider state, authenticated journeys, payment settlement, "
-            "database policy semantics, backup restoration, or browser runtime behavior."
+            "Repository evidence only; this gate does not prove live Vercel, "
+            "Supabase, Stripe, authenticated browser journeys, payment "
+            "settlement, backup restoration, or database policy semantics."
         ),
-    contracts = ["omega-production-surface-contract.py","omega-responsive-surface-contract.py","production-proof-contract.py","omega-convergence-audit.py"]
-    workflow_missing = [name for name in contracts if name not in workflow]
-
-    result = {
-        "schemaVersion":"1.0.0",
-        "contract":"enterprise-readiness",
-        "missing":missing,
-        "empty":empty,
-        "secretPatternHits":sorted(set(secret_hits)),
-        "publicHtmlPages":len(html_files),
-        "publicHtmlMissingViewport":missing_viewport,
-        "workflowMissingContracts":workflow_missing,
-        "status":"PASS" if not (missing or empty or secret_hits or missing_viewport or workflow_missing) else "FAIL",
-        "interpretation":"Repository evidence only; does not prove live provider state, authenticated journeys, payment settlement, database policy semantics, backup restoration, or browser runtime behavior."
     }
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["status"] == "PASS" else 2
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

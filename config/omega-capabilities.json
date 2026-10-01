@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-02",
+  "purpose": "Evidence-bound registry of concrete SYD OMEGA platform capabilities; narrative requirements remain in the implementation ledger until implementation evidence exists.",
+  "capabilities": [
+    {
+      "id": "CAP-OPS-001",
+      "name": "Production Surface Contract",
+      "type": "AUTOMATION",
+      "version": "1.0.0",
+      "status": "TESTED",
+      "owner": "platform",
+      "purpose": "Validate the built public HTML artifact and required runtime shell invariants.",
+      "route": "internal:production-contract",
+      "authz": "CI_ONLY",
+      "evidence": [
+        "scripts/omega-production-surface-contract.py"
+      ],
+      "rollback": "remove CI invocation; no runtime mutation"
+    },
+    {
+      "id": "CAP-OPS-002",
+      "name": "Responsive Surface Contract",
+      "type": "AUTOMATION",
+      "version": "1.0.0",
+      "status": "TESTED",
+      "owner": "platform",
+      "purpose": "Check repository-wide responsive production requirements.",
+      "route": "internal:responsive-contract",
+      "authz": "CI_ONLY",
+      "evidence": [
+        "scripts/omega-responsive-surface-contract.py",
+        "docs/RESPONSIVE_PRODUCTION_STANDARD.md"
+      ],
+      "rollback": "remove CI invocation; no runtime mutation"
+    },
+    {
+      "id": "CAP-OPS-003",
+      "name": "Enterprise Readiness Contract",
+      "type": "AUTOMATION",
+      "version": "1.0.0",
+      "status": "BUILT",
+      "owner": "platform",
+      "purpose": "Gate repository-side enterprise readiness without overstating live provider verification.",
+      "route": "internal:enterprise-readiness",
+      "authz": "CI_ONLY",
+      "evidence": [
+        "scripts/omega-enterprise-readiness-contract.py"
+      ],
+      "rollback": "remove CI invocation; no runtime mutation"
+    },
+    {
+      "id": "CAP-INT-001",
+      "name": "Evidence Graph",
+      "type": "PAGE",
+      "version": "1.0.0",
+      "status": "INTEGRATED",
+      "owner": "intelligence",
+      "purpose": "Expose persisted member and platform evidence with explicit provenance boundaries.",
+      "route": "/evidence.html",
+      "authz": "AUTHENTICATED_MEMBER",
+      "evidence": [
+        "evidence.html",
+        "omega-evidence-graph.js",
+        "scripts/omega-evidence-graph-contract.py"
+      ],
+      "rollback": "disable route via controlled navigation change"
+    },
+    {
+      "id": "CAP-INT-002",
+      "name": "Omega World",
+      "type": "PAGE",
+      "version": "1.0.0",
+      "status": "INTEGRATED",
+      "owner": "experience",
+      "purpose": "Present the governed world/progression surface without treating decorative state as authoritative.",
+      "route": "/world.html",
+      "authz": "PUBLIC_WITH_GOVERNED_DATA",
+      "evidence": [
+        "world.html",
+        "omega-world-engine.js"
+      ],
+      "rollback": "disable route via controlled navigation change"
+    },
+    {
+      "id": "CAP-GOV-001",
+      "name": "Implementation Ledger",
+      "type": "DATA_PRODUCT",
+      "version": "1.0.0",
+      "status": "BUILT",
+      "owner": "governance",
+      "purpose": "Separate specified, designed, built, tested, deployed, verified and blocked requirements.",
+      "route": "internal:implementation-ledger",
+      "authz": "REPOSITORY",
+      "evidence": [
+        "config/omega-implementation-ledger.json",
+        "docs/OMEGA_IMPLEMENTATION_LEDGER.md"
+      ],
+      "rollback": "restore previous ledger version"
+    },
+    {
+      "id": "CAP-GOV-002",
+      "name": "Capability Registry",
+      "type": "DATA_PRODUCT",
+      "version": "1.0.0",
+      "status": "BUILT",
+      "owner": "governance",
+      "purpose": "Provide a machine-readable registry for governed capabilities and their evidence.",
+      "route": "internal:capability-registry",
+      "authz": "REPOSITORY",
+      "evidence": [
+        "config/omega-capabilities.json",
+        "config/omega-capability-catalog.json"
+      ],
+      "rollback": "restore previous registry version"
+    }
+  ]
+}

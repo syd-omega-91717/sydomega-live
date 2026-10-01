@@ -358,5 +358,9 @@
     "Relations must retain source and observedAt lineage.",
     "Writes must flow through OmegaAction and server authorization.",
     "Graph visualization consumes this contract rather than inventing parallel state."
-  ]
+  ],
+  "evidencePolicy": {
+    "$ref": "config/omega-schema-evidence-policy.json",
+    "sourceRule": "Only sources present in supabase/live-schema.json are LIVE_VERIFIED; migration-only sources remain unverified."
+  }
 }

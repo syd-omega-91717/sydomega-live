@@ -47,6 +47,7 @@ on:
       - 'scripts/vercel-build.sh'
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
+      - 'scripts/omega-enterprise-readiness-contract.py'
   pull_request:
     branches: [main]
     paths:

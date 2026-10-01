@@ -8,6 +8,10 @@ they must never mint a second client or use Math.random() for request identity.
 from pathlib import Path
 import sys
 
+if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ("omega-world-actions.js", "omega-world-mission.js")
 errors = []

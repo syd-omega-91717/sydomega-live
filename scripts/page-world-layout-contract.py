@@ -17,6 +17,10 @@ from pathlib import Path
 import re
 import sys
 
+if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 ROOT = Path(__file__).resolve().parents[1]
 WORLD = ROOT / "omega-page-world.js"
 BG = ROOT / "bg.js"

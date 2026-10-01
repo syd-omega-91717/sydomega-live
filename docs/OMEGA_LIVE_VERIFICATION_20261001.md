@@ -4,7 +4,7 @@
 
 - GitHub repository: syd-omega-91717/sydomega-live.
 - Current main HEAD is updated through the live schema refresh and evidence-graph security convergence commits.
-- Enhancement branch is based directly on main and is currently 3 commits ahead, 0 behind.
+- This snapshot is maintained from the current `main` lineage; historical enhancement-branch ahead/behind counts are intentionally not treated as current production evidence.
 - Supabase project `sydomega` is ACTIVE_HEALTHY.
 - Supabase PostgreSQL version: 17.6.1.164.
 - The connected Supabase project is currently on the preview release channel.
@@ -31,6 +31,11 @@ Vercel live deployment state was not established through the connected Vercel AP
 - All 229 public tables currently report RLS enabled; live policy inventory reports 349 policies across those tables.
 - Security Advisor still reports exactly one external warning: leaked-password protection is disabled.
 - The previously live-only `evidence-graph` Edge Function was recovered into GitHub, its endpoint was hardened to authenticated/member-scoped access, and version 2 was deployed successfully. The live deployment reports `verify_jwt=false` because `@supabase/server` performs the declared user authentication boundary itself.
+
+## Repository convergence correction — 2026-10-01
+
+- Rechecked the current `main` lineage before further work. Historical convergence branches were behind `main` and were not used as merge bases.
+- The authoritative progression migration referenced by the convergence audit is present in the current repository; the audit now verifies the required bridge files exist instead of treating a hard-coded path list as evidence.
 
 ## Next verification gates
 

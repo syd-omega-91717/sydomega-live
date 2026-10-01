@@ -37,6 +37,11 @@ RPC_RE = re.compile(r"\b\.rpc\(\s*['\"]([^'\"]+)['\"]", re.I)
 FROM_RE = re.compile(r"\b\.from\(\s*['\"]([^'\"]+)['\"]", re.I)
 LOCAL_GATE_EMIT_RE = re.compile(r"OmegaBus\.emit\(\s*['\"]sovereign\.gate\.unlocked", re.I)
 LOCAL_GATE_STORAGE_RE = re.compile(r"omega_last_gate", re.I)
+REQUIRED_PROGRESS_FILES = [
+    "supabase/migrations/20261001090000_omega_authoritative_progression_events.sql",
+    "omega-event-bus.js",
+    "omega-workers.js",
+]
 HARDCODED_GATE_RE = re.compile(r"2\.3197\s*,\s*4\.6394\s*,\s*6\.9592\s*,\s*9\.2789", re.I)
 
 
@@ -68,6 +73,9 @@ def main() -> int:
     local_gate_emit = []
     local_gate_storage = []
     hardcoded_gate_thresholds = []
+    missing_required_progress_files = [
+        path for path in REQUIRED_PROGRESS_FILES if not (ROOT / path).is_file()
+    ]
 
     for path in sql_files:
         text = read_text(path)
@@ -128,11 +136,10 @@ def main() -> int:
             "localGateUnlockEmit": local_gate_emit,
             "localGateUnlockStorage": local_gate_storage,
             "hardcodedGateThresholds": hardcoded_gate_thresholds,
-            "authoritativeEventBridge": [
-                "supabase/migrations/20261001090000_omega_authoritative_progression_events.sql",
-                "omega-event-bus.js",
-                "omega-workers.js"
-            ],
+            "authoritativeEventBridge": {
+                "required": REQUIRED_PROGRESS_FILES,
+                "missing": missing_required_progress_files,
+            },
         },
         "interpretation": {
             "duplicateDefinitions": "review; some historical SQL files may be migration artifacts",
@@ -158,7 +165,14 @@ def main() -> int:
         print(f"Local gate unlock emits: {len(local_gate_emit)}")
         print(f"Local gate storage refs: {len(local_gate_storage)}")
         print(f"Hardcoded gate tables:   {len(hardcoded_gate_thresholds)}")
+        print(f"Missing progress files:  {len(missing_required_progress_files)}")
         print("\nThis report is evidence for review, not proof of live production state.")
+
+    if missing_required_progress_files:
+        print("\nERROR: authoritative progression bridge is incomplete.", file=sys.stderr)
+        for path in missing_required_progress_files:
+            print(f"  missing: {path}", file=sys.stderr)
+        return 2
 
     return 0
 

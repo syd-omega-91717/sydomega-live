@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://sydomega.com/schemas/omega-event-contract.v1.json",
+  "title":"OmegaEvent","type":"object","additionalProperties":false,
+  "required":["id","type","occurredAt","actorType","actorId","truth","source","state"],
+  "properties":{
+    "id":{"type":"string","minLength":1},"type":{"type":"string","minLength":1},"occurredAt":{"type":"string","format":"date-time"},
+    "actorType":{"enum":["member","owner","agent","system","provider","anonymous"]},"actorId":{"type":"string","minLength":1},
+    "truth":{"enum":["LIVE","VERIFIED","CALCULATED","SOURCE","SIMULATED","STALE","UNAVAILABLE","UNKNOWN"]},
+    "source":{"type":"string","minLength":1},"sourceId":{"type":["string","null"]},"sourceVersion":{"type":["string","null"]},
+    "observedAt":{"type":["string","null"],"format":"date-time"},"state":{"enum":["ACCEPTED","PROCESSED","REJECTED","DUPLICATE","FAILED","UNKNOWN"]},
+    "correlationId":{"type":["string","null"]},"causationId":{"type":["string","null"]},"idempotencyKey":{"type":["string","null"]},
+    "subject":{"type":["object","null"]},"payload":{"type":"object"},"metadata":{"type":"object"}
+  }
+}

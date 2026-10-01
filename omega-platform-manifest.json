@@ -1,1 +1,217 @@
-{"schema_version":"1.0.0","platform":"SYD OMEGA 91717","kernel":"omega-platform-kernel","truth_policy":{"allowed_states":["specified","implemented","tested","runtime_verified","production_verified","observed","scaled","blocked"],"unknown_is_not_zero":true,"no_fabricated_metrics":true},"layers":[{"id":"experience","name":"Experience","purpose":"Pages, navigation and member journeys."},{"id":"platform","name":"Platform Services","purpose":"Identity, permissions, events, objects, search and integrations."},{"id":"intelligence","name":"Intelligence Fabric","purpose":"Evidence-aware retrieval, governed agents, routing and evaluation."},{"id":"data","name":"Data Plane","purpose":"Persistence, lineage, migrations, realtime state and analytics."},{"id":"trust","name":"Trust & Control","purpose":"Security, governance, audit, reliability and recovery."},{"id":"economy","name":"Economy","purpose":"Commerce, ledger, entitlements, marketplace and settlement."}],"capabilities":[{"id":"identity","domain":"platform","route":"/identity.html","state":"implemented"},{"id":"capability-registry","domain":"platform","route":"/control-center.html","state":"implemented"},{"id":"object-graph","domain":"platform","route":"/graph-explorer.html","state":"implemented"},{"id":"evidence-graph","domain":"intelligence","route":"/evidence.html","state":"implemented"},{"id":"agent-runtime","domain":"intelligence","route":"/agent-operations.html","state":"implemented"},{"id":"commerce","domain":"economy","route":"/vault.html","state":"implemented"},{"id":"governance","domain":"trust","route":"/governance.html","state":"implemented"},{"id":"reliability","domain":"trust","route":"/control-center.html","state":"partial"},{"id":"developer-platform","domain":"platform","route":"/ecosystem.html","state":"partial"},{"id":"universal-search","domain":"platform","route":"/search.html","state":"implemented"}]}
+{
+  "schema_version": "1.1.0",
+  "platform": "SYD OMEGA 91717",
+  "kernel": "omega-platform-kernel",
+  "truth_policy": {
+    "allowed_states": [
+      "specified",
+      "implemented",
+      "partial",
+      "tested",
+      "runtime_verified",
+      "production_verified",
+      "observed",
+      "scaled",
+      "blocked"
+    ],
+    "unknown_is_not_zero": true,
+    "no_fabricated_metrics": true
+  },
+  "layers": [
+    {
+      "id": "experience",
+      "name": "Experience",
+      "purpose": "Pages, navigation and member journeys."
+    },
+    {
+      "id": "platform",
+      "name": "Platform Services",
+      "purpose": "Identity, permissions, events, objects, search and integrations."
+    },
+    {
+      "id": "intelligence",
+      "name": "Intelligence Fabric",
+      "purpose": "Evidence-aware retrieval, governed agents, routing and evaluation."
+    },
+    {
+      "id": "data",
+      "name": "Data Plane",
+      "purpose": "Persistence, lineage, migrations, realtime state and analytics."
+    },
+    {
+      "id": "trust",
+      "name": "Trust & Control",
+      "purpose": "Security, governance, audit, reliability and recovery."
+    },
+    {
+      "id": "economy",
+      "name": "Economy",
+      "purpose": "Commerce, ledger, entitlements, marketplace and settlement."
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "identity",
+      "domain": "platform",
+      "route": "/identity.html",
+      "state": "implemented",
+      "registry_id": "identity"
+    },
+    {
+      "id": "capability-registry",
+      "domain": "platform",
+      "route": "/control-center.html",
+      "state": "implemented",
+      "registry_id": "capability-registry"
+    },
+    {
+      "id": "object-graph",
+      "domain": "platform",
+      "route": "/graph-explorer.html",
+      "state": "implemented",
+      "registry_id": "object-graph"
+    },
+    {
+      "id": "evidence-graph",
+      "domain": "intelligence",
+      "route": "/evidence.html",
+      "state": "implemented",
+      "registry_id": "evidence-graph"
+    },
+    {
+      "id": "agent-runtime",
+      "domain": "intelligence",
+      "route": "/agent-operations.html",
+      "state": "implemented",
+      "registry_id": "agent-runtime"
+    },
+    {
+      "id": "commerce",
+      "domain": "economy",
+      "route": "/vault.html",
+      "state": "implemented",
+      "registry_id": "commerce"
+    },
+    {
+      "id": "governance",
+      "domain": "trust",
+      "route": "/governance.html",
+      "state": "implemented",
+      "registry_id": "governance"
+    },
+    {
+      "id": "reliability",
+      "domain": "trust",
+      "route": "/control-center.html",
+      "state": "partial",
+      "registry_id": "observability"
+    },
+    {
+      "id": "developer-platform",
+      "domain": "platform",
+      "route": "/ecosystem.html",
+      "state": "partial",
+      "registry_id": "production-contract"
+    },
+    {
+      "id": "universal-search",
+      "domain": "platform",
+      "route": "/search.html",
+      "state": "implemented",
+      "registry_id": "search"
+    },
+    {
+      "id": "activity",
+      "domain": "platform",
+      "route": "/feed.html",
+      "state": "implemented",
+      "registry_id": "feed"
+    },
+    {
+      "id": "progression",
+      "domain": "data",
+      "route": "/ascension.html",
+      "state": "implemented",
+      "registry_id": "progression"
+    },
+    {
+      "id": "observability",
+      "domain": "trust",
+      "route": "/ops.html",
+      "state": "partial",
+      "registry_id": "observability"
+    },
+    {
+      "id": "import-export",
+      "domain": "data",
+      "route": "/vault.html",
+      "state": "partial",
+      "registry_id": "import-export"
+    },
+    {
+      "id": "internationalization",
+      "domain": "experience",
+      "route": "/search.html",
+      "state": "tested",
+      "registry_id": "internationalization"
+    },
+    {
+      "id": "production-evidence",
+      "domain": "trust",
+      "route": "/control-center.html",
+      "state": "partial",
+      "registry_id": "production-contract"
+    }
+  ],
+  "proof_gates": [
+    {
+      "id": "supabase-security-advisor",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "Leaked Password Protection remains disabled in live Supabase Auth; provider-level closure is still open."
+    },
+    {
+      "id": "rls-semantic-regression",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "Structural RLS coverage is verified, but policy-semantic regression and member/owner access tests remain open."
+    },
+    {
+      "id": "auth-mfa-rbac-e2e",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "MFA enrollment, challenge and recovery remain unverified; privileged server-side paths still require proof."
+    },
+    {
+      "id": "stripe-lifecycle",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "Checkout, signed webhook, entitlement lifecycle and idempotency require end-to-end proof."
+    },
+    {
+      "id": "backup-restore",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "A real backup/restore exercise remains open."
+    },
+    {
+      "id": "critical-journeys",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "Representative mobile/desktop critical journey, accessibility and performance gates remain open."
+    },
+    {
+      "id": "latest-production-smoke",
+      "status": "blocked",
+      "source": "docs/PRODUCTION_TRUTH_MATRIX.md",
+      "evidence": "Latest main SHA still requires fresh production smoke evidence across critical journeys."
+    }
+  ],
+  "integration_policy": {
+    "capability_registry": "docs/capabilities/registry.json",
+    "object_contract": "config/omega-object-contract.schema.json",
+    "object_model": "config/omega-object-model.json",
+    "event_fabric": "docs/OMEGA_EVENT_FABRIC.md",
+    "production_truth": "docs/PRODUCTION_TRUTH_MATRIX.md"
+  }
+}

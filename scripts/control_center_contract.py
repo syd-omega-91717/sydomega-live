@@ -45,9 +45,9 @@ if runtime.exists():
 
 if nav.exists():
     nav_text = nav.read_text(encoding="utf-8")
-    if "control-center:'govern'" not in nav_text:
+    if not re.search(r"control-center\s*:\s*['\"]govern['\"]", nav_text):
         errors.append("nav.js does not map control-center to GOVERN")
-    if "['control-center','CONTROL CENTER','/control-center.html']" not in nav_text:
+    if not re.search(r"['\"]control-center['\"][^\n]{0,80}['\"]CONTROL CENTER['\"][^\n]{0,120}['\"]/control-center\.html['\"]", nav_text):
         errors.append("nav.js does not expose CONTROL CENTER in GOVERN")
     if nav_text.count("control-center") < 2:
         errors.append("nav.js control-center registration is incomplete")

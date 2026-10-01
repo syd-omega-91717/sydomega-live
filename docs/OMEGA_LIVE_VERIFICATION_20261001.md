@@ -58,3 +58,7 @@ Interpretation: this is a Vercel account/platform build-rate-limit signal, not e
 
 - Live `public.notifications` is now included in `supabase_realtime`; RLS remains the delivery boundary and the browser subscribes only to the authenticated member's `user_id` rows.
 - The existing notification worker now consumes the durable server notification stream instead of relying only on local event-feed rendering.
+
+- Workflow hardening: `omega-workflow.js` now fails closed when `complete_task`/`record_sovereign_event` rejects or is unavailable; it also reads the RPC's `axis_a/axis_b/axis_c` fields correctly.
+- Progression configuration in `omega-sdt.js` and the workflow gate computation now resolves from `OmegaCanon` rather than maintaining a second hardcoded threshold table.
+- `scripts/omega-convergence-audit.py` now detects client-side gate-event emission, client gate state storage, and hardcoded threshold tables so future drift is visible.

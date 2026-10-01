@@ -1187,3 +1187,51 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
     text-shadow: none;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   Ω-VIEWPORT BOUNDARY v1
+   Survey-driven shared layout safety.
+
+   The 2026-10-01 survey found fixed-width pressure on 123/223 visual pages.
+   Most of those declarations are legitimate component sizes that become
+   unsafe only when their containing column gets narrower. These rules do not
+   delete page-local geometry; they establish the missing containment boundary
+   so a component may shrink to its available column instead of becoming a
+   second page-wide overflow axis.
+
+   The rule is deliberately limited to content columns and known platform
+   surfaces. It does not touch the navigation dock or intentional fixed chrome.
+   ══════════════════════════════════════════════════════════════════════ */
+.page-shell,.main{min-width:0;max-width:100%;overflow-x:clip}
+.page-shell>*,.main>*{min-width:0;max-width:100%}
+:where(.card-grid,.game-grid,.exam-grid,.kpi-row,.split-hero,.reserve-hero,.progress-split,
+        .panel,.card,.kpi,.kpi-card,.glass,.glass-cyan,.tbl-wrap,.tab-panel,.media-frame,
+        .widget,.module,.tile,.module-grid,.content-grid,.hero-grid,form,table,pre){
+  min-width:0;max-width:100%
+}
+:where(img,video,iframe,canvas,svg){max-width:100%}
+:where(.card-grid,.game-grid,.exam-grid){
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))
+}
+@media(max-width:900px){
+  :where(.card-grid,.game-grid,.exam-grid){
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))
+  }
+}
+@media(max-width:700px){
+  body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){
+    display:flex;flex-direction:column;min-width:0
+  }
+  .page-shell{width:100%;max-width:100%}
+  .page-shell>*,.main>*{max-width:100%;min-width:0}
+}
+@media(max-width:480px){
+  :where(.card-grid,.game-grid,.exam-grid){grid-template-columns:1fr}
+}
+
+/* High-tracking labels remain cinematic, but ordinary section chrome should
+   not require letter-by-letter spacing to communicate hierarchy. Decorative
+   display headings keep their page-local tracking; shared section/card/table
+   labels use a readable ceiling. */
+:where(.sechead,.card-title,.card-lbl,.card-label,.kpi-l,.kpi-label,
+       .tbl-hcell,.bar-lbl,.chip,.tab-btn){letter-spacing:min(2.5px,0.22em)}

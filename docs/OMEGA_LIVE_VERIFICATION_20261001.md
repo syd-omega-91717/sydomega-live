@@ -3,14 +3,14 @@
 ## Verified through connected project tooling
 
 - GitHub repository: syd-omega-91717/sydomega-live.
-- main HEAD at audit start: 9bcd3094f9845648e860fa2748d93ed679038c31.
+- Current main HEAD is updated through the live schema refresh and evidence-graph security convergence commits.
 - Enhancement branch is based directly on main and is currently 3 commits ahead, 0 behind.
 - Supabase project `sydomega` is ACTIVE_HEALTHY.
 - Supabase PostgreSQL version: 17.6.1.164.
 - The connected Supabase project is currently on the preview release channel.
 - The live database contains extensive domain coverage including profiles, progression, academy, payments, subscriptions, marketplace, publications, AI providers/agents/memory, workflows, telemetry, graph data, missions, simulations, recovery checkpoints and architecture/compliance catalogs.
 - All listed public tables returned by the connected table inventory report RLS enabled.
-- Active Edge Functions include concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph.
+- Active Edge Functions include concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph. The live `evidence-graph` function is now version 2, requires authenticated user context through `@supabase/server`, scopes member rows by caller identity, and keeps platform evidence access server-side.
 
 ## Security finding requiring remediation
 
@@ -23,6 +23,14 @@ Supabase Performance Advisor reports 257 unused-index findings. These are inform
 ## Important deployment limitation
 
 Vercel live deployment state was not established through the connected Vercel API in this pass. The Vercel deployment URL previously associated with the project could not be resolved by the connected Vercel endpoint, and the public-domain fetch/search path did not provide reliable deployment evidence. Therefore production deployment health remains UNVERIFIED.
+
+## Latest live convergence — 2026-10-01
+
+- Live public schema was re-read from project `ydqhzvvoyufiiqvzcjns` and refreshed into `supabase/live-schema.json`: 229 public tables, captured 2026-10-01.
+- The live mission tables are now verified evidence: `omega_missions` contains 9 rows; `omega_quests`, member mission/quest state and mission transitions currently contain 0 rows. Migration-only status is no longer used to describe these mission tables as absent from live.
+- All 229 public tables currently report RLS enabled; live policy inventory reports 349 policies across those tables.
+- Security Advisor still reports exactly one external warning: leaked-password protection is disabled.
+- The previously live-only `evidence-graph` Edge Function was recovered into GitHub, its endpoint was hardened to authenticated/member-scoped access, and version 2 was deployed successfully. The live deployment reports `verify_jwt=false` because `@supabase/server` performs the declared user authentication boundary itself.
 
 ## Next verification gates
 

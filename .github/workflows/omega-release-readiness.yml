@@ -33,6 +33,12 @@ jobs:
       - name: Python syntax
         run: python -m compileall -q scripts core tests
 
+      - name: Ω platform contract
+        run: python scripts/omega-platform-contract.py
+
+      - name: Action runtime syntax
+        run: node --check omega-action-runtime.js
+
       - name: Artifact build
         run: bash scripts/vercel-build.sh
 
@@ -51,5 +57,9 @@ jobs:
           test -s public/index.html
           test -s public/vendor/supabase-js.js
           test -s public/assets/js/omega-runtime-observability.js
+          test -s public/omega-action-runtime.js
+          test -s public/config/omega-runtime-manifest.json
+          test -s public/config/omega-action-contract.json
+          test -s public/config/omega-truth-model.json
           test -d public/i18n
           test -d public/vendor

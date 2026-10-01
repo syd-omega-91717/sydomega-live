@@ -274,7 +274,8 @@
     "UNAUTHORIZED",
     "PROCESSING",
     "SUCCESS",
-    "UNKNOWN"
+    "UNKNOWN",
+    "UNAVAILABLE"
   ],
   "scalingPrinciples": [
     "server-authoritative state",

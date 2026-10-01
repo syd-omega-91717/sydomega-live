@@ -106,6 +106,12 @@ jobs:
         run: python scripts/omega-enterprise-readiness-contract.py
       - name: Capability registry contract
         run: python scripts/omega-capability-contract.py
+      - name: Product catalog contract
+        run: python scripts/omega-product-catalog-contract.py
+      - name: RPC security policy contract
+        run: python scripts/omega-rpc-security-policy-contract.py
+      - name: Canon and agent contract
+        run: python scripts/omega-canon-agent-contract.py
       - name: Architecture convergence audit
         run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants

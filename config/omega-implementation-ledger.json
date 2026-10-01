@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-10-01",
+  "generatedAt": "2026-10-02",
   "purpose": "Evidence-bound implementation ledger for Ω SYD OMEGA 91717.",
   "lifecycle": [
     "SPECIFIED",
@@ -14,10 +14,12 @@
   ],
   "evidenceAsOf": {
     "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
-    "branch": "f28ec4ef00b252f096de2b7e9cfc6939a7fb63a7",
+    "branch": "codex/production-security-and-productization-20261002",
     "pullRequest": "#606",
     "supabaseProject": "nvgedlxlkdzvcelimbvq",
-    "liveSite": "https://sydomega.com"
+    "liveSite": "https://sydomega.com",
+    "supabaseSecurity": "2026-10-02",
+    "productCatalog": "config/omega-product-catalog.json"
   },
   "items": [
     {
@@ -105,15 +107,16 @@
         "Document.txt"
       ],
       "requirement": "RLS and function execution privileges must match actor and exposure boundary.",
-      "state": "BLOCKED",
+      "state": "TESTED",
       "repo": [
         "supabase/migrations",
         "scripts/supabase-migration-security-audit.py"
       ],
       "evidence": [
-        "SUPA-SEC-20261001"
+        "SUPA-SEC-20261002",
+        "Live SQL verification: anon_execute=0 for 80 public functions"
       ],
-      "blocker": "Live advisor reports 64 public SECURITY DEFINER functions executable by anon; classify and explicitly grant only intended callers."
+      "blocker": "68 SECURITY DEFINER functions remain executable by authenticated users; each requires explicit risk classification and least-privilege role policy."
     },
     {
       "id": "DB-001",
@@ -220,15 +223,22 @@
         "Master Prompt"
       ],
       "requirement": "Balances, rewards, referrals and treasury movements use an append-only ledger and reconciliation path.",
-      "state": "DESIGNED",
+      "state": "INTEGRATED",
       "repo": [
-        "docs",
-        "supabase/migrations"
+        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql",
+        "public.omega_ledger_accounts",
+        "public.omega_ledger_transactions",
+        "public.omega_ledger_entries",
+        "public.omega_payment_events",
+        "public.omega_entitlements",
+        "omega_private.post_ledger_transaction"
       ],
       "evidence": [
-        "Source architecture audit"
+        "SUPA-LEDGER-20261002",
+        "Live privilege verification: anon=false, authenticated=false, service_role=true for posting function",
+        "Live table verification: zero fabricated accounts/transactions/entries"
       ],
-      "blocker": "Canonical ledger schema and live end-to-end reconciliation are not yet proven."
+      "blocker": "Stripe/provider webhook integration, account provisioning, reconciliation jobs, reversal workflow and production payment smoke tests remain."
     },
     {
       "id": "AGENT-001",
@@ -257,15 +267,18 @@
         "Master Prompt"
       ],
       "requirement": "729-node progression is modeled with prerequisites, verification, completion and rewards.",
-      "state": "DESIGNED",
+      "state": "INTEGRATED",
       "repo": [
-        "supabase",
-        "config"
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_nodes",
+        "public.matrix_tracks",
+        "public.matrix_progress"
       ],
       "evidence": [
-        "Schema/source audit"
+        "SUPA-MATRIX-20261002",
+        "Live SQL verification: 729 nodes, 9 stages, indices 1-729"
       ],
-      "blocker": "Current audit does not yet prove all 729 nodes exist, are reachable and are live-progress aware."
+      "blocker": "Semantic objectives, prerequisite graph, verification evidence, completion rules and reward policies are still empty/default and must be populated from governed product content."
     },
     {
       "id": "ORACLE-001",
@@ -393,6 +406,166 @@
         "Supabase live list_edge_functions on 2026-10-01 returned zero deployed functions; repository census contains 18 functions."
       ],
       "blocker": "Live Supabase currently exposes no deployed Edge Functions. Deploy/reconcile each intended function, then record route, version, auth boundary and smoke-test evidence."
+    },
+    {
+      "id": "SEC-003",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "Privileged SECURITY DEFINER RPCs must have explicit least-privilege role grants and caller classification.",
+      "state": "BLOCKED",
+      "repo": [
+        "supabase/migrations",
+        "config/omega-product-catalog.json"
+      ],
+      "evidence": [
+        "SUPA-SEC-20261002"
+      ],
+      "blocker": "68 authenticated SECURITY DEFINER functions remain in the public schema; classify owner/admin/user/self-service/read-only/server-only functions before tightening grants."
+    },
+    {
+      "id": "PRODUCT-001",
+      "domain": "product",
+      "source": [
+        "All five source documents"
+      ],
+      "requirement": "The 18-module universe must have executable product families, lifecycle states, dependencies and production acceptance gates.",
+      "state": "BUILT",
+      "repo": [
+        "config/omega-product-catalog.json",
+        "scripts/omega-product-catalog-contract.py"
+      ],
+      "evidence": [
+        "Product catalog contract"
+      ],
+      "blocker": null
+    },
+    {
+      "id": "BLUEPRINT-001",
+      "domain": "governance",
+      "source": [
+        "999 Blueprint"
+      ],
+      "requirement": "Every numbered blueprint point must remain traceable to a productization decision rather than being treated as deployed reality.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-implementation-ledger.json",
+        "config/omega-product-catalog.json"
+      ],
+      "evidence": [
+        "Source inventory audit: 391 unique numbered point bullets were extracted from the 999-point blueprint."
+      ],
+      "blocker": "Complete point-by-point productization mapping remains outstanding."
+    },
+    {
+      "id": "DB-002",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Canonical progression infrastructure must be represented as durable database state rather than visual-only coordinates.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_nodes"
+      ],
+      "evidence": [
+        "Live 729-node registry verification"
+      ],
+      "blocker": "Node semantics and user-progress integration remain incomplete."
+    },
+    {
+      "id": "ECON-001",
+      "domain": "economics",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Financial state must be server-authoritative, idempotent, double-entry and auditable.",
+      "state": "BUILT",
+      "repo": [
+        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql"
+      ],
+      "evidence": [
+        "Live ledger schema and privilege verification"
+      ],
+      "blocker": "End-to-end provider settlement and reconciliation are not yet integrated."
+    },
+    {
+      "id": "SEC-004",
+      "domain": "supabase",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "requirement": "All SECURITY DEFINER RPCs must have an explicit caller/risk policy before production authorization is considered hardened.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-rpc-security-policy.json",
+        "scripts/omega-rpc-security-policy-contract.py"
+      ],
+      "evidence": [
+        "Live census: 68 public SECURITY DEFINER functions; repository registry classifies all 68."
+      ],
+      "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
+    },
+    {
+      "id": "AGENT-001",
+      "domain": "ai",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "The 12 named agents must become governed executable capabilities with explicit tools, scopes, budgets, approvals, evidence and audit.",
+      "state": "INTEGRATED",
+      "repo": [
+        "config/omega-agent-registry.json",
+        "public.omega_agents"
+      ],
+      "evidence": [
+        "Live SQL verification: 12 registered agents; all have empty tool allowlists and default-deny external side effects."
+      ],
+      "blocker": "Actual task router, tool executor, model gateway and evidence-producing runtime are not yet integrated."
+    },
+    {
+      "id": "MATRIX-002",
+      "domain": "progress",
+      "source": [
+        "Master Prompt",
+        "omega-canon.json"
+      ],
+      "requirement": "User progression must be durable and separate from node definitions; completion must require evidence and verification.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_progress"
+      ],
+      "evidence": [
+        "Live SQL verification: 0 progress rows; RLS owner-only read/write."
+      ],
+      "blocker": "Existing matrix_progress/track workflows must be reconciled with canonical omega_matrix_progress before production cutover."
+    },
+    {
+      "id": "CANON-001",
+      "domain": "architecture",
+      "source": [
+        "omega-canon.json",
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Nine-fold systems and twelve-fold systems must remain distinct canonical dimensions; no silent flattening.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-product-catalog.json",
+        "config/omega-agent-registry.json"
+      ],
+      "evidence": [
+        "Source audit identified 9^3=729 and 9^5=59,049 canonical claims plus twelve-agent/twelve-module structures."
+      ],
+      "blocker": "Create a formal canon registry mapping each dimensional system to its owning product/domain and prohibit accidental cross-mapping."
     }
   ]
 }

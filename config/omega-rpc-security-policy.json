@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "Explicit policy inventory for public SECURITY DEFINER RPCs. This registry is a review artifact first; grants are not tightened until each function body and caller contract are verified.",
+  "defaultRole": "DENY",
+  "categories": {
+    "service_only": [
+      "apply_subscription",
+      "award_points",
+      "award_token",
+      "grant_permanent_access",
+      "grant_trial_access",
+      "approve_member",
+      "reject_member",
+      "revoke_member",
+      "set_platform_flag",
+      "sync_platform_owner",
+      "sweep_expired_trials",
+      "trg_award_exam_points",
+      "trg_award_matrix_points",
+      "trg_award_task_points"
+    ],
+    "owner_or_admin": [
+      "academy_promote",
+      "access_audit_log",
+      "compute_leaderboard_snapshot",
+      "error_summary",
+      "expire_trial",
+      "get_all_members",
+      "membership_report",
+      "order_stats",
+      "post_dispatch",
+      "review_contracts",
+      "review_reservations",
+      "set_consult_status",
+      "set_contract_status",
+      "set_dispatch_published"
+    ],
+    "member_self": [
+      "academy_subscribe",
+      "advance_matrix",
+      "check_trial_status",
+      "claim_daily_points",
+      "complete_task",
+      "deactivate_account",
+      "delete_account",
+      "get_my_task_log",
+      "has_academy_access",
+      "has_active_access",
+      "log_evolution",
+      "my_exam_results",
+      "my_feedback",
+      "my_interest_profile",
+      "my_lattice",
+      "my_matrix",
+      "my_points_balance",
+      "my_sovereign_summary",
+      "my_subscription",
+      "my_time_sovereign",
+      "my_token_balances",
+      "ping_session",
+      "propose_sim_trade",
+      "purchase_perk",
+      "reactivate_account",
+      "record_interest_signal",
+      "record_sovereign_event",
+      "report_client_error",
+      "resolve_sim_trade",
+      "set_profile_visibility",
+      "submit_exam_result",
+      "submit_feedback"
+    ],
+    "public_read_candidate": [
+      "get_platform_flag",
+      "is_app_owner",
+      "is_platform_owner",
+      "omega_is_owner",
+      "public_leaderboard",
+      "published_dispatches",
+      "log_access_decision"
+    ]
+  },
+  "rules": {
+    "service_only": "service_role only unless an explicit server-side workflow grants a narrower trusted role.",
+    "owner_or_admin": "authenticated execution must be gated inside the function by authoritative owner/admin policy; do not rely on the role alone.",
+    "member_self": "function must derive actor from auth.uid() and ignore caller-supplied identity for authorization.",
+    "public_read_candidate": "must be SECURITY INVOKER or moved to a private schema before anonymous/public execution is considered."
+  },
+  "coverage": {
+    "expectedSecurityDefinerPublicFunctions": 68
+  }
+}

@@ -13,9 +13,9 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "893d8811659cbaeb2a9c282745e04b5fe3caf8e3",
-    "branch": "codex/production-security-and-productization-20261002",
-    "pullRequest": "#606",
+    "main": "37aeb3ea9846eab3e4df7cc5a7f399a488dc806e",
+    "branch": "codex/referral-achievement-agent-notification-20261002-r2",
+    "pullRequest": null,
     "supabaseProject": "nvgedlxlkdzvcelimbvq",
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02",
@@ -421,9 +421,10 @@
         "config/omega-product-catalog.json"
       ],
       "evidence": [
-        "SUPA-SEC-20261002"
+        "SUPA-SEC-20261002",
+        "Body review identified award_points, compute_leaderboard_snapshot and my_time_sovereign as high-risk authenticated-callable mutators; live execution revoked for authenticated/anon/public."
       ],
-      "blocker": "68 authenticated SECURITY DEFINER functions remain in the public schema; classify owner/admin/user/self-service/read-only/server-only functions before tightening grants."
+      "blocker": "65 authenticated SECURITY DEFINER functions remain after this targeted hardening pass; continue body-by-body classification and least-privilege grants."
     },
     {
       "id": "PRODUCT-001",
@@ -455,9 +456,9 @@
         "config/omega-product-catalog.json"
       ],
       "evidence": [
-        "Source inventory audit: 391 unique numbered point bullets were extracted from the 999-point blueprint."
+        "Source inventory audit: 399 numbered bullet occurrences were extracted; 391 unique point numbers; 608 point numbers in the nominal 1-999 range have no numbered bullet; eight numbers are duplicated (100-104,112-113,133)."
       ],
-      "blocker": "Complete point-by-point productization mapping remains outstanding."
+      "blocker": "The file is labeled a 999-point blueprint but the numbered bullet inventory is 399 occurrences/391 unique points. Every point occurrence must be reconciled to its section/source intent before implementation status can be assigned."
     },
     {
       "id": "DB-002",
@@ -604,6 +605,112 @@
         "Service order schema includes unique idempotency_key and provider/entitlement references."
       ],
       "blocker": "Stripe/provider webhook integration and reconciliation remain outstanding."
+    },
+    {
+      "id": "REF-001",
+      "domain": "referrals",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Referral attribution, qualification, fraud signals and rewards are server-authoritative, one-attribution, idempotent and reversible.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-referral-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: referral primitive tables created with RLS and anon denied",
+        "Live SQL verification: server-only tables have explicit deny policies"
+      ],
+      "blocker": "Referral-code issuance, provider conversion events and ledger reward posting executor remain to be integrated."
+    },
+    {
+      "id": "ACH-001",
+      "domain": "achievements",
+      "source": [
+        "Master Prompt",
+        "Document.txt",
+        "999 Blueprint"
+      ],
+      "requirement": "Achievements and certificates require evidence-backed verification and support revocation.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-achievement-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: achievement definition, user achievement, verification and certificate primitives created"
+      ],
+      "blocker": "729-node semantic objectives and evidence-producing verification workflow remain to be populated."
+    },
+    {
+      "id": "AGENT-002",
+      "domain": "ai",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717.txt"
+      ],
+      "requirement": "Agent execution uses queued tasks, explicit tool grants, approval gates, idempotency and task audit events.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
+        "config/omega-agent-execution-policy.json"
+      ],
+      "evidence": [
+        "Live SQL verification: task, task-event and tool-grant primitives created; default approval required"
+      ],
+      "blocker": "Model gateway, tool executor and server-side task router remain to be integrated."
+    },
+    {
+      "id": "NOTIFY-001",
+      "domain": "notifications",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Notification delivery is durable, user-scoped, idempotent and channel-aware.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql"
+      ],
+      "evidence": [
+        "Live SQL verification: notification queue/state table with owner RLS and idempotency key"
+      ],
+      "blocker": "Email/SMS/push providers and event-driven delivery worker remain to be integrated."
+    },
+    {
+      "id": "MATRIX-003",
+      "domain": "progression",
+      "source": [
+        "999 Blueprint",
+        "Document.txt"
+      ],
+      "requirement": "Every 729 node has a separate semantic governance record without fabricating objectives, prerequisites, achievements or rewards.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002021000_create_omega_matrix_semantics.sql"
+      ],
+      "evidence": [
+        "Live SQL verification: 729 semantic rows populated; stage bands 1-3/4-6/7-9; source-specific objectives remain explicitly required"
+      ],
+      "blocker": "Map source-specific objectives and evidence requirements from the 391 extracted numbered blueprint points."
+    },
+    {
+      "id": "PAY-002",
+      "domain": "payments",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Provider payment events are uniquely keyed and settlement is reconciled separately from user-visible ledger state.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002022000_payment_reconciliation_guardrails.sql"
+      ],
+      "evidence": [
+        "Live SQL verification: provider/event unique index and server-only reconciliation table created"
+      ],
+      "blocker": "Signed Stripe webhook endpoint, provider secret configuration, transaction matching worker and production settlement smoke test remain."
     }
   ]
 }

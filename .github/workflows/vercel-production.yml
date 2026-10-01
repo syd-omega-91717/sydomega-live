@@ -46,6 +46,7 @@ on:
       - 'vercel.json'
       - 'scripts/vercel-build.sh'
       - 'scripts/vercel-build-enhance.mjs'
+      - 'scripts/release-surface-quality.py'
 
 permissions:
   contents: read
@@ -81,6 +82,8 @@ jobs:
           echo "VERCEL_PRODUCTION_VALIDATE_RUN_ID=${GITHUB_RUN_ID}"
       - name: Static contract
         run: python scripts/vercel_static_contract.py
+      - name: Release surface quality
+        run: python scripts/release-surface-quality.py
       - name: Build artifact
         run: bash scripts/vercel-build.sh
       - name: Production surface contract
@@ -109,8 +112,6 @@ jobs:
       - id: check
         shell: bash
         env:
-          # Only VERCEL_TOKEN is secret. Org/project identifiers are safe public
-          # project metadata and remain overridable through repository variables.
           TOKEN: ${{ secrets.VERCEL_TOKEN }}
           ORG: ${{ secrets.VERCEL_ORG_ID || vars.VERCEL_ORG_ID || 'team_w0v6eD1jUUzfPjiDq3ztOfvp' }}
           PROJECT: ${{ secrets.VERCEL_PROJECT_ID || vars.VERCEL_PROJECT_ID || 'prj_H3aTU3D4mR7TD19etdPTeYmhvANY' }}

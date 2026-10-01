@@ -72,7 +72,7 @@
       ],
       "identity": "id",
       "label": "gate_name",
-      "owner": "user_id"
+      "owner": null
     },
     {
       "type": "holding",
@@ -92,7 +92,7 @@
       ],
       "identity": "id",
       "label": "id",
-      "owner": "user_id"
+      "owner": "profile_id"
     },
     {
       "type": "document",
@@ -120,7 +120,7 @@
       ],
       "identity": "id",
       "label": "title",
-      "owner": "user_id"
+      "owner": null
     },
     {
       "type": "post",

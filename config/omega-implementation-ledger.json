@@ -13,6 +13,8 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
+    "main": "031ce933bbf46106e0a8678e70d36209657b695f",
+    "branch": "codex/referral-achievement-agent-notification-20261002",
     "main": "37aeb3ea9846eab3e4df7cc5a7f399a488dc806e",
     "branch": "codex/referral-achievement-agent-notification-20261002-r2",
     "pullRequest": null,
@@ -620,6 +622,7 @@
         "config/omega-referral-policy.json"
       ],
       "evidence": [
+        "Live SQL verification: referral primitive tables created with RLS and anon denied"
         "Live SQL verification: referral primitive tables created with RLS and anon denied",
         "Live SQL verification: server-only tables have explicit deny policies"
       ],
@@ -642,6 +645,7 @@
       "evidence": [
         "Live SQL verification: achievement definition, user achievement, verification and certificate primitives created"
       ],
+      "blocker": "729-node semantic definitions and evidence-producing verification workflow remain to be populated."
       "blocker": "729-node semantic objectives and evidence-producing verification workflow remain to be populated."
     },
     {

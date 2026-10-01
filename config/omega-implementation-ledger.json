@@ -511,6 +511,61 @@
         "Live census: 68 public SECURITY DEFINER functions; repository registry classifies all 68."
       ],
       "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
+    },
+    {
+      "id": "AGENT-001",
+      "domain": "ai",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "The 12 named agents must become governed executable capabilities with explicit tools, scopes, budgets, approvals, evidence and audit.",
+      "state": "INTEGRATED",
+      "repo": [
+        "config/omega-agent-registry.json",
+        "public.omega_agents"
+      ],
+      "evidence": [
+        "Live SQL verification: 12 registered agents; all have empty tool allowlists and default-deny external side effects."
+      ],
+      "blocker": "Actual task router, tool executor, model gateway and evidence-producing runtime are not yet integrated."
+    },
+    {
+      "id": "MATRIX-002",
+      "domain": "progress",
+      "source": [
+        "Master Prompt",
+        "omega-canon.json"
+      ],
+      "requirement": "User progression must be durable and separate from node definitions; completion must require evidence and verification.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
+        "public.omega_matrix_progress"
+      ],
+      "evidence": [
+        "Live SQL verification: 0 progress rows; RLS owner-only read/write."
+      ],
+      "blocker": "Existing matrix_progress/track workflows must be reconciled with canonical omega_matrix_progress before production cutover."
+    },
+    {
+      "id": "CANON-001",
+      "domain": "architecture",
+      "source": [
+        "omega-canon.json",
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Nine-fold systems and twelve-fold systems must remain distinct canonical dimensions; no silent flattening.",
+      "state": "DESIGNED",
+      "repo": [
+        "config/omega-product-catalog.json",
+        "config/omega-agent-registry.json"
+      ],
+      "evidence": [
+        "Source audit identified 9^3=729 and 9^5=59,049 canonical claims plus twelve-agent/twelve-module structures."
+      ],
+      "blocker": "Create a formal canon registry mapping each dimensional system to its owning product/domain and prohibit accidental cross-mapping."
     }
   ]
 }

@@ -18,7 +18,7 @@ if page.exists():
         'id="omega-side"','data-page="control-center"',
         '/bg.js','/verify-deployment.html','/verify-modules.html',
         'navigator.onLine','localStorage','serviceWorker',
-        "fetch(path,{cache:'no-store'"),
+        "fetch(path,{cache:'no-store'",
     ]
     for token in required:
         if token not in text: errors.append(f"control-center.html missing contract: {token}")

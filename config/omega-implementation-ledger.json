@@ -421,9 +421,10 @@
         "config/omega-product-catalog.json"
       ],
       "evidence": [
-        "SUPA-SEC-20261002"
+        "SUPA-SEC-20261002",
+        "Body review identified award_points, compute_leaderboard_snapshot and my_time_sovereign as high-risk authenticated-callable mutators; live execution revoked for authenticated/anon/public."
       ],
-      "blocker": "68 authenticated SECURITY DEFINER functions remain in the public schema; classify owner/admin/user/self-service/read-only/server-only functions before tightening grants."
+      "blocker": "65 authenticated SECURITY DEFINER functions remain after this targeted hardening pass; continue body-by-body classification and least-privilege grants."
     },
     {
       "id": "PRODUCT-001",

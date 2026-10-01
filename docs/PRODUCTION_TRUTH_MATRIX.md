@@ -39,7 +39,7 @@
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
 | Migration history | Live migration history reconciled through the 2026-10-01 convergence evidence | Check schema drift before each release |
 | Storage | Live buckets/policies verified 2026-09-26; `avatars`/`uploads` owner-scoped DELETE policies exist; live object count currently 0 | Exercise a real isolated authenticated upload/read/delete and cross-user denial test before marking lifecycle production-verified |
-| Edge Functions | **Source/live mismatch observed 2026-09-26**: repository contains more Edge Function source than the 5 ACTIVE functions currently returned by live Supabase | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
+| Edge Functions | **Source/live mismatch remains under reconciliation**: the 2026-10-01 live snapshot confirms active functions including concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph, while repository source contains additional functions | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
 
 ## Authentication
 

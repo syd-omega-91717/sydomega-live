@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-capability-catalog",
+  "purpose": "Canonical machine-readable registry for human- and agent-consumable SYD OMEGA capabilities.",
+  "lifecycle": [
+    "PROPOSED",
+    "DESIGNED",
+    "BUILT",
+    "INTEGRATED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "DEPRECATED"
+  ],
+  "capabilityTypes": [
+    "PAGE",
+    "API",
+    "SERVICE",
+    "DATA_PRODUCT",
+    "AI_MODEL",
+    "AI_AGENT",
+    "TOOL",
+    "WORKFLOW",
+    "MEDIA_PIPELINE",
+    "PAYMENT_PRODUCT",
+    "ENTITLEMENT",
+    "INTEGRATION",
+    "REPORT",
+    "AUTOMATION"
+  ],
+  "requiredFields": [
+    "id",
+    "name",
+    "type",
+    "version",
+    "owner",
+    "purpose",
+    "status",
+    "audience",
+    "authz",
+    "dataClass",
+    "inputs",
+    "outputs",
+    "dependencies",
+    "events",
+    "rateLimit",
+    "costModel",
+    "evidence",
+    "rollback"
+  ],
+  "policy": {
+    "defaultAgentAccess": "DENY",
+    "defaultHumanAccess": "DENY",
+    "productionStatusRequired": "VERIFIED",
+    "financialActionsRequireIdempotency": true,
+    "privilegedActionsRequireHumanApproval": true,
+    "externalSecretsNeverExposedToClients": true
+  }
+}

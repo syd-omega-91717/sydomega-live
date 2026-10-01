@@ -1,0 +1,15 @@
+{
+  "$schema": "https://sydomega.com/schemas/omega-event-model.v1.json",
+  "schemaVersion": "1.0.0",
+  "contract": "OmegaEvent",
+  "purpose": "Canonical event envelope for consequential platform activity, object changes, actions, workflows and evidence.",
+  "identity": {"required":["id","type","occurredAt"],"idPolicy":"stable-event-id-or-provider-event-id"},
+  "truth": {"required":["truth","source"],"allowed":["LIVE","VERIFIED","CALCULATED","SOURCE","SIMULATED","STALE","UNAVAILABLE","UNKNOWN"]},
+  "actors": {"required":["actorType","actorId"],"allowedActorTypes":["member","owner","agent","system","provider","anonymous"]},
+  "causality": {"fields":["correlationId","causationId","idempotencyKey"],"rule":"Consequential retries must carry a stable idempotency key; related events share correlationId."},
+  "authorization": {"rule":"The event envelope records who caused an action but never grants permission. Authorization remains server/RLS/policy authoritative."},
+  "lineage": {"fields":["source","sourceId","sourceVersion","observedAt"],"rule":"Provider or database events retain their source identity and observation time."},
+  "payload": {"rule":"Metadata is bounded, JSON-serializable and contains no secrets or elevated credentials."},
+  "states":["ACCEPTED","PROCESSED","REJECTED","DUPLICATE","FAILED","UNKNOWN"],
+  "rules":["Do not create an event merely because a page rendered.","Do not infer a successful mutation from a client intent.","Duplicate idempotency keys must not produce a second consequential side effect.","Unknown provider state remains UNKNOWN.","Events are evidence inputs; they are not proof of production health by themselves."]
+}

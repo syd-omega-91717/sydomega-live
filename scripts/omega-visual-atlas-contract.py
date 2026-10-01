@@ -21,8 +21,11 @@ assert 'src="/omega-visual-atlas.js"' in html, "atlas runtime missing"
 assert 'href="/world.html"' in html, "atlas must expose a return path"
 assert "REFERENCE ONLY" in html or "REFERENCE ONLY" in js, "truth boundary missing"
 
-entries = re.findall(r"""[{"']f:([^,]+),n:([^,]+),p:(["'])(.*?)\\3,r:(["']).*?\\5}""", js)
-paths = [row[3] for row in entries]
+# The atlas intentionally uses both single-quoted and double-quoted
+# object literals. Match the canonical p: field directly instead of coupling
+# the contract to one formatting style.
+paths = re.findall(r"""\\bp\\s*:\\s*(['"])(.*?)\\1""", js)
+paths = [row[1] for row in paths]
 assert len(paths) == 46, f"expected 46 curated source references, found {len(paths)}"
 
 for path in paths:

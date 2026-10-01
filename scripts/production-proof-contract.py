@@ -24,6 +24,7 @@ REQUIRED = {
     "event_bus": ROOT / "omega-event-bus.js",
     "workers": ROOT / "omega-workers.js",
     "truth_matrix": ROOT / "docs/PRODUCTION_TRUTH_MATRIX.md",
+    "responsive_contract": ROOT / "scripts/omega-responsive-surface-contract.py",
 }
 
 FORBIDDEN_PROOF_PATTERNS = {

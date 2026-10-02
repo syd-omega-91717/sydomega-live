@@ -1163,6 +1163,39 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
 })();
 
+/* ===== DESKTOP POINTER CLASSIFICATION =====================================
+   A laptop can expose a CSS viewport below 760px when browser zoom or OS
+   display scaling is high. Width alone then misclassifies a desktop as a
+   phone and activates the mobile shell. Classify input capability first;
+   keep the normal width breakpoints for coarse/touch devices.
+
+   This class is intentionally published on <html> before later shared
+   modules (including nav.js) inject their own mobile rules. The recovery
+   selectors use higher specificity and !important only for the shell-level
+   geometry that mobile rules deliberately force.
+   ========================================================================== */
+(function(){
+  try{
+    var fine=window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if(fine) document.documentElement.classList.add('omega-desktop-pointer');
+  }catch(e){}
+  var css='@media(max-width:760px){'
+    +'html.omega-desktop-pointer body{padding-bottom:0!important}'
+    +'html.omega-desktop-pointer #omega-mob{display:none!important}'
+    +'html.omega-desktop-pointer aside.omega-side,html.omega-desktop-pointer aside.side{display:flex!important}'
+    +'html.omega-desktop-pointer .shell{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .side{width:clamp(60px,7vw,80px)!important;height:100vh!important;flex-direction:column!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:hidden!important}'
+    +'html.omega-desktop-pointer .main{width:auto!important;min-width:0!important}'
+    +'html.omega-desktop-pointer .col-side{display:block!important}'
+    +'html.omega-desktop-pointer .ph-inner{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .matrix-strip{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .ms-axis{border-right:1px solid rgba(201,168,76,.12)!important;border-bottom:0!important}'
+    +'html.omega-desktop-pointer .family-roles,html.omega-desktop-pointer .status-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important}'
+    +'}';
+  var st=document.createElement('style');st.id='omega-desktop-pointer-recovery';st.textContent=css;
+  (document.head||document.documentElement).appendChild(st);
+})();
+
 /* ===== DESKTOP BOTTOM-RIGHT LADDER =========================================
    Four independent modules each place a fixed widget in the bottom-right
    corner, and none of them knows about the others:

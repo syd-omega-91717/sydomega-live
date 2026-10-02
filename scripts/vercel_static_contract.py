@@ -39,7 +39,9 @@ def main() -> int:
 
     deployment_enabled = config.get("git", {}).get("deploymentEnabled", {})
     if deployment_enabled.get("*", True) is not False:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL automatic_git_deploy_must_be_disabled")
+        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL automatic_git_deploy_must_be_disabled_for_non_main")
+    if deployment_enabled.get("main", False) is not True:
+        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL main_git_deploy_must_be_enabled")
 
     redirects = config.get("redirects", [])
 
@@ -78,7 +80,8 @@ def main() -> int:
     print("install_command=empty")
     print("output_directory=public")
     print("host_policy=" + host_policy)
-    print("git_auto_deploy=disabled")
+    print("git_auto_deploy=main_only")
+    print("git_auto_deploy_non_main=disabled")
     print("promotion_workflow=.github/workflows/vercel-production.yml")
     print("build_output_verified=references_resolve_in_public")
     print("artifact_shell=normalized")

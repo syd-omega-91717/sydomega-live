@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 298,
-    "latestRemoteMigration": "20261002075836"
+    "remoteMigrationCount": 299,
+    "latestRemoteMigration": "20261002080219"
   },
   "items": [
     {
@@ -942,6 +942,27 @@
         "Supabase security advisor on ydqhzvvoyufiiqvzcjns reports only leaked-password protection warning; authenticated SECURITY DEFINER finding count is zero."
       ],
       "blocker": "Enable leaked-password protection in Supabase Auth dashboard before security acceptance is fully closed."
+    }
+  ,
+    {
+      "id": "NOTIFY-003",
+      "domain": "notifications",
+      "source": [
+        "Master Prompt",
+        "Enterprise Platform Standard"
+      ],
+      "requirement": "Durable notification queues have a server-only claim/reclaim worker and truthful in-app delivery transition without pretending external providers are configured.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002080219_notification_worker_claim_boundary_20261002.sql",
+        "supabase/functions/omega-notification-worker/index.ts",
+        "supabase/config.toml"
+      ],
+      "evidence": [
+        "Canonical target ydqhzvvoyufiiqvzcjns: omega-notification-worker ACTIVE v1 with secret-auth handler and verify_jwt=false platform setting.",
+        "Worker claims only in_app notifications; email/sms/push remain unclaimed until provider adapters are configured."
+      ],
+      "blocker": "Secret-auth invocation and scheduled trigger still require an authorized service secret/cron configuration; no notification rows were fabricated."
     }
   ]
 }

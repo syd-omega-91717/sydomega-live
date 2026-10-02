@@ -643,7 +643,7 @@
       "evidence": [
         "Live SQL verification: achievement definition, user achievement, verification and certificate primitives created"
       ],
-      "blocker": "729-node semantic definitions and evidence-producing verification workflow remain to be populated."
+      "blocker": "729 semantic definitions now have governed stage-band achievement links; evidence-producing user verification and certificate issuance remain."
     },
     {
       "id": "AGENT-002",
@@ -804,6 +804,41 @@
         "Live privilege verification: delivery transition functions service_role-only"
       ],
       "blocker": "External email/SMS/push provider adapters and delivery worker remain."
+    },
+    {
+      "id": "ACH-002",
+      "domain": "achievements",
+      "source": [
+        "999 Blueprint"
+      ],
+      "requirement": "The source-defined 1–3, 4–6 and 7–9 progression bands are represented as digital achievement products without auto-awarding users.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002031000_progression_achievement_productization.sql",
+        "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
+      ],
+      "evidence": [
+        "Live verification: 3 active achievement definitions; 729 semantic nodes linked to one of the three digital achievement IDs; user achievement rows remain 0."
+      ],
+      "blocker": "Evidence-producing verification must still connect verified user progress to individual achievement issuance and certificate creation."
+    },
+    {
+      "id": "MATRIX-004",
+      "domain": "progression",
+      "source": [
+        "999 Blueprint",
+        "Document.txt"
+      ],
+      "requirement": "The 729-node semantic layer maps each governed stage band to an explicit digital achievement outcome while preserving evidence-required verification.",
+      "state": "INTEGRATED",
+      "repo": [
+        "public.omega_matrix_node_semantics",
+        "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
+      ],
+      "evidence": [
+        "Live verification: 729/729 semantic nodes have stage-band achievement linkage: 27 initiate, 189 architect, 513 prime."
+      ],
+      "blocker": "Source-specific objectives and evidence requirements still require point-by-point reconciliation against the 391 extracted blueprint points."
     }
   ]
 }

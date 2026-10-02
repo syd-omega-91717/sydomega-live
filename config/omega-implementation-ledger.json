@@ -13,9 +13,9 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "b98f46c786f3cf16b6672e86d6bea3683eee6922",
-    "branch": "main",
-    "pullRequest": null,
+    "main": "3afca63580b0a7efa5afd4067c12883f3c3e14ff",
+    "branch": "codex/sovereign-value-layer-20261002",
+    "pullRequest": 625,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
     "remoteMigrationCount": 316,
@@ -575,6 +575,29 @@
       ],
       "repo": [],
       "blocker": "Legal content remains an operational platform notice and should receive jurisdiction-specific legal review before being treated as legal advice."
+    },
+    {
+      "id": "VALUE-001",
+      "domain": "product-experience",
+      "state": "BUILT",
+      "requirement": "Every major platform surface should explain purpose, value, evidence state, next action and adjacent realm paths without fabricating engagement or financial outcomes.",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717",
+        "Sovereign Production & Value Standard"
+      ],
+      "repo": [
+        "config/omega-value-layer.json",
+        "omega-value-layer.js",
+        "omega-value-layer.css",
+        "scripts/omega-value-layer-contract.py",
+        "bg.js"
+      ],
+      "evidence": [
+        "PR-625 adds the universal Value Layer through the existing platform shell.",
+        "The contract enforces nine canonical realms, seven truth states, explicit page mappings and anti-fabrication policy."
+      ],
+      "blocker": "Fresh browser verification across representative public/member surfaces remains required before this experience layer is marked TESTED/VERIFIED."
     }
   ]
 }

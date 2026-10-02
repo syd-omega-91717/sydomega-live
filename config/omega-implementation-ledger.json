@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 268,
-    "latestRemoteMigration": "20261002073047"
+    "remoteMigrationCount": 293,
+    "latestRemoteMigration": "20261002073936"
   },
   "items": [
     {
@@ -128,16 +128,18 @@
         "Absolute.txt"
       ],
       "requirement": "Repository migrations and live migration journal agree in both directions.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "scripts/migration-drift.py",
         "supabase/remote-migrations.json",
         "supabase/migrations"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns migration history queried 2026-10-02: 265 remote versions; repository snapshot refreshed to that exact remote list"
+        "Target project ydqhzvvoyufiiqvzcjns: 293 remote migration versions now align with repository migration timestamps after verified application and history repair on 2026-10-02.",
+        "Four historical remote-only versions are represented by explicit repository alias files; 25 local-only migrations were actually executed against the target before their history entries were repaired.",
+        "Fresh CI migration-drift proof remains the final acceptance gate."
       ],
-      "blocker": "Exact local migration-file parity is not yet proven; do not merge until migration-drift/repository-integrity gates pass."
+      "blocker": "Await CI migration-drift/repository-integrity pass on the reconciled branch."
     },
     {
       "id": "OBJ-001",

@@ -114,6 +114,8 @@ jobs:
         run: python scripts/omega-canon-agent-contract.py
       - name: Production chain contract
         run: python scripts/omega-production-chain-contract.py
+      - name: Achievement and referral contract
+        run: python scripts/omega-achievement-referral-contract.py
       - name: Architecture convergence audit
         run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants

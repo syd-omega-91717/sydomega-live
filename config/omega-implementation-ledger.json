@@ -515,24 +515,6 @@
       "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
     },
     {
-      "id": "AGENT-001",
-      "domain": "ai",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "The 12 named agents must become governed executable capabilities with explicit tools, scopes, budgets, approvals, evidence and audit.",
-      "state": "INTEGRATED",
-      "repo": [
-        "config/omega-agent-registry.json",
-        "public.omega_agents"
-      ],
-      "evidence": [
-        "Live SQL verification: 12 registered agents; all have empty tool allowlists and default-deny external side effects."
-      ],
-      "blocker": "Actual task router, tool executor, model gateway and evidence-producing runtime are not yet integrated."
-    },
-    {
       "id": "MATRIX-002",
       "domain": "progress",
       "source": [
@@ -839,6 +821,62 @@
         "Live verification: 729/729 semantic nodes have stage-band achievement linkage: 27 initiate, 189 architect, 513 prime."
       ],
       "blocker": "Source-specific objectives and evidence requirements still require point-by-point reconciliation against the 391 extracted blueprint points."
+    },
+    {
+      "id": "SEC-005",
+      "domain": "security",
+      "source": [
+        "Supabase security advisor",
+        "Supabase Data API security"
+      ],
+      "requirement": "Privileged service/automation SECURITY DEFINER RPCs are no longer callable by anon/authenticated roles.",
+      "state": "TESTED",
+      "repo": [
+        "supabase/migrations/20261002033000_security_advisor_hardening.sql"
+      ],
+      "evidence": [
+        "Live verification: 14 privileged RPCs anon=false, authenticated=false, service_role=true.",
+        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52."
+      ],
+      "blocker": "52 remaining SECURITY DEFINER functions require caller-contract review before role tightening; several are member-self or owner/admin paths used by existing UI."
+    },
+    {
+      "id": "PAY-003",
+      "domain": "payments",
+      "source": [
+        "Master Prompt",
+        "Enterprise Platform Standard"
+      ],
+      "requirement": "Verified Stripe payment amounts are posted through an idempotent double-entry settlement and recorded in reconciliation.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/functions/stripe-webhook/index.ts",
+        "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
+      ],
+      "evidence": [
+        "Live Stripe webhook deployed ACTIVE.",
+        "Live service-role-only record_stripe_payment and ledger posting boundary applied.",
+        "No payment rows fabricated."
+      ],
+      "blocker": "Requires an actual verified Stripe event in production to prove end-to-end provider settlement."
+    },
+    {
+      "id": "PAY-004",
+      "domain": "payments",
+      "source": [
+        "Enterprise Platform Standard"
+      ],
+      "requirement": "The commercial-to-service lifecycle is represented as a repository-enforced production chain contract.",
+      "state": "BUILT",
+      "repo": [
+        "config/omega-production-chain.json",
+        "scripts/omega-production-chain-contract.py",
+        ".github/workflows/vercel-production.yml"
+      ],
+      "evidence": [
+        "Production chain contract is wired into Vercel validation workflow."
+      ],
+      "blocker": "Live Vercel verification remains blocked by provider authorization."
     }
   ]
 }

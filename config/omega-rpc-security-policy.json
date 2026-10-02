@@ -81,7 +81,7 @@
     ]
   },
   "rules": {
-    "service_only": "service_role only unless an explicit server-side workflow grants a narrower trusted role.",
+    "service_only": "privileged server role only unless an explicit server-side workflow grants a narrower trusted role.",
     "owner_or_admin": "authenticated execution must be gated inside the function by authoritative owner/admin policy; do not rely on the role alone.",
     "member_self": "function must derive actor from auth.uid() and ignore caller-supplied identity for authorization.",
     "public_read_candidate": "must be SECURITY INVOKER or moved to a private schema before anonymous/public execution is considered."

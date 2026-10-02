@@ -18,8 +18,8 @@
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 306,
-    "latestRemoteMigration": "20261002085421",
+    "remoteMigrationCount": 307,
+    "latestRemoteMigration": "20261002085641",
     "runtimeContract": "18 modules / 54 actions"
   },
   "items": [
@@ -306,7 +306,8 @@
         "omega-runtime-gateway ACTIVE with verify_jwt=true.",
         "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY.",
         "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08.",
-        "omega-runtime-gateway version 3 exposes create_service_order; target project function enforces integrated-service allowlist and idempotency."
+        "omega-runtime-gateway version 3 exposes create_service_order; target project function enforces integrated-service allowlist and idempotency.",
+        "Gateway version 4 exposes create_consult_intake; target project idempotent intake function and runtime idempotency column are live."
       ],
       "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
     },
@@ -324,7 +325,8 @@
         "omega_runtime_dispatch"
       ],
       "evidence": [
-        "Target project runtime adapters return profile/catalog data for authenticated callers."
+        "Target project runtime adapters return profile/catalog data for authenticated callers.",
+        "Core search.read is now lifecycle INTEGRATED and reads only public index rows or caller-owned rows."
       ],
       "blocker": null
     },
@@ -343,7 +345,8 @@
         "omega_matrix_node_semantics"
       ],
       "evidence": [
-        "Target project matrix runtime exposes 729 governed nodes."
+        "Target project matrix runtime exposes 729 governed nodes.",
+        "Consultancy intake is now lifecycle INTEGRATED with confidentiality acceptance and idempotency enforcement."
       ],
       "blocker": "Leaderboard adapter remains a separate verification surface."
     },

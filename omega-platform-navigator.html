@@ -450,31 +450,32 @@
   <script src="/nav.js"></script>
 </head>
 <body data-page="omega-platform-navigator">
-  <header>
-    <div class="brand-statement">
-      <h1>Ω PLATFORM NAVIGATOR</h1>
-      <p class="tagline">The Complete Product Ecosystem — 36 Capabilities Across 12 Domains</p>
-      <p>Experience the full spectrum of the Ω platform: from foundational habits and security to advanced commerce, prediction, and governance tools. Each product is element-aligned and tier-gated for progressive mastery.</p>
-    </div>
-  </header>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <header>
+      <div class="brand-statement">
+        <h1>Ω PLATFORM NAVIGATOR</h1>
+        <p class="tagline">The Complete Product Ecosystem — 36 Capabilities Across 12 Domains</p>
+        <p>Experience the full spectrum of the Ω platform: from foundational habits and security to advanced commerce, prediction, and governance tools. Each product is element-aligned and tier-gated for progressive mastery.</p>
+      </div>
+    </header>
 
-  <nav class="nav-bar">
-    <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
-    <button class="filter-btn" onclick="filterProducts('sentinel')">🛡 Sentinel</button>
-    <button class="filter-btn" onclick="filterProducts('merchant')">💰 Merchant</button>
-    <button class="filter-btn" onclick="filterProducts('scout')">🔍 Scout</button>
-    <button class="filter-btn" onclick="filterProducts('warden')">🔒 Warden</button>
-    <button class="filter-btn" onclick="filterProducts('sovereign')">👑 Sovereign</button>
-    <button class="filter-btn" onclick="filterProducts('auditor')">✓ Auditor</button>
-    <button class="filter-btn" onclick="filterProducts('proxy')">⚡ Proxy</button>
-    <button class="filter-btn" onclick="filterProducts('oracle')">🔮 Oracle</button>
-    <button class="filter-btn" onclick="filterProducts('beacon')">💡 Beacon</button>
-    <button class="filter-btn" onclick="filterProducts('analyst')">📊 Analyst</button>
-    <button class="filter-btn" onclick="filterProducts('tutor')">📚 Tutor</button>
-    <button class="filter-btn" onclick="filterProducts('historian')">📜 Historian</button>
-  </nav>
-
-  <main>
+    <nav class="nav-bar">
+      <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+      <button class="filter-btn" onclick="filterProducts('sentinel')">🛡 Sentinel</button>
+      <button class="filter-btn" onclick="filterProducts('merchant')">💰 Merchant</button>
+      <button class="filter-btn" onclick="filterProducts('scout')">🔍 Scout</button>
+      <button class="filter-btn" onclick="filterProducts('warden')">🔒 Warden</button>
+      <button class="filter-btn" onclick="filterProducts('sovereign')">👑 Sovereign</button>
+      <button class="filter-btn" onclick="filterProducts('auditor')">✓ Auditor</button>
+      <button class="filter-btn" onclick="filterProducts('proxy')">⚡ Proxy</button>
+      <button class="filter-btn" onclick="filterProducts('oracle')">🔮 Oracle</button>
+      <button class="filter-btn" onclick="filterProducts('beacon')">💡 Beacon</button>
+      <button class="filter-btn" onclick="filterProducts('analyst')">📊 Analyst</button>
+      <button class="filter-btn" onclick="filterProducts('tutor')">📚 Tutor</button>
+      <button class="filter-btn" onclick="filterProducts('historian')">📜 Historian</button>
+    </nav>
     <!-- SENTINEL PRODUCTS -->
     <section class="agent-section" data-agent="sentinel">
       <div class="agent-header">
@@ -1358,6 +1359,7 @@
       </div>
     </section>
   </main>
+</div>
 
   <script>
     function filterProducts(agent) {

@@ -2,6 +2,7 @@
 """Deterministic contract for the Omega Platform Kernel and its evidence bridges."""
 from __future__ import annotations
 import json
+import sys
 from pathlib import Path
 if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
     print(__doc__)

@@ -18,8 +18,8 @@
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 305,
-    "latestRemoteMigration": "20261002085201",
+    "remoteMigrationCount": 306,
+    "latestRemoteMigration": "20261002085421",
     "runtimeContract": "18 modules / 54 actions"
   },
   "items": [
@@ -146,7 +146,8 @@
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
-        "Target project settlement boundary is present; real payment counts remain zero and no synthetic payment was created."
+        "Target project settlement boundary is present; real payment counts remain zero and no synthetic payment was created.",
+        "Integrated service-order creation boundary now exists for the six currently INTEGRATED services; order count remains zero because no customer transaction was fabricated."
       ],
       "blocker": "Real signed Stripe test traffic and entitlement reconciliation remain before VERIFIED."
     },
@@ -304,7 +305,8 @@
         "Target project: 18 distinct modules / 54 actions verified live.",
         "omega-runtime-gateway ACTIVE with verify_jwt=true.",
         "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY.",
-        "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08."
+        "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08.",
+        "omega-runtime-gateway version 3 exposes create_service_order; target project function enforces integrated-service allowlist and idempotency."
       ],
       "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
     },

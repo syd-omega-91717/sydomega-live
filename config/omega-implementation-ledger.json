@@ -541,7 +541,11 @@
         "omega_media_jobs persistence, idempotency, RLS, claim/complete functions and omega-media-worker v1 are live."
       ],
       "repo": [],
-      "blocker": "Generation remains BLOCKED_PROVIDER until a real provider endpoint and secret are configured."
+      "blocker": "Generation remains BLOCKED_PROVIDER until a real provider endpoint and secret are configured.",
+      "source": [
+        "Master Prompt — Media/Studio service requirements",
+        "SYD OMEGA 91717 — MEDIA module and governed provider boundary"
+      ]
     },
     {
       "id": "BLOCKCHAIN-001",
@@ -552,7 +556,11 @@
         "External ownership verification now performs ERC-721 ownerOf or ERC-1155 balanceOf against allowlisted public RPC endpoints and records chain/block/proof metadata server-side."
       ],
       "repo": [],
-      "blocker": null
+      "blocker": null,
+      "source": [
+        "Master Prompt — Blockchain/NFT and ownership verification requirements",
+        "SYD OMEGA 91717 — BLOCKCHAIN_NFT module"
+      ]
     },
     {
       "id": "INVESTMENT-001",
@@ -563,7 +571,11 @@
         "Persistent caller-scoped investment watchlists and idempotent upsert runtime are live; no synthetic watchlist rows created."
       ],
       "repo": [],
-      "blocker": null
+      "blocker": null,
+      "source": [
+        "Master Prompt — Investment/financial intelligence requirements",
+        "SYD OMEGA 91717 — INVESTMENT module"
+      ]
     },
     {
       "id": "LEGAL-001",
@@ -574,7 +586,11 @@
         "Versioned terms/privacy documents are persisted with content hashes and public-read RLS; consent reads use existing versioned consent_records."
       ],
       "repo": [],
-      "blocker": "Legal content remains an operational platform notice and should receive jurisdiction-specific legal review before being treated as legal advice."
+      "blocker": "Legal content remains an operational platform notice and should receive jurisdiction-specific legal review before being treated as legal advice.",
+      "source": [
+        "Master Prompt — Legal, privacy, consent and compliance requirements",
+        "SYD OMEGA 91717 — LEGAL module"
+      ]
     },
     {
       "id": "VALUE-001",

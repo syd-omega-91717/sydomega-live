@@ -116,7 +116,9 @@ secret_patterns = [
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in web_extensions:
         continue
-    if any(part in {".git", "node_modules", "tests", "scripts", "supabase", "docs", ".claude", ".github"} for part in path.parts):
+    # config/ is repository governance/runtime source, not browser-delivered
+    # content. Keep it out of the shipped-credential scan and out of public/.
+    if any(part in {".git", "node_modules", "tests", "scripts", "supabase", "docs", "config", ".claude", ".github"} for part in path.parts):
         continue
     try:
         body = path.read_text(encoding="utf-8", errors="ignore")

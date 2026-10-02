@@ -13,14 +13,14 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "514a2a4133cf983134e3676c0cad7af5eb86c84b",
-    "branch": "codex/runtime-frontier-20261002",
+    "main": "bf2f7b90753a28c60403320537888d7a74f8f742",
+    "branch": "main",
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 313,
-    "latestRemoteMigration": "20261002091226",
-    "runtimeContract": "18 modules / 54 actions"
+    "remoteMigrationCount": 316,
+    "latestRemoteMigration": "20261002094310",
+    "runtimeContract": "18 modules / 54 actions — 54 INTEGRATED"
   },
   "items": [
     {
@@ -314,9 +314,11 @@
         "Wave 3 target-project verification: 46 of 54 actions are lifecycle INTEGRATED; 5 remain DESIGNED and 3 remain SIMULATION_ONLY.",
         "Mainline runtime frontier now adds durable media jobs, persistent investment watchlists, versioned legal documents/consent reads, and an external-chain ownership verification boundary.",
         "omega-runtime-gateway version 5 deployed ACTIVE with verify_jwt=true; blockchain verification uses public JSON-RPC read proofs and records immutable verification observations.",
-        "omega-media-worker version 1 deployed ACTIVE with secret-authenticated worker boundary; provider absence fails closed as BLOCKED_PROVIDER."
+        "omega-media-worker version 1 deployed ACTIVE with secret-authenticated worker boundary; provider absence fails closed as BLOCKED_PROVIDER.",
+        "Live target now reports 54 of 54 runtime actions INTEGRATED; Elemental cosmology, interpretation, and bounded simulation are executed by the server-side deterministic omega_elemental_runtime function.",
+        "omega-runtime-gateway version 7 is ACTIVE with verify_jwt=true and exposes the three Elemental actions through the authenticated user gateway."
       ],
-      "blocker": "Provider-specific media generation remains BLOCKED_PROVIDER until OMEGA_MEDIA_PROVIDER_URL/OMEGA_MEDIA_PROVIDER_SECRET are configured."
+      "blocker": "Provider-dependent media generation remains BLOCKED_PROVIDER until OMEGA_MEDIA_PROVIDER_URL/OMEGA_MEDIA_PROVIDER_SECRET are configured."
     },
     {
       "id": "CORE-001",

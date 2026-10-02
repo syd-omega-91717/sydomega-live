@@ -1,0 +1,3 @@
+-- Historical migration-history alias for remote version 20261001035349.
+-- Equivalent task gate reconciliation is maintained by the canonical
+-- 20261001120000_omega_complete_task_gate_reconciliation.sql migration.

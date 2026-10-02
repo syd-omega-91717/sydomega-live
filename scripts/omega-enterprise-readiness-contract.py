@@ -29,7 +29,7 @@ REQUIRED = {
     "vercel_build": ROOT / "scripts/vercel-build.sh",
     "vercel_workflow": ROOT / ".github/workflows/vercel-production.yml",
     "vercel_config": ROOT / "vercel.json",
-    "env_example": ROOT / ".env.example",
+    "env_example": ROOT / "docs/ENVIRONMENT_VARIABLES.md",
 }
 
 SECRET_PATTERNS = [
@@ -157,6 +157,12 @@ def main() -> int:
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["status"] == "PASS" else 2
 
+
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
 
 if __name__ == "__main__":
     raise SystemExit(main())

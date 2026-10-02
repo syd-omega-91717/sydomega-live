@@ -1,0 +1,6 @@
+-- Historical migration-history alias.
+-- The remote target recorded 20260930090758 (harden_user_rpc_security_invoker)
+-- but the original SQL is not present in the repository. The canonical
+-- security hardening migrations that follow are the maintained source of truth.
+-- This file intentionally performs no SQL so a clean reset is not given a
+-- false implementation from an unrecoverable historical statement.

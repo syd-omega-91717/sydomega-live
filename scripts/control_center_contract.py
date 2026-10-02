@@ -52,5 +52,11 @@ def main() -> int:
     print("CONTROL CENTER CONTRACT: PASS")
     return 0
 
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
+
 if __name__ == "__main__":
     raise SystemExit(main())

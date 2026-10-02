@@ -40,5 +40,11 @@ def main():
     print("OMEGA PRODUCT CATALOG CONTRACT: PASS — 18 modules validated")
     return 0
 
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
+
 if __name__=="__main__":
     raise SystemExit(main())

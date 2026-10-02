@@ -23,3 +23,9 @@ print(json.dumps({
     "gates":[{"id":i,"requirement":d,"status":"OPEN"} for i,d in GATES],
     "rule":"A gate may only change from OPEN after direct runtime/provider evidence is captured; source-code existence is insufficient."
 },indent=2))
+
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)

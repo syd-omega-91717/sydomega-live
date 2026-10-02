@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 299,
-    "latestRemoteMigration": "20261002080219"
+    "remoteMigrationCount": 300,
+    "latestRemoteMigration": "20261002080541"
   },
   "items": [
     {
@@ -901,6 +901,7 @@
       "evidence": [
         "Canonical target function guard tests passed without creating user achievements or certificates.",
         "Certificate issuance requires verified achievement plus approved verification evidence."
+        "Verification idempotency conflicts are rejected without mutating achievement state."
       ],
       "blocker": "No member achievement was fabricated; a real authorized member/evidence path is required for full end-to-end verification."
     },

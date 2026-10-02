@@ -47,3 +47,9 @@ for token in (
     assert token.lower() in sql.lower(), f"missing SQL contract token: {token}"
 
 print("PASS: referral, achievement, governed-agent and notification contract")
+
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)

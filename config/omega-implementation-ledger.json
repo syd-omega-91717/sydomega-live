@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 265,
-    "latestRemoteMigration": "20261002072345"
+    "remoteMigrationCount": 266,
+    "latestRemoteMigration": "20261002072542"
   },
   "items": [
     {
@@ -249,17 +249,16 @@
         "999 Blueprint"
       ],
       "requirement": "12-agent system uses explicit registry, capabilities, tool permissions, approval policy and audit trail.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "config",
         "omega-agent-*",
         "scripts/omega_fabric_platform_gate.py"
       ],
       "evidence": [
-        "Omega Intelligence Fabric evidence",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Target project ydqhzvvoyufiiqvzcjns: 12 governed agents verified live 2026-10-02; all default to DENY/approval-governed policies."
       ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "MATRIX-001",
@@ -269,7 +268,7 @@
         "Master Prompt"
       ],
       "requirement": "729-node progression is modeled with prerequisites, verification, completion and rewards.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
         "public.omega_matrix_nodes",
@@ -277,10 +276,9 @@
         "public.matrix_progress"
       ],
       "evidence": [
-        "SUPA-MATRIX-20261002",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Target project ydqhzvvoyufiiqvzcjns: 729 canonical progression nodes and 729 semantic records verified live 2026-10-02; no user completions fabricated."
       ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "ORACLE-001",
@@ -602,13 +600,13 @@
         "999 Blueprint"
       ],
       "requirement": "Referral attribution, qualification, fraud signals and rewards are server-authoritative, one-attribution, idempotent and reversible.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
         "config/omega-referral-policy.json"
       ],
       "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Referral primitives now verified live on ydqhzvvoyufiiqvzcjns: codes/clicks/attributions/conversions/rewards/fraud tables exist; all live row counts remain 0."
       ],
       "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
@@ -621,13 +619,13 @@
         "999 Blueprint"
       ],
       "requirement": "Achievements and certificates require evidence-backed verification and support revocation.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
         "config/omega-achievement-policy.json"
       ],
       "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Achievement verification primitives now verified live on ydqhzvvoyufiiqvzcjns; definitions/user achievements/verifications/certificates currently contain 0 rows."
       ],
       "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
@@ -639,13 +637,13 @@
         "SYD OMEGA 91717.txt"
       ],
       "requirement": "Agent execution uses queued tasks, explicit tool grants, approval gates, idempotency and task audit events.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
         "config/omega-agent-execution-policy.json"
       ],
       "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Governed agent task/tool-grant primitives now verified live on ydqhzvvoyufiiqvzcjns; task and grant rows remain 0."
       ],
       "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
@@ -656,12 +654,12 @@
         "Master Prompt"
       ],
       "requirement": "Notification delivery is durable, user-scoped, idempotent and channel-aware.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql"
       ],
       "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Durable notification table now verified live on ydqhzvvoyufiiqvzcjns; notification rows remain 0."
       ],
       "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
@@ -673,14 +671,14 @@
         "Document.txt"
       ],
       "requirement": "Every 729 node has a separate semantic governance record without fabricating objectives, prerequisites, achievements or rewards.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/migrations/20261002021000_create_omega_matrix_semantics.sql"
       ],
       "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Target project ydqhzvvoyufiiqvzcjns: 729 semantic governance rows verified live 2026-10-02; objectives remain explicitly source-required."
       ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "PAY-002",

@@ -14,6 +14,7 @@ const ALLOWED_ACTIONS = new Set([
   'module_state',
   'module_read',
   'create_service_order',
+  'create_consult_intake',
   'issue_referral_code',
   'attribute_referral',
   'enqueue_agent_task',

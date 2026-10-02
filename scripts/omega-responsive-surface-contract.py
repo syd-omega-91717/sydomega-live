@@ -80,8 +80,9 @@ def main() -> int:
         text = css.read_text(encoding="utf-8", errors="replace")
         fixed = [int(x) for x in FIXED_VW_RE.findall(text) if int(x) >= 900]
         if fixed:
-            # Fixed desktop widths are acceptable only when paired with an
-            # explicit responsive override somewhere in the same stylesheet.
+            # Fixed/minimum desktop widths are acceptable only when paired with an
+            # explicit responsive override somewhere in the same stylesheet. Bounded
+            # max-width containers are intentionally not treated as fixed canvases.
             media_mobile = re.search(
                 r"@media\s*\([^)]*(?:max-width|width)[^)]*\)\s*\{",
                 text, re.I
@@ -119,7 +120,7 @@ def main() -> int:
             print(" - " + item)
         return 1
 
-    print("policy=mobile-first shell, contained horizontal scrolling only, no fixed desktop canvas")
+    print("policy=mobile-first shell, contained horizontal scrolling only, no fixed/minimum desktop canvas; max-width containers allowed")
     print("desktop-recovery=fine-pointer + hover preserves desktop shell at 600-700px CSS viewport")
     if warnings:
         print(f"review-warnings={len(warnings)}")

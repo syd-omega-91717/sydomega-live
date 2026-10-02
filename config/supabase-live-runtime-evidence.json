@@ -1,13 +1,23 @@
 {
   "schemaVersion": "1.0.0",
-  "observedAt": "2026-10-01",
-  "projectId": "nvgedlxlkdzvcelimbvq",
-  "evidenceScope": "read-only production/runtime observations captured during the post-merge hardening pass",
+  "observedAt": "2026-10-02",
+  "projectId": "ydqhzvvoyufiiqvzcjns",
+  "evidenceScope": "fresh target-project verification plus retained prior runtime observations; never treat historical claims as live proof",
   "supabase": {
     "edgeFunctions": {
-      "declaredInRepository": 18,
-      "deployedLive": 0,
-      "status": "BLOCKED"
+      "declaredInRepository": 19,
+      "deployedLive": 8,
+      "deployedNames": [
+        "agent-execute",
+        "concierge",
+        "concierge-orchestrator",
+        "evidence-graph",
+        "growth-orchestrator",
+        "product-orchestrator",
+        "secrets-health",
+        "stripe-webhook"
+      ],
+      "status": "PARTIAL"
     },
     "completeTask": {
       "publicExists": true,
@@ -15,7 +25,7 @@
       "securityDefiner": true,
       "searchPath": "public",
       "intendedMigrationState": "private.complete_task with search_path = ''",
-      "status": "BLOCKED"
+      "status": "UNVERIFIED"
     },
     "taskCompletionEventBridge": {
       "triggerPresent": false,
@@ -25,21 +35,58 @@
     "notificationRealtime": {
       "realtimeNotifications": false,
       "status": "BLOCKED"
+    },
+    "financialLedger": {
+      "schemaPresent": true,
+      "accounts": 0,
+      "transactions": 0,
+      "entries": 0,
+      "paymentEvents": 0,
+      "reconciliations": 0,
+      "entitlements": 0,
+      "serviceRoleFunctions": [
+        "omega_private.post_ledger_transaction",
+        "omega_private.record_stripe_payment"
+      ],
+      "status": "INTEGRATED_NO_FINANCIAL_ACTIVITY"
+    },
+    "agentRegistry": {
+      "agents": 12,
+      "status": "INTEGRATED"
+    },
+    "progression": {
+      "nodes": 729,
+      "semanticRecords": 729,
+      "userProgressRows": 0,
+      "status": "INTEGRATED"
+    },
+    "referral": {
+      "tablesPresent": true,
+      "rowCountsAllZero": true,
+      "status": "INTEGRATED"
+    },
+    "achievements": {
+      "verificationTablesPresent": true,
+      "rowCountsAllZero": true,
+      "status": "INTEGRATED"
+    },
+    "notifications": {
+      "tablePresent": true,
+      "rowCount": 0,
+      "status": "INTEGRATED"
     }
   },
   "repositoryMigrationLineage": {
-    "targetProjectId": "nvgedlxlkdzvcelimbvq",
-    "missingFromLiveMigrationJournal": [
-      "20261001090000",
-      "20261001100000",
-      "20261001110000",
-      "20261001120000"
-    ],
-    "status": "BLOCKED"
+    "targetProjectId": "ydqhzvvoyufiiqvzcjns",
+    "remoteMigrationCount": 265,
+    "latestRemoteMigration": "20261002072345",
+    "localParity": "NOT_YET_PROVEN",
+    "status": "BLOCKED",
+    "note": "Remote history snapshot refreshed from the target project; local/remote exact parity still requires the repository migration contract to pass."
   },
   "security": {
-    "anonExecutableSecurityDefinerFunctions": 64,
-    "status": "BLOCKED"
+    "status": "NOT_RECHECKED_IN_THIS_PASS",
+    "priorFinding": "52 authenticated SECURITY DEFINER review items remained after the targeted hardening pass; do not treat that prior count as a fresh target-project census."
   },
   "vercel": {
     "githubCheck": "failure",
@@ -50,7 +97,8 @@
   "publicRuntime": {
     "url": "https://sydomega.com",
     "httpStatus": 200,
+    "lastObserved": "2026-10-01",
     "browserMatrixVerified": false
   },
-  "interpretation": "This file is an evidence snapshot, not a live monitor. Never upgrade an item to VERIFIED without a fresh runtime observation."
+  "interpretation": "Canonical target project is ydqhzvvoyufiiqvzcjns. The previous nvgedlxlkdzvcelimbvq evidence snapshot was stale for this repository and is no longer used as production proof."
 }

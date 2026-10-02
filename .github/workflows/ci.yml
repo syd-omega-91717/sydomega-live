@@ -179,6 +179,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/module-contract.py']).returncode)
+      - name: Runtime frontier contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-runtime-frontier-contract.py']).returncode)
       - name: Context budget
         shell: python
         run: |

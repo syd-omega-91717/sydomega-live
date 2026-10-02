@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 300,
-    "latestRemoteMigration": "20261002080541"
+    "remoteMigrationCount": 301,
+    "latestRemoteMigration": "20261002080728"
   },
   "items": [
     {
@@ -860,7 +860,8 @@
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated"
+        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated",
+        "record_stripe_payment is pinned to search_path='' after live SECURITY DEFINER review."
       ],
       "blocker": "Current-branch Stripe Edge Function deployment is not freshly verified; requires a real signed Stripe event before VERIFIED."
     },

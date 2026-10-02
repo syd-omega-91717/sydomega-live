@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-module-runtime",
+  "purpose": "Canonical executable contract for all 18 SYD OMEGA product modules. A registered action is not evidence of deployed business behavior; lifecycle and runtime evidence remain authoritative.",
+  "lifecycle": [
+    "CONCEPT",
+    "SPECIFIED",
+    "DESIGNED",
+    "BUILT",
+    "INTEGRATED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "SIMULATION_ONLY",
+    "BLOCKED",
+    "DEPRECATED"
+  ],
+  "modules": [
+    {
+      "id": "CORE",
+      "actions": [
+        "profile.read",
+        "catalog.read",
+        "search.read"
+      ]
+    },
+    {
+      "id": "CONSULTANCY",
+      "actions": [
+        "intake.create",
+        "cases.read",
+        "deliverables.read"
+      ]
+    },
+    {
+      "id": "GAMING",
+      "actions": [
+        "missions.read",
+        "matrix.read",
+        "leaderboard.read"
+      ]
+    },
+    {
+      "id": "ACHIEVEMENTS",
+      "actions": [
+        "definitions.read",
+        "mine.read",
+        "certificate.read"
+      ]
+    },
+    {
+      "id": "FAMILY",
+      "actions": [
+        "graph.read",
+        "heritage.read",
+        "vault.read"
+      ]
+    },
+    {
+      "id": "MEDIA",
+      "actions": [
+        "library.read",
+        "jobs.read",
+        "publishing.read"
+      ]
+    },
+    {
+      "id": "BLOCKCHAIN_NFT",
+      "actions": [
+        "assets.read",
+        "ownership.verify",
+        "marketplace.read"
+      ]
+    },
+    {
+      "id": "COMMUNICATION",
+      "actions": [
+        "notifications.read",
+        "presence.read",
+        "events.read"
+      ]
+    },
+    {
+      "id": "HOROSCOPE",
+      "actions": [
+        "profile.read",
+        "reading.generate",
+        "provenance.read"
+      ]
+    },
+    {
+      "id": "NEWS",
+      "actions": [
+        "feed.read",
+        "topics.read",
+        "provenance.read"
+      ]
+    },
+    {
+      "id": "HERITAGE",
+      "actions": [
+        "timeline.read",
+        "documents.read",
+        "access.read"
+      ]
+    },
+    {
+      "id": "PROGRESS",
+      "actions": [
+        "matrix.read",
+        "tasks.read",
+        "verification.read"
+      ]
+    },
+    {
+      "id": "CREDENTIALS",
+      "actions": [
+        "passport.read",
+        "certificates.read",
+        "verify.read"
+      ]
+    },
+    {
+      "id": "LEGAL",
+      "actions": [
+        "terms.read",
+        "privacy.read",
+        "consent.read"
+      ]
+    },
+    {
+      "id": "ELEMENTAL",
+      "actions": [
+        "cosmology.read",
+        "simulation.run",
+        "interpretation.read"
+      ]
+    },
+    {
+      "id": "INVESTMENT",
+      "actions": [
+        "watchlist.read",
+        "research.read",
+        "simulation.read"
+      ]
+    },
+    {
+      "id": "INTELLIGENCE",
+      "actions": [
+        "evidence.read",
+        "agents.read",
+        "retrieval.read"
+      ]
+    },
+    {
+      "id": "HIERARCHY",
+      "actions": [
+        "roles.read",
+        "entitlements.read",
+        "governance.read"
+      ]
+    }
+  ]
+}

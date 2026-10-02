@@ -18,8 +18,8 @@
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 307,
-    "latestRemoteMigration": "20261002085641",
+    "remoteMigrationCount": 308,
+    "latestRemoteMigration": "20261002085812",
     "runtimeContract": "18 modules / 54 actions"
   },
   "items": [
@@ -203,7 +203,8 @@
         "public.omega_matrix_node_semantics"
       ],
       "evidence": [
-        "Target project: 729 nodes and 729 semantic records verified live."
+        "Target project: 729 nodes and 729 semantic records verified live.",
+        "Progress tasks.read and verification.read adapters now expose caller-scoped task/evidence state."
       ],
       "blocker": "User-specific progression journey and evidence remain before VERIFIED."
     },
@@ -307,7 +308,8 @@
         "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY.",
         "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08.",
         "omega-runtime-gateway version 3 exposes create_service_order; target project function enforces integrated-service allowlist and idempotency.",
-        "Gateway version 4 exposes create_consult_intake; target project idempotent intake function and runtime idempotency column are live."
+        "Gateway version 4 exposes create_consult_intake; target project idempotent intake function and runtime idempotency column are live.",
+        "Wave 3 target-project verification: 47 of 54 actions are lifecycle INTEGRATED; 4 remain DESIGNED and 3 remain SIMULATION_ONLY."
       ],
       "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
     },
@@ -403,7 +405,8 @@
         "omega_certificates"
       ],
       "evidence": [
-        "Target project certificate table and adapter exist; user certificate count is zero."
+        "Target project certificate table and adapter exist; user certificate count is zero.",
+        "Passport, certificate and certificate verification runtime adapters now execute against server-authoritative state."
       ],
       "blocker": "Public credential verification adapter remains DESIGNED."
     },
@@ -428,7 +431,7 @@
     {
       "id": "ORACLE-001",
       "domain": "module",
-      "state": "DESIGNED",
+      "state": "INTEGRATED",
       "requirement": "Oracle/horoscope content remains interpretive and provenance-labeled.",
       "source": [
         "Master Prompt",
@@ -439,9 +442,10 @@
         "oracle.html"
       ],
       "evidence": [
-        "Product catalog policy marks oracle features interpretive."
+        "Product catalog policy marks oracle features interpretive.",
+        "Deterministic horoscope reading/provenance adapters are live and explicitly labeled interpretive/simulation."
       ],
-      "blocker": "Canonical provenance adapter remains."
+      "blocker": "External-source provenance is intentionally empty; no predictive claim is made."
     },
     {
       "id": "A11Y-001",

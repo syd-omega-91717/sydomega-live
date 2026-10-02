@@ -1,0 +1,3 @@
+-- Historical migration-history alias for remote version 20261001035327.
+-- Equivalent task schema alignment is maintained by the canonical
+-- 20261001110000_omega_complete_task_schema_alignment.sql migration.

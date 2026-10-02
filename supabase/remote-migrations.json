@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 307,
-  "latestRemoteMigration": "20261002085641",
+  "remoteMigrationCount": 308,
+  "latestRemoteMigration": "20261002085816",
   "versions": [
     "0001",
     "0002",
@@ -310,7 +310,8 @@
     "20261002084948",
     "20261002085201",
     "20261002085421",
-    "20261002085641"
+    "20261002085641",
+    "20261002085816"
   ],
   "migrations": [
     {
@@ -1540,6 +1541,10 @@
     {
       "version": "20261002085641",
       "name": "omega_consultancy_intake_idempotency_boundary_20261002"
+    },
+    {
+      "version": "20261002085816",
+      "name": "omega_runtime_adapter_wave3_progress_credentials_horoscope_20261002"
     }
   ]
 }

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Contract for the governed notification worker and delivery boundary."""
 
+import argparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +11,7 @@ CONFIG = ROOT / 'supabase/config.toml'
 REMOTE = ROOT / 'supabase/remote-migrations.json'
 
 def main() -> int:
+    argparse.ArgumentParser(description=__doc__).parse_args()
     errors = []
     for path in (MIGRATION, WORKER, CONFIG, REMOTE):
         if not path.is_file():

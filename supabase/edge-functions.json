@@ -12,6 +12,8 @@
     "intel-feed",
     "market-price",
     "notify-access",
+    "omega-media-worker",
+    "omega-notification-worker",
     "omega-runtime-gateway",
     "product-orchestrator",
     "rankings",

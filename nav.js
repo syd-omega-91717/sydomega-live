@@ -252,6 +252,10 @@
       '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
       '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
       '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
+      'html.omega-desktop-pointer #omega-mob{display:none!important}',
+      'html.omega-desktop-pointer body{padding-bottom:0!important}',
+      'html.omega-desktop-pointer aside.omega-side,html.omega-desktop-pointer aside.side{display:flex!important}',
+      'html.omega-desktop-pointer .shell{flex-direction:row!important}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}aside.omega-side,aside.side{display:none!important}}',
       '@media(min-width:761px){#omega-mob{display:none}}',
       /* Top scan line */

@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 308,
-  "latestRemoteMigration": "20261002085816",
+  "remoteMigrationCount": 309,
+  "latestRemoteMigration": "20261002085943",
   "versions": [
     "0001",
     "0002",
@@ -311,7 +311,8 @@
     "20261002085201",
     "20261002085421",
     "20261002085641",
-    "20261002085816"
+    "20261002085816",
+    "20261002085943"
   ],
   "migrations": [
     {
@@ -1545,6 +1546,10 @@
     {
       "version": "20261002085816",
       "name": "omega_runtime_adapter_wave3_progress_credentials_horoscope_20261002"
+    },
+    {
+      "version": "20261002085943",
+      "name": "omega_runtime_lifecycle_truth_reconciliation_20261002"
     }
   ]
 }

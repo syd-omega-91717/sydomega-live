@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 313,
-  "latestRemoteMigration": "20261002091226",
+  "remoteMigrationCount": 316,
+  "latestRemoteMigration": "20261002094310",
   "versions": [
     "0001",
     "0002",
@@ -316,7 +316,10 @@
     "20261002090705",
     "20261002090722",
     "20261002090727",
-    "20261002091226"
+    "20261002091226",
+    "20261002094212",
+    "20261002094249",
+    "20261002094310"
   ],
   "migrations": [
     {
@@ -1570,6 +1573,18 @@
     {
       "version": "20261002091226",
       "name": "2026100210_enable_mfa_enrollment"
+    },
+    {
+      "version": "20261002094212",
+      "name": "20261002094500_integrate_elemental_runtime_20261002"
+    },
+    {
+      "version": "20261002094249",
+      "name": "20261002095000_fix_elemental_runtime_trim_20261002"
+    },
+    {
+      "version": "20261002094310",
+      "name": "20261002095500_fix_elemental_runtime_integer_width_20261002"
     }
   ]
 }

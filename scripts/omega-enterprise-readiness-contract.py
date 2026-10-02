@@ -29,7 +29,7 @@ REQUIRED = {
     "vercel_build": ROOT / "scripts/vercel-build.sh",
     "vercel_workflow": ROOT / ".github/workflows/vercel-production.yml",
     "vercel_config": ROOT / "vercel.json",
-    "env_example": ROOT / ".env.example",
+    "env_example": ROOT / "docs/ENVIRONMENT_VARIABLES.md",
 }
 
 SECRET_PATTERNS = [

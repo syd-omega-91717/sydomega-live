@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 304,
-  "latestRemoteMigration": "20261002084948",
+  "remoteMigrationCount": 305,
+  "latestRemoteMigration": "20261002085201",
   "versions": [
     "0001",
     "0002",
@@ -307,7 +307,8 @@
     "20261002080728",
     "20261002084512",
     "20261002084553",
-    "20261002084948"
+    "20261002084948",
+    "20261002085201"
   ],
   "migrations": [
     {
@@ -1525,6 +1526,10 @@
     {
       "version": "20261002084948",
       "name": "omega_product_runtime_adapters_wave2_20261002"
+    },
+    {
+      "version": "20261002085201",
+      "name": "omega_performance_fk_and_policy_cleanup_20261002"
     }
   ]
 }

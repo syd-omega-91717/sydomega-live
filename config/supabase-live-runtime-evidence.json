@@ -74,6 +74,13 @@
       "tablePresent": true,
       "rowCount": 0,
       "status": "INTEGRATED"
+    },
+    "serviceCatalog": {
+      "capabilities": 24,
+      "services": 24,
+      "serviceOrders": 0,
+      "integratedCapabilities": 6,
+      "status": "INTEGRATED"
     }
   },
   "repositoryMigrationLineage": {

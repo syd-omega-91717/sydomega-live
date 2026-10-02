@@ -29,7 +29,7 @@ find . -type f \
   ! -path './supabase/*' \
   ! -path './core/*' \
   ! -path './docs/*' \
-  ! -path './config/*' \
+  ! -path './config/omega-implementation-ledger.json' \
   ! -path './vendor/*' \
   ! -path './i18n/*' \
   ! -name 'vercel.json' ! -name 'package.json' \

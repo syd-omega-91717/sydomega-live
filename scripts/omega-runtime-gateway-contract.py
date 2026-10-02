@@ -6,17 +6,21 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[1]
 GATEWAY=ROOT/"supabase/functions/omega-runtime-gateway/index.ts"
+CONFIG=ROOT/"supabase/config.toml"
 
 def main()->int:
     if "--help" in sys.argv:
         print(__doc__.strip())
         return 0
-    if not GATEWAY.is_file():
-        print("OMEGA RUNTIME GATEWAY CONTRACT: FAIL — gateway missing")
+    if not GATEWAY.is_file() or not CONFIG.is_file():
+        print("OMEGA RUNTIME GATEWAY CONTRACT: FAIL — gateway/config missing")
         return 1
     text=GATEWAY.read_text(encoding="utf-8")
-    required=("createSupabaseContext","auth: 'user'","ctx.supabaseAdmin","verify_jwt")
+    config=CONFIG.read_text(encoding="utf-8")
+    required=("createSupabaseContext","auth: 'user'","ctx.supabaseAdmin")
     missing=[x for x in required if x not in text]
+    if "[functions.omega-runtime-gateway]" not in config or "verify_jwt = true" not in config.split("[functions.omega-runtime-gateway]",1)[1]:
+        missing.append("supabase/config.toml: [functions.omega-runtime-gateway] verify_jwt = true")
     forbidden=("SUPABASE_SERVICE_ROLE_KEY","SUPABASE_ANON_KEY",".auth.getUser(")
     found=[x for x in forbidden if x in text]
     if missing or found:
@@ -24,7 +28,7 @@ def main()->int:
         if missing: print(" missing:", ", ".join(missing))
         if found: print(" forbidden legacy/runtime patterns:", ", ".join(found))
         return 1
-    print("OMEGA RUNTIME GATEWAY CONTRACT: PASS — user auth context + server admin boundary")
+    print("OMEGA RUNTIME GATEWAY CONTRACT: PASS — user auth context + verify_jwt=true + server admin boundary")
     return 0
 
 if __name__=="__main__":

@@ -1,0 +1,4 @@
+project_id = "ydqhzvvoyufiiqvzcjns"
+
+[functions.omega-notification-worker]
+verify_jwt = false

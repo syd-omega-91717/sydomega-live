@@ -13,49 +13,42 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "2f0646511c5192fed016b2279dbc8b7730305ef8",
-    "branch": "codex/security-advisor-hardening-20261002",
-    "pullRequest": 619,
-    "branch": "codex/ci-schema-contract-20261002",
-    "pullRequest": 621,
+    "main": "4f12372912dceab5d1b0925d031818fb62dbefec",
+    "branch": "codex/unified-product-runtime-20261002",
+    "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "supabaseSecurity": "2026-10-02 target-project verification",
-    "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 266,
-    "latestRemoteMigration": "20261002072542"
-    "remoteMigrationCount": 301,
-    "latestRemoteMigration": "20261002080728"
+    "remoteMigrationCount": 303,
+    "latestRemoteMigration": "20261002084553",
+    "runtimeContract": "18 modules / 54 actions"
   },
   "items": [
     {
       "id": "GOV-001",
       "domain": "governance",
+      "state": "BUILT",
+      "requirement": "Maintain one canonical evidence-bound implementation ledger.",
       "source": [
-        "999 Blueprint",
         "Master Prompt",
         "Absolute.txt"
       ],
-      "requirement": "Maintain one canonical source-of-truth ledger; never equate narrative specification with shipped capability.",
-      "state": "BUILT",
       "repo": [
-        "config/omega-implementation-ledger.json",
-        "docs/OMEGA_IMPLEMENTATION_LEDGER.md"
+        "config/omega-implementation-ledger.json"
       ],
       "evidence": [
-        "PR-605"
+        "Rebuilt as valid JSON on 2026-10-02 after detecting conflicting branch-era duplicate keys."
       ],
       "blocker": null
     },
     {
       "id": "WEB-001",
       "domain": "web",
+      "state": "TESTED",
+      "requirement": "Every HTML surface is governed by responsive/readability contracts.",
       "source": [
         "Master Prompt",
         "Document.txt"
       ],
-      "requirement": "Every HTML surface must be usable across laptop and mobile widths.",
-      "state": "TESTED",
       "repo": [
         "scripts/omega-responsive-surface-contract.py",
         "docs/RESPONSIVE_PRODUCTION_STANDARD.md"
@@ -63,923 +56,455 @@
       "evidence": [
         "PR-604"
       ],
-      "blocker": "Live browser matrix still needs current production verification."
-    },
-    {
-      "id": "WEB-002",
-      "domain": "web",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Use one canonical page-estate count and remove stale contradictory counts.",
-      "state": "BUILT",
-      "repo": [
-        "control-center.html",
-        "dashboard.html",
-        "ecosystem.html",
-        "i18n.js",
-        "notifications.html",
-        "roadmap.html",
-        "world-shell.html"
-      ],
-      "evidence": [
-        "CI-page-count-contract"
-      ],
-      "blocker": "Live site currently advertises 216 surfaces while repo estate is 217 HTML files; terminology needs formalization."
+      "blocker": "Current production browser matrix still needs fresh verification."
     },
     {
       "id": "SEC-001",
       "domain": "security",
+      "state": "BLOCKED",
+      "requirement": "No privileged credentials are shipped in source and exposed credentials are rotated/revoked.",
       "source": [
         "Master Prompt",
         "Absolute.txt"
       ],
-      "requirement": "No secrets in shipped source; exposed credentials are rotated/revoked and removed from tracked/history copies.",
-      "state": "BLOCKED",
       "repo": [
         "docs/SECURITY.md"
       ],
       "evidence": [
-        "Source-doc credential exposure audit"
+        "Attached source audit identified credential-shaped provider material."
       ],
-      "blocker": "Attached source material contained actual-looking provider credentials; rotation/revocation and history purge remain required."
+      "blocker": "Provider/account-owner rotation, revocation and history purge remain required where applicable."
     },
     {
       "id": "SEC-002",
       "domain": "supabase",
+      "state": "TESTED",
+      "requirement": "RLS and function execution privileges match actor and exposure boundaries.",
       "source": [
         "Master Prompt",
         "Document.txt"
       ],
-      "requirement": "RLS and function execution privileges must match actor and exposure boundary.",
-      "state": "TESTED",
       "repo": [
         "supabase/migrations",
         "scripts/supabase-migration-security-audit.py"
       ],
       "evidence": [
-        "SUPA-SEC-20261002",
-        "Live SQL verification: anon_execute=0 for 80 public functions"
+        "Target project security hardening; current advisor reports zero authenticated SECURITY DEFINER findings."
       ],
-      "blocker": "Supabase security advisor now reports zero authenticated SECURITY DEFINER findings on the canonical target; leaked-password protection remains a separate dashboard-level security warning."
+      "blocker": "Leaked-password protection remains a Supabase Auth dashboard warning."
     },
     {
       "id": "DB-001",
       "domain": "supabase",
+      "state": "INTEGRATED",
+      "requirement": "Repository migration state and the canonical target migration journal remain aligned.",
       "source": [
         "Master Prompt",
         "Absolute.txt"
       ],
-      "requirement": "Repository migrations and live migration journal agree in both directions.",
-      "state": "INTEGRATED",
       "repo": [
-        "scripts/migration-drift.py",
         "supabase/remote-migrations.json",
-        "supabase/migrations"
+        "supabase/migrations",
+        "scripts/migration-drift.py"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns migration history queried 2026-10-02: 265 remote versions; repository snapshot refreshed to that exact remote list"
+        "Target project ydqhzvvoyufiiqvzcjns has 303 remote migration versions; latest verified version 20261002084553."
       ],
-      "blocker": "Exact local migration-file parity is not yet proven; do not merge until migration-drift/repository-integrity gates pass."
-        "Target project ydqhzvvoyufiiqvzcjns: 293 remote migration versions now align with repository migration timestamps after verified application and history repair on 2026-10-02.",
-        "Four historical remote-only versions are represented by explicit repository alias files; 25 local-only migrations were actually executed against the target before their history entries were repaired.",
-        "Fresh CI migration-drift proof remains the final acceptance gate."
-      ],
-      "blocker": "Await CI migration-drift/repository-integrity pass on the reconciled branch."
-    },
-    {
-      "id": "OBJ-001",
-      "domain": "runtime",
-      "source": [
-        "Document.txt",
-        "999 Blueprint"
-      ],
-      "requirement": "Canonical object envelope and graph are available to all runtime consumers.",
-      "state": "INTEGRATED",
-      "repo": [
-        "omega-object-runtime.js",
-        "omega-object-graph-runtime.js",
-        "bg.js"
-      ],
-      "evidence": [
-        "Omega Object Contract run 72",
-        "PR-605"
-      ],
-      "blocker": null
-    },
-    {
-      "id": "CSP-001",
-      "domain": "security",
-      "source": [
-        "Master Prompt"
-      ],
-      "requirement": "Prevent inline script growth and ratchet legacy inline handlers downward.",
-      "state": "TESTED",
-      "repo": [
-        "scripts/csp-inline-ratchet.py",
-        "scripts/csp-inline-baseline.json",
-        "control-center-runtime.js",
-        "platform-kernel-runtime.js"
-      ],
-      "evidence": [
-        "PR-605"
-      ],
-      "blocker": "Legacy inline handlers remain across the estate; migration is incremental."
+      "blocker": "Fresh CI migration-drift/repository-integrity proof remains required."
     },
     {
       "id": "CI-001",
       "domain": "ci",
+      "state": "TESTED",
+      "requirement": "CI verifies syntax, contracts, security and release artifacts.",
       "source": [
         "Master Prompt",
         "Absolute.txt"
       ],
-      "requirement": "CI verifies syntax, contracts, supply-chain controls, release artifacts and runtime boundaries.",
-      "state": "TESTED",
       "repo": [
         ".github/workflows",
         "scripts"
       ],
       "evidence": [
-        "Workflow Contract run 2089",
-        "Omega Object Contract run 72",
-        "Supabase Migration Security Audit run 273"
+        "Existing contract suite and production workflow gates."
       ],
-      "blocker": "Full release-readiness suite has not yet reached a clean run on the latest head."
+      "blocker": "Latest branch still needs a fresh clean CI run."
     },
     {
       "id": "PAY-001",
       "domain": "payments",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
+      "state": "INTEGRATED",
       "requirement": "Stripe payments are webhook-authoritative, idempotent and ledger-backed.",
-      "state": "DESIGNED",
-      "repo": [
-        "payments.html",
-        "subscriptions.html",
-        "supabase/migrations"
-      ],
-      "evidence": [
-        "Architecture audit"
-      ],
-      "blocker": "No fresh production checkout + signed webhook + entitlement reconciliation proof in this pass."
-    },
-    {
-      "id": "LEDGER-001",
-      "domain": "economics",
-      "source": [
-        "999 Blueprint",
-        "Master Prompt"
-      ],
-      "requirement": "Balances, rewards, referrals and treasury movements use an append-only ledger and reconciliation path.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql",
-        "public.omega_ledger_accounts",
-        "public.omega_ledger_transactions",
-        "public.omega_ledger_entries",
-        "public.omega_payment_events",
-        "public.omega_entitlements",
-        "omega_private.post_ledger_transaction"
-      ],
-      "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: ledger/reconciliation tables and two service-role-only posting functions verified live 2026-10-02",
-        "Live counts: accounts=0, transactions=0, entries=0, payment_events=0, reconciliations=0, entitlements=0"
-      ],
-      "blocker": "No real payment was fabricated; fresh signed Stripe checkout/webhook/settlement evidence and downstream entitlement execution remain."
-    },
-    {
-      "id": "AGENT-001",
-      "domain": "intelligence",
       "source": [
         "Master Prompt",
         "999 Blueprint"
       ],
-      "requirement": "12-agent system uses explicit registry, capabilities, tool permissions, approval policy and audit trail.",
-      "state": "INTEGRATED",
-      "repo": [
-        "config",
-        "omega-agent-*",
-        "scripts/omega_fabric_platform_gate.py"
-      ],
-      "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: 12 governed agents verified live 2026-10-02; all default to DENY/approval-governed policies."
-      ],
-      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
-    },
-    {
-      "id": "MATRIX-001",
-      "domain": "progression",
-      "source": [
-        "999 Blueprint",
-        "Master Prompt"
-      ],
-      "requirement": "729-node progression is modeled with prerequisites, verification, completion and rewards.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
-        "public.omega_matrix_nodes",
-        "public.matrix_tracks",
-        "public.matrix_progress"
-      ],
-      "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: 729 canonical progression nodes and 729 semantic records verified live 2026-10-02; no user completions fabricated."
-      ],
-      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
-    },
-    {
-      "id": "ORACLE-001",
-      "domain": "oracle",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Oracle/horoscope features preserve a deterministic interpretive boundary and do not present divination as verified factual prediction.",
-      "state": "DESIGNED",
-      "repo": [
-        "horoscope.html",
-        "oracle.html"
-      ],
-      "evidence": [
-        "Astera methodology review"
-      ],
-      "blocker": "Shared provenance/disclaimer contract is not yet canonicalized."
-    },
-    {
-      "id": "VIDEO-001",
-      "domain": "video",
-      "source": [
-        "Master Prompt"
-      ],
-      "requirement": "Presenter/video generation is provider-abstracted with consent, job state, storage and cost controls.",
-      "state": "DESIGNED",
-      "repo": [
-        "docs",
-        "media surfaces"
-      ],
-      "evidence": [
-        "HeyGen/Higgsfield capability review"
-      ],
-      "blocker": "Provider abstraction and operational guardrails are not yet canonicalized."
-    },
-    {
-      "id": "A11Y-001",
-      "domain": "accessibility",
-      "source": [
-        "Master Prompt",
-        "Document.txt"
-      ],
-      "requirement": "Controls remain keyboard/touch accessible with visible focus and minimum target sizing.",
-      "state": "DESIGNED",
-      "repo": [
-        "css/omega-accessibility-audit.css",
-        "scripts/omega-responsive-surface-contract.py"
-      ],
-      "evidence": [
-        "WCAG 2.2 reference",
-        "Static contracts"
-      ],
-      "blocker": "No full browser accessibility audit across all 217 surfaces."
-    },
-    {
-      "id": "PERF-001",
-      "domain": "performance",
-      "source": [
-        "Master Prompt"
-      ],
-      "requirement": "Production experience is measured with performance budgets and browser/user evidence.",
-      "state": "DESIGNED",
-      "repo": [
-        "docs",
-        "scripts"
-      ],
-      "evidence": [
-        "Web performance research"
-      ],
-      "blocker": "No current measured LCP/INP/CLS dataset or bundle-budget report in this pass."
-    },
-    {
-      "id": "DEP-001",
-      "domain": "deployment",
-      "source": [
-        "Master Prompt",
-        "Document.txt"
-      ],
-      "requirement": "Vercel preview/production plus Supabase form a verified deployment path.",
-      "state": "BLOCKED",
-      "repo": [
-        ".github/workflows/vercel-production.yml"
-      ],
-      "evidence": [
-        "PR-605 Vercel check pending",
-        "Live site HTTP 200 observed"
-      ],
-      "blocker": "Vercel GitHub check is failing on provider build-rate-limit and connector authorization remains unavailable; live production acceptance is not verified."
-    },
-    {
-      "id": "TRUTH-001",
-      "domain": "truth",
-      "source": [
-        "All five source documents"
-      ],
-      "requirement": "Statements distinguish specified, built, tested, deployed, verified, planned and speculative capability.",
-      "state": "BUILT",
-      "repo": [
-        "config/omega-platform-manifest.json",
-        "config/omega-implementation-ledger.json",
-        "docs/OMEGA_IMPLEMENTATION_LEDGER.md"
-      ],
-      "evidence": [
-        "PR-605",
-        "Existing truth contracts"
-      ],
-      "blocker": "Full 999-point source-to-ledger mapping is not complete."
-    },
-    {
-      "id": "EDGE-001",
-      "domain": "supabase",
-      "source": [
-        "Master Prompt",
-        "Document.txt"
-      ],
-      "requirement": "Every repository-declared production Edge Function has an explicit live deployment state and verification record.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/functions",
-        "supabase/edge-functions.json",
-        "config/supabase-edge-runtime-evidence.json"
-      ],
-      "evidence": [
-        "Supabase live list_edge_functions 2026-10-02: omega-runtime-gateway ACTIVE v1, verify_jwt=true.",
-        "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-      "blocker": "No user state was fabricated; fresh happy-path runtime evidence with a real authorized member and signed provider events remains before VERIFIED."
-    },
-    {
-      "id": "SEC-003",
-      "domain": "supabase",
-      "source": [
-        "Master Prompt",
-        "Absolute.txt"
-      ],
-      "requirement": "Privileged SECURITY DEFINER RPCs must have explicit least-privilege role grants and caller classification.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations",
-        "config/omega-product-catalog.json"
-      ],
-      "evidence": [
-        "SUPA-SEC-20261002",
-        "Body review identified award_points, compute_leaderboard_snapshot and my_time_sovereign as high-risk authenticated-callable mutators; live execution revoked for authenticated/anon/public."
-      ],
-      "blocker": "65 authenticated SECURITY DEFINER functions remain after this targeted hardening pass; continue body-by-body classification and least-privilege grants."
-    },
-    {
-      "id": "PRODUCT-001",
-      "domain": "product",
-      "source": [
-        "All five source documents"
-      ],
-      "requirement": "The 18-module universe must have executable product families, lifecycle states, dependencies and production acceptance gates.",
-      "state": "BUILT",
-      "repo": [
-        "config/omega-product-catalog.json",
-        "scripts/omega-product-catalog-contract.py"
-      ],
-      "evidence": [
-        "Product catalog contract"
-      ],
-      "blocker": null
-    },
-    {
-      "id": "BLUEPRINT-001",
-      "domain": "governance",
-      "source": [
-        "999 Blueprint"
-      ],
-      "requirement": "Every numbered blueprint point must remain traceable to a productization decision rather than being treated as deployed reality.",
-      "state": "DESIGNED",
-      "repo": [
-        "config/omega-implementation-ledger.json",
-        "config/omega-product-catalog.json"
-      ],
-      "evidence": [
-        "Source inventory audit: 399 numbered bullet occurrences were extracted; 391 unique point numbers; 608 point numbers in the nominal 1-999 range have no numbered bullet; eight numbers are duplicated (100-104,112-113,133)."
-      ],
-      "blocker": "The file is labeled a 999-point blueprint but the numbered bullet inventory is 399 occurrences/391 unique points. Every point occurrence must be reconciled to its section/source intent before implementation status can be assigned."
-    },
-    {
-      "id": "DB-002",
-      "domain": "supabase",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Canonical progression infrastructure must be represented as durable database state rather than visual-only coordinates.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
-        "public.omega_matrix_nodes"
-      ],
-      "evidence": [
-        "Live 729-node registry verification",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "ECON-001",
-      "domain": "economics",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Financial state must be server-authoritative, idempotent, double-entry and auditable.",
-      "state": "BUILT",
-      "repo": [
-        "supabase/migrations/20261002013000_create_omega_financial_ledger.sql"
-      ],
-      "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: double-entry ledger schema and service-role-only posting boundary verified live 2026-10-02"
-      ],
-      "blocker": "Provider settlement, reconciliation and production payment smoke testing remain."
-    },
-    {
-      "id": "SEC-004",
-      "domain": "supabase",
-      "source": [
-        "Master Prompt",
-        "Absolute.txt"
-      ],
-      "requirement": "All SECURITY DEFINER RPCs must have an explicit caller/risk policy before production authorization is considered hardened.",
-      "state": "DESIGNED",
-      "repo": [
-        "config/omega-rpc-security-policy.json",
-        "scripts/omega-rpc-security-policy-contract.py"
-      ],
-      "evidence": [
-        "Live census: 68 public SECURITY DEFINER functions; repository registry classifies all 68."
-      ],
-      "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
-    },
-    {
-      "id": "MATRIX-002",
-      "domain": "progress",
-      "source": [
-        "Master Prompt",
-        "omega-canon.json"
-      ],
-      "requirement": "User progression must be durable and separate from node definitions; completion must require evidence and verification.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
-        "public.omega_matrix_progress"
-      ],
-      "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "CANON-001",
-      "domain": "architecture",
-      "source": [
-        "omega-canon.json",
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Nine-fold systems and twelve-fold systems must remain distinct canonical dimensions; no silent flattening.",
-      "state": "DESIGNED",
-      "repo": [
-        "config/omega-product-catalog.json",
-        "config/omega-agent-registry.json"
-      ],
-      "evidence": [
-        "Source audit identified 9^3=729 and 9^5=59,049 canonical claims plus twelve-agent/twelve-module structures."
-      ],
-      "blocker": "Create a formal canon registry mapping each dimensional system to its owning product/domain and prohibit accidental cross-mapping."
-    },
-    {
-      "id": "SERVICE-001",
-      "domain": "platform",
-      "source": [
-        "SYD OMEGA 91717.txt",
-        "Product Catalog"
-      ],
-      "requirement": "Turn modules and future concepts into governed executable services with lifecycle, authorization, data class, commercial model and rollback.",
-      "state": "BLOCKED",
-      "repo": [
-        "public.omega_capabilities",
-        "public.omega_services",
-        "supabase/migrations/20261002014000_create_omega_capability_service_catalog.sql"
-      ],
-      "evidence": [
-        "Live Supabase verification: 24 capability records and 24 service records.",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-        "Target project ydqhzvvoyufiiqvzcjns: 24 capability records and 24 service records verified live 2026-10-02; 0 service orders; 6 capabilities currently marked INTEGRATED and the remainder remain DESIGNED until runtime evidence exists."
-      ],
-      "blocker": "Individual service runtimes, provider integrations, tests and production evidence remain before VERIFIED."
-    },
-    {
-      "id": "SERVICE-002",
-      "domain": "commerce",
-      "source": [
-        "999 Blueprint",
-        "Master Prompt"
-      ],
-      "requirement": "Service ordering must be idempotent and connect authorization, provider settlement, entitlement and delivery.",
-      "state": "DESIGNED",
-      "repo": [
-        "public.omega_service_orders",
-        "public.omega_entitlements",
-        "public.omega_payment_events"
-      ],
-      "evidence": [
-        "Service order schema includes unique idempotency_key and provider/entitlement references."
-      ],
-      "blocker": "Stripe/provider webhook integration and reconciliation remain outstanding."
-    },
-    {
-      "id": "REF-001",
-      "domain": "referrals",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Referral attribution, qualification, fraud signals and rewards are server-authoritative, one-attribution, idempotent and reversible.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
-        "config/omega-referral-policy.json"
-      ],
-      "evidence": [
-        "Referral primitives now verified live on ydqhzvvoyufiiqvzcjns: codes/clicks/attributions/conversions/rewards/fraud tables exist; all live row counts remain 0."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "ACH-001",
-      "domain": "achievements",
-      "source": [
-        "Master Prompt",
-        "Document.txt",
-        "999 Blueprint"
-      ],
-      "requirement": "Achievements and certificates require evidence-backed verification and support revocation.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
-        "config/omega-achievement-policy.json"
-      ],
-      "evidence": [
-        "Achievement verification primitives now verified live on ydqhzvvoyufiiqvzcjns; definitions/user achievements/verifications/certificates currently contain 0 rows."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "AGENT-002",
-      "domain": "ai",
-      "source": [
-        "Master Prompt",
-        "SYD OMEGA 91717.txt"
-      ],
-      "requirement": "Agent execution uses queued tasks, explicit tool grants, approval gates, idempotency and task audit events.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql",
-        "config/omega-agent-execution-policy.json"
-      ],
-      "evidence": [
-        "Governed agent task/tool-grant primitives now verified live on ydqhzvvoyufiiqvzcjns; task and grant rows remain 0."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "NOTIFY-001",
-      "domain": "notifications",
-      "source": [
-        "Master Prompt"
-      ],
-      "requirement": "Notification delivery is durable, user-scoped, idempotent and channel-aware.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql"
-      ],
-      "evidence": [
-        "Durable notification table now verified live on ydqhzvvoyufiiqvzcjns; notification rows remain 0."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "MATRIX-003",
-      "domain": "progression",
-      "source": [
-        "999 Blueprint",
-        "Document.txt"
-      ],
-      "requirement": "Every 729 node has a separate semantic governance record without fabricating objectives, prerequisites, achievements or rewards.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002021000_create_omega_matrix_semantics.sql"
-      ],
-      "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: 729 semantic governance rows verified live 2026-10-02; objectives remain explicitly source-required."
-      ],
-      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
-    },
-    {
-      "id": "PAY-002",
-      "domain": "payments",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Provider payment events are uniquely keyed and settlement is reconciled separately from user-visible ledger state.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002022000_payment_reconciliation_guardrails.sql"
-      ],
-      "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "ORCH-001",
-      "domain": "orchestration",
-      "source": [
-        "Master Prompt",
-        "SYD OMEGA 91717.txt"
-      ],
-      "requirement": "Server-only orchestration functions connect governed referral, achievement, agent and notification state transitions with idempotency.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002024000_server_orchestration_primitives.sql"
-      ],
-      "evidence": [
-        "Live privilege verification: 4 omega_private functions execute only for service_role; anon/authenticated false",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "EVENT-001",
-      "domain": "event_fabric",
-      "source": [
-        "Master Prompt",
-        "SYD OMEGA 91717.txt"
-      ],
-      "requirement": "Durable allowlisted platform events, evidence records and audit logs with idempotency, correlation and server-authoritative writes.",
-      "state": "INTEGRATED",
-      "repo": [
-        "supabase/migrations/20261002025000_durable_event_evidence_audit_fabric.sql"
-      ],
-      "evidence": [
-        "Live verification: 3 tables, 3 RLS policies, zero fabricated rows; anonymous SELECT denied and authenticated INSERT denied"
-      ],
-      "blocker": "Event ingestion service/edge function must connect runtime actions to the fabric."
-    },
-    {
-      "id": "REF-002",
-      "domain": "referrals",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "Referral codes and first-touch attribution are issued and committed only through server-side, one-attribution state transitions.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
-        "omega_private.issue_referral_code",
-        "omega_private.attribute_referral"
-      ],
-      "evidence": [
-        "Live privilege verification: both functions service_role-only; anon/authenticated false",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "AGENT-003",
-      "domain": "ai",
-      "source": [
-        "Master Prompt",
-        "SYD OMEGA 91717.txt"
-      ],
-      "requirement": "Governed agent tasks have a server-side claim/complete/fail lifecycle with worker identity and evidence payloads.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
-        "omega_private.claim_agent_task",
-        "omega_private.complete_agent_task",
-        "omega_private.fail_agent_task"
-      ],
-      "evidence": [
-        "Live privilege verification: claim/complete/fail functions service_role-only; no client execution grant",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "NOTIFY-002",
-      "domain": "notifications",
-      "source": [
-        "Master Prompt"
-      ],
-      "requirement": "Queued notifications have server-side delivered/failed transitions with provider/channel metadata.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
-        "omega_private.mark_notification_delivered",
-        "omega_private.mark_notification_failed"
-      ],
-      "evidence": [
-        "Live privilege verification: delivery transition functions service_role-only",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "ACH-002",
-      "domain": "achievements",
-      "source": [
-        "999 Blueprint"
-      ],
-      "requirement": "The source-defined 1–3, 4–6 and 7–9 progression bands are represented as digital achievement products without auto-awarding users.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002031000_progression_achievement_productization.sql",
-        "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
-      ],
-      "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "MATRIX-004",
-      "domain": "progression",
-      "source": [
-        "999 Blueprint",
-        "Document.txt"
-      ],
-      "requirement": "The 729-node semantic layer maps each governed stage band to an explicit digital achievement outcome while preserving evidence-required verification.",
-      "state": "BLOCKED",
-      "repo": [
-        "public.omega_matrix_node_semantics",
-        "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
-      ],
-      "evidence": [
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "SEC-005",
-      "domain": "security",
-      "source": [
-        "Supabase security advisor",
-        "Supabase Data API security"
-      ],
-      "requirement": "Privileged service/automation SECURITY DEFINER RPCs are no longer callable by anon/authenticated roles.",
-      "state": "BLOCKED",
-      "repo": [
-        "supabase/migrations/20261002033000_security_advisor_hardening.sql"
-      ],
-      "evidence": [
-        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52.",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
-        "Supabase security advisor now reports zero authenticated SECURITY DEFINER findings on target project ydqhzvvoyufiiqvzcjns after explicit revocation/invoker conversion.",
-        "Live server-only RLS policies verified; no fabricated user state."
-      ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
-    },
-    {
-      "id": "PAY-003",
-      "domain": "payments",
-      "source": [
-        "Master Prompt",
-        "Enterprise Platform Standard"
-      ],
-      "requirement": "Verified Stripe payment amounts are posted through an idempotent double-entry settlement and recorded in reconciliation.",
-      "state": "INTEGRATED",
       "repo": [
         "supabase/functions/stripe-webhook/index.ts",
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated"
-        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated",
-        "record_stripe_payment is pinned to search_path='' after live SECURITY DEFINER review."
+        "Target project settlement boundary is present; real payment counts remain zero and no synthetic payment was created."
       ],
-      "blocker": "Current-branch Stripe Edge Function deployment is not freshly verified; requires a real signed Stripe event before VERIFIED."
+      "blocker": "Real signed Stripe test traffic and entitlement reconciliation remain before VERIFIED."
     },
     {
-      "id": "PAY-004",
-      "domain": "payments",
-      "source": [
-        "Enterprise Platform Standard"
-      ],
-      "requirement": "The commercial-to-service lifecycle is represented as a repository-enforced production chain contract.",
-      "state": "BUILT",
-      "repo": [
-        "config/omega-production-chain.json",
-        "scripts/omega-production-chain-contract.py",
-        ".github/workflows/vercel-production.yml"
-      ],
-      "evidence": [
-        "Production chain contract is wired into Vercel validation workflow."
-      ],
-      "blocker": "Live Vercel verification remains blocked by provider authorization."
-    }
-  ,
-    {
-      "id": "ACH-003",
-      "domain": "achievements",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint",
-        "config/omega-achievement-policy.json"
-      ],
-      "requirement": "Verified achievements can issue idempotent digital certificates and notify the member without client-authoritative state.",
-      "state": "TESTED",
-      "repo": [
-        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql",
-        "supabase/migrations/20261002075836_fix_achievement_assignment_function_20261002.sql",
-        "scripts/omega-achievement-referral-contract.py"
-      ],
-      "evidence": [
-        "Canonical target function guard tests passed without creating user achievements or certificates.",
-        "Certificate issuance requires verified achievement plus approved verification evidence."
-        "Verification idempotency conflicts are rejected without mutating achievement state."
-      ],
-      "blocker": "No member achievement was fabricated; a real authorized member/evidence path is required for full end-to-end verification."
-    },
-    {
-      "id": "REF-003",
-      "domain": "referrals",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint",
-        "config/omega-referral-policy.json"
-      ],
-      "requirement": "Confirmed referral conversions create one idempotent reward, gate on active high-risk fraud signals, and support transactional reversal.",
-      "state": "TESTED",
-      "repo": [
-        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql",
-        "scripts/omega-achievement-referral-contract.py"
-      ],
-      "evidence": [
-        "Canonical target transition guard tests passed with zero referral rewards created.",
-        "Reward posting is locked, server-only, conversion-confirmed, fraud-gated and reversible."
-      ],
-      "blocker": "No referral reward was fabricated; real qualifying conversion/provider settlement evidence is required before VERIFIED."
-    },
-    {
-      "id": "SEC-006",
-      "domain": "supabase",
-      "source": [
-        "Supabase security advisor",
-        "Supabase Data API security"
-      ],
-      "requirement": "Exposed read-only SECURITY DEFINER functions use invoker semantics and privileged execution functions are service-role-only.",
-      "state": "TESTED",
-      "repo": [
-        "supabase/migrations/20261002075620_tighten_remaining_security_definer_boundaries_20261002.sql",
-        "supabase/migrations/20261002075646_convert_read_only_security_definers_to_invoker_20261002.sql",
-        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql"
-      ],
-      "evidence": [
-        "Supabase security advisor on ydqhzvvoyufiiqvzcjns reports only leaked-password protection warning; authenticated SECURITY DEFINER finding count is zero."
-      ],
-      "blocker": "Enable leaked-password protection in Supabase Auth dashboard before security acceptance is fully closed."
-    }
-  ,
-    {
-      "id": "NOTIFY-003",
-      "domain": "notifications",
-      "source": [
-        "Master Prompt",
-        "Enterprise Platform Standard"
-      ],
-      "requirement": "Durable notification queues have a server-only claim/reclaim worker and truthful in-app delivery transition without pretending external providers are configured.",
+      "id": "LEDGER-001",
+      "domain": "economics",
       "state": "INTEGRATED",
+      "requirement": "Financial movements use immutable double-entry ledger and reconciliation.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
       "repo": [
-        "supabase/migrations/20261002080219_notification_worker_claim_boundary_20261002.sql",
-        "supabase/functions/omega-notification-worker/index.ts",
-        "supabase/config.toml"
+        "public.omega_ledger_accounts",
+        "public.omega_ledger_transactions",
+        "public.omega_ledger_entries",
+        "public.omega_payment_reconciliation"
       ],
       "evidence": [
-        "Canonical target ydqhzvvoyufiiqvzcjns: omega-notification-worker ACTIVE v1 with secret-auth handler and verify_jwt=false platform setting.",
-        "Worker claims only in_app notifications; email/sms/push remain unclaimed until provider adapters are configured."
+        "Target project financial tables and service-only posting boundary verified; live financial counts remain zero."
       ],
-      "blocker": "Secret-auth invocation and scheduled trigger still require an authorized service secret/cron configuration; no notification rows were fabricated."
+      "blocker": "Real provider settlement evidence remains before VERIFIED."
+    },
+    {
+      "id": "AGENT-001",
+      "domain": "intelligence",
+      "state": "INTEGRATED",
+      "requirement": "12 agents use explicit registry, tools, approval and audit policy.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "config/omega-agent-registry.json",
+        "public.omega_agents"
+      ],
+      "evidence": [
+        "Target project: 12 governed agents verified live."
+      ],
+      "blocker": "Authenticated headless execution and evidence-backed task completion remain."
+    },
+    {
+      "id": "MATRIX-001",
+      "domain": "progression",
+      "state": "INTEGRATED",
+      "requirement": "729-node progression is modeled with semantic, verification and reward boundaries.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "public.omega_matrix_nodes",
+        "public.omega_matrix_node_semantics"
+      ],
+      "evidence": [
+        "Target project: 729 nodes and 729 semantic records verified live."
+      ],
+      "blocker": "User-specific progression journey and evidence remain before VERIFIED."
+    },
+    {
+      "id": "REF-001",
+      "domain": "referrals",
+      "state": "INTEGRATED",
+      "requirement": "Referral attribution, conversion, reward and fraud signals are server-authoritative.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "public.omega_referral_codes",
+        "public.omega_referral_attributions",
+        "public.omega_referral_conversions",
+        "public.omega_referral_rewards",
+        "public.omega_fraud_signals"
+      ],
+      "evidence": [
+        "Target project tables exist; user/referral rows remain zero."
+      ],
+      "blocker": "Real qualifying conversion evidence remains before VERIFIED."
+    },
+    {
+      "id": "ACH-001",
+      "domain": "achievements",
+      "state": "INTEGRATED",
+      "requirement": "Achievements are evidence-verified and certificate issuance is idempotent.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "public.omega_achievement_definitions",
+        "public.omega_user_achievements",
+        "public.omega_achievement_verifications",
+        "public.omega_certificates"
+      ],
+      "evidence": [
+        "Target project definitions and verification primitives exist; user achievement rows remain zero."
+      ],
+      "blocker": "Real user evidence and verification journey remain before VERIFIED."
+    },
+    {
+      "id": "NOTIFY-001",
+      "domain": "notifications",
+      "state": "INTEGRATED",
+      "requirement": "Notifications have durable state, server-only claim/reclaim and truthful delivery transitions.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "public.omega_notifications",
+        "supabase/functions/omega-notification-worker/index.ts"
+      ],
+      "evidence": [
+        "Target project notification worker is ACTIVE; notification rows remain zero."
+      ],
+      "blocker": "Service-secret invocation/scheduling and external provider adapters remain."
+    },
+    {
+      "id": "CATALOG-001",
+      "domain": "product",
+      "state": "INTEGRATED",
+      "requirement": "Capabilities and services are represented as governed executable catalog records.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "config/omega-capability-catalog.json",
+        "config/omega-product-catalog.json",
+        "public.omega_capabilities",
+        "public.omega_services"
+      ],
+      "evidence": [
+        "Target project: 24 capabilities and 24 services verified live."
+      ],
+      "blocker": "Service orders remain zero until real customer transactions occur."
+    },
+    {
+      "id": "RUNTIME-001",
+      "domain": "platform-runtime",
+      "state": "INTEGRATED",
+      "requirement": "All 18 product modules expose three governed runtime actions each; integrated adapters return real server data and unpromoted adapters fail closed.",
+      "source": [
+        "Master Prompt",
+        "Document.txt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "config/omega-module-runtime.json",
+        "supabase/migrations/20261002084512_omega_unified_product_runtime_contract_20261002.sql",
+        "supabase/migrations/20261002084553_omega_unified_product_runtime_adapters_20261002.sql",
+        "supabase/functions/omega-runtime-gateway/index.ts",
+        "scripts/omega-module-runtime-contract.py"
+      ],
+      "evidence": [
+        "Target project: 18 distinct modules / 54 actions verified live.",
+        "omega-runtime-gateway ACTIVE with verify_jwt=true."
+      ],
+      "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
+    },
+    {
+      "id": "CORE-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Core profile and catalog runtime reads are server-authoritative.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_runtime_dispatch"
+      ],
+      "evidence": [
+        "Target project runtime adapters return profile/catalog data for authenticated callers."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "GAMING-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Gaming mission and progression runtime is connected to governed matrix state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_matrix_nodes",
+        "omega_matrix_node_semantics"
+      ],
+      "evidence": [
+        "Target project matrix runtime exposes 729 governed nodes."
+      ],
+      "blocker": "Leaderboard adapter remains a separate verification surface."
+    },
+    {
+      "id": "COMM-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Communication notifications/presence/event surfaces use governed server state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_notifications",
+        "member_presence",
+        "omega_platform_events"
+      ],
+      "evidence": [
+        "Notification worker and event fabric are live target-project primitives."
+      ],
+      "blocker": "External notification providers remain unconfigured."
+    },
+    {
+      "id": "INTEL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Intelligence exposes governed agent/evidence runtime adapters.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_agents",
+        "graph_evidence"
+      ],
+      "evidence": [
+        "Target project: 12 agents and caller-scoped evidence table are live."
+      ],
+      "blocker": "Authenticated runtime journey remains before VERIFIED."
+    },
+    {
+      "id": "CREDENTIAL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Credential/certificate reads are backed by server state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_certificates"
+      ],
+      "evidence": [
+        "Target project certificate table and adapter exist; user certificate count is zero."
+      ],
+      "blocker": "Public credential verification adapter remains DESIGNED."
+    },
+    {
+      "id": "ELEMENTAL-001",
+      "domain": "module",
+      "state": "SIMULATION_ONLY",
+      "requirement": "Elemental outputs are explicitly bounded to interpretive/simulation behavior.",
+      "source": [
+        "999 Blueprint",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_runtime_dispatch"
+      ],
+      "evidence": [
+        "Target runtime labels elemental output as interpretive_simulation and includes a non-factual disclaimer."
+      ],
+      "blocker": "No physical-world claim is made."
+    },
+    {
+      "id": "ORACLE-001",
+      "domain": "module",
+      "state": "DESIGNED",
+      "requirement": "Oracle/horoscope content remains interpretive and provenance-labeled.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "horoscope.html",
+        "oracle.html"
+      ],
+      "evidence": [
+        "Product catalog policy marks oracle features interpretive."
+      ],
+      "blocker": "Canonical provenance adapter remains."
+    },
+    {
+      "id": "A11Y-001",
+      "domain": "accessibility",
+      "state": "DESIGNED",
+      "requirement": "Keyboard/touch access, visible focus and readable text are continuously governed.",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "repo": [
+        "scripts/omega-responsive-surface-contract.py"
+      ],
+      "evidence": [
+        "Static contracts exist."
+      ],
+      "blocker": "Full browser accessibility audit remains."
+    },
+    {
+      "id": "VERCEL-001",
+      "domain": "deployment",
+      "state": "BLOCKED",
+      "requirement": "Validated repository artifacts must reach the canonical Vercel production project with current provider evidence.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        ".github/workflows/vercel-production.yml",
+        "vercel.json"
+      ],
+      "evidence": [
+        "Repository deployment workflow and Vercel project identifiers are present."
+      ],
+      "blocker": "Current provider build-rate-limit/connector authorization blocks fresh live acceptance proof."
+    },
+    {
+      "id": "MFA-001",
+      "domain": "identity",
+      "state": "BLOCKED",
+      "requirement": "MFA enrollment, challenge, recovery and owner enforcement are runtime-verified.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        "supabase/migrations",
+        "profile.html",
+        "approvals.html"
+      ],
+      "evidence": [
+        "Owner MFA controls exist in repository/live schema."
+      ],
+      "blocker": "Authenticated MFA journey remains unverified."
+    },
+    {
+      "id": "COMPLIANCE-001",
+      "domain": "privacy",
+      "state": "DESIGNED",
+      "requirement": "Export, deletion, consent, retention and privacy documentation are operationally verified.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "docs",
+        "privacy surfaces",
+        "supabase/migrations"
+      ],
+      "evidence": [
+        "KYC retention/consent and erasure guards exist."
+      ],
+      "blocker": "End-to-end export/delete/retention tests remain."
     }
   ]
 }

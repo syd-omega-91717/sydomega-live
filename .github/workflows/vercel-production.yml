@@ -120,6 +120,8 @@ jobs:
         run: python scripts/omega-notification-worker-contract.py
       - name: Unified 18-module runtime contract
         run: python scripts/omega-module-runtime-contract.py
+      - name: Runtime gateway auth contract
+        run: python scripts/omega-runtime-gateway-contract.py
       - name: Architecture convergence audit
         run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants

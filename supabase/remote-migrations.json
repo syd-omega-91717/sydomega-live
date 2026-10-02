@@ -1,5 +1,8 @@
 {
-  "_captured": "2026-09-27",
+  "_captured": "2026-10-02",
+  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
+  "remoteMigrationCount": 318,
+  "latestRemoteMigration": "20261002141940",
   "versions": [
     "0001",
     "0002",
@@ -231,6 +234,1369 @@
     "20260926221057",
     "20260926222245",
     "20260926223027",
-    "20260927110344"
+    "20260927110344",
+    "20260927123649",
+    "20260927124007",
+    "20260927142646",
+    "20260927142829",
+    "20260927143525",
+    "20260927143903",
+    "20260928100000",
+    "20260928135609",
+    "20260928135726",
+    "20260928151417",
+    "20260928152818",
+    "20260928200648",
+    "20260929083000",
+    "20260929090429",
+    "20260929092815",
+    "20260929093934",
+    "20260929094011",
+    "20260929112443",
+    "20260929113731",
+    "20260929113758",
+    "20260929114141",
+    "20260929115306",
+    "20260929115839",
+    "20260929120017",
+    "20260929120620",
+    "20260929120702",
+    "20260929151807",
+    "20260929172000",
+    "20260929174000",
+    "20260930090758",
+    "20261001035315",
+    "20261001035327",
+    "20261001035349",
+    "20261001090000",
+    "20261001100000",
+    "20261001110000",
+    "20261001120000",
+    "20261002010000",
+    "20261002011000",
+    "20261002012000",
+    "20261002013000",
+    "20261002014000",
+    "20261002020000",
+    "20261002021000",
+    "20261002022000",
+    "20261002023000",
+    "20261002024000",
+    "20261002025000",
+    "20261002026000",
+    "20261002027000",
+    "20261002028000",
+    "20261002029000",
+    "20261002030000",
+    "20261002031000",
+    "20261002032000",
+    "20261002033000",
+    "20261002034000",
+    "20261002072345",
+    "20261002072542",
+    "20261002073018",
+    "20261002073047",
+    "20261002073936",
+    "20261002075520",
+    "20261002075620",
+    "20261002075646",
+    "20261002075824",
+    "20261002075836",
+    "20261002080219",
+    "20261002080541",
+    "20261002080728",
+    "20261002084512",
+    "20261002084553",
+    "20261002084948",
+    "20261002085201",
+    "20261002085421",
+    "20261002085641",
+    "20261002085816",
+    "20261002085943",
+    "20261002090705",
+    "20261002090722",
+    "20261002090727",
+    "20261002091226",
+    "20261002094212",
+    "20261002094249",
+    "20261002094310",
+    "20261002141908",
+    "20261002141940",
+    "20261002180500",
+    "20261002182640"
+  ],
+  "migrations": [
+    {
+      "version": "0001",
+      "name": "omega_master_deploy"
+    },
+    {
+      "version": "0002",
+      "name": "omega_personal_logs"
+    },
+    {
+      "version": "0003",
+      "name": "omega_sovereign_points"
+    },
+    {
+      "version": "0004",
+      "name": "omega_nested_matrix"
+    },
+    {
+      "version": "0005",
+      "name": "omega_sovereign_points"
+    },
+    {
+      "version": "0006",
+      "name": "omega_tokens"
+    },
+    {
+      "version": "0007",
+      "name": "omega_academy_access"
+    },
+    {
+      "version": "0008",
+      "name": "omega_feedback"
+    },
+    {
+      "version": "0009",
+      "name": "omega_contracts"
+    },
+    {
+      "version": "0010",
+      "name": "omega_dispatch"
+    },
+    {
+      "version": "0011",
+      "name": "omega_time_sovereign"
+    },
+    {
+      "version": "0012",
+      "name": "omega_marketing"
+    },
+    {
+      "version": "0013",
+      "name": "omega_consult"
+    },
+    {
+      "version": "0014",
+      "name": "omega_privacy"
+    },
+    {
+      "version": "0015",
+      "name": "academy_progress"
+    },
+    {
+      "version": "0016",
+      "name": "search_index"
+    },
+    {
+      "version": "0017",
+      "name": "access_gate"
+    },
+    {
+      "version": "0018",
+      "name": "trial_access"
+    },
+    {
+      "version": "0019",
+      "name": "kyc"
+    },
+    {
+      "version": "0020",
+      "name": "platform_terms"
+    },
+    {
+      "version": "0021",
+      "name": "omega_profile_fields"
+    },
+    {
+      "version": "0022",
+      "name": "storage"
+    },
+    {
+      "version": "0023",
+      "name": "omega_demo_video"
+    },
+    {
+      "version": "0024",
+      "name": "refinements"
+    },
+    {
+      "version": "0025",
+      "name": "ad_approval"
+    },
+    {
+      "version": "0026",
+      "name": "omega_zero_start"
+    },
+    {
+      "version": "0027",
+      "name": "omega_rls_hardening"
+    },
+    {
+      "version": "0028",
+      "name": "omega_access_audit"
+    },
+    {
+      "version": "0029",
+      "name": "omega_indexes"
+    },
+    {
+      "version": "0030",
+      "name": "omega_error_monitor"
+    },
+    {
+      "version": "0031",
+      "name": "omega_subscription_dates"
+    },
+    {
+      "version": "0032",
+      "name": "omega_membership_report"
+    },
+    {
+      "version": "0033",
+      "name": "omega_lattice_engine"
+    },
+    {
+      "version": "0034",
+      "name": "omega_schema_repair"
+    },
+    {
+      "version": "0035",
+      "name": "achievements"
+    },
+    {
+      "version": "0036",
+      "name": "conversations"
+    },
+    {
+      "version": "0037",
+      "name": "dispatches"
+    },
+    {
+      "version": "0038",
+      "name": "family_nodes"
+    },
+    {
+      "version": "0039",
+      "name": "lifetime_access"
+    },
+    {
+      "version": "0040",
+      "name": "marketplace_listings"
+    },
+    {
+      "version": "0041",
+      "name": "omega_access_control"
+    },
+    {
+      "version": "0042",
+      "name": "omega_account"
+    },
+    {
+      "version": "0043",
+      "name": "omega_cosmology"
+    },
+    {
+      "version": "0044",
+      "name": "omega_evolution_rpc"
+    },
+    {
+      "version": "0045",
+      "name": "omega_horoscope"
+    },
+    {
+      "version": "0046",
+      "name": "omega_leaderboard"
+    },
+    {
+      "version": "0047",
+      "name": "omega_legacy_honors_fix"
+    },
+    {
+      "version": "0048",
+      "name": "omega_marketplace_fix"
+    },
+    {
+      "version": "0049",
+      "name": "omega_owner_audit"
+    },
+    {
+      "version": "0050",
+      "name": "omega_payments"
+    },
+    {
+      "version": "0051",
+      "name": "omega_rls_fix"
+    },
+    {
+      "version": "0052",
+      "name": "publications"
+    },
+    {
+      "version": "0053",
+      "name": "omega_stats_repair"
+    },
+    {
+      "version": "0054",
+      "name": "omega_authority_v2"
+    },
+    {
+      "version": "0055",
+      "name": "dedication_table"
+    },
+    {
+      "version": "0056",
+      "name": "entreprise_schema_v2"
+    },
+    {
+      "version": "0057",
+      "name": "fix_expire_trial"
+    },
+    {
+      "version": "0058",
+      "name": "matrix_engine"
+    },
+    {
+      "version": "0059",
+      "name": "omega_ai_memory"
+    },
+    {
+      "version": "0060",
+      "name": "omega_backend_sync"
+    },
+    {
+      "version": "0061",
+      "name": "omega_capability_registry"
+    },
+    {
+      "version": "0062",
+      "name": "omega_entreprise"
+    },
+    {
+      "version": "0063",
+      "name": "omega_governance"
+    },
+    {
+      "version": "0064",
+      "name": "omega_master_data"
+    },
+    {
+      "version": "0065",
+      "name": "omega_policy_engine"
+    },
+    {
+      "version": "0066",
+      "name": "omega_telemetry"
+    },
+    {
+      "version": "0067",
+      "name": "omega_threat"
+    },
+    {
+      "version": "0068",
+      "name": "omega_workflows"
+    },
+    {
+      "version": "0069",
+      "name": "platform_expansion"
+    },
+    {
+      "version": "0070",
+      "name": "privacy_gdpr"
+    },
+    {
+      "version": "0071",
+      "name": "slo_monitoring"
+    },
+    {
+      "version": "0072",
+      "name": "step1_drop"
+    },
+    {
+      "version": "0073",
+      "name": "step2_create"
+    },
+    {
+      "version": "0074",
+      "name": "surgical_fix_expire_trial"
+    },
+    {
+      "version": "0075",
+      "name": "targeted_fix"
+    },
+    {
+      "version": "0076",
+      "name": "trial_fix"
+    },
+    {
+      "version": "0077",
+      "name": "omega_interest_graph"
+    },
+    {
+      "version": "0078",
+      "name": "omega_formula_patch"
+    },
+    {
+      "version": "0079",
+      "name": "privilege_lockdown"
+    },
+    {
+      "version": "0080",
+      "name": "rls_closure"
+    },
+    {
+      "version": "0081",
+      "name": "signup_pipeline"
+    },
+    {
+      "version": "0082",
+      "name": "trial_917"
+    },
+    {
+      "version": "0083",
+      "name": "check_demo_columns"
+    },
+    {
+      "version": "0084",
+      "name": "chronometers"
+    },
+    {
+      "version": "0085",
+      "name": "permanent_access_policy"
+    },
+    {
+      "version": "0086",
+      "name": "rls_missing_tables"
+    },
+    {
+      "version": "0087",
+      "name": "omega_ai_memory_recall_fix"
+    },
+    {
+      "version": "0088",
+      "name": "omega_rls_index_coverage"
+    },
+    {
+      "version": "0089",
+      "name": "omega_user_assets_fix"
+    },
+    {
+      "version": "0090",
+      "name": "omega_extend_trial_fix"
+    },
+    {
+      "version": "0091",
+      "name": "omega_notifications_fix"
+    },
+    {
+      "version": "0092",
+      "name": "omega_notify_triggers"
+    },
+    {
+      "version": "0093",
+      "name": "omega_apply_subscription_fix"
+    },
+    {
+      "version": "0094",
+      "name": "omega_complete_task_dedup_fix"
+    },
+    {
+      "version": "0095",
+      "name": "omega_member_state"
+    },
+    {
+      "version": "0096",
+      "name": "omega_anon_execute_hardening"
+    },
+    {
+      "version": "0097",
+      "name": "omega_authenticated_execute_hardening"
+    },
+    {
+      "version": "0098",
+      "name": "omega_platform_events_insert_scoping"
+    },
+    {
+      "version": "0099",
+      "name": "omega_live_schema_reconciliation"
+    },
+    {
+      "version": "0100",
+      "name": "omega_security_hardening"
+    },
+    {
+      "version": "0101",
+      "name": "omega_notification_security"
+    },
+    {
+      "version": "0102",
+      "name": "security_execute_hardening"
+    },
+    {
+      "version": "0103",
+      "name": "trusted_source_registry"
+    },
+    {
+      "version": "0104",
+      "name": "runtime_schema_alignment"
+    },
+    {
+      "version": "0105",
+      "name": "creator_proposals"
+    },
+    {
+      "version": "0106",
+      "name": "commerce_flags"
+    },
+    {
+      "version": "20260816231218",
+      "name": "omega_rls_scoping_fix"
+    },
+    {
+      "version": "20260816231240",
+      "name": "omega_leaderboard_snapshots_columns_fix"
+    },
+    {
+      "version": "20260817231834",
+      "name": "consolidate_my_matrix_my_lattice_onto_compute_authority"
+    },
+    {
+      "version": "20260817233805",
+      "name": "omega_advertisements_insert_fix"
+    },
+    {
+      "version": "20260817234540",
+      "name": "revoke_pending_access_requests_select_from_authenticated"
+    },
+    {
+      "version": "20260818000551",
+      "name": "revoke_anon_execute_and_harden_search_path"
+    },
+    {
+      "version": "20260818001352",
+      "name": "drop_duplicate_indexes"
+    },
+    {
+      "version": "20260818002535",
+      "name": "wrap_auth_uid_calls_in_rls_policies"
+    },
+    {
+      "version": "20260818002831",
+      "name": "drop_redundant_duplicate_rls_policies"
+    },
+    {
+      "version": "20260818063011",
+      "name": "merge_second_pass_duplicate_role_scoped_rls_policies"
+    },
+    {
+      "version": "20260818064201",
+      "name": "drop_policies_redundant_vs_all_policy"
+    },
+    {
+      "version": "20260818065025",
+      "name": "drop_more_policies_redundant_vs_all_policy"
+    },
+    {
+      "version": "20260818072124",
+      "name": "remove_throwaway_test_migration_records"
+    },
+    {
+      "version": "20260818072250",
+      "name": "drop_redundant_authenticated_read_policies_knowledge_graph"
+    },
+    {
+      "version": "20260818072522",
+      "name": "restructure_knowledge_graph_all_plus_select_into_percommand"
+    },
+    {
+      "version": "20260818080246",
+      "name": "rls_pass6_drops_and_percommand_restructure"
+    },
+    {
+      "version": "20260818081159",
+      "name": "rls_pass7_dispatches_content_versions_marketplace_listings"
+    },
+    {
+      "version": "20260818082309",
+      "name": "add_missing_fk_indexes_real_schema"
+    },
+    {
+      "version": "20260818141500",
+      "name": "omega_graphify_schema"
+    },
+    {
+      "version": "20260818224748",
+      "name": "omega_task_and_achievement_notifications"
+    },
+    {
+      "version": "20260819071045",
+      "name": "consolidate_graph_table_rls_policies"
+    },
+    {
+      "version": "20260819071913",
+      "name": "optimize_auth_rls_initplan_seven_policies"
+    },
+    {
+      "version": "20260819082319",
+      "name": "schema_sync_point"
+    },
+    {
+      "version": "20260822000000",
+      "name": null
+    },
+    {
+      "version": "20260822024048",
+      "name": "20260822_final_feature_completeness_and_consolidation"
+    },
+    {
+      "version": "20260823212426",
+      "name": "add_graph_verified_columns"
+    },
+    {
+      "version": "20260823212827",
+      "name": "grant_graph_tables_to_authenticated"
+    },
+    {
+      "version": "20260823213110",
+      "name": "grant_policied_tables_to_authenticated"
+    },
+    {
+      "version": "20260823214656",
+      "name": "graph_events_insert_and_relationship_natural_key"
+    },
+    {
+      "version": "20260823215615",
+      "name": "ai_memory_natural_key"
+    },
+    {
+      "version": "20260824091019",
+      "name": "omega_anon_execute_hardening"
+    },
+    {
+      "version": "20260824092248",
+      "name": "omega_authenticated_execute_hardening"
+    },
+    {
+      "version": "20260824093135",
+      "name": "omega_member_state"
+    },
+    {
+      "version": "20260824175558",
+      "name": "omega_platform_events_insert_scoping"
+    },
+    {
+      "version": "20260826162400",
+      "name": "omega_architecture_catalog_v1"
+    },
+    {
+      "version": "20260826162447",
+      "name": "omega_architecture_catalog_seed_v3"
+    },
+    {
+      "version": "20260826162501",
+      "name": "omega_compliance_catalog_v1"
+    },
+    {
+      "version": "20260826162643",
+      "name": "omega_agent_registry_seed_v2"
+    },
+    {
+      "version": "20260826162751",
+      "name": "omega_data_evidence_refresh_v1"
+    },
+    {
+      "version": "20260826162820",
+      "name": "omega_architecture_rls_v1"
+    },
+    {
+      "version": "20260826163218",
+      "name": "omega_architecture_control_plane"
+    },
+    {
+      "version": "20260826164120",
+      "name": "omega_foundation_vector_extension_20260826"
+    },
+    {
+      "version": "20260826164136",
+      "name": "omega_foundation_control_planes_20260826"
+    },
+    {
+      "version": "20260826164209",
+      "name": "omega_security_definer_restriction_20260826"
+    },
+    {
+      "version": "20260829065055",
+      "name": "create_oaths_table_from_chunk_09"
+    },
+    {
+      "version": "20260829065342",
+      "name": "top_pages_owner_scoped_and_granted"
+    },
+    {
+      "version": "20260829065500",
+      "name": "top_pages_security_invoker"
+    },
+    {
+      "version": "20260829161419",
+      "name": "scope_dispatches_select_to_published_owner_or_author"
+    },
+    {
+      "version": "20260901143526",
+      "name": "creator_proposals"
+    },
+    {
+      "version": "20260902",
+      "name": "reset_migration_state"
+    },
+    {
+      "version": "20260903015502",
+      "name": "harden_rls_and_public_api_warnings_20260903"
+    },
+    {
+      "version": "20260903015535",
+      "name": "harden_future_defaults_and_rls_20260903"
+    },
+    {
+      "version": "20260903021430",
+      "name": "secure_private_rpc_boundary_v2"
+    },
+    {
+      "version": "20260903021458",
+      "name": "optimize_notifications_rls_policies"
+    },
+    {
+      "version": "20260904194956",
+      "name": "omega_platform_observability_baseline"
+    },
+    {
+      "version": "20260904200659",
+      "name": "omega_performance_rls_fk_hardening_20260904"
+    },
+    {
+      "version": "20260904200717",
+      "name": "omega_remove_redundant_fk_indexes_20260904"
+    },
+    {
+      "version": "20260904200951",
+      "name": "omega_fk_index_cleanup_20260904"
+    },
+    {
+      "version": "20260905012717",
+      "name": "chunk_10_productivity_tables"
+    },
+    {
+      "version": "20260905012909",
+      "name": "chunk_09_codex_bookmarks_and_signal_saves"
+    },
+    {
+      "version": "20260905070904",
+      "name": "rls_initplan_wrap_auth_uid_in_select"
+    },
+    {
+      "version": "20260905071243",
+      "name": "drop_structurally_redundant_indexes"
+    },
+    {
+      "version": "20260905080109",
+      "name": "omega_advisor_foreign_key_indexes_20260905"
+    },
+    {
+      "version": "20260905180909",
+      "name": "record_graph_verified_columns"
+    },
+    {
+      "version": "20260905211725",
+      "name": "adopt_advertisements_and_council_deliberations"
+    },
+    {
+      "version": "20260908032828",
+      "name": "harden_profiles_update_policy"
+    },
+    {
+      "version": "20260911222734",
+      "name": "20260911120000_phase5_autonomous_agents"
+    },
+    {
+      "version": "20260913173753",
+      "name": "harden_phase5_rls_insert_policies"
+    },
+    {
+      "version": "20260915074219",
+      "name": "revoke_client_non_dml_privileges"
+    },
+    {
+      "version": "20260915074641",
+      "name": "harden_postgres_client_table_defaults"
+    },
+    {
+      "version": "20260915100009",
+      "name": "0106_commerce_flags"
+    },
+    {
+      "version": "20260915105632",
+      "name": "20260915130000_stripe_webhook_idempotency"
+    },
+    {
+      "version": "20260915105856",
+      "name": "20260915130100_stripe_webhook_idempotent_apply"
+    },
+    {
+      "version": "20260915141500",
+      "name": "stripe_subscription_row_integrity"
+    },
+    {
+      "version": "20260915150223",
+      "name": "stripe_webhook_event_boundary"
+    },
+    {
+      "version": "20260915150404",
+      "name": "reconcile_stripe_webhook_rpc_boundary"
+    },
+    {
+      "version": "20260915201055",
+      "name": "optimize_autonomous_member_rls_policies"
+    },
+    {
+      "version": "20260915201114",
+      "name": "add_autonomous_decisions_member_index"
+    },
+    {
+      "version": "20260915201156",
+      "name": "reconcile_autonomous_decisions_member_index"
+    },
+    {
+      "version": "20260915201208",
+      "name": "omega_rls_policy_optimization"
+    },
+    {
+      "version": "20260915215205",
+      "name": "reconcile_autonomous_decisions_select_policy_overlap"
+    },
+    {
+      "version": "20260916204000",
+      "name": "harden_stripe_webhook_events_rls"
+    },
+    {
+      "version": "20260916210000",
+      "name": "harden_stripe_webhook_events_rls"
+    },
+    {
+      "version": "20260917115719",
+      "name": "grant_agent_experiments_select"
+    },
+    {
+      "version": "20260921010158",
+      "name": "academy_courses_launch"
+    },
+    {
+      "version": "20260921010337",
+      "name": "academy_courses_launch_idempotency_check"
+    },
+    {
+      "version": "20260921010709",
+      "name": "academy_progress_enrollment_lesson_constraint"
+    },
+    {
+      "version": "20260921010951",
+      "name": "academy_schema_capture"
+    },
+    {
+      "version": "20260921052732",
+      "name": "academy_exam_schema_capture"
+    },
+    {
+      "version": "20260921052807",
+      "name": "academy_exams_launch"
+    },
+    {
+      "version": "20260921065008",
+      "name": "project_management_schema_capture"
+    },
+    {
+      "version": "20260921065055",
+      "name": "project_management_launch"
+    },
+    {
+      "version": "20260921071254",
+      "name": "marketplace_extended_schema_capture"
+    },
+    {
+      "version": "20260921071311",
+      "name": "marketplace_favorites_launch"
+    },
+    {
+      "version": "20260921072441",
+      "name": "knowledge_base_schema_capture"
+    },
+    {
+      "version": "20260921072500",
+      "name": "knowledge_base_notes_launch"
+    },
+    {
+      "version": "20260922150056",
+      "name": "harden_submit_exam_attempt_execute_privileges"
+    },
+    {
+      "version": "20260922150646",
+      "name": "secure_exam_submission_rpc"
+    },
+    {
+      "version": "20260923025741",
+      "name": "index_project_milestones_project_id"
+    },
+    {
+      "version": "20260923030325",
+      "name": "tighten_private_helper_execute_privileges"
+    },
+    {
+      "version": "20260923030541",
+      "name": "harden_sensitive_public_read_policies"
+    },
+    {
+      "version": "20260923030608",
+      "name": "scope_member_presence_mutations_to_authenticated"
+    },
+    {
+      "version": "20260923030958",
+      "name": "scope_private_and_self_owned_rls_to_authenticated"
+    },
+    {
+      "version": "20260923031025",
+      "name": "finalize_telemetry_owner_policy_scope"
+    },
+    {
+      "version": "20260923031140",
+      "name": "harden_authenticated_read_policy_role_boundaries"
+    },
+    {
+      "version": "20260923031224",
+      "name": "harden_owner_only_and_platform_settings_reads"
+    },
+    {
+      "version": "20260923083139",
+      "name": "restrict_advertisement_public_columns"
+    },
+    {
+      "version": "20260923083232",
+      "name": "scope_all_public_mutation_policies_to_authenticated"
+    },
+    {
+      "version": "20260923140718",
+      "name": "scope_platform_owners_select_to_self"
+    },
+    {
+      "version": "20260923215317",
+      "name": "add_public_schema_metrics_rpc"
+    },
+    {
+      "version": "20260923215721",
+      "name": "harden_public_schema_metrics_rpc_security"
+    },
+    {
+      "version": "20260925211957",
+      "name": "revoke_anon_select_from_private_tables"
+    },
+    {
+      "version": "20260925212103",
+      "name": "drop_duplicate_owner_select_policies"
+    },
+    {
+      "version": "20260926083157",
+      "name": "20260926120000_allow_member_owned_storage_delete"
+    },
+    {
+      "version": "20260926091843",
+      "name": "restore_member_profile_self_service_grants"
+    },
+    {
+      "version": "20260926095955",
+      "name": "official_dispatches_owner_only_feed"
+    },
+    {
+      "version": "20260926102450",
+      "name": "omega_is_owner_single_gate"
+    },
+    {
+      "version": "20260926102544",
+      "name": "owner_mfa_enforcement_dormant"
+    },
+    {
+      "version": "20260926182800",
+      "name": "views_security_invoker"
+    },
+    {
+      "version": "20260926190934",
+      "name": "restore_execute_on_live_callers"
+    },
+    {
+      "version": "20260926192038",
+      "name": "service_role_reads_platform_flags"
+    },
+    {
+      "version": "20260926221057",
+      "name": "members_read_platform_flags"
+    },
+    {
+      "version": "20260926222245",
+      "name": "feedback_consent_invoker_wrappers"
+    },
+    {
+      "version": "20260926223027",
+      "name": "owner_security_checklist"
+    },
+    {
+      "version": "20260927110344",
+      "name": "kyc_intake_rpcs"
+    },
+    {
+      "version": "20260927123649",
+      "name": "owner_mfa_enforce_switch"
+    },
+    {
+      "version": "20260927124007",
+      "name": "kyc_retention_consent"
+    },
+    {
+      "version": "20260927142646",
+      "name": "kyc_erasure_guard"
+    },
+    {
+      "version": "20260927142829",
+      "name": "guard_profile_privileges_downgrade"
+    },
+    {
+      "version": "20260927143525",
+      "name": "guard_profile_trial_expiry"
+    },
+    {
+      "version": "20260927143903",
+      "name": "notifications_fill_required"
+    },
+    {
+      "version": "20260928100000",
+      "name": "omega_event_fabric_idempotency"
+    },
+    {
+      "version": "20260928135609",
+      "name": "omega_mission_state_foundation_20260928"
+    },
+    {
+      "version": "20260928135726",
+      "name": "omega_mission_state_start_idempotency_fix_20260928"
+    },
+    {
+      "version": "20260928151417",
+      "name": "20260928153000_omega_mission_state_fk_indexes"
+    },
+    {
+      "version": "20260928152818",
+      "name": "owner_public_name_syd"
+    },
+    {
+      "version": "20260928200648",
+      "name": "omega_single_sovereign_owner_20260928"
+    },
+    {
+      "version": "20260929083000",
+      "name": "omega_event_ingest_idempotency_unique_20260929"
+    },
+    {
+      "version": "20260929090429",
+      "name": "20260929090000_drop_duplicate_event_idempotency_index"
+    },
+    {
+      "version": "20260929092815",
+      "name": "20260929100000_omega_mission_public_rpc_bridge_20260929"
+    },
+    {
+      "version": "20260929093934",
+      "name": "20260929103000_omega_realtime_member_presence_20260929"
+    },
+    {
+      "version": "20260929094011",
+      "name": "20260929104500_omega_realtime_presence_privacy_revert_20260929"
+    },
+    {
+      "version": "20260929112443",
+      "name": "omega_simulation_arena_foundation_20260929"
+    },
+    {
+      "version": "20260929113731",
+      "name": "omega_agent_operations_governance_20260929"
+    },
+    {
+      "version": "20260929113758",
+      "name": "omega_agent_operations_fk_indexes_20260929"
+    },
+    {
+      "version": "20260929114141",
+      "name": "omega_agent_operations_readonly_foundation_20260929"
+    },
+    {
+      "version": "20260929115306",
+      "name": "omega_agent_operations_proposal_cleanup_20260929"
+    },
+    {
+      "version": "20260929115839",
+      "name": "omega_recovery_checkpoint_foundation_20260929"
+    },
+    {
+      "version": "20260929120017",
+      "name": "omega_recovery_checkpoint_integrity_verification_20260929"
+    },
+    {
+      "version": "20260929120620",
+      "name": "omega_recovery_checkpoint_schema_alignment_20260929"
+    },
+    {
+      "version": "20260929120702",
+      "name": "omega_recovery_checkpoint_select_grant_20260929"
+    },
+    {
+      "version": "20260929151807",
+      "name": "omega_agent_audit_rpc_service_only_20260929"
+    },
+    {
+      "version": "20260929172000",
+      "name": null
+    },
+    {
+      "version": "20260929174000",
+      "name": null
+    },
+    {
+      "version": "20260930090758",
+      "name": "harden_user_rpc_security_invoker"
+    },
+    {
+      "version": "20261001035315",
+      "name": "omega_notification_realtime_20261001"
+    },
+    {
+      "version": "20261001035327",
+      "name": "omega_complete_task_schema_alignment_20261001"
+    },
+    {
+      "version": "20261001035349",
+      "name": "omega_complete_task_gate_reconciliation_20261001"
+    },
+    {
+      "version": "20261001090000",
+      "name": "omega_authoritative_progression_events"
+    },
+    {
+      "version": "20261001100000",
+      "name": "omega_notification_realtime"
+    },
+    {
+      "version": "20261001110000",
+      "name": "omega_complete_task_schema_alignment"
+    },
+    {
+      "version": "20261001120000",
+      "name": "omega_complete_task_gate_reconciliation"
+    },
+    {
+      "version": "20261002010000",
+      "name": "revoke_anon_public_rpc_execute"
+    },
+    {
+      "version": "20261002011000",
+      "name": "revoke_public_rpc_execute"
+    },
+    {
+      "version": "20261002012000",
+      "name": "create_omega_729_node_registry"
+    },
+    {
+      "version": "20261002013000",
+      "name": "create_omega_financial_ledger"
+    },
+    {
+      "version": "20261002014000",
+      "name": "create_omega_capability_service_catalog"
+    },
+    {
+      "version": "20261002020000",
+      "name": "referral_achievement_agent_notification_primitives"
+    },
+    {
+      "version": "20261002021000",
+      "name": "create_omega_matrix_semantics"
+    },
+    {
+      "version": "20261002022000",
+      "name": "payment_reconciliation_guardrails"
+    },
+    {
+      "version": "20261002023000",
+      "name": "harden_high_risk_rpc_execution"
+    },
+    {
+      "version": "20261002024000",
+      "name": "server_orchestration_primitives"
+    },
+    {
+      "version": "20261002025000",
+      "name": "durable_event_evidence_audit_fabric"
+    },
+    {
+      "version": "20261002026000",
+      "name": "reconcile_stripe_webhook_live_rpc"
+    },
+    {
+      "version": "20261002027000",
+      "name": "service_order_entitlement_activation"
+    },
+    {
+      "version": "20261002028000",
+      "name": "server_event_ingestion_boundary"
+    },
+    {
+      "version": "20261002029000",
+      "name": "complete_server_state_transitions"
+    },
+    {
+      "version": "20261002030000",
+      "name": "runtime_gateway_dispatch"
+    },
+    {
+      "version": "20261002031000",
+      "name": "progression_achievement_productization"
+    },
+    {
+      "version": "20261002032000",
+      "name": "link_progression_stage_bands"
+    },
+    {
+      "version": "20261002033000",
+      "name": "security_advisor_hardening"
+    },
+    {
+      "version": "20261002034000",
+      "name": "stripe_settlement_to_ledger"
+    },
+    {
+      "version": "20261002072345",
+      "name": "reconcile_omega_financial_ledger_and_stripe_settlement"
+    },
+    {
+      "version": "20261002072542",
+      "name": "omega_runtime_product_primitives_reconciliation"
+    },
+    {
+      "version": "20261002073018",
+      "name": "omega_capability_service_catalog_reconciliation"
+    },
+    {
+      "version": "20261002073047",
+      "name": "seed_omega_capability_service_catalog_target_project"
+    },
+    {
+      "version": "20261002073936",
+      "name": "omega_event_fabric_compatibility_reconciliation"
+    },
+    {
+      "version": "20261002075520",
+      "name": "harden_server_only_rls_policies_20261002"
+    },
+    {
+      "version": "20261002075620",
+      "name": "tighten_remaining_security_definer_boundaries_20261002"
+    },
+    {
+      "version": "20261002075646",
+      "name": "convert_read_only_security_definers_to_invoker_20261002"
+    },
+    {
+      "version": "20261002075824",
+      "name": "complete_achievement_and_referral_state_transitions_20261002"
+    },
+    {
+      "version": "20261002075836",
+      "name": "fix_achievement_assignment_function_20261002"
+    },
+    {
+      "version": "20261002080219",
+      "name": "notification_worker_claim_boundary_20261002"
+    },
+    {
+      "version": "20261002080541",
+      "name": "fix_achievement_verification_idempotency_20261002"
+    },
+    {
+      "version": "20261002080728",
+      "name": "harden_stripe_settlement_search_path_20261002"
+    },
+    {
+      "version": "20261002084512",
+      "name": "omega_unified_product_runtime_contract_20261002"
+    },
+    {
+      "version": "20261002084553",
+      "name": "omega_unified_product_runtime_adapters_20261002"
+    },
+    {
+      "version": "20261002084948",
+      "name": "omega_product_runtime_adapters_wave2_20261002"
+    },
+    {
+      "version": "20261002085201",
+      "name": "omega_performance_fk_and_policy_cleanup_20261002"
+    },
+    {
+      "version": "20261002085421",
+      "name": "omega_service_order_creation_boundary_20261002"
+    },
+    {
+      "version": "20261002085641",
+      "name": "omega_consultancy_intake_idempotency_boundary_20261002"
+    },
+    {
+      "version": "20261002085816",
+      "name": "omega_runtime_adapter_wave3_progress_credentials_horoscope_20261002"
+    },
+    {
+      "version": "20261002085943",
+      "name": "omega_runtime_lifecycle_truth_reconciliation_20261002"
+    },
+    {
+      "version": "20261002090705",
+      "name": "20261002120300_runtime_frontier_20261002"
+    },
+    {
+      "version": "20261002090722",
+      "name": "20261002120400_seed_legal_runtime_documents_20261002"
+    },
+    {
+      "version": "20261002090727",
+      "name": "20261002120500_media_job_worker_20261002"
+    },
+    {
+      "version": "20261002091226",
+      "name": "2026100210_enable_mfa_enrollment"
+    },
+    {
+      "version": "20261002094212",
+      "name": "20261002094500_integrate_elemental_runtime_20261002"
+    },
+    {
+      "version": "20261002094249",
+      "name": "20261002095000_fix_elemental_runtime_trim_20261002"
+    },
+    {
+      "version": "20261002094310",
+      "name": "20261002095500_fix_elemental_runtime_integer_width_20261002"
+    },
+    {
+      "version": "20261002141908",
+      "name": "fix_achievement_verification_idempotency_conflict_20261002"
+    },
+    {
+      "version": "20261002141940",
+      "name": "harden_achievement_verification_conflict_race_20261002"
+    }
   ]
 }

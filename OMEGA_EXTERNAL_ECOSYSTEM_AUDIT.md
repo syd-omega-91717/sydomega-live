@@ -291,3 +291,24 @@ Nothing in this round is installed or implemented. Per §10, items 1–3 belong 
 `FEATURE_IDEAS.md` → `feature-architect` → `autonomous-coder`, and items 1 and 2
 touch AI/security surfaces, so they are HIGH-RISK and go through
 `grill-me-codex` first.
+
+---
+
+## Round 3 — 2026-09-28, owner-supplied sources
+
+**Reachability first** (raw.githubusercontent.com, this session): `langchain-ai/langchain` README 200; `praw-dev/praw` README.rst 200 (`README.md` 404; it is `.rst`); `postmanlabs/newman` 200; `vercel/next.js` `canary/readme.md` 200 (lower-case name); `KillianLucas/open-interpreter` and `OpenInterpreter/open-interpreter` both 200. Stars and activity remain unmeasurable here (§ "What could and could not be verified").
+
+| source | verdict | the specific reason |
+|---|---|---|
+| `langchain-ai/langchain` | **Rejected as a dependency** | A Python/JS orchestration framework. This platform's AI is one Deno Edge Function (`concierge`) calling one provider with the key in Supabase secrets. No Python ships (`core/` is never deployed) and there is no bundler for the JS package. What it would orchestrate (governed prompts, refusal of operational intent) already exists in `concierge`. |
+| `praw-dev/praw` / "Reddit scraper" | **Rejected** | It pulls third-party users' posts into an invite-gated, `noindex` personal platform, under Reddit's API terms and with those authors' personal data. No member benefit is named. `intel-feed` is the governed path for external data. |
+| `postmanlabs/newman` / Postman CLI | **Concept only** | An HTTP collection runner via `npm -g`. The same checks already run as Python contracts against the real backend (`supabase-runtime-contract.py`, the Edge Function refusal checks). A second toolchain for the same assertions adds a dependency, not coverage. Revisit only if a public API surface ever exists (none does). |
+| `vercel/next.js` + SEO | **Framework rejected (§9, Round 1 #6); SEO concept applied where it is real** | The platform is `noindex` on purpose (`vercel.json` X-Robots-Tag). The transferable Next.js idea is one consistent metadata contract per page. Applying it found `eternity.html` and `replay.html` declaring `robots: index,follow`, contradicting the header; both are fixed. |
+| `OpenInterpreter/open-interpreter` | **Rejected** | An LLM that executes code on the host. The platform's design is the reverse: `core/`'s execution boundary and `concierge`'s fail-closed refusal of operational intent. No member surface should run model-authored code. |
+
+**The owner's own collections were the richest source this round** (`BlockChain_Market_Analysis_syd_omega_91717/`, `Trophies_S.Y.D_Omega_91717/`, `Zodiac_signs/`):
+
+- The Legacy Constellation's 12 zodiac cards were broken images (wrong folder); fixed and gated.
+- The Passport now shows the member's own sign art and stage medal, following the data it already displays: 21 cutouts in `/assets/legacy/`, checkerboard removed to real alpha, about 45 KB each vs 170 KB.
+- **Open, owner decision:** the medals name stages 1–9 Initiate, Seeker, Strategist, Master, Omega Elite, Visionary, Architect, Sovereign, Universal S.Y.D. The Passport's `PP_RANKS` says Initiate, Seeker, Adept, Expert, Master, Elite, Sovereign, Legend, Omega. That is two canonical tables (§8.1 class 8). The caption shows only "STAGE N" until one is chosen.
+- The 8 React components (`components/*.tsx`/`.jsx`) need a build step; their content is already served by the Constellation and the Passport.

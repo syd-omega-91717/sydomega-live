@@ -52,6 +52,7 @@
 .hm-cell:hover{transform:scale(1.3)}
 
 .empty{text-align:center;padding:32px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.oms{margin:12px 0 18px;padding:16px;border:1px solid rgba(201,168,76,.16);background:rgba(10,10,15,.6);border-radius:4px}.oms-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.7);margin-bottom:8px}.oms-status{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:3px 8px;border:1px solid rgba(201,168,76,.2);color:var(--gold)}.oms-status[data-state="LIVE"]{color:var(--green);border-color:rgba(0,255,136,.25)}.oms-status[data-state="PARTIAL"]{color:var(--gold)}.oms-status[data-state="UNAVAILABLE"]{color:var(--muted)}.oms-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.oms-card{padding:10px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}.oms-card b{display:block;font-family:var(--D);font-size:20px;color:var(--gold)}.oms-card span{font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px}.oms-note{font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 0}@media(max-width:700px){.oms-grid{grid-template-columns:1fr}}
 #msn-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:10px 24px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .xp-popup{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);font-family:var(--M);font-size:22px;color:var(--gold);z-index:9999;opacity:0;pointer-events:none;text-shadow:0 0 20px rgba(201,168,76,.5);transition:opacity .4s,transform .4s}
 </style>
@@ -61,7 +62,7 @@
 <div class="page-shell" id="app" style="display:none">
 
 <header class="topbar">
-  <div class="topbar-title">MISSION BOARD<span class="topbar-sub">DAILY &middot; WEEKLY &middot; LEGENDARY</span></div>
+  <div class="topbar-title">MISSION BOARD<span class="topbar-sub">LIVE STATE &middot; EVIDENCE &middot; PROGRESSION</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
 
@@ -75,16 +76,17 @@
 <!-- MISSIONS TAB (daily) -->
 <div class="tab-panel active" id="tab-missions">
   <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="streakCount">0</div><div class="kpi-label">DAY STREAK</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="totalXp">0</div><div class="kpi-label">TOTAL XP</div><div data-omega-spark id="spark-xp" data-spark-label="XP PER DAY, LAST FOURTEEN COMPLETE DAYS" data-spark-unit=" XP" hidden style="margin-top:8px"></div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="totalComplete">0</div><div class="kpi-label">COMPLETED</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="rank">&mdash;</div><div class="kpi-label">MISSION RANK</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionActiveCount">0</div><div class="kpi-label">ACTIVE DEFINITIONS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionRunningCount">0</div><div class="kpi-label">RUNNING</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionCompletedCount">0</div><div class="kpi-label">COMPLETED</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="missionEvidenceCount">0</div><div class="kpi-label">EVIDENCE EVENTS</div></div>
   </div>
   <div class="day-progress">
     <div class="dp-label"><div class="dp-title">&#9685; TODAY&rsquo;S PROGRESS</div><div class="dp-pct" id="dayPct">0%</div></div>
     <div class="dp-bar-wrap"><div class="dp-bar" id="dayBar" style="width:0%"></div></div>
     <div class="dp-xp" id="dayXp">0 / 0 XP TODAY</div>
   </div>
+  <div class="oms" id="missionReality" data-omega-mission-state></div>
   <div class="missions-list" id="dailyList"></div>
 </div>
 
@@ -105,295 +107,28 @@
 
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
-  <div class="sechead">MISSION SCIENCE</div>
+  <div class="sechead">MISSION SCIENCE — LIVE CONTRACT</div><div id="scienceLive"></div>
   <div class="kpi-row" data-stagger data-stagger-gap="70">
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">7</div><div class="kpi-label">DAILY QUESTS</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">5</div><div class="kpi-label">WEEKLY QUESTS</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">4</div><div class="kpi-label">LEGENDARY</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">365</div><div class="kpi-label">HISTORY LIMIT</div></div>
   </div>
-  <div class="card-grid" style="margin-top:16px">
-    <div class="card">
-      <div class="card-title">&#9733; SOVEREIGN XP RANKS</div>
-      <div class="card-body">
-        <div class="tbl-wrap" style="width:100%;font-family:var(--M);font-size:12px">
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr; color:var(--muted);border-bottom:1px solid var(--line)"><div style="padding:4px 0">RANK</div><div>XP REQUIRED</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">INITIATE</div><div style="color:var(--gold)">0</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">SOVEREIGN I</div><div style="color:var(--gold)">500</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">SOVEREIGN II</div><div style="color:var(--gold)">2,000</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">SOVEREIGN III</div><div style="color:var(--gold)">5,000</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">APEX SOVEREIGN</div><div style="color:var(--gold)">10,000</div></div>
-          <div class="tbl-row" style="grid-template-columns: 1fr 1fr"><div style="padding:4px 0;color:rgba(255,255,255,.5)">LEGEND</div><div style="color:var(--gold)">25,000</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">&#9670; AUTHORITY FORMULA</div>
-      <div class="card-body">
-        <code style="font-family:var(--M);font-size:12px;color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</code>
-        <br><br>
-        <span style="font-family:var(--M);font-size:12px;color:var(--muted)">&phi; = 1.6180339887 (Golden Ratio)<br>
-        e = 2.7182818285 (Euler&rsquo;s Number)<br>
-        APEX = 27.8367</span>
-        <br><br>
-        Mission completions contribute to A, B, C attribute growth. Daily discipline is the primary A-axis driver.
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">&#9685; STREAK SCIENCE</div>
-      <div class="card-body">
-        Habit research (Clear, 2018; Duhigg, 2012) shows a minimum of 66 days of consistent behavior to form
-        automatic sovereignty. The streak system enforces a daily commitment signal. Missing one day resets
-        the streak counter — no grace period. Consistency compounds: a 30-day streak is worth 500 XP bonus
-        via the Sovereign Trial legendary quest.
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">&#9672; ELEMENT ALIGNMENT</div>
-      <div class="card-body">
-        Each mission is aligned to one of the nine sovereign elements — FIRE (action), WATER (stillness), WIND (knowledge),
-        METAL (discipline), SAND (study), SOUL (expression), SPACE (exploration), VOID (connection), THE ALL (the whole).
-        Completing missions across all nine elements drives Element Convergence — a legendary quest requiring
-        balanced development above the 80th percentile in all sovereign DNA attributes simultaneously.
-      </div>
-    </div>
-  </div>
+  
 </div>
 
 </div><!-- end page-shell -->
-<div id="msn-toast"></div>
-<div class="xp-popup" id="xpPopup"><div data-page-emblem="missions" style="margin:20px auto 0"></div>
-</div>
 
 <script>
 function setTab(name){
   var tabs=['missions','weekly','progress','science'];
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-  if(name==='progress') renderHeatmap();
 }
 </script>
 
-<script type="module">
-import{createClient}from'/vendor/supabase-js.js';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-var __omegaUser=null;
-
-(async function(){
-  var s=(await sb.auth.getSession()).data.session;
-  if(!s){location.replace('/account.html');return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-  __omegaUser=s.user;
-  window.__omegaUser=s.user;
-  document.getElementById('app').style.display='flex';
-  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-  renderAll();
-})();
-
-var DAILY_MISSIONS=[
-  {id:'d01',icon:'▤',title:'SOVEREIGN READING',desc:'Read for 20 uninterrupted minutes from any source in your Codex.',xp:50,element:'SAND',tier:'daily',est:'20 min'},
-  {id:'d02',icon:'⚔',title:'DISCIPLINE HOLD',desc:'Complete one task you have been delaying for more than 24 hours.',xp:75,element:'METAL',tier:'daily',est:'Variable'},
-  {id:'d03',icon:'△',title:'MORNING PROTOCOL',desc:'Log in before 09:00 and activate your dedication chronometer.',xp:40,element:'FIRE',tier:'daily',est:'5 min'},
-  {id:'d04',icon:'▽',title:'STRATEGIC PAUSE',desc:'Spend 10 minutes in structured stillness — no screens, no sound.',xp:60,element:'WATER',tier:'daily',est:'10 min'},
-  {id:'d05',icon:'✍︎',title:'SOVEREIGN OATH',desc:'Write and seal a new sworn declaration in the Oath Registry.',xp:80,element:'SOUL',tier:'daily',est:'10 min'},
-  {id:'d06',icon:'▩',title:'INTELLIGENCE REVIEW',desc:'Review the Signal board and note 3 meaningful insights.',xp:55,element:'WIND',tier:'daily',est:'15 min'},
-  {id:'d07',icon:'⊛',title:'CODEX EXPEDITION',desc:'Search and bookmark one new article from the Knowledge Codex.',xp:45,element:'SPACE',tier:'daily',est:'10 min'},
-];
-var WEEKLY_MISSIONS=[
-  {id:'w01',icon:'♔',title:'GATE ADVANCEMENT',desc:'Increase your Authority score by at least 0.05 points this week.',xp:300,element:'THE ALL',tier:'weekly',est:'7 days',progress:60},
-  {id:'w02',icon:'⚗',title:'RESEARCH SUBMISSION',desc:'Save and annotate 5 arXiv papers in your Knowledge Codex.',xp:250,element:'SAND',tier:'weekly',est:'3-4 hours',progress:40},
-  {id:'w03',icon:'⚡︎',title:'STREAK FORGE',desc:'Complete your daily dedication for 7 consecutive days.',xp:500,element:'FIRE',tier:'weekly',est:'7 days',progress:28},
-  {id:'w04',icon:'⊕',title:'TRIBE ENGAGEMENT',desc:'View and engage with 3 members of a different element tribe.',xp:200,element:'VOID',tier:'weekly',est:'30 min',progress:66},
-  {id:'w05',icon:'✧',title:'INNOVATION LOG',desc:'Write 3 new ideas in the Forge and complete at least one.',xp:350,element:'WIND',tier:'weekly',est:'2 hours',progress:33},
-];
-var LEGENDARY_MISSIONS=[
-  {id:'l01',icon:'♕',title:'THE SOVEREIGN TRIAL',desc:'Maintain a 30-day unbroken daily dedication streak.',xp:5000,element:'THE ALL',tier:'legendary',est:'30 days',progress:0},
-  {id:'l02',icon:'⚔',title:'GATE XII ASCENSION',desc:'Reach Gate XII — the APEX threshold. Authority must surpass 27.1.',xp:10000,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
-  {id:'l03',icon:'▧',title:'THE CODEX MASTER',desc:'Bookmark 100 items across Wikipedia, arXiv, and Open Library.',xp:3000,element:'SAND',tier:'legendary',est:'30+ days',progress:0},
-  {id:'l04',icon:'✷',title:'ELEMENT CONVERGENCE',desc:'Score above 80 on all 8 Sovereign DNA attributes simultaneously.',xp:7500,element:'THE ALL',tier:'legendary',est:'∞',progress:0},
-];
-
-var today=new Date().toISOString().slice(0,10);
-var state=loadState();
-
-function loadState(){
-  return {
-    daily:JSON.parse(localStorage.getItem('omega_missions_'+today)||'{}'),
-    weekly:JSON.parse(localStorage.getItem('omega_missions_weekly')||'{}'),
-    stats:JSON.parse(localStorage.getItem('omega_missions_stats')||'{"totalXp":0,"totalComplete":0,"streak":0,"bestStreak":0,"lastDay":""}'),
-    history:JSON.parse(localStorage.getItem('omega_missions_history')||'[]'),
-    activity:JSON.parse(localStorage.getItem('omega_missions_activity')||'{}')
-  };
-}
-
-function saveState(){
-  localStorage.setItem('omega_missions_'+today,JSON.stringify(state.daily));
-  localStorage.setItem('omega_missions_weekly',JSON.stringify(state.weekly));
-  localStorage.setItem('omega_missions_stats',JSON.stringify(state.stats));
-  localStorage.setItem('omega_missions_history',JSON.stringify(state.history.slice(0,200)));
-  localStorage.setItem('omega_missions_activity',JSON.stringify(state.activity));
-}
-
-(function checkStreak(){
-  var last=state.stats.lastDay;
-  if(!last) return;
-  var yest=new Date();yest.setDate(yest.getDate()-1);
-  var yStr=yest.toISOString().slice(0,10);
-  if(last!==today&&last!==yStr){state.stats.streak=0;saveState();}
-})();
-
-function toast(msg,col){
-  var t=document.getElementById('msn-toast');t.textContent=msg;t.style.color=col||'var(--gold)';t.style.opacity='1';
-  setTimeout(function(){t.style.opacity='0';},3000);
-}
-function showXP(xp){
-  var el=document.getElementById('xpPopup');
-  el.textContent='+'+xp+' XP';el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';
-  setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(-50%) translateY(-30px)';},1200);
-}
-
-function renderHeader(){
-  var ranks=[{x:0,r:'INITIATE'},{x:500,r:'SOVEREIGN I'},{x:2000,r:'SOVEREIGN II'},{x:5000,r:'SOVEREIGN III'},{x:10000,r:'APEX SOVEREIGN'},{x:25000,r:'LEGEND'}];
-  var rank=ranks.reduce(function(a,b){return state.stats.totalXp>=b.x?b:a;},ranks[0]);
-  document.getElementById('streakCount').textContent=state.stats.streak;
-  document.getElementById('totalXp').textContent=state.stats.totalXp.toLocaleString();
-  document.getElementById('totalComplete').textContent=state.stats.totalComplete;
-  document.getElementById('rank').textContent=rank.r;
-  var doneXp=DAILY_MISSIONS.filter(function(m){return state.daily[m.id];}).reduce(function(s,m){return s+m.xp;},0);
-  var totalXp=DAILY_MISSIONS.reduce(function(s,m){return s+m.xp;},0);
-  var pct=totalXp?Math.round(doneXp/totalXp*100):0;
-  document.getElementById('dayPct').textContent=pct+'%';
-  document.getElementById('dayBar').style.width=pct+'%';
-  document.getElementById('dayXp').textContent=doneXp+' / '+totalXp+' XP TODAY';
-  drawXpSpark();
-}
-
-/* The heatmap buckets a day into five intensities, so every day above 600 XP
-   looks identical. This is the magnitude reading the heatmap cannot give.
-   Today is deliberately excluded: it is still being earned, and comparing a
-   half-finished day against a finished one would report a fall that has not
-   happened. */
-function drawXpSpark(){
-  var el=document.getElementById('spark-xp');
-  if(!el) return;
-  var vals=[],now=new Date(),live=false;
-  for(var d=14;d>=1;d--){
-    var date=new Date(now);date.setDate(date.getDate()-d);
-    var xp=state.activity[date.toISOString().slice(0,10)]||0;
-    if(xp>0) live=true;
-    vals.push(xp);
-  }
-  el.setAttribute('data-spark-values',JSON.stringify(live?vals:[]));
-}
-
-function renderMissions(missions,containerId,stateKey){
-  var container=document.getElementById(containerId);
-  container.innerHTML='';
-  missions.forEach(function(m){
-    var done=stateKey==='daily'?!!state.daily[m.id]:!!state.weekly[m.id];
-    var card=document.createElement('div');
-    card.className='mission-card card'+(done?' completed':'')+(m.tier==='legendary'?' legendary-card':'');
-    var icon=document.createElement('div');icon.className='mc-icon';icon.textContent=m.icon;
-    var body=document.createElement('div');body.className='mc-body';
-    var hdr=document.createElement('div');hdr.className='mc-header';
-    var ttl=document.createElement('div');ttl.className='mc-title';ttl.textContent=m.title;
-    var tier=document.createElement('span');tier.className='mc-tier '+m.tier;tier.textContent=m.tier.toUpperCase();
-    hdr.appendChild(ttl);hdr.appendChild(tier);
-    var desc=document.createElement('div');desc.className='mc-desc';desc.textContent=m.desc;
-    var meta=document.createElement('div');meta.className='mc-meta';
-    var xpEl=document.createElement('span');xpEl.className='mc-xp';xpEl.textContent='+'+m.xp+' XP';
-    var elEl=document.createElement('span');elEl.className='mc-element';elEl.textContent='◈ '+m.element;
-    var timeEl=document.createElement('span');timeEl.className='mc-time';timeEl.textContent='⏱ '+m.est;
-    meta.appendChild(xpEl);meta.appendChild(elEl);meta.appendChild(timeEl);
-    if(!done){
-      var btn=document.createElement('button');btn.className='mc-action';btn.textContent='COMPLETE ✓';
-      btn.addEventListener('click',function(){complete(m.id,stateKey,m.xp);});
-      meta.appendChild(btn);
-    } else {
-      var doneSpan=document.createElement('span');doneSpan.className='mc-action done';doneSpan.textContent='COMPLETED ✓';
-      meta.appendChild(doneSpan);
-    }
-    body.appendChild(hdr);body.appendChild(desc);body.appendChild(meta);
-    if(m.progress!=null&&!done){
-      var prog=document.createElement('div');prog.className='mc-progress';
-      var fill=document.createElement('div');fill.className='mc-progress-fill';fill.style.width=m.progress+'%';
-      prog.appendChild(fill);body.appendChild(prog);
-    }
-    card.appendChild(icon);card.appendChild(body);
-    container.appendChild(card);
-  });
-}
-
-function complete(id,src,xp){
-  if(src==='daily'&&state.daily[id]) return;
-  if(src==='weekly'&&state.weekly[id]) return;
-  if(src==='daily') state.daily[id]=Date.now();
-  else state.weekly[id]=Date.now();
-  state.stats.totalXp+=xp;
-  state.stats.totalComplete++;
-  if(state.stats.lastDay!==today){
-    state.stats.streak++;
-    if(state.stats.streak>state.stats.bestStreak) state.stats.bestStreak=state.stats.streak;
-    state.stats.lastDay=today;
-  }
-  state.activity[today]=(state.activity[today]||0)+xp;
-  var allM=DAILY_MISSIONS.concat(WEEKLY_MISSIONS).concat(LEGENDARY_MISSIONS);
-  var m=allM.find(function(x){return x.id===id;});
-  if(m) state.history.unshift({id:id,title:m.title,icon:m.icon,xp:xp,completedAt:new Date().toISOString()});
-  saveState();
-  showXP(xp);
-  toast('MISSION COMPLETE: +'+xp+' XP','var(--green)');
-  renderAll();
-  if(window.__omegaUser){
-    window.OmegaProgress&&OmegaProgress.record({kind:'mission',task:'mission:'+src+':'+id+':'+today,axis:'a',title:m?m.title:'Mission Complete',silent:true});
-  }
-}
-
-function renderHistory(){
-  var list=document.getElementById('historyList');
-  if(!state.history.length){list.innerHTML='<div class="empty">NO COMPLETED MISSIONS YET</div>';return;}
-  list.innerHTML='';
-  state.history.slice(0,50).forEach(function(h){
-    var item=document.createElement('div');item.className='hist-item';
-    var ic=document.createElement('div');ic.className='hi-icon';ic.textContent=h.icon||'⚔';
-    var ttl=document.createElement('div');ttl.className='hi-title';ttl.textContent=h.title;
-    var xp=document.createElement('div');xp.className='hi-xp';xp.textContent='+'+h.xp+' XP';
-    var dt=document.createElement('div');dt.className='hi-date';
-    var diff=(Date.now()-new Date(h.completedAt).getTime())/1000;
-    dt.textContent=diff<3600?Math.floor(diff/60)+'M AGO':diff<86400?Math.floor(diff/3600)+'H AGO':Math.floor(diff/86400)+'D AGO';
-    item.appendChild(ic);item.appendChild(ttl);item.appendChild(xp);item.appendChild(dt);
-    list.appendChild(item);
-  });
-}
-
-function renderHeatmap(){
-  var grid=document.getElementById('heatmapGrid');
-  grid.innerHTML='';
-  var now=new Date();
-  for(var d=89;d>=0;d--){
-    var date=new Date(now);date.setDate(date.getDate()-d);
-    var key=date.toISOString().slice(0,10);
-    var xp=state.activity[key]||0;
-    var intensity=xp===0?0:xp<100?0.2:xp<300?0.5:xp<600?0.75:1;
-    var col=xp===0?'rgba(255,255,255,.04)':'rgba(201,168,76,'+intensity+')';
-    var wrap=document.createElement('div');wrap.style.cssText='display:flex;flex-direction:column;gap:2px';
-    var cell=document.createElement('div');cell.className='hm-cell';cell.style.background=col;
-    cell.title=key+': '+xp+' XP';
-    wrap.appendChild(cell);
-    if(d%7===0){var lbl=document.createElement('div');lbl.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;margin-top:2px';lbl.textContent=date.getDate();wrap.appendChild(lbl);}
-    grid.appendChild(wrap);
-  }
-}
-
-function renderAll(){
-  renderHeader();
-  renderMissions(DAILY_MISSIONS,'dailyList','daily');
-  renderMissions(WEEKLY_MISSIONS,'weeklyList','weekly');
-  renderMissions(LEGENDARY_MISSIONS,'legendaryList','legendary');
-  renderHistory();
-}
-</script>
+<script type="module">import "/omega-mission-board.js";</script>
 <script src="/bg.js" defer></script>
 <script src="/omega-sparkline.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
+</body></html>

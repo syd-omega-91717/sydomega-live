@@ -68,7 +68,7 @@ a{color:inherit;text-decoration:none}
 .tab-panel{display:none}.tab-panel.active{display:block}
 
 /* STAT CARDS */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0;border-bottom:1px solid var(--line)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;border-bottom:1px solid var(--line)}
 .sg-item{padding:16px 18px;border-right:1px solid var(--line);cursor:pointer;transition:background .15s;position:relative}
 .sg-item:last-child{border-right:none}
 .sg-item:hover{background:rgba(201,168,76,.04)}
@@ -206,6 +206,10 @@ a{color:inherit;text-decoration:none}
 .pp-top .ord small{display:block;font-family:var(--M);font-size:.5rem;color:var(--muted);letter-spacing:.1em;margin-top:.2rem}
 .pp-top .seal{font-family:var(--D);font-size:1.6rem;color:var(--gold);text-shadow:0 0 16px rgba(201,168,76,.3)}
 .pp-body{display:flex;gap:1rem}
+.pp-art{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 4px}
+.pp-art figure{margin:0;text-align:center}
+.pp-art img{display:block;width:100%;max-width:200px;margin:0 auto;height:auto;aspect-ratio:1;object-fit:contain}
+.pp-art figcaption{font-family:var(--M);font-size:12px;letter-spacing:.12em;color:var(--muted);margin-top:6px}
 .pp-photo{width:64px;height:64px;flex-shrink:0;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:1.4rem;color:var(--gold);background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);background-size:cover;background-position:center}
 .pp-fields{flex:1;min-width:0}
 .pp-name{font-family:var(--D);font-size:1rem;color:var(--ink);margin-bottom:.6rem}
@@ -219,6 +223,7 @@ a{color:inherit;text-decoration:none}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dot.none{background:var(--muted)}
 .dot.submitted{background:var(--solar);box-shadow:0 0 6px var(--solar)}
+.dot.rejected{background:var(--crim)}
 .dot.verified{background:var(--green);box-shadow:0 0 6px var(--green)}
 
 .kyc{max-width:440px;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:1.2rem;margin-top:.5rem}
@@ -226,6 +231,11 @@ a{color:inherit;text-decoration:none}
 .kyc input[type="file"]{width:100%;font-size:.75rem;color:var(--ink);margin-bottom:.8rem}
 .kyc .sb{font-family:var(--M);font-size:.68rem;letter-spacing:.08em;padding:.6rem 1.2rem;background:var(--gold);color:var(--void);border:none;cursor:pointer;border-radius:2px;transition:all .2s}
 .kyc .sb:hover{background:var(--solar)}
+.kyc .kyc-consent{display:flex;gap:.5rem;align-items:flex-start;font-family:var(--R);font-size:.8rem;letter-spacing:0;color:var(--ink);margin-bottom:.8rem;line-height:1.5}
+.kyc .kyc-consent input{margin-top:.25rem;flex:none}
+.kyc .kyc-consent a{color:var(--gold)}
+.kyc .kyc-withdraw{background:none;color:var(--crim);border:1px solid var(--crim);margin-left:.5rem}
+.kyc .kyc-withdraw:hover{background:rgba(139,0,0,.15)}
 .kyc .msg{font-family:var(--M);font-size:.65rem;margin-top:.6rem;min-height:1em}
 
 .kyc-status-hero{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;margin-bottom:.5rem}
@@ -693,7 +703,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="social-panel">
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://x.com/SYDOMEGA_AI"><span class="sc-icon" style="color:#1DA1F2">&#x25CF;</span><div class="sc-body"><div class="scb-handle">@SYDOMEGA_AI</div><div class="scb-desc">Twitter / X -- Sovereign broadcast</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://instagram.com/sydomega.ai"><span class="sc-icon" style="color:#E1306C">&#x25C8;</span><div class="sc-body"><div class="scb-handle">@sydomega.ai</div><div class="scb-desc">Instagram -- Cinematic universe</div></div></a>
-        <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/search/results/people/?keywords=Sleiman%20Youssef%20Dagher"><span class="sc-icon" style="color:#0A66C2">&#x25B6;</span><div class="sc-body"><div class="scb-handle">Sleiman Youssef Dagher</div><div class="scb-desc">LinkedIn -- Professional network</div></div></a>
+        <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/search/results/people/?keywords=Sleiman%20Youssef%20Dagher"><span class="sc-icon" style="color:#0A66C2">&#x25B6;</span><div class="sc-body"><div class="scb-handle">S.Y.D</div><div class="scb-desc">LinkedIn -- Professional network</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://t.me/SYDOMEGA_AI"><span class="sc-icon" style="color:var(--gold)">&#x25B2;</span><div class="sc-body"><div class="scb-handle">SYDOMEGA_AI</div><div class="scb-desc">Telegram -- Order channel</div></div></a>
       </div>
       <div class="sechead" data-reveal="fade-up" data-i18n="prof_social_identification_header">SOVEREIGN IDENTIFICATION</div>
@@ -1171,9 +1181,9 @@ function frame(){ctx.clearRect(0,0,120,120);
     <div class="topbar"><div class="t" data-i18n="prof_passport_title">SOVEREIGN PASSPORT<small data-i18n="prof_passport_subtitle">YOUR IDENTITY WITHIN THE ORDER <span data-canon-lattice="twelve"></span></small></div></div>
 
     <div class="passport" id="pp">
-      <div class="pp-top"><div class="ord">SYD OMEGA 91717<small>SOVEREIGN ORDER</small></div><div class="seal">\u03A9</div></div>
+      <div class="pp-top"><div class="ord">SYD OMEGA 91717<small>SOVEREIGN ORDER</small></div><div class="seal">&#937;</div></div>
       <div class="pp-body">
-        <div class="pp-photo" id="pp-photo">\u03A9</div>
+        <div class="pp-photo" id="pp-photo">&#937;</div>
         <div class="pp-fields">
           <div class="pp-name" id="pp-name"> -- </div>
           <div class="pp-row">
@@ -1186,18 +1196,24 @@ function frame(){ctx.clearRect(0,0,120,120);
           </div>
         </div>
       </div>
+      <div class="pp-art" id="pp-art" hidden>
+        <figure><img id="pp-art-sign" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption id="pp-art-sign-cap"></figcaption></figure>
+        <figure><img id="pp-art-stage" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption id="pp-art-stage-cap"></figcaption></figure>
+      </div>
       <div class="pp-id"><small>SOVEREIGNTY ID</small> &nbsp;<span id="pp-id"> -- </span></div>
       <div class="pp-status"><span class="dot none" id="pp-dot"></span><span id="pp-stat">VERIFICATION: NOT SUBMITTED</span></div>
     </div>
 
-    <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
+    <div class="notice">Your Passport is yours immediately. An identity document is <b>optional</b>: a person reviews it, nothing is verified automatically, and it is <b>deleted as soon as a decision is recorded</b>. <a href="/privacy.html#identity-documents">How identity documents are handled</a></div>
 
     <div class="sechead" data-reveal="fade-up" data-i18n="prof_passport_submit_header">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
       <label data-i18n="prof_passport_file_label">GOVERNMENT ID OR PASSPORT (image or PDF)</label>
       <input id="kyc-file" type="file" accept="image/*,application/pdf" />
+      <label class="kyc-consent"><input id="kyc-consent" type="checkbox" /> <span>I agree to my document being stored only until it is reviewed, as described in the <a href="/privacy.html#identity-documents">identity documents notice</a>.</span></label>
       <button class="sb" id="kyc-submit" data-i18n="prof_passport_submit_btn">SUBMIT FOR VERIFICATION</button>
-      <div class="msg" id="kyc-msg"></div>
+      <button class="sb kyc-withdraw" id="kyc-withdraw" type="button" hidden>WITHDRAW AND DELETE</button>
+      <div class="msg" id="kyc-msg" role="status" aria-live="polite"></div>
     </div>
   
 </div>
@@ -1247,7 +1263,6 @@ function frame(){ctx.clearRect(0,0,120,120);
         <div class="save-msg" id="settings-save-msg" data-i18n="profile_msg_settings_saved">Settings saved to sovereign profile.</div>
       </div>
     </div>
-  </main>
 
     <div class="tab-panel" id="tab-character">
 <div style="display:flex;align-items:center;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(201,168,76,.15)">
@@ -1472,7 +1487,7 @@ const MATS=[
   {n:5,key:'material_titanium',col:'#607D8B',thresh:'6.77'},{n:6,key:'material_carbon',col:'#455A64',thresh:'8.03'},
   {n:7,key:'material_gold',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,key:'material_platinum',col:'#E8D5B7',thresh:'10.55'},
   {n:9,key:'material_diamond',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,key:'material_adamant',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
-  {n:11,key:'material_prime',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,key:'material_omega_master',col:'#FFD700',thresh:'27.83679'},
+  {n:11,key:'material_prime',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,key:'material_omega_master',col:'#FFD700',thresh:'27.8366'},
 ];
 
 const PHASES=[
@@ -1496,9 +1511,83 @@ function drawAchBadge(cv,sym,col){
     ctx.fillText(sym,40,41);ctx.shadowBlur=0;requestAnimationFrame(f);}f();
 }
 
-async function buildAchievements(uid){
-  const g=document.getElementById('ach-grid');g.innerHTML='';
-  let trophyCount=0,medalCount=0,certCount=0;
+/* Earned counts come from the member's profile (trophies_earned /
+   medals_earned / certificates_earned, which match the trophies, medals and
+   certificates rows). This used to mark all 36 as earned and print 36 for
+   every member -- a catalogue count rendered as the member's own record. */
+function buildAchievementsGrid(earned){
+  const g=document.getElementById('ach-grid');
+  if(!g) return;
+  g.innerHTML='';
+  const e=earned||{};
+  const tr=Number(e.trophies_earned||0), me=Number(e.medals_earned||0), ce=Number(e.certificates_earned||0);
+  let totalCount=0;
+  ACHIEV.forEach((a)=>{
+    const isMedal=a.type==='MEDAL', isCert=a.type==='CERT';
+    const idx=isCert?a.n-24:isMedal?a.n-12:a.n;
+    const got=isCert?idx<=ce:isMedal?idx<=me:idx<=tr;
+    const c=document.createElement('div');c.className='ach-badge'+(got?'':' locked');c.style.borderColor=a.col+(got?'44':'1a');
+    if(!got)c.style.opacity='.4';
+    const cv=document.createElement('canvas');cv.className='ab-canvas';
+    const nameDiv=document.createElement('div');nameDiv.className='ab-name';
+    const tierDiv=document.createElement('div');tierDiv.className='ab-tier';tierDiv.style.borderColor=a.col+'77';tierDiv.style.color=a.col;
+
+    const achName=window.OmegaI18n?window.OmegaI18n.t(a.key,'en'):'';
+    nameDiv.textContent=(achName||a.key).toUpperCase().slice(0,12);
+    tierDiv.textContent=a.type||'TROPHY';
+
+    c.appendChild(cv);c.appendChild(nameDiv);c.appendChild(tierDiv);g.appendChild(c);
+    if(got){drawAchBadge(cv,a.sym,a.col);totalCount++;}
+  });
+  const sg=document.getElementById('sg-ach');if(sg)sg.textContent=totalCount+'/'+ACHIEV.length;
+  const sgs=document.getElementById('sg-ach-sub');if(sgs)sgs.textContent=totalCount>=ACHIEV.length?'All complete':(totalCount+' earned so far');
+}
+
+function buildCerts(uid){
+  const g=document.getElementById('cert-display');
+  if(!g) return;
+  g.innerHTML='';
+  const certs=ACHIEV.filter(a=>a.type==='CERT');
+  certs.forEach((cert)=>{
+    const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
+    const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
+    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:12px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
+    g.appendChild(c);
+  });
+}
+
+function buildConsole(){
+  const g=document.getElementById('console-grid');
+  const btns=[
+    {g:'\u25CF',t:'ACCESS CONTROL',d:'Grant or revoke member access. Live trial timers.',href:'/approvals.html'},
+    {g:'\u2609',t:'ALL MEMBERS',d:'Full member registry with identity and axis data.',href:'/approvals.html'},
+    {g:'\u2732',t:'SOVEREIGN OVERSIGHT',d:'System state, control deck, live platform status.',href:'/interface-omni.html'},
+    {g:'\u25C8',t:'COMPLIANCE',d:'Platform governance, charter, and legal records.',href:'/compliance.html'},
+    {g:'\u2736',t:'INTELLIGENCE',d:'Full analytics, AI agent logs, dimension viewer.',href:'/intelligence.html'},
+    {g:'\u22D4',t:'BLOODLINE VAULT',d:'Succession, inheritance, and heir protocols.',href:'/bloodline.html'},
+    {g:'\u2316',t:'SYSTEM GRID',d:'Platform infrastructure and microservices.',href:'/grid.html'},
+  ];
+  g.innerHTML='';
+  btns.forEach(b=>{
+    const el=document.createElement('button');el.className='console-btn';
+    el.innerHTML=`<span class="cb-glyph">${b.g}</span><div class="cb-title">${b.t}</div><div class="cb-desc">${b.d}</div>`;
+    el.addEventListener('click',()=>window.location.href=b.href);
+    g.appendChild(el);
+  });
+}
+
+/* Overview boot. Its header was lost in the 2026-07-26 upload (60588625), which
+   left this body attached to a buildAchievements() nothing called -- so the
+   stat bar stayed "--", the owner console/member list never loaded and every
+   [data-loading] region spun forever. Restored here and invoked below. */
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const res=await sb.from('profiles').select('is_owner,display_name,email,sign,axis_a,axis_b,axis_c,trophies_earned,medals_earned,certificates_earned').eq('id',sess.user.id).maybeSingle();
+  if(res.error) console.warn('[Omega Profile] profile lookup failed:',res.error);
+  const pr=res.data||{};
+  const isOwner=!!pr.is_owner;
+  const a=Number(pr.axis_a||1), b=Number(pr.axis_b||1), c=Number(pr.axis_c||1);
     try{
       var PHI=1.6180339887,EU=2.7182818285;
       var auth_val=Math.round(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c||0.001,3))*PHI/EU*1000)/1000;
@@ -1527,7 +1616,7 @@ async function buildAchievements(uid){
   document.getElementById('sg-coord-sub').textContent=realAuth>=APEX_AUTH-0.001?(window.OmegaI18n?window.OmegaI18n.t('profile_coord_apex_locked',lang):'Apex locked'):(window.OmegaI18n?window.OmegaI18n.t('profile_coord_in_progress',lang):'In progress');
   const myTier=MATS.filter(m=>realAuth>=parseFloat(m.thresh));
   const curTier=myTier.length?myTier[myTier.length-1]:MATS[0];
-  const tierName=window.OmegaI18n?window.OmegaI18n.t(curTier.key,lang):'';
+  const tierName=(window.OmegaI18n?window.OmegaI18n.t(curTier.key,lang):'')||curTier.key.replace('material_','').replace(/_/g,' ').toUpperCase();
   document.getElementById('sg-tier').textContent=tierName||'';
   document.getElementById('sg-tier-sub').textContent=myTier.length+' '+(window.OmegaI18n?window.OmegaI18n.t('profile_tier_of_12_sealed',lang):'of 12 sealed');
   document.getElementById('sg-grade').textContent=myTier.length+'/12';
@@ -1559,7 +1648,7 @@ async function buildAchievements(uid){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'Sleiman Youssef Dagher':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
@@ -1589,15 +1678,28 @@ async function buildAchievements(uid){
     setInterval(loadMembers, 30000);
   } else {
     document.getElementById('member-credentials-note').style.display='block';
+    /* Access control is the owner's console: loadMembers() only runs for the
+       owner, so for a member this panel's list could only ever spin. */
+    const tac=document.getElementById('tab-access'); if(tac) tac.style.display='none';
   }
-  buildAchievementsGrid();buildTiers(realAuth);buildCerts(sess.user.id);
-  buildMembershipCard();
+  buildAchievementsGrid(pr);buildCerts(sess.user.id);
+  buildMembershipCard(isOwner);
 }
 
-async function buildMembershipCard(){
+async function buildMembershipCard(isOwner){
   const card=document.getElementById('membership-card');
   if(!card) return;
   const lang=(localStorage.getItem('omega_lang')||'en');
+  /* The owner holds lifetime access (owner_lifetime_guard), not a Stripe
+     subscription: my_subscription() returns status 'none' for them, which
+     rendered "NO ACTIVE MEMBERSHIP" on the founder's own profile. */
+  if(isOwner){
+    const sgM=document.getElementById('sg-member'), sgMS=document.getElementById('sg-member-sub');
+    if(sgM) sgM.textContent='SOVEREIGN';
+    if(sgMS) sgMS.textContent='\u221e LIFETIME';
+    card.innerHTML='<div style="font-family:var(--D);font-size:16px;color:var(--gold)">SOVEREIGN</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-top:4px">\u221e LIFETIME ACCESS &middot; IRREVOCABLE</div>';
+    return;
+  }
   let sub={tier:'none',status:'none',period_end:null,payments_enabled:false};
   try{ const r=await sb.rpc('my_subscription'); if(r.data) sub=r.data; else if(r.error) console.warn('[Omega Profile] subscription lookup failed:',r.error); }catch(e){console.warn('[Omega Profile] subscription lookup failed:',e);}
   const tier=(sub.tier||'none');
@@ -1629,7 +1731,8 @@ async function buildMembershipCard(){
     '</div>'+
     '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">'+manageText+' &rarr;</a></div>';
 }
-/* boot() removed -- module self-initialises via IIFE below */;
+window.boot=boot;
+boot().catch(function(e){console.warn('[Omega Profile] boot failed:',e);});
 (async()=>{try{const s=(await sb.auth.getSession()).data.session;if(!s)return;const pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};const ti=document.getElementById('sub-tier');if(ti)ti.textContent=(pr.subscription_tier||'free').toUpperCase();const en=document.getElementById('sub-end');if(en&&pr.subscription_period_end)en.textContent=new Date(pr.subscription_period_end).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){console.log('sub module:',e);}})();
 </script>
 <script>
@@ -1785,6 +1888,72 @@ function makeToggle(on){
   return el;
 }
 
+const MEMBER_PREFERENCE_KEYS={
+  'Dark Mode':'dark_mode',
+  'Compact Layout':'compact_layout',
+  'Animations':'animations',
+  'Cursor Trail':'cursor_trail',
+  'Anonymous Mode':'anonymous_mode',
+  'Matrix Milestone Alerts':'matrix_milestone_alerts',
+  'Agent Messages':'agent_messages',
+  'Daily Oracle':'daily_oracle',
+  'Economic Events':'economic_events',
+  'Ambient Frequency':'ambient_frequency',
+  'Click Sounds':'click_sounds',
+  'Oracle Voice':'oracle_voice'
+};
+
+function preferencePayload(){
+  const payload={};
+  document.querySelectorAll('.toggle[data-key]').forEach(t=>{
+    const key=MEMBER_PREFERENCE_KEYS[t.dataset.key];
+    if(key) payload[key]=t.classList.contains('on');
+  });
+  return payload;
+}
+
+function applyMemberPreferences(row){
+  if(!row) return;
+  document.querySelectorAll('.toggle[data-key]').forEach(t=>{
+    const key=MEMBER_PREFERENCE_KEYS[t.dataset.key];
+    if(key && typeof row[key]==='boolean') t.classList.toggle('on',row[key]);
+  });
+}
+
+async function loadMemberPreferences(){
+  try{
+    const r=await sb.rpc('get_member_preferences');
+    if(r.error) throw r.error;
+    applyMemberPreferences(r.data);
+    return r.data;
+  }catch(e){
+    console.warn('member_preferences_load_failed',e);
+    return null;
+  }
+}
+
+async function saveMemberPreferences(){
+  const m=document.getElementById('settings-save-msg');
+  const p=preferencePayload();
+  const r=await sb.rpc('set_member_preferences',{
+    p_dark_mode:p.dark_mode,
+    p_compact_layout:p.compact_layout,
+    p_animations:p.animations,
+    p_cursor_trail:p.cursor_trail,
+    p_anonymous_mode:p.anonymous_mode,
+    p_matrix_milestone_alerts:p.matrix_milestone_alerts,
+    p_agent_messages:p.agent_messages,
+    p_daily_oracle:p.daily_oracle,
+    p_economic_events:p.economic_events,
+    p_ambient_frequency:p.ambient_frequency,
+    p_click_sounds:p.click_sounds,
+    p_oracle_voice:p.oracle_voice
+  });
+  if(r.error) throw r.error;
+  applyMemberPreferences(r.data);
+  return r.data;
+}
+
 function buildSettings(){
   const g=document.getElementById('settings-grid');g.innerHTML='';
   SETTINGS_DATA.forEach(sec=>{
@@ -1827,17 +1996,23 @@ async function bootIdentityExtra(){
     priv.items.forEach(item=>{ if(item[0]==='Show in Leaderboard'||item[0]==='Public Authority Score') item[1]=on; });
   }
   buildSettings();
+  await loadMemberPreferences();
 
   document.getElementById('btn-settings-save')?.addEventListener('click',async()=>{
     const m=document.getElementById('settings-save-msg');
     const leaderboardToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Show in Leaderboard');
     const authorityToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Public Authority Score');
     const wantsPublic = (leaderboardToggle&&leaderboardToggle.classList.contains('on')) || (authorityToggle&&authorityToggle.classList.contains('on'));
-    const r=await sb.rpc('set_profile_visibility',{p_public:wantsPublic});
-    if(r.data&&r.data.ok){
-      m.textContent='Privacy setting saved to your profile. (Display, Notifications, and Audio preferences are not yet backed by persistent storage -- they reset each visit for now.)';
-    } else {
-      m.textContent='Could not save privacy setting: '+((r.data&&r.data.error)||r.error?.message||'unknown error');
+    try{
+      const [visibility,preferences]=await Promise.all([
+        sb.rpc('set_profile_visibility',{p_public:wantsPublic}),
+        saveMemberPreferences()
+      ]);
+      if(visibility.error) throw visibility.error;
+      if(preferences) applyMemberPreferences(preferences);
+      m.textContent='Profile and experience preferences saved to your sovereign profile.';
+    }catch(e){
+      m.textContent='Could not save preferences: '+(e.message||e);
     }
     m.style.display='block';setTimeout(()=>m.style.display='none',5000);
   });
@@ -1997,7 +2172,7 @@ document.getElementById('btn-char-save')?.addEventListener('click',async functio
 async function bootCharacterFull(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
-  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c,display_name').eq('id',sess.user.id).maybeSingle();
+  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c,display_name,is_owner').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
   const sign=d.sign||null;
   const a=parseFloat(d.axis_a)||1, b=parseFloat(d.axis_b)||1, c=parseFloat(d.axis_c)||1;
@@ -2012,7 +2187,7 @@ async function bootCharacterFull(){
   }
   if(ch){
     document.getElementById('cm-sign').textContent=sign.toUpperCase()+' . '+ch.archetype;
-    document.getElementById('cm-name').textContent=d.display_name||ch.name;
+    document.getElementById('cm-name').textContent=d.is_owner?'S.Y.D':(d.display_name||ch.name);
     document.getElementById('cm-role').textContent=ch.role;
     const traits=document.getElementById('cm-traits');
     ch.traits.forEach(t=>{const s=document.createElement('span');s.className='cm-trait';s.textContent=t;traits.appendChild(s);});
@@ -2146,7 +2321,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var ppSb=sb;
 let ppUid=null;
 
-const PP_RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
+const PP_RANKS=['Initiate','Seeker','Strategist','Master','Omega Elite','Visionary','Architect','Sovereign','Universal S.Y.D'];
 const PP_MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
 const PP_GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
 const PP_AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
@@ -2169,8 +2344,10 @@ function ppNotice(msg){
 function ppSetStatus(s){
   var dot=document.getElementById('pp-dot'), txt=document.getElementById('pp-stat');
   if(!dot||!txt) return;
-  dot.className='dot '+(s==='submitted'?'submitted':(s==='verified'?'verified':'none'));
-  txt.textContent='VERIFICATION: '+(s==='submitted'?'SUBMITTED  .  PENDING':(s==='verified'?'VERIFIED':'NOT SUBMITTED'));
+  var known={submitted:'SUBMITTED  .  PENDING',verified:'VERIFIED',rejected:'NOT ACCEPTED'};
+  dot.className='dot '+(known[s]?s:'none');
+  txt.textContent='VERIFICATION: '+(known[s]||'NOT SUBMITTED');
+  var wd=document.getElementById('kyc-withdraw'); if(wd) wd.hidden=(s!=='submitted');
 }
 
 async function bootPassportExtra(){
@@ -2193,8 +2370,28 @@ async function bootPassportExtra(){
   var sid='\u03A9-91717-'+sign.slice(0,3).toUpperCase()+'-'+ppUid.replace(/-/g,'').slice(0,6).toUpperCase();
   document.getElementById('pp-id').textContent=sid;
   if(d.avatar_url){ var ph=document.getElementById('pp-photo'); if(ph){ph.style.backgroundImage='url('+d.avatar_url+')'; ph.textContent='';} }
+  ppArt(sign, tier);
   ppSetStatus(d.kyc_status||'none');
   kycGate();
+}
+/* The member's own sign art and stage medal: the owner's collection
+   (BlockChain_Market_Analysis_syd_omega_91717/horoscope_sign, Logo_Medal_Stage_1_to_9)
+   with the baked-in checkerboard cut to real transparency, 512px WebP, in
+   /assets/legacy/ (~45KB each vs ~170KB). Both follow data this card already
+   shows -- profiles.sign and the axis-derived stage 1..9, one medal per stage --
+   so the art asserts nothing the record does not. The medal carries its own
+   stage name, so the caption gives only the number. */
+function ppArt(sign, tier){
+  var box=document.getElementById('pp-art'); if(!box) return;
+  var k=String(sign||'').toLowerCase();
+  if(!PP_GLY[sign] || !(tier>=1 && tier<=9)) { box.hidden=true; return; }
+  var si=document.getElementById('pp-art-sign'), st=document.getElementById('pp-art-stage');
+  var dir='/assets/legacy/';
+  si.src=dir+'sign-'+k+'.webp'; si.alt=sign+' sign art';
+  st.src=dir+'stage-'+tier+'.webp'; st.alt='Stage '+tier+' medal';
+  document.getElementById('pp-art-sign-cap').textContent=sign.toUpperCase();
+  document.getElementById('pp-art-stage-cap').textContent='STAGE '+tier;
+  box.hidden=false;
 }
 
 /* KYC intake (docs/decisions/kyc-intake/PLAN.md). Members hold no UPDATE on
@@ -2210,7 +2407,11 @@ var KYC_ERR={
   bad_path:'The upload landed outside your private folder, so it was not recorded.',
   no_document:'The upload could not be found in storage, so it was not recorded.',
   already_verified:'Your identity is already verified.',
-  no_profile:'Your profile could not be found.'
+  no_profile:'Your profile could not be found.',
+  consent_required:'Tick the box to agree to how the document is stored before submitting.',
+  not_submitted:'There is no pending submission to withdraw.',
+  still_stored:'The document could not be deleted yet. Try again.',
+  document_delete_failed:'The document could not be deleted. Try again.'
 };
 async function kycIntakeOpen(){
   try{ var r=await ppSb.rpc('get_platform_flag',{p_key:'kyc_intake_enabled'}); return !r.error && r.data===true; }
@@ -2220,7 +2421,8 @@ async function kycGate(){
   var btn=document.getElementById('kyc-submit'), fileEl=document.getElementById('kyc-file'), msg=document.getElementById('kyc-msg');
   if(!btn) return;
   var open=await kycIntakeOpen();
-  btn.disabled=!open; if(fileEl) fileEl.disabled=!open;
+  var cEl=document.getElementById('kyc-consent');
+  btn.disabled=!open; if(fileEl) fileEl.disabled=!open; if(cEl) cEl.disabled=!open;
   btn.setAttribute('data-kyc-intake', open?'open':'closed');
   if(!open && msg){ msg.style.color='var(--muted)'; msg.textContent=KYC_ERR.intake_closed; }
 }
@@ -2231,6 +2433,8 @@ async function submitKyc(){
   function fail(t){ msg.style.color='var(--crim)'; msg.textContent=t; }
   if(!(await kycIntakeOpen())){ fail(KYC_ERR.intake_closed); return; }
   if(!fileEl.files || !fileEl.files[0]){ fail('Choose a document to submit.'); return; }
+  var consentEl=document.getElementById('kyc-consent');
+  if(!consentEl || !consentEl.checked){ fail(KYC_ERR.consent_required); return; }
   if(!window.OmegaStorage){ fail('Secure storage isn’t available right now.'); return; }
   msg.style.color='var(--muted)'; msg.textContent='Uploading securely…';
   var path=null;
@@ -2239,7 +2443,7 @@ async function submitKyc(){
        path=up.path||null;
        if(!path){ fail('Upload failed: storage returned no path.'); return; } }
   catch(e){ fail('Upload failed: '+(e.message||e)); return; }
-  var r=await ppSb.rpc('submit_kyc',{p_doc_path:path});
+  var r=await ppSb.rpc('submit_kyc',{p_doc_path:path,p_consent:true});
   var res=r.data||{};
   if(r.error || res.ok!==true){
     /* Never leave an identity document in storage without a record. */
@@ -2248,12 +2452,31 @@ async function submitKyc(){
     return;
   }
   if(res.replaced){ try{ await window.OmegaStorage.remove('uploads',res.replaced); }catch(e){} }
-  msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending — a person reviews it; nothing is verified automatically.';
+  msg.style.color='var(--green)'; msg.textContent='Document submitted. A person reviews it; it is deleted once a decision is recorded.';
   ppSetStatus('submitted');
-  fileEl.value='';
+  fileEl.value=''; consentEl.checked=false;
+}
+/* Withdraw: the server refuses while the document exists and returns its path;
+   clearIdentityDocThen deletes it through the Storage API and asks again, so
+   the status only changes once the file is really gone. */
+async function withdrawKyc(){
+  var msg=document.getElementById('kyc-msg'), btn=document.getElementById('kyc-withdraw');
+  if(!msg||!btn) return;
+  function fail(t){ msg.style.color='var(--crim)'; msg.textContent=t; }
+  if(!confirm('Withdraw your submission and delete the document now?')) return;
+  if(!window.OmegaStorage){ fail('Secure storage isn’t available right now.'); return; }
+  btn.disabled=true; msg.style.color='var(--muted)'; msg.textContent='Deleting…';
+  try{
+    var r=await window.OmegaStorage.clearIdentityDocThen(function(){ return ppSb.rpc('withdraw_kyc'); });
+    var res=(r&&r.data)||{};
+    if(!r || r.error || res.ok!==true){ fail(r&&r.error ? 'Could not withdraw: '+r.error.message : (KYC_ERR[res.error]||('Not withdrawn ('+res.error+').'))); return; }
+    msg.style.color='var(--green)'; msg.textContent='Withdrawn. Your document has been deleted.';
+    ppSetStatus('none');
+  } finally { btn.disabled=false; }
 }
 
 document.getElementById('kyc-submit')?.addEventListener('click',submitKyc);
+document.getElementById('kyc-withdraw')?.addEventListener('click',withdrawKyc);
 window.bootPassportExtra = bootPassportExtra;
 
 </script>
@@ -2326,40 +2549,6 @@ function buildDocs(){
     const sl=d.status==='verified'?'VERIFIED [*]':'PENDING SUBMISSION';
     c.innerHTML=`<div class="dc-badge">READY TO ACTIVATE</div><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-desc">${d.desc}</div><span class="dc-status" style="${st}">${sl}</span>`;
     c.addEventListener('click',function(){ alert('Document upload will open the KYC provider flow once activated. Your submission will be securely encrypted.'); });
-    g.appendChild(c);
-  });
-}
-
-function buildAchievementsGrid(){
-  const g=document.getElementById('ach-grid');
-  if(!g) return;
-  g.innerHTML='';
-  let totalCount=0;
-  ACHIEV.forEach((a)=>{
-    const c=document.createElement('div');c.className='ach-badge';c.style.borderColor=a.col+'44';
-    const cv=document.createElement('canvas');cv.className='ab-canvas';
-    const nameDiv=document.createElement('div');nameDiv.className='ab-name';
-    const tierDiv=document.createElement('div');tierDiv.className='ab-tier';tierDiv.style.borderColor=a.col+'77';tierDiv.style.color=a.col;
-
-    const achName=window.OmegaI18n?window.OmegaI18n.t(a.key,'en'):'';
-    nameDiv.textContent=(achName||a.key).toUpperCase().slice(0,12);
-    tierDiv.textContent=a.type||'TROPHY';
-
-    c.appendChild(cv);c.appendChild(nameDiv);c.appendChild(tierDiv);g.appendChild(c);
-    drawAchBadge(cv,a.sym,a.col);totalCount++;
-  });
-  const sg=document.getElementById('sg-ach');if(sg)sg.textContent=totalCount;
-}
-
-function buildCerts(uid){
-  const g=document.getElementById('cert-display');
-  if(!g) return;
-  g.innerHTML='';
-  const certs=ACHIEV.filter(a=>a.type==='CERT');
-  certs.forEach((cert)=>{
-    const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
-    const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
-    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:12px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
     g.appendChild(c);
   });
 }

@@ -1235,3 +1235,37 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
    labels use a readable ceiling. */
 :where(.sechead,.card-title,.card-lbl,.card-label,.kpi-l,.kpi-label,
        .tbl-hcell,.bar-lbl,.chip,.tab-btn){letter-spacing:min(2.5px,0.22em)}
+
+
+/* ── DESKTOP-POINTER RECOVERY ─────────────────────────────────────────────
+   A laptop browser can expose a reduced CSS viewport because of browser
+   zoom, OS display scaling, split-window layouts, or accessibility settings.
+   The width-only mobile breakpoint can therefore incorrectly convert the
+   entire platform shell into the mobile presentation. A fine pointer + hover
+   is a desktop interaction signal; preserve the desktop shell when there is
+   enough CSS room for the navigation rail. True touch/mobile devices retain
+   the normal width breakpoints.
+   ----------------------------------------------------------------------- */
+@media (hover:hover) and (pointer:fine) and (min-width:600px) and (max-width:700px){
+  .shell{flex-direction:row}
+  .side{
+    width:clamp(60px,7vw,80px)!important;
+    height:100vh!important;
+    flex-direction:column!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    position:sticky!important;
+    top:0!important
+  }
+  .card-grid,.game-grid,.exam-grid{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))
+  }
+  .kpi-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .split-hero,.reserve-hero,.progress-split{
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  .tab-btn{
+    padding:clamp(8px,1.5vw,12px) clamp(10px,2vw,20px);
+    font-size:12px
+  }
+}

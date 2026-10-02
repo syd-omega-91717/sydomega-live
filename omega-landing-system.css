@@ -811,6 +811,25 @@
   .ohz-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+@media (max-width:1100px){
+  .omega-figure-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .omega-figure-card-primary{grid-column:span 2}
+}
+@media (max-width:700px){
+  .omega-figure{padding-block:38px}
+  .omega-figure-head{grid-template-columns:1fr;align-items:start}
+  .omega-figure-seal{width:118px;min-height:118px}
+  .omega-figure-seal-ring{font-size:36px}
+  .omega-figure-grid{grid-template-columns:1fr}
+  .omega-figure-card,.omega-figure-card-primary{grid-column:span 1;min-height:175px}
+  .omega-figure-bottom{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  .omega-figure-seal,.omega-figure-card{transition:none}
+  .omega-figure-seal:hover,.omega-figure-card:hover{transform:none}
+  .omega-figure-pulse{animation:none}
+}
+
 /* Motion is decoration here: every animation above is a slow rotation or
    an opacity breath, so under reduced-motion the sculpture simply holds
    its pose. Nothing is hidden by an animation, so nothing disappears. */

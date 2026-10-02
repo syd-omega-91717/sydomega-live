@@ -8,6 +8,18 @@ const corsHeaders = {
   'Vary': 'Origin',
 }
 
+const ALLOWED_ACTIONS = new Set([
+  'catalog',
+  'module_manifest',
+  'module_state',
+  'module_read',
+  'issue_referral_code',
+  'attribute_referral',
+  'enqueue_agent_task',
+])
+
+const MAX_BODY_BYTES = 64 * 1024
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (req.method !== 'POST') {
@@ -18,6 +30,11 @@ Deno.serve(async (req: Request) => {
     const authHeader = req.headers.get('Authorization')
     if (!authHeader?.startsWith('Bearer ')) {
       return Response.json({ error: 'authorization_required' }, { status: 401, headers: corsHeaders })
+    }
+
+    const contentLength = Number(req.headers.get('content-length') ?? 0)
+    if (contentLength > MAX_BODY_BYTES) {
+      return Response.json({ error: 'request_too_large' }, { status: 413, headers: corsHeaders })
     }
 
     const token = authHeader.slice('Bearer '.length)
@@ -40,9 +57,11 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.json()
     const action = typeof body?.action === 'string' ? body.action : ''
-    const payload = body?.payload && typeof body.payload === 'object' ? body.payload : {}
+    const payload = body?.payload && typeof body.payload === 'object' && !Array.isArray(body.payload)
+      ? body.payload
+      : {}
 
-    if (!['issue_referral_code', 'attribute_referral', 'enqueue_agent_task'].includes(action)) {
+    if (!ALLOWED_ACTIONS.has(action)) {
       return Response.json({ error: 'action_not_allowed' }, { status: 400, headers: corsHeaders })
     }
 

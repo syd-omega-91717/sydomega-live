@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate the production runtime frontier artifacts without inventing provider state."""
 from __future__ import annotations
+import argparse
 import json
 from pathlib import Path
 
@@ -10,6 +11,7 @@ def fail(msg):
     return 1
 
 def main():
+    argparse.ArgumentParser(description=__doc__).parse_args()
     runtime=json.loads((ROOT/"config/omega-module-runtime.json").read_text(encoding="utf-8"))
     if len(runtime["modules"]) != 18 or sum(len(m["actions"]) for m in runtime["modules"]) != 54:
         return fail("canonical module/action count changed")

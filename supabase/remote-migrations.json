@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 306,
-  "latestRemoteMigration": "20261002085421",
+  "remoteMigrationCount": 307,
+  "latestRemoteMigration": "20261002085641",
   "versions": [
     "0001",
     "0002",
@@ -309,7 +309,8 @@
     "20261002084553",
     "20261002084948",
     "20261002085201",
-    "20261002085421"
+    "20261002085421",
+    "20261002085641"
   ],
   "migrations": [
     {
@@ -1535,6 +1536,10 @@
     {
       "version": "20261002085421",
       "name": "omega_service_order_creation_boundary_20261002"
+    },
+    {
+      "version": "20261002085641",
+      "name": "omega_consultancy_intake_idempotency_boundary_20261002"
     }
   ]
 }

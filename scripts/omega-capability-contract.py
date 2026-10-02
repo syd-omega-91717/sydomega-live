@@ -76,5 +76,11 @@ def main() -> int:
     print("defaultHumanAccess=DENY")
     return 0
 
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
+
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -13,7 +13,7 @@ create table if not exists public.omega_payment_reconciliation (
   settled_amount numeric(20,8),
   currency text,
   status text not null default 'pending'
-    check (status in ('pending','matched','mismatched','reversed','review')),
+    check (status in ('pending','matched','mismatch','reversed','review')),
   idempotency_key text not null unique,
   evidence jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),

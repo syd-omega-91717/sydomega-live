@@ -2,7 +2,7 @@
 -- Live notification stream
 -- Repository migration record. Live application to target project nvgedlxlkdzvcelimbvq is NOT verified here.
 
-do $
+do $$
 begin
   if not exists (
     select 1 from pg_publication_tables
@@ -11,4 +11,4 @@ begin
     alter publication supabase_realtime add table public.notifications;
   end if;
 end
-$;
+$$;

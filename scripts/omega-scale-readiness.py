@@ -18,3 +18,9 @@ if cfg.get("doNotAutoDeleteIndexes") is not True: raise SystemExit("scale policy
 print("INDEX_POLICY=EVIDENCE_REQUIRED")
 print("CLIENT_CONCURRENCY="+str(cfg["clientBudgets"]["maxConcurrentDataReads"]))
 print("CLIENT_PAGE_MAX="+str(cfg["clientBudgets"]["maxPageSize"]))
+
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)

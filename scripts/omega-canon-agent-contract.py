@@ -37,5 +37,11 @@ def main():
     print("OMEGA CANON/AGENT CONTRACT: PASS — distinct dimensions and 12 governed agents validated")
     return 0
 
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
+
 if __name__=="__main__":
     raise SystemExit(main())

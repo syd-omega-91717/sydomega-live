@@ -44,4 +44,15 @@ drop trigger if exists task_completion_sovereign_event on public.task_completion
 create trigger task_completion_sovereign_event
 after insert on public.task_completions
 for each row execute function private.record_task_sovereign_event();
-alter publication supabase_realtime add table public.sovereign_events;
+do $omega$
+begin
+if not exists (
+    select 1 from pg_publication_tables
+    where pubname='supabase_realtime'
+      and schemaname='public'
+      and tablename='sovereign_events'
+  ) then
+    alter publication supabase_realtime add table public.sovereign_events;
+  end if;
+end
+$omega$;

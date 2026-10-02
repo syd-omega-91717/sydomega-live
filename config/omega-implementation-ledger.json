@@ -20,8 +20,8 @@
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 266,
-    "latestRemoteMigration": "20261002072542"
+    "remoteMigrationCount": 268,
+    "latestRemoteMigration": "20261002073047"
   },
   "items": [
     {
@@ -561,17 +561,16 @@
         "Product Catalog"
       ],
       "requirement": "Turn modules and future concepts into governed executable services with lifecycle, authorization, data class, commercial model and rollback.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "public.omega_capabilities",
         "public.omega_services",
         "supabase/migrations/20261002014000_create_omega_capability_service_catalog.sql"
       ],
       "evidence": [
-        "Live Supabase verification: 24 capability records and 24 service records.",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Target project ydqhzvvoyufiiqvzcjns: 24 capability records and 24 service records verified live 2026-10-02; 0 service orders; 6 capabilities currently marked INTEGRATED and the remainder remain DESIGNED until runtime evidence exists."
       ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
+      "blocker": "Individual service runtimes, provider integrations, tests and production evidence remain before VERIFIED."
     },
     {
       "id": "SERVICE-002",

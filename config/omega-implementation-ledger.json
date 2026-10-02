@@ -715,6 +715,40 @@
         "Live SQL verification: provider/event unique index and server-only reconciliation table created"
       ],
       "blocker": "Signed Stripe webhook endpoint, provider secret configuration, transaction matching worker and production settlement smoke test remain."
+    },
+    {
+      "id": "ORCH-001",
+      "domain": "orchestration",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717.txt"
+      ],
+      "requirement": "Server-only orchestration functions connect governed referral, achievement, agent and notification state transitions with idempotency.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002024000_server_orchestration_primitives.sql"
+      ],
+      "evidence": [
+        "Live privilege verification: 4 omega_private functions execute only for service_role; anon/authenticated false"
+      ],
+      "blocker": "External workers/API endpoints must invoke these primitives and emit provider/evidence events."
+    },
+    {
+      "id": "EVENT-001",
+      "domain": "event_fabric",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717.txt"
+      ],
+      "requirement": "Durable allowlisted platform events, evidence records and audit logs with idempotency, correlation and server-authoritative writes.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002025000_durable_event_evidence_audit_fabric.sql"
+      ],
+      "evidence": [
+        "Live verification: 3 tables, 3 RLS policies, zero fabricated rows; anonymous SELECT denied and authenticated INSERT denied"
+      ],
+      "blocker": "Event ingestion service/edge function must connect runtime actions to the fabric."
     }
   ]
 }

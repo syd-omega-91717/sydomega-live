@@ -1485,6 +1485,10 @@
     {
       "version": "20261002075836",
       "name": "fix_achievement_assignment_function_20261002"
+    },
+    {
+      "version": "20261002080219",
+      "name": "notification_worker_claim_boundary_20261002"
     }
   ]
 }

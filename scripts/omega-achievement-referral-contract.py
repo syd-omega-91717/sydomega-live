@@ -10,6 +10,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATION = ROOT / "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql"
 FIX = ROOT / "supabase/migrations/20261002075836_fix_achievement_assignment_function_20261002.sql"
+IDEMPOTENCY = ROOT / "supabase/migrations/20261002080541_fix_achievement_verification_idempotency_20261002.sql"
+CONFLICT = ROOT / "supabase/migrations/20261002141940_harden_achievement_verification_conflict_race_20261002.sql"
 POLICY_A = ROOT / "config/omega-achievement-policy.json"
 POLICY_R = ROOT / "config/omega-referral-policy.json"
 REMOTE = ROOT / "supabase/remote-migrations.json"
@@ -24,7 +26,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args()
     errors: list[str] = []
-    for path in (MIGRATION, FIX, POLICY_A, POLICY_R, REMOTE):
+    for path in (MIGRATION, FIX, IDEMPOTENCY, CONFLICT, POLICY_A, POLICY_R, REMOTE):
         if not path.is_file():
             errors.append(f"missing required artifact: {path.relative_to(ROOT)}")
 
@@ -36,6 +38,8 @@ def main() -> int:
 
     sql = MIGRATION.read_text(encoding="utf-8")
     fix = FIX.read_text(encoding="utf-8")
+    idempotency = IDEMPOTENCY.read_text(encoding="utf-8")
+    conflict = CONFLICT.read_text(encoding="utf-8")
     achievement = json.loads(POLICY_A.read_text(encoding="utf-8"))
     referral = json.loads(POLICY_R.read_text(encoding="utf-8"))
     remote = json.loads(REMOTE.read_text(encoding="utf-8"))
@@ -57,7 +61,8 @@ def main() -> int:
     require(sql, "approved_verification_requires_evidence", "approval evidence gate", errors)
     require(sql, "on conflict(achievement_id,user_id) do nothing", "achievement idempotency", errors)
     require(sql, "on conflict(conversion_id) do update", "referral reward idempotency", errors)
-    require(sql, "verification_idempotency_conflict", "verification conflict guard", errors)
+    require(idempotency + conflict, "verification_idempotency_conflict", "verification conflict guard", errors)
+    require(conflict, "unique_violation", "verification race guard", errors)
     require(sql, "severity in ('high','critical')", "fraud gate", errors)
     require(sql, "status in ('open','confirmed')", "active fraud gate", errors)
     require(sql, "'leaderboard_points',200", "source reward policy", errors)
@@ -84,6 +89,9 @@ def main() -> int:
     expected = {
         "20261002075824": "complete_achievement_and_referral_state_transitions_20261002",
         "20261002075836": "fix_achievement_assignment_function_20261002",
+        "20261002080541": "fix_achievement_verification_idempotency_20261002",
+        "20261002141908": "fix_achievement_verification_idempotency_conflict_20261002",
+        "20261002141940": "harden_achievement_verification_conflict_race_20261002",
     }
     for version, name in expected.items():
         if versions.get(version) != name:

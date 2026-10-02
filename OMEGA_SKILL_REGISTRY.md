@@ -37,12 +37,12 @@ effectively invisible unless invoked by exact name.
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
-| `supabase-server` | yes | — | 5,094 | CLAUDE.md, README.md | 2026-08-30 |
+| `supabase-server` | yes | — | 5,099 | CLAUDE.md, README.md | 2026-10-02 |
 | `verify-in-browser` | yes | 4 | 2,457 | CLAUDE.md, README.md | 2026-09-27 |
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,615 tokens** if every SKILL.md were read in one
+**23 skills, ~38,620 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -94,13 +94,13 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 215 |
-| pages loading `bg.js` | 215 of 215 |
-| `omega-*.js` modules | 179 (1692 KB) |
-| root `.js` files | 189 |
+| `.html` pages | 217 |
+| pages loading `bg.js` | 217 of 217 |
+| `omega-*.js` modules | 186 (1723 KB) |
+| root `.js` files | 198 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 260 (106 numbered `NNNN_`, 154 timestamped) |
-| Edge Functions | 17 |
+| `supabase/migrations/*.sql` | 318 (106 numbered `NNNN_`, 212 timestamped) |
+| Edge Functions | 21 |
 | skills | 23 |
 | agent definitions | 2 |
 
@@ -123,11 +123,11 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 166 files added since (numbered and
+end-to-end for the first time"*. The 224 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 260. Treat the validated scope as `0001`–`0094` only.
+all 318. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 215 pages.** It is a hard single point of
+**`bg.js` is loaded by all 217 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

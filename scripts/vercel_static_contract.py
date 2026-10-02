@@ -11,67 +11,85 @@ if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
 
 ROOT = Path(__file__).resolve().parents[1]
 
-
 def main() -> int:
     config_path = ROOT / "vercel.json"
     index_path = ROOT / "index.html"
     build_path = ROOT / "scripts" / "vercel-build.sh"
     enhancer_path = ROOT / "scripts" / "vercel-build-enhance.mjs"
-    for path, label in ((config_path, "vercel.json"), (index_path, "index.html"), (build_path, "scripts/vercel-build.sh"), (enhancer_path, "scripts/vercel-build-enhance.mjs")):
-        if not path.is_file():
-            raise SystemExit(f"VERCEL_STATIC_CONTRACT=FAIL missing={label}")
+    required = (
+        (config_path, "vercel.json"),
+        (index_path, "index.html"),
+        (build_path, "scripts/vercel-build.sh"),
+        (enhancer_path, "scripts/vercel-build-enhance.mjs"),
+    )
+    missing = [label for path, label in required if not path.is_file()]
+    if missing:
+        for label in missing:
+            print(f"VERCEL_STATIC_CONTRACT=FAIL missing={label}")
+        return 1
 
+    errors: list[str] = []
     try:
         config = json.loads(config_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        raise SystemExit(f"VERCEL_STATIC_CONTRACT=FAIL invalid_json={exc}") from exc
+        print(f"VERCEL_STATIC_CONTRACT=FAIL invalid_json={exc}")
+        return 1
 
-    if config.get("framework", "__missing__") is not None:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL framework_must_be_null")
-    if config.get("buildCommand") != "bash scripts/vercel-build.sh":
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL buildCommand_must_be_static_builder")
-    if config.get("installCommand", "__missing__") != "":
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL installCommand_must_be_empty")
-    if config.get("outputDirectory") != "public":
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL outputDirectory_must_be_public")
-    if "builds" in config:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL forbidden_config=builds")
+    def check(condition: bool, message: str) -> None:
+        if not condition:
+            errors.append(message)
+
+    check(config.get("framework", "__missing__") is None, "framework_must_be_null")
+    check(config.get("buildCommand") == "bash scripts/vercel-build.sh", "buildCommand_must_be_static_builder")
+    check(config.get("installCommand", "__missing__") == "", "installCommand_must_be_empty")
+    check(config.get("outputDirectory") == "public", "outputDirectory_must_be_public")
+    check("builds" not in config, "forbidden_config=builds")
 
     deployment_enabled = config.get("git", {}).get("deploymentEnabled", {})
-    if deployment_enabled.get("*", True) is not False:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL automatic_git_deploy_must_be_disabled_for_non_main")
-    if deployment_enabled.get("main", False) is not True:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL main_git_deploy_must_be_enabled")
+    check(deployment_enabled.get("*", True) is False, "automatic_git_deploy_must_be_disabled_for_non_main")
+    check(deployment_enabled.get("main", False) is True, "main_git_deploy_must_be_enabled")
 
     redirects = config.get("redirects", [])
-
     def host_rules(host: str) -> list:
         return [r for r in redirects if any(h.get("type") == "host" and h.get("value") == host for h in r.get("has", []))]
 
     www_rules = host_rules("www.sydomega.com")
     apex_rules = host_rules("sydomega.com")
     if www_rules and apex_rules:
-        raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL host_redirect_loop")
-    host_policy = "redirect_www_to_apex" if www_rules else "redirect_apex_to_www" if apex_rules else "serve_both_hosts_directly"
+        errors.append("host_redirect_loop")
+        host_policy = "invalid"
+    else:
+        host_policy = "redirect_www_to_apex" if www_rules else "redirect_apex_to_www" if apex_rules else "serve_both_hosts_directly"
 
     html = index_path.read_text(encoding="utf-8", errors="strict").lower()
     for marker in ("<!doctype html", "<html", "<title>"):
-        if marker not in html:
-            raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL index_marker=" + marker)
+        check(marker in html, "index_marker=" + marker)
 
     build = build_path.read_text(encoding="utf-8", errors="strict")
-    # "public/${vendored}" replaced a hardcoded "public/vendor/supabase-js.js"
-    # here: the build now asserts EVERY vendor/*.js reached public/, not just
-    # the one that happened to be vendored first. Pin the loop and its test so
-    # the generalisation cannot be narrowed back to a single file silently.
-    for marker in ("mkdir -p public", "public/index.html", "internal_ledger_exposed", "VERCEL_BUILD=PASS", "for dir in vendor i18n", "! -path './config/omega-implementation-ledger.json'", "find vendor -type f", "public/${vendored}", "vendor files src=", "unreachable_asset=${ref}", "vercel-build-enhance.mjs"):
-        if marker not in build:
-            raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL build_marker=" + marker)
+    for marker in (
+        "mkdir -p public",
+        "public/index.html",
+        "internal_ledger_exposed",
+        "VERCEL_BUILD=PASS",
+        "for dir in vendor i18n",
+        "! -path './config/omega-implementation-ledger.json'",
+        "find vendor -type f",
+        "public/${vendored}",
+        "vendor files src=",
+        "unreachable_asset=${ref}",
+        "vercel-build-enhance.mjs",
+    ):
+        check(marker in build, "build_marker=" + marker)
 
     enhancer = enhancer_path.read_text(encoding="utf-8", errors="strict")
     for marker in ("viewport", "<title>", "omega-visual-engine.js"):
-        if marker not in enhancer:
-            raise SystemExit("VERCEL_STATIC_CONTRACT=FAIL enhancer_marker=" + marker)
+        check(marker in enhancer, "enhancer_marker=" + marker)
+
+    if errors:
+        print("VERCEL_STATIC_CONTRACT=FAIL")
+        for error in errors:
+            print(" - " + error)
+        return 1
 
     print("VERCEL_STATIC_CONTRACT=PASS")
     print("deployment_mode=static_public")

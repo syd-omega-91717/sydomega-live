@@ -17,7 +17,7 @@ def fail(message: str) -> int:
     return 1
 
 def main() -> int:
-    if "--help" in sys.argv:
+    if "--help" in sys.argv or "-h" in sys.argv:
         print(__doc__.strip())
         return 0
 
@@ -33,8 +33,16 @@ def main() -> int:
 
     sql_path = MIGRATIONS / "20261002084512_omega_unified_product_runtime_contract_20261002.sql"
     sql = sql_path.read_text(encoding="utf-8")
-    found = re.findall(r"\('([^']+)',\s*'([A-Z0-9_]+)',\s*'([^']+)'", sql)
-    action_ids = {f"{module}.{action}" for _, module, action in found}
+
+    # Match only actual action registry rows. Lifecycle/execute-mode CHECK
+    # constraints also contain three quoted strings, so an unconstrained
+    # three-string regex would manufacture false action IDs such as
+    # SPECIFIED.DESIGNED and WRITE.WORKFLOW.
+    found = re.findall(
+        r"\('([A-Z0-9_]+)\.([^']+)'\s*,\s*'([A-Z0-9_]+)'\s*,\s*'([^']+)'\s*,",
+        sql,
+    )
+    action_ids = {f"{module}.{action}" for _, action, module, _ in found}
 
     expected = {f"{m['id']}.{a}" for m in runtime["modules"] for a in m["actions"]}
     if action_ids != expected:

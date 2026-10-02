@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-02",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 316,
-  "latestRemoteMigration": "20261002094310",
+  "remoteMigrationCount": 318,
+  "latestRemoteMigration": "20261002141940",
   "versions": [
     "0001",
     "0002",
@@ -319,7 +319,9 @@
     "20261002091226",
     "20261002094212",
     "20261002094249",
-    "20261002094310"
+    "20261002094310",
+    "20261002141908",
+    "20261002141940"
   ],
   "migrations": [
     {
@@ -1585,6 +1587,14 @@
     {
       "version": "20261002094310",
       "name": "20261002095500_fix_elemental_runtime_integer_width_20261002"
+    },
+    {
+      "version": "20261002141908",
+      "name": "fix_achievement_verification_idempotency_conflict_20261002"
+    },
+    {
+      "version": "20261002141940",
+      "name": "harden_achievement_verification_conflict_race_20261002"
     }
   ]
 }

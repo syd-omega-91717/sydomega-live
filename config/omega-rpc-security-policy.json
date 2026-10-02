@@ -17,7 +17,8 @@
       "sweep_expired_trials",
       "trg_award_exam_points",
       "trg_award_matrix_points",
-      "trg_award_task_points"
+      "trg_award_task_points",
+      "omega_elemental_runtime"
     ],
     "owner_or_admin": [
       "academy_promote",

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -20,6 +21,8 @@ def require(text: str, needle: str, label: str, errors: list[str]) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args()
     errors: list[str] = []
     for path in (MIGRATION, FIX, POLICY_A, POLICY_R, REMOTE):
         if not path.is_file():

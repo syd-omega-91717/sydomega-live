@@ -13,6 +13,7 @@ const ALLOWED_ACTIONS = new Set([
   'module_manifest',
   'module_state',
   'module_read',
+  'create_service_order',
   'issue_referral_code',
   'attribute_referral',
   'enqueue_agent_task',

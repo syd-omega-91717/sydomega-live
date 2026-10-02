@@ -396,16 +396,17 @@
         "Document.txt"
       ],
       "requirement": "Every repository-declared production Edge Function has an explicit live deployment state and verification record.",
-      "state": "BLOCKED",
+      "state": "INTEGRATED",
       "repo": [
         "supabase/functions",
         "supabase/edge-functions.json",
         "config/supabase-edge-runtime-evidence.json"
       ],
       "evidence": [
-        "Supabase live list_edge_functions on 2026-10-01 returned zero deployed functions; repository census contains 18 functions."
+        "Supabase live list_edge_functions 2026-10-02: omega-runtime-gateway ACTIVE v1, verify_jwt=true.",
+        "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts"
       ],
-      "blocker": "Live Supabase currently exposes no deployed Edge Functions. Deploy/reconcile each intended function, then record route, version, auth boundary and smoke-test evidence."
+      "blocker": "Repository declares additional Edge Functions that are not yet deployed; continue function-by-function reconciliation and smoke testing."
     },
     {
       "id": "SEC-003",
@@ -725,9 +726,10 @@
         "supabase/migrations/20261002024000_server_orchestration_primitives.sql"
       ],
       "evidence": [
-        "Live privilege verification: 4 omega_private functions execute only for service_role; anon/authenticated false"
+        "Live privilege verification: 4 omega_private functions execute only for service_role; anon/authenticated false",
+        "omega-runtime-gateway deployed and routes authenticated user actions into the service-role-only dispatch boundary."
       ],
-      "blocker": "External workers/API endpoints must invoke these primitives and emit provider/evidence events."
+      "blocker": "Worker/provider integrations and end-to-end production smoke tests remain."
     },
     {
       "id": "EVENT-001",

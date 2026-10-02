@@ -49,6 +49,31 @@
         "omega_private.record_stripe_payment"
       ],
       "status": "INTEGRATED_NO_FINANCIAL_ACTIVITY"
+    },
+    "agentRegistry": {
+      "agents": 12,
+      "status": "INTEGRATED"
+    },
+    "progression": {
+      "nodes": 729,
+      "semanticRecords": 729,
+      "userProgressRows": 0,
+      "status": "INTEGRATED"
+    },
+    "referral": {
+      "tablesPresent": true,
+      "rowCountsAllZero": true,
+      "status": "INTEGRATED"
+    },
+    "achievements": {
+      "verificationTablesPresent": true,
+      "rowCountsAllZero": true,
+      "status": "INTEGRATED"
+    },
+    "notifications": {
+      "tablePresent": true,
+      "rowCount": 0,
+      "status": "INTEGRATED"
     }
   },
   "repositoryMigrationLineage": {

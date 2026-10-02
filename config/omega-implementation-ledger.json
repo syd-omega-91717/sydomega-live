@@ -14,14 +14,14 @@
   ],
   "evidenceAsOf": {
     "main": "2f0646511c5192fed016b2279dbc8b7730305ef8",
-    "branch": "codex/security-advisor-hardening-20261002",
-    "pullRequest": 619,
+    "branch": "codex/ci-schema-contract-20261002",
+    "pullRequest": 621,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
-    "remoteMigrationCount": 293,
-    "latestRemoteMigration": "20261002073936"
+    "remoteMigrationCount": 301,
+    "latestRemoteMigration": "20261002080728"
   },
   "items": [
     {
@@ -118,7 +118,7 @@
         "SUPA-SEC-20261002",
         "Live SQL verification: anon_execute=0 for 80 public functions"
       ],
-      "blocker": "68 SECURITY DEFINER functions remain executable by authenticated users; each requires explicit risk classification and least-privilege role policy."
+      "blocker": "Supabase security advisor now reports zero authenticated SECURITY DEFINER findings on the canonical target; leaked-password protection remains a separate dashboard-level security warning."
     },
     {
       "id": "DB-001",
@@ -409,7 +409,7 @@
         "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts",
         "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
+      "blocker": "No user state was fabricated; fresh happy-path runtime evidence with a real authorized member and signed provider events remains before VERIFIED."
     },
     {
       "id": "SEC-003",
@@ -841,8 +841,8 @@
         "supabase/migrations/20261002033000_security_advisor_hardening.sql"
       ],
       "evidence": [
-        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52.",
-        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+        "Supabase security advisor now reports zero authenticated SECURITY DEFINER findings on target project ydqhzvvoyufiiqvzcjns after explicit revocation/invoker conversion.",
+        "Live server-only RLS policies verified; no fabricated user state."
       ],
       "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
@@ -860,7 +860,8 @@
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated"
+        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated",
+        "record_stripe_payment is pinned to search_path='' after live SECURITY DEFINER review."
       ],
       "blocker": "Current-branch Stripe Edge Function deployment is not freshly verified; requires a real signed Stripe event before VERIFIED."
     },
@@ -881,6 +882,89 @@
         "Production chain contract is wired into Vercel validation workflow."
       ],
       "blocker": "Live Vercel verification remains blocked by provider authorization."
+    }
+  ,
+    {
+      "id": "ACH-003",
+      "domain": "achievements",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint",
+        "config/omega-achievement-policy.json"
+      ],
+      "requirement": "Verified achievements can issue idempotent digital certificates and notify the member without client-authoritative state.",
+      "state": "TESTED",
+      "repo": [
+        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql",
+        "supabase/migrations/20261002075836_fix_achievement_assignment_function_20261002.sql",
+        "scripts/omega-achievement-referral-contract.py"
+      ],
+      "evidence": [
+        "Canonical target function guard tests passed without creating user achievements or certificates.",
+        "Certificate issuance requires verified achievement plus approved verification evidence."
+        "Verification idempotency conflicts are rejected without mutating achievement state."
+      ],
+      "blocker": "No member achievement was fabricated; a real authorized member/evidence path is required for full end-to-end verification."
+    },
+    {
+      "id": "REF-003",
+      "domain": "referrals",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint",
+        "config/omega-referral-policy.json"
+      ],
+      "requirement": "Confirmed referral conversions create one idempotent reward, gate on active high-risk fraud signals, and support transactional reversal.",
+      "state": "TESTED",
+      "repo": [
+        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql",
+        "scripts/omega-achievement-referral-contract.py"
+      ],
+      "evidence": [
+        "Canonical target transition guard tests passed with zero referral rewards created.",
+        "Reward posting is locked, server-only, conversion-confirmed, fraud-gated and reversible."
+      ],
+      "blocker": "No referral reward was fabricated; real qualifying conversion/provider settlement evidence is required before VERIFIED."
+    },
+    {
+      "id": "SEC-006",
+      "domain": "supabase",
+      "source": [
+        "Supabase security advisor",
+        "Supabase Data API security"
+      ],
+      "requirement": "Exposed read-only SECURITY DEFINER functions use invoker semantics and privileged execution functions are service-role-only.",
+      "state": "TESTED",
+      "repo": [
+        "supabase/migrations/20261002075620_tighten_remaining_security_definer_boundaries_20261002.sql",
+        "supabase/migrations/20261002075646_convert_read_only_security_definers_to_invoker_20261002.sql",
+        "supabase/migrations/20261002075824_complete_achievement_and_referral_state_transitions_20261002.sql"
+      ],
+      "evidence": [
+        "Supabase security advisor on ydqhzvvoyufiiqvzcjns reports only leaked-password protection warning; authenticated SECURITY DEFINER finding count is zero."
+      ],
+      "blocker": "Enable leaked-password protection in Supabase Auth dashboard before security acceptance is fully closed."
+    }
+  ,
+    {
+      "id": "NOTIFY-003",
+      "domain": "notifications",
+      "source": [
+        "Master Prompt",
+        "Enterprise Platform Standard"
+      ],
+      "requirement": "Durable notification queues have a server-only claim/reclaim worker and truthful in-app delivery transition without pretending external providers are configured.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002080219_notification_worker_claim_boundary_20261002.sql",
+        "supabase/functions/omega-notification-worker/index.ts",
+        "supabase/config.toml"
+      ],
+      "evidence": [
+        "Canonical target ydqhzvvoyufiiqvzcjns: omega-notification-worker ACTIVE v1 with secret-auth handler and verify_jwt=false platform setting.",
+        "Worker claims only in_app notifications; email/sms/push remain unclaimed until provider adapters are configured."
+      ],
+      "blocker": "Secret-auth invocation and scheduled trigger still require an authorized service secret/cron configuration; no notification rows were fabricated."
     }
   ]
 }

@@ -1465,6 +1465,38 @@
     {
       "version": "20261002073936",
       "name": "omega_event_fabric_compatibility_reconciliation"
+    },
+    {
+      "version": "20261002075520",
+      "name": "harden_server_only_rls_policies_20261002"
+    },
+    {
+      "version": "20261002075620",
+      "name": "tighten_remaining_security_definer_boundaries_20261002"
+    },
+    {
+      "version": "20261002075646",
+      "name": "convert_read_only_security_definers_to_invoker_20261002"
+    },
+    {
+      "version": "20261002075824",
+      "name": "complete_achievement_and_referral_state_transitions_20261002"
+    },
+    {
+      "version": "20261002075836",
+      "name": "fix_achievement_assignment_function_20261002"
+    },
+    {
+      "version": "20261002080219",
+      "name": "notification_worker_claim_boundary_20261002"
+    },
+    {
+      "version": "20261002080541",
+      "name": "fix_achievement_verification_idempotency_20261002"
+    },
+    {
+      "version": "20261002080728",
+      "name": "harden_stripe_settlement_search_path_20261002"
     }
   ]
 }

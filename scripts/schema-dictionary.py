@@ -227,10 +227,17 @@ def parse_sql_files():
         try:
             live = json.loads(live_path.read_text(encoding="utf-8")).get("tables", {})
             for table, cols in live.items():
-                if table in schema:
-                    schema[table]["columns"].update(cols)
+                # live-schema.json is keyed by fully-qualified names
+                # (public.foo), while the SQL parser stores bare table names
+                # (foo). Normalize the snapshot key before merging so the live
+                # evidence actually augments the parsed schema instead of
+                # creating a parallel "public.foo" entry that client lookups
+                # never consult.
+                normalized_table = table.split(".", 1)[1] if "." in table else table
+                if normalized_table in schema:
+                    schema[normalized_table]["columns"].update(cols)
                 else:
-                    schema[table] = {"columns": set(cols), "source": "live-schema.json"}
+                    schema[normalized_table] = {"columns": set(cols), "source": "live-schema.json"}
         except (ValueError, OSError):
             # A corrupt or unreadable snapshot must not take the gate down; fall
             # through to the hand-maintained list below.

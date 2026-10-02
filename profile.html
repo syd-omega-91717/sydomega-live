@@ -1842,6 +1842,72 @@ function makeToggle(on){
   return el;
 }
 
+const MEMBER_PREFERENCE_KEYS={
+  'Dark Mode':'dark_mode',
+  'Compact Layout':'compact_layout',
+  'Animations':'animations',
+  'Cursor Trail':'cursor_trail',
+  'Anonymous Mode':'anonymous_mode',
+  'Matrix Milestone Alerts':'matrix_milestone_alerts',
+  'Agent Messages':'agent_messages',
+  'Daily Oracle':'daily_oracle',
+  'Economic Events':'economic_events',
+  'Ambient Frequency':'ambient_frequency',
+  'Click Sounds':'click_sounds',
+  'Oracle Voice':'oracle_voice'
+};
+
+function preferencePayload(){
+  const payload={};
+  document.querySelectorAll('.toggle[data-key]').forEach(t=>{
+    const key=MEMBER_PREFERENCE_KEYS[t.dataset.key];
+    if(key) payload[key]=t.classList.contains('on');
+  });
+  return payload;
+}
+
+function applyMemberPreferences(row){
+  if(!row) return;
+  document.querySelectorAll('.toggle[data-key]').forEach(t=>{
+    const key=MEMBER_PREFERENCE_KEYS[t.dataset.key];
+    if(key && typeof row[key]==='boolean') t.classList.toggle('on',row[key]);
+  });
+}
+
+async function loadMemberPreferences(){
+  try{
+    const r=await sb.rpc('get_member_preferences');
+    if(r.error) throw r.error;
+    applyMemberPreferences(r.data);
+    return r.data;
+  }catch(e){
+    console.warn('member_preferences_load_failed',e);
+    return null;
+  }
+}
+
+async function saveMemberPreferences(){
+  const m=document.getElementById('settings-save-msg');
+  const p=preferencePayload();
+  const r=await sb.rpc('set_member_preferences',{
+    p_dark_mode:p.dark_mode,
+    p_compact_layout:p.compact_layout,
+    p_animations:p.animations,
+    p_cursor_trail:p.cursor_trail,
+    p_anonymous_mode:p.anonymous_mode,
+    p_matrix_milestone_alerts:p.matrix_milestone_alerts,
+    p_agent_messages:p.agent_messages,
+    p_daily_oracle:p.daily_oracle,
+    p_economic_events:p.economic_events,
+    p_ambient_frequency:p.ambient_frequency,
+    p_click_sounds:p.click_sounds,
+    p_oracle_voice:p.oracle_voice
+  });
+  if(r.error) throw r.error;
+  applyMemberPreferences(r.data);
+  return r.data;
+}
+
 function buildSettings(){
   const g=document.getElementById('settings-grid');g.innerHTML='';
   SETTINGS_DATA.forEach(sec=>{
@@ -1884,17 +1950,23 @@ async function bootIdentityExtra(){
     priv.items.forEach(item=>{ if(item[0]==='Show in Leaderboard'||item[0]==='Public Authority Score') item[1]=on; });
   }
   buildSettings();
+  await loadMemberPreferences();
 
   document.getElementById('btn-settings-save')?.addEventListener('click',async()=>{
     const m=document.getElementById('settings-save-msg');
     const leaderboardToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Show in Leaderboard');
     const authorityToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Public Authority Score');
     const wantsPublic = (leaderboardToggle&&leaderboardToggle.classList.contains('on')) || (authorityToggle&&authorityToggle.classList.contains('on'));
-    const r=await sb.rpc('set_profile_visibility',{p_public:wantsPublic});
-    if(r.data&&r.data.ok){
-      m.textContent='Privacy setting saved to your profile. (Display, Notifications, and Audio preferences are not yet backed by persistent storage -- they reset each visit for now.)';
-    } else {
-      m.textContent='Could not save privacy setting: '+((r.data&&r.data.error)||r.error?.message||'unknown error');
+    try{
+      const [visibility,preferences]=await Promise.all([
+        sb.rpc('set_profile_visibility',{p_public:wantsPublic}),
+        saveMemberPreferences()
+      ]);
+      if(visibility.error) throw visibility.error;
+      if(preferences) applyMemberPreferences(preferences);
+      m.textContent='Profile and experience preferences saved to your sovereign profile.';
+    }catch(e){
+      m.textContent='Could not save preferences: '+(e.message||e);
     }
     m.style.display='block';setTimeout(()=>m.style.display='none',5000);
   });

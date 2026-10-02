@@ -93,7 +93,19 @@ def main() -> int:
     print(f"css={len(css_files)}")
     print("viewports=required")
     print("target-surfaces=375px / 768px / 1280px")
+    system_css = PUBLIC / "css" / "omega-system.css"
+    if system_css.exists():
+        system_text = system_css.read_text(encoding="utf-8", errors="replace")
+        desktop_recovery = "DESKTOP-POINTER RECOVERY" in system_text and "pointer:fine" in system_text and "hover:hover" in system_text
+        if not desktop_recovery:
+            failures.append("css/omega-system.css: missing fine-pointer desktop recovery for zoom/scaled laptop viewports")
+    if failures:
+        for item in failures:
+            print(" - " + item)
+        return 1
+
     print("policy=mobile-first shell, contained horizontal scrolling only, no fixed desktop canvas")
+    print("desktop-recovery=fine-pointer + hover preserves desktop shell at 600-700px CSS viewport")
     if warnings:
         print(f"review-warnings={len(warnings)}")
         for item in warnings[:40]:

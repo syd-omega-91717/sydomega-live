@@ -21,6 +21,9 @@ const ALLOWED_ACTIONS = new Set([
   'issue_referral_code',
   'attribute_referral',
   'enqueue_agent_task',
+  'elemental_cosmology_read',
+  'elemental_interpretation_read',
+  'elemental_simulation_run',
 ])
 
 const MAX_BODY_BYTES = 64 * 1024
@@ -149,6 +152,25 @@ export default {
 
       if (!ALLOWED_ACTIONS.has(action)) {
         return Response.json({ error: 'action_not_allowed' }, { status: 400, headers: corsHeaders })
+      }
+
+      if (action === 'elemental_cosmology_read' || action === 'elemental_interpretation_read' || action === 'elemental_simulation_run') {
+        try {
+          const elementalAction = action === 'elemental_cosmology_read'
+            ? 'cosmology.read'
+            : action === 'elemental_interpretation_read'
+              ? 'interpretation.read'
+              : 'simulation.run'
+          const { data, error } = await ctx.supabaseAdmin.rpc('omega_elemental_runtime', {
+            p_action: elementalAction,
+            p_payload: payload,
+          })
+          if (error) throw error
+          return Response.json({ ok: true, action, data }, { headers: corsHeaders })
+        } catch (error) {
+          console.error('omega-runtime-gateway elemental runtime', error)
+          return Response.json({ error: 'elemental_runtime_failed' }, { status: 502, headers: corsHeaders })
+        }
       }
 
       if (action === 'verify_blockchain_ownership') {

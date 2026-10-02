@@ -74,9 +74,9 @@ def main() -> int:
         "for dir in vendor i18n",
         "! -path './config/omega-implementation-ledger.json'",
         "find vendor -type f",
-        "public/\${vendored}",
+        "public/${vendored}",
         "vendor files src=",
-        "unreachable_asset=\${ref}",
+        "unreachable_asset=${ref}",
         "vercel-build-enhance.mjs",
     ):
         check(marker in build, "build_marker=" + marker)

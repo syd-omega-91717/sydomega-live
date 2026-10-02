@@ -266,10 +266,35 @@
     "20261001035315",
     "20261001035327",
     "20261001035349",
+    "20261001090000",
+    "20261001100000",
+    "20261001110000",
+    "20261001120000",
+    "20261002010000",
+    "20261002011000",
+    "20261002012000",
+    "20261002013000",
+    "20261002014000",
+    "20261002020000",
+    "20261002021000",
+    "20261002022000",
+    "20261002023000",
+    "20261002024000",
+    "20261002025000",
+    "20261002026000",
+    "20261002027000",
+    "20261002028000",
+    "20261002029000",
+    "20261002030000",
+    "20261002031000",
+    "20261002032000",
+    "20261002033000",
+    "20261002034000",
     "20261002072345",
     "20261002072542",
     "20261002073018",
-    "20261002073047"
+    "20261002073047",
+    "20261002073936"
   ],
   "migrations": [
     {
@@ -1326,6 +1351,102 @@
       "name": "omega_complete_task_gate_reconciliation_20261001"
     },
     {
+      "version": "20261001090000",
+      "name": "omega_authoritative_progression_events"
+    },
+    {
+      "version": "20261001100000",
+      "name": "omega_notification_realtime"
+    },
+    {
+      "version": "20261001110000",
+      "name": "omega_complete_task_schema_alignment"
+    },
+    {
+      "version": "20261001120000",
+      "name": "omega_complete_task_gate_reconciliation"
+    },
+    {
+      "version": "20261002010000",
+      "name": "revoke_anon_public_rpc_execute"
+    },
+    {
+      "version": "20261002011000",
+      "name": "revoke_public_rpc_execute"
+    },
+    {
+      "version": "20261002012000",
+      "name": "create_omega_729_node_registry"
+    },
+    {
+      "version": "20261002013000",
+      "name": "create_omega_financial_ledger"
+    },
+    {
+      "version": "20261002014000",
+      "name": "create_omega_capability_service_catalog"
+    },
+    {
+      "version": "20261002020000",
+      "name": "referral_achievement_agent_notification_primitives"
+    },
+    {
+      "version": "20261002021000",
+      "name": "create_omega_matrix_semantics"
+    },
+    {
+      "version": "20261002022000",
+      "name": "payment_reconciliation_guardrails"
+    },
+    {
+      "version": "20261002023000",
+      "name": "harden_high_risk_rpc_execution"
+    },
+    {
+      "version": "20261002024000",
+      "name": "server_orchestration_primitives"
+    },
+    {
+      "version": "20261002025000",
+      "name": "durable_event_evidence_audit_fabric"
+    },
+    {
+      "version": "20261002026000",
+      "name": "reconcile_stripe_webhook_live_rpc"
+    },
+    {
+      "version": "20261002027000",
+      "name": "service_order_entitlement_activation"
+    },
+    {
+      "version": "20261002028000",
+      "name": "server_event_ingestion_boundary"
+    },
+    {
+      "version": "20261002029000",
+      "name": "complete_server_state_transitions"
+    },
+    {
+      "version": "20261002030000",
+      "name": "runtime_gateway_dispatch"
+    },
+    {
+      "version": "20261002031000",
+      "name": "progression_achievement_productization"
+    },
+    {
+      "version": "20261002032000",
+      "name": "link_progression_stage_bands"
+    },
+    {
+      "version": "20261002033000",
+      "name": "security_advisor_hardening"
+    },
+    {
+      "version": "20261002034000",
+      "name": "stripe_settlement_to_ledger"
+    },
+    {
       "version": "20261002072345",
       "name": "reconcile_omega_financial_ledger_and_stripe_settlement"
     },
@@ -1340,6 +1461,10 @@
     {
       "version": "20261002073047",
       "name": "seed_omega_capability_service_catalog_target_project"
+    },
+    {
+      "version": "20261002073936",
+      "name": "omega_event_fabric_compatibility_reconciliation"
     }
   ]
 }

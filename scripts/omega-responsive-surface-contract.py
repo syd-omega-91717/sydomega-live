@@ -93,6 +93,21 @@ def main() -> int:
     print(f"css={len(css_files)}")
     print("viewports=required")
     print("target-surfaces=375px / 768px / 1280px")
+    bg_js = ROOT / "bg.js"
+    nav_js = ROOT / "nav.js"
+    if bg_js.exists():
+        bg_text = bg_js.read_text(encoding="utf-8", errors="replace")
+        if "omega-desktop-pointer" not in bg_text or "(hover:hover) and (pointer:fine)" not in bg_text:
+            failures.append("bg.js: missing fine-pointer desktop classification/recovery")
+    else:
+        failures.append("bg.js: missing shared mobile/desktop shell controller")
+    if nav_js.exists():
+        nav_text = nav_js.read_text(encoding="utf-8", errors="replace")
+        if "omega-desktop-pointer" not in nav_text or "#omega-mob{display:none!important}" not in nav_text:
+            failures.append("nav.js: missing desktop-pointer recovery for mobile bottom navigation")
+    else:
+        failures.append("nav.js: missing canonical navigation controller")
+
     system_css = PUBLIC / "css" / "omega-system.css"
     if system_css.exists():
         system_text = system_css.read_text(encoding="utf-8", errors="replace")

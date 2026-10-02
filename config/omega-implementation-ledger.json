@@ -14,12 +14,14 @@
   ],
   "evidenceAsOf": {
     "main": "2f0646511c5192fed016b2279dbc8b7730305ef8",
-    "branch": "codex/next-product-runtime-20261002",
-    "pullRequest": null,
-    "supabaseProject": "nvgedlxlkdzvcelimbvq",
+    "branch": "codex/security-advisor-hardening-20261002",
+    "pullRequest": 619,
+    "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "supabaseSecurity": "2026-10-02",
-    "productCatalog": "config/omega-product-catalog.json"
+    "supabaseSecurity": "2026-10-02 target-project verification",
+    "productCatalog": "config/omega-product-catalog.json",
+    "remoteMigrationCount": 266,
+    "latestRemoteMigration": "20261002072542"
   },
   "items": [
     {
@@ -133,9 +135,9 @@
         "supabase/migrations"
       ],
       "evidence": [
-        "SUPA-MIG-20261001"
+        "Target project ydqhzvvoyufiiqvzcjns migration history queried 2026-10-02: 265 remote versions; repository snapshot refreshed to that exact remote list"
       ],
-      "blocker": "Live journal does not contain four 20261001 repository migrations; do not register them as applied without executing and validating them."
+      "blocker": "Exact local migration-file parity is not yet proven; do not merge until migration-drift/repository-integrity gates pass."
     },
     {
       "id": "OBJ-001",
@@ -234,11 +236,10 @@
         "omega_private.post_ledger_transaction"
       ],
       "evidence": [
-        "SUPA-LEDGER-20261002",
-        "Live privilege verification: anon=false, authenticated=false, service_role=true for posting function",
-        "Live table verification: zero fabricated accounts/transactions/entries"
+        "Target project ydqhzvvoyufiiqvzcjns: ledger/reconciliation tables and two service-role-only posting functions verified live 2026-10-02",
+        "Live counts: accounts=0, transactions=0, entries=0, payment_events=0, reconciliations=0, entitlements=0"
       ],
-      "blocker": "Stripe/provider webhook integration, account provisioning, reconciliation jobs, reversal workflow and production payment smoke tests remain."
+      "blocker": "No real payment was fabricated; fresh signed Stripe checkout/webhook/settlement evidence and downstream entitlement execution remain."
     },
     {
       "id": "AGENT-001",
@@ -248,16 +249,16 @@
         "999 Blueprint"
       ],
       "requirement": "12-agent system uses explicit registry, capabilities, tool permissions, approval policy and audit trail.",
-      "state": "TESTED",
+      "state": "INTEGRATED",
       "repo": [
         "config",
         "omega-agent-*",
         "scripts/omega_fabric_platform_gate.py"
       ],
       "evidence": [
-        "Omega Intelligence Fabric evidence"
+        "Target project ydqhzvvoyufiiqvzcjns: 12 governed agents verified live 2026-10-02; all default to DENY/approval-governed policies."
       ],
-      "blocker": "Headless render evidence remains unverified for all 12 entrypoints."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "MATRIX-001",
@@ -275,10 +276,9 @@
         "public.matrix_progress"
       ],
       "evidence": [
-        "SUPA-MATRIX-20261002",
-        "Live SQL verification: 729 nodes, 9 stages, indices 1-729"
+        "Target project ydqhzvvoyufiiqvzcjns: 729 canonical progression nodes and 729 semantic records verified live 2026-10-02; no user completions fabricated."
       ],
-      "blocker": "Semantic objectives, prerequisite graph, verification evidence, completion rules and reward policies are still empty/default and must be populated from governed product content."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "ORACLE-001",
@@ -367,7 +367,7 @@
         "PR-605 Vercel check pending",
         "Live site HTTP 200 observed"
       ],
-      "blocker": "Latest Vercel check is pending; connector access previously returned 403."
+      "blocker": "Vercel GitHub check is failing on provider build-rate-limit and connector authorization remains unavailable; live production acceptance is not verified."
     },
     {
       "id": "TRUTH-001",
@@ -396,7 +396,7 @@
         "Document.txt"
       ],
       "requirement": "Every repository-declared production Edge Function has an explicit live deployment state and verification record.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/functions",
         "supabase/edge-functions.json",
@@ -404,9 +404,10 @@
       ],
       "evidence": [
         "Supabase live list_edge_functions 2026-10-02: omega-runtime-gateway ACTIVE v1, verify_jwt=true.",
-        "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts"
+        "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Repository declares additional Edge Functions that are not yet deployed; continue function-by-function reconciliation and smoke testing."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "SEC-003",
@@ -469,15 +470,16 @@
         "999 Blueprint"
       ],
       "requirement": "Canonical progression infrastructure must be represented as durable database state rather than visual-only coordinates.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
         "public.omega_matrix_nodes"
       ],
       "evidence": [
-        "Live 729-node registry verification"
+        "Live 729-node registry verification",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Node semantics and user-progress integration remain incomplete."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "ECON-001",
@@ -492,9 +494,9 @@
         "supabase/migrations/20261002013000_create_omega_financial_ledger.sql"
       ],
       "evidence": [
-        "Live ledger schema and privilege verification"
+        "Target project ydqhzvvoyufiiqvzcjns: double-entry ledger schema and service-role-only posting boundary verified live 2026-10-02"
       ],
-      "blocker": "End-to-end provider settlement and reconciliation are not yet integrated."
+      "blocker": "Provider settlement, reconciliation and production payment smoke testing remain."
     },
     {
       "id": "SEC-004",
@@ -522,15 +524,15 @@
         "omega-canon.json"
       ],
       "requirement": "User progression must be durable and separate from node definitions; completion must require evidence and verification.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002012000_create_omega_729_node_registry.sql",
         "public.omega_matrix_progress"
       ],
       "evidence": [
-        "Live SQL verification: 0 progress rows; RLS owner-only read/write."
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Existing matrix_progress/track workflows must be reconciled with canonical omega_matrix_progress before production cutover."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "CANON-001",
@@ -559,16 +561,17 @@
         "Product Catalog"
       ],
       "requirement": "Turn modules and future concepts into governed executable services with lifecycle, authorization, data class, commercial model and rollback.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "public.omega_capabilities",
         "public.omega_services",
         "supabase/migrations/20261002014000_create_omega_capability_service_catalog.sql"
       ],
       "evidence": [
-        "Live Supabase verification: 24 capability records and 24 service records."
+        "Live Supabase verification: 24 capability records and 24 service records.",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Individual service runtimes, provider integrations, tests and production evidence remain to be attached before VERIFIED."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "SERVICE-002",
@@ -603,10 +606,9 @@
         "config/omega-referral-policy.json"
       ],
       "evidence": [
-        "Live SQL verification: referral primitive tables created with RLS and anon denied",
-        "Live SQL verification: server-only tables have explicit deny policies"
+        "Referral primitives now verified live on ydqhzvvoyufiiqvzcjns: codes/clicks/attributions/conversions/rewards/fraud tables exist; all live row counts remain 0."
       ],
-      "blocker": "Referral-code issuance, provider conversion events and ledger reward posting executor remain to be integrated."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "ACH-001",
@@ -623,9 +625,9 @@
         "config/omega-achievement-policy.json"
       ],
       "evidence": [
-        "Live SQL verification: achievement definition, user achievement, verification and certificate primitives created"
+        "Achievement verification primitives now verified live on ydqhzvvoyufiiqvzcjns; definitions/user achievements/verifications/certificates currently contain 0 rows."
       ],
-      "blocker": "729 semantic definitions now have governed stage-band achievement links; evidence-producing user verification and certificate issuance remain."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "AGENT-002",
@@ -641,9 +643,9 @@
         "config/omega-agent-execution-policy.json"
       ],
       "evidence": [
-        "Live SQL verification: task, task-event and tool-grant primitives created; default approval required"
+        "Governed agent task/tool-grant primitives now verified live on ydqhzvvoyufiiqvzcjns; task and grant rows remain 0."
       ],
-      "blocker": "Model gateway, tool executor and server-side task router remain to be integrated."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "NOTIFY-001",
@@ -657,9 +659,9 @@
         "supabase/migrations/20261002020000_referral_achievement_agent_notification_primitives.sql"
       ],
       "evidence": [
-        "Live SQL verification: notification queue/state table with owner RLS and idempotency key"
+        "Durable notification table now verified live on ydqhzvvoyufiiqvzcjns; notification rows remain 0."
       ],
-      "blocker": "Email/SMS/push providers and event-driven delivery worker remain to be integrated."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "MATRIX-003",
@@ -674,9 +676,9 @@
         "supabase/migrations/20261002021000_create_omega_matrix_semantics.sql"
       ],
       "evidence": [
-        "Live SQL verification: 729 semantic rows populated; stage bands 1-3/4-6/7-9; source-specific objectives remain explicitly required"
+        "Target project ydqhzvvoyufiiqvzcjns: 729 semantic governance rows verified live 2026-10-02; objectives remain explicitly source-required."
       ],
-      "blocker": "Map source-specific objectives and evidence requirements from the 391 extracted numbered blueprint points."
+      "blocker": "Semantic source-specific objectives/evidence and headless runtime verification remain before VERIFIED."
     },
     {
       "id": "PAY-002",
@@ -686,14 +688,14 @@
         "999 Blueprint"
       ],
       "requirement": "Provider payment events are uniquely keyed and settlement is reconciled separately from user-visible ledger state.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002022000_payment_reconciliation_guardrails.sql"
       ],
       "evidence": [
-        "Live SQL verification: provider/event unique index and server-only reconciliation table created"
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Signed Stripe webhook endpoint, provider secret configuration, transaction matching worker and production settlement smoke test remain."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "ORCH-001",
@@ -703,15 +705,15 @@
         "SYD OMEGA 91717.txt"
       ],
       "requirement": "Server-only orchestration functions connect governed referral, achievement, agent and notification state transitions with idempotency.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002024000_server_orchestration_primitives.sql"
       ],
       "evidence": [
         "Live privilege verification: 4 omega_private functions execute only for service_role; anon/authenticated false",
-        "omega-runtime-gateway deployed and routes authenticated user actions into the service-role-only dispatch boundary."
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Worker/provider integrations and end-to-end production smoke tests remain."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "EVENT-001",
@@ -738,16 +740,17 @@
         "999 Blueprint"
       ],
       "requirement": "Referral codes and first-touch attribution are issued and committed only through server-side, one-attribution state transitions.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
         "omega_private.issue_referral_code",
         "omega_private.attribute_referral"
       ],
       "evidence": [
-        "Live privilege verification: both functions service_role-only; anon/authenticated false"
+        "Live privilege verification: both functions service_role-only; anon/authenticated false",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Provider conversion qualification and ledger reward posting still require an execution worker and settlement evidence."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "AGENT-003",
@@ -757,7 +760,7 @@
         "SYD OMEGA 91717.txt"
       ],
       "requirement": "Governed agent tasks have a server-side claim/complete/fail lifecycle with worker identity and evidence payloads.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
         "omega_private.claim_agent_task",
@@ -765,9 +768,10 @@
         "omega_private.fail_agent_task"
       ],
       "evidence": [
-        "Live privilege verification: claim/complete/fail functions service_role-only; no client execution grant"
+        "Live privilege verification: claim/complete/fail functions service_role-only; no client execution grant",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Model/provider gateway and actual tool executor remain to be connected."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "NOTIFY-002",
@@ -776,16 +780,17 @@
         "Master Prompt"
       ],
       "requirement": "Queued notifications have server-side delivered/failed transitions with provider/channel metadata.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
         "omega_private.mark_notification_delivered",
         "omega_private.mark_notification_failed"
       ],
       "evidence": [
-        "Live privilege verification: delivery transition functions service_role-only"
+        "Live privilege verification: delivery transition functions service_role-only",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "External email/SMS/push provider adapters and delivery worker remain."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "ACH-002",
@@ -794,15 +799,15 @@
         "999 Blueprint"
       ],
       "requirement": "The source-defined 1–3, 4–6 and 7–9 progression bands are represented as digital achievement products without auto-awarding users.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002031000_progression_achievement_productization.sql",
         "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
       ],
       "evidence": [
-        "Live verification: 3 active achievement definitions; 729 semantic nodes linked to one of the three digital achievement IDs; user achievement rows remain 0."
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Evidence-producing verification must still connect verified user progress to individual achievement issuance and certificate creation."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "MATRIX-004",
@@ -812,15 +817,15 @@
         "Document.txt"
       ],
       "requirement": "The 729-node semantic layer maps each governed stage band to an explicit digital achievement outcome while preserving evidence-required verification.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "public.omega_matrix_node_semantics",
         "supabase/migrations/20261002032000_link_progression_stage_bands.sql"
       ],
       "evidence": [
-        "Live verification: 729/729 semantic nodes have stage-band achievement linkage: 27 initiate, 189 architect, 513 prime."
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "Source-specific objectives and evidence requirements still require point-by-point reconciliation against the 391 extracted blueprint points."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "SEC-005",
@@ -830,15 +835,15 @@
         "Supabase Data API security"
       ],
       "requirement": "Privileged service/automation SECURITY DEFINER RPCs are no longer callable by anon/authenticated roles.",
-      "state": "TESTED",
+      "state": "BLOCKED",
       "repo": [
         "supabase/migrations/20261002033000_security_advisor_hardening.sql"
       ],
       "evidence": [
-        "Live verification: 14 privileged RPCs anon=false, authenticated=false, service_role=true.",
-        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52."
+        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52.",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
-      "blocker": "52 remaining SECURITY DEFINER functions require caller-contract review before role tightening; several are member-self or owner/admin paths used by existing UI."
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
     },
     {
       "id": "PAY-003",
@@ -854,11 +859,9 @@
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
-        "Live Stripe webhook deployed ACTIVE.",
-        "Live service-role-only record_stripe_payment and ledger posting boundary applied.",
-        "No payment rows fabricated."
+        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated"
       ],
-      "blocker": "Requires an actual verified Stripe event in production to prove end-to-end provider settlement."
+      "blocker": "Current-branch Stripe Edge Function deployment is not freshly verified; requires a real signed Stripe event before VERIFIED."
     },
     {
       "id": "PAY-004",

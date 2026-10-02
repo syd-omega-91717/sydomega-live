@@ -18,8 +18,8 @@
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 312,
-    "latestRemoteMigration": "20261002090727",
+    "remoteMigrationCount": 313,
+    "latestRemoteMigration": "20261002091226",
     "runtimeContract": "18 modules / 54 actions"
   },
   "items": [

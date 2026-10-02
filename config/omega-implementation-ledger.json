@@ -14,12 +14,16 @@
   ],
   "evidenceAsOf": {
     "main": "2f0646511c5192fed016b2279dbc8b7730305ef8",
+    "branch": "codex/security-advisor-hardening-20261002",
+    "pullRequest": 619,
     "branch": "codex/ci-schema-contract-20261002",
     "pullRequest": 621,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
     "supabaseSecurity": "2026-10-02 target-project verification",
     "productCatalog": "config/omega-product-catalog.json",
+    "remoteMigrationCount": 266,
+    "latestRemoteMigration": "20261002072542"
     "remoteMigrationCount": 301,
     "latestRemoteMigration": "20261002080728"
   },
@@ -135,6 +139,9 @@
         "supabase/migrations"
       ],
       "evidence": [
+        "Target project ydqhzvvoyufiiqvzcjns migration history queried 2026-10-02: 265 remote versions; repository snapshot refreshed to that exact remote list"
+      ],
+      "blocker": "Exact local migration-file parity is not yet proven; do not merge until migration-drift/repository-integrity gates pass."
         "Target project ydqhzvvoyufiiqvzcjns: 293 remote migration versions now align with repository migration timestamps after verified application and history repair on 2026-10-02.",
         "Four historical remote-only versions are represented by explicit repository alias files; 25 local-only migrations were actually executed against the target before their history entries were repaired.",
         "Fresh CI migration-drift proof remains the final acceptance gate."
@@ -409,6 +416,7 @@
         "Repository runtime gateway source: supabase/functions/omega-runtime-gateway/index.ts",
         "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
       ],
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
       "blocker": "No user state was fabricated; fresh happy-path runtime evidence with a real authorized member and signed provider events remains before VERIFIED."
     },
     {
@@ -563,13 +571,17 @@
         "Product Catalog"
       ],
       "requirement": "Turn modules and future concepts into governed executable services with lifecycle, authorization, data class, commercial model and rollback.",
-      "state": "INTEGRATED",
+      "state": "BLOCKED",
       "repo": [
         "public.omega_capabilities",
         "public.omega_services",
         "supabase/migrations/20261002014000_create_omega_capability_service_catalog.sql"
       ],
       "evidence": [
+        "Live Supabase verification: 24 capability records and 24 service records.",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
+      ],
+      "blocker": "Previous live evidence referenced a different Supabase project (nvgedlxlkdzvcelimbvq). The canonical target is ydqhzvvoyufiiqvzcjns; this capability is not upgraded from historical evidence until its target-project schema/runtime is re-verified."
         "Target project ydqhzvvoyufiiqvzcjns: 24 capability records and 24 service records verified live 2026-10-02; 0 service orders; 6 capabilities currently marked INTEGRATED and the remainder remain DESIGNED until runtime evidence exists."
       ],
       "blocker": "Individual service runtimes, provider integrations, tests and production evidence remain before VERIFIED."
@@ -841,6 +853,8 @@
         "supabase/migrations/20261002033000_security_advisor_hardening.sql"
       ],
       "evidence": [
+        "Supabase security advisor reduced authenticated SECURITY DEFINER findings from 65 to 52.",
+        "Target-project reconciliation audit 2026-10-02: prior nvged evidence invalidated for ydqhzvvoyufiiqvzcjns."
         "Supabase security advisor now reports zero authenticated SECURITY DEFINER findings on target project ydqhzvvoyufiiqvzcjns after explicit revocation/invoker conversion.",
         "Live server-only RLS policies verified; no fabricated user state."
       ],
@@ -860,6 +874,7 @@
         "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
       ],
       "evidence": [
+        "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated"
         "Target project ydqhzvvoyufiiqvzcjns: omega_private.record_stripe_payment and ledger boundary verified live 2026-10-02; no payment rows fabricated",
         "record_stripe_payment is pinned to search_path='' after live SECURITY DEFINER review."
       ],

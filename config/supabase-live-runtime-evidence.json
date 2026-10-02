@@ -85,6 +85,10 @@
   },
   "repositoryMigrationLineage": {
     "targetProjectId": "ydqhzvvoyufiiqvzcjns",
+    "remoteMigrationCount": 265,
+    "latestRemoteMigration": "20261002072345",
+    "localParity": "NOT_YET_PROVEN",
+    "status": "BLOCKED",
     "remoteMigrationCount": 293,
     "latestRemoteMigration": "20261002073936",
     "localParity": "EXPECTED_EXACT_TIMESTAMP_PARITY",

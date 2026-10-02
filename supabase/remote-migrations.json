@@ -266,7 +266,8 @@
     "20261001035315",
     "20261001035327",
     "20261001035349",
-    "20261002072345"
+    "20261002072345",
+    "20261002072542"
   ],
   "migrations": [
     {
@@ -1325,6 +1326,10 @@
     {
       "version": "20261002072345",
       "name": "reconcile_omega_financial_ledger_and_stripe_settlement"
+    },
+    {
+      "version": "20261002072542",
+      "name": "omega_runtime_product_primitives_reconciliation"
     }
   ]
 }

@@ -595,7 +595,7 @@
       ],
       "evidence": [
         "PR-625 adds the universal Value Layer through the existing platform shell.",
-        "The contract enforces nine canonical realms, seven truth states, explicit page mappings and anti-fabrication policy."
+        "Repository-level validation of the JSON contract was executed against the branch: 24 explicit page mappings, 18 modules, 9 realms, 7 truth states; no contract data errors detected."
       ],
       "blocker": "Fresh browser verification across representative public/member surfaces remains required before this experience layer is marked TESTED/VERIFIED."
     }

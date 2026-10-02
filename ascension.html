@@ -37,6 +37,7 @@
       </div>
 
       <div class="osc-stage" data-omega-sculpture="ascension" data-sculpt-height="min(50vh,420px)"
+           data-sculpt-tier-progress="0" data-sculpt-tier-color="#C9A84C"
            data-sculpt-label="The ascension tiers rendered as a tower climbing from Initiate to Ascendant, each tier a band of the structure">
         <div class="osc-cap">
           <b>THE ASCENT</b>
@@ -327,6 +328,27 @@ window.addMilestone=function(){
     });
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+/* Data-bind tier progress and color to sculpture */
+function initSculptureTierBinding() {
+  const stage = document.querySelector('[data-omega-sculpture="ascension"]');
+  if (!stage || !window.__omegaProfile) return;
+
+  const tierColors = ['#A39D89', '#C0A960', '#C9A84C', '#E2C86D', '#00BCD4', '#00E5FF', '#9B6BF0', '#4CAF50', '#FF9800'];
+  const currentTier = window.__omegaProfile.current_tier || 1;
+  const tierProgress = Math.min(currentTier / 9, 1.0);
+  const tierColor = tierColors[Math.max(0, currentTier - 1)] || '#C9A84C';
+
+  stage.setAttribute('data-sculpt-tier-progress', tierProgress.toString());
+  stage.setAttribute('data-sculpt-tier-color', tierColor);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSculptureTierBinding);
+} else {
+  initSculptureTierBinding();
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

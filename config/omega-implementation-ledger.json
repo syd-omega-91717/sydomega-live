@@ -89,7 +89,8 @@
         "scripts/supabase-migration-security-audit.py"
       ],
       "evidence": [
-        "Target project security hardening; current advisor reports zero authenticated SECURITY DEFINER findings."
+        "Target project security hardening; current advisor reports zero authenticated SECURITY DEFINER findings.",
+        "Runtime gateway no longer reads SUPABASE_ANON_KEY/SUPABASE_SERVICE_ROLE_KEY directly; user auth context and server admin boundary are enforced by @supabase/server."
       ],
       "blocker": "Leaked-password protection remains a Supabase Auth dashboard warning."
     },
@@ -302,7 +303,8 @@
       "evidence": [
         "Target project: 18 distinct modules / 54 actions verified live.",
         "omega-runtime-gateway ACTIVE with verify_jwt=true.",
-        "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY."
+        "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY.",
+        "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08."
       ],
       "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
     },

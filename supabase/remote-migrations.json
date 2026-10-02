@@ -1493,6 +1493,10 @@
     {
       "version": "20261002080541",
       "name": "fix_achievement_verification_idempotency_20261002"
+    },
+    {
+      "version": "20261002080728",
+      "name": "harden_stripe_settlement_search_path_20261002"
     }
   ]
 }

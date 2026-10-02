@@ -35,8 +35,10 @@ def main() -> int:
     if "document.write(" in html or "eval(" in html:
         errors.append("control-center.html contains a forbidden dynamic execution primitive")
 
-    if not re.search(r"control-center\s*:\s*['\"]govern['\"]", nav):
-        errors.append("nav.js does not map control-center to GOVERN")
+    if "key:'govern'" not in nav and "key: 'govern'" not in nav:
+        errors.append("nav.js does not contain the GOVERN section")
+    if "'control-center','CONTROL CENTER','/control-center.html'" not in nav and '["control-center","CONTROL CENTER","/control-center.html"]' not in nav:
+        errors.append("nav.js does not map control-center into the GOVERN section")
     if "control-center" not in nav:
         errors.append("nav.js does not register control-center")
     if "CONTROL CENTER" not in nav or "/control-center.html" not in nav:

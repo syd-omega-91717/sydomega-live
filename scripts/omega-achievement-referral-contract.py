@@ -54,6 +54,7 @@ def main() -> int:
     require(sql, "approved_verification_requires_evidence", "approval evidence gate", errors)
     require(sql, "on conflict(achievement_id,user_id) do nothing", "achievement idempotency", errors)
     require(sql, "on conflict(conversion_id) do update", "referral reward idempotency", errors)
+    require(sql, "verification_idempotency_conflict", "verification conflict guard", errors)
     require(sql, "severity in ('high','critical')", "fraud gate", errors)
     require(sql, "status in ('open','confirmed')", "active fraud gate", errors)
     require(sql, "'leaderboard_points',200", "source reward policy", errors)

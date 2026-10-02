@@ -312,8 +312,8 @@ verify_jwt = false
 **Set secrets:**
 
 ```bash
-supabase secrets set STRIPE_SECRET_KEY=sk_live_...
-supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+supabase secrets set STRIPE_SECRET_KEY=<STRIPE_SECRET_KEY>
+supabase secrets set STRIPE_WEBHOOK_SECRET=<STRIPE_WEBHOOK_SECRET>
 ```
 
 **Function** (`supabase/functions/stripe-webhook/index.ts`):

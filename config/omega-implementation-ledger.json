@@ -745,6 +745,63 @@
         "Live verification: 3 tables, 3 RLS policies, zero fabricated rows; anonymous SELECT denied and authenticated INSERT denied"
       ],
       "blocker": "Event ingestion service/edge function must connect runtime actions to the fabric."
+    },
+    {
+      "id": "REF-002",
+      "domain": "referrals",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "requirement": "Referral codes and first-touch attribution are issued and committed only through server-side, one-attribution state transitions.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
+        "omega_private.issue_referral_code",
+        "omega_private.attribute_referral"
+      ],
+      "evidence": [
+        "Live privilege verification: both functions service_role-only; anon/authenticated false"
+      ],
+      "blocker": "Provider conversion qualification and ledger reward posting still require an execution worker and settlement evidence."
+    },
+    {
+      "id": "AGENT-003",
+      "domain": "ai",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717.txt"
+      ],
+      "requirement": "Governed agent tasks have a server-side claim/complete/fail lifecycle with worker identity and evidence payloads.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
+        "omega_private.claim_agent_task",
+        "omega_private.complete_agent_task",
+        "omega_private.fail_agent_task"
+      ],
+      "evidence": [
+        "Live privilege verification: claim/complete/fail functions service_role-only; no client execution grant"
+      ],
+      "blocker": "Model/provider gateway and actual tool executor remain to be connected."
+    },
+    {
+      "id": "NOTIFY-002",
+      "domain": "notifications",
+      "source": [
+        "Master Prompt"
+      ],
+      "requirement": "Queued notifications have server-side delivered/failed transitions with provider/channel metadata.",
+      "state": "INTEGRATED",
+      "repo": [
+        "supabase/migrations/20261002029000_complete_server_state_transitions.sql",
+        "omega_private.mark_notification_delivered",
+        "omega_private.mark_notification_failed"
+      ],
+      "evidence": [
+        "Live privilege verification: delivery transition functions service_role-only"
+      ],
+      "blocker": "External email/SMS/push provider adapters and delivery worker remain."
     }
   ]
 }

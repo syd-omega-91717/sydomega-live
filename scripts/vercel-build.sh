@@ -40,6 +40,7 @@ find . -type f \
   done
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
+[ ! -e "public/config/omega-implementation-ledger.json" ] || { echo 'VERCEL_BUILD=FAIL internal_ledger_exposed'; exit 1; }
 
 # Copy directories that cannot be copied by the extension-based find above.
 for dir in vendor i18n; do

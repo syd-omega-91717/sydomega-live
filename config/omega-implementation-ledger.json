@@ -515,24 +515,6 @@
       "blocker": "Function-body review and least-privilege grant changes remain. Policy categories are not themselves proof of safe implementation."
     },
     {
-      "id": "AGENT-001",
-      "domain": "ai",
-      "source": [
-        "Master Prompt",
-        "999 Blueprint"
-      ],
-      "requirement": "The 12 named agents must become governed executable capabilities with explicit tools, scopes, budgets, approvals, evidence and audit.",
-      "state": "INTEGRATED",
-      "repo": [
-        "config/omega-agent-registry.json",
-        "public.omega_agents"
-      ],
-      "evidence": [
-        "Live SQL verification: 12 registered agents; all have empty tool allowlists and default-deny external side effects."
-      ],
-      "blocker": "Actual task router, tool executor, model gateway and evidence-producing runtime are not yet integrated."
-    },
-    {
       "id": "MATRIX-002",
       "domain": "progress",
       "source": [

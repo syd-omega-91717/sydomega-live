@@ -1,40 +1,41 @@
 {
   "schemaVersion": "1.0.0",
-  "targetProjectId": "nvgedlxlkdzvcelimbvq",
-  "observedAt": "2026-10-01",
+  "targetProjectId": "ydqhzvvoyufiiqvzcjns",
+  "observedAt": "2026-10-02",
   "policy": "A migration is not marked applied merely because a file exists or because a historical comment says it was applied. The live migration journal and target database state must agree.",
   "migrations": [
     {
       "version": "20261001090000",
       "file": "supabase/migrations/20261001090000_omega_authoritative_progression_events.sql",
-      "liveJournalState": "MISSING",
+      "liveJournalState": "NOT_MATCHING_REPOSITORY_VERSION",
       "historicalClaim": "Different Supabase project id was named in the original comment",
       "targetState": "UNVERIFIED",
-      "requiredAction": "Inspect live function/trigger/publication state, then either apply to target project or document equivalent pre-existing live objects and reconcile migration history through an approved process."
+      "requiredAction": "Compare the repository migration file with the current ydqhzvvoyufiiqvzcjns schema/history; apply only through an explicit migration or approved history repair after object-level validation."
     },
     {
       "version": "20261001100000",
       "file": "supabase/migrations/20261001100000_omega_notification_realtime.sql",
-      "liveJournalState": "MISSING",
+      "liveJournalState": "NOT_MATCHING_REPOSITORY_VERSION",
       "historicalClaim": "Original comment said Applied live without naming target project",
       "targetState": "UNVERIFIED",
-      "requiredAction": "Inspect supabase_realtime publication for notifications and reconcile through approved migration process."
+      "requiredAction": "Compare the repository migration file with the current ydqhzvvoyufiiqvzcjns schema/history; apply only through an explicit migration or approved history repair after object-level validation."
     },
     {
       "version": "20261001110000",
       "file": "supabase/migrations/20261001110000_omega_complete_task_schema_alignment.sql",
-      "liveJournalState": "MISSING",
+      "liveJournalState": "NOT_MATCHING_REPOSITORY_VERSION",
       "historicalClaim": "Prepared migration; no live-apply claim now",
       "targetState": "UNVERIFIED",
-      "requiredAction": "Inspect private.complete_task definition against the target database before any apply."
+      "requiredAction": "Compare the repository migration file with the current ydqhzvvoyufiiqvzcjns schema/history; apply only through an explicit migration or approved history repair after object-level validation."
     },
     {
       "version": "20261001120000",
       "file": "supabase/migrations/20261001120000_omega_complete_task_gate_reconciliation.sql",
-      "liveJournalState": "MISSING",
+      "liveJournalState": "NOT_MATCHING_REPOSITORY_VERSION",
       "historicalClaim": "Prepared migration; duplicate function definition appears in 20261001110000",
       "targetState": "UNVERIFIED",
-      "requiredAction": "Determine whether this migration is duplicate/reconciliation-only before application; do not run both blindly."
+      "requiredAction": "Compare the repository migration file with the current ydqhzvvoyufiiqvzcjns schema/history; apply only through an explicit migration or approved history repair after object-level validation."
     }
-  ]
+  ],
+  "note": "The repository previously recorded nvgedlxlkdzvcelimbvq for these migrations; that project is not the canonical active target. Current target migration history was queried directly. Do not mark repository migrations applied from historical claims."
 }

@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.omega-runtime-gateway]
 verify_jwt = true
+
+[functions.omega-media-worker]
+verify_jwt = false

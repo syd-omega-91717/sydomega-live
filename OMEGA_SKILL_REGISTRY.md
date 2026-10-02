@@ -37,7 +37,7 @@ effectively invisible unless invoked by exact name.
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-11 |
 | `supabase` | yes | 3 | 3,207 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
-| `supabase-server` | yes | — | 5,094 | CLAUDE.md, README.md | 2026-08-30 |
+| `supabase-server` | yes | — | 5,099 | CLAUDE.md, README.md | 2026-10-02 |
 | `verify-in-browser` | yes | 4 | 2,457 | CLAUDE.md, README.md | 2026-09-27 |
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |

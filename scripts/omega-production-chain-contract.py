@@ -44,11 +44,11 @@ def main():
     print("liveVercelProductionProof=PROVIDER_AUTHORIZATION_REQUIRED")
     return 0
 
-if __name__=="__main__":
-    raise SystemExit(main())
-
 import sys
 
 if "--help" in sys.argv:
     print(__doc__ or "")
     raise SystemExit(0)
+
+if __name__=="__main__":
+    raise SystemExit(main())

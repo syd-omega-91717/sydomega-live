@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ω SYD OMEGA 91717 Page World Actions",
+  "type": "object",
+  "required": [
+    "version",
+    "generatedFrom",
+    "purpose",
+    "sourceOfTruth",
+    "pageCount",
+    "pages"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "generatedFrom": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "sourceOfTruth": {
+      "type": "string"
+    },
+    "pageCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "page",
+          "slug",
+          "archetype",
+          "role",
+          "verb",
+          "primaryAction",
+          "actions",
+          "successOutcome",
+          "district",
+          "districtName",
+          "entry",
+          "mission",
+          "reward"
+        ],
+        "properties": {
+          "page": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "verb": {
+            "type": "string"
+          },
+          "primaryAction": {
+            "type": "string"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "successOutcome": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "districtName": {
+            "type": "string"
+          },
+          "entry": {
+            "type": "string"
+          },
+          "mission": {
+            "type": "string"
+          },
+          "reward": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

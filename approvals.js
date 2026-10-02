@@ -355,9 +355,24 @@ async function loadKyc(){
   el.removeAttribute('data-loading');el.textContent='';
   var d=r.data||{};
   if(r.error||d.ok!==true){var e=document.createElement('div');e.className='empty';e.textContent='Identity review unavailable: '+(r.error?r.error.message:(d.error||'no response'));el.appendChild(e);return;}
-  var note=document.createElement('div');note.className='empty';note.setAttribute('data-kyc-intake',d.intake_enabled?'open':'closed');
-  note.textContent=d.intake_enabled?'Intake is OPEN — members can submit identity documents.':'Intake is CLOSED (kyc_intake_enabled = false). Settle retention and a privacy notice before opening it.';
-  el.appendChild(note);
+  var note=document.createElement('div');note.className='q-row';note.setAttribute('data-kyc-intake',d.intake_enabled?'open':'closed');
+  var nl=document.createElement('div');nl.className='q-lbl';
+  nl.textContent=d.intake_enabled?'INTAKE OPEN — members can submit identity documents':'INTAKE CLOSED — members cannot submit identity documents';
+  var tg=document.createElement('button');tg.type='button';tg.className='q-btn';
+  tg.textContent=d.intake_enabled?'CLOSE INTAKE':'OPEN INTAKE';
+  tg.setAttribute('data-action','kycIntake');tg.setAttribute('data-on',d.intake_enabled?'false':'true');
+  note.appendChild(nl);note.appendChild(tg);el.appendChild(note);
+  /* Verdicts whose document is still stored: the deletion after the verdict
+     failed or never ran. They stay here until the server confirms the file
+     is gone (kyc_document_purged). */
+  (d.purge||[]).forEach(function(row){
+    var q=document.createElement('div');q.className='q-row';q.setAttribute('data-kyc-purge',row.id);
+    var lbl=document.createElement('div');lbl.className='q-lbl';
+    lbl.textContent=String(row.display_name||'Member').toUpperCase()+' · '+String(row.status||'').toUpperCase()+' · DOCUMENT NOT YET DELETED';
+    var btn=document.createElement('button');btn.type='button';btn.className='q-btn';btn.textContent='DELETE NOW';
+    btn.setAttribute('data-action','kycPurge');btn.setAttribute('data-uid',row.id);btn.setAttribute('data-path',row.doc_path||'');
+    q.appendChild(lbl);q.appendChild(btn);el.appendChild(q);
+  });
   (d.rows||[]).forEach(function(row){
     var q=document.createElement('div');q.className='q-row';q.setAttribute('data-kyc-row',row.id);
     var id=document.createElement('div');id.className='q-id';id.textContent=fmtDate(row.submitted_at);
@@ -383,7 +398,30 @@ async function kycVerdict(uid,verdict){
   var r=await sb.rpc('review_kyc',{p_member:uid,p_verdict:verdict});
   var d=r.data||{};
   if(r.error||d.ok!==true){toast('VERDICT NOT RECORDED — '+(r.error?r.error.message:(d.error||'no response')),'var(--crim)');loadKyc();return;}
-  toast(verdict==='verified'?'IDENTITY VERIFIED':'SUBMISSION REJECTED',verdict==='verified'?'var(--green)':'var(--crim)');
+  /* Retention rule: the document goes as soon as the verdict is recorded. */
+  var gone=await kycPurge(uid,d.purge,true);
+  toast((verdict==='verified'?'IDENTITY VERIFIED':'SUBMISSION REJECTED')+(gone?' · DOCUMENT DELETED':' · DOCUMENT NOT DELETED — RETRY BELOW'),gone?(verdict==='verified'?'var(--green)':'var(--crim)'):'var(--crim)');
+  loadKyc();
+}
+/* Delete through the Storage API, then let the server confirm. Storage answers
+   an RLS-blocked delete with an empty success, so only kyc_document_purged --
+   which checks storage.objects itself -- decides whether it is gone. */
+async function kycPurge(uid,path,quiet){
+  if(!uid)return false;
+  if(path){var rm=await sb.storage.from('uploads').remove([path]);
+    if(rm.error){if(!quiet)toast('DOCUMENT NOT DELETED — '+rm.error.message,'var(--crim)');return false;}}
+  var r=await sb.rpc('kyc_document_purged',{p_member:uid});
+  var d=r.data||{};
+  if(r.error||d.ok!==true){if(!quiet)toast('DOCUMENT NOT DELETED — '+(r.error?r.error.message:(d.error||'no response')),'var(--crim)');return false;}
+  if(!quiet){toast('DOCUMENT DELETED','var(--green)');loadKyc();}
+  return true;
+}
+async function kycIntake(on){
+  if(!confirm(on?'OPEN identity document intake? Members will be able to submit a government ID. Each document is deleted once you record a decision.':'CLOSE identity document intake? Pending submissions stay in the queue.'))return;
+  var r=await sb.rpc('owner_set_kyc_intake',{p_on:!!on});
+  var d=r.data||{};
+  if(r.error||d.ok!==true){toast('INTAKE NOT CHANGED — '+(r.error?r.error.message:(d.error||'no response')),'var(--crim)');return;}
+  toast(on?'INTAKE OPEN':'INTAKE CLOSED',on?'var(--green)':'var(--muted)');
   loadKyc();
 }
 
@@ -419,6 +457,8 @@ window.loadErrors=loadErrors;
 window.loadKyc=loadKyc;
 window.kycView=kycView;
 window.kycVerdict=kycVerdict;
+window.kycPurge=kycPurge;
+window.kycIntake=kycIntake;
 
 /* ── BOOT: owner gate ── */
 (async function boot(){

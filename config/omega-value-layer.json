@@ -1,0 +1,533 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-value-layer",
+  "purpose": "Trust-first orientation contract for purpose, proof state, next action and adjacent value without fabricated activity, scarcity, social proof or financial outcomes.",
+  "principles": [
+    "Value before conversion",
+    "Proof before promise",
+    "One clear next action",
+    "No fabricated activity, balances, rankings or scarcity",
+    "Financial information is descriptive and evidence-bound",
+    "Every service has a visible route back to the wider platform"
+  ],
+  "states": [
+    "LIVE",
+    "CALCULATED",
+    "SIMULATED",
+    "USER-CREATED",
+    "LORE",
+    "UNAVAILABLE",
+    "PARTIAL"
+  ],
+  "default": {
+    "realm": "command",
+    "purpose": "Navigate the Omega platform, understand what is available, and choose a meaningful next step.",
+    "value": "A single entry point into the nine-realm platform.",
+    "proof": "LIVE — navigation and platform shell",
+    "next": {
+      "label": "Open Command",
+      "href": "/dashboard.html"
+    },
+    "time": "1–3 min",
+    "commercial": "No purchase required to explore public information."
+  },
+  "realms": {
+    "command": {
+      "label": "COMMAND",
+      "purpose": "Orient, search, review evidence and decide what to do next.",
+      "next": [
+        "/dashboard.html",
+        "/search.html",
+        "/evidence.html"
+      ]
+    },
+    "identity": {
+      "label": "IDENTITY",
+      "purpose": "Understand your identity, passport, rank, settings and permissions.",
+      "next": [
+        "/profile.html",
+        "/settings.html"
+      ]
+    },
+    "ascend": {
+      "label": "ASCEND",
+      "purpose": "Learn, practise, complete governed progression and build demonstrated mastery.",
+      "next": [
+        "/academy.html",
+        "/matrix.html",
+        "/honors.html"
+      ]
+    },
+    "cosmos": {
+      "label": "COSMOS",
+      "purpose": "Explore the platform's signs, elements, agents, worlds and interpretive systems.",
+      "next": [
+        "/cosmos.html",
+        "/agents.html",
+        "/elements.html"
+      ]
+    },
+    "vault": {
+      "label": "VAULT",
+      "purpose": "Review memberships, commerce, assets, payments and financial records with clear boundaries.",
+      "next": [
+        "/vault.html",
+        "/subscriptions.html",
+        "/payments.html"
+      ]
+    },
+    "order": {
+      "label": "ORDER",
+      "purpose": "Connect family, heritage, community and governed relationships.",
+      "next": [
+        "/family.html",
+        "/hall.html"
+      ]
+    },
+    "services": {
+      "label": "SERVICES",
+      "purpose": "Discover professional, creative, publishing, studio, events and wellbeing services.",
+      "next": [
+        "/services.html",
+        "/consultancy.html",
+        "/studio.html"
+      ]
+    },
+    "intel": {
+      "label": "INTEL",
+      "purpose": "Research, analyze evidence, automate governed work and inspect platform intelligence.",
+      "next": [
+        "/intelligence.html",
+        "/research.html",
+        "/automation.html"
+      ]
+    },
+    "universe": {
+      "label": "UNIVERSE",
+      "purpose": "Explore the library, media and creative universe.",
+      "next": [
+        "/universe.html",
+        "/library.html",
+        "/media.html"
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "realm": "command",
+      "purpose": "Your command bridge: see what matters, find your next useful action and reach every realm.",
+      "value": "A single starting point instead of disconnected dashboards.",
+      "proof": "LIVE — platform shell; personalized data is shown only when available.",
+      "next": {
+        "label": "Explore the platform",
+        "href": "/services.html"
+      },
+      "time": "2–5 min",
+      "commercial": "Explore first; paid services or membership are shown only where configured."
+    },
+    "gateway": {
+      "realm": "command",
+      "purpose": "Understand access, authentication and the route into the governed platform.",
+      "value": "A transparent entry point that explains what happens before access is granted.",
+      "proof": "LIVE — access and authentication boundary.",
+      "next": {
+        "label": "Request access",
+        "href": "/pending.html"
+      },
+      "time": "2 min",
+      "commercial": "Access is not represented as purchased unless a real transaction exists."
+    },
+    "services": {
+      "realm": "services",
+      "purpose": "Compare the platform's services by purpose, evidence state and route to action.",
+      "value": "Find a concrete service instead of navigating a catalogue blindly.",
+      "proof": "LIVE — service catalogue; individual availability is state-labelled.",
+      "next": {
+        "label": "Choose a service",
+        "href": "/consultancy.html"
+      },
+      "time": "3–5 min",
+      "commercial": "Pricing and purchase are shown only from authoritative configured sources."
+    },
+    "consultancy": {
+      "realm": "services",
+      "purpose": "Submit a governed consultancy intake with confidentiality acceptance.",
+      "value": "Turn a question or project into a structured professional request.",
+      "proof": "LIVE — authenticated intake boundary; no request is fabricated.",
+      "next": {
+        "label": "Review consultancy",
+        "href": "/consultancy.html"
+      },
+      "time": "5–10 min",
+      "commercial": "Commercial terms are presented before any real charge."
+    },
+    "investment": {
+      "realm": "vault",
+      "purpose": "Review investment research, watchlists and simulations without confusing research with financial advice or execution.",
+      "value": "Separate research, simulation and real financial state so decisions remain informed.",
+      "proof": "CALCULATED/SIMULATED where applicable; live balances and execution require authoritative provider evidence.",
+      "next": {
+        "label": "Open investment research",
+        "href": "/investment.html"
+      },
+      "time": "5–10 min",
+      "commercial": "No investment outcome is promised; execution requires a real authorized provider path."
+    },
+    "portfolio": {
+      "realm": "vault",
+      "purpose": "Review portfolio information that is actually available to the authenticated member.",
+      "value": "One view of holdings and related evidence without synthetic balances.",
+      "proof": "LIVE when provider/member data exists; otherwise UNAVAILABLE/PARTIAL.",
+      "next": {
+        "label": "Open the Vault",
+        "href": "/vault.html"
+      },
+      "time": "3–5 min",
+      "commercial": "No financial value is invented."
+    },
+    "evidence": {
+      "realm": "command",
+      "purpose": "Inspect the evidence behind platform events, tasks and governed actions.",
+      "value": "Trace important platform state back to observable evidence.",
+      "proof": "LIVE/PARTIAL/UNAVAILABLE according to available evidence.",
+      "next": {
+        "label": "Open World",
+        "href": "/world.html"
+      },
+      "time": "3–7 min",
+      "commercial": "No purchase required."
+    },
+    "academy": {
+      "realm": "ascend",
+      "purpose": "Learn through structured content and demonstrated progression.",
+      "value": "Turn time spent learning into durable, evidence-bound progress.",
+      "proof": "LIVE — course and progression surfaces; completion is recorded only after a real action.",
+      "next": {
+        "label": "Start learning",
+        "href": "/courses.html"
+      },
+      "time": "10–20 min",
+      "commercial": "Course or membership charges are shown only when configured."
+    },
+    "agents": {
+      "realm": "cosmos",
+      "purpose": "Understand the twelve governed agents, their roles and their permitted boundaries.",
+      "value": "Useful AI without unrestricted autonomy.",
+      "proof": "LIVE — registry and policy; execution requires the governed runtime boundary.",
+      "next": {
+        "label": "Inspect agent governance",
+        "href": "/agent-operations.html"
+      },
+      "time": "3–8 min",
+      "commercial": "AI capability does not imply autonomous financial execution."
+    },
+    "intelligence": {
+      "realm": "intel",
+      "purpose": "Research and inspect evidence-backed intelligence across the platform.",
+      "value": "Move from information to traceable understanding.",
+      "proof": "LIVE/PARTIAL according to available evidence and providers.",
+      "next": {
+        "label": "Open research",
+        "href": "/research.html"
+      },
+      "time": "5–10 min",
+      "commercial": "External provider costs, if any, must be disclosed before use."
+    },
+    "privacy": {
+      "realm": "intel",
+      "purpose": "Control consent, export and deletion of your platform data.",
+      "value": "Sovereignty includes the ability to inspect, export and erase your data.",
+      "proof": "LIVE — privacy controls and versioned documents.",
+      "next": {
+        "label": "Review privacy controls",
+        "href": "/privacy.html"
+      },
+      "time": "3–5 min",
+      "commercial": "No charge for exercising core privacy controls."
+    },
+    "gaming": {
+      "realm": "ascend",
+      "purpose": "Learn and progress through governed challenges.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore GAMING",
+        "href": "/gaming.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "honors": {
+      "realm": "ascend",
+      "purpose": "Inspect earned evidence and certificates without fabricated records.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore ACHIEVEMENTS",
+        "href": "/honors.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "family": {
+      "realm": "order",
+      "purpose": "Connect family, heritage and governed relationships.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore FAMILY",
+        "href": "/family.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "media": {
+      "realm": "universe",
+      "purpose": "Explore and create media through evidence-bound workflows.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore MEDIA",
+        "href": "/media.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "blockchain": {
+      "realm": "vault",
+      "purpose": "Inspect digital assets and ownership proofs without inventing ownership.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore BLOCKCHAIN NFT",
+        "href": "/blockchain.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "notifications": {
+      "realm": "command",
+      "purpose": "Receive and inspect governed platform communications.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore COMMUNICATION",
+        "href": "/notifications.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "horoscope": {
+      "realm": "cosmos",
+      "purpose": "Explore explicitly interpretive readings and provenance.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore HOROSCOPE",
+        "href": "/horoscope.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "news": {
+      "realm": "services",
+      "purpose": "Research current topics with provenance-aware boundaries.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore NEWS",
+        "href": "/news.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "heritage": {
+      "realm": "order",
+      "purpose": "Preserve timelines, documents and access history.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore HERITAGE",
+        "href": "/heritage.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "matrix": {
+      "realm": "ascend",
+      "purpose": "Turn real tasks and evidence into governed progression.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore PROGRESS",
+        "href": "/matrix.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "credentials": {
+      "realm": "identity",
+      "purpose": "Inspect passports, certificates and verification boundaries.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore CREDENTIALS",
+        "href": "/credentials.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "elements": {
+      "realm": "cosmos",
+      "purpose": "Explore deterministic interpretive/simulation content with clear limits.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore ELEMENTAL",
+        "href": "/elements.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    },
+    "governance": {
+      "realm": "order",
+      "purpose": "Inspect roles, entitlements and governance boundaries.",
+      "value": "A governed module in the Omega ecosystem.",
+      "proof": "LIVE — module surface; underlying records remain evidence-bound.",
+      "next": {
+        "label": "Explore HIERARCHY",
+        "href": "/governance.html"
+      },
+      "time": "3–10 min",
+      "commercial": "Commercial state is shown only from authoritative configuration."
+    }
+  },
+  "modules": [
+    {
+      "id": "CORE",
+      "realm": "command",
+      "page": "dashboard",
+      "href": "/dashboard.html",
+      "promise": "Operate from one command bridge."
+    },
+    {
+      "id": "CONSULTANCY",
+      "realm": "services",
+      "page": "consultancy",
+      "href": "/consultancy.html",
+      "promise": "Turn a real need into a governed professional intake."
+    },
+    {
+      "id": "GAMING",
+      "realm": "ascend",
+      "page": "gaming",
+      "href": "/gaming.html",
+      "promise": "Learn and progress through governed challenges."
+    },
+    {
+      "id": "ACHIEVEMENTS",
+      "realm": "ascend",
+      "page": "honors",
+      "href": "/honors.html",
+      "promise": "Inspect earned evidence and certificates without fabricated records."
+    },
+    {
+      "id": "FAMILY",
+      "realm": "order",
+      "page": "family",
+      "href": "/family.html",
+      "promise": "Connect family, heritage and governed relationships."
+    },
+    {
+      "id": "MEDIA",
+      "realm": "universe",
+      "page": "media",
+      "href": "/media.html",
+      "promise": "Explore and create media through evidence-bound workflows."
+    },
+    {
+      "id": "BLOCKCHAIN_NFT",
+      "realm": "vault",
+      "page": "blockchain",
+      "href": "/blockchain.html",
+      "promise": "Inspect digital assets and ownership proofs without inventing ownership."
+    },
+    {
+      "id": "COMMUNICATION",
+      "realm": "command",
+      "page": "notifications",
+      "href": "/notifications.html",
+      "promise": "Receive and inspect governed platform communications."
+    },
+    {
+      "id": "HOROSCOPE",
+      "realm": "cosmos",
+      "page": "horoscope",
+      "href": "/horoscope.html",
+      "promise": "Explore explicitly interpretive readings and provenance."
+    },
+    {
+      "id": "NEWS",
+      "realm": "services",
+      "page": "news",
+      "href": "/news.html",
+      "promise": "Research current topics with provenance-aware boundaries."
+    },
+    {
+      "id": "HERITAGE",
+      "realm": "order",
+      "page": "heritage",
+      "href": "/heritage.html",
+      "promise": "Preserve timelines, documents and access history."
+    },
+    {
+      "id": "PROGRESS",
+      "realm": "ascend",
+      "page": "matrix",
+      "href": "/matrix.html",
+      "promise": "Turn real tasks and evidence into governed progression."
+    },
+    {
+      "id": "CREDENTIALS",
+      "realm": "identity",
+      "page": "credentials",
+      "href": "/credentials.html",
+      "promise": "Inspect passports, certificates and verification boundaries."
+    },
+    {
+      "id": "LEGAL",
+      "realm": "intel",
+      "page": "privacy",
+      "href": "/privacy.html",
+      "promise": "Review terms, privacy, consent and data controls."
+    },
+    {
+      "id": "ELEMENTAL",
+      "realm": "cosmos",
+      "page": "elements",
+      "href": "/elements.html",
+      "promise": "Explore deterministic interpretive/simulation content with clear limits."
+    },
+    {
+      "id": "INVESTMENT",
+      "realm": "vault",
+      "page": "investment",
+      "href": "/investment.html",
+      "promise": "Separate research, watchlists and simulation from real financial execution."
+    },
+    {
+      "id": "INTELLIGENCE",
+      "realm": "intel",
+      "page": "intelligence",
+      "href": "/intelligence.html",
+      "promise": "Research, retrieve and inspect evidence-backed intelligence."
+    },
+    {
+      "id": "HIERARCHY",
+      "realm": "order",
+      "page": "governance",
+      "href": "/governance.html",
+      "promise": "Inspect roles, entitlements and governance boundaries."
+    }
+  ]
+}

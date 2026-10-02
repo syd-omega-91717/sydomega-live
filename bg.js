@@ -33,7 +33,7 @@
     var u=(input&&input.url)?input.url:input;
     if(!watched(u)) return real.apply(this,arguments);
     W.inflight++; if(!W.firstAt) W.firstAt=Date.now();
-    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; } }
+    var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; if(W.inflight===0) W.firstAt=0; } }
     var p; try{ p=real.apply(this,arguments); }catch(e){ done(); throw e; }
     return p.then(function(res){
       done();
@@ -96,6 +96,9 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
+  /* Universal trust-first orientation: every surface gets purpose, proof, next action and adjacent value. */
+  if(!document.querySelector('link[data-omega-value-layer-css]')){var omega_value_css=document.createElement('link');omega_value_css.rel='stylesheet';omega_value_css.href='/omega-value-layer.css';omega_value_css.setAttribute('data-omega-value-layer-css','1');(document.head||document.documentElement).appendChild(omega_value_css);}
+  if(!document.querySelector('script[data-omega-value-layer]')){var omega_value_layer=document.createElement('script');omega_value_layer.src='/omega-value-layer.js';omega_value_layer.setAttribute('data-omega-value-layer','1');omega_value_layer.defer=true;__omegaAppend(omega_value_layer);}
   if(!document.querySelector('script[data-omega-more-info]')){var mi=document.createElement('script');mi.src='/omega-more-info.js';mi.setAttribute('data-omega-more-info','1');mi.defer=true;__omegaAppend(mi);}
   /* AI copilot on every page */
   if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;__omegaAppend(os_data_omega_copilot);}
@@ -103,6 +106,12 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-threat]')){var os_data_omega_threat=document.createElement('script');os_data_omega_threat.src='/omega-threat.js';os_data_omega_threat.setAttribute('data-omega-threat','1');os_data_omega_threat.defer=true;__omegaAppend(os_data_omega_threat);}
   /* Real-time knowledge graph integration engine */
   if(!document.querySelector('script[data-omega-graphify-integration]')){var os_data_omega_graphify_integration=document.createElement('script');os_data_omega_graphify_integration.src='/omega-graphify-integration.js';os_data_omega_graphify_integration.setAttribute('data-omega-graphify-integration','1');os_data_omega_graphify_integration.defer=true;__omegaAppend(os_data_omega_graphify_integration);}
+  /* Canonical object envelope + graph are platform-wide read-side primitives. 
+     Search, realtime, missions and control surfaces all consume these globals. 
+     Loading them from the shared shell prevents silent feature loss on pages 
+     that do not declare the graph runtime themselves. */
+  if(!document.querySelector('script[data-omega-object-runtime]')){var omega_object_runtime=document.createElement('script');omega_object_runtime.src='/omega-object-runtime.js';omega_object_runtime.setAttribute('data-omega-object-runtime','1');omega_object_runtime.defer=true;__omegaAppend(omega_object_runtime);}
+  if(!document.querySelector('script[data-omega-object-graph-runtime]')){var omega_object_graph_runtime=document.createElement('script');omega_object_graph_runtime.src='/omega-object-graph-runtime.js';omega_object_graph_runtime.setAttribute('data-omega-object-graph-runtime','1');omega_object_graph_runtime.defer=true;__omegaAppend(omega_object_graph_runtime);}
   /* Phase D.1: Page feature registry and capability discovery */
   if(!document.querySelector('script[data-omega-page-features]')){var os_data_omega_page_features=document.createElement('script');os_data_omega_page_features.src='/omega-page-features.js';os_data_omega_page_features.setAttribute('data-omega-page-features','1');os_data_omega_page_features.defer=true;__omegaAppend(os_data_omega_page_features);}
   /* Phase D.2: Data binding framework for reactive page updates */
@@ -986,6 +995,16 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_notify.defer=true;
     __omegaAppend(_s_data_omega_notify);
   }
+  /* Two-factor sign-in gate: a session with a verified authenticator but no
+     code confirmed yet must enter it (docs/decisions/owner-mfa). Tiny; loads
+     omega-mfa.js only when a code is due. */
+  if(!document.querySelector('script[data-omega-mfa-gate]')){
+    var _s_data_omega_mfa_gate=document.createElement('script');
+    _s_data_omega_mfa_gate.src='/omega-mfa-gate.js';
+    _s_data_omega_mfa_gate.setAttribute('data-omega-mfa-gate','1');
+    _s_data_omega_mfa_gate.defer=true;
+    __omegaAppend(_s_data_omega_mfa_gate);
+  }
   /* Ritual reminders (FEATURE_IDEAS.md S4): opt-in, inert until the member
      turns them on; loads omega-today.js itself only then. */
   if(!document.querySelector('script[data-omega-reminders-mod]')){
@@ -1145,6 +1164,39 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     +'}';
   function inject(){var st=document.createElement('style');st.id='omega-mobile-guard';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
   if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
+})();
+
+/* ===== DESKTOP POINTER CLASSIFICATION =====================================
+   A laptop can expose a CSS viewport below 760px when browser zoom or OS
+   display scaling is high. Width alone then misclassifies a desktop as a
+   phone and activates the mobile shell. Classify input capability first;
+   keep the normal width breakpoints for coarse/touch devices.
+
+   This class is intentionally published on <html> before later shared
+   modules (including nav.js) inject their own mobile rules. The recovery
+   selectors use higher specificity and !important only for the shell-level
+   geometry that mobile rules deliberately force.
+   ========================================================================== */
+(function(){
+  try{
+    var fine=window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if(fine) document.documentElement.classList.add('omega-desktop-pointer');
+  }catch(e){}
+  var css='@media(max-width:760px){'
+    +'html.omega-desktop-pointer body{padding-bottom:0!important}'
+    +'html.omega-desktop-pointer #omega-mob{display:none!important}'
+    +'html.omega-desktop-pointer aside.omega-side,html.omega-desktop-pointer aside.side{display:flex!important}'
+    +'html.omega-desktop-pointer .shell{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .side{width:clamp(60px,7vw,80px)!important;height:100vh!important;flex-direction:column!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:hidden!important}'
+    +'html.omega-desktop-pointer .main{width:auto!important;min-width:0!important}'
+    +'html.omega-desktop-pointer .col-side{display:block!important}'
+    +'html.omega-desktop-pointer .ph-inner{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .matrix-strip{flex-direction:row!important}'
+    +'html.omega-desktop-pointer .ms-axis{border-right:1px solid rgba(201,168,76,.12)!important;border-bottom:0!important}'
+    +'html.omega-desktop-pointer .family-roles,html.omega-desktop-pointer .status-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important}'
+    +'}';
+  var st=document.createElement('style');st.id='omega-desktop-pointer-recovery';st.textContent=css;
+  (document.head||document.documentElement).appendChild(st);
 })();
 
 /* ===== DESKTOP BOTTOM-RIGHT LADDER =========================================
@@ -1943,7 +1995,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
     var s=document.createElement('style');s.id='omega-ui-css';
-    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:color .15s,border-color .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}@media(max-width:760px){.tnav-btn{min-height:26px;padding:6px 10px}}a[href],button,[role=button],label,summary,select,input[type=checkbox],input[type=radio]{touch-action:manipulation}input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}';
+    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:color .15s,border-color .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:none;align-items:center;gap:10px;margin-bottom:0;flex-wrap:wrap}@media(max-width:760px){.tnav-wrap{display:flex;margin-bottom:8px}.tnav-btn{min-height:40px;padding:6px 10px}}a[href],button,[role=button],label,summary,select,input[type=checkbox],input[type=radio]{touch-action:manipulation}input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px}';
     (document.head||document.documentElement).appendChild(s);
   }
   /* Topbar back/home */
@@ -1976,9 +2028,14 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     'font-family:monospace;font-size:12px;font-weight:700;min-width:14px;height:14px;',
     'border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 2px;',
     'animation:badge-pulse 1.5s ease-in-out infinite;z-index:999}',
-    '.omega-alert{position:fixed;top:50px;right:18px;z-index:9998;background:rgba(13,13,24,.97);',
-    'border:1px solid rgba(139,0,0,.5);border-left:3px solid #8B0000;padding:14px 18px;',
-    'cursor:pointer;transition:all .2s;min-width:240px}',
+    '.omega-alert{position:fixed;top:76px;right:18px;z-index:9998;',
+    'display:flex;flex-direction:column;align-items:stretch;gap:3px;',
+    'box-sizing:border-box;width:min(560px,calc(100vw - 36px));min-width:0;max-width:calc(100vw - 36px);',
+    'max-height:calc(100vh - 94px);overflow:auto;text-decoration:none;',
+    'background:rgba(13,13,24,.97);border:1px solid rgba(139,0,0,.5);',
+    'border-left:3px solid #8B0000;padding:14px 18px;',
+    'cursor:pointer;transition:transform .2s,opacity .2s;}',
+    '@media(max-width:760px){.omega-alert{top:12px;right:10px;width:calc(100vw - 20px);max-width:calc(100vw - 20px);}}',
     '@keyframes badge-pulse{0%,100%{box-shadow:0 0 4px rgba(139,0,0,.6)}50%{box-shadow:0 0 14px rgba(139,0,0,.9)}}'
   ].join('');
   (document.head||document.documentElement).appendChild(s);
@@ -2431,6 +2488,80 @@ setTimeout(function(){
   }
 })();
 
+/* ===== DATA-LOADING TIMEOUT ==============================================
+   [data-loading] is a visual state marker, not proof that a request is alive.
+   Older pages could leave the attribute behind after a rejected query or a
+   missing module, which made omega-components render a spinner forever.
+   Arm the spinner only while the region is pending; after 12s stop the
+   animation and expose a truthful retry state instead of fake downloading.
+   Dynamic regions are observed too. A successful renderer normally removes
+   data-loading before the timeout and is unaffected. */
+(function(){
+  if(window.__omegaLoadingTimeoutGuard)return; window.__omegaLoadingTimeoutGuard=1;
+  var TIMEOUT=12000;
+  /* A region that has received real content is loaded. Most renderers write
+     textContent/innerHTML and never remove data-loading, and while it is
+     pending omega-components paints the text transparent under a spinner --
+     so the data arrived and stayed invisible (profile.html: name, stat subs,
+     character sign/role, membership card). Clear the marker on first content. */
+  function settle(el){
+    if(el.__omegaLoadingTimer){clearTimeout(el.__omegaLoadingTimer);el.__omegaLoadingTimer=null;}
+    if(el.__omegaLoadingObs){try{el.__omegaLoadingObs.disconnect();}catch(e){} el.__omegaLoadingObs=null;}
+    el.removeAttribute('data-loading-pending');
+    el.removeAttribute('data-loading');
+  }
+  function hasContent(el){
+    return !!(el.textContent||'').trim() || !!el.querySelector('img,svg,canvas,video,input,button,a');
+  }
+  function arm(el){
+    if(!el||el.nodeType!==1||!el.hasAttribute('data-loading')||el.__omegaLoadingTimer)return;
+    el.setAttribute('data-loading-pending','true');
+    try{
+      el.__omegaLoadingObs=new MutationObserver(function(){
+        if(el.hasAttribute('data-loading')&&hasContent(el)&&!el.querySelector('.omega-loading-timeout'))settle(el);
+      });
+      el.__omegaLoadingObs.observe(el,{childList:true,characterData:true,subtree:true});
+    }catch(e){}
+    /* Module scripts run before DOMContentLoaded, so a fast renderer can fill
+       the region before this scan arms it -- no later mutation would ever
+       clear it. Already-filled means already loaded. */
+    if(hasContent(el)){settle(el);return;}
+    el.__omegaLoadingTimer=setTimeout(function expire(){
+      el.__omegaLoadingTimer=null;
+      if(!el.hasAttribute('data-loading'))return;
+      /* A region in a closed tab is not late -- its renderer runs when the tab
+         opens. Only a region the member can see can be declared failed. The
+         observer stays connected, so data arriving after a timeout still
+         replaces the retry notice and clears the marker. */
+      if(!el.isConnected)return;
+      if(!el.getClientRects().length){el.__omegaLoadingTimer=setTimeout(expire,TIMEOUT);return;}
+      el.removeAttribute('data-loading-pending');
+      if(!(el.textContent||'').trim() && !el.children.length){
+        var msg=document.createElement('span');
+        msg.className='omega-loading-timeout';
+        msg.textContent='DATA NOT LOADED — TRY AGAIN';
+        msg.style.cssText='display:inline-flex;align-items:center;gap:8px;color:var(--muted,#888);font:12px/1.5 var(--M,Courier,monospace);letter-spacing:1px;pointer-events:auto';
+        var btn=document.createElement('button');
+        btn.type='button'; btn.textContent='RETRY';
+        btn.style.cssText='font:inherit;letter-spacing:1px;background:transparent;color:inherit;border:1px solid currentColor;padding:3px 8px;cursor:pointer';
+        btn.addEventListener('click',function(){location.reload();});
+        msg.appendChild(btn); el.appendChild(msg);
+      }
+    },TIMEOUT);
+  }
+  function scan(root){
+    if(!root||root.nodeType!==1&&root.nodeType!==9)return;
+    if(root.nodeType===1&&root.matches&&root.matches('[data-loading]'))arm(root);
+    var list=root.querySelectorAll?root.querySelectorAll('[data-loading]'):[];
+    for(var i=0;i<list.length;i++)arm(list[i]);
+  }
+  function boot(){
+    scan(document);
+    try{new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){for(var j=0;j<ms[i].addedNodes.length;j++)scan(ms[i].addedNodes[j]);}}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+
 /* ===== PASSWORD REVEAL -- every password field across the platform gains a
    living emblem toggle to show or hide its value. One global implementation;
    pure SVG/ASCII emblem (no emoji); gold-to-cyan on activation; catches fields
@@ -2629,14 +2760,7 @@ setTimeout(function(){
     _osdv.setAttribute('data-omega-sculpture-dataviz','1');_osdv.defer=true;__omegaAppend(_osdv);
   }
 
-  /* Seasonal & elemental theme personalization — member's zodiac element + calendar season
-     modulate platform palette via CSS tokens. Reads profile.sign, maps to element, detects
-     current season, applies saturation/brightness adjustments, publishes to :root. Respects
-     prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-theme-personalization]')){
-    var _otheme=document.createElement('script');_otheme.src='/omega-theme-personalization.js';
-    _otheme.setAttribute('data-omega-theme-personalization','1');_otheme.defer=true;__omegaAppend(_otheme);
-  }
+  /* Canonical elemental/seasonal theme engine is loaded once near the platform nervous system. */
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
   if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;__omegaAppend(_ott);}
@@ -2679,6 +2803,22 @@ setTimeout(function(){
      synchronously further up, because a dynamic script like this one is async and cannot be
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
+
+  /* Ω World Action Recorder — authenticated district actions only. */
+  if(!document.querySelector('script[data-omega-world-actions]')){
+    var _owa=document.createElement('script');_owa.src='/omega-world-actions.js';
+    _owa.setAttribute('data-omega-world-actions','1');_owa.defer=true;__omegaAppend(_owa);
+  }
+
+  /* Ω District Mission Entry — starts only canonical server-defined district missions. */
+  if(!document.querySelector('script[data-omega-world-mission]')){var wm=document.createElement('script');wm.src='/omega-world-mission.js';wm.setAttribute('data-omega-world-mission','1');wm.defer=true;__omegaAppend(wm);}
+  /* Ω World Action Membrane — every deployed page receives a role, purpose and next action
+     from config/page-character-manifest.json. The membrane is additive: it does not create
+     authority, XP, rewards, payments, or duplicate navigation. */
+  if(!document.querySelector('script[data-omega-page-world]')){
+    var _opw=document.createElement('script');_opw.src='/omega-page-world.js';
+    _opw.setAttribute('data-omega-page-world','1');_opw.defer=true;__omegaAppend(_opw);
+  }
 
   /* Ω Cache Optimizer — aggressive static asset caching, IndexedDB support, prefetch */
   if(!document.querySelector('script[data-omega-cache]')){var _occh=document.createElement('script');_occh.src='/omega-cache-optimizer.js';_occh.setAttribute('data-omega-cache','1');_occh.defer=true;__omegaAppend(_occh);}

@@ -35,7 +35,7 @@
     ['omega-visual-command', 'VISUAL COMMAND'], ['agent', 'AGENT'],
     ['verify-deployment', 'VERIFY DEPLOY'], ['verify-modules', 'VERIFY MODULES'],
     ['healthz', 'HEALTH'], ['account', 'SIGN IN'], ['pending', 'PENDING'],
-    ['offline', 'OFFLINE'], ['index', 'FRONT DOOR']
+    ['offline', 'OFFLINE'], ['visual-atlas', 'VISUAL ATLAS'], ['index', 'FRONT DOOR']
   ];
   var OWNER_SEC = { key: 'owner', label: 'OWNER', icon: '\u03A9', col: '#E8C766' };
   var WAIT_MS = 10000;
@@ -98,6 +98,9 @@
       '.odk .odk-sa{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--odk-line);border-radius:999px;background:none;color:var(--ink,#E8E4D8);font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;text-decoration:none;cursor:pointer}',
       '.odk .odk-sa:hover,.odk .odk-sa:focus-visible{border-color:var(--gold,#C9A84C);color:var(--gold,#C9A84C)}',
       '.odk .odk-sa.go{border-color:var(--c);color:var(--c)}',
+      '.odk-kv{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px}',
+      '.odk-kv:empty{display:none}',
+      '.odk-kv span{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:4px 10px;border-radius:999px;border:1px solid var(--k);color:var(--k)}',
       '.odk-sok{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;color:var(--green,#5FB88A);padding-top:6px;border-top:1px solid var(--odk-line)}',
       '.odk-group{display:flex;flex-direction:column;gap:10px}',
       '.odk-gh{display:flex;align-items:center;gap:10px;font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--c)}',
@@ -391,6 +394,10 @@
       if (Number(o.factors) > 0) return;
       items.push({ kind: 'mfa', me: !!o.me, who: String(o.email || '').split('@')[0] });
     });
+    /* Enforcement is offered only once EVERY owner account has a verified
+       factor -- and owner_set_mfa_required() re-checks that on the server, so
+       this row can never be the thing that locks an owner out. */
+    if (!items.length && (st.owners || []).length && st.owner_mfa_required !== true) items.push({ kind: 'enforce' });
     var at = st.secrets_rotated_at ? Date.parse(st.secrets_rotated_at) : NaN;
     if (!(at > 0) || Date.now() - at > ROTATE_DAYS * 864e5) items.push({ kind: 'keys' });
     return items;
@@ -420,7 +427,9 @@
       chip.appendChild(document.createTextNode(items.length + ' SECURITY'));
       chip.setAttribute('aria-label', items.length + ' open security ' + (items.length === 1 ? 'item' : 'items'));
       chip.hidden = false;
-      items.forEach(function (it) { panel.appendChild(it.kind === 'mfa' ? mfaRow(it) : keysRow(sb, items)); });
+      items.forEach(function (it) {
+        panel.appendChild(it.kind === 'mfa' ? mfaRow(it) : it.kind === 'enforce' ? enforceRow(sb, items) : keysRow(sb, items));
+      });
       var ok = mk('div', 'odk-sok', '\u2713 BREACHED PASSWORDS BLOCKED AT SIGN-UP AND RESET');
       ok.title = 'Checked in the browser against HaveIBeenPwned. The server-side check needs the Supabase Pro plan.';
       panel.appendChild(ok);
@@ -448,6 +457,47 @@
       return r;
     }
 
+    function loadMfa() {
+      if (window.OmegaMFA) return Promise.resolve(window.OmegaMFA);
+      return new Promise(function (resolve) {
+        var s = document.createElement('script');
+        s.src = '/omega-mfa.js';
+        s.setAttribute('data-omega-mfa-mod', '1');
+        s.onload = function () { resolve(window.OmegaMFA || null); };
+        s.onerror = function () { resolve(null); };
+        document.head.appendChild(s);
+      });
+    }
+
+    /* Both owner accounts enrolled: switch on owner_mfa_required. The server
+       refuses unless this session confirmed a code (aal2) and every owner has a
+       verified factor; on step_up_first we ask for the code and retry once. */
+    function enforceRow(sb, items) {
+      var r = row('ENFORCE TWO-FACTOR', 'both accounts enrolled');
+      var go = mk('button', 'odk-sa go', 'ENFORCE');
+      go.type = 'button';
+      function call() { return sb.rpc('owner_set_mfa_required', { p_on: true }); }
+      go.addEventListener('click', function () {
+        go.disabled = true; go.textContent = '\u2026';
+        call().then(function (res) {
+          if (!res.error && res.data && res.data.error === 'step_up_first') {
+            return loadMfa().then(function (M) { return M ? M.stepUp() : false; })
+              .then(function (up) { if (!up) throw new Error('code not confirmed'); return call(); });
+          }
+          return res;
+        }).then(function (res) {
+          if (res.error || !res.data || res.data.ok !== true) throw new Error((res.data && res.data.error) || (res.error && res.error.message) || 'refused');
+          paint(sb, items.filter(function (x) { return x.kind !== 'enforce'; }));
+        }).catch(function (e) {
+          go.disabled = false;
+          go.textContent = 'NOT ENFORCED \u00B7 RETRY';
+          go.title = String(e && e.message || e);
+        });
+      });
+      r.appendChild(go);
+      return r;
+    }
+
     function keysRow(sb, items) {
       var r = row('ROTATE KEYS');
       KEY_LINKS.forEach(function (k) {
@@ -457,6 +507,42 @@
         a.rel = 'noopener noreferrer';
         r.appendChild(a);
       });
+      /* VERIFY / DONE go through the secrets-health Edge Function
+         (docs/decisions/secrets-health/PLAN.md). It answers per key: set,
+         working, and whether its fingerprint changed since the last DONE --
+         never the key. DONE is recorded by the function itself, and only
+         while every set key works, so it proves a rotation rather than
+         taking the owner's word for it. */
+      var out = mk('div', 'odk-kv');
+      function health(action) {
+        return sb.functions.invoke('secrets-health', { body: { action: action } }).then(function (res) {
+          if (res.error || !res.data || !Array.isArray(res.data.keys)) throw new Error((res.data && res.data.error) || 'unavailable');
+          return res.data;
+        });
+      }
+      function showKeys(d) {
+        out.textContent = '';
+        d.keys.forEach(function (k) {
+          var st = !k.set ? ['NOT SET', 'var(--muted,#8A8880)']
+            : k.live === false ? ['FAILING', 'var(--crim,#E05A5A)']
+            : k.changed === true ? ['ROTATED', 'var(--green,#3FB27F)']
+            : k.changed === false ? ['SAME KEY', '#E8A84C']
+            : ['WORKING', 'var(--cyan,#5EC8C8)'];
+          var c = mk('span', null, String(k.label || k.name) + ' \u00B7 ' + st[0]);
+          c.style.setProperty('--k', st[1]);
+          if (k.fp) c.title = 'fingerprint ' + k.fp;
+          out.appendChild(c);
+        });
+      }
+      var verify = mk('button', 'odk-sa', 'VERIFY');
+      verify.type = 'button';
+      verify.addEventListener('click', function () {
+        verify.disabled = true; verify.textContent = '\u2026';
+        health('check').then(function (d) { showKeys(d); verify.textContent = 'VERIFY'; })
+          .catch(function (e) { verify.textContent = 'UNAVAILABLE \u00B7 RETRY'; verify.title = String(e && e.message || e); })
+          .then(function () { verify.disabled = false; });
+      });
+      r.appendChild(verify);
       var done = mk('button', 'odk-sa go', 'DONE');
       done.type = 'button';
       var armed = 0;
@@ -471,15 +557,17 @@
         done.textContent = '\u2026';
         /* Supabase resolves {data,error}; it does not throw (CLAUDE.md 8.1
            class 1). The row leaves only on a confirmed {ok:true}. */
-        sb.rpc('owner_confirm_secrets_rotated').then(function (res) {
-          if (res.error || !res.data || res.data.ok !== true) throw new Error('refused');
+        health('confirm').then(function (d) {
+          showKeys(d);
+          if (d.ok !== true || d.recorded !== true) throw new Error(d.error || 'refused');
           paint(sb, items.filter(function (x) { return x.kind !== 'keys'; }));
-        }).catch(function () {
+        }).catch(function (e) {
           done.disabled = false;
-          done.textContent = 'FAILED \u00B7 RETRY';
+          done.textContent = (e && e.message === 'key_failing') ? 'A KEY FAILS \u00B7 FIX, RETRY' : 'FAILED \u00B7 RETRY';
         });
       });
       r.appendChild(done);
+      r.appendChild(out);
       return r;
     }
 

@@ -1,10 +1,13 @@
 name: Omega Registry Sync
 
+# Manual only. On `push` this committed a bot registry commit onto every
+# branch ~10s after each push. That commit became the PR head, its PR runs were
+# created with ZERO jobs (bot pushes do not execute workflows) and the concurrency
+# groups cancelled the author's real runs -- so a red head was hidden behind an
+# empty one (#508 merged with a real failing test; issue #509). CLAUDE.md 8.2:
+# never auto-commit the registry in CI. CI's "Skill and agent registry" step and
+# ./scripts/ci-local.sh check it; run this by hand when a regenerate is wanted.
 on:
-  push:
-    branches-ignore: [main]
-    paths-ignore:
-      - OMEGA_SKILL_REGISTRY.md
   workflow_dispatch:
 
 permissions:

@@ -37,6 +37,11 @@ function extractMetadata(obj: Record<string, unknown>): { uid: string | null; ti
   return { uid: meta["uid"] || null, tier: meta["tier"] || null };
 }
 
+async function sha256Hex(payload: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payload));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 function periodEndSeconds(subLike: unknown): number | null {
   const s = (subLike || {}) as Record<string, unknown>;
   const top = s["current_period_end"];
@@ -67,6 +72,28 @@ async function fetchStripeSubscription(subscriptionId: string): Promise<Record<s
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function recordStripePayment(admin: ReturnType<typeof createClient>, args: {
+  eventId: string; eventType: string; uid: string; amountMinor: number; currency: string;
+  providerReference: string; payloadHash: string;
+}) {
+  if (!Number.isSafeInteger(args.amountMinor) || args.amountMinor <= 0) return { ok: true as const, skipped: "no_positive_amount" };
+  const { data: transactionId, error } = await admin.rpc("record_stripe_payment", {
+    p_event_id: args.eventId,
+    p_event_type: args.eventType,
+    p_user_id: args.uid,
+    p_amount_minor: args.amountMinor,
+    p_currency: args.currency,
+    p_provider_reference: args.providerReference,
+    p_payload_hash: args.payloadHash,
+    p_metadata: { source: "stripe-webhook" },
+  });
+  if (error) {
+    console.error("[stripe-webhook] record_stripe_payment failed:", error.message);
+    return { ok: false as const };
+  }
+  return { ok: true as const, transactionId };
 }
 
 async function applySubscription(admin: ReturnType<typeof createClient>, args: { uid: string; tier: string | null; status: string; periodEnd: string | null; customer: string | null; eventId: string; eventType: string }) {
@@ -115,6 +142,7 @@ Deno.serve(async (req) => {
     return json({ error: "webhook_not_configured" }, 503);
   }
   const admin = createClient(supabaseUrl, serviceKey);
+  const payloadHash = await sha256Hex(rawBody);
   try {
     if (eventType === "checkout.session.completed") {
       const { uid, tier } = extractMetadata(obj);
@@ -132,6 +160,13 @@ Deno.serve(async (req) => {
       const subPeriodEnd = periodEndSeconds(sub);
       const periodEnd = subPeriodEnd !== null ? new Date(subPeriodEnd * 1000).toISOString() : null;
       const customer = typeof obj.customer === "string" ? obj.customer : null;
+      const amountMinor = typeof obj.amount_total === "number" ? obj.amount_total : 0;
+      const currency = typeof obj.currency === "string" ? obj.currency : "";
+      const providerReference = typeof obj.payment_intent === "string" ? obj.payment_intent : eventId;
+      const settled = await recordStripePayment(admin, {
+        eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
+      });
+      if (!settled.ok) return json({ error: "settlement_error" }, 500);
       const applied = await applySubscription(admin, {
         uid,
         tier: sub.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
@@ -159,6 +194,24 @@ Deno.serve(async (req) => {
       const applied = await applySubscription(admin, { uid, tier: null, status: "cancelled", periodEnd: null, customer, eventId, eventType });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
+    }
+    if (eventType === "invoice.payment_succeeded") {
+      const subId = typeof obj.subscription === "string" ? obj.subscription : null;
+      if (!subId) return json({ received: true, skipped: "no_subscription" });
+      const subData = await fetchStripeSubscription(subId);
+      if (!subData) return json({ error: "stripe_lookup_failed" }, 503);
+      const { uid } = extractMetadata(subData);
+      if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
+      const amountMinor = typeof obj.amount_paid === "number" ? obj.amount_paid : 0;
+      const currency = typeof obj.currency === "string" ? obj.currency : "";
+      const providerReference = typeof obj.payment_intent === "string"
+        ? obj.payment_intent
+        : (typeof obj.id === "string" ? obj.id : eventId);
+      const settled = await recordStripePayment(admin, {
+        eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
+      });
+      if (!settled.ok) return json({ error: "settlement_error" }, 500);
+      return json({ received: true, event: eventType, transaction_id: settled.transactionId });
     }
     if (eventType === "invoice.payment_failed") {
       const subId = typeof obj.subscription === "string" ? obj.subscription : null;

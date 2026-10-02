@@ -46,6 +46,17 @@ on:
       - 'vercel.json'
       - 'scripts/vercel-build.sh'
       - 'scripts/vercel-build-enhance.mjs'
+      - 'scripts/release-surface-quality.py'
+      - 'scripts/omega-enterprise-readiness-contract.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - '**/*.css'
+      - '**/*.js'
+      - '**/*.json'
+      - 'scripts/**'
+      - '.github/workflows/vercel-production.yml'
 
 permissions:
   contents: read
@@ -81,10 +92,38 @@ jobs:
           echo "VERCEL_PRODUCTION_VALIDATE_RUN_ID=${GITHUB_RUN_ID}"
       - name: Static contract
         run: python scripts/vercel_static_contract.py
+      - name: Release surface quality
+        run: python scripts/release-surface-quality.py
       - name: Build artifact
         run: bash scripts/vercel-build.sh
       - name: Production surface contract
         run: python scripts/omega-production-surface-contract.py
+      - name: Responsive surface contract
+        run: python scripts/omega-responsive-surface-contract.py
+      - name: Repository production proof contract
+        run: python scripts/production-proof-contract.py
+      - name: Enterprise readiness contract
+        run: python scripts/omega-enterprise-readiness-contract.py
+      - name: Capability registry contract
+        run: python scripts/omega-capability-contract.py
+      - name: Product catalog contract
+        run: python scripts/omega-product-catalog-contract.py
+      - name: RPC security policy contract
+        run: python scripts/omega-rpc-security-policy-contract.py
+      - name: Canon and agent contract
+        run: python scripts/omega-canon-agent-contract.py
+      - name: Production chain contract
+        run: python scripts/omega-production-chain-contract.py
+      - name: Achievement and referral contract
+        run: python scripts/omega-achievement-referral-contract.py
+      - name: Notification worker contract
+        run: python scripts/omega-notification-worker-contract.py
+      - name: Unified 18-module runtime contract
+        run: python scripts/omega-module-runtime-contract.py
+      - name: Runtime gateway auth contract
+        run: python scripts/omega-runtime-gateway-contract.py
+      - name: Architecture convergence audit
+        run: python scripts/omega-convergence-audit.py --json > production-proof-convergence.json
       - name: Artifact invariants
         run: |
           set -euo pipefail
@@ -105,8 +144,6 @@ jobs:
       - id: check
         shell: bash
         env:
-          # Only VERCEL_TOKEN is secret. Org/project identifiers are safe public
-          # project metadata and remain overridable through repository variables.
           TOKEN: ${{ secrets.VERCEL_TOKEN }}
           ORG: ${{ secrets.VERCEL_ORG_ID || vars.VERCEL_ORG_ID || 'team_w0v6eD1jUUzfPjiDq3ztOfvp' }}
           PROJECT: ${{ secrets.VERCEL_PROJECT_ID || vars.VERCEL_PROJECT_ID || 'prj_H3aTU3D4mR7TD19etdPTeYmhvANY' }}
@@ -163,6 +200,9 @@ jobs:
           cat > .vercel/project.json <<EOF
           {"orgId":"${VERCEL_ORG_ID}","projectId":"${VERCEL_PROJECT_ID}"}
           EOF
+      - name: Verify Vercel token and project authority
+        if: needs.credentials.outputs.ready == 'true'
+        run: bash scripts/vercel-deployment-auth-check.sh
       - name: Deploy to Vercel Production
         if: >-
           needs.credentials.outputs.ready == 'true' &&

@@ -1,0 +1,4 @@
+create index if not exists omega_agent_action_proposals_tool_id_idx on public.omega_agent_action_proposals(tool_id);
+create index if not exists omega_agent_action_proposals_policy_id_idx on public.omega_agent_action_proposals(policy_id);
+create index if not exists omega_agent_action_proposals_decided_by_idx on public.omega_agent_action_proposals(decided_by);
+create index if not exists omega_agent_action_proposals_audit_event_id_idx on public.omega_agent_action_proposals(audit_event_id);

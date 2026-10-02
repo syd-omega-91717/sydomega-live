@@ -43,7 +43,10 @@ def main() -> int:
 
     duplicate_targets = groups(hrefs)
     duplicate_labels = groups(label for label, _ in labels)
-    duplicate_keys = groups(key for key, _ in keys)
+    key_targets = defaultdict(set)
+    for key, href in keys:
+        key_targets[key].add(href)
+    duplicate_keys = {key: sorted(targets) for key, targets in key_targets.items() if len(targets) > 1}
 
     html_pages = {p.name for p in ROOT.glob("*.html")}
     nav_pages = {Path(href.split("#", 1)[0]).name for href in hrefs if href.startswith("/") and href.endswith(".html")}
@@ -69,10 +72,12 @@ def main() -> int:
     for page in orphan_pages:
         print(f"  - {page}")
 
-    # This gate intentionally reports findings but does not fail merely because
-    # overlap exists. The existing navigation is legacy data that must be
-    # measured before it can be safely consolidated. CI should therefore fail
-    # only on malformed/missing inputs, while preserving the audit report.
+    # Some legacy aliases intentionally reuse a key for the same destination.
+    # The actual conflict is one key resolving to multiple destinations.
+    if duplicate_keys:
+        fail("conflicting page keys resolve to multiple destinations")
+        return 1
+
     if not hrefs:
         fail("no navigation targets were detected")
         return 1

@@ -50,10 +50,14 @@ jobs:
         run: python scripts/production-contract.py
       - name: Capability registry contract
         run: python scripts/capability-audit.py --check
+      - name: Platform kernel contract
+        run: python scripts/platform-kernel-contract.py
       - name: Capability evidence freshness
         run: python scripts/capability-evidence-freshness.py
       - name: Module contract reachability
         run: python scripts/module-contract.py
+      - name: Runtime frontier contract
+        run: python scripts/omega-runtime-frontier-contract.py
       - name: Evidence audit
         run: python scripts/evidence-audit.py --summary
       - name: JavaScript syntax

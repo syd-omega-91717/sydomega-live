@@ -1,94 +1,91 @@
 ---
 name: edge-functions
-description: Work on sydomega-live's Supabase Edge Functions — the 14 Deno/TypeScript functions under supabase/functions/ (checkout, stripe-webhook, concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
+description: Work on sydomega-live's Supabase Edge Functions — the 17 Deno/TypeScript source functions under supabase/functions/ (checkout, stripe-webhook, concierge, secrets-health, concierge-orchestrator, growth-orchestrator, product-orchestrator, event-ingest, notify-access, rankings, snapshot-leaderboard, weekly-digest, intel-feed, market-price, graphify-ai-ingest, graphify-ai-query). Use before adding, changing, deploying, or debugging any of them, or any code that calls one.
 ---
 
 # EDGE FUNCTIONS
 
 ## What ships and how
 
-14 functions in `supabase/functions/*/index.ts`, Deno + TypeScript. They are
-**not** deployed by Vercel or CI — `supabase functions deploy <name>` by hand
-against project `ydqhzvvoyufiiqvzcjns`. `.vercelignore` excludes `supabase/`
-entirely. `deno check` on every function runs **non-blocking** in `ci.yml`
-(syntax only). The client uses the publishable key; functions that need
-elevation create their own `service_role` client from a Supabase secret —
-**never** ship `service_role` to the browser (`ci.yml` step 5, blocking).
+There are **17 source functions** in `supabase/functions/*/index.ts`. As of the
+2026-09-29 live audit, only **7 are deployed ACTIVE** in Supabase:
+`agent-execute`, `concierge`, `concierge-orchestrator`, `growth-orchestrator`,
+`product-orchestrator`, `stripe-webhook`, and `secrets-health`.
 
-| function | purpose | trigger |
+The remaining **10 are source-only/dormant** and must not be described as live
+capabilities until independently deployed and exercised:
+`checkout`, `event-ingest`, `graphify-ai-ingest`, `graphify-ai-query`,
+`intel-feed`, `market-price`, `notify-access`, `rankings`,
+`snapshot-leaderboard`, `weekly-digest`.
+
+They are not deployed by Vercel. `.vercelignore` excludes `supabase/`.
+Edge-function type checking is repository CI work; live deployment is a
+separate Supabase operation. Treat source presence, deployment, and successful
+runtime verification as three different states.
+
+## Function inventory
+
+| function | purpose | trigger / state |
+| `agent-execute` | governed read-only agent operations | authenticated POST / ACTIVE — endpoint verification pending |
 |---|---|---|
-| `checkout` | creates a Stripe Checkout session | client POST from `enterprise.html`/pricing |
-| `stripe-webhook` | payment webhook; verifies Stripe signatures and applies subscription state through the canonical server-side RPC boundary | Stripe → HTTP |
-| `concierge` | optional AI upgrade for `chatbot.html` (Anthropic) | client POST; caller falls back to a local keyword guide on non-200 |
-| `concierge-orchestrator` | orchestrates the concierge/AI workflow | HTTP / platform workflow |
-| `growth-orchestrator` | executes growth-oriented platform workflows | HTTP / platform workflow |
-| `product-orchestrator` | executes product-oriented platform workflows | HTTP / platform workflow |
-| `notify-access` | emails the owner on access requests | RPC / trigger |
-| `rankings`, `snapshot-leaderboard` | leaderboard computation / daily snapshot | `pg_cron` |
-| `weekly-digest` | per-member weekly recap | `pg_cron` weekly |
-| `intel-feed`, `market-price` | external intelligence/market data | client / cron |
-| `graphify-ai-ingest`, `graphify-ai-query` | knowledge-graph AI ingest/query | client |
+| `checkout` | Stripe Checkout session creation | client POST / dormant |
+| `stripe-webhook` | verified Stripe payment webhook | Stripe → HTTP / ACTIVE |
+| `concierge` | governed Anthropic concierge | client POST / ACTIVE |
+| `concierge-orchestrator` | concierge workflow orchestration | HTTP / ACTIVE |
+| `growth-orchestrator` | growth workflow orchestration | HTTP / ACTIVE |
+| `product-orchestrator` | product workflow orchestration | HTTP / ACTIVE |
+| `secrets-health` | owner-only provider-secret health/rotation evidence | client / ACTIVE |
+| `event-ingest` | authenticated member event ingestion | client POST / dormant |
+| `notify-access` | access-request email notification | DB webhook / dormant |
+| `rankings` | server-side leaderboard computation | client / dormant |
+| `snapshot-leaderboard` | daily leaderboard snapshot | cron/owner / dormant |
+| `weekly-digest` | weekly member digest processing | cron/owner / dormant |
+| `intel-feed` | Hacker News intelligence feed | client / dormant |
+| `market-price` | keyed stock/ETF quote proxy | client / dormant |
+| `graphify-ai-ingest` | authenticated AI graph ingestion | client POST / dormant |
+| `graphify-ai-query` | authenticated member graph query | client POST / dormant |
 
-## The "gated so deploying does nothing" convention
+## Security rules
 
-`checkout` and `concierge` **refuse cleanly (not a 500)** unless their secret
-(`STRIPE_SECRET_KEY` / `ANTHROPIC_API_KEY`) is configured. So a function file
-can be committed and even deployed and remain dormant until the secret is set
-and — for monetizable features — its `platform_settings` flag is flipped
-by a human (`CLAUDE.md` §9). Keep this shape for any new function that touches
-money, email, or an external paid API: probe the secret, return a clean
-non-200 when absent, never a 500.
+- Never infer that a source-only function is deployed.
+- Any DB-writing function must authenticate the actor and enforce ownership
+  server-side; request-body `user_id` is never an authority boundary.
+- Webhooks with `verify_jwt=false` require their own cryptographic/shared-secret
+  verification. `notify-access` therefore requires
+  `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `x-omega-webhook-secret` header.
+- Monetizable or externally metered functions remain secret-gated and,
+  where appropriate, feature-flagged.
+- Never expose `service_role` or provider keys to browser code.
+- After deployment, verify the actual endpoint; source review alone is not
+  runtime verification.
 
-## Secrets (Supabase, never committed)
+## Secrets
 
-`ANTHROPIC_API_KEY`, `RESEND_API_KEY`, `TWELVE_DATA_API_KEY`, `SITE_URL`,
-`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_MAP`.
-`supabase secrets set NAME=...`. **Run `./scripts/check-secrets.sh` before any
-deploy** — it reports which expected secrets are missing and never prints a
-value. (`supabase login && supabase link --project-ref ydqhzvvoyufiiqvzcjns`
-first.)
+Expected function secrets are checked by `scripts/check-secrets.sh`.
+The script reports names only and never prints values. `notify-access` now
+requires both `RESEND_API_KEY` and `NOTIFY_ACCESS_WEBHOOK_SECRET`.
 
 ## Rules for changing one
 
-1. **`stripe-webhook`**: it validates the `Stripe-Signature` header against
-   `STRIPE_WEBHOOK_SECRET` — without that check any HTTP call fakes a payment.
-   Never weaken it. It returns 200 for unhandled event types so Stripe does
-   not retry. All DB writes go through the canonical server-side subscription
-   RPC boundary with service-role enforcement. Payment code gets the same
-   care as production payment code anywhere — this is not a toy.
-2. **A function writing to the DB**: prefer a `SECURITY DEFINER` RPC that
-   `REVOKE`s `EXECUTE` from `PUBLIC` and re-grants narrowly. Check `.error` on
-   every write — a Supabase call resolves to `{data:null,error}`, it does not
-   throw.
-3. **CORS**: preserve each function's existing CORS contract; do not broaden
-   an endpoint's trust boundary as a drive-by change.
-4. **A cron function**: mirror the existing scheduled-function pattern and
-   record the schedule in a comment; the `pg_cron` entry itself is a
-   `supabase/*.sql` change.
-5. **Anthropic calls**: server-side only, key from the secret. Model id and
-   API shape — load the applicable AI API skill before changing it.
-6. **The `@supabase/server` migration**: every function still uses its current
-   repository-owned runtime contract. Treat migration to another server SDK
-   as a scoped task, not a drive-by rewrite.
+1. `stripe-webhook`: never weaken Stripe signature verification.
+2. DB writes: prefer canonical SECURITY DEFINER RPC boundaries and check every
+   Supabase write error.
+3. Preserve existing CORS trust boundaries.
+4. Cron functions must document their schedule and deployment state.
+5. AI provider calls remain server-side and secret-backed.
+6. Update capability/audit documentation when a function's contract changes.
+7. Deploy dormant functions only after their secrets, trigger, and runtime
+   contract are ready; do not deploy merely to make the inventory look green.
 
-## Verify
+## Verification
 
-- `deno check supabase/functions/<name>/index.ts` (or the repo's `deno.json`
-  task if present).
-- `./scripts/check-secrets.sh` — confirm the secrets the function needs exist
-  before deploying.
-- After deploy: exercise the real endpoint. For `stripe-webhook`, use a
-  Stripe CLI test event with a valid signature; a wrong signature must 400.
-- Update `CAPABILITY_INVENTORY.md` / `REPOSITORY_AUDIT.md` and the relevant
-  `docs/capabilities/registry.json` contract for the changed function, in the
-  same commit.
+- Run repository syntax/type checks for the changed function.
+- Run `scripts/check-secrets.sh` before deployment.
+- Exercise the real deployed endpoint after deployment.
+- Reconcile the live Supabase function list after deployment.
 
 ## Guardrails
 
-- No `service_role` in client-shipped code, ever (blocking CI check).
-- A monetizable function ships dormant — secret-gated **and** flag-gated —
-  regardless of how finished the code is.
-- Never commit a secret; never print one in a log line.
-- Edge Function changes are applied by a human via the Supabase CLI, not by
-  CI and not by this session unless explicitly asked — the code lands on a
-  branch, the deploy is a separate step.
+No service-role key in client-shipped code. Never commit or log secrets.
+Source code, deployed state, and verified runtime state must remain explicitly
+separate in audits.

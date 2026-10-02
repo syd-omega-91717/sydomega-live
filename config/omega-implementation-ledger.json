@@ -18,8 +18,8 @@
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
     "liveSite": "https://sydomega.com",
-    "remoteMigrationCount": 303,
-    "latestRemoteMigration": "20261002084553",
+    "remoteMigrationCount": 304,
+    "latestRemoteMigration": "20261002084948",
     "runtimeContract": "18 modules / 54 actions"
   },
   "items": [
@@ -108,7 +108,8 @@
         "scripts/migration-drift.py"
       ],
       "evidence": [
-        "Target project ydqhzvvoyufiiqvzcjns has 303 remote migration versions; latest verified version 20261002084553."
+        "Target project ydqhzvvoyufiiqvzcjns has 304 remote migration versions; latest verified version 20261002084948.",
+        "Repository remote-migrations snapshot was rebuilt directly from the target migration journal."
       ],
       "blocker": "Fresh CI migration-drift/repository-integrity proof remains required."
     },
@@ -300,7 +301,8 @@
       ],
       "evidence": [
         "Target project: 18 distinct modules / 54 actions verified live.",
-        "omega-runtime-gateway ACTIVE with verify_jwt=true."
+        "omega-runtime-gateway ACTIVE with verify_jwt=true.",
+        "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 14 remain DESIGNED and 3 remain SIMULATION_ONLY."
       ],
       "blocker": "DESIGNED module actions intentionally return contract-only state until their real adapters are promoted."
     },

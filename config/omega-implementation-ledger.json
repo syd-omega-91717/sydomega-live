@@ -13,7 +13,7 @@
     "BLOCKED"
   ],
   "evidenceAsOf": {
-    "main": "bf2f7b90753a28c60403320537888d7a74f8f742",
+    "main": "c3008986e318138a3809600b6d9770e675cb5fb8",
     "branch": "main",
     "pullRequest": null,
     "supabaseProject": "ydqhzvvoyufiiqvzcjns",
@@ -489,7 +489,7 @@
         "Repository deployment workflow and Vercel project identifiers are present.",
         "Mainline remains repository-valid; Vercel provider acceptance is still external to the repository."
       ],
-      "blocker": "Fresh production deployment proof remains blocked by the current Vercel provider authorization/build-rate-limit condition."
+      "blocker": "Fresh production deployment proof remains blocked by Vercel api-deployments-free-per-day (>100 deployments/24h)."
     },
     {
       "id": "MFA-001",
@@ -506,9 +506,10 @@
         "approvals.html"
       ],
       "evidence": [
-        "Owner MFA controls exist in repository/live schema."
+        "Owner MFA controls exist in repository/live schema.",
+        "MFA enrollment setting is enabled in the live target; owner enforcement remains dormant until a verified owner factor exists."
       ],
-      "blocker": "Authenticated MFA journey remains unverified."
+      "blocker": "Owner must complete a real MFA enrollment/verification before owner_mfa_required can be safely enabled."
     },
     {
       "id": "COMPLIANCE-001",

@@ -723,6 +723,106 @@
 .ohz-dir-l:hover,
 .ohz-dir-l:focus-visible { color: var(--ohz-gold-bright); }
 
+/* ── Discovery intelligence ────────────────────────────────────────── */
+.omega-discovery{
+  position:relative;
+  padding:clamp(42px,6vw,86px) var(--ohz-gutter);
+  border-bottom:1px solid var(--ohz-line);
+  background:linear-gradient(180deg,rgba(0,229,255,.025),transparent 45%);
+}
+.omega-discovery-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:28px;
+  margin-bottom:28px;
+}
+.omega-discovery-head h2{
+  max-width:850px;
+  margin:10px 0 0;
+  font-family:var(--D,"Cinzel Decorative",Georgia,serif);
+  font-size:clamp(25px,3.6vw,50px);
+  line-height:1.06;
+  color:var(--ohz-ink);
+}
+.omega-discovery-head p{
+  max-width:70ch;
+  margin:16px 0 0;
+  font-size:clamp(14px,1.05vw,17px);
+  line-height:1.7;
+  color:var(--ohz-dim);
+}
+.omega-discovery-signal{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+  max-width:330px;
+  font:9px/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
+  letter-spacing:.15em;
+  color:var(--ohz-gold-bright);
+}
+.omega-discovery-signal i{color:var(--ohz-dim);font-style:normal}
+.omega-discovery-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.omega-discovery-card{
+  min-height:245px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:10px;
+  padding:22px;
+  border:1px solid var(--ohz-line);
+  border-radius:14px;
+  background:rgba(255,255,255,.018);
+  color:inherit;
+  text-decoration:none;
+  transition:transform .25s ease,border-color .25s ease,background .25s ease;
+}
+.omega-discovery-card:hover,.omega-discovery-card:focus-visible{
+  transform:translateY(-5px);
+  border-color:rgba(0,229,255,.42);
+  background:rgba(0,229,255,.035);
+}
+.omega-discovery-kicker{
+  font:8px/1.5 var(--M,"Courier Prime",ui-monospace,monospace);
+  letter-spacing:.15em;
+  color:var(--ohz-cyan,#00E5FF);
+}
+.omega-discovery-card strong{
+  font:clamp(17px,1.4vw,22px)/1.1 var(--D,"Cinzel Decorative",Georgia,serif);
+  letter-spacing:.03em;
+  color:var(--ohz-ink);
+}
+.omega-discovery-card span:not(.omega-discovery-kicker){
+  font-size:12.5px;
+  line-height:1.58;
+  color:var(--ohz-dim);
+}
+.omega-discovery-card b{
+  margin-top:5px;
+  font:9px/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
+  letter-spacing:.16em;
+  color:var(--ohz-gold-bright);
+}
+@media(max-width:1000px){
+  .omega-discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .omega-discovery-head{grid-template-columns:1fr}
+  .omega-discovery-signal{justify-content:flex-start;max-width:none}
+  .omega-discovery-grid{grid-template-columns:1fr}
+  .omega-discovery-card{min-height:210px}
+}
+@media(prefers-reduced-motion:reduce){
+  .omega-discovery-card{transition:none}
+  .omega-discovery-card:hover{transform:none}
+}
+
 /* ── Vision band ─────────────────────────────────────────────────────── */
 .ohz-band {
   display: grid;

@@ -197,7 +197,7 @@
     },
     {
       "n": 9,
-      "name": "THE NINTH",
+      "name": "THE ALL",
       "type": "transcendent",
       "hex": "#ffffff",
       "signs": [],
@@ -413,9 +413,9 @@
       "VOID"
     ],
     "transcendent": [
-      "THE NINTH"
+      "THE ALL"
     ],
-    "note": "Tracks carry a PHYSICAL element (sign-derived). SOUL/SPACE/VOID are class-assigned; THE NINTH activates at Stage 9."
+    "note": "Tracks carry a PHYSICAL element (sign-derived). SOUL/SPACE/VOID are class-assigned; THE ALL activates at Stage 9."
   },
   "tiers": [
     {

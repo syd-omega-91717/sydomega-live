@@ -35,8 +35,13 @@
          re-stepped away from: measured against this file's own --void
          (#08080F) the old red is 1.99:1, under the 3:1 floor for any
          content, and it was painting real text on every page. #C4453C is
-         4.05:1. Every other token in this palette clears 4.5:1. */
-      --crim:#C4453C;
+         4.05:1. #CA5850 then cleared 3:1 but sat at 4.19-4.69:1 on the
+         platform's card surfaces, the one token under AA for small text; a
+         2026-09-27 contrast sweep found it on 6 pages. #CF6760 is the least
+         lightening of the same hue that reaches 5.38:1 on #0C0B10, so every
+         token in this palette now clears 4.5:1. css/omega-system.css holds
+         the same value -- change both or it does not ship (CLAUDE.md 4). */
+      --crim:#CF6760;
       --green:#3fb27f;
       /* Text neutrals, cooled to the design reference. Sampled from the
          reference by canvas getImageData in headless Chromium: its body,

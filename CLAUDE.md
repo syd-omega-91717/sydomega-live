@@ -135,8 +135,8 @@ A rule written in bg.js for a surface it does not own is dead code that
 looks correct in the diff. That is exactly how the Ω-HORIZON v2 layer came
 to be invisible (§8.4).
 
-**Third-party bundles are self-hosted in `/vendor/`** — 8 files, official builds,
-no bundler, add with `npm pack`; `audit.py` tracks them apart from root modules.
+**Third-party bundles are self-hosted in `/vendor/`** — all of them, official builds,
+no bundler, add with `npm pack`; the CSP names no code CDN (`security-headers-contract.py`); `audit.py` tracks them apart from root modules.
 Never reintroduce a runtime CDN import: an unresolved one runs *none* of its
 module's code, so the particle engine, the realm sphere, Chart.js, tippy, marked
 and Fuse each read as silently dead until vendored (`FIXES_LOG.md` 128, 130-132,
@@ -286,8 +286,9 @@ through this one file with no per-page markup changes:
   `<div data-omega-constellation="agents|signs|custom">`, each node a real link.
   It draws no artwork: it emits `data-omega-emblem` for `omega-emblems.js`. Node
   size is a geometric constraint — read its header. `cosmos.html` has its own.
-- **`.omega-spin-slow`**: the signature motion motif — `spin-slow 60s linear`,
-  static under `prefers-reduced-motion`; only `#ph-sigil` today.
+- **`omega-alive.js`** (bg.js, every page, MutationObserver): emblems turn at
+  72–120s, single-glyph marks breathe. It animates `rotate`/`scale`, never
+  `transform` — a transform keyframe erases every hover lift. `data-no-alive` opts out.
 - **`omega-cinematic-system.css` is LIVE on all 202 pages**, not inert as this
   file long claimed (157). `.omega-cinematic` matches **202/202** — its JS adds it
   to `<body>`; only 2 pages name it in markup — and it *paints*: toggling moves
@@ -543,11 +544,11 @@ Only what changes what you do in the **first minutes** stays here:
   — `ci.yml` was `cancelled` 30 runs running on `main`, a job waiting ~53min while any push in
   that window cancelled it: **starvation, not deadlock**. Fixed, verified on `main`: 53m06s →
   **3s** (112). Measure `created_at` vs `started_at` on the **job**; the run's timestamps hide
-  the wait. Gated; a **fixed** group with `false` is correct and exempt. **Separately, Actions
-  cannot dispatch jobs at all right now** — every run dies in 1–5s with no `runner_id`, no
-  `runner_name` and no `steps`, on `main` too; six PRs (#347–#352). Read the JOB object, never
-  the logs (they 404 even for successful runs). Owner action: Settings → Billing, Settings →
-  Actions.
+  the wait. Gated; a **fixed** group with `false` is correct and exempt. **Separately, a run
+  triggered by a Claude Code session's `git push` gets no runner** — dies in 1–5s, `runner_id: 0`,
+  no steps (measured 2026-09-26; public repo, so not billing). Runs from the owner's pushes and
+  merges run normally, and so does a `workflow_dispatch` sent through the GitHub API — dispatch
+  the gates on the branch after pushing. Read the JOB object, not the run's conclusion.
 
 ### 8.3 Current verification baseline
 
@@ -557,7 +558,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **6** warnings — **0 `.js`, 0 `.css`** unloaded, a first (168). Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **312** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **455** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -570,13 +571,13 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **6** (10 of 19 were one broken DOM, not a palette — 169) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **1** on `--all` (verify-deployment.html, a diagnostic page; was 48 — fix the hue's lightness, never its alpha: the scanner reads full opacity) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **118** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
-| `python3 scripts/evidence-audit.py --summary` | 96 BUILT / 27 PARTIAL / 45 LOCAL_ONLY / 19 STATIC / 2 BROKEN / 13 UNREACHABLE (202 pages); **0 declared relations absent live** (snapshot 2026-09-13, **223** relations), and **126** declared |
-| `./scripts/ci-local.sh` | **24** blocking checks, all passing (`contract-suite.py` holds **18** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
+| `python3 scripts/evidence-audit.py --summary` | 101 BUILT / 28 PARTIAL / 43 LOCAL_ONLY / 33 STATIC / 2 BROKEN (dormant payments/tokens, honest empty states) / **0** UNREACHABLE (207 pages; the owner deck reaches the 13 nav.js omits); **0 declared relations absent live** (snapshot 2026-09-21) |
+| `./scripts/ci-local.sh` | **27** blocking checks, all passing (`contract-suite.py` holds **19** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

@@ -58,7 +58,9 @@ async function launch(opts = {}) {
     /* Map of filename -> source, served instead of the working-tree copy.
        Use with gitShow() for a real A/B against a previous commit. */
     pin = null,
-    signedIn = true
+    signedIn = true,
+    /* IANA zone, e.g. 'Asia/Beirut'. Day-key bugs only show off UTC. */
+    timezoneId = undefined
   } = opts;
   const { chromium } = loadPlaywright(scratchpad);
   const browser = await chromium.launch({ executablePath: CHROME });
@@ -68,7 +70,8 @@ async function launch(opts = {}) {
     serviceWorkers: 'block',
     viewport: { width, height },
     isMobile: mobile, hasTouch: mobile,
-    deviceScaleFactor: mobile ? 2 : 1
+    deviceScaleFactor: mobile ? 2 : 1,
+    timezoneId
   });
 
   /* Every gated page imports the Supabase client at the top of a module

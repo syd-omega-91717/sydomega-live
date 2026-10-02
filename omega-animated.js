@@ -125,67 +125,88 @@
     if(!canvas||REDUCED) return;
     opts = opts||{};
     var ctx = canvas.getContext('2d');
-    var W=0,H=0,pts=[];
-    var N = opts.count||40;
+    if(!ctx) return;
+    var W=0,H=0,pts=[],raf=0,active=true;
+    var N = Math.max(1, Math.min(Number(opts.count)||40, 120));
     var COL = opts.color||'201,168,76';
-    var MAX_DIST = opts.maxDist||120;
+    var MAX_DIST = Math.max(20, Math.min(Number(opts.maxDist)||120, 300));
     function resize(){
-      W=canvas.width=canvas.offsetWidth||canvas.parentElement.offsetWidth||800;
-      H=canvas.height=canvas.offsetHeight||canvas.parentElement.offsetHeight||400;
+      W=canvas.width=canvas.offsetWidth||canvas.parentElement?.offsetWidth||800;
+      H=canvas.height=canvas.offsetHeight||canvas.parentElement?.offsetHeight||400;
     }
-    function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5};}
+    function mkPt(){
+      return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5};
+    }
+    function rebuild(){
+      pts=[];for(var i=0;i<N;i++)pts.push(mkPt());
+    }
+    function stop(){
+      active=false;
+      if(raf) cancelAnimationFrame(raf);
+      raf=0;
+    }
     function draw(){
+      if(!active||document.hidden){raf=0;return;}
       ctx.clearRect(0,0,W,H);
-      pts.forEach(function(p){
+      for(var a=0;a<pts.length;a++){
+        var p=pts[a];
         p.x+=p.vx;p.y+=p.vy;
         if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
         ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
         ctx.fillStyle='rgba('+COL+',.5)';ctx.fill();
-        for(var i=pts.indexOf(p)+1;i<pts.length;i++){
-          var dx=p.x-pts[i].x,dy=p.y-pts[i].y;
-          var d=Math.sqrt(dx*dx+dy*dy);
+        for(var i=a+1;i<pts.length;i++){
+          var q=pts[i],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
           if(d<MAX_DIST){
-            ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(pts[i].x,pts[i].y);
+            ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
             ctx.strokeStyle='rgba('+COL+','+(1-d/MAX_DIST)*.08+')';
             ctx.lineWidth=.5;ctx.stroke();
           }
         }
-      });
-      requestAnimationFrame(draw);
+      }
+      raf=requestAnimationFrame(draw);
     }
-    window.addEventListener('resize',function(){resize();pts=[];for(var i=0;i<N;i++)pts.push(mkPt());});
-    resize();for(var i=0;i<N;i++)pts.push(mkPt());draw();
+    function resume(){
+      if(!active||REDUCED||document.hidden)return;
+      resize();rebuild();draw();
+    }
+    function onResize(){resize();rebuild();}
+    function onVisibility(){
+      if(document.hidden){if(raf)cancelAnimationFrame(raf);raf=0;}
+      else resume();
+    }
+    window.addEventListener('resize',onResize,{passive:true});
+    document.addEventListener('visibilitychange',onVisibility);
+    window.addEventListener('pagehide',stop,{once:true});
+    resize();rebuild();draw();
   };
 
   /* ── F. LOADING CHOREOGRAPHY ──────────────────────────────────── */
+  function loadingBox(el, type, msg, icon){
+    if(!el) return;
+    el.replaceChildren();
+    var box=document.createElement('div');
+    box.style.cssText='padding:'+(type==='loading'?'20px':'24px')+';text-align:center'+(type==='loading'?';display:flex;align-items:center;justify-content:center;gap:10px;opacity:.7':'');
+    if(type==='error') box.style.cssText+=';border:1px solid rgba(139,0,0,.3);border-radius:2px;background:rgba(139,0,0,.05)';
+    if(type==='loading'){
+      var spin=document.createElement('div');spin.className='oa-spin';spin.style.cssText='width:16px;height:16px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold,#C9A84C);border-radius:50%';
+      box.appendChild(spin);
+    } else if(type==='empty'){
+      var glyph=document.createElement('div');glyph.style.cssText='font-family:var(--D,"Cinzel Decorative",serif);font-size:32px;color:rgba(201,168,76,.15);margin-bottom:10px';glyph.textContent=icon||'◆';box.appendChild(glyph);
+    } else if(type==='error'){
+      var title=document.createElement('div');title.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#C4453C);margin-bottom:4px';title.textContent='ERROR';box.appendChild(title);
+    }
+    var text=document.createElement('div');text.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:2px;color:'+(type==='error'?'rgba(233,230,220,.7)':'rgba(138,134,118,.4)');text.textContent=(msg|| (type==='loading'?'LOADING':type==='error'?'Failed to load data':'NO DATA'))+(type==='loading'?'…':'');box.appendChild(text);
+    el.appendChild(box);
+  }
   window.OmegaLoading = {
-    show: function(el, msg){
-      if(!el) return;
-      el.dataset.origHtml = el.innerHTML;
-      el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;opacity:.7">'
-        +'<div class="oa-spin" style="width:16px;height:16px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold,#C9A84C);border-radius:50%"></div>'
-        +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">'+(msg||'LOADING')+'&hellip;</span>'
-        +'</div>';
-    },
+    show: function(el, msg){ loadingBox(el,'loading',msg); },
     hide: function(el){
       if(!el) return;
-      if(REDUCED){ el.style.opacity='1'; return; }
+      if(REDUCED){el.style.opacity='1';return;}
       el.style.animation='oa-fade-in .3s ease both';
     },
-    error: function(el, msg){
-      if(!el) return;
-      el.innerHTML = '<div style="padding:16px;text-align:center;border:1px solid rgba(139,0,0,.3);border-radius:2px;background:rgba(139,0,0,.05)">'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#C4453C);margin-bottom:4px">ERROR</div>'
-        +'<div style="font-size:12px;color:rgba(233,230,220,.7)">'+(msg||'Failed to load data')+'</div>'
-        +'</div>';
-    },
-    empty: function(el, msg, icon){
-      if(!el) return;
-      el.innerHTML = '<div style="padding:24px;text-align:center">'
-        +'<div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:32px;color:rgba(201,168,76,.15);margin-bottom:10px">'+(icon||'&#9670;')+'</div>'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.4)">'+(msg||'NO DATA')+'</div>'
-        +'</div>';
-    }
+    error: function(el, msg){ loadingBox(el,'error',msg); },
+    empty: function(el, msg, icon){ loadingBox(el,'empty',msg,icon); }
   };
 
   /* ── G. PAGE ENTRANCE SEQUENCE ────────────────────────────────── */

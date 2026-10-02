@@ -45,7 +45,10 @@
   var CAP = 3;
   var EARN_EVERY_DAYS = 7; // +1 freeze per 7 distinct active (logged) days
 
-  function dateKey(d) { return d.toISOString().slice(0, 10); }
+  /* Local calendar day, as habits.html and journal.html key their logs.
+     toISOString() after setHours(0,0,0,0) named the previous UTC day in any
+     UTC+ zone, so "yesterday" was the day before it there. */
+  function dateKey(d) { return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate(); }
   function yesterday() {
     var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 1);
     return d;
@@ -63,7 +66,14 @@
     if (!state[scopeKey]) {
       state[scopeKey] = { available: 1, frozen: {}, activeDays: {}, lastEarnCount: 0 };
     }
-    return state[scopeKey];
+    /* A partial scope (older shape, or restored from another device) must not
+       throw inside habits.html's render loop. */
+    var sc = state[scopeKey];
+    if (!sc.frozen || typeof sc.frozen !== 'object') sc.frozen = {};
+    if (!sc.activeDays || typeof sc.activeDays !== 'object') sc.activeDays = {};
+    if (typeof sc.available !== 'number') sc.available = 1;
+    if (typeof sc.lastEarnCount !== 'number') sc.lastEarnCount = 0;
+    return sc;
   }
 
   // Call whenever the caller knows `dateKey` was a genuinely active day

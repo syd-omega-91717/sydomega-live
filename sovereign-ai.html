@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Sovereign AI Command</title>
+<title>&#937; SYD OMEGA 91717 &mdash; AI Command</title>
 <meta name="description" content="The 12-agent sovereign AI system — each agent bound to a zodiac sign, element, and domain. Powered by Anthropic Claude."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
@@ -200,7 +200,7 @@ window.sendToAgent=async function(){
     var r=await sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',auth:auth.toFixed(4),tier:_profile&&_profile.subscription_tier||'free'}}});
     if(r.data&&r.data.reply){addMsg('ai',r.data.reply,EL_COLORS[(_activeAgent.element||'').toLowerCase()]);return;}
     if(r.data&&r.data.enabled===false)dormant=true;
-  }catch(e){}
+  }catch(e){console.warn('[Omega Sovereign AI] concierge request failed:',e);}
   addMsg('ai','I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. '+(dormant
     ? 'Agent conversation is not switched on for this platform yet.'
     : 'The channel is unreachable right now — please try again shortly.'));

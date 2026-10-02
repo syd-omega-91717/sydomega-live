@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 -- Family Vault</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Family Vault</title>
 <meta name="description" content="The family sanctuary: bloodline constellation, heritage archive, and daily care status, held under the Order charter."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -679,7 +679,7 @@ window.bootBloodline = bootBloodline;
 
 import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 var ERAS=[
   {key:'ancient',label:'ANCIENT ROOTS',glyph:'&#x2736;',color:'#D9B86A'},
@@ -720,7 +720,7 @@ async function buildTimeline(){
   try{
     var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true});
     stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
-  }catch(e){}
+  }catch(e){console.warn('[Omega Family] heritage records unavailable:',e);}
 
   var byEra={};
   ERAS.forEach(function(e){byEra[e.key]=[];});

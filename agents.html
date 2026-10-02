@@ -135,16 +135,16 @@ var EC_COLOR={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand
 var SIGN_GLYPHS={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
 var FALLBACK_AGENTS=[
   {name:'Sentinel',sign:'Aries',element:'Fire',god:'Ares',role:'Security Guardian',token:'ARENITE',greeting:'I am Sentinel, guardian of the sovereign platform. Security, access, and integrity are my domain. How may I serve?',voice:'authoritative'},
-  {name:'Merchant',sign:'Taurus',element:'Metal',god:'Hephaestus',role:'Commerce Steward',token:'AURUM',greeting:'I am Merchant, steward of commerce and value. The token economy, marketplace, and treasury are my domain.',voice:'measured'},
+  {name:'Merchant',sign:'Taurus',element:'Metal',god:'Aphrodite',role:'Commerce Steward',token:'AURUM',greeting:'I am Merchant, steward of commerce and value. The token economy, marketplace, and treasury are my domain.',voice:'measured'},
   {name:'Scout',sign:'Gemini',element:'Wind',god:'Hermes',role:'Discovery Agent',token:'ZEPHYR',greeting:'I am Scout, your intelligence operative. I find what you need before you know you need it.',voice:'quick'},
   {name:'Warden',sign:'Cancer',element:'Water',god:'Artemis',role:'Heritage Guardian',token:'NEREID',greeting:'I am Warden, protector of bloodline and legacy. Your family archive and heritage are safe in my care.',voice:'protective'},
   {name:'Sovereign',sign:'Leo',element:'Fire',god:'Apollo',role:'Supreme Coordinator',token:'SOLARI',greeting:'I am Sovereign, coordinator of all agents. I maintain your standing within the Order and route all directives.',voice:'commanding'},
-  {name:'Auditor',sign:'Virgo',element:'Sand',god:'Athena',role:'Integrity Verifier',token:'SILITE',greeting:'I am Auditor, keeper of integrity. Every claim on your record is verified before it is counted.',voice:'precise'},
+  {name:'Auditor',sign:'Virgo',element:'Sand',god:'Athena',role:'Integrity Verifier',token:'SANDITE',greeting:'I am Auditor, keeper of integrity. Every claim on your record is verified before it is counted.',voice:'precise'},
   {name:'Proxy',sign:'Libra',element:'Wind',god:'Hera',role:'Executive Executor',token:'FORGEON',greeting:'I am Proxy, your executive arm. I carry out directives and mediate your position within the Order.',voice:'diplomatic'},
-  {name:'Oracle',sign:'Scorpio',element:'Water',god:'Poseidon',role:'Prediction Engine',token:'STYX',greeting:'I am Oracle. I read the patterns in your matrix trajectory that others cannot see.',voice:'enigmatic'},
+  {name:'Oracle',sign:'Scorpio',element:'Water',god:'Demeter',role:'Prediction Engine',token:'STYX',greeting:'I am Oracle. I read the patterns in your matrix trajectory that others cannot see.',voice:'enigmatic'},
   {name:'Beacon',sign:'Sagittarius',element:'Fire',god:'Zeus',role:'Broadcast Agent',token:'EMBER',greeting:'I am Beacon. Your achievements and dispatches reach the wider Order through me.',voice:'expansive'},
-  {name:'Analyst',sign:'Capricorn',element:'Metal',god:'Cronus',role:'Financial Intelligence',token:'FERRUM',greeting:'I am Analyst, your financial intelligence agent. Portfolio, treasury, and economic trajectory are my domain.',voice:'analytical'},
-  {name:'Tutor',sign:'Aquarius',element:'Wind',god:'Hephaestus',role:'Education Guide',token:'PRIMUS',greeting:'I am Tutor. I raise your Knowledge axis through the Academy and guide your ascension.',voice:'instructive'},
+  {name:'Analyst',sign:'Capricorn',element:'Metal',god:'Hestia',role:'Financial Intelligence',token:'FERRUM',greeting:'I am Analyst, your financial intelligence agent. Portfolio, treasury, and economic trajectory are my domain.',voice:'analytical'},
+  {name:'Tutor',sign:'Aquarius',element:'Wind',god:'Hephaestus',role:'Education Guide',token:'AETHER',greeting:'I am Tutor. I raise your Knowledge axis through the Academy and guide your ascension.',voice:'instructive'},
   {name:'Historian',sign:'Pisces',element:'Water',god:'Poseidon',role:'Memory Keeper',token:'ABYSS',greeting:'I am Historian, keeper of all that has been. Your evolution log and record are in my care.',voice:'reflective'},
 ];
 
@@ -234,7 +234,7 @@ window.sendMsg=async function(){
       var r=await _sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4)}}});
       if(r.data&&r.data.reply)reply=r.data.reply;
       else if(r.data&&r.data.enabled===false)dormant=true;
-    }catch(e){}
+    }catch(e){console.warn('[Omega Agents] concierge request failed:',e);}
   }
   if(!reply)reply='I am '+(_myAgent&&_myAgent.name||'your agent')+'. '+(dormant
     ? 'Agent conversation is not switched on for this platform yet.'

@@ -30,8 +30,7 @@
     document.head.appendChild(s);
   })();
 
-  var SPINNER = '<div style="width:16px;height:16px;border:2px solid rgba(201,168,76,.15);border-top-color:var(--gold,#C9A84C);border-radius:50%;animation:oa-spin 1s linear infinite"></div>'
-    +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">LOADING</span>';
+  function makeSpinner(){var box=document.createDocumentFragment(),spin=document.createElement('div'),label=document.createElement('span');spin.style.cssText='width:16px;height:16px;border:2px solid rgba(201,168,76,.15);border-top-color:var(--gold,#C9A84C);border-radius:50%;animation:oa-spin 1s linear infinite';label.style.cssText='font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)';label.textContent='LOADING';box.appendChild(spin);box.appendChild(label);return box;}
 
   function setStateMessage(container, message, options){
     if(!container) return;
@@ -71,7 +70,7 @@
       var loadEl = el.querySelector('[data-state-loading]');
       var errEl = el.querySelector('[data-state-error]');
       var emptyEl = el.querySelector('[data-state-empty]');
-      if(loadEl && !loadEl.textContent.trim()) loadEl.innerHTML = SPINNER;
+      if(loadEl && !loadEl.textContent.trim() && !loadEl.children.length){loadEl.replaceChildren(makeSpinner());}
       if(errEl && state==='error') setStateMessage(errEl, msg, {error:true});
       if(emptyEl && state==='empty') setStateMessage(emptyEl, msg, {icon:icon});
       el.setAttribute('aria-busy', state==='loading'?'true':'false');
@@ -105,7 +104,7 @@
           if(!el.querySelector('[data-state-loading]')){
             var l=document.createElement('div');
             l.setAttribute('data-state-loading','');
-            l.innerHTML=SPINNER;
+            l.appendChild(makeSpinner());
             el.insertBefore(l,el.firstChild);
           }
           el.dataset.state=el.dataset.stateDefault||'idle';

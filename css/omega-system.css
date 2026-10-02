@@ -20,9 +20,11 @@
   /* was #8B0000 -- measured at 1.74:1 against this surface, i.e. barely
      visible, and 77 of its uses are text `color`. Re-stepped to the
      deepest crimson that still clears 3:1 (validated with the dataviz
-     palette checker; CVD separation unchanged at deutan dE 18.9). */
-  --crim:#C4453C;
-  --green:#3fb27f; --purple:#9B6BF0;
+     palette checker; CVD separation unchanged at deutan dE 18.9).
+     2026-09-27: #CA5850 -> #CF6760, same hue, 4.19-4.69:1 -> 5.38:1 on the
+     card surfaces (AA for small text); theme.js holds the same value. */
+  --crim:#CF6760;
+  --green:#3fb27f; --purple:#AB82F2;
   --muted:#8a8676; --ink:#e9e6dc;
   --line:rgba(201,168,76,.15);
   --line-cyan:rgba(0,229,255,.12);
@@ -85,7 +87,12 @@ button{cursor:pointer}
    aside sits as a direct body child instead of nested inside a .shell
    wrapper. Structurally equivalent -- defined here so it renders identically
    instead of falling back to unstyled block flow (stacked, not side-by-side). */
-body:has(> aside#omega-side){display:flex;min-height:100vh}
+/* Only a VISIBLE aside makes the body a sidebar row. The public pages
+   (reset, terms, pending, 404) carry a hidden stub aside for nav.js; matching
+   it turned their <body> into a flex row, so the injected context rail, the
+   content column and the legal footer sat side by side -- reset.html
+   measured 1679px wide in a 1280px viewport. */
+body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){display:flex;min-height:100vh}
 .page-shell{flex:1;min-width:0;display:flex;flex-direction:column;overflow-x:hidden}
 
 /* ── TOPBAR ─────────────────────────────────────────────────────────────── */
@@ -1144,13 +1151,16 @@ html::before {
   color: var(--element-accent);
 }
 
-/* LINK ACCENTS: navigation uses element color to hint section identity */
-a[href]:not(.on):not(.nav-home):not(.nav-back) {
+/* LINK ACCENTS: navigation uses element color to hint section identity.
+   .skip-link is excluded: it paints its own gold background, and at (0,4,1)
+   this rule outranked its (0,1,0) colour, so a member whose element accent is
+   gold got gold-on-gold -- measured 1:1 by verify-runtime.js on roadmap.html. */
+a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
   color: var(--element-accent);
   transition: color 0.15s ease, text-shadow 0.15s ease;
 }
 
-a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
   text-shadow: 0 0 8px var(--element-accent);
 }
 
@@ -1173,7 +1183,7 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
     box-shadow: none;
   }
 
-  a[href]:hover:not(.on):not(.nav-home):not(.nav-back) {
+  a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
     text-shadow: none;
   }
 }

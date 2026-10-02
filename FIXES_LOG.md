@@ -20513,3 +20513,1179 @@ python3 scripts/check-inline-js.py                                           OK
 python3 scripts/omega-registry.py --check (after regeneration)               OK
 ./scripts/ci-local.sh                                                        24/24 blocking checks pass
 ```
+
+## Four more pages resolved off the deferred more-info list: the --cols:1 "about this feature" card judgment call
+
+The prior entry left `codex.html`/`tribe.html`/`elements.html`/`automation.html` deferred pending a judgment call: each has a single `--cols:1` card ("HOW THE ENGINE WORKS", "WHY OPEN SOURCES", etc.) with two paragraphs of prose, structurally different from the multi-item card-grid bodies already ruled out (where the title stands in for the whole entry). Resolved in favor of applying the pattern: a `--cols:1` card's title names the topic, it does not summarise the prose the way a grid item's title does, so collapsing behind a short lead is a genuine improvement, not a click tax. Same discipline as every prior application: full original text (both `<p>` tags, unchanged) preserved verbatim in `.omi-full`, a fresh one-sentence lead written per page.
+
+**Verified live**: all four pages' explanatory card sits inside a `SCIENCE` tab, not the default-active one — activated via each page's real `setTab('science')` before clicking, per this repo's own "hidden tab panel" test gotcha. All four toggles fire correctly (`aria-expanded` flips, `max-height` goes from 0 to the real `scrollHeight` — 401/429/374/374px respectively), 0 console errors across all four.
+
+```
+codex.html omi-toggle click        aria-expanded true, max-height 401px, 0 errors
+tribe.html omi-toggle click        aria-expanded true, max-height 429px, 0 errors
+elements.html omi-toggle click     aria-expanded true, max-height 374px, 0 errors
+automation.html omi-toggle click   aria-expanded true, max-height 374px, 0 errors
+python3 scripts/check-inline-js.py                                           OK
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```
+
+## Third sigil-entry-point surface found and shipped (characters.html); the a[href] display-collision bug recurs a third time
+
+Owner-directed ("all similar design in the project... must follow"): asked to sweep the whole platform for every emblem/sigil-like element that could become a click-to-enter mark, not just the two surfaces already done. Rather than guess at scope, delegated a full reconnaissance pass first: every emblem-rendering module (`omega-sigil-gen.js`, `omega-emblems.js`/`omega-emblems-catalog.js`, `omega-emblem-panel.js`, `omega-page-emblem.js`, `omega-constellation.js`, `omega-sculpture.js`'s five non-signet mounts) and every candidate hub-grid page were checked against their real, live behavior — not assumed from naming.
+
+**Result: only one genuine untouched candidate existed** — `characters.html`'s `.archetype-grid` (4 cards, each already a real `<a href>` to a distinct real page: `/character.html`, `/gaming.html`, `/identity.html`, `/bloodline.html`), which carried **no icon at all**, only a decorative CSS `::before` ring. Wired `OmegaIdentity.dial()` into each, keyed by the destination slug and the card's own `--accent` custom property (same derivation pattern as `index.html`'s realm strip). Everything else surveyed was either already correct (`omega-constellation.js`'s nodes are already real links; `omega-sculpture.js`'s 5 non-signet mounts already carry working `links:[]` overlays) or intentionally different and correctly left alone: `agents.html`'s roster switches the in-page chat agent, not navigation; `cosmos.html`/`honors.html`/`elements.html`'s preview cards use `OmegaEmblemPanel`'s richer "preview → modal → optional deep link" pattern, which converting to direct navigation would have deleted; `elements.html`'s 9-element grid, `houses.html`, `gates.html`, `pantheons.html`, `factions.html`, `family.html` all render the *viewing member's own* progression/cosmology/genealogy data, not links to other pages (`pantheons.html` documents this in its own source: "the gods have no destination pages"). `dashboard.html`'s quick-actions list is a real-link candidate too, but structurally a dense single-line list rather than a card — `dial()`'s full ring/spoke/triangle geometry read as too heavy at that scale in a quick check; left alone rather than forcing a bad fit, an open design call rather than a coded exclusion.
+
+**The `a[href]{display:inline-flex}` accessibility-CSS collision (first found and fixed on `world-shell.html`'s `.char-card` in the prior entry) recurred a third time, on `.archetype-card`.** This instance was actually worse: `.archetype-card` had never declared its own `display` at all, so the accessibility rule wasn't just outranking a competing declaration — it was the *only* rule setting `display`, and won by default. Same diagnosis method (`document.styleSheets` matching against the live element), same fix shape: `.archetype-grid .archetype-card{display:block}` raises the selector's specificity via two classes `(0,2,0)`, comfortably ahead of `a[href]`'s `(0,1,1)`, with no `!important`. **A full 205-page automated sweep for this bug class was attempted and abandoned**: two scan scripts (one waiting for `load`, one for `domcontentloaded` with a hard per-page timeout) both ran past this harness's command budget without finishing, for reasons unrelated to the fix itself (page-load variance across 205 real pages, not a scanner bug). Rather than claim a false completeness, this is recorded honestly as **not exhaustively audited** — three confirmed instances, fixed on sight each time, and a real, open possibility that more exist elsewhere. A dedicated future pass with a longer budget (or a batched/chunked scan) is the correct way to close this out, not a claim this entry doesn't have the evidence for.
+
+**Verified live**: `characters.html` — 4/4 cards carry a real `svg.oid-dial` with the correct resolved stroke colour (confirmed `#00E5FF` on the cyan card, not the literal string `"var(--cg-cyan)"` — the two-level custom-property chain resolves correctly through `getComputedStyle`), 0 console errors. `.archetype-card` computed `display` confirmed `block` (was `flex`) after the fix, verified with a real before/after render matching the exact method used on `world-shell.html`.
+
+```
+document.styleSheets rule match (a[href], omega-accessibility-audit.css)     display:inline-flex, specificity (0,1,1) -- same root cause as world-shell.html
+.archetype-card computed display, before fix                                 flex (no competing page-local rule existed at all)
+.archetype-card computed display, after fix (.archetype-grid .archetype-card) block
+characters.html: 4/4 archetype cards carry a real svg.oid-dial               confirmed, stroke #00E5FF resolved correctly, 0 console errors
+Full 205-page automated scan for the same a[href] collision class            attempted twice, both runs exceeded the command time budget -- NOT completed, recorded as open rather than claimed clean
+python3 scripts/check-inline-js.py                                           OK
+./scripts/ci-local.sh                                                        24/24 blocking checks pass
+```
+
+## Merged a large parallel effort into this branch; found and fixed 5 real blocking breaks it introduced, plus a real live UX collision (not fixed, flagged)
+
+Merging `origin/main` to bring this branch current (the previous PR had already merged) pulled in substantial parallel work this session did not produce: 135 files, +5456/-1553 lines. Two of the new files are directly relevant to this session's own four-part task — `docs/CONTENT_PAGE_SIGIL_ROLLOUT.md` + `omega-content-sigil-system.js`/`omega-emblem-integration.js` (a platform-wide, automatic "page door" self-link + heuristic-selector progressive-disclosure retrofit, now live via `bg.js` on every non-system page) and `docs/SIGIL_REALMS_AND_GAME_TECHNOLOGY.md` + `realms.html`/`omega-sigil-system.js` (a dedicated 18-realm sigil launcher, plus an honestly-scoped "separate Unreal Engine 5 game client" architecture recommendation — materially more ambitious than this session's own conservative three.js tone-mapping research). This is recorded here because it changes the picture for this session's own sigil/more-info work: a broader automatic system now exists platform-wide, in parallel with (not replacing) the hand-curated `omega-more-info.js`/`OmegaIdentity.dial()` work already shipped. The two "more info" systems use non-overlapping selectors (`[data-omega-more]`/`.omi-lead` vs `.hero-subtitle`/`.lead`/`.intro`/etc.), so they do not technically collide on any single element, but they are now two independently-built answers to the same UX problem, which is worth a deliberate decision (keep both, converge, or deprecate one) rather than silent duplication going forward.
+
+**A full local CI run on the merged tree found 5 real blocking breaks, all pre-existing on `main` (confirmed byte-identical against `origin/main` before fixing, so none of this was caused by this session's own work), fixed one at a time:**
+
+1. **`pulse.html`'s inline module script had an orphaned extra `}`** after `renderForex()`'s closing brace, breaking the whole script's parse. Root-caused by extracting the script and running `node --check` on it directly (not guessing from the CI error's line number, which pointed at the `<script>` tag itself). Removed the stray brace.
+2. **`wealth.html`'s inline module script was missing a closing `}`** for `renderHistory()` — the opposite defect, diagnosed by checking each top-level function's own text in isolation via `node --check` (a naive character-by-character brace counter gave a false lead here, confused by the regex literals `/'/ `/`/"/ ` inside `escHtml()`'s replace chain — real JS tokenizers distinguish regex-vs-division correctly, a hand-rolled scanner does not, so per-function isolation via the real parser was the reliable method). Added the missing brace.
+3. **`omega-project-studio.js` had a duplicate stray `}`** replaced by a missing one at the boundary between `renderProjectList`'s function body and the enclosing `window.OmegaProjectStudio = {...}` object literal's own closing brace — the file had `};` where `}\n};` was needed (one brace to close the function, one to close the object, both before the trailing semicolon). Fixed by adding the missing brace.
+4. **Three new scripts shipped without answering `--help` from their docstring** (`check-js-syntax.py`, `security-definer-audit.py`, `security-headers-contract.py`) — the exact recurring bug class `scripts/tests/test_script_help_contract.py` exists to catch (CLAUDE.md 8.4: "21 of 47 ignored it, running the whole job instead," measured 2026-09-05). All three ran their real job on `--help` instead of printing their docstring. Added the standard guard (`if __name__=="__main__" and ("--help" in sys.argv or "-h" in sys.argv): print(__doc__); raise SystemExit(0)`) to each, placed before any work, matching the idiom already used correctly elsewhere in `scripts/` (e.g. `architecture-contract.py`).
+5. **`realms.html` (the new 18-realm sigil launcher) was unreachable** — no entry in `nav.js`'s `SECTIONS`/`PS` map, failing `scripts/reachability-contract.py` (blocking). Added `realms:'command'` to `PS` and a `['realms','REALMS','/realms.html']` sub-entry next to `gateway` in the `command` section, since `docs/SIGIL_REALMS_AND_GAME_TECHNOLOGY.md` names `gateway.html` as realms.html's own entry point.
+6. `OMEGA_SKILL_REGISTRY.md` was stale after the page-count and module-size changes from the merge — regenerated.
+
+**A real, live UX collision was found but deliberately NOT fixed** (not this session's system to unilaterally redesign): on pages where `omega-identity.js` inserts its own per-page hero (`.oid-hero`) — e.g. `characters.html` — the new `omega-content-sigil-system.js` now ALSO inserts a `.omega-page-door` at the very top of `main`, so both render stacked. Worse, `.omega-page-door`'s link points at `location.pathname`, i.e. the page's own URL — a "click to enter" affordance on a page a member is already on, which is a dead-end self-link, not a real bug in the sense of throwing an error, but a real UX defect (confirmed live: `dashboard.html`/`codex.html` render `.omega-page-door` with `doorHref` equal to their own path; `characters.html` renders both `.omega-page-door` and `.oid-hero` stacked). Flagged in `GAP_ANALYSIS.md` rather than patched, since deciding whether the fix is "don't self-link," "suppress the door where a hero already exists," or "retire one of the two systems" is a design call outside this session's own scope.
+
+```
+pulse.html script isolated + node --check                                    orphaned extra `}` after renderForex(), fixed, now parses
+wealth.html script isolated, per-function node --check bisection             missing `}` closing renderHistory(), fixed, now parses
+omega-project-studio.js node --check                                         `};` should have been `}\n};` at the object-literal boundary, fixed
+scripts/check-js-syntax.py --help                                            now exits 0 printing its docstring (was running the full repo scan)
+scripts/security-definer-audit.py --help                                     now exits 0 printing its docstring (was running the full SQL audit)
+scripts/security-headers-contract.py --help                                  now exits 0 printing its docstring (was validating vercel.json)
+python3 scripts/reachability-contract.py                                     OK -- every destination page is linked from navigation (was 1 BLOCKING)
+python3 -m unittest scripts.tests.test_script_help_contract                  3/3 tests pass (was 1 failure)
+python3 scripts/check-js-syntax.py                                           FIRST_PARTY_JS_CHECK checked=174, PASS
+.omega-page-door self-link + .oid-hero stacking                              confirmed live on dashboard.html/codex.html/characters.html -- NOT fixed, flagged as an open UX defect in a system this session does not own
+./scripts/ci-local.sh                                                        24/24 blocking checks pass (was 5 failing)
+```
+
+## Security-hardening pass 3: every page-local `esc()` made quote-safe and executed in a test; owner-facing stored-XSS in `approvals.html`; three syntax errors that had `main` red
+
+Continued from `5788c115` (which was also `origin/main`). A pristine `git archive HEAD` showed `main` itself failing `ci-local.sh`: **6 blocking checks**. Three were real outages, not tooling noise — a parse error runs *none* of a script block:
+
+- `omega-project-studio.js:145` — `renderProjectList` closed with `};` and no `}`, so the object literal never closed: `SyntaxError: Unexpected token ';'`. Regression from `5c7600c` ("Fix project studio object closure"). The whole studio module was dead on every page that loads it.
+- `pulse.html` inline module — a stray `}` after `renderForex` (`Unexpected token '}'`): the entire PULSE page script dead.
+- `wealth.html` inline script — `renderHistory()` lost its closing brace (`Unexpected end of input`): the entire wealth dashboard dead, including every calculator.
+
+The other three were pre-existing contract drift: `check-js-syntax.py`, `security-definer-audit.py` and `security-headers-contract.py` ran their job on `--help` (now answer from the docstring, the `audit.py` stanza); `realms.html` (added `9f027559`) was linked from nothing in `nav.js` (now `COSMOS → 18 REALMS`, PS `realms:'cosmos'`); and the census was stale (regenerated).
+
+**Owner-facing stored XSS, `approvals.html`.** The owner's member-review card rendered `((m.sign||'--')+'/'+(m.element||'--')).toUpperCase()` straight into `innerHTML`. Both are free-text `profiles` columns (`0001_omega_master_deploy.sql:1347-1348`, no CHECK) that a member updates on their own row via `profiles_update` — so any member could plant markup that executes in the *owner's* session. Now `esc()`-wrapped; `m.id` is escaped in `data-uid`/`id` attributes too (defence in depth; it is a uuid today).
+
+**The escape helpers themselves.** 53 page-local `esc`/`escHtml`/`escapeHtml` definitions had drifted into ~10 shapes. Measured by executing each in Node:
+
+```
+leave " and ' raw (attribute break-out wherever the result lands in value="…"/data-*="…")   most of them — e.g. decisions.html:406 value="${esc(opt)}"
+throw TypeError on any non-zero number  ((s||'').replace)                                  ~25
+identity function — escaped nothing (feed.html, sovereigns.html; both now dead code, removed)  2
+render null/undefined as the text "null"/"undefined" (omega-sigil-system.js, omega-content-sigil-system.js)  2
+```
+
+All now use one body — `String(s==null?'':s).replace(/[&<>"']/g, …)` — preserving `journal.html`'s `\n→<br>`. `omega-search.js`'s `highlight()` used to regex-match the *escaped* string, so a query of `3` split `&#39;` into `&#<mark>3</mark>9;`; it now splits the raw text and escapes each piece. `intelligence.html` double-escaped into `textContent` (an error showed `&lt;`), and `feed.html` wrote a literal `&mdash;` via `textContent` — both fixed.
+
+**Gate:** `scripts/tests/test_escape_helpers.py` extracts every helper and *executes* it against `<b a="1" b='2'>&</b>`, `42`, `null` and `undefined`, with a planted-violator case proving it catches the identity and `(s||'')` shapes. A grep cannot tell these apart; running them can.
+
+```
+git archive 5788c115 → ./scripts/ci-local.sh                  6 BLOCKING CHECK(S) FAILED (18 passed)
+node --check omega-project-studio.js (before / after)         SyntaxError: Unexpected token ';'  /  OK
+python3 scripts/check-inline-js.py (before / after)           2 broken (pulse.html:234, wealth.html:355)  /  OK
+python3 -m unittest scripts/tests/test_escape_helpers.py      2 tests OK (first run caught 2 more helpers → fixed)
+./scripts/ci-local.sh (after)                                 ALL 24 BLOCKING CHECKS PASSED; 318 + 23 tests
+```
+
+**Two more `main` breaks found by rendering, not by any static gate:**
+
+- `nav.js` gave its injected `<style>` *and* the context-rail `<nav>` the same id, `omega-context-rail` — a duplicate id on **every** page (`verify-runtime.js` failed 49/49 touched pages on it, and pristine `main` too), and the style's `getElementById` guard could read the rail as itself. The style is now `omega-context-rail-style`.
+- `css/omega-system.css:1148` `a[href]:not(.on):not(.nav-home):not(.nav-back)` (0,4,1) set `color: var(--element-accent)` over `.skip-link` (0,1,0), whose own background is gold — so for a signed-in member with a gold accent the skip link rendered **gold on gold, 1:1**, on `roadmap.html` (a §10 capability entrypoint, so the blocking `capability-evidence` gate), `courses.html`, `architecture.html`. Same class `omega-accessibility-audit.css:171` already fixed for `:hover`. `:not(.skip-link)` added to both the rule and its `:hover` twins. Found with a live `cssRules` walk — the unauthenticated probe measured the link fine, because `--element-accent` only resolves once the signed-in stub has an element.
+
+```
+verify-runtime.js (default 13 entrypoints), pristine main   FAIL roadmap.html  1:1 A.skip-link
+verify-runtime.js (default 13 entrypoints), after           PASS
+verify-runtime.js --pages <49 touched pages>, after         0 uncaught errors on any page (wealth.html threw "Unexpected end of input" on main)
+```
+
+**Full-estate sweep** (`verify-runtime.js --all`, 206 pages): 202 pass. Three of the four failures were one bug — `omega-content-sigil-system.js:58` did `main.insertBefore(door, main.querySelector('.hero,.page-header,header'))`, but `querySelector` returns a *descendant*, so any nested hero threw `NotFoundError` (`honors.html`, `maintenance.html`, `matrix.html`; identical on pristine `main`). It now climbs to `main`'s direct child first; the 3 pages pass. `reset.html`'s horizontal overflow is pre-existing and left open.
+
+Still open (not done in this pass): `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites. Most render the member's own data to themselves (self-XSS) or static constants; this pass prioritised the class where one member's data reaches *another* session. Remaining inline `onclick=` handlers also block a strict `script-src` CSP.
+
+## Security-hardening pass 4: last seven runtime CDN loads vendored, CSP narrowed to `'self'` for code, Shepherd tour was dead
+
+CLAUDE.md §4 says every third-party bundle is self-hosted, but the live CSP still allowed `esm.sh`, `unpkg.com` and `cdn.jsdelivr.net` in `script-src` (and jsdelivr in `style-src`/`font-src`) because seven loads still used them:
+
+```
+omega-oss.js     lucide 1.37.0 (unpkg), dayjs 1.11.23 + relativeTime (jsdelivr), highlight.js 11.12.0 (jsdelivr)
+omega-qr.js      qrcode-generator 1.5.2 (jsdelivr, auto-minified qrcode.min.js)
+omega-tour.js    shepherd.js 13.0.3 JS + CSS (jsdelivr)
+omega-music.js   tone 14.9.17 (esm.sh dynamic import)
+```
+
+All eight files (plus Tone's licence file) are now in `/vendor/`, copied **unmodified** from the official `npm pack` tarballs (licences: ISC, MIT ×4, BSD-3-Clause). SHA-256 (first 12 hex digits): lucide `970650887f49`, dayjs `0198dd0b1f76`, relativeTime `9aeaf25ce3c5`, highlight `8ab71eb09c51`, qrcode `18ae399f8118`, shepherd.mjs `201355df553c`, shepherd.css `487b5fd746dc`, tone `76fde2e44a0f`.
+
+**A dead feature found on the way:** `omega-tour.js` requested `shepherd.js@13.0.3/dist/js/shepherd.min.js`. The 13.0.3 package's `dist/` holds only `esm/`, `cjs/` and `css/`, so that file does not exist, and every guided tour failed at `js.onerror` with a console warning (the same shape as fuse 7.x, see the `omega-oss.js` header). 13.x ships no UMD build. The tour now `import()`s `/vendor/shepherd.mjs` (it has no imports of its own) and publishes `window.Shepherd = mod.default`. Tone moved from an ESM namespace import to its UMD build, which sets the same namespace as `window.Tone`; the loader now shares one in-flight promise and clears it on failure so a retry is possible.
+
+**CSP:** `vercel.json` is now `script-src 'self' 'unsafe-inline'`; `style-src` keeps only Google Fonts; `font-src` keeps only `fonts.gstatic.com`; and `form-action 'self'` is added (no `<form action=>` in the repo posts off-site). `vault.html`'s meta CSP loses `esm.sh` in `default-src`/`script-src`. Analytics and speed-insights load same-origin `/_vercel/*` in production; their `va.vercel-scripts.com` branch is development-only and was never allowed. `architect.html`'s ADR-004 ("esm.sh for all third-party libraries — ACCEPTED", member-visible) now records the `/vendor/` decision.
+
+**Gate:** `security-headers-contract.py` fails on any code CDN host in `script-src`/`style-src`/`font-src`/`default-src`, in the header **or** any page `<meta>` CSP. `test_security_headers_contract.py` covers it with planted violators. Its first meta regex stopped at the `'` in `'self'` and silently missed `vault.html` — the planted-violator test pins that.
+
+```
+node CSP server (exact vercel.json header) + Chromium, terms.html, each lib via its real API:
+  lucide.createIcons ✓  dayjs ✓  fromNow → "an hour ago" ✓  hljs.highlight ✓
+  OmegaQR.render 128x128, 6312 dark px ✓  OmegaTour.start → .shepherd-element + /vendor/shepherd.css ✓
+  OmegaMusic.play → window.Tone 14.9.17 ✓            securitypolicyviolation events: 0
+python3 scripts/security-headers-contract.py      PASSED (before the change: 6 errors, incl. vault.html)
+./scripts/ci-local.sh                             ALL 24 BLOCKING CHECKS PASSED; 322 + 23 tests
+node scripts/verify-runtime.js                    PASS (13 pages)
+python3 scripts/audit.py                          0 critical / 7 warnings — identical on origin/main (FIXES_LOG.md alone is now >1000 KB)
+```
+
+Still open: `'unsafe-inline'` (1,355 inline handlers on 164 pages, 354 inline `<script>` blocks) — see `GAP_ANALYSIS.md`.
+
+## CI root cause corrected, `main`'s one real red gate fixed, and the strict-CSP migration started (inline-code ratchet, 6 files clean)
+
+**GitHub Actions, re-diagnosed.** Two sessions (and CLAUDE.md §8.2) blamed billing for jobs dying in 1–5s with `runner_id: 0`. That was wrong: the repo is **public**, and on 2026-09-26 every `push` run on `main` got a runner and passed. Contracts `pull_request` history separates the cases exactly:
+
+```
+8f497c89  owner's "Merge branch 'main'" from the GitHub UI   success (runner assigned)
+f75d8878, 63852da1, 20cb3a5a, c8ae485e  pushed from Claude Code sessions   failure, runner_id 0, no steps
+Omega Registry Sync, event=push, on a Claude-pushed branch commit           failure, runner_id 0
+0b3aa986 etc. (2026-09-21, same Claude author)                             success
+workflow_dispatch of contracts.yml via the GitHub API (run 36205147451)     success, runner assigned
+```
+
+So a run whose trigger is a Claude Code session's `git push` never gets a runner, whatever its event. Commit authorship is not the cause (the same author passed on 09-21), and neither is the code. The dependable route is `workflow_dispatch` through the API after pushing. CLAUDE.md §8.2 now says so.
+
+**`Supabase Runtime Contract` was genuinely red on `main`** (`42501 permission denied for table platform_settings`, run 36204856814). The table was locked down **on purpose** — `20260923031224_harden_owner_only_and_platform_settings_reads` and `20260925211957_revoke_anon_select_from_private_tables` — and live, `anon` can SELECT exactly one public relation (`token_catalog`). Flags reach members through `get_platform_flag()` (authenticated only). Re-granting would have reversed hardening. `main` independently fixed it in `b2315f2c` by probing `token_catalog` (the one anon-readable relation); on merging, that target was kept and this branch's change became the backstop: the contract treats a Postgres `42501` as proof the key was accepted, so the next hardening pass that narrows anon cannot turn `main` red again: PostgREST had to authenticate the key and switch to `anon` before Postgres could refuse the grant. A bad key is rejected by PostgREST itself with no Postgres code. Five new tests, including invalid-key, JWT-error and 500 cases that must still fail. Not runnable from this sandbox (egress proxy 403s Supabase); verified by a GitHub-hosted dispatch after push.
+
+**Strict-CSP migration, batch 1.** `scripts/csp-inline-ratchet.py` counts inline `on*=` handlers (markup and JS-built strings) and inline `<script>` blocks per root file against `scripts/csp-inline-baseline.json`. It runs in `contract-suite.py`, so it blocks locally and on GitHub. A file can never go up, and new files must start at 0.
+
+```
+origin/main   1,368 inline handlers   351 inline <script> blocks   205 files
+this branch   1,323                   348                          199 files (6 now clean, locked at 0)
+```
+
+- **Shared modules, loaded on every page, now clean:** `omega-copilot.js` (close/send), `omega-onboard.js` (card click + the `onmouseenter`/`onmouseleave` pair a click-only grep missed), `omega-notify.js` (close + row hover → `:hover` rule), `omega-search.js` (ESC + result hover; the no-results message also echoed the query into `innerHTML` unescaped and `item.u` into `href` — both escaped now), `omega-legal.js` (POLICY `onclick=window.open` → a real `<a href>`).
+- **`approvals.html` (owner console) is fully clean:** 20 markup handlers, 9 template handlers and 3 dead `onclick=""` REVIEW stubs, plus all 3 inline scripts, moved to `approvals-ui.js` (classic; a delegated `data-action` dispatcher over an explicit allow-list, never `window[name]`) and `approvals.js` (the module). One trap was fixed on the way: `filterClick` highlighted buttons with `.fb[onclick*="…"]`, a selector keyed on the very attribute being removed. It now uses `data-arg`.
+
+```
+approvals.html as OWNER under script-src 'self' (no 'unsafe-inline'), stubbed members incl. sign='<img onerror>':
+  app shown ✓  tabs ✓  stat-cell + filter-bar highlight ✓  XSS payload inert ✓  CSP violations 0  page errors 0
+  APPROVE via DOM click -> approve_member RPC, same as origin/main (a forced Playwright click hit an off-screen
+  button at y≈1160 on BOTH versions -- a probe artifact, checked before trusting either result)
+dashboard.html under the same strict policy, member without a sign:
+  onboarding hover/select/confirm ✓  copilot open/send/close ✓  search results/ESC/hover ✓ (query XSS inert)
+  notifications open/close ✓  consent POLICY is <a href=/privacy.html> ✓
+  CSP violations: only dashboard.html's own 3 inline <script> blocks (batch 2), none from shared modules
+./scripts/ci-local.sh   ALL 24 BLOCKING CHECKS PASSED; 332 + 23 tests
+```
+
+## New members could not accept terms or finish onboarding: profile UPDATE grants had drifted narrower than 0041 intended (applied live, 20260926091843)
+
+Found by an audit pass, not a report. Measured live on 2026-09-26: `authenticated` held column-level UPDATE on `public.profiles` for only `avatar_url, bio, demo_watched_at, display_name, dob, trial_started_at`. Migration `0041_omega_access_control.sql:171` grants `display_name, sign, birth_date, terms_accepted, updated_at, nationality, profession, bio, avatar_url`. Nothing in `supabase/migrations/` removes them, so the drift was applied live outside the repo.
+
+Every self-service write in the client that needs those columns failed with `42501 permission denied for table profiles`:
+
+```
+terms.html          terms_accepted, terms_accepted_at   -> a new member can never accept terms; bg.js
+                                                           sends a member without terms back to terms.html (locked out)
+omega-onboard.js    sign (+ element, god, agent, token) -> onboarding can never complete
+settings.html       bg_color                            -> theme colour never saves
+profile.html KYC    kyc_status, kyc_doc_path, ...       -> still fails; NOT granted on purpose (below)
+live: 4 of 7 non-owner members have no sign and no accepted terms; newest signup 2026-07-29
+```
+
+The one member tested had `terms_accepted_at = 2026-06-16`, so this path worked before the drift.
+
+**Fix (owner approved, applied live):** the migration re-grants `sign, birth_date, terms_accepted, terms_accepted_at, bg_color, nationality, profession, updated_at`. It deliberately does **not** grant `element/god/agent`: `derive_cosmology` computes them from `sign`, and `omega-onboard.js` now sends `sign` only (sending the derived columns made the whole write 42501). It also does **not** grant `kyc_*`, because a member must never write their own KYC verdict; that needs an owner-reviewed RPC. Privileged columns stay blocked twice, by the grants and by `guard_profile_privileges`.
+
+```
+BEFORE, as real non-owner member cfc4593f-… (rolled back):  update sign=… -> 42501 permission denied
+proof on production inside a rolled-back txn with the grant: sign='leo' -> Leo/FIRE/Apollo/Sovereign, terms + bg saved
+AFTER apply, same member (rolled back):   sign='virgo' -> Virgo/SAND/Athena/Auditor ✓   is_owner=true -> 42501 ✓
+                                          access_approved unchanged (false) ✓
+member row after every test: bg_color NULL, terms_accepted_at 2026-06-16 -> nothing persisted
+security advisor after apply: unchanged (only auth_leaked_password_protection, issue #375)
+supabase/remote-migrations.json + migration-drift.py: PASS (221 versions, local and remote agree)
+```
+
+**Also found in the same audit, a false positive and not a vulnerability:** `security-definer-audit.py` flags `approve_member`, `grant_permanent_access`, `check_trial_status`, etc. as mutating SECURITY DEFINER functions without an auth check. It reads the `supabase/*.sql` reference bag. Live, the `public.*` versions are SECURITY INVOKER one-liners (`SELECT private.approve_member($1)`), and the `private.*` DEFINER functions open with `IF NOT public.is_platform_owner() THEN RETURN … 'forbidden'`. No `public` SECURITY DEFINER function is executable by `anon` or `authenticated`.
+
+## Enterprise audit pass: CI supply chain fully pinned, cross-user RLS measured live, three trust gaps found
+
+An enterprise-scale audit report was checked against evidence before anything was acted on. Its CI claims held (the Contracts and Vercel Production workflows SHA-pinned, `vercel@59.6.0`), as did its registry figures (15 capabilities: 4 BUILT / 6 PARTIAL / 2 BROKEN / 1 LOCAL_ONLY / 2 TESTED, 0 `verified`). Its core framing is right too: the Master Build's React/Express/Prisma stack is a target specification, not what ships.
+
+**Supply chain (fixed).** Only five named workflows were held to immutable refs. The rest ran **31 mutable tags in 17 workflows**, including `stefanzweifel/git-auto-commit-action@v5`, a third-party action with repo write access, in `omega-update.yml`. That workflow was an unfinished placeholder (`echo "Update applied"` under "You would paste my code here"), had no `permissions:` block, had never run, and was referenced nowhere. It is removed. The other 30 refs now use the SHAs nine workflows already ran (checkout/setup-node/setup-python v7; v4 was on the deprecated Node 20 runtime). `workflow-contract.py` now checks **every** workflow, not five, proven with a planted `actions/checkout@v4` in `schema-tracking.yml` → `FAIL … mutable action reference`.
+
+```
+before: 57 action refs, 26 SHA-pinned, 31 mutable (17 workflows)
+after:  55 action refs, 55 SHA-pinned, 0 mutable
+```
+
+**Cross-user RLS, measured live (not aggregate counts).** For all 64 public tables with a `user_id uuid` column that `authenticated` can SELECT, each was counted as the database owner and again as a real non-owner member (`SET LOCAL ROLE authenticated` + JWT `sub`, one rolled-back transaction):
+
+```
+18 tables hold other users' rows -> 17 fully isolated (member sees 0):
+  client_errors 7629->0, platform_events 5283->0, session_heartbeats 1103->0, sovereign_points_ledger 69->0,
+  user_dedication 33->0, certificates/medals/trophies/token_balances 24->0, member_state 20->0,
+  evolution_events 20->0, lesson_completions 18->0, task_completions 10->0, ai_memory 8->0, ...
+  dispatches 1->1   (by design: SELECT is is_published OR owner OR own row)
+46 tables hold no foreign rows -> isolation NOT demonstrable by this test; needs seeded fixtures
+```
+
+**Trust gaps found (open, recorded in GAP_ANALYSIS.md):**
+- **Dispatch moderation bypass.** `news.html` lets members submit dispatches without `is_published`; the feed reads `published_dispatches()`. But `authenticated` holds INSERT on `is_published`, the insert check is only `user_id = auth.uid()`, and no trigger guards the column, so a member can publish straight to every member's feed.
+- **No MFA anywhere.** 0 verified `auth.mfa_factors` project-wide, including both owner accounts, which hold schema-wide authority. There is also no enrolment UI: nothing in the client calls `auth.mfa.*`.
+- **`security-definer-audit.py` false positives** (recorded in the previous entry).
+
+## Dashboard tour stuck on screen: popover under its own overlay, stacked tours, pale strip, missing targets
+
+**Reported:** owner screenshot of `sydomega.com/dashboard` (2026-09-26 12:38 local) — the "SOVEREIGN COMMAND BAR" tour card with a pale strip down its right edge, the page behind it dimmed, and "COMMAND / NEXTANALYTICSOPEN →" run together above it.
+
+**Root causes, each measured in a headless render of `dashboard.html` at 1366×768:**
+- **Buttons unclickable.** `omega-tour.js` set `.shepherd-element{z-index:9994}` while Shepherd's modal overlay is `9997` with `pointer-events:all` on its path. `document.elementFromPoint` at the centre of NEXT returned the overlay `path`, not the button. There was no way to advance or close, so the page stayed dimmed.
+- **Tours stacked.** `omega:populated` fires more than once per page, and every firing armed `autoStart` again. After three firings the probe counted **3** `.shepherd-element`s, each with its own overlay. Playwright's click on the visible NEXT timed out (3000ms).
+- **Pale strip.** `vendor/shepherd.css` gives `.shepherd-element` `background:#fff; max-width:400px`, while the theme capped `.shepherd-content` at 320px. Measured: element 400px wide, `rgb(255,255,255)`, content 320px, leaving an 80px white band.
+- **Step pointed at nothing.** The dashboard has no `.topbar` and no `.side` (console: "The element for this Shepherd step was not found .topbar"). Shepherd centred that card while its copy said the bar was "always visible here". Across the nine registered tours, 14 of 30 targets are absent or unrendered.
+- **Run-together label.** `omega-content-sigil-system.js` builds the related-page card from three inline `<span>`s whose CSS only sets `margin-top`, so they sat on one line.
+
+**Fix:**
+- `omega-tour.js`:
+  - `.shepherd-element` now has `z-index:9999`, is 320px wide and has a transparent background.
+  - One tour runs at a time (`_running`), and `autoStart` arms once per page (`_scheduled`).
+  - Steps whose target is absent or zero-size are dropped; a target-less card stays.
+  - The nav step targets `#omega-side, .side`.
+  - Closing the tour now counts as seen, recorded in `localStorage`. It used to be `sessionStorage`, set only on completion, so a dismissed tour came back every session.
+- `omega-content-sigil-system.js`: the three label spans are `display:block`.
+- `.claude/skills/verify-in-browser/harness/serve.js` now serves `.mjs` as `text/javascript`. It had sent `application/octet-stream`, so the vendored Shepherd module failed to import under the harness and no local render could reproduce this report.
+
+**After (same render):**
+- One tour.
+- Element 320px, `rgba(0,0,0,0)`, `z-index:9999`.
+- The first card attaches to the sidebar (`data-popper-placement=right`).
+- NEXT advances to "YOUR SOVEREIGN METRICS".
+- × removes the overlay, and `omega_tour_done_dashboard` reads `1`.
+- The three related-sigil labels render `display:block` at stacked `y` offsets.
+
+## Member posts rendered as official dispatches; owner could not post one (applied live, 20260926095955)
+
+Owner-approved ("Do both", 2026-09-26). The finding recorded above as a "moderation bypass" was measured again before fixing it, and its shape was different:
+
+- `dispatches.is_published` **defaults `true`**, and `news.html`'s Wire is described as "public to the Order". So member posts being visible to members is by design, and forcing `is_published=false` would have silently emptied the Wire.
+- The real gap is the **official** feed. `private.published_dispatches()` was `SELECT * ... WHERE is_published = true`. In a rolled-back probe, a member's Wire insert appeared in it: **1 row**, rendered under "SOVEREIGN DISPATCHES" as though the owner had issued it.
+- **The owner could not post an official dispatch at all.** `post_dispatch()` read `RETURNING id` (a `bigint` identity) into a `uuid` variable. Running as the owner it failed with `22P02 invalid input syntax for type uuid: "4"`, so `approvals.html` `sendDispatch()` could only ever show "DISPATCH FAILED".
+- `set_dispatch_published(uuid, boolean)` compared the `bigint` id to a `uuid`. It had no client caller.
+
+**Migration `20260926095955_official_dispatches_owner_only_feed`:**
+- The official feed now returns `is_published AND user_id IS NULL`, the rows `post_dispatch()` writes. A member cannot write an author-less row, because `dispatches_self_insert` requires `user_id = auth.uid()` or the owner.
+- `post_dispatch()` uses a `bigint` id and treats an empty category as `DISPATCH`.
+- `set_dispatch_published()` is recreated as `(bigint, boolean)` in both layers and returns `not_found` when no row matched. EXECUTE is revoked from `PUBLIC` and `anon` and granted to `authenticated`, the same ACL as before.
+
+**Verified live (single transaction, rolled back):**
+
+```
+owner_post={"id": 6, "ok": true}  owner_unpublish={"ok": true, "published": false}
+member_post_dispatch={"ok": false, "error": "owner_only"}  member_set_published={"ok": false, "error": "owner_only"}
+member_rows_in_official=0  official_rows_visible=1
+```
+
+- Afterwards: `dispatches` total=1, probe rows=0.
+- Security advisor: unchanged. Its only finding is leaked-password protection (#375, owner action).
+
+## Two-factor sign-in: threat model, dormant enrolment UI, owner enforcement proposed and exercised live
+
+Owner-approved start ("Do both", 2026-09-26). This is **not a fix yet**. It is the reviewed, dormant first half. Decision record: `docs/decisions/owner-mfa/PLAN.md` (Status `AWAITING-HUMAN-REVIEW`) and `CODEX_REVIEW.md`.
+
+**Measured live:**
+- `auth.mfa_factors` has 0 rows.
+- 161 policies and 33 functions route owner authority through `private.is_platform_owner()`.
+- **24** functions test `profiles.is_owner` / `platform_owners` directly. The plan lists them, and enforcement must not be turned on until they are routed through the helper.
+
+**Shipped (dormant):**
+- **`omega-mfa.js`:** TOTP enrol (QR as `<img src>`, secret via `textContent`), verify, remove, and `stepUp()`.
+  - Every Auth call's `.error` is checked, and the status is re-read from the server after each change.
+  - Abandoned unverified factors are removed before a new enrol.
+- **`settings.html`:** mounts it in the Account tab inside `data-omega-flag="mfa_enrolment_enabled"`. The flag row does not exist, so the section is hidden and the module never mounts.
+- **Browser check (`settings.html`, harness):**
+  - Dormant: `visible:false`, `mounted:false`.
+  - With the flag attribute forced and the Auth API stubbed:
+    - a malformed code is refused client-side;
+    - a rejected code shows `Invalid TOTP code entered` and the status stays `TWO-FACTOR IS OFF`;
+    - an accepted code gives `TWO-FACTOR IS ON · 1 authenticator`;
+    - a factor named `<img src=x onerror=alert(1)>` renders as text, with 0 injected `<img>`;
+    - the stale unverified factor is unenrolled before `enroll`.
+
+**Proposed, not applied (`supabase/migrations/20260926102544_owner_mfa_enforcement_dormant.sql`):**
+- Seed `mfa_enrolment_enabled` and `owner_mfa_required` false.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+- Exercised live inside one aborted transaction:
+
+  ```
+  before_owner=t  flag_off_owner_aal1=t  flag_off_member=f
+  flag_on_owner_aal1=f  flag_on_owner_aal2=t  flag_on_member_aal2=f
+  ```
+
+- Afterwards: the live function has no `aal` test, and 0 MFA flag rows exist.
+
+## Owner MFA phase 2: the one bypass closed, enforcement applied dormant; audit module-graph gap
+
+**`private.omega_is_owner()` bypassed any rule on `is_platform_owner()` (applied live, `20260926102450`).** Each of the 24 functions that test `profiles.is_owner` / `platform_owners` directly was read. 23 are row guards, statistics or profile triggers, not caller authority; the classification is in `docs/decisions/owner-mfa/PLAN.md`.
+
+The exception was `omega_is_owner()`. It returned `is_platform_owner()` **OR** a fallback read of `profiles.is_owner`. Nine owner functions and the `daily_engagement_self_read` policy call it:
+- expire_trial, grant_trial_access, get_pending_requests, revoke_permanent_access
+- ratify_existing_permanent_access, check_trial_status, engagement_report, get_engagement_status
+- guard_profile_privileges
+
+Before the change:
+- `profiles.is_owner` and `platform_owners` held the identical set: 2 = 2, 0 rows in only one, synced by `trg_sync_platform_owner`. The fallback therefore changed no result and only ever acted as a bypass.
+
+After the change:
+- It defers only to `is_platform_owner()`.
+- Probe: owner `t`, member `f`, anon `f`; ACL unchanged.
+
+**Owner AAL2 enforcement applied, dormant (`20260926102544`).**
+- It seeds `mfa_enrolment_enabled` and `owner_mfa_required` as `false`.
+- `is_platform_owner()` requires `aal2` only while `owner_mfa_required` is on.
+
+Verified live:
+- Flag off: owner `t` through both gates, member `f`.
+- Flag on (rolled back): an owner at `aal1` gets `f` from `omega_is_owner()` too.
+- Both flags persist `false`.
+- Security advisor unchanged: only #375 remains.
+
+**`scripts/audit.py` reported a live module as dead.**
+- `omega-sovereign-os.js` loads `omega-content-progressive.js` through `loadScript('/…js', guard)`. The helper's own `s.src = url` is a variable, invisible to `SRC_ASSIGN_RE`.
+- The audit now counts calls to named loader helpers (`loadScript` / `injectScript` / `loadModule`) with a literal `.js` argument.
+- The new test `test_module_reached_through_a_loader_helper_call_is_reachable` checks two cases:
+  - the helper-loaded module is reachable;
+  - a module named only by a dead module is still reported dead.
+- Warnings went from 7 back to the baseline of 6.
+
+## Layout: the breadcrumb was a 315px empty column on every page; public pages were flex rows; invented analytics replaced with real data
+
+**The context rail rendered as a full-height empty column.** `nav.js` inserted `#omega-context-rail` (the "COMMAND › DASHBOARD" breadcrumb) in one of two places, and both are flex rows:
+- before `<main>`, which puts it inside `.shell`;
+- as the first child of `<body>`.
+
+Measured on `dashboard.html` at 1280px:
+- Before: the rail was **x=80 w=315 h=3485**, an empty dark column beside the sidebar that pushed every page's content right. The owner's production screenshot shows the effect.
+- After: the rail is inserted as the first child of the content column (`main`, `.main`, `[role=main]`, `.page-shell` or `#app`), skipping any candidate that contains `#omega-side`, since that is the shell (CLAUDE.md §4).
+- Now the rail is **w=1200 h=62** on `dashboard.html`, w=1084 on `settings.html`, and w=323 at 375px.
+
+**Public pages were flex rows.**
+- `css/omega-system.css` had `body:has(> aside#omega-side){display:flex}`. It also matched the hidden stub aside that `reset`, `terms`, `pending` and `404` carry, so the rail, the content column and the legal footer sat side by side.
+- `reset.html` measured scrollWidth **1679** in a 1280px viewport.
+- The rule now requires a visible aside. All four pages measure scrollWidth = viewport at both 375 and 1280.
+- `reset.html`'s `.wrap` also held the platform hero and page emblem as row siblings of the form, squeezing it to about 50px on a phone. It is a column now.
+
+**`analytics-dashboard.html` and `segmentation-dashboard.html` rendered invented figures (§8.1 class 9).** Both are owner analytics pages that navigation does not link to.
+- analytics: 487 active members, a 72.4 engagement score, 2.1% churn, and 142/189/89/67 segments. It carried a "SIMULATED DATA" banner, and its session chart never drew.
+- segmentation: personas 71/170/170/49/24, "LTV Estimate $1,200/$400/$150/$80/$0", k-means clusters and a 0.78 silhouette score.
+
+Real data now drives every figure that has a source:
+- analytics:
+  - `membership_report` gives approved, pending, rejected, on trial, expiring and the tier table;
+  - `engagement_report(day)` × 7 gives engaged minutes per day, today's count and 7-day distinct members;
+  - `top_pages` gives views, sessions and pages tracked.
+- segmentation (`get_all_members`):
+  - access segments;
+  - members by element;
+  - lifecycle by account age;
+  - 8 weekly signup cohorts.
+
+Panels with no data source (churn model, clusters, retention, recommendations, reports) say so instead of showing "Loading..." forever. The report schedule is now written in the future tense, since `weekly_digest_enabled` is off.
+
+Verified with stubbed owner responses:
+- values render correctly;
+- `<b>`/`<i>` in names are escaped (0 injected elements);
+- 0 page errors;
+- no `487`, `72.4`, `$1,200` or `Silhouette` remains.
+- Non-owners get "Owner-only report."
+
+**Three canvases were blurry (§8.1 class 3).** Each read its width before the approval guard revealed it:
+- `analytics-dashboard.html#chart-sessions`: never drawn, now 1094×200 buffer for a 1094×200 box.
+- `sigma.html#sigma-dist`: 112px buffer in a 325px box, now 493×180 for 493×180.
+- `pulse.html#dom-canvas`: 300px in 380–515px, now 515×100 for 515×100. Tested with a routed CoinGecko response.
+
+Each is sized from its own box times `devicePixelRatio` and redrawn by a `ResizeObserver`.
+
+**Accessibility advisories closed:**
+- `#ofb-msg` (feedback textarea) has an `aria-label`.
+- `verify-deployment.html` and `verify-modules.html` have a `<main>` landmark.
+
+## AI Edge Functions: three orchestrators broken, leaky and ungated; concierge live/source drift; four owner-rights views (applied live)
+
+**Orchestrators (`growth-`, `concierge-`, `product-orchestrator`), deployed live as v3.** Each had three faults:
+- It requested the model `claude-opus-4-100k`, which does not exist, so every call failed.
+- It returned the raw error object (`details: error`) in its 500 response.
+- It ignored `platform_settings.autonomous_agents_enabled` (`false`), so an authenticated caller could run autonomous work the owner had not turned on. No page calls any of the three.
+
+The fix:
+- They now read the flag first and fail closed (`503 {"error":"disabled"}`).
+- They use `claude-opus-5` without `temperature`, which that model rejects.
+- They read the first `type:"text"` block, since adaptive thinking puts a thinking block first.
+- They check `response.ok` and `stop_reason === "refusal"`, and no longer leak error bodies.
+
+Verified live from the database with `pg_net`: all three return `503 {"error":"disabled"}` (responses 3, 4, 5).
+
+**`concierge`: the live code existed nowhere in the repo.** Live v3 was a hardened rewrite: origin allow-list, bearer required, a governance classifier that refuses account-changing intent, and no error leakage. The repo still held the older open version (`Access-Control-Allow-Origin: *`, `String(e)` and the upstream error body returned to the client). The live version, in turn, had two defects of its own:
+- It **dropped `system_override`**. Five callers (`agents.html:234`, `sovereign-ai.html:200`, `weekly.html:452`, `omega-ai.js:66`, `omega-intelligence.js:148`) send a persona, and every one silently got the generic concierge voice.
+- Its `Access-Control-Allow-Headers` omitted **`x-client-info`**, which the vendored supabase-js sends on every request (`vendor/supabase-js.js`: `"X-Client-Info":"supabase-js/2.112.4; …"`). The browser preflight for every `functions.invoke('concierge')` therefore failed. Consistent with that, the 24h function logs held no member traffic.
+
+The repo's version had a third defect: its memory write omitted `ai_memory.memory` (`NOT NULL`, no default, no insert trigger). It never stored a row; live has **0** `conversation` rows out of 8.
+
+One canonical source is now in `supabase/functions/concierge/index.ts`, deployed as v4:
+- It keeps live's hardening.
+- It restores the persona, placed *below* the governed rules as untrusted guidance and bounded to 2000 characters.
+- It adds `x-client-info` to the allowed headers.
+- It reads the text block by type and handles refusals.
+- Memory stays read-only. Writing member chat content is a separate decision and stays off.
+
+Verified live without a paid model call:
+- `"please delete my account"` returns `403 approval_required`;
+- `system_override:123` returns `400 system_override_invalid`, a check that exists only in v4;
+- both responses carry `access-control-allow-origin: https://sydomega.com` and `allow-headers: authorization, content-type, apikey, x-client-info`.
+
+`stripe-webhook` live v1 matches the repo: timeout, API version, the constant-time compare and every error code agree.
+
+**Views (migration `20260926182800`).** `conversion_funnel`, `pending_access_requests`, `permanent_access_review` and `workflow_analytics` ran with owner rights (`postgres`, BYPASSRLS). None is readable by anon, authenticated, or even service_role, so nothing was exposed. A future `GRANT` would have exposed every row past RLS, though, so each is now `security_invoker = true`.
+
+The only consumer is `private.get_pending_requests()` (SECURITY DEFINER, owner `postgres`). Under owner impersonation it returned 9 before and 9 after, in a rolled-back probe. After the change, public views without `security_invoker`: **0**.
+
+## Owner deck: every page in one place, owner only; Calm mode; two ghost registry pages
+
+The owner asked for one place, reachable only by the owner, that reaches every page, with less text and less clutter.
+
+**`control-plane.html` is now the Owner Deck**, rendered by the new module `omega-owner-deck.js`:
+- Each page is a tile carrying its own sigil (`OmegaIdentity.sigil`, the mark its hero shows), a short name, and its section colour. There is no descriptive text.
+- Controls:
+  - search across every page (`/` focuses it; Enter opens the top match);
+  - section chips;
+  - a Recent row, kept in `localStorage` as a per-viewer convenience;
+  - arrow-key movement between tiles.
+- The deck holds no copy of the page list. It reads nav.js (new `OmegaAxis.pages()`), then the control-plane registry, then an `EXTRA` list of the 17 pages neither knows: owner dashboards, verification pages, and the public/system pages.
+- `scripts/tests/test_owner_deck.py` fails if any `*.html` falls outside all three. Verified by removing `healthz` from `EXTRA`: the test fails and names it.
+- The old inventory, realms, motion, duplicates and audit tabs are unchanged, folded into a collapsed owner-only DIAGNOSTICS panel.
+
+Owner-only in three places, all keyed on `bg.js`'s existing `body.omega-owner` (from `profiles.is_owner`):
+- The deck renders only for the owner. Anyone else gets "OWNER ONLY · RETURN HOME", and the diagnostics are removed from the DOM.
+- A new OWNER dock item in nav.js is hidden until the owner is confirmed. It uses an inline `display:none` because `.on-icon`/`.on-btn` set `display` themselves and would override a `hidden` attribute.
+- The nav entry is flagged `['control-plane','OWNER DECK','/control-plane.html','owner']`. The tooltip and the command palette hide it from members.
+
+This is presentation, not authorisation. The deck lists links only, and every page's data stays behind RLS. Live previews in frames were rejected: `vercel.json` sends `X-Frame-Options: DENY`, which blocks same-origin frames too, and that protection is kept.
+
+**Calm mode** is a new block in `bg.js` (`window.OmegaCalm`, `localStorage.omega_calm`, `html[data-omega-calm]`):
+- One reversible switch hides the ambient extras on every page:
+  - the door banner (`.omega-page-door`), ticker, PMI badge;
+  - the language/music dock, feedback, share and voice buttons;
+  - the rail HUB/PIN;
+  - the topbar HOME/BACK, on desktop only, where the sidebar has its own.
+- It keeps navigation, the copilot, the menu, and every visual layer. Nothing leaves the DOM, so each module keeps working.
+- It turns on the first time the owner opens the deck; the CALM chip reverses it.
+
+Measured in a render: 9 of 9 targets hidden, sidebar, rail, copilot and menu visible. After toggling off, `#osh-btn` is `display:flex` again and the stored value is `'0'`.
+
+**Two ghost pages in the registry.** `omega-control-plane.js` listed `security` and `upload`, and neither page exists, so the deck drew two tiles that would 404 (208 tiles for 206 files). Both entries are removed, and the new test asserts the registry names only real pages.
+
+**Gate fix.** `reachability-contract.py` matched only three-field nav entries, so the owner flag made `control-plane.html` read as unreachable. The pattern now accepts an optional flag. The new test `test_flagged_entry_still_counts_as_reachable` fails against the old pattern and passes against the new one.
+
+Rendered with the harness (owner stub `is_owner:true`, member stub `false`):
+- owner at 1366px and 390px: 206 tiles, 206 sigils, 206 unique hrefs, 18 chips, 0 page errors, no horizontal overflow;
+- search "graph" returns the 8 graph pages; the INTEL chip returns 21; `/` focuses search; arrows move between tiles;
+- member: 0 tiles, gate text shown, diagnostics absent, OWNER dock and tooltip entry hidden;
+- the tile radius measured 4px at first because `a[href]` in `omega-accessibility-audit.css` outranks one class. The deck's rules are scoped under `.odk`, and it measures 14px.
+
+## Backend privileges: feedback and consent never saved; service-key flag gates could not read their flag (applied live)
+
+**Owners confirmed live (2026-09-26).** `s.y.dagher@gmail.com` and `slmndghr@gmail.com` are both in `platform_owners` and have `profiles.is_owner = true`. No other account is in either.
+
+**The 28 public SECURITY DEFINER functions.** Measured with `has_function_privilege`:
+- all 28 have EXECUTE revoked from `anon` and `authenticated`;
+- all 28 pin `search_path`.
+
+That exposure is correct. The reverse failure (§8.1 class 6c) was the real finding: live code calls four of them, and no role could run them.
+
+| function | caller | effect before |
+|---|---|---|
+| `submit_feedback` | `omega-feedback.js:81` (FEEDBACK button, every page) | always "Could not send." |
+| `update_consent` | `privacy.html:172` | consent toggles always reverted; no `consent_records` row |
+| `upsert_graph_entity`, `add_graph_relationship` | `graphify-ai-ingest` (service key) | not even `service_role` could execute them |
+
+Migration `20260926190934`:
+- The first two go to `authenticated` only. Both act on `auth.uid()` and refuse anonymous callers.
+- The graph pair goes to `service_role` only, since it takes `p_user_id`; the Edge Function derives it from the verified JWT (`requireCallerId`).
+
+Proven as a real non-owner member inside a rolled-back block:
+- `submit_feedback` returned `{"ok":true,"id":…}`;
+- `update_consent` returned `{"ok":true}`, and `consent_records` for that member went 0 → 1 (rolled back).
+
+Sweep of every RPC name any `.html`/`.js` calls: **40 of 40** are now executable by `authenticated`. The count query is cross-checked; the same query without its filter returns 40.
+
+**`service_role` could not read any public table.** Default privileges were revoked in `20260903015535`, and nothing re-granted what server code needs. Measured: 0 of the 11 tables the Edge Functions query had SELECT for `service_role`. Only 5 functions are deployed, so the live effect was narrower than that sounds:
+- The **three orchestrators** read `platform_settings` with the service key. The read failed, and the gate fails closed, so they answered `503 disabled` because the read failed, not because the switch was off. They would stay shut after the owner turned `autonomous_agents_enabled` on. This also means the 503s verified in the previous entry did not prove the flag was read.
+- **`checkout`** (not deployed) calls `get_platform_flag`, an invoker function over the same table. It returned `checkout_not_configured` instead of "Payments are not active yet", and would keep refusing with payments on.
+
+Migration `20260926192038` grants read-only access:
+- `platform_settings` SELECT and `get_platform_flag` EXECUTE to `service_role`;
+- verified `svc_sel = true`, `svc_upd = false`, `svc_flag = true`.
+
+No DML was granted: the orchestrators' writes stay ungranted until the owner decides to turn them on. Both remaining steps are recorded in `GAP_ANALYSIS.md` §S, along with the missing `find_contradictions`.
+
+`concierge` runs as the member and `stripe-webhook` uses `apply_subscription_event` (already `service_role`-executable), so neither was affected.
+
+## Less text on member pages: long paragraphs fold to two lines (progressive disclosure)
+
+The owner asked for less explanatory text. Rather than deleting the platform's lore (chronicle, kings, pantheons and houses exist to present it), a new module, `omega-readmore.js` (injected by `bg.js`, guard `data-omega-readmore`), folds long running text to two lines behind a MORE / LESS toggle. Nothing is removed.
+
+**Measured first.** A rendered scan of all 206 pages, counting visible blocks with 90 or more characters of their own text, found **119 pages** with such blocks. The heaviest:
+
+| page | characters |
+|---|---|
+| chronicle | 6,423 |
+| kings | 2,868 |
+| pantheons | 2,313 |
+| media | 2,209 |
+| automation | 2,197 |
+| honors | 2,115 |
+| elements | 2,007 |
+
+The dashboard had **0** such blocks (376 visible words), so it was not the target.
+
+**Rules, each from a measurement:**
+- **Fold only at 4 or more rendered lines** (at least two lines hidden). The first version folded anything past two lines, and `media.html` grew 16px and `houses.html` 5px, because a paragraph barely over two lines hides less than the button adds.
+- **Character floor 100, not 160.** At 160, houses 1, 2 and 5 (about 150 characters over 4 lines) stayed whole while their neighbours folded, which made the grid uneven. At 100, all 12 house cards fold alike (checked in a screenshot).
+- **Measure only rendered blocks.** Unrendered blocks are retried on DOM additions and on `<body>` class changes, because the approval guard hides the column (§8.1 class 3). The observer watches class changes on `<body>` only; animated pages flip classes throughout the tree.
+- **Never fold:**
+  - `terms`, `privacy`, `sovereign-covenant`, `charter` (legal and consent text), `chatbot` (AI replies), and the owner deck;
+  - forms, tables, dialogs, code, editable areas, the nav and rail;
+  - any block containing a control or media element;
+  - anything marked `[data-no-clamp]`.
+
+  `scripts/tests/test_readmore.py` pins the exclusions, the single injection, and the labels.
+
+**Labels:** `ui_read_more` / `ui_read_less` are in `T_EN` and all six packs (ar, es, fr, hi, nl, zh). The i18n contract is clean.
+
+Before (`bg.js` pinned to `origin/main`) and after, 1366px, same harness:
+
+| page | height (px) | paragraphs folded |
+|---|---|---|
+| chronicle | 7,353 → 6,211 | 20 |
+| kings | 2,406 → 2,289 | 9 |
+| pantheons | 2,696 → 2,605 | 12 |
+| media | 3,922 → 3,852 | 12 |
+| research | 1,929 → 1,886 | 9 |
+| houses | 1,856 → 1,861 | 12, now uniform |
+| dashboard, automation, elements | unchanged | 0 |
+
+Page errors were 0 before and 0 after on every page, with no horizontal overflow. The toggle sets `aria-expanded` and `aria-controls`, and swaps the label to LESS (40px folded, 99px open).
+
+`terms` in that run measured the dashboard, because the signed-in stub is redirected off public pages (§8.4). It is excluded by `SKIP_PAGES` regardless.
+
+## Calm mode for every member (opt-in); the floating DEDICATION timer; contrast advisories now name their elements
+
+- **Members can choose Calm mode.** A CALM switch in `settings.html` (Preferences tab) toggles `window.OmegaCalm`, the same per-viewer switch as the owner deck. It stays off unless the member turns it on. Language stays reachable in Settings, so hiding the language dock loses nothing. Rendered as a member stub:
+  - OFF → ON: `#ofb-btn` goes from `flex` to `none`;
+  - survives a reload;
+  - ON → OFF: `flex` again;
+  - 0 page errors.
+
+  The wiring sits inside the page's existing inline block, so `csp-inline-ratchet` is unchanged (PASS).
+- **`#omega-ded-widget`** (`omega-chrono.js`, fixed bottom-right) covered card text (`houses.html` house 8, screenshot). It is ambient, so Calm mode now hides it. Its offsets are unchanged: it already clears the bottom chrome.
+- **`verify-runtime.js --contrast-detail`.** The sweep reported "text contrast 3–4.5:1: 99" as a bare count that named nothing to fix: 99 elements across 206 pages, not 99 pages. The new report-only flag prints one tab-separated `CONTRAST` line per element (page, ratio, colour, background, size, selector, text). The first lines already show the pattern: the `--crim` token `#C4453C` at 3.97:1 on near-black, and the `#9B6BF0` purple at 3.8–4.46:1 on its tinted chips.
+
+## Text contrast: three colours caused most sub-AA text; owner deck shows who is waiting; phone drawer leaked the owner entry; pending count included a rejected applicant
+
+**Contrast, measured and traced.** `verify-runtime.js --contrast-detail`, from the previous entry, turned the advisory into a list. On the baseline (all 206 pages), 99 text elements sat between 3:1 and 4.5:1.
+
+In the first 76 traced, two colours accounted for 40:
+- **`--crim` `#C4453C`**, 23 elements at 3.96–4.2:1 on near-black: stat numbers, PAUSED / ENABLE / ACCESS DENIED;
+- **`#9B6BF0`**, 17 elements at 3.8–4.46:1: the "SYMBOLIC LORE" badge from `omega-canon-badge.js`, and the COSMOS / INTEL / ARENA / MEDIA sidebar colours in `nav.js`.
+
+Each was nudged brighter in the same hue (HLS lightness +0.05, computed against every background the sweep recorded):
+- `--crim` → **`#CA5850`**, set in both of its owners (`theme.js` and `css/omega-system.css`, §4). Worst case is 4.67:1, and dark text on crimson badges goes from 4.05 to 4.77.
+- `--purple` → **`#AB82F2`** (`css/omega-system.css`), plus the four `nav.js` section colours and the lore badge. Worst case is 4.76:1.
+- Fiction badge `#E86A3A` → **`#EB7B51`**: 4.19 → 4.78:1 on its measured background.
+- `emblem.js`: the three page labels coloured `#C4453C` (factions, cinema, settings) → `#CA5850`.
+
+**Not changed on purpose:** the other 38 literal `#C4453C` uses. Some are backgrounds behind white text, where brightening would *lower* contrast (white on `#CA5850` ≈ 4.4:1).
+
+**Same pages before and after** (a–forge, same harness): **39 → 10** elements below 4.5:1. The remaining 10 are page-specific literal colours:
+- `#7B00FF` VOID on `elements.html`, 3.0:1;
+- `rgba(200,50,50,.7)` on `forge.html`;
+- `enter.html`'s grey language buttons at 4.46:1.
+
+The full-site after figure is recorded on the PR.
+
+**The owner could not see who was waiting.** Live on 2026-09-26: 3 pending applicants, the oldest waiting since **2026-06-16**. The only signal was `bg.js`'s 10-second toast. The owner deck now shows a persistent **"N WAITING"** chip linking to `approvals.html`:
+- it uses the same definition as `approvals.js:161`: not approved, not rejected;
+- it is hidden at 0 and hidden on a failed count, never a false 0;
+- rendered with a 3-pending stub it shows "3 WAITING"; with 0, no chip; 0 page errors.
+
+**The toast over-counted.** It filtered `access_approved=false, is_owner=false` only, so the one rejected applicant counted as waiting forever. Live: 3 real, 4 shown. It now adds `.not('is_rejected','is',true)`, which keeps NULLs.
+
+**The phone drawer listed OWNER DECK to every member.** `nav.js`'s drawer is built from `SECTIONS`, including the owner-flagged entry, with no filter. Owner-flagged links now start hidden and share the sidebar's reveal (`window.__omegaRevealOwner`). Owners also get **Ω OWNER DECK · EVERY PAGE** first in the drawer, since there is no dock on a phone. Rendered at 390px: owner sees 2 entries, member sees 0, 0 errors.
+
+**Evidence audit.** It reported 13 pages UNREACHABLE: exactly the owner deck's `EXTRA` list (owner dashboards and verification pages). It now reads that list from `omega-owner-deck.js`, so the two cannot drift.
+- Result: **13 → 0** unreachable; those pages are classified by their data (101 BUILT / 28 PARTIAL / 43 LOCAL_ONLY / 32 STATIC / 2 BROKEN).
+- Planted check: removing `healthz` from `EXTRA` makes the audit report 1 unreachable.
+- The two BROKEN pages (`subscriptions` → `transactions`, `vault` → `wallet_balances`) are dormant payment/token features, and both already render an honest "not available yet" state.
+
+## The Guide (public), trial copy that said hours, flag switches members could never read, two-factor enrolment on, page counts in every language
+
+**`guide.html` + `omega-guide.js`: the platform explained.** The owner asked for one place where anyone can get clarification about the platform. The page has 26 short answers in 7 topics (start, membership, progress, signs and lore, money and tokens, privacy, settings), a search box, and topic chips.
+- An unmatched search offers the Concierge.
+- A section map is read from `OmegaAxis`, and the twelve agents come from `omega-agents.json`.
+- **Every figure is read at runtime, not typed.** Gates with thresholds, the 12 tiers, the authority formula and range (0.001–27.8367) and the matrix (12 × 12 × 9 × 9 × 9 = 104,976) come from `omega-canon.json`; the elements by tier from `omega-elements.json`.
+- **Claims checked before writing.** Ctrl/⌘+K opens the palette (`nav.js:794`); deletion lives on privacy and settings; the trial length is from the database (below). "Nothing is sold or shared" was dropped: the page loads Vercel analytics, and `privacy.html` makes no such claim.
+- **Public**, because an applicant waiting on approval needs it most. `guide` is in all four `bg.js` public lists (the PUBLIC guard CSS, both ACCESS GUARD `EX` exemptions, and the not-approved redirect `pub`), `verify-runtime.js`, and `evidence-audit.py`. It is linked from `pending.html` and listed under COMMAND.
+- **New gate, `scripts/tests/test_public_pages.py`:** the four `bg.js` lists must hold the same pages, the two checkers must mirror them, and every public page must exist. This is the charter class-8 bug made a test. Planted: removing `guide` from PUBLIC alone fails it.
+- Rendered signed out (visitor), signed in, and at 390px: 26 answers, 12 agents, 27 cards; the canon figures are present; 0 page errors; no overflow. Search "token" → 1 answer; "zzzz" → the Concierge offer; PROGRESS → 5.
+
+**The trial was advertised as 9 hours.** `public.trial_duration()` returns `00:09:17` (557 s), matching `approvals.js:7`. The countdown starts when the member confirms (`private.start_trial_countdown`). `pending.html`, the page applicants read, said "9 hours 17 minutes 17 seconds" in three places, and `automation.html` once. 9 h 17 m 17 s is the separate daily *Dedication target* (`omega-chrono.js:19`), so all four are corrected, and the Guide now separates the two.
+
+**Members could never read a feature switch.** `public.get_platform_flag` (SECURITY INVOKER) calls `private.get_platform_flag` (SECURITY DEFINER), which `authenticated` could not execute.
+- Every member call failed with 42501, and `omega-flags.js` fails closed, so no `data-omega-flag` section could ever appear for anyone.
+- Found by turning `mfa_enrolment_enabled` on and probing as a real member: "permission denied for function get_platform_flag".
+- The earlier "40 of 40 RPCs member-callable" sweep checked only the public layer. The full chain was swept: 39 pairs, and this one is the only broken hand-off.
+- Migration `20260926221057` grants it to `authenticated` only. Probe after: mfa `t`, payments `f`.
+
+**Two-factor enrolment is on** (`mfa_enrolment_enabled = true`; D4 step 1 in `docs/decisions/owner-mfa/PLAN.md`). The owner delegated the rollout ("take the lead"). `owner_mfa_required` stays off until both owners have enrolled.
+
+**Settings offered 4 of the 7 languages.** Nederlands, 中文 and हिन्दी are added. This matters more now that Calm mode hides the language bar.
+
+**Page counts in every language.** Adding the Guide made six member-visible "206 pages" claims stale (`page-count-claims.py` failed them, as designed), and all are now 207. The gate scanned `*.html` only, so dictionary strings escaped it: `T_EN.dash_platform_index` said 206 while all six packs still said **205**, and `T_EN.platform_command_index` said **170** in all seven languages.
+- The gate now holds `T_EN` claims to the real counts, and every pack to its English value's number.
+- 3 new tests: a pack dropping the count fails, a matching pack passes, a stale dictionary claim fails.
+- Planted: fr.json back to 205 fails it.
+- 8/8 tests pass.
+
+**Contrast, the full-site after figure** for the previous entry: **99 → 48** (all 206 pages PASS). The capability entrypoints go from 6 advisories to 1.
+
+## Supabase security advisor: 3 warnings to 1; the owner's open security items in one chip that clears itself
+
+**Two `authenticated_security_definer_function_executable` warnings (lint 0029), fixed live.** `public.submit_feedback` and `public.update_consent` were SECURITY DEFINER in the exposed schema.
+- Migration `20260926222245` moves both bodies to `private` behind `public` SECURITY INVOKER wrappers with identical signatures and defaults. This is the pattern every other page-called RPC here already uses, so `omega-feedback.js` and `privacy.html` are unchanged.
+- Probe (rolled back): a non-owner approved member got `{"ok":true}` from both wrappers. `anon` holds EXECUTE on neither copy.
+- Advisor after: the 0029 findings are gone; one finding remains.
+
+**The remaining warning, `auth_leaked_password_protection`, is not reachable.**
+- `get_organization` returns `plan: free`, and the setting is Pro-and-above.
+- The threat is already closed at the only two places a password is set: `account.html` `signUp` and `reset.html` `updateUser` (grep: no other `signUp`/`updateUser(` call in the estate). `omega-password-guard.js` checks HaveIBeenPwned there.
+- A direct Auth API call still bypasses the in-app check, as `GAP_ANALYSIS.md` already records.
+
+**Owner Deck SECURITY chip** (`omega-owner-deck.js`, migration `20260926223027`). The owner asked for the dashboard-only reminders to stop recurring as prose. They now sit behind one chip that shows a count only while something is open:
+- **Two-factor:** one row per owner with no verified factor. It is read from `auth.mfa_factors` through the owner-only `owner_security_status()`, so it clears on evidence; there is no tick box.
+  - SET UP links to `/settings.html#two-factor`. `omega-mfa.js` now scrolls there once the flag-gated section actually has a box, because the browser's own anchor jump fires while the approval guard still hides it.
+  - Live: 0 of 2 owners enrolled.
+- **Rotate keys:** links to each provider's key page, then DONE → CONFIRM → `owner_confirm_secrets_rotated()`.
+  - The row leaves only on `{ok:true}`.
+  - It returns after 180 days.
+  - The timestamp lives in `platform_settings.text_value` with `bool_value=false`, so a member's `get_platform_flag()` reads false.
+- **Breached passwords** show as covered, not open.
+- Probe (rolled back):
+  - member: `forbidden` from both functions;
+  - owner: 2 owners, factors `[0,0]`, write ok;
+  - member flag read afterwards: `f`.
+- `anon` holds EXECUTE on none of the four functions. No new advisor finding.
+- Render (owner stub):
+  - the chip reads `3 SECURITY` and the panel is hidden at rest;
+  - the first DONE click arms (`CONFIRM`), the second clears the row, and the chip reads `2 SECURITY`;
+  - external links carry `noopener noreferrer`;
+  - no page errors, no horizontal overflow at 375px.
+
+**Found on the way: two-factor enforcement would lock both owners out at their next sign-in.** `OmegaMFA.stepUp()` has no caller. With `owner_mfa_required` on, an owner signs in at `aal1`, `is_platform_owner()` returns false, and every owner power fails silently. The enforcement button was therefore left out of the chip, and a sign-in step-up is recorded as a precondition in `docs/decisions/owner-mfa/PLAN.md` and `GAP_ANALYSIS.md`.
+
+**Secrets from the supplied documents.**
+- None are in the repo: a key-shape scan of the full, unshallow `git log --all -p` finds 0, and the only JWTs in history are `anon`.
+- `check-secrets.sh` could not list Edge Function secrets: no Supabase CLI login in this container.
+- Rotation stays with the owner, and the chip carries it.
+
+**Tests:** `test_owner_deck.py` +3.
+- The item logic runs from the shipped file in node: items clear on evidence, a stale or unparseable rotation date reopens the keys row, and the write checks `.error` and `ok`.
+- Both migrations keep `public` wrappers INVOKER and revoke `anon`. Planted: one wrapper switched to DEFINER fails the test.
+- 353 tests pass; `ci-local.sh` passes all 26 blocking checks.
+
+## The owner's dashboard screenshot (2026-09-26): stale priorities, a stuck ticker, a label over the stats, a button over the rail, doubled rail icons; and every emblem now alive
+
+Each item was reproduced by rendering `dashboard.html` as owner at 1280x600 (the photo's viewport), then re-measured after the fix.
+
+**Action Centre asserted finished work as CRITICAL/HIGH** (CLAUDE.md 8.1 class 9). The three owner items were string literals:
+- "apply pending schema": the migration ledger matches, `migration-drift` PASS;
+- "set ANTHROPIC_API_KEY and deploy concierge": `concierge` is ACTIVE, v4;
+- "enable pgvector": live `pg_extension` has `vector 0.8.2`.
+
+They are replaced by `ownerItems()`, which reads:
+- people waiting for approval (the same count as the deck's WAITING chip);
+- `owner_security_status()`: owners without a verified factor, and key rotation not yet confirmed or older than 180 days.
+
+A failed read adds nothing, and item text is escaped. Render: the three live items show.
+
+**Ticker stuck on "LOADING LIVE FEED…"**. Live `activity_feed` has **0 rows**; the SELECT grant and policy are fine. So the load could never finish, and the strip claimed it forever. Empty now reads `QUIET · NO PUBLIC ACTIVITY YET`, and an error reads `LIVE FEED UNAVAILABLE`. A realtime INSERT still replaces it.
+
+**`COMMAND_INTELLIGENCE / OPERATIONS · SOVEREIGN` printed across the stats row.** `#omega-cap-badge` is fixed at `bottom:238px`, which is mid-page on any viewport under about 760px tall. It is engineering metadata with no action, so it now renders only with `localStorage.omega_diag = '1'`.
+
+**FEEDBACK covered the rail** (COSMOS in the photo; OWNER and LOG OUT at 1280x600). `omega-feedback.js` puts it at `left:12px`, inside the 80px sidebar. The desktop ladder now gives it the voice button's x-clear, `left:96px`, on the rung below it. Measured: x = 96.
+
+**Two icons per rail entry, some of the time.** `omega-emblem-integration.js` prepends an emblem to every sidebar link. When it ran after `nav.js`, the section icons got a generic mark above their own `.on-glyph`, the rail overflowed, and labels were clipped. It now skips nav-owned glyphs and the brand. Over 6 renders on 2 pages: 0 doubled; the hidden hover menus still receive emblems in 4 of 6.
+
+**`omega-alive.js` (new, injected by bg.js on every page).** It answers the owner's request, "make every solid image emblem and rotative and more alive". Motion had been applied once: bg.js step 8 spins only the sigils present at that instant, so anything drawn later stayed still.
+- A MutationObserver pass gives two kinds of motion:
+  - round marks (emblem and sigil SVGs, deck tile sigils, emblem images) make a 72–120s turn;
+  - single-glyph icons (nav rail, alert and tile glyphs) breathe on a staggered 5.6s cycle and make one turn on hover.
+- It animates `rotate`/`scale`, never `transform`. An animation beats a declaration, so a transform keyframe would erase `nav.js`'s hover scale and every tilt already on these marks.
+- It skips:
+  - anything already animated;
+  - controls, charts and canvases;
+  - multi-letter text;
+  - pictures over 260px or non-square;
+  - the nav's hidden hover menus (258 emblems before this exclusion).
+- Off-screen marks pause, and `prefers-reduced-motion` stops everything. It caps at 400 marks.
+- Render counts:
+
+| page | turn | breathe |
+|---|---|---|
+| dashboard | 18 | 22 |
+| cosmos | 18 | 1 |
+| control-plane | 18 | 185 |
+| hercules | 18 | 16 |
+
+  The galaxy core's ♎ already had its own animation (`oeGlyph`) and is left alone.
+
+**Tests:** `test_alive.py` (10 tests). They check:
+- the loader;
+- that no keyframe animates `transform` (planted `transform:rotate(360deg)`: fails);
+- reduced motion;
+- the skip rules;
+- no hardcoded owner backlog outside comments;
+- that live-state reads check `.error`;
+- escaping;
+- the ticker's empty state;
+- the rail guard;
+- that the badge is diagnostics-only.
+
+363 tests pass. `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## One page, one title; nothing still (owner screenshots, 2026-09-27)
+
+**points.html printed its name five times** before its own title bar. Measured in a render with a text walk over visible nodes, each copy tagged with its owner:
+1. `.omega-page-door` (omega-content-sigil-system.js): "SIGIL ENTRY / POINTS / Open the experience / ENTER →", a link to the page itself.
+2. `.oid-hero` (omega-identity.js): `hasHero()` did not count `.topbar-title`, `.topbar .t` or `h1` as the page's own title.
+3. `.omega-context-current` (nav.js): the breadcrumb's copy of the page name.
+4. `#omega-emblem-wrap span` (emblem.js): the name printed beside the emblem.
+
+Plus the page's own `.topbar-title`, which stays. The same stack held on vault, habits, cosmos and guide.
+
+The fix:
+- The door and the "SECTION / NEXT" card are now opt-in (`data-omega-page-door`, `data-omega-related`). The owner's rule: the badge is how you *enter* a page, so it belongs in listings, not on the page.
+- Identity counts the page's own title.
+- The crumb is screen-reader only. On a section hub, the parent link and HUB, both self-links, are dropped. The hub check normalises clean URLs, since production serves `/points`, not `/points.html`.
+- The emblem keeps the name only as its `aria-label`.
+
+After: points, habits and guide show one visible title; vault and cosmos show one plus the section link.
+
+**A text card was spinning.** bg.js step 8 added `.omega-spin-slow` to every `[class*="sigil"]`, including `nav.omega-related-sigils`, a card of text. Step 8 now skips anything with more than two characters of text.
+
+**omega-ring.js drew a ring into its own `<script>` on every page** (CLAUDE.md 8.1 class 5b). Its loader tag carries `data-omega-ring`, and the auto-mount selected `[data-omega-ring]`. It now selects `[data-omega-ring]:not(script)`. Found by a still-visual scan: a 100x100 canvas whose pixels did not change in 2.5s, parent `SCRIPT[src=/omega-ring.js]`.
+
+**The dashboard galaxy looked frozen.** Nodes advanced 0.0004 rad per *frame*, about 4.4 minutes per orbit, so it read as a still picture.
+- Orbits now run on seconds: inner 60s, outer 90s counter-rotating, each node trailing a short comet arc. The sweep and armillary are also time-based.
+- The centre Ω is brighter and breathes, via a new `data-alive-mark` / `data-alive-turn` hook in omega-alive.js.
+- Reduced motion still freezes it.
+
+**Tests:** `test_one_title.py`, 7 tests. A planted 300s orbit fails the orbit test. 370 tests pass; `ci-local.sh` passes 26/26; `verify-runtime.js` passes on 13 pages.
+
+## Why the platform looked solid: the default "Simple UI" stopped every animation (2026-09-27)
+
+`css/omega-simple-ui.css` (commit `a63f4dcf`, 2026-09-23) is loaded on every page, and bg.js adds `body.omega-simple` to every body. It held three things:
+- `body.omega-simple *{animation-duration:.01ms!important;animation-iteration-count:1!important}`, outside any reduced-motion query, so every CSS animation on the platform ran for one frame and stopped;
+- `display:none!important` on `[data-omega-sculpture]`, `.osc-stage`, `.constellation-background` and `.emblem-orb`, which hid the 3-D emblems, constellations and orbs;
+- `animation:none` on the status dots.
+
+This is why the owner kept seeing "solid pictures", and why `omega-alive.js`'s turning emblems (#485) had the class but did not move. My earlier render counts measured the classes being applied, not motion.
+
+Measured on dashboard.html by pinning the old file against the new one:
+
+| | long-running animations | nav glyph animation-duration | turning emblem's `rotate` over 1.5s | visible sculptures |
+|---|---|---|---|---|
+| before | 3 | `1e-05s` | `none` | 0 |
+| after | 67 | `5.6s` | 36.7° → 44.2° | 1 |
+
+points.html went from 2 long-running animations to 20.
+
+Simple UI keeps its decluttering: flatter cards, no heavy shadow or blur, and ambient particles and starfield hidden. It no longer freezes motion or hides emblems. Reduced motion is still honoured: bg.js, omega-visual-evolution.css and omega-accessibility-audit.css each carry a `prefers-reduced-motion` block, all checked scoped.
+
+**Still pictures that never changed.** A scan of all 205 pages found about 30 canvases and diagrams whose pixels were identical 2.5s apart: network maps, rings, radars and charts. `omega-alive.js` gains a measured pass:
+- each canvas is sampled into a 12x12 thumbnail twice, 2.5s apart;
+- only an identical pair gets a 7s breathing glow in the page accent, composed over the element's own filter, since `omega-visual-evolution.css` gives every canvas contrast/saturate;
+- canvases never turn, because they draw their own numbers and a turning chart cannot be read;
+- a square SVG emblem with no `<text>` turns; others glow.
+
+**Gate:** `test_one_title.py` adds:
+- no stylesheet may carry a catch-all animation-duration kill outside reduced motion (planted old file: fails);
+- Simple UI must not hide sculptures or orbs.
+
+373 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## Every page, measured: one title, nothing still, no text without a role (2026-09-27)
+
+The owner: "you forgot other pages ... do that to all pages and make sure everything is done." So this pass measured every page instead of sampling. A headless sweep of all 205 pages records:
+- every visible copy of the page's name outside the sidebar and footer, with its element path;
+- canvases whose pixels are identical 2.5s apart, and large SVGs or images with no running animation;
+- hidden emblems and sculptures;
+- the count of running animations.
+
+The 17 pages that timed out under a 4-way parallel run were re-run serially.
+
+**Result on main before this change** (#486 already merged):
+- Injected title copies: 0. Every remaining repeat came from the page's own markup.
+- Hidden emblems: 0.
+- Still visuals: 2. graph.html's 1184x646 diagram was excluded by a too-broad "overlay" size rule. The dashboard authority ring animates 0→value at load, so the 3s pass skips it and the 9s pass picks it up.
+
+**Fixed here:**
+- **The page heading repeated the title bar.**
+  - Pages: command.html ("DAILY COMMAND BRIEF" at 26px in the bar, then as an 18px h1), world-shell.html (three copies), elements.html (the 3-D stage caption).
+  - `omega-identity.js` `dedupeTitles()` compares each h1/h2/`.hero-title`/`.osc-cap b` against the bar's own words, ignoring its `<small>` subtitle; that was the first attempt's bug, which matched nothing. A repeat becomes `.omega-sr`, so it is visually hidden and still read by screen readers.
+  - Re-measured: one visible title on command, world-shell, elements, graph and realm.
+- **Text with no role, on every page with a topbar:**
+  - the "PMI 70" badge (a hand-typed score shown as measured: CLAUDE.md 8.1 class 9);
+  - the mission banner (the page name again);
+  - "Ω CMD" (a fourth way back);
+  - the "PRESS ? FOR KEYBOARD SHORTCUTS" hint, now once per device instead of once per tab session.
+- **graph.html's diagram** now glows; the overlay skip is viewport-relative and applies to fixed layers only.
+
+**Left as is, on purpose:**
+- A first tab named like its page (map, search, grades, nexus, dna, graph, city, oracle): it is a control with a job.
+- KPI labels such as "TOTAL CONTACTS" and document mastheads such as charter's: content.
+
+**Tests:** `test_one_title.py` +2. 375 tests pass. `verify-runtime.js`: PASS on 13 pages. `ci-local.sh`: 26/26 blocking.
+
+## One set of terms across the platform: canon, navigation, titles (2026-09-27)
+
+**Owner request:** "Make sure all the platform and pages and contents follow the same compatible terms."
+
+**Canon: one table, now gated.** `omega-canon.json` `tracks` pairs each sign with its god, element, agent and token. Pages that kept their own copies had drifted (CLAUDE.md 8.1 class 8):
+- `agents.html` fallback table: Merchant's god (→ Aphrodite), Oracle's god (→ Demeter), Capricorn's "Cronus" (→ Hestia), tokens SILITE → SANDITE and PRIMUS → AETHER.
+- `media.html`: 11 "Sign // Agent" card pairs set to the canon.
+- `blockchain.html`: SOLARII → SOLARI, Virgo ARENITE → SANDITE, PRIME → AETHER.
+- `omega-onboard.js`: the token assigned at onboarding now matches the canon for all twelve signs. Live `profiles` carry a null token, so there is no data to migrate.
+- `profile.html` archetypes, `missions.html` (elements MIND/COSMOS/ALL, which are not elements, → SAND/VOID/THE ALL), `horoscope.html` modes, `travel.html` ("Space is the seventh of the nine elements").
+- **The ninth element had two names.** "THE ALL" is the key read by about 15 modules; six pages printed a second name. Canon, `omega-elements.json`, cosmos, search, sculpture, knowledge and gaming now all say THE ALL. `elements.html` keeps its tier label as "TRANSCENDENT · NINTH ELEMENT", an ordinal and not a name.
+- **New gate: `scripts/canon-consistency.py`** (in `contract-suite.py`, so blocking). A record is a line, or one item of a long minified line, that names exactly one sign, or one agent in a `name`/`agent` field. Its god (full pantheon, so a god outside the twelve is caught), agent, token and element must be the canon's. Rows naming several signs are skipped. Uranus is excluded because pages cite it as Aquarius's ruling planet. Result: 396 files, PASS. A planted Cronus and a planted PRIMUS each FAIL. `test_canon_consistency.py` covers 10 cases.
+
+**Navigation: one page, one place, one name.** `nav.js` `SECTIONS`:
+- **37 duplicate entries removed.** Each page is kept only in its home section (`PS`), so no href appears twice.
+- **19 labels aligned** to the page's own name, for example DASHBOARD → COMMAND BRIDGE, THE 729 → THE MATRIX, GAMING ARENA → GAMES & EXAMS, HONORS → HALL OF HONORS, FOCUS → DEEP WORK.
+- **Two losses caught before commit** by diffing every href against the pre-change file:
+  - the transform dropped the one four-field entry (OWNER DECK, `'owner'`), and `reachability-contract.py` failed on `control-plane.html`;
+  - it dropped four hash-tab destinations (`matrix#triads/#grid/#charter`, `profile#portfolio`) whose keys had no `PS` home.
+  All five are restored in their page's section. After the fix, the diff shows 0 lost hrefs and 0 duplicates.
+
+**Titles and title bars:**
+- **Every `<title>` now reads `Ω SYD OMEGA 91717 — X`.** Before, 98 pages used seven different formats (`X · SYD OMEGA 91717`, `X | Ω…`, `Ω… -- X`, `Ω SYDOMEGA — X`, and some with no brand at all).
+- The repeated "Sovereign" prefix was dropped from 38 titles; the platform is sovereign everywhere, so on each title it was noise.
+- Titles now match the nav name: Hall of Honors, The Matrix, Creative Universe, Deep Work, Billing, Runes, Trophy Vault.
+- `content-uniqueness-contract.py` caught one collision (design-showcase and design-system), which was renamed to Design Showcase.
+- **Title bars that clashed with another page:**
+  - rune.html said SIGIL, which is sigil.html's name; it now says RUNES;
+  - subscriptions.html said MEMBERSHIP, which is membership.html's name; it now says BILLING;
+  - honors.html said THE ACHIEVEMENTS; it now says HALL OF HONORS;
+  - trophies.html said ACHIEVEMENT VAULT; it now says TROPHY VAULT.
+
+**Verification:**
+- `unittest`: 385 tests pass.
+- `canon-consistency.py`: PASS.
+- `reachability-contract.py`: OK.
+- `test_owner_deck.py`: OK.
+- `content-uniqueness-contract.py`: PASS (215 pages).
+- `verify-runtime.js`: PASS (13 pages).
+- `ci-local.sh`: 26/26 blocking checks pass.
+
+## UNIVERSE rail section folded into MEDIA (2026-09-27)
+
+**Owner decision** (following #488): after the navigation dedupe, UNIVERSE held one link (Creative Universe → media.html). It now lives as the first entry of MEDIA. `PS.media` is `'media'`, and the rail has **14** sections.
+- Count claims updated to match: the dashboard "PLATFORM COMMAND INDEX · ALL 207 PAGES · 14 SECTIONS" in `dashboard.html`, both `i18n.js` keys, all six language packs, and the `omega-gateway.js` comment.
+- The link's key is `media`; the old key `cinema` collided with cinema.html's entry.
+- **Verified:**
+  - `OmegaAxis.sectionOf('media')` → `media`, and `sections().length` → 14 in a render.
+  - `reachability-contract.py` OK; `test_owner_deck.py` OK; `i18n-contract.py` 0 violations.
+  - 385 tests pass; `verify-runtime.js` PASS (13 pages); `ci-local.sh` 26/26 blocking checks pass.
+
+## Load cost: a 2.65s first-frame stall and four scripts that ran twice (2026-09-27)
+
+**Owner request:** "put more power on the platform — check, analyze, improve, enhance, evolve."
+
+**Measured first.**
+- `verify-runtime.js --all`: 208/208 pages PASS.
+- `evidence-audit.py`: the 43 LOCAL_ONLY pages are all mirrored to `member_state`. The four whose storage keys are built at runtime (body, command, sleep, stoic) were resolved by reading them: every key is `omega_`-prefixed. BROKEN (2) is the dormant payment surface.
+- The real gap was load cost. Every page requests ~150 scripts (~1.8MB), and dashboard/profile took **6+s** before content showed, against ~1.2s for other pages.
+
+**Root cause 1: one 2,652ms main-thread task.** A CPU profile put it at `omega-sculpture.js` `frame()`, line `c2.drawImage(_glCanvas…)`, the flush point for queued GPU work.
+- An experiment with the environment map disabled dropped that task to ~210ms. So the cost was `PMREMGenerator.fromScene(room, 0.04)`: a fixed 256px cube plus a sigma blur pass.
+- It is now captured with a `CubeCamera` into a **128px** `WebGLCubeRenderTarget` and pre-filtered with `fromCubemap`, falling back to `fromScene`.
+- Luminance across 11 mounts × 3 runs on sculpture.html stayed inside run-to-run noise. 64px was also measured and dimmed the brightest mount ~156 → ~134, so 128 is the floor.
+- Also added: `compileAsync` before a mount's first frame, and `frame()` skips a mount until `m.ready`. Honestly recorded: in headless software GL this was **not** the stall. It is kept for real GPUs without `KHR_parallel_shader_compile`.
+
+**Root cause 2: scripts executed twice** (`dashboard.html`: omega-constellation, omega-controls, popper, tippy; `journal.html`: omega-ui).
+- `bg.js` guarded omega-controls under two different markers, `data-omega-ctrl` and `data-omega-controls`.
+- Every `data-omega-*` guard misses a page's own `<script src>` tag.
+- `omega-oss.js` and `omega-tooltip.js` each checked the other's global before either had loaded.
+
+**The fix for root cause 2:**
+- `__omegaAppend` now skips a script whose pathname is already on the page, on both the immediate and the DOMContentLoaded path. All 136 callers were checked: none attaches onload/onerror, so a skipped element loses nothing.
+- Both library loaders adopt an existing tag, and `omega-tooltip.js` drains at once if the adopted tag already ran.
+- Result on dashboard/journal/points/habits: 0 duplicate requests, 0 duplicate tags. The rendered output is identical before and after: 11 tippy instances, 1 controls dock, 12 constellation nodes, 0 page errors.
+
+**A/B** (origin/main pinned vs working tree, 3 runs each; load / longest task / total blocking time):
+
+| page | before | after |
+|---|---|---|
+| dashboard | 3.1s / 1.55s / 1.95s | 1.7s / 0.30s / 0.66s |
+| profile | 3.1s / 1.57s / 1.83s | 1.8s / 0.34s / 0.70s |
+| sculpture | 3.2s / 1.81s / 2.51s | 1.5s / 0.28s / 0.95s |
+
+These are headless software-GL numbers, so the absolute values overstate a real GPU. The direction and the mechanism are what they show.
+
+**Tests:** `test_load_cost.py` (5) holds the cube size, `fromCubemap`, compile-before-frame, the append dedupe on both paths, the no-load-handler invariant and both loaders' adoption.
+
+## Text contrast: 48 advisories to 0 on the 18 pages that carried them (2026-09-27)
+
+**Measured:** `verify-runtime.js --all --contrast-detail` found 48 text elements between 3:1 and 4.5:1. They were legible, but under WCAG AA for this platform's 12px type. CLAUDE.md 8.3 still said "6"; the baseline had drifted.
+
+**Root causes and fixes:**
+- **One token.** `--crim` #CA5850 was the only palette text colour under 4.5:1 on the card surfaces, at 4.19-4.69:1 on 6 pages. It is now **#CF6760**, the least lightening of the same hue that reaches 5.38:1 on #0C0B10. The change is in **both** owners, `theme.js` and `css/omega-system.css`.
+- **Accent colours used as small text,** each given a same-hue text tint while the identity colour is kept for borders, glyphs and backgrounds:
+  - mirror: `.ci-label` and `.ci-tag` → #A86EBF;
+  - media: `--crimson2-text` #D85D50 and `--wind-text` #A86EBF for poster phases, element labels and game tags; the 12 "12 SERIES // 12 SUB-GAMES" lines use solid tints;
+  - elements: void text → #AB5CFF via `el.txt`;
+  - houses: House of Mystery → `textColor:'#936CFF'`, a mechanism the page already had;
+  - tribe: `el.text` for fire, space and void;
+  - forge: apex → #D65C5C;
+  - honors: level tier → #D85D50;
+  - wealth: liabilities → #D26060;
+  - stoic: muted text → `var(--muted)`;
+  - time: `--dim` → #939081;
+  - chronicle: forthcoming badge → `var(--ink)`;
+  - index and omega-world-engine: media accent → #CF6760.
+- **An unstyled control.** On `enter.html`, the four layer tabs (GATEWAY/STATUS/PROTOCOL/SCIENCE) had **no CSS rule**, so they rendered as the browser's grey system buttons (rgb 107,107,107) on the public entry page. They now use the platform tab treatment.
+
+**Method note:** the scanner judges a colour at full opacity. Raising an `rgba` alpha changed nothing it measured, and two first attempts on media and time proved it. Fix the hue's lightness, not its alpha.
+
+**Verified:**
+- 18 affected pages re-measured: **0** contrast advisories; `RUNTIME VERIFICATION: PASS`.
+- `test_text_contrast.py` (4 tests): both token owners agree; every text token clears 4.5:1 on #0C0B10; the entry tabs stay styled; the tints stay in place.
+
+**Follow-up (same day, after #493 merged):** a full `verify-runtime.js --all --contrast-detail` on the merged tree reports **1** advisory in 208 pages. The one left is `verify-deployment.html`'s red failure line, on a diagnostic page. So lightening `--crim` created no new finding on any crimson background. `ci-local.sh` on merged main: 26/26 blocking checks pass. CLAUDE.md 8.3 is updated: 394 tests; contrast advisory 1.
+
+## "Vercel Production" red on main 4 times: a new page with no navigation shell (2026-09-27)
+
+**Found by listing every workflow's latest run on main** (28 workflows). All were green except **Vercel Production**, which failed 4 times from 06:25 UTC. Its `validate` job logged `OMEGA PRODUCTION SURFACE: FAIL — world.html: missing navigation/runtime shell hook` (run 36304707516).
+
+**Cause.** `world.html` (commit 27b8cc63, "feat(world): add live 18-module world surface") rendered its own `.ow-shell` with no `#omega-side` mount. On the page itself the member had no rail, and the page sat outside the approval guard's `.shell`/`main.main`.
+
+**Fix:**
+- The page now has the platform shell, matching its sibling `world-shell.html`: `.shell` + `aside#omega-side[data-page=world]` + `main.main`.
+- `.ow-shell.shell .ow-main` takes the remaining width. Its `94vw` would otherwise overflow beside the 80px rail.
+- The legend's unavailable dot now uses the new crimson `#CF6760`.
+- Verified: `omega-production-surface-contract.py` PASS on 216 pages; `verify-runtime.js --pages=world.html` PASS, no overflow.
+
+**Why local CI said 26/26 while main was red.** `ci-local.sh` mirrored every blocking workflow except this one's `validate` job: static contract, build artifact, surface contract and artifact invariants.
+- It is now step **9b** (`vercel_artifact`), so there are **27** blocking checks.
+- A planted run against the old `world.html` fails with the same finding as GitHub; the fixed file passes.
+- CLAUDE.md 8.3 already said "mirror every blocking gate, from every workflow". This one had been missed.
+
+## TODAY panel + service roadmap (2026-09-27)
+
+**Owner request:** find what remains, and what can be built as services members use, inspired by how established platforms package the same needs.
+
+**Built:** `omega-today.js` on `command.html`: one due/done tile per ritual across 9 modules' own stores. A module never used shows START, never a fabricated zero.
+- Render-verified with seeded stores: 3/6 done, each tile matching its seed, with out-of-range entries excluded.
+- Empty stores: 9 START tiles.
+- 0 errors; no overflow at 375px.
+- `test_today.py`: 5 tests, including that every key it reads is still the key its owning page writes.
+
+**Proposed:** `FEATURE_IDEAS.md`, "Service roadmap" with S1–S11, each grounded in files that exist here, and each with its risk tier.
+
+**Two findings while grounding it:**
+- `command.html`'s DAY SCORE is a self-rating, so a contributor-based readiness score (S3) is new work, not a duplicate.
+- `omega-export.js` already exports 7 Supabase datasets (GDPR Art. 20). S6 is therefore scoped as extending its `gather()` with the tracker stores, not as a new exporter.
+
+## S2 weekly review + S3 readiness (2026-09-27)
+
+**Owner request:** "Ok i agree / Continue correctly" — build S2 and S3 from the service roadmap.
+
+**Built, in `omega-today.js`:**
+- **READINESS** (`command.html`): a score from 7 contributors (sleep hours, sleep quality, mood, energy, stress, 7-day training load, 7-day habit %), each shown with its input. Bands: PRIMED ≥85, READY ≥70, RECOVER below. With fewer than 3 contributors logged the score is withheld ("— / N of 3 signals"), never estimated (§8.1 class 9).
+- **THIS WEEK** (`weekly.html`): habits %, training, sleep average, mood average, water-goal days, stillness minutes and priorities done/set, against last week. The week is Monday-start, matching `weekly.html`'s own `getWeekKey`. Unfinished priorities from earlier briefs this week carry over.
+
+**Honesty rules:**
+- A direction arrow is drawn only when both weeks have logged entries. The first render drew habits ▼ against a week with nothing logged.
+- Carry-over is the only member text rendered. It goes through `textContent`; an injected `<img onerror>` priority rendered as text, with 0 `img` elements.
+
+**Finding:** the platform rule `a[href]{display:inline-flex}` collapsed the readiness contributor rows (anchors) and their bars to 0px. `.ord a.ord-row{display:grid!important}` restores it; bar width measured 267.5px after.
+
+**Verified:**
+- Seeded render: readiness **73 READY** from 7 contributors, matching the hand-computed value.
+- A sleep-only member sees "2 of 3 signals".
+- The week view matches its seeds.
+- 0 page errors; no overflow at 375px or 1280px.
+- `verify-runtime --pages=command.html,weekly.html`: PASS.
+- 407 unit tests (+8 in `test_today.py`); `ci-local.sh` 27/27.
+
+## S4 ritual reminders, S6 full export, S7 calendar step 1 (2026-09-27)
+
+**Owner request:** "Do it and all related and new ones for improving. Get enhanced and inspired from as much as you can from the web."
+
+**Research:**
+- Duolingo's KDD 2020 bandit paper and two 2026 teardowns: two notification slots (routine in the member's revealed habit window, and save only when a streak is about to end), at most two a day, every push gated on a state trigger.
+- Streaks: per-task reminders and a fixed-time option.
+- A 2026 PWA-push note: web push on iOS needs an installed app.
+
+**Live check (Supabase, 2026-09-27):**
+- `push_subscriptions` does not exist.
+- `pg_cron` is available but not installed; `pg_net` is installed.
+- `notifications_enabled=true`.
+- Closed-app push therefore needs schema, a scheduler and an owner-set VAPID secret. It is S4 Part B (HIGH) and was not built.
+
+**Built:**
+- `omega-reminders.js` (bg.js, opt-in, off by default):
+  - reads each ritual through `OmegaToday.status()` and the habit streak through `OmegaToday.habitStreak()`, both new in `omega-today.js`;
+  - learns the window as the median observed check-in minus 30 min. A check-in counts only when this tab saw the ritual go from open to done, so a store restored from the server is never timed. Below 3 check-ins it says so and uses the member's own time;
+  - both slots are claimed in `omega_reminder_sent` before showing, so two tabs send once; the key is mirrored across devices;
+  - quiet hours 22:30–07:30;
+  - the first check runs 4.5 s after load, after the genesis splash;
+  - the card sits top-right. At the bottom it was measured under the mobile dock and across SHARE.
+- `sw.js`: new `notificationclick` handler (focus, else open; same-origin only). Before this, clicking a notification did nothing.
+- Settings on `notifications.html` (`data-omega-reminders`), with a `#reminders` deep link from the TODAY panel's new chip.
+- S6: `omega-export.js` now also packs `tracker_stores`, i.e. every key `OmegaMemberState.isMemberKey` accepts.
+- S7 step 1: `⤓ CALENDAR` on `command.html` downloads today's blocks as `.ics` (RFC 5545 escaping, lines folded at 60 code units). The reminder card offers a daily recurring `.ics` with an alarm, which reaches a closed app through the phone's calendar.
+
+**Found and fixed:**
+- `notifications.html` built reminder and notification rows with raw `r.text`, `r.cat`, `n.title` and `n.body` in `innerHTML`. They are now escaped: a seeded `<img onerror>` rendered as text, 0 `img`.
+- Its DONE button passed the index from a **sorted copy** into the unsorted array, so it marked the wrong reminder done. Measured: clicking DONE on the first row (id 1) now marks id 1; the pre-fix code would have marked id 2.
+- `time.html` requested notification permission on page load, with no user gesture. Browsers quiet or ignore such prompts. It now asks on START.
+
+**Found, left open:** `notifications.html`'s four "notification category" checkboxes save to `omega_notif_settings`, and no file reads that key (grep).
+
+**Verified:**
+- Render with a fixed clock:
+  - routine card at 18:05 with an 18:00 window; none at 17:55;
+  - none on reload (one per day);
+  - save card at 21:10 with save on; with save off, the routine nudge instead (it runs until quiet hours, so a member first seen at 21:10 is still reached);
+  - nothing at 23:00, and nothing with reminders off (where `omega-today.js` was not even loaded).
+- Learning: 2 samples plus one observed transition at 10:20 moved the window to 17:30, the median of 18:00, 18:20 and 10:20 minus 30.
+- `.ics` output inspected: `SUMMARY:Deep work\, draft\; review`; the long line folded.
+- The export contained `tracker_stores` including `omega_sleep_log`.
+- Card buttons were uncovered (`elementFromPoint`) at 1280px and 375px.
+- 0 page errors.
+- Harness note: under `clock.setFixedTime`, page time ran at about 40% of wall time (`performance.now()` 2754 after about 7 s), so a timed boot looked like a missing send. Wait on a condition, not a duration.
+
+## S5 one review queue, and one SM-2 (2026-09-27)
+
+**Owner request:** continue "all related and new ones for improving". S5 was the next item on the roadmap.
+
+**Grounding found three bugs in the two copies of SM-2** (§8.1 class 8). Each was measured on the previous version pinned with `H.gitShow('HEAD', …)`:
+- **HARD reset a card like AGAIN.** `flashcard.html` mapped HARD to quality 2, below SM-2's pass mark of 3. A card at reps 2 / interval 6 went to reps 0 / interval 1 on HARD, and the button read `<1d`. The page's own explainer said HARD "increases the interval". GOOD was quality 3, which lowered the ease on every correct answer.
+- **A mastered word could never come back.** `vocabulary.html`'s due drill **and** its library "DUE" filter both excluded `status==='mastered'`. With a due mastered word seeded, the old drill held 1 word, not 2. `test_review_queue.py` found the second copy (the library filter) after the first was fixed.
+- **The two pages ordered the SM-2 step differently.** `vocabulary.html` updated the ease before computing the interval; `flashcard.html` and the original algorithm compute I(n) = I(n-1) × EF with the current EF, then adjust EF.
+
+**Built:**
+- `omega-srs.js`: the one scheduler, keeping each page's field names, so no stored data migrates. Grades are AGAIN/HARD/GOOD/EASY = 1/3/4/5. Both pages now call it, and the flashcard buttons come from `OmegaSRS.BUTTONS`.
+- `omega-review.js`: the review queue.
+  - Holds every due card and word, oldest first, interleaved, up to 40 at a time.
+  - Space reveals, 1–4 grades, Esc closes.
+  - Each grade re-reads the store and writes that one item by id; words also add to `omega_vocab_log`, so vocabulary's stats and streak count them.
+  - Entry points: `▶ REVIEW n` on the TODAY panel, and `/command.html#review` from both pages. The link opens only after the approval guard reveals the page.
+- `vocabulary.html` rendered term, definition, example and etymology unescaped in three templates. All four now go through `esc()`.
+
+**Verified in a render:**
+- Order: card, word, card, word, card.
+- GOOD on a new card → 1 d, EF 2.50.
+- HARD on a word at reps 2 / interval 6 → 15 d, ease 2.36.
+- AGAIN → 1 d, reps 0.
+- EASY on a mastered word at 30 d / 2.6 → 78 d / 2.70.
+- `omega_vocab_log` +2.
+- The chip disappears once nothing is due.
+- An `<img onerror>` front rendered as text, with 0 `img` elements.
+- On `flashcard.html`: 4 buttons, HARD shows `15d`.
+- The due drill now holds the mastered word.
+- Buttons uncovered and no overflow at 375 px and 1280 px.
+- 0 page errors.
+- `verify-runtime` passes on command, flashcard and vocabulary.
+- 435 tests pass; `ci-local.sh` 27/27.
+
+**Noted, not changed:** in original SM-2, HARD, GOOD and EASY give the same *next* interval and differ only in the ease they leave. That is correct, but it looks flat. FSRS is proposed as S15.
+
+## KYC intake that saves (dormant), the Passport tab that never opened, freeze-aware streaks (2026-09-27)
+
+**Owner request:** "You take the right decision … make it stronger … a real asset, not a demo." Delegated decisions, taken as: fix what is broken or misleading before adding features.
+
+**KYC.** Measured live:
+- `authenticated` holds UPDATE on 14 `profiles` columns and none of them is `kyc_*`.
+- `profile.html` wrote those columns directly, **after** uploading the document, so every submission would fail with 42501 and leave an identity document orphaned. `uploads` held 0 objects, so none is orphaned today.
+- No owner review surface existed.
+
+Fix, under a Mode 1 decision record (`docs/decisions/kyc-intake/`):
+- Migration `20260927110344`: `submit_kyc`, `review_kyc` and `kyc_queue`, each a private definer body behind a public invoker wrapper, with EXECUTE revoked from public and anon.
+- `kyc_intake_enabled = false`, and the page reads it before uploading.
+- Any server refusal removes the upload.
+- `approvals.html` → IDENTITY REVIEW, opening documents through a 60 s signed URL.
+
+Verified live in a rolled-back impersonation block: 15 checks, all as designed (list in the migration header). Afterwards the flag was `false`, `kyc` was `none=9` and storage held 0 objects; the advisor was unchanged. The first apply's pattern `[^/]{1,280}` failed at call time with 2201B (Postgres caps repetition at 255), and was replaced in place with `{1,255}`.
+
+**The Passport tab had never worked.** `bootPassportExtra()` called `ppSb`, and no file or commit ever defined it (`git log -S "ppSb="`: nothing). On the pinned previous version it threw `ppSb is not defined`, so there was no passport and no KYC status. It is now `var ppSb=sb`. A sweep for other never-assigned client names found `omega-data-binding.js` reading `window.OmegaSB.sb`, while bg.js publishes `OmegaSB` as `{get,url,key}`. That is latent, because no page uses `data-bind-query`, and it now reads `window.__omegaSb`.
+
+**Dead controls removed.** `notifications.html`'s four "notification category" checkboxes saved `omega_notif_settings`, which no file reads.
+
+**S12 was already built.** `omega-streak-freeze.js` exists; the roadmap row saying otherwise was wrong and is corrected. The real bug: `OmegaToday.habitStreak()` ignored freezes. With days 1, 3 and 4 logged and day 2 frozen, the previous version returned 1; it now returns 4, matching `habits.html`. The 21:00 save nudge now says "protected tonight" when every open habit still has a freeze.
+
+**Found, opened:** day keys disagree across time zones in `habits.html` and `omega-streak-freeze.js`, which write the UTC date and read from local midnight. Entry in `GAP_ANALYSIS.md` §S; next PR.
+
+**Verified:**
+- 449 tests pass (+12 `test_kyc_intake.py`, +2 freeze).
+- Render: intake closed → button disabled with the reason.
+- With intake open:
+  - a refusal removes the upload;
+  - success removes the superseded document;
+  - the owner list escapes names (0 `img`), and VERIFY sends `{p_member, p_verdict:'verified'}`.
+
+## Habit day keys were UTC on write and local on read (2026-09-27)
+
+**Found while fixing the freeze-aware streak; measured before changing anything.** The harness gained `launch({timezoneId})`, since the container runs in UTC and hides this class. One daily habit, one check-in through the real `toggleHabit`, previous version pinned:
+
+| zone | local time | stored key | streak | today's dot |
+|---|---|---|---|---|
+| Asia/Beirut | Sun 10:00 | 09-27 | **0d** | **dark** |
+| Asia/Beirut | Mon 01:30 | 09-27 (yesterday) | 1d | lit |
+| America/New_York | Sat 21:00 | **09-28** (tomorrow) | **0d** | **dark** |
+| UTC | Sun 12:00 | 09-27 | 1d | lit |
+
+**Cause:** `todayKey()` wrote `toISOString()`, the UTC date. Every reader (`getStreak`, the dots, rates, the heatmap) walked back from `setHours(0,0,0,0)` and then called `toISOString()`, which names the previous UTC day east of Greenwich. `omega-streak-freeze.js`'s `dateKey` and `journal.html` had the same pair. So did the habit half of `omega-today.js`, including `weekBounds`.
+
+**Fix:**
+- One local `dayKey()` for every write and read in the habit chain.
+- Weekly keys (`week-<local Sunday>`) had been a Saturday date east of Greenwich. `habits.html` re-keys any Saturday `week-` key to its Sunday once, merging rather than overwriting, guarded by `omega_habit_weekkeys_local`.
+- `omega-streak-freeze.js`'s `scope()` now fills missing fields. A partial stored state, found by a malformed test seed, had thrown inside the habits render loop.
+
+**Verified after:**
+- All four cases store the local day and show 1d / lit.
+- Beirut: `week-2026-09-26` → `week-2026-09-27`.
+- A check-in on `habits.html` shows done on the TODAY panel.
+- `test_day_keys.py` (6); 455 tests.
+
+**Still open**, with the reason, in `GAP_ANALYSIS.md` §S: the other trackers keep their self-consistent UTC keys.

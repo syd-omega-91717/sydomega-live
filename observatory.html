@@ -166,13 +166,13 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     /* Member count */
-    try{var mc=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);sid('k-members',mc.count||0);}catch(e){}
+    try{var mc=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);sid('k-members',mc.error?'—':(mc.count==null?'—':mc.count));}catch(e){sid('k-members','—');console.warn('[Omega Observatory] member count unavailable:',e);}
     /* Events today */
-    try{var today=new Date().toISOString().slice(0,10);var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',today);sid('k-events',pe.count||0);}catch(e){}
+    try{var today=new Date().toISOString().slice(0,10);var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',today);sid('k-events',pe.error?'—':(pe.count==null?'—':pe.count));}catch(e){sid('k-events','—');console.warn('[Omega Observatory] event count unavailable:',e);}
     /* Tasks 7d */
-    try{var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());sid('k-tasks',tc.count||0);}catch(e){}
+    try{var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());sid('k-tasks',tc.error?'—':(tc.count==null?'—':tc.count));}catch(e){sid('k-tasks','—');console.warn('[Omega Observatory] task count unavailable:',e);}
     /* Threat events */
-    try{var thr=await sb.from('threat_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-7*864e5).toISOString());sid('k-threats',thr.count||0);}catch(e){}
+    try{var thr=await sb.from('threat_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-7*864e5).toISOString());sid('k-threats',thr.error?'—':(thr.count==null?'—':thr.count));}catch(e){sid('k-threats','—');console.warn('[Omega Observatory] threat count unavailable:',e);}
     /* CWV */
     try{
       var cwv=await sb.from('platform_metrics').select('dimensions').order('created_at',{ascending:false}).limit(1).maybeSingle();
@@ -182,7 +182,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var inpEl=document.getElementById('inp-val');if(inpEl&&d.inp_ms){inpEl.textContent=d.inp_ms+'ms';inpEl.style.color=goodColor(d.inp_ms,200);}
         var clsEl=document.getElementById('cls-val');if(clsEl&&d.cls!=null){clsEl.textContent=d.cls;clsEl.style.color=d.cls<=0.1?'var(--green)':'var(--crim)';}
       }
-    }catch(e){}
+    }catch(e){console.warn('[Omega Observatory] CWV data unavailable:',e);}
     /* Error budget */
     try{
       var eb=await sb.from('error_budget_policy').select('budget_4wk_pct').order('last_computed',{ascending:false}).limit(1).maybeSingle();
@@ -192,7 +192,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var fill=document.getElementById('budget-fill');
         if(fill){fill.style.width=pct+'%';fill.style.background=pct<20?'var(--green)':pct<50?'var(--solar)':'var(--crim)';}
       }
-    }catch(e){}
+    }catch(e){console.warn('[Omega Observatory] error budget unavailable:',e);}
     /* SLO data */
     try{
       var slo=await sb.from('error_budget_policy').select('*');
@@ -202,7 +202,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var v=card.querySelector('.slo-val');if(v)v.style.color=col;
         var f=card.querySelector('.slo-fill');if(f)f.style.background=col;
       });
-    }catch(e){}
+    }catch(e){console.warn('[Omega Observatory] SLO data unavailable:',e);}
     /* Uptime (30d) -- genuinely computed from real incident downtime, not the hardcoded
        99.9% this KPI displayed permanently before (no JS ever updated k-uptime). Sums
        downtime for every incident that started within the last 30 days (ongoing
@@ -221,7 +221,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
       sid('k-uptime',uptimePct.toFixed(2)+'%');
       var upEl=document.getElementById('k-uptime');
       if(upEl)upEl.style.color=uptimePct>=99.9?'var(--green)':uptimePct>=99?'var(--solar)':'var(--crim)';
-    }catch(e){}
+    }catch(e){console.warn('[Omega Observatory] uptime data unavailable:',e);}
     /* Incidents */
     try{
       var inc=await sb.from('incidents').select('*').order('started_at',{ascending:false}).limit(10);
@@ -236,8 +236,8 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
           return '<div class="tbl-row inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+String(i.severity||'').replace(/</g,'&lt;')+'</div><div>'+String(i.title||'').slice(0,50).replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
         }).join('');
       }
-    }catch(e){}
-  }catch(e){document.getElementById('app').style.display='flex';}
+    }catch(e){console.warn('[Omega Observatory] incident data unavailable:',e);}
+  }catch(e){document.getElementById('app').style.display='flex';console.warn('[Omega Observatory] boot failed:',e);}
 })();
 </script>
 <script src="/bg.js" defer></script>

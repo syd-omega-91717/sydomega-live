@@ -204,7 +204,7 @@
 </div>
 
 <script>
-function esc(s){var d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 var ELEMENTS={
   fire:  {name:'FIRE',  sigil:'☲',color:'#FF4500',attrs:{willpower:95,adaptability:40,creativity:70,precision:60,endurance:50,intuition:65,vision:75,discipline:55}},

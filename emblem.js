@@ -33,7 +33,7 @@
     honors:          ['ring',  8,  '#E2C86D', '\u272A',  'THE HONORS'],
     horoscope:       ['ring',  12, '#C9A84C', '\u2609',  'THE WHEEL'],
     pantheons:       ['orbit', 4,  '#E2C86D', '\u232C',  'CROSS-PANTHEON'],
-    factions:        ['poly',  6,  '#C4453C', '\u25C6',  'THE 12 FACTIONS'],
+    factions:        ['poly',  6,  '#CA5850', '\u25C6',  'THE 12 FACTIONS'],
     city:            ['orb',   9,  '#C9A84C', '\u03A9',  'OMEGA CITY'],
     elements:        ['rays',  5,  '#D9B86A', '\u2605',  'THE ELEMENTS'],
     academy:         ['arc',   9,  '#00E5FF', '\u2756',  'KNOWLEDGE ENGINE'],
@@ -48,7 +48,7 @@
     contracts:       ['arc',   4,  '#C9A84C', '\u270D',  'CONTRACTS'],
     publishing:      ['ring',  4,  '#E2C86D', '\u2394',  'PUBLISHING'],
     media:           ['orbit', 4,  '#00E5FF', '\u25BA',  'MEDIA VAULT'],
-    cinema:          ['rays',  8,  '#C4453C', '\u25D9',  'THE CINEMA'],
+    cinema:          ['rays',  8,  '#CA5850', '\u25D9',  'THE CINEMA'],
     news:            ['ring',  6,  '#00E5FF', '\u25CF',  'INTELLIGENCE FEED'],
     social:          ['ring',  7,  '#C9A84C', '\u2743',  'SOCIAL HUB'],
     marketing:       ['orbit', 3,  '#E2C86D', '\u25C8',  'SIGNAL CORPS'],
@@ -57,7 +57,7 @@
     travel:          ['arc',   7,  '#9B6BF0', '\u2708',  'TRAVEL'],
     sovereigns:      ['arc',   9,  '#E2C86D', '\u265A',  'HALL OF SOVEREIGNS'],
     family:          ['orbit', 3,  '#C9A84C', '\u2665',  'LINEAGE'],
-    settings:        ['ring',  4,  '#C4453C', '\u2699',  'SYSTEM SETTINGS'],
+    settings:        ['ring',  4,  '#CA5850', '\u2699',  'SYSTEM SETTINGS'],
     automation:      ['rays',  9,  '#00E5FF', '\u21D2',  'AUTOMATION ENGINE'],
     heritage:        ['arc',   5,  '#C9A84C', '\u22D4',  'HERITAGE ARCHIVE'],
     sigil:           ['poly',  6,  '#C9A84C', '\u25C6',  'YOUR SIGIL'],
@@ -94,7 +94,11 @@
   if (window.innerWidth >= 900) lbl.style.display = 'block';
 
   wrap.appendChild(cv);
-  wrap.appendChild(lbl);
+  /* No label: the topbar it joins already carries the page's title, so the
+     name printed beside the emblem was a duplicate. The name stays as the
+     emblem's accessible name. */
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('aria-label', label);
 
   /* --- inject into topbar --- */
   var tb = document.querySelector('.topbar');

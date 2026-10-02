@@ -29,6 +29,19 @@
       if(r.error) return {error:r.error.message};
       return {path:path,name:file.name,size:file.size};
     },
+    remove:async function(bucket,path){
+      if(!bucket || typeof bucket!=='string') return {error:'No storage bucket named.'};
+      if(!path || typeof path!=='string') return {error:'No storage path.'};
+      var sb=await ready;
+      var s=(await sb.auth.getSession()).data.session;
+      if(!s) return {error:'Sign in first.'};
+      /* RLS is authoritative: authenticated members may delete only objects
+         whose first path segment is their own user id. Keep the client helper
+         deliberately thin so it cannot become a second authorization system. */
+      var r=await sb.storage.from(bucket).remove([path]);
+      if(r.error) return {error:r.error.message};
+      return {path:path};
+    },
     publicUrl:async function(bucket,path){ var sb=await ready; return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl; },
     signedUrl:async function(bucket,path,sec){ var sb=await ready; var r=await sb.storage.from(bucket).createSignedUrl(path,sec||3600); return r.data?r.data.signedUrl:null; }
   };

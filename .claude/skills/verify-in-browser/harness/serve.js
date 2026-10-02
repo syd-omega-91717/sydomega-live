@@ -1,6 +1,6 @@
 const http = require('http'), fs = require('fs'), path = require('path');
 const ROOT = '/home/user/sydomega-live';
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json',
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json',
   '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json', '.mp4': 'video/mp4',
   '.woff2': 'font/woff2', '.txt': 'text/plain' };

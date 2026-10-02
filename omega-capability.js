@@ -120,6 +120,14 @@
     /* Only a declared capability gets a badge. An undeclared page shows
        nothing rather than a placeholder that reads like data. */
     if(!cap||!cap.declared||document.getElementById('omega-cap-badge')) return;
+    /* Engineering metadata, not something a member acts on. Floating at
+       bottom:238px it landed mid-page on any viewport under ~760px tall and
+       printed "COMMAND_INTELLIGENCE / OPERATIONS . SOVEREIGN" across the
+       dashboard's stats row (owner screenshot, 2026-09-26). It now shows only
+       when diagnostics are asked for: localStorage omega_diag = '1'. */
+    var diag=false;
+    try{ diag=localStorage.getItem('omega_diag')==='1'; }catch(e){}
+    if(!diag) return;
     var badge=document.createElement('div');
     badge.id='omega-cap-badge';
     badge.setAttribute('aria-label','Capability: '+cap.cap);

@@ -29,6 +29,10 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const ARGV = process.argv.slice(2);
+/* --contrast-detail: print every 3-4.5:1 text element (page, ratio, colour,
+   background, size, selector) as a tab-separated CONTRAST line, so the
+   advisory count can be traced to the colour that causes it. Report-only. */
+const CONTRAST_DETAIL = ARGV.includes('--contrast-detail');
 const JSON_OUT = ARGV.includes('--json');
 const SELF_TEST = ARGV.includes('--self-test');
 const pagesFlag = ARGV.indexOf('--pages');
@@ -98,7 +102,7 @@ const BENIGN = [
   /export\.arxiv\.org/, /wikipedia\.org/, /has been blocked by CORS/, /Access to fetch at/
 ];
 // Pages that legitimately render signed-out (bg.js public-page allowlist).
-const PUBLIC = /(^|\/)(account|enter|reset|terms|pending|index)\.html$/;
+const PUBLIC = /(^|\/)(account|enter|reset|terms|pending|index|guide)\.html$/;
 // Owner-only pages: the member stub (is_owner:false) SHOULD be kept out, so
 // "#app not visible" there is the gate working, not a bug.
 const OWNER_GATED = /(^|\/)(approvals)\.html$/;
@@ -317,7 +321,7 @@ const CHECK_JS = `(() => {
   const L = c => .2126*lin(c[0]) + .7152*lin(c[1]) + .0722*lin(c[2]);
   const px = t => { const m = String(t).match(/[\\d.]+/g); return m ? m.map(Number) : null; };
   const alpha = c => (c && c.length > 3) ? c[3] : 1;
-  const cLow = [], cMidIds = [], cOkIds = []; let cMid = 0, cOk = 0, cSeen = 0;
+  const cLow = [], cMidIds = [], cOkIds = [], cMidList = []; let cMid = 0, cOk = 0, cSeen = 0;
   document.querySelectorAll('body *').forEach(el => {
     const txt = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
     if (txt.length < 2) return;
@@ -399,7 +403,13 @@ const CHECK_JS = `(() => {
       cLow.push({ id: el.id, sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
                  ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
                  px: Math.round(size), text: txt.slice(0,26) });
-    } else if (worst + 0.005 < (large ? 3 : 4.5)) { cMid++; if (el.id) cMidIds.push(el.id); }
+    } else if (worst + 0.005 < (large ? 3 : 4.5)) {
+      cMid++; if (el.id) cMidIds.push(el.id);
+      /* Kept for --contrast-detail: a count alone names nothing to fix. */
+      cMidList.push({ sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
+                      ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
+                      px: Math.round(size), text: txt.slice(0,26) });
+    }
     else { cOk++; if (el.id) cOkIds.push(el.id); }
   });
   out.lowContrastIds = cLow.map(x => x.id).filter(Boolean);
@@ -407,6 +417,7 @@ const CHECK_JS = `(() => {
   out.lowContrastCount = cLow.length;
   out.midContrast = cMid;
   out.midContrastIds = cMidIds;
+  out.midContrastList = cMidList;
   out.okContrastIds = cOkIds;
   return out;
 })()`;
@@ -534,6 +545,8 @@ async function main() {
       if (info.lowContrastCount) problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
         info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' ' + JSON.stringify(c.text)).join(' | '));
       if (info.midContrast) advisories.push('contrast 3-4.5:1: ' + info.midContrast);
+      if (CONTRAST_DETAIL && info.midContrastList) info.midContrastList.forEach(c =>
+        console.log('CONTRAST\t' + pg + '\t' + c.ratio + '\t' + c.color + '\t' + c.bg + '\t' + c.px + 'px\t' + c.sel + '\t' + JSON.stringify(c.text)));
       results.push({ page: pg, landedOn: landed, problems, advisories, benignSuppressed: errs.length - realErrs.length });
     }
   } catch (e) {

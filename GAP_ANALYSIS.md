@@ -18,6 +18,25 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **`service_role` holds only what deployed server code needs** (opened 2026-09-26,
+  `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
+  no default privilege on public tables. Granted since: `platform_settings` SELECT,
+  `get_platform_flag` EXECUTE, the two graph-ingest RPCs, and
+  `apply_subscription_event`. **Before turning `autonomous_agents_enabled` on**, grant
+  what the orchestrators write, or they fail at their first write:
+  - `autonomous_decisions` INSERT (all three);
+  - `member_feature_flags` INSERT, UPDATE (product-orchestrator upserts).
+
+  **Before deploying** `checkout`, `rankings`, `snapshot-leaderboard`, `weekly-digest` or
+  `graphify-ai-query`, grant each one the table operations it uses. A small script
+  mapping `supabase/functions/*` `.from()` calls to table grants would make this a gate
+  rather than a checklist.
+- **The Guide is English-only** (opened 2026-09-26). `omega-guide.js` holds its 26 answers as English strings, not `T_EN` keys, so the six packs do not reach it. Keying them means 26 × 7 entries through the i18n contract, which is worth doing once the wording settles.
+- **`find_contradictions` does not exist** (opened 2026-09-26).
+  `graphify-ai-query/index.ts:252` calls it and only logs a warning when it fails, so the
+  anomaly report's contradiction list is always empty. The function is not deployed, so
+  no member sees it yet.
+
 - **The concept art and the canon disagree in three places now** (opened
   2026-09-13; `FIXES_LOG.md` 139, 141). Not a bug — a **decision the owner has
   not made yet**, and every visual built from the art rather than the data
@@ -324,6 +343,74 @@ open, recorded in `FIXES_LOG.md`:
   `node scripts/verify-runtime.js --pages graph.html,map.html` reports `PASS`. The
   `verify-in-browser` skill's own gotcha list still called these two (plus
   `realm.html`) "blocked CDN" throws — corrected there too; all three render clean.
+- ~~**Dispatch moderation bypass**~~ **CLOSED 2026-09-26** (migration `20260926095955`, applied live). The
+  earlier reading was wrong about the shape: member posts on the Wire are *meant* to be public
+  (`dispatches.is_published` defaults `true`), but `published_dispatches()` — the official "SOVEREIGN
+  DISPATCHES" feed — returned every published row, so any member post also rendered as an official
+  dispatch. The feed now returns only author-less rows, which only `post_dispatch()` (owner-only) writes.
+  The same migration fixed `post_dispatch()` (22P02 for the owner: bigint id into a uuid) and
+  `set_dispatch_published()` (uuid signature on a bigint id). See `FIXES_LOG.md`.
+- **No MFA yet on either owner** (live 2026-09-26: 0 verified `auth.mfa_factors` for both
+  `platform_owners`). Enrolment is **on** (`mfa_enrolment_enabled = true`); what remains is each
+  owner scanning the QR on their own device. The Owner Deck's SECURITY chip lists each owner still
+  without a verified factor and clears from `auth.mfa_factors` itself (`owner_security_status()`,
+  `20260926223027`).
+  **Enforcement prerequisite, found 2026-09-26:** `OmegaMFA.stepUp()` has **no caller** — only
+  `settings.html` loads `omega-mfa.js`, and no sign-in path asks for the code. With
+  `owner_mfa_required` on, an owner's next sign-in is `aal1`, so `is_platform_owner()` returns false
+  and every owner power fails silently. A sign-in step-up must ship before that flag is set.
+  - The `omega-mfa.js` enrol/verify/remove UI ships in Settings (`/settings.html#two-factor`)
+    behind `mfa_enrolment_enabled`, which fails closed.
+  - Owner enforcement (AAL2 inside `private.is_platform_owner()`, behind `owner_mfa_required`) is
+    **applied live and dormant** (`20260926102544`; both flags seeded `false`, verified unchanged results).
+  - Decision record: `docs/decisions/owner-mfa/`.
+  - Phase 2 is done (`20260926102450`). Of the 24 direct owner checks, the only caller-authority
+    bypass was `private.omega_is_owner()`'s `profiles.is_owner` fallback, now removed. The other 23 are
+    row guards, statistics or triggers. What remains: both owners enrol (two devices each), a
+    sign-in step-up ships, then `owner_mfa_required`.
+- **Third-party keys named in the supplied documents: rotation is owner action** (2026-09-26). The
+  repo and its full, unshallow history hold none (key-shape scan of `git log --all -p`: 0; the only
+  JWTs are `anon`), so nothing is left to purge here; no API in reach rotates provider keys. The
+  Owner Deck shows a ROTATE KEYS row with each provider's key page until the owner confirms
+  (`owner_confirm_secrets_rotated()`), and the row returns 180 days later.
+- **Cross-user RLS isolation proven on 17/17 populated private tables; 46 tables unprovable** (no foreign rows
+  exist). A seeded two-member fixture test would close that; see `FIXES_LOG.md` enterprise audit entry.
+- ~~**Member KYC submission cannot save**~~ **Machinery fixed 2026-09-27; intake stays CLOSED
+  on purpose.** Migration `20260927110344`: `submit_kyc`, `review_kyc` and `kyc_queue`
+  (definer bodies, invoker wrappers). Decision record: `docs/decisions/kyc-intake/`. The
+  Passport tab had also never opened: `ppSb` was undefined.
+  **Still open, and an owner decision:** `kyc_intake_enabled` stays `false` until two
+  things are settled:
+  - identity-document **retention**. The owner cannot delete a member's object under the
+    current storage policy, and deleting `storage.objects` rows in SQL orphans the bytes;
+  - a **privacy notice** for collecting IDs. Separately, `security-definer-audit.py` reads the reference SQL bag and
+  reports owner-checked `private.*` functions as unguarded; it should read `migrations/`.
+- **Day keys: the habit chain is fixed; other trackers are still on UTC** (opened and part-fixed
+  2026-09-27, `FIXES_LOG.md`).
+  - **Fixed:** `habits.html`, `journal.html`, `omega-streak-freeze.js` and the habit half of
+    `omega-today.js` now key the local calendar day, measured in Beirut, New York and UTC.
+  - **Still UTC:**
+    - timestamp stores (water, mood, workout, stillness), bucketed by the UTC date in `omega-today.js`;
+    - date-string stores written with `toISOString()` (sleep, gratitude, command briefs);
+    - flashcard and vocabulary due dates (`omega-srs.js`).
+  - Each is consistent with itself, so what is left is a near-midnight shift, not a lost check-in.
+  - A platform-wide move to local days means changing writers and readers together, store by
+    store.
+- **CSP: third-party code CDNs removed; `'unsafe-inline'` is the remaining gap** (2026-09-26;
+  `FIXES_LOG.md`, security-hardening pass 4). The last seven runtime CDN loads (lucide,
+  dayjs + relativeTime, highlight.js, qrcode-generator, Shepherd JS/CSS, Tone.js) are
+  vendored, so `vercel.json` and `vault.html`'s meta CSP now name no `esm.sh`/`unpkg.com`/
+  `cdn.jsdelivr.net`, and `form-action 'self'` is added. `security-headers-contract.py`
+  blocks any code CDN in script/style/font/default-src. **Still open:** `script-src
+  'unsafe-inline'` stays because 164 pages carry 1,355 inline `on*=` handlers and 354
+  inline `<script>` blocks. Removing it is a page-by-page migration (handlers →
+  `addEventListener`, blocks → files or hashes), best done behind
+  `Content-Security-Policy-Report-Only` first.
+  **Progress (2026-09-26):** batch 1 done — `csp-inline-ratchet.py` (blocking, in the contract
+  suite) now holds every file at or below `scripts/csp-inline-baseline.json`; the 5 shared
+  modules that emitted handlers on every page, and `approvals.html`, are at 0 and verified
+  under a strict `script-src 'self'`. Remaining: 1,323 handlers / 348 blocks across 199 files;
+  `dashboard.html` (83 handlers, 3 blocks) is the largest single page.
 - **`vault.html` runs a second, stricter CSP than the rest of the platform, and
   four of its divergences are still live** (opened 2026-09-13; `FIXES_LOG.md`
   137). `vault.html:5` is the **only** page in the repo carrying a
@@ -471,12 +558,60 @@ open, recorded in `FIXES_LOG.md`:
   elaboration collapses), `vocabulary.html` (a section preamble ahead of a
   research-citation stack, not a repeated grid item). Same discipline as the
   first three: full original text preserved verbatim in `.omi-full`, only a
-  fresh one-sentence lead written. A further ~5 candidates were surveyed and
-  are genuine fits but sit inside single-item `--cols:1` "about this feature"
-  cards (`codex.html`, `tribe.html`, `elements.html`, `automation.html`) —
-  structurally different from the multi-item card-grid bodies already ruled
-  out, but deferred pending a judgment call on whether a `--cols:1` card
-  counts as "the title already summarises." Open, scoped work.
+  fresh one-sentence lead written. **Four more shipped 2026-09-21**:
+  `codex.html`, `tribe.html`, `elements.html`, `automation.html` — the
+  judgment call on the single-item `--cols:1` "about this feature" cards was
+  resolved in favor of collapsing them: the card title (e.g. "HOW THE ENGINE
+  WORKS") names the *topic*, it does not summarise the two paragraphs of
+  prose beneath it the way a multi-item grid's title stands in for its whole
+  entry, so the same short-lead treatment applies. Total now 7 pages.
+- **Sigil-as-entry-point coverage is now complete for every genuine candidate
+  found by two independent surveys — `world-shell.html`, `index.html`,
+  `characters.html`.** A full reconnaissance of every emblem-rendering module
+  found no fourth: `agents.html`'s roster switches the in-page chat agent
+  (not navigation), `cosmos.html`/`honors.html`/`elements.html`'s preview
+  cards intentionally use `OmegaEmblemPanel`'s richer preview-then-modal
+  pattern, and `elements.html`/`houses.html`/`gates.html`/`pantheons.html`/
+  `factions.html`/`family.html`'s grids all render the *viewing member's own*
+  data, not links elsewhere. `dashboard.html`'s quick-actions list is a real
+  candidate (real links, flat glyphs) left open on a design call, not a
+  coded exclusion: it's a dense single-line list, not a card, and `dial()`'s
+  full geometry read as too heavy at that scale in a quick check.
+- **The `a[href]{display:inline-flex}` CSS-specificity bug
+  (`omega-accessibility-audit.css`) has now been found and fixed on 3
+  separate anchor-based card layouts** (`world-shell.html`'s `.char-card`,
+  `characters.html`'s `.archetype-card`, plus the one already documented in
+  `FIXES_LOG.md`) — each time by accident, while verifying unrelated work,
+  never by a deliberate sweep. **Two attempts at a full 205-page automated
+  scan for this exact bug class both ran past this session's command time
+  budget and did not complete.** This is recorded as genuinely open, not
+  audited-and-clean: a real possibility that other anchor-based multi-child
+  layouts elsewhere in the 205 pages carry the same silent squish, undetected
+  because nothing has looked. A future session with a longer-running or
+  chunked scan is the correct way to close this, not another accidental find.
+- **Two independent, non-colliding but functionally-duplicate "sigil entry
+  point" / "progressive disclosure" systems now exist platform-wide,
+  from separate, unrelated efforts.** This session's own `OmegaIdentity.dial()`
+  + hand-curated `omega-more-info.js` (`[data-omega-more]`, opt-in, ~9 pages)
+  ships alongside a newer, more automatic pair merged in from elsewhere:
+  `omega-content-sigil-system.js` (a self-referential `.omega-page-door` on
+  every non-system page, wired via `omega-emblem-integration.js` from `bg.js`)
+  and a heuristic-selector auto-compactor (`.hero-subtitle`/`.lead`/`.intro`/
+  etc., 180-char threshold). The selectors genuinely don't overlap today, so
+  nothing double-processes — but two systems solving the same UX problem
+  independently is exactly the kind of divergence CLAUDE.md 8.1 class 8 warns
+  about for canonical data; the same risk applies to canonical *components*.
+  **A real, live bug exists in the newer system, found but not fixed** (not
+  this session's system to redesign unilaterally): `.omega-page-door`'s link
+  points at `location.pathname` — the page's own URL — so it renders a
+  "click to enter" affordance on the page a member is already viewing, a
+  dead-end self-link. Confirmed live on `dashboard.html`/`codex.html`
+  (door present, `href` equals the page's own path) and `characters.html`
+  (both `.omega-page-door` and `omega-identity.js`'s own `.oid-hero` render
+  stacked at the top of `main`, redundant). Deciding whether the fix is "make
+  the door link elsewhere," "suppress it where a hero already exists," or
+  "converge the two more-info systems into one" needs a real decision, not a
+  silent patch from whichever session notices it next.
 - **`OmegaGuardian`'s six risk signals are dead wiring** — none is emitted, so
   the score moves only on 30-min idle and a failed gated action, never on a
   threat. Detection is an architecture decision. (`gate()` *is* called —
@@ -672,8 +807,8 @@ open, recorded in `FIXES_LOG.md`:
   function, `REVOKE EXECUTE … FROM PUBLIC` in the same file** — Postgres grants
   it to PUBLIC on every `CREATE FUNCTION`, so the insecure state returns on its
   own; that is how 70 revoked functions became 23.
-- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03:
-  `plan: free`, Pro-and-above). An Auth *dashboard* toggle, no SQL reaches it.
+- **`auth_leaked_password_protection` stays on; expected** (live 2026-09-03, re-checked
+  2026-09-26: `plan: free`, Pro-and-above; it is now the security advisor's **only** finding). An Auth *dashboard* toggle, no SQL reaches it.
   Threat closed client-side instead: `omega-password-guard.js` (HaveIBeenPwned
   k-anonymity) on `account.html`/`reset.html`. **A direct Auth API call still
   bypasses it — not resolved.** Fails open reporting `checked:false`; never
@@ -905,6 +1040,7 @@ verifying the *current* guard says nothing about what may have happened before i
 | Stored XSS in `omega-live.js`'s ticker (dormant) | `activity_feed.title` rendered raw via `.innerHTML`; RLS lets any member insert their own `is_public=true` row with an arbitrary title. Currently unreachable — no page has a `[data-live-ticker]` element yet — but `bg.js` loads this module on every page and it clearly exists to power one | **Fixed preemptively** — `esc()` added |
 | Reflected XSS in `pulse.html` (external source, not a Supabase table — a different vector than the rest of this sweep) | `item.title` from a Reuters feed proxied via `api.rss2json.com` (plain `fetch()`, no `.from()` call) rendered raw via `.innerHTML` — a compromised/MITM'd feed response would execute script. Missed by the `.from()`-call-centric sweep below since it isn't a database read | **Fixed** — `esc()` added |
 | Stored XSS in `omega-notify.js`'s notification panel (dormant) | `n.message`/`n.content`/`n.notification_type` from `public.notifications` rendered raw via `.innerHTML` in `buildPanel()`. Currently unreachable — no `GRANT INSERT` exists on the table for `authenticated`, so the only writers are the 5 owner-gated `SECURITY DEFINER` trigger functions in `omega_notify_triggers.sql`, each inserting a static string literal — but a future free-text notification event (already flagged in §2.2 as deliberately-undone work) would silently re-open this, same shape as the `omega-live.js` ticker above | **Fixed preemptively** — `esc()` added |
+| Stored XSS in `approvals.html`'s member card (sign/element) | `profiles.sign`/`element` are free-text, self-updatable columns; the owner's review card rendered `(m.sign+'/'+m.element).toUpperCase()` raw via `.innerHTML` — the row-907-era sweep escaped `display_name`/`email` on the same card but not these. Separately, most page-local `esc()` helpers left `"`/`'` raw (attribute break-out) and two were identity functions | **Fixed** 2026-09-25 — escaped; all 53 helpers normalised and executed by `scripts/tests/test_escape_helpers.py` (`FIXES_LOG.md`, security-hardening pass 3). Still open: `audit-dynamic-html-security.py` reports ~1,600 dynamic-HTML sites, mostly self-data or constants, not yet triaged individually |
 
 This session ran a systematic, evidence-based sweep for all three established bug classes
 (stored XSS via unescaped `.innerHTML`, silent-failure writes, and queries against
@@ -1247,7 +1383,7 @@ itself. Both client call sites assumed the latter:
 - `vault.html`'s `loadAuditLog()` did `(r.data||[]).slice(0,60)` — since `r.data` is the
   `{ok,rows}` object, not an array, `.slice` doesn't exist on it and the call threw on every
   invocation, silently caught and replaced with 5 hardcoded `DEMO` entries
-  (`"OWNER APEX LOCKED..."`, `"RLS ENABLED ON ALL 42 DATABASE TABLES"`, etc.) presented as if
+  (`"OWNER APEX LOCKED..."`, `"RLS ENABLED ON ALL 42 DATABASE TABLES" (legacy 2026-07-27 baseline; current live schema is tracked separately)`, etc.) presented as if
   they were the real audit trail. This happened for every caller, including the owner —
   the feature has never shown real data to anyone.
 - `approvals.html`'s `loadAudit()` did `r.data||[]` then checked `!rows.length` — on the

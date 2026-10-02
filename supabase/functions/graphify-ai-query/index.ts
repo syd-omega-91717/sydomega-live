@@ -22,12 +22,39 @@ const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+async function requireCaller(req: Request): Promise<{ userId: string } | Response> {
+  const authorization = req.headers.get("Authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  const token = match?.[1]?.trim();
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!token || !anonKey) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const callerClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await callerClient.auth.getUser();
+  if (error || !data.user) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  return { userId: data.user.id };
+}
 const anthropic = new Anthropic({ apiKey: anthropicKey });
 
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405 });
   }
+
+  const caller = await requireCaller(req);
+  if (caller instanceof Response) return caller;
 
   const queryReq: QueryRequest = await req.json();
   const {
@@ -37,6 +64,13 @@ Deno.serve(async (req: Request) => {
     entity_name,
     relationship_type,
   } = queryReq;
+
+  if (user_id !== caller.userId) {
+    return new Response(JSON.stringify({ error: "forbidden" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   console.log(`Graph query: ${query_type} - ${query}`);
 

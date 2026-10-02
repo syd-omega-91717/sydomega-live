@@ -45,7 +45,7 @@
         '<h3>Share your feedback</h3>' +
         '<p class="sub">Tell the Order what you think. Optional rating below.</p>' +
         '<div id="ofb-stars"></div>' +
-        '<textarea id="ofb-msg" placeholder="Your comment, idea, or issue..."></textarea>' +
+        '<textarea id="ofb-msg" aria-label="Your feedback" placeholder="Your comment, idea, or issue..."></textarea>' +
         '<div id="ofb-note"></div>' +
         '<div id="ofb-row">' +
           '<button class="ofb-b" id="ofb-cancel">CANCEL</button>' +

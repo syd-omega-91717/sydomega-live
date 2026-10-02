@@ -134,10 +134,10 @@
     // Preserve real content the first time we replace it, so a failed refresh
     // can fall back to stale data rather than a blank panel.
     if (this._prev === null && !this.node.querySelector('.omega-shell-state')) {
-      this._prev = this.node.innerHTML;
+      this._prev = Array.prototype.map.call(this.node.childNodes, function (n) { return n.cloneNode(true); });
     }
     this.node.setAttribute('aria-busy', busy ? 'true' : 'false');
-    this.node.innerHTML = '';
+    this.node.replaceChildren();
     this.node.appendChild(stateNode);
   };
 
@@ -218,7 +218,7 @@
   /* Restore whatever was in the region before the first state swap. */
   Region.prototype.restore = function () {
     if (this._prev !== null) {
-      this.node.innerHTML = this._prev;
+      this.node.replaceChildren.apply(this.node, this._prev.map(function (n) { return n.cloneNode(true); }));
       this.node.setAttribute('aria-busy', 'false');
     }
     return this;

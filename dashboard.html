@@ -183,7 +183,7 @@
         <div class="galaxy-wrap" style="height:clamp(240px,38vh,400px)">
           <canvas id="galaxy-canvas" role="img" aria-label="Sovereign platform module galaxy"></canvas>
           <div class="galaxy-center-label">
-            <div style="font-family:var(--D);font-size:clamp(24px,4vw,40px);color:rgba(201,168,76,.2)">&#937;</div>
+            <div data-alive-mark style="font-family:var(--D);font-size:clamp(24px,4vw,40px);color:rgba(201,168,76,.45)">&#937;</div>
             <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.15)">SOVEREIGN CORE</div>
           </div>
         </div>
@@ -271,7 +271,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 205 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 208 PAGES &middot; 14 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
@@ -384,12 +384,12 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 205 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 208 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
 <script>
-function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 /* ── YOUR ELEMENT SPHERE (lazy-mount, real element from window._dashProfile
    set in the async load block below -- not omega-realm.js's own
    omega:user-loaded auto-mount path, which derives element from zodiac
@@ -446,7 +446,9 @@ function setTab(name){
     });
   }
   var hovered=null;
+  var t0=performance.now();
   function draw(){
+    var sec=_galaxyReduce?0:(performance.now()-t0)/1000;
     ctx.clearRect(0,0,W,H);
     var cx=W/2,cy=H/2;
     /* Orbit rings. Were .04 alpha, i.e. invisible -- with the canvas finally
@@ -463,7 +465,7 @@ function setTab(name){
 
     /* Radar sweep -- one slow rotating wedge, the single cheapest thing that
        turns a static diagram into a live instrument. */
-    var sweep=t*0.0016;
+    var sweep=sec*0.35;
     var sg=ctx.createConicGradient?null:null;
     ctx.save();
     ctx.beginPath();ctx.moveTo(cx,cy);
@@ -480,7 +482,7 @@ function setTab(name){
     ctx.restore();
 
     /* Armillary ring around the core: 12 ticks, counter-rotating. */
-    var cr=Math.min(W,H)*.105, spin=-t*0.0011;
+    var cr=Math.min(W,H)*.105, spin=-sec*0.25;
     ctx.save();
     ctx.beginPath();ctx.arc(cx,cy,cr,0,Math.PI*2);
     ctx.strokeStyle='rgba(201,168,76,.16)';ctx.lineWidth=.6;ctx.stroke();
@@ -498,15 +500,23 @@ function setTab(name){
     nodes.forEach(function(n,i){
       if(n.orbit===0){n.x=cx;n.y=cy;}
       else{
-        var speed=n.orbit<(Math.min(W,H)*.3)?0.0004:0.0003;
-        var angle=n.baseAngle+t*speed*(n.mod.r===1?1:-1);
+        /* Seconds, not frames, and fast enough to SEE: at 0.0004 rad/frame an
+           orbit took ~4.4 minutes, which reads as a still picture (owner
+           photo, 2026-09-27). Now the inner ring turns once a minute, the
+           outer once every 90s, counter to it. */
+        var speed=n.mod.r===1?(2*Math.PI/60):(2*Math.PI/90);
+        var angle=n.baseAngle+sec*speed*(n.mod.r===1?1:-1);
         n.x=cx+Math.cos(angle)*n.orbit;
         n.y=cy+Math.sin(angle)*n.orbit;
+        /* A short comet tail along the orbit, so the motion reads at a glance. */
+        ctx.beginPath();
+        ctx.arc(cx,cy,n.orbit,angle-(n.mod.r===1?0.32:-0.32),angle,n.mod.r!==1);
+        ctx.strokeStyle=n.mod.col+'55';ctx.lineWidth=1.4;ctx.stroke();
       }
       var isH=hovered===i;
       /* Phase-offset breathing, so the field reads as alive rather than
          frozen. Frozen entirely under prefers-reduced-motion, since t stops. */
-      var pulse=1+Math.sin(t*0.02+i*0.7)*0.12;
+      var pulse=1+Math.sin(sec*1.6+i*0.7)*0.14;
       var r=(n.orbit===0?10:isH?7:5)*(isH?1:pulse);
       var col=n.mod.col;
       /* Glow */
@@ -936,34 +946,62 @@ function sid(id,v){
      owner's operational backlog is real work, but it is the owner's -- it is
      rendered only when pr.is_owner, matching the is_owner gating this page
      already uses for its analytics and risk sections. */
-  function renderActionCentre(pr){
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  /* The owner's items are read live, never typed here. Three were once
+     hardcoded ("apply pending schema", "set ANTHROPIC_API_KEY", "enable
+     pgvector") and outlived the work: on 2026-09-26 the migration ledger
+     matched, concierge was deployed and vector 0.8.2 was installed, yet the
+     panel still showed all three as CRITICAL/HIGH. Each item below clears the
+     moment its source says it is done. A failed read adds nothing, rather
+     than a guess. */
+  function ownerItems(){
+    var out=[];
+    var waiting=sb.from('profiles').select('id',{count:'exact',head:true})
+      .eq('access_approved',false).eq('is_owner',false).not('is_rejected','is',true)
+      .then(function(r){
+        if(!r.error&&r.count>0) out.push({c:'var(--crim)',i:'&#9650;',t:r.count+(r.count===1?' person is':' people are')+' waiting for your decision.',m:'OWNER &middot; ACCESS',href:'/approvals.html'});
+      },function(){});
+    var sec=sb.rpc('owner_security_status').then(function(r){
+      var d=r&&!r.error&&r.data;
+      if(!d||d.ok!==true) return;
+      (d.owners||[]).forEach(function(o){
+        if(Number(o.factors)>0) return;
+        var who=String(o.email||'').split('@')[0];
+        out.push(o.me
+          ?{c:'var(--solar)',i:'&#9888;',t:'Turn on two-factor sign-in for this account.',m:'OWNER &middot; SECURITY',href:'/settings.html#two-factor'}
+          :{c:'var(--solar)',i:'&#9888;',t:'Two-factor is not on yet for '+who+'.',m:'OWNER &middot; SECURITY &middot; ON THEIR SIGN-IN'});
+      });
+      var at=d.secrets_rotated_at?Date.parse(d.secrets_rotated_at):NaN;
+      if(!(at>0)||Date.now()-at>180*864e5) out.push({c:'var(--cyan)',i:'&#9670;',t:'Rotate the provider keys, then press DONE in the Owner Deck.',m:'OWNER &middot; SECURITY',href:'/control-plane.html'});
+    },function(){});
+    return Promise.all([waiting,sec]).then(function(){return out;});
+  }
+  function paintActionCentre(items){
     var host=document.getElementById('alert-list');
     if(!host) return;
-    var items=[];
-    if(pr.is_owner){
-      items.push({c:'var(--crim)',i:'&#9650;',t:'Apply pending schema to the live database — see supabase/migrations/README.md for which files are safe against production.',m:'OWNER &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP'});
-      items.push({c:'var(--solar)',i:'&#9888;',t:'Set ANTHROPIC_API_KEY in Supabase secrets, then deploy the concierge Edge Function. Until both are done the copilot answers that it is not switched on.',m:'OWNER &middot; PRIORITY: HIGH &middot; AI MODULE'});
-      items.push({c:'var(--cyan)',i:'&#9670;',t:'Enable the pgvector extension to activate semantic AI memory.',m:'OWNER &middot; PRIORITY: HIGH &middot; VECTOR SEARCH'});
-    }else{
-      /* No "complete your onboarding" item on purpose: onboarding is not a page,
-         it is an overlay bg.js loads via omega-onboard.js, whose needsOnboarding()
-         is (!pr.sign && !pr.element && !pr.is_owner) -- so it already presents
-         itself to exactly this member. An alert pointing at it would be a second
-         copy of a prompt already on screen, and the /onboarding.html it would
-         have linked to does not exist. */
-      if(pr.is_trial&&pr.trial_expires_at){
-        var daysLeft=Math.ceil((new Date(pr.trial_expires_at)-new Date())/864e5);
-        if(daysLeft>=0) items.push({c:daysLeft<=3?'var(--crim)':'var(--cyan)',i:'&#9670;',t:'Your trial ends in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.',m:'YOURS &middot; DOMAIN: ACCESS'});
-      }
-    }
     if(!items.length){
       host.innerHTML='<div class="alert-item card card-edge" style="--ac:var(--green)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Nothing needs your attention right now.</div><div class="alert-meta">NO PRIORITY ITEMS</div></div></div>';
       return;
     }
     host.innerHTML=items.map(function(x){
       var open=x.href?' onclick="location.href=\''+x.href+'\'" style="--ac:'+x.c+';cursor:pointer"':' style="--ac:'+x.c+'"';
-      return '<div class="alert-item card card-edge"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+x.t+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
+      return '<div class="alert-item card card-edge"'+open+'><div class="alert-icon">'+x.i+'</div><div><div class="alert-text">'+esc(x.t)+'</div><div class="alert-meta">'+x.m+'</div></div></div>';
     }).join('');
+  }
+  /* ACTION CENTRE. Every item must come from this member's real state; when
+     nothing applies the panel says so rather than inventing a priority. The
+     owner's operational backlog is rendered only when pr.is_owner. */
+  function renderActionCentre(pr){
+    if(pr.is_owner){ ownerItems().then(paintActionCentre); return; }
+    var items=[];
+    /* No "complete your onboarding" item on purpose: onboarding is an overlay
+       bg.js loads via omega-onboard.js, which already presents itself to
+       exactly this member. */
+    if(pr.is_trial&&pr.trial_expires_at){
+      var daysLeft=Math.ceil((new Date(pr.trial_expires_at)-new Date())/864e5);
+      if(daysLeft>=0) items.push({c:daysLeft<=3?'var(--crim)':'var(--cyan)',i:'&#9670;',t:'Your trial ends in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.',m:'YOURS &middot; DOMAIN: ACCESS'});
+    }
+    paintActionCentre(items);
   }
 
   try{

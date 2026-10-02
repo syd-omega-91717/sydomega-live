@@ -10,17 +10,17 @@
 
   var ZODIAC_MAP=[
     {sign:'Aries',el:'fire',god:'Ares',agent:'Sentinel',token:'ARENITE',dates:'Mar 21 – Apr 19',glyph:'\u2648'},
-    {sign:'Taurus',el:'metal',god:'Aphrodite',agent:'Merchant',token:'TAURITE',dates:'Apr 20 – May 20',glyph:'\u2649'},
-    {sign:'Gemini',el:'wind',god:'Hermes',agent:'Scout',token:'GEMITE',dates:'May 21 – Jun 20',glyph:'\u264A'},
-    {sign:'Cancer',el:'water',god:'Artemis',agent:'Warden',token:'CANITE',dates:'Jun 21 – Jul 22',glyph:'\u264B'},
-    {sign:'Leo',el:'fire',god:'Apollo',agent:'Sovereign',token:'LEONITE',dates:'Jul 23 – Aug 22',glyph:'\u264C'},
-    {sign:'Virgo',el:'sand',god:'Athena',agent:'Auditor',token:'VIRGITE',dates:'Aug 23 – Sep 22',glyph:'\u264D'},
-    {sign:'Libra',el:'wind',god:'Hera',agent:'Proxy',token:'LIBRITE',dates:'Sep 23 – Oct 22',glyph:'\u264E'},
-    {sign:'Scorpio',el:'water',god:'Demeter',agent:'Oracle',token:'SCORITE',dates:'Oct 23 – Nov 21',glyph:'\u264F'},
-    {sign:'Sagittarius',el:'fire',god:'Zeus',agent:'Beacon',token:'SAGITE',dates:'Nov 22 – Dec 21',glyph:'\u2650'},
-    {sign:'Capricorn',el:'metal',god:'Hestia',agent:'Analyst',token:'CAPRITE',dates:'Dec 22 – Jan 19',glyph:'\u2651'},
-    {sign:'Aquarius',el:'wind',god:'Hephaestus',agent:'Tutor',token:'AQUITE',dates:'Jan 20 – Feb 18',glyph:'\u2652'},
-    {sign:'Pisces',el:'water',god:'Poseidon',agent:'Historian',token:'PISCITE',dates:'Feb 19 – Mar 20',glyph:'\u2653'},
+    {sign:'Taurus',el:'metal',god:'Aphrodite',agent:'Merchant',token:'AURUM',dates:'Apr 20 – May 20',glyph:'\u2649'},
+    {sign:'Gemini',el:'wind',god:'Hermes',agent:'Scout',token:'ZEPHYR',dates:'May 21 – Jun 20',glyph:'\u264A'},
+    {sign:'Cancer',el:'water',god:'Artemis',agent:'Warden',token:'NEREID',dates:'Jun 21 – Jul 22',glyph:'\u264B'},
+    {sign:'Leo',el:'fire',god:'Apollo',agent:'Sovereign',token:'SOLARI',dates:'Jul 23 – Aug 22',glyph:'\u264C'},
+    {sign:'Virgo',el:'sand',god:'Athena',agent:'Auditor',token:'SANDITE',dates:'Aug 23 – Sep 22',glyph:'\u264D'},
+    {sign:'Libra',el:'wind',god:'Hera',agent:'Proxy',token:'FORGEON',dates:'Sep 23 – Oct 22',glyph:'\u264E'},
+    {sign:'Scorpio',el:'water',god:'Demeter',agent:'Oracle',token:'STYX',dates:'Oct 23 – Nov 21',glyph:'\u264F'},
+    {sign:'Sagittarius',el:'fire',god:'Zeus',agent:'Beacon',token:'EMBER',dates:'Nov 22 – Dec 21',glyph:'\u2650'},
+    {sign:'Capricorn',el:'metal',god:'Hestia',agent:'Analyst',token:'FERRUM',dates:'Dec 22 – Jan 19',glyph:'\u2651'},
+    {sign:'Aquarius',el:'wind',god:'Hephaestus',agent:'Tutor',token:'AETHER',dates:'Jan 20 – Feb 18',glyph:'\u2652'},
+    {sign:'Pisces',el:'water',god:'Poseidon',agent:'Historian',token:'ABYSS',dates:'Feb 19 – Mar 20',glyph:'\u2653'},
   ];
   var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D'};
 
@@ -43,9 +43,9 @@
       +ZODIAC_MAP.map(function(z){
         var col=EL_COLORS[z.el]||'#C9A84C';
         return '<div class="ob-card" data-sign="'+z.sign+'" data-el="'+z.el+'" data-god="'+z.god+'" data-agent="'+z.agent+'" data-token="'+z.token+'"'
-          +' onclick="window.__obSelect(this)"'
+          +' data-col="'+col+'"'
           +' style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;text-align:center;transition:all .18s;position:relative"'
-          +' onmouseenter="this.style.borderColor=\''+col+'\';this.style.background=\''+col+'11\'" onmouseleave="this.style.borderColor=this.dataset.selected?\''+col+'\':\'rgba(201,168,76,.15)\';this.style.background=this.dataset.selected?\''+col+'11\':\'rgba(10,10,15,.55)\'">'
+          +'>'
           +'<div style="font-size:28px;margin-bottom:6px">'+z.glyph+'</div>'
           +'<div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C;margin-bottom:4px">'+z.sign.toUpperCase()+'</div>'
           +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:1.5px;color:'+col+';margin-bottom:3px">'+z.el.toUpperCase()+'</div>'
@@ -55,10 +55,29 @@
       +'</div>'
       +'<div id="ob-detail" style="display:none;border:1px solid rgba(201,168,76,.25);padding:16px;border-radius:2px;background:rgba(201,168,76,.04);margin-bottom:16px;text-align:center"></div>'
       +'<div style="text-align:center">'
-        +'<button id="ob-confirm" onclick="window.__obConfirm()" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
+        +'<button id="ob-confirm" type="button" disabled style="font-family:\'Cinzel Decorative\',serif;font-size:12px;letter-spacing:3px;padding:14px 32px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:none;color:rgba(201,168,76,.4);cursor:not-allowed;transition:.25s">\u03A9 CONFIRM SOVEREIGN IDENTITY</button>'
       +'</div>'
     +'</div>';
     document.body.appendChild(ov);
+    /* Listeners, not inline on*= attributes: script-src without 'unsafe-inline'
+       refuses every inline handler. Delegated on the grid; the handlers resolve
+       window.__obSelect/__obConfirm at event time, after they are defined below. */
+    var obGrid=ov.querySelector('#ob-grid');
+    if(obGrid){
+      obGrid.addEventListener('click',function(e){var c=e.target.closest('.ob-card');if(c)window.__obSelect(c);});
+      obGrid.addEventListener('mouseover',function(e){
+        var c=e.target.closest('.ob-card');if(!c||c.contains(e.relatedTarget))return;
+        c.style.borderColor=c.dataset.col;c.style.background=c.dataset.col+'11';
+      });
+      obGrid.addEventListener('mouseout',function(e){
+        var c=e.target.closest('.ob-card');if(!c||c.contains(e.relatedTarget))return;
+        var col=c.dataset.col;
+        c.style.borderColor=c.dataset.selected?col:'rgba(201,168,76,.15)';
+        c.style.background=c.dataset.selected?col+'11':'rgba(10,10,15,.55)';
+      });
+    }
+    var obBtn=ov.querySelector('#ob-confirm');
+    if(obBtn)obBtn.addEventListener('click',function(){window.__obConfirm();});
 
     window.__obSelect=function(card){
       document.querySelectorAll('.ob-card').forEach(function(c){
@@ -90,12 +109,11 @@
       try{
         var s=(await window.__omegaSb.auth.getSession()).data.session;
         if(!s)return;
+        /* sign only: derive_cosmology recomputes element/god/agent server-side,
+           and members hold UPDATE on sign but not on the derived columns
+           (migration 20260926091843) -- sending them made the whole write 42501. */
         var upd=await window.__omegaSb.from('profiles').update({
-          sign:selected.sign,
-          element:selected.el,
-          god:selected.god,
-          agent:selected.agent,
-          token:selected.token
+          sign:selected.sign
         }).eq('id',s.user.id);
         if(upd.error){
           if(btn){btn.textContent='Ω CONFIRM SOVEREIGN IDENTITY';btn.disabled=false;}

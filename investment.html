@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Investment Engine · SYD OMEGA 91717</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Investment Engine</title>
 <link rel="manifest" href="/manifest.json">
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -191,7 +191,7 @@ var TYPE_COLORS={equity:'#4CAF50',etf:(getComputedStyle(document.documentElement
 function load(){try{holdings=JSON.parse(localStorage.getItem('omega_investments')||'[]');}catch(e){holdings=[];}}
 function save(){localStorage.setItem('omega_investments',JSON.stringify(holdings));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function fmtPct(v){return (v>=0?'+':'')+v.toFixed(2)+'%';}
 

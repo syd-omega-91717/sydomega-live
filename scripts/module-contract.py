@@ -76,6 +76,9 @@ SRC_ASSIGN_RE = re.compile(r"""\.src\s*=\s*['"]([^'"]+\.js)['"]""")
 ESM_IMPORT_RE = re.compile(
     r"""(?:\bimport\s*\(\s*|\bimport\b[^;'"]*?\bfrom\s*|\bimport\s*)['"]([^'"]+\.js)['"]"""
 )
+# A named loader-helper call (`loadScript('/x.js', guard)`) -- see audit.py.
+LOADER_CALL_RE = re.compile(
+    r"""\b(?:loadScript|injectScript|loadModule)\s*\(\s*['"]([^'"]+\.js)['"]""")
 REMOTE_RE = re.compile(r"""^(?:[a-z][a-z0-9+.-]*:)?//""", re.I)
 SCRIPT_TAG_RE = re.compile(r"""<script[^>]+src=(?:["']([^"']+)["']|([^\s>"'=]+))""")
 
@@ -134,7 +137,8 @@ def edges_from(path):
     src = read(path)
     return {
         basename(m)
-        for m in SRC_ASSIGN_RE.findall(src) + ESM_IMPORT_RE.findall(src)
+        for m in (SRC_ASSIGN_RE.findall(src) + ESM_IMPORT_RE.findall(src)
+                  + LOADER_CALL_RE.findall(src))
         if not REMOTE_RE.match(m)
     }
 

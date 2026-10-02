@@ -45,9 +45,7 @@ platform with a small membership, not an engineering one.
 ## 3. `omega-guardian.js` gate() — either wire it or retire the badge
 
 **Grounded in:** verified directly in this repo — `omega-guardian.js` exports a `gate` function
-(`gate:gate` in its returned API, line 147) but a repo-wide grep for `OmegaGuardian.gate(` across
-every `.html`/`.js` file returns zero call sites. The topbar risk-score badge implies active
-protection that isn't happening, same finding as the sibling repo.
+(`gate:gate` in its returned API, line 147) but a repo-wide inspection now finds the shipped gate callers in `approvals.html`. The topbar risk-score badge accompanies actual gating of the highest-privilege approval actions; additional coverage remains future scope.
 
 **Idea (needs an explicit decision, not a code fix):** pick a short list of genuinely
 higher-stakes actions already in the codebase — e.g. `approvals.html`'s
@@ -2480,3 +2478,76 @@ scripts/upsert-conflict-check.py                                 1 finding, veri
 Full site sweep                                                  205 pages, 0 uncaught errors
 platform_settings.courses_enabled                                false (dormant; owner's call to activate)
 ```
+
+## 38. TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED
+
+**Inspired by** Sunsama's "unified daily view" (tasks, mail and meetings in one column before planning; sunsama.com/daily-planning, read 2026-09-27) and Things/Todoist "Today".
+**Grounded in** `command.html`, which already runs the ritual (three priorities, time blocks, evening "seal the day") but could not see the rest of the member's day. Each of 9 modules kept its own store on its own page.
+
+**Shipped:**
+- `omega-today.js`, mounted on `command.html` via `<div data-omega-today>`.
+- It reads each owning page's **own** store: `omega_habits_v2`/`omega_habit_logs_v2`, `omega_fc_cards`, `omega_vocab`, `omega_water_log`/`_goal`, `omega_sleep_log`, `omega_mood_log`, `omega_gratitude_log`, `omega_meditate_log`, `omega_workout_log`.
+- It mirrors the owning pages' due/done rules (habits.html `shouldDoToday`, `isCompletedToday`, `weekKey`).
+- One tile per ritual, each a link into its page, plus a done/started ring.
+- A module never used renders **START**, never a zero (§8.1 class 9).
+- Re-reads after `omega-member-state.js` restores the stores from Postgres.
+
+**Verified:**
+- Seeded render: habits 2/3; cards due 2, with future and new cards excluded; water 1.3/2.5 L, with an old entry excluded; sleep 7.3 H; mood logged; training 1 in 7 days — **3/6** done.
+- Empty stores render 9 START tiles.
+- 0 page errors; no overflow at 375px.
+- `test_today.py` (5 tests).
+
+---
+
+## Service roadmap — from 200 pages to services a member returns to (2026-09-27)
+
+**The gap, stated plainly.** The platform has breadth: about 200 pages, and trackers for habits, sleep, water, mood, money, learning and training. It has little *service shape*. Products that people use daily package the same trackers as a **loop**, not a page:
+- **capture** in seconds;
+- a **ritual** that pulls it together (plan the day, review the week);
+- a **signal** that reaches you when you are not looking (a reminder);
+- an **insight** you could not see yourself;
+- **ownership** of your data (export, calendar, sync).
+
+Each service below names the product pattern it follows, what already exists here, what is missing, and its risk tier under §10. HIGH-RISK means schema, a new public function, or data leaving the platform; those go through `grill-me-codex` first.
+
+| # | Service | Pattern it follows | What exists here | What is missing | Tier |
+|---|---|---|---|---|---|
+| S1 | **Today** | Sunsama unified view | `command.html` ritual | — | **SHIPPED (#38)** |
+| S2 | **Weekly Review, auto-filled** | Sunsama/Todoist weekly review: review time spent, carry over, set next week's objectives | `weekly.html` (a manual form) | Pre-fill "what happened" from the same stores Today reads: habit completion %, workouts, sleep average, mood trend, OKR key-result movement (`targets.html` → `okr_key_results`). Carry unfinished priorities from `omega_command_briefs` into next week. | LOW — **SHIPPED 2026-09-27** (`data-omega-week` on `weekly.html`: 7 tiles vs last week, arrow only when both weeks have entries; carry-over via textContent). OKR movement not included — `okr_key_results` is Supabase, this module stays client-only. |
+| S3 | **Readiness** | Oura: a score from seven named contributors, each shown, below 70 means rest | Nothing. `command.html`'s DAY SCORE is a self-rating | A score computed **only** from logged sleep hours/quality, mood, training load (7d) and habit consistency. Every contributor is shown with its input, and "not enough data" appears until 3+ contributors have entries (§8.1 class 9). Client-only, no schema. | LOW — **SHIPPED 2026-09-27** (`data-omega-readiness` on `command.html`: 7 contributors, PRIMED ≥85 / READY ≥70 / RECOVER, score withheld under 3). |
+| S4 | **Reminders that reach you** | Streaks/Todoist: per-habit reminder time, push to phone. Web Push works on iOS 16.4+ for installed PWAs (mobiloud.com, Feb 2026) | `sw.js` + manifest (the platform is installable); `Notification.requestPermission` on notifications.html and time.html, **tab-open only** | A `push_subscriptions` table (RLS: own rows); VAPID keys as a Supabase secret; an Edge Function run by `pg_cron` that sends due reminders; a reminder time on each habit. | **Part A SHIPPED 2026-09-27, LOW** — `omega-reminders.js` (bg.js, opt-in): Duolingo's two slots (routine in the learned habit window, streak-save at 21:00), ≤2/day, quiet 22:30–07:30, window = median observed check-in − 30 min after 3 samples, delivered via `sw.js` `showNotification` or an in-page card while Ω is open, plus a recurring `.ics` with an alarm for the closed-app case. **Part B, closed-app Web Push: still HIGH** — live check 2026-09-27: no `push_subscriptions`, `pg_cron` available but not installed, no VAPID secret. Needs `grill-me-codex` and the owner to set the secret. |
+| S5 | **One review queue** | Anki/Duolingo: one "review" button, one session | SM-2 spaced repetition in **both** `flashcard.html` and `vocabulary.html`, run separately | One session that interleaves due cards and due words, reusing each page's own scheduler. Today already surfaces both due counts. | LOW — **SHIPPED 2026-09-27**: `omega-srs.js` (the one SM-2, now called by both pages) + `omega-review.js` (queue overlay, `▶ REVIEW n` on the TODAY panel, `/command.html#review` from both pages). |
+| S6 | **Your data, portable** | Google Takeout / GDPR Art. 20: "download everything" | **Half-built:** `omega-export.js` (GDPR Art. 20, mounted on `privacy.html`, `tribe.html`) already exports 7 Supabase datasets; `omega-local-backup.js` exports per page | Add the tracker stores to that same archive: every `omega_*` key that `omega-member-state.js` mirrors (habits, sleep, water, mood, money, learning), so one download holds everything. Extend `gather()` rather than building a second exporter (§8.1 class 8). | LOW — **SHIPPED 2026-09-27**: `tracker_stores` in the same archive, keyed by `OmegaMemberState.isMemberKey` (read, not copied). |
+| S7 | **Your plan in your calendar** | Sunsama calendar sync | `command.html` time blocks | **Step 1:** an ".ics" download of today's blocks and habit times, pure client, no backend. **Step 2:** a subscribable feed URL (Edge Function + per-member token). | Step 1 **SHIPPED 2026-09-27** (`⤓ CALENDAR` on `command.html`'s blocks, RFC 5545 escaped and folded; the ritual reminder's daily `.ics`); Step 2 **HIGH** |
+| S8 | **Ask your own data** | Notion AI / Mem: answers grounded in *your* notes | `concierge` Edge Function (Anthropic server-side); copilot UI | An opt-in "context pack" of **counts and trends only** (never raw journal; the journal is encrypted client-side by design), behind a `platform_settings` flag **and** a per-member consent. | **HIGH** — member data leaves the platform |
+| S9 | **Accountability circles** | Strava clubs / Focusmate | `social.html`, `family.html`, proposal #21 (factions) | A small private circle that sees streaks only, not content. Needs product scoping with #21. | MED (RLS on new tables) |
+| S10 | **Money with rules** | YNAB's four rules: give every dollar a job | `budget.html`, `expenses.html`, `wallet.html` (local, mirrored) | Proposal #4 ("pick a lane") is still the gate: decide Postgres vs local first, then envelope rules. | decision first |
+| S11 | **Packaging into tiers** | Freemium: the loop free, depth paid | `membership_tier`, `OmegaCanon.tierUnlocks()`, Stripe (dormant) | A decision about which services are the free loop (S1–S3, S5) and which are depth (S4, S7-2, S8). Payments stay dormant until legal/ops sign-off (§9). | **owner decision** |
+
+**Recommended order** (updated 2026-09-27 after S2, S3, S4-A, S6, S7-1 shipped):
+1. ~~S5~~ shipped (the SM-2 step was lifted into `omega-srs.js` first, so the queue is not a third copy).
+2. S4 Part B — closed-app push — through `grill-me-codex`; owner sets the VAPID secret.
+3. S12–S14 below.
+4. S8 last, and only with explicit consent design.
+
+**New from the reminder research pass (2026-09-27):**
+
+| # | Service | Pattern it follows | Grounded here | Tier |
+|---|---|---|---|---|
+| S12 | **Streak freeze** | Duolingo: one earned "freeze" covers a missed day | **Already built — this row was wrong.** `omega-streak-freeze.js` (bg.js) holds a pool of 3, earns +1 per 7 active days, and freezes automatically on `habits.html`. **Fixed 2026-09-27:** `OmegaToday.habitStreak()` ignored freezes (1 day vs the page's 4), and the 21:00 save nudge now says "protected tonight" when every open habit has a freeze in hand. | done |
+| S13 | **Implementation intentions** | "When X, I will Y" (Gollwitzer): a cue per habit raises follow-through; Streaks shows it on the reminder | `omega_habits_v2` has no cue field. Add one, shown on the routine nudge and the habit tile. | LOW |
+| S15 | **FSRS scheduling** | Anki's default scheduler since 23.10 (FSRS, open-spec): fits the member's own forgetting curve and lets HARD/GOOD/EASY give different next intervals. Original SM-2 changes only the ease on a pass, so all three show the same next interval — correct SM-2, but visibly flat in the queue. | `omega-srs.js` is now the single place to swap it; stored fields would need a stability/difficulty pair per item. | LOW (client), needs a migration of stored items |
+| S14 | **Reminder that adapts to being ignored** | Duolingo's bandit backs off a template a member keeps swiping away | `omega_reminder_sent` records sends; record opens (the `sw.js` click) and move the window, or go quiet, after 3 ignored days. | LOW |
+
+Sources read: Duolingo's KDD 2020 paper on recurring-notification bandits (research.duolingo.com), a 2026 breakdown of its two-slot routine/save design (duolingo.deconstructoroffun.com, digia.tech), the Streaks App Store listing, and a 2026 state-of-PWA-push note (webscraft.org).
+
+**What is still open on the platform, from `GAP_ANALYSIS.md` §S** (the items a member or the owner would feel):
+- No MFA on either owner account (owner action).
+- Leaked-document keys need rotation (owner action).
+- Member KYC submission cannot save.
+- 127 tables have policies but no grant (latent `42501`).
+- CSP still allows `'unsafe-inline'`.
+- Payments/tokens are dormant.
+- The in-app Guide is English-only.
+- `OmegaGuardian`'s risk signals are not emitted.

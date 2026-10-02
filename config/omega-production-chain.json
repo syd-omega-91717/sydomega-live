@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-production-chain",
+  "purpose": "Machine-readable contract for the verified commercial-to-service lifecycle.",
+  "lifecycle": [
+    "stripe_event_verified",
+    "payment_event_idempotent",
+    "ledger_transaction_posted",
+    "payment_reconciled",
+    "subscription_or_order_activated",
+    "entitlement_active",
+    "service_execution_authorized",
+    "platform_event_recorded",
+    "evidence_recorded",
+    "achievement_verified",
+    "notification_queued",
+    "audit_recorded"
+  ],
+  "invariants": [
+    "Stripe signatures are verified before privileged processing.",
+    "Provider event IDs are idempotent.",
+    "Financial state is represented by immutable double-entry ledger transactions.",
+    "Provider settlement is reconciled against the internal transaction.",
+    "Entitlements are server-authoritative.",
+    "Client code cannot post ledger transactions or activate entitlements.",
+    "Achievement issuance requires evidence-producing verification.",
+    "Notifications are idempotent and auditable.",
+    "Every privileged state transition has an audit/evidence path."
+  ],
+  "implementation": {
+    "stripe_webhook": "supabase/functions/stripe-webhook/index.ts",
+    "payment_rpc": "omega_private.record_stripe_payment",
+    "ledger_rpc": "omega_private.post_ledger_transaction",
+    "reconciliation_table": "public.omega_payment_reconciliation",
+    "subscription_rpc": "public.apply_subscription_event",
+    "service_activation_rpc": "omega_private.activate_service_order",
+    "event_rpc": "omega_private.record_platform_event",
+    "evidence_table": "public.omega_platform_evidence",
+    "achievement_rpc": "omega_private.verify_achievement",
+    "notification_rpc": "omega_private.enqueue_notification",
+    "audit_table": "public.omega_audit_log"
+  },
+  "verificationBoundary": {
+    "liveProviderProof": "REQUIRED",
+    "liveStripePayment": "NOT_FABRICATED",
+    "liveVercelProductionProof": "BLOCKED_UNTIL_PROVIDER_AUTHORIZATION",
+    "userRewards": "NEVER_FABRICATED"
+  }
+}

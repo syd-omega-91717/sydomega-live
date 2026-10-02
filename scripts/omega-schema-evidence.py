@@ -80,5 +80,11 @@ def main() -> None:
         f"migration_only={len(migration_only)}"
     )
 
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__ or "")
+    raise SystemExit(0)
+
 if __name__ == "__main__":
     main()

@@ -191,6 +191,25 @@ a{color:inherit;text-decoration:none}
       <div class="ft-status"><div class="fts-dot"></div>FAMILY SAFE MODE: ACTIVE</div>
     </div>
 
+    <!-- QUEST WIDGET: Guardian's Circle (FAMILY domain) -->
+    <div style="border-bottom:1px solid rgba(201,168,76,.15);padding:20px clamp(14px,3vw,36px);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.95))">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;max-width:1400px;margin:0 auto">
+        <div style="flex:1">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.6);margin-bottom:6px" id="quest-tier-family">TIER 2</div>
+          <div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700;margin-bottom:8px" id="quest-title-family">Guardian's Circle</div>
+          <div style="font-family:var(--R);font-size:14px;color:var(--muted);line-height:1.6;max-width:60ch" id="quest-desc-family">Strengthen family bonds and establish protective circles. Seal bloodline commitments, designate heirs, and build the foundational trust that secures future generations.</div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 18px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);border:none;cursor:pointer;transition:box-shadow .2s" onclick="window.startFamilyQuest()" id="quest-start-btn-family">START QUEST &#x2192;</button>
+            <button style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 18px;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);cursor:pointer;transition:all .2s" onclick="window.showFamilyQuestDetail()" id="quest-detail-btn-family">DETAILS</button>
+          </div>
+        </div>
+        <div style="width:120px;text-align:right">
+          <div style="font-family:var(--D);font-size:24px;color:rgba(201,168,76,.4)">150</div>
+          <div style="font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)">POINTS</div>
+        </div>
+      </div>
+    </div>
+
     <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "ORDER") -->
     <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
          data-sculpt-accent="#D9B86A" data-sculpt-bloom="off"
@@ -856,5 +875,8 @@ function callWhenReady(fnName){
 })();
 </script>
 <script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
+<script>
+(function initFamilyQuestWidget(){var maxRetries=50,retryCount=0;function tryInit(){if(window.OmegaQuests&&window.OmegaQuests.registerQuestWidget){window.OmegaQuests.registerQuestWidget('family',{questId:'guardians_circle',tier:2,points:150,title:'Guardian\'s Circle',description:'Strengthen family bonds and establish protective circles. Seal bloodline commitments, designate heirs, and build the foundational trust that secures future generations.',domain:'family'});window.startFamilyQuest=function(){if(window.OmegaQuests){window.OmegaQuests.startQuest('guardians_circle','family')}};window.showFamilyQuestDetail=function(){if(window.OmegaQuests){window.OmegaQuests.showQuestDetail('guardians_circle','family')}};window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'family',quest:'guardians_circle'})}else if(retryCount<maxRetries){retryCount++;setTimeout(tryInit,100)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryInit)}else{tryInit()}})();
+</script></body>
 </html>

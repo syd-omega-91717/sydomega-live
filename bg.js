@@ -159,7 +159,13 @@ function __omegaAppend(el){
   /* Quest System -- Engagement multiplier across 8 domains, tier unlock driver, progression loop.
      Reads quests from DB, tracks completion, emits events for UI to consume. Every page gets
      quest context; domain pages (tasks.html, commerce.html, etc) wire action callbacks. */
-  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}
+  /* Quest Handler -- Event delegation for quest action buttons (data-quest-action).
+     Centralizes quest button click handling across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-questhandler]')){var os_data_omega_questhandler=document.createElement('script');os_data_omega_questhandler.src='/omega-quest-handler.js';os_data_omega_questhandler.setAttribute('data-omega-questhandler','1');os_data_omega_questhandler.defer=true;__omegaAppend(os_data_omega_questhandler);}
+  /* Tab Handler -- Event delegation for tab switching buttons (data-tab-action).
+     Centralizes tab click handling across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-tabhandler]')){var os_data_omega_tabhandler=document.createElement('script');os_data_omega_tabhandler.src='/omega-tab-handler.js';os_data_omega_tabhandler.setAttribute('data-omega-tabhandler','1');os_data_omega_tabhandler.defer=true;__omegaAppend(os_data_omega_tabhandler);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

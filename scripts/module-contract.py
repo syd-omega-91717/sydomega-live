@@ -151,6 +151,11 @@ def reachable_modules():
     for page in (f for f in os.listdir(".") if f.endswith(".html")):
         for a, b in SCRIPT_TAG_RE.findall(read(page)):
             roots.add(basename(a or b))
+        # An inline <script type="module">import "/x.js"</script> is a root too
+        # (missions.html -> omega-mission-board.js); audit.py counts it the same.
+        for m in ESM_IMPORT_RE.findall(read(page)):
+            if not REMOTE_RE.match(m):
+                roots.add(basename(m))
     seen = set(roots)
     queue = [m for m in roots if m.endswith(".js") and os.path.exists(m)]
     while queue:

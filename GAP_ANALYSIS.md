@@ -18,6 +18,15 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
+  `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
+  09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in
+  `config/omega-runtime-manifest.json`, never wired to a page), and
+  `omega-theme-personalization.js` (Proposal #22; bg.js loads `omega-theme-elemental.js`
+  instead). Not deleted: an unloaded module has been load-bearing before
+  (`omega-bottom-stack.js`). Wire or retire each with its author's intent in hand.
+  (`omega-mission-board.js` was a false positive — loaded by an inline `import`, which
+  `audit.py` now counts.)
 - **Five inert member write policies on the progression tables** (opened 2026-10-03):
   `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
   `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`

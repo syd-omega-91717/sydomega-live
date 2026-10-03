@@ -62,6 +62,8 @@
   <script src="/omega-srs.js" defer></script>
 <script src="/omega-today.js" defer></script>
 <script src="/omega-review.js" defer></script>
+<script src="/omega-quest-handler.js" defer></script>
+<script src="/omega-tab-handler.js" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -107,9 +109,9 @@
         <div style="background:var(--gold);height:100%;width:0%;transition:width .3s" id="quest-progress-fill"></div>
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button id="quest-start-btn" class="btn-gold" style="display:none" onclick="startCommandQuest()">START QUEST</button>
+        <button id="quest-start-btn" class="btn-gold" style="display:none" data-quest-action="start" data-quest-key="guardians_seal">START QUEST</button>
         <div id="quest-status" style="font-family:var(--M);font-size:12px;color:rgba(201,168,76,.5);display:none">—</div>
-        <button id="quest-detail-btn" class="btn-gold" style="display:none;border-color:rgba(201,168,76,.15);color:rgba(138,134,118,.5)" onclick="showCommandQuestDetail()">VIEW DETAILS</button>
+        <button id="quest-detail-btn" class="btn-gold" style="display:none;border-color:rgba(201,168,76,.15);color:rgba(138,134,118,.5)" data-quest-action="detail" data-quest-key="guardians_seal">VIEW DETAILS</button>
       </div>
     </div>
 
@@ -126,10 +128,10 @@
     </div>
 
     <div class="layer-tabs">
-      <button class="tab-btn active" onclick="switchTab('priorities',this)">&#9670; PRIORITIES</button>
-      <button class="tab-btn" onclick="switchTab('schedule',this)">&#9670; SCHEDULE</button>
-      <button class="tab-btn" onclick="switchTab('review',this)">&#9670; REVIEW</button>
-      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+      <button class="tab-btn active" data-tab-action="priorities">&#9670; PRIORITIES</button>
+      <button class="tab-btn" data-tab-action="schedule">&#9670; SCHEDULE</button>
+      <button class="tab-btn" data-tab-action="review">&#9670; REVIEW</button>
+      <button class="tab-btn" data-tab-action="science">&#9670; SCIENCE</button>
     </div>
 
     <!-- PRIORITIES -->

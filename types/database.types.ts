@@ -289,6 +289,17 @@ export interface CouncilDeliberations {
   synthesis: Record<string, any> | null;
 }
 
+export interface CovenantProgress {
+  completedAt: string | null;
+  createdAt: string | null;
+  id: string | null;
+  month: number;
+  pointsEarned: number | null;
+  premiumUnlocked: boolean | null;
+  tasksCompleted: number | null;
+  year: number;
+}
+
 export interface DailyEngagement {
   beatCount: number;
   completedAt: string | null;
@@ -364,6 +375,16 @@ export interface Dispatches {
   sign: string | null;
   title: string | null;
   userId: string | null;
+}
+
+export interface DomainMastery {
+  createdAt: string | null;
+  domain: string;
+  id: string | null;
+  lastActive: string | null;
+  level: number | null;
+  questsCompleted: number | null;
+  totalPoints: number | null;
 }
 
 export interface EnterpriseAccounts {
@@ -631,6 +652,15 @@ export interface KnowledgeNodes {
   properties: Record<string, any> | null;
 }
 
+export interface LeaderboardEntries {
+  domain: string;
+  id: string | null;
+  lastUpdated: string | null;
+  level: number | null;
+  points: number | null;
+  rank: number | null;
+}
+
 export interface LeaderboardSnapshots {
   displayName: string | null;
   element: string | null;
@@ -893,6 +923,9 @@ export interface Profiles {
   pendingDeletion: string | null;
   permanentGrantedAt: string | null;
   profession: string | null;
+  questPointsEarned: number | null;
+  questsCompleted: number | null;
+  questsStarted: number | null;
   sign: string | null;
   stripeCustomerId: string | null;
   subscriptionPeriodEnd: string | null;
@@ -915,6 +948,60 @@ export interface Publications {
   kind: string;
   status: string | null;
   title: string | null;
+}
+
+export interface QuestCompletions {
+  completedAt: string | null;
+  createdAt: string | null;
+  domain: string;
+  id: string | null;
+  progress: number | null;
+  questId: string;
+  rewardPoints: number | null;
+  target: number | null;
+  updatedAt: string | null;
+}
+
+export interface QuestConfig {
+  createdAt: string | null;
+  description: string | null;
+  domain: string;
+  icon: string | null;
+  id: string | null;
+  nextQuestId: string | null;
+  points: number;
+  targetCount: number | null;
+  tier: number;
+  title: string;
+  unlockRequirements: string | null;
+}
+
+export interface QuestEvents {
+  createdAt: string | null;
+  eventType: string | null;
+  id: string | null;
+  metadata: Record<string, any> | null;
+}
+
+export interface QuestProgress {
+  completedAt: string | null;
+  id: string | null;
+  progress: number | null;
+  startedAt: string | null;
+  status: string | null;
+  target: number | null;
+}
+
+export interface Quests {
+  createdAt: string | null;
+  description: string | null;
+  domain: string;
+  iconGlyph: string | null;
+  id: string | null;
+  questKey: string;
+  rewardPoints: number | null;
+  tierUnlock: number | null;
+  title: string;
 }
 
 export interface RateLimits {
@@ -956,6 +1043,22 @@ export interface SearchIndex {
   entityType: string;
   id: string | null;
   title: string | null;
+}
+
+export interface SeasonalEvents {
+  createdAt: string | null;
+  description: string | null;
+  domain: string;
+  endDate: string;
+  icon: string | null;
+  id: string | null;
+  points: number | null;
+  questId: string;
+  seasonName: string;
+  seasonNumber: number;
+  startDate: string;
+  targetCount: number | null;
+  title: string;
 }
 
 export interface SecurityPolicies {
@@ -1521,6 +1624,11 @@ export interface set_reservation_statusParams {
   status: string;
 }
 
+export interface start_questParams {
+  domain: string;
+  quest_key: string;
+}
+
 export interface submit_exam_resultParams {
   cert_name: string;
   exam_id: string;
@@ -1542,6 +1650,11 @@ export interface update_consentParams {
   granted: boolean;
   type: string;
   version: string;
+}
+
+export interface update_quest_progressParams {
+  progress: number;
+  quest_id: string;
 }
 
 export interface upsert_graph_entityParams {
@@ -1592,6 +1705,7 @@ export interface Database {
       contribution_log: ContributionLog;
       conversations: Conversations;
       council_deliberations: CouncilDeliberations;
+      covenant_progress: CovenantProgress;
       daily_engagement: DailyEngagement;
       data_domains: DataDomains;
       data_entities: DataEntities;
@@ -1599,6 +1713,7 @@ export interface Database {
       data_lineage: DataLineage;
       digest_preferences: DigestPreferences;
       dispatches: Dispatches;
+      domain_mastery: DomainMastery;
       enterprise_accounts: EnterpriseAccounts;
       enterprise_audit: EnterpriseAudit;
       error_budget_policy: ErrorBudgetPolicy;
@@ -1623,6 +1738,7 @@ export interface Database {
       interest_signals: InterestSignals;
       knowledge_edges: KnowledgeEdges;
       knowledge_nodes: KnowledgeNodes;
+      leaderboard_entries: LeaderboardEntries;
       leaderboard_snapshots: LeaderboardSnapshots;
       marketplace_listings: MarketplaceListings;
       matrix_progress: MatrixProgress;
@@ -1649,10 +1765,16 @@ export interface Database {
       policy_rules: PolicyRules;
       profiles: Profiles;
       publications: Publications;
+      quest_completions: QuestCompletions;
+      quest_config: QuestConfig;
+      quest_events: QuestEvents;
+      quest_progress: QuestProgress;
+      quests: Quests;
       rate_limits: RateLimits;
       research_hypotheses: ResearchHypotheses;
       risk_register: RiskRegister;
       search_index: SearchIndex;
+      seasonal_events: SeasonalEvents;
       security_policies: SecurityPolicies;
       session_heartbeats: SessionHeartbeats;
       signal_saves: SignalSaves;

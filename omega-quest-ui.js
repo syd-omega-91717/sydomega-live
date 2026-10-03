@@ -220,7 +220,7 @@ const OmegaQuestUI = (() => {
 
       .oc-quest-domain {
         font-family: var(--M);
-        font-size: 11px;
+        font-size: 12px;
         letter-spacing: 1px;
         color: var(--muted);
         margin: 0;
@@ -273,7 +273,7 @@ const OmegaQuestUI = (() => {
       }
 
       .oc-quest-progress-text {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--muted);
         margin: 4px 0 0;
       }
@@ -294,7 +294,7 @@ const OmegaQuestUI = (() => {
       }
 
       .oc-quest-reward-label {
-        font-size: 11px;
+        font-size: 12px;
         font-family: var(--M);
         color: var(--muted);
         letter-spacing: 1px;

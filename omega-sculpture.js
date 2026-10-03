@@ -356,7 +356,8 @@
 
     var orbit = new T.Mesh(
       new T.TorusGeometry(1.62, 0.008, 8, 160),
-      new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.55 }));
+      new T.MeshStandardMaterial({ color: p.cyan, emissive: p.cyan, emissiveIntensity: 0.3,
+                                   transparent: true, opacity: 0.55, metalness: 0.8, roughness: 0.4 }));
     orbit.rotation.x = Math.PI * 0.42;
     scene.add(orbit);
 
@@ -398,46 +399,51 @@
     if (state === 'seal') { seal.visible = true; lattice.visible = true; }
 
     return { scene: scene, camera: cam, update: function (t, px, py) {
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       /* state-specific behaviour, applied before the shared sway */
       var taskPulse = 0;
       if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) {
         taskPulse = window.OmegaSculptureDataViz.getActiveTaskCount();
       }
-      if (state === 'pulse') {
-        var pulseAmp = 0.055 + taskPulse * 0.035;
-        var b = 1 + Math.sin(t * 2.4) * pulseAmp;
-        mark.scale.setScalar(b);
-        halo.material.opacity = 0.10 + Math.sin(t * 2.4) * (0.06 + taskPulse * 0.04);
-      } else if (state === 'reactor') {
-        orbit.rotation.z = t * 1.6;
-        orbit.rotation.x = Math.PI * 0.42 + Math.sin(t * 0.8) * 0.35;
-        halo.material.opacity = 0.16 + Math.sin(t * 5.2) * 0.07;
-        halo.scale.setScalar(1 + Math.sin(t * 5.2) * 0.05);
-      } else if (state === 'cube') {
-        lattice.rotation.y = -t * 0.34;
-        lattice.rotation.x = Math.sin(t * 0.4) * 0.22;
-        lattice.scale.setScalar(1 + Math.sin(t * 1.1) * 0.04);
-      } else if (state === 'seal') {
-        lattice.rotation.y = -t * 0.2;
-        seal.rotation.z = t * 0.12;
-        seal.material.emissiveIntensity = 0.5 + Math.sin(t * 1.6) * 0.22;
-        halo.material.opacity = 0.14 + Math.sin(t * 1.2) * 0.04;
-      }
+      if (opt && opt.pulseValue !== undefined) taskPulse = opt.pulseValue;
+      if (!reduceMotion) {
+        if (state === 'pulse') {
+          var pulseAmp = 0.055 + taskPulse * 0.035;
+          var b = 1 + Math.sin(t * 2.4) * pulseAmp;
+          mark.scale.setScalar(b);
+          halo.material.opacity = 0.10 + Math.sin(t * 2.4) * (0.06 + taskPulse * 0.04);
+        } else if (state === 'reactor') {
+          orbit.rotation.z = t * 1.6;
+          orbit.rotation.x = Math.PI * 0.42 + Math.sin(t * 0.8) * 0.35;
+          halo.material.opacity = 0.16 + Math.sin(t * 5.2) * 0.07;
+          halo.scale.setScalar(1 + Math.sin(t * 5.2) * 0.05);
+        } else if (state === 'cube') {
+          lattice.rotation.y = -t * 0.34;
+          lattice.rotation.x = Math.sin(t * 0.4) * 0.22;
+          lattice.scale.setScalar(1 + Math.sin(t * 1.1) * 0.04);
+        } else if (state === 'seal') {
+          lattice.rotation.y = -t * 0.2;
+          seal.rotation.z = t * 0.12;
+          seal.material.emissiveIntensity = 0.5 + Math.sin(t * 1.6) * 0.22;
+          halo.material.opacity = 0.14 + Math.sin(t * 1.2) * 0.04;
+        }
 
-      /* A SWAY, NOT A SPIN. The first version ran mark.rotation.y = t * 0.42,
-         a continuous turn -- which carries the mark through edge-on twice a
-         cycle, where an extruded Omega reads as a plain gold slab. On the
-         front door that means the brand mark is illegible for a good part of
-         every rotation. Oscillating inside roughly +/-32 degrees keeps it
-         dimensional and lit from changing angles while never leaving it
-         unreadable. The pointer adds to the sway rather than replacing it,
-         so it still answers the cursor. */
-      var swayAmp = state === 'seal' ? 0.16 : 0.56;   /* a seal faces you */
-      mark.rotation.y = Math.sin(t * 0.33) * swayAmp + px * (state === 'seal' ? 0.14 : 0.42);
-      mark.rotation.x = Math.sin(t * 0.31) * 0.14 - py * 0.34;
-      halo.rotation.z = -t * 0.16;
-      halo.material.opacity = 0.085 + Math.sin(t * 0.9) * 0.030;
-      orbit.rotation.z = t * 0.30;
+        /* A SWAY, NOT A SPIN. The first version ran mark.rotation.y = t * 0.42,
+           a continuous turn -- which carries the mark through edge-on twice a
+           cycle, where an extruded Omega reads as a plain gold slab. On the
+           front door that means the brand mark is illegible for a good part of
+           every rotation. Oscillating inside roughly +/-32 degrees keeps it
+           dimensional and lit from changing angles while never leaving it
+           unreadable. The pointer adds to the sway rather than replacing it,
+           so it still answers the cursor. */
+        var swayAmp = state === 'seal' ? 0.16 : 0.56;   /* a seal faces you */
+        mark.rotation.y = Math.sin(t * 0.33) * swayAmp + px * (state === 'seal' ? 0.14 : 0.42);
+        mark.rotation.x = Math.sin(t * 0.31) * 0.14 - py * 0.34;
+        halo.rotation.z = -t * 0.16;
+        halo.material.opacity = 0.085 + Math.sin(t * 0.9) * 0.030;
+        orbit.rotation.z = t * 0.30;
+      }
+      orbit.material.emissiveIntensity = 0.3 + taskPulse * 0.5;
       cam.position.x = px * 0.34;
       cam.position.y = -py * 0.26;
       cam.lookAt(0, 0, 0);
@@ -510,19 +516,28 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
-      grp.rotation.y = t * 0.16 + px * 0.5;
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) grp.rotation.y = t * 0.16 + px * 0.5;
       var masteries = {};
       if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getAllElementMasteries) {
         masteries = window.OmegaSculptureDataViz.getAllElementMasteries();
+      }
+      if (opt && opt.masteryScores && Array.isArray(opt.masteryScores)) {
+        for (var j = 0; j < opt.masteryScores.length && j < nodes.length; j++) {
+          var el = ELEMENT_FALLBACK[j];
+          if (el && el.key) masteries[el.key] = opt.masteryScores[j];
+        }
       }
       for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
         var el = ELEMENT_FALLBACK[i];
         var mastery = (el && masteries[el.key]) ? masteries[el.key] : 0;
-        n.mesh.rotation.y = t * 0.6 + n.phase;
-        n.mesh.rotation.x = t * 0.35;
+        if (!reduceMotion) {
+          n.mesh.rotation.y = t * 0.6 + n.phase;
+          n.mesh.rotation.x = t * 0.35;
+        }
         if (!n.mesh.userData.omegaHovered) {
-          var base = 1 + Math.sin(t * 1.3 + n.phase) * 0.10;
+          var base = 1 + (reduceMotion ? 0 : Math.sin(t * 1.3 + n.phase) * 0.10);
           n.mesh.scale.setScalar(base + mastery * 0.18);
         }
       }
@@ -590,22 +605,38 @@
     });
 
     return { scene: scene, camera: cam, links: links, update: function (t, px, py) {
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       var tierProgress = 0;
       if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getTierProgress) {
         tierProgress = window.OmegaSculptureDataViz.getTierProgress() / 100;
       }
-      tower.rotation.y = (tierProgress * Math.PI * 2) + t * 0.22 + px * 0.55;
+      if (opt && opt.tierProgress !== undefined) tierProgress = opt.tierProgress;
+      if (!reduceMotion) {
+        tower.rotation.y = (tierProgress * Math.PI * 2) + t * 0.22 + px * 0.55;
+      } else {
+        tower.rotation.y = tierProgress * Math.PI * 2;
+      }
       for (var i = 0; i < rings.length; i++) {
         var r = rings[i];
         /* a slow rise of light up the tower -- a climb, expressed as motion */
-        var wave = Math.sin(t * 0.9 - r.i * 0.42);
+        var wave = reduceMotion ? 0 : Math.sin(t * 0.9 - r.i * 0.42);
         var ringProgress = tierProgress * N;
         r.mesh.material.emissiveIntensity = 0.22 + (r.i / (N - 1)) * 0.45 + wave * 0.16 + (ringProgress > r.i ? 0.18 : 0);
+        if (opt && opt.tierColor && /^#[0-9a-f]{6}$/i.test(opt.tierColor)) {
+          var tierCol = new T.Color(opt.tierColor);
+          r.mesh.material.color.copy(tierCol);
+          r.mesh.material.emissive.copy(tierCol);
+        }
         if (!r.mesh.userData.omegaHovered) r.mesh.scale.setScalar(1 + wave * 0.018 + (ringProgress > r.i ? 0.08 : 0));
       }
-      apex.rotation.y = t * 1.0 + (tierProgress * 3.14);
-      apex.rotation.x = t * 0.6;
-      apex.material.emissiveIntensity = tierProgress > 0.98 ? 1.0 : (0.85 + Math.sin(t * 2.2) * 0.28);
+      if (!reduceMotion) {
+        apex.rotation.y = t * 1.0 + (tierProgress * 3.14);
+        apex.rotation.x = t * 0.6;
+        apex.material.emissiveIntensity = tierProgress > 0.98 ? 1.0 : (0.85 + Math.sin(t * 2.2) * 0.28);
+      } else {
+        apex.rotation.y = tierProgress * 3.14;
+        apex.material.emissiveIntensity = tierProgress > 0.98 ? 1.0 : 0.85;
+      }
       cam.position.y = 0.5 - py * 0.9;
       cam.lookAt(0, 0.45, 0);
     }};
@@ -1373,10 +1404,28 @@
     var stAttr = (el.getAttribute('data-sculpt-state') || 'idle').trim().toLowerCase();
     if (['idle','pulse','reactor','cube','seal'].indexOf(stAttr) === -1) stAttr = 'idle';
 
+    /* Data-binding attributes for real-time geometry updates. Pages set these
+       via setAttribute() to control scene parameters without re-creating. */
+    var pulseValue = parseFloat(el.getAttribute('data-sculpt-pulse') || '0');
+    if (isNaN(pulseValue)) pulseValue = 0;
+    var tierProgress = parseFloat(el.getAttribute('data-sculpt-tier-progress') || '0');
+    if (isNaN(tierProgress)) tierProgress = 0;
+    var tierColorAttr = (el.getAttribute('data-sculpt-tier-color') || '').trim();
+    var tierColor = /^#[0-9a-f]{6}$/i.test(tierColorAttr) ? parseInt(tierColorAttr.slice(1), 16) : null;
+    var masteryScoresStr = (el.getAttribute('data-sculpt-mastery-scores') || '').trim();
+    var masteryScores = masteryScoresStr
+      ? masteryScoresStr.split(',').map(function (v) {
+          var n = parseFloat(v.trim());
+          return isNaN(n) ? 0 : Math.max(0, Math.min(1, n));
+        }).slice(0, 9)
+      : null;
+
     var m = { el: el, canvas: cv, kind: kind, accent: accent, state: stAttr,
               bloom: !bloomOff, visible: false,
               dead: false, scene: null, ctx: null, w: 0, h: 0, bw: 0, bh: 0,
-              offset: Math.random() * 40 };
+              offset: Math.random() * 40,
+              pulseValue: pulseValue, tierProgress: tierProgress, tierColor: tierColor,
+              masteryScores: masteryScores };
     _mounts.push(m);
 
     /* Attached for life, not one-shot: the approval guard's reveal fires no

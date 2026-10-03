@@ -22041,3 +22041,57 @@ exemptions (the mirror was red where GitHub was green); a merge left
 (IndentationError); repairing it exposed that the fix it guards never landed —
 `graphify-ai-query` still swallowed a `find_contradictions` error as an empty result
 (§8.1 class 1), now thrown like the adjacent `orphanError`.
+
+## Dead quest widgets retired; Phase 1 pages repaired; approval dropped before `<body>` (2026-10-03)
+
+**Quest widgets removed from 12 pages** (`achievements`, `arena`, `automation`, `budget`,
+`command`, `cosmos`, `family`, `investment`, `predictions-dashboard`, `research`,
+`settings`, `vault`). Each promised points ("160 POINTS — COMPLETE THE QUEST") for a
+backend never deployed; `omega-quests.js` never published `window.OmegaQuests`, so every
+widget's init retried and gave up, and `command.html`'s polled every 200 ms forever.
+Removed by balanced-`<div>`/balanced-brace cuts, each reviewed in a dry run; 0 leftover
+references. `bg.js` no longer injects `omega-quests.js`/`omega-quest-handler.js`; both
+and the never-loaded `omega-quest-ui.js` are deleted. The undeployed reference schema
+(`supabase/omega_quests_system.sql`; `supabase/omega_quest_ecosystem.sql`, a stale copy
+of the old insecure `0107` carrying `quest_config`) is removed — this clears
+`schema-consolidation-gate.py` and `migration-consistency.py`, the last two red gates.
+
+**`leaderboard.html` restored.** Phase 1 (`81a5d42`) overwrote the working authority
+leaderboard (rankings → snapshots → profiles fallback, translated, XSS-hardened on
+09-25) with a page that used an undefined `window.supabase`, read a nonexistent
+`leaderboard_entries.points` (masked by the stale reference file declaring it — the
+gate went red the moment that file left), embedded RLS-hidden `profiles`, and wrote
+`display_name` into `innerHTML`. Restored from `81a5d42^`; its module script moved to
+`leaderboard.js` and its tab `onclick`s to `data-tab-action` (CSP ratchet).
+
+**`quest-progress`, `domain-mastery`, `covenant`, `seasonal-events`** called the
+undefined `window.supabase`; each now awaits `DOMContentLoaded` and resolves
+`OmegaSB.get()`, raising into its existing error path when no client resolves, and
+escapes database strings before `innerHTML`. `covenant` also parsed `jsonb` with
+`JSON.parse` (it arrives as an array).
+
+**`bg.js` `__omegaApprove` discarded the approval when it resolved before `<body>`**
+(`document.body && …`, §8.1 class 5a). `omega-platform-navigator.html` loads bg.js
+synchronously in `<head>` behind a large stylesheet, so a fast session check left an
+approved member on a blank page — reproduced deterministically under the verifier
+(body without `omega-approved`, guard rule matching `#app`). It now queues on
+`DOMContentLoaded`. `approvals.html` remains owner-gated for the member stub
+(before and after).
+
+**Smaller:** `predictions-dashboard`/`omega-platform-navigator` hard-coded
+`style="display:none"` on `#app`, which outranks the guard's reveal — removed (the guard
+hides it with `!important` until approval). `profile.html`'s `ACHIEV` read `--crim` at
+parse time, before bg.js injects the sheet, and fell back to a stale `#8B0000`
+(1.97:1); the fallback and two hard-coded copies now use the token's value `#CF6760`.
+`omega-visual-atlas.js` threw `URI malformed` on two filenames containing a literal
+`100%`, aborting `render()` and dropping every later card; it now falls back to the raw
+path.
+
+**Not done here:** the five inert member write policies on the progression tables. Every
+`DROP` through the Supabase connector waits on a confirmation this session cannot give
+(the tool documents that destructive statements may require it) and times out. Drop them
+in the SQL editor.
+
+Verification: `./scripts/ci-local.sh --all` **35/35**; every script step across all
+workflows passes except `supabase-runtime-contract.py`, which needs the live endpoint the
+sandbox proxy blocks.

@@ -72,20 +72,7 @@
 <aside class="side" id="omega-side" data-page="achievements"></aside>
 <main class="main">
   <div class="topbar"><div class="t">SOVEREIGN ACHIEVEMENTS<small>VERIFIED RECORDS · TROPHIES · MEDALS · CERTIFICATES · SYD OMEGA 91717</small></div></div>
-  <div style="background:rgba(34,197,94,.06);border-bottom:1px solid rgba(34,197,94,.2);padding:16px 20px;margin-bottom:20px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;max-width:900px;margin:0 auto">
-      <div style="flex:1">
-        <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(34,197,94,.7);margin-bottom:8px;text-transform:uppercase">EDUCATION DOMAIN — TIER 2</div>
-        <div style="font-family:var(--D);font-size:20px;color:rgba(34,197,94,.9);margin-bottom:8px">Tutor's Curriculum</div>
-        <p style="font-size:13px;line-height:1.6;color:rgba(34,197,94,.8);margin:0;max-width:55ch">Develop mastery through structured learning paths. Design your personal curriculum and cultivate expertise across all domains of knowledge.</p>
-        <div style="margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(34,197,94,.6)">130 POINTS — COMPLETE THE QUEST</div>
-      </div>
-      <div style="display:flex;gap:10px;flex-shrink:0;margin-left:20px">
-        <button class="btn btn-fill" data-quest-action="start" style="font-size:12px;padding:8px 16px;background:rgba(34,197,94,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
-        <button class="btn" data-quest-action="detail" style="font-size:12px;padding:8px 16px;border:1px solid rgba(34,197,94,.5);color:rgba(34,197,94,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
-      </div>
-    </div>
-  </div>
+  
   <div style="padding:20px var(--pad,20px)">
 
     <div class="tab-row">
@@ -363,9 +350,6 @@ async function load(){
 }
 load();
 })();
-</script>
-<script>
-(function initAchievementsQuestWidget(){var maxRetries=50,retryCount=0;function tryInit(){if(window.OmegaQuests&&window.OmegaQuests.registerQuestWidget){window.OmegaQuests.registerQuestWidget('education',{questId:'tutors_curriculum',tier:2,points:130,title:'Tutor\'s Curriculum',description:'Develop mastery through structured learning paths. Design your personal curriculum and cultivate expertise across all domains of knowledge.',domain:'education'});window.startAchievementsQuest=function(){if(window.OmegaQuests){window.OmegaQuests.startQuest('tutors_curriculum','education')}};window.showAchievementsQuestDetail=function(){if(window.OmegaQuests){window.OmegaQuests.showQuestDetail('tutors_curriculum','education')}};window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'education',quest:'tutors_curriculum'})}else if(retryCount<maxRetries){retryCount++;setTimeout(tryInit,100)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryInit)}else{tryInit()}})();
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

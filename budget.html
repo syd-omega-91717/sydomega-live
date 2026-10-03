@@ -100,23 +100,7 @@
     <button onclick="OmegaLocalBackup.importKeys(['omega_budget_months','omega_budget_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
   </div>
 
-  <!-- QUEST WIDGET -->
-  <div id="quest-widget-budget" style="border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.04);padding:14px;margin-bottom:14px;display:none">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6)">QUEST · COMMERCE</div>
-      <div id="quest-tier-budget" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.5)">TIER —</div>
-    </div>
-    <div id="quest-title-budget" style="font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:8px">—</div>
-    <div id="quest-desc-budget" style="font-family:var(--R);font-size:12px;color:rgba(220,210,180,.7);line-height:1.6;margin-bottom:10px">—</div>
-    <div id="quest-progress-bar-budget" style="background:rgba(201,168,76,.1);height:6px;border-radius:3px;margin-bottom:10px;overflow:hidden;display:none">
-      <div style="background:var(--gold);height:100%;width:0%;transition:width .3s" id="quest-progress-fill-budget"></div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button id="quest-start-btn-budget" class="b-btn" style="display:none" data-quest-action="start">START QUEST</button>
-      <button id="quest-detail-btn-budget" class="b-btn" style="display:none" data-quest-action="detail">VIEW DETAILS</button>
-      <div id="quest-status-budget" style="font-family:var(--M);font-size:12px;color:rgba(201,168,76,.5);display:none;margin-top:2px">—</div>
-    </div>
-  </div>
+  
 
   <!-- OVERVIEW -->
   <div class="tab-pane active" id="tab-overview">
@@ -604,87 +588,11 @@ renderOverview();
 
 /* ── QUEST WIDGET INITIALIZATION ───────────────────────────────────────────── */
 
-(function initQuestWidget() {
-  let retries = 0;
-  const maxRetries = 50;
 
-  function setupQuestWidget() {
-    if (!window.OmegaQuests) {
-      retries++;
-      if (retries < maxRetries) {
-        setTimeout(setupQuestWidget, 100);
-      }
-      return;
-    }
 
-    try {
-      const quest = window.OmegaQuests.getQuest('commerce', 'merchants_ledger');
-      if (!quest) return;
 
-      const progress = window.OmegaQuests.getProgress('commerce', 'merchants_ledger');
-      const widget = document.getElementById('quest-widget-budget');
-      if (!widget) return;
 
-      widget.style.display = 'block';
 
-      // Populate quest data
-      document.getElementById('quest-tier-budget').textContent = 'TIER ' + (quest.tier || '—');
-      document.getElementById('quest-title-budget').textContent = quest.title || '—';
-      document.getElementById('quest-desc-budget').textContent = quest.description || '—';
-
-      // Handle progress display
-      if (progress && progress.isStarted) {
-        const pct = Math.min((progress.current / progress.target) * 100, 100);
-        document.getElementById('quest-progress-bar-budget').style.display = 'block';
-        document.getElementById('quest-progress-fill-budget').style.width = pct + '%';
-        document.getElementById('quest-start-btn-budget').style.display = 'none';
-        document.getElementById('quest-detail-btn-budget').style.display = 'inline-block';
-        document.getElementById('quest-status-budget').style.display = 'block';
-        document.getElementById('quest-status-budget').textContent = progress.current + ' / ' + progress.target;
-      } else {
-        document.getElementById('quest-progress-bar-budget').style.display = 'none';
-        document.getElementById('quest-start-btn-budget').style.display = 'inline-block';
-        document.getElementById('quest-detail-btn-budget').style.display = 'none';
-        document.getElementById('quest-status-budget').style.display = 'none';
-      }
-
-      // Subscribe to quest events
-      window.OmegaQuests.subscribe((event) => {
-        if (event.type === 'questStarted' && event.domain === 'commerce' && event.questKey === 'merchants_ledger') {
-          document.getElementById('quest-progress-bar-budget').style.display = 'block';
-          document.getElementById('quest-start-btn-budget').style.display = 'none';
-          document.getElementById('quest-detail-btn-budget').style.display = 'inline-block';
-        } else if (event.type === 'progressUpdated' && event.domain === 'commerce' && event.questKey === 'merchants_ledger') {
-          const pct = Math.min((event.current / event.target) * 100, 100);
-          document.getElementById('quest-progress-fill-budget').style.width = pct + '%';
-          document.getElementById('quest-status-budget').textContent = event.current + ' / ' + event.target;
-        } else if (event.type === 'questCompleted' && event.domain === 'commerce' && event.questKey === 'merchants_ledger') {
-          if (window.OmegaQuestUI && window.OmegaQuestUI.celebrate) {
-            window.OmegaQuestUI.celebrate(quest.title);
-          }
-        }
-      });
-    } catch (err) {
-      console.error('[Quest Widget] Error initializing:', err);
-    }
-  }
-
-  setupQuestWidget();
-})();
-
-window.startBudgetQuest = function() {
-  if (window.OmegaQuests) {
-    window.OmegaQuests.startQuest('commerce', 'merchants_ledger');
-  }
-};
-
-window.showBudgetQuestDetail = function() {
-  if (window.OmegaQuestUI && window.OmegaQuestUI.showQuestDetail) {
-    const quest = window.OmegaQuests.getQuest('commerce', 'merchants_ledger');
-    const progress = window.OmegaQuests.getProgress('commerce', 'merchants_ledger');
-    window.OmegaQuestUI.showQuestDetail(quest, progress);
-  }
-};
 
 </script>
 <script src="omega-local-backup.js"></script>

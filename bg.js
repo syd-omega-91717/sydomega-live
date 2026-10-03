@@ -156,13 +156,6 @@ function __omegaAppend(el){
      Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
      persists to localStorage with 24h expiry. Grounded in: proposal #22. */
   if(!document.querySelector('script[data-omega-theme-elemental]')){var os_data_omega_theme_elemental=document.createElement('script');os_data_omega_theme_elemental.src='/omega-theme-elemental.js';os_data_omega_theme_elemental.setAttribute('data-omega-theme-elemental','1');os_data_omega_theme_elemental.defer=true;__omegaAppend(os_data_omega_theme_elemental);}
-  /* Quest System -- Engagement multiplier across 8 domains, tier unlock driver, progression loop.
-     Reads quests from DB, tracks completion, emits events for UI to consume. Every page gets
-     quest context; domain pages (tasks.html, commerce.html, etc) wire action callbacks. */
-  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}
-  /* Quest Handler -- Event delegation for quest action buttons (data-quest-action).
-     Centralizes quest button click handling across all pages via data attributes. */
-  if(!document.querySelector('script[data-omega-questhandler]')){var os_data_omega_questhandler=document.createElement('script');os_data_omega_questhandler.src='/omega-quest-handler.js';os_data_omega_questhandler.setAttribute('data-omega-questhandler','1');os_data_omega_questhandler.defer=true;__omegaAppend(os_data_omega_questhandler);}
   /* Tab Handler -- Event delegation for tab switching buttons (data-tab-action).
      Centralizes tab click handling across all pages via data attributes. */
   if(!document.querySelector('script[data-omega-tabhandler]')){var os_data_omega_tabhandler=document.createElement('script');os_data_omega_tabhandler.src='/omega-tab-handler.js';os_data_omega_tabhandler.setAttribute('data-omega-tabhandler','1');os_data_omega_tabhandler.defer=true;__omegaAppend(os_data_omega_tabhandler);}
@@ -646,8 +639,15 @@ function __omegaAppend(el){
 
     /* Safety valve: if the check cannot complete (offline, RPC down) we do NOT
        silently reveal. We send the member somewhere honest instead. */
+    /* `document.body && ...` discarded the approval when the check resolved
+       before <body> was parsed -- a page that loads bg.js synchronously in
+       <head> behind a large stylesheet (omega-platform-navigator) then stayed
+       blank for an approved member. Queue instead (CLAUDE.md 8.1 class 5a). */
     window.__omegaApprove = function(ok){
-      if (ok) document.body && document.body.classList.add('omega-approved');
+      if (!ok) return;
+      var add = function(){ document.body.classList.add('omega-approved'); };
+      if (document.body) add();
+      else document.addEventListener('DOMContentLoaded', add, { once: true });
     };
   }catch(e){}
 })();

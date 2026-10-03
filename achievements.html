@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Achievements</title>\n<meta name="description" content="Ω SYD OMEGA 91717 achievements surface for verified progress, milestones and evidence-backed records.">
 <link rel="manifest" href="/manifest.json">
+<script src="/omega-quest-handler.js" defer></script>
+<script src="/omega-tab-handler.js" defer></script>
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
@@ -81,18 +83,18 @@
         <div style="margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(34,197,94,.6)">130 POINTS — COMPLETE THE QUEST</div>
       </div>
       <div style="display:flex;gap:10px;flex-shrink:0;margin-left:20px">
-        <button class="btn btn-fill" onclick="window.startAchievementsQuest&&window.startAchievementsQuest()" style="font-size:12px;padding:8px 16px;background:rgba(34,197,94,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
-        <button class="btn" onclick="window.showAchievementsQuestDetail&&window.showAchievementsQuestDetail()" style="font-size:12px;padding:8px 16px;border:1px solid rgba(34,197,94,.5);color:rgba(34,197,94,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
+        <button class="btn btn-fill" data-quest-action="start" style="font-size:12px;padding:8px 16px;background:rgba(34,197,94,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
+        <button class="btn" data-quest-action="detail" style="font-size:12px;padding:8px 16px;border:1px solid rgba(34,197,94,.5);color:rgba(34,197,94,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
       </div>
     </div>
   </div>
   <div style="padding:20px var(--pad,20px)">
 
     <div class="tab-row">
-      <button class="tab-btn act" data-tab="board" onclick="switchTab('board',this)">&#9670; BOARD</button>
-      <button class="tab-btn" data-tab="create" onclick="switchTab('create',this)">&#9670; CREATE</button>
-      <button class="tab-btn" data-tab="log" onclick="switchTab('log',this)">&#9670; LOG</button>
-      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+      <button class="tab-btn act" data-tab="board" data-tab-action="board">&#9670; BOARD</button>
+      <button class="tab-btn" data-tab="create" data-tab-action="create">&#9670; CREATE</button>
+      <button class="tab-btn" data-tab="log" data-tab-action="log">&#9670; LOG</button>
+      <button class="tab-btn" data-tab="science" data-tab-action="science">&#9670; SCIENCE</button>
     </div>
 
     <!-- BOARD -->

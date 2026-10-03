@@ -21919,3 +21919,62 @@ Open, owner's art (not fixable in code without re-authoring): Stage 8 medal read
 the Stage 4 medal) whose residue shows under the Passport cutouts. `Zodiac_signs/`
 (unused) has 12 files for 11 signs — Aries twice, no Taurus. Full estate audit:
 `docs/OMEGA_VISUAL_ESTATE_AUDIT_20260929.md`.
+
+## Gamification Phase 2: progression, cosmetics, member quests — dormant (2026-10-03)
+
+**What the handoff specified vs. what was built.** A prior session left a plan for
+`character.html`/`cosmetics-shop.html`/`user-quests.html` plus a rewritten
+`stripe-webhook`. Checked against the tree it did not hold: `quests.html` and
+`supabase/omega_gamification.sql` (its "reference" and "completed schema") did not
+exist; `character.html` (319 lines, nav ARCHIVE) and `stripe-webhook` (241 lines, live
+payments) did, and would have been overwritten — the webhook replacement handled only
+`payment_intent.succeeded` and acknowledged every other event unprocessed. The pages
+hardcoded an anon JWT that is not this project's, imported an unvendored
+`/vendor/dompurify/…` (a failed module import runs none of the page), and posted to a
+nonexistent `/api/checkout` with a client-supplied `user_id`/`amount_cents`. Built
+instead, extending what is live:
+
+- **Progression is derived, never stored.** `my_progression()` sums
+  `sovereign_points_ledger` (lifetime = positive deltas; level L starts at 25·(L−1)²).
+  No new XP column a client could write. `SECURITY INVOKER` — it reads only rows the
+  caller already sees under `spl_own`/`mp_own`/`perks_read`.
+- **Cosmetics are `point_perks` rows with a `slot`** (frame/aura/title, 7 seeded),
+  bought with the existing `purchase_perk()`; `set_perk_equipped()` enforces one per
+  slot under a row lock. Each item has a real visible effect on `character.html`'s
+  identity card (outline / animated glow / title line) — no item that does nothing.
+  The four pre-existing perks keep `slot = null` and are not listed.
+- **Member quests are private and award no points.** A member-set reward on a
+  self-written quest would mint currency. `member_quests`: RLS own-row
+  select/insert/update/delete (+ owner read); insert/update also require the flag;
+  delete stays possible while it is off.
+- **Dormant.** `platform_settings.gamification_enabled = false`; every new write path
+  checks it server-side; the UI is behind `data-omega-flag`.
+
+**Applied live** as six migrations, `20261003213300`…`20261003214237`, local files
+matching. `apply_migration` timed out at 60s on roughly half the calls with no lock
+held and the same SQL completing instantly via `execute_sql` in a rolled-back
+transaction — so the work was split; every timed-out attempt was confirmed rolled back
+(`to_regclass` null, no history row) before retrying.
+
+**Verified live** (impersonation via `SET LOCAL ROLE authenticated` + JWT claims,
+§8.4; every probe rolled back, flag/ledger/member_perks/member_quests counts confirmed
+unchanged after): flag off → member insert `42501`, equip `feature_disabled`, spoofed
+`user_id` `42501`, anon `my_progression`/select `42501`. Flag on → buy 40+40+25 from a
+200 credit leaves 95, equipping a second frame unequips the first, level 3 / next 225;
+a member sees, updates and deletes 0 of the owner's quests. Invoker check: a member
+credited 30 sees 30, not the owner's 500.
+
+**Snapshots.** `supabase/live-schema.json` regenerated: **273** relations, was 229 —
+it was 44 behind live, including the 0107 quest tables (applied by hand with narrower
+grants than the file). `remote-migrations.json` 322 → 328.
+
+**Runtime.** `verify-runtime.js --pages character,cosmetics,my-quests`: render,
+guard lift, no overflow, no duplicate ids — the only problem on each is the
+pre-existing `omega-quests.js` throw, which `dashboard.html` and `quest-progress.html`
+show identically (see `GAP_ANALYSIS.md` §S). A flag-ON render with fixture data
+confirmed the gated UI paints (level 3, 65 to next, 48% bar; gold outline and SEEKER
+title on the card; self row highlighted) and that a quest titled `<b>…</b>` renders as
+text.
+
+**Copy.** Two pages moved the estate 222 → 224; `page-count-claims.py` caught the
+stale count in 6 pages, `T_EN` and all six packs — updated.

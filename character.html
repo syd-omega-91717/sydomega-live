@@ -38,6 +38,21 @@
 .lore-title{font-family:var(--M);font-size:clamp(13px,2vw,18px);color:var(--cyan);margin-bottom:8px}
 .lore-body{font-size:12px;line-height:1.9;color:var(--ink);opacity:.8}
 #ref-table .tbl-row.hl{background:rgba(0,229,255,.06)}
+/* Gamification Phase 2 -- point-bought cosmetics (point_perks.slot), applied to
+   the identity card. Scoped under #tab-identity so they outrank the later
+   .card owners (CLAUDE.md section 4: a page's own <style> is sheet 0). */
+#tab-identity .id-card.cos-frame-gold{outline:2px solid var(--gold);outline-offset:4px}
+#tab-identity .id-card.cos-frame-cyan{outline:2px solid var(--cyan);outline-offset:4px}
+#tab-identity .id-card.cos-frame-crimson{outline:2px solid var(--crim);outline-offset:4px}
+#tab-identity .id-card.cos-aura-solar{--cos-aura:rgba(226,200,109,.38);animation:cos-aura 6s ease-in-out infinite}
+#tab-identity .id-card.cos-aura-void{--cos-aura:rgba(155,107,240,.42);animation:cos-aura 6s ease-in-out infinite}
+@keyframes cos-aura{0%,100%{box-shadow:0 0 14px 1px var(--cos-aura)}50%{box-shadow:0 0 34px 6px var(--cos-aura)}}
+@media(prefers-reduced-motion:reduce){#tab-identity .id-card.cos-aura-solar,#tab-identity .id-card.cos-aura-void{animation:none;box-shadow:0 0 24px 3px var(--cos-aura)}}
+.id-title{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--gold);margin:-2px 0 12px}
+.prg-meta{display:flex;justify-content:space-between;gap:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.prg-note{font-family:var(--M);font-size:12px;letter-spacing:.5px;line-height:1.7;color:var(--muted);margin:10px 0 0}
+.prg-eq{display:flex;flex-wrap:wrap;gap:8px}
+#prg-lb .tbl-row.self{background:rgba(201,168,76,.08)}
 @media(max-width:700px){.id-card{grid-template-columns:1fr}.id-card-left{border-right:none;padding-right:0;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}.id-card-right{padding-left:0}.element-grid{grid-template-columns:repeat(3,1fr)}.axis-grid{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -53,6 +68,7 @@
   <button class="tab-btn" onclick="setTab('elements')">ELEMENTS</button>
   <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn" id="tab-btn-progression">PROGRESSION</button>
 </div>
 
 <!-- IDENTITY TAB -->
@@ -69,6 +85,7 @@
       <div class="id-card-left">
         <div class="id-header">SYD OMEGA 91717 · CHARACTER PROFILE</div>
         <div class="id-name" id="chr-display-name">--</div>
+        <div class="id-title" id="chr-cos-title" hidden></div>
         <div class="id-sub" id="chr-uid-short">UID --</div>
         <div class="id-field"><div class="id-label">ZODIAC SIGN</div><div class="id-value" id="chr-sign">--</div></div>
         <div class="id-field"><div class="id-label">ELEMENT AFFINITY</div><div class="id-value green" id="chr-element">--</div></div>
@@ -217,16 +234,48 @@
     </div>
   </div>
 </div>
+<!-- PROGRESSION TAB -- Gamification Phase 2, dormant behind
+     platform_settings.gamification_enabled (omega-flags.js fails closed). -->
+<div class="tab-panel" id="tab-progression">
+  <div style="padding:1.25rem">
+    <div data-omega-flag="gamification_enabled">
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-val" id="prg-level" style="color:var(--gold)">--</div><div class="kpi-label">LEVEL</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="prg-lifetime" style="color:var(--cyan)">--</div><div class="kpi-label">POINTS EARNED</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="prg-balance" style="color:var(--cyan)">--</div><div class="kpi-label">POINTS TO SPEND</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="prg-next" style="color:var(--solar)">--</div><div class="kpi-label">TO NEXT LEVEL</div></div>
+      </div>
+      <p class="sechead">LEVEL PROGRESS</p>
+      <div class="glass" style="margin-bottom:1rem">
+        <div class="prg-meta"><span id="prg-range">--</span><span id="prg-pct">--</span></div>
+        <div class="bar-track"><div class="bar-fill" id="prg-bar" style="width:0%;background:var(--gold)"></div></div>
+        <p class="prg-note">Your level comes from the points you have earned on the platform: lessons, passed exams and lattice advancement. Spending points on cosmetics never lowers it.</p>
+      </div>
+      <p class="sechead">EQUIPPED COSMETICS</p>
+      <div class="glass" style="margin-bottom:1rem">
+        <div class="prg-eq" id="prg-equipped"><span class="prg-note" style="margin:0">Loading…</span></div>
+        <p class="prg-note"><a href="/cosmetics.html" style="color:var(--cyan)">Browse cosmetics</a> to change what appears on your identity card.</p>
+      </div>
+      <p class="sechead">POINTS LEADERBOARD</p>
+      <div class="tbl-wrap">
+        <div class="tbl-head" style="grid-template-columns:44px 1fr 90px 60px 90px"><span>#</span><span>MEMBER</span><span>ELEMENT</span><span>LEVEL</span><span>POINTS</span></div>
+        <div id="prg-lb"><div class="tbl-row" style="grid-template-columns:1fr"><span>Loading…</span></div></div>
+      </div>
+      <p class="prg-note">Lists members whose profile is public, plus you.</p>
+    </div>
+  </div>
+</div>
 <div data-page-emblem="character" style="margin:20px auto 0"></div>
 </div>
 
 <script>
 function setTab(name){
-  var tabs=['identity','elements','matrix','science'];
+  var tabs=['identity','elements','matrix','science','progression'];
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+document.getElementById('tab-btn-progression').addEventListener('click',function(){setTab('progression');});
 function setW(id,pct){var el=document.getElementById(id);if(el)el.style.width=pct.toFixed(1)+'%';}
 </script>
 <script type="module">
@@ -313,7 +362,56 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   rows.forEach(function(row){
     if(row.children[0]&&row.children[0].textContent===sign)row.classList.add('hl');
   });
+
+  loadProgression();
 })();
+
+/* Gamification Phase 2. Level, balance and equipped cosmetics come from
+   my_progression() (derived from sovereign_points_ledger, never stored). Every
+   call checks .error -- Supabase resolves {data,error}, it does not throw
+   (CLAUDE.md section 8.1 class 1). */
+var COSMETIC_CLASS={frame_gold:'cos-frame-gold',frame_cyan:'cos-frame-cyan',frame_crimson:'cos-frame-crimson',aura_solar:'cos-aura-solar',aura_void:'cos-aura-void'};
+var COSMETIC_TITLE={title_seeker:'SEEKER',title_architect:'ARCHITECT'};
+async function loadProgression(){
+  var r=await sb.rpc('my_progression');
+  var p=r&&!r.error&&r.data&&r.data.ok?r.data:null;
+  if(!p){
+    sid('prg-range','Progression is unavailable right now.');
+    document.getElementById('prg-equipped').textContent='';
+  }else{
+    sid('prg-level',p.level);sid('prg-lifetime',p.lifetime_points);sid('prg-balance',p.balance);
+    sid('prg-next',Math.max(0,p.next_level_at-p.lifetime_points));
+    var span=Math.max(1,p.next_level_at-p.level_floor),pct=Math.min(100,(p.lifetime_points-p.level_floor)/span*100);
+    sid('prg-range','LEVEL '+p.level+' · '+p.level_floor+' → '+p.next_level_at+' PTS');
+    sid('prg-pct',pct.toFixed(0)+'%');setW('prg-bar',pct);
+    applyCosmetics(p.equipped||[]);
+  }
+  var lb=await sb.rpc('get_points_leaderboard',{p_limit:10});
+  var host=document.getElementById('prg-lb');host.textContent='';
+  var cols='44px 1fr 90px 60px 90px';
+  function row(cells,cls){
+    var d=document.createElement('div');d.className='tbl-row'+(cls?' '+cls:'');d.style.gridTemplateColumns=cols;
+    cells.forEach(function(c){var s=document.createElement('span');s.textContent=c==null?'--':String(c);d.appendChild(s);});
+    host.appendChild(d);
+  }
+  if(lb.error){var e=document.createElement('div');e.className='tbl-row';e.style.gridTemplateColumns='1fr';e.textContent='Leaderboard unavailable right now.';host.appendChild(e);return;}
+  if(!lb.data||!lb.data.length){var n=document.createElement('div');n.className='tbl-row';n.style.gridTemplateColumns='1fr';n.textContent='No points earned yet. Complete a lesson or pass an exam to appear here.';host.appendChild(n);return;}
+  lb.data.forEach(function(x){row([x.rank,x.display_name,x.element||'--',x.level,x.lifetime_points],x.is_self?'self':'');});
+}
+function applyCosmetics(equipped){
+  var card=document.querySelector('#tab-identity .id-card');
+  var title=document.getElementById('chr-cos-title');
+  var list=document.getElementById('prg-equipped');
+  if(card)Object.keys(COSMETIC_CLASS).forEach(function(k){card.classList.remove(COSMETIC_CLASS[k]);});
+  if(title){title.hidden=true;title.textContent='';}
+  list.textContent='';
+  if(!equipped.length){var none=document.createElement('span');none.className='prg-note';none.style.margin='0';none.textContent='Nothing equipped yet.';list.appendChild(none);return;}
+  equipped.forEach(function(e){
+    if(card&&COSMETIC_CLASS[e.perk_id])card.classList.add(COSMETIC_CLASS[e.perk_id]);
+    if(title&&COSMETIC_TITLE[e.perk_id]){title.textContent=COSMETIC_TITLE[e.perk_id];title.hidden=false;}
+    var chip=document.createElement('span');chip.className='chip';chip.textContent=e.slot.toUpperCase()+' · '+e.name;list.appendChild(chip);
+  });
+}
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

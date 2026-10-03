@@ -223,6 +223,14 @@ see `GAP_ANALYSIS.md` §4.7).
 `leaderboard_snapshots` table as of this session — was querying a nonexistent
 `authority_snapshots` table).
 
+Gamification Phase 2 (2026-10-03, dormant behind `platform_settings.gamification_enabled`):
+`character.html` PROGRESSION tab (level derived from `sovereign_points_ledger` via
+`my_progression()`, points leaderboard via `get_points_leaderboard()`, equipped cosmetics
+applied to the identity card), `cosmetics.html` (`point_perks` with a `slot`, bought with
+`purchase_perk()`, equipped with `set_perk_equipped()`), `my-quests.html` (private
+`member_quests`, no points). Server-side gated and verified live by impersonation —
+`FIXES_LOG.md`, 2026-10-03.
+
 ## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
 
 Grouped by function, one line each, extracted from each file's own header comment (not

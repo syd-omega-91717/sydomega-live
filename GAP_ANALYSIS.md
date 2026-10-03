@@ -18,6 +18,27 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **`track_quest_progress` is callable by anyone and trusts its arguments** (opened
+  2026-10-03, found while building Gamification Phase 2; live check). It is `SECURITY
+  DEFINER`, has no `search_path`, its ACL is the default (so `anon` can execute it —
+  the security advisor lists it), and it takes `p_user_id` and `p_points` from the
+  caller with no `auth.uid()` check: anyone with the publishable key can set any
+  member's `quest_completions`/`domain_mastery`. It does **not** touch
+  `sovereign_points_ledger`, so Phase 2 levels and cosmetics are unaffected. Not fixed
+  here because `habits.html:407` calls it from the browser — a fix changes Phase 1's
+  contract (derive the user from `auth.uid()`, cap or server-assign points, revoke from
+  `anon`/`PUBLIC`).
+- **`omega-quests.js` throws on every page** (opened 2026-10-03). bg.js injects it
+  everywhere; it calls `window.OmegaSupabase.from('quests')`, but `OmegaSupabase` is an
+  accessor, not a client, and no `quests` relation exists live. `verify-runtime.js`
+  therefore fails every page it renders (`dashboard.html` included).
+- **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
+  `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
+  `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid
+  (Stripe) cosmetics were deliberately not built — HIGH-RISK under CLAUDE.md §10, needs
+  `grill-me-codex` and a decision on who receives revenue. `purchase_perk()` itself is
+  not flag-gated (it predates this, spends points only, has no cash value).
+
 - **`service_role` holds only what deployed server code needs** (opened 2026-09-26,
   `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
   no default privilege on public tables. Granted since: `platform_settings` SELECT,

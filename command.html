@@ -94,6 +94,25 @@
 
     <div data-omega-readiness></div>
     <div data-omega-today></div>
+
+    <!-- QUEST WIDGET -->
+    <div id="quest-widget-command" style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:16px;display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6)">QUEST · COMMAND</div>
+        <div id="quest-tier" style="font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:rgba(201,168,76,.5)">TIER —</div>
+      </div>
+      <div id="quest-title" style="font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:8px">—</div>
+      <div id="quest-desc" style="font-family:var(--R);font-size:13px;color:rgba(220,210,180,.7);line-height:1.6;margin-bottom:12px">—</div>
+      <div id="quest-progress-bar" style="background:rgba(201,168,76,.1);height:6px;border-radius:3px;margin-bottom:10px;overflow:hidden;display:none">
+        <div style="background:var(--gold);height:100%;width:0%;transition:width .3s" id="quest-progress-fill"></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button id="quest-start-btn" class="btn-gold" style="display:none" onclick="startCommandQuest()">START QUEST</button>
+        <div id="quest-status" style="font-family:var(--M);font-size:12px;color:rgba(201,168,76,.5);display:none">—</div>
+        <button id="quest-detail-btn" class="btn-gold" style="display:none;border-color:rgba(201,168,76,.15);color:rgba(138,134,118,.5)" onclick="showCommandQuestDetail()">VIEW DETAILS</button>
+      </div>
+    </div>
+
     <div class="kpi-row" data-stagger data-stagger-gap="70">
       <div class="kpi" data-reveal="fade-up"><div class="lv">DAY SCORE</div><div class="vv" id="kpiDay">—</div></div>
       <div class="kpi" data-reveal="fade-up"><div class="lv">PRIORITIES DONE</div><div class="vv" id="kpiPri">—</div></div>
@@ -421,6 +440,76 @@ function switchTab(id,btn){
   if(id==='schedule')renderSchedule();
   if(id==='review')renderArchive();
 }
+
+/* QUEST INTEGRATION */
+(function(){
+  function initQuestWidget(){
+    if(!window.OmegaQuests){setTimeout(initQuestWidget,200);return;}
+    var questWidget=document.getElementById('quest-widget-command');
+    if(!questWidget)return;
+
+    var quest=OmegaQuests.getQuest('command','guardians_seal');
+    if(!quest){setTimeout(initQuestWidget,200);return;}
+
+    var progress=OmegaQuests.getProgress('command','guardians_seal');
+    var isStarted=progress&&progress.status!=='not_started';
+
+    document.getElementById('quest-title').textContent=quest.title||'Guardian\'s Seal';
+    document.getElementById('quest-desc').textContent=quest.description||'Master the daily command system and establish sovereign authority over your time and priorities.';
+    document.getElementById('quest-tier').textContent='TIER '+((quest.tier||'?')+'').toUpperCase();
+
+    if(isStarted){
+      document.getElementById('quest-start-btn').style.display='none';
+      document.getElementById('quest-detail-btn').style.display='';
+      var pct=Math.round((progress.progress||0)*100);
+      document.getElementById('quest-progress-bar').style.display='';
+      document.getElementById('quest-progress-fill').style.width=pct+'%';
+      document.getElementById('quest-status').style.display='';
+      document.getElementById('quest-status').textContent='Progress: '+pct+'%';
+    }else{
+      document.getElementById('quest-start-btn').style.display='';
+      document.getElementById('quest-detail-btn').style.display='none';
+      document.getElementById('quest-progress-bar').style.display='none';
+      document.getElementById('quest-status').style.display='none';
+    }
+    questWidget.style.display='block';
+
+    OmegaQuests.subscribe('questStarted',function(e){
+      if(e.domain==='command'&&e.questKey==='guardians_seal') initQuestWidget();
+    });
+    OmegaQuests.subscribe('progressUpdated',function(e){
+      if(e.domain==='command'&&e.questKey==='guardians_seal') initQuestWidget();
+    });
+    OmegaQuests.subscribe('questCompleted',function(e){
+      if(e.domain==='command'&&e.questKey==='guardians_seal'){
+        initQuestWidget();
+        if(window.OmegaQuestUI&&window.OmegaQuestUI.celebrate){
+          OmegaQuestUI.celebrate('Guardian\'s Seal');
+        }
+      }
+    });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initQuestWidget);
+  }else{
+    initQuestWidget();
+  }
+})();
+
+window.startCommandQuest=function(){
+  if(window.OmegaQuests){
+    OmegaQuests.startQuest('command','guardians_seal');
+  }
+};
+
+window.showCommandQuestDetail=function(){
+  if(window.OmegaQuestUI&&window.OmegaQuests){
+    var quest=OmegaQuests.getQuest('command','guardians_seal');
+    var progress=OmegaQuests.getProgress('command','guardians_seal');
+    if(quest) OmegaQuestUI.showQuestDetail(quest,progress);
+  }
+};
 
 /* INIT */
 loadPriorities();

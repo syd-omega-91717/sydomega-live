@@ -402,6 +402,24 @@ async function mirrorLog(habit, key, on){
                   log_date: logDate, completed: true },
                 { onConflict: 'user_id,habit_id,log_date' });
       if(error){ console.warn('[habits] mirror upsert failed:', error.message); return; }
+      /* Track quest progress in domain mastery (non-blocking) */
+      const { data: questResult, error: questError } = await sb
+        .rpc('track_quest_progress', {
+          p_user_id: uid,
+          p_domain: 'execution',
+          p_quest_id: `habit-${habit.id}`,
+          p_points: 10
+        });
+      if(questError) {
+        console.warn('[habits] quest tracking failed:', questError.message);
+      } else if(questResult?.[0]) {
+        const { new_level, level_up } = questResult[0];
+        if(level_up) {
+          document.dispatchEvent(new CustomEvent('omega:level-up', {
+            detail: { domain: 'execution', newLevel: new_level, intensity: 'habit' }
+          }));
+        }
+      }
       /* Dispatch task-complete celebration event + streak milestone event */
       if(window.OmegaCelebrate) {
         const profile = await sb.from('profiles').select('membership_tier').eq('id', uid).maybeSingle();

@@ -71,7 +71,6 @@
           return;
         }
 
-        // Get current month covenant
         const now = new Date();
         const month = now.getMonth() + 1;
         const year = now.getFullYear();
@@ -89,16 +88,7 @@
         if (covenantError && covenantError.code !== 'PGRST116') throw covenantError;
 
         if (!covenant) {
-          // Generate new covenant for this month
-          const { error: genError } = await (window.supabase.functions || window.sb?.functions)
-            ?.invoke('generate_monthly_covenant', { body: { user_id: user.id } });
-
-          if (genError) {
-            loading.textContent = 'Unable to generate covenant. Try again later.';
-            return;
-          }
-
-          location.reload();
+          loading.textContent = 'No covenant found for this month. Please check back later.';
           return;
         }
 

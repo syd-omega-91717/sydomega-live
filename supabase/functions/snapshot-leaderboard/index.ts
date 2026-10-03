@@ -132,13 +132,14 @@ Deno.serve(async (req) => {
         .upsert(batch, { onConflict: "user_id,snapshot_date", ignoreDuplicates: false });
       if (uErr) {
         console.error("Snapshot upsert error:", uErr.message);
-      } else {
-        rowsWritten += batch.length;
+        return json({ error: "snapshot_persist_failed" }, 502);
       }
+      rowsWritten += batch.length;
     }
 
     return json({ ok: true, rows_written: rowsWritten, snapshot_date: snapshotDate, total_members: rows.length });
   } catch (e) {
-    return json({ error: String(e) }, 500);
+    console.error("[snapshot-leaderboard] unhandled error:", e instanceof Error ? e.message : "unknown error");
+    return json({ error: "snapshot_failed" }, 500);
   }
 });

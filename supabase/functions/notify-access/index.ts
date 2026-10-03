@@ -1,28 +1,16 @@
 // SYD OMEGA 91717 -- Access-request email notifier
-// Spec: see /setup.md (already in this repo). Emails s.y.dagher@gmail.com whenever
-// a new member requests access. /approvals.html keeps working regardless of whether
-// this is deployed -- this only adds an email ping on top of it.
+// Triggered by a Supabase Database Webhook on public.profiles.
+// Webhook authentication is mandatory: NOTIFY_ACCESS_WEBHOOK_SECRET must be
+// configured in Supabase and sent as the x-omega-webhook-secret header.
 //
-// Trigger: a Supabase Database Webhook on public.profiles, Insert + Update, POSTing
-// the standard Supabase webhook payload: { type, table, record, old_record, schema }.
+// Filtering:
+//   - INSERT: notify a brand-new pending member.
+//   - UPDATE: notify only when access_approved enters false and the member is not rejected.
 //
-// Filtering (per setup.md -- "ignores ordinary profile edits and only emails on a
-// real new pending request"):
-//   - INSERT: always notify (a brand-new member is, by definition, a new pending
-//     request awaiting approval).
-//   - UPDATE: only notify if this update just moved the member INTO a pending state
-//     (access_approved flipped to false/unset and they are not marked rejected) --
-//     i.e. a resubmission -- not on ordinary self-edits like terms/avatar/background,
-//     which never touch access_approved.
-//
-// Env (Supabase secrets): RESEND_API_KEY
+// Env (Supabase secrets): RESEND_API_KEY, NOTIFY_ACCESS_WEBHOOK_SECRET
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const NOTIFY_TO = "s.y.dagher@gmail.com";
-// Per setup.md: works out of the box pre-domain-verification since Resend's
-// onboarding@resend.dev sender can send to your own account email. Once
-// sydomega.com is verified in Resend, change this to
-// "SYD OMEGA 91717 <access@sydomega.com>" as the setup doc says.
 const FROM = "SYD OMEGA 91717 <onboarding@resend.dev>";
 
 const json = (b: unknown, s = 200) =>
@@ -30,6 +18,19 @@ const json = (b: unknown, s = 200) =>
 
 function escHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+async function matchesWebhookSecret(provided: string, expected: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(provided)),
+    crypto.subtle.digest("SHA-256", enc.encode(expected)),
+  ]);
+  const left = new Uint8Array(a);
+  const right = new Uint8Array(b);
+  let diff = left.length ^ right.length;
+  for (let i = 0; i < Math.min(left.length, right.length); i++) diff |= left[i] ^ right[i];
+  return diff === 0;
 }
 
 function shouldNotify(payload: { type: string; record: any; old_record: any }): boolean {
@@ -47,12 +48,19 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
   try {
+    const webhookSecret = Deno.env.get("NOTIFY_ACCESS_WEBHOOK_SECRET");
+    if (!webhookSecret) return json({ error: "webhook_not_configured" }, 503);
+
+    const providedSecret = req.headers.get("x-omega-webhook-secret") || "";
+    if (!providedSecret || !(await matchesWebhookSecret(providedSecret, webhookSecret))) {
+      return json({ error: "unauthorized" }, 401);
+    }
+
     const apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) return json({ sent: false, message: "RESEND_API_KEY not configured yet." });
 
     const payload = await req.json().catch(() => null);
     if (!payload || !payload.record) return json({ error: "bad_payload" }, 400);
-
     if (!shouldNotify(payload)) return json({ sent: false, reason: "not_a_new_request" });
 
     const p = payload.record;
@@ -81,12 +89,9 @@ Deno.serve(async (req) => {
       }),
     });
 
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      return json({ sent: false, error: "resend_error", detail }, 502);
-    }
+    if (!res.ok) return json({ sent: false, error: "resend_error" }, 502);
     return json({ sent: true });
   } catch (e) {
-    return json({ error: String(e) }, 500);
+    return json({ error: e instanceof Error ? e.message : "notify_access_failed" }, 500);
   }
 });

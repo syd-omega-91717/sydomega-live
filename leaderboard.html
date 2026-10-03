@@ -1,240 +1,123 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="SYD OMEGA 91717 — LEADERBOARD &middot; Sovereign Platform"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Leaderboard</title>
-<style>
-.podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;margin-bottom:20px;align-items:end}
-.pod{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;text-align:center;position:relative;transition:.18s}
-.pod-rank{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:6px;right:10px;line-height:1}
-.pod-gold{border-color:rgba(226,200,109,.4);background:rgba(226,200,109,.04);border-top:3px solid var(--solar)}
-.pod-silver{border-color:rgba(192,192,192,.25);background:rgba(192,192,192,.02);border-top:2px solid rgba(192,192,192,.4)}
-.pod-bronze{border-color:rgba(205,127,50,.25);background:rgba(205,127,50,.02);border-top:2px solid rgba(205,127,50,.4)}
-.pod-name{font-family:var(--D);font-size:12px;color:var(--ink);margin:8px 0 4px}
-.pod-auth{font-family:var(--D);font-size:clamp(16px,3vw,24px);color:var(--gold);line-height:1}
-.pod-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pod-el{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-top:6px}
-/* Leaderboard-specific styling (extends shared .tbl-* system) */
-.tbl-head{background:rgba(201,168,76,.04)!important;border-bottom:1px solid rgba(201,168,76,.12)!important}
-.tbl-hcell{color:var(--solar)!important;font-size:12px!important}
-.tbl-row{grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:11px 12px;align-items:center}
-.tbl-row:hover{background:rgba(201,168,76,.025)!important}
-.tbl-row.me{background:rgba(201,168,76,.04)!important;border-left:2px solid var(--gold)!important}
-.lb-rank{font-family:var(--D);font-size:14px;text-align:center}
-.lb-name-val{font-family:var(--M);font-size:12px}
-.lb-sign-val{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
-.lb-auth-val{font-family:var(--D);font-size:13px;color:var(--gold)}
-.lb-axis-val{font-family:var(--M);font-size:12px;text-align:center}
-.lb-row-loading{grid-template-columns:1fr!important;padding:20px!important;text-align:center}
-.my-rank-banner{border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-@media(max-width:700px){
-  .podium{grid-template-columns:1fr 1fr}.pod:first-child{grid-column:1/-1}
-  .lb-head,.lb-row{grid-template-columns:36px 1fr 70px 60px}
-  .lb-hcell:nth-child(n+5),.lb-row>*:nth-child(n+5){display:none}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domain Leaderboards — Ω</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <script src="/bg.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <style>
+    .lb-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .lb-tab-btn { padding: 0.75rem 1.5rem; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; color: var(--muted); cursor: pointer; transition: all 0.2s ease; font-family: var(--M); }
+    .lb-tab-btn.active { background: rgba(6,182,212,.3); border-color: var(--cyan); color: var(--cyan); }
+    .lb-tab-btn:hover { background: rgba(255,255,255,.1); }
+    .lb-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .lb-table th { text-align: left; padding: 1rem; border-bottom: 2px solid rgba(6,182,212,.3); color: var(--cyan); font-family: var(--D); }
+    .lb-table td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,.05); color: var(--ink); }
+    .lb-table tr:hover { background: rgba(255,255,255,.02); }
+    .lb-rank { color: var(--gold); font-weight: bold; min-width: 30px; }
+    .lb-rank.top1 { color: #FFD700; font-size: 1.2rem; }
+    .lb-rank.top2 { color: #C0C0C0; }
+    .lb-rank.top3 { color: #CD7F32; }
+    .lb-loading { text-align: center; color: var(--muted); padding: 2rem; }
+  </style>
 </head>
 <body>
-<aside id="omega-side" data-page="leaderboard" aria-label="Side navigation"></aside>
-<div class="page-shell" id="app" style="display:none">
-<header class="topbar">
-  <div class="topbar-title" data-i18n="lead_topbar_title">SOVEREIGN LEADERBOARD<span class="topbar-sub">DAILY SNAPSHOT &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; UPDATED: <span id="lb-date">--</span></span></div>
-  <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
-</header>
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('ranking')" data-i18n="lead_tab_ranking">RANKING</button>
-  <button class="tab-btn" onclick="setTab('podium')" data-i18n="lead_tab_podium">PODIUM</button>
-  <button class="tab-btn" onclick="setTab('myrank')" data-i18n="lead_tab_myrank">MY RANK</button>
-  <button class="tab-btn" onclick="setTab('science')" data-i18n="lead_tab_science">SCIENCE</button>
-</div>
+  <div id="omega-side"></div>
+  <main>
+    <div class="shell">
+      <div class="side"></div>
+      <div class="main">
+        <div id="app">
+          <h1 style="font-family: var(--D); color: var(--cyan);">Domain Leaderboards</h1>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Compare your mastery across all 12 domains.</p>
 
-<div class="tab-panel active" id="tab-ranking">
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="lb-total">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_total">RANKED MEMBERS</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-val" id="my-rank">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myrank">MY GLOBAL RANK</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-val" id="my-auth">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myauth">MY AUTHORITY</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label" data-i18n="lead_ranking_kpi_freq">SNAPSHOT FREQUENCY</div></div>
-  </div>
-  <div class="sechead" data-i18n="lead_ranking_section">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED</div>
-  <div class="tbl-wrap" role="table" aria-label="Leaderboard">
-    <div class="tbl-head" role="row" style="grid-template-columns:50px 1fr 90px 90px 90px 80px">
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_rank">RANK</div>
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_member">MEMBER</div>
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_auth">AUTHORITY</div>
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_axis_a">AXIS A</div>
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_axis_b">AXIS B</div>
-      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_elem">ELEMENT</div>
+          <div class="lb-tabs" id="lb-tabs"></div>
+          <div id="lb-loading" class="lb-loading">Loading leaderboards...</div>
+          <div id="lb-container" style="display: none;">
+            <table class="lb-table" id="lb-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Member</th>
+                  <th>Level</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody id="lb-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="lb-rows" role="rowgroup"><div class="tbl-row lb-row-loading" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
-  </div>
-  <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.8" data-i18n="lead_ranking_methodology">
-    LEADERBOARD METHODOLOGY &middot; Ranking uses AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e computed daily at midnight.<br>
-    Inspired by Google PageRank: authority flows from demonstrated knowledge, mastery, and contribution — not follower count.<br>
-    Daily snapshots prevent gaming. No real-time rank manipulation. Rank recalculates every 24 hours.
-  </div>
-</div>
+  </main>
 
-<div class="tab-panel" id="tab-podium">
-  <div class="sechead" data-i18n="lead_podium_title">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH</div>
-  <div class="podium" id="podium">
-    <div class="pod pod-silver"><div class="pod-rank">2</div><div class="pod-auth" id="p2-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p2-name">--</div><div class="pod-el" id="p2-el">--</div></div>
-    <div class="pod pod-gold"><div class="pod-rank">1</div><div class="pod-auth" id="p1-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p1-name">--</div><div class="pod-el" id="p1-el">--</div></div>
-    <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
-  </div>
-  <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px" data-i18n="lead_podium_methodology">PODIUM METHODOLOGY</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_podium_methodology_text">Top 3 sovereigns ranked by AUTH = sqrt(A³+B³+C³)×φ/e. Gold position at center elevated to signify apex standing. Daily snapshot sourced from leaderboard_snapshots table or live profiles query as fallback.</div>
-  </div>
-</div>
+  <script>
+    (async function() {
+      const tabs = document.getElementById('lb-tabs');
+      const tbody = document.getElementById('lb-tbody');
+      const loading = document.getElementById('lb-loading');
+      const container = document.getElementById('lb-container');
 
-<div class="tab-panel" id="tab-myrank">
-  <div class="sechead" data-i18n="lead_myrank_title">MY SOVEREIGN STANDING</div>
-  <div class="my-rank-banner" id="my-rank-banner">
-    <div style="font-family:var(--D);font-size:28px;color:var(--gold);line-height:1">#<span id="banner-rank">--</span></div>
-    <div>
-      <div style="font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px" id="banner-name">--</div>
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH <span id="banner-auth" style="color:var(--gold)">--</span> &middot; <span id="banner-element">--</span> &middot; A:<span id="banner-a">--</span> B:<span id="banner-b">--</span> C:<span id="banner-c">--</span></div>
-    </div>
-  </div>
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="my-rank-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_rank">GLOBAL RANK</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-val" id="my-auth-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_auth">AUTHORITY SCORE</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-val" id="my-gate">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_gate">GATE</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_total">TOTAL MEMBERS</div></div>
-  </div>
-  <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:8px" data-i18n="lead_myrank_formula_title">AUTHORITY FORMULA</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_myrank_formula_text">AUTH = sqrt(A³ + B³ + C³) × φ / e &nbsp;&nbsp;where φ=1.6180339887 and e=2.7182818285. Apex AUTH = 27.8367 achieved when A=B=C=9 (all three axes at maximum). Your rank updates daily at midnight UTC.</div>
-  </div>
-</div>
+      const domains = ['prophecy', 'finance', 'education', 'discovery', 'validation', 'execution',
+                       'governance', 'onboarding', 'archive', 'family', 'security'];
 
-<div class="tab-panel" id="tab-science">
-  <div class="sechead" data-i18n="lead_science_title">LEADERBOARD ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title" data-i18n="lead_science_formula_title">AUTHORITY FORMULA</div><div class="card-body" data-i18n="lead_science_formula_body">AUTH = sqrt(A³+B³+C³) × φ/e where φ=1.6180339887 (Golden Ratio) and e=2.7182818285 (Euler's number). The cubic weighting rewards high concentration in a single axis more than moderate scores across all three. Apex score of 27.8367 achieved at A=B=C=9.</div></div>
-    <div class="card"><div class="card-title" data-i18n="lead_science_pipeline_title">RANKING PIPELINE</div><div class="card-body" data-i18n="lead_science_pipeline_body">Three-tier fallback: (1) rankings edge function for server-computed AUTH; (2) leaderboard_snapshots table for daily snapshot data; (3) live profiles query with client-side AUTH computation. This ensures the leaderboard always renders regardless of edge function availability.</div></div>
-    <div class="card"><div class="card-title" data-i18n="lead_science_cadence_title">SNAPSHOT CADENCE</div><div class="card-body" data-i18n="lead_science_cadence_body">Daily snapshots prevent real-time rank manipulation and gaming. Scores are calculated server-side at midnight UTC and written to the leaderboard_snapshots table. This mirrors Google PageRank's batch computation philosophy: authority is earned over time, not gamed in the moment.</div></div>
-    <div class="card"><div class="card-title" data-i18n="lead_science_interest_title">INTEREST GRAPH</div><div class="card-body" data-i18n="lead_science_interest_body">The leaderboard is weighted by interest-graph authority: members who contribute knowledge, master skills, and build contributions earn higher axis values. The Sovereign Order values demonstrated competence over social metrics. No follower count, no engagement farming — only sovereign merit.</div></div>
-  </div>
-</div>
-<div data-page-emblem="leaderboard" style="margin:20px auto 0"></div>
-</div>
+      let currentDomain = 'finance';
 
-<script>
-function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['ranking','podium','myrank','science'][i]===name);});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-}
-function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-</script>
-<script type="module">
-import{createClient}from'/vendor/supabase-js.js';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-var PHI=1.6180339887,EU=2.7182818285;
-var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-var GATE_NAMES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function calcAuth(a,b,c){return Math.sqrt(Math.pow(Number(a)||0,3)+Math.pow(Number(b)||0,3)+Math.pow(Number(c)||0,3))*PHI/EU;}
-function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return GATE_NAMES[g];}
+      async function loadLeaderboard(domain) {
+        tbody.innerHTML = '';
+        
+        try {
+          const { data: entries, error } = await window.supabase
+            .from('leaderboard_entries')
+            .select('rank, user_id, level, points, profiles(display_name)')
+            .eq('domain', domain)
+            .order('points', { ascending: false })
+            .limit(100);
 
-function renderPodium(r1,r2,r3){
-  function fill(id,r){if(!r)return;sid(id+'-auth',r.auth||r.authority||'--');sid(id+'-name',(r.display_name||'MEMBER').toUpperCase().slice(0,18));sid(id+'-el',(r.element||'').toUpperCase());}
-  fill('p1',r1);fill('p2',r2);fill('p3',r3);
-}
-function renderTable(rows,myUid){
-  var el=document.getElementById('lb-rows');if(!el)return;
-  el.innerHTML='';
-  rows.forEach(function(r,i){
-    var row=document.createElement('div');row.className='tbl-row'+(r.user_id===myUid||r.id===myUid?' me':'');row.setAttribute('role','row');
-    var isMe=r.user_id===myUid||r.id===myUid;
-    var rank=r.rank||r.rank_global||i+1;
-    var medal=rank===1?'♔':rank===2?'♕':rank===3?'♖':'';
-    var auth=r.auth||r.authority||(r.axis_a!==undefined?calcAuth(r.axis_a,r.axis_b,r.axis_c).toFixed(4):'--');
-    var rankEl=document.createElement('div');rankEl.className='lb-rank';rankEl.style.color=rank<=3?'var(--gold)':'var(--muted)';rankEl.textContent=medal+rank;
-    var nameWrap=document.createElement('div');
-    var nameEl=document.createElement('div');nameEl.className='lb-name-val';
-    if(isMe){var you=document.createElement('span');you.style.color='var(--gold)';you.textContent='◆ YOU — ';nameEl.appendChild(you);}
-    nameEl.appendChild(document.createTextNode((r.display_name||'MEMBER').toUpperCase().slice(0,22)));
-    var signEl=document.createElement('div');signEl.className='lb-sign-val';signEl.textContent=(r.element||r.sign||'').toUpperCase();
-    nameWrap.appendChild(nameEl);nameWrap.appendChild(signEl);
-    var authEl=document.createElement('div');authEl.className='lb-auth-val';authEl.textContent=typeof auth==='number'?auth.toFixed(4):String(auth);
-    var axaEl=document.createElement('div');axaEl.className='lb-axis-val';axaEl.style.color='var(--gold)';axaEl.textContent=Number(r.axis_a||0).toFixed(3);
-    var axbEl=document.createElement('div');axbEl.className='lb-axis-val';axbEl.style.color='var(--cyan)';axbEl.textContent=Number(r.axis_b||0).toFixed(3);
-    var elemEl=document.createElement('div');elemEl.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);text-align:center';elemEl.textContent=(r.element||'?').toUpperCase().slice(0,5);
-    row.appendChild(rankEl);row.appendChild(nameWrap);row.appendChild(authEl);row.appendChild(axaEl);row.appendChild(axbEl);row.appendChild(elemEl);
-    el.appendChild(row);
-  });
-}
+          if (error) throw error;
 
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    var myA=Number(pr.is_owner?9:pr.axis_a||0.001);
-    var myB=Number(pr.is_owner?9:pr.axis_b||0.001);
-    var myC=Number(pr.is_owner?9:pr.axis_c||0.001);
-    var myAuth=pr.is_owner?27.8367:calcAuth(myA,myB,myC);
-    sid('my-auth',myAuth.toFixed(4));sid('my-auth-2',myAuth.toFixed(4));
-    sid('my-gate',getGate(myAuth));
-    var dateStr=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-    /* Banner */
-    sid('banner-name',(pr.display_name||'SOVEREIGN MEMBER').toUpperCase());
-    sid('banner-auth',myAuth.toFixed(4));
-    sid('banner-element',(pr.element||'--').toUpperCase());
-    sid('banner-a',myA.toFixed(3));sid('banner-b',myB.toFixed(3));sid('banner-c',myC.toFixed(3));
-    /* Try rankings edge function */
-    var ranked=false;
-    try{
-      var rr=await sb.functions.invoke('rankings',{body:{limit:50,user_id:s.user.id}});
-      if(rr.data&&rr.data.rankings&&rr.data.rankings.length){
-        var rankings=rr.data.rankings;
-        var total=rr.data.total||rankings.length;
-        sid('lb-total',total);sid('my-total',total);sid('lb-date',dateStr);
-        if(rr.data.my_rank){sid('my-rank',rr.data.my_rank);sid('my-rank-2',rr.data.my_rank);sid('banner-rank',rr.data.my_rank);}
-        renderPodium(rankings[0],rankings[1],rankings[2]);
-        renderTable(rankings,s.user.id);
-        ranked=true;
+          (entries || []).forEach((entry, idx) => {
+            const row = document.createElement('tr');
+            const rankClass = idx === 0 ? 'top1' : idx === 1 ? 'top2' : idx === 2 ? 'top3' : '';
+            const displayName = entry.profiles?.display_name || 'Member';
+
+            row.innerHTML = `
+              <td><span class="lb-rank ${rankClass}">${idx + 1}</span></td>
+              <td>${displayName}</td>
+              <td style="color: var(--cyan);">${entry.level}/9</td>
+              <td style="color: var(--gold);">${entry.points} pts</td>
+            `;
+            tbody.appendChild(row);
+          });
+
+          if (!entries || entries.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted);">No entries yet</td></tr>';
+          }
+        } catch (error) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--crim);">Error: ${error.message}</td></tr>`;
+        }
       }
-    }catch(e){}
-    /* Try leaderboard_snapshots */
-    if(!ranked){
-      try{
-        var lb=await sb.from('leaderboard_snapshots').select('*').eq('snapshot_date',new Date().toISOString().slice(0,10)).order('rank_global',{ascending:true}).limit(50);
-        var rows=lb.data||[];
-        if(!rows.length)throw new Error('no snapshot');
-        sid('lb-total',rows.length);sid('my-total',rows.length);sid('lb-date',dateStr);
-        var me=rows.find(function(r){return r.user_id===s.user.id;});
-        if(me){sid('my-rank',me.rank_global);sid('my-rank-2',me.rank_global);sid('banner-rank',me.rank_global);}
-        renderPodium(rows[0],rows[1],rows[2]);
-        renderTable(rows,s.user.id);
-        ranked=true;
-      }catch(e){}
-    }
-    /* Live profiles fallback */
-    if(!ranked){
-      var pf=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,element,is_owner').eq('access_approved',true).limit(100);
-      var profiles=(pf.data||[]).map(function(p){
-        var auth=p.is_owner?27.8367:calcAuth(p.axis_a,p.axis_b,p.axis_c);
-        return Object.assign({},p,{auth:auth,authority:auth,user_id:p.id,rank:0});
+
+      // Create tabs
+      domains.forEach(domain => {
+        const btn = document.createElement('button');
+        btn.className = `lb-tab-btn ${domain === currentDomain ? 'active' : ''}`;
+        btn.textContent = domain.charAt(0).toUpperCase() + domain.slice(1);
+        btn.onclick = () => {
+          document.querySelectorAll('.lb-tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentDomain = domain;
+          loadLeaderboard(domain);
+        };
+        tabs.appendChild(btn);
       });
-      profiles.sort(function(a,b){return b.auth-a.auth;});
-      profiles.forEach(function(p,i){p.rank=i+1;});
-      sid('lb-total',profiles.length);sid('my-total',profiles.length);sid('lb-date','LIVE');
-      var meR=profiles.findIndex(function(p){return p.id===s.user.id;});
-      if(meR>=0){sid('my-rank',meR+1);sid('my-rank-2',meR+1);sid('banner-rank',meR+1);}
-      renderPodium(profiles[0],profiles[1],profiles[2]);
-      renderTable(profiles,s.user.id);
-    }
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();
-</script>
-<script src="/bg.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+
+      loading.style.display = 'none';
+      container.style.display = 'block';
+      loadLeaderboard(currentDomain);
+    })();
+  </script>
+</body>
 </html>

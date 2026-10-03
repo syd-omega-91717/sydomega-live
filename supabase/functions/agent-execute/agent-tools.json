@@ -1,0 +1,16 @@
+{
+  "version":"1.0.0",
+  "mode":"READ_ONLY",
+  "tools":{
+    "member.context.read":{"risk":"low","purpose":"Read authenticated member context.","mutation":false},
+    "mission.state.read":{"risk":"low","purpose":"Read authenticated mission and quest state.","mutation":false},
+    "simulation.history.read":{"risk":"low","purpose":"Read authenticated simulation history.","mutation":false}
+  },
+  "agents":{
+    "Sentinel":["member.context.read"],"Merchant":["simulation.history.read"],"Scout":["mission.state.read"],
+    "Warden":["member.context.read"],"Sovereign":["member.context.read","mission.state.read","simulation.history.read"],
+    "Auditor":["member.context.read","mission.state.read","simulation.history.read"],"Proxy":["mission.state.read"],
+    "Oracle":["simulation.history.read"],"Beacon":["member.context.read"],"Analyst":["simulation.history.read"],
+    "Tutor":["mission.state.read"],"Historian":["simulation.history.read"]
+  }
+}

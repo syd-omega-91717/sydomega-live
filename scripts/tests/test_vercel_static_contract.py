@@ -37,7 +37,7 @@ BASE_CONFIG = {
     "buildCommand": "bash scripts/vercel-build.sh",
     "installCommand": "",
     "outputDirectory": "public",
-    "git": {"deploymentEnabled": {"*": False}},
+    "git": {"deploymentEnabled": {"*": False, "main": True}},
     "redirects": [],
 }
 

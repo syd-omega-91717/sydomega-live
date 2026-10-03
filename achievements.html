@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; Achievements</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Achievements</title>\n<meta name="description" content="Ω SYD OMEGA 91717 achievements surface for verified progress, milestones and evidence-backed records.">
 <link rel="manifest" href="/manifest.json">
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -71,7 +71,21 @@
 <div class="shell">
 <aside class="side" id="omega-side" data-page="achievements"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">SOVEREIGN ACHIEVEMENTS<small>EARN XP · UNLOCK TIERS · ASCEND · SYD OMEGA 91717</small></div></div>
+  <div class="topbar"><div class="t">SOVEREIGN ACHIEVEMENTS<small>VERIFIED RECORDS · TROPHIES · MEDALS · CERTIFICATES · SYD OMEGA 91717</small></div></div>
+  <div style="background:rgba(34,197,94,.06);border-bottom:1px solid rgba(34,197,94,.2);padding:16px 20px;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;max-width:900px;margin:0 auto">
+      <div style="flex:1">
+        <div style="font-family:var(--M);font-size:11px;letter-spacing:3px;color:rgba(34,197,94,.7);margin-bottom:8px;text-transform:uppercase">EDUCATION DOMAIN — TIER 2</div>
+        <div style="font-family:var(--D);font-size:20px;color:rgba(34,197,94,.9);margin-bottom:8px">Tutor's Curriculum</div>
+        <p style="font-size:13px;line-height:1.6;color:rgba(34,197,94,.8);margin:0;max-width:55ch">Develop mastery through structured learning paths. Design your personal curriculum and cultivate expertise across all domains of knowledge.</p>
+        <div style="margin-top:12px;font-family:var(--M);font-size:11px;letter-spacing:2px;color:rgba(34,197,94,.6)">130 POINTS — COMPLETE THE QUEST</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-shrink:0;margin-left:20px">
+        <button class="btn btn-fill" onclick="window.startAchievementsQuest&&window.startAchievementsQuest()" style="font-size:12px;padding:8px 16px;background:rgba(34,197,94,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
+        <button class="btn" onclick="window.showAchievementsQuestDetail&&window.showAchievementsQuestDetail()" style="font-size:12px;padding:8px 16px;border:1px solid rgba(34,197,94,.5);color:rgba(34,197,94,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
+      </div>
+    </div>
+  </div>
   <div style="padding:20px var(--pad,20px)">
 
     <div class="tab-row">
@@ -227,186 +241,131 @@
 </div>
 
 <script>
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
-  if(btn) btn.classList.add('act');
-  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
-  document.getElementById('tab-'+id).classList.add('act');
-  if(id==='board'){renderBoard();}
-  if(id==='log'){renderLog();}
+(function(){
+'use strict';
+
+var state={profile:null,tasks:[],trophies:[],medals:[],certificates:[],records:[],loaded:false};
+
+function esc(v){
+  return String(v==null?'':v).replace(/[&<>"']/g,function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
 }
-
-var achievements = [];
-var unlockLog = [];
-var catFilter = 'all';
-
-var XP_MAP = {common:100,rare:250,epic:500,legendary:1000};
-var RANKS = [
-  {level:1,title:'INITIATE',xp:0},{level:2,title:'APPRENTICE',xp:1000},
-  {level:3,title:'PRACTITIONER',xp:2500},{level:4,title:'ADEPT',xp:5000},
-  {level:5,title:'EXPERT',xp:10000},{level:6,title:'MASTER',xp:20000},
-  {level:7,title:'GRANDMASTER',xp:35000},{level:8,title:'SOVEREIGN',xp:55000},
-  {level:9,title:'APEX',xp:80000},{level:10,title:'OMEGA',xp:120000}
-];
-var CAT_COLORS = {mastery:'#9B6BF0',wealth:'#FFD700',health:'#4CAF50',identity:'#00E5FF',relations:'#FF9800',custom:'#888'};
-
-var SEED_ACHIEVEMENTS = [
-  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'&#9702;',cat:'identity',rarity:'common',unlocked:false,seed:true},
-  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'&#9636;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'&#8734;',cat:'identity',rarity:'rare',unlocked:false,seed:true},
-  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'&#8862;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'&#9650;',cat:'health',rarity:'rare',unlocked:false,seed:true},
-  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'&#9889;&#65038;',cat:'health',rarity:'epic',unlocked:false,seed:true},
-  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'&#9670;',cat:'wealth',rarity:'common',unlocked:false,seed:true},
-  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'&#9707;',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
-  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'&#8860;',cat:'relations',rarity:'rare',unlocked:false,seed:true},
-  {id:'s10',name:'Philosopher',desc:'Write 100 principles',icon:'&#9878;',cat:'identity',rarity:'epic',unlocked:false,seed:true},
-  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'&#9673;',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
-  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'&#9889;&#65038;',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
-];
-
-function load(){
-  try{achievements=JSON.parse(localStorage.getItem('omega_achievements')||'null');}catch(e){}
-  if(!achievements||!achievements.length)achievements=[...SEED_ACHIEVEMENTS.map(function(a){return Object.assign({},a);})];
-  try{unlockLog=JSON.parse(localStorage.getItem('omega_ach_log')||'[]');}catch(e){unlockLog=[];}
+function client(){
+  if(window.OmegaSB&&typeof window.OmegaSB.get==='function')return window.OmegaSB.get();
+  if(window.__omegaSb)return window.__omegaSb;
+  return import('/vendor/supabase-js.js').then(function(m){
+    return window.__omegaSb=m.createClient(
+      'https://ydqhzvvoyufiiqvzcjns.supabase.co',
+      'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'
+    );
+  });
 }
-function save(){
-  localStorage.setItem('omega_achievements',JSON.stringify(achievements));
-  localStorage.setItem('omega_ach_log',JSON.stringify(unlockLog));
+function authority(a,b,c){
+  return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
 }
-function uid(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function levelFor(auth){
+  var t=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+  var n=0; for(var i=0;i<t.length;i++){if(auth>=t[i])n=i+1;}
+  return Math.max(1,Math.min(12,n||1));
+}
+function recordCard(r){
+  var kind=esc(r.kind),title=esc(r.title),meta=esc(r.meta||'LIVE RECORD');
+  var date=r.date?new Date(r.date).toLocaleString():'';
+  return '<article class="ach-card unlocked" style="border-color:rgba(0,229,255,.35)">'
+    +'<div class="rarity-badge rarity-common">'+kind+'</div>'
+    +'<div class="ach-icon">Ω</div>'
+    +'<div class="ach-name">'+title+'</div>'
+    +'<div class="ach-desc">'+meta+'</div>'
+    +(date?'<div class="unlock-date">'+esc(date)+'</div>':'')
+    +'</article>';
+}
+function render(){
+  var p=state.profile||{},a=Number(p.axis_a||0),b=Number(p.axis_b||0),cc=Number(p.axis_c||0);
+  var auth=authority(a,b,cc),level=levelFor(auth);
+  document.getElementById('xp-level').textContent=String(level);
+  document.getElementById('xp-rank').textContent='CALCULATED SOVEREIGN LEVEL';
+  document.getElementById('xp-cur').textContent=auth.toFixed(4)+' AUTHORITY';
+  document.getElementById('xp-next').textContent=level<12?'NEXT GATE AVAILABLE':'APEX';
+  document.getElementById('xp-bar').style.width=Math.min(100,(level/12)*100)+'%';
 
-function totalXP(){return achievements.filter(function(a){return a.unlocked;}).reduce(function(s,a){return s+XP_MAP[a.rarity];},0);}
-function getRank(xp){
-  var rank=RANKS[0];
-  for(var i=0;i<RANKS.length;i++){if(xp>=RANKS[i].xp)rank=RANKS[i];}
-  return rank;
-}
-function getNextRank(xp){
-  for(var i=0;i<RANKS.length;i++){if(RANKS[i].xp>xp)return RANKS[i];}
-  return null;
-}
-
-function renderXP(){
-  var xp=totalXP();
-  var rank=getRank(xp);
-  var next=getNextRank(xp);
-  document.getElementById('xp-level').textContent=rank.level;
-  document.getElementById('xp-rank').textContent=rank.title;
-  document.getElementById('xp-cur').textContent=xp.toLocaleString()+' XP';
-  if(next){
-    var pct=(xp-rank.xp)/(next.xp-rank.xp)*100;
-    document.getElementById('xp-bar').style.width=Math.min(100,pct)+'%';
-    document.getElementById('xp-next').textContent=next.xp.toLocaleString()+' XP';
-  } else {
-    document.getElementById('xp-bar').style.width='100%';
-    document.getElementById('xp-next').textContent='MAX LEVEL';
+  var labels=document.querySelectorAll('.stat-lbl');
+  if(labels.length>=4){
+    labels[0].textContent='TASK COMPLETIONS';
+    labels[1].textContent='TROPHIES';
+    labels[2].textContent='MEDALS';
+    labels[3].textContent='CERTIFICATES';
   }
-  var unlocked=achievements.filter(function(a){return a.unlocked;}).length;
-  var total=achievements.length;
-  document.getElementById('stat-total-xp').textContent=xp.toLocaleString();
-  document.getElementById('stat-unlocked').textContent=unlocked;
-  document.getElementById('stat-locked').textContent=total-unlocked;
-  document.getElementById('stat-pct').textContent=Math.round(unlocked/total*100)+'%';
-}
+  document.getElementById('stat-total-xp').textContent=String(state.tasks.length);
+  document.getElementById('stat-unlocked').textContent=String(state.trophies.length);
+  document.getElementById('stat-locked').textContent=String(state.medals.length);
+  document.getElementById('stat-pct').textContent=String(state.certificates.length);
 
-function setCat(c,el){
-  catFilter=c;
-  document.querySelectorAll('#cat-filter .filter-tag').forEach(function(x){x.classList.remove('active');});
-  el.classList.add('active');
-  renderGrid();
-}
-
-function renderBoard(){renderXP();renderGrid();}
-
-function renderGrid(){
   var grid=document.getElementById('achievements-grid');
-  var list=catFilter==='all'?achievements:achievements.filter(function(a){return a.cat===catFilter;});
-  var unlocked=list.filter(function(a){return a.unlocked;});
-  var locked=list.filter(function(a){return !a.unlocked;});
-  var sorted=[...unlocked,...locked];
-  grid.innerHTML=sorted.map(function(a){return achCard(a);}).join('');
-}
+  var records=state.records.slice().sort(function(x,y){return (new Date(y.date||0))-(new Date(x.date||0));});
+  grid.innerHTML=records.length
+    ?records.map(recordCard).join('')
+    :'<div class="empty"><strong>NO VERIFIED ACHIEVEMENT RECORDS YET</strong><br><span>Complete a real mission, task or governed progression action to create persisted evidence.</span></div>';
 
-function achCard(a){
-  var col=CAT_COLORS[a.cat]||'#888';
-  var rarityClass='rarity-'+a.rarity;
-  var rarityLabel={common:'COMMON',rare:'RARE',epic:'EPIC',legendary:'LEGENDARY'}[a.rarity]||'';
-  return '<div class="ach-card '+(a.unlocked?'unlocked':'locked')+' '+(a.rarity!=='common'&&a.unlocked?a.rarity:'')+'" style="border-color:'+(a.unlocked?col:'#1a1a1a')+'">'
-    +'<div class="rarity-badge '+rarityClass+'">'+rarityLabel+'</div>'
-    +'<div class="ach-icon">'+a.icon+'</div>'
-    +'<div class="ach-name">'+esc(a.name)+'</div>'
-    +'<div class="ach-desc">'+esc(a.desc)+'</div>'
-    +'<div class="ach-xp" style="color:'+col+'">+'+XP_MAP[a.rarity]+' XP</div>'
-    +(a.unlocked&&a.unlockedAt?'<div class="unlock-date">'+new Date(a.unlockedAt).toLocaleDateString()+'</div>':'')
-    +(!a.unlocked?'<button class="unlock-btn" onclick="unlock(\''+a.id+'\')">MARK ACHIEVED</button>':'<button class="unlock-btn unlocked-btn" disabled>&#10003; ACHIEVED</button>')
-    +'</div>';
+  var log=document.getElementById('unlock-log');
+  if(log)log.innerHTML=records.length
+    ?records.map(function(r){return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid #111"><span style="font-size:20px">Ω</span><div style="flex:1"><div style="font-family:Courier New,monospace;font-size:12px;color:#e0e0e0">'+esc(r.title)+'</div><div style="font-family:Courier New,monospace;font-size:12px;color:var(--muted)">'+esc(r.kind)+' · '+esc(r.meta||'LIVE RECORD')+'</div></div><span style="font-family:Courier New,monospace;font-size:12px;color:var(--cyan)">'+esc(r.date?new Date(r.date).toLocaleDateString():'')+'</span></div>';}).join('')
+    :'<div style="text-align:center;padding:40px;color:var(--muted);font-family:Courier New,monospace;font-size:12px">NO PERSISTED ACHIEVEMENT HISTORY</div>';
 }
-
-function unlock(id){
-  var a=achievements.find(function(x){return x.id===id;});
-  if(!a||a.unlocked)return;
-  a.unlocked=true;a.unlockedAt=new Date().toISOString();
-  unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[a.rarity],rarity:a.rarity,cat:a.cat,date:a.unlockedAt});
-  save();renderBoard();
-  showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[a.rarity]+' XP');
-  /* Dispatch achievement celebration event */
-  if(window.OmegaCelebrate) {
-    document.dispatchEvent(new CustomEvent('omega:achievement', {
-      detail: { title: a.name, rarity: a.rarity, metadata: { id: a.id, xp: XP_MAP[a.rarity] } }
-    }));
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('act');});
+  if(btn)btn.classList.add('act');
+  var target=document.getElementById('tab-'+id);if(target)target.classList.add('act');
+  if(id==='board')render();
+  if(id==='log')render();
+}
+function hideLegacyCreate(){
+  var b=document.querySelector('.tab-btn[data-tab="create"]');
+  var p=document.getElementById('tab-create');
+  if(b)b.remove();
+  if(p)p.remove();
+}
+async function load(){
+  hideLegacyCreate();
+  try{
+    var sb=await client();
+    var session=(await sb.auth.getSession()).data.session;
+    if(!session){
+      document.getElementById('achievements-grid').innerHTML='<div class="empty"><strong>SIGN IN REQUIRED</strong><br><span>Achievement state is member-owned and is never inferred while signed out.</span></div>';
+      return;
+    }
+    var uid=session.user.id;
+    var results=await Promise.all([
+      sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner,access_approved').eq('id',uid).maybeSingle(),
+      sb.from('task_completions').select('id,task,task_name,task_type,axis,points_earned,completed_at').eq('user_id',uid).order('completed_at',{ascending:false}).limit(200),
+      sb.from('trophies').select('id,trophy_num,trophy_name,milestone,tier,earned_at').eq('user_id',uid).order('earned_at',{ascending:false}),
+      sb.from('medals').select('medal_num,earned_at').eq('user_id',uid).order('earned_at',{ascending:false}),
+      sb.from('certificates').select('cert_num,issued_at').eq('user_id',uid).order('issued_at',{ascending:false})
+    ]);
+    var errors=results.filter(function(x){return x.error;});
+    if(errors.length)throw errors[0].error;
+    state.profile=results[0].data||{};
+    state.tasks=results[1].data||[];
+    state.trophies=results[2].data||[];
+    state.medals=results[3].data||[];
+    state.certificates=results[4].data||[];
+    state.records=[];
+    state.tasks.forEach(function(x){state.records.push({kind:'TASK',title:x.task_name||x.task||'Verified task',meta:(x.axis?'AXIS '+String(x.axis).toUpperCase()+' · ':'')+(x.points_earned!=null?String(x.points_earned)+' POINTS':'PERSISTED COMPLETION'),date:x.completed_at});});
+    state.trophies.forEach(function(x){state.records.push({kind:'TROPHY',title:x.trophy_name||('Trophy #'+x.trophy_num),meta:[x.tier,x.milestone].filter(Boolean).join(' · ')||'EARNED',date:x.earned_at});});
+    state.medals.forEach(function(x){state.records.push({kind:'MEDAL',title:'Medal #'+x.medal_num,meta:'PERSISTED MEMBER RECORD',date:x.earned_at});});
+    state.certificates.forEach(function(x){state.records.push({kind:'CERTIFICATE',title:'Certificate #'+x.cert_num,meta:'ISSUED RECORD',date:x.issued_at});});
+    render();
+    state.loaded=true;
+  }catch(e){
+    document.getElementById('achievements-grid').innerHTML='<div class="empty"><strong>ACHIEVEMENT DATA UNAVAILABLE</strong><br><span>'+esc(e&&e.message||'Persisted achievement sources could not be read. No state is inferred.')+'</span></div>';
   }
 }
-
-function showNotif(msg){
-  var el=document.getElementById('notif');
-  el.textContent=msg;el.style.display='block';
-  clearTimeout(el._t);el._t=setTimeout(function(){el.style.display='none';},3000);
-}
-
-function createAchievement(){
-  var name=document.getElementById('c-name').value.trim();
-  var desc=document.getElementById('c-desc').value.trim();
-  var icon=document.getElementById('c-icon').value.trim()||'&#9733;';
-  var cat=document.getElementById('c-cat').value;
-  var rarity=document.getElementById('c-rarity').value;
-  var doUnlock=document.getElementById('c-unlock').value==='yes';
-  if(!name){alert('Name required.');return;}
-  var a={id:uid(),name:name,desc:desc,icon:icon,cat:cat,rarity:rarity,unlocked:doUnlock};
-  if(doUnlock)a.unlockedAt=new Date().toISOString();
-  achievements.unshift(a);
-  if(doUnlock)unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[rarity],rarity:rarity,cat:cat,date:a.unlockedAt});
-  save();clearCreate();
-  document.getElementById('create-msg').textContent='ACHIEVEMENT CREATED'+(doUnlock?' & UNLOCKED':'');
-  setTimeout(function(){document.getElementById('create-msg').textContent='';},2500);
-  if(doUnlock)showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[rarity]+' XP');
-}
-
-function clearCreate(){
-  ['c-name','c-desc','c-icon'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('c-cat').value='mastery';
-  document.getElementById('c-rarity').value='common';
-  document.getElementById('c-unlock').value='no';
-}
-
-function renderLog(){
-  var el=document.getElementById('unlock-log');
-  if(!unlockLog.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-family:\'Courier New\',monospace;font-size:12px;">NO ACHIEVEMENTS UNLOCKED YET</div>';return;}
-  el.innerHTML=unlockLog.map(function(l){
-    var col=CAT_COLORS[l.cat]||'#888';
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid #111;">'
-      +'<span style="font-size:20px;">&#9733;</span>'
-      +'<div style="flex:1;"><div style="font-family:\'Courier New\',monospace;font-size:12px;color:#e0e0e0;">'+esc(l.name)+'</div>'
-      +'<div style="font-family:\'Courier New\',monospace;font-size:12px;color:var(--muted);">'+new Date(l.date).toLocaleString()+'</div></div>'
-      +'<span style="font-family:\'Courier New\',monospace;font-size:12px;color:'+col+';">+'+l.xp+' XP</span>'
-      +'</div>';
-  }).join('');
-}
-
 load();
-renderBoard();
+})();
+</script>
+<script>
+(function initAchievementsQuestWidget(){var maxRetries=50,retryCount=0;function tryInit(){if(window.OmegaQuests&&window.OmegaQuests.registerQuestWidget){window.OmegaQuests.registerQuestWidget('education',{questId:'tutors_curriculum',tier:2,points:130,title:'Tutor\'s Curriculum',description:'Develop mastery through structured learning paths. Design your personal curriculum and cultivate expertise across all domains of knowledge.',domain:'education'});window.startAchievementsQuest=function(){if(window.OmegaQuests){window.OmegaQuests.startQuest('tutors_curriculum','education')}};window.showAchievementsQuestDetail=function(){if(window.OmegaQuests){window.OmegaQuests.showQuestDetail('tutors_curriculum','education')}};window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'education',quest:'tutors_curriculum'})}else if(retryCount<maxRetries){retryCount++;setTimeout(tryInit,100)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryInit)}else{tryInit()}})();
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

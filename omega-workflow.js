@@ -65,21 +65,24 @@
       return {ok:true,auth:auth,profile:pr};
     },
     compute_gate: async function(ctx){
-      var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
-      var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
-      var auth=ctx.auth||0;
-      var gi=GATES.findIndex(function(g){return auth<g;});
-      return {ok:true,gate_idx:gi<0?11:gi,gate_name:gi<0?'APEX':GNAMES[gi],threshold:gi<0?27.8367:GATES[gi]};
+      var auth=Number(ctx.auth||0);
+      var canon=window.OmegaCanon;
+      var structure=canon&&canon.structure||{};
+      var authority=canon&&canon.authority||{};
+      var gates=(structure.gate_thresholds||authority.gates||[]).map(Number).filter(function(v){return isFinite(v);});
+      var names=(authority.gate_names||[]).map(String);
+      if(!gates.length)return {ok:false,error:'canonical_gate_config_unavailable'};
+      var gi=gates.findIndex(function(g){return auth<g;});
+      var idx=gi<0?gates.length-1:gi;
+      return {ok:true,gate_idx:idx,gate_name:names[idx]||('GATE '+(idx+1)),threshold:gates[idx]};
     },
     show_celebration: async function(ctx){
-      if(window.OmegaSDT&&window.OmegaSDT.pulse){
+      /* Gate ceremonies are driven by authoritative sovereign.gate.unlocked events.
+         This workflow may render ordinary task feedback only. */
+      if(window.OmegaSDT&&window.OmegaSDT.pulse&&ctx._workflow!=='gate_unlock'){
         window.OmegaSDT.pulse('c',0.009,ctx.auth||0);
       }
-      if(window.OmegaNotify){
-        var msg=ctx.gate_name?'GATE UNLOCKED: '+ctx.gate_name+' (AUTH='+Number(ctx.auth||0).toFixed(4)+')':'SOVEREIGN ACHIEVEMENT UNLOCKED';
-        window.OmegaNotify.showToast(msg,'success');
-      }
-      return {ok:true,shown:true};
+      return {ok:true,shown:ctx._workflow!=='gate_unlock'};
     },
     emit_events: async function(ctx){
       if(window.OmegaOS){
@@ -98,7 +101,7 @@
       return {ok:true,logged:true};
     },
     record_event: async function(ctx){
-      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:false,error:'no_authenticated_client'};
       /* The try/catch below cannot observe this failing: Supabase resolves
          {data:null,error} rather than throwing, so the old code returned
          {ok:true} whether or not the event was recorded (CLAUDE.md 8.1
@@ -112,8 +115,11 @@
         });
         recErr=rr&&rr.error||null;
       }catch(e){recErr=e;}
-      if(recErr)console.warn('[OmegaWorkflow] record_sovereign_event failed:',recErr.message||recErr);
-      return {ok:true,recorded:!recErr};
+      if(recErr){
+        console.warn('[OmegaWorkflow] record_sovereign_event failed:',recErr.message||recErr);
+        return {ok:false,error:'record_sovereign_event_failed',message:recErr.message||String(recErr)};
+      }
+      return {ok:true,recorded:true};
     },
     /* task_complete workflow steps — these were referenced but not implemented */
     validate_task: async function(ctx){
@@ -122,7 +128,8 @@
       return {ok:true,validated:true};
     },
     increment_axis: async function(ctx){
-      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      if(!ctx.ok) return {ok:false,error:'validation_failed'};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var axis=String(ctx.axis||'a');
       var kind=String(ctx.kind||ctx._workflow||'workflow');
       var task=String(ctx.task||ctx._instance);
@@ -133,9 +140,10 @@
           p_task_type:kind, p_task_name:task, p_axis_type:axis, p_description:title, p_points:weight
         });
         if(r.error) throw r.error;
-        return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
+        if(!r.data||r.data.ok!==true)return {ok:false,error:'complete_task_rejected',axis_result:r.data||{}};
+        return {ok:true,applied:!!r.data.applied,axis_result:r.data};
       }catch(e){
-        return {ok:true,skipped:'rpc_error',error:e.message};
+        return {ok:false,error:'rpc_error',message:e.message||String(e)};
       }
     },
     recompute_auth: async function(ctx){
@@ -144,7 +152,7 @@
       if(!pr) return {ok:true};
       /* If axis was incremented, pull fresh values from server result */
       var ar=ctx.axis_result||{};
-      var a=Number(ar.a||pr.axis_a||0.001),b=Number(ar.b||pr.axis_b||0.001),c=Number(ar.c||pr.axis_c||0.001);
+      var a=Number(ar.axis_a!=null?ar.axis_a:pr.axis_a||0.001),b=Number(ar.axis_b!=null?ar.axis_b:pr.axis_b||0.001),c=Number(ar.axis_c!=null?ar.axis_c:pr.axis_c||0.001);
       var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
       return {ok:true,auth:auth,a:a,b:b,c:c};
     },
@@ -169,7 +177,7 @@
     },
     /* ── gate_unlock workflow ───────────────────────────────────── */
     record_achievement: async function(ctx){
-      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:false,error:'no_authenticated_client'};
       /* `recorded:true` was returned unconditionally, from inside a try/catch
          that cannot catch a Supabase write failure — the workflow asserted the
          gate unlock had been recorded when it may not have been. */
@@ -182,8 +190,11 @@
         });
         gateErr=gr&&gr.error||null;
       }catch(e){gateErr=e;}
-      if(gateErr)console.warn('[OmegaWorkflow] gate.unlocked not recorded:',gateErr.message||gateErr);
-      return {ok:true,recorded:!gateErr};
+      if(gateErr){
+        console.warn('[OmegaWorkflow] gate.unlocked not recorded:',gateErr.message||gateErr);
+        return {ok:false,error:'gate_event_record_failed',message:gateErr.message||String(gateErr)};
+      }
+      return {ok:true,recorded:true};
     },
     notify_owner: async function(ctx){
       if(window.OmegaOS){
@@ -222,7 +233,8 @@
       return {ok:true,duration:dur,target:DEDICATION};
     },
     award_axis_c: async function(ctx){
-      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      if(!ctx.ok) return {ok:false,error:'dedication_validation_failed'};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var today=new Date().toISOString().slice(0,10);
       try{
         var r=await window.__omegaSb.rpc('complete_task',{
@@ -235,7 +247,7 @@
         if(r.error) throw r.error;
         return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
       }catch(e){
-        return {ok:true,skipped:'rpc_error',error:e.message};
+        return {ok:false,error:'rpc_error',message:e.message||String(e)};
       }
     },
     log_dedication: async function(ctx){
@@ -259,24 +271,30 @@
       return {ok:!r.error,profile:r.data||{}};
     },
     query_tasks: async function(ctx){
-      if(!window.__omegaSb) return {ok:true,_tasks_count:0};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var sess=await window.__omegaSb.auth.getSession();
-      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
-      if(!uid) return {ok:true,_tasks_count:0};
+      var sr=sess&&sess.data&&sess.data.session;
+      if(!sr) return {ok:false,error:'no_session'};
+      var uid=sr.user&&sr.user.id;
+      if(!uid) return {ok:false,error:'no_session'};
       try{
         var r=await window.__omegaSb.from('task_completions').select('id',{count:'exact',head:true}).eq('user_id',uid);
-        return {ok:true,_tasks_count:r.count||0};
-      }catch(e){return {ok:true,_tasks_count:0};}
+        if(r.error) return {ok:false,error:'task_query_failed',message:r.error.message||String(r.error)};
+        return {ok:true,_tasks_count:Number(r.count||0)};
+      }catch(e){return {ok:false,error:'task_query_failed',message:e.message||String(e)};}
     },
     query_dedications: async function(ctx){
-      if(!window.__omegaSb) return {ok:true,_dedications:[]};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var sess=await window.__omegaSb.auth.getSession();
-      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
-      if(!uid) return {ok:true,_dedications:[]};
+      var sr=sess&&sess.data&&sess.data.session;
+      if(!sr) return {ok:false,error:'no_session'};
+      var uid=sr.user&&sr.user.id;
+      if(!uid) return {ok:false,error:'no_session'};
       try{
         var r=await window.__omegaSb.from('sovereign_events').select('*').eq('user_id',uid).eq('event_type','dedication.completed').order('occurred_at',{ascending:false}).limit(10);
-        return {ok:true,_dedications:r.data||[]};
-      }catch(e){return {ok:true,_dedications:[]};}
+        if(r.error) return {ok:false,error:'dedication_query_failed',message:r.error.message||String(r.error)};
+        return {ok:true,_dedications:Array.isArray(r.data)?r.data:[]};
+      }catch(e){return {ok:false,error:'dedication_query_failed',message:e.message||String(e)};}
     },
     cache_result: async function(ctx){
       if(window.OmegaMemory&&ctx.report){
@@ -296,25 +314,41 @@
     var entry={id:instanceId,workflow:workflowId,started:new Date().toISOString(),steps:[],status:'running'};
     _log.push(entry);
     if(window.OmegaOS)window.OmegaOS.events.emit('workflow:started',{workflow:workflowId,instance:instanceId});
-    /* Execute steps */
+    /* Execute steps. A workflow is successful only when every declared step
+       exists and explicitly returns ok !== false. This is deliberately fail-closed:
+       a Supabase RPC/query failure must never become a completed workflow. */
     for(var i=0;i<def.steps.length;i++){
       var stepName=def.steps[i];
       var step=STEPS[stepName];
-      if(!step) continue; /* skip undefined steps */
+      if(!step){
+        entry.steps.push({name:stepName,ok:false,error:'step_not_implemented',ts:Date.now()});
+        ctx=Object.assign(ctx,{ok:false,error:'step_not_implemented',failed_step:stepName});
+        entry.status='failed';
+        break;
+      }
       try{
         var result=await step(ctx);
         ctx=Object.assign(ctx,result||{});
+        if(result&&result.ok===false){
+          entry.steps.push({name:stepName,ok:false,error:result.error||'step_failed',ts:Date.now()});
+          entry.status='failed';
+          break;
+        }
         ctx._steps_completed++;
         entry.steps.push({name:stepName,ok:true,ts:Date.now()});
       }catch(e){
-        entry.steps.push({name:stepName,ok:false,error:e.message});
-        /* Non-fatal: continue to next step */
+        var message=e&&e.message?e.message:String(e);
+        ctx=Object.assign(ctx,{ok:false,error:'step_exception',message:message,failed_step:stepName});
+        entry.steps.push({name:stepName,ok:false,error:message,ts:Date.now()});
+        entry.status='failed';
+        break;
       }
     }
-    entry.status='completed';entry.ended=new Date().toISOString();
+    if(entry.status==='running') entry.status='completed';
+    entry.ended=new Date().toISOString();
     delete _running[instanceId];
-    if(window.OmegaOS)window.OmegaOS.events.emit('workflow:completed',{workflow:workflowId,instance:instanceId,ctx:ctx});
-    return {ok:true,instance:instanceId,result:ctx};
+    if(window.OmegaOS)window.OmegaOS.events.emit('workflow:completed',{workflow:workflowId,instance:instanceId,status:entry.status,ctx:ctx});
+    return {ok:entry.status==='completed',instance:instanceId,result:ctx};
   }
 
   /* ── TRIGGER WORKFLOWS FROM EVENTS ──────────────────────────────── */

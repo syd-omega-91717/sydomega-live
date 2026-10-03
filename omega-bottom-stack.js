@@ -170,9 +170,19 @@
     addEventListener('orientationchange', schedule, { passive: true });
     /* The docks are injected by other modules at unpredictable times, and the
        approval guard reveals the shell with no resize event of its own
-       (CLAUDE.md 8.1 class 3), so a DOM observer is the only reliable signal. */
+       (CLAUDE.md 8.1 class 3), so a DOM observer is the only reliable signal.
+       Defer observer setup until after DOMContentLoaded to prevent reflows during
+       module injection phase (FIXES_LOG entry: layout shift during initial load). */
     if (document.body) {
-      new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+      if (document.readyState === 'loading') {
+        // Don't observe mutations during initial load — defer until DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function initObserver() {
+          new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+        }, { once: true });
+      } else {
+        // If we're already past DOMContentLoaded, observe immediately
+        new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+      }
     }
   }
 

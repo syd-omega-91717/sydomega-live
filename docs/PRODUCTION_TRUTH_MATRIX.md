@@ -31,15 +31,15 @@
 |---|---|---|
 | Production project | Active production project established | Keep canonical project ID documented |
 | PostgreSQL | Live; direct SQL verification completed 2026-09-15 | Continue schema verification |
-| Public tables | **220** at live verification 2026-09-23 | Re-run inventory before each release |
-| Public functions | **128** at live verification 2026-09-15 | Re-run privilege/function audit |
-| RLS | **220/220** public tables have RLS enabled at live verification 2026-09-23 | Complete policy-semantic regression and member/owner access tests |
-| Tables without policies | **0** at live verification 2026-09-23 | Preserve this invariant |
+| Public tables | **229** at live verification 2026-10-01 | Re-run inventory before each release |
+| Public functions | **current inventory not re-counted in the 2026-10-01 snapshot** | Re-run privilege/function audit |
+| RLS | **229/229** public tables have RLS enabled at live verification 2026-10-01 | Complete policy-semantic regression and member/owner access tests |
+| Tables without policies | **0** at live verification 2026-10-01 | Preserve this invariant |
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
-| Migration history | Live migration history verified through `20260923140718` on 2026-09-23 | Check schema drift before each release |
+| Migration history | Live migration history reconciled through the 2026-10-01 convergence evidence | Check schema drift before each release |
 | Storage | Live buckets/policies verified 2026-09-26; `avatars`/`uploads` owner-scoped DELETE policies exist; live object count currently 0 | Exercise a real isolated authenticated upload/read/delete and cross-user denial test before marking lifecycle production-verified |
-| Edge Functions | **Source/live mismatch observed 2026-09-26**: repository contains more Edge Function source than the 5 ACTIVE functions currently returned by live Supabase | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
+| Edge Functions | **Source/live mismatch remains under reconciliation**: the 2026-10-01 live snapshot confirms active functions including concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph, while repository source contains additional functions | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
 
 ## Authentication
 
@@ -61,9 +61,9 @@
 |---|---|---|
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
-| Vercel production deployment | Current main SHA `0b5c001802cf95fe11a7f9ec204966fbfe454e7e` has a successful Vercel status | Keep production propagation/smoke gates mandatory |
+| Vercel production deployment | **INTEGRATION STATUS PASS** for release commit `52a32f14d7fbbfa61f442fac0e1e2d3c36b8d9e9`; GitHub combined status reports Vercel `success`. Direct connected-Vercel inspection remains blocked by a 403 scope authorization response. | Restore connected Vercel scope authorization and independently inspect deployment ID, production alias, logs and browser smoke |
 | GitHub workflows | **PR #470 corrected-commit verification is green on 2026-09-26**: CI, CodeQL, Contracts, Supabase Runtime Contract, Supabase Migration Security Audit, Production Contract, Runtime Contract, Repository Integrity, Release Readiness, Capability Evidence, Intelligence Fabric and Workflow Contract all passed | Preserve concurrency policy and investigate any new failure at root cause |
-| Production smoke checks | Implemented and successful for the prior release evidence set; current main deployment has a successful Vercel status, but production smoke evidence for the latest SHA is not independently re-exercised in this session | Require successful execution as release evidence |
+| Production smoke checks | Implemented and successful for the prior release evidence set; current Vercel production deployment is not independently established in the 2026-10-01 snapshot | Require successful execution as release evidence |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
 ## Payments / financial integrity
@@ -139,5 +139,6 @@ A production release should not be declared complete until all P0/P1 items below
 - [ ] Backup/restore procedure has been exercised.
 - [x] Current release evidence records Git SHA, deployment evidence and Supabase transport reachability.
 - [ ] Latest main SHA has fresh production smoke evidence for all critical journeys.
+- [x] Repository production-proof contract exists and is wired into the Vercel validation workflow.
 
 **This matrix intentionally does not invent completion. It is updated only when evidence changes.**

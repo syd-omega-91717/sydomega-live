@@ -21767,3 +21767,155 @@ could tell a rotated key from the old one, or a new key that does not work.
 - `test_owner_deck.py` +1.
 
 **Owner action:** rotate each key at its provider, set it in Supabase secrets, then VERIFY → DONE.
+
+## `main` red after the World merges: one page served as three documents (2026-09-28)
+
+`main` at `842d14e4` failed 6 of 28 blocking checks locally and 5 workflows on GitHub (CI, Contracts, Production Contract, Repository Integrity, Vercel Production).
+
+- **`world.html` was three complete HTML documents on three lines.** Three branches (#506 achievement chain, #507 provenance, #508 continuity) each rewrote the page as a single line, and the merges kept all three. The result: 22 duplicate ids, 3 H1s, 3 meta descriptions. It is now one document holding the union: map, provenance, progression, achievement chain, legacy constellation and continuity portals.
+- **`omega-achievement-evidence-chain.js` was loaded by no page.** Its section was mounted but its script never was (§8.1 class 4). It now loads, and renders in the harness ("ACHIEVEMENT EVIDENCE CHAIN · LIVE").
+- **`eternity.html` and `replay.html` had no `#omega-side` and were missing from `nav.js`.** Both are now in COMMAND beside OMEGA WORLD. A shallow read had called `replay.html` empty (`wc -l` 0); it is 1,156 bytes with no trailing newline.
+- **`event-ingest` was missing from `supabase/edge-functions.json`.** Added.
+- **Migration drift:** `20260928100000_omega_event_fabric_idempotency` *was* applied live (`schema_migrations` has it, and the index `omega_platform_events_member_idempotency_idx` exists). Only the snapshot lacked it; it is now registered (238 versions).
+- **Page counts** "208" → 210 on 5 pages, in `T_EN` and in all 6 packs. `ecosystem.html` also said "196-PAGE PLATFORM", which the gate did not catch.
+
+**Verified:** `./scripts/ci-local.sh` 28/28. `verify-runtime.js` passes on world, eternity, replay and dashboard; the harness shows a sidebar, 1 H1 and no overflow on each.
+
+## Registry auto-commits hid real PR failures behind zero-job runs (issue #509, 2026-09-28)
+
+`omega-registry-sync.yml` ran on every non-`main` push and committed `chore: synchronize generated omega registry` about 10 seconds later. Measured on PR #508:
+
+- The author's head `56d05952` ran the real CI job, which **failed** at "Audit tooling tests" (the deck-coverage test for `eternity`/`replay`).
+- The bot's commit `c2ad6f1b` then became the PR head. All 11 of its PR runs had **0 jobs** (`list_workflow_jobs` → `total_count: 0`) and were stamped `failure` at merge time.
+- The PR merged with the real failure buried under an empty head, which put `main` red.
+- Intermediate author heads such as `a8c63fbb` got only the sync run: the issue's "no workflow runs".
+
+This broke CLAUDE.md §8.2's standing rule ("never auto-commit it in CI"). The workflow is now `workflow_dispatch` only. The registry stays gated by CI's "Skill and agent registry" step and by `ci-local.sh`.
+
+## Owner's collections: 12 broken zodiac images, Passport art, `Ω` shown as text (2026-09-28)
+
+- **Legacy Constellation zodiac cards: 12 of 12 broken images.** The code loaded `/Zodiac_signs/horoscope_sign_*.png.jpeg`, but those files live in `BlockChain_Market_Analysis_syd_omega_91717/horoscope_sign/`; `Zodiac_signs/` holds `WhatsApp Image …` files. The broken-asset gate reads markup and cannot see JS-built paths. The path is fixed, and `test_legacy_assets.py` resolves all 62 named files through the module itself. The test fails on the previous code.
+- **Passport:** the member's own sign art and stage medal, driven only by `profiles.sign` and the stage the card already derives (1..9, one medal per stage). The source art had a checkerboard baked into the JPEG. It was cut to real alpha in the harness Chromium (edge flood-fill of low-chroma pixels ≥210, 1px feather) and saved as 21 WebP files in `/assets/legacy/`, 19–55 KB each vs about 170 KB. Rendered: both images load, captioned "ARIES" / "STAGE 3".
+- **`<div class="seal">Ω</div>` and the photo placeholder** used a JS escape in HTML. A scan of every page's text and attributes outside `<script>`/`<style>` found only these 2 cases; both are now `&#937;`.
+- **`eternity.html`/`replay.html` declared `robots: index,follow`** against the platform-wide `X-Robots-Tag: noindex`; both now say `noindex, nofollow`.
+- **Open (owner decision):** the medal art names stages Initiate…Universal S.Y.D, while `PP_RANKS` names them Initiate…Omega, and 7 of 9 differ. `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` Round 3 has both lists.
+
+**Verified:** ci-local 28/28; 486 tests; `verify-runtime.js` passes on profile, world, eternity and replay.
+
+## Profile: owner name, dead boot, stuck spinners, split layout (2026-09-28)
+
+Reported from a photo of `sydomega.com/profile` (owner session): the character
+card read "MAJOR SLEIMAN YOUSSEF DAGHER", small loading circles never stopped,
+AUTHORITY / MATRIX COORD / MATERIAL TIER read `--`, and the page was split into
+two squeezed columns. Each item was reproduced in the harness (owner stub,
+1536px) before it was changed.
+
+- **Name.** Not in the page code: live `profiles.display_name` was
+  `Major Sleiman Youssef Dagher` on both owner rows (seeded by
+  `0039_lifetime_access.sql`). Migration
+  `20260928152818_owner_public_name_syd.sql` sets it to `S.Y.D`, applied live
+  and re-read (`select display_name from profiles where is_owner` → 2×`S.Y.D`).
+  Hardcoded copies removed from `omega-share-card.js` (×2), `omega-protect.js`,
+  `omega-canon.json`, the access-denied gate on `approvals.html` (seen by
+  non-owners) and `sovereign-covenant.html`. The full name
+  "Sleiman Youssef Dagher" stays only on owner/admin surfaces (`approvals.html`
+  owner badge, the owner's own Identity FULL NAME field). `privacy.html`
+  keeps the full name as the legal data controller, with "Major" dropped.
+- **Dead boot.** The 2026-07-26 upload (`60588625`) deleted `async function
+  boot(){` and its profile read; the body was left inside a
+  `buildAchievements(uid)` that nothing called, and a comment claimed "boot()
+  removed -- module self-initialises". So the stat bar, owner console, member
+  list and membership card never loaded for anyone. Restored `boot()` and the
+  deleted `buildConsole()`; moved `buildAchievementsGrid`/`buildCerts` into the
+  module that owns `ACHIEV` (they were in another module, where it is not in
+  scope); dropped a stray `buildTiers(realAuth)` that overwrote the KYC tier grid.
+  Harness, before → after: `sg-auth` `--` → `27.837`, `sg-coord` `(--,--,--)` →
+  `(9.000,9.000,9.000)`, `sg-member` `--` → `SOVEREIGN`, 0 page errors.
+- **Fabricated count (§8.1 class 9).** `buildAchievementsGrid()` marked all 36
+  achievements earned and printed 36 for every member. It now reads
+  `trophies_earned/medals_earned/certificates_earned`, which match the rows live
+  (owners 12/12/12, the other 7 members 0/0/0), and locks the rest.
+- **Unreachable apex.** OMEGA MASTER threshold was `27.83679`; the maximum
+  authority (9,9,9) is `27.83668…`, so no one could reach it — the owner read
+  PRIME. Threshold → `27.8366`. The tier label also raced `i18n.js` (empty when
+  `OmegaI18n` was not yet loaded); it now falls back to the key.
+- **Owner membership.** `my_subscription()` returns `status:'none'` for the owner
+  (lifetime, no Stripe row — verified impersonating the owner), which rendered
+  "NO ACTIVE MEMBERSHIP" on the founder's profile. Owner → SOVEREIGN · ∞ LIFETIME.
+- **Spinners (bg.js).** Renderers fill `[data-loading]` regions but never remove
+  the attribute, and while pending `omega-components.js` paints the text
+  transparent under a spinner — the data arrived and stayed invisible. The
+  loading guard now clears the marker when a region receives content (or
+  already has it when armed: module scripts run before `DOMContentLoaded`), and
+  never declares a hidden region (closed tab) failed. Harness: 12 stuck regions
+  → 0 on the visible tab; 0 false "DATA NOT LOADED" after 14s. `sw.js`
+  `CACHE_VERSION` v7 → v8 so the stale-while-revalidate cache drops the old bg.js.
+- **Layout (§4 `.shell` flex row).** A second `</main>` closed the content column
+  before `#tab-character`/`#tab-science`, so they became a third flex column and
+  squeezed everything to 739px. Removed; content column back to 1456px.
+  `.stat-grid` `auto-fill` → `auto-fit` so six tiles fill the row.
+- Members no longer see the owner-only Access Control panel (its list is only
+  loaded for the owner and could only spin).
+- Pre-existing, not from this change (fail identically on `origin/main`):
+  `evidence.html: missing navigation/runtime shell hook` (gate 9b). The
+  `fk_indexes` migration file was renamed to its applied version `20260928151417`
+  so migration-drift passes.
+
+## Privacy policy named no contact for the data controller (2026-09-28)
+
+`privacy.html` identified the controller (Sleiman Youssef Dagher — kept as the
+full legal name: GDPR Art. 13(1)(a) and Lebanon Law 81/2018 require the
+controller's identity, which initials do not give) but gave no contact details,
+which Art. 13(1)(a) also requires. Added `info@sydomega.com` (supplied by the
+owner, 2026-09-28) as the contact for privacy and data-rights requests, and
+pointed the erasure-failure message at it instead of "CONTACT ADMINISTRATOR".
+
+## `main` red after #522; Evidence Graph built a client with a key the project does not have; World zodiac rendered as white tiles (2026-09-29)
+
+`main` @ `5fde492` (merge of #522): **Contracts** and **CI** red.
+
+- **Contracts → `migration-drift`.** `20260929083000_omega_event_ingest_idempotency_unique`
+  was in `supabase/migrations/` and absent from `supabase/remote-migrations.json`.
+  `mcp__Supabase__list_migrations` (2026-09-29) lists it as **applied live**, last
+  entry after `20260928200648` — so the snapshot was stale, not the schema. Snapshot
+  refreshed (`_captured` 2026-09-29, 244 versions). `contract-suite.py`: 21/21 → 22/22.
+- **CI → `test_script_help_contract`.** `scripts/enable-supabase-hibp.py --help`
+  exited 2 (it required `SUPABASE_ACCESS_TOKEN` before reading argv). Now prints its
+  docstring and exits 0. 487 → 492 tests, all passing.
+- **Registry drift already on `main`.** `omega-registry.py --check` failed on
+  `origin/main` (edge-functions skill + two migrations without regeneration).
+  Regenerated.
+- **`evidence.html` (gate 9b, recorded as pre-existing in the entry above).** The only
+  member page outside `.shell` + `#omega-side`: no sidebar, no back link. Now matches
+  `replay.html`/`world.html`: `data-page="evidence"`, `omega-visual-universe.css`,
+  `noindex`. Surface contract: PASS, 219 pages.
+- **Evidence Graph never saw a signed-in member (§8.1 class 1/9).**
+  `omega-evidence-graph.js` built its own client with `sb_publishable_4L5Qy5vQ9pQm8hM0QmQ`.
+  `mcp__Supabase__get_publishable_keys` returns only `sb_publishable_9Klhhn…` (plus the
+  legacy anon JWT); the 314 other occurrences in the estate use that one. The module
+  runs before bg.js's shared client resolves, so the wrong key was the normal path:
+  `auth.getUser()` failed → "Sign in to view member-scoped evidence" for signed-in
+  members, and every read failed. Fixed: `window.OmegaSB.get()` only, never
+  `createClient`. Also: a failed source now renders `—`, not `0`; cards and rows are
+  scope-labelled **MEMBER** / **PLATFORM** (`omega_platform_evidence` has no `user_id`);
+  UNAVAILABLE `#8b0000` (~1.9:1 on the page ground) → `#cf6760`. Rendered via the
+  harness: signed-in LIVE, sidebar present, 0 page errors; signed-out UNAVAILABLE,
+  content behind the approval guard.
+- **New gate `supabase-client-key` (blocking, in `contract-suite.py`).**
+  `scripts/supabase-client-key-contract.py`: every shipped `.html/.js/.json` may name
+  only bg.js's project host and publishable key. Proven both ways: FAIL on the pre-fix
+  module (exactly 1 finding estate-wide), PASS after; 5 planted-violator tests in
+  `scripts/tests/test_supabase_client_key_contract.py`. The evidence contract now also
+  refuses `createClient`/`sb_publishable_` in the module and requires both scope labels.
+- **World → Legacy Constellation → ZODIAC: 12 white tiles.** It rendered
+  `horoscope_sign/*.png.jpeg`, whose "transparency" is a checkerboard baked into the
+  JPEG. The same art already existed cut to alpha in `/assets/legacy/sign-*.webp`
+  (Passport, entry above). The gallery now renders those (~45 KB vs ~170 KB each);
+  the source filename stays as provenance. Harness: 12/12 load, white tiles gone.
+  `test_legacy_assets.py` now asserts the 12 rendered cutouts too (62 → 74 paths).
+
+Open, owner's art (not fixable in code without re-authoring): Stage 8 medal reads
+"SOVERRIGN"; stages 1–4, 6, 7 carry a baked filename caption (`logo_stage.2.png` on
+the Stage 4 medal) whose residue shows under the Passport cutouts. `Zodiac_signs/`
+(unused) has 12 files for 11 signs — Aries twice, no Taurus. Full estate audit:
+`docs/OMEGA_VISUAL_ESTATE_AUDIT_20260929.md`.

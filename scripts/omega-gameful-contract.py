@@ -29,6 +29,8 @@ MODULES = {
 }
 
 RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css", "omega-legacy-constellation.js", "omega-world-progression.js"]
+RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css", "omega-legacy-constellation.js", "omega-world-progression.js", "omega-achievement-evidence-chain.js", "docs/OMEGA_ACHIEVEMENT_EVIDENCE_CHAIN.md"]
+RUNTIME_FILES = ["world.html", "omega-world-engine.js", "omega-world-engine.css", "omega-legacy-constellation.js", "omega-world-progression.js", "omega-capability-provenance.js"]
 
 REQUIRED = [
     "Why does it exist?",

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "purpose": "Server-authoritative referral attribution, fraud review, conversion and reversible reward policy.",
+  "rules": {
+    "one_attribution_per_referred_user": true,
+    "self_referral": "deny",
+    "reward_before_qualification": "deny",
+    "reward_before_provider_settlement": "deny",
+    "reward_posting": "server_only",
+    "ledger_posting": "idempotent",
+    "reversal": "supported",
+    "fraud_review": "required_for_high_risk_signals"
+  },
+  "qualifying_events": ["verified_onboarding", "settled_purchase", "approved_service_order"],
+  "default_reward": {
+    "type": "leaderboard_points",
+    "value": 200,
+    "status": "policy_only",
+    "note": "The value comes from the source specification; no points are credited until a qualifying event and server verification exist."
+  }
+}

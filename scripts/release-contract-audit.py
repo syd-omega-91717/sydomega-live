@@ -116,6 +116,10 @@ secret_patterns = [
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in web_extensions:
         continue
+    # config/ is repository governance/runtime source, not browser-delivered
+    # content. Keep it out of the shipped-credential scan and out of public/.
+    if path.as_posix().endswith("config/omega-implementation-ledger.json"):
+        continue
     if any(part in {".git", "node_modules", "tests", "scripts", "supabase", "docs", ".claude", ".github"} for part in path.parts):
         continue
     try:

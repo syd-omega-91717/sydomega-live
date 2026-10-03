@@ -160,7 +160,23 @@ a{color:inherit;text-decoration:none}
     <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COSMOS") -->
     <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
          data-sculpt-accent="#9B6BF0" data-sculpt-bloom="off"
+         data-sculpt-pulse-source="task_count"
          data-sculpt-label="The Omega signet, tinted to the Cosmos realm"></div>
+
+    <div style="background:rgba(168,85,247,.06);border-bottom:1px solid rgba(168,85,247,.2);padding:16px 20px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;max-width:900px;margin:0 auto">
+        <div style="flex:1">
+          <div style="font-family:var(--M);font-size:11px;letter-spacing:3px;color:rgba(168,85,247,.7);margin-bottom:8px;text-transform:uppercase">PROPHECY DOMAIN — TIER 4</div>
+          <div style="font-family:var(--D);font-size:20px;color:rgba(168,85,247,.9);margin-bottom:8px">Cosmic's Equilibrium</div>
+          <p style="font-size:13px;line-height:1.6;color:rgba(168,85,247,.8);margin:0;max-width:55ch">Balance the forces of the cosmos and master the art of cosmic harmony. Equilibrate celestial patterns and unlock universal synchronization.</p>
+          <div style="margin-top:12px;font-family:var(--M);font-size:11px;letter-spacing:2px;color:rgba(168,85,247,.6)">190 POINTS — COMPLETE THE QUEST</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-shrink:0;margin-left:20px">
+          <button class="btn btn-fill" onclick="window.startCosmosQuest&&window.startCosmosQuest()" style="font-size:12px;padding:8px 16px;background:rgba(168,85,247,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
+          <button class="btn" onclick="window.showCosmosQuestDetail&&window.showCosmosQuestDetail()" style="font-size:12px;padding:8px 16px;border:1px solid rgba(168,85,247,.5);color:rgba(168,85,247,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
+        </div>
+      </div>
+    </div>
 
     <!-- TAB NAVIGATION -->
     <div class="tab-nav" id="tab-nav">
@@ -1099,6 +1115,48 @@ async function bootHoroscopeFull(){
 }
 window.bootHoroscopeFull = bootHoroscopeFull;
 
+/* Data-bind task_completions to sculpture pulse */
+async function initSculpturePulse() {
+  const stage = document.querySelector('[data-sculpt-pulse-source="task_count"]');
+  if (!stage) return;
+
+  const checkReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  async function updatePulse() {
+    if (!window.__omegaSB) return;
+    try {
+      const { data, error } = await window.__omegaSB
+        .from('task_completions')
+        .select('id', { count: 'exact', head: true });
+      if (!error && data !== null) {
+        const count = data.length || 0;
+        const normalized = Math.min(count / 100, 1.0);
+        stage.setAttribute('data-sculpt-pulse', normalized.toString());
+      }
+    } catch (e) {
+      console.debug('Pulse update error:', e);
+    }
+  }
+
+  updatePulse();
+
+  if (!checkReducedMotion()) {
+    const sub = window.__omegaSB
+      ?.from('task_completions')
+      ?.on('*', () => updatePulse());
+    if (sub) sub?.subscribe();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSculpturePulse);
+} else {
+  initSculpturePulse();
+}
+
+</script>
+<script>
+(function initCosmosQuestWidget(){var maxRetries=50,retryCount=0;function tryInit(){if(window.OmegaQuests&&window.OmegaQuests.registerQuestWidget){window.OmegaQuests.registerQuestWidget('prophecy',{questId:'cosmics_equilibrium',tier:4,points:190,title:'Cosmic\'s Equilibrium',description:'Balance the forces of the cosmos and master the art of cosmic harmony. Equilibrate celestial patterns and unlock universal synchronization.',domain:'prophecy'});window.startCosmosQuest=function(){if(window.OmegaQuests){window.OmegaQuests.startQuest('cosmics_equilibrium','prophecy')}};window.showCosmosQuestDetail=function(){if(window.OmegaQuests){window.OmegaQuests.showQuestDetail('cosmics_equilibrium','prophecy')}};window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'prophecy',quest:'cosmics_equilibrium'})}else if(retryCount<maxRetries){retryCount++;setTimeout(tryInit,100)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryInit)}else{tryInit()}})();
 </script>
 <script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

@@ -1,0 +1,421 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-agent-registry",
+  "principle": "Agents are governed capabilities, not unrestricted autonomous actors.",
+  "defaultPolicy": {
+    "enabled": false,
+    "toolAccess": "DENY",
+    "externalSideEffects": false,
+    "financialActions": "HUMAN_APPROVAL_REQUIRED"
+  },
+  "agents": [
+    {
+      "id": "sentinel",
+      "name": "Sentinel",
+      "version": "1.0.0",
+      "purpose": "security,monitoring,threat detection",
+      "riskLevel": "HIGH",
+      "status": "DESIGNED",
+      "capabilities": [
+        "security,monitoring,threat detection"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "analyst",
+      "name": "Analyst",
+      "version": "1.0.0",
+      "purpose": "research, quantitative analysis, evidence synthesis",
+      "riskLevel": "MEDIUM",
+      "status": "DESIGNED",
+      "capabilities": [
+        "research",
+        "quantitative analysis",
+        "evidence synthesis"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "historian",
+      "name": "Historian",
+      "version": "1.0.0",
+      "purpose": "provenance, archive, chronology, knowledge retrieval",
+      "riskLevel": "LOW",
+      "status": "DESIGNED",
+      "capabilities": [
+        "provenance",
+        "archive",
+        "chronology",
+        "knowledge retrieval"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "NONE",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "tutor",
+      "name": "Tutor",
+      "version": "1.0.0",
+      "purpose": "education, guided learning, progression support",
+      "riskLevel": "LOW",
+      "status": "DESIGNED",
+      "capabilities": [
+        "education",
+        "guided learning",
+        "progression support"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "NONE",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "merchant",
+      "name": "Merchant",
+      "version": "1.0.0",
+      "purpose": "catalog, commerce workflow, pricing intelligence",
+      "riskLevel": "HIGH",
+      "status": "DESIGNED",
+      "capabilities": [
+        "catalog",
+        "commerce workflow",
+        "pricing intelligence"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "proxy",
+      "name": "Proxy",
+      "version": "1.0.0",
+      "purpose": "authorized workflow delegation",
+      "riskLevel": "HIGH",
+      "status": "DESIGNED",
+      "capabilities": [
+        "authorized workflow delegation"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "version": "1.0.0",
+      "purpose": "interpretive/oracle content, scenario exploration",
+      "riskLevel": "MEDIUM",
+      "status": "DESIGNED",
+      "capabilities": [
+        "interpretive/oracle content",
+        "scenario exploration"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "version": "1.0.0",
+      "purpose": "public-source discovery, opportunity research",
+      "riskLevel": "MEDIUM",
+      "status": "DESIGNED",
+      "capabilities": [
+        "public-source discovery",
+        "opportunity research"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "warden",
+      "name": "Warden",
+      "version": "1.0.0",
+      "purpose": "policy, safety, access review",
+      "riskLevel": "HIGH",
+      "status": "DESIGNED",
+      "capabilities": [
+        "policy",
+        "safety",
+        "access review"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "auditor",
+      "name": "Auditor",
+      "version": "1.0.0",
+      "purpose": "audit evidence, controls, compliance checks",
+      "riskLevel": "HIGH",
+      "status": "DESIGNED",
+      "capabilities": [
+        "audit evidence",
+        "controls",
+        "compliance checks"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "beacon",
+      "name": "Beacon",
+      "version": "1.0.0",
+      "purpose": "notifications, publication, system announcements",
+      "riskLevel": "MEDIUM",
+      "status": "DESIGNED",
+      "capabilities": [
+        "notifications",
+        "publication",
+        "system announcements"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    },
+    {
+      "id": "sovereign",
+      "name": "Sovereign",
+      "version": "1.0.0",
+      "purpose": "cross-agent orchestration under explicit policy",
+      "riskLevel": "CRITICAL",
+      "status": "DESIGNED",
+      "capabilities": [
+        "cross-agent orchestration under explicit policy"
+      ],
+      "allowedTools": [],
+      "deniedTools": [
+        "unscoped_external_side_effects",
+        "credential_access",
+        "secret_read",
+        "unapproved_financial_transfer",
+        "covert_surveillance"
+      ],
+      "dataScope": "least_privilege",
+      "modelProvider": "policy_selected_at_runtime",
+      "budget": {
+        "currency": "USD",
+        "maxPerTask": 0
+      },
+      "rateLimit": {
+        "perMinute": 0
+      },
+      "approvalPolicy": "HUMAN_APPROVAL_REQUIRED",
+      "auditPolicy": "REQUIRED",
+      "evidencePolicy": "REQUIRED",
+      "fallback": "human_review"
+    }
+  ],
+  "contracts": {
+    "execution": "registry -> policy check -> task authorization -> tool authorization -> execution -> evidence -> audit event",
+    "identity": "Every invocation has agent_id, version, actor_id, task_id, policy_version and correlation_id.",
+    "financial": "No agent may post directly to the financial ledger; approved server workflows may do so after authorization.",
+    "external": "No agent may call an external side-effecting integration without an explicit tool grant.",
+    "autonomous": "No recursive self-propagation or unbounded autonomous execution."
+  }
+}

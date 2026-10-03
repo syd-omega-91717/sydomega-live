@@ -35,7 +35,7 @@
     ['omega-visual-command', 'VISUAL COMMAND'], ['agent', 'AGENT'],
     ['verify-deployment', 'VERIFY DEPLOY'], ['verify-modules', 'VERIFY MODULES'],
     ['healthz', 'HEALTH'], ['account', 'SIGN IN'], ['pending', 'PENDING'],
-    ['offline', 'OFFLINE'], ['index', 'FRONT DOOR']
+    ['offline', 'OFFLINE'], ['visual-atlas', 'VISUAL ATLAS'], ['index', 'FRONT DOOR']
   ];
   var OWNER_SEC = { key: 'owner', label: 'OWNER', icon: '\u03A9', col: '#E8C766' };
   var WAIT_MS = 10000;

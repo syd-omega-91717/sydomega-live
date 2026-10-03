@@ -58,6 +58,25 @@
 
 <div class="tab-panel active" id="tab-labs">
   <div class="sechead">SOVEREIGN RESEARCH LABORATORIES</div>
+
+  <!-- QUEST WIDGET -->
+  <div id="quest-widget-research" style="border:1px solid rgba(100,200,255,.1);background:rgba(100,200,255,.04);padding:14px;margin-bottom:14px;display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(100,200,255,.6)">QUEST · DISCOVERY</div>
+      <div id="quest-tier-research" style="font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:rgba(100,200,255,.5)">TIER —</div>
+    </div>
+    <div id="quest-title-research" style="font-family:var(--D);font-size:16px;color:var(--cyan);margin-bottom:8px">—</div>
+    <div id="quest-desc-research" style="font-family:var(--R);font-size:12px;color:rgba(100,200,255,.7);line-height:1.6;margin-bottom:10px">—</div>
+    <div id="quest-progress-bar-research" style="background:rgba(100,200,255,.1);height:6px;border-radius:3px;margin-bottom:10px;overflow:hidden;display:none">
+      <div style="background:var(--cyan);height:100%;width:0%;transition:width .3s" id="quest-progress-fill-research"></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="quest-start-btn-research" style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(100,200,255,.3);color:var(--cyan);background:none;cursor:pointer;display:none" onclick="startResearchQuest()">START QUEST</button>
+      <button id="quest-detail-btn-research" style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(100,200,255,.3);color:var(--cyan);background:none;cursor:pointer;display:none" onclick="showResearchQuestDetail()">VIEW DETAILS</button>
+      <div id="quest-status-research" style="font-family:var(--M);font-size:12px;color:rgba(100,200,255,.5);display:none;margin-top:2px">—</div>
+    </div>
+  </div>
+
   <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:640px">Each lab's progress bar is driven by your own axis data — Knowledge, Mastery, Contribution, and overall Authority — not a fixed number. It moves as you do.</div><div style="font-size:12px;color:var(--muted);line-height:1.6;margin:-4px 0 12px;max-width:640px">Catalog status describes the research program; it does not claim a live laboratory feed.</div>
   <div class="kpi-row" data-stagger data-stagger-gap="70">
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">9</div><div class="kpi-label">RESEARCH LABS</div></div>
@@ -202,6 +221,62 @@ function renderTwins(){
   if(window.omegaSweep) window.omegaSweep.sweep(g,350);
 }
 document.addEventListener('DOMContentLoaded',function(){renderLabs();renderDiscoveries();renderTwins();});
+
+(function initResearchQuestWidget(){
+  let attempts=0;
+  const maxAttempts=50;
+  function tryInit(){
+    if(typeof window.OmegaQuests!=='undefined'){
+      const quest=window.OmegaQuests.getQuest('discovery','scouts_trail');
+      const progress=window.OmegaQuests.getProgress('discovery','scouts_trail');
+      if(quest){
+        document.getElementById('quest-tier-research').textContent='TIER '+(quest.tier||'—');
+        document.getElementById('quest-title-research').textContent=quest.title;
+        document.getElementById('quest-desc-research').textContent=quest.description;
+        document.getElementById('quest-widget-research').style.display='block';
+        if(progress&&progress.current>0){
+          document.getElementById('quest-progress-bar-research').style.display='block';
+          document.getElementById('quest-progress-fill-research').style.width=((progress.current/progress.max)*100)+'%';
+          document.getElementById('quest-status-research').textContent=progress.current+'/'+progress.max+' completed';
+          document.getElementById('quest-status-research').style.display='block';
+        }
+        if(quest.isStarted){
+          document.getElementById('quest-start-btn-research').style.display='none';
+          document.getElementById('quest-detail-btn-research').style.display='inline-block';
+        }else{
+          document.getElementById('quest-start-btn-research').style.display='inline-block';
+          document.getElementById('quest-detail-btn-research').style.display='none';
+        }
+        window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'discovery',quest:'scouts_trail'});
+      }
+      return true;
+    }
+    return false;
+  }
+  function retry(){
+    if(!tryInit()&&attempts<maxAttempts){
+      attempts++;
+      setTimeout(retry,100);
+    }
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',retry);
+  }else{
+    retry();
+  }
+})();
+
+window.startResearchQuest=function(){
+  if(typeof window.OmegaQuests!=='undefined'){
+    window.OmegaQuests.startQuest('discovery','scouts_trail');
+  }
+};
+
+window.showResearchQuestDetail=function(){
+  if(typeof window.OmegaQuestUI!=='undefined'){
+    window.OmegaQuestUI.showModal({domain:'discovery',quest:'scouts_trail'});
+  }
+};
 </script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

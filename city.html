@@ -38,12 +38,13 @@
 .council-name{font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:4px}
 .council-desc{font-family:var(--M);font-size:12px;color:var(--muted)}
 </style>
+<script src="/omega-living-city.js" defer></script>
 </head>
 <body>
 <aside id="omega-side" data-page="city"></aside>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
-  <div class="topbar-title">&#937; CITY<span class="topbar-sub">SOVEREIGN SMART CITY · 9 DISTRICTS · BLUEPRINT PHASE</span></div>
+  <div class="topbar-title">&#937; CITY<span class="topbar-sub">LIVING WORLD · 9 DISTRICTS · REAL PLATFORM SURFACES</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-live data-ring-value="0" aria-label="Authority ring"></canvas>
 </header>
 <div class="tab-bar">
@@ -60,7 +61,13 @@
       <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--gold)">9</div><div class="kpi-label">DISTRICTS</div></div>
       <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--cyan)">729</div><div class="kpi-label">MATRIX NODES</div></div>
       <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--green)">9.17 Hz</div><div class="kpi-label">RESONANCE</div></div>
-      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--gold)">9,999</div><div class="kpi-label">CITIZEN THRESHOLD</div></div>
+      <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" style="color:var(--gold)">12</div><div class="kpi-label">AUTHORITY GATES</div></div>
+    </div>
+    <div class="sim-controls" aria-label="City simulation controls">
+      <button id="city-play" type="button" aria-pressed="true">PAUSE</button>
+      <button id="city-reset" type="button">RESET</button>
+      <label for="city-speed">SPEED <input id="city-speed" type="range" min="0.25" max="3" step="0.25" value="1" aria-label="Simulation speed"/></label>
+      <span id="city-state" role="status">LIVE SIMULATION</span>
     </div>
     <div class="city-canvas-wrap">
       <canvas id="city-canvas" aria-label="Live Ω City simulation"></canvas>
@@ -73,8 +80,10 @@
       </div>
     </div>
     <p style="font-size:14px;color:var(--muted);line-height:1.8;max-width:72ch;margin-bottom:1rem">
-      &#937; City is a live visual model of the sovereign city system.
+      &#937; City is the world layer: every district points to real platform surfaces, real progression, and real actions. The simulation is visual; member progress remains governed by the existing authority, mission, achievement, and commerce systems.
     </p>
+    <div id="omega-world-loop" class="omega-world-loop" aria-label="Living world progression loop"></div>
+    <div id="omega-city-focus" hidden aria-live="polite"></div>
     <details class="city-rules" style="border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);padding:12px 16px;border-radius:8px;font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.8">
       <summary style="cursor:pointer;color:var(--gold);letter-spacing:2px">CITY RULES +</summary>
       <div style="padding-top:10px">

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest Progress — Ω</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <script src="/bg.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <style>
+    .qp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .qp-card { border: 1px solid rgba(217,119,6,.2); border-radius: 8px; padding: 1.5rem; background: rgba(0,0,0,.3); }
+    .qp-domain { font-family: var(--D); font-size: 1.1rem; color: var(--gold); margin-bottom: 0.5rem; }
+    .qp-progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; margin: 1rem 0; overflow: hidden; }
+    .qp-progress-fill { height: 100%; background: linear-gradient(90deg, rgba(217,119,6,.4), rgba(217,119,6,.8)); transition: width 0.3s ease; }
+    .qp-stats { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+    .qp-badge { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(217,119,6,.2); border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div id="omega-side"></div>
+  <main>
+    <div class="shell">
+      <div class="side"></div>
+      <div class="main">
+        <div id="app">
+          <h1 style="font-family: var(--D); color: var(--gold);">Quest Progress</h1>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Track your advancement across all 12 domains of mastery.</p>
+
+          <div id="qp-loading" style="text-align: center; color: var(--muted);">Loading your quest progress...</div>
+          <div id="qp-container" style="display: none;">
+            <div id="qp-grid" class="qp-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (async function() {
+      const container = document.getElementById('qp-container');
+      const grid = document.getElementById('qp-grid');
+      const loading = document.getElementById('qp-loading');
+
+      try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) {
+          loading.textContent = 'Please sign in to view your quest progress.';
+          return;
+        }
+
+        const { data: quests, error: questError } = await window.supabase
+          .from('quest_completions')
+          .select('quest_id, domain, progress, target, completed_at, reward_points')
+          .eq('user_id', user.id)
+          .order('domain', { ascending: true });
+
+        if (questError) throw questError;
+
+        const byDomain = {};
+        (quests || []).forEach(q => {
+          if (!byDomain[q.domain]) {
+            byDomain[q.domain] = [];
+          }
+          byDomain[q.domain].push(q);
+        });
+
+        if (Object.keys(byDomain).length === 0) {
+          loading.textContent = 'No quest progress yet. Start a quest to begin!';
+          return;
+        }
+
+        Object.entries(byDomain).forEach(([domain, domainQuests]) => {
+          const completed = domainQuests.filter(q => q.completed_at).length;
+          const total = domainQuests.length;
+          const totalPoints = domainQuests.reduce((sum, q) => sum + (q.reward_points || 0), 0);
+          const progressPct = (completed / total) * 100;
+
+          const card = document.createElement('div');
+          card.className = 'qp-card card';
+          card.innerHTML = `
+            <div class="qp-domain">${domain.charAt(0).toUpperCase() + domain.slice(1)}</div>
+            <div class="qp-progress-bar">
+              <div class="qp-progress-fill" style="width: ${progressPct}%"></div>
+            </div>
+            <div class="qp-stats">
+              <span>${completed}/${total} quests</span>
+              <span class="qp-badge">${totalPoints} pts</span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        loading.style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        loading.textContent = `Error loading progress: ${error.message}`;
+      }
+    })();
+  </script>
+</body>
+</html>

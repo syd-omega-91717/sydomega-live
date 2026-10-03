@@ -45,7 +45,7 @@
       const loading = document.getElementById('dm-loading');
 
       const domains = ['prophecy', 'finance', 'education', 'discovery', 'validation', 'execution',
-                       'governance', 'onboarding', 'archive', 'family', 'security'];
+                       'governance', 'onboarding', 'archive', 'family', 'security', 'health'];
 
       try {
         const { data: { user } } = await window.supabase.auth.getUser();
@@ -54,7 +54,6 @@
           return;
         }
 
-        // Fetch all domain mastery records
         const { data: mastery, error: masteryError } = await window.supabase
           .from('domain_mastery')
           .select('domain, level, total_points, quests_completed')
@@ -67,7 +66,6 @@
           masteryMap[m.domain] = m;
         });
 
-        // Render all 12 domains
         domains.forEach(domain => {
           const m = masteryMap[domain] || { level: 1, total_points: 0, quests_completed: 0 };
           const nextLevelPoints = m.level * 200;

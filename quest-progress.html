@@ -43,14 +43,12 @@
       const loading = document.getElementById('qp-loading');
 
       try {
-        // Get current user
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) {
           loading.textContent = 'Please sign in to view your quest progress.';
           return;
         }
 
-        // Fetch quest completions
         const { data: quests, error: questError } = await window.supabase
           .from('quest_completions')
           .select('quest_id, domain, progress, target, completed_at, reward_points')
@@ -59,7 +57,6 @@
 
         if (questError) throw questError;
 
-        // Group by domain
         const byDomain = {};
         (quests || []).forEach(q => {
           if (!byDomain[q.domain]) {
@@ -73,11 +70,10 @@
           return;
         }
 
-        // Render progress cards
-        Object.entries(byDomain).forEach(([domain, quests]) => {
-          const completed = quests.filter(q => q.completed_at).length;
-          const total = quests.length;
-          const totalPoints = quests.reduce((sum, q) => sum + (q.reward_points || 0), 0);
+        Object.entries(byDomain).forEach(([domain, domainQuests]) => {
+          const completed = domainQuests.filter(q => q.completed_at).length;
+          const total = domainQuests.length;
+          const totalPoints = domainQuests.reduce((sum, q) => sum + (q.reward_points || 0), 0);
           const progressPct = (completed / total) * 100;
 
           const card = document.createElement('div');

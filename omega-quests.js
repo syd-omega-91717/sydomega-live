@@ -7,47 +7,66 @@ const OmegaQuests = (() => {
   const state = {
     quests: [],
     userProgress: {},
-    listeners: []
+    listeners: [],
+    available: false
+  };
+
+  /* The shared client. window.OmegaSupabase is an accessor slot ({sb}) that
+     bg.js fills -- calling .from() on it threw "OmegaSupabase.from is not a
+     function" on every page. window.OmegaSB.get() is the publisher
+     (CLAUDE.md section 8.1 class 4). */
+  const client = async () => {
+    try {
+      if (window.OmegaSB && typeof window.OmegaSB.get === 'function') return await window.OmegaSB.get();
+    } catch (e) { return null; }
+    return (window.OmegaSupabase && window.OmegaSupabase.sb) || null;
   };
 
   // Initialize quest system
   const init = async () => {
     try {
       const quests = await fetchQuests();
-      const progress = await fetchUserProgress();
+      /* The quests backend (supabase/omega_quests_system.sql) is not deployed;
+         without it there is no progress to read either, so stop here. */
+      const progress = state.available ? await fetchUserProgress() : {};
 
       state.quests = quests || [];
       state.userProgress = progress || {};
 
       notifyListeners('init', { quests: state.quests, progress: state.userProgress });
     } catch (err) {
-      console.error('Quest init failed:', err);
+      console.warn('[quests] init failed:', err && err.message ? err.message : err);
     }
   };
 
   // Fetch all available quests
   const fetchQuests = async () => {
-    if (!window.OmegaSupabase) return [];
+    const sb = await client();
+    if (!sb) return [];
 
-    const { data, error } = await window.OmegaSupabase.from('quests')
+    const { data, error } = await sb.from('quests')
       .select('*')
-      .order('domain, title');
+      .order('domain')
+      .order('title');
 
     if (error) {
-      console.error('Failed to fetch quests:', error);
+      /* Expected while the quests table is undeployed: degrade, do not error. */
+      console.warn('[quests] unavailable:', error.message);
       return [];
     }
+    state.available = true;
     return data || [];
   };
 
   // Fetch user's quest progress
   const fetchUserProgress = async () => {
-    if (!window.OmegaSupabase) return {};
+    const sb = await client();
+    if (!sb) return {};
 
-    const { data, error } = await window.OmegaSupabase.rpc('get_active_quests');
+    const { data, error } = await sb.rpc('get_active_quests');
 
     if (error) {
-      console.error('Failed to fetch quest progress:', error);
+      console.warn('[quests] progress unavailable:', error.message);
       return {};
     }
 
@@ -60,12 +79,13 @@ const OmegaQuests = (() => {
 
   // Start a quest
   const startQuest = async (domain, questKey) => {
-    if (!window.OmegaSupabase) {
+    const sb = await client();
+    if (!sb) {
       notifyListeners('error', { msg: 'Supabase not available' });
       return false;
     }
 
-    const { data, error } = await window.OmegaSupabase.rpc('start_quest', {
+    const { data, error } = await sb.rpc('start_quest', {
       p_quest_key: questKey,
       p_domain: domain
     });
@@ -85,12 +105,13 @@ const OmegaQuests = (() => {
 
   // Update quest progress
   const updateProgress = async (questId, progress) => {
-    if (!window.OmegaSupabase) {
+    const sb = await client();
+    if (!sb) {
       notifyListeners('error', { msg: 'Supabase not available' });
       return false;
     }
 
-    const { data, error } = await window.OmegaSupabase.rpc('update_quest_progress', {
+    const { data, error } = await sb.rpc('update_quest_progress', {
       p_quest_id: questId,
       p_progress: progress
     });

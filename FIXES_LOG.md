@@ -21978,3 +21978,66 @@ text.
 
 **Copy.** Two pages moved the estate 222 → 224; `page-count-claims.py` caught the
 stale count in 6 pages, `T_EN` and all six packs — updated.
+
+## Quest progression was forgeable by anyone; three unsafe edge functions; `main` gate debt (2026-10-03)
+
+**`track_quest_progress` (live, fixed).** `SECURITY DEFINER`, no `search_path`, default
+ACL (the security advisor listed it as executable by `anon`), and it took `p_user_id`
+and `p_points` from the caller with no `auth.uid()` check — anyone holding the
+publishable key could write any member's `quest_completions`/`domain_mastery`. It had
+also **never worked**: `level = floor(points/200)` is 0 below 200 points and violates
+`domain_mastery`'s `CHECK (level >= 1)`, so every call raised — which is why all three
+tables held 0 rows (live count) and there was nothing forged to clean up. Members also
+held INSERT/UPDATE on `quest_completions`, `domain_mastery`, `leaderboard_entries` and
+UPDATE on `covenant_progress` — no page writes them (all four only read), so those
+grants served only self-forgery.
+
+Applied live: `20261003220624_harden_track_quest_progress` (caller is `auth.uid()`, a
+mismatched `p_user_id` raises `42501`; signature kept so `habits.html:407` works
+unchanged; points clamped 0..10; one award per quest per UTC day so re-toggling a habit
+earns nothing; level `1 + points/200` capped 9; `search_path=''`; revoked from
+`PUBLIC`/`anon`) and `20261003220754_progression_tables_revoke_member_writes`.
+Verified live by impersonation, rolled back: first call `(1,f)`, same-day repeat adds 0,
+a 100000-point request credits 10 (total 20); spoofed user, bad domain, direct
+INSERT/UPDATE on `domain_mastery`, UPDATE on `leaderboard_entries` and the anon call all
+blocked (`42501`/`22023`); own rows still readable. The five member write policies are
+still present but inert (a GRANT is checked before RLS); four attempts to drop them via
+`apply_migration` timed out at 60s — open hygiene item.
+
+**`0107_omega_quest_ecosystem.sql` reconciled and registered.** It could never apply
+(`CREATE POLICY IF NOT EXISTS` is not PostgreSQL), granted ALL to `authenticated`, and
+defined the unsafe function — so `migration-drift` and the migration security audit
+were red on `main`. Rewritten as an idempotent capture of the hardened live state
+(read-only grants and SELECT policies, `UNIQUE (user_id, quest_id)` as live has it, no
+function — its single definition is `20261003220624`). Proven on a fresh local
+PostgreSQL 16 with Supabase stand-ins: runs twice cleanly, grants SELECT only, and the
+behaviour checks above hold. Then registered as applied (`0107` row in
+`supabase_migrations.schema_migrations`, which `migration-drift.py` prescribes);
+`remote-migrations.json` 328 → 331. Drift: PASS. Migration security audit: PASSED.
+
+**Three edge functions removed** — `track_quest_progress`, `calculate_domain_mastery`,
+`generate_monthly_covenant`. Each built a service-role client and acted on a `user_id`
+from the request body with no caller authentication (`edge-service-role-auth-audit.py`
+FAIL ×3); none was deployed (`list_edge_functions`) or called anywhere; deploying any
+would have granted service-role writes to whoever called it. Census and auth audit now
+PASS.
+
+**`omega-quests.js` threw on every page.** It called `.from()` on
+`window.OmegaSupabase`, an accessor slot, not a client (§8.1 class 4). It now resolves
+`window.OmegaSB.get()` and degrades with one `console.warn` while the quests backend
+(`supabase/omega_quests_system.sql`) is undeployed. `verify-runtime.js`: dashboard,
+habits, vault, character, cosmetics, my-quests, quest-progress all `ok` (each failed
+before). This unmasked one pre-existing finding: `achievements.html`'s green
+START QUEST button at 2.71:1.
+
+**`world.html` held three concatenated HTML documents** (merge residue on 2026-10-03;
+production contract: 24 duplicate ids). The third was a strict superset of the other
+two (every id and script, plus presence, achievement chain and continuity; its truth
+boundary is the extended wording). Kept it. Production contract: PASSED.
+
+**Smaller:** `ci-local.sh`'s service-role scan now mirrors `ci.yml`'s two exact-path
+exemptions (the mirror was red where GitHub was green); a merge left
+`test_graphify_contradictions_contract.py` with two stacked `def` lines
+(IndentationError); repairing it exposed that the fix it guards never landed —
+`graphify-ai-query` still swallowed a `find_contradictions` error as an empty result
+(§8.1 class 1), now thrown like the adjacent `orphanError`.

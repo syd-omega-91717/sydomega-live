@@ -676,3 +676,16 @@ the wrong place):
 - **No Edge Function changes** — `stripe-webhook` is untouched.
 - Evidence and verification: `FIXES_LOG.md`, 2026-10-03. Open items it surfaced:
   `GAP_ANALYSIS.md` §S.
+
+## 11. Quest-progression hardening and `main` gate debt (2026-10-03)
+
+- **RPC:** `track_quest_progress` hardened live (`20261003220624`): `auth.uid()`-bound,
+  `search_path=''`, revoked from `PUBLIC`/`anon`, points clamped, one award per quest per
+  day. Member INSERT/UPDATE on the four progression tables revoked (`20261003220754`).
+- **Migration `0107`** rewritten to the hardened live state and registered as applied.
+- **Edge Functions:** `track_quest_progress`, `calculate_domain_mastery`,
+  `generate_monthly_covenant` removed (never deployed, unauthenticated service-role).
+  `graphify-ai-query` now throws on a `find_contradictions` error.
+- **Pages:** `world.html` reduced to one document; `omega-quests.js` resolves the shared
+  client and no longer throws.
+- Evidence: `FIXES_LOG.md`, 2026-10-03 (second entry). Open: `GAP_ANALYSIS.md` §S.

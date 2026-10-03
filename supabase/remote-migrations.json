@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-03",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 328,
-  "latestRemoteMigration": "20261003214237",
+  "remoteMigrationCount": 331,
+  "latestRemoteMigration": "20261003220754",
   "versions": [
     "0001",
     "0002",
@@ -110,6 +110,7 @@
     "0104",
     "0105",
     "0106",
+    "0107",
     "20260816231218",
     "20260816231240",
     "20260817231834",
@@ -331,7 +332,9 @@
     "20261003213738",
     "20261003214022",
     "20261003214034",
-    "20261003214237"
+    "20261003214237",
+    "20261003220624",
+    "20261003220754"
   ],
   "migrations": [
     {
@@ -757,6 +760,10 @@
     {
       "version": "0106",
       "name": "commerce_flags"
+    },
+    {
+      "version": "0107",
+      "name": "omega_quest_ecosystem"
     },
     {
       "version": "20260816231218",
@@ -1645,6 +1652,14 @@
     {
       "version": "20261003214237",
       "name": "gamification_phase2_progression_invoker"
+    },
+    {
+      "version": "20261003220624",
+      "name": "harden_track_quest_progress"
+    },
+    {
+      "version": "20261003220754",
+      "name": "progression_tables_revoke_member_writes"
     }
   ]
 }

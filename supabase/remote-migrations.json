@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-02",
+  "_captured": "2026-10-03",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 318,
-  "latestRemoteMigration": "20261002141940",
+  "remoteMigrationCount": 322,
+  "latestRemoteMigration": "20261003085318",
   "versions": [
     "0001",
     "0002",
@@ -323,7 +323,9 @@
     "20261002141908",
     "20261002141940",
     "20261002180500",
-    "20261002182640"
+    "20261002182640",
+    "20261003085246",
+    "20261003085318"
   ],
   "migrations": [
     {
@@ -1597,6 +1599,22 @@
     {
       "version": "20261002141940",
       "name": "harden_achievement_verification_conflict_race_20261002"
+    },
+    {
+      "version": "20261002180500",
+      "name": "member_preferences_persistence_20261002"
+    },
+    {
+      "version": "20261002182640",
+      "name": "member_preferences_persistence_20261002"
+    },
+    {
+      "version": "20261003085246",
+      "name": "omega_graphify_find_contradictions_20261003"
+    },
+    {
+      "version": "20261003085318",
+      "name": "omega_graphify_find_contradictions_search_path_20261003"
     }
   ]
 }

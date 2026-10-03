@@ -1,8 +1,20 @@
 -- Ω QUEST ECOSYSTEM v1 — Real progression tied to member behavior
--- Idempotent migration: CREATE TABLE IF NOT EXISTS, ON CONFLICT DO NOTHING
+-- Idempotent: CREATE ... IF NOT EXISTS, DROP POLICY IF EXISTS before CREATE.
+--
+-- RECONCILED 2026-10-03. The original file never ran through migration
+-- history: `CREATE POLICY IF NOT EXISTS` is not valid PostgreSQL, so it could
+-- not apply, and these five tables were created in production by hand. It also
+-- granted ALL on every table to `authenticated` and defined
+-- track_quest_progress without auth.uid() or search_path. This version records
+-- what production actually holds after hardening, so `supabase db push` on a
+-- fresh database reproduces it:
+--   * reads only -- members never write these tables directly; progression is
+--     written by track_quest_progress (SECURITY DEFINER), whose single
+--     canonical definition is 20261003220624_harden_track_quest_progress.sql;
+--   * quest_completions carries UNIQUE (user_id, quest_id), the conflict target
+--     that function uses (live: quest_completions_user_id_quest_id_key).
 
--- Quest completions: tracks real member progress
-CREATE TABLE IF NOT EXISTS quest_completions (
+CREATE TABLE IF NOT EXISTS public.quest_completions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   quest_id TEXT NOT NULL,
@@ -13,40 +25,14 @@ CREATE TABLE IF NOT EXISTS quest_completions (
   reward_points INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT valid_progress CHECK (progress >= 0 AND progress <= target)
+  CONSTRAINT valid_progress CHECK (progress >= 0 AND progress <= target),
+  UNIQUE (user_id, quest_id)
 );
+CREATE INDEX IF NOT EXISTS idx_quest_completions_user ON public.quest_completions(user_id);
+CREATE INDEX IF NOT EXISTS idx_quest_completions_domain ON public.quest_completions(domain);
+CREATE INDEX IF NOT EXISTS idx_quest_completions_quest ON public.quest_completions(quest_id);
 
-CREATE INDEX IF NOT EXISTS idx_quest_completions_user ON quest_completions(user_id);
-CREATE INDEX IF NOT EXISTS idx_quest_completions_domain ON quest_completions(domain);
-CREATE INDEX IF NOT EXISTS idx_quest_completions_quest ON quest_completions(quest_id);
-
--- Enable RLS on quest_completions
-ALTER TABLE quest_completions ENABLE ROW LEVEL SECURITY;
-
--- RLS policy: members see own, owners see all
-CREATE POLICY IF NOT EXISTS quest_completions_member_access ON quest_completions
-  FOR SELECT USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
-CREATE POLICY IF NOT EXISTS quest_completions_member_insert ON quest_completions
-  FOR INSERT WITH CHECK (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
-CREATE POLICY IF NOT EXISTS quest_completions_member_update ON quest_completions
-  FOR UPDATE USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  ) WITH CHECK (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
--- Domain mastery: tracks member's level (1-9) in each of 12 domains
-CREATE TABLE IF NOT EXISTS domain_mastery (
+CREATE TABLE IF NOT EXISTS public.domain_mastery (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   domain TEXT NOT NULL,
@@ -55,33 +41,13 @@ CREATE TABLE IF NOT EXISTS domain_mastery (
   quests_completed INTEGER DEFAULT 0,
   last_active TIMESTAMP DEFAULT NOW(),
   created_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, domain),
+  UNIQUE (user_id, domain),
   CONSTRAINT valid_level CHECK (level >= 1 AND level <= 9)
 );
+CREATE INDEX IF NOT EXISTS idx_domain_mastery_user ON public.domain_mastery(user_id);
+CREATE INDEX IF NOT EXISTS idx_domain_mastery_domain ON public.domain_mastery(domain);
 
-CREATE INDEX IF NOT EXISTS idx_domain_mastery_user ON domain_mastery(user_id);
-CREATE INDEX IF NOT EXISTS idx_domain_mastery_domain ON domain_mastery(domain);
-
--- Enable RLS
-ALTER TABLE domain_mastery ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY IF NOT EXISTS domain_mastery_member_access ON domain_mastery
-  FOR SELECT USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
-CREATE POLICY IF NOT EXISTS domain_mastery_member_update ON domain_mastery
-  FOR UPDATE USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  ) WITH CHECK (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
--- Seasonal events: time-gated quests (4 seasons/year)
-CREATE TABLE IF NOT EXISTS seasonal_events (
+CREATE TABLE IF NOT EXISTS public.seasonal_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   season_name TEXT NOT NULL,
   season_number INTEGER NOT NULL,
@@ -95,27 +61,12 @@ CREATE TABLE IF NOT EXISTS seasonal_events (
   start_date TIMESTAMP NOT NULL,
   end_date TIMESTAMP NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(season_number, quest_id)
+  UNIQUE (season_number, quest_id)
 );
+CREATE INDEX IF NOT EXISTS idx_seasonal_events_season ON public.seasonal_events(season_number);
+CREATE INDEX IF NOT EXISTS idx_seasonal_events_dates ON public.seasonal_events(start_date, end_date);
 
-CREATE INDEX IF NOT EXISTS idx_seasonal_events_season ON seasonal_events(season_number);
-CREATE INDEX IF NOT EXISTS idx_seasonal_events_dates ON seasonal_events(start_date, end_date);
-
--- Enable RLS (public read for active events, owner edit)
-ALTER TABLE seasonal_events ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY IF NOT EXISTS seasonal_events_public_read ON seasonal_events
-  FOR SELECT USING (
-    now() >= start_date AND now() <= end_date
-    OR is_platform_owner()
-  );
-
-CREATE POLICY IF NOT EXISTS seasonal_events_owner_all ON seasonal_events
-  FOR ALL USING (is_platform_owner())
-  WITH CHECK (is_platform_owner());
-
--- Leaderboard entries: ranked domain progression
-CREATE TABLE IF NOT EXISTS leaderboard_entries (
+CREATE TABLE IF NOT EXISTS public.leaderboard_entries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   domain TEXT NOT NULL,
@@ -124,29 +75,12 @@ CREATE TABLE IF NOT EXISTS leaderboard_entries (
   level INTEGER DEFAULT 1,
   quests_completed INTEGER DEFAULT 0,
   updated_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, domain)
+  UNIQUE (user_id, domain)
 );
+CREATE INDEX IF NOT EXISTS idx_leaderboard_domain_rank ON public.leaderboard_entries(domain, rank);
+CREATE INDEX IF NOT EXISTS idx_leaderboard_user_domain ON public.leaderboard_entries(user_id, domain);
 
-CREATE INDEX IF NOT EXISTS idx_leaderboard_domain_rank ON leaderboard_entries(domain, rank);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_user_domain ON leaderboard_entries(user_id, domain);
-
--- Enable RLS
-ALTER TABLE leaderboard_entries ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY IF NOT EXISTS leaderboard_public_read ON leaderboard_entries
-  FOR SELECT USING (true);
-
-CREATE POLICY IF NOT EXISTS leaderboard_member_update ON leaderboard_entries
-  FOR UPDATE USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  ) WITH CHECK (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
-
--- Covenant progress: monthly battle pass tracking
-CREATE TABLE IF NOT EXISTS covenant_progress (
+CREATE TABLE IF NOT EXISTS public.covenant_progress (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   month INTEGER NOT NULL,
@@ -156,92 +90,43 @@ CREATE TABLE IF NOT EXISTS covenant_progress (
   premium_unlocked BOOLEAN DEFAULT false,
   tasks_available JSONB,
   created_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, month, year)
+  UNIQUE (user_id, month, year)
 );
+CREATE INDEX IF NOT EXISTS idx_covenant_user_month ON public.covenant_progress(user_id, month, year);
 
-CREATE INDEX IF NOT EXISTS idx_covenant_user_month ON covenant_progress(user_id, month, year);
+ALTER TABLE public.quest_completions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.domain_mastery ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.seasonal_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leaderboard_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.covenant_progress ENABLE ROW LEVEL SECURITY;
 
--- Enable RLS
-ALTER TABLE covenant_progress ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS quest_completions_member_access ON public.quest_completions;
+CREATE POLICY quest_completions_member_access ON public.quest_completions
+  FOR SELECT USING (auth.uid() = user_id OR public.is_platform_owner());
 
-CREATE POLICY IF NOT EXISTS covenant_member_access ON covenant_progress
-  FOR SELECT USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
+DROP POLICY IF EXISTS domain_mastery_member_access ON public.domain_mastery;
+CREATE POLICY domain_mastery_member_access ON public.domain_mastery
+  FOR SELECT USING (auth.uid() = user_id OR public.is_platform_owner());
 
-CREATE POLICY IF NOT EXISTS covenant_member_update ON covenant_progress
-  FOR UPDATE USING (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  ) WITH CHECK (
-    auth.uid() = user_id
-    OR is_platform_owner()
-  );
+DROP POLICY IF EXISTS seasonal_events_public_read ON public.seasonal_events;
+CREATE POLICY seasonal_events_public_read ON public.seasonal_events
+  FOR SELECT USING ((now() >= start_date AND now() <= end_date) OR public.is_platform_owner());
 
--- Grant table access
-GRANT SELECT, INSERT, UPDATE ON quest_completions TO authenticated;
-GRANT SELECT, INSERT, UPDATE ON domain_mastery TO authenticated;
-GRANT SELECT ON seasonal_events TO authenticated;
-GRANT SELECT, UPDATE ON leaderboard_entries TO authenticated;
-GRANT SELECT, UPDATE ON covenant_progress TO authenticated;
+DROP POLICY IF EXISTS seasonal_events_owner_all ON public.seasonal_events;
+CREATE POLICY seasonal_events_owner_all ON public.seasonal_events
+  FOR ALL USING (public.is_platform_owner()) WITH CHECK (public.is_platform_owner());
 
--- Owner-level access
-GRANT ALL PRIVILEGES ON quest_completions TO authenticated;
-GRANT ALL PRIVILEGES ON domain_mastery TO authenticated;
-GRANT ALL PRIVILEGES ON seasonal_events TO authenticated;
-GRANT ALL PRIVILEGES ON leaderboard_entries TO authenticated;
-GRANT ALL PRIVILEGES ON covenant_progress TO authenticated;
+DROP POLICY IF EXISTS leaderboard_public_read ON public.leaderboard_entries;
+CREATE POLICY leaderboard_public_read ON public.leaderboard_entries
+  FOR SELECT USING (true);
 
--- Track quest progress: atomic server-side update of quest_completions + domain_mastery
-CREATE OR REPLACE FUNCTION track_quest_progress(
-  p_user_id UUID,
-  p_domain TEXT,
-  p_quest_id TEXT,
-  p_points INTEGER DEFAULT 10
-)
-RETURNS TABLE(new_level INTEGER, level_up BOOLEAN) AS $$
-DECLARE
-  v_current_points INTEGER;
-  v_new_points INTEGER;
-  v_old_level INTEGER;
-  v_new_level INTEGER;
-  v_quests_completed INTEGER;
-BEGIN
-  -- Upsert quest completion
-  INSERT INTO quest_completions (user_id, quest_id, domain, progress, target, completed_at, reward_points)
-  VALUES (p_user_id, p_quest_id, p_domain, 1, 1, NOW(), p_points)
-  ON CONFLICT (quest_id, user_id) DO UPDATE
-  SET progress = LEAST(progress + 1, target),
-      updated_at = NOW(),
-      completed_at = CASE WHEN excluded.target = LEAST(progress + 1, target) THEN NOW() ELSE completed_at END;
+DROP POLICY IF EXISTS covenant_member_access ON public.covenant_progress;
+CREATE POLICY covenant_member_access ON public.covenant_progress
+  FOR SELECT USING (auth.uid() = user_id OR public.is_platform_owner());
 
-  -- Get current domain mastery
-  SELECT total_points, level, quests_completed INTO v_current_points, v_old_level, v_quests_completed
-  FROM domain_mastery
-  WHERE user_id = p_user_id AND domain = p_domain;
-
-  IF NOT FOUND THEN
-    v_current_points := 0;
-    v_old_level := 1;
-    v_quests_completed := 0;
-  END IF;
-
-  -- Calculate new points and level
-  v_new_points := v_current_points + p_points;
-  v_new_level := LEAST(FLOOR(v_new_points::NUMERIC / 200), 9)::INTEGER;
-  v_quests_completed := v_quests_completed + 1;
-
-  -- Upsert domain mastery
-  INSERT INTO domain_mastery (user_id, domain, level, total_points, quests_completed, last_active)
-  VALUES (p_user_id, p_domain, v_new_level, v_new_points, v_quests_completed, NOW())
-  ON CONFLICT (user_id, domain) DO UPDATE
-  SET level = v_new_level,
-      total_points = v_new_points,
-      quests_completed = v_quests_completed,
-      last_active = NOW();
-
-  -- Return new level and whether it increased
-  RETURN QUERY SELECT v_new_level, (v_new_level > v_old_level);
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+-- Reads only. Writes go through track_quest_progress (20261003220624).
+GRANT SELECT ON public.quest_completions TO authenticated;
+GRANT SELECT ON public.domain_mastery TO authenticated;
+GRANT SELECT ON public.seasonal_events TO authenticated;
+GRANT SELECT ON public.leaderboard_entries TO authenticated;
+GRANT SELECT ON public.covenant_progress TO authenticated;

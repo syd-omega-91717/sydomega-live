@@ -150,6 +150,13 @@
     "governance": "genesis",
     "kyc": "genesis",
     "control-center": "genesis",
-    "platform-kernel": "genesis"
+    "platform-kernel": "genesis",
+    "omega-platform-navigator": "genesis",
+    "cosmetics": "arena",
+    "covenant": "arena",
+    "domain-mastery": "arena",
+    "my-quests": "arena",
+    "quest-progress": "arena",
+    "seasonal-events": "arena"
   }
 }

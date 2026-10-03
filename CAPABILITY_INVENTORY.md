@@ -326,6 +326,12 @@ labeling), `omega-sign-codex.js`, `omega-content.js`, `omega-animated.js`, `omeg
 ## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total — all read in full
 and audited this session; see `CLAUDE.md` §8 for the 2 findings)
 
+> **2026-10-03:** `track_quest_progress`, `calculate_domain_mastery` and
+> `generate_monthly_covenant` (added by the Phase 1 quest merge) were removed undeployed:
+> each acted on a request-body `user_id` with a service-role client and no caller
+> authentication. Quest progress is recorded by the `track_quest_progress` **RPC**
+> (`auth.uid()`-bound). Current count: `python3 scripts/edge-function-census.py`.
+
 | Function | Purpose |
 |---|---|
 | `checkout` | Stripe checkout session creation — real payment integration. ✅ Audited, clean. A fully orphaned duplicate `checkout/stripe-webhook/index.ts` (nested inside this function's own directory, not a valid deploy target, zero references anywhere else in the repo) was found and removed this session. |

@@ -271,7 +271,9 @@ async function anomalyQuery(user_id: string): Promise<GraphResponse> {
     p_user_id: user_id,
   });
 
-  if (contraError) console.warn("Could not find contradictions (function may not exist)");
+  // find_contradictions is deployed (20261003085246); an error is a real failure,
+  // not an empty result (CLAUDE.md section 8.1 class 1).
+  if (contraError) throw contraError;
 
   return {
     entities: orphaned || [],

@@ -20,6 +20,7 @@ class GraphContradictionsContract(unittest.TestCase):
             self.assertIn("REVOKE ALL ON FUNCTION public.find_contradictions(uuid) FROM PUBLIC", sql)
             self.assertIn("GRANT EXECUTE ON FUNCTION public.find_contradictions(uuid) TO authenticated", sql)
 
+    def test_edge_function_calls_the_rpc_without_silent_success_path(self):
     def test_edge_function_calls_the_rpc_without_silent_missing_function_path(self):
         source = EDGE.read_text(encoding="utf-8")
         self.assertIn('rpc("find_contradictions"', source)

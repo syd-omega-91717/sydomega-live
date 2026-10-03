@@ -175,6 +175,7 @@ function __omegaAppend(el){
   /* Function Handler -- Event delegation for page-level function calls (data-function-call).
      Centralizes inline function call patterns across all pages via data attributes. */
   if(!document.querySelector('script[data-omega-functionhandler]')){var os_data_omega_functionhandler=document.createElement('script');os_data_omega_functionhandler.src='/omega-function-handler.js';os_data_omega_functionhandler.setAttribute('data-omega-functionhandler','1');os_data_omega_functionhandler.defer=true;__omegaAppend(os_data_omega_functionhandler);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-tabhandler]')){var os_data_omega_tabhandler=document.createElement('script');os_data_omega_tabhandler.src='/omega-tab-handler.js';os_data_omega_tabhandler.setAttribute('data-omega-tabhandler','1');os_data_omega_tabhandler.defer=true;__omegaAppend(os_data_omega_tabhandler);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

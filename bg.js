@@ -155,7 +155,11 @@ function __omegaAppend(el){
   /* Phase 4: Elemental Theming -- Seasonal/elemental color cycling synchronized with nav axis.
      Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
      persists to localStorage with 24h expiry. Grounded in: proposal #22. */
-  if(!document.querySelector('script[data-omega-theme-elemental]')){var os_data_omega_theme_elemental=document.createElement('script');os_data_omega_theme_elemental.src='/omega-theme-elemental.js';os_data_omega_theme_elemental.setAttribute('data-omega-theme-elemental','1');os_data_omega_theme_elemental.defer=true;__omegaAppend(os_data_omega_theme_elemental);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-theme-elemental]')){var os_data_omega_theme_elemental=document.createElement('script');os_data_omega_theme_elemental.src='/omega-theme-elemental.js';os_data_omega_theme_elemental.setAttribute('data-omega-theme-elemental','1');os_data_omega_theme_elemental.defer=true;__omegaAppend(os_data_omega_theme_elemental);}
+  /* Quest System -- Engagement multiplier across 8 domains, tier unlock driver, progression loop.
+     Reads quests from DB, tracks completion, emits events for UI to consume. Every page gets
+     quest context; domain pages (tasks.html, commerce.html, etc) wire action callbacks. */
+  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops

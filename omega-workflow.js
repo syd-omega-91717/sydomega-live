@@ -177,7 +177,7 @@
     },
     /* ── gate_unlock workflow ───────────────────────────────────── */
     record_achievement: async function(ctx){
-      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:false,error:'no_authenticated_client'};
       /* `recorded:true` was returned unconditionally, from inside a try/catch
          that cannot catch a Supabase write failure — the workflow asserted the
          gate unlock had been recorded when it may not have been. */
@@ -190,8 +190,11 @@
         });
         gateErr=gr&&gr.error||null;
       }catch(e){gateErr=e;}
-      if(gateErr)console.warn('[OmegaWorkflow] gate.unlocked not recorded:',gateErr.message||gateErr);
-      return {ok:true,recorded:!gateErr};
+      if(gateErr){
+        console.warn('[OmegaWorkflow] gate.unlocked not recorded:',gateErr.message||gateErr);
+        return {ok:false,error:'gate_event_record_failed',message:gateErr.message||String(gateErr)};
+      }
+      return {ok:true,recorded:true};
     },
     notify_owner: async function(ctx){
       if(window.OmegaOS){
@@ -230,7 +233,8 @@
       return {ok:true,duration:dur,target:DEDICATION};
     },
     award_axis_c: async function(ctx){
-      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      if(!ctx.ok) return {ok:false,error:'dedication_validation_failed'};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var today=new Date().toISOString().slice(0,10);
       try{
         var r=await window.__omegaSb.rpc('complete_task',{
@@ -243,7 +247,7 @@
         if(r.error) throw r.error;
         return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
       }catch(e){
-        return {ok:true,skipped:'rpc_error',error:e.message};
+        return {ok:false,error:'rpc_error',message:e.message||String(e)};
       }
     },
     log_dedication: async function(ctx){
@@ -267,24 +271,30 @@
       return {ok:!r.error,profile:r.data||{}};
     },
     query_tasks: async function(ctx){
-      if(!window.__omegaSb) return {ok:true,_tasks_count:0};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var sess=await window.__omegaSb.auth.getSession();
-      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
-      if(!uid) return {ok:true,_tasks_count:0};
+      var sr=sess&&sess.data&&sess.data.session;
+      if(!sr) return {ok:false,error:'no_session'};
+      var uid=sr.user&&sr.user.id;
+      if(!uid) return {ok:false,error:'no_session'};
       try{
         var r=await window.__omegaSb.from('task_completions').select('id',{count:'exact',head:true}).eq('user_id',uid);
-        return {ok:true,_tasks_count:r.count||0};
-      }catch(e){return {ok:true,_tasks_count:0};}
+        if(r.error) return {ok:false,error:'task_query_failed',message:r.error.message||String(r.error)};
+        return {ok:true,_tasks_count:Number(r.count||0)};
+      }catch(e){return {ok:false,error:'task_query_failed',message:e.message||String(e)};}
     },
     query_dedications: async function(ctx){
-      if(!window.__omegaSb) return {ok:true,_dedications:[]};
+      if(!window.__omegaSb) return {ok:false,error:'no_authenticated_client'};
       var sess=await window.__omegaSb.auth.getSession();
-      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
-      if(!uid) return {ok:true,_dedications:[]};
+      var sr=sess&&sess.data&&sess.data.session;
+      if(!sr) return {ok:false,error:'no_session'};
+      var uid=sr.user&&sr.user.id;
+      if(!uid) return {ok:false,error:'no_session'};
       try{
         var r=await window.__omegaSb.from('sovereign_events').select('*').eq('user_id',uid).eq('event_type','dedication.completed').order('occurred_at',{ascending:false}).limit(10);
-        return {ok:true,_dedications:r.data||[]};
-      }catch(e){return {ok:true,_dedications:[]};}
+        if(r.error) return {ok:false,error:'dedication_query_failed',message:r.error.message||String(r.error)};
+        return {ok:true,_dedications:Array.isArray(r.data)?r.data:[]};
+      }catch(e){return {ok:false,error:'dedication_query_failed',message:e.message||String(e)};}
     },
     cache_result: async function(ctx){
       if(window.OmegaMemory&&ctx.report){
@@ -304,25 +314,41 @@
     var entry={id:instanceId,workflow:workflowId,started:new Date().toISOString(),steps:[],status:'running'};
     _log.push(entry);
     if(window.OmegaOS)window.OmegaOS.events.emit('workflow:started',{workflow:workflowId,instance:instanceId});
-    /* Execute steps */
+    /* Execute steps. A workflow is successful only when every declared step
+       exists and explicitly returns ok !== false. This is deliberately fail-closed:
+       a Supabase RPC/query failure must never become a completed workflow. */
     for(var i=0;i<def.steps.length;i++){
       var stepName=def.steps[i];
       var step=STEPS[stepName];
-      if(!step) continue; /* skip undefined steps */
+      if(!step){
+        entry.steps.push({name:stepName,ok:false,error:'step_not_implemented',ts:Date.now()});
+        ctx=Object.assign(ctx,{ok:false,error:'step_not_implemented',failed_step:stepName});
+        entry.status='failed';
+        break;
+      }
       try{
         var result=await step(ctx);
         ctx=Object.assign(ctx,result||{});
+        if(result&&result.ok===false){
+          entry.steps.push({name:stepName,ok:false,error:result.error||'step_failed',ts:Date.now()});
+          entry.status='failed';
+          break;
+        }
         ctx._steps_completed++;
         entry.steps.push({name:stepName,ok:true,ts:Date.now()});
       }catch(e){
-        entry.steps.push({name:stepName,ok:false,error:e.message});
-        /* Non-fatal: continue to next step */
+        var message=e&&e.message?e.message:String(e);
+        ctx=Object.assign(ctx,{ok:false,error:'step_exception',message:message,failed_step:stepName});
+        entry.steps.push({name:stepName,ok:false,error:message,ts:Date.now()});
+        entry.status='failed';
+        break;
       }
     }
-    entry.status='completed';entry.ended=new Date().toISOString();
+    if(entry.status==='running') entry.status='completed';
+    entry.ended=new Date().toISOString();
     delete _running[instanceId];
-    if(window.OmegaOS)window.OmegaOS.events.emit('workflow:completed',{workflow:workflowId,instance:instanceId,ctx:ctx});
-    return {ok:true,instance:instanceId,result:ctx};
+    if(window.OmegaOS)window.OmegaOS.events.emit('workflow:completed',{workflow:workflowId,instance:instanceId,status:entry.status,ctx:ctx});
+    return {ok:entry.status==='completed',instance:instanceId,result:ctx};
   }
 
   /* ── TRIGGER WORKFLOWS FROM EVENTS ──────────────────────────────── */

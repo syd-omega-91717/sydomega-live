@@ -38,7 +38,13 @@ BEGIN
   WHERE
     gr1.user_id = p_user_id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$ LANGUAGE plpgsql SECURITY INVOKER
+SET search_path = pg_catalog, public;
+
+REVOKE ALL ON FUNCTION public.find_contradictions(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.find_contradictions(uuid) FROM anon;
+GRANT EXECUTE ON FUNCTION public.find_contradictions(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.find_contradictions(uuid) TO service_role;
 
 -- Grant execute to authenticated members
 GRANT EXECUTE ON FUNCTION public.find_contradictions(uuid) TO authenticated;

@@ -1,5 +1,5 @@
-// Generic tab switching event handler
-// Supports any page that uses tab-btn elements with onclick="switchTab(...)" or onclick="setTab(...)"
+// Generic tab switching event handler for all tab-enabled pages
+// Supports dynamic tab switching across pages via event delegation
 
 (function() {
   const tabHandlers = {};

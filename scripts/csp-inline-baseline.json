@@ -12,8 +12,8 @@
   "scripts": 2
  },
  "achievements.html": {
-  "handlers": 13,
-  "scripts": 1
+  "handlers": 9,
+  "scripts": 2
  },
  "ad-network.html": {
   "handlers": 0,
@@ -55,16 +55,20 @@
   "handlers": 0,
   "scripts": 1
  },
+ "arena.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
  "ascension.html": {
   "handlers": 1,
-  "scripts": 2
+  "scripts": 3
  },
  "atlas.html": {
   "handlers": 17,
   "scripts": 2
  },
  "automation.html": {
-  "handlers": 4,
+  "handlers": 0,
   "scripts": 3
  },
  "autonomous-insights.html": {
@@ -140,7 +144,7 @@
   "scripts": 2
  },
  "command.html": {
-  "handlers": 13,
+  "handlers": 9,
   "scripts": 1
  },
  "compliance.html": {
@@ -169,13 +173,17 @@
  },
  "cosmos.html": {
   "handlers": 1,
-  "scripts": 2
+  "scripts": 3
  },
  "council.html": {
   "handlers": 3,
   "scripts": 1
  },
  "courses.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
+ "covenant.html": {
   "handlers": 0,
   "scripts": 1
  },
@@ -202,6 +210,10 @@
  "dna.html": {
   "handlers": 4,
   "scripts": 2
+ },
+ "domain-mastery.html": {
+  "handlers": 0,
+  "scripts": 1
  },
  "ecosystem.html": {
   "handlers": 6,
@@ -240,8 +252,8 @@
   "scripts": 2
  },
  "family.html": {
-  "handlers": 2,
-  "scripts": 5
+  "handlers": 4,
+  "scripts": 6
  },
  "fasting.html": {
   "handlers": 9,
@@ -376,8 +388,8 @@
   "scripts": 3
  },
  "investment.html": {
-  "handlers": 17,
-  "scripts": 1
+  "handlers": 19,
+  "scripts": 2
  },
  "investor-dashboard.html": {
   "handlers": 0,
@@ -408,8 +420,8 @@
   "scripts": 1
  },
  "leaderboard.html": {
-  "handlers": 4,
-  "scripts": 2
+  "handlers": 0,
+  "scripts": 1
  },
  "ledger.html": {
   "handlers": 4,
@@ -567,6 +579,10 @@
   "handlers": 4,
   "scripts": 1
  },
+ "predictions-dashboard.html": {
+  "handlers": 2,
+  "scripts": 2
+ },
  "principles.html": {
   "handlers": 15,
   "scripts": 1
@@ -577,7 +593,7 @@
  },
  "profile.html": {
   "handlers": 10,
-  "scripts": 14
+  "scripts": 15
  },
  "project-studio.html": {
   "handlers": 0,
@@ -599,6 +615,10 @@
   "handlers": 0,
   "scripts": 1
  },
+ "quest-progress.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
  "queue.html": {
   "handlers": 7,
   "scripts": 1
@@ -616,7 +636,7 @@
   "scripts": 2
  },
  "research.html": {
-  "handlers": 4,
+  "handlers": 6,
   "scripts": 2
  },
  "reset.html": {
@@ -643,6 +663,10 @@
   "handlers": 4,
   "scripts": 1
  },
+ "seasonal-events.html": {
+  "handlers": 0,
+  "scripts": 1
+ },
  "segmentation-dashboard.html": {
   "handlers": 0,
   "scripts": 1
@@ -656,8 +680,8 @@
   "scripts": 3
  },
  "settings.html": {
-  "handlers": 4,
-  "scripts": 2
+  "handlers": 6,
+  "scripts": 3
  },
  "sigil.html": {
   "handlers": 5,
@@ -748,8 +772,8 @@
   "scripts": 2
  },
  "vault.html": {
-  "handlers": 5,
-  "scripts": 4
+  "handlers": 7,
+  "scripts": 5
  },
  "venture-pipeline.html": {
   "handlers": 0,

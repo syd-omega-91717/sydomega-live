@@ -50,6 +50,8 @@ jobs:
         run: python scripts/edge-service-role-auth-audit.py
       - name: Enforce gameful feature purpose contract
         run: python scripts/omega-gameful-contract.py
+      - name: Enforce capability provenance contract
+        run: python scripts/omega-capability-provenance-contract.py
       - name: Enforce Eternal Continuity contract
         run: python scripts/omega-eternity-contract.py
       - name: Enforce capability provenance contract

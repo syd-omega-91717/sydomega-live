@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; COSMETICS</title>
+<meta name="description" content="Spend sovereign points on cosmetics for your character identity card."/>
+<style>
+.cos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:1rem}
+.cos-item{display:flex;flex-direction:column;gap:8px;padding:16px}
+.cos-slot{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
+.cos-name{font-family:var(--M);font-size:14px;color:var(--ink)}
+.cos-desc{font-size:13px;line-height:1.6;color:var(--muted);flex:1}
+.cos-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.cos-cost{font-family:var(--M);font-size:13px;color:var(--gold)}
+.cos-state{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--green)}
+.cos-msg{font-family:var(--M);font-size:12px;letter-spacing:.5px;min-height:1.4em;margin:0 0 1rem;color:var(--muted)}
+.cos-msg.err{color:var(--crim)}
+.cos-note{font-family:var(--M);font-size:12px;line-height:1.7;letter-spacing:.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<aside id="omega-side" data-page="cosmetics"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <h1 class="topbar-title" style="margin:0;font-weight:400">COSMETICS<span class="topbar-sub">SPEND SOVEREIGN POINTS · SHOWN ON YOUR CHARACTER IDENTITY CARD</span></h1>
+</header>
+<div style="padding:1.25rem">
+  <div data-omega-flag="gamification_enabled">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val" id="cos-balance" style="color:var(--gold)">--</div><div class="kpi-label">POINTS TO SPEND</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="cos-owned" style="color:var(--cyan)">--</div><div class="kpi-label">OWNED</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="cos-level" style="color:var(--solar)">--</div><div class="kpi-label">LEVEL</div></div>
+    </div>
+    <p class="cos-msg" id="cos-msg" role="status" aria-live="polite"></p>
+    <p class="sechead">FRAMES</p>
+    <div class="cos-grid" id="cos-frame"></div>
+    <p class="sechead">AURAS</p>
+    <div class="cos-grid" id="cos-aura"></div>
+    <p class="sechead">TITLES</p>
+    <div class="cos-grid" id="cos-title"></div>
+    <p class="cos-note">Points are earned by completing lessons, passing exams and advancing on the lattice. They have no cash value and cannot be bought. One item per slot can be equipped; your level is based on points earned, so spending never lowers it. See the result on your <a href="/character.html" style="color:var(--cyan)">character page</a>.</p>
+  </div>
+</div>
+<div data-page-emblem="cosmetics" style="margin:20px auto 0"></div>
+</div>
+
+<script type="module" src="/cosmetics.js"></script>
+<script src="/bg.js" defer></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

@@ -662,3 +662,17 @@ the wrong place):
   worth a manual check post-deploy. Not a new issue: the same nested-tooltip-inside-anchor HTML
   pattern this uses was already present, unchanged, in every pre-existing section before this
   edit.
+
+## 10. Gamification Phase 2 (2026-10-03)
+
+- **Pages:** `cosmetics.html`, `my-quests.html` added (estate 222 → 224), both in
+  `nav.js` ACHIEVE (`PS` + `SECTIONS`); `character.html` gains a PROGRESSION tab.
+- **Schema (live, six migrations `20261003213300`–`20261003214237`):** `point_perks`
+  + `slot`, `active`; `member_perks` + `equipped`; new `member_quests` (RLS, grants to
+  `authenticated` only); flag `gamification_enabled` = false.
+- **RPCs:** `set_perk_equipped(text, boolean)` and `get_points_leaderboard(int)`
+  (`SECURITY DEFINER`, `search_path=''`, `auth.uid()`-scoped, revoked from
+  `PUBLIC`/`anon`); `my_progression()` (`SECURITY INVOKER`).
+- **No Edge Function changes** — `stripe-webhook` is untouched.
+- Evidence and verification: `FIXES_LOG.md`, 2026-10-03. Open items it surfaced:
+  `GAP_ANALYSIS.md` §S.

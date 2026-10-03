@@ -30,6 +30,7 @@ REQUIRED_FILES = (
     ".github/workflows/workflow-contract.yml",
     "scripts/production-contract.py",
     "scripts/capability-audit.py",
+    "scripts/platform-kernel-contract.py",
     "scripts/workflow-contract.py",
     "docs/capabilities/registry.json",
     "docs/architecture/production-building-blocks.json",
@@ -100,6 +101,15 @@ def check_registry_integrity() -> int:
     return failures
 
 
+def check_platform_kernel() -> int:
+    import subprocess
+    result = subprocess.run([sys.executable, str(ROOT / "scripts/platform-kernel-contract.py")], cwd=ROOT, capture_output=True, text=True)
+    if result.returncode:
+        fail("platform kernel contract failed: " + (result.stdout.strip() or result.stderr.strip()))
+        return 1
+    return 0
+
+
 def check_client_secrets() -> int:
     failures = 0
     patterns = (re.compile(r"SUPABASE_SERVICE_ROLE_KEY", re.I), re.compile(r"service_role", re.I))
@@ -116,6 +126,7 @@ def main() -> int:
     failures += check_required_files()
     failures += check_public_pages()
     failures += check_registry_integrity()
+    failures += check_platform_kernel()
     failures += check_client_secrets()
     print("RELEASE GATE: " + ("PASSED" if failures == 0 else f"FAILED ({failures} finding(s))"))
     return 1 if failures else 0

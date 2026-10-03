@@ -1,0 +1,619 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-02",
+  "purpose": "Evidence-bound implementation ledger for Ω SYD OMEGA 91717.",
+  "lifecycle": [
+    "SPECIFIED",
+    "DESIGNED",
+    "BUILT",
+    "INTEGRATED",
+    "TESTED",
+    "DEPLOYED",
+    "VERIFIED",
+    "BLOCKED"
+  ],
+  "evidenceAsOf": {
+    "main": "3afca63580b0a7efa5afd4067c12883f3c3e14ff",
+    "branch": "codex/sovereign-value-layer-20261002",
+    "pullRequest": 625,
+    "supabaseProject": "ydqhzvvoyufiiqvzcjns",
+    "liveSite": "https://sydomega.com",
+    "remoteMigrationCount": 316,
+    "latestRemoteMigration": "20261002094310",
+    "runtimeContract": "18 modules / 54 actions — 54 INTEGRATED"
+  },
+  "items": [
+    {
+      "id": "GOV-001",
+      "domain": "governance",
+      "state": "BUILT",
+      "requirement": "Maintain one canonical evidence-bound implementation ledger.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        "config/omega-implementation-ledger.json"
+      ],
+      "evidence": [
+        "Rebuilt as valid JSON on 2026-10-02 after detecting conflicting branch-era duplicate keys."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "WEB-001",
+      "domain": "web",
+      "state": "TESTED",
+      "requirement": "Every HTML surface is governed by responsive/readability contracts.",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "repo": [
+        "scripts/omega-responsive-surface-contract.py",
+        "docs/RESPONSIVE_PRODUCTION_STANDARD.md"
+      ],
+      "evidence": [
+        "PR-604"
+      ],
+      "blocker": "Current production browser matrix still needs fresh verification."
+    },
+    {
+      "id": "SEC-001",
+      "domain": "security",
+      "state": "BLOCKED",
+      "requirement": "No privileged credentials are shipped in source and exposed credentials are rotated/revoked.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        "docs/SECURITY.md"
+      ],
+      "evidence": [
+        "Attached source audit identified credential-shaped provider material."
+      ],
+      "blocker": "Provider/account-owner rotation, revocation and history purge remain required where applicable."
+    },
+    {
+      "id": "SEC-002",
+      "domain": "supabase",
+      "state": "TESTED",
+      "requirement": "RLS and function execution privileges match actor and exposure boundaries.",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "repo": [
+        "supabase/migrations",
+        "scripts/supabase-migration-security-audit.py"
+      ],
+      "evidence": [
+        "Target project security hardening; current advisor reports zero authenticated SECURITY DEFINER findings.",
+        "Runtime gateway no longer reads SUPABASE_ANON_KEY/SUPABASE_SERVICE_ROLE_KEY directly; user auth context and server admin boundary are enforced by @supabase/server.",
+        "Supabase security hardening remains active; duplicate omega_audit_log index removed and new runtime tables have explicit RLS/grants."
+      ],
+      "blocker": "Leaked-password protection remains a dashboard-level Supabase Auth setting."
+    },
+    {
+      "id": "DB-001",
+      "domain": "supabase",
+      "state": "INTEGRATED",
+      "requirement": "Repository migration state and the canonical target migration journal remain aligned.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        "supabase/remote-migrations.json",
+        "supabase/migrations",
+        "scripts/migration-drift.py"
+      ],
+      "evidence": [
+        "Target project ydqhzvvoyufiiqvzcjns has 316 remote migration versions; latest verified version 20261002094310.",
+        "Repository remote-migrations snapshot is aligned to the live migration journal.",
+        "No synthetic migration rows were added; the current repository snapshot preserves the live version journal."
+      ],
+      "blocker": "Fresh CI migration-drift/repository-integrity proof remains required."
+    },
+    {
+      "id": "CI-001",
+      "domain": "ci",
+      "state": "TESTED",
+      "requirement": "CI verifies syntax, contracts, security and release artifacts.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        ".github/workflows",
+        "scripts"
+      ],
+      "evidence": [
+        "Existing contract suite and production workflow gates.",
+        "A fresh post-reconciliation mainline runner result is still required; repository inspection alone is not substituted for GitHub Actions execution evidence."
+      ],
+      "blocker": "Latest branch still needs a fresh clean CI run."
+    },
+    {
+      "id": "PAY-001",
+      "domain": "payments",
+      "state": "INTEGRATED",
+      "requirement": "Stripe payments are webhook-authoritative, idempotent and ledger-backed.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "supabase/functions/stripe-webhook/index.ts",
+        "supabase/migrations/20261002034000_stripe_settlement_to_ledger.sql"
+      ],
+      "evidence": [
+        "Target project settlement boundary is present; real payment counts remain zero and no synthetic payment was created.",
+        "Integrated service-order creation boundary now exists for the six currently INTEGRATED services; order count remains zero because no customer transaction was fabricated."
+      ],
+      "blocker": "Real signed Stripe test traffic and entitlement reconciliation remain before VERIFIED."
+    },
+    {
+      "id": "LEDGER-001",
+      "domain": "economics",
+      "state": "INTEGRATED",
+      "requirement": "Financial movements use immutable double-entry ledger and reconciliation.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "public.omega_ledger_accounts",
+        "public.omega_ledger_transactions",
+        "public.omega_ledger_entries",
+        "public.omega_payment_reconciliation"
+      ],
+      "evidence": [
+        "Target project financial tables and service-only posting boundary verified; live financial counts remain zero."
+      ],
+      "blocker": "Real provider settlement evidence remains before VERIFIED."
+    },
+    {
+      "id": "AGENT-001",
+      "domain": "intelligence",
+      "state": "INTEGRATED",
+      "requirement": "12 agents use explicit registry, tools, approval and audit policy.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "config/omega-agent-registry.json",
+        "public.omega_agents"
+      ],
+      "evidence": [
+        "Target project: 12 governed agents verified live."
+      ],
+      "blocker": "Authenticated headless execution and evidence-backed task completion remain."
+    },
+    {
+      "id": "MATRIX-001",
+      "domain": "progression",
+      "state": "INTEGRATED",
+      "requirement": "729-node progression is modeled with semantic, verification and reward boundaries.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "public.omega_matrix_nodes",
+        "public.omega_matrix_node_semantics"
+      ],
+      "evidence": [
+        "Target project: 729 nodes and 729 semantic records verified live.",
+        "Progress tasks.read and verification.read adapters now expose caller-scoped task/evidence state."
+      ],
+      "blocker": "User-specific progression journey and evidence remain before VERIFIED."
+    },
+    {
+      "id": "REF-001",
+      "domain": "referrals",
+      "state": "INTEGRATED",
+      "requirement": "Referral attribution, conversion, reward and fraud signals are server-authoritative.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "public.omega_referral_codes",
+        "public.omega_referral_attributions",
+        "public.omega_referral_conversions",
+        "public.omega_referral_rewards",
+        "public.omega_fraud_signals"
+      ],
+      "evidence": [
+        "Target project tables exist; user/referral rows remain zero."
+      ],
+      "blocker": "Real qualifying conversion evidence remains before VERIFIED."
+    },
+    {
+      "id": "ACH-001",
+      "domain": "achievements",
+      "state": "INTEGRATED",
+      "requirement": "Achievements are evidence-verified and certificate issuance is idempotent.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "public.omega_achievement_definitions",
+        "public.omega_user_achievements",
+        "public.omega_achievement_verifications",
+        "public.omega_certificates"
+      ],
+      "evidence": [
+        "Target project definitions and verification primitives exist; user achievement rows remain zero."
+      ],
+      "blocker": "Real user evidence and verification journey remain before VERIFIED."
+    },
+    {
+      "id": "NOTIFY-001",
+      "domain": "notifications",
+      "state": "INTEGRATED",
+      "requirement": "Notifications have durable state, server-only claim/reclaim and truthful delivery transitions.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "public.omega_notifications",
+        "supabase/functions/omega-notification-worker/index.ts"
+      ],
+      "evidence": [
+        "Target project notification worker is ACTIVE; notification rows remain zero."
+      ],
+      "blocker": "Service-secret invocation/scheduling and external provider adapters remain."
+    },
+    {
+      "id": "CATALOG-001",
+      "domain": "product",
+      "state": "INTEGRATED",
+      "requirement": "Capabilities and services are represented as governed executable catalog records.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "config/omega-capability-catalog.json",
+        "config/omega-product-catalog.json",
+        "public.omega_capabilities",
+        "public.omega_services"
+      ],
+      "evidence": [
+        "Target project: 24 capabilities and 24 services verified live."
+      ],
+      "blocker": "Service orders remain zero until real customer transactions occur."
+    },
+    {
+      "id": "RUNTIME-001",
+      "domain": "platform-runtime",
+      "state": "INTEGRATED",
+      "requirement": "All 18 product modules expose three governed runtime actions each; integrated adapters return real server data and unpromoted adapters fail closed.",
+      "source": [
+        "Master Prompt",
+        "Document.txt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "config/omega-module-runtime.json",
+        "supabase/migrations/20261002084512_omega_unified_product_runtime_contract_20261002.sql",
+        "supabase/migrations/20261002084553_omega_unified_product_runtime_adapters_20261002.sql",
+        "supabase/functions/omega-runtime-gateway/index.ts",
+        "scripts/omega-module-runtime-contract.py"
+      ],
+      "evidence": [
+        "Target project: 18 distinct modules / 54 actions verified live.",
+        "omega-runtime-gateway ACTIVE with verify_jwt=true.",
+        "Wave 2 target-project verification: 37 of 54 actions are lifecycle INTEGRATED; 15 remain DESIGNED and 3 remain SIMULATION_ONLY.",
+        "Gateway authentication modernization deployed live as omega-runtime-gateway version 2 using @supabase/server createSupabaseContext(auth:'user'); deployment hash 378cd6c5f6002b5d14fe5ad5e679aa4ded8bb9a411ad9214adbf8d1d7efe5e08.",
+        "omega-runtime-gateway version 3 exposes create_service_order; target project function enforces integrated-service allowlist and idempotency.",
+        "Gateway version 4 exposes create_consult_intake; target project idempotent intake function and runtime idempotency column are live.",
+        "Wave 3 target-project verification: 46 of 54 actions are lifecycle INTEGRATED; 5 remain DESIGNED and 3 remain SIMULATION_ONLY.",
+        "Mainline runtime frontier now adds durable media jobs, persistent investment watchlists, versioned legal documents/consent reads, and an external-chain ownership verification boundary.",
+        "omega-runtime-gateway version 5 deployed ACTIVE with verify_jwt=true; blockchain verification uses public JSON-RPC read proofs and records immutable verification observations.",
+        "omega-media-worker version 1 deployed ACTIVE with secret-authenticated worker boundary; provider absence fails closed as BLOCKED_PROVIDER.",
+        "Live target now reports 54 of 54 runtime actions INTEGRATED; Elemental cosmology, interpretation, and bounded simulation are executed by the server-side deterministic omega_elemental_runtime function.",
+        "omega-runtime-gateway version 7 is ACTIVE with verify_jwt=true and exposes the three Elemental actions through the authenticated user gateway.",
+        "Current mainline reconciliation: 18 modules / 54 actions — 54 INTEGRATED; gateway version 7 exposes the three Elemental actions with verify_jwt=true."
+      ],
+      "blocker": "Provider-dependent media generation remains BLOCKED_PROVIDER until OMEGA_MEDIA_PROVIDER_URL/OMEGA_MEDIA_PROVIDER_SECRET are configured; VERIFIED status still requires live provider evidence."
+    },
+    {
+      "id": "CORE-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Core profile and catalog runtime reads are server-authoritative.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_runtime_dispatch"
+      ],
+      "evidence": [
+        "Target project runtime adapters return profile/catalog data for authenticated callers.",
+        "Core search.read is now lifecycle INTEGRATED and reads only public index rows or caller-owned rows."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "GAMING-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Gaming mission and progression runtime is connected to governed matrix state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_matrix_nodes",
+        "omega_matrix_node_semantics"
+      ],
+      "evidence": [
+        "Target project matrix runtime exposes 729 governed nodes.",
+        "Consultancy intake is now lifecycle INTEGRATED with confidentiality acceptance and idempotency enforcement."
+      ],
+      "blocker": "Leaderboard adapter remains a separate verification surface."
+    },
+    {
+      "id": "COMM-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Communication notifications/presence/event surfaces use governed server state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_notifications",
+        "member_presence",
+        "omega_platform_events"
+      ],
+      "evidence": [
+        "Notification worker and event fabric are live target-project primitives."
+      ],
+      "blocker": "External notification providers remain unconfigured."
+    },
+    {
+      "id": "INTEL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Intelligence exposes governed agent/evidence runtime adapters.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_agents",
+        "graph_evidence"
+      ],
+      "evidence": [
+        "Target project: 12 agents and caller-scoped evidence table are live."
+      ],
+      "blocker": "Authenticated runtime journey remains before VERIFIED."
+    },
+    {
+      "id": "CREDENTIAL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Credential/certificate reads are backed by server state.",
+      "source": [
+        "Master Prompt",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_certificates"
+      ],
+      "evidence": [
+        "Target project certificate table and adapter exist; user certificate count is zero.",
+        "Passport, certificate and certificate verification runtime adapters now execute against server-authoritative state."
+      ],
+      "blocker": "Public credential verification adapter remains DESIGNED."
+    },
+    {
+      "id": "ELEMENTAL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Elemental outputs are explicitly bounded to interpretive/simulation behavior.",
+      "source": [
+        "999 Blueprint",
+        "Product Catalog"
+      ],
+      "repo": [
+        "omega-runtime-gateway",
+        "omega_runtime_dispatch"
+      ],
+      "evidence": [
+        "Elemental cosmology.read, interpretation.read and simulation.run are executed through the authenticated runtime gateway and the server-side deterministic omega_elemental_runtime function.",
+        "Outputs remain explicitly interpretive/bounded simulation content and carry a non-factual disclaimer; no physical-world claim is made."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "ORACLE-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "Oracle/horoscope content remains interpretive and provenance-labeled.",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ],
+      "repo": [
+        "horoscope.html",
+        "oracle.html"
+      ],
+      "evidence": [
+        "Product catalog policy marks oracle features interpretive.",
+        "Deterministic horoscope reading/provenance adapters are live and explicitly labeled interpretive/simulation."
+      ],
+      "blocker": "External-source provenance is intentionally empty; no predictive claim is made."
+    },
+    {
+      "id": "A11Y-001",
+      "domain": "accessibility",
+      "state": "DESIGNED",
+      "requirement": "Keyboard/touch access, visible focus and readable text are continuously governed.",
+      "source": [
+        "Master Prompt",
+        "Document.txt"
+      ],
+      "repo": [
+        "scripts/omega-responsive-surface-contract.py"
+      ],
+      "evidence": [
+        "Static contracts exist.",
+        "Supabase performance advisor 2026-10-02: unindexed foreign-key and multiple-permissive-policy findings cleared after wave-3 index/policy migration."
+      ],
+      "blocker": "Full browser accessibility audit remains."
+    },
+    {
+      "id": "VERCEL-001",
+      "domain": "deployment",
+      "state": "BLOCKED",
+      "requirement": "Validated repository artifacts must reach the canonical Vercel production project with current provider evidence.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        ".github/workflows/vercel-production.yml",
+        "vercel.json"
+      ],
+      "evidence": [
+        "Repository deployment workflow and Vercel project identifiers are present.",
+        "Mainline remains repository-valid; Vercel provider acceptance is still external to the repository."
+      ],
+      "blocker": "Fresh production deployment proof remains blocked by Vercel api-deployments-free-per-day (>100 deployments/24h)."
+    },
+    {
+      "id": "MFA-001",
+      "domain": "identity",
+      "state": "BLOCKED",
+      "requirement": "MFA enrollment, challenge, recovery and owner enforcement are runtime-verified.",
+      "source": [
+        "Master Prompt",
+        "Absolute.txt"
+      ],
+      "repo": [
+        "supabase/migrations",
+        "profile.html",
+        "approvals.html"
+      ],
+      "evidence": [
+        "Owner MFA controls exist in repository/live schema.",
+        "MFA enrollment setting is enabled in the live target; owner enforcement remains dormant until a verified owner factor exists."
+      ],
+      "blocker": "Owner must complete a real MFA enrollment/verification before owner_mfa_required can be safely enabled."
+    },
+    {
+      "id": "COMPLIANCE-001",
+      "domain": "privacy",
+      "state": "DESIGNED",
+      "requirement": "Export, deletion, consent, retention and privacy documentation are operationally verified.",
+      "source": [
+        "Master Prompt"
+      ],
+      "repo": [
+        "docs",
+        "privacy surfaces",
+        "supabase/migrations"
+      ],
+      "evidence": [
+        "KYC retention/consent and erasure guards exist."
+      ],
+      "blocker": "End-to-end export/delete/retention tests remain."
+    },
+    {
+      "id": "MEDIA-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "MEDIA-001",
+      "evidence": [
+        "omega_media_jobs persistence, idempotency, RLS, claim/complete functions and omega-media-worker v1 are live."
+      ],
+      "repo": [],
+      "blocker": "Generation remains BLOCKED_PROVIDER until a real provider endpoint and secret are configured.",
+      "source": [
+        "Master Prompt — Media/Studio service requirements",
+        "SYD OMEGA 91717 — MEDIA module and governed provider boundary"
+      ]
+    },
+    {
+      "id": "BLOCKCHAIN-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "BLOCKCHAIN-001",
+      "evidence": [
+        "External ownership verification now performs ERC-721 ownerOf or ERC-1155 balanceOf against allowlisted public RPC endpoints and records chain/block/proof metadata server-side."
+      ],
+      "repo": [],
+      "blocker": null,
+      "source": [
+        "Master Prompt — Blockchain/NFT and ownership verification requirements",
+        "SYD OMEGA 91717 — BLOCKCHAIN_NFT module"
+      ]
+    },
+    {
+      "id": "INVESTMENT-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "INVESTMENT-001",
+      "evidence": [
+        "Persistent caller-scoped investment watchlists and idempotent upsert runtime are live; no synthetic watchlist rows created."
+      ],
+      "repo": [],
+      "blocker": null,
+      "source": [
+        "Master Prompt — Investment/financial intelligence requirements",
+        "SYD OMEGA 91717 — INVESTMENT module"
+      ]
+    },
+    {
+      "id": "LEGAL-001",
+      "domain": "module",
+      "state": "INTEGRATED",
+      "requirement": "LEGAL-001",
+      "evidence": [
+        "Versioned terms/privacy documents are persisted with content hashes and public-read RLS; consent reads use existing versioned consent_records."
+      ],
+      "repo": [],
+      "blocker": "Legal content remains an operational platform notice and should receive jurisdiction-specific legal review before being treated as legal advice.",
+      "source": [
+        "Master Prompt — Legal, privacy, consent and compliance requirements",
+        "SYD OMEGA 91717 — LEGAL module"
+      ]
+    },
+    {
+      "id": "VALUE-001",
+      "domain": "product-experience",
+      "state": "BUILT",
+      "requirement": "Every major platform surface should explain purpose, value, evidence state, next action and adjacent realm paths without fabricating engagement or financial outcomes.",
+      "source": [
+        "Master Prompt",
+        "SYD OMEGA 91717",
+        "Sovereign Production & Value Standard"
+      ],
+      "repo": [
+        "config/omega-value-layer.json",
+        "omega-value-layer.js",
+        "omega-value-layer.css",
+        "scripts/omega-value-layer-contract.py",
+        "bg.js"
+      ],
+      "evidence": [
+        "PR-625 adds the universal Value Layer through the existing platform shell.",
+        "Repository-level validation of the JSON contract was executed against the branch: 24 explicit page mappings, 18 modules, 9 realms, 7 truth states; no contract data errors detected."
+      ],
+      "blocker": "Fresh browser verification across representative public/member surfaces remains required before this experience layer is marked TESTED/VERIFIED."
+    }
+  ]
+}

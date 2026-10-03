@@ -1,0 +1,3 @@
+-- Historical migration-history alias for remote version 20261001035315.
+-- Equivalent notification/realtime behavior is maintained by the canonical
+-- 20261001100000_omega_notification_realtime.sql migration.

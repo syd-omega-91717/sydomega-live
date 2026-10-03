@@ -1,0 +1,20 @@
+{
+  "$schema": "https://sydomega.com/schemas/omega-schema-evidence-policy.v1.json",
+  "schemaVersion": "1.0.0",
+  "contract": "OmegaSchemaEvidence",
+  "purpose": "Separate verified live database schema from migration-declared intent so runtime contracts never promote unverified tables to LIVE truth.",
+  "states": {
+    "LIVE_VERIFIED": "Present in the dated live-schema snapshot.",
+    "MIGRATION_DECLARED_UNVERIFIED": "Declared by repository SQL but absent from the dated live-schema snapshot.",
+    "UNKNOWN": "Referenced without sufficient live or migration evidence.",
+    "BOTH": "Declared by repository SQL and present in the dated live-schema snapshot."
+  },
+  "rules": [
+    "live-schema.json is evidence, not a target schema.",
+    "Migration declarations never upgrade runtime truth to LIVE_VERIFIED.",
+    "A table absent from live-schema.json must not be queried as a verified live source.",
+    "Generated drift reports retain capture date and project reference.",
+    "Failed or unavailable live inspection must not be converted into an empty schema.",
+    "Schema changes require a refreshed live evidence snapshot before LIVE_VERIFIED status is assigned."
+  ]
+}

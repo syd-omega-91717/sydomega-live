@@ -209,7 +209,7 @@
     {t:'HEPHAESTUS AQUARIUS',d:'God of the forge — Aquarius Wind element',u:'/cosmos.html',c:'OLYMPIAN'},
     /* ── CANON ──────────────────────────────────────────────────────────── */
     {t:'AUTHORITY FORMULA',d:'AUTH=sqrt(A³+B³+C³)×φ/e Apex=27.8367 A=Knowledge B=Mastery C=Contribution',u:'/analytics.html',c:'CANON'},
-    {t:'ARENITE TOKEN',d:'Founder token Aries sign Major Sleiman Youssef Dagher',u:'/vault.html',c:'CANON'},
+    {t:'ARENITE TOKEN',d:'Founder token Aries sign S.Y.D.',u:'/vault.html',c:'CANON'},
     {t:'12×12×9×9×9 LATTICE',d:'104976 canonical nodes The Plane 12x12x9^3 sovereign matrix',u:'/points.html',c:'CANON'},
     {t:'TRIAL 9 MINUTES 17 SECONDS',d:'557 seconds trial period granted by owner only',u:'/approvals.html',c:'CANON'},
     {t:'DEDICATION 9H 17M 17S',d:'33437 seconds daily dedication target',u:'/dashboard.html',c:'CANON'},
@@ -316,17 +316,40 @@
     if(qi===q.length)return 10+b;
     return 0;
   }
+  function graphSearch(q){
+    var g=window.OmegaObjectGraph;
+    if(!g||typeof g.find!=='function'||!q)return [];
+    var needle=String(q).toLowerCase().trim();
+    if(!needle)return [];
+    return g.find().map(function(o){
+      var label=String(o.label||o.id||''), type=String(o.type||'').toUpperCase(), source=String(o.source||'');
+      var meta=o.metadata&&typeof o.metadata==='object'?JSON.stringify(o.metadata):'';
+      var hay=(label+' '+type+' '+source+' '+meta).toLowerCase(), score=0;
+      if(label.toLowerCase()===needle)score=100;
+      else if(label.toLowerCase().includes(needle))score=70;
+      else if(type.toLowerCase().includes(needle)||source.toLowerCase().includes(needle))score=45;
+      else if(hay.includes(needle))score=25;
+      if(!score)return null;
+      return {t:label||type,d:type+' · '+source,u:o.metadata&&o.metadata.url?String(o.metadata.url):'/search.html#object-'+encodeURIComponent(String(o.id)),c:'OBJECT',_score:score,object:o};
+    }).filter(Boolean).sort(function(a,b){return b._score-a._score;}).slice(0,10);
+  }
+  function mergeGraphResults(base,q){
+    var live=graphSearch(q);if(!live.length)return base;
+    var seen={};base.forEach(function(x){seen[String(x.u)]=1;});
+    live.forEach(function(x){if(!seen[x.u]){base.push(x);seen[x.u]=1;}});
+    return base.slice(0,10);
+  }
   function doSearch(q){
     if(!q||q.length<1)return INDEX.slice(0,10);
     /* Use Fuse.js if available (better typo tolerance + relevance ranking) */
     if(_fuse&&q.length>=2){
       var fuseResults=_fuse.search(q).slice(0,10).map(function(r){return r.item;});
-      if(fuseResults.length) return fuseResults;
+      if(fuseResults.length) return mergeGraphResults(fuseResults,q);
     }
-    return INDEX.map(function(item){return{item:item,sc:scoreItem(item,q)};})
+    return mergeGraphResults(INDEX.map(function(item){return{item:item,sc:scoreItem(item,q)};})
       .filter(function(r){return r.sc>0;})
       .sort(function(a,b){return b.sc-a.sc;})
-      .slice(0,10).map(function(r){return r.item;});
+      .slice(0,10).map(function(r){return r.item;}),q);
   }
   /* Results go through .innerHTML. The hardcoded INDEX above is static and
      safe, but addItems()/harvestNav() feed it text read out of the DOM, so

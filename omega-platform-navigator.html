@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ω Platform Navigator — Complete Ecosystem</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --void: #0a0d14;
+      --void2: #1a1f2e;
+      --gold: #C9A84C;
+      --cyan: #00BCD4;
+      --crim: #FF4444;
+      --green: #4CAF50;
+      --purple: #9B6BF0;
+      --muted: #888;
+      --ink: #ddd;
+      --D: 'Cinzel Decorative', serif;
+      --R: 'Rajdhani', sans-serif;
+      --M: 'Courier Prime', monospace;
+      --omega-chrome-bottom: 0px;
+    }
+
+    body {
+      background: var(--void);
+      color: var(--ink);
+      font-family: var(--R);
+      line-height: 1.6;
+      overflow-x: hidden;
+      max-width: 100%;
+      width: 100%;
+      scrollbar-gutter: stable;
+    }
+
+    button, .filter-btn, .tab-btn, .specialization-tab, .ritual-tab {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--void2) 0%, rgba(201, 168, 76, 0.05) 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-statement {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .brand-statement h1 {
+      font-family: var(--D);
+      font-size: 2.5rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .brand-statement .tagline {
+      font-size: 1.1rem;
+      color: var(--cyan);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-statement p {
+      max-width: 700px;
+      margin: 0.5rem auto;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid var(--void2);
+      overflow-x: hidden;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .filter-btn {
+      padding: 0.8rem 1.5rem;
+      border: 1px solid var(--void2);
+      background: transparent;
+      color: var(--ink);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    main {
+      max-width: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    section {
+      max-width: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .section-title {
+      font-family: var(--D);
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* Product Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .product-card {
+      background: linear-gradient(135deg, rgba(26, 31, 46, 0.8) 0%, rgba(201, 168, 76, 0.05) 100%);
+      border: 1px solid var(--void2);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gold);
+      opacity: 0.7;
+    }
+
+    .product-card:hover {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(26, 31, 46, 0.95) 0%, rgba(201, 168, 76, 0.1) 100%);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(201, 168, 76, 0.15);
+    }
+
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .product-name {
+      font-family: var(--D);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .tier-badge {
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.3rem 0.8rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-family: var(--M);
+      white-space: nowrap;
+    }
+
+    .element-icon {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .element-fire { background: rgba(255, 68, 68, 0.2); border: 1px solid #FF4444; }
+    .element-water { background: rgba(0, 188, 212, 0.2); border: 1px solid #00BCD4; }
+    .element-earth { background: rgba(165, 98, 7, 0.2); border: 1px solid #C9A84C; }
+    .element-air { background: rgba(155, 107, 240, 0.2); border: 1px solid #9B6BF0; }
+
+    .product-description {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .product-features {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .product-features li {
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .product-features li:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-weight: bold;
+    }
+
+    .product-status {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid var(--green);
+      border-radius: 3px;
+      color: var(--green);
+      font-size: 0.75rem;
+      font-family: var(--M);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .agent-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .agent-icon {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(201, 168, 76, 0.1);
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+    }
+
+    .agent-title {
+      font-family: var(--D);
+      font-size: 1.8rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .agent-domain {
+      color: var(--cyan);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    /* Tier Comparison */
+    .tier-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .tier-card {
+      background: var(--void2);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .tier-name {
+      font-family: var(--D);
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .tier-price {
+      font-size: 1.4rem;
+      color: var(--cyan);
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .tier-features {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .tier-features li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .tier-features li:last-child {
+      border-bottom: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .section-title {
+        font-size: 1.6rem;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 2rem 1rem;
+      }
+
+      .brand-statement h1 {
+        font-size: 1.8rem;
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .nav-bar {
+        padding: 1rem;
+        gap: 0.5rem;
+      }
+
+      .filter-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .tier-comparison {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .product-card {
+        padding: 1.2rem;
+      }
+
+      .product-name {
+        font-size: 1.1rem;
+      }
+
+      .agent-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .agent-title {
+        font-size: 1.4rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      .brand-statement h1 {
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .product-header {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+  <script src="/bg.js"></script>
+  <script src="/nav.js"></script>
+</head>
+<body data-page="omega-platform-navigator">
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <header>
+      <div class="brand-statement">
+        <h1>Ω PLATFORM NAVIGATOR</h1>
+        <p class="tagline">The Complete Product Ecosystem — 36 Capabilities Across 12 Domains</p>
+        <p>Experience the full spectrum of the Ω platform: from foundational habits and security to advanced commerce, prediction, and governance tools. Each product is element-aligned and tier-gated for progressive mastery.</p>
+      </div>
+    </header>
+
+    <nav class="nav-bar">
+      <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+      <button class="filter-btn" onclick="filterProducts('sentinel')">⬢ Sentinel</button>
+      <button class="filter-btn" onclick="filterProducts('merchant')">◈ Merchant</button>
+      <button class="filter-btn" onclick="filterProducts('scout')">○ Scout</button>
+      <button class="filter-btn" onclick="filterProducts('warden')">◊ Warden</button>
+      <button class="filter-btn" onclick="filterProducts('sovereign')">Ω Sovereign</button>
+      <button class="filter-btn" onclick="filterProducts('auditor')">✓ Auditor</button>
+      <button class="filter-btn" onclick="filterProducts('proxy')">⚡&#xFE0E; Proxy</button>
+      <button class="filter-btn" onclick="filterProducts('oracle')">◎ Oracle</button>
+      <button class="filter-btn" onclick="filterProducts('beacon')">★ Beacon</button>
+      <button class="filter-btn" onclick="filterProducts('analyst')">▲ Analyst</button>
+      <button class="filter-btn" onclick="filterProducts('tutor')">◈ Tutor</button>
+      <button class="filter-btn" onclick="filterProducts('historian')">◈ Historian</button>
+    </nav>
+    <!-- SENTINEL PRODUCTS -->
+    <section class="agent-section" data-agent="sentinel">
+      <div class="agent-header">
+        <div class="agent-icon">⬢</div>
+        <div>
+          <h2 class="agent-title">SENTINEL</h2>
+          <p class="agent-domain">Security & Threat Detection</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="sentinel">
+          <h3 class="product-name">Omen Guard</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 2+</span>
+          </div>
+          <p class="product-description">Real-time threat detection on member data with weekly security audits and breach recovery guidance.</p>
+          <ul class="product-features">
+            <li>Threat intelligence feeds</li>
+            <li>Weekly security reports</li>
+            <li>Breach notifications</li>
+            <li>Recovery guidance</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="sentinel">
+          <h3 class="product-name">Cipher Vault</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Advanced encryption layer for sensitive documents with multi-factor key management and zero-knowledge backups.</p>
+          <ul class="product-features">
+            <li>Military-grade encryption</li>
+            <li>Key management system</li>
+            <li>Zero-knowledge backup</li>
+            <li>Secure sharing</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="sentinel">
+          <h3 class="product-name">Sentinel Watch</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 7+</span>
+          </div>
+          <p class="product-description">24/7 security monitoring with AI anomaly detection, automated threat response, and compliance reporting.</p>
+          <ul class="product-features">
+            <li>AI anomaly detection</li>
+            <li>Automated response</li>
+            <li>SOC 2 compliance</li>
+            <li>GDPR ready</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MERCHANT PRODUCTS -->
+    <section class="agent-section" data-agent="merchant">
+      <div class="agent-header">
+        <div class="agent-icon">◈</div>
+        <div>
+          <h2 class="agent-title">MERCHANT</h2>
+          <p class="agent-domain">Commerce & Financial Flow</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="merchant">
+          <h3 class="product-name">Trade Signal</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Personal expense categorization dashboard with spending analysis and element-based budget forecasting.</p>
+          <ul class="product-features">
+            <li>Expense categorization</li>
+            <li>Pattern analysis</li>
+            <li>Budget forecasting</li>
+            <li>Element insights</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="merchant">
+          <h3 class="product-name">Yield Stream</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 3+</span>
+          </div>
+          <p class="product-description">Passive income tracking across investments, royalties, and affiliate programs with portfolio optimization.</p>
+          <ul class="product-features">
+            <li>Multi-source tracking</li>
+            <li>Rebalancing suggestions</li>
+            <li>Tax-lot accounting</li>
+            <li>Performance analytics</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="merchant">
+          <h3 class="product-name">Commerce Ascendant</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 6+</span>
+          </div>
+          <p class="product-description">Full creator economy toolkit with unified payment dashboard and revenue optimization by audience segment.</p>
+          <ul class="product-features">
+            <li>Creator tools suite</li>
+            <li>Revenue optimization</li>
+            <li>Unified dashboard</li>
+            <li>Audience analytics</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCOUT PRODUCTS -->
+    <section class="agent-section" data-agent="scout">
+      <div class="agent-header">
+        <div class="agent-icon">○</div>
+        <div>
+          <h2 class="agent-title">SCOUT</h2>
+          <p class="agent-domain">Discovery & Learning Paths</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="scout">
+          <h3 class="product-name">Compass Portal</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Personalized content feed with element-matching recommendations and curated collections.</p>
+          <ul class="product-features">
+            <li>Content discovery</li>
+            <li>Element matching</li>
+            <li>Saved collections</li>
+            <li>Smart tagging</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="scout">
+          <h3 class="product-name">Pathfinder Maps</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 3+</span>
+          </div>
+          <p class="product-description">Skill tree visualization showing learning progression with community paths and expert resources.</p>
+          <ul class="product-features">
+            <li>Skill trees</li>
+            <li>Learning paths</li>
+            <li>Expert curation</li>
+            <li>Progress tracking</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="scout">
+          <h3 class="product-name">Horizon Scope</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 5+</span>
+          </div>
+          <p class="product-description">Predictive trend discovery with 6-month outlooks, emerging opportunity alerts, and network effects mapping.</p>
+          <ul class="product-features">
+            <li>Trend forecasting</li>
+            <li>Opportunity alerts</li>
+            <li>Network mapping</li>
+            <li>Pattern analysis</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WARDEN PRODUCTS -->
+    <section class="agent-section" data-agent="warden">
+      <div class="agent-header">
+        <div class="agent-icon">◊</div>
+        <div>
+          <h2 class="agent-title">WARDEN</h2>
+          <p class="agent-domain">Family & Privacy Protection</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="warden">
+          <h3 class="product-name">Kinship Circle</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 2+</span>
+          </div>
+          <p class="product-description">Encrypted family group messaging with shared decision-making tools and synchronized family calendar.</p>
+          <ul class="product-features">
+            <li>Encrypted messaging</li>
+            <li>Voting system</li>
+            <li>Shared calendar</li>
+            <li>Private sharing</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="warden">
+          <h3 class="product-name">Legacy Keeper</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Digital estate planning with encrypted will storage, successor permissions, and family tree visualization.</p>
+          <ul class="product-features">
+            <li>Estate planning</li>
+            <li>Encrypted storage</li>
+            <li>Permission system</li>
+            <li>Family tree</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="warden">
+          <h3 class="product-name">Haven Protocol</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 8+</span>
+          </div>
+          <p class="product-description">Full family AI assistant with joint financial planning and emergency contact automation.</p>
+          <ul class="product-features">
+            <li>AI assistant</li>
+            <li>Financial planning</li>
+            <li>Emergency automation</li>
+            <li>Family coordination</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOVEREIGN PRODUCTS -->
+    <section class="agent-section" data-agent="sovereign">
+      <div class="agent-header">
+        <div class="agent-icon">Ω</div>
+        <div>
+          <h2 class="agent-title">SOVEREIGN</h2>
+          <p class="agent-domain">Governance & Decision Making</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="sovereign">
+          <h3 class="product-name">Council Convene</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 3+</span>
+          </div>
+          <p class="product-description">Decision-making framework with weighted voting, proposal discussions, and outcome tracking by domain.</p>
+          <ul class="product-features">
+            <li>Voting framework</li>
+            <li>Proposal boards</li>
+            <li>Domain tracking</li>
+            <li>Decision history</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="sovereign">
+          <h3 class="product-name">Charter Craft</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 5+</span>
+          </div>
+          <p class="product-description">Custom governance rules builder with role-based permissions and complete audit trail of decisions.</p>
+          <ul class="product-features">
+            <li>Rules builder</li>
+            <li>Role templates</li>
+            <li>Audit trail</li>
+            <li>Permission control</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="sovereign">
+          <h3 class="product-name">Dominion OS</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-fire">⬢</div>
+            <span class="tier-badge">Tier 9+</span>
+          </div>
+          <p class="product-description">Full governance AI with organizational redesign simulations and strategic alignment scoring.</p>
+          <ul class="product-features">
+            <li>Governance AI</li>
+            <li>Org simulation</li>
+            <li>Alignment scoring</li>
+            <li>Strategic planning</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDITOR PRODUCTS -->
+    <section class="agent-section" data-agent="auditor">
+      <div class="agent-header">
+        <div class="agent-icon">✓</div>
+        <div>
+          <h2 class="agent-title">AUDITOR</h2>
+          <p class="agent-domain">Validation & Truth Checking</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="auditor">
+          <h3 class="product-name">Verify Mark</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 2+</span>
+          </div>
+          <p class="product-description">Fact-checking dashboard with claim source verification and media literacy assessments.</p>
+          <ul class="product-features">
+            <li>Fact checking</li>
+            <li>Source verification</li>
+            <li>Literacy scores</li>
+            <li>Truth ratings</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="auditor">
+          <h3 class="product-name">Truth Table</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Systematic bias detection, logical fallacy scanning, and citation strength analysis.</p>
+          <ul class="product-features">
+            <li>Bias detection</li>
+            <li>Fallacy scanner</li>
+            <li>Citation strength</li>
+            <li>Logic analysis</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="auditor">
+          <h3 class="product-name">Auditor Supreme</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 7+</span>
+          </div>
+          <p class="product-description">Third-party audit toolkit with regulatory compliance checking and financial statement validation.</p>
+          <ul class="product-features">
+            <li>Audit toolkit</li>
+            <li>Compliance check</li>
+            <li>Statement validation</li>
+            <li>Report generation</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROXY PRODUCTS -->
+    <section class="agent-section" data-agent="proxy">
+      <div class="agent-header">
+        <div class="agent-icon">⚡&#xFE0E;</div>
+        <div>
+          <h2 class="agent-title">PROXY</h2>
+          <p class="agent-domain">Execution & Automation</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="proxy">
+          <h3 class="product-name">Task Executor</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Automated workflow builder with calendar sync and AI-timed smart reminders.</p>
+          <ul class="product-features">
+            <li>No-code workflows</li>
+            <li>Calendar sync</li>
+            <li>Smart reminders</li>
+            <li>Automation rules</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="proxy">
+          <h3 class="product-name">Delegate Force</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Task marketplace connecting you with vetted helpers and template library for recurring workflows.</p>
+          <ul class="product-features">
+            <li>Helper marketplace</li>
+            <li>Template library</li>
+            <li>QA checks</li>
+            <li>Skill matching</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="proxy">
+          <h3 class="product-name">Proxy Prime</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 8+</span>
+          </div>
+          <p class="product-description">AI execution layer handling complex multi-step workflows and third-party API orchestration.</p>
+          <ul class="product-features">
+            <li>AI execution</li>
+            <li>Multi-step flows</li>
+            <li>API orchestration</li>
+            <li>Integration hub</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORACLE PRODUCTS -->
+    <section class="agent-section" data-agent="oracle">
+      <div class="agent-header">
+        <div class="agent-icon">◎</div>
+        <div>
+          <h2 class="agent-title">ORACLE</h2>
+          <p class="agent-domain">Prediction & Foresight</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="oracle">
+          <h3 class="product-name">Foresight Daily</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 2+</span>
+          </div>
+          <p class="product-description">Personal horoscope based on element and sign with daily forecasts and trend predictions.</p>
+          <ul class="product-features">
+            <li>Daily horoscope</li>
+            <li>Element forecast</li>
+            <li>Mood prediction</li>
+            <li>Trend insights</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="oracle">
+          <h3 class="product-name">Prophecy Engine</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 5+</span>
+          </div>
+          <p class="product-description">Advanced predictive analytics with life event forecasting and data-driven scenario planning.</p>
+          <ul class="product-features">
+            <li>Predictive models</li>
+            <li>Event forecasting</li>
+            <li>Scenario planning</li>
+            <li>Analytics</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="oracle">
+          <h3 class="product-name">Oracle Ascendant</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 8+</span>
+          </div>
+          <p class="product-description">Proprietary AI prediction model with long-term life path forecasting and strategic foresight reports.</p>
+          <ul class="product-features">
+            <li>Proprietary AI</li>
+            <li>Life forecasting</li>
+            <li>Strategic reports</li>
+            <li>Deep insights</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEACON PRODUCTS -->
+    <section class="agent-section" data-agent="beacon">
+      <div class="agent-header">
+        <div class="agent-icon">★</div>
+        <div>
+          <h2 class="agent-title">BEACON</h2>
+          <p class="agent-domain">Onboarding & Guidance</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="beacon">
+          <h3 class="product-name">Welcome Ritual</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Free Tier</span>
+          </div>
+          <p class="product-description">Guided onboarding with zodiac discovery and initial preference setup for all new members.</p>
+          <ul class="product-features">
+            <li>Interactive walk-through</li>
+            <li>Element quiz</li>
+            <li>Preferences setup</li>
+            <li>Profile creation</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="beacon">
+          <h3 class="product-name">Mentor Bridge</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 3+</span>
+          </div>
+          <p class="product-description">1-on-1 mentor matching with structured curriculum and milestone celebration badges.</p>
+          <ul class="product-features">
+            <li>Mentor matching</li>
+            <li>Curriculum path</li>
+            <li>Milestone badges</li>
+            <li>Progress tracking</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="beacon">
+          <h3 class="product-name">Guide Eternal</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 6+</span>
+          </div>
+          <p class="product-description">Lifetime learning path with quarterly check-ins and coach AI for mastery level progression.</p>
+          <ul class="product-features">
+            <li>Personalized paths</li>
+            <li>Coach AI</li>
+            <li>Quarterly check-ins</li>
+            <li>Mastery levels</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYST PRODUCTS -->
+    <section class="agent-section" data-agent="analyst">
+      <div class="agent-header">
+        <div class="agent-icon">▲</div>
+        <div>
+          <h2 class="agent-title">ANALYST</h2>
+          <p class="agent-domain">Finance & Wealth</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="analyst">
+          <h3 class="product-name">Numbers Dashboard</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Net worth tracking with income vs. expense visualization and asset allocation breakdown.</p>
+          <ul class="product-features">
+            <li>Net worth tracking</li>
+            <li>Income analytics</li>
+            <li>Asset breakdown</li>
+            <li>Trend charts</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="analyst">
+          <h3 class="product-name">Wealth Architect</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Financial goal planning with investment recommendations and tax optimization strategies.</p>
+          <ul class="product-features">
+            <li>Goal planning</li>
+            <li>Recommendations</li>
+            <li>Tax optimization</li>
+            <li>Strategy modeling</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="analyst">
+          <h3 class="product-name">Financial Oracle</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-earth">◈</div>
+            <span class="tier-badge">Tier 7+</span>
+          </div>
+          <p class="product-description">Retirement modeling with 100+ scenarios and generational wealth planning with AI advisor.</p>
+          <ul class="product-features">
+            <li>Retirement modeling</li>
+            <li>Scenario planning</li>
+            <li>Legacy planning</li>
+            <li>AI advisor</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TUTOR PRODUCTS -->
+    <section class="agent-section" data-agent="tutor">
+      <div class="agent-header">
+        <div class="agent-icon">◈</div>
+        <div>
+          <h2 class="agent-title">TUTOR</h2>
+          <p class="agent-domain">Education & Mastery</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="tutor">
+          <h3 class="product-name">Learn Portal</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Skill assessment with element-matched courses and AI-curated dashboard progress tracking.</p>
+          <ul class="product-features">
+            <li>Skill assessments</li>
+            <li>Course catalog</li>
+            <li>AI curation</li>
+            <li>Progress tracking</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="tutor">
+          <h3 class="product-name">Master Academy</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Interactive workshops with peer study groups and certification pathways for skill advancement.</p>
+          <ul class="product-features">
+            <li>Live workshops</li>
+            <li>Study groups</li>
+            <li>Certifications</li>
+            <li>Expert access</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="tutor">
+          <h3 class="product-name">Sage Protocol</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-air">★</div>
+            <span class="tier-badge">Tier 7+</span>
+          </div>
+          <p class="product-description">AI tutor personalized to your learning style with advanced mastery programs and expert network access.</p>
+          <ul class="product-features">
+            <li>AI tutor</li>
+            <li>Mastery programs</li>
+            <li>Expert network</li>
+            <li>Custom learning</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORIAN PRODUCTS -->
+    <section class="agent-section" data-agent="historian">
+      <div class="agent-header">
+        <div class="agent-icon">◈</div>
+        <div>
+          <h2 class="agent-title">HISTORIAN</h2>
+          <p class="agent-domain">Archive & Legacy</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" data-agent="historian">
+          <h3 class="product-name">Memory Vault</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 1+</span>
+          </div>
+          <p class="product-description">Personal encrypted journal with photo timeline and milestone capture system.</p>
+          <ul class="product-features">
+            <li>Encrypted journal</li>
+            <li>Photo timeline</li>
+            <li>Searchable</li>
+            <li>Milestone capture</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="historian">
+          <h3 class="product-name">Chronicle Complete</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 4+</span>
+          </div>
+          <p class="product-description">Full life narrative builder with family history documentation and video/audio archival.</p>
+          <ul class="product-features">
+            <li>Narrative builder</li>
+            <li>Family history</li>
+            <li>Media archival</li>
+            <li>Story export</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+
+        <div class="product-card" data-agent="historian">
+          <h3 class="product-name">Eternal Record</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="element-icon element-water">◈</div>
+            <span class="tier-badge">Tier 8+</span>
+          </div>
+          <p class="product-description">AI-powered autobiography generation with generational storytelling and digital museum creation.</p>
+          <ul class="product-features">
+            <li>AI autobiography</li>
+            <li>Storytelling framework</li>
+            <li>Digital museum</li>
+            <li>Legacy publication</li>
+          </ul>
+          <span class="product-status">Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING & TIERS -->
+    <section style="padding: 4rem 2rem; background: linear-gradient(135deg, rgba(0, 188, 212, 0.05) 0%, var(--void2) 100%);">
+      <div class="container">
+        <h2 class="section-title">Membership Tiers & Pricing</h2>
+        <p style="text-align: center; color: var(--muted); margin-bottom: 3rem;">Choose your level of access and unlock increasingly powerful capabilities.</p>
+
+        <div class="tier-comparison">
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 1: Initiate</h4>
+            <div class="tier-price">Free</div>
+            <ul class="tier-features">
+              <li>✓ Welcome Ritual onboarding</li>
+              <li>✓ Compass Portal discovery</li>
+              <li>✓ Memory Vault journal</li>
+              <li>✓ Learn Portal access</li>
+              <li>✓ Numbers Dashboard</li>
+              <li>✓ Trade Signal expenses</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 2: Seeker</h4>
+            <div class="tier-price">$9/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 1 features</li>
+              <li>✓ Omen Guard security</li>
+              <li>✓ Kinship Circle family</li>
+              <li>✓ Verify Mark fact-checking</li>
+              <li>✓ Foresight Daily oracle</li>
+              <li>✓ Priority support</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 3: Apprentice</h4>
+            <div class="tier-price">$24/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 2 features</li>
+              <li>✓ Scout advanced paths</li>
+              <li>✓ Merchant Yield Stream</li>
+              <li>✓ Council Convene voting</li>
+              <li>✓ Master Academy workshops</li>
+              <li>✓ Mentor Bridge access</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 4: Journeyer</h4>
+            <div class="tier-price">$49/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 3 features</li>
+              <li>✓ Cipher Vault encryption</li>
+              <li>✓ Prophecy Engine</li>
+              <li>✓ Legacy Keeper estate</li>
+              <li>✓ Delegate Force helpers</li>
+              <li>✓ Truth Table bias detection</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 5: Adept</h4>
+            <div class="tier-price">$99/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 4 features</li>
+              <li>✓ Horizon Scope trends</li>
+              <li>✓ Charter Craft governance</li>
+              <li>✓ Wealth Architect planning</li>
+              <li>✓ Oracle API access</li>
+              <li>✓ API integration suite</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 6: Sage</h4>
+            <div class="tier-price">$199/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 5 features</li>
+              <li>✓ Commerce Ascendant</li>
+              <li>✓ Guide Eternal coaching</li>
+              <li>✓ Financial Oracle advisor</li>
+              <li>✓ White-label options</li>
+              <li>✓ Dedicated support</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 7: Visionary</h4>
+            <div class="tier-price">$399/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 6 features</li>
+              <li>✓ Sentinel Watch 24/7</li>
+              <li>✓ Auditor Supreme</li>
+              <li>✓ Sage Protocol AI tutor</li>
+              <li>✓ Advanced governance</li>
+              <li>✓ Team collaboration</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 8: Luminary</h4>
+            <div class="tier-price">$799/mo</div>
+            <ul class="tier-features">
+              <li>✓ All Tier 7 features</li>
+              <li>✓ Haven Protocol family AI</li>
+              <li>✓ Proxy Prime automation</li>
+              <li>✓ Oracle Ascendant foresight</li>
+              <li>✓ Eternal Record museum</li>
+              <li>✓ VIP concierge service</li>
+            </ul>
+          </div>
+
+          <div class="tier-card">
+            <h4 class="tier-name">Tier 9: Sovereign</h4>
+            <div class="tier-price">$1,999/mo</div>
+            <ul class="tier-features">
+              <li>✓ All features unlocked</li>
+              <li>✓ Dominion OS full access</li>
+              <li>✓ Custom integrations</li>
+              <li>✓ Private infrastructure</li>
+              <li>✓ Direct API access</li>
+              <li>✓ Enterprise SLA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section style="padding: 4rem 2rem; background: var(--void2);">
+      <div class="container">
+        <h2 class="section-title">The Complete Picture</h2>
+        <p style="text-align: center; color: var(--muted); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+          The Ω platform now offers 36 distinct products across 12 agent domains, with 9 membership tiers providing progressive access to capabilities. From foundational habits tracking to enterprise governance systems, every product is grounded in the element system and tier progression.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+          <div style="text-align: center; padding: 1rem; background: rgba(201, 168, 76, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
+            <h4 style="color: var(--gold); font-family: var(--D); margin-bottom: 0.5rem;">36 Products</h4>
+            <p style="color: var(--muted); font-size: 0.9rem;">Across 12 domains</p>
+          </div>
+          <div style="text-align: center; padding: 1rem; background: rgba(0, 188, 212, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
+            <h4 style="color: var(--cyan); font-family: var(--D); margin-bottom: 0.5rem;">9 Tiers</h4>
+            <p style="color: var(--muted); font-size: 0.9rem;">Free to enterprise</p>
+          </div>
+          <div style="text-align: center; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
+            <h4 style="color: var(--green); font-family: var(--D); margin-bottom: 0.5rem;">4 Elements</h4>
+            <p style="color: var(--muted); font-size: 0.9rem;">Fire, Water, Earth, Air</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+  <script>
+    function filterProducts(agent) {
+      const cards = document.querySelectorAll('.product-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      cards.forEach(card => {
+        if (agent === 'all' || card.dataset.agent === agent) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Also filter sections
+      document.querySelectorAll('.agent-section').forEach(section => {
+        if (agent === 'all' || section.dataset.agent === agent) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

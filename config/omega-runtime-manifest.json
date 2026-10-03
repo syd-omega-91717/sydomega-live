@@ -1,0 +1,295 @@
+{
+  "$schema": "https://sydomega.com/schemas/omega-runtime-manifest.v1.json",
+  "schemaVersion": "1.0.0",
+  "platform": "SYD OMEGA 91717",
+  "runtimeVersion": "3.0.0",
+  "truthPolicy": {
+    "authoritative": [
+      "LIVE",
+      "VERIFIED"
+    ],
+    "derived": [
+      "CALCULATED",
+      "DERIVED"
+    ],
+    "nonAuthoritative": [
+      "DESIGNED",
+      "SOURCE",
+      "SIMULATED",
+      "UNKNOWN",
+      "UNAVAILABLE",
+      "STALE"
+    ],
+    "neverInferMissingState": true
+  },
+  "layers": [
+    "identity",
+    "navigation",
+    "state",
+    "events",
+    "data",
+    "permissions",
+    "actions",
+    "intelligence",
+    "presentation",
+    "observability",
+    "extensions"
+  ],
+  "entrypoints": {
+    "kernel": "/bg.js",
+    "actionRuntime": "/omega-action-runtime.js",
+    "observability": "/assets/js/omega-runtime-observability.js",
+    "navigation": "/nav.js",
+    "architecture": "/omega-architecture-runtime.js",
+    "objectRuntime": "/omega-object-runtime.js",
+    "objectGraph": "/omega-object-graph-runtime.js"
+  },
+  "capabilities": [
+    {
+      "id": "identity",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "member",
+      "critical": true,
+      "entry": [
+        "/omega-user.js"
+      ],
+      "dataSources": [
+        "profiles"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "navigation",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "platform",
+      "critical": true,
+      "entry": [
+        "/nav.js"
+      ],
+      "dataSources": [
+        "page metadata"
+      ],
+      "permissions": [
+        "public"
+      ]
+    },
+    {
+      "id": "activity",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "member",
+      "critical": false,
+      "entry": [
+        "/omega-realtime.js",
+        "/feed.html"
+      ],
+      "dataSources": [
+        "activity_feed",
+        "omega_platform_events"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "progression",
+      "version": "1.0.0",
+      "owner": "ascend",
+      "scope": "member",
+      "critical": true,
+      "entry": [
+        "/omega-sdt.js"
+      ],
+      "dataSources": [
+        "profiles",
+        "gate_evaluations",
+        "evolution_events"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "intelligence",
+      "version": "1.0.0",
+      "owner": "intel",
+      "scope": "member",
+      "critical": false,
+      "entry": [
+        "/omega-intelligence.js"
+      ],
+      "dataSources": [
+        "ai_jobs",
+        "ai_memory",
+        "ai_conversations"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "graph",
+      "version": "1.0.0",
+      "owner": "intel",
+      "scope": "member",
+      "critical": false,
+      "entry": [
+        "/nexus.html",
+        "/omega-sculpture-dataviz.js"
+      ],
+      "dataSources": [
+        "graph_entities",
+        "graph_relationships",
+        "graph_events"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "continuity",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "member",
+      "critical": false,
+      "entry": [
+        "/omega-eternity-engine.js"
+      ],
+      "dataSources": [
+        "omega_platform_events",
+        "activity_feed",
+        "capability_registry"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "observability",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "platform",
+      "critical": true,
+      "entry": [
+        "/assets/js/omega-runtime-observability.js"
+      ],
+      "dataSources": [
+        "client_errors",
+        "analytics_events"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    },
+    {
+      "id": "offline",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "platform",
+      "critical": false,
+      "entry": [
+        "/sw.js"
+      ],
+      "dataSources": [
+        "Cache API"
+      ],
+      "permissions": [
+        "public"
+      ]
+    },
+    {
+      "id": "governance",
+      "version": "1.0.0",
+      "owner": "owner",
+      "scope": "platform",
+      "critical": true,
+      "entry": [
+        "/approvals.html",
+        "/control-center.html"
+      ],
+      "dataSources": [
+        "capability_registry",
+        "governance_policies",
+        "audit_logs"
+      ],
+      "permissions": [
+        "owner"
+      ]
+    },
+    {
+      "id": "object-graph",
+      "version": "1.0.0",
+      "owner": "core",
+      "scope": "platform",
+      "critical": true,
+      "entry": [
+        "/omega-object-runtime.js",
+        "/omega-object-graph-runtime.js"
+      ],
+      "dataSources": [
+        "omega_platform_events",
+        "activity_feed",
+        "graph_entities",
+        "graph_relationships",
+        "data_lineage",
+        "capability_registry"
+      ],
+      "permissions": [
+        "authenticated"
+      ]
+    }
+  ],
+  "objectTypes": [
+    "member",
+    "mission",
+    "achievement",
+    "gate",
+    "holding",
+    "transaction",
+    "document",
+    "course",
+    "lesson",
+    "post",
+    "media",
+    "agent",
+    "conversation",
+    "project",
+    "event",
+    "credential",
+    "asset",
+    "capability"
+  ],
+  "universalStates": [
+    "LOADING",
+    "READY",
+    "EMPTY",
+    "ERROR",
+    "OFFLINE",
+    "STALE",
+    "LOCKED",
+    "UNAUTHORIZED",
+    "PROCESSING",
+    "SUCCESS",
+    "UNKNOWN",
+    "UNAVAILABLE"
+  ],
+  "scalingPrinciples": [
+    "server-authoritative state",
+    "idempotent actions",
+    "bounded client concurrency",
+    "lazy non-critical modules",
+    "observability for every consequential action",
+    "fail-closed authorization",
+    "evidence-backed truth"
+  ],
+  "objectContract": {
+    "manifest": "/config/omega-object-model.json",
+    "schema": "/config/omega-object-contract.schema.json",
+    "runtime": "/omega-object-runtime.js",
+    "graphRuntime": "/omega-object-graph-runtime.js"
+  }
+}

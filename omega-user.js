@@ -8,8 +8,8 @@
 
 /* ── CANONICAL OWNER DATA (absolute, locked) ─────────────────────────────── */
 var OWNER = {
-  display_name    : 'MAJOR SLEIMAN YOUSSEF DAGHER',
-  full_name       : 'Major Sleiman Youssef Dagher',
+  display_name    : 'S.Y.D',
+  full_name       : 'Sleiman Youssef Dagher',
   title           : 'ARCHITECT & SOVEREIGN FOUNDER',
   order_number    : 'LEBANESE ORDER OF ENGINEERS NO. 30875',
   sign            : 'Aries',
@@ -100,6 +100,10 @@ window.__omegaPopulate = function(pr, user){
         +'COSMOLOGY: ARIES \u00b7 FIRE \u00b7 ARES \u00b7 SENTINEL \u00b7 ARENITE';
     }
   }
+
+  /* Owner/admin identity surfaces may show the legal full name; public identity uses S.Y.D. */
+  var officialName=document.getElementById('idf-fullname');
+  if(officialName) officialName.textContent=isOwner ? OWNER.full_name : name;
 
   /* ── TITLE / ROLE ── */
   var pht=document.getElementById('ph-title');

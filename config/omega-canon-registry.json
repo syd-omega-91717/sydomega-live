@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "Prevent dimensional concepts from being silently collapsed during implementation.",
+  "dimensions": [
+    {
+      "id": "NINE_CUBE_3D",
+      "symbol": "9^3",
+      "cardinality": 729,
+      "status": "INTEGRATED",
+      "ownerDomain": "progression",
+      "source": [
+        "Master Prompt",
+        "implementation ledger"
+      ]
+    },
+    {
+      "id": "NINE_FRACTAL_5D",
+      "symbol": "9^5",
+      "cardinality": 59049,
+      "status": "DESIGNED",
+      "ownerDomain": "canon/fractal progression",
+      "source": [
+        "omega-canon.json"
+      ]
+    },
+    {
+      "id": "TWELVE_AGENT_SET",
+      "symbol": "12",
+      "cardinality": 12,
+      "status": "INTEGRATED",
+      "ownerDomain": "agent system",
+      "source": [
+        "Master Prompt",
+        "999 Blueprint"
+      ]
+    },
+    {
+      "id": "TWELVE_MODULE_SET",
+      "symbol": "18",
+      "cardinality": 18,
+      "status": "INTEGRATED",
+      "ownerDomain": "product modules",
+      "source": [
+        "project architecture"
+      ]
+    },
+    {
+      "id": "TWELVE_BY_TWELVE_BY_NINE_BY_NINE_BY_NINE",
+      "symbol": "12×12×9×9×9",
+      "cardinality": 104976,
+      "status": "DESIGNED",
+      "ownerDomain": "extended canon",
+      "source": [
+        "omega-canon.json"
+      ]
+    }
+  ],
+  "rules": [
+    "A dimensional system may not be reinterpreted as another dimensional system without an explicit architecture decision.",
+    "Cardinality alone does not prove implementation.",
+    "A node/agent/module existing in a registry does not imply completion, achievement, financial value, ownership or external-world realization.",
+    "Narrative or speculative infrastructure must be represented as SIMULATION_ONLY or DESIGNED until independently verifiable infrastructure exists."
+  ]
+}

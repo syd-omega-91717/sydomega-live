@@ -17,7 +17,7 @@
         table,
         data,
         timestamp: Date.now(),
-        id: Math.random().toString(36).substring(7)
+        id: (window.crypto&&typeof window.crypto.randomUUID==='function') ? window.crypto.randomUUID() : (window.crypto&&typeof window.crypto.getRandomValues==='function' ? Array.from(window.crypto.getRandomValues(new Uint8Array(16))).map(function(b){return b.toString(16).padStart(2,'0');}).join('') : null)
       });
       
       // Auto-sync when online

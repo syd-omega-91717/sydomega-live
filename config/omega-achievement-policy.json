@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "purpose": "Evidence-backed achievement and certificate issuance.",
+  "rules": {
+    "completion_is_not_verification": true,
+    "client_cannot_self_verify": true,
+    "certificate_requires_verified_achievement": true,
+    "reward_requires_verified_achievement": true,
+    "revocation_supported": true,
+    "evidence_reference_required_for_verified_state": true
+  },
+  "achievement_types": ["node","stage","mission","certificate","contribution","service","governance","custom"]
+}

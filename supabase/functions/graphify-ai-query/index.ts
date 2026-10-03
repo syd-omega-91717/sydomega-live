@@ -46,6 +46,17 @@ async function requireCaller(req: Request): Promise<{ userId: string } | Respons
   }
   return { userId: data.user.id };
 }
+
+const MAX_QUERY_LENGTH = 500;
+const MAX_FILTER_LENGTH = 120;
+const ALLOWED_QUERY_TYPES = new Set(["natural_language","path_find","centrality","anomalies"]);
+const ALLOWED_RELATIONSHIPS = new Set(["depends_on","enables","blocks","creates","relates_to"]);
+
+function safeFilter(value: unknown): string {
+  if (typeof value !== "string" || value.length === 0 || value.length > MAX_FILTER_LENGTH) throw new Error("invalid_query_parameter");
+  return value.replace(/[\\%_,()]/g, " ").trim();
+}
+
 const anthropic = new Anthropic({ apiKey: anthropicKey });
 
 Deno.serve(async (req: Request) => {
@@ -56,7 +67,7 @@ Deno.serve(async (req: Request) => {
   const caller = await requireCaller(req);
   if (caller instanceof Response) return caller;
 
-  const queryReq: QueryRequest = await req.json();
+  const queryReq: QueryRequest = await req.json().catch(() => { throw new Error("invalid_body"); });
   const {
     user_id,
     query,
@@ -72,7 +83,10 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  console.log(`Graph query: ${query_type} - ${query}`);
+  if (!ALLOWED_QUERY_TYPES.has(query_type)) return new Response(JSON.stringify({ error: "invalid_query_type" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  if (typeof query !== "string" || query.length === 0 || query.length > MAX_QUERY_LENGTH) return new Response(JSON.stringify({ error: "invalid_query" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  if (relationship_type !== undefined && !ALLOWED_RELATIONSHIPS.has(relationship_type)) return new Response(JSON.stringify({ error: "invalid_relationship_type" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  console.log(`Graph query: ${query_type}`);
 
   try {
     let result: GraphResponse;
@@ -96,7 +110,7 @@ Deno.serve(async (req: Request) => {
     });
   } catch (error) {
     console.error("Graph query error:", error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: "graph_query_failed" }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 });
 
@@ -123,7 +137,11 @@ Respond with JSON:
   const content = message.content[0];
   if (content.type !== "text") throw new Error("Unexpected response");
 
-  const parsed = JSON.parse(content.text);
+  let parsed: any;
+  try { parsed = JSON.parse(content.text); } catch { throw new Error("invalid_ai_json"); }
+  if (!parsed || typeof parsed !== "object" || !["search","path_find","analysis"].includes(parsed.query_type)) throw new Error("invalid_ai_query_plan");
+  if (parsed.entity_search !== null && parsed.entity_search !== undefined && typeof parsed.entity_search !== "string") throw new Error("invalid_ai_query_plan");
+  if (parsed.relationship_type !== null && parsed.relationship_type !== undefined && !ALLOWED_RELATIONSHIPS.has(parsed.relationship_type)) throw new Error("invalid_ai_query_plan");
 
   // Execute based on parsed query type
   if (parsed.entity_search) {
@@ -142,7 +160,7 @@ async function entitySearchQuery(user_id: string, search: string): Promise<Graph
     .from("graph_entities")
     .select("*")
     .eq("user_id", user_id)
-    .or(`display_name.ilike.%${search}%,canonical_name.ilike.%${search}%`)
+    .or(`display_name.ilike.%${safeFilter(search)}%,canonical_name.ilike.%${safeFilter(search)}%`)
     .limit(20);
 
   if (entityError) throw entityError;
@@ -186,7 +204,7 @@ async function pathFindQuery(
     .from("graph_entities")
     .select("id")
     .eq("user_id", user_id)
-    .ilike("display_name", `%${source_entity}%`)
+    .ilike("display_name", `%${safeFilter(source_entity)}%`)
     .limit(1)
     .single();
 
@@ -199,7 +217,7 @@ async function pathFindQuery(
     .from("graph_entities")
     .select("id")
     .eq("user_id", user_id)
-    .ilike("display_name", `%${target_entity}%`)
+    .ilike("display_name", `%${safeFilter(target_entity)}%`)
     .limit(1)
     .single();
 

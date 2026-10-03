@@ -47,14 +47,22 @@
       const domains = ['prophecy', 'finance', 'education', 'discovery', 'validation', 'execution',
                        'governance', 'onboarding', 'archive', 'family', 'security', 'health'];
 
+      /* The page called an undefined global client; resolve the shared client that bg.js
+         publishes (deferred, so wait for DOMContentLoaded) -- CLAUDE.md 8.1 class 4. */
+      const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const sb = await new Promise((resolve) => {
+        const go = () => { try { Promise.resolve(window.OmegaSB && window.OmegaSB.get()).then(resolve, () => resolve(null)); } catch (e) { resolve(null); } };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go, { once: true }); else go();
+      });
       try {
-        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!sb) throw new Error('connection unavailable');
+        const { data: { user } } = await sb.auth.getUser();
         if (!user) {
           loading.textContent = 'Please sign in to view your mastery.';
           return;
         }
 
-        const { data: mastery, error: masteryError } = await window.supabase
+        const { data: mastery, error: masteryError } = await sb
           .from('domain_mastery')
           .select('domain, level, total_points, quests_completed')
           .eq('user_id', user.id);
@@ -74,7 +82,7 @@
           const card = document.createElement('div');
           card.className = 'dm-card card';
           card.innerHTML = `
-            <div class="dm-domain">${domain}</div>
+            <div class="dm-domain">${esc(domain)}</div>
             <div class="dm-level">${m.level}</div>
             <div class="dm-level-max">/ 9</div>
             <div class="dm-progress-bar">

@@ -689,3 +689,16 @@ the wrong place):
 - **Pages:** `world.html` reduced to one document; `omega-quests.js` resolves the shared
   client and no longer throws.
 - Evidence: `FIXES_LOG.md`, 2026-10-03 (second entry). Open: `GAP_ANALYSIS.md` §S.
+
+## 12. Quest widgets retired, Phase 1 pages repaired (2026-10-03)
+
+- **Removed:** quest widget markup/JS from 12 pages; modules `omega-quests.js`,
+  `omega-quest-handler.js`, `omega-quest-ui.js` (and their two `bg.js` injections);
+  reference schema `supabase/omega_quests_system.sql`, `supabase/omega_quest_ecosystem.sql`.
+- **Restored:** `leaderboard.html` to its pre-`81a5d42` authority leaderboard (logic now in
+  `leaderboard.js`).
+- **Fixed:** client resolution and escaping on `quest-progress`, `domain-mastery`,
+  `covenant`, `seasonal-events`; `bg.js` approval no longer dropped before `<body>`;
+  `#app` inline hide on two pages; `profile.html` stale `--crim` fallback;
+  `omega-visual-atlas.js` malformed-URI throw.
+- Evidence: `FIXES_LOG.md`, 2026-10-03 (third entry).

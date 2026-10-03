@@ -18,30 +18,15 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
-- **Phase 1 quest widgets promise points nothing can award** (opened 2026-10-03). About ten
-  pages (`vault`, `achievements`, `cosmos`, `investment`, `predictions-dashboard`, `arena`, …)
-  show a START QUEST button and copy like "160 POINTS — COMPLETE THE QUEST". The backend they
-  need (`quests`/`quest_progress`/`quest_events` and `start_quest()`, declared only in
-  `supabase/omega_quests_system.sql`) was never deployed, and `omega-quests.js` never
-  publishes `window.OmegaQuests` (a top-level `const`), so each widget's init retries 50 times
-  and gives up — the buttons do nothing. Owner decision: build the backend (and route awards
-  through `track_quest_progress`, not a second ledger) or hide the widgets behind a flag.
-  These three tables are also `schema-consolidation-gate.py`'s only orphans, and with
-  `quest_config` and three `profiles` quest columns they are all five of
-  `migration-consistency.py`'s findings (GitHub-blocking; red on `main` before this).
-  `achievements.html`'s START QUEST button is 2.71:1 contrast.
-- **Seven runtime failures that the quest throw was masking** (opened 2026-10-03,
-  `verify-runtime.js --all`, 217/224 pages ok — 0 before, since every page threw):
-  approval guard never lifts in the harness on `automation.html` (also horizontal
-  overflow), `omega-platform-navigator.html`, `predictions-dashboard.html`; contrast below
-  3:1 on `profile.html` (`.ab-tier` "TROPHY", 1.91:1) and on the START QUEST buttons of
-  `achievements.html` (2.71:1) and `arena.html` (2.88:1); `visual-atlas.html` throws
-  `URI malformed`. Not yet triaged against a live session — the harness stubs Supabase.
 - **Five inert member write policies on the progression tables** (opened 2026-10-03):
   `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
-  `leaderboard_member_update`, `covenant_member_update`. Inert since
-  `20261003220754` revoked the grants; dropping them timed out four times through
-  `apply_migration`. Drop them in a dashboard SQL session and add the migration.
+  `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`
+  revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
+  agent session cannot give, so run in the SQL editor:
+  `drop policy quest_completions_member_insert on public.quest_completions;` (and the
+  other four), then add the matching migration file.
+- **Leaked-password protection is off** (Supabase security advisor). Dashboard-only:
+  Authentication → Policies (password strength / HaveIBeenPwned). No API path from here.
 - **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
   `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
   `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid

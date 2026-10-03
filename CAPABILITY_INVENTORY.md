@@ -233,6 +233,11 @@ applied to the identity card), `cosmetics.html` (`point_perks` with a `slot`, bo
 
 ## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
 
+> **2026-10-03:** `omega-quests.js`, `omega-quest-handler.js` and `omega-quest-ui.js` were
+> removed with the Phase 1 quest widgets they served (backend never deployed). The
+> gamification that is live is `character.html`'s progression, `cosmetics.html` and
+> `my-quests.html` (`FIXES_LOG.md`, 2026-10-03).
+
 Grouped by function, one line each, extracted from each file's own header comment (not
 invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
 

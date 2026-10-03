@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covenant — Monthly Battle Pass — Ω</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <script src="/bg.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <style>
+    .cov-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem; background: rgba(217,119,6,.1); border-radius: 8px; border: 1px solid rgba(217,119,6,.2); }
+    .cov-month { font-family: var(--D); font-size: 1.5rem; color: var(--gold); }
+    .cov-progress { display: flex; gap: 1rem; align-items: center; }
+    .cov-bar { flex: 1; min-width: 200px; }
+    .cov-bar-track { width: 100%; height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden; }
+    .cov-bar-fill { height: 100%; background: linear-gradient(90deg, rgba(217,119,6,.4), rgba(217,119,6,.8)); }
+    .cov-tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .cov-task { border: 1px solid rgba(217,119,6,.2); border-radius: 8px; padding: 1.5rem; background: rgba(0,0,0,.3); cursor: pointer; transition: all 0.2s ease; }
+    .cov-task:hover { border-color: rgba(217,119,6,.5); background: rgba(217,119,6,.05); }
+    .cov-task.completed { opacity: 0.6; }
+    .cov-task-domain { font-size: 0.75rem; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
+    .cov-task-desc { color: var(--ink); margin: 0.5rem 0; font-size: 0.95rem; }
+    .cov-task-points { color: var(--gold); font-weight: bold; margin-top: 0.5rem; }
+    .cov-premium { background: linear-gradient(135deg, rgba(168,85,247,.1), rgba(217,119,6,.1)); border: 1px solid rgba(168,85,247,.3); }
+    .cov-empty { text-align: center; color: var(--muted); padding: 3rem; grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <div id="omega-side"></div>
+  <main>
+    <div class="shell">
+      <div class="side"></div>
+      <div class="main">
+        <div id="app">
+          <h1 style="font-family: var(--D); color: var(--gold);">The Covenant</h1>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Monthly battle pass with 25 challenges across all domains.</p>
+
+          <div id="cov-loading" style="text-align: center; color: var(--muted);">Loading your covenant...</div>
+          <div id="cov-container" style="display: none;">
+            <div id="cov-header" class="cov-header">
+              <div class="cov-month" id="cov-month-name"></div>
+              <div class="cov-progress">
+                <div class="cov-bar">
+                  <div class="cov-bar-track">
+                    <div class="cov-bar-fill" id="cov-bar-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div id="cov-progress-text" style="min-width: 60px; text-align: right; color: var(--gold);">0/25</div>
+              </div>
+            </div>
+            <div id="cov-tasks" class="cov-tasks"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (async function() {
+      const container = document.getElementById('cov-container');
+      const loading = document.getElementById('cov-loading');
+      const tasks = document.getElementById('cov-tasks');
+      const monthName = document.getElementById('cov-month-name');
+      const progressText = document.getElementById('cov-progress-text');
+      const barFill = document.getElementById('cov-bar-fill');
+
+      try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) {
+          loading.textContent = 'Please sign in to view your covenant.';
+          return;
+        }
+
+        // Get current month covenant
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+
+        const { data: covenant, error: covenantError } = await window.supabase
+          .from('covenant_progress')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('month', month)
+          .eq('year', year)
+          .maybeSingle();
+
+        if (covenantError && covenantError.code !== 'PGRST116') throw covenantError;
+
+        if (!covenant) {
+          // Generate new covenant for this month
+          const { error: genError } = await (window.supabase.functions || window.sb?.functions)
+            ?.invoke('generate_monthly_covenant', { body: { user_id: user.id } });
+
+          if (genError) {
+            loading.textContent = 'Unable to generate covenant. Try again later.';
+            return;
+          }
+
+          location.reload();
+          return;
+        }
+
+        monthName.textContent = `${monthNames[month - 1]} ${year}`;
+
+        const taskList = covenant.tasks_available ? JSON.parse(covenant.tasks_available) : [];
+        const completed = covenant.tasks_completed || 0;
+        const progressPct = (completed / 25) * 100;
+
+        progressText.textContent = `${completed}/25`;
+        barFill.style.width = progressPct + '%';
+
+        if (taskList.length === 0) {
+          tasks.innerHTML = '<div class="cov-empty">No tasks available yet.</div>';
+        } else {
+          taskList.forEach((task, idx) => {
+            const card = document.createElement('div');
+            card.className = `cov-task card ${task.is_premium ? 'cov-premium' : ''}`;
+            if (task.completed) card.classList.add('completed');
+
+            card.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                  <div class="cov-task-domain">${task.domain}</div>
+                  <div class="cov-task-desc">${task.description}</div>
+                  ${task.is_premium ? '<div style="font-size: 0.7rem; color: var(--purple); margin-top: 0.5rem;">PREMIUM</div>' : ''}
+                </div>
+                <div style="text-align: right;">
+                  <div class="cov-task-points">${task.points}pt</div>
+                </div>
+              </div>
+            `;
+
+            card.onclick = () => {
+              if (task.completed) {
+                card.classList.remove('completed');
+                task.completed = false;
+              } else {
+                card.classList.add('completed');
+                task.completed = true;
+              }
+
+              const newCompleted = taskList.filter(t => t.completed).length;
+              progressText.textContent = `${newCompleted}/25`;
+              barFill.style.width = (newCompleted / 25 * 100) + '%';
+            };
+
+            tasks.appendChild(card);
+          });
+        }
+
+        loading.style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        loading.textContent = `Error loading covenant: ${error.message}`;
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domain Mastery — Ω</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <script src="/bg.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <style>
+    .dm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .dm-card { border: 1px solid rgba(6,182,212,.2); border-radius: 8px; padding: 1.5rem; background: rgba(0,0,0,.3); text-align: center; }
+    .dm-domain { font-family: var(--D); font-size: 1rem; color: var(--cyan); margin-bottom: 0.5rem; text-transform: uppercase; }
+    .dm-level { font-size: 2.5rem; font-weight: bold; color: var(--gold); margin: 0.5rem 0; }
+    .dm-level-max { font-size: 0.85rem; color: var(--muted); }
+    .dm-points { font-size: 0.9rem; color: var(--ink); margin: 1rem 0; }
+    .dm-progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,.1); border-radius: 3px; margin: 1rem 0; overflow: hidden; }
+    .dm-progress-fill { height: 100%; background: linear-gradient(90deg, rgba(6,182,212,.4), rgba(6,182,212,.8)); }
+    .dm-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
+  </style>
+</head>
+<body>
+  <div id="omega-side"></div>
+  <main>
+    <div class="shell">
+      <div class="side"></div>
+      <div class="main">
+        <div id="app">
+          <h1 style="font-family: var(--D); color: var(--cyan);">Domain Mastery</h1>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Your progression across the 12 domains of knowledge and skill (Level 1-9).</p>
+
+          <div id="dm-loading" style="text-align: center; color: var(--muted);">Loading your mastery levels...</div>
+          <div id="dm-container" style="display: none;">
+            <div id="dm-grid" class="dm-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (async function() {
+      const container = document.getElementById('dm-container');
+      const grid = document.getElementById('dm-grid');
+      const loading = document.getElementById('dm-loading');
+
+      const domains = ['prophecy', 'finance', 'education', 'discovery', 'validation', 'execution',
+                       'governance', 'onboarding', 'archive', 'family', 'security'];
+
+      try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) {
+          loading.textContent = 'Please sign in to view your mastery.';
+          return;
+        }
+
+        // Fetch all domain mastery records
+        const { data: mastery, error: masteryError } = await window.supabase
+          .from('domain_mastery')
+          .select('domain, level, total_points, quests_completed')
+          .eq('user_id', user.id);
+
+        if (masteryError) throw masteryError;
+
+        const masteryMap = {};
+        (mastery || []).forEach(m => {
+          masteryMap[m.domain] = m;
+        });
+
+        // Render all 12 domains
+        domains.forEach(domain => {
+          const m = masteryMap[domain] || { level: 1, total_points: 0, quests_completed: 0 };
+          const nextLevelPoints = m.level * 200;
+          const progressPct = Math.min((m.total_points / nextLevelPoints) * 100, 100);
+
+          const card = document.createElement('div');
+          card.className = 'dm-card card';
+          card.innerHTML = `
+            <div class="dm-domain">${domain}</div>
+            <div class="dm-level">${m.level}</div>
+            <div class="dm-level-max">/ 9</div>
+            <div class="dm-progress-bar">
+              <div class="dm-progress-fill" style="width: ${progressPct}%"></div>
+            </div>
+            <div class="dm-points">${m.total_points} / ${nextLevelPoints} pts<br><small>${m.quests_completed} quests</small></div>
+          `;
+          grid.appendChild(card);
+        });
+
+        loading.style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        loading.textContent = `Error loading mastery: ${error.message}`;
+      }
+    })();
+  </script>
+</body>
+</html>

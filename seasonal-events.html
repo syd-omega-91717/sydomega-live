@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seasonal Events — Ω</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <script src="/bg.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <style>
+    .se-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .se-card { border: 1px solid rgba(168,85,247,.2); border-radius: 8px; padding: 1.5rem; background: rgba(168,85,247,.05); }
+    .se-season { font-family: var(--D); font-size: 1.2rem; color: var(--purple); margin-bottom: 0.5rem; }
+    .se-quest { color: var(--gold); font-weight: bold; margin: 0.75rem 0; }
+    .se-dates { font-size: 0.85rem; color: var(--muted); margin: 1rem 0; }
+    .se-points { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(217,119,6,.2); border-radius: 4px; font-size: 0.75rem; color: var(--gold); }
+    .se-active { border-color: rgba(168,85,247,.5); background: rgba(168,85,247,.1); }
+    .se-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
+  </style>
+</head>
+<body>
+  <div id="omega-side"></div>
+  <main>
+    <div class="shell">
+      <div class="side"></div>
+      <div class="main">
+        <div id="app">
+          <h1 style="font-family: var(--D); color: var(--purple);">Seasonal Events</h1>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Limited-time quests tied to the seasons (Spring, Summer, Autumn, Winter).</p>
+
+          <div id="se-loading" style="text-align: center; color: var(--muted);">Loading seasonal events...</div>
+          <div id="se-container" style="display: none;">
+            <div id="se-grid" class="se-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (async function() {
+      const container = document.getElementById('se-container');
+      const grid = document.getElementById('se-grid');
+      const loading = document.getElementById('se-loading');
+
+      try {
+        const { data: events, error } = await window.supabase
+          .from('seasonal_events')
+          .select('*')
+          .order('start_date', { ascending: false });
+
+        if (error) throw error;
+
+        const now = new Date();
+
+        if (!events || events.length === 0) {
+          grid.innerHTML = '<div class="se-empty">No seasonal events available yet.</div>';
+        } else {
+          events.forEach(event => {
+            const startDate = new Date(event.start_date);
+            const endDate = new Date(event.end_date);
+            const isActive = now >= startDate && now <= endDate;
+
+            const card = document.createElement('div');
+            card.className = `se-card card ${isActive ? 'se-active' : ''}`;
+            card.innerHTML = `
+              <div class="se-season">${event.season_name}</div>
+              <div class="se-quest">${event.title}</div>
+              <p style="color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0;">${event.description || ''}</p>
+              <div class="se-dates">
+                ${startDate.toLocaleDateString()} — ${endDate.toLocaleDateString()}
+                ${isActive ? '<br><span style="color: var(--green);">● Active Now</span>' : ''}
+              </div>
+              <div>
+                <span class="se-points">${event.points} pts</span>
+                <span style="margin-left: 0.5rem; color: var(--cyan);">${event.target_count} target</span>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+        }
+
+        loading.style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        loading.textContent = `Error loading events: ${error.message}`;
+      }
+    })();
+  </script>
+</body>
+</html>

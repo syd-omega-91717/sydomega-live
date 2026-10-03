@@ -463,19 +463,19 @@
     </header>
 
     <nav class="nav-bar">
-      <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
-      <button class="filter-btn" onclick="filterProducts('sentinel')">⬢ Sentinel</button>
-      <button class="filter-btn" onclick="filterProducts('merchant')">◈ Merchant</button>
-      <button class="filter-btn" onclick="filterProducts('scout')">○ Scout</button>
-      <button class="filter-btn" onclick="filterProducts('warden')">◊ Warden</button>
-      <button class="filter-btn" onclick="filterProducts('sovereign')">Ω Sovereign</button>
-      <button class="filter-btn" onclick="filterProducts('auditor')">✓ Auditor</button>
-      <button class="filter-btn" onclick="filterProducts('proxy')">⚡︎ Proxy</button>
-      <button class="filter-btn" onclick="filterProducts('oracle')">◎ Oracle</button>
-      <button class="filter-btn" onclick="filterProducts('beacon')">★ Beacon</button>
-      <button class="filter-btn" onclick="filterProducts('analyst')">▲ Analyst</button>
-      <button class="filter-btn" onclick="filterProducts('tutor')">◈ Tutor</button>
-      <button class="filter-btn" onclick="filterProducts('historian')">◈ Historian</button>
+      <button class="filter-btn active" data-filter-agent="all">All Products</button>
+      <button class="filter-btn" data-filter-agent="sentinel">⬢ Sentinel</button>
+      <button class="filter-btn" data-filter-agent="merchant">◈ Merchant</button>
+      <button class="filter-btn" data-filter-agent="scout">○ Scout</button>
+      <button class="filter-btn" data-filter-agent="warden">◊ Warden</button>
+      <button class="filter-btn" data-filter-agent="sovereign">Ω Sovereign</button>
+      <button class="filter-btn" data-filter-agent="auditor">✓ Auditor</button>
+      <button class="filter-btn" data-filter-agent="proxy">⚡︎ Proxy</button>
+      <button class="filter-btn" data-filter-agent="oracle">◎ Oracle</button>
+      <button class="filter-btn" data-filter-agent="beacon">★ Beacon</button>
+      <button class="filter-btn" data-filter-agent="analyst">▲ Analyst</button>
+      <button class="filter-btn" data-filter-agent="tutor">◈ Tutor</button>
+      <button class="filter-btn" data-filter-agent="historian">◈ Historian</button>
     </nav>
     <!-- SENTINEL PRODUCTS -->
     <section class="agent-section" data-agent="sentinel">
@@ -1362,31 +1362,6 @@
   </main>
 </div>
 
-  <script>
-    function filterProducts(agent) {
-      const cards = document.querySelectorAll('.product-card');
-      const buttons = document.querySelectorAll('.filter-btn');
-
-      buttons.forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-
-      cards.forEach(card => {
-        if (agent === 'all' || card.dataset.agent === agent) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Also filter sections
-      document.querySelectorAll('.agent-section').forEach(section => {
-        if (agent === 'all' || section.dataset.agent === agent) {
-          section.style.display = 'block';
-        } else {
-          section.style.display = 'none';
-        }
-      });
-    }
-  </script>
+  <script src="/omega-platform-filters.js"></script>
 </body>
 </html>

@@ -7,9 +7,12 @@
    - Data load indicator lifecycle and state transitions
    - Integration with omega-particles.js for dynamic emission control
    - Particle orbital synchronization with Phase 2 constellation orbits
+   - Web Audio API voice-responsive animation binding (Proposal #25)
+   - Voice energy detection from copilot stream events with dynamic emission modulation
 
    Performance: efficient state-based DOM updates, throttled intensity calculations,
    defers to prefers-reduced-motion detection. GPU-safe transforms only.
+   Voice energy uses Web Audio AnalyserNode frequency analysis with graceful fallback.
 
    Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
 */
@@ -24,6 +27,14 @@
   let currentParticleState = 'idle';
   let dataLoadIndicator = null;
   let particleClusters = [];
+
+  /* Voice-responsive animation state */
+  let audioContext = null;
+  let analyser = null;
+  let voiceEnergyValue = 0;
+  let voiceEnergyAnimationFrame = null;
+  let streamStartTime = 0;
+  let streamTokenCount = 0;
 
   /* ===== PARTICLE STATE MANAGEMENT ===================================== */
 
@@ -156,6 +167,141 @@
     });
   }
 
+  /* ===== VOICE-RESPONSIVE ANIMATION (WEB AUDIO API) ===================== */
+
+  function initAudioContext() {
+    if (prefersReduced || audioContext) return;
+
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        audioContext = new AudioContext();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        console.debug('[OmegaPhase3] Web Audio API context initialized for voice-responsive animations');
+      }
+    } catch (e) {
+      console.debug('[OmegaPhase3] Web Audio API unavailable:', e.message);
+    }
+  }
+
+  function calculateVoiceEnergy() {
+    if (!analyser || prefersReduced) return 0;
+
+    try {
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(dataArray);
+
+      /* Analyze frequency spectrum for voice energy (human speech typically 80-250 Hz) */
+      let sum = 0;
+      let voiceRange = Math.floor(dataArray.length * 0.3); /* Lower frequencies for voice */
+      for (let i = 0; i < voiceRange; i++) {
+        sum += dataArray[i];
+      }
+
+      /* Normalize to 0-1 range */
+      return Math.min(1, sum / (voiceRange * 255));
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function updateVoiceEnergyAnimation() {
+    if (prefersReduced) return;
+
+    /* Smooth voice energy decay when not streaming */
+    if (!analyser || audioContext.state !== 'running') {
+      voiceEnergyValue = Math.max(0, voiceEnergyValue - 0.05);
+    } else {
+      voiceEnergyValue = calculateVoiceEnergy();
+    }
+
+    /* Update particle emission based on voice energy */
+    const baseRate = {
+      'loading': 8,
+      'processing': 12,
+      'active': 15,
+      'idle': 3,
+      'error': 20,
+      'success': 10
+    }[currentParticleState] || 5;
+
+    /* Modulate emission rate by voice energy (0-1 scale adds 0-15 particles) */
+    const voiceModulatedRate = baseRate + (voiceEnergyValue * 15);
+
+    if (window.tsParticles && window.tsParticles.dom()) {
+      const container = window.tsParticles.domItem(0);
+      if (container && container.actualOptions) {
+        container.actualOptions.emitter = container.actualOptions.emitter || {};
+        container.actualOptions.emitter.rate = {
+          increment: voiceModulatedRate / 60,
+          value: voiceModulatedRate
+        };
+      }
+    }
+
+    voiceEnergyAnimationFrame = requestAnimationFrame(updateVoiceEnergyAnimation);
+  }
+
+  function startVoiceEnergyTracking() {
+    if (prefersReduced) {
+      /* Reduced motion fallback: static opacity increase during stream */
+      if (dataLoadIndicator) {
+        dataLoadIndicator.style.opacity = '0.8';
+      }
+      return;
+    }
+
+    initAudioContext();
+
+    if (audioContext && audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+
+    streamStartTime = Date.now();
+    voiceEnergyValue = 0;
+
+    if (!voiceEnergyAnimationFrame) {
+      updateVoiceEnergyAnimation();
+    }
+  }
+
+  function stopVoiceEnergyTracking() {
+    if (prefersReduced) {
+      /* Reduced motion fallback: restore normal opacity */
+      if (dataLoadIndicator) {
+        dataLoadIndicator.style.opacity = '1';
+      }
+      return;
+    }
+
+    if (voiceEnergyAnimationFrame) {
+      cancelAnimationFrame(voiceEnergyAnimationFrame);
+      voiceEnergyAnimationFrame = null;
+    }
+
+    voiceEnergyValue = 0;
+    streamTokenCount = 0;
+  }
+
+  function setupCopilotStreamListeners() {
+    document.addEventListener('omega:copilot-stream-start', (e) => {
+      console.debug('[OmegaPhase3] Copilot stream started, enabling voice-responsive animation');
+      startVoiceEnergyTracking();
+    });
+
+    document.addEventListener('omega:copilot-stream-end', (e) => {
+      streamTokenCount = e.detail?.tokenCount || 0;
+      console.debug('[OmegaPhase3] Copilot stream ended, disabling voice-responsive animation');
+      stopVoiceEnergyTracking();
+      /* Return to idle particle state after stream ends */
+      setTimeout(() => {
+        updateParticleState('idle');
+        setParticleEmissionRate(3);
+      }, 500);
+    });
+  }
+
   /* ===== INTEGRATION WITH OMEGA-PARTICLES ============================== */
 
   function setParticleEmissionRate(rate) {
@@ -272,6 +418,9 @@
     watchBodyStateChanges();
     watchReducedMotion();
 
+    /* Setup voice-responsive animation listeners */
+    setupCopilotStreamListeners();
+
     /* Synchronize with Phase 2 orbits */
     syncParticleOrbits();
 
@@ -287,7 +436,10 @@
     showDataLoadIndicator: showDataLoadIndicator,
     hideDataLoadIndicator: hideDataLoadIndicator,
     setEmissionRate: setParticleEmissionRate,
-    repositionClusters: repositionParticleClusters
+    repositionClusters: repositionParticleClusters,
+    startVoiceTracking: startVoiceEnergyTracking,
+    stopVoiceTracking: stopVoiceEnergyTracking,
+    getVoiceEnergy: () => voiceEnergyValue
   };
 
   /* Start initialization */

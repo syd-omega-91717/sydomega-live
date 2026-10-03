@@ -159,7 +159,22 @@ function __omegaAppend(el){
   /* Quest System -- Engagement multiplier across 8 domains, tier unlock driver, progression loop.
      Reads quests from DB, tracks completion, emits events for UI to consume. Every page gets
      quest context; domain pages (tasks.html, commerce.html, etc) wire action callbacks. */
-  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-quests]')){var os_data_omega_quests=document.createElement('script');os_data_omega_quests.src='/omega-quests.js';os_data_omega_quests.setAttribute('data-omega-quests','1');os_data_omega_quests.defer=true;__omegaAppend(os_data_omega_quests);}
+  /* Quest Handler -- Event delegation for quest action buttons (data-quest-action).
+     Centralizes quest button click handling across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-questhandler]')){var os_data_omega_questhandler=document.createElement('script');os_data_omega_questhandler.src='/omega-quest-handler.js';os_data_omega_questhandler.setAttribute('data-omega-questhandler','1');os_data_omega_questhandler.defer=true;__omegaAppend(os_data_omega_questhandler);}
+  /* Tab Handler -- Event delegation for tab switching buttons (data-tab-action).
+     Centralizes tab click handling across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-tabhandler]')){var os_data_omega_tabhandler=document.createElement('script');os_data_omega_tabhandler.src='/omega-tab-handler.js';os_data_omega_tabhandler.setAttribute('data-omega-tabhandler','1');os_data_omega_tabhandler.defer=true;__omegaAppend(os_data_omega_tabhandler);}
+  /* Nav Handler -- Event delegation for navigation buttons (data-nav-action).
+     Centralizes location.href navigation across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-navhandler]')){var os_data_omega_navhandler=document.createElement('script');os_data_omega_navhandler.src='/omega-nav-handler.js';os_data_omega_navhandler.setAttribute('data-omega-navhandler','1');os_data_omega_navhandler.defer=true;__omegaAppend(os_data_omega_navhandler);}
+  /* Hover Handler -- Event delegation for hover effects (data-hover-bg-on/off).
+     Centralizes mouseover/mouseout styling across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-hoverhandler]')){var os_data_omega_hoverhandler=document.createElement('script');os_data_omega_hoverhandler.src='/omega-hover-handler.js';os_data_omega_hoverhandler.setAttribute('data-omega-hoverhandler','1');os_data_omega_hoverhandler.defer=true;__omegaAppend(os_data_omega_hoverhandler);}
+  /* Function Handler -- Event delegation for page-level function calls (data-function-call).
+     Centralizes inline function call patterns across all pages via data attributes. */
+  if(!document.querySelector('script[data-omega-functionhandler]')){var os_data_omega_functionhandler=document.createElement('script');os_data_omega_functionhandler.src='/omega-function-handler.js';os_data_omega_functionhandler.setAttribute('data-omega-functionhandler','1');os_data_omega_functionhandler.defer=true;__omegaAppend(os_data_omega_functionhandler);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -2583,9 +2598,9 @@ setTimeout(function(){
     btn.type='button'; btn.tabIndex=-1; btn.setAttribute('aria-label','Show or hide password');
     btn.style.cssText='position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:0;padding:4px;margin:0;cursor:pointer;color:#C9A84C;opacity:.68;transition:opacity .2s ease,color .2s ease,transform .18s ease;display:flex;align-items:center;line-height:0';
     btn.innerHTML=OFF;
-    btn.onmouseenter=function(){btn.style.opacity='1';};
-    btn.onmouseleave=function(){btn.style.opacity=(inp.getAttribute('type')==='text')?'1':'.68';};
-    btn.onclick=function(e){
+    btn.addEventListener('mouseenter',function(){btn.style.opacity='1';});
+    btn.addEventListener('mouseleave',function(){btn.style.opacity=(inp.getAttribute('type')==='text')?'1':'.68';});
+    btn.addEventListener('click',function(e){
       e.preventDefault();
       var reveal=inp.getAttribute('type')==='password';
       inp.setAttribute('type',reveal?'text':'password');
@@ -2595,7 +2610,7 @@ setTimeout(function(){
       btn.style.transform='translateY(-50%) scale(1.18)';
       setTimeout(function(){btn.style.transform='translateY(-50%) scale(1)';},170);
       try{inp.focus();}catch(_){}
-    };
+    });
     wrap.appendChild(btn);
   }
   function scan(){var l=document.querySelectorAll('input[type=password]');for(var i=0;i<l.length;i++)enhance(l[i]);}

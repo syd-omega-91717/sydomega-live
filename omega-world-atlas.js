@@ -58,6 +58,19 @@ function inspect(id){
  box.appendChild(note);
 }
 function setFilter(next){filter=FILTERS[next]?next:'ALL';document.querySelectorAll('.wa-controls button').forEach(function(b){b.classList.toggle('active',b.dataset.filter===filter);});renderTree();renderScene();}
+function renderSystems(systems){
+ var root=document.getElementById('wa-systems-grid');if(!root)return;root.replaceChildren();
+ (systems||[]).forEach(function(s){
+  var card=document.createElement('article');card.className='wa-system-card';
+  var tag=document.createElement('span');tag.className='wa-system-state';tag.textContent=s.state||'DESIGN_PROPOSAL';card.appendChild(tag);
+  var h=document.createElement('h3');h.textContent=s.name;card.appendChild(h);
+  var p=document.createElement('p');p.textContent=s.purpose||'Design proposal.';card.appendChild(p);
+  var list=document.createElement('ul');
+  (s.integrations||s.inputs||[]).slice(0,5).forEach(function(v){var li=document.createElement('li');li.textContent=v;list.appendChild(li);});
+  card.appendChild(list);
+  root.appendChild(card);
+ });
+}
 function setCount(id,predicate){var el=document.getElementById(id);if(el)el.textContent=String(all.filter(predicate).length);}
 async function boot(){
  try{
@@ -70,7 +83,7 @@ async function boot(){
   var root=document.getElementById('wa-tree');if(root)root.textContent='ATLAS SOURCE UNAVAILABLE — no fallback state is fabricated.';
   return;
  }
- renderScene();renderTree();
+ renderScene();renderTree();renderSystems(data.inventions);
  document.querySelectorAll('.wa-controls button').forEach(function(b){b.addEventListener('click',function(){setFilter(b.dataset.filter);});});
  inspect('earth-world');
  setCount('wa-planets',function(x){return x.type==='PLANET'||x.type==='PLANETARY_CORE';});

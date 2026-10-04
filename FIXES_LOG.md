@@ -22368,3 +22368,17 @@ The owner said they "still can't see a major change", pages carry too much text 
 run 37211479551 on `main` (`21febb81`, after #711; CLI 2.119.0), job 111463394701: every step `success`. Those
 steps were `Replay every migration from zero` (15:03:49–15:04:20), the post-replay inventory, the migration
 security audit and the hardening contract. `GAP_ANALYSIS.md`'s replay entry is now closed.
+
+**Playable arcade on `gaming.html` (2026-10-04).** The GAMES tab was a text catalog of 37 cards that only
+recorded a self-reported "done". New `omega-arcade.js` (`window.OmegaArcade`, `oxa-` prefix, loaded by
+`gaming.html` only) adds six real games in a focus-trapped fullscreen player: ASCEND (2048), SERPENT (Snake),
+ORACLE WORD (Wordle, daily + practice), ZODIAC MEMORY (U+FE0E glyphs), AEGIS BREAKER (Breakout), HADES FIELD
+(Minesweeper). The first real result calls `OmegaProgress.record({kind:'mastery',task:'arcade:<id>'})`,
+which checks `.error` itself; best scores are per-browser (`localStorage['omega_arcade_best']`, try/catch).
+The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
+- Verification: `verify-runtime.js --pages gaming.html` PASS; Playwright at 1280px and 375px/touch:
+  103 checks pass (non-blank canvas, focus trap over 10 Tabs, Esc stops each rAF loop, no overflow,
+  0 page errors); unit checks 14/14 (Wordle duplicate letters, 3,000 first-click-safe minesweeper boards,
+  2048 no-chain merges); `brand-glyph-check.py` OK.
+- Limits: Supabase stubbed, so the progress call is proven wired, not proven live. Wordle keys are ~31px
+  wide at 375px and 16×16 minesweeper cells ~22px — inherent to those layouts on a phone.

@@ -1,7 +1,7 @@
 {
   "_captured": "2026-10-04",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 334,
+  "remoteMigrationCount": 336,
   "latestRemoteMigration": "20261004084024",
   "versions": [
     "0001",
@@ -336,6 +336,8 @@
     "20261003220624",
     "20261003220754",
     "20261004000807",
+    "20261004083218",
+    "20261004082748",
     "20261004084002",
     "20261004084024"
   ],

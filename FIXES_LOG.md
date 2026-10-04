@@ -22211,3 +22211,11 @@ CI's.
 **Not done:** the full migration replay (`GAP_ANALYSIS.md` §S — needs an edit to an
 applied migration, refused by this session's permission policy) and the five inert
 policies (DROP confirmation never reaches the user).
+
+**Follow-up, same PR:** with Semgrep green, the Trivy steps ran for the first time on any
+branch and the second SARIF upload was refused — `only one run of the codeql/analyze or
+codeql/upload-sarif actions is allowed per job per tool/category` (both Trivy uploads
+report tool `Trivy` under the default category). The config upload now sets
+`category: trivy-config`; the two existing uploads keep their default category so their
+code-scanning alert history is not orphaned. The filesystem scan itself passed (no
+HIGH/CRITICAL fixable vulnerability) and the config scan found 0 config files.

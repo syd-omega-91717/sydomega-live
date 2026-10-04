@@ -302,16 +302,31 @@ END $$;
 -- pg_temp is placed last deliberately: it is always implicitly searched first
 -- unless named, so naming it last is what actually pushes it to the end.
 -- ---------------------------------------------------------------------------
-ALTER FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text)
-  SET search_path = public, pg_temp;
+DO $$ BEGIN
+  IF to_regprocedure('public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
 
 -- These three are SECURITY INVOKER, so the escalation above does not apply --
 -- pinned anyway for consistency and to clear the advisor finding.
-ALTER FUNCTION public.find_graph_paths(uuid, uuid, uuid, integer)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.graph_entity_centrality(uuid)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.notify_achievement(text, integer)
-  SET search_path = public, pg_temp;
+DO $$ BEGIN
+  IF to_regprocedure('public.find_graph_paths(uuid, uuid, uuid, integer)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.find_graph_paths(uuid, uuid, uuid, integer) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.graph_entity_centrality(uuid)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.graph_entity_centrality(uuid) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.notify_achievement(text, integer)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.notify_achievement(text, integer) SET search_path = public, pg_temp;';
+  END IF;
+END $$;

@@ -26,6 +26,10 @@ commits = [
   # iat 1687000000) that graphify.html carried until 77f14076 replaced it with
   # the real publishable key. Not a credential for any project; history only.
   'ed0a0c3a0fff1409c402dd1304552096b61b65fc',
+  # Same shape again: quests.html (#703) carried an anon JWT for ref
+  # "ydqhzvvoyufiiqvzcjs" (real ref ends "cjns"); the file was removed in the
+  # PR that added this entry. History only.
+  '8d0655071cacf3f208eaf9c23acab9b6f6e586f1',
 ]
 paths = [
   # SHA-1 of the literal word "password": the public HIBP test vector.

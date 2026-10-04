@@ -1,0 +1,101 @@
+name: Supply Chain and SBOM
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: supply-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: Blocking supply-chain scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Semgrep SAST
+        run: |
+          docker run --rm -v "${PWD}:/src" semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0 semgrep scan --config=auto --error --sarif --output=/src/semgrep.sarif /src
+
+      - name: Upload Semgrep SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
+        with:
+          sarif_file: semgrep.sarif
+
+      - name: Trivy filesystem vulnerability scan
+        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Trivy IaC/misconfiguration scan
+        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          format: sarif
+          output: trivy-config.sarif
+
+      - name: Upload Trivy config SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
+        with:
+          sarif_file: trivy-config.sarif
+
+      - name: Generate dependency SBOM
+        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: omega-sbom.cdx.json
+          exit-code: '0'
+
+      - name: Validate SBOM artifact
+        run: |
+          test -s omega-sbom.cdx.json
+          python3 - <<'PY'
+          import json
+          with open("omega-sbom.cdx.json", encoding="utf-8") as f:
+              data=json.load(f)
+          if data.get("bomFormat") != "CycloneDX":
+              raise SystemExit("SBOM_FORMAT_INVALID")
+          if not data.get("components"):
+              raise SystemExit("SBOM_COMPONENTS_EMPTY")
+          print("SBOM=PASS components=%d" % len(data["components"]))
+          PY
+
+      - name: Upload SBOM
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: omega-sbom
+          path: omega-sbom.cdx.json
+          retention-days: 30

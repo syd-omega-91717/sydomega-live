@@ -13,6 +13,11 @@ def fail(message:str)->int:
     print(f"EDGE_RUNTIME_RECONCILIATION=FAILED: {message}")
     return 1
 
+def git_blob_sha(path: Path) -> str:
+    data=path.read_bytes()
+    header=f"blob {len(data)}\0".encode("utf-8")
+    return hashlib.sha1(header + data).hexdigest()
+
 def main()->int:
     if not FUNCTIONS.is_dir(): return fail("supabase/functions is missing")
     if not SNAPSHOT.is_file(): return fail("live snapshot is missing")
@@ -25,7 +30,7 @@ def main()->int:
         if not NAME_RE.fullmatch(path.name): return fail(f"invalid function directory name: {path.name}")
         entry=path/"index.ts"
         if not entry.is_file(): return fail(f"function {path.name} has no index.ts")
-        actual[path.name]=hashlib.sha1(entry.read_bytes()).hexdigest()
+        actual[path.name]=git_blob_sha(entry)
     missing=sorted(set(expected)-set(actual))
     unclassified=sorted(set(actual)-set(expected))
     if missing: return fail(f"snapshot functions missing from repository: {missing}")

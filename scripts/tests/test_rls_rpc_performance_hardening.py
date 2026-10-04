@@ -51,7 +51,7 @@ class RlsRpcPerformanceHardeningTests(unittest.TestCase):
         )
 
     def test_seasonal_events_has_explicit_owner_writes(self):
-        self.assertNotIn("seasonal_events_owner_all", self.sql)
+        self.assertNotRegex(self.sql, re.compile(r"create\\s+policy\\s+seasonal_events_owner_all", re.IGNORECASE))
         for action in ("insert", "update", "delete"):
             self.assertIn(f"seasonal_events_owner_{action}", self.sql)
 

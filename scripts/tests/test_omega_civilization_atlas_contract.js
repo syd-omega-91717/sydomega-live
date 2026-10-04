@@ -31,6 +31,9 @@ for(const relation of ['CONTAINS','LOCATED_IN','IMPLEMENTS','VERIFIED_BY','PROGR
 assert(runtime.includes("data-filter=\"PRODUCTION\"")===false,'runtime must not hard-code HTML filters');
 assert(runtime.includes("PRODUCTION:function(x){return x.state==='LIVE';}"),'production truth mapping must be explicit');
 assert(runtime.includes('ATLAS SOURCE UNAVAILABLE — no fallback state is fabricated.'),'failure state must not fabricate fallback data');
+assert((atlas.inventions||[]).length===8,'eight governed operating system proposals must be registered');
+assert((atlas.inventions||[]).every(x=>x.state==='DESIGN_PROPOSAL'),'new inventions must remain explicitly proposal-state');
+assert(atlas.inventionPrinciples.productionRule.includes('authoritative implementation'),'invention production gate must be explicit');
 assert(!/WebGLRenderer|THREE\s*\./.test(runtime),'atlas runtime must not own a second WebGL renderer');
 
 console.log('OMEGA_CIVILIZATION_ATLAS_CONTRACT=PASS');

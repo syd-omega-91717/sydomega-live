@@ -16,7 +16,7 @@ def main():
     assert "SOURCE-DNA SYMBOLIC" in html
     assert "NOT A FINANCIAL LEDGER" in html
     # The source example listed Earth twice; the canonical solar layer contains it once.
-    assert html.count("data-solar-body="EARTH"") == 1
+    assert html.count('data-solar-body="EARTH"') == 1
     print("PASS: source-DNA solar-system ledger contract")
 
 if __name__ == "__main__":

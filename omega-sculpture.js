@@ -451,6 +451,14 @@
   };
 
   /* ── SOLAR SYSTEM LEDGER ─────────────────────────────────────────────
+     Historical source DNA calls for a planetary/cosmic ledger. This scene
+     realizes that idea through the existing single WebGL owner. It is a
+     symbolic information architecture: it does not claim ownership,
+     extraterrestrial infrastructure, astronomical authority, or a financial
+     ledger. The Sun plus the eight canonical planets are deliberately
+     readable rather than astronomically to-scale, because this is a product
+     map, not a scientific simulator. Each body is a real navigable destination
+     on the canonical cosmic-ledger page.
      Source-DNA planetary concept, realized through the canonical single
      WebGL owner. Symbolic information architecture only: no ownership,
      custody, extraterrestrial infrastructure, astronomical authority, or
@@ -480,6 +488,9 @@
       {id:'neptune',name:'NEPTUNE',radius:0.21,color:0x315fc1,emissive:0x172c67,orbit:5.88,href:'#neptune',phase:5.5}
     ];
     var links=[], nodes=[];
+    var orbitRadii=[1.15,1.62,2.15,2.72,3.42,4.20,5.05,5.88];
+
+    orbitRadii.forEach(function(r,i){
     [1.15,1.62,2.15,2.72,3.42,4.20,5.05,5.88].forEach(function(r,i){
       var torus=new T.Mesh(new T.TorusGeometry(r,0.009,8,160),
         new T.MeshBasicMaterial({color:i%2?p.gold:p.cyan,transparent:true,opacity:0.20}));
@@ -496,6 +507,9 @@
       var holder=new T.Group();
       holder.rotation.y=b.phase;
       holder.add(mesh);
+      if(b.id!=='sun'){
+        mesh.position.x=b.orbit;
+      }
       if(b.id!=='sun') mesh.position.x=b.orbit;
       if(b.id==='saturn'){
         var ring=new T.Mesh(new T.TorusGeometry(0.38,0.025,8,64),
@@ -504,6 +518,39 @@
         mesh.add(ring);
       }
       system.add(holder);
+      nodes.push({mesh:mesh,holder:holder,phase:b.phase,orbit:b.orbit,id:b.id});
+      links.push({object:mesh,href:'/cosmic-ledger.html'+b.href,label:b.name});
+    });
+
+    var coreHalo=new T.Mesh(
+      new T.SphereGeometry(0.72,24,16),
+      new T.MeshBasicMaterial({color:p.gold,transparent:true,opacity:0.055,blending:T.AdditiveBlending,depthWrite:false})
+    );
+    system.add(coreHalo);
+
+    return {
+      scene:scene,camera:cam,links:links,
+      update:function(t,px,py){
+        var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(!reduced) system.rotation.y=t*0.055+px*0.35;
+        for(var i=0;i<nodes.length;i++){
+          var n=nodes[i];
+          if(n.id==='sun'){
+            n.mesh.rotation.y=reduced?0:t*0.12;
+            n.mesh.material.emissiveIntensity=reduced?1.0:1.0+Math.sin(t*1.2)*0.18;
+            continue;
+          }
+          if(!reduced) n.holder.rotation.y=n.phase+t*(0.035+0.010*i);
+          n.mesh.rotation.y=reduced?0:t*(0.18+0.02*i);
+          if(!n.mesh.userData.omegaHovered){
+            var pulse=reduced?1:1+Math.sin(t*1.1+n.phase)*0.035;
+            n.mesh.scale.setScalar(pulse);
+          }
+        }
+        cam.position.y=4.8-py*0.8;
+        cam.lookAt(0,0,0);
+      }
+    };
       nodes.push({mesh:mesh,holder:holder,phase:b.phase,id:b.id});
       links.push({object:mesh,href:'/cosmic-ledger.html'+b.href,label:b.name});
     });
@@ -1013,6 +1060,10 @@
       ctx.beginPath(); ctx.arc(cx, cy, R * 0.16, 0, Math.PI * 2); ctx.fill();
       var planetColours = [cyan,gold,'#79c8cf','#b64e39','#d8b889','#c7b17f','#79c8cf','#315fc1'];
       for (var sp = 0; sp < 8; sp++) {
+        var sa = (sp / 8) * Math.PI * 2;
+        ctx.fillStyle = planetColours[sp];
+        ctx.beginPath(); ctx.arc(cx + Math.cos(sa) * R * (0.28 + sp * 0.085),
+          cy + Math.sin(sa) * R * (0.28 + sp * 0.085), Math.max(3,R*(0.025+sp*0.002)), 0, Math.PI*2); ctx.fill();
         var sa = (sp / 8) * Math.PI * 2, sr2 = R * (0.28 + sp * 0.085);
         ctx.fillStyle = planetColours[sp];
         ctx.beginPath(); ctx.arc(cx + Math.cos(sa) * sr2, cy + Math.sin(sa) * sr2,

@@ -22,6 +22,12 @@ function detail(b){
  n.appendChild(h);n.appendChild(document.createElement('br'));n.appendChild(r);
  n.appendChild(document.createElement('br'));n.appendChild(note);n.appendChild(state);
 }
+function showHash(){
+ var hash=(window.location.hash||'').replace(/^#/,'').toLowerCase();
+ if(!hash)return;
+ var body=bodies.find(function(x){return x.id===hash;});
+ if(body)detail(body);
+}
 function boot(){
  var grid=document.getElementById('cosmic-ledger-cards');if(grid)grid.textContent='';
  bodies.forEach(function(b){
@@ -36,6 +42,8 @@ function boot(){
  });
  var sun=document.querySelector('.cl-sun');if(sun)sun.addEventListener('click',function(){detail(bodies[0]);});
  detail(bodies[3]);
+ showHash();
+ window.addEventListener('hashchange',showHash);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 window.OmegaCosmicLedger={bodies:bodies};

@@ -23,7 +23,7 @@
     news:'services',social:'services',
     research:'intel',prediction:'intel',intelligence:'intel',
     automation:'intel',compliance:'intel',approvals:'intel',
-    vault:'vault',sigil:'vault',cosmos:'cosmos',
+    vault:'vault',sigil:'vault',cosmos:'cosmos','cosmic-ledger':'cosmos',
     /* Below: each key's final/effective value — earlier duplicate keys with a
        different value that this silently overrode have been removed (JS object
        literals keep only the last assignment); see REPOSITORY_AUDIT.md §5. */
@@ -82,7 +82,7 @@
           ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],
           ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
-     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],
+     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],
           ['horoscope','HOROSCOPE','/cosmos.html#horoscope'],['agents','AGENTS','/agents.html'],['elements','THE NINE ELEMENTS','/elements.html'],
           ['pantheons','PANTHEONS','/pantheons.html'],['gates-alias-1','12 GATES','/elements.html#gates'],['houses','ASTRAL HOUSES','/houses.html'],
           ['kings-alias-1','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],

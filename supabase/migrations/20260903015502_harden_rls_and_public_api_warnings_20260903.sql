@@ -14,22 +14,30 @@ create policy "platform_metrics_insert_own_session"
     and metric_value is not null
   );
 
-drop policy if exists "public can join" on public.signups;
-create policy "public can join validated"
-  on public.signups
-  for insert
-  to anon
-  with check (
-    email is not null
-    and length(btrim(email)) between 3 and 320
-    and position('@' in btrim(email)) > 1
-    and position('.' in split_part(btrim(email),'@',2)) > 1
-    and length(coalesce(sign,'')) <= 64
-    and length(coalesce(element,'')) <= 64
-    and length(coalesce(olympian,'')) <= 128
-    and length(coalesce(planet,'')) <= 128
-    and length(coalesce(agent,'')) <= 128
-  );
+-- Guarded (owner-approved edit, 2026-10-04): public.signups exists live but
+-- no file in this repository creates it (made out-of-band), so a fresh
+-- `supabase db reset` failed here. Live already applied this version.
+do $$
+begin
+  if to_regclass('public.signups') is not null then
+    drop policy if exists "public can join" on public.signups;
+    create policy "public can join validated"
+      on public.signups
+      for insert
+      to anon
+      with check (
+        email is not null
+        and length(btrim(email)) between 3 and 320
+        and position('@' in btrim(email)) > 1
+        and position('.' in split_part(btrim(email),'@',2)) > 1
+        and length(coalesce(sign,'')) <= 64
+        and length(coalesce(element,'')) <= 64
+        and length(coalesce(olympian,'')) <= 128
+        and length(coalesce(planet,'')) <= 128
+        and length(coalesce(agent,'')) <= 128
+      );
+  end if;
+end $$;
 
 -- Prevent broad object listing in the public avatars bucket while preserving
 -- public object retrieval. The operation-aware helper distinguishes listing

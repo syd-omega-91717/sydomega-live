@@ -1139,5 +1139,268 @@
     "seededResources": 4,
     "seededTasks": 10,
     "canonicalAgents": 12
+  },
+  "inventions": [
+    {
+      "id": "omega-city-pulse",
+      "name": "Ω CITY PULSE",
+      "state": "DESIGN_PROPOSAL",
+      "type": "SYSTEM",
+      "purpose": "A governed city-state layer that turns authoritative platform events into explainable city activity without inventing population, revenue, occupancy or health metrics.",
+      "inputs": [
+        "omega_platform_events",
+        "member_presence",
+        "capability_registry",
+        "feature_flags"
+      ],
+      "outputs": [
+        "city_activity_state",
+        "service_health_state",
+        "mission_flow_state"
+      ],
+      "truthRules": [
+        "LIVE only from authoritative telemetry",
+        "CALCULATED values carry formula/provenance",
+        "SIMULATED values never appear as production facts"
+      ],
+      "integrations": [
+        "Event Fabric",
+        "Evidence Graph",
+        "Civilization Atlas",
+        "Observability"
+      ]
+    },
+    {
+      "id": "omega-trade-routes",
+      "name": "Ω TRADE ROUTES",
+      "state": "DESIGN_PROPOSAL",
+      "type": "SYSTEM",
+      "purpose": "A graph of digital and simulated trade relationships between cities, services, resources and missions.",
+      "inputs": [
+        "service_registry",
+        "marketplace_orders",
+        "capability_registry",
+        "evidence_graph"
+      ],
+      "outputs": [
+        "route_graph",
+        "trade_opportunity",
+        "dependency_map"
+      ],
+      "truthRules": [
+        "real transactions require authoritative commerce evidence",
+        "simulated routes remain SIMULATED",
+        "no ownership or jurisdiction is inferred from graph edges"
+      ],
+      "integrations": [
+        "Marketplace",
+        "Investment Intelligence",
+        "Graph Evidence",
+        "City OS"
+      ]
+    },
+    {
+      "id": "omega-civic-missions",
+      "name": "Ω CIVIC MISSIONS",
+      "state": "DESIGN_PROPOSAL",
+      "type": "SYSTEM",
+      "purpose": "Convert city services into governed missions that produce measurable evidence and progression rather than decorative quests.",
+      "lifecycle": [
+        "DISCOVER",
+        "AUTHORIZE",
+        "START",
+        "ACT",
+        "EVENT",
+        "EVIDENCE",
+        "VERIFY",
+        "PROGRESS"
+      ],
+      "inputs": [
+        "missions",
+        "services",
+        "capability_registry",
+        "policies"
+      ],
+      "outputs": [
+        "mission_state",
+        "evidence",
+        "progression_delta"
+      ],
+      "truthRules": [
+        "client cannot mint completion",
+        "progression requires authoritative mission transition",
+        "SIMULATED missions cannot award production credentials"
+      ]
+    },
+    {
+      "id": "omega-passport",
+      "name": "Ω WORLD PASSPORT",
+      "state": "DESIGN_PROPOSAL",
+      "type": "IDENTITY",
+      "purpose": "A portable, privacy-minimized identity and credential surface connecting verified achievements, credentials, permissions and civilization membership without exposing unnecessary personal data.",
+      "inputs": [
+        "identity",
+        "credentials",
+        "achievements",
+        "authorization_policies"
+      ],
+      "outputs": [
+        "verified_claims",
+        "credential_view",
+        "access_context"
+      ],
+      "truthRules": [
+        "claims must have provenance",
+        "sensitive identity attributes are minimized",
+        "membership is not citizenship and simulation is not legal status"
+      ],
+      "integrations": [
+        "Credentials",
+        "Hierarchy",
+        "Legal",
+        "Privacy",
+        "Evidence Graph"
+      ]
+    },
+    {
+      "id": "omega-knowledge-loom",
+      "name": "Ω KNOWLEDGE LOOM",
+      "state": "DESIGN_PROPOSAL",
+      "type": "INTELLIGENCE",
+      "purpose": "A provenance-first knowledge graph joining documents, events, missions, research, services and agent outputs into explainable answer paths.",
+      "inputs": [
+        "data_lineage",
+        "graph_evidence",
+        "documents",
+        "search_index",
+        "agent_outputs"
+      ],
+      "outputs": [
+        "evidence_paths",
+        "knowledge_clusters",
+        "answer_provenance"
+      ],
+      "truthRules": [
+        "every material claim carries source state",
+        "AI inference is labeled INFERRED",
+        "absence of evidence never becomes evidence of fact"
+      ],
+      "integrations": [
+        "Search",
+        "Intelligence",
+        "Historian",
+        "Auditor",
+        "Scout"
+      ]
+    },
+    {
+      "id": "omega-planetary-relay",
+      "name": "Ω PLANETARY RELAY",
+      "state": "DESIGN_PROPOSAL",
+      "type": "INFRASTRUCTURE",
+      "purpose": "A future-ready abstraction for delayed, replicated or simulated planetary data channels without pretending that off-world infrastructure currently exists.",
+      "modes": [
+        "LIVE",
+        "DELAYED",
+        "SIMULATED",
+        "UNAVAILABLE"
+      ],
+      "inputs": [
+        "event_streams",
+        "replication_checkpoints"
+      ],
+      "outputs": [
+        "relay_state",
+        "latency_profile",
+        "replay_checkpoint"
+      ],
+      "truthRules": [
+        "off-world infrastructure remains UNAVAILABLE unless independently verified",
+        "simulation may model latency and failure",
+        "relay state never changes authorization truth"
+      ],
+      "integrations": [
+        "Event Fabric",
+        "Replay",
+        "Disaster Recovery",
+        "Cosmic Ledger"
+      ]
+    },
+    {
+      "id": "omega-civic-market",
+      "name": "Ω CIVIC MARKET",
+      "state": "DESIGN_PROPOSAL",
+      "type": "ECONOMY",
+      "purpose": "A service marketplace where cities expose governed capabilities and users discover, order, complete and verify service workflows.",
+      "inputs": [
+        "service_registry",
+        "marketplace",
+        "payments",
+        "mission_state",
+        "evidence"
+      ],
+      "outputs": [
+        "service_offers",
+        "orders",
+        "entitlements",
+        "provider_metrics"
+      ],
+      "truthRules": [
+        "prices and balances come only from authoritative commerce systems",
+        "simulated offers cannot trigger real payment",
+        "provider claims require evidence"
+      ],
+      "integrations": [
+        "Marketplace",
+        "Payments",
+        "Merchant",
+        "Civic Missions"
+      ]
+    },
+    {
+      "id": "omega-trust-index",
+      "name": "Ω TRUST INDEX",
+      "state": "DESIGN_PROPOSAL",
+      "type": "GOVERNANCE",
+      "purpose": "A multidimensional evidence-based trust profile for actions and artifacts, deliberately avoiding opaque social-credit scoring.",
+      "dimensions": [
+        "identity_assurance",
+        "evidence_quality",
+        "task_reliability",
+        "security_posture",
+        "provenance",
+        "policy_compliance"
+      ],
+      "inputs": [
+        "credentials",
+        "verified_events",
+        "audit_results",
+        "evidence_graph"
+      ],
+      "outputs": [
+        "trust_factors",
+        "confidence_band",
+        "explanation"
+      ],
+      "truthRules": [
+        "never score protected traits",
+        "never replace authorization policy",
+        "every factor is explainable and reversible",
+        "low evidence produces UNKNOWN rather than a punitive score"
+      ],
+      "integrations": [
+        "Auditor",
+        "Sentinel",
+        "Warden",
+        "Credentials",
+        "Evidence Graph"
+      ]
+    }
+  ],
+  "inventionPrinciples": {
+    "sourceBoundary": "Source corpus establishes the vision and requirements; these named systems are original SYD OMEGA design proposals.",
+    "designRule": "Every invention requires purpose, inputs, outputs, truth rules and canonical integrations before implementation.",
+    "antiDuplication": "No invention may create a parallel identity, event, evidence, mission, capability or WebGL architecture.",
+    "productionRule": "DESIGN_PROPOSAL is not production functionality until an authoritative implementation, authorization, failure path, observability and verification evidence exist."
   }
 }

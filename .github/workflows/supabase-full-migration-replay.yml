@@ -1,0 +1,52 @@
+name: Supabase Full Migration Replay
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches:
+      - "hardening/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-full-replay-\${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  replay:
+    name: Fresh database replay (all migrations)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.84.2
+
+      - name: Validate migration inventory
+        run: python3 scripts/migration-replay-contract.py
+
+      - name: Start isolated Supabase stack
+        run: supabase start
+
+      - name: Replay every migration from zero
+        run: supabase db reset
+
+      - name: Re-run migration inventory after replay
+        run: python3 scripts/migration-replay-contract.py
+
+      - name: Run migration security audit
+        run: python3 scripts/supabase-migration-security-audit.py
+
+      - name: Run latest hardening contract
+        run: python3 -m unittest scripts/tests/test_rls_rpc_performance_hardening.py
+
+      - name: Stop isolated Supabase stack
+        if: always()
+        run: supabase stop --no-backup

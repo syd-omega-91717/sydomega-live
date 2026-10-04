@@ -14,6 +14,11 @@ assert.strictEqual(bodies.filter(x=>x.type==='PLANET').length,8,'atlas must cont
 assert.strictEqual(bodies.length,9,'atlas must expose nine canonical ledger bodies');
 assert(objects.some(x=>x.id==='earth-world'&&x.state==='LIVE'),'Earth production world must exist');
 assert.strictEqual((atlas.cityProfiles||[]).length,3,'city profiles must be registered for seeded cities');
+assert.strictEqual((atlas.countryProfiles||[]).length,3,'country profiles must be registered for seeded countries');
+assert.strictEqual((atlas.empireProfiles||[]).length,1,'empire profile must be registered');
+assert.strictEqual((atlas.runtimeCounts||{}).seededBuildings,4,'building seed count must be explicit');
+assert.strictEqual((atlas.runtimeCounts||{}).seededServices,11,'service seed count must be explicit');
+assert.strictEqual((atlas.runtimeCounts||{}).seededTasks,10,'task seed count must be explicit');
 assert.strictEqual((atlas.agents||[]).length,12,'all twelve canonical agents must be mapped');
 assert.strictEqual(atlas.progression.matrix,'9x9x9','progression matrix must remain canonical');
 assert(atlas.integration.progressionContract.includes('729-node matrix'),'progression contract must bind the 729-node model');

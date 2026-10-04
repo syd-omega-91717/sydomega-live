@@ -34,7 +34,7 @@ def main() -> int:
     actual: list[str] = []
     invalid: list[str] = []
     for name in files:
-        match = VERSION_RE.match(name)
+        match = VERSION_RE.fullmatch(name)
         if not match:
             invalid.append(name)
             continue

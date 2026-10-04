@@ -28,7 +28,11 @@
 -- Applied to the live database and verified — see CLAUDE.md §8.
 -- ============================================================================
 
-DROP POLICY IF EXISTS "member submits own ad" ON public.advertisements;
-CREATE POLICY "member submits own ad" ON public.advertisements
-  FOR INSERT TO authenticated
-  WITH CHECK (submitted_by = auth.uid());
+DO 'BEGIN
+  IF to_regclass(''public.advertisements'') IS NOT NULL THEN
+    EXECUTE ''DROP POLICY IF EXISTS "member submits own ad" ON public.advertisements'';
+    EXECUTE ''CREATE POLICY "member submits own ad" ON public.advertisements
+      FOR INSERT TO authenticated
+      WITH CHECK (submitted_by = auth.uid())'';
+  END IF;
+END';

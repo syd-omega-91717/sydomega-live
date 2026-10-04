@@ -26,27 +26,14 @@
 </head>
 <body>
 <aside id="omega-side" data-page="predictions"></aside>
-<div class="page-shell" id="app" style="display:none">
+<div class="page-shell" id="app">
 
 <header class="topbar">
   <div class="topbar-title">PREDICTIONS<span class="topbar-sub">FORESIGHT &middot; PROPHECY &middot; ORACLE</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="purple" data-ring-value="0" data-ring-live aria-label="Prophecy ring"></canvas>
 </header>
 
-<div style="background:rgba(178,75,243,.06);border-bottom:1px solid rgba(178,75,243,.2);padding:16px 20px;margin-bottom:20px">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;max-width:900px;margin:0 auto">
-    <div style="flex:1">
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(178,75,243,.7);margin-bottom:8px;text-transform:uppercase">PROPHECY DOMAIN &mdash; TIER 2</div>
-      <div style="font-family:var(--D);font-size:20px;color:rgba(178,75,243,.9);margin-bottom:8px">Oracle's Sight</div>
-      <p style="font-size:13px;line-height:1.6;color:rgba(178,75,243,.8);margin:0;max-width:55ch">Peer through the veils of time and possibility. Master foresight algorithms and read the patterns only an Oracle can see.</p>
-      <div style="margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(178,75,243,.6)">150 POINTS &mdash; COMPLETE THE QUEST</div>
-    </div>
-    <div style="display:flex;gap:10px;flex-shrink:0;margin-left:20px">
-      <button class="btn btn-fill" onclick="window.startPredictionsQuest&&window.startPredictionsQuest()" style="font-size:12px;padding:8px 16px;background:rgba(178,75,243,.9);color:white;border:none;cursor:pointer;font-family:var(--M);letter-spacing:1px">START QUEST</button>
-      <button class="btn" onclick="window.showPredictionsQuestDetail&&window.showPredictionsQuestDetail()" style="font-size:12px;padding:8px 16px;border:1px solid rgba(178,75,243,.5);color:rgba(178,75,243,.9);background:transparent;cursor:pointer;font-family:var(--M);letter-spacing:1px">DETAILS</button>
-    </div>
-  </div>
-</div>
+
 
 <div style="max-width:900px;margin:0 auto;padding:0 20px">
   <div class="sechead">PROPHECY CAPABILITIES</div>
@@ -67,10 +54,6 @@
   </div>
 </div>
 </div>
-
-<script>
-(function initPredictionsQuestWidget(){var maxRetries=50,retryCount=0;function tryInit(){if(window.OmegaQuests&&window.OmegaQuests.registerQuestWidget){window.OmegaQuests.registerQuestWidget('prophecy',{questId:'oracles_sight',tier:2,points:150,title:'Oracle\'s Sight',description:'Peer through the veils of time and possibility. Master foresight algorithms and read the patterns only an Oracle can see.',domain:'prophecy'});window.startPredictionsQuest=function(){if(window.OmegaQuests){window.OmegaQuests.startQuest('oracles_sight','prophecy')}};window.showPredictionsQuestDetail=function(){if(window.OmegaQuests){window.OmegaQuests.showQuestDetail('oracles_sight','prophecy')}};window.OmegaQuests.notifyListeners('questWidgetReady',{domain:'prophecy',quest:'oracles_sight'})}else if(retryCount<maxRetries){retryCount++;setTimeout(tryInit,100)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryInit)}else{tryInit()}})();
-</script>
 
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

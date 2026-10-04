@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; MY QUESTS</title>
+<meta name="description" content="Write your own personal quests and track them to completion."/>
+<style>
+.mq-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;margin-bottom:1rem}
+.mq-form .full{grid-column:1/-1}
+.mq-form label{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.mq-form .inp{width:100%;box-sizing:border-box}
+.mq-form textarea.inp{min-height:90px;resize:vertical}
+.mq-actions{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mq-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.mq-filter .btn[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.mq-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:1rem}
+.mq-card{display:flex;flex-direction:column;gap:8px;padding:16px}
+.mq-card.done{opacity:.72}
+.mq-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.mq-title{font-family:var(--M);font-size:14px;color:var(--ink);word-break:break-word}
+.mq-diff{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);white-space:nowrap}
+.mq-desc{font-size:13px;line-height:1.6;color:var(--muted);flex:1;white-space:pre-wrap;word-break:break-word}
+.mq-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
+.mq-btns{display:flex;gap:8px;flex-wrap:wrap}
+.mq-msg{font-family:var(--M);font-size:12px;letter-spacing:.5px;min-height:1.4em;margin:0;color:var(--muted)}
+.mq-msg.err{color:var(--crim)}
+.mq-note{font-family:var(--M);font-size:12px;line-height:1.7;letter-spacing:.5px;color:var(--muted)}
+@media(max-width:700px){.mq-form{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside id="omega-side" data-page="my-quests"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <h1 class="topbar-title" style="margin:0;font-weight:400">MY QUESTS<span class="topbar-sub">PERSONAL GOALS · PRIVATE TO YOU</span></h1>
+</header>
+<div style="padding:1.25rem">
+  <div data-omega-flag="gamification_enabled">
+    <p class="sechead">NEW QUEST</p>
+    <form class="card mq-form" id="mq-form" novalidate>
+      <div class="full"><label for="mq-title">TITLE</label><input class="inp" id="mq-title" maxlength="120" required placeholder="e.g. Finish the Lattice Fundamentals course" autocomplete="off"></div>
+      <div class="full"><label for="mq-desc">DESCRIPTION (OPTIONAL)</label><textarea class="inp" id="mq-desc" maxlength="1000" placeholder="What does done look like?"></textarea></div>
+      <div><label for="mq-diff">DIFFICULTY</label>
+        <select class="inp" id="mq-diff"><option value="1">1 · Light</option><option value="2">2 · Steady</option><option value="3">3 · Demanding</option><option value="4">4 · Hard</option><option value="5">5 · Epic</option></select></div>
+      <div><label for="mq-elem">ELEMENT (OPTIONAL)</label>
+        <select class="inp" id="mq-elem"><option value="">None</option><option value="fire">Fire</option><option value="water">Water</option><option value="wind">Wind</option><option value="metal">Metal</option><option value="sand">Sand</option><option value="soul">Soul</option><option value="space">Space</option><option value="void">Void</option></select></div>
+      <div class="mq-actions"><button type="submit" class="btn btn-fill" id="mq-submit">CREATE QUEST</button><p class="mq-msg" id="mq-msg" role="status" aria-live="polite"></p></div>
+    </form>
+    <p class="sechead">YOUR QUESTS</p>
+    <div class="mq-filter" role="group" aria-label="Filter quests">
+      <button type="button" class="btn" data-filter="active" aria-pressed="true">ACTIVE</button>
+      <button type="button" class="btn" data-filter="completed" aria-pressed="false">COMPLETED</button>
+      <button type="button" class="btn" data-filter="archived" aria-pressed="false">ARCHIVED</button>
+    </div>
+    <div class="mq-list" id="mq-list"><p class="mq-note">Loading…</p></div>
+    <p class="mq-note">Personal quests are visible only to you and do not award points. Points come from platform activity, such as lessons, exams and lattice progress.</p>
+  </div>
+</div>
+<div data-page-emblem="my-quests" style="margin:20px auto 0"></div>
+</div>
+
+<script type="module" src="/my-quests.js"></script>
+<script src="/bg.js" defer></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body></html>

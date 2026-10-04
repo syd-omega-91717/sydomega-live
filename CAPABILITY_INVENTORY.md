@@ -223,7 +223,20 @@ see `GAP_ANALYSIS.md` §4.7).
 `leaderboard_snapshots` table as of this session — was querying a nonexistent
 `authority_snapshots` table).
 
+Gamification Phase 2 (2026-10-03, dormant behind `platform_settings.gamification_enabled`):
+`character.html` PROGRESSION tab (level derived from `sovereign_points_ledger` via
+`my_progression()`, points leaderboard via `get_points_leaderboard()`, equipped cosmetics
+applied to the identity card), `cosmetics.html` (`point_perks` with a `slot`, bought with
+`purchase_perk()`, equipped with `set_perk_equipped()`), `my-quests.html` (private
+`member_quests`, no points). Server-side gated and verified live by impersonation —
+`FIXES_LOG.md`, 2026-10-03.
+
 ## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
+
+> **2026-10-03:** `omega-quests.js`, `omega-quest-handler.js` and `omega-quest-ui.js` were
+> removed with the Phase 1 quest widgets they served (backend never deployed). The
+> gamification that is live is `character.html`'s progression, `cosmetics.html` and
+> `my-quests.html` (`FIXES_LOG.md`, 2026-10-03).
 
 Grouped by function, one line each, extracted from each file's own header comment (not
 invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
@@ -317,6 +330,12 @@ labeling), `omega-sign-codex.js`, `omega-content.js`, `omega-animated.js`, `omeg
 
 ## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total — all read in full
 and audited this session; see `CLAUDE.md` §8 for the 2 findings)
+
+> **2026-10-03:** `track_quest_progress`, `calculate_domain_mastery` and
+> `generate_monthly_covenant` (added by the Phase 1 quest merge) were removed undeployed:
+> each acted on a request-body `user_id` with a service-role client and no caller
+> authentication. Quest progress is recorded by the `track_quest_progress` **RPC**
+> (`auth.uid()`-bound). Current count: `python3 scripts/edge-function-census.py`.
 
 | Function | Purpose |
 |---|---|

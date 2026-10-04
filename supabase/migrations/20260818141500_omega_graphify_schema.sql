@@ -291,5 +291,5 @@ SELECT
   e.confidence_score
 FROM public.graph_entities e
 WHERE e.user_id = p_user_id
-ORDER BY degree DESC;
+ORDER BY 4 DESC;
 $$ LANGUAGE SQL STABLE;

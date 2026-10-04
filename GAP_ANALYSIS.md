@@ -18,6 +18,31 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
+  `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
+  09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in
+  `config/omega-runtime-manifest.json`, never wired to a page), and
+  `omega-theme-personalization.js` (Proposal #22; bg.js loads `omega-theme-elemental.js`
+  instead). Not deleted: an unloaded module has been load-bearing before
+  (`omega-bottom-stack.js`). Wire or retire each with its author's intent in hand.
+  (`omega-mission-board.js` was a false positive — loaded by an inline `import`, which
+  `audit.py` now counts.)
+- **Five inert member write policies on the progression tables** (opened 2026-10-03):
+  `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
+  `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`
+  revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
+  agent session cannot give, so run in the SQL editor:
+  `drop policy quest_completions_member_insert on public.quest_completions;` (and the
+  other four), then add the matching migration file.
+- **Leaked-password protection is off** (Supabase security advisor). Dashboard-only:
+  Authentication → Policies (password strength / HaveIBeenPwned). No API path from here.
+- **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
+  `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
+  `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid
+  (Stripe) cosmetics were deliberately not built — HIGH-RISK under CLAUDE.md §10, needs
+  `grill-me-codex` and a decision on who receives revenue. `purchase_perk()` itself is
+  not flag-gated (it predates this, spends points only, has no cash value).
+
 - **`service_role` holds only what deployed server code needs** (opened 2026-09-26,
   `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
   no default privilege on public tables. Granted since: `platform_settings` SELECT,
@@ -771,15 +796,51 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **127 tables have RLS policies and no grant** (down from 130 on
-  2026-09-17 — `academy_exams`/`academy_questions`/`academy_exam_results`
-  granted 2026-09-21 as the exam-layer follow-up above, `academy_questions`
-  column-restricted rather than a full table grant). Left locked out — the
-  safe state for the rest. Cross-referenced against client `.from(...)`
-  calls: unreachable from any page, do not "fix" by granting without
-  deciding the feature is wanted. **One was reachable and broken** —
-  `agent_experiments` (`autonomous-insights.html`) hit a real, live `42501`
-  on every read; granted and verified in #179, not a case of this rule.
+- **125 tables have RLS policies and no grant** (live 2026-10-04; was 127, and
+  the 2026-09-21 claim that the rest were "unreachable from any page" was
+  wrong for three). `omega_platform_events`, `omega_platform_evidence` and
+  `capability_registry` were read by `omega-eternity-engine.js`,
+  `omega-evidence-graph.js`, `omega-mission-board.js` and
+  `omega-temporal-replay.js` and failed `42501` on every read; granted in
+  `20261004084744` (`capability_registry` column-restricted, `threat_model`
+  excluded) and verified by impersonation. The remaining 125 were
+  cross-checked against every client `.from(...)` in the repo on 2026-10-04:
+  **none is read by a page**, and every table a page reads exists live with a
+  member SELECT path. Left locked out — the safe state; do not grant without
+  deciding the feature is wanted. (`agent_experiments` was the earlier
+  reachable case, #179.)
+- **Proposal #26's sculpture data binding is inert end to end** (found
+  2026-10-04). `omega-sculpture-dataviz.js` (bg.js-injected) feeds the
+  ascension/elements/signet scenes from `profile.current_tier_progress`,
+  `window.__omegaTasks` and `window.__omegaAchievements` — `profiles` has no
+  tier-progress column live, and nothing in the repo assigns either global or
+  dispatches the `omega:{tasks,achievements}-updated` events it listens for,
+  so every scene renders its neutral default (0). Honest, not fabricated —
+  but not live. The three page-local duplicates (`profile.html`,
+  `cosmos.html`, `ascension.html`), which read an unpublished
+  `window.__omegaSB`, a non-existent `element_mastery` table and the v1
+  `.from().on()` realtime API, were removed. Wiring the layer needs a real
+  source: Phase 2 progression exists but is dormant behind its flag, so
+  binding it would expose a dormant feature — decide that first.
+- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`,
+  measured 2026-10-04). A fresh `supabase db reset` stops at migration #129,
+  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql`: its unguarded
+  `ALTER POLICY … ON public.council_deliberations` runs before the table exists,
+  because that table only reaches `migrations/` in `20260905211725`; live had it
+  from the flat bag first. Reproduced locally on PG16 + pgvector + pg_cron with
+  a Supabase platform stub, failing at the same statement. The fix that leaves
+  live untouched wraps those three `ALTER`s in a `pg_policies` existence check:
+  the version is already applied live and never re-runs, and `20260905211725`
+  creates the same three policies in the same `(SELECT auth.uid())` form. It
+  edits an applied migration, though, which CLAUDE.md §5 forbids, and the edit
+  was refused by this session's permission policy. **Owner decision.** Further
+  gaps past #129 are unmeasured until this one is resolved.
+- **Five inert progression write policies** (`covenant_member_update`,
+  `domain_mastery_member_update`, `leaderboard_member_update`,
+  `quest_completions_member_insert`, `quest_completions_member_update`) are still
+  live. A DROP through the connector waits on a confirmation that never reaches
+  the user and times out; retried 2026-10-04, still 5. Run in the SQL editor:
+  `drop policy if exists <name> on public.<table>;` for each.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

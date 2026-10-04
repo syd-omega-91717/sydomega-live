@@ -7,7 +7,7 @@
      const { browser, ctx } = await launch({ width: 375, mobile: true });
 */
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 
 const ROOT = '/home/user/sydomega-live';
 const ORIGIN = 'http://localhost:8765';
@@ -19,6 +19,8 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
    future session installs it elsewhere. */
 function loadPlaywright(scratchpad) {
   const tries = [
+    // scratchpad is the developer's own $OMEGA_SCRATCHPAD on a local harness, not request input.
+    // nosemgrep: path-join-resolve-traversal
     scratchpad && path.join(scratchpad, 'node_modules', 'playwright'),
     'playwright'
   ].filter(Boolean);
@@ -142,7 +144,8 @@ async function launch(opts = {}) {
 function gitShow(rev, files) {
   const out = {};
   files.forEach(f => {
-    out[f] = execSync(`git -C ${ROOT} show ${rev}:${f}`, { encoding: 'utf8', maxBuffer: 1 << 24 });
+    // argv, not a shell string: a rev or path can never become a command.
+    out[f] = execFileSync('git', ['-C', ROOT, 'show', `${rev}:${f}`], { encoding: 'utf8', maxBuffer: 1 << 24 });
   });
   return out;
 }

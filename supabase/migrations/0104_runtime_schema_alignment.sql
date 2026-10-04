@@ -5,7 +5,6 @@ BEGIN;
 
 ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS content text;
 ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS expires_at timestamptz;
-UPDATE public.ai_memory SET content = memory WHERE content IS NULL;
 
 CREATE UNIQUE INDEX IF NOT EXISTS ai_memory_user_memory_key_uidx
   ON public.ai_memory(user_id, memory_key)
@@ -29,7 +28,7 @@ BEGIN
   SELECT jsonb_agg(jsonb_build_object(
     'key',memory_key,
     'type',memory_type,
-    'content',coalesce(content,memory),
+    'content',content,
     'ts',updated_at
   )) INTO _mems
   FROM (

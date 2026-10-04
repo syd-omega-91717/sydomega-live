@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Covenant — Monthly Battle Pass — Ω</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='8' y='26' font-size='28' font-family='Cinzel Decorative'%3EΩ%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="/favicon.ico">
   <script src="/bg.js" defer></script>
   <script src="/nav.js" defer></script>
   <style>
@@ -64,8 +64,16 @@
       const progressText = document.getElementById('cov-progress-text');
       const barFill = document.getElementById('cov-bar-fill');
 
+      /* The page called an undefined global client; resolve the shared client that bg.js
+         publishes (deferred, so wait for DOMContentLoaded) -- CLAUDE.md 8.1 class 4. */
+      const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const sb = await new Promise((resolve) => {
+        const go = () => { try { Promise.resolve(window.OmegaSB && window.OmegaSB.get()).then(resolve, () => resolve(null)); } catch (e) { resolve(null); } };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go, { once: true }); else go();
+      });
       try {
-        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!sb) throw new Error('connection unavailable');
+        const { data: { user } } = await sb.auth.getUser();
         if (!user) {
           loading.textContent = 'Please sign in to view your covenant.';
           return;
@@ -77,7 +85,7 @@
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                            'July', 'August', 'September', 'October', 'November', 'December'];
 
-        const { data: covenant, error: covenantError } = await window.supabase
+        const { data: covenant, error: covenantError } = await sb
           .from('covenant_progress')
           .select('*')
           .eq('user_id', user.id)
@@ -94,7 +102,8 @@
 
         monthName.textContent = `${monthNames[month - 1]} ${year}`;
 
-        const taskList = covenant.tasks_available ? JSON.parse(covenant.tasks_available) : [];
+        const raw = covenant.tasks_available;
+        const taskList = Array.isArray(raw) ? raw : (typeof raw === 'string' ? JSON.parse(raw) : []);
         const completed = covenant.tasks_completed || 0;
         const progressPct = (completed / 25) * 100;
 
@@ -112,12 +121,12 @@
             card.innerHTML = `
               <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div>
-                  <div class="cov-task-domain">${task.domain}</div>
-                  <div class="cov-task-desc">${task.description}</div>
+                  <div class="cov-task-domain">${esc(task.domain)}</div>
+                  <div class="cov-task-desc">${esc(task.description)}</div>
                   ${task.is_premium ? '<div style="font-size: 0.7rem; color: var(--purple); margin-top: 0.5rem;">PREMIUM</div>' : ''}
                 </div>
                 <div style="text-align: right;">
-                  <div class="cov-task-points">${task.points}pt</div>
+                  <div class="cov-task-points">${esc(task.points)}pt</div>
                 </div>
               </div>
             `;

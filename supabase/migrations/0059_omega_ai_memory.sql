@@ -5,13 +5,14 @@
 -- ============================================================================
 
 -- ── AI MEMORY STORE ──────────────────────────────────────────────────────
+CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA extensions;
 CREATE TABLE IF NOT EXISTS public.ai_memory(
   id           uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id      uuid        NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   memory_key   text        NOT NULL,
   memory_type  text        NOT NULL DEFAULT 'semantic',
   content      text        NOT NULL,
-  embedding    vector(384),            -- pgvector for semantic recall (optional)
+  embedding    extensions.vector(384),            -- pgvector for semantic recall (optional)
   confidence   numeric(4,3) DEFAULT 1.0,
   source       text        DEFAULT 'system',  -- 'system','member','agent'
   agent_name   text,

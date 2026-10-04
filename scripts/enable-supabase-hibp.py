@@ -26,7 +26,11 @@ def request(method, url, token, payload=None):
             "Accept": "application/json",
         },
     )
+    if not url.startswith("https://"):
+        raise ValueError(f"refusing non-https URL: {url!r}")
     try:
+        # https-only, checked above, so no file:// or other scheme reaches urlopen.
+        # nosemgrep: dynamic-urllib-use-detected
         with urllib.request.urlopen(req, timeout=20) as response:
             raw = response.read().decode()
             return response.status, json.loads(raw) if raw else {}

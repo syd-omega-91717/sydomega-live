@@ -662,3 +662,43 @@ the wrong place):
   worth a manual check post-deploy. Not a new issue: the same nested-tooltip-inside-anchor HTML
   pattern this uses was already present, unchanged, in every pre-existing section before this
   edit.
+
+## 10. Gamification Phase 2 (2026-10-03)
+
+- **Pages:** `cosmetics.html`, `my-quests.html` added (estate 222 → 224), both in
+  `nav.js` ACHIEVE (`PS` + `SECTIONS`); `character.html` gains a PROGRESSION tab.
+- **Schema (live, six migrations `20261003213300`–`20261003214237`):** `point_perks`
+  + `slot`, `active`; `member_perks` + `equipped`; new `member_quests` (RLS, grants to
+  `authenticated` only); flag `gamification_enabled` = false.
+- **RPCs:** `set_perk_equipped(text, boolean)` and `get_points_leaderboard(int)`
+  (`SECURITY DEFINER`, `search_path=''`, `auth.uid()`-scoped, revoked from
+  `PUBLIC`/`anon`); `my_progression()` (`SECURITY INVOKER`).
+- **No Edge Function changes** — `stripe-webhook` is untouched.
+- Evidence and verification: `FIXES_LOG.md`, 2026-10-03. Open items it surfaced:
+  `GAP_ANALYSIS.md` §S.
+
+## 11. Quest-progression hardening and `main` gate debt (2026-10-03)
+
+- **RPC:** `track_quest_progress` hardened live (`20261003220624`): `auth.uid()`-bound,
+  `search_path=''`, revoked from `PUBLIC`/`anon`, points clamped, one award per quest per
+  day. Member INSERT/UPDATE on the four progression tables revoked (`20261003220754`).
+- **Migration `0107`** rewritten to the hardened live state and registered as applied.
+- **Edge Functions:** `track_quest_progress`, `calculate_domain_mastery`,
+  `generate_monthly_covenant` removed (never deployed, unauthenticated service-role).
+  `graphify-ai-query` now throws on a `find_contradictions` error.
+- **Pages:** `world.html` reduced to one document; `omega-quests.js` resolves the shared
+  client and no longer throws.
+- Evidence: `FIXES_LOG.md`, 2026-10-03 (second entry). Open: `GAP_ANALYSIS.md` §S.
+
+## 12. Quest widgets retired, Phase 1 pages repaired (2026-10-03)
+
+- **Removed:** quest widget markup/JS from 12 pages; modules `omega-quests.js`,
+  `omega-quest-handler.js`, `omega-quest-ui.js` (and their two `bg.js` injections);
+  reference schema `supabase/omega_quests_system.sql`, `supabase/omega_quest_ecosystem.sql`.
+- **Restored:** `leaderboard.html` to its pre-`81a5d42` authority leaderboard (logic now in
+  `leaderboard.js`).
+- **Fixed:** client resolution and escaping on `quest-progress`, `domain-mastery`,
+  `covenant`, `seasonal-events`; `bg.js` approval no longer dropped before `<body>`;
+  `#app` inline hide on two pages; `profile.html` stale `--crim` fallback;
+  `omega-visual-atlas.js` malformed-URI throw.
+- Evidence: `FIXES_LOG.md`, 2026-10-03 (third entry).

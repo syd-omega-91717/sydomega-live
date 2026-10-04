@@ -169,6 +169,12 @@ for page in (f for f in os.listdir(".") if f.endswith(".html")):
             r"""<script[^>]+src=(?:["']([^"']+)["']|([^\s>"'=]+))""", read(page)):
         m = a or b
         static_included.add(m.split("/")[-1].split("?")[0])
+    # An inline <script type="module">import "/x.js";</script> is a root too:
+    # missions.html loads omega-mission-board.js exactly that way, and the
+    # page scan reported it (and what it imports) as never loaded.
+    for m in ESM_IMPORT_RE.findall(read(page)):
+        if not REMOTE_SRC_RE.match(m):
+            static_included.add(m.split("/")[-1].split("?")[0])
 
 # TRANSITIVE CLOSURE, not one hop. This scan used to read `.src =` out of
 # LOADERS only, so a module injected by an already-reachable module was

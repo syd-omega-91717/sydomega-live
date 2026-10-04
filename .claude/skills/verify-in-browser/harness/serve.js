@@ -5,6 +5,8 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
   '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json', '.mp4': 'video/mp4',
   '.woff2': 'font/woff2', '.txt': 'text/plain' };
 const cache = new Map();
+// Local harness server, bound to loopback below; never deployed.
+// nosemgrep: using-http-server
 http.createServer((req, res) => {
   let u = decodeURIComponent(req.url.split('?')[0]);
   if (u === '/') u = '/index.html';
@@ -16,4 +18,4 @@ http.createServer((req, res) => {
   if (buf === null) { res.writeHead(404, { 'content-type': 'text/plain' }); return res.end('nf'); }
   res.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream', 'cache-control': 'no-store' });
   res.end(buf);
-}).listen(8765, () => console.log('serving on 8765'));
+}).listen(8765, '127.0.0.1', () => console.log('serving on 127.0.0.1:8765'));

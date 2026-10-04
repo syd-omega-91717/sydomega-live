@@ -445,53 +445,7 @@ a{color:inherit;text-decoration:none}
     <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "IDENTITY") -->
     <div class="osc-stage" data-omega-sculpture="elements" data-sculpt-height="min(24vh,200px)"
          data-sculpt-accent="#00E5FF" data-sculpt-bloom="off"
-         data-sculpt-mastery-source="elements"
-         data-sculpt-label="Element mastery visualization showing proficiency in fire, water, earth, and air"></div>
-
-    <script>
-    async function initSculptureMasteryBinding() {
-      const stage = document.querySelector('[data-sculpt-mastery-source="elements"]');
-      if (!stage) return;
-
-      const checkReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      async function updateMastery() {
-        if (!window.__omegaSB) return;
-        try {
-          const { data, error } = await window.__omegaSB
-            .from('element_mastery')
-            .select('fire_score, water_score, earth_score, air_score')
-            .single();
-          if (!error && data) {
-            const scores = [
-              Math.min((data.fire_score || 0) / 100, 1.0),
-              Math.min((data.water_score || 0) / 100, 1.0),
-              Math.min((data.earth_score || 0) / 100, 1.0),
-              Math.min((data.air_score || 0) / 100, 1.0)
-            ];
-            stage.setAttribute('data-sculpt-mastery-scores', scores.join(','));
-          }
-        } catch (e) {
-          console.debug('Mastery update error:', e);
-        }
-      }
-
-      updateMastery();
-
-      if (!checkReducedMotion()) {
-        const sub = window.__omegaSB
-          ?.from('element_mastery')
-          ?.on('*', () => updateMastery());
-        if (sub) sub?.subscribe();
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSculptureMasteryBinding);
-    } else {
-      initSculptureMasteryBinding();
-    }
-    </script>
+         data-sculpt-label="The nine elements in their three canonical tiers, tinted to the Identity realm"></div>
 
     <!-- LIVE STATS (inspired by Image 1-B: Level, Points, Achievements) -->
     <div class="stat-grid" id="stat-grid" data-reveal="fade-up">
@@ -1464,7 +1418,7 @@ const ACHIEV=[
   {n:1,key:'achievement_genesis',col:'#D9B86A',sym:'\u03A9'},{n:2,key:'achievement_knowledge',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
   {n:3,key:'achievement_mastery',col:'#E86A3A',sym:'\u25C8'},{n:4,key:'achievement_contribution',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
   {n:5,key:'achievement_elemental',col:'#D9B86A',sym:'\u2609'},{n:6,key:'achievement_celestial',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
-  {n:7,key:'achievement_sovereign',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,key:'achievement_bloodline',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
+  {n:7,key:'achievement_sovereign',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,key:'achievement_bloodline',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#CF6760'),sym:'\u22D4'},
   {n:9,key:'achievement_economic',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,key:'achievement_oracle',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
   {n:11,key:'achievement_guardian',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,key:'achievement_apex',col:'#FFD700',sym:'\u03A9'},
   {n:13,key:'medal_1st_light',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,key:'medal_pioneer',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
@@ -2515,7 +2469,7 @@ const UNLOCKS=[
   {icon:'&#x21C4;',title:'MARKETPLACE',desc:'Full listing, buying, and selling on the sovereign marketplace.',col:'#E2C86D'},
   {icon:'&#x25C8;',title:'SUBSCRIPTION PAYMENTS',desc:'Live Stripe payment processing for all membership tiers.',col:'#9B6BF0'},
   {icon:'&#x2694;',title:'CONSULTANCY BOOKING',desc:'Paid consultancy sessions across all 6 expert domains.',col:'#00E5FF'},
-  {icon:'&#x22D4;',title:'INHERITANCE RIGHTS',desc:'Full legal succession protocol. Bloodline vault inheritance active.',col:'#8B0000'},
+  {icon:'&#x22D4;',title:'INHERITANCE RIGHTS',desc:'Full legal succession protocol. Bloodline vault inheritance active.',col:'#CF6760'},
   {icon:'&#x272A;',title:'SOVEREIGN CREDENTIALS',desc:'Cryptographic certificate issuance. Verifiable on-chain.',col:'#C9A84C'},
 ];
 
@@ -2584,7 +2538,7 @@ async function bootKYCExtra(){
     not_started:{icon:'&#x25A1;',title:'VERIFICATION NOT STARTED',badge:'NOT STARTED',col:'#85837b',desc:'Complete the steps below to begin your KYC journey.',tier:0},
     submitted:  {icon:'&#x25CF;',title:'DOCUMENTS SUBMITTED',badge:'UNDER REVIEW',col:'#E2C86D',desc:'Your documents have been submitted and are under compliance review. This takes 1-3 business days.',tier:2},
     verified:   {icon:'&#x2713;',title:'IDENTITY VERIFIED',badge:'FULLY VERIFIED',col:'#3fb27f',desc:'Your sovereign identity is confirmed. All economic features, token access, and credentials are active.',tier:3},
-    rejected:   {icon:'&#x2715;',title:'VERIFICATION REJECTED',badge:'REJECTED',col:'#8B0000',desc:'Your documents could not be verified. Please resubmit with clear, valid documents.',tier:0},
+    rejected:   {icon:'&#x2715;',title:'VERIFICATION REJECTED',badge:'REJECTED',col:'#CF6760',desc:'Your documents could not be verified. Please resubmit with clear, valid documents.',tier:0},
   };
   const s=states[kyc]||states['not_started'];
   document.getElementById('kyc-icon').innerHTML=s.icon;

@@ -21919,3 +21919,303 @@ Open, owner's art (not fixable in code without re-authoring): Stage 8 medal read
 the Stage 4 medal) whose residue shows under the Passport cutouts. `Zodiac_signs/`
 (unused) has 12 files for 11 signs — Aries twice, no Taurus. Full estate audit:
 `docs/OMEGA_VISUAL_ESTATE_AUDIT_20260929.md`.
+
+## Gamification Phase 2: progression, cosmetics, member quests — dormant (2026-10-03)
+
+**What the handoff specified vs. what was built.** A prior session left a plan for
+`character.html`/`cosmetics-shop.html`/`user-quests.html` plus a rewritten
+`stripe-webhook`. Checked against the tree it did not hold: `quests.html` and
+`supabase/omega_gamification.sql` (its "reference" and "completed schema") did not
+exist; `character.html` (319 lines, nav ARCHIVE) and `stripe-webhook` (241 lines, live
+payments) did, and would have been overwritten — the webhook replacement handled only
+`payment_intent.succeeded` and acknowledged every other event unprocessed. The pages
+hardcoded an anon JWT that is not this project's, imported an unvendored
+`/vendor/dompurify/…` (a failed module import runs none of the page), and posted to a
+nonexistent `/api/checkout` with a client-supplied `user_id`/`amount_cents`. Built
+instead, extending what is live:
+
+- **Progression is derived, never stored.** `my_progression()` sums
+  `sovereign_points_ledger` (lifetime = positive deltas; level L starts at 25·(L−1)²).
+  No new XP column a client could write. `SECURITY INVOKER` — it reads only rows the
+  caller already sees under `spl_own`/`mp_own`/`perks_read`.
+- **Cosmetics are `point_perks` rows with a `slot`** (frame/aura/title, 7 seeded),
+  bought with the existing `purchase_perk()`; `set_perk_equipped()` enforces one per
+  slot under a row lock. Each item has a real visible effect on `character.html`'s
+  identity card (outline / animated glow / title line) — no item that does nothing.
+  The four pre-existing perks keep `slot = null` and are not listed.
+- **Member quests are private and award no points.** A member-set reward on a
+  self-written quest would mint currency. `member_quests`: RLS own-row
+  select/insert/update/delete (+ owner read); insert/update also require the flag;
+  delete stays possible while it is off.
+- **Dormant.** `platform_settings.gamification_enabled = false`; every new write path
+  checks it server-side; the UI is behind `data-omega-flag`.
+
+**Applied live** as six migrations, `20261003213300`…`20261003214237`, local files
+matching. `apply_migration` timed out at 60s on roughly half the calls with no lock
+held and the same SQL completing instantly via `execute_sql` in a rolled-back
+transaction — so the work was split; every timed-out attempt was confirmed rolled back
+(`to_regclass` null, no history row) before retrying.
+
+**Verified live** (impersonation via `SET LOCAL ROLE authenticated` + JWT claims,
+§8.4; every probe rolled back, flag/ledger/member_perks/member_quests counts confirmed
+unchanged after): flag off → member insert `42501`, equip `feature_disabled`, spoofed
+`user_id` `42501`, anon `my_progression`/select `42501`. Flag on → buy 40+40+25 from a
+200 credit leaves 95, equipping a second frame unequips the first, level 3 / next 225;
+a member sees, updates and deletes 0 of the owner's quests. Invoker check: a member
+credited 30 sees 30, not the owner's 500.
+
+**Snapshots.** `supabase/live-schema.json` regenerated: **273** relations, was 229 —
+it was 44 behind live, including the 0107 quest tables (applied by hand with narrower
+grants than the file). `remote-migrations.json` 322 → 328.
+
+**Runtime.** `verify-runtime.js --pages character,cosmetics,my-quests`: render,
+guard lift, no overflow, no duplicate ids — the only problem on each is the
+pre-existing `omega-quests.js` throw, which `dashboard.html` and `quest-progress.html`
+show identically (see `GAP_ANALYSIS.md` §S). A flag-ON render with fixture data
+confirmed the gated UI paints (level 3, 65 to next, 48% bar; gold outline and SEEKER
+title on the card; self row highlighted) and that a quest titled `<b>…</b>` renders as
+text.
+
+**Copy.** Two pages moved the estate 222 → 224; `page-count-claims.py` caught the
+stale count in 6 pages, `T_EN` and all six packs — updated.
+
+## Quest progression was forgeable by anyone; three unsafe edge functions; `main` gate debt (2026-10-03)
+
+**`track_quest_progress` (live, fixed).** `SECURITY DEFINER`, no `search_path`, default
+ACL (the security advisor listed it as executable by `anon`), and it took `p_user_id`
+and `p_points` from the caller with no `auth.uid()` check — anyone holding the
+publishable key could write any member's `quest_completions`/`domain_mastery`. It had
+also **never worked**: `level = floor(points/200)` is 0 below 200 points and violates
+`domain_mastery`'s `CHECK (level >= 1)`, so every call raised — which is why all three
+tables held 0 rows (live count) and there was nothing forged to clean up. Members also
+held INSERT/UPDATE on `quest_completions`, `domain_mastery`, `leaderboard_entries` and
+UPDATE on `covenant_progress` — no page writes them (all four only read), so those
+grants served only self-forgery.
+
+Applied live: `20261003220624_harden_track_quest_progress` (caller is `auth.uid()`, a
+mismatched `p_user_id` raises `42501`; signature kept so `habits.html:407` works
+unchanged; points clamped 0..10; one award per quest per UTC day so re-toggling a habit
+earns nothing; level `1 + points/200` capped 9; `search_path=''`; revoked from
+`PUBLIC`/`anon`) and `20261003220754_progression_tables_revoke_member_writes`.
+Verified live by impersonation, rolled back: first call `(1,f)`, same-day repeat adds 0,
+a 100000-point request credits 10 (total 20); spoofed user, bad domain, direct
+INSERT/UPDATE on `domain_mastery`, UPDATE on `leaderboard_entries` and the anon call all
+blocked (`42501`/`22023`); own rows still readable. The five member write policies are
+still present but inert (a GRANT is checked before RLS); four attempts to drop them via
+`apply_migration` timed out at 60s — open hygiene item.
+
+**`0107_omega_quest_ecosystem.sql` reconciled and registered.** It could never apply
+(`CREATE POLICY IF NOT EXISTS` is not PostgreSQL), granted ALL to `authenticated`, and
+defined the unsafe function — so `migration-drift` and the migration security audit
+were red on `main`. Rewritten as an idempotent capture of the hardened live state
+(read-only grants and SELECT policies, `UNIQUE (user_id, quest_id)` as live has it, no
+function — its single definition is `20261003220624`). Proven on a fresh local
+PostgreSQL 16 with Supabase stand-ins: runs twice cleanly, grants SELECT only, and the
+behaviour checks above hold. Then registered as applied (`0107` row in
+`supabase_migrations.schema_migrations`, which `migration-drift.py` prescribes);
+`remote-migrations.json` 328 → 331. Drift: PASS. Migration security audit: PASSED.
+
+**Three edge functions removed** — `track_quest_progress`, `calculate_domain_mastery`,
+`generate_monthly_covenant`. Each built a service-role client and acted on a `user_id`
+from the request body with no caller authentication (`edge-service-role-auth-audit.py`
+FAIL ×3); none was deployed (`list_edge_functions`) or called anywhere; deploying any
+would have granted service-role writes to whoever called it. Census and auth audit now
+PASS.
+
+**`omega-quests.js` threw on every page.** It called `.from()` on
+`window.OmegaSupabase`, an accessor slot, not a client (§8.1 class 4). It now resolves
+`window.OmegaSB.get()` and degrades with one `console.warn` while the quests backend
+(`supabase/omega_quests_system.sql`) is undeployed. `verify-runtime.js`: dashboard,
+habits, vault, character, cosmetics, my-quests, quest-progress all `ok` (each failed
+before). This unmasked one pre-existing finding: `achievements.html`'s green
+START QUEST button at 2.71:1.
+
+**`world.html` held three concatenated HTML documents** (merge residue on 2026-10-03;
+production contract: 24 duplicate ids). The third was a strict superset of the other
+two (every id and script, plus presence, achievement chain and continuity; its truth
+boundary is the extended wording). Kept it. Production contract: PASSED.
+
+**Smaller:** `ci-local.sh`'s service-role scan now mirrors `ci.yml`'s two exact-path
+exemptions (the mirror was red where GitHub was green); a merge left
+`test_graphify_contradictions_contract.py` with two stacked `def` lines
+(IndentationError); repairing it exposed that the fix it guards never landed —
+`graphify-ai-query` still swallowed a `find_contradictions` error as an empty result
+(§8.1 class 1), now thrown like the adjacent `orphanError`.
+
+## Dead quest widgets retired; Phase 1 pages repaired; approval dropped before `<body>` (2026-10-03)
+
+**Quest widgets removed from 12 pages** (`achievements`, `arena`, `automation`, `budget`,
+`command`, `cosmos`, `family`, `investment`, `predictions-dashboard`, `research`,
+`settings`, `vault`). Each promised points ("160 POINTS — COMPLETE THE QUEST") for a
+backend never deployed; `omega-quests.js` never published `window.OmegaQuests`, so every
+widget's init retried and gave up, and `command.html`'s polled every 200 ms forever.
+Removed by balanced-`<div>`/balanced-brace cuts, each reviewed in a dry run; 0 leftover
+references. `bg.js` no longer injects `omega-quests.js`/`omega-quest-handler.js`; both
+and the never-loaded `omega-quest-ui.js` are deleted. The undeployed reference schema
+(`supabase/omega_quests_system.sql`; `supabase/omega_quest_ecosystem.sql`, a stale copy
+of the old insecure `0107` carrying `quest_config`) is removed — this clears
+`schema-consolidation-gate.py` and `migration-consistency.py`, the last two red gates.
+
+**`leaderboard.html` restored.** Phase 1 (`81a5d42`) overwrote the working authority
+leaderboard (rankings → snapshots → profiles fallback, translated, XSS-hardened on
+09-25) with a page that used an undefined `window.supabase`, read a nonexistent
+`leaderboard_entries.points` (masked by the stale reference file declaring it — the
+gate went red the moment that file left), embedded RLS-hidden `profiles`, and wrote
+`display_name` into `innerHTML`. Restored from `81a5d42^`; its module script moved to
+`leaderboard.js` and its tab `onclick`s to `data-tab-action` (CSP ratchet).
+
+**`quest-progress`, `domain-mastery`, `covenant`, `seasonal-events`** called the
+undefined `window.supabase`; each now awaits `DOMContentLoaded` and resolves
+`OmegaSB.get()`, raising into its existing error path when no client resolves, and
+escapes database strings before `innerHTML`. `covenant` also parsed `jsonb` with
+`JSON.parse` (it arrives as an array).
+
+**`bg.js` `__omegaApprove` discarded the approval when it resolved before `<body>`**
+(`document.body && …`, §8.1 class 5a). `omega-platform-navigator.html` loads bg.js
+synchronously in `<head>` behind a large stylesheet, so a fast session check left an
+approved member on a blank page — reproduced deterministically under the verifier
+(body without `omega-approved`, guard rule matching `#app`). It now queues on
+`DOMContentLoaded`. `approvals.html` remains owner-gated for the member stub
+(before and after).
+
+**Smaller:** `predictions-dashboard`/`omega-platform-navigator` hard-coded
+`style="display:none"` on `#app`, which outranks the guard's reveal — removed (the guard
+hides it with `!important` until approval). `profile.html`'s `ACHIEV` read `--crim` at
+parse time, before bg.js injects the sheet, and fell back to a stale `#8B0000`
+(1.97:1); the fallback and two hard-coded copies now use the token's value `#CF6760`.
+`omega-visual-atlas.js` threw `URI malformed` on two filenames containing a literal
+`100%`, aborting `render()` and dropping every later card; it now falls back to the raw
+path.
+
+**Not done here:** the five inert member write policies on the progression tables. Every
+`DROP` through the Supabase connector waits on a confirmation this session cannot give
+(the tool documents that destructive statements may require it) and times out. Drop them
+in the SQL editor.
+
+Verification: `./scripts/ci-local.sh --all` **35/35**; every script step across all
+workflows passes except `supabase-runtime-contract.py`, which needs the live endpoint the
+sandbox proxy blocks.
+
+## Three member-read tables had policies and no grant; Proposal #26's page bindings were dead (2026-10-04)
+
+**Grants (§8.1 class 6c).** A live inventory of tables with RLS policies and no
+`anon`/`authenticated` privilege of any kind returned 128; cross-checked against every
+client `.from('<table>')` in the repo, three were read by pages:
+
+| table | readers | policy |
+|---|---|---|
+| `omega_platform_events` | `omega-eternity-engine.js:115`, `omega-evidence-graph.js:256`, `omega-mission-board.js:149`, `omega-temporal-replay.js:13` | `auth.uid() = actor_user_id` |
+| `omega_platform_evidence` | `omega-evidence-graph.js:257` | `auth.uid() = owner_user_id` |
+| `capability_registry` | `omega-eternity-engine.js:126` | any signed-in user |
+
+Each read failed `42501` before RLS ran, so `eternity.html`, `evidence.html`,
+`missions.html` and `replay.html` showed their "could not be read" states for every
+member. `20261004084744_grant_read_platform_events_evidence_capabilities_20261004`
+grants `SELECT` on the two event tables and, on `capability_registry`, only the five
+columns the page selects (`threat_model`, `dependencies` and the rest stay ungranted).
+Applied live; journal now 337 (`max(version) = 20261004084744`).
+
+Verified by impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`): the
+events' actor (`69842a74…`) sees **7/7**; another approved member (`8a6d85bd…`) sees
+**0** events and **0** evidence rows, and **18/18** capabilities through the granted
+columns. `has_column_privilege('authenticated', …, 'threat_model', 'select')` = false;
+`anon` has no SELECT on either table; `authenticated` still has no INSERT on events.
+The other **125** were checked against the same client list: none is read by a page,
+and every one of the 95 tables pages read exists live with a member SELECT path
+(`element_mastery` excepted — below; `uploads` is a storage bucket).
+
+`supabase/remote-migrations.json`'s `migrations` list had also fallen two entries behind
+its own `versions` list on `main` (`20261004084002`, `20261004084024`); both added with
+the new version, 337/337.
+
+**Proposal #26 (§8.1 classes 2 and 4b).** `06d95737` added page-local "real-time
+geometry binding" scripts to `profile.html`, `cosmos.html` and `ascension.html`. All
+three were dead: they returned at `if (!window.__omegaSB)` — nothing publishes that name
+(bg.js publishes `window.OmegaSB.get()`); `profile.html` queried `element_mastery`,
+which exists neither live nor in `supabase/`; the realtime calls used supabase-js v1's
+`.from().on()`, absent in the vendored v2; and `omega-sculpture.js:1409` reads the
+`data-sculpt-*` attributes once at mount, so a later `setAttribute` would not have moved
+the geometry anyway. Removed, with their orphan `data-sculpt-*-source` hooks.
+`profile.html`'s sculpture label claimed it showed "proficiency in fire, water, earth,
+and air"; it now describes what renders. The shared layer that *is* loaded
+(`omega-sculpture-dataviz.js`) is inert for a different reason, recorded in
+`GAP_ANALYSIS.md` §S rather than wired, because its only real source is dormant.
+
+Verification: `node scripts/verify-runtime.js --pages
+eternity,evidence,missions,replay,profile,cosmos,ascension` — 7/7 PASS.
+
+**`main` was red on three gates when this branch started (`21acf823`)**, each from the
+migration/edge-function PRs merged since #662: `omega-registry.py --check` (census said
+332 migrations, repo had 336 — regenerated); `test_script_help_contract`
+(`supabase-edge-runtime-reconciliation.py` ran its job on `--help` — now prints its
+docstring and exits 0); and `migration-replay-contract.py`, which compares the version
+list *in order* and failed with `missing=[] extra=[]` because
+`remote-migrations.json` listed `…083218` before `…082748` — both lists now sorted by
+version, the order live applies them. After: `./scripts/ci-local.sh --all` **35/35**, and
+every `scripts/*` step referenced by `.github/workflows/` passes except
+`supabase-runtime-contract.py` (needs the live auth endpoint the sandbox proxy 403s) and
+`page-overlap-audit.py` (pinned to the dead self-hosted runner, §8.2).
+
+## Supply-chain Semgrep gate cleared (21 findings); browser evidence measured mid-redirect; registry-sync shell injection (2026-10-04)
+
+**The gate could not say what it found.** `supply-chain-sbom.yml` runs
+`semgrep scan --config=auto --error` and uploads the SARIF to code scanning, so a red
+run logged only `Findings: 22 (22 blocking)`; code scanning returns 403 to this
+session, `--config=auto` needs `semgrep.dev` (egress-blocked), and no SARIF artifact is
+kept. A failure-only step now prints every finding as `rule  file:line` plus a workflow
+annotation. The first dispatched run listed **21** (one had already been fixed, below).
+
+**Real fixes:**
+- `omega-registry-sync.yml` expanded `${{ github.ref_name }}` inside a shell `run:`
+  (`run-shell-injection`, HIGH) — a ref name may carry `$`, `;` or backticks. It now
+  arrives only as `$TARGET_REF`. A sweep of all workflows found no other site.
+- `.claude/skills/verify-in-browser/harness/session.js` built
+  `` `git -C ${ROOT} show ${rev}:${f}` `` for `execSync` (`detect-child-process` ×2): now
+  `execFileSync('git', [...])`, no shell.
+- Three log calls put a variable inside the format string (`unsafe-formatstring`):
+  `omega-devtools.js`, `weekly-digest`, `product-orchestrator` now pass it as a `%s`/`%d`
+  argument. `product-orchestrator` is DEPLOYED, so the source change was deployed as
+  **version 4** (`verify_jwt` kept true; fetched back and compared — identical to the repo
+  apart from that line; the function is dormant behind `autonomous_agents_enabled`) and
+  `docs/runtime/supabase-edge-functions-live.json` updated (`ezbr_sha256 9524fa5e…`, blob
+  `90114578…`); `supabase-edge-runtime-reconciliation.py` passes.
+- `covenant`/`domain-mastery`/`quest-progress`/`seasonal-events.html` used an inline
+  `data:` SVG favicon (`missing-integrity`); now `/favicon.ico` like the other pages.
+- Both local harness HTTP servers bind `127.0.0.1` (`serve.js` listened on all
+  interfaces). `.npmrc` gains `min-release-age=7` — npm 10 (CI's) ignores the key with a
+  warning, recorded in the file; CI already installs exact, weeks-old versions with
+  `--ignore-scripts`.
+
+**Suppressed inline, each with its reason on the line above:** four `RegExp`s whose input
+is already escaped on the same line (`omega-analytics.js`, `omega-speed-insights.js`,
+`omega-search.js`, `omega-search-enhanced.js`); git's blob SHA-1 (an identity, now
+`usedforsecurity=False`); the two `urllib` calls (now refusing any non-`https://` URL
+first); the loopback test servers and their repo-controlled `path.join`s. Semgrep
+matches `nosemgrep: <id>` by **suffix**, so the comment uses the rule's last segment: the
+full registry id silently fails to match when the rules run from a local checkout (tested
+on a three-variant fixture). Verified locally with the same rule files cloned from
+`semgrep/semgrep-rules`: 12 findings on the touched files before, **0** after.
+
+**Browser release evidence (`tests/release/browser.spec.cjs`) never measured a page.**
+Its failures on `main` were not accessibility violations: every one was
+`Execution context was destroyed … because of a navigation` or `ERR_ABORTED`. A
+signed-out visitor is redirected client-side (bg.js's guard, e.g. `dashboard.html` →
+`account.html`) just after DOMContentLoaded, and axe / `page.evaluate` ran during the hop.
+The spec now settles on the page the visitor lands on (`visit` + `settle`, one retry if a
+late redirect interrupts), reads HTTP reachability with `page.request.get` instead of a
+racing `goto`, and gives the 18-route walk its own timeout. Run locally against a static
+server with `@playwright/test@1.63.0` + `@axe-core/playwright@4.13.0` (CI's versions):
+**before 9/11, after 11/11, twice**. Production is egress-blocked here, so the live run is
+CI's.
+
+**Not done:** the full migration replay (`GAP_ANALYSIS.md` §S — needs an edit to an
+applied migration, refused by this session's permission policy) and the five inert
+policies (DROP confirmation never reaches the user).
+
+**Follow-up, same PR:** with Semgrep green, the Trivy steps ran for the first time on any
+branch and the second SARIF upload was refused — `only one run of the codeql/analyze or
+codeql/upload-sarif actions is allowed per job per tool/category` (both Trivy uploads
+report tool `Trivy` under the default category). The config upload now sets
+`category: trivy-config`; the two existing uploads keep their default category so their
+code-scanning alert history is not orphaned. The filesystem scan itself passed (no
+HIGH/CRITICAL fixable vulnerability) and the config scan found 0 config files.

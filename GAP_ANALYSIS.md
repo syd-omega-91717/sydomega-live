@@ -827,22 +827,23 @@ open, recorded in `FIXES_LOG.md`:
   `.from().on()` realtime API, were removed. Wiring the layer needs a real
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
-- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`).
-  Owner-approved fixes so far, each to a version recorded as applied in live
-  `supabase_migrations.schema_migrations` (so a no-op there): #129 (#707), #158 (#708),
-  and #160, #165, #192 (+`…010951`), #198, #244, #275, #280 (+`…073936`), #305, #333
-  (this PR). The fixes are existence guards, plus three tables captured from live:
-  `organizations`, `omega_agents` with its 12 seeded rows, and the
-  `academy_progress`/`task_completions` legacy columns. One real bug was fixed too: #160
-  wrapped trigger functions in SQL. A local replay (PG16 + pg_cron + platform stub) now
-  stops at **#334** `20261004083218_governed_ai_memory_embedding_storage`: it reads
-  `ai_memory.memory`, a column live has (`memory`, `owner_id`, `importance`, … added
-  out-of-band) and the chain never adds. The proposed fix, `add column if not exists memory
-  text` before its backfill, is **open, owner decision**. #335–#338 are unmeasured.
-  **Drift that does not block the replay:**
-  - `task_completions.id` is `bigint` live and `uuid` on a fresh database;
-  - live `search_index` is not the shape `0016` declares;
+- **The full migration replay — CLOSED locally 2026-10-04** (`supabase-full-migration-replay.yml`).
+  A fresh replay (PG16 + pg_cron + platform stub) now applies **all 337 migrations**, after
+  owner-approved edits to versions already recorded as applied in live
+  `supabase_migrations.schema_migrations` (a no-op there):
+  - #129 (#707) and #158 (#708);
+  - #160–#333 (#709);
+  - #334 `20261004083218`, which adds the legacy `ai_memory.memory` column before its backfill.
+
+  `FIXES_LOG.md` has the per-migration detail. Confirm on GitHub's real-Supabase run before
+  calling it closed there.
+
+  **Drift that remains, and does not block replay:**
+  - `task_completions.id` is `bigint` live and `uuid` fresh;
+  - live `search_index` is not `0016`'s shape;
   - live `ai_memory` is a union of two shapes.
+
+  A database rebuilt from the repo is therefore structurally close to live, not identical.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

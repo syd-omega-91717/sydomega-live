@@ -24,7 +24,11 @@
 -- owner_manage_ads and read_approved_ads existed on public.advertisements,
 -- no INSERT policy for a non-owner member.
 --
--- Idempotent (DO $ BEGIN
+-- Idempotent (DROP POLICY IF EXISTS; CREATE POLICY), safe to re-run.
+-- Applied to the live database and verified — see CLAUDE.md §8.
+-- ============================================================================
+
+DO $ BEGIN
   IF to_regclass('public.advertisements') IS NOT NULL THEN
     DROP POLICY IF EXISTS "member submits own ad" ON public.advertisements;
     CREATE POLICY "member submits own ad" ON public.advertisements

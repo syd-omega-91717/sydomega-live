@@ -33,7 +33,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 .github/workflows/supabase-full-migration-replay.yml starts an isolated Supabase stack and runs supabase db reset, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
 
-The reconciled repository/live target is 336 migrations, with the latest registered version 20261004084024_harden_privacy_export_invoker_20261004. A successful inventory check is not itself proof that the full database replay passed; the workflow must complete the isolated reset and subsequent security/hardening tests.
+The reconciled repository/live target is 336 migrations, with the latest registered version 20261004084024_harden_privacy_export_invoker_20261004. Live migration journal verification and the post-change Security Advisor check were observed on 2026-10-04; the only remaining Security Advisor finding is the external leaked-password-protection setting. A successful inventory check is not itself proof that the full database replay passed; the workflow must complete the isolated reset and subsequent security/hardening tests.
 
 ## Provider blockers
 

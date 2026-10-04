@@ -1,3 +1,31 @@
+-- Canonical table bootstrap. The production table existed before this registry seed
+-- was versioned, which made a fresh migration replay non-reproducible.
+CREATE TABLE IF NOT EXISTS public.omega_knowledge_sources (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  canonical_url text,
+  title text NOT NULL,
+  publisher text,
+  author text,
+  published_at timestamptz,
+  retrieved_at timestamptz NOT NULL DEFAULT now(),
+  license text,
+  source_type text NOT NULL DEFAULT 'public',
+  provenance jsonb NOT NULL DEFAULT '{}'::jsonb,
+  quality_score numeric,
+  status text NOT NULL DEFAULT 'pending',
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS omega_knowledge_sources_url_uq
+  ON public.omega_knowledge_sources(canonical_url)
+  WHERE canonical_url IS NOT NULL;
+ALTER TABLE public.omega_knowledge_sources ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS omega_deny_by_default ON public.omega_knowledge_sources;
+CREATE POLICY omega_deny_by_default
+  ON public.omega_knowledge_sources
+  FOR ALL TO anon, authenticated
+  USING (false)
+  WITH CHECK (false);
+
 -- SYD OMEGA 91717 trusted engineering source registry
 -- Idempotent reference data for the knowledge/provenance layer.
 BEGIN;

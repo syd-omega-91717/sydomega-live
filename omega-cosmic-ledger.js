@@ -12,16 +12,30 @@ var bodies=[
 {id:'uranus',name:'URANUS',state:'R&D',role:'Architectural change and unconventional infrastructure motif.',note:'Production mapping: controlled experimentation and architecture evolution.'},
 {id:'neptune',name:'NEPTUNE',state:'R&D',role:'Deep-network, unknowns and frontier-research motif.',note:'Production mapping: resilience research, provider failover and future systems.'}
 ];
-function esc(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function detail(b){var n=document.getElementById('cosmic-ledger-detail');if(!n)return;n.innerHTML='<strong>'+esc(b.name)+'</strong><br>'+esc(b.role)+'<br>'+esc(b.note)+' <span style="color:#e8c97a">'+esc(b.state)+'</span>';}
+function detail(b){
+ var n=document.getElementById('cosmic-ledger-detail');if(!n)return;
+ n.textContent='';
+ var h=document.createElement('strong');h.textContent=b.name;
+ var r=document.createElement('span');r.textContent=b.role;
+ var note=document.createElement('span');note.textContent=b.note;
+ var state=document.createElement('span');state.textContent=' '+b.state;state.style.color='#e8c97a';
+ n.appendChild(h);n.appendChild(document.createElement('br'));n.appendChild(r);
+ n.appendChild(document.createElement('br'));n.appendChild(note);n.appendChild(state);
+}
 function boot(){
-var grid=document.getElementById('cosmic-ledger-cards');if(grid)grid.textContent='';
-bodies.forEach(function(b){
-var p=document.querySelector('[data-body="'+b.id+'"]');if(p)p.addEventListener('click',function(){detail(b);});
-if(grid){var c=document.createElement('article');c.className='cl-card';var h=document.createElement('h3');h.textContent=b.name;var d=document.createElement('p');d.textContent=b.role+' '+b.note;var s=document.createElement('span');s.className='cl-state';s.textContent=b.state;c.appendChild(h);c.appendChild(d);c.appendChild(s);grid.appendChild(c);}
-});
-var sun=document.querySelector('.cl-sun');if(sun)sun.addEventListener('click',function(){detail(bodies[0]);});
-detail(bodies[3]);
+ var grid=document.getElementById('cosmic-ledger-cards');if(grid)grid.textContent='';
+ bodies.forEach(function(b){
+  var p=document.querySelector('[data-body="'+b.id+'"]');if(p)p.addEventListener('click',function(){detail(b);});
+  if(grid){
+   var c=document.createElement('article');c.className='cl-card';
+   var h=document.createElement('h3');h.textContent=b.name;
+   var d=document.createElement('p');d.textContent=b.role+' '+b.note;
+   var s=document.createElement('span');s.className='cl-state';s.textContent=b.state;
+   c.appendChild(h);c.appendChild(d);c.appendChild(s);grid.appendChild(c);
+  }
+ });
+ var sun=document.querySelector('.cl-sun');if(sun)sun.addEventListener('click',function(){detail(bodies[0]);});
+ detail(bodies[3]);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 window.OmegaCosmicLedger={bodies:bodies};

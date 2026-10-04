@@ -36,6 +36,8 @@ function boot(){
  });
  var sun=document.querySelector('.cl-sun');if(sun)sun.addEventListener('click',function(){detail(bodies[0]);});
  detail(bodies[3]);
+ showHash();
+ window.addEventListener('hashchange',showHash);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 window.OmegaCosmicLedger={bodies:bodies};

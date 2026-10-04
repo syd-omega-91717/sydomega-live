@@ -9,7 +9,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 | Supabase security | Security Advisor has zero actionable findings | BLOCKED — leaked-password protection is disabled on the provider side |
 | RLS performance | Advisor has zero RLS init-plan findings | PASS |
 | RPC privilege | High-risk client RPCs are invoker/search-path hardened | PASS |
-| Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 334-FILE RUN |
+| Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 336-FILE RUN |
 | Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → reversal | BLOCKED — live provider proof required |
 | Disaster recovery | Provider restore drill with measured RPO/RTO | BLOCKED — provider restore proof required |
 | Privacy lifecycle | Export/delete/retention exercised against controlled data | PARTIAL — implementation exists; full lifecycle evidence remains |
@@ -33,7 +33,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 .github/workflows/supabase-full-migration-replay.yml starts an isolated Supabase stack and runs supabase db reset, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
 
-The reconciled repository/live target is 334 migrations, with the latest registered version 20261004083218_governed_ai_memory_embedding_storage_20261004. A successful inventory check is not itself proof that the full database replay passed; the workflow must complete the isolated reset and subsequent security/hardening tests.
+The reconciled repository/live target is 336 migrations, with the latest registered version 20261004084024_harden_privacy_export_invoker_20261004. A successful inventory check is not itself proof that the full database replay passed; the workflow must complete the isolated reset and subsequent security/hardening tests.
 
 ## Provider blockers
 

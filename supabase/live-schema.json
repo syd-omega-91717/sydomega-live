@@ -14,10 +14,10 @@
     "are applied live: it is dated evidence, not a target. The query that",
     "produced it is in supabase/live-schema.README.md."
   ],
-  "_captured": "2026-10-03",
+  "_captured": "2026-10-04",
   "_project": "ydqhzvvoyufiiqvzcjns",
   "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
-  "_table_count": 273,
+  "_table_count": 274,
   "tables": {
     "public.signups": [
       "id",
@@ -3044,6 +3044,23 @@
       "failed",
       "avg_duration_ms",
       "last_executed"
+    ],
+    "public.ai_memory_embeddings": [
+      "id",
+      "memory_id",
+      "user_id",
+      "provider_code",
+      "model",
+      "model_version",
+      "dimensions",
+      "embedding",
+      "content_hash",
+      "status",
+      "attempt_count",
+      "last_error_code",
+      "generated_at",
+      "created_at",
+      "updated_at"
     ]
   }
 }

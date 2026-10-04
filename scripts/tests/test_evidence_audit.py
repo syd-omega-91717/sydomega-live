@@ -281,6 +281,19 @@ class TestLiveSchemaCrossCheck(EvidenceAuditFixture):
         self.assertIn('absent from the live snapshot (2026-08-29): 0', out)
         self.assertIn('No absent relation is read by any page', self.report())
 
+    def test_schema_qualified_snapshot_keys_match_bare_names(self):
+        """live-schema.json switched to "public.x" keys on 2026-10-01; the bag's
+        names are bare. Unnormalised, every declared relation read as absent
+        (204 of 204) -- a scanner reporting everything is as blind as one
+        reporting nothing."""
+        self.write('nav.js', "var PS={'alpha':'X'};")
+        self.write('alpha.html',
+                   "<html><script>sb.from('real_table').select('*')</script></html>")
+        self.write('supabase/a.sql', 'CREATE TABLE public.real_table (id uuid);')
+        self._snapshot(['public.real_table'])
+        out = self.audit_stdout()
+        self.assertIn('absent from the live snapshot (2026-08-29): 0', out)
+
     def test_missing_snapshot_reports_not_checked_not_zero(self):
         """A missing snapshot and a clean one must not look identical.
 

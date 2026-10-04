@@ -33,9 +33,14 @@ open, recorded in `FIXES_LOG.md`:
   revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
   agent session cannot give, so run in the SQL editor:
   `drop policy quest_completions_member_insert on public.quest_completions;` (and the
-  other four), then add the matching migration file.
-- **Leaked-password protection is off** (Supabase security advisor). Dashboard-only:
-  Authentication → Policies (password strength / HaveIBeenPwned). No API path from here.
+  other four), then add the matching migration file. Retried 2026-10-04 with the
+  owner present: the confirmation still never surfaced; live count still 5.
+- **Leaked-password protection is off** (Supabase security advisor; issue #375). The
+  control requires the **Pro** plan (`get_organization` reports `free`), so no SQL or
+  repo change can enable it. Once on Pro: Authentication → Policies → Password Security,
+  or `scripts/enable-supabase-hibp.py` with an owner access token. Compensating
+  control today: `omega-password-guard.js` (HIBP k-anonymity at sign-up and reset),
+  which direct Auth API calls bypass.
 - **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
   `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
   `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid
@@ -57,10 +62,10 @@ open, recorded in `FIXES_LOG.md`:
   mapping `supabase/functions/*` `.from()` calls to table grants would make this a gate
   rather than a checklist.
 - **The Guide is English-only** (opened 2026-09-26). `omega-guide.js` holds its 26 answers as English strings, not `T_EN` keys, so the six packs do not reach it. Keying them means 26 × 7 entries through the i18n contract, which is worth doing once the wording settles.
-- **`find_contradictions` does not exist** (opened 2026-09-26).
-  `graphify-ai-query/index.ts:252` calls it and only logs a warning when it fails, so the
-  anomaly report's contradiction list is always empty. The function is not deployed, so
-  no member sees it yet.
+- **CLOSED 2026-10-04 — `find_contradictions` exists** (opened 2026-09-26). Defined in
+  `20261003085246` (+ `20261003085318` pinning `search_path`) and present live
+  (`pg_proc` count 1). Its only caller, `graphify-ai-query`, is still `LOCAL_ONLY` in
+  `docs/runtime/supabase-edge-functions-live.json`, so no member reaches it yet.
 
 - **The concept art and the canon disagree in three places now** (opened
   2026-09-13; `FIXES_LOG.md` 139, 141). Not a bug — a **decision the owner has
@@ -835,12 +840,6 @@ open, recorded in `FIXES_LOG.md`:
   edits an applied migration, though, which CLAUDE.md §5 forbids, and the edit
   was refused by this session's permission policy. **Owner decision.** Further
   gaps past #129 are unmeasured until this one is resolved.
-- **Five inert progression write policies** (`covenant_member_update`,
-  `domain_mastery_member_update`, `leaderboard_member_update`,
-  `quest_completions_member_insert`, `quest_completions_member_update`) are still
-  live. A DROP through the connector waits on a confirmation that never reaches
-  the user and times out; retried 2026-10-04, still 5. Run in the SQL editor:
-  `drop policy if exists <name> on public.<table>;` for each.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

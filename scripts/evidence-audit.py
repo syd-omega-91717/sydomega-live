@@ -279,7 +279,14 @@ def live_surface():
     tables = data.get('tables')
     if not isinstance(tables, dict) or not tables:
         return None, None
-    return {str(k).lower() for k in tables}, str(data.get('_captured', 'unknown'))
+    # Keys became schema-qualified ("public.profiles") on 2026-10-01 (f1fb10ce)
+    # while the bag's names are bare, so every declared relation read as absent
+    # live (204 of 204). Normalise to bare names.
+    live = set()
+    for k in tables:
+        k = str(k).lower()
+        live.add(k[len('public.'):] if k.startswith('public.') else k)
+    return live, str(data.get('_captured', 'unknown'))
 
 
 def live_gap(rows, rels, live):

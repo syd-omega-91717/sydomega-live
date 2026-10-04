@@ -1,0 +1,42 @@
+# Gitleaks configuration: the default ruleset plus narrow allowlists for values
+# that are public or not secrets at all. Measured 2026-10-04 on the full history
+# (8,224 commits): all 41 default-rule matches were one of these four shapes.
+#
+# Never allowlist a value because it is inconvenient. A Supabase *secret* key
+# (sb_secret_...) or a service_role JWT must still fail this scan.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public client credentials and non-secret identifiers"
+regexTarget = "match"
+regexes = [
+  # Supabase publishable key: shipped to every browser by design (bg.js).
+  '''sb_publishable_[A-Za-z0-9_-]+''',
+  # The project's legacy anon JWT (role=anon), equally public. Pinned to this
+  # project's ref so a service_role token or another project's key still fails.
+  '''eyJ[A-Za-z0-9_-]+\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkcWh6dnZveXVmaWlxdnpjam5zIiwicm9sZSI6ImFub24i[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+''',
+  # localStorage key *names* (e.g. HABITS_KEY = 'omega_habits_v1'), not secrets.
+  '''(?i)[A-Z_]*_KEY\s*=\s*['"]omega_[a-z0-9_]+['"]''',
+  '''key:\s*'omega_[a-z0-9_]+_v[0-9]+''',
+]
+commits = [
+  # A fabricated placeholder JWT (ref misspelled "ydqhzvvoyfuiiqvzcns", round
+  # iat 1687000000) that graphify.html carried until 77f14076 replaced it with
+  # the real publishable key. Not a credential for any project; history only.
+  'ed0a0c3a0fff1409c402dd1304552096b61b65fc',
+]
+paths = [
+  # SHA-1 of the literal word "password": the public HIBP test vector.
+  '''scripts/tests/test_password_guard\.py''',
+]
+
+# The default ruleset has no rule for Supabase's new-format secret key, which
+# bypasses RLS like service_role. Proven missing on 2026-10-04 with a planted
+# sb_secret_ value that the defaults let through.
+[[rules]]
+id = "supabase-secret-key"
+description = "Supabase secret API key (sb_secret_...)"
+regex = '''sb_secret_[A-Za-z0-9_-]{20,}'''
+keywords = ["sb_secret_"]

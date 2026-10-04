@@ -802,6 +802,15 @@
       function finish(row, instant) {
         var won = row.w === s.answer, game = s;
         if (won || s.rows.length >= 6) s.done = true;
+        /* The daily word is one of omega-daily.js's rituals; tell it the day's
+           puzzle is finished (also when restored from today's saved guesses). */
+        if (s.done && mode === 'daily') {
+          try {
+            document.dispatchEvent(new CustomEvent('omega-arcade:daily', {
+              detail: { game: 'oracle', day: dayKey(), won: won, guesses: s.rows.length }
+            }));
+          } catch (e) { /* old browser */ }
+        }
         h.later(function () {
           if (game !== s) return;   /* a new puzzle started meanwhile */
           row.shown = true;

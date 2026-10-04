@@ -6,6 +6,7 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Command Bridge</title>
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-daily.js" defer></script>
 <style>
 :root{--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
@@ -125,15 +126,12 @@
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
       <div class="ss-item"><div class="ss-label" data-i18n="active_members">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="auth_apex">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="lattice_nodes">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="js_engines">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="pages">PAGES</div><div class="ss-val" style="--vc:var(--green)">170</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="sql_files">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="formula">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:12px">A&#179;+B&#179;+C&#179;</div></div>
     </div>
+
+    <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
+    <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>

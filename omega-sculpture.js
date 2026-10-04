@@ -450,6 +450,103 @@
     }};
   };
 
+  /* ── SOLAR SYSTEM LEDGER ─────────────────────────────────────────────
+     Historical source DNA calls for a planetary/cosmic ledger. This scene
+     realizes that idea through the existing single WebGL owner. It is a
+     symbolic information architecture: it does not claim ownership,
+     extraterrestrial infrastructure, astronomical authority, or a financial
+     ledger. The Sun plus the eight canonical planets are deliberately
+     readable rather than astronomically to-scale, because this is a product
+     map, not a scientific simulator. Each body is a real navigable destination
+     on the canonical cosmic-ledger page.
+     ───────────────────────────────────────────────────────────────────── */
+  SCENES['solar-system'] = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(42, 1, 0.1, 100);
+    cam.position.set(0, 4.8, 8.4);
+    rig(T, scene, p);
+    starfield(T, scene, 360, 30, p.cyan);
+
+    var system = new T.Group();
+    system.rotation.x = -0.22;
+    scene.add(system);
+
+    var bodies = [
+      {id:'sun',name:'SOLAR CORE',radius:0.52,color:p.solar,emissive:p.gold,orbit:0,href:'#sun',phase:0},
+      {id:'mercury',name:'MERCURY',radius:0.11,color:0x9b9284,emissive:0x5b5147,orbit:1.15,href:'#mercury',phase:0.2},
+      {id:'venus',name:'VENUS',radius:0.15,color:0xc99d68,emissive:0x6e5034,orbit:1.62,href:'#venus',phase:1.1},
+      {id:'earth',name:'EARTH',radius:0.17,color:0x2c8baa,emissive:0x17465a,orbit:2.15,href:'#earth',phase:2.0},
+      {id:'mars',name:'MARS LEDGER',radius:0.14,color:0xb64e39,emissive:0x5e2118,orbit:2.72,href:'#mars',phase:2.7},
+      {id:'jupiter',name:'JUPITER',radius:0.31,color:0xd8b889,emissive:0x62452f,orbit:3.42,href:'#jupiter',phase:3.4},
+      {id:'saturn',name:'SATURN',radius:0.27,color:0xc7b17f,emissive:0x68572f,orbit:4.20,href:'#saturn',phase:4.0},
+      {id:'uranus',name:'URANUS',radius:0.21,color:0x79c8cf,emissive:0x315e63,orbit:5.05,href:'#uranus',phase:4.8},
+      {id:'neptune',name:'NEPTUNE',radius:0.21,color:0x315fc1,emissive:0x172c67,orbit:5.88,href:'#neptune',phase:5.5}
+    ];
+    var links=[], nodes=[];
+    var orbitRadii=[1.15,1.62,2.15,2.72,3.42,4.20,5.05,5.88];
+
+    orbitRadii.forEach(function(r,i){
+      var torus=new T.Mesh(new T.TorusGeometry(r,0.009,8,160),
+        new T.MeshBasicMaterial({color:i%2?p.gold:p.cyan,transparent:true,opacity:0.20}));
+      torus.rotation.x=Math.PI/2;
+      system.add(torus);
+    });
+
+    bodies.forEach(function(b,i){
+      var mat=new T.MeshStandardMaterial({
+        color:b.color, emissive:b.emissive, emissiveIntensity:b.id==='sun'?1.15:0.28,
+        metalness:b.id==='sun'?0.25:0.72, roughness:b.id==='sun'?0.30:0.38
+      });
+      var mesh=new T.Mesh(new T.SphereGeometry(b.radius,24,16),mat);
+      var holder=new T.Group();
+      holder.rotation.y=b.phase;
+      holder.add(mesh);
+      if(b.id!=='sun'){
+        mesh.position.x=b.orbit;
+      }
+      if(b.id==='saturn'){
+        var ring=new T.Mesh(new T.TorusGeometry(0.38,0.025,8,64),
+          new T.MeshStandardMaterial({color:p.gold,emissive:p.gold,emissiveIntensity:0.18,metalness:0.9,roughness:0.3}));
+        ring.rotation.x=Math.PI/2.6;
+        mesh.add(ring);
+      }
+      system.add(holder);
+      nodes.push({mesh:mesh,holder:holder,phase:b.phase,orbit:b.orbit,id:b.id});
+      links.push({object:mesh,href:'/cosmic-ledger.html'+b.href,label:b.name});
+    });
+
+    var coreHalo=new T.Mesh(
+      new T.SphereGeometry(0.72,24,16),
+      new T.MeshBasicMaterial({color:p.gold,transparent:true,opacity:0.055,blending:T.AdditiveBlending,depthWrite:false})
+    );
+    system.add(coreHalo);
+
+    return {
+      scene:scene,camera:cam,links:links,
+      update:function(t,px,py){
+        var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(!reduced) system.rotation.y=t*0.055+px*0.35;
+        for(var i=0;i<nodes.length;i++){
+          var n=nodes[i];
+          if(n.id==='sun'){
+            n.mesh.rotation.y=reduced?0:t*0.12;
+            n.mesh.material.emissiveIntensity=reduced?1.0:1.0+Math.sin(t*1.2)*0.18;
+            continue;
+          }
+          if(!reduced) n.holder.rotation.y=n.phase+t*(0.035+0.010*i);
+          n.mesh.rotation.y=reduced?0:t*(0.18+0.02*i);
+          if(!n.mesh.userData.omegaHovered){
+            var pulse=reduced?1:1+Math.sin(t*1.1+n.phase)*0.035;
+            n.mesh.scale.setScalar(pulse);
+          }
+        }
+        cam.position.y=4.8-py*0.8;
+        cam.lookAt(0,0,0);
+      }
+    };
+  };
+
   /* ── ELEMENTS ─────────────────────────────────────────────────────────
      The nine, arranged as the canon groups them rather than as a flat ring:
      PHYSICAL (5) on the outer orbit, METAPHYSICAL (3) on a smaller, higher
@@ -922,6 +1019,22 @@
     ctx.strokeStyle = gold;
     ctx.lineCap = 'round';
 
+    if (kind === 'solar-system') {
+      ctx.globalAlpha = 0.32; ctx.lineWidth = Math.max(1, R * 0.008);
+      for (var sr = 0; sr < 8; sr++) {
+        ctx.beginPath(); ctx.arc(cx, cy, R * (0.28 + sr * 0.085), 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.globalAlpha = 1; ctx.fillStyle = gold;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 0.16, 0, Math.PI * 2); ctx.fill();
+      var planetColours = [cyan,gold,'#79c8cf','#b64e39','#d8b889','#c7b17f','#79c8cf','#315fc1'];
+      for (var sp = 0; sp < 8; sp++) {
+        var sa = (sp / 8) * Math.PI * 2;
+        ctx.fillStyle = planetColours[sp];
+        ctx.beginPath(); ctx.arc(cx + Math.cos(sa) * R * (0.28 + sp * 0.085),
+          cy + Math.sin(sa) * R * (0.28 + sp * 0.085), Math.max(3,R*(0.025+sp*0.002)), 0, Math.PI*2); ctx.fill();
+      }
+      return;
+    }
     if (kind === 'matrix') {
       ctx.globalAlpha = 0.5; ctx.lineWidth = Math.max(1, R * 0.012);
       for (var gx = -4; gx <= 4; gx++) for (var gy = -4; gy <= 4; gy++) {
@@ -1620,7 +1733,8 @@
     signet: 'The Omega signet, rendered in three dimensions and slowly rotating',
     agents: 'The twelve agent executors in orbit around the Omega core',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
-    gates:  'The twelve gates receding into depth toward the Crystal-Omega'
+    gates:  'The twelve gates receding into depth toward the Crystal-Omega',
+    'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };
 
   /* Only mounts actually on screen are ever rendered. On a page with several

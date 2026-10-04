@@ -22272,3 +22272,17 @@ Issues #686 and #687 closed with run evidence (`Supply Chain and SBOM` 371935635
 `GAP_ANALYSIS.md` §S: duplicate five-policies entry merged; `find_contradictions`
 closed (live, `20261003085246`); leaked-password entry corrected to the real blocker
 (Pro plan, #375).
+
+**Follow-up PR (#704 merged before this commit was pushed) — `main` broken by #703, repaired by removal (owner's decision).**
+#703 merged another session's `quests.html`, `supabase/omega_gamification.sql` and
+`vendor/dompurify.min.js` into `main`, turning three gates red: `page-world-contract`
+(`quests` unassigned), `schema-consolidation-gate` (5 orphan tables — `quests`,
+`characters`, `cosmetic_items`, `cosmetic_purchases`, `progression` — declared only in
+the never-deployed bag; none exist live) and Gitleaks (a JWT literal). The page could not
+work: its fallback anon key decodes to project ref `ydqhzvvoyufiiqvzcjs` (the real ref is
+`…vzcjns`), so every request would be rejected; it built its own client instead of
+`OmegaSB`; and it duplicated the Phase 2 already shipped on live tables (`my-quests.html`,
+`cosmetics.html`). Asked, the owner chose removal over a redirect or a new parallel
+schema. All three files deleted (nothing else referenced them; the jsPDF bundle's
+internal "dompurify" string is unrelated), and `FEATURE_IDEAS.md` #39 is annotated as
+superseded.

@@ -22306,3 +22306,26 @@ editing this applied migration (CLAUDE.md §5 otherwise forbids it); live alread
 never re-runs it. Local replay (PG16 + pg_cron + platform stub): before `FAIL #129`, after `FAIL #158`
 — `20260903015502` references `public.signups`, which exists live but is created by no file in the repo.
 That second gap is recorded in `GAP_ANALYSIS.md` as an owner decision.
+
+**Migration replay gaps #160–#333 closed (owner-approved "all migrations in the #708 table", 2026-10-04).**
+Every edited version is recorded as applied in live `supabase_migrations.schema_migrations` (queried), so
+none re-runs there. Per migration:
+- **#160 `20260903021430`** is a real bug. Its loop moved every SECURITY DEFINER function into `private`
+  and generated a `LANGUAGE sql` wrapper for each, which Postgres rejects for trigger functions. Trigger
+  functions are now excluded; they are not RPC-callable anyway.
+- **#165 `20260904200951`, #305 `20261002084948`:** each index is now built only where its table/columns
+  exist. Live tables drifted out-of-band.
+- **#192 `20260921010158`:** policies were applied to academy tables that `…010951_academy_schema_capture`
+  creates 8 minutes later. The DDL moved into the launch file, plus three `academy_progress` columns that
+  live has but `0015` never added.
+- **#198 `20260921065008`, #275 `20261002020000`:** `organizations` and `omega_agents` were referenced by
+  FKs but created by no file. Both are now captured from live `pg_attribute`/`pg_constraint`, and the 12
+  governed agents are seeded from live rows (`on conflict do nothing`). `20261002072542` fails closed
+  without them.
+- **#244 `20260928200648`:** owner assignment is skipped when `auth.users` is empty, i.e. on a fresh DB.
+- **#280 `20261002025000` + `20261002073936`:** the legacy event/evidence tables are upgraded before
+  durable-shape indexes are built, and the legacy-only UPDATEs run only when the legacy shape is present.
+- **#333 `20261004082748`:** adds `task_completions.axis`/`increment` with live types.
+
+Local replay: before, `FAIL #160`; after, it passes 333 migrations and stops at **#334**
+(`ai_memory.memory`, recorded in `GAP_ANALYSIS.md` as the next owner decision).

@@ -19,6 +19,108 @@
 -- private.is_platform_owner(), auth.uid() wrapped in a select per the
 -- rls_initplan optimization already applied platform-wide.
 
+-- Table DDL (moved here 2026-10-04 from 20260921010951_academy_schema_capture.sql,
+-- which ran after this file; idempotent, a no-op live).
+create table if not exists public.academy_categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null,
+  description text,
+  icon text,
+  color text,
+  created_at timestamptz default now(),
+  constraint academy_categories_slug_key unique (slug)
+);
+
+create table if not exists public.academy_courses (
+  id uuid primary key default gen_random_uuid(),
+  category_id uuid references public.academy_categories(id),
+  instructor_id uuid references public.profiles(id),
+  title text not null,
+  slug text not null,
+  description text,
+  thumbnail text,
+  difficulty text default 'Beginner',
+  language text default 'English',
+  duration_minutes integer default 0,
+  xp_reward integer default 100,
+  published boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  constraint academy_courses_slug_key unique (slug)
+);
+
+create table if not exists public.academy_modules (
+  id uuid primary key default gen_random_uuid(),
+  course_id uuid references public.academy_courses(id) on delete cascade,
+  title text not null,
+  description text,
+  sort_order integer default 1,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.academy_lessons (
+  id uuid primary key default gen_random_uuid(),
+  module_id uuid references public.academy_modules(id) on delete cascade,
+  title text not null,
+  lesson_type text default 'video',
+  video_url text,
+  article text,
+  attachment text,
+  duration_minutes integer default 0,
+  xp_reward integer default 20,
+  sort_order integer default 1,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.academy_enrollments (
+  id uuid primary key default gen_random_uuid(),
+  course_id uuid references public.academy_courses(id) on delete cascade,
+  profile_id uuid references public.profiles(id) on delete cascade,
+  progress numeric default 0,
+  completed boolean default false,
+  enrolled_at timestamptz default now(),
+  constraint academy_enrollments_course_id_profile_id_key unique (course_id, profile_id)
+);
+
+-- academy_progress and academy_access already had real RLS and grants
+-- (confirmed live) and are captured for the same reason as the tables
+-- above -- they were also missing from every file in this repo.
+create table if not exists public.academy_progress (
+  id uuid primary key default gen_random_uuid(),
+  enrollment_id uuid references public.academy_enrollments(id) on delete cascade,
+  lesson_id uuid references public.academy_lessons(id),
+  completed boolean,
+  completed_at timestamptz,
+  user_id uuid references auth.users(id) on delete cascade,
+  node_id text,
+  xp_awarded integer,
+  created_at timestamptz default now(),
+  constraint academy_progress_user_node_unique unique (user_id, node_id)
+);
+-- 0015_academy_progress.sql created this table first with an older shape, so
+-- the statement above is a no-op on a fresh database; live gained these three
+-- columns out-of-band. Reconcile idempotently (a no-op live).
+alter table public.academy_progress
+  add column if not exists enrollment_id uuid references public.academy_enrollments(id) on delete cascade,
+  add column if not exists lesson_id uuid references public.academy_lessons(id),
+  add column if not exists completed_at timestamptz;
+
+create table if not exists public.academy_access (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  expires_at timestamptz,
+  stage integer,
+  updated_at timestamptz default now()
+);
+
+alter table public.academy_categories enable row level security;
+alter table public.academy_courses enable row level security;
+alter table public.academy_modules enable row level security;
+alter table public.academy_lessons enable row level security;
+alter table public.academy_enrollments enable row level security;
+alter table public.academy_progress enable row level security;
+alter table public.academy_access enable row level security;
+
 insert into public.platform_settings (key, bool_value)
 values ('courses_enabled', false)
 on conflict (key) do nothing;

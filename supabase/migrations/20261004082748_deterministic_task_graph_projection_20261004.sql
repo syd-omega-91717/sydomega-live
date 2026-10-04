@@ -1,3 +1,12 @@
+-- (2026-10-04, owner-approved) Live task_completions carries legacy columns
+-- the migration chain never adds (types copied from live pg_attribute); the
+-- trigger below names `axis`, so a fresh `supabase db reset` failed here.
+-- A no-op live. Known remaining drift: live `id` is bigint, a fresh
+-- database's is uuid (GAP_ANALYSIS.md).
+ALTER TABLE public.task_completions
+  ADD COLUMN IF NOT EXISTS axis text DEFAULT 'a',
+  ADD COLUMN IF NOT EXISTS increment numeric(6,4) DEFAULT 0.001;
+
 CREATE OR REPLACE FUNCTION public.project_task_completion_to_graph(p_task_id bigint)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp AS $$
 DECLARE r public.task_completions%ROWTYPE; v_task_entity uuid; v_axis_entity uuid; v_relationship uuid; v_evidence uuid;

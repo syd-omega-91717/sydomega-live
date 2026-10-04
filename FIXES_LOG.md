@@ -22348,3 +22348,23 @@ Re-verified with the faithful stub: `ALL 337 APPLIED`. `migration-replay-contrac
 `supabase-migration-security-audit` PASSED, `test_rls_rpc_performance_hardening` OK. Method note: a local
 stub that defines what the real stack lacks turns a replay into a false pass. Check every stub definition
 against the pinned CLI's stack.
+
+**Calm by default, living images, readable KPI tiles, member sign art (2026-10-04).**
+The owner said they "still can't see a major change", pages carry too much text and are "disturbing", and every image should be alive.
+- **Render of `horoscope.html` at 1280.** The page's own content sat below the fold under injected chrome: the `omega-value-layer` banner, the `omega-page-world` strip, the `omega-kbd-hint` toast, the dedication timer, the ticker, and share/feedback buttons.
+- **Calm mode.** A calm mode already existed in `bg.js` but was opt-in, `localStorage omega_calm==='1'`. It is now on unless explicitly `'0'`. Its hide list gained `#omega-value-layer`, `#omega-page-world` and `#omega-kbd-hint`. The Settings toggle and the owner deck share the same `OmegaCalm`.
+- **KPI tiles.** Every `.kpi-card` rendered as a solid accent block: lilac `rgb(171,130,242)` at opacity .8 behind gold numerals on cosmos pages.
+  - Cause: `css/omega-cinematic-animations-phase1.css` set `background:var(--card-accent)` on `.kpi-card::before`. That pseudo is the full-cover sheen from `omega-visual-evolution.css` (inset:0), not `.card`'s 2px bar.
+  - Fix: `.kpi-card` removed from those two selectors. Re-render shows dark glass tiles.
+- **`omega-living-art.js`.** New, injected by bg.js behind `data-omega-living-art`. Every `<img>` rendered at ≥72px outside the nav gets:
+  - an idle breath via individual `scale`/`translate` properties, which compose with tilt;
+  - an accent glow and a pointer tilt;
+  - IntersectionObserver gating, a ResizeObserver size read (§8.1 class 3) and reduced-motion respect.
+- **`horoscope.html`.** Shows the member's own sign art (`/assets/legacy/sign-<sign>.webp`) only when `profiles.sign` is recorded. The pre-existing `si<0 → Aries` stand-in no longer drives the art.
+- **`omega-legacy-constellation.js`.** Drops the raw filename under every artwork and replaces the 40-word disclaimer with one line.
+- **Verification.** `verify-runtime.js` passes on horoscope, settings, dashboard, world and profile. Horoscope's art has class `ola-art ola-on`, animation `ola-breathe`, 0 page errors. `test_legacy_assets`/`test_source_dna` OK. Unit suite OK. `audit.py` 0 critical.
+
+**Migration replay green on real Supabase for the first time (2026-10-04).** `Supabase Full Migration Replay`
+run 37211479551 on `main` (`21febb81`, after #711; CLI 2.119.0), job 111463394701: every step `success`. Those
+steps were `Replay every migration from zero` (15:03:49–15:04:20), the post-replay inventory, the migration
+security audit and the hardening contract. `GAP_ANALYSIS.md`'s replay entry is now closed.

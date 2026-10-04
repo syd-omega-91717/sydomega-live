@@ -944,13 +944,17 @@ function __omegaAppend(el){
 (function(){
   var KEY='omega_calm', root=document.documentElement;
   function apply(on){ if(on) root.setAttribute('data-omega-calm',''); else root.removeAttribute('data-omega-calm'); }
-  try{ apply(localStorage.getItem(KEY)==='1'); }catch(e){}
+  /* Default ON since 2026-10-04 (owner: "pages with less text and not disturbing");
+     only an explicit '0' from the toggle turns it off. */
+  var calmOn=true; try{ calmOn=localStorage.getItem(KEY)!=='0'; }catch(e){}
+  apply(calmOn);
   if(!document.getElementById('omega-calm-style')){
     var st=document.createElement('style'); st.id='omega-calm-style';
     st.textContent='html[data-omega-calm] .omega-page-door,html[data-omega-calm] #omega-ticker-strip,'+
       'html[data-omega-calm] #omega-pmi-badge,html[data-omega-calm] #omega-controls-dock,'+
       'html[data-omega-calm] #ofb-btn,html[data-omega-calm] #osh-btn,html[data-omega-calm] #omega-voice-btn,'+
-      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget{display:none!important}'+
+      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget,'+
+      'html[data-omega-calm] #omega-value-layer,html[data-omega-calm] #omega-page-world,html[data-omega-calm] #omega-kbd-hint{display:none!important}'+
       '@media (min-width:901px){html[data-omega-calm] #omega-tb-nav{display:none!important}}';
     (document.head||root).appendChild(st);
   }
@@ -2713,6 +2717,8 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
   /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
   if(!document.querySelector('script[data-omega-alive]')){var _oal=document.createElement('script');_oal.src='/omega-alive.js';_oal.setAttribute('data-omega-alive','1');_oal.defer=true;__omegaAppend(_oal);}
+  /* Ω LIVING ART — every real <img> breathes, glows and tilts (omega-living-art.js header). */
+  if(!document.querySelector('script[data-omega-living-art]')){var _ola=document.createElement('script');_ola.src='/omega-living-art.js';_ola.setAttribute('data-omega-living-art','1');_ola.defer=true;__omegaAppend(_ola);}
   if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */

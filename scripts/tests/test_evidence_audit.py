@@ -294,6 +294,24 @@ class TestLiveSchemaCrossCheck(EvidenceAuditFixture):
         out = self.audit_stdout()
         self.assertIn('absent from the live snapshot (2026-08-29): 0', out)
 
+    def test_table_a_later_migration_drops_is_not_declared(self):
+        """omega_agent_tool_registry was created in one migration and dropped in
+        the next; unreplayed, it read as "declared and never applied"."""
+        self.write('nav.js', "var PS={'alpha':'X'};")
+        self.write('alpha.html', '<html></html>')
+        self.write('supabase/migrations/001_a.sql',
+                   'CREATE TABLE public.gone_table (id uuid);\n'
+                   'CREATE TABLE public.kept_table (id uuid);')
+        self.write('supabase/migrations/002_b.sql',
+                   'drop table if exists public.gone_table cascade;\n'
+                   'alter publication supabase_realtime drop table public.kept_table;')
+        self._snapshot(['something_else'])
+        self.audit_stdout()
+        report = self.report()
+        self.assertNotIn('gone_table', report)
+        # PLANTED POSITIVE: a publication drop leaves the table declared.
+        self.assertIn('kept_table', report)
+
     def test_missing_snapshot_reports_not_checked_not_zero(self):
         """A missing snapshot and a clean one must not look identical.
 

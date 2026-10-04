@@ -6,7 +6,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase/migrations/20261004090000_rls_rpc_performance_hardening_20261004.sql"
+MIGRATION = ROOT / "supabase/migrations/20261004000807_rls_rpc_performance_hardening_20261004.sql"
 
 
 class RlsRpcPerformanceHardeningTests(unittest.TestCase):

@@ -1,15 +1,66 @@
-/* Ω WORLD ATLAS — governed civilization hierarchy. No fake geopolitical or financial claims. */
+/* Ω WORLD ATLAS — governed civilization hierarchy. Data comes from the canonical atlas source registry. */
 (function(){
 'use strict';
-var bodies=[{id:'sun',type:'PLANETARY_CORE',name:'SOLAR CORE',state:'LORE',role:'Central Ω identity and energy metaphor.',parent:null},{id:'mercury',type:'PLANET',name:'MERCURY',state:'LORE',role:'Speed, communication and execution motif.',parent:'sun'},{id:'venus',type:'PLANET',name:'VENUS',state:'LORE',role:'Culture, design and creative expression motif.',parent:'sun'},{id:'earth',type:'PLANET',name:'EARTH',state:'PRODUCTION',role:'Current physical operating context and user/service world.',parent:'sun'},{id:'mars',type:'PLANET',name:'MARS LEDGER',state:'R&D',role:'Continuity, archive, recovery and resilience metaphor.',parent:'sun'},{id:'jupiter',type:'PLANET',name:'JUPITER',state:'R&D',role:'Scale, capacity and hyperscale systems motif.',parent:'sun'},{id:'saturn',type:'PLANET',name:'SATURN',state:'R&D',role:'Governance, boundaries and containment motif.',parent:'sun'},{id:'uranus',type:'PLANET',name:'URANUS',state:'R&D',role:'Controlled architectural change and experimentation.',parent:'sun'},{id:'neptune',type:'PLANET',name:'NEPTUNE',state:'R&D',role:'Frontier research, resilience and unknowns.',parent:'sun'}];
-var nodes=[{id:'earth-world',type:'WORLD',name:'EARTH / OMEGA WORLD',state:'PRODUCTION',role:'Platform world layer.',parent:'earth'},{id:'omega-commonwealth',type:'EMPIRE',name:'Ω COMMONWEALTH',state:'SIMULATION',role:'Simulated civilization layer joining countries, factions and cities.',parent:'earth-world'},{id:'aurelia',type:'COUNTRY',name:'AURELIA',state:'SIMULATION',role:'Knowledge and creation territory.',parent:'omega-commonwealth'},{id:'meridian',type:'COUNTRY',name:'MERIDIAN',state:'SIMULATION',role:'Commerce, services and exchange territory.',parent:'omega-commonwealth'},{id:'vespera',type:'COUNTRY',name:'VESPERA',state:'SIMULATION',role:'Intelligence, research and frontier territory.',parent:'omega-commonwealth'},{id:'omega-prime',type:'CITY',name:'OMEGA PRIME',state:'SIMULATION',role:'Capital city model: command, governance and core services.',parent:'aurelia'},{id:'meridian-gate',type:'CITY',name:'MERIDIAN GATE',state:'SIMULATION',role:'Commerce city model: marketplace, contracts and logistics.',parent:'meridian'},{id:'vesper-nexus',type:'CITY',name:'VESPER NEXUS',state:'SIMULATION',role:'Intelligence city model: research, AI and evidence.',parent:'vespera'},{id:'command-district',type:'DISTRICT',name:'COMMAND DISTRICT',state:'SIMULATION',role:'Command Center, search, missions and decisions.',parent:'omega-prime'},{id:'academy-district',type:'DISTRICT',name:'ACADEMY DISTRICT',state:'SIMULATION',role:'Matrix, academy, skills and progression.',parent:'omega-prime'},{id:'vault-district',type:'DISTRICT',name:'VAULT DISTRICT',state:'SIMULATION',role:'Commerce, payments, portfolio and governed assets.',parent:'meridian-gate'},{id:'research-district',type:'DISTRICT',name:'RESEARCH DISTRICT',state:'SIMULATION',role:'Intelligence, evidence, graph and research.',parent:'vesper-nexus'},{id:'svc-search',type:'SERVICE',name:'GLOBAL SEARCH',state:'PRODUCTION',role:'Evidence-aware platform discovery.',parent:'command-district',route:'/search.html',module:'CORE'},{id:'svc-missions',type:'SERVICE',name:'MISSIONS',state:'PRODUCTION',role:'Server-authoritative mission and evidence workflow.',parent:'command-district',route:'/missions.html',module:'GAMING'},{id:'svc-academy',type:'SERVICE',name:'ACADEMY',state:'PRODUCTION',role:'Progression and learning surface.',parent:'academy-district',route:'/academy.html',module:'EVALUATION'},{id:'svc-market',type:'SERVICE',name:'MARKETPLACE',state:'PRODUCTION',role:'Governed services and commerce surface.',parent:'vault-district',route:'/marketplace.html',module:'BLOCKCHAIN_NFT'},{id:'svc-intel',type:'SERVICE',name:'INTELLIGENCE',state:'PRODUCTION',role:'AI, research and evidence intelligence.',parent:'research-district',route:'/intelligence.html',module:'AI'},{id:'task-command',type:'TASK',name:'VERIFY A COMMAND ACTION',state:'SIMULATION',role:'Example task: execute an authorized command action and attach evidence.',parent:'command-district'},{id:'task-academy',type:'TASK',name:'COMPLETE A VERIFIED LEARNING NODE',state:'SIMULATION',role:'Example task: complete a progression node with evidence.',parent:'academy-district'},{id:'task-market',type:'TASK',name:'COMPLETE A SERVICE ORDER',state:'SIMULATION',role:'Example task: complete a real service order through the governed commerce path.',parent:'vault-district'},{id:'task-research',type:'TASK',name:'PUBLISH AN EVIDENCE-BACKED FINDING',state:'SIMULATION',role:'Example task: produce provenance-linked research output.',parent:'research-district'}];
-var all=bodies.concat(nodes),filter='ALL';
-function kids(id){return all.filter(function(x){return x.parent===id;});} function visible(x){return filter==='ALL'||x.state===filter;}
-function renderScene(){var root=document.getElementById('wa-body-nodes');if(!root)return;root.replaceChildren();bodies.filter(function(x){return x.type==='PLANET';}).forEach(function(p,i){var a=document.createElement('button');a.type='button';a.className='wa-node';var angle=i/8*Math.PI*2;a.style.left=(50+Math.cos(angle)*40)+'%';a.style.top=(50+Math.sin(angle)*35)+'%';a.textContent=p.name;var s=document.createElement('small');s.textContent=p.state;a.appendChild(s);a.addEventListener('click',function(){inspect(p.id);});root.appendChild(a);});}
-function renderItem(x,level){if(!visible(x))return null;var wrap=document.createElement('div');wrap.className='wa-item level-'+Math.min(level,6);wrap.setAttribute('role','treeitem');var btn=document.createElement('button');btn.type='button';var label=document.createElement('span');label.textContent=x.name;var meta=document.createElement('span');meta.className='meta';meta.textContent=x.type+' · '+x.state;btn.appendChild(label);btn.appendChild(meta);btn.addEventListener('click',function(){inspect(x.id);});wrap.appendChild(btn);kids(x.id).filter(visible).forEach(function(k){var child=renderItem(k,level+1);if(child)wrap.appendChild(child);});return wrap;}
-function renderTree(){var root=document.getElementById('wa-tree');if(!root)return;root.replaceChildren();all.filter(function(x){return x.parent===null;}).forEach(function(x){var item=renderItem(x,0);if(item)root.appendChild(item);});}
-function inspect(id){var x=all.find(function(n){return n.id===id;});if(!x)return;var box=document.getElementById('wa-inspector');if(!box)return;box.replaceChildren();var tag=document.createElement('span');tag.className='tag';tag.textContent=x.type+' · '+x.state;var h=document.createElement('h3');h.textContent=x.name;var p=document.createElement('p');p.textContent=x.role;box.appendChild(tag);box.appendChild(h);box.appendChild(p);var list=document.createElement('ul');list.className='wa-list';[['PARENT',x.parent||'WORLD CORE'],['ROUTE',x.route||'MODEL / CONCEPT'],['MODULE',x.module||'—'],['CHILDREN',String(kids(x.id).length)]].forEach(function(pair){var li=document.createElement('li');var b=document.createElement('b');b.textContent=pair[0]+' ';li.appendChild(b);li.appendChild(document.createTextNode(pair[1]));list.appendChild(li);});box.appendChild(list);var note=document.createElement('p');note.textContent=x.type==='SERVICE'?'Production services must resolve to an existing canonical route and capability contract before being advertised as live.':x.type==='TASK'?'Tasks are simulation definitions until bound to persisted mission, authorization, event and evidence contracts.':'Child objects inherit no legal authority merely from their parent.';box.appendChild(note);}
+var all=[],filter='ALL';
+function kids(id){return all.filter(function(x){return x.parent===id;});}
+function visible(x){return filter==='ALL'||x.state===filter;}
+function renderScene(){
+ var root=document.getElementById('wa-body-nodes');if(!root)return;root.replaceChildren();
+ all.filter(function(x){return x.type==='PLANET';}).forEach(function(p,i){
+  var a=document.createElement('button');a.type='button';a.className='wa-node';
+  var angle=i/8*Math.PI*2;a.style.left=(50+Math.cos(angle)*40)+'%';a.style.top=(50+Math.sin(angle)*35)+'%';
+  a.textContent=p.name;var s=document.createElement('small');s.textContent=p.state;a.appendChild(s);
+  a.addEventListener('click',function(){inspect(p.id);});root.appendChild(a);
+ });
+}
+function renderItem(x,level){
+ if(!visible(x))return null;
+ var wrap=document.createElement('div');wrap.className='wa-item level-'+Math.min(level,6);wrap.setAttribute('role','treeitem');
+ var btn=document.createElement('button');btn.type='button';
+ var label=document.createElement('span');label.textContent=x.name;
+ var meta=document.createElement('span');meta.className='meta';meta.textContent=x.type+' · '+x.state;
+ btn.appendChild(label);btn.appendChild(meta);btn.addEventListener('click',function(){inspect(x.id);});wrap.appendChild(btn);
+ kids(x.id).filter(visible).forEach(function(k){var child=renderItem(k,level+1);if(child)wrap.appendChild(child);});
+ return wrap;
+}
+function renderTree(){
+ var root=document.getElementById('wa-tree');if(!root)return;root.replaceChildren();
+ all.filter(function(x){return x.parent===null;}).forEach(function(x){var item=renderItem(x,0);if(item)root.appendChild(item);});
+}
+function inspect(id){
+ var x=all.find(function(n){return n.id===id;});if(!x)return;
+ var box=document.getElementById('wa-inspector');if(!box)return;box.replaceChildren();
+ var tag=document.createElement('span');tag.className='tag';tag.textContent=x.type+' · '+x.state;
+ var h=document.createElement('h3');h.textContent=x.name;var p=document.createElement('p');p.textContent=x.role;
+ box.appendChild(tag);box.appendChild(h);box.appendChild(p);
+ var list=document.createElement('ul');list.className='wa-list';
+ [['PARENT',x.parent||'WORLD CORE'],['ROUTE',x.route||'MODEL / CONCEPT'],['MODULE',x.module||'—'],['CHILDREN',String(kids(x.id).length)]].forEach(function(pair){
+  var li=document.createElement('li');var b=document.createElement('b');b.textContent=pair[0]+' ';li.appendChild(b);li.appendChild(document.createTextNode(pair[1]));list.appendChild(li);
+ });
+ box.appendChild(list);
+ var note=document.createElement('p');
+ note.textContent=x.type==='SERVICE'?'Production services must resolve to an existing canonical route and capability contract before being advertised as live.':x.type==='TASK'?'Tasks are simulation definitions until bound to persisted mission, authorization, event and evidence contracts.':'Child objects inherit no legal authority merely from their parent.';
+ box.appendChild(note);
+}
 function setFilter(next){filter=next;document.querySelectorAll('.wa-controls button').forEach(function(b){b.classList.toggle('active',b.dataset.filter===next);});renderTree();}
-function boot(){renderScene();renderTree();document.querySelectorAll('.wa-controls button').forEach(function(b){b.addEventListener('click',function(){setFilter(b.dataset.filter);});});inspect('earth-world');document.getElementById('wa-countries').textContent=String(all.filter(function(x){return x.type==='COUNTRY';}).length);document.getElementById('wa-empires').textContent=String(all.filter(function(x){return x.type==='EMPIRE';}).length);document.getElementById('wa-cities').textContent=String(all.filter(function(x){return x.type==='CITY';}).length);document.getElementById('wa-services').textContent=String(all.filter(function(x){return x.type==='SERVICE';}).length);}
-window.OmegaWorldAtlas={nodes:all,setFilter:setFilter,inspect:inspect};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+async function boot(){
+ try{
+  var r=await fetch('/config/omega-civilization-atlas.json',{cache:'no-store'});
+  if(!r.ok)throw new Error('atlas source unavailable: HTTP '+r.status);
+  var data=await r.json();all=(data.bodies||[]).concat(data.objects||[]);
+ }catch(e){
+  var root=document.getElementById('wa-tree');if(root){root.textContent='ATLAS SOURCE UNAVAILABLE — no fallback state is fabricated.';}
+  return;
+ }
+ renderScene();renderTree();document.querySelectorAll('.wa-controls button').forEach(function(b){b.addEventListener('click',function(){setFilter(b.dataset.filter);});});
+ inspect('earth-world');
+ document.getElementById('wa-planets').textContent=String(all.filter(function(x){return x.type==='PLANET';}).length);
+ document.getElementById('wa-worlds').textContent=String(all.filter(function(x){return x.type==='WORLD';}).length);
+ document.getElementById('wa-countries').textContent=String(all.filter(function(x){return x.type==='COUNTRY';}).length);
+ document.getElementById('wa-empires').textContent=String(all.filter(function(x){return x.type==='EMPIRE';}).length);
+ document.getElementById('wa-cities').textContent=String(all.filter(function(x){return x.type==='CITY';}).length);
+ document.getElementById('wa-services').textContent=String(all.filter(function(x){return x.type==='SERVICE';}).length);
+}
+window.OmegaWorldAtlas={get nodes(){return all;},setFilter:setFilter,inspect:inspect};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

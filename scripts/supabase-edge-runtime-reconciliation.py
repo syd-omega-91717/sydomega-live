@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fail-closed Supabase Edge Function source/runtime reconciliation contract."""
 from __future__ import annotations
-import hashlib,json,re
+import hashlib,json,re,sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -50,4 +50,7 @@ def main()->int:
     return 0
 
 if __name__=="__main__":
+    if any(a in ("-h","--help") for a in sys.argv[1:]):
+        print(__doc__)
+        raise SystemExit(0)
     raise SystemExit(main())

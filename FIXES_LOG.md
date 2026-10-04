@@ -22095,3 +22095,63 @@ in the SQL editor.
 Verification: `./scripts/ci-local.sh --all` **35/35**; every script step across all
 workflows passes except `supabase-runtime-contract.py`, which needs the live endpoint the
 sandbox proxy blocks.
+
+## Three member-read tables had policies and no grant; Proposal #26's page bindings were dead (2026-10-04)
+
+**Grants (§8.1 class 6c).** A live inventory of tables with RLS policies and no
+`anon`/`authenticated` privilege of any kind returned 128; cross-checked against every
+client `.from('<table>')` in the repo, three were read by pages:
+
+| table | readers | policy |
+|---|---|---|
+| `omega_platform_events` | `omega-eternity-engine.js:115`, `omega-evidence-graph.js:256`, `omega-mission-board.js:149`, `omega-temporal-replay.js:13` | `auth.uid() = actor_user_id` |
+| `omega_platform_evidence` | `omega-evidence-graph.js:257` | `auth.uid() = owner_user_id` |
+| `capability_registry` | `omega-eternity-engine.js:126` | any signed-in user |
+
+Each read failed `42501` before RLS ran, so `eternity.html`, `evidence.html`,
+`missions.html` and `replay.html` showed their "could not be read" states for every
+member. `20261004084744_grant_read_platform_events_evidence_capabilities_20261004`
+grants `SELECT` on the two event tables and, on `capability_registry`, only the five
+columns the page selects (`threat_model`, `dependencies` and the rest stay ungranted).
+Applied live; journal now 337 (`max(version) = 20261004084744`).
+
+Verified by impersonation (`SET LOCAL ROLE authenticated` + `request.jwt.claims`): the
+events' actor (`69842a74…`) sees **7/7**; another approved member (`8a6d85bd…`) sees
+**0** events and **0** evidence rows, and **18/18** capabilities through the granted
+columns. `has_column_privilege('authenticated', …, 'threat_model', 'select')` = false;
+`anon` has no SELECT on either table; `authenticated` still has no INSERT on events.
+The other **125** were checked against the same client list: none is read by a page,
+and every one of the 95 tables pages read exists live with a member SELECT path
+(`element_mastery` excepted — below; `uploads` is a storage bucket).
+
+`supabase/remote-migrations.json`'s `migrations` list had also fallen two entries behind
+its own `versions` list on `main` (`20261004084002`, `20261004084024`); both added with
+the new version, 337/337.
+
+**Proposal #26 (§8.1 classes 2 and 4b).** `06d95737` added page-local "real-time
+geometry binding" scripts to `profile.html`, `cosmos.html` and `ascension.html`. All
+three were dead: they returned at `if (!window.__omegaSB)` — nothing publishes that name
+(bg.js publishes `window.OmegaSB.get()`); `profile.html` queried `element_mastery`,
+which exists neither live nor in `supabase/`; the realtime calls used supabase-js v1's
+`.from().on()`, absent in the vendored v2; and `omega-sculpture.js:1409` reads the
+`data-sculpt-*` attributes once at mount, so a later `setAttribute` would not have moved
+the geometry anyway. Removed, with their orphan `data-sculpt-*-source` hooks.
+`profile.html`'s sculpture label claimed it showed "proficiency in fire, water, earth,
+and air"; it now describes what renders. The shared layer that *is* loaded
+(`omega-sculpture-dataviz.js`) is inert for a different reason, recorded in
+`GAP_ANALYSIS.md` §S rather than wired, because its only real source is dormant.
+
+Verification: `node scripts/verify-runtime.js --pages
+eternity,evidence,missions,replay,profile,cosmos,ascension` — 7/7 PASS.
+
+**`main` was red on three gates when this branch started (`21acf823`)**, each from the
+migration/edge-function PRs merged since #662: `omega-registry.py --check` (census said
+332 migrations, repo had 336 — regenerated); `test_script_help_contract`
+(`supabase-edge-runtime-reconciliation.py` ran its job on `--help` — now prints its
+docstring and exits 0); and `migration-replay-contract.py`, which compares the version
+list *in order* and failed with `missing=[] extra=[]` because
+`remote-migrations.json` listed `…083218` before `…082748` — both lists now sorted by
+version, the order live applies them. After: `./scripts/ci-local.sh --all` **35/35**, and
+every `scripts/*` step referenced by `.github/workflows/` passes except
+`supabase-runtime-contract.py` (needs the live auth endpoint the sandbox proxy 403s) and
+`page-overlap-audit.py` (pinned to the dead self-hosted runner, §8.2).

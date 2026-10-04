@@ -496,7 +496,7 @@ are listed in rough order of how often they have recurred.
 
 **The full list lives in `GAP_ANALYSIS.md` §S** — ~19 standing items, each with the reason it
 is open and the evidence behind it (dormant payment/token tables, the ~83-table SaaS scaffold,
-39 tables with policies and no grant, `storage.objects` DELETE, member location, LFS debt,
+125 tables with policies and no grant, `storage.objects` DELETE, member location, LFS debt,
 `OmegaGuardian`'s unemitted signals, the advisor counts, and the rest). It moved there on
 2026-09-05 because this file is capped at 16,000 tokens and §8.2 had reached the cap: the only
 way to add a fact was to compress an older one, and that had begun costing information. Consult

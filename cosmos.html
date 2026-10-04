@@ -160,7 +160,6 @@ a{color:inherit;text-decoration:none}
     <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COSMOS") -->
     <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
          data-sculpt-accent="#9B6BF0" data-sculpt-bloom="off"
-         data-sculpt-pulse-source="task_count"
          data-sculpt-label="The Omega signet, tinted to the Cosmos realm"></div>
 
     
@@ -1101,45 +1100,6 @@ async function bootHoroscopeFull(){
   buildCompat(sign);
 }
 window.bootHoroscopeFull = bootHoroscopeFull;
-
-/* Data-bind task_completions to sculpture pulse */
-async function initSculpturePulse() {
-  const stage = document.querySelector('[data-sculpt-pulse-source="task_count"]');
-  if (!stage) return;
-
-  const checkReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  async function updatePulse() {
-    if (!window.__omegaSB) return;
-    try {
-      const { data, error } = await window.__omegaSB
-        .from('task_completions')
-        .select('id', { count: 'exact', head: true });
-      if (!error && data !== null) {
-        const count = data.length || 0;
-        const normalized = Math.min(count / 100, 1.0);
-        stage.setAttribute('data-sculpt-pulse', normalized.toString());
-      }
-    } catch (e) {
-      console.debug('Pulse update error:', e);
-    }
-  }
-
-  updatePulse();
-
-  if (!checkReducedMotion()) {
-    const sub = window.__omegaSB
-      ?.from('task_completions')
-      ?.on('*', () => updatePulse());
-    if (sub) sub?.subscribe();
-  }
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSculpturePulse);
-} else {
-  initSculpturePulse();
-}
 
 </script>
 <script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>

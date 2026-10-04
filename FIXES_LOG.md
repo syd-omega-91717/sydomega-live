@@ -22329,3 +22329,9 @@ none re-runs there. Per migration:
 
 Local replay: before, `FAIL #160`; after, it passes 333 migrations and stops at **#334**
 (`ai_memory.memory`, recorded in `GAP_ANALYSIS.md` as the next owner decision).
+
+**Migration replay: the whole chain applies (owner-approved "guard 20261004083218", 2026-10-04).**
+#334 `20261004083218_governed_ai_memory_embedding_storage` backfilled from `coalesce(m.content, m.memory, '')`,
+but `ai_memory.memory` exists only live (added out-of-band). Added `alter table public.ai_memory add column if
+not exists memory text` before the backfill; live already applied the version. Local replay: before,
+`FAIL #334`; after, **`ALL 337 APPLIED`**. The first full replay success since the workflow was added.

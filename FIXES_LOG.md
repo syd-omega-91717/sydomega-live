@@ -22382,3 +22382,20 @@ Verified:
 - A Playwright e2e at 1280/375 answered all 10 questions with keyboard and click. The best score persists across reload, there is no horizontal overflow and tap targets are ≥44px.
 - `brand-glyph-check` OK; `ci-local.sh` 28/28.
 - Limitation: `OmegaProgress.record` was stubbed in the test, so the real `complete_task` RPC is unexercised.
+
+**Real MP4 franchise films replace the text-only Movies page (2026-10-04).** `movies.html` described 12 franchise films as text cards; no video existed on the platform (0 `<video>` across 224 pages).
+- `scripts/movies/scene.html` + `render.js` (not shipped: `vercel-build.sh` excludes `scripts/`) render each film deterministically:
+  - seeded RNG, `t = frame/24`, frames captured in headless Chromium;
+  - encoded by the system ffmpeg: H.264 1280×720, 24 fps, 12 s, `+faststart`, quiet synthesized AAC drone;
+  - the CRF is raised until each film is ≤1.5 MiB; a poster JPG (≤120 KB) is taken from the title-card frame.
+- Each film's hero is the owner's own zodiac art (`/assets/legacy/sign-<sign>.webp`, all 12 signs), read at render time, not copied.
+- `assets/movies/franchise-01..12.{mp4,jpg}`: 18.8 MB total. ffprobe confirms every film: h264, yuv420p, 288 frames, 12.000 s.
+- The new `movies.html` is a near-text-free video wall:
+  - muted hover/focus/tap previews with `preload="none"`, none under reduced motion;
+  - a native `<dialog>` player with sound;
+  - the auth module unchanged.
+- The lightbox path is built as `dir+'franchise-'+nn`, because the production contract reads a quoted prefix as a missing asset (same class as horoscope).
+- Verified:
+  - `verify-runtime.js` PASS; `ci-local.sh` 28/28; every `src`/`href` resolves.
+  - A Playwright check covered hover playback, keyboard focus, lightbox open/Esc/focus return and no overflow at 375.
+  - Limitation: the sandbox Chromium lacks H.264, so playback was proven with a VP9 copy served at the same URL.

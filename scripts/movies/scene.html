@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Franchise Film Scene</title>
+<!--
+  Ω franchise film scene — the frame source for scripts/movies/render.js.
+  NOT shipped (scripts/ is excluded by scripts/vercel-build.sh).
+
+  Deterministic: a seeded RNG drives every random choice and time is
+  derived from the frame index (t = i / FPS), never the wall clock, so
+  render(i) always paints the same pixels for the same franchise.
+
+  Hero art: the owner's zodiac artwork, already cut to alpha, read at render
+  time from /assets/legacy/sign-<sign>.webp (served by render.js's local
+  server, same-origin so the canvas is never tainted). If it fails to load,
+  a forged gold glyph (U+2648.. + U+FE0E, text presentation) stands in.
+
+  Usage (render.js does this):  scene.html?f=1..12
+     await SCENE.ready;  SCENE.render(i)  // i in [0, SCENE.frames)
+-->
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+(function () {
+  'use strict';
+  var W = 1280, H = 720, FPS = 24, DUR = 12, FRAMES = FPS * DUR;
+  var CX = W / 2, CY = H / 2;
+
+  // Read from the twelve franchise cards in movies.html (number, god, sign,
+  // anchor film, card colour, element).
+  var FR = [
+    [1, 'ARES', 'ARIES', 'WAR SOVEREIGN', '#E86A3A', 'FIRE'],
+    [2, 'APHRODITE', 'TAURUS', 'LOVE SOVEREIGN', '#9B6BF0', 'METAL'],
+    [3, 'HERMES', 'GEMINI', 'MESSENGER SOVEREIGN', '#00E5FF', 'WIND'],
+    [4, 'ARTEMIS', 'CANCER', 'HUNT SOVEREIGN', '#3fb27f', 'WATER'],
+    [5, 'APOLLO', 'LEO', 'LIGHT SOVEREIGN', '#E2C86D', 'FIRE'],
+    [6, 'ATHENA', 'VIRGO', 'WISDOM SOVEREIGN', '#C9A84C', 'SAND'],
+    [7, 'HERA', 'LIBRA', 'QUEEN SOVEREIGN', '#9B6BF0', 'WIND'],
+    [8, 'DEMETER', 'SCORPIO', 'EARTH SOVEREIGN', '#3fb27f', 'WATER'],
+    [9, 'ZEUS', 'SAGITTARIUS', 'THUNDER SOVEREIGN', '#E2C86D', 'FIRE'],
+    [10, 'HESTIA', 'CAPRICORN', 'HEARTH SOVEREIGN', '#E86A3A', 'METAL'],
+    [11, 'HEPHAESTUS', 'AQUARIUS', 'FORGE SOVEREIGN', '#C9A84C', 'WIND'],
+    [12, 'POSEIDON', 'PISCES', 'OCEAN SOVEREIGN', '#00E5FF', 'WATER']
+  ];
+  var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  var GOLD = '#C9A84C';
+
+  var q = new URLSearchParams(location.search);
+  var fi = Math.max(1, Math.min(12, parseInt(q.get('f') || '1', 10))) - 1;
+  var F = FR[fi];
+  var NUM = F[0], GOD = F[1], SIGN = F[2], TITLE = F[3], COL = F[4];
+  var GLYPH = String.fromCodePoint(0x2648 + fi) + '︎';
+  var ART = '/assets/legacy/sign-' + SIGN.toLowerCase() + '.webp';
+
+  // ---------- helpers ----------
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function sstep(a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+  function eio(t) { t = clamp(t, 0, 1); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function eout(t) { t = clamp(t, 0, 1); return 1 - Math.pow(1 - t, 3); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function hex(h) { h = h.replace('#', ''); return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)]; }
+  function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  function mix(a, b, t) { return [Math.round(lerp(a[0], b[0], t)), Math.round(lerp(a[1], b[1], t)), Math.round(lerp(a[2], b[2], t))]; }
+  function hueShift(c, deg) {
+    var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    var h, s, l = (mx + mn) / 2, d = mx - mn;
+    if (!d) { h = s = 0; } else {
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h /= 6;
+    }
+    h = (h + deg / 360 + 1) % 1;
+    function f(p, q2, t) { if (t < 0) t += 1; if (t > 1) t -= 1; return t < 1 / 6 ? p + (q2 - p) * 6 * t : t < 1 / 2 ? q2 : t < 2 / 3 ? p + (q2 - p) * (2 / 3 - t) * 6 : p; }
+    if (!s) return [l * 255, l * 255, l * 255].map(Math.round);
+    var q2 = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q2;
+    return [f(p, q2, h + 1 / 3), f(p, q2, h), f(p, q2, h - 1 / 3)].map(function (v) { return Math.round(v * 255); });
+  }
+  function mk(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+
+  var C1 = hex(COL), C2 = hueShift(C1, 38), CG = hex(GOLD), CW = [255, 244, 220];
+  var CDEEP = mix(C1, [10, 12, 30], 0.7);
+
+  var cv = document.getElementById('c'), ctx = cv.getContext('2d');
+
+  // glow sprite per colour
+  function sprite(c, core) {
+    var s = mk(64, 64), g = s.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, rgba(mix(c, [255, 255, 255], core), 1));
+    gr.addColorStop(0.18, rgba(c, 0.85));
+    gr.addColorStop(0.45, rgba(c, 0.22));
+    gr.addColorStop(1, rgba(c, 0));
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return s;
+  }
+  var SP1 = sprite(C1, 0.7), SP2 = sprite(C2, 0.6), SPG = sprite(CG, 0.75), SPW = sprite(CW, 0.9);
+
+  // ---------- static precomputation (seeded) ----------
+  var R = mulberry32(91717 + NUM * 131);
+
+  var STAR_LAYERS = [
+    { n: 340, d: 0.12, s0: 0.35, s1: 1.0, a: 0.55 },
+    { n: 150, d: 0.38, s0: 0.7, s1: 1.6, a: 0.75 },
+    { n: 46, d: 0.95, s0: 1.2, s1: 2.6, a: 0.95 }
+  ].map(function (L) {
+    L.st = [];
+    for (var i = 0; i < L.n; i++) L.st.push({ x: R() * W * 1.4, y: R() * H * 1.4, s: lerp(L.s0, L.s1, Math.pow(R(), 2)), ph: R() * 6.283, sp: 0.6 + R() * 2.2, warm: R() });
+    return L;
+  });
+
+  var BLOBS = [];
+  for (var b = 0; b < 8; b++) BLOBS.push({ a: R() * 6.283, r: 80 + R() * 260, w: (R() - 0.5) * 0.16, rad: 260 + R() * 320, al: 0.10 + R() * 0.12, c: b % 3 === 0 ? C2 : b % 3 === 1 ? C1 : CDEEP });
+
+  var NP = 1300, P = [];
+  for (var i = 0; i < NP; i++) {
+    var rr = 70 + Math.pow(R(), 0.65) * 560;
+    P.push({ r: rr, a: R() * 6.283, w: (0.10 + 26 / rr) * (R() < 0.5 ? 1 : 1.12), y: (R() - 0.5) * 40, s: 0.6 + Math.pow(R(), 3) * 2.6, dl: R() * 0.9, bx: R() - 0.5, by: R() - 0.5, sp: R() < 0.55 ? SP1 : R() < 0.6 ? SPG : SP2, tw: R() * 6.283 });
+  }
+  var NE = 240, E = [];
+  for (var e = 0; e < NE; e++) E.push({ R: 0.36 + Math.pow(R(), 0.8) * 0.44, a: R() * 6.283, w: (0.18 + R() * 0.32) * (R() < 0.85 ? 1 : -1), h: (R() - 0.5) * 0.18, s: 0.7 + Math.pow(R(), 2.5) * 2.8, c: R() < 0.55 ? SP1 : R() < 0.7 ? SPG : SPW, tw: R() * 6.283 });
+  var NS = 90, SPK = [];
+  for (var k = 0; k < NS; k++) SPK.push({ x: R() * W, v: 18 + R() * 46, ph: R() * H, wob: 10 + R() * 30, f: 0.3 + R(), s: 0.6 + R() * 1.6 });
+
+  // vignette
+  var VIG = mk(W, H); (function () {
+    var g = VIG.getContext('2d'), gr = g.createRadialGradient(CX, CY, H * 0.28, CX, CY, H * 0.95);
+    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.6, 'rgba(0,0,0,0.35)'); gr.addColorStop(1, 'rgba(0,0,0,0.88)');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  })();
+  // film grain tiles
+  var GRAIN = [];
+  for (var gi = 0; gi < 4; gi++) {
+    var gc = mk(256, 256), gx = gc.getContext('2d'), id = gx.createImageData(256, 256);
+    for (var p = 0; p < id.data.length; p += 4) { var v = (R() * 255) | 0; id.data[p] = id.data[p + 1] = id.data[p + 2] = v; id.data[p + 3] = 255; }
+    gx.putImageData(id, 0, 0); GRAIN.push(gc);
+  }
+
+  var HERO = null, BLOOM = null, HPTS = [], OPTS = [], heroIsArt = false;
+  var SCR = mk(1024, 1024), SCX = SCR.getContext('2d');
+
+  function samplePts(c, test, step, n, rng) {
+    var g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data, out = [];
+    for (var y = 0; y < c.height; y += step) for (var x = 0; x < c.width; x += step) {
+      var o = (y * c.width + x) * 4; if (test(d[o], d[o + 1], d[o + 2], d[o + 3])) out.push([x / c.width - 0.5, y / c.height - 0.5]);
+    }
+    var res = []; if (!out.length) out.push([0, 0]);
+    for (var j = 0; j < n; j++) res.push(out[(rng() * out.length) | 0]);
+    return res;
+  }
+
+  function buildGlyphHero() {
+    var c = mk(1024, 1024), g = c.getContext('2d');
+    var au = g.createRadialGradient(512, 512, 0, 512, 512, 480);
+    au.addColorStop(0, rgba(C1, 0.35)); au.addColorStop(0.5, rgba(CDEEP, 0.25)); au.addColorStop(1, rgba(C1, 0));
+    g.fillStyle = au; g.fillRect(0, 0, 1024, 1024);
+    g.strokeStyle = rgba(CG, 0.8); g.lineWidth = 3;
+    g.beginPath(); g.arc(512, 512, 430, 0, 6.283); g.stroke();
+    g.lineWidth = 1.5; g.beginPath(); g.arc(512, 512, 395, 0, 6.283); g.stroke();
+    for (var t = 0; t < 72; t++) { var a = t / 72 * 6.283, l = t % 6 ? 12 : 28; g.beginPath(); g.moveTo(512 + Math.cos(a) * 430, 512 + Math.sin(a) * 430); g.lineTo(512 + Math.cos(a) * (430 - l), 512 + Math.sin(a) * (430 - l)); g.stroke(); }
+    g.font = '560px "DejaVu Sans"'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    var gr = g.createLinearGradient(0, 260, 0, 760); gr.addColorStop(0, '#FFF1C4'); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, COL);
+    g.shadowColor = COL; g.shadowBlur = 40; g.fillStyle = gr; g.fillText(GLYPH, 512, 540);
+    return c;
+  }
+
+  function prepare(img) {
+    var c = mk(1024, 1024), g = c.getContext('2d');
+    if (img) { g.imageSmoothingQuality = 'high'; g.drawImage(img, 0, 0, 1024, 1024); heroIsArt = true; }
+    else { c = buildGlyphHero(); }
+    HERO = c;
+    BLOOM = mk(256, 256); var bg = BLOOM.getContext('2d'); bg.filter = 'blur(10px)'; bg.drawImage(c, 0, 0, 256, 256); bg.filter = 'none';
+    var rng = mulberry32(7 + NUM);
+    HPTS = samplePts(c, function (r, gg, bb, a) { return a > 200 && (r + gg + bb) > 240; }, 6, NP, rng);
+    var oc = mk(600, 600), og = oc.getContext('2d');
+    og.font = 'bold 380px "DejaVu Serif"'; og.textAlign = 'center'; og.textBaseline = 'middle'; og.fillStyle = '#fff'; og.fillText('Ω', 300, 310);
+    OPTS = samplePts(oc, function (r, gg, bb, a) { return a > 128; }, 3, NP, rng);
+  }
+
+  var ready = (document.fonts && document.fonts.load ? Promise.all([
+    document.fonts.load('560px "DejaVu Sans"'), document.fonts.load('bold 64px "DejaVu Serif"'), document.fonts.load('20px "DejaVu Sans Mono"')
+  ]).catch(function () {}) : Promise.resolve()).then(function () {
+    return new Promise(function (res) {
+      var im = new Image(); im.onload = function () { res(im); }; im.onerror = function () { console.warn('art missing, glyph fallback'); res(null); }; im.src = ART;
+    });
+  }).then(function (im) { prepare(im); return { franchise: NUM, art: heroIsArt ? ART : null, frames: FRAMES }; });
+
+  // ---------- frame ----------
+  function render(fr) {
+    var t = fr / FPS, frRng = mulberry32(fr * 7919 + NUM);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0;
+    ctx.fillStyle = '#020307'; ctx.fillRect(0, 0, W, H);
+
+    // camera drift
+    var camX = Math.sin(t * 0.35) * 26 + t * 5, camY = Math.cos(t * 0.27) * 14;
+    var zoom = 1 + 0.03 * t;
+
+    // envelopes
+    var nebE = lerp(1, 0.55, sstep(3, 5, t)) * lerp(1, 0.75, sstep(6, 7, t)) * lerp(1, 1.3, sstep(9.4, 10.4, t));
+    var heroIn = sstep(2.9, 4.6, t), heroOut = 1 - sstep(9.2, 10.3, t);
+    var heroDim = lerp(1, 0.3, sstep(6.0, 7.0, t));
+    var heroA = heroIn * heroOut * heroDim;
+
+    function streak(sx, sy, a, len) {
+      var lg2 = ctx.createLinearGradient(sx - len / 2, 0, sx + len / 2, 0);
+      lg2.addColorStop(0, rgba(C1, 0)); lg2.addColorStop(0.5, rgba(mix(C1, CW, 0.6), a)); lg2.addColorStop(1, rgba(C1, 0));
+      ctx.fillStyle = lg2;
+      ctx.save(); ctx.translate(sx, sy); ctx.scale(1, 0.012); ctx.beginPath(); ctx.arc(0, 0, len / 2, 0, 6.283); ctx.restore(); ctx.fill();
+      ctx.save(); ctx.globalAlpha = 0.35; ctx.translate(sx, sy); ctx.scale(1, 0.05); ctx.beginPath(); ctx.arc(0, 0, len / 2, 0, 6.283); ctx.restore(); ctx.fill(); ctx.globalAlpha = 1;
+    }
+
+    // nebula (volumetric blobs)
+    ctx.globalCompositeOperation = 'lighter';
+    for (var b = 0; b < BLOBS.length; b++) {
+      var B = BLOBS[b], ang = B.a + B.w * t;
+      var bx = CX + Math.cos(ang) * B.r * 1.5 - camX * 0.25, by = CY + Math.sin(ang) * B.r * 0.7 - camY * 0.25;
+      var rad = B.rad * zoom, gr = ctx.createRadialGradient(bx, by, 0, bx, by, rad);
+      gr.addColorStop(0, rgba(B.c, B.al * nebE)); gr.addColorStop(0.5, rgba(B.c, B.al * 0.4 * nebE)); gr.addColorStop(1, rgba(B.c, 0));
+      ctx.fillStyle = gr; ctx.fillRect(bx - rad, by - rad, rad * 2, rad * 2);
+    }
+
+    // parallax stars
+    for (var l = 0; l < STAR_LAYERS.length; l++) {
+      var L = STAR_LAYERS[l], z = 1 + (zoom - 1) * L.d * 3, spanX = W * 1.4, spanY = H * 1.4;
+      for (var s = 0; s < L.st.length; s++) {
+        var S = L.st[s];
+        var x = ((S.x - camX * L.d * 4) % spanX + spanX) % spanX - W * 0.2, y = ((S.y - camY * L.d * 4) % spanY + spanY) % spanY - H * 0.2;
+        x = CX + (x - CX) * z; y = CY + (y - CY) * z;
+        if (x < -10 || x > W + 10 || y < -10 || y > H + 10) continue;
+        var tw = 0.55 + 0.45 * Math.sin(t * S.sp + S.ph), sz = S.s * 4;
+        ctx.globalAlpha = L.a * tw;
+        ctx.drawImage(S.warm > 0.8 ? SPG : S.warm > 0.6 ? SP1 : SPW, x - sz, y - sz, sz * 2, sz * 2);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // hero transform: Ken Burns push-in + parallax
+    var kb = lerp(0.9, 1.12, eio((t - 1.5) / 9));
+    var HS = 560 * kb, hx = CX - camX * 0.4 + 8, hy = CY - camY * 0.4 - 6;
+
+    // god rays behind the hero
+    var rayE = sstep(2.6, 4.0, t) * (1 - sstep(8.5, 10, t)) * (0.6 + 0.4 * Math.sin(t * 1.3));
+    if (rayE > 0.01) {
+      ctx.save(); ctx.translate(hx, hy); ctx.rotate(t * 0.06);
+      for (var r = 0; r < 18; r++) {
+        var ra = r / 18 * 6.283, len = 900, wd = 0.05 + 0.03 * Math.sin(r * 3.1 + t);
+        var g2 = ctx.createRadialGradient(0, 0, HS * 0.2, 0, 0, len);
+        g2.addColorStop(0, rgba(r % 2 ? C1 : CG, 0.16 * rayE)); g2.addColorStop(1, rgba(C1, 0));
+        ctx.fillStyle = g2; ctx.beginPath(); ctx.moveTo(0, 0);
+        ctx.arc(0, 0, len, ra - wd, ra + wd); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // embers orbiting the hero in the franchise colour (back half, then front)
+    var embE = sstep(3.0, 4.4, t) * (1 - sstep(9.6, 10.6, t));
+    function embers(front) {
+      if (embE < 0.01) return;
+      for (var i = 0; i < NE; i++) {
+        var e = E[i], a = e.a + e.w * t, zz = Math.sin(a);
+        if ((zz > 0) !== front) continue;
+        var ex = hx + Math.cos(a) * e.R * HS * 1.25, ey = hy + zz * e.R * HS * 0.28 + e.h * HS - Math.cos(a) * 0.12 * HS * e.R;
+        var sz = e.s * (1 + zz * 0.6) * 5, al = embE * (0.5 + 0.5 * Math.sin(t * 3 + e.tw)) * (front ? 1 : 0.55);
+        ctx.globalAlpha = al; ctx.drawImage(e.c, ex - sz, ey - sz, sz * 2, sz * 2);
+      }
+      ctx.globalAlpha = 1;
+    }
+    embers(false);
+
+    // hero bloom + hero, with a radial light reveal
+    if (heroA > 0.005 && HERO) {
+      var x0 = hx - HS / 2, y0 = hy - HS / 2;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = heroA * (0.3 + 0.12 * Math.sin(t * 1.7));
+      ctx.drawImage(BLOOM, x0 - HS * 0.08, y0 - HS * 0.08, HS * 1.16, HS * 1.16);
+      ctx.globalCompositeOperation = 'source-over';
+      var rev = eout((t - 2.8) / 1.9);
+      if (rev < 1) {
+        SCX.setTransform(1, 0, 0, 1, 0, 0); SCX.globalCompositeOperation = 'source-over'; SCX.clearRect(0, 0, 1024, 1024);
+        SCX.drawImage(HERO, 0, 0);
+        SCX.globalCompositeOperation = 'destination-in';
+        var mr = Math.max(1, rev * 760), mg = SCX.createRadialGradient(512, 512, mr * 0.55, 512, 512, mr);
+        mg.addColorStop(0, 'rgba(0,0,0,1)'); mg.addColorStop(1, 'rgba(0,0,0,0)');
+        SCX.fillStyle = mg; SCX.fillRect(0, 0, 1024, 1024);
+        ctx.globalAlpha = heroA; ctx.drawImage(SCR, x0, y0, HS, HS);
+      } else {
+        ctx.globalAlpha = heroA; ctx.drawImage(HERO, x0, y0, HS, HS);
+      }
+      // light sweep across the art (clipped to its alpha)
+      var sw = (t - 4.4) / 1.4, sw2 = (t - 7.6) / 1.6;
+      [[sw, 1], [sw2, 0.6]].forEach(function (pr) {
+        var u = pr[0]; if (u <= 0 || u >= 1) return;
+        SCX.setTransform(1, 0, 0, 1, 0, 0); SCX.globalCompositeOperation = 'source-over'; SCX.clearRect(0, 0, 1024, 1024);
+        SCX.drawImage(HERO, 0, 0);
+        SCX.globalCompositeOperation = 'source-in';
+        var px = lerp(-300, 1324, eio(u)), lg = SCX.createLinearGradient(px - 160, 0, px + 160, 0);
+        lg.addColorStop(0, 'rgba(255,240,200,0)'); lg.addColorStop(0.5, 'rgba(255,246,220,0.95)'); lg.addColorStop(1, 'rgba(255,240,200,0)');
+        SCX.setTransform(1, 0.35, 0, 1, 0, -180); SCX.fillStyle = lg; SCX.fillRect(-400, 0, 1824, 1400);
+        SCX.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = heroA * 0.75 * pr[1] * Math.sin(Math.PI * u);
+        ctx.drawImage(SCR, x0, y0, HS, HS);
+      });
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    }
+
+    ctx.globalCompositeOperation = 'lighter';
+    embers(true);
+
+    // rising sparks
+    for (var k = 0; k < NS; k++) {
+      var K = SPK[k], sy = H + 20 - ((K.ph + K.v * t * 2) % (H + 40)), sx = K.x + Math.sin(t * K.f + k) * K.wob - camX * 0.6;
+      ctx.globalAlpha = 0.35 * (0.5 + 0.5 * Math.sin(t * 4 + k)); var ss = K.s * 4;
+      ctx.drawImage(k % 3 ? SP1 : SPG, sx - ss, sy - ss, ss * 2, ss * 2);
+    }
+
+    // forge particles: nebula -> hero (forging) ... hero -> Ω (closing)
+    var oS = 360, ox = CX - camX * 0.2, oy = CY - 40;
+    var closeOn = sstep(9.1, 9.6, t);
+    for (var i = 0; i < NP; i++) {
+      var p = P[i], x1, y1, al;
+      if (t < 9.1) {
+        var a2 = p.a + p.w * t, nx = CX + Math.cos(a2) * p.r * 1.35 - camX * 0.6, ny = CY + Math.sin(a2) * p.r * 0.5 + p.y - camY * 0.6;
+        var p1 = eio((t - 1.3 - p.dl) / 1.7), T = HPTS[i];
+        x1 = lerp(nx, hx + T[0] * HS, p1); y1 = lerp(ny, hy + T[1] * HS, p1);
+        al = sstep(0, 1.0, t) * (1 - sstep(4.0, 5.0, t) * 0.92);
+      } else {
+        var p2 = eio((t - 9.3 - p.dl * 0.6) / 1.5), T2 = HPTS[i], O = OPTS[i];
+        var sx0 = hx + T2[0] * HS, sy0 = hy + T2[1] * HS, tx = ox + O[0] * oS, ty = oy + O[1] * oS;
+        var bur = Math.sin(Math.PI * p2) * 140;
+        x1 = lerp(sx0, tx, p2) + p.bx * bur; y1 = lerp(sy0, ty, p2) + p.by * bur;
+        al = closeOn * (1 - sstep(11.2, 11.8, t) * 0.6);
+      }
+      var sz2 = p.s * 4 * (0.8 + 0.3 * Math.sin(t * 5 + p.tw));
+      ctx.globalAlpha = clamp(al, 0, 1) * 0.85; ctx.drawImage(p.sp, x1 - sz2, y1 - sz2, sz2 * 2, sz2 * 2);
+    }
+    ctx.globalAlpha = 1;
+
+    // reveal flash + anamorphic streak
+    var fl = Math.exp(-Math.pow((t - 3.5) / 0.35, 2));
+    if (fl > 0.01) {
+      var fg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 520);
+      fg.addColorStop(0, rgba(CW, 0.65 * fl)); fg.addColorStop(0.3, rgba(C1, 0.3 * fl)); fg.addColorStop(1, rgba(C1, 0));
+      ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H);
+      streak(hx, hy, 1.0 * fl, 1300);
+    }
+
+    // ---- title card ----
+    ctx.globalCompositeOperation = 'source-over';
+    var tA = sstep(6.4, 7.2, t) * (1 - sstep(9.0, 9.6, t));
+    if (tA > 0.005) {
+      var band = ctx.createRadialGradient(CX, 372, 0, CX, 372, 620);
+      band.addColorStop(0, 'rgba(2,3,7,' + 0.8 * tA + ')'); band.addColorStop(1, 'rgba(2,3,7,0)');
+      ctx.save(); ctx.translate(CX, 372); ctx.scale(1, 0.32); ctx.translate(-CX, -372); ctx.fillStyle = band; ctx.fillRect(0, -800, W, 2400); ctx.restore();
+
+      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      ctx.globalAlpha = tA * sstep(6.4, 7.0, t);
+      ctx.font = '15px "DejaVu Sans Mono"'; ctx.letterSpacing = '9px'; ctx.fillStyle = rgba(mix(C1, CW, 0.3), 1);
+      ctx.fillText('FRANCHISE ' + ROMAN[fi] + (NUM === 12 ? '  ·  APEX' : ''), CX, 282);
+      ctx.font = '21px "DejaVu Sans Mono"'; ctx.letterSpacing = '11px'; ctx.fillStyle = '#E8D9A8';
+      ctx.fillText(GOD + '  ·  ' + SIGN, CX, 318);
+
+      var tr = eout((t - 6.6) / 1.6), tsz = TITLE.length > 16 ? 58 : 66;
+      ctx.globalAlpha = tA * sstep(6.6, 7.4, t);
+      ctx.font = 'bold ' + tsz + 'px "DejaVu Serif"'; ctx.letterSpacing = lerp(28, 9, tr).toFixed(1) + 'px';
+      var tg = ctx.createLinearGradient(0, 330, 0, 392); tg.addColorStop(0, '#FFF3CC'); tg.addColorStop(0.55, GOLD); tg.addColorStop(1, rgba(mix(C1, CG, 0.4), 1));
+      ctx.shadowColor = COL; ctx.shadowBlur = 26; ctx.fillStyle = tg; ctx.fillText(TITLE, CX, 392); ctx.shadowBlur = 0;
+
+      var rw = 420 * eout((t - 7.0) / 1.2);
+      ctx.globalAlpha = tA; ctx.letterSpacing = '0px';
+      var rl = ctx.createLinearGradient(CX - rw, 0, CX + rw, 0); rl.addColorStop(0, rgba(CG, 0)); rl.addColorStop(0.5, rgba(CG, 0.9)); rl.addColorStop(1, rgba(CG, 0));
+      ctx.fillStyle = rl; ctx.fillRect(CX - rw, 418, rw * 2, 1.5);
+      ctx.font = '13px "DejaVu Sans Mono"'; ctx.letterSpacing = '8px'; ctx.fillStyle = 'rgba(232,217,168,0.8)';
+      ctx.globalAlpha = tA * sstep(7.4, 8.0, t); ctx.fillText('A  SOVEREIGN  SAGA', CX, 446);
+      ctx.letterSpacing = '0px'; ctx.globalAlpha = 1;
+
+      // lens glow sweeping across the title
+      ctx.globalCompositeOperation = 'lighter';
+      var lx = lerp(CX - 520, CX + 520, eio((t - 6.9) / 1.6));
+      var lgA = tA * Math.sin(Math.PI * clamp((t - 6.9) / 1.6, 0, 1));
+      if (lgA > 0.01) {
+        var hg = ctx.createRadialGradient(lx, 372, 0, lx, 372, 90);
+        hg.addColorStop(0, rgba(CW, 0.7 * lgA)); hg.addColorStop(0.4, rgba(C1, 0.25 * lgA)); hg.addColorStop(1, rgba(C1, 0));
+        ctx.fillStyle = hg; ctx.fillRect(lx - 90, 282, 180, 180);
+        streak(lx, 372, 0.8 * lgA, 1100);
+      }
+      streak(CX, 372, 0.18 * tA, 1400);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // ---- closing sigil ----
+    var cA = sstep(10.3, 11.0, t);
+    if (cA > 0.005) {
+      ctx.globalCompositeOperation = 'lighter';
+      var og2 = ctx.createRadialGradient(ox, oy, 0, ox, oy, 300);
+      og2.addColorStop(0, rgba(CG, 0.28 * cA)); og2.addColorStop(1, rgba(CG, 0));
+      ctx.fillStyle = og2; ctx.fillRect(ox - 300, oy - 300, 600, 600);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = 'bold 228px "DejaVu Serif"'; ctx.globalAlpha = cA * 0.85;
+      var og3 = ctx.createLinearGradient(0, oy - 130, 0, oy + 130); og3.addColorStop(0, '#FFF3CC'); og3.addColorStop(0.6, GOLD); og3.addColorStop(1, '#7a5e1e');
+      ctx.shadowColor = GOLD; ctx.shadowBlur = 30; ctx.fillStyle = og3; ctx.fillText('Ω', ox, oy + 6); ctx.shadowBlur = 0;
+      ctx.textBaseline = 'alphabetic';
+      ctx.globalAlpha = sstep(10.5, 11.1, t); ctx.font = '22px "DejaVu Sans Mono"'; ctx.letterSpacing = '12px'; ctx.fillStyle = '#E8D9A8';
+      ctx.fillText('Ω SYD OMEGA 91717', CX, 560); ctx.letterSpacing = '0px'; ctx.globalAlpha = 1;
+    }
+
+    // ---- letterbox ----
+    var lb = 82 * eio((t - 5.8) / 1.0);
+    if (lb > 0.5) { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, lb); ctx.fillRect(0, H - lb, W, lb); }
+
+    // ---- post: vignette, flicker, grain, fades ----
+    ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(VIG, 0, 0);
+    ctx.globalAlpha = 0.03 * frRng(); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.07;
+    var pat = ctx.createPattern(GRAIN[fr % 4], 'repeat'), gox = (frRng() * 256) | 0, goy = (frRng() * 256) | 0;
+    ctx.translate(-gox, -goy); ctx.fillStyle = pat; ctx.fillRect(0, 0, W + 256, H + 256); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    var fade = sstep(0, 0.9, t) * (1 - sstep(11.3, 12.0, t + 1 / FPS));
+    ctx.globalAlpha = 1 - fade; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+  }
+
+  window.SCENE = {
+    fps: FPS, frames: FRAMES, franchise: F, ready: ready, posterFrame: Math.round(8.3 * FPS),
+    render: render,
+    frame: function (i) { render(i); return cv.toDataURL('image/png'); }
+  };
+})();
+</script>
+</body>
+</html>

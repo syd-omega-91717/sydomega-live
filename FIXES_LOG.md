@@ -22383,6 +22383,7 @@ Verified:
 - `brand-glyph-check` OK; `ci-local.sh` 28/28.
 - Limitation: `OmegaProgress.record` was stubbed in the test, so the real `complete_task` RPC is unexercised.
 
+<<<<<<< HEAD
 **Playable arcade on `gaming.html` (2026-10-04).** The GAMES tab was a text catalog of 37 cards that only
 recorded a self-reported "done". New `omega-arcade.js` (`window.OmegaArcade`, `oxa-` prefix, loaded by
 `gaming.html` only) adds six real games in a focus-trapped fullscreen player: ASCEND (2048), SERPENT (Snake),
@@ -22396,3 +22397,21 @@ The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
   2048 no-chain merges); `brand-glyph-check.py` OK.
 - Limits: Supabase stubbed, so the progress call is proven wired, not proven live. Wordle keys are ~31px
   wide at 375px and 16×16 minesweeper cells ~22px — inherent to those layouts on a phone.
+=======
+**Real MP4 franchise films replace the text-only Movies page (2026-10-04).** `movies.html` described 12 franchise films as text cards; no video existed on the platform (0 `<video>` across 224 pages).
+- `scripts/movies/scene.html` + `render.js` (not shipped: `vercel-build.sh` excludes `scripts/`) render each film deterministically:
+  - seeded RNG, `t = frame/24`, frames captured in headless Chromium;
+  - encoded by the system ffmpeg: H.264 1280×720, 24 fps, 12 s, `+faststart`, quiet synthesized AAC drone;
+  - the CRF is raised until each film is ≤1.5 MiB; a poster JPG (≤120 KB) is taken from the title-card frame.
+- Each film's hero is the owner's own zodiac art (`/assets/legacy/sign-<sign>.webp`, all 12 signs), read at render time, not copied.
+- `assets/movies/franchise-01..12.{mp4,jpg}`: 18.8 MB total. ffprobe confirms every film: h264, yuv420p, 288 frames, 12.000 s.
+- The new `movies.html` is a near-text-free video wall:
+  - muted hover/focus/tap previews with `preload="none"`, none under reduced motion;
+  - a native `<dialog>` player with sound;
+  - the auth module unchanged.
+- The lightbox path is built as `dir+'franchise-'+nn`, because the production contract reads a quoted prefix as a missing asset (same class as horoscope).
+- Verified:
+  - `verify-runtime.js` PASS; `ci-local.sh` 28/28; every `src`/`href` resolves.
+  - A Playwright check covered hover playback, keyboard focus, lightbox open/Esc/focus return and no overflow at 375.
+  - Limitation: the sandbox Chromium lacks H.264, so playback was proven with a VP9 copy served at the same URL.
+>>>>>>> origin/main

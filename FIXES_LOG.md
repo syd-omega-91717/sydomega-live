@@ -22413,3 +22413,29 @@ The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
   2048 no-chain merges); `brand-glyph-check.py` OK.
 - Limits: Supabase stubbed, so the progress call is proven wired, not proven live. Wordle keys are ~31px
   wide at 375px and 16×16 minesweeper cells ~22px — inherent to those layouts on a phone.
+
+**Ω Daily Three on the dashboard, and card controls that could not be clicked (2026-10-04).**
+- **Daily loop.** New `omega-daily.js` (`window.OmegaDaily`, guard `data-omega-daily`, `odl-` prefix; deliberately not
+  `omega-today.js`, which is command.html's habits/readiness view — §8.1 class 5). Three rituals per local day:
+  the arcade's daily ORACLE WORD (omega-arcade.js now emits `omega-arcade:daily` when the day's puzzle ends), a
+  3-question quiz from three different sectors of `omega-exam-bank.json` (seeded by date), and a film of the day
+  from `assets/movies/`. Each ritual records once via `OmegaProgress.record` (`daily:<day>:<ritual>`, deduped by
+  `complete_task`), plus `daily:<day>` when all three are done. The streak is counted from the member's own
+  `task_completions` rows (`.error` checked); a browser-local history is used only when that read fails, and the
+  tooltip says which. `dashboard.html` mounts it under the status strip, which loses its developer counts
+  (AUTH APEX, LATTICE NODES, JS ENGINES 92, PAGES 170, SQL FILES 105, FORMULA — stale and not member-facing).
+- **Bug found by it — clicks swallowed by 3-D hover effects.** The quiz could not be answered by mouse:
+  `elementFromPoint` at the button's centre returned its container. Three layers each made page content one shared
+  3-D context, where hit-testing is depth-sorted, so a tile lifted by a hover tilt or the parallax took a
+  neighbour's or child's click: `omega-spatial-system.css` (`preserve-3d` on main/.page-shell and on every card),
+  bg.js §6 cinematic motion (inline `preserve-3d` on every button/link/input/`[class*="card"]`, a tilt on controls
+  inside tilting cards, and a resting `perspective()` transform after mouseleave), and bg.js `.ofx-tilt`.
+  Fix: column and cards are `transform-style:flat` (perspective kept — it alone gives the depth), bg.js sets no
+  `preserve-3d`, does not tilt a control nested in a card (`omg-no-tilt`), and clears the transform on leave.
+  - Real-mouse probe (hover each control in a `[class*="card"]`, hit-test where it then sits), 14 pages:
+    **before 9/30 unclickable (social.html 9/10), after 0/32**; before-run served the HEAD files via the
+    harness `pin` option.
+  - `scripts/tests/test_click_depth_contract.py` (11 tests) holds it; it fails 6/11 on the pre-fix files.
+- Verification: Playwright at 1280 and 375/touch, 38/38: 3 cards, quiz plays through, word/film/quiz saved,
+  3 pips, all-done banner, exact `daily:` tasks recorded, state survives reload, arcade opens from the dashboard,
+  no overflow, 0 page errors. Supabase stubbed: the RPC and the streak read are proven wired, not proven live.

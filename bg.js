@@ -482,7 +482,14 @@ function __omegaAppend(el){
          transitions on .card, .kpi and .btn, which bg.js and
          omega-visual-evolution.css already own. */
       el.style.transition = 'transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s ease';
-      el.style.transformStyle = 'preserve-3d';
+      /* No transform-style:preserve-3d, and no tilt on a control that sits
+         inside a card. A hovered card lifted with translateZ(8px) in a 3-D
+         context, holding a control lifted the same way, made the browser
+         hit-test the plane between them: the click reached the container, not
+         the button (measured: 10/10 card controls on social.html dead while
+         hovered). The card still tilts; its contents ride along flat. */
+      var nested = el.parentElement && el.parentElement.closest('[class*="card"],.kpi');
+      if (nested && el.matches('button, a, [role="button"], input, select, textarea, .btn')) el.classList.add('omg-no-tilt');
       /* No will-change here: it was promoting all 580 matched elements to their
          own compositing layer at once, which costs far more than the hover
          transform it was meant to smooth. */
@@ -498,7 +505,9 @@ function __omegaAppend(el){
       });
 
       el.addEventListener('mouseleave', function(){
-        el.style.transform = 'perspective(1000px) translateZ(0) rotateX(0) rotateY(0)';
+        /* Back to no transform at all: a resting perspective() transform kept
+           every element hovered once in its own 3-D rendering context. */
+        if(!el.classList.contains('omg-no-tilt')) el.style.transform = '';
       });
 
       /* Scroll-reactive parallax on cards */
@@ -1864,7 +1873,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     s.textContent=[
       '.ofx-rise{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}',
       '.ofx-rise.ofx-in{opacity:1;transform:none}',
-      '.ofx-tilt{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease;transform-style:preserve-3d;will-change:transform}',
+      '.ofx-tilt{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease;will-change:transform}',
       '.ofx-tilt:hover{box-shadow:0 18px 50px -20px rgba(0,0,0,.7),0 0 24px -8px rgba(201,168,76,.35)}',
       '@supports ((-webkit-background-clip:text) or (background-clip:text)){',
       '.ofx-sheen{background-image:linear-gradient(100deg,currentColor 38%,rgba(255,247,214,.95) 50%,currentColor 62%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:240% 100%;background-position:140% 0;animation:ofx-sweep 7s ease-in-out infinite}',

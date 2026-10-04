@@ -1,0 +1,297 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-civilization-atlas",
+  "purpose": "Canonical source registry for the governed planetary-to-city concept layer.",
+  "truthPolicy": "Source/design objects remain SOURCE or SIMULATED until independently verified.",
+  "hierarchy": [
+    "PLANETARY_CORE",
+    "PLANET",
+    "WORLD",
+    "REGION",
+    "COUNTRY",
+    "EMPIRE",
+    "FACTION",
+    "CITY",
+    "DISTRICT",
+    "SERVICE",
+    "RESOURCE",
+    "MISSION",
+    "TASK"
+  ],
+  "bodies": [
+    {
+      "id": "sun",
+      "type": "PLANETARY_CORE",
+      "name": "SOLAR CORE",
+      "state": "SOURCE",
+      "role": "Central Ω identity and energy metaphor.",
+      "parent": null
+    },
+    {
+      "id": "mercury",
+      "type": "PLANET",
+      "name": "MERCURY",
+      "state": "SOURCE",
+      "role": "Speed, communication and execution motif.",
+      "parent": "sun"
+    },
+    {
+      "id": "venus",
+      "type": "PLANET",
+      "name": "VENUS",
+      "state": "SOURCE",
+      "role": "Culture, design and creative expression motif.",
+      "parent": "sun"
+    },
+    {
+      "id": "earth",
+      "type": "PLANET",
+      "name": "EARTH",
+      "state": "LIVE",
+      "role": "Current physical operating context and user/service world.",
+      "parent": "sun"
+    },
+    {
+      "id": "mars",
+      "type": "PLANET",
+      "name": "MARS LEDGER",
+      "state": "SOURCE",
+      "role": "Continuity, archive, recovery and resilience metaphor.",
+      "parent": "sun"
+    },
+    {
+      "id": "jupiter",
+      "type": "PLANET",
+      "name": "JUPITER",
+      "state": "SOURCE",
+      "role": "Scale, capacity and hyperscale systems motif.",
+      "parent": "sun"
+    },
+    {
+      "id": "saturn",
+      "type": "PLANET",
+      "name": "SATURN",
+      "state": "SOURCE",
+      "role": "Governance, boundaries and containment motif.",
+      "parent": "sun"
+    },
+    {
+      "id": "uranus",
+      "type": "PLANET",
+      "name": "URANUS",
+      "state": "SOURCE",
+      "role": "Controlled architectural change and experimentation.",
+      "parent": "sun"
+    },
+    {
+      "id": "neptune",
+      "type": "PLANET",
+      "name": "NEPTUNE",
+      "state": "SOURCE",
+      "role": "Frontier research, resilience and unknowns.",
+      "parent": "sun"
+    }
+  ],
+  "objects": [
+    {
+      "id": "earth-world",
+      "type": "WORLD",
+      "name": "EARTH / OMEGA WORLD",
+      "state": "LIVE",
+      "role": "Platform world layer.",
+      "parent": "earth"
+    },
+    {
+      "id": "omega-commonwealth",
+      "type": "EMPIRE",
+      "name": "Ω COMMONWEALTH",
+      "state": "SIMULATED",
+      "role": "Simulated civilization layer joining countries, factions and cities.",
+      "parent": "earth-world"
+    },
+    {
+      "id": "aurelia",
+      "type": "COUNTRY",
+      "name": "AURELIA",
+      "state": "SIMULATED",
+      "role": "Knowledge and creation territory.",
+      "parent": "omega-commonwealth"
+    },
+    {
+      "id": "meridian",
+      "type": "COUNTRY",
+      "name": "MERIDIAN",
+      "state": "SIMULATED",
+      "role": "Commerce, services and exchange territory.",
+      "parent": "omega-commonwealth"
+    },
+    {
+      "id": "vespera",
+      "type": "COUNTRY",
+      "name": "VESPERA",
+      "state": "SIMULATED",
+      "role": "Intelligence, research and frontier territory.",
+      "parent": "omega-commonwealth"
+    },
+    {
+      "id": "omega-prime",
+      "type": "CITY",
+      "name": "OMEGA PRIME",
+      "state": "SIMULATED",
+      "role": "Capital city model: command, governance and core services.",
+      "parent": "aurelia"
+    },
+    {
+      "id": "meridian-gate",
+      "type": "CITY",
+      "name": "MERIDIAN GATE",
+      "state": "SIMULATED",
+      "role": "Commerce city model: marketplace, contracts and logistics.",
+      "parent": "meridian"
+    },
+    {
+      "id": "vesper-nexus",
+      "type": "CITY",
+      "name": "VESPER NEXUS",
+      "state": "SIMULATED",
+      "role": "Intelligence city model: research, AI and evidence.",
+      "parent": "vespera"
+    },
+    {
+      "id": "command-district",
+      "type": "DISTRICT",
+      "name": "COMMAND DISTRICT",
+      "state": "SIMULATED",
+      "role": "Command Center, search, missions and decisions.",
+      "parent": "omega-prime"
+    },
+    {
+      "id": "academy-district",
+      "type": "DISTRICT",
+      "name": "ACADEMY DISTRICT",
+      "state": "SIMULATED",
+      "role": "Matrix, academy, skills and progression.",
+      "parent": "omega-prime"
+    },
+    {
+      "id": "vault-district",
+      "type": "DISTRICT",
+      "name": "VAULT DISTRICT",
+      "state": "SIMULATED",
+      "role": "Commerce, payments, portfolio and governed assets.",
+      "parent": "meridian-gate"
+    },
+    {
+      "id": "research-district",
+      "type": "DISTRICT",
+      "name": "RESEARCH DISTRICT",
+      "state": "SIMULATED",
+      "role": "Intelligence, evidence, graph and research.",
+      "parent": "vesper-nexus"
+    },
+    {
+      "id": "svc-search",
+      "type": "SERVICE",
+      "name": "GLOBAL SEARCH",
+      "state": "LIVE",
+      "role": "Evidence-aware platform discovery.",
+      "parent": "command-district",
+      "route": "/search.html",
+      "module": "CORE"
+    },
+    {
+      "id": "svc-missions",
+      "type": "SERVICE",
+      "name": "MISSIONS",
+      "state": "LIVE",
+      "role": "Server-authoritative mission and evidence workflow.",
+      "parent": "command-district",
+      "route": "/missions.html",
+      "module": "GAMING"
+    },
+    {
+      "id": "svc-academy",
+      "type": "SERVICE",
+      "name": "ACADEMY",
+      "state": "LIVE",
+      "role": "Progression and learning surface.",
+      "parent": "academy-district",
+      "route": "/academy.html",
+      "module": "EVALUATION"
+    },
+    {
+      "id": "svc-market",
+      "type": "SERVICE",
+      "name": "MARKETPLACE",
+      "state": "LIVE",
+      "role": "Governed services and commerce surface.",
+      "parent": "vault-district",
+      "route": "/marketplace.html",
+      "module": "BLOCKCHAIN_NFT"
+    },
+    {
+      "id": "svc-intel",
+      "type": "SERVICE",
+      "name": "INTELLIGENCE",
+      "state": "LIVE",
+      "role": "AI, research and evidence intelligence.",
+      "parent": "research-district",
+      "route": "/intelligence.html",
+      "module": "AI"
+    },
+    {
+      "id": "task-command",
+      "type": "TASK",
+      "name": "VERIFY A COMMAND ACTION",
+      "state": "SIMULATED",
+      "role": "Example task: execute an authorized command action and attach evidence.",
+      "parent": "command-district"
+    },
+    {
+      "id": "task-academy",
+      "type": "TASK",
+      "name": "COMPLETE A VERIFIED LEARNING NODE",
+      "state": "SIMULATED",
+      "role": "Example task: complete a progression node with evidence.",
+      "parent": "academy-district"
+    },
+    {
+      "id": "task-market",
+      "type": "TASK",
+      "name": "COMPLETE A SERVICE ORDER",
+      "state": "SIMULATED",
+      "role": "Example task: complete a real service order through the governed commerce path.",
+      "parent": "vault-district"
+    },
+    {
+      "id": "task-research",
+      "type": "TASK",
+      "name": "PUBLISH AN EVIDENCE-BACKED FINDING",
+      "state": "SIMULATED",
+      "role": "Example task: produce provenance-linked research output.",
+      "parent": "research-district"
+    }
+  ],
+  "integration": {
+    "serviceContract": "service → capability → route → authoritative data → policy → event → evidence → verification",
+    "taskContract": "task → authorization → action → event → evidence → mission state → reward/progression",
+    "authoritativeSystems": [
+      "config/omega-object-model.json",
+      "config/omega-product-catalog.json",
+      "omega_platform_events",
+      "graph_evidence",
+      "omega_mission_transitions"
+    ],
+    "webglRule": "Reuse the existing canonical 3-D owner; do not introduce a second WebGL renderer."
+  },
+  "provenance": {
+    "sourceFamilies": [
+      "999-Point Sovereign Blueprint",
+      "Master Prompt",
+      "Document.txt",
+      "Absolute.txt"
+    ],
+    "classification": "DESIGN_EXTENSION",
+    "ownerDecisionRequiredForRealWorldSovereignty": true
+  }
+}

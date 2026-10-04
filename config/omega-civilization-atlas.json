@@ -391,6 +391,291 @@
       "provenance": "SYD OMEGA 91717 source corpus",
       "observedAt": null,
       "lifecycle": "design-seed"
+    },
+    {
+      "id": "command-tower",
+      "type": "BUILDING",
+      "name": "COMMAND TOWER",
+      "state": "SIMULATED",
+      "role": "Command, governance and operator workspace.",
+      "parent": "command-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "academy-hall",
+      "type": "BUILDING",
+      "name": "ACADEMY HALL",
+      "state": "SIMULATED",
+      "role": "Learning, assessment and progression facility.",
+      "parent": "academy-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "vault-exchange",
+      "type": "BUILDING",
+      "name": "VAULT EXCHANGE",
+      "state": "SIMULATED",
+      "role": "Commerce, payments and asset-service facility.",
+      "parent": "vault-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "research-observatory",
+      "type": "BUILDING",
+      "name": "RESEARCH OBSERVATORY",
+      "state": "SIMULATED",
+      "role": "Research, evidence and intelligence facility.",
+      "parent": "research-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "resource-knowledge",
+      "type": "RESOURCE",
+      "name": "KNOWLEDGE",
+      "state": "SIMULATED",
+      "role": "Learning and research resource model.",
+      "parent": "academy-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "resource-liquidity",
+      "type": "RESOURCE",
+      "name": "LIQUIDITY",
+      "state": "SIMULATED",
+      "role": "Financial-resource concept; never a balance without authoritative ledger data.",
+      "parent": "vault-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "resource-compute",
+      "type": "RESOURCE",
+      "name": "COMPUTE",
+      "state": "SIMULATED",
+      "role": "Compute capacity concept; runtime values require telemetry.",
+      "parent": "research-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "resource-evidence",
+      "type": "RESOURCE",
+      "name": "EVIDENCE",
+      "state": "SIMULATED",
+      "role": "Evidence capacity concept; authoritative records live in the Evidence Graph.",
+      "parent": "research-district",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed"
+    },
+    {
+      "id": "svc-omega-governance",
+      "type": "SERVICE",
+      "name": "OMEGA GOVERNANCE SERVICE",
+      "state": "SIMULATED",
+      "role": "Governance, approvals and audit workflows.",
+      "parent": "omega-prime",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "svc-omega-community",
+      "type": "SERVICE",
+      "name": "OMEGA COMMUNITY SERVICE",
+      "state": "SIMULATED",
+      "role": "Communication, events and community operations.",
+      "parent": "omega-prime",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "svc-meridian-logistics",
+      "type": "SERVICE",
+      "name": "MERIDIAN LOGISTICS SERVICE",
+      "state": "SIMULATED",
+      "role": "Commerce fulfillment and service routing concept.",
+      "parent": "meridian-gate",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "svc-meridian-contracts",
+      "type": "SERVICE",
+      "name": "MERIDIAN CONTRACT SERVICE",
+      "state": "SIMULATED",
+      "role": "Contract lifecycle and commission workflow concept.",
+      "parent": "meridian-gate",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "svc-vesper-research",
+      "type": "SERVICE",
+      "name": "VESPER RESEARCH SERVICE",
+      "state": "SIMULATED",
+      "role": "Research discovery and evidence workflow concept.",
+      "parent": "vesper-nexus",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "svc-vesper-publishing",
+      "type": "SERVICE",
+      "name": "VESPER PUBLISHING SERVICE",
+      "state": "SIMULATED",
+      "role": "Evidence-backed publishing workflow concept.",
+      "parent": "vesper-nexus",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "contract": {
+        "capability": null,
+        "authorization": "simulation-policy",
+        "event": "simulation_run",
+        "evidence": "simulation-record"
+      }
+    },
+    {
+      "id": "task-governance",
+      "type": "TASK",
+      "name": "RUN A GOVERNANCE REVIEW",
+      "state": "SIMULATED",
+      "role": "Governance review simulation with policy and evidence checkpoints.",
+      "parent": "omega-prime",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
+    },
+    {
+      "id": "task-community",
+      "type": "TASK",
+      "name": "PUBLISH A COMMUNITY DISPATCH",
+      "state": "SIMULATED",
+      "role": "Community publication simulation with provenance.",
+      "parent": "omega-prime",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
+    },
+    {
+      "id": "task-logistics",
+      "type": "TASK",
+      "name": "PLAN A SERVICE ROUTE",
+      "state": "SIMULATED",
+      "role": "Logistics simulation without real-world fulfillment claims.",
+      "parent": "meridian-gate",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
+    },
+    {
+      "id": "task-contract",
+      "type": "TASK",
+      "name": "DRAFT A SERVICE CONTRACT",
+      "state": "SIMULATED",
+      "role": "Contract simulation pending legal/provider verification.",
+      "parent": "meridian-gate",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
+    },
+    {
+      "id": "task-publish",
+      "type": "TASK",
+      "name": "PUBLISH A VERIFIED BRIEF",
+      "state": "SIMULATED",
+      "role": "Publication simulation requiring evidence and review.",
+      "parent": "vesper-nexus",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
     }
   ],
   "integration": {
@@ -707,5 +992,133 @@
         "decision-support"
       ]
     }
-  ]
+  ],
+  "empireProfiles": [
+    {
+      "id": "omega-commonwealth",
+      "state": "SIMULATED",
+      "features": [
+        "federated-civilization-model",
+        "shared-services",
+        "cross-city-missions",
+        "trade-routes",
+        "knowledge-exchange"
+      ],
+      "governance": [
+        "charter",
+        "policy",
+        "audit",
+        "faction-rules"
+      ],
+      "economy": [
+        "marketplace",
+        "services",
+        "contracts",
+        "investment-intelligence"
+      ],
+      "intelligence": [
+        "12-agent-network",
+        "evidence-graph",
+        "research",
+        "signal-intelligence"
+      ],
+      "taskFamilies": [
+        "governance",
+        "trade",
+        "research",
+        "education",
+        "city-operations"
+      ]
+    }
+  ],
+  "countryProfiles": [
+    {
+      "id": "aurelia",
+      "state": "SIMULATED",
+      "features": [
+        "academy",
+        "creative-industry",
+        "heritage",
+        "identity"
+      ],
+      "services": [
+        "education",
+        "media",
+        "consultancy"
+      ],
+      "taskFamilies": [
+        "learning",
+        "creation",
+        "heritage"
+      ],
+      "governance": [
+        "country-policy",
+        "access-policy"
+      ]
+    },
+    {
+      "id": "meridian",
+      "state": "SIMULATED",
+      "features": [
+        "commerce",
+        "marketplace",
+        "payments",
+        "logistics"
+      ],
+      "services": [
+        "commerce",
+        "contracts",
+        "payments"
+      ],
+      "taskFamilies": [
+        "orders",
+        "trade",
+        "portfolio"
+      ],
+      "governance": [
+        "commerce-policy",
+        "entitlement",
+        "audit"
+      ]
+    },
+    {
+      "id": "vespera",
+      "state": "SIMULATED",
+      "features": [
+        "research",
+        "ai",
+        "evidence",
+        "frontier"
+      ],
+      "services": [
+        "research",
+        "intelligence",
+        "publishing"
+      ],
+      "taskFamilies": [
+        "research",
+        "analysis",
+        "publication"
+      ],
+      "governance": [
+        "model-governance",
+        "provenance",
+        "privacy"
+      ]
+    }
+  ],
+  "runtimeCounts": {
+    "canonicalLedgerBodies": 9,
+    "orbitalPlanets": 8,
+    "productionWorlds": 1,
+    "seededEmpires": 1,
+    "seededCountries": 3,
+    "seededCities": 3,
+    "seededDistricts": 4,
+    "seededBuildings": 4,
+    "seededServices": 11,
+    "seededResources": 4,
+    "seededTasks": 10,
+    "canonicalAgents": 12
+  }
 }

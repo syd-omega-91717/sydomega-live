@@ -2,7 +2,7 @@
   "_captured": "2026-10-04",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
   "remoteMigrationCount": 332,
-  "latestRemoteMigration": "20261004090000",
+  "latestRemoteMigration": "20261004000807",
   "versions": [
     "0001",
     "0002",
@@ -335,7 +335,7 @@
     "20261003214237",
     "20261003220624",
     "20261003220754",
-    "20261004090000"
+    "20261004000807"
   ],
   "migrations": [
     {
@@ -1663,7 +1663,7 @@
       "name": "progression_tables_revoke_member_writes"
     },
     {
-      "version": "20261004090000",
+      "version": "20261004000807",
       "name": "rls_rpc_performance_hardening_20261004"
     }
   ]

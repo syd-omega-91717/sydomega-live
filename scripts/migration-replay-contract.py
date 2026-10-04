@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "supabase" / "migrations"
 REMOTE = ROOT / "supabase" / "remote-migrations.json"
-VERSION_RE = re.compile(r"^(?P<version>[^_]+)_.+\.sql$")
+VERSION_RE = re.compile(r"^(?P<version>[^_]+)_.+[.]sql$")
 
 def fail(message: str) -> int:
     print(f"MIGRATION_REPLAY_CONTRACT=FAILED: {message}")

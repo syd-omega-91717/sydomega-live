@@ -22155,3 +22155,59 @@ version, the order live applies them. After: `./scripts/ci-local.sh --all` **35/
 every `scripts/*` step referenced by `.github/workflows/` passes except
 `supabase-runtime-contract.py` (needs the live auth endpoint the sandbox proxy 403s) and
 `page-overlap-audit.py` (pinned to the dead self-hosted runner, §8.2).
+
+## Supply-chain Semgrep gate cleared (21 findings); browser evidence measured mid-redirect; registry-sync shell injection (2026-10-04)
+
+**The gate could not say what it found.** `supply-chain-sbom.yml` runs
+`semgrep scan --config=auto --error` and uploads the SARIF to code scanning, so a red
+run logged only `Findings: 22 (22 blocking)`; code scanning returns 403 to this
+session, `--config=auto` needs `semgrep.dev` (egress-blocked), and no SARIF artifact is
+kept. A failure-only step now prints every finding as `rule  file:line` plus a workflow
+annotation. The first dispatched run listed **21** (one had already been fixed, below).
+
+**Real fixes:**
+- `omega-registry-sync.yml` expanded `${{ github.ref_name }}` inside a shell `run:`
+  (`run-shell-injection`, HIGH) — a ref name may carry `$`, `;` or backticks. It now
+  arrives only as `$TARGET_REF`. A sweep of all workflows found no other site.
+- `.claude/skills/verify-in-browser/harness/session.js` built
+  `` `git -C ${ROOT} show ${rev}:${f}` `` for `execSync` (`detect-child-process` ×2): now
+  `execFileSync('git', [...])`, no shell.
+- Three log calls put a variable inside the format string (`unsafe-formatstring`):
+  `omega-devtools.js`, `weekly-digest`, `product-orchestrator` now pass it as a `%s`/`%d`
+  argument. `product-orchestrator` is DEPLOYED, so the source change was deployed as
+  **version 4** (`verify_jwt` kept true; fetched back and compared — identical to the repo
+  apart from that line; the function is dormant behind `autonomous_agents_enabled`) and
+  `docs/runtime/supabase-edge-functions-live.json` updated (`ezbr_sha256 9524fa5e…`, blob
+  `90114578…`); `supabase-edge-runtime-reconciliation.py` passes.
+- `covenant`/`domain-mastery`/`quest-progress`/`seasonal-events.html` used an inline
+  `data:` SVG favicon (`missing-integrity`); now `/favicon.ico` like the other pages.
+- Both local harness HTTP servers bind `127.0.0.1` (`serve.js` listened on all
+  interfaces). `.npmrc` gains `min-release-age=7` — npm 10 (CI's) ignores the key with a
+  warning, recorded in the file; CI already installs exact, weeks-old versions with
+  `--ignore-scripts`.
+
+**Suppressed inline, each with its reason on the line above:** four `RegExp`s whose input
+is already escaped on the same line (`omega-analytics.js`, `omega-speed-insights.js`,
+`omega-search.js`, `omega-search-enhanced.js`); git's blob SHA-1 (an identity, now
+`usedforsecurity=False`); the two `urllib` calls (now refusing any non-`https://` URL
+first); the loopback test servers and their repo-controlled `path.join`s. Semgrep
+matches `nosemgrep: <id>` by **suffix**, so the comment uses the rule's last segment: the
+full registry id silently fails to match when the rules run from a local checkout (tested
+on a three-variant fixture). Verified locally with the same rule files cloned from
+`semgrep/semgrep-rules`: 12 findings on the touched files before, **0** after.
+
+**Browser release evidence (`tests/release/browser.spec.cjs`) never measured a page.**
+Its failures on `main` were not accessibility violations: every one was
+`Execution context was destroyed … because of a navigation` or `ERR_ABORTED`. A
+signed-out visitor is redirected client-side (bg.js's guard, e.g. `dashboard.html` →
+`account.html`) just after DOMContentLoaded, and axe / `page.evaluate` ran during the hop.
+The spec now settles on the page the visitor lands on (`visit` + `settle`, one retry if a
+late redirect interrupts), reads HTTP reachability with `page.request.get` instead of a
+racing `goto`, and gives the 18-route walk its own timeout. Run locally against a static
+server with `@playwright/test@1.63.0` + `@axe-core/playwright@4.13.0` (CI's versions):
+**before 9/11, after 11/11, twice**. Production is egress-blocked here, so the live run is
+CI's.
+
+**Not done:** the full migration replay (`GAP_ANALYSIS.md` §S — needs an edit to an
+applied migration, refused by this session's permission policy) and the five inert
+policies (DROP confirmation never reaches the user).

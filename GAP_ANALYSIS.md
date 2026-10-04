@@ -822,6 +822,25 @@ open, recorded in `FIXES_LOG.md`:
   `.from().on()` realtime API, were removed. Wiring the layer needs a real
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
+- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`,
+  measured 2026-10-04). A fresh `supabase db reset` stops at migration #129,
+  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql`: its unguarded
+  `ALTER POLICY … ON public.council_deliberations` runs before the table exists,
+  because that table only reaches `migrations/` in `20260905211725`; live had it
+  from the flat bag first. Reproduced locally on PG16 + pgvector + pg_cron with
+  a Supabase platform stub, failing at the same statement. The fix that leaves
+  live untouched wraps those three `ALTER`s in a `pg_policies` existence check:
+  the version is already applied live and never re-runs, and `20260905211725`
+  creates the same three policies in the same `(SELECT auth.uid())` form. It
+  edits an applied migration, though, which CLAUDE.md §5 forbids, and the edit
+  was refused by this session's permission policy. **Owner decision.** Further
+  gaps past #129 are unmeasured until this one is resolved.
+- **Five inert progression write policies** (`covenant_member_update`,
+  `domain_mastery_member_update`, `leaderboard_member_update`,
+  `quest_completions_member_insert`, `quest_completions_member_update`) are still
+  live. A DROP through the connector waits on a confirmation that never reaches
+  the user and times out; retried 2026-10-04, still 5. Run in the SQL editor:
+  `drop policy if exists <name> on public.<table>;` for each.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

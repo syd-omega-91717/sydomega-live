@@ -27,10 +27,10 @@
     },
     "product-orchestrator": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 4,
       "verify_jwt": true,
-      "live_sha256": "f87974023438b6fad29b9a40d81efd5f54f5bdc9e70794f21f1f20acaf56b937",
-      "repository_blob_sha": "f4ecde9a6b3a48a96c8813902d306c841a75fa66"
+      "live_sha256": "9524fa5e566243e1932fa9af69fbdf65d7afcff2661eec59c18c14cd62ae5900",
+      "repository_blob_sha": "9011457894e6911e29eee0d41a32f5a1b01394ea"
     },
     "stripe-webhook": {
       "state": "DEPLOYED",

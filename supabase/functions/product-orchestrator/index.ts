@@ -144,7 +144,7 @@ async function updateMemberFeatureFlags(
     });
 
     if (error) {
-      console.error(`Error setting feature flag ${featureId}:`, error);
+      console.error('Error setting feature flag %s:', featureId, error);
     }
   }
 }

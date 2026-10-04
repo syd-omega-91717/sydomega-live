@@ -1671,6 +1671,8 @@
       "name": "rls_rpc_performance_hardening_20261004"
     },
     {
+      "version": "20261004000900",
+      "name": "deterministic_task_graph_projection_20261004"
       "version": "20261004082748",
       "name": "deterministic_task_graph_projection_20261004"
     },

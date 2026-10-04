@@ -22369,6 +22369,20 @@ run 37211479551 on `main` (`21febb81`, after #711; CLI 2.119.0), job 11146339470
 steps were `Replay every migration from zero` (15:03:49–15:04:20), the post-replay inventory, the migration
 security audit and the hardening contract. `GAP_ANALYSIS.md`'s replay entry is now closed.
 
+**Real sector exams replace the 10-card flashcard page (2026-10-04).** `exam.html` was a self-graded flashcard list with 10 seed questions in localStorage; `gaming.html`'s "exams" were text cards naming certifications. New:
+- `omega-exam-bank.json`: 12 sectors × 20 multiple-choice questions = 240. Answer index is balanced, 60 per position. Every key was re-read by the coordinator, and the distractors on borderline items (Dead Sea, equator, desert, blood donor) admit exactly one correct option.
+- `omega-exam-engine.js` (`window.OmegaExam`):
+  - flow: sector grid → 10 random questions with shuffled options → optional 45 s timer ring → instant feedback with a ≤140-char explanation → score ring with mistake review;
+  - best score per sector in `omega_exam_best` (localStorage, try/catch);
+  - a pass (≥70%) calls `OmegaProgress.record({kind:'knowledge',task:'exam:'+sector,axis:'a'})`, which dedups server-side and checks `.error`. These are the first real `task_completions` writes on offer to members; live there are 0.
+- `exam.html` rebuilt with low text: title, 3 honest KPIs, EXAMS | FLASHCARDS tabs. The existing `omega_exam` flashcard data is preserved.
+
+Verified:
+- `verify-runtime.js --pages exam.html` PASS.
+- A Playwright e2e at 1280/375 answered all 10 questions with keyboard and click. The best score persists across reload, there is no horizontal overflow and tap targets are ≥44px.
+- `brand-glyph-check` OK; `ci-local.sh` 28/28.
+- Limitation: `OmegaProgress.record` was stubbed in the test, so the real `complete_task` RPC is unexercised.
+
 **Playable arcade on `gaming.html` (2026-10-04).** The GAMES tab was a text catalog of 37 cards that only
 recorded a self-reported "done". New `omega-arcade.js` (`window.OmegaArcade`, `oxa-` prefix, loaded by
 `gaming.html` only) adds six real games in a focus-trapped fullscreen player: ASCEND (2048), SERPENT (Snake),

@@ -74,6 +74,27 @@ test.describe('Omega production release surface', () => {
     });
   }
 
+  test('homepage performance stays within release thresholds', async ({ page }) => {
+    await page.goto(BASE_URL, { waitUntil: 'load' });
+    const metrics = await page.evaluate(() => {
+      const nav = performance.getEntriesByType('navigation')[0];
+      const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
+      const layoutShifts = performance.getEntriesByType('layout-shift').filter((e) => !e.hadRecentInput);
+      return {
+        domContentLoaded: nav ? nav.domContentLoadedEventEnd : null,
+        load: nav ? nav.loadEventEnd : null,
+        lcp: lcpEntries.length ? lcpEntries[lcpEntries.length - 1].startTime : null,
+        cls: layoutShifts.reduce((sum, e) => sum + e.value, 0),
+      };
+    });
+    expect(metrics.domContentLoaded).not.toBeNull();
+    expect(metrics.load).not.toBeNull();
+    expect(metrics.domContentLoaded).toBeLessThan(5000);
+    expect(metrics.load).toBeLessThan(8000);
+    if (metrics.lcp !== null) expect(metrics.lcp).toBeLessThan(4000);
+    expect(metrics.cls).toBeLessThan(0.25);
+  });
+
   test('reduced-motion context is honored by the browser', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();

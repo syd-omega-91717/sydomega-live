@@ -266,7 +266,7 @@ async function boot(){
     var si=SNAMES.indexOf(pr.sign||'');
     /* The member's own sign art (owner collection, alpha cutouts) -- shown only
        when the profile actually records a sign; never a stand-in sign. */
-    if(si>=0){var art=document.getElementById('hr-sign-art');if(art){art.src='/assets/legacy/sign-'+SNAMES[si].toLowerCase()+'.webp';art.alt=SNAMES[si]+' sign art';art.hidden=false;}}
+    if(si>=0){var art=document.getElementById('hr-sign-art');if(art){var dir='/assets/legacy/';art.src=dir+'sign-'+SNAMES[si].toLowerCase()+'.webp';art.alt=SNAMES[si]+' sign art';art.hidden=false;}}
     if(si<0)si=0;
     sid('hr-sign-emblem',SYMS[si]);
     sid('hr-sign-name',SNAMES[si]+' '+SYMS[si]);

@@ -45,6 +45,10 @@ def get(url: str, headers: dict[str, str] | None = None) -> tuple[int, bytes]:
         headers={"User-Agent": USER_AGENT, **(headers or {})},
         method="GET",
     )
+    if not url.startswith("https://"):
+        raise ValueError(f"refusing non-https URL: {url!r}")
+    # https-only, checked above, so no file:// or other scheme reaches urlopen.
+    # nosemgrep: dynamic-urllib-use-detected
     with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
         return response.status, response.read(4096)
 

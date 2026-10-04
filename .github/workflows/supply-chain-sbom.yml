@@ -30,6 +30,24 @@ jobs:
         run: |
           docker run --rm -v "${PWD}:/src" semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0 semgrep scan --config=auto --error --sarif --output=/src/semgrep.sarif /src
 
+      - name: List Semgrep findings
+        # The SARIF goes to code scanning, which most readers of this log cannot
+        # open; without this a red run shows only "N findings".
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import json
+          runs = json.load(open("semgrep.sarif")).get("runs", [])
+          for run in runs:
+              for r in run.get("results", []):
+                  loc = r["locations"][0]["physicalLocation"]
+                  path = loc["artifactLocation"]["uri"]
+                  line = loc.get("region", {}).get("startLine", 0)
+                  msg = r["message"]["text"].splitlines()[0][:160]
+                  print(f"::error file={path},line={line}::{r['ruleId']}: {msg}")
+                  print(f"{r['ruleId']}\t{path}:{line}")
+          PY
+
       - name: Upload Semgrep SARIF
         if: always()
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
@@ -68,6 +86,9 @@ jobs:
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           sarif_file: trivy-config.sarif
+          # Both Trivy uploads report tool "Trivy", and code scanning accepts one
+          # SARIF per tool+category per job: this one needs its own category.
+          category: trivy-config
 
       - name: Generate dependency SBOM
         uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage

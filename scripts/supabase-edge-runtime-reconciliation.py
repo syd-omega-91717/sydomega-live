@@ -16,7 +16,10 @@ def fail(message:str)->int:
 def git_blob_sha(path: Path) -> str:
     data=path.read_bytes()
     header=f"blob {len(data)}\0".encode("utf-8")
-    return hashlib.sha1(header + data).hexdigest()
+    # Git defines a blob's identity as SHA-1 of this header + content; this is an
+    # identity comparison against git, not a security use.
+    # nosemgrep: insecure-hash-algorithm-sha1
+    return hashlib.sha1(header + data, usedforsecurity=False).hexdigest()
 
 def main()->int:
     if not FUNCTIONS.is_dir(): return fail("supabase/functions is missing")

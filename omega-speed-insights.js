@@ -57,6 +57,8 @@ function computeRoute(pathname, pathParams) {
   }
 }
 function turnValueToRegExp(value) {
+  // `value` is regex-escaped on this line, so it matches literally (no ReDoS).
+  // nosemgrep: detect-non-literal-regexp
   return new RegExp(`/${escapeRegExp(value)}(?=[/?#]|$)`);
 }
 function escapeRegExp(string) {

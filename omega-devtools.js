@@ -36,9 +36,9 @@
     // DOM inspector
     inspect: (selector) => {
       const elements = document.querySelectorAll(selector);
-      console.log(`[INSPECT] Found ${elements.length} elements matching "${selector}"`);
+      console.log('[INSPECT] Found %d elements matching "%s"', elements.length, selector);
       elements.forEach((el, i) => {
-        console.log(`  ${i + 1}. ${el.tagName}`, el);
+        console.log('  %d. %s', i + 1, el.tagName, el);
       });
       return elements;
     },

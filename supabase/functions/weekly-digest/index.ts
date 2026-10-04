@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
         // The throw above records a truthful failure rather than false delivery evidence.
 
       } catch (err) {
-        console.error(`[Digest] Error processing ${item.id}:`, err);
+        console.error('[Digest] Error processing %s:', item.id, err);
         await supabase
           .from("weekly_digest_queue")
           .update({

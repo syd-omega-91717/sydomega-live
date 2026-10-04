@@ -164,7 +164,10 @@
   var lb=document.getElementById('omv-lb'),lbv=document.getElementById('omv-lb-video'),lbt=document.getElementById('omv-lb-title'),opener=null;
   function openFilm(tile,btn){
     stop(tile);opener=btn;
-    var nn=tile.getAttribute('data-film');
+    /* data-film is 01..12; rebuild it from a number so no page text reaches a URL. */
+    var n=parseInt(tile.getAttribute('data-film'),10);
+    if(!(n>=1&&n<=12))return;
+    var nn=(n<10?'0':'')+n;
     lbt.textContent=btn.getAttribute('data-title')||'';
     var dir='/assets/movies/';
     lbv.poster=dir+'franchise-'+nn+'.jpg';

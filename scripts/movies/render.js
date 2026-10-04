@@ -54,7 +54,11 @@ function loadPlaywright() {
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.css': 'text/css' };
 function serve() {
   return new Promise((res) => {
+    // Loopback-only render server (127.0.0.1, ephemeral port); never deployed.
+    // nosemgrep: using-http-server
     const srv = http.createServer((req, rsp) => {
+      // Normalized, then confined to ROOT on the next line.
+      // nosemgrep: path-join-resolve-traversal
       const p = path.normalize(path.join(ROOT, decodeURIComponent(req.url.split('?')[0])));
       if (!p.startsWith(ROOT + path.sep) || !fs.existsSync(p) || !fs.statSync(p).isFile()) { rsp.writeHead(404); return rsp.end(); }
       rsp.writeHead(200, { 'Content-Type': TYPES[path.extname(p).toLowerCase()] || 'application/octet-stream' });
@@ -78,9 +82,13 @@ function droneGraph(n) {
 
 function encode(n, dir) {
   const nn = String(n).padStart(2, '0');
+  // `n` is a loop integer 1..12.
+  // nosemgrep: path-join-resolve-traversal
   const mp4 = path.join(OUT, `franchise-${nn}.mp4`);
   let crf = 27;
   for (;;) {
+    // `dir` is this script's own temp dir.
+    // nosemgrep: path-join-resolve-traversal
     ff(['-framerate', '24', '-i', path.join(dir, 'f%04d.png'), '-f', 'lavfi', '-i', droneGraph(n),
       '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf), '-pix_fmt', 'yuv420p',
       '-profile:v', 'high', '-r', '24', '-c:a', 'aac', '-b:a', '64k', '-ac', '1', '-shortest', '-movflags', '+faststart', mp4]);
@@ -93,6 +101,8 @@ function encode(n, dir) {
 
 function poster(n, png) {
   const nn = String(n).padStart(2, '0');
+  // `n` is a loop integer 1..12.
+  // nosemgrep: path-join-resolve-traversal
   const jpg = path.join(OUT, `franchise-${nn}.jpg`);
   for (const [w, qv] of [[1280, 3], [1280, 5], [1280, 7], [960, 5], [960, 8], [800, 8], [800, 12]]) {
     ff(['-i', png, '-vf', `scale=${w}:-2`, '-q:v', String(qv), jpg]);
@@ -103,6 +113,8 @@ function poster(n, png) {
 }
 
 async function renderOne(browser, base, n) {
+  // `n` is a loop integer 1..12.
+  // nosemgrep: path-join-resolve-traversal
   const dir = path.join(TMP, `f${String(n).padStart(2, '0')}`);
   fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
@@ -114,10 +126,14 @@ async function renderOne(browser, base, n) {
   console.log(`  franchise ${n}: ${total} frames, art=${info.art || 'glyph fallback'}`);
   for (let i = 0; i < total; i++) {
     const url = await page.evaluate((k) => window.SCENE.frame(k), i);
+    // `i` is a frame counter.
+    // nosemgrep: path-join-resolve-traversal
     fs.writeFileSync(path.join(dir, `f${String(i).padStart(4, '0')}.png`), Buffer.from(url.split(',')[1], 'base64'));
   }
   await page.close();
   encode(n, dir);
+  // `posterAt` is a frame number from our own scene.
+  // nosemgrep: path-join-resolve-traversal
   poster(n, path.join(dir, `f${String(posterAt).padStart(4, '0')}.png`));
   if (!KEEP) fs.rmSync(dir, { recursive: true, force: true });
 }

@@ -210,6 +210,62 @@
       "owner": "owner_agent"
     }
   ],
+    {
+      "type": "planetary_body",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "world",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "country",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "empire",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "city",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "district",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "service",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
+    {
+      "type": "task",
+      "sources": ["config/omega-civilization-atlas.json"],
+      "identity": "id",
+      "label": "name",
+      "owner": null
+    },
   "relations": [
     {
       "type": "OWNS",

@@ -22297,3 +22297,12 @@ event is a drop, with the same `ALTER PUBLICATION … DROP TABLE` exception (`me
 stays declared — checked). Declared relations 204 → 202; absent live 2 → 0; the drop is
 exactly the two named tables. `test_table_a_later_migration_drops_is_not_declared` fails on
 the old script and passes on the new one (with a planted publication-drop control); suite 518.
+
+**Migration replay gap 1 of n closed — `20260819071913` guarded (owner-approved, 2026-10-04, PR #707).**
+A fresh `supabase db reset` stopped at #129: three `ALTER POLICY … ON public.council_deliberations`
+ran before the table reaches `migrations/` (`20260905211725`, which recreates the same three policies
+in the same `(SELECT auth.uid())` form). Wrapped in `pg_policies` existence checks. The owner approved
+editing this applied migration (CLAUDE.md §5 otherwise forbids it); live already applied the version and
+never re-runs it. Local replay (PG16 + pg_cron + platform stub): before `FAIL #129`, after `FAIL #158`
+— `20260903015502` references `public.signups`, which exists live but is created by no file in the repo.
+That second gap is recorded in `GAP_ANALYSIS.md` as an owner decision.

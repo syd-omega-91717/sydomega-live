@@ -828,18 +828,20 @@ open, recorded in `FIXES_LOG.md`:
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
 - **The full migration replay has never passed** (`supabase-full-migration-replay.yml`,
-  measured 2026-10-04). A fresh `supabase db reset` stops at migration #129,
-  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql`: its unguarded
-  `ALTER POLICY … ON public.council_deliberations` runs before the table exists,
-  because that table only reaches `migrations/` in `20260905211725`; live had it
-  from the flat bag first. Reproduced locally on PG16 + pgvector + pg_cron with
-  a Supabase platform stub, failing at the same statement. The fix that leaves
-  live untouched wraps those three `ALTER`s in a `pg_policies` existence check:
-  the version is already applied live and never re-runs, and `20260905211725`
-  creates the same three policies in the same `(SELECT auth.uid())` form. It
-  edits an applied migration, though, which CLAUDE.md §5 forbids, and the edit
-  was refused by this session's permission policy. **Owner decision.** Further
-  gaps past #129 are unmeasured until this one is resolved.
+  measured 2026-10-04). Gap 1 of n, **fixed with owner approval (PR #707)**: #129
+  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql` altered three
+  `council_deliberations` policies before that table reaches `migrations/`
+  (`20260905211725`, which creates the same policies in the same form); its `ALTER`s
+  are now wrapped in `pg_policies` existence checks — live already applied the version,
+  so nothing changes there. Gap 2, **open, owner decision**: #158
+  `20260903015502_harden_rls_and_public_api_warnings_20260903.sql` fails with
+  `relation "public.signups" does not exist` — `signups` exists live (`id, email, sign,
+  element, olympian, planet, agent, created_at`) but **no file in this repo creates it**
+  (out-of-band). Fix: the same existence guard on its two `signups` statements (another
+  applied-migration edit, refused by this session's permission policy without explicit
+  approval for that file), ideally plus adopting `signups`' live DDL into `migrations/`.
+  Measured with a local replay (PG16 + pg_cron + a Supabase platform stub); gaps past
+  #158 are unmeasured.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

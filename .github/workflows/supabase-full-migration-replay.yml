@@ -5,6 +5,7 @@ on:
     branches: [main]
   push:
     branches:
+      - main
       - "hardening/**"
   workflow_dispatch:
 

@@ -5,18 +5,23 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "supabase" / "migrations"
 REMOTE = ROOT / "supabase" / "remote-migrations.json"
-VERSION_RE = re.compile(r"^(?P<version>[^_]+)_.+\\.sql$")
+VERSION_RE = re.compile(r"^(?P<version>[^_]+)_.+\.sql$")
 
 def fail(message: str) -> int:
     print(f"MIGRATION_REPLAY_CONTRACT=FAILED: {message}")
     return 1
 
 def main() -> int:
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
+        print(__doc__ or "")
+        return 0
+
     if not MIGRATIONS.is_dir():
         return fail("supabase/migrations is missing")
     if not REMOTE.is_file():

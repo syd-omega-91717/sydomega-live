@@ -81,74 +81,214 @@
 -- ---------------------------------------------------------------------------
 
 -- === No caller anywhere. Unguarded. These get nothing back. ===
-REVOKE EXECUTE ON FUNCTION public.notify_member(uuid, text, text, jsonb) FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public.log_evolution(text, text) FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text) FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text) FROM PUBLIC, anon;
+DO $$ BEGIN
+  IF to_regprocedure('public.notify_member(uuid, text, text, jsonb)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.notify_member(uuid, text, text, jsonb) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.log_evolution(text, text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.log_evolution(text, text) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text) FROM PUBLIC, anon';
+  END IF;
+END $$;
 
 -- === Trigger functions. Fire as the table owner; never called over REST. ===
-REVOKE EXECUTE ON FUNCTION public._notify_approved() FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public._notify_owner_member_approved() FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public._notify_owner_member_rejected() FROM PUBLIC, anon;
+DO $$ BEGIN
+  IF to_regprocedure('public._notify_approved()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public._notify_approved() FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public._notify_owner_member_approved()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public._notify_owner_member_approved() FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public._notify_owner_member_rejected()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public._notify_owner_member_rejected() FROM PUBLIC, anon';
+  END IF;
+END $$;
 
 -- === Signed-in member callers. Keep `authenticated`, drop everyone else. ===
 -- order_stats -> hall.html (gated)
-REVOKE EXECUTE ON FUNCTION public.order_stats() FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.order_stats() TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.order_stats()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.order_stats() FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.order_stats()') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.order_stats() TO authenticated';
+  END IF;
+END $$;
 
 -- public_leaderboard -> hall.html (gated). Named "public_" but its only caller
 -- is a gated page. If a genuinely public leaderboard is ever wanted, re-granting
 -- anon is a deliberate one-line change rather than an accident of the default.
-REVOKE EXECUTE ON FUNCTION public.public_leaderboard(integer) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.public_leaderboard(integer) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.public_leaderboard(integer)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.public_leaderboard(integer) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.public_leaderboard(integer)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.public_leaderboard(integer) TO authenticated';
+  END IF;
+END $$;
 
 -- get_platform_flag -> interface-omni.html (gated) + one Edge Function
-REVOKE EXECUTE ON FUNCTION public.get_platform_flag(text) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.get_platform_flag(text) TO authenticated, service_role;
+DO $$ BEGIN
+  IF to_regprocedure('public.get_platform_flag(text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.get_platform_flag(text) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.get_platform_flag(text)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.get_platform_flag(text) TO authenticated, service_role';
+  END IF;
+END $$;
 
 -- get_all_members -> approvals.html, profile.html, omega-user.js
-REVOKE EXECUTE ON FUNCTION public.get_all_members() FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.get_all_members() TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.get_all_members()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.get_all_members() FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.get_all_members()') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.get_all_members() TO authenticated';
+  END IF;
+END $$;
 
 -- complete_task -> publishing.html + 4 omega-* modules
-REVOKE EXECUTE ON FUNCTION public.complete_task(text, text, text, text, numeric) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.complete_task(text, text, text, text, numeric) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.complete_task(text, text, text, text, numeric)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.complete_task(text, text, text, text, numeric) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.complete_task(text, text, text, text, numeric)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.complete_task(text, text, text, text, numeric) TO authenticated';
+  END IF;
+END $$;
 
 -- check_gate -> omega-guardian.js
-REVOKE EXECUTE ON FUNCTION public.check_gate(text, numeric) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.check_gate(text, numeric) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.check_gate(text, numeric)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.check_gate(text, numeric) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.check_gate(text, numeric)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.check_gate(text, numeric) TO authenticated';
+  END IF;
+END $$;
 
 -- record_interest_signal -> omega-recommend.js
-REVOKE EXECUTE ON FUNCTION public.record_interest_signal(text, text, text, text, numeric) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.record_interest_signal(text, text, text, text, numeric) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.record_interest_signal(text, text, text, text, numeric)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.record_interest_signal(text, text, text, text, numeric) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.record_interest_signal(text, text, text, text, numeric)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.record_interest_signal(text, text, text, text, numeric) TO authenticated';
+  END IF;
+END $$;
 
 -- === Owner-only membership and access control. No client caller found; the
 -- owner reaches these while authenticated, and each keeps its internal guard. ===
-REVOKE EXECUTE ON FUNCTION public.approve_member(uuid) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.approve_member(uuid) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.approve_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.approve_member(uuid) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.approve_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.approve_member(uuid) TO authenticated';
+  END IF;
+END $$;
 
-REVOKE EXECUTE ON FUNCTION public.reject_member(uuid) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.reject_member(uuid) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.reject_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.reject_member(uuid) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.reject_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.reject_member(uuid) TO authenticated';
+  END IF;
+END $$;
 
-REVOKE EXECUTE ON FUNCTION public.revoke_member(uuid) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.revoke_member(uuid) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.revoke_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.revoke_member(uuid) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.revoke_member(uuid)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.revoke_member(uuid) TO authenticated';
+  END IF;
+END $$;
 
-REVOKE EXECUTE ON FUNCTION public.grant_permanent_access(uuid) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.grant_permanent_access(uuid) TO authenticated;
+DO $$ BEGIN
+  IF to_regprocedure('public.grant_permanent_access(uuid)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.grant_permanent_access(uuid) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.grant_permanent_access(uuid)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.grant_permanent_access(uuid) TO authenticated';
+  END IF;
+END $$;
 
 -- === Server-side only. Invoked by Edge Functions under service_role. ===
 -- authenticated is kept on apply_subscription because the existing definition
 -- already grants it and the function raises for any caller that is neither
 -- service_role nor owner; removing it here would be a behaviour change
 -- smuggled into a security fix.
-REVOKE EXECUTE ON FUNCTION public.apply_subscription(uuid, text, text, timestamptz, text) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.apply_subscription(uuid, text, text, timestamptz, text) TO authenticated, service_role;
+DO $$ BEGIN
+  IF to_regprocedure('public.apply_subscription(uuid, text, text, timestamptz, text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.apply_subscription(uuid, text, text, timestamptz, text) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.apply_subscription(uuid, text, text, timestamptz, text)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.apply_subscription(uuid, text, text, timestamptz, text) TO authenticated, service_role';
+  END IF;
+END $$;
 
-REVOKE EXECUTE ON FUNCTION public.queue_weekly_digest(uuid) FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.queue_weekly_digest(uuid) TO service_role;
+DO $$ BEGIN
+  IF to_regprocedure('public.queue_weekly_digest(uuid)') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.queue_weekly_digest(uuid) FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.queue_weekly_digest(uuid)') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.queue_weekly_digest(uuid) TO service_role';
+  END IF;
+END $$;
 
-REVOKE EXECUTE ON FUNCTION public.send_weekly_digests() FROM PUBLIC, anon;
-GRANT  EXECUTE ON FUNCTION public.send_weekly_digests() TO service_role;
+DO $$ BEGIN
+  IF to_regprocedure('public.send_weekly_digests()') IS NOT NULL THEN
+    EXECUTE 'REVOKE EXECUTE ON FUNCTION public.send_weekly_digests() FROM PUBLIC, anon';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.send_weekly_digests()') IS NOT NULL THEN
+    EXECUTE 'GRANT  EXECUTE ON FUNCTION public.send_weekly_digests() TO service_role';
+  END IF;
+END $$;
 
 -- ---------------------------------------------------------------------------
 -- PART 2 -- pin search_path on the functions that lack it
@@ -162,16 +302,31 @@ GRANT  EXECUTE ON FUNCTION public.send_weekly_digests() TO service_role;
 -- pg_temp is placed last deliberately: it is always implicitly searched first
 -- unless named, so naming it last is what actually pushes it to the end.
 -- ---------------------------------------------------------------------------
-ALTER FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text)
-  SET search_path = public, pg_temp;
+DO $$ BEGIN
+  IF to_regprocedure('public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.upsert_graph_entity(uuid, text, text, text, text, jsonb, numeric, text) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.add_graph_relationship(uuid, uuid, uuid, text, numeric, numeric, text) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
 
 -- These three are SECURITY INVOKER, so the escalation above does not apply --
 -- pinned anyway for consistency and to clear the advisor finding.
-ALTER FUNCTION public.find_graph_paths(uuid, uuid, uuid, integer)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.graph_entity_centrality(uuid)
-  SET search_path = public, pg_temp;
-ALTER FUNCTION public.notify_achievement(text, integer)
-  SET search_path = public, pg_temp;
+DO $$ BEGIN
+  IF to_regprocedure('public.find_graph_paths(uuid, uuid, uuid, integer)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.find_graph_paths(uuid, uuid, uuid, integer) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.graph_entity_centrality(uuid)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.graph_entity_centrality(uuid) SET search_path = public, pg_temp;';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('public.notify_achievement(text, integer)') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.notify_achievement(text, integer) SET search_path = public, pg_temp;';
+  END IF;
+END $$;

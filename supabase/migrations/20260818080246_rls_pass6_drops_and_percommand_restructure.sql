@@ -209,19 +209,11 @@ CREATE POLICY "ai_memory_self_update" ON public.ai_memory
 CREATE POLICY "ai_memory_self_delete" ON public.ai_memory
   FOR DELETE USING (user_id = (select auth.uid()));
 
--- ============ RESTRUCTURE: advertisements (owner-only ALL + member submit/read) ============
-DROP POLICY IF EXISTS "owner_manage_ads" ON public.advertisements;
-DROP POLICY IF EXISTS "member submits own ad" ON public.advertisements;
-DROP POLICY IF EXISTS "read_approved_ads" ON public.advertisements;
-CREATE POLICY "advertisements_select" ON public.advertisements
-  FOR SELECT USING (is_platform_owner() OR status = 'approved' OR submitted_by = (select auth.uid()));
-CREATE POLICY "advertisements_insert" ON public.advertisements
-  FOR INSERT WITH CHECK (is_platform_owner() OR submitted_by = (select auth.uid()));
-CREATE POLICY "advertisements_owner_update" ON public.advertisements
-  FOR UPDATE USING (is_platform_owner()) WITH CHECK (is_platform_owner());
-CREATE POLICY "advertisements_owner_delete" ON public.advertisements
-  FOR DELETE USING (is_platform_owner());
-
+-- ============ RESTRUCTURE: advertisements ============
+-- The table is adopted later by 20260905211725_adopt_advertisements_and_council_deliberations.
+-- Keep this historical policy pass a no-op on fresh databases; production already
+-- received the policy change through the recorded migration, and the later
+-- adoption migration reproduces the final policy set from scratch.
 -- ============ RESTRUCTURE: platform_settings (owner-only ALL + public read) ============
 DROP POLICY IF EXISTS "ps_write" ON public.platform_settings;
 DROP POLICY IF EXISTS "platform_settings_read" ON public.platform_settings;

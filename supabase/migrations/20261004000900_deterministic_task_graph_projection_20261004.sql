@@ -28,3 +28,11 @@ GRANT EXECUTE ON FUNCTION public.sync_task_completion_to_graph() TO service_role
 DROP TRIGGER IF EXISTS task_completion_graph_projection ON public.task_completions;
 CREATE TRIGGER task_completion_graph_projection AFTER INSERT OR UPDATE OF task,task_name,description,axis,completed_at ON public.task_completions FOR EACH ROW EXECUTE FUNCTION public.sync_task_completion_to_graph();
 
+
+DO $$
+DECLARE r record;
+BEGIN
+  FOR r IN SELECT id FROM public.task_completions ORDER BY id LOOP
+    PERFORM public.project_task_completion_to_graph(r.id);
+  END LOOP;
+END $$;

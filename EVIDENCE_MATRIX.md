@@ -318,7 +318,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 202 |
+| tables + views declared in `supabase/` | 204 |
 | functions declared in `supabase/` | 165 |
 | tables defined in more than one root SQL file | 46 |
 
@@ -394,7 +394,7 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 202 | 0 | 0 |
+| 204 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

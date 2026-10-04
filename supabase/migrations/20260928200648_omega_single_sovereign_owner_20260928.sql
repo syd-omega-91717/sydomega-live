@@ -12,6 +12,13 @@ BEGIN
   LIMIT 1;
 
   IF canonical_owner IS NULL THEN
+    -- A fresh database (`supabase db reset`) has no auth users, so there is no
+    -- owner to assign; skip rather than abort the replay. Live found the
+    -- account when this ran (guard added 2026-10-04).
+    IF NOT EXISTS (SELECT 1 FROM auth.users) THEN
+      RAISE NOTICE 'no auth users (fresh database); owner assignment skipped';
+      RETURN;
+    END IF;
     RAISE EXCEPTION 'canonical owner account not found';
   END IF;
 

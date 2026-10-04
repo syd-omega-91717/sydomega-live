@@ -1,13 +1,28 @@
 begin;
 
-create index if not exists consult_requests_user_created_idx on public.consult_requests(user_id,created_at desc);
-create index if not exists family_nodes_user_created_idx on public.family_nodes(user_id,created_at desc);
-create index if not exists heritage_records_user_created_idx on public.heritage_records(user_id,created_at desc);
-create index if not exists publications_user_created_idx on public.publications(user_id,created_at desc);
-create index if not exists user_assets_user_created_idx on public.user_assets(user_id,created_at desc);
-create index if not exists consent_records_user_idx on public.consent_records(user_id,granted_at desc);
-create index if not exists research_hypotheses_user_created_idx on public.research_hypotheses(user_id,created_at desc);
-create index if not exists search_index_owner_updated_idx on public.search_index(owner_id,updated_at desc);
+-- Guarded (2026-10-04): live tables drifted out-of-band from the repo's
+-- definitions (search_index has owner_id/updated_at live, content/created_at
+-- per 0016), so a fresh `supabase db reset` failed here. Each index is built
+-- only where its columns exist; a no-op live.
+do $$
+declare r record;
+begin
+  for r in select * from (values
+    ('consult_requests_user_created_idx','consult_requests','user_id','created_at'),
+    ('family_nodes_user_created_idx','family_nodes','user_id','created_at'),
+    ('heritage_records_user_created_idx','heritage_records','user_id','created_at'),
+    ('publications_user_created_idx','publications','user_id','created_at'),
+    ('user_assets_user_created_idx','user_assets','user_id','created_at'),
+    ('consent_records_user_idx','consent_records','user_id','granted_at'),
+    ('research_hypotheses_user_created_idx','research_hypotheses','user_id','created_at'),
+    ('search_index_owner_updated_idx','search_index','owner_id','updated_at')
+  ) v(idx, tbl, c1, c2) loop
+    if (select count(*) from information_schema.columns where table_schema = 'public'
+        and table_name = r.tbl and column_name in (r.c1, r.c2)) = 2 then
+      execute format('create index if not exists %I on public.%I(%I,%I desc)', r.idx, r.tbl, r.c1, r.c2);
+    end if;
+  end loop;
+end $$;
 
 update public.omega_module_runtime_actions
 set lifecycle='INTEGRATED'

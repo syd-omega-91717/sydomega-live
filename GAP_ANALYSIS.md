@@ -827,21 +827,22 @@ open, recorded in `FIXES_LOG.md`:
   `.from().on()` realtime API, were removed. Wiring the layer needs a real
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
-- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`,
-  measured 2026-10-04). Gap 1 of n, **fixed with owner approval (PR #707)**: #129
-  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql` altered three
-  `council_deliberations` policies before that table reaches `migrations/`
-  (`20260905211725`, which creates the same policies in the same form); its `ALTER`s
-  are now wrapped in `pg_policies` existence checks — live already applied the version,
-  so nothing changes there. Gap 2, **open, owner decision**: #158
-  `20260903015502_harden_rls_and_public_api_warnings_20260903.sql` fails with
-  `relation "public.signups" does not exist` — `signups` exists live (`id, email, sign,
-  element, olympian, planet, agent, created_at`) but **no file in this repo creates it**
-  (out-of-band). Fix: the same existence guard on its two `signups` statements (another
-  applied-migration edit, refused by this session's permission policy without explicit
-  approval for that file), ideally plus adopting `signups`' live DDL into `migrations/`.
-  Measured with a local replay (PG16 + pg_cron + a Supabase platform stub); gaps past
-  #158 are unmeasured.
+- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`).
+  Owner-approved fixes so far, each to a version recorded as applied in live
+  `supabase_migrations.schema_migrations` (so a no-op there): #129 (#707), #158 (#708),
+  and #160, #165, #192 (+`…010951`), #198, #244, #275, #280 (+`…073936`), #305, #333
+  (this PR). The fixes are existence guards, plus three tables captured from live:
+  `organizations`, `omega_agents` with its 12 seeded rows, and the
+  `academy_progress`/`task_completions` legacy columns. One real bug was fixed too: #160
+  wrapped trigger functions in SQL. A local replay (PG16 + pg_cron + platform stub) now
+  stops at **#334** `20261004083218_governed_ai_memory_embedding_storage`: it reads
+  `ai_memory.memory`, a column live has (`memory`, `owner_id`, `importance`, … added
+  out-of-band) and the chain never adds. The proposed fix, `add column if not exists memory
+  text` before its backfill, is **open, owner decision**. #335–#338 are unmeasured.
+  **Drift that does not block the replay:**
+  - `task_completions.id` is `bigint` live and `uuid` on a fresh database;
+  - live `search_index` is not the shape `0016` declares;
+  - live `ai_memory` is a union of two shapes.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

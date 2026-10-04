@@ -122,6 +122,50 @@ create table if not exists public.omega_certificates (
   metadata jsonb not null default '{}'::jsonb
 );
 
+-- public.omega_agents (captured 2026-10-04 from live pg_attribute/pg_constraint):
+-- the tables below reference it, but no file in this repo created it, so a
+-- fresh `supabase db reset` failed here. Idempotent; a no-op live.
+create table if not exists public.omega_agents (
+  agent_id text primary key,
+  name text not null,
+  version text not null default '1.0.0',
+  purpose text not null,
+  risk_level text not null check (risk_level in ('LOW','MEDIUM','HIGH','CRITICAL')),
+  status text not null default 'DESIGNED' check (status in ('DRAFT','DESIGNED','BUILT','INTEGRATED','TESTED','DEPLOYED','VERIFIED','DISABLED')),
+  capabilities jsonb not null default '[]'::jsonb,
+  allowed_tools jsonb not null default '[]'::jsonb,
+  denied_tools jsonb not null default '[]'::jsonb,
+  data_scope text not null default 'least_privilege',
+  model_provider text not null default 'policy_selected_at_runtime',
+  budget jsonb not null default '{"currency": "USD", "maxPerTask": 0}'::jsonb,
+  rate_limit jsonb not null default '{"perMinute": 0}'::jsonb,
+  approval_policy text not null default 'HUMAN_APPROVAL_REQUIRED',
+  audit_policy text not null default 'REQUIRED',
+  evidence_policy text not null default 'REQUIRED',
+  fallback text not null default 'human_review',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.omega_agents enable row level security;
+
+-- The 12 governed agents (captured 2026-10-04 from live): seeded out-of-band,
+-- and 20261002072542 fails closed unless exactly 12 exist. Idempotent.
+insert into public.omega_agents (agent_id, name, purpose, risk_level, capabilities, denied_tools, approval_policy)
+values
+  ('analyst','Analyst','research, quantitative analysis, evidence synthesis','MEDIUM','["research", "quantitative analysis", "evidence synthesis"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('auditor','Auditor','audit evidence, controls, compliance checks','HIGH','["audit evidence", "controls", "compliance checks"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('beacon','Beacon','notifications, publication, system announcements','MEDIUM','["notifications", "publication", "system announcements"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('historian','Historian','provenance, archive, chronology, knowledge retrieval','LOW','["provenance", "archive", "chronology", "knowledge retrieval"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'NONE'),
+  ('merchant','Merchant','catalog, commerce workflow, pricing intelligence','HIGH','["catalog", "commerce workflow", "pricing intelligence"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('oracle','Oracle','interpretive/oracle content, scenario exploration','MEDIUM','["interpretive/oracle content", "scenario exploration"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('proxy','Proxy','authorized workflow delegation','HIGH','["authorized workflow delegation"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('scout','Scout','public-source discovery, opportunity research','MEDIUM','["public-source discovery", "opportunity research"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('sentinel','Sentinel','security,monitoring,threat detection','HIGH','["security", "monitoring", "threat detection"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('sovereign','Sovereign','cross-agent orchestration under explicit policy','CRITICAL','["cross-agent orchestration under explicit policy"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED'),
+  ('tutor','Tutor','education, guided learning, progression support','LOW','["education", "guided learning", "progression support"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'NONE'),
+  ('warden','Warden','policy, safety, access review','HIGH','["policy", "safety", "access review"]'::jsonb,'["unscoped_external_side_effects","credential_access","secret_read","unapproved_financial_transfer","covert_surveillance"]'::jsonb,'HUMAN_APPROVAL_REQUIRED')
+on conflict (agent_id) do nothing;
+
 create table if not exists public.omega_agent_tasks (
   task_id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete set null,

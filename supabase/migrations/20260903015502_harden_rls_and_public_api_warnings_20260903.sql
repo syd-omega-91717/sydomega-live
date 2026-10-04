@@ -42,15 +42,27 @@ end $$;
 -- Prevent broad object listing in the public avatars bucket while preserving
 -- public object retrieval. The operation-aware helper distinguishes listing
 -- from object retrieval.
-drop policy if exists "avatars read" on storage.objects;
-create policy "avatars read objects only"
-  on storage.objects
-  for select
-  to anon, authenticated
-  using (
-    bucket_id = 'avatars'
-    and storage.allow_any_operation(array['storage.object.get_authenticated_info','storage.object.get_authenticated'])
-  );
+-- Guarded (owner-approved, 2026-10-04): older local Supabase stacks (CLI
+-- 2.84.2) have no storage.allow_any_operation, so a fresh `supabase db reset`
+-- failed here. Where the helper is missing the policy is skipped rather than
+-- replaced by a weaker one -- avatars stay unreadable, never listable. Live has
+-- the helper and already applied this version.
+do $$
+begin
+  if to_regprocedure('storage.allow_any_operation(text[])') is not null then
+    drop policy if exists "avatars read" on storage.objects;
+    create policy "avatars read objects only"
+      on storage.objects
+      for select
+      to anon, authenticated
+      using (
+        bucket_id = 'avatars'
+        and storage.allow_any_operation(array['storage.object.get_authenticated_info','storage.object.get_authenticated'])
+      );
+  else
+    raise notice 'storage.allow_any_operation missing; avatars read policy skipped';
+  end if;
+end $$;
 
 -- SECURITY DEFINER RPCs must not be exposed to anonymous/authenticated roles
 -- unless explicitly required. The application should use trusted server-side

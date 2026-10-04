@@ -827,14 +827,19 @@ open, recorded in `FIXES_LOG.md`:
   `.from().on()` realtime API, were removed. Wiring the layer needs a real
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
-- **The full migration replay — CLOSED locally 2026-10-04** (`supabase-full-migration-replay.yml`).
-  A fresh replay (PG16 + pg_cron + platform stub) now applies **all 337 migrations**, after
-  owner-approved edits to versions already recorded as applied in live
-  `supabase_migrations.schema_migrations` (a no-op there):
-  - #129 (#707) and #158 (#708);
-  - #160–#333 (#709);
-  - #334 `20261004083218`, which adds the legacy `ai_memory.memory` column before its backfill.
+- **The full migration replay** (`supabase-full-migration-replay.yml`). A fresh local replay
+  (PG16 + pg_cron + a platform stub, **CI-faithful since 2026-10-04**: an earlier stub defined
+  `storage.allow_any_operation`, which CLI 2.84.2's stack lacks, so a local "all applied" briefly
+  overstated this) applies **all 337 migrations**. That follows owner-approved edits to versions
+  already recorded as applied in live `supabase_migrations.schema_migrations`, so the edits are a
+  no-op there:
+  - #129 (#707), #158 (#708);
+  - #160–#333 (#709), #334 (#710);
+  - the `avatars read objects only` policy in #158, now skipped where the helper is missing
+    (never weakened).
 
+  The workflow's pinned CLI was bumped 2.84.2 → 2.119.0 (owner-approved). **Closed only once
+  GitHub's real-Supabase run is green.**
   `FIXES_LOG.md` has the per-migration detail. Confirm on GitHub's real-Supabase run before
   calling it closed there.
 

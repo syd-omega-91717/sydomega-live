@@ -22335,3 +22335,16 @@ Local replay: before, `FAIL #160`; after, it passes 333 migrations and stops at 
 but `ai_memory.memory` exists only live (added out-of-band). Added `alter table public.ai_memory add column if
 not exists memory text` before the backfill; live already applied the version. Local replay: before,
 `FAIL #334`; after, **`ALL 337 APPLIED`**. The first full replay success since the workflow was added.
+
+**Replay correction: the local stub overstated the result; avatars policy guarded and CLI bumped (owner-approved "do both", 2026-10-04).**
+After #710, GitHub's real-Supabase replay still failed inside #158: `storage.allow_any_operation(text[])
+does not exist`. My local stub had defined that function, so the local `ALL 337 APPLIED` was not
+CI-faithful. Corrected the stub. Then:
+- `20260903015502`: the `avatars read objects only` policy is created only when the helper exists. Where
+  it is missing the policy is skipped, not weakened, so avatars are never listable.
+- `supabase-full-migration-replay.yml`: CLI pin bumped 2.84.2 → 2.119.0.
+
+Re-verified with the faithful stub: `ALL 337 APPLIED`. `migration-replay-contract` PASS (337),
+`supabase-migration-security-audit` PASSED, `test_rls_rpc_performance_hardening` OK. Method note: a local
+stub that defines what the real stack lacks turns a replay into a false pass. Check every stub definition
+against the pinned CLI's stack.

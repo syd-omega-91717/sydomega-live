@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-10-04",
+  "project_ref": "ydqhzvvoyufiiqvzcjns",
+  "source_directory": "supabase/functions",
+  "functions": {
+    "concierge": {
+      "state": "DEPLOYED",
+      "version": 4,
+      "verify_jwt": true,
+      "live_sha256": "e485b8ade3bf890a5e86e8208c56190e1487314b8d8332d9b55e2ff21807ec93",
+      "repository_blob_sha": "eb5267c60c48c24ca2a5f1a61214a90763c7f892"
+    },
+    "concierge-orchestrator": {
+      "state": "DEPLOYED",
+      "version": 3,
+      "verify_jwt": true,
+      "live_sha256": "0066c12df703fdbcf239bbb53c060f0a368ea218d7d18a0a8e2f49d089ec5dfb",
+      "repository_blob_sha": "bed135b7c6d15e1274d9bc8d9243528e8716a6c6"
+    },
+    "growth-orchestrator": {
+      "state": "DEPLOYED",
+      "version": 3,
+      "verify_jwt": true,
+      "live_sha256": "995ceb4e6a3a2f403bc0198a0fe571c7d59ac1abb49f0436f8d209e4c4c42f20",
+      "repository_blob_sha": "02b62ba375901ca4c7b40384a1d2bd9e592f039f"
+    },
+    "product-orchestrator": {
+      "state": "DEPLOYED",
+      "version": 3,
+      "verify_jwt": true,
+      "live_sha256": "f87974023438b6fad29b9a40d81efd5f54f5bdc9e70794f21f1f20acaf56b937",
+      "repository_blob_sha": "f4ecde9a6b3a48a96c8813902d306c841a75fa66"
+    },
+    "stripe-webhook": {
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": false,
+      "live_sha256": "3d3c95c4a29105cf70104eee9818db4ee32a02241fef95bb67378a8663e46041",
+      "repository_blob_sha": "3f5ffc7b0a7855ebe5f0a160a94763c77e1f7a3a"
+    },
+    "secrets-health": {
+      "state": "DEPLOYED",
+      "version": 2,
+      "verify_jwt": true,
+      "live_sha256": "1b5c80d8fb8287cec300d6f3c49be0b07ccb3a86edbe33ca50c51caa9e9c9063",
+      "repository_blob_sha": "02c7f9e6e66a7f0b7cef2d206189c82d44450380"
+    },
+    "agent-execute": {
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": true,
+      "live_sha256": "0bdecef8940376d52759d2859d259fc62f7df01c26c7184004238cffd1d7f8a5",
+      "repository_blob_sha": "480983c8d97cc354ff37c9b2376d06e2cdf8aaf5"
+    },
+    "evidence-graph": {
+      "state": "DEPLOYED",
+      "version": 2,
+      "verify_jwt": false,
+      "live_sha256": "f8a38e6e138999229ae9b2062e4fce683e749bae2d1556ae6fe147ab888249a1",
+      "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
+    },
+    "omega-notification-worker": {
+      "state": "DEPLOYED",
+      "version": 36,
+      "verify_jwt": false,
+      "live_sha256": "8443f4184c528683d51ac7a703671728f04b9554e882da5f17b836082fd8803d",
+      "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
+    },
+    "omega-runtime-gateway": {
+      "state": "DEPLOYED",
+      "version": 40,
+      "verify_jwt": true,
+      "live_sha256": "b8bbb1c46efc044e342ed8e045ca6e4ee397685f45234bcbae91e911de662cec",
+      "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
+    },
+    "omega-media-worker": {
+      "state": "DEPLOYED",
+      "version": 34,
+      "verify_jwt": false,
+      "live_sha256": "140f6f8675d599e64841c213eab548d69dd0f3eac429d76675de14018d75e6db",
+      "repository_blob_sha": "0ea395b4e9aa9723420d2a26e6a3de2a857325cb"
+    },
+    "checkout": {
+      "state": "LOCAL_ONLY"
+    },
+    "event-ingest": {
+      "state": "LOCAL_ONLY"
+    },
+    "notify-access": {
+      "state": "LOCAL_ONLY"
+    },
+    "rankings": {
+      "state": "LOCAL_ONLY"
+    },
+    "snapshot-leaderboard": {
+      "state": "LOCAL_ONLY"
+    },
+    "weekly-digest": {
+      "state": "LOCAL_ONLY"
+    },
+    "intel-feed": {
+      "state": "LOCAL_ONLY"
+    },
+    "market-price": {
+      "state": "LOCAL_ONLY"
+    },
+    "graphify-ai-ingest": {
+      "state": "LOCAL_ONLY"
+    },
+    "graphify-ai-query": {
+      "state": "LOCAL_ONLY"
+    }
+  }
+}

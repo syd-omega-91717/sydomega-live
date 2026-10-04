@@ -1,0 +1,21 @@
+name: Supabase Edge Runtime Reconciliation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "hardening/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    name: Source vs live Edge Function reconciliation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate Edge Function reconciliation
+        run: python3 scripts/supabase-edge-runtime-reconciliation.py

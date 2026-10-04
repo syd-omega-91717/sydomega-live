@@ -186,7 +186,31 @@ def sql_surface():
             name = m.group(1).lower()
             if name not in RESERVED:
                 fns.add(name)
+    # A table a later migration drops is not declared. Without this replay
+    # omega_agent_tool_registry / omega_agent_action_proposals (created in
+    # 20260929113731, dropped in 20260929115306) were listed as "declared and
+    # never applied" -- the opposite of what happened. Same replay as
+    # scripts/omega-schema-evidence.py, including its publication exception.
+    rels -= _dropped_by_migrations(tbl_re)
     return rels, fns, defs
+
+
+def _dropped_by_migrations(tbl_re):
+    """Relations whose last event, replayed in migration order, is a DROP."""
+    drop_re = re.compile(
+        r'\bdrop\s+table\s+(?:if\s+exists\s+)?(?:public\.)?([a-z0-9_]+)', re.I)
+    state = {}
+    for path in sorted(Path('supabase/migrations').glob('*.sql')):
+        text = _strip_sql_comments(path.read_text(encoding='utf-8', errors='replace'))
+        events = [(m.start(), True, m.group(1).lower()) for m in tbl_re.finditer(text)]
+        for m in drop_re.finditer(text):
+            # "ALTER PUBLICATION ... DROP TABLE x" leaves the table in place.
+            stmt = text[text.rfind(';', 0, m.start()) + 1:m.start()]
+            if not re.search(r'\bpublication\b', stmt, re.I):
+                events.append((m.start(), False, m.group(1).lower()))
+        for _, alive, name in sorted(events):
+            state[name] = alive
+    return {name for name, alive in state.items() if not alive}
 
 
 # ---------------------------------------------------------------------------

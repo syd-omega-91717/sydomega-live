@@ -22286,3 +22286,14 @@ work: its fallback anon key decodes to project ref `ydqhzvvoyufiiqvzcjs` (the re
 schema. All three files deleted (nothing else referenced them; the jsPDF bundle's
 internal "dompurify" string is unrelated), and `FEATURE_IDEAS.md` #39 is annotated as
 superseded.
+
+**`evidence-audit.py` reported two dropped tables as "declared and never applied" (2026-10-04).**
+The same replay gap `omega-schema-evidence.py` closed above: `sql_surface()` collected every
+`CREATE TABLE` and never applied a drop, so `EVIDENCE_MATRIX.md` listed
+`omega_agent_tool_registry` / `omega_agent_action_proposals` (created `20260929113731`,
+dropped `20260929115306`) as dormant schema waiting to be applied — the opposite of what
+happened. It now replays `supabase/migrations/` in order and removes a relation whose last
+event is a drop, with the same `ALTER PUBLICATION … DROP TABLE` exception (`member_presence`
+stays declared — checked). Declared relations 204 → 202; absent live 2 → 0; the drop is
+exactly the two named tables. `test_table_a_later_migration_drops_is_not_declared` fails on
+the old script and passes on the new one (with a planted publication-drop control); suite 518.

@@ -318,7 +318,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 204 |
+| tables + views declared in `supabase/` | 202 |
 | functions declared in `supabase/` | 165 |
 | tables defined in more than one root SQL file | 46 |
 
@@ -394,20 +394,10 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 204 | 2 | 0 |
+| 202 | 0 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.
-
-### Absent live, read by nothing — declared and never applied
-
-Not a failure, and deliberately not gated: this repo ships dormant
-backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
-to one of these is a decision rather than a surprise — the page
-would classify `BUILT` while returning nothing.
-
-- `omega_agent_action_proposals`
-- `omega_agent_tool_registry`
 
 
 ## UNVERIFIED — what no repository scan can settle

@@ -1,0 +1,3236 @@
+{
+ "version": 1,
+ "updated": "2026-10-04",
+ "per_run": 10,
+ "pass_pct": 70,
+ "sectors": [
+  {
+   "id": "math",
+   "name": "Mathematics",
+   "glyph": "∑",
+   "color": "#C9A84C",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "math-01",
+     "q": "What is the derivative of x²?",
+     "options": [
+      "2x",
+      "x",
+      "x²/2",
+      "2"
+     ],
+     "answer": 0,
+     "why": "Power rule: d/dx xⁿ = n·xⁿ⁻¹, so x² becomes 2x.",
+     "level": "easy"
+    },
+    {
+     "id": "math-02",
+     "q": "What is π rounded to two decimal places?",
+     "options": [
+      "3.41",
+      "3.14",
+      "3.12",
+      "3.16"
+     ],
+     "answer": 1,
+     "why": "π = 3.14159…, which rounds to 3.14.",
+     "level": "easy"
+    },
+    {
+     "id": "math-03",
+     "q": "What do the interior angles of a triangle sum to in Euclidean geometry?",
+     "options": [
+      "90°",
+      "360°",
+      "180°",
+      "270°"
+     ],
+     "answer": 2,
+     "why": "In flat (Euclidean) geometry every triangle's angles sum to 180°.",
+     "level": "easy"
+    },
+    {
+     "id": "math-04",
+     "q": "What is the smallest prime number?",
+     "options": [
+      "1",
+      "3",
+      "0",
+      "2"
+     ],
+     "answer": 3,
+     "why": "A prime has exactly two divisors. 1 has only one; 2 is the first and only even prime.",
+     "level": "easy"
+    },
+    {
+     "id": "math-05",
+     "q": "What is √144?",
+     "options": [
+      "12",
+      "14",
+      "11",
+      "16"
+     ],
+     "answer": 0,
+     "why": "12 × 12 = 144.",
+     "level": "easy"
+    },
+    {
+     "id": "math-06",
+     "q": "What is the area of a circle with radius r?",
+     "options": [
+      "2πr",
+      "πr²",
+      "πr",
+      "4πr²"
+     ],
+     "answer": 1,
+     "why": "Area = πr². 2πr is the circumference; 4πr² is a sphere's surface area.",
+     "level": "easy"
+    },
+    {
+     "id": "math-07",
+     "q": "A right triangle has legs 3 and 4. How long is the hypotenuse?",
+     "options": [
+      "6",
+      "7",
+      "5",
+      "4.5"
+     ],
+     "answer": 2,
+     "why": "Pythagoras: 3² + 4² = 9 + 16 = 25, and √25 = 5.",
+     "level": "easy"
+    },
+    {
+     "id": "math-08",
+     "q": "What is log₁₀(1000)?",
+     "options": [
+      "2",
+      "10",
+      "100",
+      "3"
+     ],
+     "answer": 3,
+     "why": "10³ = 1000, so the base-10 logarithm of 1000 is 3.",
+     "level": "easy"
+    },
+    {
+     "id": "math-09",
+     "q": "What is the integral of 1/x dx?",
+     "options": [
+      "ln|x| + C",
+      "x⁻² + C",
+      "1/x² + C",
+      "eˣ + C"
+     ],
+     "answer": 0,
+     "why": "The derivative of ln|x| is 1/x, so its antiderivative is ln|x| + C.",
+     "level": "medium"
+    },
+    {
+     "id": "math-10",
+     "q": "What is 0! (zero factorial)?",
+     "options": [
+      "0",
+      "1",
+      "Undefined",
+      "Infinity"
+     ],
+     "answer": 1,
+     "why": "0! is defined as 1 — the empty product, and it keeps n! = n·(n−1)! consistent.",
+     "level": "medium"
+    },
+    {
+     "id": "math-11",
+     "q": "How many edges does a cube have?",
+     "options": [
+      "8",
+      "6",
+      "12",
+      "24"
+     ],
+     "answer": 2,
+     "why": "A cube has 8 vertices, 12 edges and 6 faces.",
+     "level": "easy"
+    },
+    {
+     "id": "math-12",
+     "q": "What is the derivative of sin x?",
+     "options": [
+      "−cos x",
+      "−sin x",
+      "tan x",
+      "cos x"
+     ],
+     "answer": 3,
+     "why": "d/dx sin x = cos x; d/dx cos x = −sin x.",
+     "level": "medium"
+    },
+    {
+     "id": "math-13",
+     "q": "What is e^(iπ) + 1?",
+     "options": [
+      "0",
+      "1",
+      "−1",
+      "2"
+     ],
+     "answer": 0,
+     "why": "Euler's identity: e^(iπ) = −1, so e^(iπ) + 1 = 0.",
+     "level": "hard"
+    },
+    {
+     "id": "math-14",
+     "q": "In how many ways can 4 distinct objects be arranged in a row?",
+     "options": [
+      "16",
+      "24",
+      "12",
+      "4"
+     ],
+     "answer": 1,
+     "why": "Permutations of n objects = n!. 4! = 4·3·2·1 = 24.",
+     "level": "medium"
+    },
+    {
+     "id": "math-15",
+     "q": "What is the probability of two heads in two fair coin flips?",
+     "options": [
+      "1/2",
+      "1/3",
+      "1/4",
+      "3/4"
+     ],
+     "answer": 2,
+     "why": "Independent events multiply: ½ × ½ = ¼.",
+     "level": "medium"
+    },
+    {
+     "id": "math-16",
+     "q": "What kind of number is √2?",
+     "options": [
+      "Rational",
+      "An integer",
+      "A repeating decimal",
+      "Irrational"
+     ],
+     "answer": 3,
+     "why": "√2 cannot be written as a fraction of integers — a classic proof by contradiction.",
+     "level": "medium"
+    },
+    {
+     "id": "math-17",
+     "q": "What is the determinant of the matrix [[1, 2], [3, 4]]?",
+     "options": [
+      "−2",
+      "2",
+      "10",
+      "−10"
+     ],
+     "answer": 0,
+     "why": "det [[a,b],[c,d]] = ad − bc = 1·4 − 2·3 = −2.",
+     "level": "hard"
+    },
+    {
+     "id": "math-18",
+     "q": "What is 1 + 2 + 3 + … + 100?",
+     "options": [
+      "5000",
+      "5050",
+      "10100",
+      "4950"
+     ],
+     "answer": 1,
+     "why": "Gauss's formula n(n+1)/2 = 100·101/2 = 5050.",
+     "level": "medium"
+    },
+    {
+     "id": "math-19",
+     "q": "What is the limit of (sin x)/x as x approaches 0?",
+     "options": [
+      "0",
+      "Infinity",
+      "1",
+      "It does not exist"
+     ],
+     "answer": 2,
+     "why": "A standard limit: sin x ≈ x for small x, so the ratio tends to 1.",
+     "level": "hard"
+    },
+    {
+     "id": "math-20",
+     "q": "What is the slope of the line y = 3x + 2?",
+     "options": [
+      "2",
+      "5",
+      "1/3",
+      "3"
+     ],
+     "answer": 3,
+     "why": "In y = mx + b, m is the slope. Here m = 3 and b = 2 is the intercept.",
+     "level": "easy"
+    }
+   ]
+  },
+  {
+   "id": "physics",
+   "name": "Physics",
+   "glyph": "ħ",
+   "color": "#00E5FF",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "physics-01",
+     "q": "What is the SI unit of force?",
+     "options": [
+      "Joule",
+      "Newton",
+      "Watt",
+      "Pascal"
+     ],
+     "answer": 1,
+     "why": "1 newton = 1 kg·m/s². Joule is energy, watt is power, pascal is pressure.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-02",
+     "q": "Roughly how fast does light travel in a vacuum?",
+     "options": [
+      "30,000 km/s",
+      "3,000 km/s",
+      "300,000 km/s",
+      "300 km/s"
+     ],
+     "answer": 2,
+     "why": "c = 299,792 km/s — about 300,000 km per second.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-03",
+     "q": "Which equation states Newton's second law?",
+     "options": [
+      "E = mc²",
+      "V = IR",
+      "F = mv",
+      "F = ma"
+     ],
+     "answer": 3,
+     "why": "Net force equals mass times acceleration.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-04",
+     "q": "Ohm's law relates voltage, current and resistance as:",
+     "options": [
+      "V = IR",
+      "V = I/R",
+      "V = R/I",
+      "V = I²R"
+     ],
+     "answer": 0,
+     "why": "Voltage = current × resistance.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-05",
+     "q": "What is the SI unit of energy?",
+     "options": [
+      "Newton",
+      "Joule",
+      "Watt",
+      "Volt"
+     ],
+     "answer": 1,
+     "why": "1 joule = 1 newton acting over 1 metre.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-06",
+     "q": "About how strong is gravitational acceleration at Earth's surface?",
+     "options": [
+      "3.0 m/s²",
+      "15 m/s²",
+      "9.8 m/s²",
+      "1.6 m/s²"
+     ],
+     "answer": 2,
+     "why": "g ≈ 9.81 m/s² on Earth. 1.6 m/s² is roughly the Moon's.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-07",
+     "q": "Which particle carries a negative electric charge?",
+     "options": [
+      "Proton",
+      "Neutron",
+      "Photon",
+      "Electron"
+     ],
+     "answer": 3,
+     "why": "Electrons are negative, protons positive, neutrons and photons neutral.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-08",
+     "q": "What is the formula for kinetic energy?",
+     "options": [
+      "½mv²",
+      "mv",
+      "mgh",
+      "ma"
+     ],
+     "answer": 0,
+     "why": "KE = ½mv². mv is momentum, mgh is gravitational potential energy.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-09",
+     "q": "What is the SI unit of power?",
+     "options": [
+      "Joule",
+      "Watt",
+      "Newton",
+      "Ampere"
+     ],
+     "answer": 1,
+     "why": "1 watt = 1 joule per second.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-10",
+     "q": "Which of these cannot travel through a vacuum?",
+     "options": [
+      "Light",
+      "Radio waves",
+      "Sound",
+      "X-rays"
+     ],
+     "answer": 2,
+     "why": "Sound is a mechanical wave that needs a medium; the others are electromagnetic.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-11",
+     "q": "The first law of thermodynamics is a statement of:",
+     "options": [
+      "Entropy always increasing",
+      "Absolute zero being unreachable",
+      "Heat flowing from cold to hot",
+      "Conservation of energy"
+     ],
+     "answer": 3,
+     "why": "ΔU = Q − W: energy is neither created nor destroyed. Entropy is the second law.",
+     "level": "medium"
+    },
+    {
+     "id": "physics-12",
+     "q": "What is the SI unit of electrical resistance?",
+     "options": [
+      "Ohm",
+      "Ampere",
+      "Volt",
+      "Farad"
+     ],
+     "answer": 0,
+     "why": "Resistance is measured in ohms (Ω).",
+     "level": "easy"
+    },
+    {
+     "id": "physics-13",
+     "q": "Einstein's E = mc² relates which two quantities?",
+     "options": [
+      "Force and acceleration",
+      "Mass and energy",
+      "Voltage and current",
+      "Pressure and volume"
+     ],
+     "answer": 1,
+     "why": "Mass and energy are equivalent, linked by the speed of light squared.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-14",
+     "q": "What is the SI unit of frequency?",
+     "options": [
+      "Tesla",
+      "Henry",
+      "Hertz",
+      "Coulomb"
+     ],
+     "answer": 2,
+     "why": "1 hertz = one cycle per second.",
+     "level": "easy"
+    },
+    {
+     "id": "physics-15",
+     "q": "What is the formula for linear momentum?",
+     "options": [
+      "p = ma",
+      "p = ½mv²",
+      "p = m/v",
+      "p = mv"
+     ],
+     "answer": 3,
+     "why": "Momentum is mass times velocity.",
+     "level": "medium"
+    },
+    {
+     "id": "physics-16",
+     "q": "In which medium does light travel fastest?",
+     "options": [
+      "Vacuum",
+      "Water",
+      "Glass",
+      "Diamond"
+     ],
+     "answer": 0,
+     "why": "Any material slows light; diamond's high refractive index slows it most here.",
+     "level": "medium"
+    },
+    {
+     "id": "physics-17",
+     "q": "What is absolute zero in degrees Celsius?",
+     "options": [
+      "−100 °C",
+      "−273.15 °C",
+      "−373.15 °C",
+      "0 °C"
+     ],
+     "answer": 1,
+     "why": "0 K = −273.15 °C, the lowest possible temperature.",
+     "level": "medium"
+    },
+    {
+     "id": "physics-18",
+     "q": "Which force binds protons and neutrons together in a nucleus?",
+     "options": [
+      "Gravity",
+      "Electromagnetic force",
+      "Strong nuclear force",
+      "Weak nuclear force"
+     ],
+     "answer": 2,
+     "why": "The strong force overcomes the protons' electric repulsion at nuclear distances.",
+     "level": "hard"
+    },
+    {
+     "id": "physics-19",
+     "q": "What is the bending of light as it passes between media called?",
+     "options": [
+      "Reflection",
+      "Diffraction",
+      "Polarization",
+      "Refraction"
+     ],
+     "answer": 3,
+     "why": "Refraction happens because light changes speed between media.",
+     "level": "medium"
+    },
+    {
+     "id": "physics-20",
+     "q": "What is the SI unit of magnetic flux density?",
+     "options": [
+      "Tesla",
+      "Weber",
+      "Henry",
+      "Siemens"
+     ],
+     "answer": 0,
+     "why": "1 tesla = 1 weber per square metre. Weber is flux; henry is inductance.",
+     "level": "hard"
+    }
+   ]
+  },
+  {
+   "id": "chemistry",
+   "name": "Chemistry",
+   "glyph": "⌬",
+   "color": "#7CFFB2",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "chemistry-01",
+     "q": "What is the chemical symbol for gold?",
+     "options": [
+      "Ag",
+      "Gd",
+      "Au",
+      "Go"
+     ],
+     "answer": 2,
+     "why": "Au comes from the Latin aurum. Ag is silver.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-02",
+     "q": "What is the atomic number of carbon?",
+     "options": [
+      "12",
+      "8",
+      "4",
+      "6"
+     ],
+     "answer": 3,
+     "why": "Carbon has 6 protons. 12 is the mass number of its common isotope.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-03",
+     "q": "What is the pH of pure water at 25 °C?",
+     "options": [
+      "7",
+      "0",
+      "14",
+      "1"
+     ],
+     "answer": 0,
+     "why": "Pure water is neutral: pH 7 at 25 °C.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-04",
+     "q": "What is the chemical formula of water?",
+     "options": [
+      "HO₂",
+      "H₂O",
+      "H₂O₂",
+      "OH"
+     ],
+     "answer": 1,
+     "why": "Two hydrogen atoms bonded to one oxygen. H₂O₂ is hydrogen peroxide.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-05",
+     "q": "Which gas makes up most of Earth's atmosphere?",
+     "options": [
+      "Oxygen",
+      "Carbon dioxide",
+      "Nitrogen",
+      "Argon"
+     ],
+     "answer": 2,
+     "why": "Nitrogen is about 78% of dry air; oxygen about 21%.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-06",
+     "q": "Which element has the symbol Na?",
+     "options": [
+      "Nitrogen",
+      "Neon",
+      "Nickel",
+      "Sodium"
+     ],
+     "answer": 3,
+     "why": "Na comes from the Latin natrium. Nitrogen is N, neon Ne, nickel Ni.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-07",
+     "q": "What is Avogadro's number, approximately?",
+     "options": [
+      "6.022 × 10²³",
+      "3.00 × 10⁸",
+      "6.626 × 10⁻³⁴",
+      "1.602 × 10⁻¹⁹"
+     ],
+     "answer": 0,
+     "why": "Particles per mole. The others are c (m/s), Planck's constant and the elementary charge.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-08",
+     "q": "A bond formed by sharing electron pairs is called:",
+     "options": [
+      "Ionic",
+      "Covalent",
+      "Metallic",
+      "Hydrogen"
+     ],
+     "answer": 1,
+     "why": "Covalent bonds share electrons; ionic bonds transfer them.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-09",
+     "q": "The noble gases sit in which group of the periodic table?",
+     "options": [
+      "Group 1",
+      "Group 2",
+      "Group 18",
+      "Group 17"
+     ],
+     "answer": 2,
+     "why": "Group 18: He, Ne, Ar, Kr, Xe, Rn. Group 17 is the halogens.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-10",
+     "q": "A solution with a pH below 7 is:",
+     "options": [
+      "Basic",
+      "Neutral",
+      "Saline",
+      "Acidic"
+     ],
+     "answer": 3,
+     "why": "Below 7 is acidic, above 7 is basic (alkaline).",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-11",
+     "q": "What is the chemical formula of table salt?",
+     "options": [
+      "NaCl",
+      "KCl",
+      "NaOH",
+      "CaCl₂"
+     ],
+     "answer": 0,
+     "why": "Sodium chloride. NaOH is sodium hydroxide (lye).",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-12",
+     "q": "What is the lightest element?",
+     "options": [
+      "Helium",
+      "Hydrogen",
+      "Lithium",
+      "Carbon"
+     ],
+     "answer": 1,
+     "why": "Hydrogen, atomic number 1, has a single proton.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-13",
+     "q": "What is the chemical formula of methane?",
+     "options": [
+      "C₂H₆",
+      "CO₂",
+      "CH₄",
+      "CH₃OH"
+     ],
+     "answer": 2,
+     "why": "One carbon bonded to four hydrogens. C₂H₆ is ethane, CH₃OH methanol.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-14",
+     "q": "What does a catalyst do?",
+     "options": [
+      "Is used up as the reaction proceeds",
+      "Always slows a reaction down",
+      "Raises the activation energy",
+      "Speeds up a reaction without being consumed"
+     ],
+     "answer": 3,
+     "why": "A catalyst lowers the activation energy and is regenerated at the end.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-15",
+     "q": "Which element has the symbol Fe?",
+     "options": [
+      "Iron",
+      "Fluorine",
+      "Francium",
+      "Fermium"
+     ],
+     "answer": 0,
+     "why": "Fe comes from the Latin ferrum. Fluorine is F.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-16",
+     "q": "What is the electric charge of a neutron?",
+     "options": [
+      "+1",
+      "Zero (neutral)",
+      "−1",
+      "+2"
+     ],
+     "answer": 1,
+     "why": "Neutrons carry no net charge, hence the name.",
+     "level": "easy"
+    },
+    {
+     "id": "chemistry-17",
+     "q": "Which gas is released when zinc reacts with hydrochloric acid?",
+     "options": [
+      "Oxygen",
+      "Carbon dioxide",
+      "Hydrogen",
+      "Chlorine"
+     ],
+     "answer": 2,
+     "why": "Zn + 2HCl → ZnCl₂ + H₂.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-18",
+     "q": "Isotopes of an element differ in their number of:",
+     "options": [
+      "Protons",
+      "Electrons in the neutral atom",
+      "Atomic number",
+      "Neutrons"
+     ],
+     "answer": 3,
+     "why": "Same protons (same element), different neutrons (different mass).",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-19",
+     "q": "What is a solid turning directly into a gas called?",
+     "options": [
+      "Sublimation",
+      "Condensation",
+      "Evaporation",
+      "Deposition"
+     ],
+     "answer": 0,
+     "why": "Dry ice sublimes. Deposition is the reverse: gas straight to solid.",
+     "level": "medium"
+    },
+    {
+     "id": "chemistry-20",
+     "q": "In redox chemistry, oxidation is:",
+     "options": [
+      "Gain of electrons",
+      "Loss of electrons",
+      "Gain of protons",
+      "Loss of neutrons"
+     ],
+     "answer": 1,
+     "why": "OIL RIG: Oxidation Is Loss, Reduction Is Gain (of electrons).",
+     "level": "hard"
+    }
+   ]
+  },
+  {
+   "id": "biology",
+   "name": "Biology & Health",
+   "glyph": "☤",
+   "color": "#FF6B9A",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "biology-01",
+     "q": "Which organelle produces most of a cell's ATP?",
+     "options": [
+      "Nucleus",
+      "Ribosome",
+      "Golgi apparatus",
+      "Mitochondrion"
+     ],
+     "answer": 3,
+     "why": "Mitochondria run cellular respiration — the 'powerhouse of the cell'.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-02",
+     "q": "Which molecule carries hereditary information?",
+     "options": [
+      "DNA",
+      "ATP",
+      "Glucose",
+      "Collagen"
+     ],
+     "answer": 0,
+     "why": "DNA stores genetic instructions; ATP carries energy.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-03",
+     "q": "How many chambers does the human heart have?",
+     "options": [
+      "2",
+      "4",
+      "3",
+      "6"
+     ],
+     "answer": 1,
+     "why": "Two atria and two ventricles.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-04",
+     "q": "Which organelle carries out photosynthesis?",
+     "options": [
+      "Mitochondrion",
+      "Vacuole",
+      "Chloroplast",
+      "Lysosome"
+     ],
+     "answer": 2,
+     "why": "Chloroplasts contain chlorophyll, which captures light energy.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-05",
+     "q": "What is the largest organ of the human body?",
+     "options": [
+      "Liver",
+      "Brain",
+      "Lungs",
+      "Skin"
+     ],
+     "answer": 3,
+     "why": "Skin is the largest organ; the liver is the largest internal one.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-06",
+     "q": "Which protein in red blood cells carries oxygen?",
+     "options": [
+      "Hemoglobin",
+      "Insulin",
+      "Keratin",
+      "Melanin"
+     ],
+     "answer": 0,
+     "why": "Hemoglobin binds oxygen in the lungs and releases it in tissues.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-07",
+     "q": "In DNA, adenine pairs with:",
+     "options": [
+      "Cytosine",
+      "Thymine",
+      "Guanine",
+      "Uracil"
+     ],
+     "answer": 1,
+     "why": "A–T and G–C. Uracil replaces thymine only in RNA.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-08",
+     "q": "Which organ produces insulin?",
+     "options": [
+      "Liver",
+      "Kidneys",
+      "Pancreas",
+      "Thyroid"
+     ],
+     "answer": 2,
+     "why": "Beta cells in the pancreas's islets secrete insulin.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-09",
+     "q": "How many chromosomes does a typical human body cell have?",
+     "options": [
+      "23",
+      "44",
+      "48",
+      "46"
+     ],
+     "answer": 3,
+     "why": "23 pairs = 46. Egg and sperm cells carry 23.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-10",
+     "q": "Which vitamin does skin make when exposed to sunlight?",
+     "options": [
+      "Vitamin D",
+      "Vitamin C",
+      "Vitamin A",
+      "Vitamin K"
+     ],
+     "answer": 0,
+     "why": "UVB light drives vitamin D synthesis in the skin.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-11",
+     "q": "Which blood vessels carry blood away from the heart?",
+     "options": [
+      "Veins",
+      "Arteries",
+      "Capillaries",
+      "Lymph vessels"
+     ],
+     "answer": 1,
+     "why": "Arteries carry blood away; veins return it.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-12",
+     "q": "Antibiotics are used to treat infections caused by:",
+     "options": [
+      "Viruses",
+      "Prions",
+      "Bacteria",
+      "Allergens"
+     ],
+     "answer": 2,
+     "why": "Antibiotics target bacteria; they do not work against viruses.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-13",
+     "q": "What is the basic structural unit of all living things?",
+     "options": [
+      "Atom",
+      "Tissue",
+      "Organ",
+      "Cell"
+     ],
+     "answer": 3,
+     "why": "Cell theory: all living things are made of cells.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-14",
+     "q": "Cell division producing two identical daughter cells is:",
+     "options": [
+      "Mitosis",
+      "Meiosis",
+      "Osmosis",
+      "Fertilization"
+     ],
+     "answer": 0,
+     "why": "Mitosis makes identical copies; meiosis makes gametes with half the chromosomes.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-15",
+     "q": "Scurvy is caused by a deficiency of:",
+     "options": [
+      "Vitamin D",
+      "Vitamin C",
+      "Iron",
+      "Vitamin B12"
+     ],
+     "answer": 1,
+     "why": "Vitamin C is needed to make collagen; without it tissues break down.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-16",
+     "q": "Which gas do plants absorb for photosynthesis?",
+     "options": [
+      "Oxygen",
+      "Nitrogen",
+      "Carbon dioxide",
+      "Methane"
+     ],
+     "answer": 2,
+     "why": "6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-17",
+     "q": "What is the junction across which neurons pass signals?",
+     "options": [
+      "Nephron",
+      "Alveolus",
+      "Villus",
+      "Synapse"
+     ],
+     "answer": 3,
+     "why": "Neurotransmitters cross the synaptic gap. A nephron is a kidney unit.",
+     "level": "hard"
+    },
+    {
+     "id": "biology-18",
+     "q": "Where does gas exchange happen in the lungs?",
+     "options": [
+      "Alveoli",
+      "Bronchi",
+      "Trachea",
+      "Larynx"
+     ],
+     "answer": 0,
+     "why": "Oxygen and CO₂ diffuse across the thin walls of the alveoli.",
+     "level": "medium"
+    },
+    {
+     "id": "biology-19",
+     "q": "Who proposed evolution by natural selection, alongside Alfred Russel Wallace?",
+     "options": [
+      "Gregor Mendel",
+      "Charles Darwin",
+      "Louis Pasteur",
+      "Jean-Baptiste Lamarck"
+     ],
+     "answer": 1,
+     "why": "Darwin and Wallace presented natural selection in 1858; Darwin published On the Origin of Species in 1859.",
+     "level": "easy"
+    },
+    {
+     "id": "biology-20",
+     "q": "Which red-cell blood type is the universal donor?",
+     "options": [
+      "AB positive",
+      "A negative",
+      "O negative",
+      "B positive"
+     ],
+     "answer": 2,
+     "why": "O− cells lack A, B and RhD antigens. AB+ is the universal recipient.",
+     "level": "hard"
+    }
+   ]
+  },
+  {
+   "id": "finance",
+   "name": "Finance & Investing",
+   "glyph": "%",
+   "color": "#4CAF50",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "finance-01",
+     "q": "Compound interest is earned on:",
+     "options": [
+      "Principal plus accumulated interest",
+      "The principal only",
+      "The interest only",
+      "New deposits only"
+     ],
+     "answer": 0,
+     "why": "Interest on interest is what makes compounding grow exponentially.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-02",
+     "q": "What does a share of stock represent?",
+     "options": [
+      "A loan to a company",
+      "Part ownership of a company",
+      "A government debt",
+      "A commodity contract"
+     ],
+     "answer": 1,
+     "why": "Shareholders own a fraction of the company's equity.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-03",
+     "q": "What does a bond represent?",
+     "options": [
+      "Ownership of the issuer",
+      "An insurance policy",
+      "A loan to the issuer",
+      "A currency swap"
+     ],
+     "answer": 2,
+     "why": "Bondholders lend money and receive interest plus principal back.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-04",
+     "q": "What is the main purpose of diversification?",
+     "options": [
+      "Guarantee a positive return",
+      "Eliminate all risk",
+      "Increase trading fees",
+      "Reduce risk by spreading investments"
+     ],
+     "answer": 3,
+     "why": "Diversifying cuts asset-specific risk; it cannot remove market risk.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-05",
+     "q": "By the Rule of 72, how long does money take to double at 8% a year?",
+     "options": [
+      "About 9 years",
+      "About 6 years",
+      "About 12 years",
+      "About 18 years"
+     ],
+     "answer": 0,
+     "why": "72 ÷ 8 = 9 years.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-06",
+     "q": "What is inflation?",
+     "options": [
+      "A rise in interest rates",
+      "A general rise in the price level",
+      "A general fall in prices",
+      "Growth in GDP"
+     ],
+     "answer": 1,
+     "why": "Inflation reduces what a unit of money can buy. A general fall is deflation.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-07",
+     "q": "How is the price-to-earnings (P/E) ratio calculated?",
+     "options": [
+      "Earnings ÷ revenue",
+      "Price ÷ book value per share",
+      "Share price ÷ earnings per share",
+      "Dividends ÷ share price"
+     ],
+     "answer": 2,
+     "why": "P/E shows how much investors pay per unit of profit. Price ÷ book is P/B.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-08",
+     "q": "What does an index fund do?",
+     "options": [
+      "Actively picks stocks to beat the market",
+      "Guarantees your principal",
+      "Invests only in bonds",
+      "Passively tracks a market index"
+     ],
+     "answer": 3,
+     "why": "Index funds replicate an index, which keeps costs low.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-09",
+     "q": "When market interest rates rise, prices of existing bonds typically:",
+     "options": [
+      "Fall",
+      "Rise",
+      "Stay the same",
+      "Double"
+     ],
+     "answer": 0,
+     "why": "Older bonds pay less than new ones, so their prices drop to compensate.",
+     "level": "hard"
+    },
+    {
+     "id": "finance-10",
+     "q": "What is a dividend?",
+     "options": [
+      "Interest on a loan",
+      "A share of company profits paid to shareholders",
+      "A tax on gains",
+      "A broker's fee"
+     ],
+     "answer": 1,
+     "why": "Companies may distribute part of their earnings as dividends.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-11",
+     "q": "In finance, liquidity means:",
+     "options": [
+      "How profitable a company is",
+      "How much debt a company has",
+      "How easily an asset becomes cash without losing value",
+      "How volatile a price is"
+     ],
+     "answer": 2,
+     "why": "Cash is the most liquid asset; real estate is relatively illiquid.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-12",
+     "q": "Which is the balance sheet equation?",
+     "options": [
+      "Assets = Revenue − Expenses",
+      "Equity = Assets + Liabilities",
+      "Profit = Assets − Liabilities",
+      "Assets = Liabilities + Equity"
+     ],
+     "answer": 3,
+     "why": "Everything a firm owns is financed by debt or by owners' equity.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-13",
+     "q": "A 'bear market' describes:",
+     "options": [
+      "A prolonged fall in prices",
+      "A prolonged rise in prices",
+      "Flat, sideways prices",
+      "Unusually high trading volume"
+     ],
+     "answer": 0,
+     "why": "Bear markets fall; bull markets rise.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-14",
+     "q": "What does ETF stand for?",
+     "options": [
+      "Equity Transfer Fund",
+      "Exchange-Traded Fund",
+      "Electronic Trading Facility",
+      "Estimated Tax Filing"
+     ],
+     "answer": 1,
+     "why": "ETFs hold a basket of assets and trade on an exchange like a stock.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-15",
+     "q": "How is market capitalization calculated?",
+     "options": [
+      "Revenue × profit margin",
+      "Assets − liabilities",
+      "Share price × shares outstanding",
+      "Dividends × shares outstanding"
+     ],
+     "answer": 2,
+     "why": "Market cap is the market value of all of a company's shares.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-16",
+     "q": "What is dollar-cost averaging?",
+     "options": [
+      "Buying only after prices fall",
+      "Investing everything in one lump sum",
+      "Converting savings into dollars",
+      "Investing a fixed amount at regular intervals"
+     ],
+     "answer": 3,
+     "why": "Fixed amounts buy more units when prices are low and fewer when high.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-17",
+     "q": "What does the Sharpe ratio measure?",
+     "options": [
+      "Excess return per unit of volatility",
+      "Total return over a year",
+      "Dividend yield",
+      "Debt relative to equity"
+     ],
+     "answer": 0,
+     "why": "Sharpe = (return − risk-free rate) ÷ standard deviation of returns.",
+     "level": "hard"
+    },
+    {
+     "id": "finance-18",
+     "q": "Investors generally demand higher expected returns for:",
+     "options": [
+      "Taking on less risk",
+      "Taking on more risk",
+      "Holding cash",
+      "Paying higher fees"
+     ],
+     "answer": 1,
+     "why": "The risk–return trade-off: more risk must be rewarded with more expected return.",
+     "level": "medium"
+    },
+    {
+     "id": "finance-19",
+     "q": "What is a capital gain?",
+     "options": [
+      "Dividend income",
+      "Interest received on a bond",
+      "Profit from selling an asset above its cost",
+      "A salary increase"
+     ],
+     "answer": 2,
+     "why": "Sell price minus purchase price, when positive.",
+     "level": "easy"
+    },
+    {
+     "id": "finance-20",
+     "q": "At a positive interest rate, the present value of money received in the future is:",
+     "options": [
+      "Equal to its future value",
+      "Greater than its future value",
+      "Always zero",
+      "Less than its future value"
+     ],
+     "answer": 3,
+     "why": "Discounting: a dollar later is worth less than a dollar today.",
+     "level": "hard"
+    }
+   ]
+  },
+  {
+   "id": "business",
+   "name": "Business & Strategy",
+   "glyph": "♜",
+   "color": "#FFB347",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "business-01",
+     "q": "What does SWOT stand for?",
+     "options": [
+      "Sales, Wages, Operations, Taxes",
+      "Strengths, Weaknesses, Opportunities, Threats",
+      "Scope, Work, Output, Timing",
+      "Supply, Warehousing, Orders, Transport"
+     ],
+     "answer": 1,
+     "why": "SWOT pairs internal factors (S, W) with external ones (O, T).",
+     "level": "easy"
+    },
+    {
+     "id": "business-02",
+     "q": "Porter's Five Forces is used to analyse:",
+     "options": [
+      "Personal productivity",
+      "Supply-chain logistics",
+      "The competitive intensity of an industry",
+      "Employee motivation"
+     ],
+     "answer": 2,
+     "why": "Rivalry, new entrants, substitutes, buyer power and supplier power.",
+     "level": "medium"
+    },
+    {
+     "id": "business-03",
+     "q": "Revenue minus cost of goods sold equals:",
+     "options": [
+      "Net profit",
+      "Operating cash flow",
+      "Retained earnings",
+      "Gross profit"
+     ],
+     "answer": 3,
+     "why": "Gross profit comes before operating expenses, interest and taxes.",
+     "level": "medium"
+    },
+    {
+     "id": "business-04",
+     "q": "A market with a single seller is a:",
+     "options": [
+      "Monopoly",
+      "Oligopoly",
+      "Perfect competition",
+      "Monopsony"
+     ],
+     "answer": 0,
+     "why": "A monopsony is a single buyer; an oligopoly has a few sellers.",
+     "level": "easy"
+    },
+    {
+     "id": "business-05",
+     "q": "A market dominated by a few large firms is a:",
+     "options": [
+      "Monopoly",
+      "Oligopoly",
+      "Perfect competition",
+      "Monopsony"
+     ],
+     "answer": 1,
+     "why": "Airlines and mobile networks are classic oligopolies.",
+     "level": "medium"
+    },
+    {
+     "id": "business-06",
+     "q": "The break-even point is where:",
+     "options": [
+      "Profit is maximized",
+      "Costs fall to zero",
+      "Total revenue equals total costs",
+      "Sales reach their peak"
+     ],
+     "answer": 2,
+     "why": "At break-even, profit is exactly zero.",
+     "level": "easy"
+    },
+    {
+     "id": "business-07",
+     "q": "Price elasticity of demand above 1 (in absolute value) means demand is:",
+     "options": [
+      "Inelastic",
+      "Unit elastic",
+      "Perfectly inelastic",
+      "Elastic"
+     ],
+     "answer": 3,
+     "why": "Quantity responds more than proportionally to a price change.",
+     "level": "hard"
+    },
+    {
+     "id": "business-08",
+     "q": "What does KPI stand for?",
+     "options": [
+      "Key Performance Indicator",
+      "Key Product Inventory",
+      "Knowledge Process Integration",
+      "Key Price Index"
+     ],
+     "answer": 0,
+     "why": "A KPI is a measurable value tracking progress toward a goal.",
+     "level": "easy"
+    },
+    {
+     "id": "business-09",
+     "q": "Economies of scale mean:",
+     "options": [
+      "Prices rise as demand grows",
+      "Average cost falls as output grows",
+      "Costs rise as a firm grows",
+      "Governments subsidize large firms"
+     ],
+     "answer": 1,
+     "why": "Fixed costs spread over more units lower the cost per unit.",
+     "level": "medium"
+    },
+    {
+     "id": "business-10",
+     "q": "Opportunity cost is:",
+     "options": [
+      "The cash price paid",
+      "A cost already spent",
+      "The value of the next-best alternative given up",
+      "A tax on a transaction"
+     ],
+     "answer": 2,
+     "why": "Choosing one option means forgoing the best alternative.",
+     "level": "medium"
+    },
+    {
+     "id": "business-11",
+     "q": "A sunk cost is:",
+     "options": [
+      "A future cost",
+      "A cost that varies with output",
+      "The value of a forgone alternative",
+      "A past cost that cannot be recovered"
+     ],
+     "answer": 3,
+     "why": "Rational decisions ignore sunk costs; only future costs and benefits matter.",
+     "level": "medium"
+    },
+    {
+     "id": "business-12",
+     "q": "The 4 Ps of the marketing mix are:",
+     "options": [
+      "Product, Price, Place, Promotion",
+      "People, Process, Profit, Planning",
+      "Price, Profit, Product, Packaging",
+      "Plan, Pitch, Prospect, Persuade"
+     ],
+     "answer": 0,
+     "why": "E. Jerome McCarthy's classic marketing-mix framework.",
+     "level": "medium"
+    },
+    {
+     "id": "business-13",
+     "q": "By the law of demand, when price rises (all else equal), quantity demanded:",
+     "options": [
+      "Rises",
+      "Falls",
+      "Stays the same",
+      "Doubles"
+     ],
+     "answer": 1,
+     "why": "Demand curves slope downward.",
+     "level": "easy"
+    },
+    {
+     "id": "business-14",
+     "q": "A fixed cost is one that:",
+     "options": [
+      "Rises with every unit produced",
+      "Is paid only when a sale occurs",
+      "Does not vary with output in the short run",
+      "Is always zero"
+     ],
+     "answer": 2,
+     "why": "Rent is fixed; raw materials are variable.",
+     "level": "medium"
+    },
+    {
+     "id": "business-15",
+     "q": "Net profit margin equals:",
+     "options": [
+      "Revenue ÷ total assets",
+      "Gross profit ÷ cost of goods sold",
+      "Cash ÷ liabilities",
+      "Net income ÷ revenue"
+     ],
+     "answer": 3,
+     "why": "It shows how much of each unit of revenue is kept as profit.",
+     "level": "hard"
+    },
+    {
+     "id": "business-16",
+     "q": "Return on investment (ROI) is calculated as:",
+     "options": [
+      "(Gain − cost) ÷ cost",
+      "Cost ÷ gain",
+      "Revenue − cost",
+      "Gain × cost"
+     ],
+     "answer": 0,
+     "why": "ROI expresses net gain as a fraction of what was invested.",
+     "level": "medium"
+    },
+    {
+     "id": "business-17",
+     "q": "In the BCG matrix, a high-share business in a low-growth market is a:",
+     "options": [
+      "Star",
+      "Cash cow",
+      "Question mark",
+      "Dog"
+     ],
+     "answer": 1,
+     "why": "Stars are high share, high growth; dogs are low share, low growth.",
+     "level": "hard"
+    },
+    {
+     "id": "business-18",
+     "q": "What does IPO stand for?",
+     "options": [
+      "International Purchase Order",
+      "Internal Profit Outlook",
+      "Initial Public Offering",
+      "Investment Portfolio Option"
+     ],
+     "answer": 2,
+     "why": "An IPO is a company's first sale of shares to the public.",
+     "level": "easy"
+    },
+    {
+     "id": "business-19",
+     "q": "First-mover advantage is the benefit of:",
+     "options": [
+      "Having the lowest costs",
+      "Copying a competitor's product",
+      "Entering a market last",
+      "Being first to enter a market"
+     ],
+     "answer": 3,
+     "why": "Early entrants can gain brand recognition, scale and switching costs.",
+     "level": "medium"
+    },
+    {
+     "id": "business-20",
+     "q": "A supply chain is:",
+     "options": [
+      "The network from raw materials to the end customer",
+      "A marketing campaign",
+      "A hiring process",
+      "An accounting ledger"
+     ],
+     "answer": 0,
+     "why": "It spans suppliers, manufacturers, distributors and retailers.",
+     "level": "easy"
+    }
+   ]
+  },
+  {
+   "id": "tech",
+   "name": "Technology & AI",
+   "glyph": "λ",
+   "color": "#9B6BF0",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "tech-01",
+     "q": "What does CPU stand for?",
+     "options": [
+      "Computer Personal Unit",
+      "Central Program Utility",
+      "Central Processing Unit",
+      "Core Processing Uplink"
+     ],
+     "answer": 2,
+     "why": "The CPU executes a program's instructions.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-02",
+     "q": "Which digits does the binary number system use?",
+     "options": [
+      "0 to 9",
+      "1 and 2",
+      "0 to 7",
+      "0 and 1"
+     ],
+     "answer": 3,
+     "why": "Binary is base 2. Base 8 (0 to 7) is octal.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-03",
+     "q": "How many bits are in a byte?",
+     "options": [
+      "8",
+      "4",
+      "16",
+      "10"
+     ],
+     "answer": 0,
+     "why": "A byte is 8 bits; 4 bits is a nibble.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-04",
+     "q": "HTML is a:",
+     "options": [
+      "Database",
+      "Markup language",
+      "Operating system",
+      "Network protocol"
+     ],
+     "answer": 1,
+     "why": "HyperText Markup Language structures web pages.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-05",
+     "q": "What does RAM stand for?",
+     "options": [
+      "Read Access Memory",
+      "Rapid Application Module",
+      "Random Access Memory",
+      "Remote Access Machine"
+     ],
+     "answer": 2,
+     "why": "RAM is fast, volatile working memory.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-06",
+     "q": "Machine learning is best described as:",
+     "options": [
+      "Only hand-written rules",
+      "Manufacturing computer hardware",
+      "Compressing files",
+      "Systems that learn patterns from data"
+     ],
+     "answer": 3,
+     "why": "ML models improve at a task by fitting to examples rather than explicit rules.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-07",
+     "q": "Supervised learning trains a model on:",
+     "options": [
+      "Labeled examples",
+      "Unlabeled data only",
+      "Reward signals only",
+      "No data at all"
+     ],
+     "answer": 0,
+     "why": "Each training input comes with the correct output. Rewards are reinforcement learning.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-08",
+     "q": "What is the worst-case time complexity of binary search on a sorted array?",
+     "options": [
+      "O(n)",
+      "O(log n)",
+      "O(n²)",
+      "O(1)"
+     ],
+     "answer": 1,
+     "why": "Each step halves the search range.",
+     "level": "hard"
+    },
+    {
+     "id": "tech-09",
+     "q": "The Turing test evaluates whether a machine:",
+     "options": [
+      "Runs faster than a human",
+      "Is secure against attack",
+      "Can converse indistinguishably from a human",
+      "Has enough memory"
+     ],
+     "answer": 2,
+     "why": "Proposed by Alan Turing in 1950 as the 'imitation game'.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-10",
+     "q": "Neural networks are usually trained by:",
+     "options": [
+      "Compilation",
+      "Defragmentation",
+      "Encryption",
+      "Backpropagation with gradient descent"
+     ],
+     "answer": 3,
+     "why": "Backpropagation computes gradients; gradient descent updates the weights.",
+     "level": "hard"
+    },
+    {
+     "id": "tech-11",
+     "q": "What does LLM stand for in AI?",
+     "options": [
+      "Large Language Model",
+      "Linear Logic Machine",
+      "Low-Latency Memory",
+      "Layered Learning Module"
+     ],
+     "answer": 0,
+     "why": "LLMs are neural networks trained on large text corpora to predict tokens.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-12",
+     "q": "Which data structure is last-in, first-out (LIFO)?",
+     "options": [
+      "Queue",
+      "Stack",
+      "Heap",
+      "Hash table"
+     ],
+     "answer": 1,
+     "why": "A stack pops the most recently pushed item. A queue is FIFO.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-13",
+     "q": "What is binary 1010 in decimal?",
+     "options": [
+      "12",
+      "8",
+      "10",
+      "5"
+     ],
+     "answer": 2,
+     "why": "1·8 + 0·4 + 1·2 + 0·1 = 10.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-14",
+     "q": "Which operating-system kernel did Linus Torvalds create?",
+     "options": [
+      "Windows",
+      "macOS",
+      "Unix",
+      "Linux"
+     ],
+     "answer": 3,
+     "why": "Torvalds released Linux in 1991. Unix came from Bell Labs.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-15",
+     "q": "What does HTTP stand for?",
+     "options": [
+      "HyperText Transfer Protocol",
+      "High Transfer Text Process",
+      "Hosted Text Transmission Program",
+      "Hyperlink Tracking Transfer Path"
+     ],
+     "answer": 0,
+     "why": "HTTP is the request–response protocol of the web.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-16",
+     "q": "Overfitting means a model:",
+     "options": [
+      "Is too simple to fit the data",
+      "Fits training data too closely and generalizes poorly",
+      "Has too much test data",
+      "Runs too hot on the hardware"
+     ],
+     "answer": 1,
+     "why": "It memorizes noise; validation data reveals it.",
+     "level": "hard"
+    },
+    {
+     "id": "tech-17",
+     "q": "GPUs were originally designed for:",
+     "options": [
+      "Storing files",
+      "Routing network traffic",
+      "Rendering graphics",
+      "Supplying power"
+     ],
+     "answer": 2,
+     "why": "Their parallelism later proved ideal for training neural networks.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-18",
+     "q": "An IP address identifies:",
+     "options": [
+      "A file format",
+      "A programming language",
+      "A CPU core",
+      "A device on a network"
+     ],
+     "answer": 3,
+     "why": "Internet Protocol addresses route packets to devices.",
+     "level": "easy"
+    },
+    {
+     "id": "tech-19",
+     "q": "Moore's law observed that:",
+     "options": [
+      "Transistor counts on chips double about every two years",
+      "CPU clock speed halves every year",
+      "Memory prices triple each decade",
+      "Internet users double every year"
+     ],
+     "answer": 0,
+     "why": "Gordon Moore's 1965 observation, revised in 1975 to about two years.",
+     "level": "medium"
+    },
+    {
+     "id": "tech-20",
+     "q": "Hexadecimal is a number system with base:",
+     "options": [
+      "8",
+      "16",
+      "2",
+      "10"
+     ],
+     "answer": 1,
+     "why": "Digits 0 to 9 plus A to F.",
+     "level": "easy"
+    }
+   ]
+  },
+  {
+   "id": "cyber",
+   "name": "Cybersecurity",
+   "glyph": "◈",
+   "color": "#FF4D4D",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "cyber-01",
+     "q": "Phishing is:",
+     "options": [
+      "A type of firewall",
+      "An encryption algorithm",
+      "A backup method",
+      "Deceptive messages that trick people into revealing information"
+     ],
+     "answer": 3,
+     "why": "Phishing impersonates trusted senders to steal credentials or money.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-02",
+     "q": "Multi-factor authentication requires:",
+     "options": [
+      "Two or more independent verification factors",
+      "Logging in twice",
+      "Two different browsers",
+      "Changing your password twice a year"
+     ],
+     "answer": 0,
+     "why": "Something you know, have or are — two passwords are still one factor.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-03",
+     "q": "What does a firewall do?",
+     "options": [
+      "Removes viruses from files",
+      "Filters network traffic according to rules",
+      "Stores your passwords",
+      "Backs up your data"
+     ],
+     "answer": 1,
+     "why": "Firewalls allow or block traffic by rules on ports, addresses and protocols.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-04",
+     "q": "Ransomware is malware that:",
+     "options": [
+      "Sends spam email",
+      "Damages hardware physically",
+      "Encrypts data and demands payment",
+      "Blocks advertisements"
+     ],
+     "answer": 2,
+     "why": "Offline backups are the main defence against ransomware.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-05",
+     "q": "What does HTTPS add to HTTP?",
+     "options": [
+      "Faster downloads",
+      "Compression only",
+      "Advertising",
+      "TLS encryption"
+     ],
+     "answer": 3,
+     "why": "TLS encrypts traffic and authenticates the server with a certificate.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-06",
+     "q": "AES is a:",
+     "options": [
+      "Symmetric block cipher",
+      "Asymmetric cipher",
+      "Hash function",
+      "Key-exchange protocol"
+     ],
+     "answer": 0,
+     "why": "The Advanced Encryption Standard uses the same key to encrypt and decrypt.",
+     "level": "hard"
+    },
+    {
+     "id": "cyber-07",
+     "q": "SQL injection is:",
+     "options": [
+      "Tampering with hardware",
+      "Inserting malicious SQL through untrusted input",
+      "Changing DNS records",
+      "Phishing by text message"
+     ],
+     "answer": 1,
+     "why": "Parameterized queries prevent it by separating code from data.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-08",
+     "q": "The principle of least privilege means:",
+     "options": [
+      "Giving administrators access to everything",
+      "Making all data read-only",
+      "Granting only the minimum access needed",
+      "Rotating passwords monthly"
+     ],
+     "answer": 2,
+     "why": "Limiting access limits the damage of a compromised account.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-09",
+     "q": "Symmetric encryption uses:",
+     "options": [
+      "A public and private key pair",
+      "No key at all",
+      "Only a hash",
+      "The same key to encrypt and decrypt"
+     ],
+     "answer": 3,
+     "why": "Asymmetric encryption is the one with a key pair.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-10",
+     "q": "Why are hash functions used to store passwords?",
+     "options": [
+      "They are one-way and infeasible to reverse",
+      "They can be decrypted with a key",
+      "They compress data losslessly",
+      "They make passwords shorter to type"
+     ],
+     "answer": 0,
+     "why": "Systems compare hashes, never storing the plain password.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-11",
+     "q": "Cross-site scripting (XSS) is:",
+     "options": [
+      "Overloading a server with traffic",
+      "Injecting malicious scripts into pages others view",
+      "Stealing physical hardware",
+      "Guessing passwords by brute force"
+     ],
+     "answer": 1,
+     "why": "Escaping output and a Content Security Policy are key defences.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-12",
+     "q": "A DDoS attack:",
+     "options": [
+      "Steals passwords from a database",
+      "Encrypts files for ransom",
+      "Overwhelms a service with traffic from many sources",
+      "Forges email headers"
+     ],
+     "answer": 2,
+     "why": "Distributed Denial of Service floods a target until it is unavailable.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-13",
+     "q": "In public-key cryptography, which key is shared openly?",
+     "options": [
+      "The private key",
+      "Both keys",
+      "Neither key",
+      "The public key"
+     ],
+     "answer": 3,
+     "why": "The private key must stay secret; the public key can be published.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-14",
+     "q": "A zero-day vulnerability is:",
+     "options": [
+      "A flaw unknown to the vendor, with no patch yet",
+      "A bug fixed on its first day",
+      "An expired certificate",
+      "A virus that activates at midnight"
+     ],
+     "answer": 0,
+     "why": "Defenders have had 'zero days' to fix it.",
+     "level": "hard"
+    },
+    {
+     "id": "cyber-15",
+     "q": "What does a VPN provide?",
+     "options": [
+      "Virus protection",
+      "An encrypted tunnel for network traffic",
+      "Video playback",
+      "A password vault"
+     ],
+     "answer": 1,
+     "why": "A Virtual Private Network encrypts traffic between you and the VPN server.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-16",
+     "q": "Social engineering attacks exploit:",
+     "options": [
+      "Hardware defects",
+      "Compiler bugs",
+      "Human psychology",
+      "Power-grid failures"
+     ],
+     "answer": 2,
+     "why": "Manipulating people is often easier than breaking systems.",
+     "level": "easy"
+    },
+    {
+     "id": "cyber-17",
+     "q": "The CIA triad in security stands for:",
+     "options": [
+      "Control, Inspection, Audit",
+      "Cipher, Identity, Access",
+      "Compliance, Insurance, Assurance",
+      "Confidentiality, Integrity, Availability"
+     ],
+     "answer": 3,
+     "why": "The three core goals of information security.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-18",
+     "q": "Salting password hashes mainly defends against:",
+     "options": [
+      "Precomputed rainbow-table attacks",
+      "Typing mistakes",
+      "Network sniffing",
+      "Phishing emails"
+     ],
+     "answer": 0,
+     "why": "A unique random salt makes each hash different even for identical passwords.",
+     "level": "hard"
+    },
+    {
+     "id": "cyber-19",
+     "q": "A man-in-the-middle attack is when an attacker:",
+     "options": [
+      "Leaks data from inside the company",
+      "Secretly intercepts communication between two parties",
+      "Physically steals a laptop",
+      "Floods a server with requests"
+     ],
+     "answer": 1,
+     "why": "Encryption with authenticated endpoints (like TLS) defeats it.",
+     "level": "medium"
+    },
+    {
+     "id": "cyber-20",
+     "q": "A keylogger:",
+     "options": [
+      "Locks the keyboard",
+      "Generates encryption keys",
+      "Records keystrokes",
+      "Encrypts the disk"
+     ],
+     "answer": 2,
+     "why": "Keyloggers capture typed passwords; MFA limits the damage.",
+     "level": "easy"
+    }
+   ]
+  },
+  {
+   "id": "history",
+   "name": "World History",
+   "glyph": "☥",
+   "color": "#D4A373",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "history-01",
+     "q": "Who was the first person to walk on the Moon?",
+     "options": [
+      "Neil Armstrong",
+      "Buzz Aldrin",
+      "Yuri Gagarin",
+      "John Glenn"
+     ],
+     "answer": 0,
+     "why": "Armstrong stepped onto the Moon in July 1969 during Apollo 11.",
+     "level": "easy"
+    },
+    {
+     "id": "history-02",
+     "q": "In which year did World War II end?",
+     "options": [
+      "1944",
+      "1945",
+      "1939",
+      "1950"
+     ],
+     "answer": 1,
+     "why": "Germany surrendered in May 1945 and Japan in September 1945.",
+     "level": "easy"
+    },
+    {
+     "id": "history-03",
+     "q": "In which year did World War I begin?",
+     "options": [
+      "1918",
+      "1905",
+      "1914",
+      "1939"
+     ],
+     "answer": 2,
+     "why": "It began in 1914 and ended with the armistice of November 1918.",
+     "level": "easy"
+    },
+    {
+     "id": "history-04",
+     "q": "Which civilization built the pyramids of Giza?",
+     "options": [
+      "Romans",
+      "Aztecs",
+      "Sumerians",
+      "Ancient Egyptians"
+     ],
+     "answer": 3,
+     "why": "They were built for Old Kingdom pharaohs such as Khufu.",
+     "level": "easy"
+    },
+    {
+     "id": "history-05",
+     "q": "Who was the first Roman emperor?",
+     "options": [
+      "Augustus",
+      "Julius Caesar",
+      "Nero",
+      "Constantine"
+     ],
+     "answer": 0,
+     "why": "Augustus took power in 27 BC. Julius Caesar was dictator, never emperor.",
+     "level": "medium"
+    },
+    {
+     "id": "history-06",
+     "q": "In which year did the Berlin Wall fall?",
+     "options": [
+      "1991",
+      "1989",
+      "1961",
+      "1975"
+     ],
+     "answer": 1,
+     "why": "The wall went up in 1961 and opened on 9 November 1989.",
+     "level": "medium"
+    },
+    {
+     "id": "history-07",
+     "q": "Who wrote the Ninety-five Theses in 1517?",
+     "options": [
+      "John Calvin",
+      "Henry VIII",
+      "Martin Luther",
+      "Erasmus"
+     ],
+     "answer": 2,
+     "why": "Luther's theses sparked the Protestant Reformation.",
+     "level": "medium"
+    },
+    {
+     "id": "history-08",
+     "q": "In which year did the French Revolution begin?",
+     "options": [
+      "1776",
+      "1815",
+      "1848",
+      "1789"
+     ],
+     "answer": 3,
+     "why": "The storming of the Bastille was on 14 July 1789.",
+     "level": "medium"
+    },
+    {
+     "id": "history-09",
+     "q": "In which year did Columbus's first voyage reach the Americas?",
+     "options": [
+      "1492",
+      "1519",
+      "1453",
+      "1607"
+     ],
+     "answer": 0,
+     "why": "He landed in the Bahamas in October 1492.",
+     "level": "easy"
+    },
+    {
+     "id": "history-10",
+     "q": "In which year was Magna Carta sealed?",
+     "options": [
+      "1066",
+      "1215",
+      "1492",
+      "1315"
+     ],
+     "answer": 1,
+     "why": "King John sealed it at Runnymede in 1215. 1066 was the Norman Conquest.",
+     "level": "medium"
+    },
+    {
+     "id": "history-11",
+     "q": "Who was the first human in space?",
+     "options": [
+      "Neil Armstrong",
+      "Alan Shepard",
+      "Yuri Gagarin",
+      "John Glenn"
+     ],
+     "answer": 2,
+     "why": "Gagarin orbited Earth aboard Vostok 1 on 12 April 1961.",
+     "level": "easy"
+    },
+    {
+     "id": "history-12",
+     "q": "In which year was the US Declaration of Independence adopted?",
+     "options": [
+      "1789",
+      "1812",
+      "1765",
+      "1776"
+     ],
+     "answer": 3,
+     "why": "Adopted by the Continental Congress on 4 July 1776.",
+     "level": "easy"
+    },
+    {
+     "id": "history-13",
+     "q": "Which leader of Indian independence is known for nonviolent resistance?",
+     "options": [
+      "Mahatma Gandhi",
+      "Subhas Chandra Bose",
+      "Muhammad Ali Jinnah",
+      "Bhagat Singh"
+     ],
+     "answer": 0,
+     "why": "Gandhi's satyagraha campaigns relied on nonviolent civil disobedience.",
+     "level": "easy"
+    },
+    {
+     "id": "history-14",
+     "q": "The Cold War was primarily a rivalry between:",
+     "options": [
+      "The UK and France",
+      "The United States and the Soviet Union",
+      "China and Japan",
+      "Germany and Italy"
+     ],
+     "answer": 1,
+     "why": "It ran from the late 1940s until the USSR dissolved in 1991.",
+     "level": "easy"
+    },
+    {
+     "id": "history-15",
+     "q": "In which year did Constantinople fall to the Ottomans?",
+     "options": [
+      "1492",
+      "1204",
+      "1453",
+      "1517"
+     ],
+     "answer": 2,
+     "why": "Mehmed II took the city in 1453. In 1204 it was sacked by crusaders.",
+     "level": "hard"
+    },
+    {
+     "id": "history-16",
+     "q": "In which country did the Renaissance begin?",
+     "options": [
+      "England",
+      "Spain",
+      "Germany",
+      "Italy"
+     ],
+     "answer": 3,
+     "why": "It began in 14th-century Italian city-states, notably Florence.",
+     "level": "medium"
+    },
+    {
+     "id": "history-17",
+     "q": "Where did the Industrial Revolution begin?",
+     "options": [
+      "Great Britain",
+      "The United States",
+      "France",
+      "Japan"
+     ],
+     "answer": 0,
+     "why": "It started in 18th-century Britain with textiles and steam power.",
+     "level": "medium"
+    },
+    {
+     "id": "history-18",
+     "q": "At which battle was Napoleon finally defeated in 1815?",
+     "options": [
+      "Austerlitz",
+      "Waterloo",
+      "Trafalgar",
+      "Leipzig"
+     ],
+     "answer": 1,
+     "why": "Waterloo ended his rule. Austerlitz was one of his greatest victories.",
+     "level": "medium"
+    },
+    {
+     "id": "history-19",
+     "q": "In which year did Nelson Mandela become President of South Africa?",
+     "options": [
+      "1990",
+      "1984",
+      "1994",
+      "2000"
+     ],
+     "answer": 2,
+     "why": "Released in 1990, he was elected after the first all-race election in 1994.",
+     "level": "hard"
+    },
+    {
+     "id": "history-20",
+     "q": "Alexander the Great was king of:",
+     "options": [
+      "Sparta",
+      "Persia",
+      "Rome",
+      "Macedon"
+     ],
+     "answer": 3,
+     "why": "He succeeded Philip II of Macedon in 336 BC and conquered the Persian Empire.",
+     "level": "medium"
+    }
+   ]
+  },
+  {
+   "id": "geography",
+   "name": "Geography",
+   "glyph": "⊕",
+   "color": "#3FA7D6",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "geography-01",
+     "q": "What is the largest ocean on Earth?",
+     "options": [
+      "Atlantic Ocean",
+      "Pacific Ocean",
+      "Indian Ocean",
+      "Arctic Ocean"
+     ],
+     "answer": 1,
+     "why": "The Pacific covers about a third of Earth's surface.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-02",
+     "q": "What is the capital of Japan?",
+     "options": [
+      "Kyoto",
+      "Osaka",
+      "Tokyo",
+      "Seoul"
+     ],
+     "answer": 2,
+     "why": "Tokyo. Kyoto was the former imperial capital; Seoul is South Korea's capital.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-03",
+     "q": "What is the largest country by area?",
+     "options": [
+      "Canada",
+      "China",
+      "United States",
+      "Russia"
+     ],
+     "answer": 3,
+     "why": "Russia spans about 17 million km² across Europe and Asia.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-04",
+     "q": "What is the highest mountain above sea level?",
+     "options": [
+      "Mount Everest",
+      "K2",
+      "Kilimanjaro",
+      "Mont Blanc"
+     ],
+     "answer": 0,
+     "why": "Everest, on the Nepal–China border, is about 8,849 m high.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-05",
+     "q": "What is the capital of Australia?",
+     "options": [
+      "Sydney",
+      "Canberra",
+      "Melbourne",
+      "Perth"
+     ],
+     "answer": 1,
+     "why": "Canberra was purpose-built as a compromise between Sydney and Melbourne.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-06",
+     "q": "What is the largest hot desert in the world?",
+     "options": [
+      "Gobi",
+      "Kalahari",
+      "Sahara",
+      "Arabian"
+     ],
+     "answer": 2,
+     "why": "The Sahara. Antarctica is the largest desert overall, but a cold one.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-07",
+     "q": "What is the capital of Canada?",
+     "options": [
+      "Toronto",
+      "Montreal",
+      "Vancouver",
+      "Ottawa"
+     ],
+     "answer": 3,
+     "why": "Ottawa, in Ontario. Toronto is the largest city.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-08",
+     "q": "The equator passes through which of these continents?",
+     "options": [
+      "Africa",
+      "Europe",
+      "Australia",
+      "Antarctica"
+     ],
+     "answer": 0,
+     "why": "It crosses Africa, South America and Asia (Indonesia).",
+     "level": "medium"
+    },
+    {
+     "id": "geography-09",
+     "q": "Which strait separates Europe from Africa?",
+     "options": [
+      "Bosporus",
+      "Strait of Gibraltar",
+      "Strait of Hormuz",
+      "Strait of Malacca"
+     ],
+     "answer": 1,
+     "why": "It links the Atlantic and the Mediterranean between Spain and Morocco.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-10",
+     "q": "What is the capital of Brazil?",
+     "options": [
+      "Rio de Janeiro",
+      "São Paulo",
+      "Brasília",
+      "Salvador"
+     ],
+     "answer": 2,
+     "why": "Brasília replaced Rio de Janeiro as capital in 1960.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-11",
+     "q": "What is the smallest country by area?",
+     "options": [
+      "Monaco",
+      "San Marino",
+      "Liechtenstein",
+      "Vatican City"
+     ],
+     "answer": 3,
+     "why": "Vatican City covers about 0.44 km² inside Rome.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-12",
+     "q": "In which country is Mount Kilimanjaro?",
+     "options": [
+      "Tanzania",
+      "Kenya",
+      "Uganda",
+      "Ethiopia"
+     ],
+     "answer": 0,
+     "why": "Africa's highest peak is in northeastern Tanzania, near the Kenyan border.",
+     "level": "hard"
+    },
+    {
+     "id": "geography-13",
+     "q": "Which river flows through Paris?",
+     "options": [
+      "Thames",
+      "Seine",
+      "Rhine",
+      "Danube"
+     ],
+     "answer": 1,
+     "why": "The Seine. The Thames flows through London.",
+     "level": "easy"
+    },
+    {
+     "id": "geography-14",
+     "q": "What is the largest island that is not a continent?",
+     "options": [
+      "New Guinea",
+      "Borneo",
+      "Greenland",
+      "Madagascar"
+     ],
+     "answer": 2,
+     "why": "Greenland; Australia is classed as a continent.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-15",
+     "q": "What is the deepest lake in the world?",
+     "options": [
+      "Lake Superior",
+      "Lake Tanganyika",
+      "Lake Victoria",
+      "Lake Baikal"
+     ],
+     "answer": 3,
+     "why": "Baikal in Siberia is over 1,600 m deep and holds more fresh water than any other lake.",
+     "level": "hard"
+    },
+    {
+     "id": "geography-16",
+     "q": "Where is the deepest known point in the oceans?",
+     "options": [
+      "Mariana Trench",
+      "Puerto Rico Trench",
+      "Java Trench",
+      "Tonga Trench"
+     ],
+     "answer": 0,
+     "why": "The Challenger Deep in the western Pacific's Mariana Trench.",
+     "level": "hard"
+    },
+    {
+     "id": "geography-17",
+     "q": "Lines of latitude measure:",
+     "options": [
+      "Distance east or west of the prime meridian",
+      "Distance north or south of the equator",
+      "Altitude above sea level",
+      "Time-zone offsets"
+     ],
+     "answer": 1,
+     "why": "Latitude runs 0° to 90° N or S; longitude measures east–west.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-18",
+     "q": "The prime meridian (0° longitude) passes through:",
+     "options": [
+      "Paris",
+      "Rome",
+      "Greenwich, London",
+      "New York"
+     ],
+     "answer": 2,
+     "why": "Set at the Royal Observatory, Greenwich, by international agreement in 1884.",
+     "level": "medium"
+    },
+    {
+     "id": "geography-19",
+     "q": "Which of these countries borders the Dead Sea?",
+     "options": [
+      "Egypt",
+      "Turkey",
+      "Iran",
+      "Jordan"
+     ],
+     "answer": 3,
+     "why": "The Dead Sea lies between Jordan to the east and Israel and the West Bank to the west.",
+     "level": "hard"
+    },
+    {
+     "id": "geography-20",
+     "q": "What is the capital of Turkey?",
+     "options": [
+      "Ankara",
+      "Istanbul",
+      "Izmir",
+      "Bursa"
+     ],
+     "answer": 0,
+     "why": "Ankara became the capital in 1923. Istanbul is the largest city.",
+     "level": "medium"
+    }
+   ]
+  },
+  {
+   "id": "literature",
+   "name": "Language & Literature",
+   "glyph": "¶",
+   "color": "#E0C3FC",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "literature-01",
+     "q": "Who wrote Romeo and Juliet?",
+     "options": [
+      "Charles Dickens",
+      "Christopher Marlowe",
+      "William Shakespeare",
+      "Geoffrey Chaucer"
+     ],
+     "answer": 2,
+     "why": "Shakespeare's tragedy dates from the mid-1590s.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-02",
+     "q": "Who wrote the novel Nineteen Eighty-Four?",
+     "options": [
+      "Aldous Huxley",
+      "Ray Bradbury",
+      "H. G. Wells",
+      "George Orwell"
+     ],
+     "answer": 3,
+     "why": "Orwell published it in 1949. Huxley wrote Brave New World.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-03",
+     "q": "A word with the opposite meaning of another is a:",
+     "options": [
+      "Antonym",
+      "Synonym",
+      "Homonym",
+      "Acronym"
+     ],
+     "answer": 0,
+     "why": "Hot and cold are antonyms; big and large are synonyms.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-04",
+     "q": "Who wrote Don Quixote?",
+     "options": [
+      "Gabriel García Márquez",
+      "Miguel de Cervantes",
+      "Lope de Vega",
+      "Jorge Luis Borges"
+     ],
+     "answer": 1,
+     "why": "Cervantes published it in two parts, in 1605 and 1615.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-05",
+     "q": "A noun is a word that:",
+     "options": [
+      "Expresses an action",
+      "Describes a noun",
+      "Names a person, place, thing or idea",
+      "Joins two clauses"
+     ],
+     "answer": 2,
+     "why": "Verbs express actions, adjectives describe nouns, conjunctions join clauses.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-06",
+     "q": "What is the traditional syllable pattern of a haiku?",
+     "options": [
+      "7-5-7",
+      "5-5-5",
+      "3-5-3",
+      "5-7-5"
+     ],
+     "answer": 3,
+     "why": "Three lines of 5, 7 and 5 syllables (morae in Japanese).",
+     "level": "medium"
+    },
+    {
+     "id": "literature-07",
+     "q": "Who wrote Pride and Prejudice?",
+     "options": [
+      "Jane Austen",
+      "Charlotte Brontë",
+      "Emily Brontë",
+      "George Eliot"
+     ],
+     "answer": 0,
+     "why": "Austen published it in 1813.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-08",
+     "q": "A simile is a comparison that:",
+     "options": [
+      "Says one thing is another",
+      "Uses 'like' or 'as'",
+      "Exaggerates for effect",
+      "Imitates a sound"
+     ],
+     "answer": 1,
+     "why": "'Brave as a lion' is a simile; 'he is a lion' is a metaphor.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-09",
+     "q": "Homer is traditionally credited with which epics?",
+     "options": [
+      "The Aeneid",
+      "The Divine Comedy",
+      "The Iliad and the Odyssey",
+      "Beowulf"
+     ],
+     "answer": 2,
+     "why": "The Aeneid is Virgil's; the Divine Comedy is Dante's.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-10",
+     "q": "Onomatopoeia is a word that:",
+     "options": [
+      "Exaggerates for effect",
+      "Contradicts itself",
+      "Repeats an initial consonant",
+      "Imitates the sound it describes"
+     ],
+     "answer": 3,
+     "why": "Buzz, sizzle and bang are onomatopoeia.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-11",
+     "q": "Who wrote the Divine Comedy?",
+     "options": [
+      "Dante Alighieri",
+      "Petrarch",
+      "Giovanni Boccaccio",
+      "Virgil"
+     ],
+     "answer": 0,
+     "why": "Dante's poem has three parts: Inferno, Purgatorio and Paradiso.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-12",
+     "q": "How many lines does a sonnet have?",
+     "options": [
+      "12",
+      "14",
+      "10",
+      "16"
+     ],
+     "answer": 1,
+     "why": "Petrarchan and Shakespearean sonnets both have 14 lines.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-13",
+     "q": "Who wrote War and Peace?",
+     "options": [
+      "Fyodor Dostoevsky",
+      "Anton Chekhov",
+      "Leo Tolstoy",
+      "Ivan Turgenev"
+     ],
+     "answer": 2,
+     "why": "Tolstoy's novel follows Russian society through the Napoleonic Wars.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-14",
+     "q": "A verb is a word that:",
+     "options": [
+      "Names a thing",
+      "Describes a noun",
+      "Replaces a noun",
+      "Expresses an action or a state"
+     ],
+     "answer": 3,
+     "why": "Run, be and seem are verbs. A pronoun replaces a noun.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-15",
+     "q": "Alliteration is:",
+     "options": [
+      "Repetition of initial consonant sounds",
+      "Rhyme at the ends of lines",
+      "Deliberate exaggeration",
+      "A comparison using 'like'"
+     ],
+     "answer": 0,
+     "why": "'Peter Piper picked a peck' is alliteration.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-16",
+     "q": "Who wrote One Hundred Years of Solitude?",
+     "options": [
+      "Isabel Allende",
+      "Gabriel García Márquez",
+      "Mario Vargas Llosa",
+      "Julio Cortázar"
+     ],
+     "answer": 1,
+     "why": "The 1967 novel is a landmark of magical realism.",
+     "level": "hard"
+    },
+    {
+     "id": "literature-17",
+     "q": "The protagonist of a story is its:",
+     "options": [
+      "Main opponent",
+      "Author",
+      "Main character",
+      "Setting"
+     ],
+     "answer": 2,
+     "why": "The antagonist is the opposing force.",
+     "level": "easy"
+    },
+    {
+     "id": "literature-18",
+     "q": "Who wrote Moby-Dick?",
+     "options": [
+      "Mark Twain",
+      "Nathaniel Hawthorne",
+      "Edgar Allan Poe",
+      "Herman Melville"
+     ],
+     "answer": 3,
+     "why": "Melville published it in 1851.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-19",
+     "q": "Hyperbole is:",
+     "options": [
+      "Deliberate exaggeration",
+      "Understatement",
+      "A comparison using 'like'",
+      "Imitation of a sound"
+     ],
+     "answer": 0,
+     "why": "'I've told you a million times' is hyperbole.",
+     "level": "medium"
+    },
+    {
+     "id": "literature-20",
+     "q": "How many metrical feet are in a line of iambic pentameter?",
+     "options": [
+      "4",
+      "5",
+      "6",
+      "10"
+     ],
+     "answer": 1,
+     "why": "'Penta' means five: five iambs, ten syllables.",
+     "level": "hard"
+    }
+   ]
+  },
+  {
+   "id": "law",
+   "name": "Law & Civics",
+   "glyph": "§",
+   "color": "#B0BEC5",
+   "axis": "a",
+   "questions": [
+    {
+     "id": "law-01",
+     "q": "What are the three branches of the US federal government?",
+     "options": [
+      "Federal, state, local",
+      "House, Senate, President",
+      "Police, courts, prisons",
+      "Legislative, executive, judicial"
+     ],
+     "answer": 3,
+     "why": "Congress makes laws, the President enforces them, the courts interpret them.",
+     "level": "easy"
+    },
+    {
+     "id": "law-02",
+     "q": "The main purpose of the separation of powers is to:",
+     "options": [
+      "Prevent any one body from holding too much power",
+      "Speed up lawmaking",
+      "Lower taxes",
+      "Abolish elections"
+     ],
+     "answer": 0,
+     "why": "Checks and balances let each branch limit the others.",
+     "level": "medium"
+    },
+    {
+     "id": "law-03",
+     "q": "The presumption of innocence means the accused is:",
+     "options": [
+      "Guilty until proven innocent",
+      "Innocent until proven guilty",
+      "Never tried in court",
+      "Tried without a lawyer"
+     ],
+     "answer": 1,
+     "why": "The prosecution carries the burden of proof.",
+     "level": "easy"
+    },
+    {
+     "id": "law-04",
+     "q": "Habeas corpus protects against:",
+     "options": [
+      "Unreasonable searches",
+      "Being tried twice",
+      "Unlawful detention",
+      "Self-incrimination"
+     ],
+     "answer": 2,
+     "why": "It requires a detained person to be brought before a court to test the detention.",
+     "level": "hard"
+    },
+    {
+     "id": "law-05",
+     "q": "In a civil lawsuit, the plaintiff is:",
+     "options": [
+      "The party being sued",
+      "The judge",
+      "A juror",
+      "The party who brings the case"
+     ],
+     "answer": 3,
+     "why": "The party being sued is the defendant.",
+     "level": "medium"
+    },
+    {
+     "id": "law-06",
+     "q": "Democracy literally means rule by:",
+     "options": [
+      "The people",
+      "A single monarch",
+      "A small elite",
+      "The military"
+     ],
+     "answer": 0,
+     "why": "From the Greek dēmos (people) and kratos (rule).",
+     "level": "easy"
+    },
+    {
+     "id": "law-07",
+     "q": "Which rights does the US First Amendment protect?",
+     "options": [
+      "The right to bear arms",
+      "Speech, religion, press, assembly and petition",
+      "The right to a jury trial",
+      "Protection from unreasonable searches"
+     ],
+     "answer": 1,
+     "why": "Arms are the Second Amendment; searches the Fourth.",
+     "level": "easy"
+    },
+    {
+     "id": "law-08",
+     "q": "How many justices sit on the US Supreme Court?",
+     "options": [
+      "7",
+      "11",
+      "9",
+      "12"
+     ],
+     "answer": 2,
+     "why": "The number has been nine since 1869.",
+     "level": "medium"
+    },
+    {
+     "id": "law-09",
+     "q": "In which year did the UN adopt the Universal Declaration of Human Rights?",
+     "options": [
+      "1945",
+      "1919",
+      "1966",
+      "1948"
+     ],
+     "answer": 3,
+     "why": "Adopted on 10 December 1948, now marked as Human Rights Day.",
+     "level": "hard"
+    },
+    {
+     "id": "law-10",
+     "q": "In common law, a valid contract generally requires:",
+     "options": [
+      "Offer, acceptance and consideration",
+      "A notary's stamp",
+      "A court's approval",
+      "A government licence"
+     ],
+     "answer": 0,
+     "why": "Consideration is the value each party exchanges.",
+     "level": "medium"
+    },
+    {
+     "id": "law-11",
+     "q": "Double jeopardy protection prevents:",
+     "options": [
+      "Being charged with two crimes",
+      "Being tried twice for the same offence",
+      "Having two judges",
+      "Appealing a verdict"
+     ],
+     "answer": 1,
+     "why": "Once acquitted or convicted, a person cannot be retried for the same offence.",
+     "level": "medium"
+    },
+    {
+     "id": "law-12",
+     "q": "A constitution is:",
+     "options": [
+      "A local by-law",
+      "A single court ruling",
+      "The fundamental law setting out a state's government and rights",
+      "A trade agreement"
+     ],
+     "answer": 2,
+     "why": "Ordinary laws must conform to the constitution.",
+     "level": "easy"
+    },
+    {
+     "id": "law-13",
+     "q": "A veto is the power to:",
+     "options": [
+      "Pass a law alone",
+      "Interpret a law",
+      "Call an election",
+      "Reject a proposed law"
+     ],
+     "answer": 3,
+     "why": "From Latin for 'I forbid'.",
+     "level": "easy"
+    },
+    {
+     "id": "law-14",
+     "q": "A bicameral legislature has:",
+     "options": [
+      "Two chambers",
+      "One chamber",
+      "Three chambers",
+      "No chambers"
+     ],
+     "answer": 0,
+     "why": "The US Congress and UK Parliament are both bicameral.",
+     "level": "medium"
+    },
+    {
+     "id": "law-15",
+     "q": "In law, a tort is:",
+     "options": [
+      "A crime prosecuted by the state",
+      "A civil wrong that causes harm and creates liability",
+      "A clause in a contract",
+      "A type of tax"
+     ],
+     "answer": 1,
+     "why": "Negligence and defamation are torts; the remedy is usually damages.",
+     "level": "hard"
+    },
+    {
+     "id": "law-16",
+     "q": "What is the standard of proof in a common-law criminal trial?",
+     "options": [
+      "Balance of probabilities",
+      "Any evidence at all",
+      "Beyond a reasonable doubt",
+      "A majority of witnesses"
+     ],
+     "answer": 2,
+     "why": "The balance of probabilities is the usual civil standard.",
+     "level": "hard"
+    },
+    {
+     "id": "law-17",
+     "q": "In a jury trial, the jury's main role is to:",
+     "options": [
+      "Write new laws",
+      "Prosecute the defendant",
+      "Appoint the judge",
+      "Decide the facts and deliver a verdict"
+     ],
+     "answer": 3,
+     "why": "The judge rules on law; the jury decides what happened.",
+     "level": "medium"
+    },
+    {
+     "id": "law-18",
+     "q": "A referendum is:",
+     "options": [
+      "A direct vote by the electorate on a specific question",
+      "An election of representatives",
+      "A court case",
+      "A population census"
+     ],
+     "answer": 0,
+     "why": "Voters decide the issue themselves rather than through representatives.",
+     "level": "medium"
+    },
+    {
+     "id": "law-19",
+     "q": "Federalism divides power between:",
+     "options": [
+      "Parliament and the monarch",
+      "National and regional governments",
+      "Courts and police",
+      "Political parties"
+     ],
+     "answer": 1,
+     "why": "The US, Germany and Australia are federal systems.",
+     "level": "medium"
+    },
+    {
+     "id": "law-20",
+     "q": "The principle of stare decisis means courts:",
+     "options": [
+      "Let laws expire after a set time",
+      "Elect their judges",
+      "Follow precedent from earlier decisions",
+      "Let juries choose the law"
+     ],
+     "answer": 2,
+     "why": "Latin for 'to stand by things decided'.",
+     "level": "hard"
+    }
+   ]
+  }
+ ]
+}

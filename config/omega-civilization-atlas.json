@@ -676,6 +676,25 @@
         "missionState": "not-connected",
         "progression": "not-awarded"
       }
+    },
+    {
+      "id": "task-intelligence",
+      "type": "TASK",
+      "name": "MAP AN INTELLIGENCE SIGNAL",
+      "state": "SIMULATED",
+      "role": "Intelligence simulation linked to discovery, provenance and review.",
+      "parent": "vesper-nexus",
+      "provenance": "SYD OMEGA 91717 design corpus",
+      "observedAt": null,
+      "lifecycle": "design-seed",
+      "execution": {
+        "authorization": "simulation-policy",
+        "action": "simulation_run",
+        "event": "simulation_run",
+        "evidence": "simulation-record",
+        "missionState": "not-connected",
+        "progression": "not-awarded"
+      }
     }
   ],
   "integration": {

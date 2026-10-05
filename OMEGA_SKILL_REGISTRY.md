@@ -94,12 +94,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 227 |
-| pages loading `bg.js` | 227 of 227 |
-| `omega-*.js` modules | 208 (1966 KB) |
-| root `.js` files | 223 |
+| `.html` pages | 236 |
+| pages loading `bg.js` | 236 of 236 |
+| `omega-*.js` modules | 209 (1968 KB) |
+| root `.js` files | 224 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 339 (107 numbered `NNNN_`, 232 timestamped) |
+| `supabase/migrations/*.sql` | 340 (107 numbered `NNNN_`, 233 timestamped) |
 | Edge Functions | 22 |
 | skills | 23 |
 | agent definitions | 2 |

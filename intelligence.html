@@ -61,6 +61,7 @@
 .sci-title{font-family:'Courier New',monospace;font-size:12px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
 .sci-body{font-size:12px;color:#888;line-height:1.65}
 .sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
+.data-reality{border:1px solid rgba(155,107,240,.25);background:rgba(10,10,15,.6);padding:16px;margin-bottom:20px}.data-reality-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:12px}.data-reality-head b{font-family:'Courier New',monospace;font-size:12px;letter-spacing:2px;color:#9B6BF0}.data-reality-head span{font-family:'Courier New',monospace;font-size:12px;color:var(--muted)}.data-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.data-source-card{border:1px solid #1a1a1a;background:#0d0d0d;padding:12px;display:grid;gap:5px}.data-source-card b{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0}.data-source-card span{font-family:'Courier New',monospace;font-size:12px;color:var(--muted)}.data-source-card .data-source-state{color:#9B6BF0;letter-spacing:1px}.data-source-card small,.data-source-card p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.data-source-empty{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);padding:10px}
 </style>
 </head>
 <body>
@@ -85,6 +86,7 @@
 
 <!-- HUB -->
 <div id="tab-hub" class="tab-panel act">
+  <section class="data-reality" aria-labelledby="data-reality-title"><div class="data-reality-head"><b id="data-reality-title">DATA REALITY / SOURCE VERIFICATION</b><span id="data-reality-status">INITIALIZING</span></div><div id="data-source-grid" class="data-source-grid"></div></section>
   <div class="stats-row">
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL INTEL</div></div>
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-threats">0</div><div class="stat-lbl">THREATS</div></div>
@@ -326,6 +328,7 @@
 </div>
 
 <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-data-reality.js" defer></script>
 <script>
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
@@ -536,6 +539,7 @@ async function startGraphIngestion(){
 
 load();
 renderStats();
+window.addEventListener("DOMContentLoaded",function(){if(window.OmegaDataReality){window.OmegaDataReality.render("data-source-grid").then(function(r){var e=document.getElementById("data-reality-status");if(e)e.textContent=r.state+" · "+r.count+" source(s)";});}});
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

@@ -22451,3 +22451,24 @@ resolved to no City district (`resolved=225` of 226). Assigned `void` beside `wo
 `config/page-world-overrides.json`; now `resolved=226`, PASS. Still red on `main` and not fixed here:
 `omega-object-contract.py` — the 10 civilization object types added to `config/omega-object-model.json` name
 `config/omega-civilization-atlas.json` as their source, and the contract accepts only live-schema tables.
+
+**Three blockers closed together (2026-10-05).**
+- **Vercel quota exhaustion — the preview gate never matched a real branch.** `vercel.json` had
+  `git.deploymentEnabled: {"*": false, "main": true}` since `1b309e7f` (2026-09-05), meant to deploy only `main`.
+  minimatch `*` does not cross `/`, and every branch here has one (`claude/…`, `feat/…`, `fix/…`): measured with the
+  repo's own minimatch, `claude/sydomega91717-world-atlas-district` and `feat/omega-x` match `*` → **false**, `**` →
+  true. So every PR push built a preview, and the free plan's 100 deployments/day ran out on 2026-10-04 and again on
+  2026-10-05 (Vercel: `api-deployments-free-per-day`), stalling production. Added `"**": false` (`main` still matches
+  its own `true`; Vercel deploys when any matching rule is true). `vercel_static_contract.py` now requires it, with a
+  planted violator (`"*"` alone) in `test_vercel_static_contract.py`. CI's `Validate production artifact` already
+  builds the same artifact per PR, so previews were redundant.
+- **`omega-object-contract.py` red on `main`.** The 10 civilization types (`planetary_body` … `resource`) name
+  `config/omega-civilization-atlas.json`, and the model's own rule says they are "registry-backed"; the contract only
+  knew live tables. It now accepts a `config/*.json` source when the object declares `recordTypes` and every record of
+  those types has the identity and label fields and a `state` in the truth vocabulary (missing file, undeclared type,
+  empty type, missing field or invented state each fail — `test_object_contract_registry.py`). That unmasked a second
+  failure: `relearn_record` claimed a `lesson`/`user_id` pair no source table has; its label is now `description`
+  on `task_completions` (`id`/`description`/`user_id`), where a captured lesson is stored. Result:
+  `OMEGA_OBJECT_CONTRACT=PASS objects=31 relations=19 tables=548 registry_backed=10`.
+- **Local suite blind to both.** `contract-suite.py` gains `page-world` and `object-contract` (36 gates); on `main`'s
+  object model the suite exits 1, on this branch 0.

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "Authoritative source-coverage inventory for the five uploaded SYD OMEGA 91717 source documents.",
+  "sourceCorpus": [
+    {
+      "id": "BLUEPRINT_999",
+      "name": "Ω- SYD OMEGA 91717-THE 999-POINT SOVEREIGN BLUEPRINT-NANO-DETAIL EXPANSION.txt",
+      "role": "CONCEPTUAL_ARCHIVAL_SPECULATIVE",
+      "lineCount": 1231,
+      "declaredFrameworkPoints": 999,
+      "explicitNumberedRecords": 391,
+      "numberedRecordOccurrences": 399,
+      "duplicateNumberRecords": 8,
+      "nonDiscreteDeclaredNumbers": 608,
+      "implementationAuthority": "NONE"
+    },
+    {
+      "id": "MASTER_PROMPT",
+      "name": "SYD OMEGA 91717 - Master Prompt.txt",
+      "role": "HISTORICAL_TARGET_ARCHITECTURE_AND_FEATURE_SPECIFICATION",
+      "lineCount": 1846,
+      "implementationAuthority": "REFERENCE_ONLY"
+    },
+    {
+      "id": "PRODUCT_DOCUMENT",
+      "name": "Ω SYD OMEGA 91717_Document.txt",
+      "role": "EARLIER_FULL_STACK_PRODUCT_SPECIFICATION",
+      "lineCount": 362,
+      "implementationAuthority": "REFERENCE_ONLY"
+    },
+    {
+      "id": "ABSOLUTE",
+      "name": "Absolute.txt",
+      "role": "PROMPTING_CRITIQUE_HUMANIZATION_AND_REASONING_GUIDANCE",
+      "lineCount": 74,
+      "implementationAuthority": "PROCESS_GUIDANCE_ONLY"
+    },
+    {
+      "id": "RESEARCH_MASTER",
+      "name": "SYD OMEGA 91717.txt",
+      "role": "RESEARCH_BENCHMARKING_AND_CONTINUOUS_IMPROVEMENT_DIRECTIVE",
+      "lineCount": 552,
+      "implementationAuthority": "GOVERNANCE_RESEARCH_GUIDANCE"
+    }
+  ],
+  "authorityOrder": [
+    "LIVE_PRODUCTION_EVIDENCE",
+    "REPOSITORY_CONTRACTS",
+    "CURRENT_IMPLEMENTATION",
+    "CURRENT_PRODUCT_ARCHITECTURE",
+    "HISTORICAL_MASTER_PROMPTS",
+    "999_POINT_BLUEPRINT",
+    "EXTERNAL_RESEARCH"
+  ],
+  "truthStates": [
+    "SOURCE",
+    "LIVE",
+    "CALCULATED",
+    "SIMULATED",
+    "USER_CREATED",
+    "LORE",
+    "UNAVAILABLE",
+    "DESIGN_PROPOSAL",
+    "IMPLEMENTED",
+    "PARTIAL",
+    "BLOCKED",
+    "UNVERIFIED"
+  ],
+  "promotionLifecycle": [
+    "SOURCE",
+    "CLASSIFY",
+    "SPECIFY",
+    "IMPLEMENT",
+    "CONNECT",
+    "PERSIST",
+    "SECURE",
+    "TEST",
+    "DEPLOY",
+    "LIVE_VERIFY"
+  ],
+  "coverageDomains": [
+    "IDENTITY_AND_ACCESS",
+    "18_PRODUCT_MODULES",
+    "GAMING_AND_PROGRESSION",
+    "LEADERBOARDS_AND_SOCIAL",
+    "AI_AND_AGENTS",
+    "SEARCH_AND_KNOWLEDGE",
+    "EVENTS_EVIDENCE_AND_LINEAGE",
+    "COMMERCE_AND_PAYMENTS",
+    "BLOCKCHAIN_AND_DIGITAL_ASSETS",
+    "MEDIA_AND_CONTENT",
+    "FAMILY_AND_HERITAGE",
+    "HOROSCOPE_AND_SYMBOLIC_CONTENT",
+    "LEGAL_PRIVACY_AND_COMPLIANCE",
+    "SECURITY_AND_ZERO_TRUST",
+    "DATA_GOVERNANCE",
+    "OBSERVABILITY_AND_OPERATIONS",
+    "DEVSECOPS_AND_SUPPLY_CHAIN",
+    "PERFORMANCE_AND_SCALE",
+    "MOBILE_AND_PWA",
+    "NOTIFICATIONS",
+    "CIVILIZATION_AND_CITY_OS",
+    "ROBOTICS_AND_INTEROPERABILITY",
+    "DIGITAL_TWINS",
+    "BUSINESS_AND_MONETIZATION",
+    "DOCUMENTATION_AND_ONBOARDING"
+  ],
+  "non_authoritativeCategories": [
+    "PLAUSIBILITY_UNVERIFIED_PHYSICS",
+    "LEGAL_SOVEREIGNTY_OR_IMMUNITY_CLAIMS",
+    "BIOLOGICAL_OR_DNA_AUTHORIZATION",
+    "MEDICAL_OR_MENTAL_HEALTH_AUTOMATION",
+    "OFFENSIVE_CYBERWARFARE",
+    "AUTONOMOUS_GEOPOLITICAL_POWER",
+    "UNVERIFIED_EXTRATERRESTRIAL_OWNERSHIP",
+    "GUARANTEED_PREDICTION_OR_PERFECT_CONTROL",
+    "PLAINTEXT_CREDENTIALS_IN_HISTORICAL_TEXT"
+  ],
+  "hardRules": [
+    "Never promote lore or speculative source text to LIVE without independent production evidence.",
+    "Never fabricate missing numbered blueprint points.",
+    "Never copy historical credentials into code, prompts, tickets, tests, screenshots, or deployment configuration.",
+    "Never use symbolic, astrological, psychological, or game-derived values as hidden eligibility for high-impact decisions.",
+    "Never let a protocol connection imply trust or authority.",
+    "Never create a second persistence authority when an existing canonical system covers the domain.",
+    "Never treat route reachability as business correctness.",
+    "Never claim physical-world execution without identity, capability, authorization, safety state, timeout, fail-safe behavior, telemetry, result, and evidence."
+  ]
+}

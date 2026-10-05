@@ -22439,3 +22439,79 @@ The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
 - Verification: Playwright at 1280 and 375/touch, 38/38: 3 cards, quiz plays through, word/film/quiz saved,
   3 pips, all-done banner, exact `daily:` tasks recorded, state survives reload, arcade opens from the dashboard,
   no overflow, 0 page errors. Supabase stubbed: the RPC and the streak read are proven wired, not proven live.
+
+**`main` red after the 2026-10-05 merges: page-count copy and census (2026-10-05).** After #717–#730,
+`./scripts/ci-local.sh` on `988bc646` failed 2 of 28: `page-count-claims` (the estate is 226 pages with
+`world-atlas.html`, but 7 page sites, `T_EN.dash_platform_index`/`platform_command_index` and the six packs still
+said 225) and `2j. Skill/agent registry` (census not regenerated). Copy moved to 226 in all 21 sites (the same two
+keys in every pack, so no translation keeps the old number) and `python3 scripts/omega-registry.py` rerun.
+After: `page-count-claims` PASS, `i18n-contract` 0 violations, `omega-registry.py --check` OK, ci-local 28/28.
+Same drift, a third gate (`contracts.yml` → `page-world-contract.py`, not mirrored in ci-local): `world-atlas`
+resolved to no City district (`resolved=225` of 226). Assigned `void` beside `world` and `map` in
+`config/page-world-overrides.json`; now `resolved=226`, PASS. Still red on `main` and not fixed here:
+`omega-object-contract.py` — the 10 civilization object types added to `config/omega-object-model.json` name
+`config/omega-civilization-atlas.json` as their source, and the contract accepts only live-schema tables.
+
+**Three blockers closed together (2026-10-05).**
+- **Vercel quota exhaustion — the preview gate never matched a real branch.** `vercel.json` had
+  `git.deploymentEnabled: {"*": false, "main": true}` since `1b309e7f` (2026-09-05), meant to deploy only `main`.
+  minimatch `*` does not cross `/`, and every branch here has one (`claude/…`, `feat/…`, `fix/…`): measured with the
+  repo's own minimatch, `claude/sydomega91717-world-atlas-district` and `feat/omega-x` match `*` → **false**, `**` →
+  true. So every PR push built a preview, and the free plan's 100 deployments/day ran out on 2026-10-04 and again on
+  2026-10-05 (Vercel: `api-deployments-free-per-day`), stalling production. Added `"**": false` (`main` still matches
+  its own `true`; Vercel deploys when any matching rule is true). `vercel_static_contract.py` now requires it, with a
+  planted violator (`"*"` alone) in `test_vercel_static_contract.py`. CI's `Validate production artifact` already
+  builds the same artifact per PR, so previews were redundant.
+- **`omega-object-contract.py` red on `main`.** The 10 civilization types (`planetary_body` … `resource`) name
+  `config/omega-civilization-atlas.json`, and the model's own rule says they are "registry-backed"; the contract only
+  knew live tables. It now accepts a `config/*.json` source when the object declares `recordTypes` and every record of
+  those types has the identity and label fields and a `state` in the truth vocabulary (missing file, undeclared type,
+  empty type, missing field or invented state each fail — `test_object_contract_registry.py`). That unmasked a second
+  failure: `relearn_record` claimed a `lesson`/`user_id` pair no source table has; its label is now `description`
+  on `task_completions` (`id`/`description`/`user_id`), where a captured lesson is stored. Result:
+  `OMEGA_OBJECT_CONTRACT=PASS objects=31 relations=19 tables=548 registry_backed=10`.
+- **Local suite blind to both.** `contract-suite.py` gains `page-world` and `object-contract` (36 gates); on `main`'s
+  object model the suite exits 1, on this branch 0.
+
+**Live verification of progress writes and the three owner security items (2026-10-05, Supabase MCP live).**
+- **Progress saves, proven on production.** `task_completions` already held a real member row from the shipped
+  Daily Three — `daily:2026-10-05:film / ritual / c / 0.03`, written 2026-10-04 22:05 UTC by a browser session.
+  Exams and arcade had no live rows yet (no pass/win since they shipped), so their path was proven by impersonating
+  a member exactly as PostgREST does (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, CLAUDE.md 8.4) and
+  calling `complete_task` with named arguments: `exam:math`, `arcade:oracle`, `daily:2026-10-05:quiz` each
+  `applied=true`, `rows_written=3`; a repeat `arcade:oracle` `applied=false` (dedup holds). The block ends in
+  `RAISE EXCEPTION`, so it rolled back; a follow-up count found 0 leftovers. `complete_task` is SECURITY INVOKER,
+  `authenticated` EXECUTE true, `anon` false. A first probe with POSITIONAL arguments wrote task names
+  `knowledge`/`mastery`/`ritual` — the live signature is `(p_task_name, p_task_type, …)`; the client passes named
+  arguments and is unaffected (also rolled back).
+- **#692 MFA:** `platform_owners` = 1 row (`s.y.dagher@gmail.com`, 0 verified factors; `slmndghr@gmail.com` is no
+  longer an owner). `mfa_enrolment_enabled=true`, `owner_mfa_required=false`. Enrolment, sign-in step-up and the
+  lockout-safe switch are live; the only remaining step is enrolment on the owner's own device.
+- **#375 leaked-password protection:** advisor `auth_leaked_password_protection` still WARN; org plan `free`, and
+  Supabase docs: "available on the Pro Plan and above". `omega-password-guard.js` covers both UI paths (tests pass).
+- **#682 credentials:** pattern scan of all 10,715 commits on every ref — 0 Stripe/Anthropic/Resend/GitHub/AWS
+  secrets, 4 `sb_secret_` hits all deliberate dummies, JWTs only `role: anon`. `secrets-health` deployed; no
+  rotation confirmed yet. 13 Edge Functions still read the legacy `SUPABASE_SERVICE_ROLE_KEY`, which blocks
+  disabling legacy keys until they move to `sb_secret_` keys.
+
+## Concierge spent on Anthropic for any holder of the public key (2026-10-05)
+
+`docs/decisions/legacy-key-migration/PLAN.md` Phase A, carried out under the owner's delegation ("You choose what
+is better and improve the project").
+
+- **Bug (§8.1 class 6):** `supabase/functions/concierge/index.ts:68-71` checked only that `Authorization` began
+  with `bearer `, then called Anthropic. Platform `verify_jwt` is not authentication — for migration compatibility
+  it also accepts the publishable key and the legacy anon JWT (Supabase functions/auth-headers), both shipped in
+  every page. So anyone could drive Anthropic spend with no account.
+- **Fix:** before classification or any paid call, resolve the caller with
+  `auth.getUser(<bearer token>)` on a publishable-key client; 401 `authentication_required` otherwise. The same
+  client then serves the existing `recall_ai_context` read. Every caller already treats non-200 as "use the local
+  fallback" (file header), so signed-out paths degrade as before.
+- **Verified live:** deployed as version 5 (`verify_jwt` true, `ezbr_sha256 8eb55259…`); `get_edge_function`
+  returns the repo file. Probed from the database with `net.http_post` (the sandbox's egress to supabase.co is
+  denied): legacy anon JWT as apikey+Bearer → **401** `{"error":"authentication_required"}`; publishable key as
+  apikey+Bearer → **401** same body. The body is the function's own, so `verify_jwt` admitted both and the new gate
+  refused them — the gap was real until this deploy. **Not verified live:** the positive path with a real member
+  session (no member JWT is available to this session); it uses the documented `getUser(jwt)` call.
+- `docs/runtime/supabase-edge-functions-live.json` concierge entry moved to version 5 / blob `c8241590…`;
+  `supabase-edge-runtime-reconciliation.py` PASS (21 repository, 11 deployed, 10 local-only).

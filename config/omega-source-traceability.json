@@ -1,0 +1,39 @@
+{
+  "schemaVersion":"1.0.0",
+  "name":"omega-source-traceability",
+  "purpose":"Governed bridge from the five uploaded SYD OMEGA 91717 source documents into implementation requirements without fabricating undocumented points.",
+  "truthPolicy":"Source statements are preserved as SOURCE. Implementation state is independently classified as IMPLEMENTED, PARTIAL, DESIGN_PROPOSAL, SIMULATED, BLOCKED, or UNVERIFIED.",
+  "sourceCorpus":[
+    {"id":"blueprint-999","file":"Ω- SYD OMEGA 91717-THE 999-POINT SOVEREIGN BLUEPRINT-NANO-DETAIL EXPANSION.txt","role":"visionary blueprint, numbered points, agent model, sovereignty/legacy concepts","declaredPointCount":999,"explicitNumberedPointRecords":391,"unrepresentedDeclaredPoints":608},
+    {"id":"master-prompt","file":"SYD OMEGA 91717 - Master Prompt.txt","role":"technical build specification, security, scalability, services, UI, QA and deployment requirements"},
+    {"id":"omega-document","file":"Ω SYD OMEGA 91717_Document.txt","role":"18-module product specification, routes, payments, passport, investment, intelligence and hierarchy requirements"},
+    {"id":"absolute","file":"Absolute.txt","role":"expanded product vision and governance concepts; source concepts are not proof of production reality"},
+    {"id":"global-research-prompt","file":"SYD OMEGA 91717.txt","role":"enterprise research, benchmarking, continuous-improvement and delivery requirements"}
+  ],
+  "auditAccounting":{
+    "declaredFrameworkPoints":999,
+    "explicitNumberedPointRecords":391,
+    "declaredButNotDiscreteSourceRecords":608,
+    "rule":"Never synthesize the 608 as if they were explicit source records. Preserve the 999-point claim as SOURCE while tracking only auditable records.",
+    "groupedRequirements":"Preserved separately from numbered-point accounting."
+  },
+  "canonicalTruthStates":["SOURCE","LIVE","CALCULATED","SIMULATED","USER-CREATED","LORE","UNAVAILABLE","DESIGN_PROPOSAL","IMPLEMENTED","PARTIAL","BLOCKED","UNVERIFIED"],
+  "requirementDomains":["enterprise_architecture","software_engineering","backend","frontend","artificial_intelligence","data","devsecops","cybersecurity","performance","legal_compliance","quality","documentation","business","product","payments","identity","governance","world_atlas","agents","progression","media","gaming","family","heritage"],
+  "implementationRule":{
+    "source":"A source requirement is not production-complete because a page, config entry or visual exists.",
+    "minimumProductionEvidence":["authoritative implementation","authorization/policy path","failure handling","observability","automated verification","deployment evidence","production evidence where applicable"],
+    "architectureConstraint":"Extend the current static/Supabase/Vercel architecture; do not replace it with the historical React/Vite/Express monorepo proposal."
+  },
+  "traceabilityFields":["sourceId","sourceLocator","concept","domain","truthState","implementationPath","authoritativeSystem","verification","productionEvidence","notes"],
+  "currentCanonicalSystems":{
+    "identity":"Supabase Auth + governed authorization policies",
+    "events":"omega_platform_events",
+    "evidence":"graph_evidence / omega_platform_evidence",
+    "missions":"omega_missions / omega_member_mission_state / omega_mission_transitions",
+    "capabilities":"capability_registry",
+    "lineage":"data_lineage",
+    "atlas":"config/omega-civilization-atlas.json",
+    "objectModel":"config/omega-object-model.json",
+    "progression":"9x9x9 / 729-node progression model"
+  }
+}

@@ -19,7 +19,7 @@ sb.from('capability_registry').select('capability_id,capability_name,lifecycle_s
 sb.from('omega_member_mission_state').select('status').eq('user_id',uid).limit(100),
 sb.from('evolution_events').select('id,axis,note,delta,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(20)
 ]);
-var profile=results[0].data||null,tasks=results[1].data||[],events=results[2].data||[],caps=results[3].data||[],missions=results[4].data||[],evolution=results[5].data||[];
+var profile=results[0].data||null,tasks=results[1].data||[],events=results[2].data||[],caps=results[3].data||[],missions=results[4].data||[],evolution=results[5].data||[];var reality=null;try{reality=await window.OmegaProductReality.member();}catch(e){reality=null;}
 var errors=results.map(function(x){return x.error;}).filter(Boolean);
 if(!profile){showUnavailable('MEMBER PROFILE UNAVAILABLE');return;}
 var verifiedLearning=tasks.filter(function(x){return Number(x.points_earned||0)>0;});
@@ -38,6 +38,7 @@ set('relearn-count',String(verifiedLearning.length));
 var list=document.getElementById('relearn-list');clear(list);verifiedLearning.slice(0,5).forEach(function(x){var item=add(list,'div','relearn-item');add(item,'b',null,'VERIFIED · '+(x.task_name||x.task||'LEARNING'));add(item,'span',null,x.completed_at?new Date(x.completed_at).toLocaleDateString():'date unavailable');});if(!verifiedLearning.length)add(list,'div','relearn-item',undefined);
 var path=document.getElementById('civilization-path');clear(path);[['PERSON',profile.display_name||'MEMBER'],['PROJECT','USER-OWNED WORK'],['TASK',String(tasks.length)+' COMPLETIONS'],['SERVICE',String(caps.length)+' REGISTERED CAPABILITIES'],['CITY','UNAVAILABLE'],['REGION','UNAVAILABLE'],['COUNTRY',profile.country||'UNAVAILABLE'],['WORLD','OMEGA WORLD']].forEach(function(x){var n=add(path,'div','civ-node');add(n,'b',null,x[0]);add(n,'span',null,x[1]);});
 set('civilization-truth',profile.country?'LIVE + USER-CREATED':'PARTIAL');
+var realityGrid=document.getElementById('product-reality-grid');clear(realityGrid);if(reality){[['EVENTS',reality.event_count],['EVIDENCE',reality.evidence_count],['TASKS',reality.task_completion_count],['MISSIONS',reality.mission_count],['ACTIVE MISSIONS',reality.active_mission_count],['COMPLETED MISSIONS',reality.completed_mission_count],['AI MEMORY',reality.memory_count],['EMBEDDINGS',reality.embedding_count],['KNOWLEDGE DOCS',reality.knowledge_document_count],['LISTINGS',reality.marketplace_listing_count],['ORDERS',reality.marketplace_order_count]].forEach(function(x){var card=add(realityGrid,'div');add(card,'b',null,x[0]);add(card,'span',null,String(x[1]));});set('product-reality-truth','LIVE · OBSERVED');}else{add(realityGrid,'div',null,'Product reality source unavailable.');set('product-reality-truth','UNAVAILABLE');}
 void events;void evolution;
 }catch(e){showUnavailable('SOURCE READ FAILED');}
 }

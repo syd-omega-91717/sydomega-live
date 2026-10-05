@@ -1,3 +1,10 @@
+-- Fresh-replay compatibility: the live schema carries a legacy owner_id on
+-- ai_memory, while the historical 0059 memory migration is intentionally
+-- additive and does not guarantee that column. Some earlier owner-scoped
+-- policy/function dependencies resolve against that shape during replay.
+-- Keep this guard idempotent: on the live database it is a no-op.
+ALTER TABLE IF EXISTS public.ai_memory ADD COLUMN IF NOT EXISTS owner_id uuid;
+
 -- ============================================================================
 -- SYD OMEGA 91717 -- CLIENT ERROR MONITORING (idempotent; safe to re-run)
 --

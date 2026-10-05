@@ -5,10 +5,10 @@
 // The caller's rank is derived only from a verified JWT. Request-body user_id
 // is never accepted as an identity authority.
 //
-// Env (Supabase secrets): SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
-// SUPABASE_ANON_KEY.
+// Env (Supabase secrets): SUPABASE_URL; API keys via ../_shared/keys.ts.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 
 const PHI = 1.6180339887;
 const EU  = 2.7182818285;
@@ -57,7 +57,7 @@ interface RankRow {
 
 async function getCallerId(req: Request, supabaseUrl: string): Promise<string | null> {
   const authHeader = req.headers.get("Authorization");
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const anonKey = publishableKey();
   if (!authHeader || !anonKey) return null;
 
   try {
@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = secretKey();
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   if (!serviceKey || !supabaseUrl) {
     return json({ enabled: false, message: "Rankings function not configured." }, 200);

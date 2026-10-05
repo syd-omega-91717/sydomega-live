@@ -18,6 +18,20 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
+  `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
+  `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;
+  secret reports `legacy_fallback` because `SUPABASE_SECRET_KEYS` is `{}` (key names `[]`, from
+  the function logs): the project has **no new-format secret key yet**. Owner: create one in
+  Settings → API Keys (Phase 0); functions pick it up on their next boot, no redeploy. Phases 3–4
+  (deactivate legacy keys, then revoke the legacy JWT secret) stay gated on every function
+  logging `secret:new`.
+- **`stripe-webhook` refuses every event: `STRIPE_WEBHOOK_SECRET` is not set** (opened
+  2026-10-05). A live probe returned `503 webhook_not_configured` and the function logged
+  "STRIPE_WEBHOOK_SECRET is not configured; refusing webhook." The check runs before signature
+  verification and is unchanged code; `checkout` is source-only, so no payment flow is live end
+  to end. Owner: set the secret (`supabase secrets set STRIPE_WEBHOOK_SECRET=…`) only when
+  payments are meant to go live.
 - **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
   `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
   09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in

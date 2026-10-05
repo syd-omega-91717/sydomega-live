@@ -17,7 +17,10 @@ def main() -> int:
     checked = 0
     for path in sorted(FUNCTIONS.glob("*/index.ts")):
         source = path.read_text(encoding="utf-8")
-        if "SUPABASE_SERVICE_ROLE_KEY" not in source:
+        # Admin access is the legacy env var or, since the key migration, the shared
+        # helper (supabase/functions/_shared/keys.ts). Matching only the legacy name
+        # would silently skip every migrated function.
+        if "SUPABASE_SERVICE_ROLE_KEY" not in source and not re.search(r"\bsecretKey\s*\(", source):
             continue
         checked += 1
         name = path.parent.name

@@ -1,7 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabaseKey = secretKey()!;
 const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -10,7 +11,7 @@ async function requireCaller(req: Request): Promise<{ userId: string } | Respons
   const authorization = req.headers.get("Authorization") || "";
   const match = authorization.match(/^Bearer\s+(.+)$/i);
   const token = match?.[1]?.trim();
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const anonKey = publishableKey();
   if (!token || !anonKey) {
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,

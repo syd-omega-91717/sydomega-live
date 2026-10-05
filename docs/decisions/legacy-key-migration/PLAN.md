@@ -10,6 +10,16 @@
 > project"); Phase A, a standalone fix to an existing gap, was implemented and deployed (concierge v5) and
 > verified live: the public publishable key and the legacy anon JWT now get 401 (`FIXES_LOG.md`, last entry).
 > Phases 0–4 remain awaiting an explicit owner decision.
+>
+> **2026-10-05 — Phases 1 and 2 done (owner: "Go ahead").** `_shared/keys.ts` is in place; all 14
+> functions read through it; the 7 live ones are redeployed and probed. Live findings that refine
+> this plan: (1) R1 confirmed on the real gateway — `Bearer` equal to an `sb_` apikey reaches
+> Postgres as that key's role, a mismatched `Bearer` is rejected as a malformed JWT; (2) R3
+> answered — `SUPABASE_SECRET_KEYS` is injected but is `{}`, so **Phase 0 is not done**: every
+> function runs on `legacy_fallback` for the secret key and `new` for the publishable key. When the
+> owner creates the secret key, no redeploy is needed. Phase 3 stays blocked until all 7 log
+> `secret:new`. Helper refinement beyond the plan: with no `default`, a single key of the right
+> kind under any name is accepted, and the logged failure names the keys (never values).
 
 # Plan: move Edge Functions off the legacy `anon` / `service_role` credentials
 

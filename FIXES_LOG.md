@@ -22562,3 +22562,43 @@ is better and improve the project").
   The four pages evidence-audit could not resolve (`body`, `command`, `sleep`, `stoic`) write through constants
   that are all `omega_`-prefixed (`omega_body_log`, `omega_sleep_log`, `omega_stoic_journal`, …), so they are
   mirrored too.
+
+## Legacy-key migration Phases 1–2: shared key helper, 7 live functions redeployed (2026-10-05)
+
+Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/PLAN.md`, including the
+`stripe-webhook` redeploy).
+
+- **R1 tested on the real gateway before writing code**, from the database with `net.http_get` (sandbox egress
+  to supabase.co is denied): `apikey: sb_publishable_…` with `Authorization: Bearer` equal to it gave the same
+  `42501` (role `anon`, table not granted to anon) as `apikey` alone. With a different `Bearer`, it gave
+  `PGRST301 Expected 3 parts in JWT`. So supabase-js's header shape (Bearer = apikey, both 2.39.x and 2.112.x)
+  works with `sb_` keys, and the secret key maps to `service_role` the same way.
+- **`supabase/functions/_shared/keys.ts`:** `secretKey()` / `publishableKey()` / `keySource()`. It reads
+  `SUPABASE_SECRET_KEYS` / `SUPABASE_PUBLISHABLE_KEYS` first (`default`, or a single key of the right kind under
+  any name). The legacy var is a logged fallback. Each isolate logs `KEY_SOURCE` once per kind, never a value.
+  All 14 functions now read through it. `secrets-health` gains a `SUPABASE` probe for the new key (its
+  fingerprint covers the single key, not the JSON), labels the legacy row `SUPABASE (LEGACY)`, excludes it from
+  `all_live`, and returns `key_source`. `snapshot-leaderboard` and `weekly-digest` (source-only) are marked
+  REDESIGN BEFORE DEPLOY: they authorize by a non-timing-safe bearer-equals-key compare.
+- **Gates:** `edge-service-role-auth-audit.py` matched only the legacy name and would have silently skipped
+  every migrated function. It now also matches `secretKey(` and reviews 13. `omega-event-fabric-contract.py` and
+  `omega-agent-operations-contract.py` assert `secretKey()`. `production-contract.py` and `release-gate.py`
+  also flag `sb_secret_…` in client files. `test_owner_deck` now asserts the owner gate precedes the
+  `valueOf(name)` call site. Noted, not widened: `omega-agent-operations-contract.py` is wired into no CI and
+  points at a renamed migration (`…120000…` vs `…114141…`). Repointed, it fails `rpc service-only`; left as found.
+  `concierge-orchestrator` has a pre-existing TS2339 (`escalation_reason`), identical on `main`.
+- **Deployed in blast-radius order**, each with `../_shared/keys.ts` bundled: secrets-health v4, concierge v6,
+  concierge-, growth-, product-orchestrator v4/v4/v5, agent-execute v2 (+ `agent-tools.json`), stripe-webhook v2
+  (`verify_jwt` false, unchanged). Live probes: concierge 401 to the publishable key. The three orchestrators
+  answer 503 `disabled` (flag off), and edge_logs show their admin flag reads `GET platform_settings … 200`, which
+  `anon` cannot read, so the admin client reaches Postgres as `service_role`. agent-execute 401 to an anon JWT
+  with a valid agent/tool.
+- **Function logs answered R3:** `{"event":"KEYS_PARSE_FAILED","var":"SUPABASE_SECRET_KEYS","reason":"no key of
+  this kind","names":[]}`, then `secret: legacy_fallback`, `publishable: new`. **The project has no new-format
+  secret key yet** (Phase 0, an owner dashboard step). Every function keeps working on the fallback, and none
+  needs a redeploy once the key exists.
+- **Found: `stripe-webhook` refuses all events.** The unsigned probe got `503 webhook_not_configured`, and the
+  function logged "STRIPE_WEBHOOK_SECRET is not configured; refusing webhook." That check precedes the key read
+  and is untouched code. Recorded in `GAP_ANALYSIS.md` §S. A Stripe test-mode replay (plan criterion 3) was not
+  possible from this session: no Stripe access, and no webhook secret to sign with.
+- `docs/runtime/supabase-edge-functions-live.json` records the 7 new versions; reconciliation PASS (21 / 11 / 10).

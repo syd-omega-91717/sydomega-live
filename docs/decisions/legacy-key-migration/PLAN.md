@@ -5,6 +5,11 @@
 > The reviewer was a subagent of the same session, not an independent party, so this record asks
 > for a human verdict instead of claiming `APPROVED-BY-CODEX`. No code is written under it until
 > the owner marks it `APPROVED-BY-HUMAN`. The dashboard actions (Phases 0, 3, 4) stay the owner's.
+>
+> **2026-10-05 — Phase A done.** The owner delegated the choice ("You choose what is better and improve the
+> project"); Phase A, a standalone fix to an existing gap, was implemented and deployed (concierge v5) and
+> verified live: the public publishable key and the legacy anon JWT now get 401 (`FIXES_LOG.md`, last entry).
+> Phases 0–4 remain awaiting an explicit owner decision.
 
 # Plan: move Edge Functions off the legacy `anon` / `service_role` credentials
 

@@ -138,7 +138,9 @@ class SecurityChecklist(unittest.TestCase):
         fn = read("supabase/functions/secrets-health/index.ts")
         # Only the owner, through the caller's own JWT (aal2 once enforced).
         self.assertIn('asCaller.rpc("owner_security_status")', fn)
-        self.assertLess(fn.index('owner_security_status'), fn.index('Deno.env.get(name)'))
+        # Secret values are read per key only after the owner gate. valueOf() is
+        # defined above the handler; what matters is where it is called.
+        self.assertLess(fn.index('owner_security_status'), fn.index('const value = valueOf(name)'))
         # Per key: flags, a status code and an 8-hex hash. Never the value,
         # never a provider body.
         self.assertIn("return { name, label, set: true, live: probe.live, status: probe.status, fp, changed:", fn)

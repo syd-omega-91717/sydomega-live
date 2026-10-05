@@ -14,6 +14,7 @@
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey } from "../_shared/keys.ts";
 
 const allowedOrigin = (origin: string | null) => {
   if (!origin) return null;
@@ -84,7 +85,7 @@ Deno.serve(async (req) => {
     // public publishable key and any legacy anon JWT, so the caller is resolved to a real
     // member here, before any paid upstream call (docs/decisions/legacy-key-migration, Phase A).
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    const anonKey = publishableKey();
     if (!supabaseUrl || !anonKey) return json({ error: "runtime_configuration_unavailable" }, 503, origin);
     const supabase = createClient(supabaseUrl, anonKey, {
       auth: { persistSession: false },

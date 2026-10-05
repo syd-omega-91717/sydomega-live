@@ -1,6 +1,7 @@
 // SYD OMEGA 91717 -- Stripe Webhook receiver
 // Existing Edge Function -> RPC architecture preserved.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { secretKey } from "../_shared/keys.ts";
 
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "Content-Type": "application/json" } });
 
@@ -136,7 +137,7 @@ Deno.serve(async (req) => {
   const obj = data?.object;
   if (!eventId || !eventType || !obj || typeof obj !== "object") return json({ error: "invalid_event" }, 400);
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = secretKey();
   if (!supabaseUrl || !serviceKey) {
     console.error("[stripe-webhook] Supabase server credentials are not configured.");
     return json({ error: "webhook_not_configured" }, 503);

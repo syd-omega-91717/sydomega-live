@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 import registry from "./agent-tools.json" with { type: "json" };
 const allowedOrigin=(origin:string|null)=>{if(!origin)return null;try{const u=new URL(origin);if(u.protocol==="https:"&&(u.hostname==="sydomega.com"||u.hostname.endsWith(".sydomega.com")))return origin;}catch{}return null;};
 const headers=(origin:string|null)=>{const a=allowedOrigin(origin);return {...(a?{"Access-Control-Allow-Origin":a,Vary:"Origin"}:{}),"Access-Control-Allow-Headers":"authorization,content-type,apikey,x-client-info","Access-Control-Allow-Methods":"POST,OPTIONS","Content-Type":"application/json"};};
@@ -16,7 +17,7 @@ Deno.serve(async(req)=>{
  if(!agent||!tool||!intent)return reply({error:"agent_tool_intent_required"},400,origin); if(JSON.stringify(payload).length>1200)return reply({error:"payload_too_large"},413,origin);
  const bound=(registry.agents as Record<string,string[]>)[agent],spec=(registry.tools as Record<string,{risk:string;mutation:boolean}>)[tool];
  if(!bound||!spec||!bound.includes(tool)||spec.mutation||spec.risk!=="low")return reply({error:"tool_not_permitted",governance:{agent,tool,risk:spec?.risk||"unknown",status:"BLOCKED"}},403,origin);
- const url=Deno.env.get("SUPABASE_URL"),key=Deno.env.get("SUPABASE_ANON_KEY"),serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"); if(!url||!key||!serviceKey)return reply({error:"runtime_configuration_unavailable"},503,origin);
+ const url=Deno.env.get("SUPABASE_URL"),key=publishableKey(),serviceKey=secretKey(); if(!url||!key||!serviceKey)return reply({error:"runtime_configuration_unavailable"},503,origin);
  const s=createClient(url,key,{global:{headers:{Authorization:auth}}}); const who=await s.auth.getUser(); if(who.error||!who.data.user)return reply({error:"authentication_required"},401,origin);
  const admin=createClient(url,serviceKey); const userId=who.data.user.id;
  const approved=await record(admin,userId,agent,tool,intent,"AUTHORIZED","read_only_tool_authorized",payload); if(approved.error)return reply({error:"audit_unavailable"},503,origin);

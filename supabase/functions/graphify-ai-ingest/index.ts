@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 import { Anthropic } from "https://esm.sh/@anthropic-ai/sdk@0.9.0";
 
 interface RequestBody {
@@ -67,7 +68,7 @@ interface ExtractionResult {
 }
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabaseServiceKey = secretKey()!;
 const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -82,7 +83,7 @@ const anthropic = new Anthropic({ apiKey: anthropicKey });
 async function requireCallerId(req: Request): Promise<string | null> {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) return null;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const anonKey = publishableKey();
   if (!anonKey) return null;
   try {
     const callerClient = createClient(supabaseUrl, anonKey, {

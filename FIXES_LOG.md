@@ -22446,3 +22446,8 @@ The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
 said 225) and `2j. Skill/agent registry` (census not regenerated). Copy moved to 226 in all 21 sites (the same two
 keys in every pack, so no translation keeps the old number) and `python3 scripts/omega-registry.py` rerun.
 After: `page-count-claims` PASS, `i18n-contract` 0 violations, `omega-registry.py --check` OK, ci-local 28/28.
+Same drift, a third gate (`contracts.yml` → `page-world-contract.py`, not mirrored in ci-local): `world-atlas`
+resolved to no City district (`resolved=225` of 226). Assigned `void` beside `world` and `map` in
+`config/page-world-overrides.json`; now `resolved=226`, PASS. Still red on `main` and not fixed here:
+`omega-object-contract.py` — the 10 civilization object types added to `config/omega-object-model.json` name
+`config/omega-civilization-atlas.json` as their source, and the contract accepts only live-schema tables.

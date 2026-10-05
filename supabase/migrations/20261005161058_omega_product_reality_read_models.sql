@@ -10,7 +10,7 @@ select
   coalesce((select count(*) from public.omega_member_mission_state m where m.user_id = (select auth.uid())),0)::bigint as mission_count,
   coalesce((select count(*) from public.omega_member_mission_state m where m.user_id = (select auth.uid()) and upper(m.status) in ('ACTIVE','IN_PROGRESS')),0)::bigint as active_mission_count,
   coalesce((select count(*) from public.omega_member_mission_state m where m.user_id = (select auth.uid()) and upper(m.status) = 'COMPLETED'),0)::bigint as completed_mission_count,
-  coalesce((select count(*) from public.ai_memory m where coalesce(m.user_id,m.owner_id) = (select auth.uid())),0)::bigint as memory_count,
+  coalesce((select count(*) from public.ai_memory m where m.user_id = (select auth.uid())),0)::bigint as memory_count,
   coalesce((select count(*) from public.ai_memory_embeddings e where e.user_id = (select auth.uid())),0)::bigint as embedding_count,
   coalesce((select count(*) from public.analytics_events a where a.profile_id = (select auth.uid())),0)::bigint as analytics_event_count,
   coalesce((select count(*) from public.knowledge_spaces s where s.owner_id = (select auth.uid())),0)::bigint as knowledge_space_count,

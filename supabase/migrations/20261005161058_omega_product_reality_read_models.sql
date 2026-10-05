@@ -16,8 +16,7 @@ select
   coalesce((select count(*) from public.knowledge_documents d where d.author_id = (select auth.uid()) or d.space_id in (select s.id from public.knowledge_spaces s where s.owner_id = (select auth.uid()))),0)::bigint as knowledge_document_count,
   coalesce((select count(*) from public.marketplace_listings l where coalesce(l.seller_id,l.user_id) = (select auth.uid())),0)::bigint as marketplace_listing_count,
   coalesce((select count(*) from public.marketplace_orders o where o.buyer_id = (select auth.uid()) or o.seller_id = (select auth.uid())),0)::bigint as marketplace_order_count,
-  coalesce((select count(*) from public.payments p where p.profile_id = (select auth.uid())),0)::bigint as payment_count,
-  coalesce((select count(*) from public.subscriptions s where s.profile_id = (select auth.uid())),0)::bigint as subscription_count;
+  coalesce((select count(*) from public.marketplace_orders o where o.buyer_id = (select auth.uid()) or o.seller_id = (select auth.uid())),0)::bigint as marketplace_order_count;
 comment on view public.omega_member_product_reality is 'Canonical member product read model derived only from authoritative production tables. Zero means no observed production data, never synthetic activity.';
 revoke all on public.omega_member_product_reality from public, anon;
 grant select on public.omega_member_product_reality to authenticated;
@@ -33,7 +32,6 @@ select
   (select count(*) from public.knowledge_documents)::bigint as knowledge_document_count,
   (select count(*) from public.marketplace_listings)::bigint as marketplace_listing_count,
   (select count(*) from public.marketplace_orders)::bigint as marketplace_order_count,
-  (select count(*) from public.payments)::bigint as payment_count,
   (select count(*) from public.stripe_webhook_events)::bigint as stripe_webhook_event_count;
 comment on view public.omega_platform_product_reality is 'Authenticated product-reality summary derived from canonical tables. Counts are observational and never fabricated KPIs.';
 revoke all on public.omega_platform_product_reality from public, anon;

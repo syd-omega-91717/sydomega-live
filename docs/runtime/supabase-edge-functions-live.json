@@ -6,10 +6,10 @@
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 4,
+      "version": 5,
       "verify_jwt": true,
-      "live_sha256": "e485b8ade3bf890a5e86e8208c56190e1487314b8d8332d9b55e2ff21807ec93",
-      "repository_blob_sha": "eb5267c60c48c24ca2a5f1a61214a90763c7f892"
+      "live_sha256": "8eb5525982d88daba2526afe2711c23f234904ab83b4b58048b0a6926093956c",
+      "repository_blob_sha": "c82415905658288539bf1fa31fb074999a896b83"
     },
     "concierge-orchestrator": {
       "state": "DEPLOYED",

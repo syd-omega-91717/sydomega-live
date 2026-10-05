@@ -22493,3 +22493,25 @@ resolved to no City district (`resolved=225` of 226). Assigned `void` beside `wo
   secrets, 4 `sb_secret_` hits all deliberate dummies, JWTs only `role: anon`. `secrets-health` deployed; no
   rotation confirmed yet. 13 Edge Functions still read the legacy `SUPABASE_SERVICE_ROLE_KEY`, which blocks
   disabling legacy keys until they move to `sb_secret_` keys.
+
+## Concierge spent on Anthropic for any holder of the public key (2026-10-05)
+
+`docs/decisions/legacy-key-migration/PLAN.md` Phase A, carried out under the owner's delegation ("You choose what
+is better and improve the project").
+
+- **Bug (§8.1 class 6):** `supabase/functions/concierge/index.ts:68-71` checked only that `Authorization` began
+  with `bearer `, then called Anthropic. Platform `verify_jwt` is not authentication — for migration compatibility
+  it also accepts the publishable key and the legacy anon JWT (Supabase functions/auth-headers), both shipped in
+  every page. So anyone could drive Anthropic spend with no account.
+- **Fix:** before classification or any paid call, resolve the caller with
+  `auth.getUser(<bearer token>)` on a publishable-key client; 401 `authentication_required` otherwise. The same
+  client then serves the existing `recall_ai_context` read. Every caller already treats non-200 as "use the local
+  fallback" (file header), so signed-out paths degrade as before.
+- **Verified live:** deployed as version 5 (`verify_jwt` true, `ezbr_sha256 8eb55259…`); `get_edge_function`
+  returns the repo file. Probed from the database with `net.http_post` (the sandbox's egress to supabase.co is
+  denied): legacy anon JWT as apikey+Bearer → **401** `{"error":"authentication_required"}`; publishable key as
+  apikey+Bearer → **401** same body. The body is the function's own, so `verify_jwt` admitted both and the new gate
+  refused them — the gap was real until this deploy. **Not verified live:** the positive path with a real member
+  session (no member JWT is available to this session); it uses the documented `getUser(jwt)` call.
+- `docs/runtime/supabase-edge-functions-live.json` concierge entry moved to version 5 / blob `c8241590…`;
+  `supabase-edge-runtime-reconciliation.py` PASS (21 repository, 11 deployed, 10 local-only).

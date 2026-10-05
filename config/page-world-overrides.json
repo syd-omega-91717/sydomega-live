@@ -16,6 +16,7 @@
     "vision": "genesis",
     "weekly": "genesis",
     "world": "void",
+    "world-atlas": "void",
     "agent-network": "intelligence",
     "agent-operations": "intelligence",
     "agent": "intelligence",

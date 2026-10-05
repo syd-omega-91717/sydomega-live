@@ -22439,3 +22439,10 @@ The text catalog stays in the DOM behind one "Browse the full catalog" toggle.
 - Verification: Playwright at 1280 and 375/touch, 38/38: 3 cards, quiz plays through, word/film/quiz saved,
   3 pips, all-done banner, exact `daily:` tasks recorded, state survives reload, arcade opens from the dashboard,
   no overflow, 0 page errors. Supabase stubbed: the RPC and the streak read are proven wired, not proven live.
+
+**`main` red after the 2026-10-05 merges: page-count copy and census (2026-10-05).** After #717–#730,
+`./scripts/ci-local.sh` on `988bc646` failed 2 of 28: `page-count-claims` (the estate is 226 pages with
+`world-atlas.html`, but 7 page sites, `T_EN.dash_platform_index`/`platform_command_index` and the six packs still
+said 225) and `2j. Skill/agent registry` (census not regenerated). Copy moved to 226 in all 21 sites (the same two
+keys in every pack, so no translation keeps the old number) and `python3 scripts/omega-registry.py` rerun.
+After: `page-count-claims` PASS, `i18n-contract` 0 violations, `omega-registry.py --check` OK, ci-local 28/28.

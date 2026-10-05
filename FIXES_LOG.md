@@ -22541,3 +22541,24 @@ is better and improve the project").
   `window.OmegaRelearnSigilMana` is an object with 11 members, the truth banner reads `LIVE + CALCULATED ·
   CANONICAL MEMBER SOURCES`, and mana renders `4/100`. `verify-runtime.js` PASS on all 4. `ci-local.sh` 28/28;
   unit tests 546 (was 544).
+
+## The cloud backup had no way back down; Settings told members nothing was uploaded (2026-10-05)
+
+- **Gap:** `omega-member-state.js` mirrors every `omega`-prefixed localStorage key up to `public.member_state`, and
+  it is live. Measured 2026-10-05 the table held 28 rows, last write that day, including real tracker data:
+  `omega_quotes` (5 KB), `omega_atlas_v2`, `omega_rituals`, `omega_affirmations`, `omega_habit_logs_v2`,
+  `omega_command_briefs`, `omega_skills`. Its only pull-down is `OmegaMemberState.restore()`, explicit by design
+  (header: a hydrating sync would race page render). `grep -l OmegaMemberState *.html` returned nothing: no page
+  called it. A member on a new device had a server copy and no way to recover it.
+- **And the copy was false (§8.1 class 9):** `settings.html` YOUR DATA said "keep what you enter in this browser
+  only… Nothing here is uploaded".
+- **Fix:** a RESTORE FROM CLOUD button beside EXPORT/IMPORT. It calls `restore()` with no `overwrite`, so keys this
+  browser already holds are skipped and nothing local is overwritten. It checks the resolved `{error}` before
+  reporting (signed out, failed, empty, restored N / kept M), and the copy now describes the automatic backup.
+- **Verified:** render with the signed-in stub. The button is visible on the Account tab (214×40). A click reports
+  "Your cloud backup is empty — nothing to restore yet." (the stub returns no rows), 0 page errors. Signed out,
+  the page redirects to sign-in before the control exists. Live RLS, impersonated with `SET LOCAL ROLE
+  authenticated` + `request.jwt.claims` and rolled back: the owner reads 28 rows, a different member reads **0**.
+  The four pages evidence-audit could not resolve (`body`, `command`, `sleep`, `stoic`) write through constants
+  that are all `omega_`-prefixed (`omega_body_log`, `omega_sleep_log`, `omega_stoic_journal`, …), so they are
+  mirrored too.

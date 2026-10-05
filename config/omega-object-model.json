@@ -216,7 +216,11 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "PLANET",
+        "PLANETARY_CORE"
+      ]
     },
     {
       "type": "world",
@@ -225,7 +229,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "WORLD"
+      ]
     },
     {
       "type": "country",
@@ -234,7 +241,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "COUNTRY"
+      ]
     },
     {
       "type": "empire",
@@ -243,7 +253,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "EMPIRE"
+      ]
     },
     {
       "type": "city",
@@ -252,7 +265,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "CITY"
+      ]
     },
     {
       "type": "district",
@@ -261,7 +277,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "DISTRICT"
+      ]
     },
     {
       "type": "service",
@@ -270,7 +289,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "SERVICE"
+      ]
     },
     {
       "type": "task",
@@ -279,7 +301,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "TASK"
+      ]
     },
     {
       "type": "building",
@@ -288,7 +313,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "BUILDING"
+      ]
     },
     {
       "type": "resource",
@@ -297,7 +325,10 @@
       ],
       "identity": "id",
       "label": "name",
-      "owner": null
+      "owner": null,
+      "recordTypes": [
+        "RESOURCE"
+      ]
     },
     {
       "type": "relearn_record",
@@ -307,7 +338,7 @@
         "task_completions"
       ],
       "identity": "id",
-      "label": "lesson",
+      "label": "description",
       "owner": "user_id"
     },
     {

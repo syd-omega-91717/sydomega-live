@@ -4,7 +4,7 @@
 
 Expose observed product state without creating a second source of truth.
 
-The read models derive member and platform product indicators from existing canonical production tables: profiles, omega_platform_events, omega_platform_evidence, task_completions, omega_member_mission_state, ai_memory, ai_memory_embeddings, analytics_events, knowledge_spaces, knowledge_documents, marketplace_listings, marketplace_orders, payments, subscriptions, omega_missions, capability_registry, and stripe_webhook_events.
+The read models derive member and platform product indicators from existing canonical production tables: profiles, omega_platform_events, omega_platform_evidence, task_completions, omega_member_mission_state, ai_memory, ai_memory_embeddings, analytics_events, knowledge_spaces, knowledge_documents, marketplace_listings, marketplace_orders, omega_missions, capability_registry, and stripe_webhook_events.
 
 ## Truth rules
 
@@ -20,7 +20,7 @@ The read models derive member and platform product indicators from existing cano
 
 life.html consumes omega_member_product_reality through omega-product-reality.js.
 
-The surface exposes events, evidence, tasks, missions, active/completed missions, AI memory, embeddings, knowledge documents, marketplace listings/orders, payments, and subscriptions.
+The surface exposes events, evidence, tasks, missions, active/completed missions, AI memory, embeddings, knowledge documents, marketplace listings and orders.
 
 Each value is explicitly marked as observed production state.
 

@@ -22472,3 +22472,24 @@ resolved to no City district (`resolved=225` of 226). Assigned `void` beside `wo
   `OMEGA_OBJECT_CONTRACT=PASS objects=31 relations=19 tables=548 registry_backed=10`.
 - **Local suite blind to both.** `contract-suite.py` gains `page-world` and `object-contract` (36 gates); on `main`'s
   object model the suite exits 1, on this branch 0.
+
+**Live verification of progress writes and the three owner security items (2026-10-05, Supabase MCP live).**
+- **Progress saves, proven on production.** `task_completions` already held a real member row from the shipped
+  Daily Three — `daily:2026-10-05:film / ritual / c / 0.03`, written 2026-10-04 22:05 UTC by a browser session.
+  Exams and arcade had no live rows yet (no pass/win since they shipped), so their path was proven by impersonating
+  a member exactly as PostgREST does (`SET LOCAL ROLE authenticated` + `request.jwt.claims`, CLAUDE.md 8.4) and
+  calling `complete_task` with named arguments: `exam:math`, `arcade:oracle`, `daily:2026-10-05:quiz` each
+  `applied=true`, `rows_written=3`; a repeat `arcade:oracle` `applied=false` (dedup holds). The block ends in
+  `RAISE EXCEPTION`, so it rolled back; a follow-up count found 0 leftovers. `complete_task` is SECURITY INVOKER,
+  `authenticated` EXECUTE true, `anon` false. A first probe with POSITIONAL arguments wrote task names
+  `knowledge`/`mastery`/`ritual` — the live signature is `(p_task_name, p_task_type, …)`; the client passes named
+  arguments and is unaffected (also rolled back).
+- **#692 MFA:** `platform_owners` = 1 row (`s.y.dagher@gmail.com`, 0 verified factors; `slmndghr@gmail.com` is no
+  longer an owner). `mfa_enrolment_enabled=true`, `owner_mfa_required=false`. Enrolment, sign-in step-up and the
+  lockout-safe switch are live; the only remaining step is enrolment on the owner's own device.
+- **#375 leaked-password protection:** advisor `auth_leaked_password_protection` still WARN; org plan `free`, and
+  Supabase docs: "available on the Pro Plan and above". `omega-password-guard.js` covers both UI paths (tests pass).
+- **#682 credentials:** pattern scan of all 10,715 commits on every ref — 0 Stripe/Anthropic/Resend/GitHub/AWS
+  secrets, 4 `sb_secret_` hits all deliberate dummies, JWTs only `role: anon`. `secrets-health` deployed; no
+  rotation confirmed yet. 13 Edge Functions still read the legacy `SUPABASE_SERVICE_ROLE_KEY`, which blocks
+  disabling legacy keys until they move to `sb_secret_` keys.

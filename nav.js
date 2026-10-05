@@ -8,7 +8,7 @@
 
   /* Map every page to a section */
   var PS={
-    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
+    dashboard:'command',beacon:'command',notifications:'command',search:'command','data-observatory':'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command',gateway:'command',guide:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
@@ -65,7 +65,7 @@
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
      sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['beacon','BEACON','/beacon.html'],
-          ['search','SEARCH','/search.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
+          ['search','SEARCH','/search.html'],['data-observatory','DATA OBSERVATORY','/data-observatory.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html'],['eternity','CONTINUITY','/eternity.html'],['replay','REPLAY','/replay.html'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html'],['command','COMMAND BRIEF','/command.html'],
           ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html'],
           ['network','NETWORK','/network.html'],['notes','NOTES','/notes.html'],['projects','PROJECTS','/projects.html'],

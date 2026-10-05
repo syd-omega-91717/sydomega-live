@@ -298,6 +298,39 @@
       "identity": "id",
       "label": "name",
       "owner": null
+    },
+    {
+      "type": "relearn_record",
+      "sources": [
+        "omega_platform_events",
+        "omega_platform_evidence",
+        "task_completions"
+      ],
+      "identity": "id",
+      "label": "lesson",
+      "owner": "user_id"
+    },
+    {
+      "type": "sigil",
+      "sources": [
+        "profiles",
+        "certificates",
+        "evolution_events"
+      ],
+      "identity": "id",
+      "label": "id",
+      "owner": "user_id"
+    },
+    {
+      "type": "mana_state",
+      "sources": [
+        "capability_registry",
+        "omega_platform_events",
+        "task_completions"
+      ],
+      "identity": "id",
+      "label": "id",
+      "owner": "user_id"
     }
   ],
   "relations": [
@@ -479,6 +512,61 @@
         "credential",
         "capability"
       ]
+    },
+    {
+      "type": "RELEARNS_FROM",
+      "from": [
+        "member"
+      ],
+      "to": [
+        "event",
+        "document",
+        "mission",
+        "task"
+      ]
+    },
+    {
+      "type": "REPRESENTS",
+      "from": [
+        "sigil"
+      ],
+      "to": [
+        "member",
+        "city",
+        "country",
+        "world"
+      ]
+    },
+    {
+      "type": "EVOLVES",
+      "from": [
+        "sigil"
+      ],
+      "to": [
+        "achievement",
+        "credential",
+        "gate"
+      ]
+    },
+    {
+      "type": "HAS_CAPACITY",
+      "from": [
+        "member"
+      ],
+      "to": [
+        "mana_state"
+      ]
+    },
+    {
+      "type": "LEADS_TO",
+      "from": [
+        "relearn_record"
+      ],
+      "to": [
+        "capability",
+        "gate",
+        "credential"
+      ]
     }
   ],
   "sourceRegistry": {
@@ -529,7 +617,10 @@
     "Planetary and civilization objects are registry-backed; visual rendering never creates authoritative state.",
     "City, country and empire simulation objects cannot imply legal jurisdiction, ownership, citizenship or real-world sovereignty.",
     "Service and task objects require a canonical capability, authorization policy, event path and evidence path before production advertisement.",
-    "Building and resource objects remain UNKNOWN or UNAVAILABLE until a canonical source is registered."
+    "Building and resource objects remain UNKNOWN or UNAVAILABLE until a canonical source is registered.",
+    "Relearn records are learning provenance, not independent progression authority.",
+    "Sigils are representational objects and never authenticate, authorize or imply legal status.",
+    "Mana states are calculated capacity views and never constitute money, credit, health, employment or social-worth scores."
   ],
   "evidencePolicy": {
     "$ref": "config/omega-schema-evidence-policy.json",

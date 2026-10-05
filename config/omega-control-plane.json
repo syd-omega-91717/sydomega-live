@@ -1,0 +1,42 @@
+{
+  "schemaVersion":"1.0.0",
+  "name":"Ω Control Plane",
+  "purpose":"Canonical contract for platform operations that span identity, notifications, privacy, search, analytics, media, onboarding, administration, payments and provider health.",
+  "truthPolicy":"A contract is not provider availability. External capabilities remain UNVERIFIED until their provider, authorization, failure path and production evidence are verified.",
+  "domains":{
+    "identity":{"canonical":"Supabase Auth + governed authorization","requiredEvidence":["MFA enrollment/challenge/recovery","RLS semantic regression"]},
+    "privacy":{"capabilities":["export_data","request_deletion","cookie_consent","retention_policy"],"truth":"USER_CONTROLLED"},
+    "notifications":{"capabilities":["in_app","email","sms","push"],"truth":"PROVIDER_DEPENDENT"},
+    "search":{"capabilities":["global_search","recent_searches","trending_searches"],"truth":"CALCULATED_FROM_AUTHORITATIVE_DATA"},
+    "analytics":{"capabilities":["page_views","api_usage","module_usage","progress_analytics","operational_reports"],"truth":"CALCULATED"},
+    "media":{"capabilities":["secure_upload","thumbnail","virus_scan","private_delivery"],"truth":"PROVIDER_DEPENDENT"},
+    "onboarding":{"steps":["welcome","profile","birth_context","element","plan","completion"],"truth":"USER_CREATED"},
+    "administration":{"capabilities":["user_management","kyc_review","transaction_monitoring","audit_log","content_management","system_health"],"truth":"OWNER_AUTHORIZED"},
+    "commerce":{"capabilities":["checkout","webhook_verification","entitlement","refund","dispute"],"truth":"PROVIDER_DEPENDENT"}
+  },
+  "providerEvidenceGate":[
+    "provider configured",
+    "secret configuration verified without exposing secrets",
+    "authorization verified",
+    "failure semantics tested",
+    "idempotency verified",
+    "audit event emitted",
+    "automated contract test passes",
+    "production smoke evidence exists"
+  ],
+  "canonicalSystems":{
+    "events":"omega_platform_events",
+    "evidence":"omega_platform_evidence / graph_evidence",
+    "capabilities":"capability_registry",
+    "lineage":"data_lineage",
+    "authorization":"Supabase Auth + RLS/policies"
+  },
+  "hardRules":[
+    "Never expose provider secrets to the browser.",
+    "Never grant entitlements from a client-only success callback.",
+    "Never claim delivery when a provider has not confirmed delivery.",
+    "Never export data outside the authenticated user's authorization boundary.",
+    "Never delete authoritative records without an approved retention/deletion policy.",
+    "Never present operational KPIs as LIVE unless their source and freshness are known."
+  ]
+}

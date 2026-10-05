@@ -22515,3 +22515,29 @@ is better and improve the project").
   session (no member JWT is available to this session); it uses the documented `getUser(jwt)` call.
 - `docs/runtime/supabase-edge-functions-live.json` concierge entry moved to version 5 / blob `c8241590…`;
   `supabase-edge-runtime-reconciliation.py` PASS (21 repository, 11 deployed, 10 local-only).
+
+## Ω LIFE unreachable, `main` red on three gates; module-contract blind to the UMD publish form (2026-10-05)
+
+#738 added `life.html` (the governed member Life surface) without wiring it anywhere. On `main` at `c25bd300`:
+
+- **`reachability-contract.py` (blocking): `life.html` UNREACHABLE.** No `nav.js` SECTIONS link, so no member could
+  navigate to it. Added `['life','Ω LIFE','/life.html']` to IDENTITY beside PROFILE, with `life:'identity'` in PS.
+  The advisory list also named `arena`/`chatbot` (no PS key, so no section highlighted). Both are added
+  (`arena:'arena'`, `chatbot:'command'`). `platform-kernel.html` had no `#omega-side`, so nav.js returned
+  immediately and no sidebar rendered. Wrapped it in the standard `.shell` + `aside#omega-side` + `main.main`, the
+  same shape as `life.html`.
+- **`page-world-contract.py`: `life` assigned to no City district** (`resolved=226` of 227). Placed in `genesis`
+  beside `profile`/`identity`/`passport`/`character`.
+- **`page-count-claims.py`: "226 pages" in 7 pages, the two `T_EN` keys and all 6 packs.** Moved to 227 (only the
+  page claims; `rgba(226,…)` colours untouched). Census regenerated (`omega-registry.py`; it was also drifted).
+- **Exposed by the fix: `module-contract.py` reported `window.OmegaRelearnSigilMana` "published by NOTHING".**
+  It was a scanner gap, not a page bug. `omega-relearn-sigil-mana.js:214` publishes through the environment-neutral
+  IIFE (`root.OmegaRelearnSigilMana = …` with `root = globalThis`), and the gate matched only `window.X =`. The
+  reader became reachable only once Life did. The gate now also accepts `globalThis./self.` publishes and the IIFE
+  parameter when the IIFE is invoked with a real global. Two new tests: the UMD shape passes, and a local-object
+  IIFE (`(function(state){state.OmegaLocal={}})({})`) still fails.
+- **Verified in a render** (harness, signed-in stub): the sidebar draws on life/platform-kernel/arena/chatbot (244
+  links, 0 page errors) with `data-omega-axis` = identity/govern/arena/command. On `life.html`,
+  `window.OmegaRelearnSigilMana` is an object with 11 members, the truth banner reads `LIVE + CALCULATED ·
+  CANONICAL MEMBER SOURCES`, and mana renders `4/100`. `verify-runtime.js` PASS on all 4. `ci-local.sh` 28/28;
+  unit tests 546 (was 544).

@@ -115,6 +115,7 @@
     "membership": "genesis",
     "passport": "genesis",
     "profile": "genesis",
+    "life": "genesis",
     "blockchain": "intelligence",
     "graph-admin": "intelligence",
     "graph-anomalies": "intelligence",

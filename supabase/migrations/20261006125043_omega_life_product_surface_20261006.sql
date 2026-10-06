@@ -1,6 +1,3 @@
--- Ω LIFE PRODUCT SURFACE
--- Read-only member projection over authoritative production tables.
--- No synthetic member state is created.
 
 drop view if exists public.omega_member_life_surface;
 

@@ -1,10 +1,8 @@
 {
-  "_captured": "2026-10-05",
+  "_captured": "2026-10-06",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 340,
-  "latestRemoteMigration": "20261005180625",
-  "remoteMigrationCount": 343,
-  "latestRemoteMigration": "20261006150000",
+  "remoteMigrationCount": 357,
+  "latestRemoteMigration": "20261006170333",
   "versions": [
     "0001",
     "0002",
@@ -345,11 +343,24 @@
     "20261004084744",
     "20261005161058",
     "20261005163509",
-    "20261005180625"
     "20261005180625",
-    "20261006130000",
-    "20261006140000",
-    "20261006150000"
+    "20261006101756",
+    "20261006102815",
+    "20261006103210",
+    "20261006125043",
+    "20261006130108",
+    "20261006130135",
+    "20261006130147",
+    "20261006130315",
+    "20261006130443",
+    "20261006132358",
+    "20261006132604",
+    "20261006132644",
+    "20261006134235",
+    "20261006134244",
+    "20261006134342",
+    "20261006170056",
+    "20261006170333"
   ],
   "migrations": [
     {
@@ -1701,12 +1712,84 @@
       "name": "grant_read_platform_events_evidence_capabilities_20261004"
     },
     {
+      "version": "20261005161058",
+      "name": "20261005190000_omega_product_reality_read_models"
+    },
+    {
       "version": "20261005163509",
       "name": "omega_product_reality_view_alignment"
     },
     {
       "version": "20261005180625",
       "name": "omega_data_reality_fabric"
+    },
+    {
+      "version": "20261006101756",
+      "name": "omega_knowledge_loom_reality_20261006"
+    },
+    {
+      "version": "20261006102815",
+      "name": "omega_knowledge_loom_evidence_identity_reconciliation_20261006"
+    },
+    {
+      "version": "20261006103210",
+      "name": "omega_knowledge_loom_canonical_evidence_reconciliation_20261006"
+    },
+    {
+      "version": "20261006125043",
+      "name": "omega_life_product_surface_20261006"
+    },
+    {
+      "version": "20261006130108",
+      "name": "omega_mission_task_reality_20261006_v2"
+    },
+    {
+      "version": "20261006130135",
+      "name": "omega_mission_task_transitions_20261006"
+    },
+    {
+      "version": "20261006130147",
+      "name": "omega_product_reality_mission_tasks_20261006"
+    },
+    {
+      "version": "20261006130315",
+      "name": "omega_mission_task_security_hardening_20261006"
+    },
+    {
+      "version": "20261006130443",
+      "name": "omega_knowledge_retrieval_20261006"
+    },
+    {
+      "version": "20261006132358",
+      "name": "omega_knowledge_governed_ingestion_20261006"
+    },
+    {
+      "version": "20261006132604",
+      "name": "omega_knowledge_documents_created_by_index_20261006"
+    },
+    {
+      "version": "20261006132644",
+      "name": "omega_member_mission_tasks_mission_task_index_20261006"
+    },
+    {
+      "version": "20261006134235",
+      "name": "omega_creation_layer_20261006"
+    },
+    {
+      "version": "20261006134244",
+      "name": "omega_creation_layer_indexes_20261006"
+    },
+    {
+      "version": "20261006134342",
+      "name": "omega_creation_layer_fk_indexes_20261006"
+    },
+    {
+      "version": "20261006170056",
+      "name": "omega_creation_layer_grants_20261006"
+    },
+    {
+      "version": "20261006170333",
+      "name": "omega_mission_knowledge_read_grants_20261006"
     }
   ]
 }

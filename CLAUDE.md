@@ -560,7 +560,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings — **4 `.js`** unloaded (`GAP_ANALYSIS.md` §S), 0 `.css`. Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **546** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **555** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -579,7 +579,7 @@ entries (which were accurate when written):
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **164** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
 | `python3 scripts/evidence-audit.py --summary` | 107 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 0 BROKEN / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 read relations absent live** (snapshot 2026-10-04; keys are `public.`-qualified — strip it) |
-| `./scripts/ci-local.sh` | **28** blocking checks, all passing (`contract-suite.py` holds **36** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
+| `./scripts/ci-local.sh` | **28** blocking checks, all passing (`contract-suite.py` holds **37** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

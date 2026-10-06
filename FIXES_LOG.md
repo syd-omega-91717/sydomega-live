@@ -22602,3 +22602,49 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
   and is untouched code. Recorded in `GAP_ANALYSIS.md` §S. A Stripe test-mode replay (plan criterion 3) was not
   possible from this session: no Stripe access, and no webhook secret to sign with.
 - `docs/runtime/supabase-edge-functions-live.json` records the 7 new versions; reconciliation PASS (21 / 11 / 10).
+
+## Creation Layer and mission board unreachable: eight tables with policies and no GRANT (2026-10-06)
+
+- **Found:** `omega_creation_surface()` as an impersonated member (`SET LOCAL ROLE authenticated` +
+  `request.jwt.claims`) raised `42501: permission denied for table omega_creative_projects`.
+  `20260903015535` revoked default table privileges, and the Creation Layer migration
+  granted nothing, so its four owner policies never ran (§8.1 class 6c). A live sweep of
+  that day's new relations found four more: `omega_member_mission_task_surface()` (called by
+  `omega-mission-board.js`) raised `42501` on `omega_member_mission_tasks`, and
+  `omega_mission_tasks`, `omega_mission_task_transitions` and `omega_knowledge_documents`
+  had SELECT policies and no grant.
+- **Fixed live, two migrations:** `20261006170056` grants SELECT/INSERT/UPDATE/DELETE on
+  the four Creation tables to `authenticated` (the policies are owner `FOR ALL`);
+  `20261006170333` grants SELECT only on the other four, matching their SELECT-only
+  policies (writes go through the definer `private.omega_transition_mission_task`).
+  `anon` gets nothing.
+- **Verified by impersonation, rolled back:** member A inserts a project and the surface
+  returns 1; member B sees 0 of A's rows; A inserting with B's `owner_id` is refused
+  (`new row violates row-level security policy`); `anon` gets `42501`. The mission surface
+  now returns for a member; the active catalog reads 9 rows, equal to the privileged count;
+  no other member's task is visible. `has_table_privilege` confirms authenticated has no
+  write on the four read-only tables. 0 probe rows remain.
+- **Root cause closed with a gate:** `scripts/migration-grant-contract.py` (contract suite,
+  37 gates) fails any table created after the revoke that a policy opens to a client role
+  while no client role holds a grant. Against `origin/main`'s pre-fix migrations it names
+  exactly the eight tables above, nothing else. `rls-auditor.py` reads policy text only and
+  had passed all eight. The first rule (every policy role needs its own grant) reported
+  48, mostly PUBLIC policies on member tables with `anon` deliberately ungranted; narrowed,
+  20 remained, each checked live and recorded as a ratcheting `KNOWN` baseline: 12 locked
+  out on purpose, 7 granted live by statements no migration holds, 1 absent live
+  (`GAP_ANALYSIS.md` §S). 9 tests in `test_migration_grant_contract.py`, with planted
+  violators, comment/literal fakes, and the baseline asserted equal to the findings.
+- **Migration history reconciled (it was red on `main`):** `supabase/remote-migrations.json`
+  did not parse (two hand-merged `latestRemoteMigration` keys, a missing comma), so
+  `migration-drift.py` failed on every branch. Rebuilt from `supabase_migrations.schema_migrations`:
+  357 versions, md5 of the version list equal to live (`f8f12fd7…`). It then showed what
+  the hand edits hid: that day's 12 files were committed under invented versions (15
+  applied live with no file, 11 files `db push` would re-run, two sharing `20261006150000`).
+  Each was replaced by the statements Postgres recorded, at its real version. Four of the
+  five content mismatches were cosmetic; the fifth, `knowledge_loom_reality`, was a stale
+  draft reading `e.evidence_id`/`e.metadata`/`e.subject_id` where live ran
+  `e.id`/`e.evidence`/`e.commit_sha`. `test_omega_knowledge_loom.js` (run by no CI step,
+  failing on `main`) now reads the view's final definition and `knowledge-loom.html`.
+- `supabase/live-schema.json` regenerated (274 → 287; 13 relations from that day were
+  missing). `OMEGA_SKILL_REGISTRY.md` regenerated (it held duplicated merge lines).
+  `ci-local.sh` 28/28, `unittest` 555, contract suite 37/37.

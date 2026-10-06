@@ -18,6 +18,22 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
+- **Creation Layer truth contract is declared, not enforced** (opened 2026-10-06,
+  `docs/OMEGA_CREATION_LAYER.md` "Enforcement status"). Members hold full write on
+  their own `omega_creative_*`/`omega_experience_*` rows, so `truth_state`,
+  `status`, `provider*`, `content_sha256` and `experience_runs.score`/`state` are
+  client-set; `omega_creation_surface()`'s `truth_contract` keys are constants.
+  Published experiences are owner-read only, so nothing is playable by another
+  member. Fix before any UI or provider adapter: server-owned columns (trigger or
+  definer RPC) and a published-read policy. HIGH-RISK pipeline (`grill-me-codex`).
+- **Seven tables are granted live by statements no migration holds** (opened
+  2026-10-06, `scripts/migration-grant-contract.py` `KNOWN`): `omega_notifications`,
+  `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`,
+  `omega_agent_tasks`, `omega_agent_task_events`, `omega_matrix_node_semantics`
+  have client grants live (`has_table_privilege`) and none in `migrations/`, so a
+  rebuild from the repo would lock members out of them. Materialise the live
+  grants as a migration, then drop them from `KNOWN`. `omega_agent_action_proposals`
+  is the reverse: declared in `20260929113731`, absent live.
 - **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
   `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
   `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;
@@ -815,7 +831,8 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **125 tables have RLS policies and no grant** (live 2026-10-04; was 127, and
+- **126 tables have RLS policies and no grant** (live 2026-10-06, column grants
+  counted; was 125 on 2026-10-04 and 127 before that, and
   the 2026-09-21 claim that the rest were "unreachable from any page" was
   wrong for three). `omega_platform_events`, `omega_platform_evidence` and
   `capability_registry` were read by `omega-eternity-engine.js`,
@@ -827,7 +844,10 @@ open, recorded in `FIXES_LOG.md`:
   **none is read by a page**, and every table a page reads exists live with a
   member SELECT path. Left locked out — the safe state; do not grant without
   deciding the feature is wanted. (`agent_experiments` was the earlier
-  reachable case, #179.)
+  reachable case, #179.) Re-cross-checked 2026-10-06: none of the 126 is read
+  by a page. That day's eight new cases *were* reached (Creation Layer, mission
+  board) and were granted, not added here; `migration-grant-contract.py` now
+  fails any new one.
 - **Proposal #26's sculpture data binding is inert end to end** (found
   2026-10-04). `omega-sculpture-dataviz.js` (bg.js-injected) feeds the
   ascension/elements/signet scenes from `profile.current_tier_progress`,

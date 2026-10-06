@@ -1,20 +1,31 @@
--- Ω MISSION TASK TRANSITIONS
 begin;
-create table if not exists public.omega_mission_task_transitions (
- id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
- member_task_id uuid not null references public.omega_member_mission_tasks(id) on delete cascade,
- from_status text, to_status text not null, evidence_event_ids bigint[] not null default '{}',
- graph_evidence_ids uuid[] not null default '{}', idempotency_key text, reason text, created_at timestamptz not null default now(),
- check(to_status in ('available','accepted','started','blocked','submitted','verified','completed','failed','cancelled','expired'))
-);
-create index if not exists omega_mission_task_transitions_user_idx on public.omega_mission_task_transitions(user_id,created_at desc);
-create index if not exists omega_mission_task_transitions_task_idx on public.omega_mission_task_transitions(member_task_id,created_at desc);
-alter table public.omega_mission_task_transitions enable row level security;
-drop policy if exists omega_mission_task_transitions_owner_read on public.omega_mission_task_transitions;
-create policy omega_mission_task_transitions_owner_read on public.omega_mission_task_transitions for select to authenticated using(user_id=(select auth.uid()));
-create or replace function public.omega_transition_mission_task(p_member_task_id uuid,p_to_status text,p_evidence_event_ids bigint[] default '{}',p_graph_evidence_ids uuid[] default '{}',p_idempotency_key text default null,p_reason text default null)
-returns public.omega_member_mission_tasks language plpgsql security definer set search_path='' as $$
-declare v_user_id uuid:=(select auth.uid()); v_task public.omega_member_mission_tasks; v_from text;
+
+create or replace function public.omega_member_mission_task_surface()
+returns setof public.omega_member_mission_tasks
+language sql
+security invoker
+set search_path=''
+as $$
+ select t.*
+ from public.omega_member_mission_tasks t
+ where t.user_id=(select auth.uid())
+ order by t.updated_at desc;
+$$;
+
+create or replace function private.omega_transition_mission_task(
+  p_member_task_id uuid,
+  p_to_status text,
+  p_evidence_event_ids bigint[] default '{}',
+  p_graph_evidence_ids uuid[] default '{}',
+  p_idempotency_key text default null,
+  p_reason text default null
+)
+returns public.omega_member_mission_tasks
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare v_user_id uuid := (select auth.uid()); v_task public.omega_member_mission_tasks; v_from text;
 begin
  if v_user_id is null then raise exception 'authentication required' using errcode='42501'; end if;
  if p_to_status not in ('available','accepted','started','blocked','submitted','verified','completed','failed','cancelled','expired') then raise exception 'invalid task status' using errcode='22023'; end if;
@@ -45,7 +56,23 @@ begin
  insert into public.omega_mission_task_transitions(user_id,member_task_id,from_status,to_status,evidence_event_ids,graph_evidence_ids,idempotency_key,reason)
  values(v_user_id,v_task.id,v_from,p_to_status,coalesce(p_evidence_event_ids,'{}'),coalesce(p_graph_evidence_ids,'{}'),p_idempotency_key,p_reason);
  return v_task;
-end; $$;
+end;
+$$;
+
+create or replace function public.omega_transition_mission_task(
+ p_member_task_id uuid,p_to_status text,p_evidence_event_ids bigint[] default '{}',
+ p_graph_evidence_ids uuid[] default '{}',p_idempotency_key text default null,p_reason text default null
+)
+returns public.omega_member_mission_tasks
+language sql
+security invoker
+set search_path=''
+as $$
+ select private.omega_transition_mission_task($1,$2,$3,$4,$5,$6);
+$$;
+
+revoke execute on function private.omega_transition_mission_task(uuid,text,bigint[],uuid[],text,text) from public,anon,authenticated;
 revoke execute on function public.omega_transition_mission_task(uuid,text,bigint[],uuid[],text,text) from public,anon;
 grant execute on function public.omega_transition_mission_task(uuid,text,bigint[],uuid[],text,text) to authenticated;
+
 commit;

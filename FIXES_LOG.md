@@ -22666,3 +22666,30 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
 - `supabase/live-schema.json` regenerated (274 → 287; 13 relations from that day were
   missing). `OMEGA_SKILL_REGISTRY.md` regenerated (it held duplicated merge lines).
   `ci-local.sh` 28/28, `unittest` 555, contract suite 37/37.
+
+## Production paused: Vercel blocked the Hobby account for usage; deploy volume cut (2026-10-06)
+
+- **Symptom.** `sydomega.com` (every route, e.g. `/life`) served HTTP **402** "This
+  deployment is temporarily paused"; the `Vercel` commit status on every new SHA read
+  **"Account is blocked."** CI's `Chromium release evidence` failed 4/11 on that page
+  (runs 37519246092, 37519941215). The last production deployment
+  (`dpl_9h9Eq1MSC3XgeAyzijV852RQnu14`, PR #755) is `READY` — the code was fine.
+- **Evidence (Vercel API, 2026-10-06).** Account plan `hobby`; billing charges API returns
+  `costs_not_found` (no paid usage to read, so the exact meter is not measurable from here —
+  the owner's dashboard *Usage* tab names it). `list_deployments` since 2026-10-03: **42**
+  production deployments, 20 in one hour on 2026-10-06, some twice per SHA, then none after
+  13:15 UTC. Each emits ~85 MB / 1,095 files (`scripts/vercel-build.sh`, measured).
+- **Cause in this repo.** `vercel.json` `"ignoreCommand": "exit 1"` built every `main` push,
+  docs-only included; and `browser-release-evidence.yml` ran a Chromium crawl of
+  **production** on every `pull_request` — production traffic that tested nothing in the PR.
+- **Fix.** `scripts/vercel-ignore.sh` is the ignore step: it diffs
+  `VERCEL_GIT_PREVIOUS_SHA..VERCEL_GIT_COMMIT_SHA` and skips only when no changed path ships,
+  using the build's own copy rules; any uncertainty (no/unknown previous SHA, git error)
+  builds. Replayed over the last 45 `main` commits: **28 skip, 17 build**; sampled skips
+  changed only `supabase/`, `docs/` or the registry. The crawl now runs on push to `main`,
+  daily and on dispatch, not on PRs. `test_vercel_ignore.py` (9 tests, incl. real-git runs).
+- **Also.** `migration-grant-contract.py` was red on `main` (7 `KNOWN` tables granted since);
+  the ratchet's own instruction applied — entries removed, PASS.
+- **Not fixable from the repo.** Restoring service: an `unpause_project` call was accepted
+  (null result) but not verifiable from this session; the account block is lifted by the
+  owner (upgrade, or the usage window resetting).

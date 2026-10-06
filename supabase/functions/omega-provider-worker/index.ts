@@ -18,7 +18,8 @@ async function dispatch(p:Provider,j:Job){
     const raw=await r.text(); let body:Record<string,unknown>={}
     try{body=raw?JSON.parse(raw):{}}catch{body={raw}}
     if(!r.ok)return {status:'FAILED',errorCode:`provider_http_${r.status}`,errorDetail:typeof body.error==='string'?body.error:'Provider adapter rejected the job.',result:body}
-    const patch=typeof body.provider_asset_id==='string'&&typeof body.source_uri==='string'&&typeof body.content_sha256==='string'?{provider:p.provider_key,provider_asset_id:body.provider_asset_id,source_uri:body.source_uri,storage_path:typeof body.storage_path==='string'?body.storage_path:null,content_sha256:body.content_sha256,license:typeof body.license==='string'?body.license:null,provenance:body.provenance??{},metadata:body.metadata??{}}:null
+    const patch=typeof body.provider_asset_id==='string'&&body.provider_asset_id.trim()!==''&&typeof body.source_uri==='string'&&body.source_uri.trim()!==''&&typeof body.content_sha256==='string'&&/^[a-fA-F0-9]{64}$/.test(body.content_sha256.trim())?{provider:p.provider_key,provider_asset_id:body.provider_asset_id,source_uri:body.source_uri,storage_path:typeof body.storage_path==='string'?body.storage_path:null,content_sha256:body.content_sha256.toLowerCase(),license:typeof body.license==='string'?body.license:null,provenance:body.provenance??{},metadata:body.metadata??{}}:null
+    if(!patch)return {status:'FAILED',errorCode:'provider_artifact_unverified',errorDetail:'Provider returned success without a valid provider_asset_id, source_uri and 64-character SHA-256 content hash.',result:body}
     return {status:'SUCCEEDED',providerJobId:typeof body.job_id==='string'?body.job_id:null,result:body,assetPatch:patch}
   }catch(e){return {status:'FAILED',errorCode:'provider_request_failed',errorDetail:e instanceof Error?e.message:'Provider adapter request failed.'}}
   finally{clearTimeout(t)}

@@ -20,7 +20,7 @@ effectively invisible unless invoked by exact name.
 |---|---|---|---|---|---|
 | `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-11 |
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,692 | CLAUDE.md, README.md | 2026-08-23 |
+| `context-budget` | yes | — | 1,692 | CLAUDE.md, README.md | 2026-10-06 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
 | `edge-functions` | yes | — | 1,207 | CLAUDE.md, README.md | 2026-09-29 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |

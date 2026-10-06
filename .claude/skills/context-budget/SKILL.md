@@ -48,6 +48,7 @@ decision?** If not, it does not belong in `CLAUDE.md`.
 | Detailed audit findings, table-by-table or page-by-page | `REPOSITORY_AUDIT.md` / `GAP_ANALYSIS.md` |
 | A long procedure or checklist | A skill under `.claude/skills/` — loads only when invoked |
 | A feature proposal | `FEATURE_IDEAS.md` |
+| A correction the owner gave you mid-session ("use X, not Y", "never touch Z") | Not straight into `CLAUDE.md`. If it is enforceable, make it a gate (a `scripts/*` check or `.claude/hooks/omega_guard.py`), because a rule in prose relies on someone remembering it. Otherwise put it in the skill for that surface. Only a standing fact goes in §8 |
 
 The distinction that matters: **§8 holds standing facts, `FIXES_LOG.md` holds
 the record.** "We fixed X in `page.html` on this date, here is the query output
@@ -61,9 +62,24 @@ open. Do not restate the evidence in §8.
 
 ## 3. Reading this repo's large files cheaply
 
-Several files cost more in one read than the entire auto-loaded context:
-`FIXES_LOG.md` (~61,600), `profile.html` (~43,800), `bg.js` (~34,500),
-`GAP_ANALYSIS.md` (~26,300). Run the script for current figures.
+Several files cost more in one read than the entire auto-loaded context.
+Measured 2026-10-06: `FIXES_LOG.md` **~348,000** approx tokens (22,668 lines,
+it grew roughly 5x after this section first quoted ~61,600), `bg.js` ~48,400,
+`profile.html` ~47,300. Run the script for current figures.
+
+**Start with `scripts/peek.py`.** It runs the recipes below in one command.
+It prints the file's structure with line numbers (markdown headings and
+FIXES_LOG entry headers, JS functions/publishers and the section markers inside
+bg.js's style string, HTML blocks, SQL statements, JSON keys) plus the size of
+a full read. Then `Read` only the range you need:
+
+```bash
+python3 scripts/peek.py FIXES_LOG.md --max 40            # entry headers + line numbers
+python3 scripts/peek.py FIXES_LOG.md --grep task_completions -C 2
+python3 scripts/peek.py bg.js profile.html               # several files at once
+```
+
+The hand recipes still work, and they are what peek runs:
 
 `bg.js` is the worst trap, because almost all of its size is a **single
 JS string literal** holding the whole injected stylesheet. Reading the file to

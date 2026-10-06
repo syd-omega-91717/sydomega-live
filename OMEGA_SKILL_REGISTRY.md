@@ -100,6 +100,14 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | root `.js` files | 224 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 340 (107 numbered `NNNN_`, 233 timestamped) |
+| `omega-*.js` modules | 207 (1965 KB) |
+| root `.js` files | 222 |
+| `.html` pages | 229 |
+| pages loading `bg.js` | 229 of 229 |
+| `omega-*.js` modules | 211 (1976 KB) |
+| root `.js` files | 226 |
+| `supabase/*.sql` (flat bag) | 127 |
+| `supabase/migrations/*.sql` | 343 (107 numbered `NNNN_`, 236 timestamped) |
 | Edge Functions | 22 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -126,8 +134,11 @@ fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 end-to-end for the first time"*. The 246 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 340. Treat the validated scope as `0001`–`0094` only.
+end-to-end for the first time"*. The 249 files added since (numbered and
+timestamped alike) were **not part of that validation**, and no run has covered
+all 343. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 227 pages.** It is a hard single point of
+**`bg.js` is loaded by all 229 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

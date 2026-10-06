@@ -3,6 +3,8 @@
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
   "remoteMigrationCount": 340,
   "latestRemoteMigration": "20261005180625",
+  "remoteMigrationCount": 343,
+  "latestRemoteMigration": "20261006150000",
   "versions": [
     "0001",
     "0002",
@@ -344,6 +346,10 @@
     "20261005161058",
     "20261005163509",
     "20261005180625"
+    "20261005180625",
+    "20261006130000",
+    "20261006140000",
+    "20261006150000"
   ],
   "migrations": [
     {

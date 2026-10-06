@@ -15,6 +15,7 @@ create table if not exists public.omega_knowledge_documents (
 );
 alter table public.omega_knowledge_chunks add column if not exists document_id uuid references public.omega_knowledge_documents(id) on delete cascade;
 create index if not exists omega_knowledge_documents_source_idx on public.omega_knowledge_documents(source_id, created_at desc);
+create index if not exists omega_knowledge_documents_created_by_idx on public.omega_knowledge_documents(created_by);
 create index if not exists omega_knowledge_chunks_document_idx on public.omega_knowledge_chunks(document_id, chunk_no);
 alter table public.omega_knowledge_documents enable row level security;
 drop policy if exists omega_knowledge_documents_owner_select on public.omega_knowledge_documents;

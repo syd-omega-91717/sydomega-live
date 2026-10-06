@@ -67,7 +67,7 @@ where g.user_id = (select auth.uid())
 union all
 
 select
-  e.id as source_id,
+  e.evidence_id as source_id,
   'platform_evidence'::text as source_kind,
   coalesce(nullif(e.check_name,''), nullif(e.evidence_type,''), 'PLATFORM EVIDENCE') as title,
   left(coalesce(cast(e.evidence as text),''), 700) as excerpt,

@@ -8,7 +8,7 @@
 
   /* Map every page to a section */
   var PS={
-    dashboard:'command',beacon:'command',notifications:'command',search:'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
+    dashboard:'command',beacon:'command',notifications:'command',search:'command','data-observatory':'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command',gateway:'command',guide:'command',
     profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
@@ -65,7 +65,7 @@
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
      sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['beacon','BEACON','/beacon.html'],
-          ['search','SEARCH','/search.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
+          ['search','SEARCH','/search.html'],['data-observatory','DATA OBSERVATORY','/data-observatory.html'],['notifications','NOTIFICATIONS','/notifications.html'],['chatbot','CONCIERGE','/chatbot.html'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html'],['eternity','CONTINUITY','/eternity.html'],['replay','REPLAY','/replay.html'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html'],['command','COMMAND BRIEF','/command.html'],
           ['contacts','CONTACTS','/contacts.html'],['decisions','DECISIONS','/decisions.html'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html'],
           ['network','NETWORK','/network.html'],['notes','NOTES','/notes.html'],['projects','PROJECTS','/projects.html'],
@@ -128,7 +128,7 @@
      sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],['enterprise','ENTERPRISE','/enterprise.html'],['privacy','PRIVACY','/privacy.html'],
           ['roadmap','ROADMAP','/roadmap.html'],['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
-          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],
+          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['knowledge-loom','KNOWLEDGE LOOM','/knowledge-loom.html'],
           ['omega-platform-navigator','PLATFORM NAVIGATOR','/omega-platform-navigator.html'],['maintenance','MAINTENANCE','/maintenance.html'],['control-center','CONTROL CENTER','/control-center.html'],['platform-kernel','PLATFORM KERNEL','/platform-kernel.html'],['agent-operations','AGENT OPERATIONS','/agent-operations.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
           ['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',

@@ -8,7 +8,7 @@ const SUPABASE_KEY = 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
 const sb = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SUPABASE_KEY));
 
 const $ = (id) => document.getElementById(id);
-const state = { user:null, missions:[], quests:[], missionStates:[], questStates:[], events:[], transitions:[] };
+const state = { user:null, missions:[], quests:[], missionStates:[], questStates:[], events:[], transitions:[], missionTasks:[] };
 
 function esc(value){
   const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
@@ -130,6 +130,7 @@ function renderScience(){
     '<p>Quest definitions: <b>'+state.quests.length+'</b></p>'+
     '<p>Member-owned evidence events loaded: <b>'+state.events.length+'</b></p>'+
     '<p>Mission state transitions loaded: <b>'+state.transitions.length+'</b></p>'+
+    '<p>Mission task states loaded: <b>'+state.missionTasks.length+'</b></p>'+
     '<p class="oms-note">The former localStorage XP/rank/streak simulator has been removed. Progress is now displayed only from persisted production state.</p>'+
     '</div></div>';
 }
@@ -147,7 +148,8 @@ async function load(){
     sb.from('omega_member_mission_state').select('id,mission_id,status,attempt_count,started_at,completed_at,last_transition_at').order('last_transition_at',{ascending:false}),
     sb.from('omega_member_quest_state').select('id,quest_id,status,current_mission_id,started_at,completed_at,last_transition_at').order('last_transition_at',{ascending:false}),
     sb.from('omega_platform_events').select('id,event_type,route,actor_user_id,created_at,metadata').eq('actor_user_id',session.user.id).order('created_at',{ascending:false}).limit(100),
-    sb.from('omega_mission_transitions').select('id,member_mission_id,from_status,to_status,event_id,evidence_event_ids,graph_evidence_ids,idempotency_key,reason,created_at').order('created_at',{ascending:false}).limit(100)
+    sb.from('omega_mission_transitions').select('id,member_mission_id,from_status,to_status,event_id,evidence_event_ids,graph_evidence_ids,idempotency_key,reason,created_at').order('created_at',{ascending:false}).limit(100),
+    sb.rpc('omega_member_mission_task_surface')
   ]);
   const failed=results.find(r=>r.error);
   if(failed?.error){
@@ -160,6 +162,7 @@ async function load(){
   state.questStates=results[3].data||[];
   state.events=results[4].data||[];
   state.transitions=results[5].data||[];
+  state.missionTasks=results[6].data||[];
   /* Feed persisted mission state into the canonical read-side object graph. */
   if(window.OmegaObjectGraph){
     window.OmegaObjectGraph.putMany(state.missions,{type:'mission',source:'omega_missions',truth:'LIVE',observedAt:new Date().toISOString()});

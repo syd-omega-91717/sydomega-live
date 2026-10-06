@@ -160,6 +160,8 @@
     "my-quests": "arena",
     "quest-progress": "arena",
     "seasonal-events": "arena",
-    "cosmic-ledger": "void"
+    "cosmic-ledger": "void",
+    "data-observatory": "genesis",
+    "knowledge-loom": "academy"
   }
 }

@@ -70,7 +70,7 @@ select
   e.id as source_id,
   'platform_evidence'::text as source_kind,
   coalesce(nullif(e.check_name,''), nullif(e.evidence_type,''), 'PLATFORM EVIDENCE') as title,
-  left(coalesce(e.evidence,''), 700) as excerpt,
+  left(coalesce(cast(e.evidence as text),''), 700) as excerpt,
   case
     when e.status = 'verified' or e.verified_at is not null then 'VERIFIED'
     else 'LIVE'

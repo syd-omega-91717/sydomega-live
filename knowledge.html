@@ -41,20 +41,6 @@
   <button class="tab-btn" onclick="setTab('nodes')">NODES</button>
   <button class="tab-btn" onclick="setTab('concepts')">CONCEPTS</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
-  <button class="tab-btn" onclick="setTab('loom')">LOOM</button>
-</div>
-
-<div class="tab-panel" id="tab-loom">
-  <div class="sechead">Ω KNOWLEDGE LOOM — REAL MEMBER PROVENANCE</div>
-  <div class="loom-toolbar">
-    <input id="loom-query" type="search" autocomplete="off" placeholder="Search your documents, memory, evidence…" aria-label="Search Knowledge Loom sources">
-    <select id="loom-kind" aria-label="Filter Knowledge Loom source type">
-      <option value="ALL">ALL SOURCES</option><option value="knowledge_document">DOCUMENTS</option><option value="ai_memory">AI MEMORY</option><option value="graph_evidence">GRAPH EVIDENCE</option><option value="platform_evidence">PLATFORM EVIDENCE</option>
-    </select>
-  </div>
-  <div class="loom-truth" role="status"><span id="loom-truth">UNAVAILABLE · INITIALIZING</span><span>RECORDS: <b id="loom-count">0</b></span></div>
-  <div id="loom-grid" class="loom-grid"></div>
-  <div id="loom-empty" class="loom-empty" hidden>NO MEMBER-SCOPED KNOWLEDGE RECORDS MATCH THE CURRENT FILTER.</div>
 </div>
 
 <div class="tab-panel active" id="tab-graph">
@@ -141,7 +127,7 @@ var selectedNode=null,hoveredNode=null;
 var _W=0,_H=0;
 
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['graph','nodes','concepts','science','loom'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['graph','nodes','concepts','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
   if(name==='graph')setTimeout(function(){resizeGraph();drawGraph();},10);
 }
@@ -288,7 +274,6 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/omega-knowledge-loom.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

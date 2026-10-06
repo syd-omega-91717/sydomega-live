@@ -94,9 +94,11 @@ The completion path also records provider-job verification provenance and an E2 
 
 ## Current production state
 
-The adapter runtime is deployed as:
+The hardened adapter runtime is deployed as:
 
-`omega-provider-worker` version 1.
+`omega-provider-worker` **version 2**.
+
+The live Supabase function contains lease recovery, retry correction and stale-worker protection.
 
 All twelve registered providers currently remain:
 

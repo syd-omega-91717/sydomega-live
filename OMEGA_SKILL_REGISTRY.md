@@ -20,7 +20,7 @@ effectively invisible unless invoked by exact name.
 |---|---|---|---|---|---|
 | `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-11 |
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
+| `context-budget` | yes | — | 1,692 | CLAUDE.md, README.md | 2026-08-23 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
 | `edge-functions` | yes | — | 1,207 | CLAUDE.md, README.md | 2026-09-29 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
@@ -42,7 +42,7 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,620 tokens** if every SKILL.md were read in one
+**23 skills, ~38,893 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or

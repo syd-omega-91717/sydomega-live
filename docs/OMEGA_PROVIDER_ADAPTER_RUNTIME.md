@@ -62,7 +62,7 @@ The adapter should return JSON containing, for successful artifact creation:
 - optional `provenance`
 - optional `metadata`
 
-A successful provider HTTP response without the required artifact identity/hash is **not sufficient to promote an asset to LIVE**.
+A successful provider HTTP response without the required artifact identity/hash is **not sufficient to promote an asset to LIVE**. The worker and completion RPC both enforce this boundary; malformed success is converted to `FAILED / provider_artifact_unverified`.
 
 ## Asset truth promotion
 
@@ -72,7 +72,7 @@ An asset is promoted from `USER-CREATED / DESIGNED` to `LIVE / READY` only when 
 - source URI
 - content SHA-256
 
-The completion path also records provider-job verification provenance.
+The completion path also records provider-job verification provenance and an E2 `omega_platform_evidence` record tied to the provider job, artifact SHA-256 and source URI.
 
 ## Current production state
 

@@ -69,13 +69,6 @@ KNOWN = {
     'omega_referral_conversions': LOCKED_OUT,
     'omega_referral_rewards': LOCKED_OUT,
     'stripe_webhook_events': LOCKED_OUT,
-    'omega_achievement_definitions': GRANTED_BY_HAND,
-    'omega_agent_task_events': GRANTED_BY_HAND,
-    'omega_agent_tasks': GRANTED_BY_HAND,
-    'omega_certificates': GRANTED_BY_HAND,
-    'omega_matrix_node_semantics': GRANTED_BY_HAND,
-    'omega_notifications': GRANTED_BY_HAND,
-    'omega_user_achievements': GRANTED_BY_HAND,
     'omega_agent_action_proposals': 'declared in a migration, absent live',
 }
 

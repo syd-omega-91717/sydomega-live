@@ -34,6 +34,12 @@ open, recorded in `FIXES_LOG.md`:
   rebuild from the repo would lock members out of them. Materialise the live
   grants as a migration, then drop them from `KNOWN`. `omega_agent_action_proposals`
   is the reverse: declared in `20260929113731`, absent live.
+- **A migration-built database is close to live, not equal to it** (opened 2026-10-06,
+  `FIXES_LOG.md` "Fresh replay restored"). Three `REPLAY PRELUDE` blocks now let all 357
+  migrations replay from zero, but they add only what today's views read. Known residue:
+  live NOT NULLs left nullable on 8 columns, `notification_queue`/`omega_knowledge_chunks`
+  replay without their live policy, `notification_templates` exists live only. Closing it
+  means a schema diff of a replayed DB against live, materialised as one migration.
 - **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
   `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
   `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;

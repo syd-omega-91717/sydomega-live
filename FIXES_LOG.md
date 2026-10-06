@@ -22641,10 +22641,28 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
   the hand edits hid: that day's 12 files were committed under invented versions (15
   applied live with no file, 11 files `db push` would re-run, two sharing `20261006150000`).
   Each was replaced by the statements Postgres recorded, at its real version. Four of the
-  five content mismatches were cosmetic; the fifth, `knowledge_loom_reality`, was a stale
-  draft reading `e.evidence_id`/`e.metadata`/`e.subject_id` where live ran
-  `e.id`/`e.evidence`/`e.commit_sha`. `test_omega_knowledge_loom.js` (run by no CI step,
-  failing on `main`) now reads the view's final definition and `knowledge-loom.html`.
+  five content mismatches were cosmetic. The fifth, `knowledge_loom_reality`, read
+  `e.evidence_id`/`e.metadata`/`e.subject_id` where live ran `e.id`/`e.evidence`/`e.commit_sha`
+  -- and the local file was the one consistent with the migrations: live
+  `omega_platform_evidence` is a legacy table no migration creates (`20261002025000`'s
+  `CREATE TABLE IF NOT EXISTS` was skipped live and only ALTERed it).
+  `test_omega_knowledge_loom.js` (run by no CI step, failing on `main`) now reads the view's
+  final definition and `knowledge-loom.html`.
+- **Fresh replay restored, red since the day's knowledge work:** with the manifest parsing,
+  `supabase-full-migration-replay.yml` failed `42703 column e.id does not exist`. A local
+  replay (CLI 2.119.0, the CI version) then measured the whole gap at once -- replay to the
+  last good migration, diff its columns against live for every table the remaining views
+  read: 8 legacy `omega_platform_evidence` columns, 14 more on `ai_memory`/`evolution_events`/
+  `notifications`/`profiles`, and two live-only tables (`notification_queue`;
+  `omega_knowledge_chunks`, which no migration on `main` ever created). Each is added as an
+  `IF NOT EXISTS` "REPLAY PRELUDE" at the head of the migration that first reads it
+  (`20261006101756`, `…125043`, `…130443`) -- a no-op live, typed from `pg_attribute` /
+  `pg_constraint`. Deliberate deviations, all toward a replay that cannot fail: live
+  NOT NULLs with no default are left off; `notification_queue.template_id` has no FK
+  (`notification_templates` is itself absent from a migration-built DB); the two tables get
+  RLS without their live policy, so they replay locked. Verified: `supabase start` + `db reset`
+  from zero applies **357/357**, then `migration-replay-contract.py` PASS,
+  `supabase-migration-security-audit.py` PASSED, `test_rls_rpc_performance_hardening` OK.
 - `supabase/live-schema.json` regenerated (274 → 287; 13 relations from that day were
   missing). `OMEGA_SKILL_REGISTRY.md` regenerated (it held duplicated merge lines).
   `ci-local.sh` 28/28, `unittest` 555, contract suite 37/37.

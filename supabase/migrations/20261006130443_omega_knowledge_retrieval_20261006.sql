@@ -1,3 +1,26 @@
+-- REPLAY PRELUDE (added 2026-10-06, not part of what ran live).
+-- The statements below that this file ran live read schema that exists live
+-- but that no migration creates, so a database built from migrations alone
+-- failed here (42703/42P01 in the full replay). Every statement is IF NOT
+-- EXISTS -- a no-op live, where each object exists exactly as declared
+-- (pg_attribute / pg_constraint, 2026-10-06) -- except where noted: a live
+-- NOT NULL with no default is left off so earlier inserts still replay; a
+-- table gets RLS but not its live policy, i.e. it replays locked (the safe
+-- direction).
+-- document_id (and its FK) is added by 20261006132358, as it was live.
+create table if not exists public.omega_knowledge_chunks (
+  id uuid primary key default gen_random_uuid(),
+  source_id uuid not null references public.omega_knowledge_sources(id) on delete cascade,
+  chunk_no integer not null,
+  content text not null,
+  evidence_level text not null default 'emerging',
+  metadata jsonb not null default '{}'::jsonb,
+  embedding extensions.vector,
+  created_at timestamptz not null default now(),
+  unique (source_id, chunk_no)
+);
+alter table public.omega_knowledge_chunks enable row level security;
+
 begin;
 
 create index if not exists omega_knowledge_chunks_fts_idx

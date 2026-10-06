@@ -1,3 +1,22 @@
+-- REPLAY PRELUDE (added 2026-10-06, not part of what ran live).
+-- Live public.omega_platform_evidence is a legacy table created outside any
+-- migration; 20261002025000's CREATE TABLE IF NOT EXISTS was skipped live and
+-- only ALTERed it. The view below reads those legacy columns, so a database
+-- built from migrations alone lacked them (42703 on e.id in the full replay).
+-- Every statement is ADD COLUMN IF NOT EXISTS: a no-op live, where all eight
+-- exist (pg_attribute, 2026-10-06). Live also holds NOT NULL on capability_id,
+-- evidence_level, check_name and result with no default; that is left off here
+-- so later migrations' inserts that predate these columns still replay.
+alter table public.omega_platform_evidence
+  add column if not exists id uuid not null default gen_random_uuid(),
+  add column if not exists capability_id text,
+  add column if not exists evidence_level text,
+  add column if not exists check_name text,
+  add column if not exists result text,
+  add column if not exists evidence jsonb not null default '{}'::jsonb,
+  add column if not exists commit_sha text,
+  add column if not exists workflow_run_id text;
+
 create or replace view public.omega_member_knowledge_loom
 with (security_invoker = true)
 as

@@ -69,28 +69,15 @@ union all
 select
   e.evidence_id as source_id,
   'platform_evidence'::text as source_kind,
-  coalesce(nullif(e.check_name,''), nullif(e.evidence_type,''), 'PLATFORM EVIDENCE') as title,
-  left(coalesce(cast(e.evidence as text),''), 700) as excerpt,
-  case
-    when e.status = 'verified' or e.verified_at is not null then 'VERIFIED'
-    else 'LIVE'
-  end as truth_state,
-  coalesce(e.uri, e.commit_sha, e.workflow_run_id::text, e.id::text) as source_ref,
+  coalesce(nullif(e.evidence_type,''), 'PLATFORM EVIDENCE') as title,
+  left(coalesce(cast(e.metadata as text),''), 700) as excerpt,
+  case when e.status = 'verified' or e.verified_at is not null then 'VERIFIED' else 'LIVE' end as truth_state,
+  coalesce(e.uri, e.subject_id, e.evidence_id::text) as source_ref,
   coalesce(e.verified_at, e.recorded_at, now()) as observed_at,
   (e.status = 'verified' or e.verified_at is not null) as verified,
-  jsonb_build_object(
-    'capability_id', e.capability_id,
-    'evidence_level', e.evidence_level,
-    'evidence_type', e.evidence_type,
-    'source', e.source,
-    'subject_type', e.subject_type,
-    'subject_id', e.subject_id,
-    'commit_sha', e.commit_sha,
-    'workflow_run_id', e.workflow_run_id
-  ) as metadata
+  e.metadata as metadata
 from public.omega_platform_evidence e
 where e.owner_user_id = (select auth.uid());
-
 grant select on public.omega_member_knowledge_loom to authenticated;
 
 comment on view public.omega_member_knowledge_loom is

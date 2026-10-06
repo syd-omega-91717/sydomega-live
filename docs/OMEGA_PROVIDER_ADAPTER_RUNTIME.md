@@ -28,6 +28,24 @@ Jobs have:
 
 Concurrent workers use row locking with `FOR UPDATE SKIP LOCKED`.
 
+### Lease recovery
+
+A worker receives a five-minute lease. If it disappears before completing a job:
+
+- the next worker claim pass requeues an expired lease when attempts remain;
+- the next claim pass marks an expired lease `FAILED / worker_lease_exhausted` when the maximum attempts are exhausted;
+- the recovery path emits a canonical `omega_platform_events` failure event.
+
+### Retry semantics
+
+Provider failures with attempts remaining return to `QUEUED` with a five-minute retry delay. `BLOCKED_PROVIDER` returns to `QUEUED` with a fifteen-minute retry delay.
+
+A terminal failure remains `FAILED` only after the attempt budget is exhausted.
+
+### Stale-worker protection
+
+Completion is bound to the exact worker lease that claimed the job. A stale worker cannot complete or promote an asset after another worker has reclaimed the job.
+
 ## Provider adapter contract
 
 Each provider is represented by `omega_provider_registry`.
@@ -76,9 +94,11 @@ The completion path also records provider-job verification provenance and an E2 
 
 ## Current production state
 
-The adapter runtime is deployed as:
+The hardened adapter runtime is deployed as:
 
-`omega-provider-worker` version 1.
+`omega-provider-worker` **version 2**.
+
+The live Supabase function contains lease recovery, retry correction and stale-worker protection.
 
 All twelve registered providers currently remain:
 

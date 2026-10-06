@@ -32,13 +32,23 @@ export default {fetch:withSupabase({auth:'secret'},async(req,ctx)=>{
   const body=await req.json().catch(()=>({})); const limit=Math.max(1,Math.min(25,Number(body?.limit??10))); const workerId=`${WORKER_PREFIX}:${crypto.randomUUID()}`
   const {data:jobs,error}=await ctx.supabaseAdmin.rpc('omega_claim_provider_jobs',{p_limit:limit,p_worker_id:workerId})
   if(error)return Response.json({error:'claim_failed'},{status:500})
-  let succeeded=0,failed=0,blocked=0
+  let succeeded=0,failed=0,blocked=0,stale=0
   for(const j of (Array.isArray(jobs)?jobs:[]) as Job[]){
     const {data:ps,error:pe}=await ctx.supabaseAdmin.from('omega_provider_registry').select('provider_key,status').eq('id',j.provider_id).limit(1)
     const p=ps?.[0] as Provider|undefined
     const result=pe||!p?{status:'FAILED',errorCode:'provider_registry_unavailable',errorDetail:'Provider registry lookup failed.'}:await dispatch(p,j)
-    const {error:ce}=await ctx.supabaseAdmin.rpc('omega_complete_provider_job',{p_job_id:j.id,p_status:result.status,p_external_job_id:(result as any).providerJobId??null,p_result:(result as any).result??null,p_error_code:(result as any).errorCode??null,p_error_message:(result as any).errorDetail??null,p_asset_patch:(result as any).assetPatch??null})
-    if(ce)failed++; else if(result.status==='SUCCEEDED')succeeded++; else if(result.status==='BLOCKED_PROVIDER')blocked++; else failed++
+    const {error:ce}=await ctx.supabaseAdmin.rpc('omega_complete_provider_job',{
+      p_job_id:j.id,p_status:result.status,p_external_job_id:(result as any).providerJobId??null,
+      p_result:(result as any).result??null,p_error_code:(result as any).errorCode??null,
+      p_error_message:(result as any).errorDetail??null,p_asset_patch:(result as any).assetPatch??null,
+      p_worker_id:workerId
+    })
+    if(ce){
+      if(String(ce.message||'').includes('provider_job_stale_or_not_running'))stale++
+      else failed++
+    }else if(result.status==='SUCCEEDED')succeeded++
+    else if(result.status==='BLOCKED_PROVIDER')blocked++
+    else failed++
   }
-  return Response.json({ok:true,worker:WORKER_PREFIX,claimed:Array.isArray(jobs)?jobs.length:0,succeeded,failed,blocked})
+  return Response.json({ok:true,worker:WORKER_PREFIX,claimed:Array.isArray(jobs)?jobs.length:0,succeeded,failed,blocked,stale})
 })}

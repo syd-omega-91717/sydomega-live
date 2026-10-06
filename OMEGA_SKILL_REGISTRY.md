@@ -94,6 +94,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
+| `.html` pages | 227 |
+| pages loading `bg.js` | 227 of 227 |
+| `omega-*.js` modules | 207 (1965 KB) |
+| root `.js` files | 222 |
 | `.html` pages | 229 |
 | pages loading `bg.js` | 229 of 229 |
 | `omega-*.js` modules | 211 (1976 KB) |

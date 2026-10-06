@@ -15,8 +15,6 @@ Authenticated clients cannot directly INSERT, UPDATE, or DELETE rows in:
 
 Creation and mutation go through authenticated public RPC wrappers. Privileged implementations live in the non-exposed `private` schema with `SECURITY DEFINER`, empty `search_path`, explicit ownership checks, and restricted execution.
 
-This follows Supabase's current guidance that privileged functions should be tightly scoped, use an empty search path, and receive explicit execute grants. citeturn1search0turn1search1
-
 ## Truth rules
 
 ### Projects

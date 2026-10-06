@@ -1,6 +1,46 @@
--- Ω LIFE PRODUCT SURFACE
--- Read-only member projection over authoritative production tables.
--- No synthetic member state is created.
+-- REPLAY PRELUDE (added 2026-10-06, not part of what ran live).
+-- The statements below that this file ran live read schema that exists live
+-- but that no migration creates, so a database built from migrations alone
+-- failed here (42703/42P01 in the full replay). Every statement is IF NOT
+-- EXISTS -- a no-op live, where each object exists exactly as declared
+-- (pg_attribute / pg_constraint, 2026-10-06) -- except where noted: a live
+-- NOT NULL with no default is left off so earlier inserts still replay; a
+-- table gets RLS but not its live policy, i.e. it replays locked (the safe
+-- direction).
+alter table public.ai_memory
+  add column if not exists owner_id uuid,
+  add column if not exists conversation_id uuid,
+  add column if not exists importance integer default 1,
+  add column if not exists category text,
+  add column if not exists embedding_status text default 'pending';
+alter table public.evolution_events
+  add column if not exists delta numeric not null default 0.25;
+-- live: title/type NOT NULL, no default
+alter table public.notifications
+  add column if not exists title text,
+  add column if not exists type text,
+  add column if not exists is_read boolean default false;
+alter table public.profiles
+  add column if not exists olympian text,
+  add column if not exists planet text,
+  add column if not exists dob date,
+  add column if not exists creed text,
+  add column if not exists pledge text,
+  add column if not exists phone text;
+-- live also has template_id -> notification_templates(id); that table is
+-- itself absent from a migration-built database, so the FK is omitted.
+create table if not exists public.notification_queue (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid references public.profiles(id),
+  template_id uuid,
+  payload jsonb default '{}'::jsonb,
+  status text default 'pending',
+  attempts integer default 0,
+  scheduled_at timestamptz default now(),
+  processed_at timestamptz
+);
+alter table public.notification_queue enable row level security;
+
 
 drop view if exists public.omega_member_life_surface;
 

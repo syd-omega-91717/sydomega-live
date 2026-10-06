@@ -54,3 +54,21 @@ No provider secret belongs in client code.
 ## Status
 
 The database layer is implemented. Provider-specific generation adapters, rendering pipelines, game execution, and the public Creation Studio UI remain separate implementation phases and are not falsely marked LIVE.
+## Enforcement status (measured live 2026-10-06)
+
+- **Reachable since `20261006170056`.** The tables shipped with policies and no
+  `GRANT`; `omega_creation_surface()` raised `42501` for every member until the
+  grant migration. Verified by impersonation: a member reads and writes only
+  their own rows, a spoofed `owner_id` is refused by RLS, `anon` is refused.
+- **The truth boundaries above are declared, not enforced.** Members hold full
+  write on their own rows, so a client can set `truth_state='LIVE'` or
+  `status='READY'` with no provider job, and can write `experience_runs.score`
+  and `state` directly. The `truth_contract` keys returned by
+  `omega_creation_surface()` are constants, not checks. Until server-owned
+  columns exist (a trigger or a definer RPC writing `status`, `truth_state`,
+  `provider*`, `content_sha256`, `score`), no asset or run is evidence.
+- **`PUBLISHED` experiences are readable by their owner only.** No policy lets
+  another member read a published definition, so nothing is playable by anyone
+  but its author, and a run's `experience_id` is checked by FK only.
+
+The last two are open in `GAP_ANALYSIS.md` §S.

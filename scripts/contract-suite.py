@@ -171,6 +171,11 @@ GATES = [
     ('object-contract',
      'every Omega object is backed by live tables or a validated config registry',
      ['scripts/omega-object-contract.py']),
+    # Eight tables shipped on 2026-10-06 with member policies and no GRANT; every
+    # member query failed 42501 and rls-auditor (policy text only) passed them.
+    ('migration-grant',
+     'no new table has client policies without a GRANT (8.1 class 6c)',
+     ['scripts/migration-grant-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

@@ -1,5 +1,3 @@
--- Ω SYD OMEGA 91717 — Knowledge Loom evidence identity reconciliation
--- Fresh replay uses evidence_id as the canonical platform-evidence primary key.
 create or replace view public.omega_member_knowledge_loom
 with (security_invoker = true)
 as

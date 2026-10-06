@@ -1,0 +1,3 @@
+-- Ω MISSION TASK REALITY
+-- Canonical Mission -> Task lifecycle. Definitions are seeded from existing mission completion rules;
+-- no member activity or fake completion records are created.

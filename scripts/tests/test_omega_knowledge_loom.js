@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+'use strict';
+const fs=require('fs');
+const assert=require('assert');
+const migration=fs.readFileSync('supabase/migrations/20261006130000_omega_knowledge_loom_reality.sql','utf8');
+const js=fs.readFileSync('omega-knowledge-loom.js','utf8');
+const html=fs.readFileSync('knowledge.html','utf8');
+const css=fs.readFileSync('omega-knowledge-loom.css','utf8');
+assert(migration.includes('create or replace view public.omega_member_knowledge_loom'));
+assert(migration.includes('security_invoker = true'));
+assert(migration.includes("where d.author_id = (select auth.uid())"));
+assert(migration.includes("where m.user_id = (select auth.uid())"));
+assert(migration.includes("where g.user_id = (select auth.uid())"));
+assert(migration.includes("where e.owner_user_id = (select auth.uid())"));
+['knowledge_document','ai_memory','graph_evidence','platform_evidence'].forEach(k=>assert(migration.includes("'"+k+"'")));
+assert(!js.includes('innerHTML'));
+assert(js.includes("from('omega_member_knowledge_loom')"));
+assert(js.includes('source_kind,source_id,title,excerpt,truth_state'));
+assert(html.includes('id="tab-loom"'));
+assert(html.includes('omega-knowledge-loom.js'));
+assert(css.includes('.loom-card'));
+console.log('OMEGA KNOWLEDGE LOOM CONTRACT: PASS');

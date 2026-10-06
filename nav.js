@@ -128,7 +128,7 @@
      sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],['enterprise','ENTERPRISE','/enterprise.html'],['privacy','PRIVACY','/privacy.html'],
           ['roadmap','ROADMAP','/roadmap.html'],['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
-          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],
+          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['knowledge-loom','KNOWLEDGE LOOM','/knowledge-loom.html'],
           ['omega-platform-navigator','PLATFORM NAVIGATOR','/omega-platform-navigator.html'],['maintenance','MAINTENANCE','/maintenance.html'],['control-center','CONTROL CENTER','/control-center.html'],['platform-kernel','PLATFORM KERNEL','/platform-kernel.html'],['agent-operations','AGENT OPERATIONS','/agent-operations.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
           ['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/investment.html',   col:'#E2C86D',

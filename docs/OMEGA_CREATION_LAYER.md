@@ -54,21 +54,28 @@ No provider secret belongs in client code.
 ## Status
 
 The database layer is implemented. Provider-specific generation adapters, rendering pipelines, game execution, and the public Creation Studio UI remain separate implementation phases and are not falsely marked LIVE.
-## Enforcement status (measured live 2026-10-06)
 
-- **Reachable since `20261006170056`.** The tables shipped with policies and no
-  `GRANT`; `omega_creation_surface()` raised `42501` for every member until the
-  grant migration. Verified by impersonation: a member reads and writes only
-  their own rows, a spoofed `owner_id` is refused by RLS, `anon` is refused.
-- **The truth boundaries above are declared, not enforced.** Members hold full
-  write on their own rows, so a client can set `truth_state='LIVE'` or
-  `status='READY'` with no provider job, and can write `experience_runs.score`
-  and `state` directly. The `truth_contract` keys returned by
-  `omega_creation_surface()` are constants, not checks. Until server-owned
-  columns exist (a trigger or a definer RPC writing `status`, `truth_state`,
-  `provider*`, `content_sha256`, `score`), no asset or run is evidence.
-- **`PUBLISHED` experiences are readable by their owner only.** No policy lets
-  another member read a published definition, so nothing is playable by anyone
-  but its author, and a run's `experience_id` is checked by FK only.
+## Enforcement status — measured live 2026-10-06
 
-The last two are open in `GAP_ANALYSIS.md` §S.
+The previous client-write gap is **closed in the live database**.
+
+- Authenticated clients no longer have direct INSERT/UPDATE/DELETE privileges on the four Creation Layer tables.
+- Creation and mutation are performed through authenticated public RPC wrappers.
+- Privileged implementations live in the non-exposed `private` schema, use `SECURITY DEFINER`, `search_path=''`, and explicit ownership checks.
+- Anonymous execution of the public creation RPCs is denied.
+- Project creation is forced to `DRAFT / USER-CREATED`.
+- Asset creation is forced to `DESIGNED / USER-CREATED` with unverified user-origin provenance.
+- Experience creation is forced to `DRAFT / SIMULATED`.
+- Run creation and state transitions are server-owned; run score is not client-writable.
+- Experience steps emit canonical `omega_platform_events` records.
+- Published experiences are readable by authenticated members; draft and retired experiences remain owner-scoped.
+- A rollback transaction exercised the creation RPC and confirmed the enforced `DRAFT` state without leaving test data.
+- Security Advisor remains at the single pre-existing warning: leaked-password protection is disabled.
+
+## Remaining reality gap
+
+Provider-specific adapters, verified provider jobs, artifact storage delivery, content hashing, licensing verification, publication workflows, and the public Creation Studio remain to be built.
+
+Until a real provider job produces verifiable output, a creative asset must remain visibly `USER-CREATED` / `DESIGNED` rather than `LIVE`.
+
+The Creation Layer is therefore **secured and persisted, but not yet provider-live**.

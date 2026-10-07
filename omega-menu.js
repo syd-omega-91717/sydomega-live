@@ -11,9 +11,10 @@
 
   var GROUPS = [
     ['PROGRESSION', '#E86A3A', [
-      ['\u25B2', 'Ascend', '/honors.html#ascension'],
+      ['\u25B2', 'Ascend', '/ascend.html'],
+      ['\u2605', 'Achieve', '/achieve.html'],
       ['\u2605', 'Honors', '/honors.html'],
-      ['\u2666', 'Achievements', '/honors.html#record'],
+      ['\u2666', 'Achievements', '/achievements.html'],
       ['\u2637', 'Gates', '/elements.html#gates'],
       ['\u2609', 'Elements', '/elements.html'],
       ['\u25B3', 'Exam Hall', '/exam.html'],
@@ -34,7 +35,10 @@
     ]],
     ['EXPERIENCE', '#9B6BF0', [
       ['\u2726', 'Academy', '/academy.html'],
+      ['\u25A1', 'Courses', '/courses.html'],
+      ['\u25B3', 'Exams', '/exam.html'],
       ['\u25B6', 'Games', '/gaming.html'],
+      ['\u2b21', 'Contributions', '/contributions.html'],
       ['\u2638', 'Universe', '/media.html#universe'],
       ['\u25C9', 'Cinema', '/media.html#saga'],
       ['\u25A3', 'Media', '/media.html'],

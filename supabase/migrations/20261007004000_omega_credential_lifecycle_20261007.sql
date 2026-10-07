@@ -60,7 +60,9 @@ returns jsonb language sql security invoker set search_path='' as $$ select priv
 revoke all on function private.omega_issue_certificate(uuid,text,text,jsonb) from public,anon,authenticated;
 revoke all on function private.omega_revoke_certificate(uuid,text) from public,anon,authenticated;
 revoke all on function private.omega_verify_certificate(text) from public,anon,authenticated;
+revoke execute on function public.omega_issue_certificate(uuid,text,text,jsonb) from public,anon;
 grant execute on function public.omega_issue_certificate(uuid,text,text,jsonb) to authenticated;
+revoke execute on function public.omega_revoke_certificate(uuid,text) from public,anon;
 grant execute on function public.omega_revoke_certificate(uuid,text) to authenticated;
 grant execute on function public.omega_verify_certificate(text) to anon,authenticated;
 commit;

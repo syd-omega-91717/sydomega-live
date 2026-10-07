@@ -359,7 +359,7 @@
     vault:['vault','wallet','payments','subscriptions','marketplace','blockchain','ledger'],
     order:['family','hall','sovereigns','factions','city','approvals'],
     services:['services','consultancy','contracts','creation-studio','publishing','marketing','social'],
-    intel:['intel','intelligence','research','knowledge-loom','graphify','graph-explorer','graph-evidence','signal','prediction'],
+    intel:['intel','intelligence','search','research','knowledge-loom','graphify','graph-explorer','graph-evidence','signal','prediction'],
     arena:['sovereign-ai','agent-network','analytics','queue'],
     govern:['governance','control-center','observatory','enterprise','knowledge','architecture','agent-operations'],
     invest:['invest','investment','portfolio','treasury','wallet','revenue','budget','expenses','wealth'],

@@ -4,9 +4,15 @@
 
 REVOKE INSERT ON TABLE public.certificates FROM authenticated, anon, public;
 
--- Live database implementation also enforces AAL2 for:
+REVOKE INSERT, UPDATE, DELETE ON TABLE public.evolution_events FROM authenticated, anon, public;
+REVOKE INSERT, UPDATE, DELETE ON TABLE public.medals FROM authenticated, anon, public;
+REVOKE INSERT, UPDATE, DELETE ON TABLE public.task_completions FROM authenticated, anon, public;
+REVOKE INSERT, UPDATE, DELETE ON TABLE public.trophies FROM authenticated, anon, public;
+
+-- The live database implementation also enforces AAL2 for:
 -- private.purchase_perk(text)
 -- private.grant_trial_access(uuid)
 -- private.grant_permanent_access(uuid)
 -- and revokes direct client EXECUTE on those private implementations.
--- See docs/OMEGA_FINANCIAL_CREDENTIAL_HARDENING.md.
+-- The private implementations are defined by the preceding live hardening
+-- migration and remain non-client-callable.

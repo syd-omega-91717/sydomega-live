@@ -217,6 +217,8 @@
       '.on-tip .tip-a{display:flex;align-items:center;justify-content:flex-start;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
       '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
       '.tip-a.tip-on{color:#C9A84C}',
+      '.tip-a.tip-workspace{color:#C9A84C;border-top:1px solid rgba(201,168,76,.12);margin-top:4px;padding-top:8px}',
+
       '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
       /* Logout */
       '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted);padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
@@ -316,6 +318,37 @@
   };
 
   /* BUILD SIDEBAR */
+  /* User-facing navigation is intentionally flatter than the physical HTML estate.
+     Specialized pages remain addressable/deep-linkable, but only the highest-value
+     jobs appear in the persistent dock. This turns hundreds of files into a small
+     set of workspaces without deleting capabilities. */
+  var COMPACT={
+    command:['gateway','dashboard','search','missions','notifications','chatbot','world'],
+    identity:['profile','life','security','settings'],
+    life:['life','body','mood','habits','journal','targets','weekly'],
+    ascend:['academy','courses','gaming','honors','contributions','evolution','focus'],
+    cosmos:['cosmos','world-atlas','agents','elements','horoscope','chronicle','map'],
+    vault:['vault','wallet','payments','subscriptions','marketplace','blockchain','ledger'],
+    order:['family','hall','sovereigns','factions','city','approvals'],
+    services:['services','consultancy','contracts','creation-studio','publishing','marketing','social'],
+    intel:['intelligence','research','knowledge','knowledge-loom','graphify','prediction','signal'],
+    arena:['sovereign-ai','agent-network','analytics','queue'],
+    govern:['governance','control-center','observatory','enterprise','knowledge','architecture','agent-operations'],
+    invest:['investment','portfolio','treasury','budget','expenses','wealth'],
+    achieve:['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates'],
+    archive:['heritage','passport','kyc','credentials','character','membership'],
+    media:['media','cinema','movies','series','trailers','publications','visual-atlas']
+  };
+  function compactSub(sec){
+    var wanted=COMPACT[sec.key]||[];
+    var byKey={};sec.sub.forEach(function(x){byKey[x[0]]=x;});
+    var out=[];
+    wanted.forEach(function(k){if(byKey[k])out.push(byKey[k]);});
+    var active=null;
+    sec.sub.forEach(function(x){if(x[0]===dp)active=x;});
+    if(active && !out.some(function(x){return x[0]===active[0];}))out.push(active);
+    return out;
+  }
   var h='';
   h+='<div class="on-hb">';
   h+='<a class="on-btn" href="/dashboard.html" title="Home">&#x2302;</a>';
@@ -343,13 +376,16 @@
        INSIDE the tooltip, so `.on-icon:hover .on-tip` matched 0 elements and
        all 15 section tooltips were permanently invisible on all 202 pages. */
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
-    sec.sub.forEach(function(sub){
+    compactSub(sec).forEach(function(sub){
       var on=sub[0]===dp;
       var own=sub[3]==='owner';
       h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+sub[2]+'"'+(own?' style="display:none"':'')+'>';
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
+    if(sec.href && !compactSub(sec).some(function(x){return x[2]===sec.href;})){
+      h+='<a class="tip-a tip-workspace" href="'+sec.href+'"><div class="tip-dot" style="background:'+sec.col+'"></div>OPEN WORKSPACE</a>';
+    }
     h+='</div></div>';
   });
   h+='</div>';

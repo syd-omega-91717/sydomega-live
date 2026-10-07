@@ -354,7 +354,7 @@
     command:['gateway','dashboard','search','missions','notifications','chatbot','world'],
     identity:['profile','life','security','settings'],
     life:['life','body','mood','habits','journal','targets','weekly'],
-    ascend:['academy','courses','gaming','honors','contributions','evolution','focus'],
+    ascend:['ascend','academy','courses','evolution','levels','phases','ascension','domain-mastery','contributions','focus'],
     cosmos:['cosmos','world-atlas','agents','elements','horoscope','chronicle','map'],
     vault:['vault','wallet','payments','subscriptions','marketplace','blockchain','ledger'],
     order:['family','hall','sovereigns','factions','city','approvals'],

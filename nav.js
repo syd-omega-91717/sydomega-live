@@ -42,7 +42,7 @@
     analytics:'intel',achieve:'achieve',achievements:'achieve',leaderboard:'achieve',
     'quest-progress':'achieve','domain-mastery':'achieve','covenant':'achieve','seasonal-events':'achieve',
     cosmetics:'achieve','my-quests':'achieve',
-    bloodline:'archive',character:'archive',charter:'archive',
+    archive:'archive',bloodline:'archive',character:'archive',charter:'archive',
     cinema:'media',characters:'archive',movies:'media',credentials:'archive',design_system:'govern',
     ecosystem:'govern',enterprise:'govern',feed:'media',
     gates:'achieve',governance:'govern',grades:'achieve',
@@ -135,8 +135,8 @@
           ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
           ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
           ['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html']]},
-    {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/heritage.html',     col:'#3fb27f',
-     sub:[['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],['character','CHARACTER','/character.html'],
+    {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/archive.html',     col:'#3fb27f',
+     sub:[['archive','ARCHIVE WORKSPACE','/archive.html'],['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],['character','CHARACTER','/character.html'],
           ['identity','IDENTITY','/identity.html'],['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html'],
           ['credentials','CREDENTIALS','/credentials.html'],['charter','CHARTER','/charter.html'],['sigil','SIGIL','/sigil.html'],
           ['membership','MEMBERSHIP','/membership.html']]},
@@ -364,7 +364,7 @@
     govern:['govern','governance','control-center','observatory','analytics','monitoring-dashboard','compliance','recovery','enterprise','knowledge','architecture','agent-operations'],
     invest:['invest','investment','portfolio','treasury','wallet','revenue','budget','expenses','wealth'],
     achieve:['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates'],
-    archive:['heritage','passport','kyc','credentials','character','membership'],
+    archive:['archive','heritage','passport','kyc','credentials','character','membership'],
     media:['media','cinema','movies','series','trailers','publications','visual-atlas']
   };
   function compactSub(sec){

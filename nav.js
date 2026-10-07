@@ -37,7 +37,7 @@
     creator:'services','project-studio':'services','creation-studio':'services',
     architecture:'govern','control-plane':'govern','control-center':'govern','platform-kernel':'govern','world-shell':'govern',
     'autonomous-insights':'govern',
-    life:'identity',arena:'arena',chatbot:'command',
+    life:'life',arena:'arena',chatbot:'command',
     'interface-omni':'order',
     analytics:'intel',achievements:'achieve',leaderboard:'achieve',
     'quest-progress':'achieve','domain-mastery':'achieve','covenant':'achieve','seasonal-events':'achieve',
@@ -59,7 +59,7 @@
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
-    affirmations:'services',body:'services',breath:'services',fasting:'services',gratitude:'services',habits:'services',journal:'services',meditate:'services',mood:'services',nutrition:'services',oath:'services',physiology:'services',rituals:'services',sleep:'services',stoic:'services',targets:'services',water:'services',weekly:'services',workout:'services',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
+    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',meditate:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
   };
 
   var SECTIONS=[
@@ -100,18 +100,14 @@
      sub:[['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline'],['heritage-alias-1','HERITAGE','/family.html#heritage'],
           ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
           ['city','CITY','/city.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','CONTROL DECK','/interface-omni.html']]},
+    {key:'life', icon:'\u2665', label:'LIFE', href:'/life.html', col:'#00E5FF',
+     sub:[['life','LIFE HOME','/life.html'],['body','BODY','/body.html'],['physiology','PHYSIOLOGY','/physiology.html'],['workout','WORKOUT','/workout.html'],['nutrition','NUTRITION','/nutrition.html'],['sleep','SLEEP','/sleep.html'],['mood','MOOD','/mood.html'],['meditate','MEDITATION','/meditate.html'],['breath','BREATHWORK','/breath.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['rituals','RITUALS','/rituals.html'],['fasting','FASTING','/fasting.html'],['targets','GOALS & TARGETS','/targets.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['gratitude','GRATITUDE','/gratitude.html'],['oath','OATH','/oath.html'],['stoic','STOIC PRACTICE','/stoic.html'],['water','HYDRATION','/water.html']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
      sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
-          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['creator','IDEA FORGE','/creator.html'],
-          ['project-studio','PROJECT STUDIO','/project-studio.html'],['creation-studio','CREATION STUDIO','/creation-studio.html'],['marketing','MARKETING','/marketing.html'],['news','NEWS INTELLIGENCE','/news.html'],
-          ['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
-          ['health','HEALTH & WELLNESS','/health.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],
-          ['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],
-          ['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],
-          ['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],
-          ['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],
-          ['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],
-          ['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
+          ['publishing','PUBLISHING','/publishing.html'],['studio','PRODUCTION STUDIO','/studio.html'],['creation-studio','CREATION STUDIO','/creation-studio.html'],
+          ['project-studio','PROJECT STUDIO','/project-studio.html'],['creator','IDEA FORGE','/creator.html'],['marketing','MARKETING','/marketing.html'],
+          ['news','NEWS INTELLIGENCE','/news.html'],['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
+          ['health','HEALTH SERVICE','/health.html']]},
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#AB82F2',
      sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "ACTIVE",
+  "policy": "SENSITIVE_MEMBER_ACTIONS_REQUIRE_AAL2",
+  "source": "Supabase Auth JWT aal claim",
+  "protectedActions": [
+    "omega_submit_provider_job",
+    "submit_kyc",
+    "delete_account"
+  ],
+  "disabledLegacyActions": [
+    "submit_exam_result"
+  ],
+  "verification": {
+    "aal1Denied": true,
+    "aal2GateVerified": true,
+    "syntheticRowsRetained": false
+  }
+}

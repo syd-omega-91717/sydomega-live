@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "ACTIVE",
+  "policy": "SENSITIVE_MEMBER_AND_OWNER_ACTIONS_REQUIRE_AAL2",
+  "source": "Supabase Auth JWT aal claim",
+  "protectedActions": [
+    "omega_submit_provider_job",
+    "submit_kyc",
+    "delete_account",
+    "owner.approve_member",
+    "owner.revoke_member",
+    "owner.revoke_permanent_access",
+    "owner.owner_set_kyc_intake",
+    "owner.set_platform_flag",
+    "owner.set_contract_status",
+    "owner.set_reservation_status",
+    "owner.set_dispatch_published",
+    "owner.set_consult_status",
+    "owner.review_kyc",
+    "owner.apply_subscription"
+  ],
+  "serviceRoleBypass": [
+    "stripe_webhook.apply_subscription_event"
+  ],
+  "disabledLegacyActions": [
+    "submit_exam_result"
+  ],
+  "verification": {
+    "aal1Denied": true,
+    "aal2GateVerified": true,
+    "stripeTierMappingVerified": true,
+    "syntheticRowsRetained": false
+  }
+}

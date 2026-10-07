@@ -37,7 +37,7 @@
     creator:'services','project-studio':'services','creation-studio':'services',
     architecture:'govern','control-plane':'govern','control-center':'govern','platform-kernel':'govern','world-shell':'govern',
     'autonomous-insights':'govern',
-    life:'identity',arena:'arena',chatbot:'command',
+    life:'life',arena:'arena',chatbot:'command',
     'interface-omni':'order',
     analytics:'intel',achievements:'achieve',leaderboard:'achieve',
     'quest-progress':'achieve','domain-mastery':'achieve','covenant':'achieve','seasonal-events':'achieve',
@@ -59,7 +59,7 @@
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
-    affirmations:'services',body:'services',breath:'services',fasting:'services',gratitude:'services',habits:'services',journal:'services',meditate:'services',mood:'services',nutrition:'services',oath:'services',physiology:'services',rituals:'services',sleep:'services',stoic:'services',targets:'services',water:'services',weekly:'services',workout:'services',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
+    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',meditate:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
   };
 
   var SECTIONS=[
@@ -100,18 +100,14 @@
      sub:[['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline'],['heritage-alias-1','HERITAGE','/family.html#heritage'],
           ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
           ['city','CITY','/city.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','CONTROL DECK','/interface-omni.html']]},
+    {key:'life', icon:'\u2665', label:'LIFE', href:'/life.html', col:'#00E5FF',
+     sub:[['life','LIFE HOME','/life.html'],['body','BODY','/body.html'],['physiology','PHYSIOLOGY','/physiology.html'],['workout','WORKOUT','/workout.html'],['nutrition','NUTRITION','/nutrition.html'],['sleep','SLEEP','/sleep.html'],['mood','MOOD','/mood.html'],['meditate','MEDITATION','/meditate.html'],['breath','BREATHWORK','/breath.html'],['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['rituals','RITUALS','/rituals.html'],['fasting','FASTING','/fasting.html'],['targets','GOALS & TARGETS','/targets.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['gratitude','GRATITUDE','/gratitude.html'],['oath','OATH','/oath.html'],['stoic','STOIC PRACTICE','/stoic.html'],['water','HYDRATION','/water.html']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
      sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
-          ['publishing','PUBLISHING','/publishing.html'],['studio','PROD STUDIO','/studio.html'],['creator','IDEA FORGE','/creator.html'],
-          ['project-studio','PROJECT STUDIO','/project-studio.html'],['creation-studio','CREATION STUDIO','/creation-studio.html'],['marketing','MARKETING','/marketing.html'],['news','NEWS INTELLIGENCE','/news.html'],
-          ['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
-          ['health','HEALTH & WELLNESS','/health.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['body','BODY COMPOSITION','/body.html'],
-          ['breath','BREATHWORK','/breath.html'],['fasting','FASTING','/fasting.html'],['gratitude','GRATITUDE','/gratitude.html'],
-          ['habits','HABITS','/habits.html'],['journal','JOURNAL','/journal.html'],['meditate','MEDITATION','/meditate.html'],
-          ['mood','MOOD TRACKER','/mood.html'],['nutrition','NUTRITION','/nutrition.html'],['oath','OATH','/oath.html'],
-          ['physiology','PHYSIOLOGY','/physiology.html'],['rituals','RITUALS','/rituals.html'],['sleep','SLEEP','/sleep.html'],
-          ['stoic','STOIC PRACTICE','/stoic.html'],['targets','DAILY TARGETS','/targets.html'],['water','HYDRATION','/water.html'],
-          ['weekly','WEEKLY REVIEW','/weekly.html'],['workout','WORKOUT','/workout.html']]},
+          ['publishing','PUBLISHING','/publishing.html'],['studio','PRODUCTION STUDIO','/studio.html'],['creation-studio','CREATION STUDIO','/creation-studio.html'],
+          ['project-studio','PROJECT STUDIO','/project-studio.html'],['creator','IDEA FORGE','/creator.html'],['marketing','MARKETING','/marketing.html'],
+          ['news','NEWS INTELLIGENCE','/news.html'],['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
+          ['health','HEALTH SERVICE','/health.html']]},
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#AB82F2',
      sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],
@@ -221,6 +217,8 @@
       '.on-tip .tip-a{display:flex;align-items:center;justify-content:flex-start;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;text-decoration:none;transition:all .1s;gap:6px;white-space:nowrap}',
       '.tip-a:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
       '.tip-a.tip-on{color:#C9A84C}',
+      '.tip-a.tip-workspace{color:#C9A84C;border-top:1px solid rgba(201,168,76,.12);margin-top:4px;padding-top:8px}',
+
       '.tip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}',
       /* Logout */
       '.on-logout{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:var(--muted);padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
@@ -263,6 +261,14 @@
       '@media(min-width:761px){#omega-mob{display:none}}',
       /* Top scan line */
       '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
+      '.omega-workspace{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:80;padding:8px 12px;margin:0 0 12px;background:rgba(5,5,12,.88);border-bottom:1px solid rgba(201,168,76,.12);backdrop-filter:blur(14px);overflow-x:auto;scrollbar-width:none}',
+      '.omega-workspace::-webkit-scrollbar{display:none}',
+      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
+      '.omega-workspace .ow-sep{color:rgba(133,131,123,.5);flex:0 0 auto}',
+      '.omega-workspace .ow-current{font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
+      '.omega-workspace .ow-link{font:500 11px/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
+      '.omega-workspace .ow-link:hover,.omega-workspace .ow-link.ow-on{color:#C9A84C;border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.05)}',
+      '@media(max-width:760px){.omega-workspace{top:0;margin-bottom:8px;padding:7px 8px}.omega-workspace .ow-link,.omega-workspace .ow-home{padding:9px 10px;font-size:10px}}',
       '@keyframes top-sc{0%{background-position:200% 0}100%{background-position:-200% 0}}',
     ].join('');
     (document.head||document.documentElement).appendChild(s);
@@ -319,7 +325,59 @@
     }
   };
 
+  function injectWorkspaceRail(){
+    var main=document.querySelector('main');
+    if(!main||document.getElementById('omega-workspace'))return;
+    var sec=SECTIONS.filter(function(x){return x.key===activeSection;})[0];
+    if(!sec)return;
+    var currentLabel=dp.toUpperCase().replace(/[-_]/g,' ');
+    var rail=document.createElement('nav');
+    rail.id='omega-workspace';
+    rail.className='omega-workspace';
+    rail.setAttribute('aria-label',sec.label+' workspace navigation');
+    var home=document.createElement('a');
+    home.className='ow-home';home.href=sec.href;home.textContent='Ω '+sec.label;
+    rail.appendChild(home);
+    var sep=document.createElement('span');sep.className='ow-sep';sep.textContent='›';rail.appendChild(sep);
+    var cur=document.createElement('span');cur.className='ow-current';cur.textContent=currentLabel;rail.appendChild(cur);
+    compactSub(sec).filter(function(x){return x[0]!==dp;}).slice(0,5).forEach(function(x){
+      var a=document.createElement('a');a.className='ow-link';a.href=x[2];a.textContent=x[1];rail.appendChild(a);
+    });
+    main.insertBefore(rail,main.firstChild);
+  }
+
   /* BUILD SIDEBAR */
+  /* User-facing navigation is intentionally flatter than the physical HTML estate.
+     Specialized pages remain addressable/deep-linkable, but only the highest-value
+     jobs appear in the persistent dock. This turns hundreds of files into a small
+     set of workspaces without deleting capabilities. */
+  var COMPACT={
+    command:['gateway','dashboard','search','missions','notifications','chatbot','world'],
+    identity:['profile','life','security','settings'],
+    life:['life','body','mood','habits','journal','targets','weekly'],
+    ascend:['academy','courses','gaming','honors','contributions','evolution','focus'],
+    cosmos:['cosmos','world-atlas','agents','elements','horoscope','chronicle','map'],
+    vault:['vault','wallet','payments','subscriptions','marketplace','blockchain','ledger'],
+    order:['family','hall','sovereigns','factions','city','approvals'],
+    services:['services','consultancy','contracts','creation-studio','publishing','marketing','social'],
+    intel:['intelligence','research','knowledge','knowledge-loom','graphify','prediction','signal'],
+    arena:['sovereign-ai','agent-network','analytics','queue'],
+    govern:['governance','control-center','observatory','enterprise','knowledge','architecture','agent-operations'],
+    invest:['investment','portfolio','treasury','budget','expenses','wealth'],
+    achieve:['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates'],
+    archive:['heritage','passport','kyc','credentials','character','membership'],
+    media:['media','cinema','movies','series','trailers','publications','visual-atlas']
+  };
+  function compactSub(sec){
+    var wanted=COMPACT[sec.key]||[];
+    var byKey={};sec.sub.forEach(function(x){byKey[x[0]]=x;});
+    var out=[];
+    wanted.forEach(function(k){if(byKey[k])out.push(byKey[k]);});
+    var active=null;
+    sec.sub.forEach(function(x){if(x[0]===dp)active=x;});
+    if(active && !out.some(function(x){return x[0]===active[0];}))out.push(active);
+    return out;
+  }
   var h='';
   h+='<div class="on-hb">';
   h+='<a class="on-btn" href="/dashboard.html" title="Home">&#x2302;</a>';
@@ -347,13 +405,16 @@
        INSIDE the tooltip, so `.on-icon:hover .on-tip` matched 0 elements and
        all 15 section tooltips were permanently invisible on all 202 pages. */
     h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
-    sec.sub.forEach(function(sub){
+    compactSub(sec).forEach(function(sub){
       var on=sub[0]===dp;
       var own=sub[3]==='owner';
       h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+sub[2]+'"'+(own?' style="display:none"':'')+'>';
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
+    if(sec.href && !compactSub(sec).some(function(x){return x[2]===sec.href;})){
+      h+='<a class="tip-a tip-workspace" href="'+sec.href+'"><div class="tip-dot" style="background:'+sec.col+'"></div>OPEN WORKSPACE</a>';
+    }
     h+='</div></div>';
   });
   h+='</div>';
@@ -364,6 +425,8 @@
   h+='<div class="on-item on-owner" style="display:none"><a class="on-icon'+(dp==='control-plane'?' on-active':'')+'" href="/control-plane.html" style="--col:#C9A84C" aria-label="Owner deck: every page">';
   h+='<span class="on-glyph" style="color:#C9A84C">\u03A9</span><span class="on-lbl">OWNER</span></a></div>';
   h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
+
+  injectWorkspaceRail();
 
   el.className='omega-side';
   el.innerHTML=h;

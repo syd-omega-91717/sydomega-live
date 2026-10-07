@@ -52,6 +52,14 @@
   var AUDIO_VOICE  = "Welcome to SYD OMEGA 91717. This cinematic introduction explains the platform as a sovereign digital intelligence experience. The interface, mythology, and fictional universe are presented as designed media, while live platform capabilities are identified separately.";   // fallback when the column is absent
 
   var state = { lastReason: "not run yet", lastError: null };
+  function ensureCinematicAudio(){
+    if(window.OmegaCinematicAudio)return Promise.resolve();
+    return new Promise(function(resolve){
+      var s=document.createElement("script");
+      s.src="/omega-cinematic-audio.js";s.onload=resolve;s.onerror=resolve;
+      (document.head||document.documentElement).appendChild(s);
+    });
+  }
   function note(reason, err) {
     state.lastReason = reason;
     state.lastError = err || null;
@@ -260,7 +268,7 @@
           if (watched) { note("already watched — use OmegaDemo.reset() to see it again"); return; }
 
           note("eligible and unwatched — opening");
-          openModal(function () { markWatched(sb, session.user.id); });
+          return ensureCinematicAudio().then(function(){openModal(function () { markWatched(sb, session.user.id); });});
         });
       });
     }).catch(function (err) {

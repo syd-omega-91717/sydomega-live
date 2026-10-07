@@ -86,7 +86,7 @@ async function load(){
     card(host,'PRODUCT REALITY','The existing production reality projection returned no readable row. No zeros are fabricated.','UNAVAILABLE');
   }
 
-  var qInput=el('intel-query'),out=el('intel-query-results');
+  var qInput=el('intel-query-input'),out=el('intel-query-results');
   if(qInput&&!qInput.dataset.bound){
     qInput.dataset.bound='1';
     qInput.addEventListener('input',function(){

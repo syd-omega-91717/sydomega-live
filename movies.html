@@ -34,6 +34,7 @@
 @media (prefers-reduced-motion:reduce){.omv-hit img,.omv-hit video,.omv-play{transition:none}.omv-tile:hover .omv-hit img{transform:none}}
 </style>
 <script src="/omega-spatial-realms.js" data-omega-spatial-realms-js defer></script>
+<script src="/omega-cinematic-audio.js" defer></script>
 </head>
 <body>
 <aside id="omega-side" data-page="movies"></aside>
@@ -141,7 +142,7 @@
 </section>
 <dialog class="omv-lb" id="omv-lb" aria-labelledby="omv-lb-title">
   <div class="omv-lb-bar"><span class="omv-lb-title" id="omv-lb-title"></span><button class="omv-x" type="button" id="omv-x" aria-label="Close film">&times;</button></div>
-  <video id="omv-lb-video" controls playsinline preload="none"></video>
+  <video id="omv-lb-video" controls playsinline preload="none" data-omega-audio-required="true"></video>
 </dialog>
 <div data-page-emblem="movies" style="margin:8px auto 0"></div>
 </div>
@@ -169,10 +170,13 @@
     if(!(n>=1&&n<=12))return;
     var nn=(n<10?'0':'')+n;
     lbt.textContent=btn.getAttribute('data-title')||'';
+    lbv.setAttribute('data-omega-audio-required','true');
+    lbv.setAttribute('data-omega-voice','Now playing '+(btn.getAttribute('data-title')||'this fictional SYD OMEGA franchise film')+'. This is fictional media-universe content, presented as cinematic lore and not real-world history.');
     var dir='/assets/movies/';
     lbv.poster=dir+'franchise-'+nn+'.jpg';
     lbv.src=dir+'franchise-'+nn+'.mp4';
     lbv.muted=false;
+    lbv.setAttribute('data-omega-audio-state','READY_FOR_SOUND_MUSIC_VOICE');
     if(typeof lb.showModal==='function')lb.showModal();else lb.setAttribute('open','');
     document.getElementById('omv-x').focus();
     if(!isReduced()){var p=lbv.play();if(p&&p.catch)p.catch(function(err){console.warn('[movies] playback needs a tap:',err&&err.name);});}

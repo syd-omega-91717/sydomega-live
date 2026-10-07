@@ -261,6 +261,14 @@
       '@media(min-width:761px){#omega-mob{display:none}}',
       /* Top scan line */
       '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
+      '.omega-workspace{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:80;padding:8px 12px;margin:0 0 12px;background:rgba(5,5,12,.88);border-bottom:1px solid rgba(201,168,76,.12);backdrop-filter:blur(14px);overflow-x:auto;scrollbar-width:none}',
+      '.omega-workspace::-webkit-scrollbar{display:none}',
+      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
+      '.omega-workspace .ow-sep{color:rgba(133,131,123,.5);flex:0 0 auto}',
+      '.omega-workspace .ow-current{font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
+      '.omega-workspace .ow-link{font:500 11px/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
+      '.omega-workspace .ow-link:hover,.omega-workspace .ow-link.ow-on{color:#C9A84C;border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.05)}',
+      '@media(max-width:760px){.omega-workspace{top:0;margin-bottom:8px;padding:7px 8px}.omega-workspace .ow-link,.omega-workspace .ow-home{padding:9px 10px;font-size:10px}}',
       '@keyframes top-sc{0%{background-position:200% 0}100%{background-position:-200% 0}}',
     ].join('');
     (document.head||document.documentElement).appendChild(s);
@@ -316,6 +324,27 @@
       return out;
     }
   };
+
+  function injectWorkspaceRail(){
+    var main=document.querySelector('main');
+    if(!main||document.getElementById('omega-workspace'))return;
+    var sec=SECTIONS.filter(function(x){return x.key===activeSection;})[0];
+    if(!sec)return;
+    var currentLabel=dp.toUpperCase().replace(/[-_]/g,' ');
+    var rail=document.createElement('nav');
+    rail.id='omega-workspace';
+    rail.className='omega-workspace';
+    rail.setAttribute('aria-label',sec.label+' workspace navigation');
+    var home=document.createElement('a');
+    home.className='ow-home';home.href=sec.href;home.textContent='Ω '+sec.label;
+    rail.appendChild(home);
+    var sep=document.createElement('span');sep.className='ow-sep';sep.textContent='›';rail.appendChild(sep);
+    var cur=document.createElement('span');cur.className='ow-current';cur.textContent=currentLabel;rail.appendChild(cur);
+    compactSub(sec).filter(function(x){return x[0]!==dp;}).slice(0,5).forEach(function(x){
+      var a=document.createElement('a');a.className='ow-link';a.href=x[2];a.textContent=x[1];rail.appendChild(a);
+    });
+    main.insertBefore(rail,main.firstChild);
+  }
 
   /* BUILD SIDEBAR */
   /* User-facing navigation is intentionally flatter than the physical HTML estate.
@@ -396,6 +425,8 @@
   h+='<div class="on-item on-owner" style="display:none"><a class="on-icon'+(dp==='control-plane'?' on-active':'')+'" href="/control-plane.html" style="--col:#C9A84C" aria-label="Owner deck: every page">';
   h+='<span class="on-glyph" style="color:#C9A84C">\u03A9</span><span class="on-lbl">OWNER</span></a></div>';
   h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
+
+  injectWorkspaceRail();
 
   el.className='omega-side';
   el.innerHTML=h;

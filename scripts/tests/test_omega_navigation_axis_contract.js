@@ -8,9 +8,10 @@ const source = fs.readFileSync(path.join(__dirname, '..', '..', 'nav.js'), 'utf8
 const requiredMappings = {
   'simulation-arena': 'arena',
   'achieve-home': 'achieve',
-  'knowledge-loom': 'intel',
+  'knowledge-loom': 'govern',
   'billing': 'vault',
-  'vault-settings': 'vault'
+  'vault-settings': 'vault',
+  'horoscope-page': 'intel'
 };
 
 for (const [page, section] of Object.entries(requiredMappings)) {

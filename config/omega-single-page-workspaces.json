@@ -1,0 +1,292 @@
+{
+  "version": "1.0.0",
+  "principle": "Physical specialist files may remain for compatibility, but user-facing navigation should expose coherent workspaces. A capability is eligible for in-page viewing only after its route remains authoritative and its authorization/data contract is preserved.",
+  "workspaces": {
+    "command": {
+      "canonical": "/dashboard.html",
+      "capabilities": [
+        "beacon",
+        "search",
+        "notifications",
+        "chatbot",
+        "missions",
+        "world",
+        "replay",
+        "evidence",
+        "recovery",
+        "contacts",
+        "decisions",
+        "network",
+        "notes",
+        "projects",
+        "quotes",
+        "time",
+        "vision"
+      ]
+    },
+    "identity": {
+      "canonical": "/profile.html",
+      "capabilities": [
+        "identity",
+        "passport",
+        "character",
+        "credentials",
+        "membership"
+      ],
+      "separate": [
+        "security"
+      ]
+    },
+    "life": {
+      "canonical": "/life.html",
+      "capabilities": [
+        "body",
+        "physiology",
+        "workout",
+        "nutrition",
+        "sleep",
+        "mood",
+        "meditate",
+        "breath",
+        "habits",
+        "journal",
+        "rituals",
+        "fasting",
+        "targets",
+        "weekly",
+        "affirmations",
+        "gratitude",
+        "oath",
+        "stoic",
+        "water"
+      ]
+    },
+    "ascend": {
+      "canonical": "/ascend.html",
+      "capabilities": [
+        "academy",
+        "courses",
+        "focus",
+        "contributions",
+        "evolution",
+        "levels",
+        "phases",
+        "ascension",
+        "domain-mastery",
+        "clarity",
+        "flashcard",
+        "library",
+        "mentors",
+        "principles",
+        "reading",
+        "skills",
+        "vocabulary",
+        "architect",
+        "forge"
+      ]
+    },
+    "cosmos": {
+      "canonical": "/cosmos.html",
+      "capabilities": [
+        "horoscope",
+        "elements",
+        "pantheons",
+        "houses",
+        "chronicle",
+        "dna",
+        "graph",
+        "map",
+        "mirror",
+        "oracle",
+        "realm",
+        "rune",
+        "tribe",
+        "realms",
+        "sculpture",
+        "cosmic-ledger"
+      ]
+    },
+    "vault": {
+      "canonical": "/vault.html",
+      "capabilities": [
+        "wallet",
+        "subscriptions",
+        "payments",
+        "ledger",
+        "blockchain",
+        "advertising",
+        "ad-network",
+        "sovereign-covenant"
+      ],
+      "separate": [
+        "marketplace"
+      ]
+    },
+    "order": {
+      "canonical": "/order.html",
+      "capabilities": [
+        "family",
+        "heritage",
+        "bloodline",
+        "hall",
+        "sovereigns",
+        "factions",
+        "city",
+        "approvals",
+        "interface-omni"
+      ]
+    },
+    "services": {
+      "canonical": "/services.html",
+      "capabilities": [
+        "consultancy",
+        "contracts",
+        "publishing",
+        "marketing",
+        "events",
+        "travel",
+        "health",
+        "social"
+      ],
+      "separate": [
+        "creation-studio"
+      ]
+    },
+    "intel": {
+      "canonical": "/intel.html",
+      "capabilities": [
+        "research",
+        "prediction",
+        "intelligence",
+        "automation",
+        "graphify",
+        "graph-admin",
+        "graph-timeline",
+        "graph-centrality",
+        "graph-explorer",
+        "graph-anomalies",
+        "graph-evidence",
+        "atlas",
+        "cipher",
+        "codex",
+        "mindmap",
+        "nexus",
+        "pulse",
+        "sigma",
+        "signal",
+        "news"
+      ]
+    },
+    "arena": {
+      "canonical": "/arena.html",
+      "capabilities": [
+        "sovereign-ai",
+        "agent-network",
+        "agents",
+        "analytics",
+        "queue",
+        "gaming"
+      ]
+    },
+    "govern": {
+      "canonical": "/govern.html",
+      "capabilities": [
+        "governance",
+        "observatory",
+        "enterprise",
+        "privacy",
+        "roadmap",
+        "ecosystem",
+        "knowledge",
+        "knowledge-loom",
+        "maintenance",
+        "control-center",
+        "platform-kernel",
+        "agent-operations",
+        "ops",
+        "architecture",
+        "autonomous-insights"
+      ],
+      "owner": [
+        "control-plane",
+        "approvals"
+      ]
+    },
+    "invest": {
+      "canonical": "/invest.html",
+      "capabilities": [
+        "investment",
+        "portfolio",
+        "treasury",
+        "wallet",
+        "revenue",
+        "income",
+        "budget",
+        "expenses",
+        "wealth",
+        "ledger",
+        "payments",
+        "subscriptions"
+      ]
+    },
+    "achieve": {
+      "canonical": "/achieve.html",
+      "capabilities": [
+        "achievements",
+        "my-quests",
+        "quest-progress",
+        "leaderboard",
+        "domain-mastery",
+        "seasonal-events",
+        "gates",
+        "grades",
+        "levels",
+        "phases",
+        "ascension",
+        "kings",
+        "triads",
+        "grid",
+        "awards",
+        "hercules",
+        "trophies",
+        "gaming"
+      ]
+    },
+    "archive": {
+      "canonical": "/archive.html",
+      "capabilities": [
+        "heritage",
+        "bloodline",
+        "character",
+        "identity",
+        "passport",
+        "kyc",
+        "credentials",
+        "charter",
+        "sigil",
+        "membership"
+      ]
+    },
+    "media": {
+      "canonical": "/media.html",
+      "capabilities": [
+        "cinema",
+        "movies",
+        "series",
+        "trailers",
+        "universe",
+        "feed",
+        "publications",
+        "visual-atlas",
+        "characters"
+      ]
+    }
+  },
+  "rules": [
+    "Do not delete a legacy route solely because it appears in a workspace.",
+    "Do not fabricate a capability inside a hub; preserve the specialist route as the authority until its code/data contract is absorbed.",
+    "When an in-page view is used, expose its source route and truth state.",
+    "Sensitive owner/admin capabilities must never become public merely because they are grouped.",
+    "Deep links remain stable."
+  ]
+}

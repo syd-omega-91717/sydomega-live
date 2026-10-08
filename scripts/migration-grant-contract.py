@@ -69,7 +69,6 @@ KNOWN = {
     'omega_referral_conversions': LOCKED_OUT,
     'omega_referral_rewards': LOCKED_OUT,
     'stripe_webhook_events': LOCKED_OUT,
-    'omega_agent_action_proposals': 'declared in a migration, absent live',
 }
 
 

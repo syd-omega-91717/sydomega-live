@@ -947,6 +947,11 @@
     document.head.appendChild(s);
   })();
 
+  /* Canonical workspaces expose specialist capabilities as in-page views. Legacy URLs remain deep-linkable. */
+  if(!document.getElementById('omega-single-page-loader')){
+    var spl=document.createElement('script');spl.id='omega-single-page-loader';spl.src='/omega-single-page-workspaces.js';spl.defer=true;document.head.appendChild(spl);
+  }
+
   /* Top scan bar */
   if(!document.getElementById('omega-top')){
     var tb=document.createElement('div');tb.id='omega-top';document.body.appendChild(tb);

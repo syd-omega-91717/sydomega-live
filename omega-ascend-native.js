@@ -21,6 +21,11 @@ function run(sb){
   document.getElementById('oac-axes').textContent=a.toFixed(3)+' / '+b.toFixed(3)+' / '+c.toFixed(3);
   var tr=await sb.from('task_completions').select('id',{count:'exact',head:true}).eq('user_id',u.id);
   document.getElementById('oac-tasks').textContent=tr.error?'UNAVAILABLE':String(tr.count||0);
+  var mr=await sb.from('domain_mastery').select('domain,level,total_points,quests_completed').eq('user_id',u.id).order('domain').limit(12);
+  var ms=document.getElementById('oac-mastery-state'),mg=document.getElementById('oac-mastery-grid');
+  if(mr.error){if(ms)ms.textContent='UNAVAILABLE';if(mg)mg.innerHTML='<div class="omega-ascend-mastery-card"><strong>UNAVAILABLE</strong><span>Canonical mastery source could not be read.</span></div>';}
+  else if(!mr.data||!mr.data.length){if(ms)ms.textContent='EMPTY';if(mg)mg.innerHTML='<div class="omega-ascend-mastery-card"><strong>EMPTY</strong><span>No domain mastery rows are currently persisted for this member.</span></div>';}
+  else{if(ms)ms.textContent='LIVE';mg.replaceChildren();mr.data.forEach(function(x){var c=document.createElement('div');c.className='omega-ascend-mastery-card';var n=document.createElement('strong');n.textContent=String(x.domain||'DOMAIN').toUpperCase();var v=document.createElement('span');v.textContent='LEVEL '+String(x.level==null?'—':x.level)+' · '+String(x.total_points==null?0:x.total_points)+' PTS';var q=document.createElement('em');q.textContent=String(x.quests_completed==null?0:x.quests_completed)+' QUESTS';c.append(n,v,q);mg.appendChild(c);});}
   var er=await sb.from('evolution_events').select('axis,note,created_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(6);
   if(er.error){document.getElementById('oac-events').textContent='UNAVAILABLE';}
   else{var ev=er.data||[];document.getElementById('oac-events').textContent=String(ev.length)+(ev.length===6?'+':'');document.getElementById('oac-recent').innerHTML=ev.length?ev.map(function(x){return'<div><b>'+esc((x.axis||'X').toUpperCase())+'</b><span>'+esc(x.note||'Evolution event recorded.')+'</span><time>'+esc(new Date(x.created_at).toLocaleString())+'</time></div>';}).join(''):'<span class="empty">EMPTY · no evolution events recorded for this member</span>';}

@@ -110,18 +110,19 @@ async function search(term){
   try{session=(await sb.auth.getSession()).data.session;}catch(e){add(out,'p','intel-query-empty','UNAVAILABLE · session check failed.');return;}
   if(!session||!session.user){add(out,'p','intel-query-empty','UNAVAILABLE · sign in to query member-visible knowledge.');return;}
   var needle=term.replace(/[%,]/g,' ').slice(0,120);
-  var q=await sb.from('omega_member_knowledge_loom')
-    .select('source_id,source_kind,title,excerpt,truth_state,source_ref,observed_at,verified')
-    .or('title.ilike.%'+needle+'%,excerpt.ilike.%'+needle+'%,source_ref.ilike.%'+needle+'%')
-    .order('observed_at',{ascending:false}).limit(12);
-  if(q.error){add(out,'p','intel-query-empty','PARTIAL · Knowledge Loom query failed.');return;}
-  if(!q.data||!q.data.length){add(out,'p','intel-query-empty','NO VERIFIED MATCHES IN MEMBER-VISIBLE KNOWLEDGE LOOM.');return;}
+  var q=await sb.rpc('omega_knowledge_hybrid_search',{
+    p_query:needle,
+    p_embedding:null,
+    p_limit:12
+  });
+  if(q.error){add(out,'p','intel-query-empty','PARTIAL · Knowledge Loom hybrid query failed.');return;}
+  if(!q.data||!q.data.length){add(out,'p','intel-query-empty','NO APPROVED KNOWLEDGE CHUNKS MATCHED. SEMANTIC RETRIEVAL REMAINS EMPTY UNTIL EMBEDDINGS ARE POPULATED.');return;}
   q.data.forEach(function(row){
     var c=add(out,'article','intel-result');
-    add(c,'span','intel-result-state',(row.truth_state||'UNVERIFIED')+' · '+(row.verified?'VERIFIED':'PROVENANCE UNVERIFIED'));
-    add(c,'strong',null,row.title||'UNTITLED SOURCE');
-    add(c,'p',null,row.excerpt||'No excerpt available.');
-    add(c,'code',null,row.source_ref||'—');
+    add(c,'span','intel-result-state',(row.retrieval_mode||'LEXICAL')+' · '+(row.evidence_level||'EVIDENCE UNSET'));
+    add(c,'strong',null,row.source_title||'UNTITLED SOURCE');
+    add(c,'p',null,row.content||'No indexed content.');
+    add(c,'code',null,(row.canonical_url||'NO CANONICAL URL')+' · lexical='+Number(row.lexical_rank||0).toFixed(4)+' · semantic='+Number(row.semantic_rank||0).toFixed(4));
   });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();

@@ -1,20 +1,21 @@
-/* Ω MEDIA NATIVE — truth-aware media catalog projection.
- * The current media hub is a static/presentation catalog. It must not imply
- * that its franchise, series or game arrays are persisted production assets.
- */
+/* Ω MEDIA NATIVE — truth-aware projection over the canonical persisted media catalog. */
 (function(root){
 'use strict';
-function render(){
- var el=document.getElementById('media-native-state');if(!el)return;
- var cards=[
-  ['CATALOG','CALCULATED','Static catalog/presentation data'],
-  ['FRANCHISE / SAGA','LORE','Creative universe material; not production deployment proof'],
-  ['SERIES / GAMES','LORE','Concept/development presentation; not shipped runtime state'],
-  ['MEMBER MEDIA','UNAVAILABLE','No verified canonical member-media table is exposed by the current media hub'],
-  ['PERSISTED MEDIA STATE','UNAVAILABLE','Current evidence matrix records media.html as having no persisted state'],
-  ['STORAGE','UNVERIFIED','Supabase Storage is referenced by the page framework, but this hub does not establish a live media-storage inventory']
- ];
- el.innerHTML='<div class="native-grid">'+cards.map(function(c){return '<div class="native-card"><b>'+c[1]+'</b><span>'+c[0]+'</span><small>'+c[2]+'</small></div>';}).join('')+'</div><p class="native-boundary">TRUTH BOUNDARY: catalog concepts, franchise metadata and visual assets remain presentation material unless a governed persisted source proves otherwise. This surface does not claim publication, distribution, subscription entitlement, advertising inventory, ownership or deployment.</p>';
+function client(){if(root.OmegaSB&&typeof root.OmegaSB.get==='function')return root.OmegaSB.get();return Promise.resolve(root.__omegaSb||null);}
+async function load(){
+ var sb=await client();if(!sb)throw new Error('DATABASE_CLIENT_UNAVAILABLE');
+ var s=(await sb.auth.getSession()).data.session;if(!s||!s.user)throw new Error('SIGN_IN_REQUIRED');
+ var r=await sb.from('media_items').select('id,title,media_type,status,created_at').order('created_at',{ascending:false}).limit(100);
+ if(r.error)throw r.error;
+ return {truth_state:r.data&&r.data.length?'LIVE':'EMPTY',items:r.data||[]};
 }
-root.OmegaMediaNative={render:render};
+function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function render(d){
+ var el=document.getElementById('media-native-state');if(!el)return;
+ var items=d.items||[], live=items.length;
+ var byType={};items.forEach(function(x){var k=x.media_type||'UNSPECIFIED';byType[k]=(byType[k]||0)+1;});
+ var cards=[['PERSISTED MEDIA',live,d.truth_state],['MEMBER MEDIA','USER-SCOPED','RLS / AUTHORIZED'],['CATALOG TYPES',Object.keys(byType).length,'CALCULATED'],['FRANCHISE / SAGA','LORE','NOT PRODUCTION PROOF']];
+ el.innerHTML='<div class="native-grid">'+cards.map(function(c){return '<div class="native-card"><b>'+esc(c[1])+'</b><span>'+esc(c[0])+'</span><small>'+esc(c[2])+'</small></div>';}).join('')+'</div><div class="native-boundary">TRUTH BOUNDARY: '+esc(live)+' persisted media_items are readable in the authenticated context. Static franchise/series/game material remains presentation or lore unless linked to governed persisted records. This projection does not infer publication, distribution, ownership, subscription entitlement or deployment from a catalog row.</div>';
+}
+root.OmegaMediaNative={load:load,render:render};
 })(globalThis);

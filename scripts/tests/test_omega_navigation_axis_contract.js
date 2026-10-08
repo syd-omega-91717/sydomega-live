@@ -5,6 +5,23 @@ const fs = require('fs');
 const path = require('path');
 const source = fs.readFileSync(path.join(__dirname, '..', '..', 'nav.js'), 'utf8');
 
+const psStart = source.indexOf('var PS={');
+const sectionsStart = source.indexOf('var SECTIONS=[');
+const cssStart = source.indexOf('/* INJECT CSS */');
+if (psStart < 0 || sectionsStart < 0 || cssStart < 0) throw new Error('Navigation contract anchors missing');
+
+const psSource = source.slice(psStart, sectionsStart);
+const sectionSource = source.slice(sectionsStart, cssStart);
+const psKeys = new Set();
+for (const match of psSource.matchAll(/(?:^|[,\\n])\\s*['\"]?([A-Za-z0-9_-]+)['\"]?\\s*:/g)) psKeys.add(match[1]);
+
+const subKeys = new Set();
+for (const match of sectionSource.matchAll(/\\[\\s*['\"]([A-Za-z0-9_-]+)['\"]\\s*,/g)) subKeys.add(match[1]);
+
+const ignored = /^.+-alias-\\d+$/;
+const missing = [...subKeys].filter((key) => !ignored.test(key) && !psKeys.has(key));
+if (missing.length) throw new Error('Reachable navigation pages missing PS axis mapping: ' + missing.join(', '));
+
 const requiredMappings = {
   'simulation-arena': 'arena',
   'achieve-home': 'achieve',
@@ -21,4 +38,4 @@ for (const [page, section] of Object.entries(requiredMappings)) {
 
 if (!source.includes("var activeSection=PS[dp]||'command';")) throw new Error('Navigation active-section fallback contract changed unexpectedly');
 if (!source.includes('window.OmegaAxis')) throw new Error('Canonical OmegaAxis publication contract missing');
-console.log('PASS navigation axis contract: required real routes resolve to their owning workspace.');
+console.log('PASS navigation axis contract: every reachable non-alias route has a canonical workspace mapping.');

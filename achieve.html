@@ -23,6 +23,7 @@ h1{font-family:var(--D);font-size:clamp(28px,5vw,54px);letter-spacing:3px;color:
 .cardx h3{font-family:var(--D);font-size:16px;color:var(--ink);margin-bottom:7px}.cardx p{font-size:13px;color:var(--muted);line-height:1.55;flex:1}.go{font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:var(--cyan);margin-top:14px}
 .note{border-left:2px solid var(--gold);background:rgba(201,168,76,.045);padding:14px 16px;color:var(--muted);font-size:13px;line-height:1.65;margin-top:12px}.note strong{color:var(--ink)}
 @media(max-width:650px){.ach-wrap{padding:16px}.grid{grid-template-columns:1fr}}
+.native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:12px}.native-card{border:1px solid var(--line);padding:12px;background:rgba(10,10,15,.5)}.native-card b{display:block;font:600 20px monospace;color:var(--cyan)}.native-card span{display:block;margin-top:5px;font:10px monospace;letter-spacing:1px;color:var(--muted)}.native-boundary{margin-top:12px;font:11px monospace;line-height:1.7;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -36,6 +37,8 @@ h1{font-family:var(--D);font-size:clamp(28px,5vw,54px);letter-spacing:3px;color:
 <p class="hero-copy">A single orientation surface for recognition state: achievements, honors, trophies, awards, rankings, mastery records and seasonal progression. Specialist pages remain the authoritative interaction surfaces.</p>
 <div class="truth">REALITY CONTRACT · NO FABRICATED AWARDS OR RANKINGS</div>
 </section>
+
+<section class="section"><div class="section-head"><h2>CANONICAL EVIDENCE STATE</h2><span>AUTHENTICATED · READ-ONLY</span></div><div id="achieve-native-state"><span class="truth">LOADING · AUTHENTICATED READ-ONLY</span></div></section>
 
 <section class="section">
 <div class="section-head"><h2>RECORD</h2><span>MEMBER RECOGNITION</span></div>
@@ -81,5 +84,6 @@ h1{font-family:var(--D);font-size:clamp(28px,5vw,54px);letter-spacing:3px;color:
 </div>
 </main>
 </div>
+<script src="/omega-achieve-native.js"></script><script>(function(){function boot(){if(!window.OmegaAchieveNative)return;window.OmegaAchieveNative.load().then(window.OmegaAchieveNative.render).catch(function(e){var el=document.getElementById("achieve-native-state");if(el)el.innerHTML="<div class=\"native-boundary\">"+(e&&e.message==="SIGN_IN_REQUIRED"?"UNAVAILABLE · SIGN IN REQUIRED":"UNAVAILABLE · EVIDENCE READ FAILED")+"</div>";});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();})();</script>
 </body>
 </html>

@@ -1,0 +1,120 @@
+{
+  "name": "OMEGA_PRODUCTION_10_10_EVIDENCE_GATE",
+  "version": 1,
+  "truth_rule": "IMPLEMENTATION_IS_NOT_PROVIDER_EVIDENCE",
+  "statuses": [
+    "PASS",
+    "PARTIAL",
+    "PENDING",
+    "BLOCKED"
+  ],
+  "domains": [
+    {
+      "id": "supabase_security",
+      "status": "BLOCKED",
+      "evidence_required": [
+        "security_advisor_zero_actionable_findings",
+        "leaked_password_protection_enabled"
+      ]
+    },
+    {
+      "id": "rls_performance",
+      "status": "PASS",
+      "evidence_required": [
+        "security_advisor_zero_rls_init_plan_findings"
+      ]
+    },
+    {
+      "id": "rpc_privilege",
+      "status": "PASS",
+      "evidence_required": [
+        "invoker_and_search_path_hardening"
+      ]
+    },
+    {
+      "id": "migration_reproducibility",
+      "status": "PENDING",
+      "evidence_required": [
+        "isolated_full_migration_replay"
+      ]
+    },
+    {
+      "id": "payment_lifecycle",
+      "status": "BLOCKED",
+      "evidence_required": [
+        "signed_stripe_event",
+        "idempotency",
+        "immutable_ledger",
+        "reconciliation",
+        "entitlement",
+        "reversal",
+        "live_provider_proof"
+      ]
+    },
+    {
+      "id": "disaster_recovery",
+      "status": "BLOCKED",
+      "evidence_required": [
+        "provider_restore_drill",
+        "measured_rpo",
+        "measured_rto"
+      ]
+    },
+    {
+      "id": "privacy_lifecycle",
+      "status": "PARTIAL",
+      "evidence_required": [
+        "controlled_export",
+        "controlled_erasure",
+        "retention_verification"
+      ]
+    },
+    {
+      "id": "provider_credentials",
+      "status": "PARTIAL",
+      "evidence_required": [
+        "provider_inventory",
+        "credential_verification",
+        "failure_test"
+      ]
+    },
+    {
+      "id": "scale",
+      "status": "PENDING",
+      "evidence_required": [
+        "concurrency",
+        "db_saturation",
+        "queue_limits",
+        "edge_function_limits",
+        "latency",
+        "cost"
+      ]
+    },
+    {
+      "id": "ai_quality",
+      "status": "PENDING",
+      "evidence_required": [
+        "groundedness",
+        "retrieval_quality",
+        "hallucination",
+        "latency",
+        "cost",
+        "adversarial_recovery"
+      ]
+    },
+    {
+      "id": "vercel_production",
+      "status": "BLOCKED",
+      "evidence_required": [
+        "ready_production_deployment_for_current_main_commit"
+      ]
+    },
+    {
+      "id": "owner_security",
+      "status": "PENDING",
+      "evidence_required": [
+        "owner_mfa_verified_for_every_platform_owner"
+      ]
+    }
+  ]
+}

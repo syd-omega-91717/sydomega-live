@@ -12,8 +12,16 @@ if (psStart < 0 || sectionsStart < 0 || cssStart < 0) throw new Error('Navigatio
 
 const psSource = source.slice(psStart, sectionsStart);
 const sectionSource = source.slice(sectionsStart, cssStart);
+const psExecutable = psSource
+  .replace(/\/\*[\\s\\S]*?\*\//g, '')
+  .replace(/(^|\\n)\\s*\/\/.*$/gm, '');
 const psKeys = new Set();
-for (const match of psSource.matchAll(/(?:^|[,\\n])\\s*['\"]?([A-Za-z0-9_-]+)['\"]?\\s*:/g)) psKeys.add(match[1]);
+const psDuplicates = new Set();
+for (const match of psExecutable.matchAll(/(?:^|,)\\s*['"]?([A-Za-z0-9_-]+)['"]?\\s*:/g)) {
+  if (psKeys.has(match[1])) psDuplicates.add(match[1]);
+  psKeys.add(match[1]);
+}
+if (psDuplicates.size) throw new Error('Duplicate PS axis mappings silently override earlier values: ' + [...psDuplicates].join(', '));
 
 const subKeys = new Set();
 for (const match of sectionSource.matchAll(/\\[\\s*['\"]([A-Za-z0-9_-]+)['\"]\\s*,/g)) subKeys.add(match[1]);

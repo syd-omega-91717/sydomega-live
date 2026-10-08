@@ -229,6 +229,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .s-desc,.g-desc{font-size:.7rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
 .g-genre{font-family:monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.04em;margin-bottom:.4rem}
 .s-status,.g-status{display:inline-block;font-family:monospace;font-size:.5rem;letter-spacing:.06em;color:var(--solar);border:1px solid rgba(226,200,109,.4);padding:.15rem .5rem;border-radius:2px}
+.native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:14px 2rem}.native-card{border:1px solid var(--border);padding:13px;background:rgba(10,10,15,.5)}.native-card b{display:block;font:600 16px monospace;color:var(--cyan)}.native-card span{display:block;margin-top:5px;font:10px monospace;letter-spacing:1px;color:var(--gold)}.native-card small{display:block;margin-top:6px;color:var(--muted);line-height:1.5}.native-boundary{margin:0 2rem 20px;font:11px monospace;line-height:1.7;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -238,7 +239,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <aside class="side" id="omega-side" data-page="media" style="width:80px;flex-shrink:0"></aside>
   <div style="flex:1;min-width:0">
 <div class="page">
-  <div class="hero-band">
+  <section id="media-native-state" aria-label="Canonical media truth state"><div class="native-grid"><div class="native-card"><b>LOADING</b><span>MEDIA STATE</span><small>Truth classification loading.</small></div></div></section>
+<div class="hero-band">
     <div class="hero-eyebrow">M6 // CINEMATIC UNIVERSE</div>
     <h1 class="hero-title">The Living Codex</h1>
     <p class="hero-sub">12 franchise films, each spawning 12 series and 12 games -- 144 series, 144 sub-games, across 9 visual rendering dimensions. All content gated by matrix progression.</p>
@@ -1117,7 +1119,7 @@ if(cat==='all'||cats.includes(cat)){card.style.display='';}else{card.style.displ
 });
 }
 </script>
-<script src="/nav.js" defer></script>
+<script src="/nav.js" defer></script><script src="/omega-media-native.js" defer></script><script>document.addEventListener("DOMContentLoaded",function(){if(window.OmegaMediaNative)window.OmegaMediaNative.render();});</script>
 <script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
 </div>
 </div>

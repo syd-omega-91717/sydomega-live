@@ -351,21 +351,21 @@
      jobs appear in the persistent dock. This turns hundreds of files into a small
      set of workspaces without deleting capabilities. */
   var COMPACT={
-    command:['gateway','dashboard','search','missions','notifications','chatbot','world'],
-    identity:['profile','life','security','settings'],
-    life:['life','body','mood','habits','journal','targets','weekly'],
-    ascend:['ascend','academy','courses','evolution','levels','phases','ascension','domain-mastery','contributions','focus'],
-    cosmos:['cosmos','world-atlas','agents','elements','horoscope','chronicle','map'],
-    vault:['vault','wallet','payments','subscriptions','marketplace','blockchain','ledger'],
-    order:['order','family','hall','sovereigns','factions','city','approvals'],
-    services:['services','consultancy','contracts','creation-studio','publishing','marketing','social'],
-    intel:['intel','intelligence','search','research','knowledge-loom','graphify','graph-explorer','graph-evidence','signal','prediction'],
-    arena:['sovereign-ai','agent-network','analytics','queue'],
-    govern:['govern','governance','control-center','observatory','analytics','monitoring-dashboard','compliance','recovery','enterprise','knowledge','architecture','agent-operations'],
-    invest:['invest','investment','portfolio','treasury','wallet','revenue','budget','expenses','wealth'],
-    achieve:['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates'],
-    archive:['archive','heritage','passport','kyc','credentials','character','membership'],
-    media:['media','cinema','movies','series','trailers','publications','visual-atlas']
+    command:['dashboard','search','missions','notifications','chatbot','world','evidence'],
+    identity:['profile','security'],
+    life:['life'],
+    ascend:['ascend','academy','focus','evolution','contributions'],
+    cosmos:['cosmos','agents','elements','horoscope','world-atlas'],
+    vault:['vault','wallet','subscriptions','payments','marketplace','blockchain'],
+    order:['order','family','approvals','hall'],
+    services:['services','creation-studio','consultancy','contracts','publishing'],
+    intel:['intel','intelligence','research','knowledge-loom','graph-explorer','graph-evidence'],
+    arena:['arena','sovereign-ai','agent-network','analytics'],
+    govern:['govern','control-center','observatory','enterprise','knowledge-loom','architecture'],
+    invest:['invest','investment','portfolio','treasury','revenue'],
+    achieve:['achieve','achievements','my-quests','leaderboard','gates'],
+    archive:['archive','heritage','credentials','kyc','membership'],
+    media:['media','cinema','movies','series','publications','visual-atlas']
   };
   function compactSub(sec){
     var wanted=COMPACT[sec.key]||[];

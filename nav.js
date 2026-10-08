@@ -39,7 +39,6 @@
     creator:'services','project-studio':'services','creation-studio':'services',
     architecture:'govern','control-plane':'govern','control-center':'govern','platform-kernel':'govern','world-shell':'govern',
     'autonomous-insights':'govern',    'knowledge-loom':'govern',
-    'knowledge-loom':'intel',
     life:'life',govern:'govern',arena:'arena','simulation-arena':'arena',chatbot:'command',
     'interface-omni':'order',
     analytics:'intel',achieve:'achieve','achieve-home':'achieve',achievements:'achieve',leaderboard:'achieve',

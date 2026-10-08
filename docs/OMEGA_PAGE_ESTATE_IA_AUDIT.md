@@ -284,6 +284,26 @@ Main currently contains **231 HTML files**; the visual survey contains **235 rec
 5. Verify reachability, authorization/RLS, analytics, accessibility, and truth-state contracts.
 6. Only then retire redundant HTML files.
 
+
+
+## 2026-10-08 single-page workspace implementation
+
+The consolidation model is now implemented as a user-facing layer:
+
+- canonical workspace destinations remain the primary navigation model;
+- `omega-single-page-workspaces.js` adds in-page capability viewing to canonical hubs;
+- specialist capabilities are opened from the hub in an accessible dialog;
+- the source route is displayed and remains directly openable;
+- `#module=<specialist-key>` provides a stable deep-link state;
+- direct specialist URLs are intentionally preserved;
+- compact navigation was reduced further so the persistent dock emphasizes canonical destinations rather than every specialist file.
+
+This is a **progressive consolidation layer**, not a destructive file deletion pass. A specialist route is only retired after its capability, authorization, data contract, analytics and deep-link behavior have been absorbed and verified.
+
+The canonical user-facing target remains:
+
+`COMMAND → IDENTITY → LIFE → ASCEND → COSMOS → VAULT → ORDER → SERVICES → INTEL → ARENA → GOVERN → INVEST → ACHIEVE → ARCHIVE → MEDIA`
+
 ## UX target
 
 Users should understand **what they can do**, not how the repository is partitioned. Search, command palette, contextual navigation, recents, pins, and hub-level workspaces should expose capabilities without requiring users to understand 200+ URLs.

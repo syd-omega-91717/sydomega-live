@@ -8,3 +8,6 @@ verify_jwt = true
 
 [functions.omega-media-worker]
 verify_jwt = false
+
+[functions.omega-knowledge-embedding-worker]
+verify_jwt = false

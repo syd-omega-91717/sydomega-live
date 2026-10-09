@@ -108,7 +108,7 @@ def scan_page(path: Path, capabilities: list[dict], domains: list[dict]) -> dict
 
     return {
         "page_id": path.stem,
-        "path": path.as_posix(),
+        "path": path.relative_to(ROOT).as_posix(),
         "contract_state": "BOOTSTRAP_OPEN",
         "authoritative_contract_present": False,
         "evidence": evidence,

@@ -42,7 +42,7 @@ function startChrono(uid,expISO,startISO){
       cdEl.textContent='EXPIRED';cdEl.style.color='var(--crim)';
       clearInterval(timers[uid]);
       /* auto-expire in DB */
-      sb.rpc('check_trial_status',{p_uid:uid}).catch(function(){});
+      sb.rpc('check_trial_status',{p_uid:uid}).then(null,function(){});
       setTimeout(function(){load();},1500);
     }
     /* progress bar: pct of 557s remaining */

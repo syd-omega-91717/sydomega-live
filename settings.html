@@ -272,7 +272,7 @@ async function saveBg(color){
   applyBg(color);markSwatch(color);
   var msg=document.getElementById('s-msg');
   if(_user){
-    var r=await sb.from('profiles').update({bg_color:color}).eq('id',_user.id).catch(function(e){return{error:e};});
+    var r=await sb.from('profiles').update({bg_color:color}).eq('id',_user.id).then(null,function(e){return{error:e};});
     if(msg)msg.textContent=(r&&r.error)?'Background saved on this device. Sync to your account failed.':'Background saved.';
   } else if(msg){msg.textContent='Background saved.';}
 }
@@ -282,7 +282,7 @@ async function resetBg(){
   applyBg(DEFAULT_BG);markSwatch(DEFAULT_BG);document.getElementById('cpick').value=DEFAULT_BG;
   var msg=document.getElementById('s-msg');
   if(_user){
-    var r=await sb.from('profiles').update({bg_color:null}).eq('id',_user.id).catch(function(e){return{error:e};});
+    var r=await sb.from('profiles').update({bg_color:null}).eq('id',_user.id).then(null,function(e){return{error:e};});
     if(msg)msg.textContent=(r&&r.error)?'Reset on this device. Sync to your account failed.':'Reset to the Void.';
   } else if(msg){msg.textContent='Reset to the Void.';}
 }

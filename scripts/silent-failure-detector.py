@@ -295,6 +295,57 @@ def _check_file(file_path, patterns):
     return findings
 
 
+_BUILDER_ROOT = re.compile(r"\.(?:from|rpc)\s*\(")
+_CHAIN_METHOD = re.compile(r"\.\s*([A-Za-z_$][\w$]*)\s*\(")
+
+
+def _depth0_methods(stmt):
+    """Method names called on the chain itself, in order, skipping arguments.
+
+    `.catch` inside a callback argument belongs to another chain; only calls at
+    the statement's own nesting level are the builder's.
+    """
+    out, depth = [], 0
+    for i, ch in enumerate(stmt):
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif ch == "." and depth == 0:
+            m = _CHAIN_METHOD.match(stmt, i)
+            if m:
+                out.append(m.group(1))
+    return out
+
+
+def find_dead_builder_catch():
+    """A `.catch()` on a Supabase query builder that no `.then()` precedes.
+
+    The builder (supabase-js 2.112.4, vendored) is a thenable: it has `.then`
+    and no `.catch`, so `sb.from(t).update(x).eq(k,v).catch(fn)` throws
+    "catch is not a function" BEFORE the request is sent -- the write never
+    happens. Live, this was the commonest client error: 1,877 of them in 30
+    days across 67 pages (2026-10-09). This scanner used to accept that very
+    `.catch()` as proof the write was handled.
+    """
+    found = []
+    # public/ is vercel-build.sh's output copy of these same files (never
+    # committed); scanning it reports every finding twice.
+    files = list(Path(".").glob("*.html")) + [
+        f for f in Path(".").glob("**/*.js")
+        if not {"vendor", "node_modules", "public"} & set(f.parts)]
+    for path in files:
+        content = _strip_js_comments(path.read_text(encoding="utf-8", errors="ignore"))
+        for m in _BUILDER_ROOT.finditer(content):
+            if not _looks_like_supabase(content, m.start()):
+                continue
+            methods = _depth0_methods(_statement_slice(content, m.start()))
+            if "catch" in methods and "then" not in methods[:methods.index("catch")]:
+                found.append({"file": str(path),
+                              "line": content[:m.start()].count("\n") + 1})
+    return found
+
+
 # ============================================================================
 # MAIN
 # ============================================================================
@@ -302,6 +353,12 @@ def _check_file(file_path, patterns):
 def main():
     """Scan for unchecked write operations."""
     print("Scanning for .insert()/.update()/.upsert()/.rpc() calls without .error checks...")
+    dead = find_dead_builder_catch()
+    if dead:
+        print(f"\nFOUND {len(dead)} .catch() ON A SUPABASE BUILDER (it has no .catch; the call throws and nothing is sent):")
+        for f in dead:
+            print(f"  {f['file']}:{f['line']} -- use .then(null, fn) or await inside try")
+        return 1
     findings = find_unchecked_writes()
 
     if not findings:

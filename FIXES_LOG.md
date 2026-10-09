@@ -22728,3 +22728,26 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
   `omega-agents.json`, SERVICES to the **deployed** count (a member reads the row as what is
   running; 9 source-only functions are not services). Stats corrected to 238/16.
   `TestFrontDoorStats` plants 216/2 and fails, passes on derived values.
+
+## `.catch()` on a Supabase builder: the commonest live client error, and writes that never ran (2026-10-09)
+
+- **Symptom (live `client_errors`, 30 days).** Top two messages:
+  `window.__omegaSb.from(...).insert(...).catch is not a function` (1,035, 55 pages) and
+  `window.__omegaSb.rpc(...).catch is not a function` (842, 67 pages), plus 389 more from the
+  same telemetry/interest-signal calls — still firing on 2026-10-09. `client_errors` (8,544
+  rows) was the largest table in the database, larger than `platform_events` (7,102).
+- **Cause.** The vendored `@supabase/supabase-js@2.112.4` builder is a thenable with no
+  `.catch` (proved in Node against `vendor/supabase-js.js`: `then function catch undefined
+  rpc.catch undefined`). `builder.catch(fn)` throws before `.then` runs, so **no request is
+  sent**. Stubbed-fetch proof: old form `THROWS … requests sent: 0`; new form `requests sent: 1 |
+  r.error.code = 42501`. Member-visible victims: `settings.html` background sync and
+  `social.html` link/unlink never wrote; `omega-onboard.js`'s `member.onboarded` event never
+  recorded; telemetry, presence and interest signals never recorded.
+- **Why no gate fired.** `silent-failure-detector.py` treated any `.catch(` in the statement as
+  proof the write was handled, and its own test asserted `sb.rpc(...).catch(...)` passes.
+- **Fix.** 10 sites → `.then(onResult, onReject)`; the 5 background writes now read
+  `r.error` (they were the detector's 5 findings once the false vouch was removed).
+  `find_dead_builder_catch()` flags a depth-0 `.catch` with no prior `.then`; it reports 10 on
+  the old tree, 0 now. `DeadBuilderCatchTests` (3) plant the violation; the test that encoded
+  the bug now uses a valid chain. Production still runs the 2026-10-06 build, so the live error
+  rate drops only once Vercel deploys.

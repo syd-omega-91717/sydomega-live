@@ -24,17 +24,25 @@ open, recorded in `FIXES_LOG.md`:
   `main` is 417 commits / 90 merges ahead, 52 shipped `.html`/`.js`/`.css` files changed. Every
   "verified" claim since #755 is repository evidence only. Owner: lift the account block
   (§8.2), then confirm one production deploy of current `main`.
-- **OPEN 2026-10-09 — the access funnel is broken at step one.** `notify-access` (emails the
-  owner when someone requests access) is `LOCAL_ONLY` — 9 of 25 functions are
+- **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
+  `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:
-  9 accounts, 4 approved, **5 pending for 72–115 days** (4 with confirmed email), 2 sign-ins in
-  30 days. Owner: decide each pending request in `approvals.html`; to deploy `notify-access`,
-  set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles` DB webhook first.
-  `rankings`, `snapshot-leaderboard`, `weekly-digest` (cron jobs) and `checkout` are also
-  source-only.
-- **OPEN 2026-10-09 — Auth leaked-password protection is off** (`get_advisors` security: the
-  only lint, `auth_leaked_password_protection`). Owner toggle: Auth → Password security.
-
+  9 accounts, 4 approved, **4 pending for 72–115 days**, 1 rejected; 2 sign-ins in 30 days.
+  (Corrected same day: a first count said 5 pending by including the rejected row.) A signal
+  does exist — `omega-owner-deck.js` `waitingChip()` shows "N WAITING" — but only on
+  `control-plane.html`. Owner: decide each request in `approvals.html`; to deploy
+  `notify-access`, set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles`
+  DB webhook first.
+- **OPEN 2026-10-09 — nothing runs on a schedule.** `pg_cron` is **not installed** live
+  (`cron.job` → 42P01; `pg_available_extensions` lists it, `pg_net` is installed). So
+  `rankings`, `snapshot-leaderboard`, `weekly-digest` (also undeployed) and the trial sweep
+  never run. Live row counts are 0 in all eight async tables: `leaderboard_snapshots`,
+  `weekly_digest_queue`, `notification_queue`, `omega_event_queue`, `ai_jobs`,
+  `omega_media_jobs`, `omega_provider_jobs`, `omega_knowledge_embedding_jobs` — the four
+  deployed workers have never had work. **2 expired trials are unswept.** Enforcement does not
+  depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
+  `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
+  so its first run wipes those two members' progress. Owner decision before any schedule.
 - **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
